@@ -10,9 +10,9 @@ php:
 
 before_script:
   - wget 'http://xp-framework.net/downloads/releases/bin/setup' -O - | php
-  - echo "use=core:tools" > xp.ini
+  - echo "use=." > xp.ini
   - echo "[runtime]" >> xp.ini
   - echo "date.timezone=Europe/Berlin" >> xp.ini
 
 script:
-  - (EXCD=0; for i in core/src/test/config/unittest/*.ini; do echo "---> $i"; ./unittest $i; RES=$?; if [ $RES -ne 0 ]; then EXCD=$RES; fi; done; exit $EXCD;)
+  - (EXCD=0; for i in src/test/config/unittest/*.ini; do echo "---> $i"; ./unittest $i; RES=$?; if [ $RES -ne 0 ]; then EXCD=$RES; fi; done; exit $EXCD;)
