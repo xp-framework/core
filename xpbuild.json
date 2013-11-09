@@ -1,5 +1,4 @@
 {
-  "base"     : "core",
   "naming"   : {
     "main"     : "xp-rt-{VERSION}.xar",
     "test"     : "xp-test-{VERSION}.xar"

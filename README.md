@@ -10,24 +10,26 @@ Installation
 Clone this repository, e.g. using Git Read-Only:
 
 ```sh
-$ cd [path]
-$ git clone git://github.com/xp-framework/xp-framework.git
+$ cd /path/to/xp
+$ git clone git://github.com/xp-framework/core.git
 ```
 
 ### Directory structure
 ```
-[path]/xp-framework
-`- core
-   |- ChangeLog         # Version log
-   |- boot.pth          # Bootstrap classpath
-   |- tools             # Bootstrapping (lang.base.php, class.php, xar.php, web.php)
-   `- src               # Sourcecode, by Maven conventions
-      |- main
-      |  `- php
-      `- test
-         |- php
-         |- config      # Unittest configuration
-         `- resources   # Test resources
+[path]/core
+|- ChangeLog.md      # Version log
+|- README.md         # This file
+|- xpbuild.json      # XP build infrastructure
+|- pom.xml           # Maven build infrastructure
+|- boot.pth          # Bootstrap classpath
+|- tools             # Bootstrapping (lang.base.php, class.php, xar.php, web.php)
+`- src               # Sourcecode, by Maven conventions
+   |- main
+   |  `- php
+   `- test
+      |- php
+      |- config      # Unittest configuration
+      `- resources   # Test resources
 ```
 
 ### Runners
@@ -46,7 +48,7 @@ To use the the XP Framework development checkout, put the following
 in your `~/bin/xp.ini` file:
 
 ```ini
-use=[path]/xp-framework/core
+use=/path/to/xp/core
 ```
 
 **Enjoy!**
