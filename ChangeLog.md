@@ -8,6 +8,12 @@ XP Framework ChangeLog
 * Moved classes inside text.util - Random(Code|Password)Generator to the
   package security.password - (@thekid)
 
+### RFCs
+
+* Implemented RFC #262: Split up framework into minimal pieces:
+  - Extracted `remote` into https://github.com/xp-framework/remote
+  (@kiesel, @thekid)
+
 
 ## 5.9.9 / 2013-11-09
 
