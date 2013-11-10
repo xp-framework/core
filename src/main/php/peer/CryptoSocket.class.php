@@ -1,15 +1,14 @@
 <?php
 /* This class is part of the XP framework
  *
- * $Id$ 
+ * $Id$
  */
 
-  uses('peer.Socket');
+  uses('peer.Socket', 'security.cert.X509Certificate');
 
   /**
    * Intermediate common class for all cryptographic socket classes such
    * as SSLSocket and TLSSocket.
-   *
    */
   class CryptoSocket extends Socket {
     const CTX_WRP = 'ssl';      // stream context option key
@@ -125,7 +124,7 @@
     /**
      * Retrieve captured peer certificate
      *
-     * @return  var
+     * @return  security.cert.X509Certificate
      * @throws  lang.IllegalStateException if capturing is disabled
      */
     public function getPeerCertificate() {
@@ -133,13 +132,13 @@
         throw new IllegalStateException('Cannot get peer\'s certificate, if capturing is disabled.');
       }
 
-      return $this->getSocketOption(self::CTX_WRP, 'peer_certificate');
+      return new X509Certificate(NULL, $this->getSocketOption(self::CTX_WRP, 'peer_certificate'));
     }
 
     /**
      * Retrieve captured peer certificate chain
      *
-     * @return  var[]
+     * @return  security.cert.X509Certificate[]
      * @throws  lang.IllegalStateException if capturing is disabled
      */
     public function getPeerCertificateChain() {
@@ -149,7 +148,7 @@
 
       $chain= array();
       foreach ($this->getSocketOption(self::CTX_WRP, 'peer_certificate_chain') as $cert) {
-        $chain[]= $cert;
+        $chain[]= new X509Certificate(NULL, $cert);
       }
 
       return $chain;
