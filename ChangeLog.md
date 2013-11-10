@@ -11,6 +11,7 @@ XP Framework ChangeLog
 ### RFCs
 
 * Implemented RFC #262: Split up framework into minimal pieces:
+  - Extracted `doclet` into https://github.com/xp-framework/doclet
   - Extracted `remote` into https://github.com/xp-framework/remote
   (@kiesel, @thekid)
 
