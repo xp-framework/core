@@ -1,4 +1,4 @@
-<?php namespace net\xp_framework\unittest\peer;
+<?php namespace net\xp_framework\unittest\peer\ldap;
  
 use peer\ldap\LDAPEntry;
 use unittest\TestCase;
