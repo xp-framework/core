@@ -1,7 +1,13 @@
 XP Framework ChangeLog
 ========================================================================
 
-## ?.?.? / ????-??-??
+## 6.0.0 / ????-??-??
+
+### Heads up!
+
+* Moved classes inside text.util - Random(Code|Password)Generator to the
+  package security.password - (@thekid)
+
 
 ## 5.9.9 / 2013-11-09
 
