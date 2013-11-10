@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\peer\mail;
 
 use unittest\TestCase;
+use unittest\actions\ExtensionAvailable;
 use peer\mail\store\ImapStore;
 
 /**
@@ -9,6 +10,7 @@ use peer\mail\store\ImapStore;
  * @see  xp://peer.mail.store.ImapStore
  * @see  xp://peer.mail.store.CclientStore
  */
+#[@action(new ExtensionAvailable('imap'))]
 class ImapStoreTest extends TestCase {
 
   /**
