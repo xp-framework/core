@@ -1,8 +1,10 @@
 <?php
-  uses(
-    'peer.Socket',
-    'security.cert.X509Certificate'
-  );
+/* This class is part of the XP framework
+ *
+ * $Id$ 
+ */
+
+  uses('peer.Socket');
 
   /**
    * Intermediate common class for all cryptographic socket classes such
@@ -123,7 +125,7 @@
     /**
      * Retrieve captured peer certificate
      *
-     * @return  security.cert.X509Certificate
+     * @return  var
      * @throws  lang.IllegalStateException if capturing is disabled
      */
     public function getPeerCertificate() {
@@ -131,13 +133,13 @@
         throw new IllegalStateException('Cannot get peer\'s certificate, if capturing is disabled.');
       }
 
-      return new X509Certificate(NULL, $this->getSocketOption(self::CTX_WRP, 'peer_certificate'));
+      return $this->getSocketOption(self::CTX_WRP, 'peer_certificate');
     }
 
     /**
      * Retrieve captured peer certificate chain
      *
-     * @return  security.cert.X509Certificate[]
+     * @return  var[]
      * @throws  lang.IllegalStateException if capturing is disabled
      */
     public function getPeerCertificateChain() {
@@ -147,7 +149,7 @@
 
       $chain= array();
       foreach ($this->getSocketOption(self::CTX_WRP, 'peer_certificate_chain') as $cert) {
-        $chain[]= new X509Certificate(NULL, $cert);
+        $chain[]= $cert;
       }
 
       return $chain;
