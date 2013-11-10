@@ -1,21 +1,18 @@
-<?php namespace net\xp_framework\unittest\peer;
+<?php namespace net\xp_framework\unittest\peer\mail;
 
 use unittest\TestCase;
 use peer\mail\store\ImapStore;
 
-
 /**
  * TestCase for peer.mail.store.ImapStore
  *
- * @see       xp://peer.mail.store.ImapStore
- * @see       xp://peer.mail.store.CclientStore
- * @purpose   Test ImapStore class
+ * @see  xp://peer.mail.store.ImapStore
+ * @see  xp://peer.mail.store.CclientStore
  */
 class ImapStoreTest extends TestCase {
 
   /**
    * Sets up test case
-   *
    */
   public function setUp() {
     $this->fixture= newinstance('peer.mail.store.ImapStore', array(), '{
