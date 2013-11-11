@@ -11,6 +11,7 @@ XP Framework ChangeLog
 ### RFCs
 
 * Implemented RFC #262: Split up framework into minimal pieces:
+  - Extracted `webservices.rest` into https://github.com/xp-framework/rest
   - Extracted `rdbms` into https://github.com/xp-framework/rdbms
   - Extracted `io.archive.zip` into https://github.com/xp-framework/zip
   - Extracted `text.parser` into https://github.com/xp-framework/parser
