@@ -181,6 +181,7 @@ class Runner extends \lang\Object {
    * @return  int
    */
   public function run(ParamString $params) {
+
     // No arguments given - show our own usage
     if ($params->count < 1) {
       self::$err->writeLine(self::textOf(\lang\XPClass::forName(\xp::nameOf(__CLASS__))->getComment()));
@@ -266,8 +267,10 @@ class Runner extends \lang\Object {
     $l= Logger::getInstance();
     $pm->hasProperties('log') && $l->configure($pm->getProperties('log'));
 
-    $cm= ConnectionManager::getInstance();
-    $pm->hasProperties('database') && $cm->configure($pm->getProperties('database'));
+    if (class_exists('rdbms\DBConnection')) {   // FIXME: Job of XPInjector?
+      $cm= ConnectionManager::getInstance();
+      $pm->hasProperties('database') && $cm->configure($pm->getProperties('database'));
+    }
 
     // Setup logger context for all registered log categories
     foreach (Logger::getInstance()->getCategories() as $category) {

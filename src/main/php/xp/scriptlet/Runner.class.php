@@ -157,8 +157,10 @@ class Runner extends \lang\Object {
     $l= Logger::getInstance();
     $pm->hasProperties('log') && $l->configure($pm->getProperties('log'));
 
-    $cm= ConnectionManager::getInstance();
-    $pm->hasProperties('database') && $cm->configure($pm->getProperties('database'));
+    if (class_exists('rdbms\DBConnection')) {   // FIXME: Job of XPInjector?
+      $cm= ConnectionManager::getInstance();
+      $pm->hasProperties('database') && $cm->configure($pm->getProperties('database'));
+    }
 
     // Setup logger context for all registered log categories
     foreach (Logger::getInstance()->getCategories() as $category) {
