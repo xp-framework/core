@@ -13,6 +13,7 @@ XP Framework ChangeLog
 * Implemented RFC #262: Split up framework into minimal pieces:
   - Extracted `rdbms` into https://github.com/xp-framework/rdbms
   - Extracted `io.archive.zip` into https://github.com/xp-framework/zip
+  - Extracted `text.csv` into https://github.com/xp-framework/csv
   - Extracted `text.doclet` into https://github.com/xp-framework/doclet
   - Extracted `remote` into https://github.com/xp-framework/remote
   (@kiesel, @thekid)
