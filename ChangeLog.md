@@ -5,6 +5,7 @@ XP Framework ChangeLog
 
 ### Heads up!
 
+* Removed deprecated `ref()` and `deref()` functionality - (@thekid)
 * Moved classes inside text.util - Random(Code|Password)Generator to the
   package security.password - (@thekid)
 * Moved classes inside scriptlet.rpc to webservices.rpc - (@thekid)
