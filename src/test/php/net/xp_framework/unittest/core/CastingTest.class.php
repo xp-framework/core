@@ -5,8 +5,6 @@ use lang\Runnable;
 
 /**
  * Tests cast() functionality
- *
- * @purpose  Unittest
  */
 class CastingTest extends TestCase implements Runnable {
 
@@ -20,10 +18,12 @@ class CastingTest extends TestCase implements Runnable {
 
   #[@test]
   public function newinstance() {
-    $runnable= newinstance('lang.Runnable', array(), '{
-      public function run() { return "RUN"; }
-    }');
-    $this->assertEquals('RUN', cast($runnable, 'lang.Runnable')->run());
+    $runnable= newinstance('lang.Runnable', array(), array(
+      'run' => function($self) {
+        return 'Test';
+      }
+    ));
+    $this->assertEquals('Test', cast($runnable, 'lang.Runnable')->run());
   }
 
   #[@test]

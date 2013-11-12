@@ -156,7 +156,7 @@ class RuntimeInstantiationTest extends TestCase {
   public function shutdownHookRunOnFatal() {
     $out= $this->runInNewRuntime(Runtime::getInstance()->startupOptions(), '
       Runtime::getInstance()->addShutdownHook(newinstance("lang.Runnable", array(), "{
-      public function run() {
+        public function run() {
           echo \'+OK Shutdown hook run\';
         }
       }"));
@@ -173,7 +173,7 @@ class RuntimeInstantiationTest extends TestCase {
   public function shutdownHookRunOnUncaughtException() {
     $out= $this->runInNewRuntime(Runtime::getInstance()->startupOptions(), '
       Runtime::getInstance()->addShutdownHook(newinstance("lang.Runnable", array(), "{
-      public function run() {
+        public function run() {
           echo \'+OK Shutdown hook run\';
         }
       }"));
