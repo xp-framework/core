@@ -11,6 +11,7 @@ XP Framework ChangeLog
 ### RFCs
 
 * Implemented RFC #262: Split up framework into minimal pieces:
+  - Extracted `peer.http` into https://github.com/xp-framework/http
   - Extracted `peer.ftp` into https://github.com/xp-framework/ftp
   - Extracted `img` into https://github.com/xp-framework/imaging
   - Extracted `scriptlet` into https://github.com/xp-framework/scriptlet
