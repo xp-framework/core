@@ -12,6 +12,7 @@ XP Framework ChangeLog
 ### RFCs
 
 * Implemented RFC #262: Split up framework into minimal pieces:
+  - Extracted `xml` into https://github.com/xp-framework/xml
   - Extracted `xp.codegen` into https://github.com/xp-framework/codegen
   - Extracted `peer.webdav` into https://github.com/xp-framework/webdav
   - Extracted `peer.sieve` into https://github.com/xp-framework/sieve
