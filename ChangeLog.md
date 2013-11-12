@@ -7,10 +7,12 @@ XP Framework ChangeLog
 
 * Moved classes inside text.util - Random(Code|Password)Generator to the
   package security.password - (@thekid)
-* Moved classes inside scriptlet.rpc to webservices.rpc (@thekid)
+* Moved classes inside scriptlet.rpc to webservices.rpc - (@thekid)
 
 ### RFCs
 
+* Implemented RFC #186: Drop SAPI feature alltogether; after it was 
+  deprecated since 5.9.0 - (@thekid)
 * Implemented RFC #262: Split up framework into minimal pieces:
   - Extracted `util.telephony` into https://github.com/xp-framework/telephony
   - Extracted `xml` into https://github.com/xp-framework/xml

@@ -42,9 +42,7 @@
     public static $classpath= NULL;
     public static $errors= array();
     public static $meta= array();
-    public static $registry = array(
-      'sapi'       => array()
-    );
+    public static $registry= array();
     
     // {{{ proto string loadClass0(string name)
     //     Loads a class by its fully qualified name
@@ -208,27 +206,6 @@
       } else {            // Otherwise, check for an error in the file on a certain line
         return isset(xp::$errors[$file][$line]) ? xp::$errors[$file][$line] : NULL;
       }
-    }
-    // }}}
-    
-    // {{{ proto deprecated void sapi(string* sapis)
-    //     Sets an SAPI
-    static function sapi() {
-      foreach ($a= func_get_args() as $name) {
-        foreach (xp::$classpath as $path) {
-          $filename= 'sapi'.DIRECTORY_SEPARATOR.strtr($name, '.', DIRECTORY_SEPARATOR).'.sapi.php';
-          if (is_dir($path) && file_exists($f= $path.DIRECTORY_SEPARATOR.$filename)) {
-            require_once($f);
-            continue 2;
-          } else if (is_file($path) && file_exists($f= 'xar://'.$path.'?'.strtr($filename, DIRECTORY_SEPARATOR, '/'))) {
-            require_once($f);
-            continue 2;
-          }
-        }
-        
-        xp::error('Cannot open SAPI '.$name.' (include_path='.get_include_path().')');
-      }
-      xp::$registry['sapi']= $a;
     }
     // }}}
     
