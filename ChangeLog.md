@@ -7,6 +7,7 @@ XP Framework ChangeLog
 
 * Moved classes inside text.util - Random(Code|Password)Generator to the
   package security.password - (@thekid)
+* Moved classes inside scriptlet.rpc to webservices.rpc (@thekid)
 
 ### RFCs
 
