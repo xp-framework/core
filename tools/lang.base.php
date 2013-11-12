@@ -571,20 +571,6 @@
   }
   // }}}
   
-  // {{{ proto deprecated var ref(var object)
-  //     Creates a "reference" to an object
-  function ref(&$object) {
-    return array(&$object);
-  }
-  // }}}
-
-  // {{{ proto deprecated &var deref(&mixed expr)
-  //     Dereferences an expression
-  function &deref(&$expr) {
-    if (is_array($expr)) return $expr[0]; else return $expr;
-  }
-  // }}}
-
   // {{{ proto var this(var expr, var offset)
   //     Indexer access for a given expression
   function this($expr, $offset) {
