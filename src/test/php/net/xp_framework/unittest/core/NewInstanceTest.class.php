@@ -2,10 +2,10 @@
 
 use lang\Runnable;
 use lang\Runtime;
+use lang\reflect\Package;
 
 /**
  * TestCase for newinstance() functionality
- *
  */
 class NewInstanceTest extends \unittest\TestCase {
 
@@ -58,8 +58,8 @@ class NewInstanceTest extends \unittest\TestCase {
   #[@test]
   public function argumentsArePassedToConstructor() {
     $instance= newinstance('lang.Object', array($this), '{
-    public $test= null;
-    public function __construct($test) {
+      public $test= null;
+      public function __construct($test) {
         $this->test= $test;
       }
     }');
@@ -122,7 +122,7 @@ class NewInstanceTest extends \unittest\TestCase {
   public function packageOfNewInstancedClass() {
     $i= newinstance('lang.Object', array(), '{}');
     $this->assertEquals(
-      \lang\reflect\Package::forName('lang'),
+      Package::forName('lang'),
       $i->getClass()->getPackage()
     );
   }
@@ -131,7 +131,7 @@ class NewInstanceTest extends \unittest\TestCase {
   public function packageOfNewInstancedFullyQualifiedClass() {
     $i= newinstance('net.xp_framework.unittest.core.PackagedClass', array(), '{}');
     $this->assertEquals(
-      \lang\reflect\Package::forName('net.xp_framework.unittest.core'),
+      Package::forName('net.xp_framework.unittest.core'),
       $i->getClass()->getPackage()
     );
   }
@@ -140,7 +140,7 @@ class NewInstanceTest extends \unittest\TestCase {
   public function packageOfNewInstancedNamespacedClass() {
     $i= newinstance('net.xp_framework.unittest.core.NamespacedClass', array(), '{}');
     $this->assertEquals(
-      \lang\reflect\Package::forName('net.xp_framework.unittest.core'),
+      Package::forName('net.xp_framework.unittest.core'),
       $i->getClass()->getPackage()
     );
   }
@@ -149,7 +149,7 @@ class NewInstanceTest extends \unittest\TestCase {
   public function packageOfNewInstancedNamespacedInterface() {
     $i= newinstance('net.xp_framework.unittest.core.NamespacedInterface', array(), '{}');
     $this->assertEquals(
-      \lang\reflect\Package::forName('net.xp_framework.unittest.core'),
+      Package::forName('net.xp_framework.unittest.core'),
       $i->getClass()->getPackage()
     );
   }
