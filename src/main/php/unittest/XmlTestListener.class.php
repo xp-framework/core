@@ -30,7 +30,7 @@
      */
     public function __construct(OutputStreamWriter $out) {
       $this->out= $out;
-      $this->tree= new Tree('testsuites');
+      $this->tree= new \xml\Tree('testsuites');
       $this->classes= create('new util.collections.HashTable<lang.XPClass, xml.Node>()');
     }
 
@@ -102,7 +102,7 @@
     protected function testNode(TestCase $case) {
       $class= $case->getClass();
       if (!$this->classes->containsKey($class)) {
-        $this->classes[$class]= $this->tree->addChild(new Node('testsuite', NULL, array(
+        $this->classes[$class]= $this->tree->addChild(new \xml\Node('testsuite', NULL, array(
           'name'       => $class->getName(),
           'file'       => $this->uriFor($class),
           'tests'      => 0,
@@ -133,7 +133,7 @@
       $inc && $n->setAttribute($inc, $n->getAttribute($inc)+ 1);
       
       // Add testcase information
-      return $n->addChild(new Node('testcase', NULL, array(
+      return $n->addChild(new \xml\Node('testcase', NULL, array(
         'name'       => $outcome->test->getName(),
         'class'      => $testClass->getName(),
         'file'       => $this->uriFor($testClass),
@@ -149,7 +149,7 @@
      */
     public function testFailed(TestFailure $failure) {
       $t= $this->addTestCase($failure, 'failures');
-      $t->addChild(new Node('failure', $this->messageFor($failure), array(
+      $t->addChild(new \xml\Node('failure', $this->messageFor($failure), array(
         'message' => trim($failure->reason->compoundMessage()),
         'type'    => xp::typeOf($failure->reason)
       )));
@@ -162,7 +162,7 @@
      */
     public function testError(TestError $error) {
       $t= $this->addTestCase($error, 'errors');
-      $t->addChild(new Node('error', $this->messageFor($error), array(
+      $t->addChild(new \xml\Node('error', $this->messageFor($error), array(
         'message' => trim($error->reason->compoundMessage()),
         'type'    => xp::typeOf($error->reason)
       )));
@@ -175,7 +175,7 @@
      */
     public function testWarning(TestWarning $warning) {
       $t= $this->addTestCase($warning, 'errors');
-      $t->addChild(new Node('error', $this->messageFor($warning), array(
+      $t->addChild(new \xml\Node('error', $this->messageFor($warning), array(
         'message' => 'Non-clear error stack',
         'type'    => 'warnings'
       )));

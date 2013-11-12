@@ -11,15 +11,16 @@ use lang\ResourceProvider;
  *
  * @see   xp://lang.ResourceProvider
  */
+#[@action(new \unittest\actions\ExtensionAvailable('xsl'))]
 class ResourceProviderXslIntegrationTest extends TestCase {
 
   /**
-   * Skips tests if XSL Extension is not loaded
+   * Skips tests if XML Module is not loaded
    */
   #[@beforeClass]
   public static function verifyXSLExtensionLoaded() {
-    if (!extension_loaded('xsl')) {
-      throw new \unittest\PrerequisitesNotMetError('XSL Extension not loaded', NULL, array('loaded'));
+    if (!class_exists('xml\DomXSLProcessor')) {
+      throw new \unittest\PrerequisitesNotMetError('XML Module not available', NULL, array('loaded'));
     }
   }
 

@@ -18,6 +18,16 @@ class XmlListenerTest extends \unittest\TestCase {
   /**
    * Sets up test case
    */
+  #[@beforeClass]
+  public static function onlyWithXmlModule() {
+    if (!class_exists('xml\Tree')) {
+      throw new \unittest\PrerequisitesNotMetError('XML Module not available', NULL, array('loaded'));
+    }
+  }
+
+  /**
+   * Sets up test case
+   */
   public function setUp() {
     $this->out= new MemoryOutputStream();
     $this->suite= new TestSuite();
