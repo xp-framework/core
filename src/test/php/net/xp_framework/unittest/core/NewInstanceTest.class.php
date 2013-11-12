@@ -44,25 +44,72 @@ class NewInstanceTest extends \unittest\TestCase {
   }
   
   #[@test]
-  public function newObject() {
+  public function new_class_with_empty_body() {
+    $o= newinstance('lang.Object', array());
+    $this->assertInstanceOf('lang.Object', $o);
+  }
+
+  #[@test]
+  public function new_class_with_empty_body_as_string() {
     $o= newinstance('lang.Object', array(), '{}');
     $this->assertInstanceOf('lang.Object', $o);
   }
 
   #[@test]
-  public function newRunnable() {
+  public function new_class_with_empty_body_as_closuremap() {
+    $o= newinstance('lang.Object', array(), array());
+    $this->assertInstanceOf('lang.Object', $o);
+  }
+
+  #[@test]
+  public function new_class_with_member_as_string() {
+    $o= newinstance('lang.Object', array(), '{
+      public $test= "Test";
+    }');
+    $this->assertEquals('Test', $o->test);
+  }
+
+  #[@test]
+  public function new_class_with_member_as_closuremap() {
+    $o= newinstance('lang.Object', array(), array(
+      'test' => 'Test'
+    ));
+    $this->assertEquals('Test', $o->test);
+  }
+
+  #[@test]
+  public function new_interface_with_body_as_string() {
     $o= newinstance('lang.Runnable', array(), '{ public function run() { } }');
     $this->assertInstanceOf('lang.Runnable', $o);
   }
 
   #[@test]
-  public function argumentsArePassedToConstructor() {
+  public function new_interface_with_body_as_closuremap() {
+    $o= newinstance('lang.Runnable', array(), array(
+      'run' => function($self) { }
+    ));
+    $this->assertInstanceOf('lang.Runnable', $o);
+  }
+
+  #[@test]
+  public function arguments_are_passed_to_constructor() {
     $instance= newinstance('lang.Object', array($this), '{
       public $test= null;
       public function __construct($test) {
         $this->test= $test;
       }
     }');
+    $this->assertEquals($this, $instance->test);
+  }
+
+  #[@test]
+  public function arguments_are_passed_to_constructor_in_closuremap() {
+    $instance= newinstance('lang.Object', array($this), array(
+      'test' => null,
+      '__construct' => function($self, $test) {
+        $self->test= $test;
+      }
+    ));
     $this->assertEquals($this, $instance->test);
   }
 

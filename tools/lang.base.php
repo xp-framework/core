@@ -578,9 +578,9 @@
   }
   // }}}
   
-  // {{{ proto lang.Object newinstance(string spec, var[] args, string bytes)
+  // {{{ proto lang.Object newinstance(string spec, var[] args, var def)
   //     Anonymous instance creation
-  function newinstance($spec, $args, $bytes) {
+  function newinstance($spec, $args, $def= NULL) {
     static $u= 0;
 
     // Check for an anonymous generic 
@@ -615,6 +615,34 @@
       $type= '\\'.$type;
     }
 
+    // No definition: Emty body, array => closure style, string: source code
+    $functions= array();
+    if (NULL === $def) {
+      $bytes= '{}';
+    } else if (is_array($def)) {
+      $bytes= '{ static $__func;';
+      foreach ($def as $name => $member) {
+        if ($member instanceof \Closure) {
+          $r= new ReflectionFunction($member);
+          $pass= '';
+          foreach (array_slice($r->getParameters(), 1) as $param) {
+            $pass.= ', $'.$param->getName();
+          }
+          $bytes.= 'function '.$name.'('.substr($pass, 2).') {
+            $f= self::$__func["'.$name.'"];
+            return call_user_func($f, $this'.('' === $pass ? '' : ', '.substr($pass, 2)).');
+            return $f($this'.('' === $pass ? '' : ', '.substr($pass, 2)).');
+          }';
+          $functions[$name]= $member;
+        } else {
+          $bytes.= 'public $'.$name.'= '.var_export($member, TRUE).';';
+        }
+      }
+      $bytes.= '}';
+    } else {
+      $bytes= (string)$def;
+    }
+
     // Checks whether an interface or a class was given
     $cl= DynamicClassLoader::instanceFor(__FUNCTION__);
     if (interface_exists($type)) {
@@ -623,13 +651,10 @@
       $cl->setClassBytes($spec, $ns.'class '.$decl.' extends '.$type.' '.$bytes);
     }
 
-    $decl= $cl->loadClass0($spec);
-
-    // Build paramstr for evaluation
-    for ($paramstr= '', $i= 0, $m= sizeof($args); $i < $m; $i++) {
-      $paramstr.= ', $args['.$i.']';
-    }
-    return eval('return new '.$decl.'('.substr($paramstr, 2).');');
+    // Instantiate
+    $decl= new \ReflectionClass($cl->loadClass0($spec));
+    $functions && $decl->setStaticPropertyValue('__func', $functions);
+    return $decl->newInstanceArgs($args);
   }
   // }}}
 
