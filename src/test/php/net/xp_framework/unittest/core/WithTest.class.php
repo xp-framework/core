@@ -30,15 +30,17 @@ class WithTest extends \unittest\TestCase {
 
   #[@test]
   public function new_usage_with_closure() {
-    with (new Object(), function($f) {
-      $this->assertInstanceOf('lang.Object', $f);
+    $self= $this;
+    with (new Object(), function($f) use($self) {
+      $self->assertInstanceOf('lang.Object', $f);
     });
   }
 
   #[@test]
   public function closeable_is_open_inside_block() {
-    with (self::$closes->newInstance(), function($f) {
-      $this->assertFalse($f->closed);
+    $self= $this;
+    with (self::$closes->newInstance(), function($f) use($self) {
+      $self->assertFalse($f->closed);
     });
   }
 
