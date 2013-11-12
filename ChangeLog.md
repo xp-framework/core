@@ -26,6 +26,7 @@ XP Framework ChangeLog
   - Extracted `webservices.rest` into https://github.com/xp-framework/rest
   - Extracted `rdbms` into https://github.com/xp-framework/rdbms
   - Extracted `io.archive.zip` into https://github.com/xp-framework/zip
+  - Extracted `text.spelling` into https://github.com/xp-framework/spelling
   - Extracted `text.parser` into https://github.com/xp-framework/parser
   - Extracted `text.csv` into https://github.com/xp-framework/csv
   - Extracted `text.doclet` into https://github.com/xp-framework/doclet
