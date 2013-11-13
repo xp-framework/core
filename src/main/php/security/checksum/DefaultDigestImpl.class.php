@@ -32,6 +32,9 @@ class DefaultDigestImpl extends MessageDigestImpl {
         }
       }'));
     }
+
+    // Add crc16
+    \lang\XPClass::forName('security.checksum.CRC16DigestImpl');
   }
 
   /**

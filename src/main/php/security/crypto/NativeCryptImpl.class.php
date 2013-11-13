@@ -1,7 +1,5 @@
 <?php namespace security\crypto;
 
-
-
 /**
  * Implementation which uses PHP's crypt() function
  *
@@ -20,7 +18,7 @@ class NativeCryptImpl extends CryptImpl {
   public function crypt($plain, $salt) {
     $crypted= crypt($plain, $salt);
     if (strlen($crypted) < 13) {      // Crypted contains error
-      throw new \CryptoException('Failed to crypt: '.$crypted);
+      throw new CryptoException('Failed to crypt: '.$crypted);
     }
     return $crypted;
   }
