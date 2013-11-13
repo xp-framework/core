@@ -1,5 +1,5 @@
-XP Framework
-============
+XP Framework Core
+=================
 [![Build Status on TravisCI](https://secure.travis-ci.org/xp-framework/core.png)](http://travis-ci.org/xp-framework/core)
 
 This is the XP Framework's development checkout
@@ -21,7 +21,7 @@ $ git clone git://github.com/xp-framework/core.git
 |- xpbuild.json      # XP build infrastructure
 |- pom.xml           # Maven build infrastructure
 |- boot.pth          # Bootstrap classpath
-|- tools             # Bootstrapping (lang.base.php, class.php, xar.php, web.php)
+|- tools             # Bootstrapping (lang.base.php, class.php, web.php)
 `- src               # Sourcecode, by Maven conventions
    |- main
    |  `- php
