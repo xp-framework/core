@@ -1,6 +1,7 @@
 <?php namespace unittest\mock;
 
 use lang\ClassLoader;
+use lang\reflect\Modifiers;
 
 /**
  * Provides functionallity for creating dynamic proxy
@@ -213,17 +214,13 @@ class MockProxyBuilder extends \lang\Object {
     $reservedMethods= \lang\XPClass::forName('lang.Generic')->getMethods();
     $reservedMethodNames= array_map(create_function('$i', 'return $i->getName();'), $reservedMethods);
     
-    foreach($baseClass->getMethods() as $m) {
-      if (in_array($m->getName(), $reservedMethodNames)) { //do not overwrite reserved methods
-        continue;
-      }
-      
-      if (($m->getModifiers()&\ReflectionMethod::IS_STATIC) == \ReflectionMethod::IS_STATIC) {  //omit static methods
-        continue;
-      }
+    foreach ($baseClass->getMethods() as $m) {
+
+      // do not overwrite reserved methods, omit static methods
+      if (in_array($m->getName(), $reservedMethodNames) || Modifiers::isStatic($m->getModifiers())) continue;
         
       // Check for already declared methods, do not redeclare them
-      //implement abstract methods
+      // implement abstract methods
       if ($this->overwriteExisting || ($m->getModifiers() & 2) == 2) {
         if (isset($this->added[$m->getName()])) continue;
         $this->added[$m->getName()]= true;
