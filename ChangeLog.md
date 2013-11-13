@@ -38,3 +38,8 @@ XP Framework Core ChangeLog
   - Extracted `text.doclet` into https://github.com/xp-framework/doclet
   - Extracted `remote` into https://github.com/xp-framework/remote
   (@kiesel, @thekid)
+
+### Features
+
+* Extended the `with` statement to to work with lang.Closeable instances.
+  See xp-framework/core#2 - (@thekid)
