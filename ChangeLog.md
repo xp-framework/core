@@ -5,6 +5,7 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Removed obsolete top-level `gui` package - (@thekid)
 * Removed deprecated `ref()` and `deref()` functionality - (@thekid)
 * Moved classes inside text.util - Random(Code|Password)Generator to the
   package security.password - (@thekid)
