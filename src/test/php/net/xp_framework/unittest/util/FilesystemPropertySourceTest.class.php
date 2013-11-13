@@ -5,7 +5,7 @@ use io\File;
 use io\FileUtil;
 use lang\System;
 use util\FilesystemPropertySource;
-
+use util\Properties;
 
 /**
  * Testcase for util.Properties class.

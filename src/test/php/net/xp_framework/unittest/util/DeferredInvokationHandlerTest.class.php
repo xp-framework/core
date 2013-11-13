@@ -36,7 +36,7 @@ class DeferredInvokationHandlerTest extends TestCase {
       public function initialize() { 
         return newinstance("lang.Runnable", array(), "{
           public function run() {
-            throw new XPException(func_get_arg(0));
+            throw new \lang\XPException(func_get_arg(0));
           }
         }");
       }
@@ -64,7 +64,7 @@ class DeferredInvokationHandlerTest extends TestCase {
   public function initialize_throws_exception() {
     $handler= newinstance('util.AbstractDeferredInvokationHandler', array(), '{
       public function initialize() { 
-        throw new IllegalStateException("Cannot initialize yet");
+        throw new \lang\IllegalStateException("Cannot initialize yet");
       }
     }');
     $handler->invoke($this, 'run', array());
@@ -82,7 +82,7 @@ class DeferredInvokationHandlerTest extends TestCase {
           function() { return newinstance("lang.Runnable", array(), "{
             public function run() { return TRUE; }
           }"); },
-          function() { throw new IllegalStateException("Initialization called again"); },
+          function() { throw new \lang\IllegalStateException("Initialization called again"); },
         );
       }
       public function initialize() {
@@ -102,7 +102,7 @@ class DeferredInvokationHandlerTest extends TestCase {
       private $actions;
       public function __construct() {
         $this->actions= array(
-          function() { throw new IllegalStateException("Error initializing"); },
+          function() { throw new \lang\IllegalStateException("Error initializing"); },
           function() { return newinstance("lang.Runnable", array(), "{
             public function run() { return TRUE; }
           }"); }

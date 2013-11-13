@@ -20,7 +20,7 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
       protected $stream= NULL;
       public function __construct($stream) { $this->stream= $stream; }
       public function exists() { return NULL !== $this->stream; }
-      public function getURI() { return Streams::readableUri($this->stream); }
+      public function getURI() { return \io\streams\Streams::readableUri($this->stream); }
       public function getInputStream() { return $this->stream; }
     }');
   }

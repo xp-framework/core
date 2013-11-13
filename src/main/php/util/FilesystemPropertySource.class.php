@@ -1,7 +1,5 @@
 <?php namespace util;
 
-
-
 /**
  * Filesystem-based property source
  *
@@ -42,7 +40,7 @@ class FilesystemPropertySource extends \lang\Object implements PropertySource {
       throw new \lang\IllegalArgumentException('No properties '.$name.' found at '.$this->root);
 
     if (!isset($this->cache[$name])) {
-      $this->cache[$name]= new \Properties($this->root.DIRECTORY_SEPARATOR.$name.'.ini');
+      $this->cache[$name]= new Properties($this->root.DIRECTORY_SEPARATOR.$name.'.ini');
     }
     
     return $this->cache[$name];

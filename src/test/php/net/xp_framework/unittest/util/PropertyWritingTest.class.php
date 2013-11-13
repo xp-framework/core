@@ -4,7 +4,6 @@ use unittest\TestCase;
 use util\Properties;
 use util\Hashmap;
 
-
 /**
  * Testcase for util.Properties class.
  *
@@ -144,7 +143,7 @@ class PropertyWritingTest extends TestCase {
    */
   #[@test]
   public function hashmapOneElement() {
-    $h= new \HashMap();
+    $h= new Hashmap();
     $h->put('color', 'green');
     $this->fixture->writeHash('section', 'key', $h);
     $this->assertSavedFixtureEquals('
@@ -159,7 +158,7 @@ class PropertyWritingTest extends TestCase {
    */
   #[@test]
   public function hashmapTwoElements() {
-    $h= new \HashMap();
+    $h= new Hashmap();
     $h->put('color', 'green');
     $h->put('size', 'L');
     $this->fixture->writeHash('section', 'key', $h);
@@ -175,7 +174,7 @@ class PropertyWritingTest extends TestCase {
    */
   #[@test]
   public function emptyHashmap() {
-    $this->fixture->writeHash('section', 'key', new \HashMap());
+    $this->fixture->writeHash('section', 'key', new Hashmap());
     $this->assertSavedFixtureEquals('
       [section]
       key=""

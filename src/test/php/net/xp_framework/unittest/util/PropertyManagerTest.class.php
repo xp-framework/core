@@ -5,7 +5,6 @@ use util\PropertyManager;
 use util\ResourcePropertySource;
 use lang\ClassLoader;
 
-
 /**
  * Tests for util.PropertyManager singleton
  *
@@ -13,6 +12,10 @@ use lang\ClassLoader;
  */
 class PropertyManagerTest extends TestCase {
   const RESOURCE_PATH = 'net/xp_framework/unittest/util/';
+
+  static function __static() {
+    \lang\XPClass::forName('lang.ResourceProvider');
+  }
 
   /**
    * Creates a fixrture
