@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Removed deprecated `xp::registry()` function, which has been superseded
+  by the static `xp::$registry` member. Continue considering this a core
+  internal API, though! (@thekid)
 * Removed obsolete top-level `gui` package - (@thekid)
 * Removed deprecated `ref()` and `deref()` functionality - (@thekid)
 * Moved classes inside text.util - Random(Code|Password)Generator to the

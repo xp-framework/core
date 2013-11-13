@@ -209,18 +209,6 @@
     }
     // }}}
     
-    // {{{ proto deprecated var registry(var args*)
-    //     Stores static data
-    static function registry() {
-      switch (func_num_args()) {
-        case 0: return xp::$registry;
-        case 1: return @xp::$registry[func_get_arg(0)];
-        case 2: xp::$registry[func_get_arg(0)]= func_get_arg(1); break;
-      }
-      return NULL;
-    }
-    // }}}
-    
     // {{{ proto string reflect(string type)
     //     Retrieve type literal for a given type name
     static function reflect($type) {
