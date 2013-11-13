@@ -18,7 +18,7 @@
   <!-- More project information -->
   <name>XP-Framework</name>
   <description>The XP framework is an all-purpose, object oriented PHP framework</description>
-  <url>https://github.com/xp-framework/xp-framework</url>
+  <url>https://github.com/xp-framework/core</url>
   <inceptionYear>2001</inceptionYear>
   <organization>
     <name>XP-Framework Team</name>
@@ -79,27 +79,9 @@
             <extension>com_dotnet</extension>
             <extension>zlib</extension>
 
-            <!-- XML -->
-            <extension>dom</extension>
-            <extension>xsl</extension>
-            <extension>xml</extension>
-            <extension>libxml</extension>
-
             <!-- Networking -->
             <extension>sockets</extension>
             <extension>openssl</extension>
-            <extension>ldap</extension>
-            <extension>soap</extension>
-
-            <!-- Imaging -->
-            <extension>gd</extension>
-            <extension>exif</extension>
-            <extension>mbstring</extension>
-
-            <!-- Databases ??? -->
-            <!--extension>mysql</extension>
-            <extension>mysqli</extension>
-            <extension>sqlite3</extension-->
 
             <!-- The web -->
             <extension>session</extension>
@@ -129,12 +111,7 @@
                   <directory>src/main/php/</directory>
                   <includes>
                     <include>**/package-info.xp</include>
-                    <include>sapi/**/*.sapi.php</include>
-                    <include>sapi/scriptlet/*.html</include>
                     <include>xp/runtime/usage.txt</include>
-                    <include>xp/scriptlet/xpws.txt</include>
-                    <include>xp/scriptlet/*.html</include>
-                    <include>xp/codegen/**/*.xsl</include>
                   </includes>
                 </resource>
               </resources>
