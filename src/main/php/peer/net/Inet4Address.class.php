@@ -1,13 +1,10 @@
 <?php namespace peer\net;
 
-
-
 /**
  * IPv4 address
  *
- * @test      xp://net.xp_framework.unittest.peer.Inet4AddressTest
- * @see       php://ip2long
- * @purpose   Represent an IPv4 address
+ * @test  xp://net.xp_framework.unittest.peer.Inet4AddressTest
+ * @see   php://ip2long
  */
 class Inet4Address extends \lang\Object implements InetAddress {
 
@@ -84,7 +81,7 @@ class Inet4Address extends \lang\Object implements InetAddress {
    * @return  bool
    * @throws  lang.FormatException in case net has invalid format
    */
-  public function inSubnet(\Network $net) {
+  public function inSubnet(Network $net) {
     if (!$net->getAddress() instanceof self) return false;
     
     $addrn= $net->getAddress()->addr;
@@ -101,7 +98,7 @@ class Inet4Address extends \lang\Object implements InetAddress {
    */
   public function createSubnet($subnetSize) {
     $addr= $this->addr & (0xFFFFFFFF << (32-$subnetSize));
-    return new \Network(new Inet4Address(long2ip($addr)), $subnetSize);
+    return new Network(new Inet4Address(long2ip($addr)), $subnetSize);
   }
   
   /**

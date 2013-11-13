@@ -1,12 +1,9 @@
 <?php namespace peer\net;
 
-
-
 /**
  * InetAddress Factory
  *
- * @test      xp://net.xp_framework.unittest.peer.net.InetAddressFactoryTest
- * @purpose   Factory class
+ * @test  xp://net.xp_framework.unittest.peer.net.InetAddressFactoryTest
  */
 class InetAddressFactory extends \lang\Object {
 

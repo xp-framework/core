@@ -126,7 +126,7 @@ class PreforkingServer extends Server implements Traceable {
       }
 
       // Handle accepted socket
-      if ($this->protocol instanceof \SocketAcceptHandler) {
+      if ($this->protocol instanceof \peer\server\protocol\SocketAcceptHandler) {
         if (!$this->protocol->handleAccept($m)) {
           $m->close();
           continue;

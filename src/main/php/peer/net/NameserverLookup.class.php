@@ -1,7 +1,5 @@
 <?php namespace peer\net;
 
-
-
 /**
  * Class to perform DNS name server lookups; supports IPv4
  * and IPv6, both.
@@ -10,7 +8,6 @@
  * uses php://dns_get_record - a function which is not available on
  * all platforms in all supported PHP versions.
  *
- * @experimental
  * @test    xp://net.xp_framework.unittest.peer.net.NameserverLookupTest
  * @see     php://dns_get_record
  */
@@ -125,7 +122,7 @@ class NameserverLookup extends \lang\Object {
    * @return  string
    * @throws  lang.ElementNotFoundException in case no reverse lookup exists
    */
-  public function reverseLookup(\InetAddress $addr) {
+  public function reverseLookup(InetAddress $addr) {
     $ptr= $this->tryReverseLookup($addr);
     if (null === $ptr) throw new \lang\ElementNotFoundException('No reverse lookup for '.$addr->toString());
 
@@ -139,7 +136,7 @@ class NameserverLookup extends \lang\Object {
    * @param   peer.InetAddress addr
    * @return  string
    */
-  public function tryReverseLookup(\InetAddress $addr) {
+  public function tryReverseLookup(InetAddress $addr) {
     $ptr= $this->_nativeLookup($addr->reversedNotation(), DNS_PTR);
     if (!isset($ptr[0]['target'])) return null;
 

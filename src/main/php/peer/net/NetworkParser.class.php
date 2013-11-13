@@ -1,16 +1,12 @@
 <?php namespace peer\net;
 
-
-
 /**
  * Description of NetworkParser
  *
- * @test      xp://net.xp_framework.unittest.peer.net.NetworkParserTest
- * @purpose   Parse network addresses
+ * @test  xp://net.xp_framework.unittest.peer.net.NetworkParserTest
  */
 class NetworkParser extends \lang\Object {
-  protected
-    $addressParser  = null;
+  protected $addressParser  = null;
 
   /**
    * Constructor

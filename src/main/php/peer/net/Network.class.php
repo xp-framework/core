@@ -1,9 +1,7 @@
 <?php namespace peer\net;
 
 /**
- * Network class
- *
- * @purpose   Represent IP network
+ * Represent IP network
  */
 class Network extends \lang\Object {
 
@@ -13,7 +11,7 @@ class Network extends \lang\Object {
    * @param   peer.InetAddress addr
    * @param   int netmask
    */
-  public function __construct(\InetAddress $addr, $netmask) {
+  public function __construct(InetAddress $addr, $netmask) {
     if (!is_int($netmask) || $netmask < 0 || $netmask > $addr->sizeInBits())
       throw new \lang\FormatException('Netmask must be integer, between 0 and '.$addr->sizeInBits());
 
@@ -63,7 +61,7 @@ class Network extends \lang\Object {
    * @param   peer.InetAddress addr
    * @return  bool
    */
-  public function contains(\InetAddress $addr) {
+  public function contains(InetAddress $addr) {
     return $addr->inSubnet($this);
   }
 

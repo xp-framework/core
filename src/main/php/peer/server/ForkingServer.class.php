@@ -2,7 +2,6 @@
 
 use lang\SystemException;
 
-
 /**
  * Forking TCP/IP Server
  *
@@ -30,7 +29,7 @@ class ForkingServer extends Server {
       if (!$m) continue;
 
       // Handle accepted socket
-      if ($this->protocol instanceof \SocketAcceptHandler) {
+      if ($this->protocol instanceof \peer\server\protocol\SocketAcceptHandler) {
         if (!$this->protocol->handleAccept($m)) {
           $m->close();
           continue;
@@ -43,7 +42,7 @@ class ForkingServer extends Server {
 
         // If the protocol can handle this, be friendly, else simply
         // close the socket. There's not much we can do here!
-        if ($this->protocol instanceof \OutOfResourcesHandler) {
+        if ($this->protocol instanceof \peer\server\protocol\OutOfResourcesHandler) {
           $this->protocol->handleOutOfResources($m, new SystemException('Could not fork', -1));
         }
         $m->close();

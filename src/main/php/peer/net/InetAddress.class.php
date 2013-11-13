@@ -1,11 +1,7 @@
 <?php namespace peer\net;
 
-
-
 /**
- * Interface Inet address
- *
- * @purpose  Common ancestor for IPv4 and IPv6
+ * Common ancestor for IPv4 and IPv6
  */
 interface InetAddress {
 

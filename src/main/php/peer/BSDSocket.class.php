@@ -1,15 +1,12 @@
 <?php namespace peer;
 
-
-
 /**
- * BSDSocket implementation
+ * Provide an interface to the BSD sockets
  *
- * @test     xp://net.xp_framework.unittest.peer.sockets.BSDSocketTest
- * @see      php://sockets
- * @see      http://www.developerweb.net/sock-faq/ The UNIX Socket FAQ
- * @ext      sockets
- * @purpose  Provide an interface to the BSD sockets
+ * @test  xp://net.xp_framework.unittest.peer.sockets.BSDSocketTest
+ * @see   php://sockets
+ * @see   http://www.developerweb.net/sock-faq/ The UNIX Socket FAQ
+ * @ext   sockets
  */
 class BSDSocket extends Socket {
   public
@@ -35,9 +32,9 @@ class BSDSocket extends Socket {
   public function localEndpoint() {
     if (is_resource($this->_sock)) {
       if (false === socket_getsockname($this->_sock, $host, $port)) {
-        throw new \SocketException('Cannot get socket name on '.$this->_sock);
+        throw new SocketException('Cannot get socket name on '.$this->_sock);
       }
-      return new \SocketEndpoint($host, $port);
+      return new SocketEndpoint($host, $port);
     }
     return null;    // Not connected
   }
@@ -159,7 +156,7 @@ class BSDSocket extends Socket {
     
     // Create socket...
     if (!($this->_sock= socket_create($this->domain, $this->type, $this->protocol))) {
-      $e= new \ConnectException(sprintf(
+      $e= new ConnectException(sprintf(
         'Create of %s socket (type %s, protocol %s) failed: %d: %s',
         $domains[$this->domain],
         $types[$this->type],
@@ -208,7 +205,7 @@ class BSDSocket extends Socket {
 
     // Check return status
     if (false === $r) {
-      $e= new \ConnectException(sprintf(
+      $e= new ConnectException(sprintf(
         'Connect to %s:%d failed: %s',
         $this->host,
         $this->port,
@@ -262,7 +259,7 @@ class BSDSocket extends Socket {
       $ret= socket_set_nonblock($this->_sock);
     }
     if (false === $ret) {
-      $e= new \SocketException(sprintf(
+      $e= new SocketException(sprintf(
         'setBlocking (%s) failed: %s',
         ($blocking ? 'blocking' : 'nonblocking'),
         $this->getLastError()
@@ -293,7 +290,7 @@ class BSDSocket extends Socket {
     }
 
     if (false === ($n= socket_select($r, $w, $e, $tv_sec, $tv_usec))) {
-      $e= new \SocketException('Select failed: '.$this->getLastError());
+      $e= new SocketException('Select failed: '.$this->getLastError());
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -332,7 +329,7 @@ class BSDSocket extends Socket {
     $res= '';
     if (!$this->_eof && 0 === strlen($this->rq)) {
       if (!$this->_select(array($this->_sock), null, null, $this->_timeout)) {
-        $e= new \SocketTimeoutException('Read of '.$maxLen.' bytes failed', $this->_timeout);
+        $e= new SocketTimeoutException('Read of '.$maxLen.' bytes failed', $this->_timeout);
         \xp::gc(__FILE__);
         throw $e;
       }
@@ -343,7 +340,7 @@ class BSDSocket extends Socket {
           $this->_eof= true;
           return null;
         }
-        $e= new \SocketException('Read of '.$maxLen.' bytes failed: '.$this->getLastError());
+        $e= new SocketException('Read of '.$maxLen.' bytes failed: '.$this->getLastError());
         \xp::gc(__FILE__);
         throw $e;
       } else if ('' === $res) {
@@ -408,7 +405,7 @@ class BSDSocket extends Socket {
   public function write($str) {
     $bytesWritten= socket_write($this->_sock, $str, strlen($str));
     if (false === $bytesWritten || null === $bytesWritten) {
-      $e= new \SocketException('Write of '.$len.' bytes to socket failed: '.$this->getLastError());
+      $e= new SocketException('Write of '.$len.' bytes to socket failed: '.$this->getLastError());
       \xp::gc(__FILE__);
       throw $e;
     }

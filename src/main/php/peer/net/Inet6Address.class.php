@@ -1,12 +1,9 @@
 <?php namespace peer\net;
 
-
-
 /**
  * IPv6 address
  *
- * @test      xp://net.xp_framework.unittest.peer.net.Inet6AddressTest
- * @purpose   Represent an IPv6 address
+ * @test  p://net.xp_framework.unittest.peer.net.Inet6AddressTest
  */
 class Inet6Address extends \lang\Object implements InetAddress {
   protected $addr;
@@ -135,7 +132,7 @@ class Inet6Address extends \lang\Object implements InetAddress {
    * @return  bool
    * @throws  lang.FormatException in case net has invalid format
    */
-  public function inSubnet(\Network $net) {
+  public function inSubnet(Network $net) {
     $addr= $net->getAddress();
     $mask= $net->getNetmask();
     
@@ -172,7 +169,7 @@ class Inet6Address extends \lang\Object implements InetAddress {
       $lastByte= ord($addr{$lastNibblePos}) & (0xFF<<(8-$subnetSize%8));
       $addr{$lastNibblePos}=pack("i*", $lastByte);
     }
-    return new \Network(new Inet6Address($addr, true), $subnetSize);
+    return new Network(new Inet6Address($addr, true), $subnetSize);
   }
   /**
    * Equals method
@@ -201,5 +198,4 @@ class Inet6Address extends \lang\Object implements InetAddress {
   public function __toString() {
     return '['.$this->asString().']';
   }
-
 }
