@@ -508,7 +508,7 @@
     }
 
     raise('lang.ClassCastException', 'Cannot cast '.xp::typeOf($expression).' to '.$type);
-   }
+  }
 
   // {{{ proto bool is(string type, var object)
   //     Checks whether a given object is an instance of the type given
