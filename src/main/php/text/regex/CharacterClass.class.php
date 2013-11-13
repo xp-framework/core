@@ -48,7 +48,7 @@ class CharacterClass extends \lang\Object {
    *
    * @param   text.regex.Matcher
    */
-  protected function __construct(\Matcher $matcher) {
+  protected function __construct(Matcher $matcher) {
     $this->matcher= $matcher;
   }
   

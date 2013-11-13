@@ -1,13 +1,10 @@
 <?php namespace text\regex;
 
-
-
 /**
  * Represents a regular expression pattern
  *
- * @test     xp://net.xp_framework.unittest.text.PatternTest
- * @see      php://preg
- * @purpose  Regular Expression
+ * @test  xp://net.xp_framework.unittest.text.PatternTest
+ * @see   php://preg
  */
 class Pattern extends \lang\Object implements Matcher {
   const 
@@ -128,7 +125,7 @@ class Pattern extends \lang\Object implements Matcher {
       \xp::gc(__FILE__);
       throw $e;
     }
-    return new \MatchResult($n, $m);
+    return new MatchResult($n, $m);
   }
 
   /**

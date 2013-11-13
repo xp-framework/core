@@ -3,7 +3,6 @@
 use unittest\TestCase;
 use text\regex\CharacterClass;
 
-
 /**
  * TestCase
  *

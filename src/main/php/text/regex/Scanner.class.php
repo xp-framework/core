@@ -111,7 +111,7 @@ class Scanner extends \lang\Object implements Matcher {
       $o+= $l;
     }
     
-    if ('' === $matches[0]) return \MatchResult::$EMPTY;
-    return new \MatchResult(sizeof($matches)- 1, array($matches));
+    if ('' === $matches[0]) return MatchResult::$EMPTY;
+    return new MatchResult(sizeof($matches)- 1, array($matches));
   }
 }
