@@ -1,68 +1,63 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace io\streams;
+
+
+
+/**
+ * InputStream that inflates 
  *
- * $Id$
+ * @ext      zlib
+ * @test     xp://net.xp_framework.unittest.io.streams.InflatingInputStreamTest
+ * @purpose  InputStream implementation
  */
-
-  uses('io.streams.InputStream', 'io.streams.Streams');
-
+class InflatingInputStream extends \lang\Object implements InputStream {
+  protected $in = null;
+  
   /**
-   * InputStream that inflates 
+   * Constructor
    *
-   * @ext      zlib
-   * @test     xp://net.xp_framework.unittest.io.streams.InflatingInputStreamTest
-   * @purpose  InputStream implementation
+   * @param   io.streams.InputStream in
    */
-  class InflatingInputStream extends Object implements InputStream {
-    protected $in = NULL;
-    
-    /**
-     * Constructor
-     *
-     * @param   io.streams.InputStream in
-     */
-    public function __construct(InputStream $in) {
-      $this->in= Streams::readableFd($in);
-      if (!stream_filter_append($this->in, 'zlib.inflate', STREAM_FILTER_READ)) {
-        throw new IOException('Could not append stream filter');
-      }
-    }
-
-    /**
-     * Read a string
-     *
-     * @param   int limit default 8192
-     * @return  string
-     */
-    public function read($limit= 8192) {
-      return fread($this->in, $limit);
-    }
-
-    /**
-     * Returns the number of bytes that can be read from this stream 
-     * without blocking.
-     *
-     */
-    public function available() {
-      return feof($this->in) ? 0 : 1;
-    }
-
-    /**
-     * Close this buffer.
-     *
-     */
-    public function close() {
-      if (!$this->in) return;
-      fclose($this->in);
-      $this->in= NULL;
-    }
-    
-    /**
-     * Destructor. Ensures output stream is closed.
-     *
-     */
-    public function __destruct() {
-      $this->close();
+  public function __construct(InputStream $in) {
+    $this->in= Streams::readableFd($in);
+    if (!stream_filter_append($this->in, 'zlib.inflate', STREAM_FILTER_READ)) {
+      throw new \io\IOException('Could not append stream filter');
     }
   }
-?>
+
+  /**
+   * Read a string
+   *
+   * @param   int limit default 8192
+   * @return  string
+   */
+  public function read($limit= 8192) {
+    return fread($this->in, $limit);
+  }
+
+  /**
+   * Returns the number of bytes that can be read from this stream 
+   * without blocking.
+   *
+   */
+  public function available() {
+    return feof($this->in) ? 0 : 1;
+  }
+
+  /**
+   * Close this buffer.
+   *
+   */
+  public function close() {
+    if (!$this->in) return;
+    fclose($this->in);
+    $this->in= null;
+  }
+  
+  /**
+   * Destructor. Ensures output stream is closed.
+   *
+   */
+  public function __destruct() {
+    $this->close();
+  }
+}

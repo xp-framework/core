@@ -1,24 +1,19 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace util;
+
+/**
+ * Observer interface
  *
- * $Id$ 
+ * @see      xp://util.Observable
+ * @purpose  Interface
  */
+interface Observer {
 
   /**
-   * Observer interface
+   * Update method
    *
-   * @see      xp://util.Observable
-   * @purpose  Interface
+   * @param   util.Observable obs
+   * @param   var arg default NULL
    */
-  interface Observer {
-  
-    /**
-     * Update method
-     *
-     * @param   util.Observable obs
-     * @param   var arg default NULL
-     */
-    public function update($obs, $arg= NULL);
-  
-  }
-?>
+  public function update($obs, $arg= null);
+
+}

@@ -1,15 +1,10 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace lang;
+
+/**
+ * Chained Exception
  *
- * $Id$ 
+ * @deprecated Feature has been integrated into lang.Throwable
  */
+class ChainedException extends XPException {
 
-  /**
-   * Chained Exception
-   *
-   * @deprecated Feature has been integrated into lang.Throwable
-   */
-  class ChainedException extends XPException {
-
-  }
-?>
+}

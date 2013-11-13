@@ -7,11 +7,13 @@ use util\collections\HashTable;
  * TestCase for create() core functionality. It has the following two purposes:
  *
  * 1) Create generics
+ *
  * ```php
  * $v= create('new util.collections.Vector<lang.types.String>');
  * ```
  *
  * 2) Returning an object passed in, for use in fluent interfaces, e.g.
+ *
  * ```php
  * $c= create(new Criteria())->add('bz_id', 20000, EQUAL);
  * ````
@@ -28,8 +30,7 @@ class CreateTest extends \unittest\TestCase {
 
   #[@test]
   public function createWithShortNames() {
-    \lang\XPClass::forName('util.collections.HashTable');
-    $h= create('new HashTable<String, String>');
+    $h= create('new util.collections.HashTable<String, String>');
     $this->assertEquals(
       array(\lang\XPClass::forName('lang.types.String'), \lang\XPClass::forName('lang.types.String')), 
       $h->getClass()->genericArguments()

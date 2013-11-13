@@ -1,15 +1,8 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace lang;
 
-  /**
-   * Indicates an internal error has occured
-   *
-   * @purpose  Error
-   */
-  class RuntimeError extends Error {
-  
-  }
-?>
+/**
+ * Indicates an internal error has occured
+ */
+class RuntimeError extends Error {
+
+}

@@ -53,14 +53,14 @@
 
         // If path is a directory and the included file exists, load it
         if (is_dir($path) && file_exists($f= $path.DIRECTORY_SEPARATOR.strtr($class, '.', DIRECTORY_SEPARATOR).xp::CLASS_FILE_EXT)) {
-          $cl= 'FileSystemClassLoader';
+          $cl= 'lang.FileSystemClassLoader';
         } else if (is_file($path) && file_exists($f= 'xar://'.$path.'?'.strtr($class, '.', '/').xp::CLASS_FILE_EXT)) {
-          $cl= 'ArchiveClassLoader';
+          $cl= 'lang.archive.ArchiveClassLoader';
         } else {
           continue;
         }
 
-        // Load class        
+        // Load class
         $package= NULL;
         xp::$cl[$class]= $cl.'://'.$path;
         xp::$cll++;
@@ -77,13 +77,17 @@
         } else if (NULL !== $package) {
           $name= strtr($class, '.', '·');
           class_alias($name, strtr($class, '.', '\\'));
-        } else if (($ns= strtr($class, '.', '\\')) && (class_exists($ns, FALSE) || interface_exists($ns, FALSE))) {
-          $name= $ns;
-        } else if (($cl= substr($class, $p+ 1)) && (class_exists($cl, FALSE) || interface_exists($cl, FALSE))) {
-          $name= $cl;
-          class_alias($name, strtr($class, '.', '\\'));
+        } else {
+          $name= strtr($class, '.', '\\');
         }
+
         xp::$cn[$name]= $class;
+
+        if (0 === strncmp($class, 'lang.', 5)) {
+          class_alias($name, substr($class, $p + 1));
+          xp::$cn[substr($class, $p + 1)]= $class;
+        }
+
         method_exists($name, '__static') && xp::$cli[]= array($name, '__static');
         if (0 === xp::$cll) {
           $invocations= xp::$cli;
@@ -127,7 +131,7 @@
         return '<null>';
       } else if (is_int($arg) || is_float($arg)) {
         return (string)$arg;
-      } else if ($arg instanceof Generic && !isset($protect[(string)$arg->hashCode()])) {
+      } else if ($arg instanceof \lang\Generic && !isset($protect[(string)$arg->hashCode()])) {
         $protect[(string)$arg->hashCode()]= TRUE;
         $s= $arg->toString();
         unset($protect[(string)$arg->hashCode()]);
@@ -169,7 +173,7 @@
     // {{{ proto void extensions(string class, string scope)
     //     Registers extension methods for a certain scope
     static function extensions($class, $scope) {
-      foreach (create(new XPClass($class))->getMethods() as $method) {
+      foreach (create(new \lang\XPClass($class))->getMethods() as $method) {
         if (MODIFIER_STATIC & $method->getModifiers() && $method->numParameters() > 0) {
           $param= $method->getParameter(0);
           if ('self' === $param->getName()) {
@@ -224,7 +228,7 @@
         $l= xp::reflect(substr($type, 0, $p)).'··';
         for ($args= substr($type, $p+ 1, -1).',', $o= 0, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
           if (',' === $args{$i} && 0 === $brackets) {
-            $l.= xp::reflect(ltrim(substr($args, $o, $i- $o))).'¸';
+            $l.= strtr(xp::reflect(ltrim(substr($args, $o, $i- $o))).'¸', '\\', '¦');
             $o= $i+ 1;
           } else if ('<' === $args{$i}) {
             $brackets++;
@@ -255,7 +259,7 @@
       static $version= NULL;
 
       if (NULL === $version) {
-        $version= trim(XPClass::forName('lang.Object')->getClassLoader()->getResource('VERSION'));
+        $version= trim(\lang\XPClass::forName('lang.Object')->getClassLoader()->getResource('VERSION'));
       }
       return $version;
     }
@@ -270,35 +274,35 @@
     //     Constructor to avoid magic __call invokation
     public function __construct() {
       if (isset(xp::$null)) {
-        throw new IllegalAccessException('Cannot create new instances of xp::null()');
+        throw new \lang\IllegalAccessException('Cannot create new instances of xp::null()');
       }
     }
     
     // {{{ proto void __clone(void)
     //     Clone interceptor
     public function __clone() {
-      throw new NullPointerException('Object cloning intercepted.');
+      throw new \lang\NullPointerException('Object cloning intercepted.');
     }
     // }}}
     
     // {{{ proto var __call(string name, var[] args)
     //     Call proxy
     function __call($name, $args) {
-      throw new NullPointerException('Method.invokation('.$name.')');
+      throw new \lang\NullPointerException('Method.invokation('.$name.')');
     }
     // }}}
 
     // {{{ proto void __set(string name, var value)
     //     Set proxy
     function __set($name, $value) {
-      throw new NullPointerException('Property.write('.$name.')');
+      throw new \lang\NullPointerException('Property.write('.$name.')');
     }
     // }}}
 
     // {{{ proto var __get(string name)
     //     Set proxy
     function __get($name) {
-      throw new NullPointerException('Property.read('.$name.')');
+      throw new \lang\NullPointerException('Property.read('.$name.')');
     }
     // }}}
   }
@@ -433,7 +437,7 @@
     if (0 === error_reporting() || is_null($file)) return;
 
     if (E_RECOVERABLE_ERROR === $code) {
-      throw new IllegalArgumentException($msg.' @ '.$file.':'.$line);
+      throw new \lang\IllegalArgumentException($msg.' @ '.$file.':'.$line);
     } else {
       $bt= debug_backtrace();
       $class= (isset($bt[1]['class']) ? $bt[1]['class'] : NULL);
@@ -481,7 +485,7 @@
   //     throws an exception by a given class name
   function raise($classname) {
     try {
-      $class= XPClass::forName($classname);
+      $class= \lang\XPClass::forName($classname);
     } catch (ClassNotFoundException $e) {
       xp::error($e->getMessage());
     }
@@ -503,7 +507,7 @@
   function cast(Generic $expression= NULL, $type) {
     if (NULL === $expression) {
       return xp::null();
-    } else if (XPClass::forName($type)->isInstance($expression)) {
+    } else if (\lang\XPClass::forName($type)->isInstance($expression)) {
       return $expression;
     }
 
@@ -650,9 +654,9 @@
     }
 
     // Checks whether an interface or a class was given
-    $cl= DynamicClassLoader::instanceFor(__FUNCTION__);
+    $cl= \lang\DynamicClassLoader::instanceFor(__FUNCTION__);
     if (interface_exists($type)) {
-      $cl->setClassBytes($spec, $ns.'class '.$decl.' extends \Object implements '.$type.' '.$bytes);
+      $cl->setClassBytes($spec, $ns.'class '.$decl.' extends \lang\Object implements '.$type.' '.$bytes);
     } else {
       $cl->setClassBytes($spec, $ns.'class '.$decl.' extends '.$type.' '.$bytes);
     }
@@ -667,50 +671,30 @@
   // {{{ proto lang.Generic create(var spec)
   //     Creates a generic object
   function create($spec) {
-    if ($spec instanceof Generic) return $spec;
+    if ($spec instanceof \lang\Generic) return $spec;
 
     // Parse type specification: "new " TYPE "()"?
     // TYPE:= B "<" ARGS ">"
     // ARGS:= TYPE [ "," TYPE [ "," ... ]]
     $b= strpos($spec, '<');
     $base= substr($spec, 4, $b- 4);
-    $typeargs= Type::forNames(substr($spec, $b+ 1, strrpos($spec, '>')- $b- 1));
-    
-    // BC check: For classes with __generic field, instanciate without 
-    // invoking the constructor and pass type information. This is done 
-    // so that the constructur can already use generic types.
-    $class= XPClass::forName(strstr($base, '.') ? $base : xp::nameOf($base));
-    if ($class->hasField('__generic')) {
-      $__id= uniqid('', TRUE);
-      $name= $class->literal();
-      $instance= unserialize('O:'.strlen($name).':"'.$name.'":1:{s:4:"__id";s:'.strlen($__id).':"'.$__id.'";}');
-      foreach ($typeargs as $type) {
-        $instance->__generic[]= xp::reflect($type->getName());
-      }
-
-      // Call constructor if available
-      if (method_exists($instance, '__construct')) {
-        $a= func_get_args();
-        call_user_func_array(array($instance, '__construct'), array_slice($a, 1));
-      }
-
-      return $instance;
-    }
+    $typeargs= \lang\Type::forNames(substr($spec, $b+ 1, strrpos($spec, '>')- $b- 1));
     
     // Instantiate, passing the rest of any arguments passed to create()
     // BC: Wrap IllegalStateExceptions into IllegalArgumentExceptions
+    $class= \lang\XPClass::forName(strstr($base, '.') ? $base : xp::nameOf($base));
     try {
-      $reflect= new ReflectionClass(XPClass::createGenericType($class, $typeargs));
+      $reflect= new ReflectionClass(\lang\XPClass::createGenericType($class, $typeargs));
       if ($reflect->hasMethod('__construct')) {
         $a= func_get_args();
         return $reflect->newInstanceArgs(array_slice($a, 1));
       } else {
         return $reflect->newInstance();
       }
-    } catch (IllegalStateException $e) {
-      throw new IllegalArgumentException($e->getMessage());
+    } catch (\lang\IllegalStateException $e) {
+      throw new \lang\IllegalArgumentException($e->getMessage());
     } catch (ReflectionException $e) {
-      throw new IllegalAccessException($e->getMessage());
+      throw new \lang\IllegalAccessException($e->getMessage());
     }
   }
   // }}}
@@ -718,14 +702,14 @@
   // {{{ proto lang.Type typeof(mixed arg)
   //     Returns type
   function typeof($arg) {
-    if ($arg instanceof Generic) {
+    if ($arg instanceof \lang\Generic) {
       return $arg->getClass();
     } else if (NULL === $arg) {
-      return Type::$VOID;
+      return \lang\Type::$VOID;
     } else if (is_array($arg)) {
-      return 0 === key($arg) ? ArrayType::forName('var[]') : MapType::forName('[:var]');
+      return 0 === key($arg) ? \lang\ArrayType::forName('var[]') : \lang\MapType::forName('[:var]');
     } else {
-      return Type::forName(gettype($arg));
+      return \lang\Type::forName(gettype($arg));
     }
   }
   // }}}
@@ -733,10 +717,16 @@
   // {{{ proto bool __load(string class)
   //     SPL Autoload callback
   function __load($class) {
+    if ('Date' === $class) $class= 'util.Date';
+    if ('Error' === $class) $class= 'lang.Error';
     $name= strtr($class, '\\', '.');
     $cl= xp::$loader->findClass($name);
-    if ($cl instanceof null) return FALSE;
-
+    if ($cl instanceof null) {
+      #fputs(STDERR, "! $class -> $name\n");
+      #ob_end_clean();
+      #debug_print_backtrace();
+      return FALSE;
+    }
     $cl->loadClass0($name);
     return TRUE;
   }
@@ -792,16 +782,34 @@
     xp::$classpath= explode(PATH_SEPARATOR, $classpath);
     xp::$loader= new xp();
     uses(
+      'lang.Generic',
       'lang.Object',
+      'lang.Throwable',
       'lang.Error',
       'lang.XPException',
+      'lang.Type',
       'lang.XPClass',
       'lang.NullPointerException',
       'lang.IllegalAccessException',
       'lang.IllegalArgumentException',
       'lang.IllegalStateException',
       'lang.FormatException',
-      'lang.ClassLoader'
+      'lang.IClassLoader',
+      'lang.AbstractClassLoader',
+      'lang.FileSystemClassLoader',
+      'lang.archive.ArchiveClassLoader',
+      'lang.ClassLoader',
+      'lang.types.ArrayList',
+      'lang.types.Boolean',
+      'lang.types.Byte',
+      'lang.types.Bytes',
+      'lang.types.Character',
+      'lang.types.Double',
+      'lang.types.Float',
+      'lang.types.Integer',
+      'lang.types.Long',
+      'lang.types.Short',
+      'lang.types.String'
     );
   }
   // }}}

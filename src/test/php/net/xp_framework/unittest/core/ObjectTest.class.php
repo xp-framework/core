@@ -8,6 +8,16 @@
 class ObjectTest extends \unittest\TestCase {
 
   #[@test]
+  public function is_declared_with_qualified_name() {
+    $this->assertTrue(class_exists('lang\Object', false));
+  }
+
+  #[@test]
+  public function is_aliased_with_short_name() {
+    $this->assertTrue(class_exists('Object', false));
+  }
+
+  #[@test]
   public function noConstructor() {
     $this->assertFalse(\lang\XPClass::forName('lang.Object')->hasConstructor());
   }

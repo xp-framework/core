@@ -1,16 +1,11 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace security;
 
-  /**
-   * PolicyException
-   *
-   * @see      xp://security.PolicyFile
-   * @purpose  Indicate errors in policy
-   */
-  class PolicyException extends XPException {
-  
-  }
-?>
+/**
+ * PolicyException
+ *
+ * @see      xp://security.PolicyFile
+ * @purpose  Indicate errors in policy
+ */
+class PolicyException extends \lang\XPException {
+
+}

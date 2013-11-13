@@ -1,32 +1,27 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace io\streams;
+
+/**
+ * Defines a stream as being seekable
  *
- * $Id$ 
+ * @see      php://fseek
+ * @purpose  Interface
  */
+interface Seekable {
 
   /**
-   * Defines a stream as being seekable
+   * Seek to a given offset
    *
-   * @see      php://fseek
-   * @purpose  Interface
+   * @param   int offset
+   * @param   int whence default SEEK_SET (one of SEEK_[SET|CUR|END])
+   * @throws  io.IOException in case of error
    */
-  interface Seekable {
-  
-    /**
-     * Seek to a given offset
-     *
-     * @param   int offset
-     * @param   int whence default SEEK_SET (one of SEEK_[SET|CUR|END])
-     * @throws  io.IOException in case of error
-     */
-    public function seek($offset, $whence= SEEK_SET);
+  public function seek($offset, $whence= SEEK_SET);
 
-    /**
-     * Return current offset
-     *
-     * @return  int offset
-     */
-    public function tell();
-  
-  }
-?>
+  /**
+   * Return current offset
+   *
+   * @return  int offset
+   */
+  public function tell();
+
+}

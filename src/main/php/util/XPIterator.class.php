@@ -1,33 +1,28 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace util;
 
-  uses('util.NoSuchElementException');
+
+
+/**
+ * Iterates over elements of a collection.
+ *
+ * @purpose  Interface
+ */
+interface XPIterator {
 
   /**
-   * Iterates over elements of a collection.
+   * Returns true if the iteration has more elements. (In other words, 
+   * returns true if next would return an element rather than throwing 
+   * an exception.)
    *
-   * @purpose  Interface
+   * @return  bool
    */
-  interface XPIterator {
+  public function hasNext();
   
-    /**
-     * Returns true if the iteration has more elements. (In other words, 
-     * returns true if next would return an element rather than throwing 
-     * an exception.)
-     *
-     * @return  bool
-     */
-    public function hasNext();
-    
-    /**
-     * Returns the next element in the iteration.
-     *
-     * @return  var
-     * @throws  util.NoSuchElementException when there are no more elements
-     */
-    public function next();
-  }
-?>
+  /**
+   * Returns the next element in the iteration.
+   *
+   * @return  var
+   * @throws  util.NoSuchElementException when there are no more elements
+   */
+  public function next();
+}

@@ -1,50 +1,45 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace text\format;
+
+
+
+/**
+ * Printf formatter
  *
- * $Id$
+ * @purpose  Provide a Format wrapper for numbers
+ * @see      php://number_format
+ * @see      php://localeconv
+ * @see      xp://text.format.IFormat
  */
+class NumberFormat extends IFormat {
 
-  uses('text.format.IFormat');
-  
   /**
-   * Printf formatter
+   * Get an instance
    *
-   * @purpose  Provide a Format wrapper for numbers
-   * @see      php://number_format
-   * @see      php://localeconv
-   * @see      xp://text.format.IFormat
+   * @return  text.format.NumberFormat
    */
-  class NumberFormat extends IFormat {
+  public function getInstance() {
+    return parent::getInstance('NumberFormat');
+  }  
 
-    /**
-     * Get an instance
-     *
-     * @return  text.format.NumberFormat
-     */
-    public function getInstance() {
-      return parent::getInstance('NumberFormat');
-    }  
-  
-    /**
-     * Apply format to argument
-     *
-     * @param   var fmt
-     * @param   var argument
-     * @return  string
-     * @throws  lang.FormatException
-     */
-    public function apply($fmt, $argument) {
-      if (!is_numeric($argument)) {
-        throw new FormatException('Argument '.$argument.' of type "'.gettype($argument).'" is not a number');
-      }
-      
-      list($decimals, $dec_point, $thousands_sep)= explode('#', $fmt);
-      return number_format(
-        floatval($argument), 
-        $decimals, 
-        $dec_point,
-        $thousands_sep
-      );
+  /**
+   * Apply format to argument
+   *
+   * @param   var fmt
+   * @param   var argument
+   * @return  string
+   * @throws  lang.FormatException
+   */
+  public function apply($fmt, $argument) {
+    if (!is_numeric($argument)) {
+      throw new \lang\FormatException('Argument '.$argument.' of type "'.gettype($argument).'" is not a number');
     }
+    
+    list($decimals, $dec_point, $thousands_sep)= explode('#', $fmt);
+    return number_format(
+      floatval($argument), 
+      $decimals, 
+      $dec_point,
+      $thousands_sep
+    );
   }
-?>
+}

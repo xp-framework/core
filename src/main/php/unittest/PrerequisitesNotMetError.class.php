@@ -1,44 +1,39 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace unittest;
 
-  define('PREREQUISITE_LIBRARYMISSING', 'library.missing');
-  define('PREREQUISITE_INITFAILED',     'initialization.failed');
+define('PREREQUISITE_LIBRARYMISSING', 'library.missing');
+define('PREREQUISITE_INITFAILED',     'initialization.failed');
+
+/**
+ * Indicates prerequisites have not been met
+ *
+ * @purpose  Exception
+ */
+class PrerequisitesNotMetError extends \lang\XPException {
+  public $prerequisites= array();
+    
+  /**
+   * Constructor
+   *
+   * @param   string message
+   * @param   lang.Throwable cause 
+   * @param   array prerequisites default array()
+   */
+  public function __construct($message, $cause= null, $prerequisites= array()) {
+    parent::__construct($message, $cause);
+    $this->prerequisites= (array)$prerequisites;
+  }
 
   /**
-   * Indicates prerequisites have not been met
+   * Return compound message of this exception.
    *
-   * @purpose  Exception
+   * @return  string
    */
-  class PrerequisitesNotMetError extends XPException {
-    public $prerequisites= array();
-      
-    /**
-     * Constructor
-     *
-     * @param   string message
-     * @param   lang.Throwable cause 
-     * @param   array prerequisites default array()
-     */
-    public function __construct($message, $cause= NULL, $prerequisites= array()) {
-      parent::__construct($message, $cause);
-      $this->prerequisites= (array)$prerequisites;
-    }
-
-    /**
-     * Return compound message of this exception.
-     *
-     * @return  string
-     */
-    public function compoundMessage() {
-      return sprintf(
-        '%s (%s) { prerequisites: [%s] }',
-        $this->getClassName(),
-        $this->message,
-        implode(', ', array_map(array('xp', 'stringOf'), $this->prerequisites))
-      );
-    }
+  public function compoundMessage() {
+    return sprintf(
+      '%s (%s) { prerequisites: [%s] }',
+      $this->getClassName(),
+      $this->message,
+      implode(', ', array_map(array('xp', 'stringOf'), $this->prerequisites))
+    );
   }
-?>
+}

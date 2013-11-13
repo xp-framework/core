@@ -1,18 +1,13 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace unittest;
+
+
+
+/**
+ * Indicates a test failed
  *
- * $Id$ 
+ * @see      xp://unittest.TestAssertionFailed
+ * @see      xp://unittest.TestError
  */
-
-  uses('unittest.TestOutcome');
-
-  /**
-   * Indicates a test failed
-   *
-   * @see      xp://unittest.TestAssertionFailed
-   * @see      xp://unittest.TestError
-   */
-  interface TestFailure extends TestOutcome {
-    
-  }
-?>
+interface TestFailure extends TestOutcome {
+  
+}

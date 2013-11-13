@@ -1,16 +1,11 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace io;
+
+
+
+/**
+ * Indicates the file could not be found
  *
- * $Id$ 
+ * @see      xp://io.IOException
  */
-
-  uses('io.IOException');
-
-  /**
-   * Indicates the file could not be found
-   *
-   * @see      xp://io.IOException
-   */
-  class FileNotFoundException extends IOException {
-  }
-?>
+class FileNotFoundException extends IOException {
+}

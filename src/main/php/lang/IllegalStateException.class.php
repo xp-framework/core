@@ -1,15 +1,8 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$
- */
+<?php namespace lang;
  
-  /**
-   * Encapsulates IllegalStateException
-   *
-   * @see Exception
-   */
-  class IllegalStateException extends XPException {
-  
-  }
-?>
+/**
+ * Encapsulates IllegalStateException
+ */
+class IllegalStateException extends XPException {
+
+}

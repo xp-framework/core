@@ -1,23 +1,18 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace util;
+
+/**
+ * Visitor is an interface for classes implementing the visitor pattern.
  *
- * $Id$
+ * @see       xp://util.Component
+ * @purpose   Interface
  */
+interface Visitor {
 
   /**
-   * Visitor is an interface for classes implementing the visitor pattern.
+   * Visits the given Component. Work on the visited objects
+   * is up to implementation :)
    *
-   * @see       xp://util.Component
-   * @purpose   Interface
+   * @param   util.Component Component
    */
-  interface Visitor {
-
-    /**
-     * Visits the given Component. Work on the visited objects
-     * is up to implementation :)
-     *
-     * @param   util.Component Component
-     */
-    public function visit($Component);
-  }
-?>
+  public function visit($Component);
+}

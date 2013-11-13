@@ -1,21 +1,16 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace unittest\mock\arguments;
+
+/**
+ * Interface for argument matchers
  *
- * $Id$ 
  */
+interface IArgumentMatcher {
 
   /**
-   * Interface for argument matchers
-   *
+   * Checks whether the provided parameter does match a certain criteria.
+   * 
+   * @param   var value
+   * @return  bool
    */
-  interface IArgumentMatcher {
-
-    /**
-     * Checks whether the provided parameter does match a certain criteria.
-     * 
-     * @param   var value
-     * @return  bool
-     */
-    public function matches($value);
-  }
-?>
+  public function matches($value);
+}

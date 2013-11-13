@@ -1,28 +1,27 @@
-<?php
-/* This file is part of the XP framework's experiments
+<?php namespace io\streams;/* This file is part of the XP framework's experiments
  *
  * $Id$
  */
 
-  uses('lang.Closeable');
+use lang\Closeable;
+
+
+/**
+ * An OuputStream can be written to
+ *
+ */
+interface OutputStream extends Closeable {
 
   /**
-   * An OuputStream can be written to
+   * Write a string
+   *
+   * @param   var arg
+   */
+  public function write($arg);
+
+  /**
+   * Flush this buffer
    *
    */
-  interface OutputStream extends Closeable {
-
-    /**
-     * Write a string
-     *
-     * @param   var arg
-     */
-    public function write($arg);
-
-    /**
-     * Flush this buffer
-     *
-     */
-    public function flush();
-  }
-?>
+  public function flush();
+}

@@ -1,30 +1,29 @@
-<?php
-/* This file is part of the XP framework's experiments
+<?php namespace io\streams;/* This file is part of the XP framework's experiments
  *
  * $Id$
  */
 
-  uses('lang.Closeable');
+use lang\Closeable;
+
+
+/**
+ * An InputStream can be read from
+ *
+ */
+interface InputStream extends Closeable {
 
   /**
-   * An InputStream can be read from
+   * Read a string
+   *
+   * @param   int limit default 8192
+   * @return  string
+   */
+  public function read($limit= 8192);
+
+  /**
+   * Returns the number of bytes that can be read from this stream 
+   * without blocking.
    *
    */
-  interface InputStream extends Closeable {
-
-    /**
-     * Read a string
-     *
-     * @param   int limit default 8192
-     * @return  string
-     */
-    public function read($limit= 8192);
-
-    /**
-     * Returns the number of bytes that can be read from this stream 
-     * without blocking.
-     *
-     */
-    public function available();
-  }
-?>
+  public function available();
+}

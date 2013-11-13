@@ -5,6 +5,10 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Classes are now only referenceable by their namespaced names except
+  for those in the `lang` package (and subpackages thereof) - (@thekid)
+* Removed support for `__generic` style generics which have been deprecated
+  since the implementation of RFC #193 - (@thekid)
 * Removed deprecated `xp::registry()` function, which has been superseded
   by the static `xp::$registry` member. Continue considering this a core
   internal API, though! (@thekid)
@@ -16,6 +20,8 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented RFC #136: PHP namespaces adoption. All classes in the core
+  are now in PHP 5.3 namespaces - (@thekid)
 * Implemented RFC #279: Newinstance with closures in xp-framework/core#2
   (@thekid)
 * Implemented RFC #186: Drop SAPI feature alltogether; after it was 

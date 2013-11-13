@@ -22,6 +22,6 @@ class NSDefinitionReflectionTest extends AbstractDefinitionReflectionTest {
    * @return  var
    */
   protected function fixtureInstance() {
-    return create('new net.xp_framework.unittest.core.generics.NSLookup<String, TestCase>()');
+    return create('new net.xp_framework.unittest.core.generics.NSLookup<String, unittest.TestCase>()');
   }
 }

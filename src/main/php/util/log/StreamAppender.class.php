@@ -1,37 +1,32 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace util\log;
+
+
+
+/**
+ * StreamAppender which appends data to a stream
  *
- * $Id$
- */
-
-  uses('util.log.Appender');
-
+ * @see      xp://util.log.Appender
+ * @test     xp://net.xp_framework.unittest.logging.StreamAppenderTest
+ * @purpose  Appender
+ */  
+class StreamAppender extends Appender {
+  public $stream= null;
+  
   /**
-   * StreamAppender which appends data to a stream
+   * Constructor
    *
-   * @see      xp://util.log.Appender
-   * @test     xp://net.xp_framework.unittest.logging.StreamAppenderTest
-   * @purpose  Appender
-   */  
-  class StreamAppender extends Appender {
-    public $stream= NULL;
-    
-    /**
-     * Constructor
-     *
-     * @param   io.streams.OutputStream stream
-     */
-    public function __construct(OutputStream $stream) {
-      $this->stream= $stream;
-    }
-    
-    /**
-     * Append data
-     *
-     * @param   util.log.LoggingEvent event
-     */ 
-    public function append(LoggingEvent $event) {
-      $this->stream->write($this->layout->format($event));
-    }
+   * @param   io.streams.OutputStream stream
+   */
+  public function __construct(\io\streams\OutputStream $stream) {
+    $this->stream= $stream;
   }
-?>
+  
+  /**
+   * Append data
+   *
+   * @param   util.log.LoggingEvent event
+   */ 
+  public function append(\LoggingEvent $event) {
+    $this->stream->write($this->layout->format($event));
+  }
+}

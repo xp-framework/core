@@ -1,14 +1,9 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace unittest\mock;
+
+/**
+ * Marker interface for mock proxy objects
  *
- * $Id$ 
  */
+interface IMockProxy {
 
-  /**
-   * Marker interface for mock proxy objects
-   *
-   */
-  interface IMockProxy {
-
-  }
-?>
+}

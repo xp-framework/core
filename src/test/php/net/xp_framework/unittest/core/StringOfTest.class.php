@@ -182,7 +182,7 @@ class StringOfTest extends \unittest\TestCase {
   public function toStringRecursion() {
     $test= newinstance('lang.Object', array(), '{
       public function toString() {
-        return xp::stringOf($this);
+        return \xp::stringOf($this);
       }
     }');
     $this->assertEquals(

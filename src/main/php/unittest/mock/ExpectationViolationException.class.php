@@ -1,15 +1,10 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace unittest\mock;
+
+
+/**
+ * Exception indicating that expectations have not been fulfilled.
  *
- * $Id$ 
  */
+class ExpectationViolationException extends \lang\XPException {
 
-
-  /**
-   * Exception indicating that expectations have not been fulfilled.
-   *
-   */
-  class ExpectationViolationException extends XPException {
-
-  }
-?>
+}

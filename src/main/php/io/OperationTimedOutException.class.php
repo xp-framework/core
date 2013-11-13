@@ -1,18 +1,13 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace io;
+
+
+
+/**
+ * Indicates an operation timed out
  *
- * $Id$
+ * @see      xp://io.IOException
+ * @purpose  Exception
  */
+class OperationTimedOutException extends IOException {
 
-  uses('io.IOException');
-
-  /**
-   * Indicates an operation timed out
-   *
-   * @see      xp://io.IOException
-   * @purpose  Exception
-   */
-  class OperationTimedOutException extends IOException {
-  
-  }
-?>
+}

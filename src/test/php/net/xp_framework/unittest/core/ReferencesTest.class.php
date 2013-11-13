@@ -32,7 +32,7 @@ class ReferencesTest extends \unittest\TestCase {
     }');
     ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousNewInstanceFactory', 'lang.Object', array(), '{
       static function factory() {
-        return XPClass::forName("net.xp_framework.unittest.core.AnonymousList")->newInstance();
+        return \lang\XPClass::forName("net.xp_framework.unittest.core.AnonymousList")->newInstance();
       }
     }');
   }

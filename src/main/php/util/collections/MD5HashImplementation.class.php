@@ -1,28 +1,21 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$
- */
+<?php namespace util\collections;
 
-  uses('util.collections.HashImplementation');
+/**
+ * MD5
+ *
+ * @see   php://md5
+ * @see   xp://util.collections.HashProvider
+ * @test  xp://net.xp_framework.unittest.util.collections.MD5HashImplementationTest:
+ */
+class MD5HashImplementation extends \lang\Object implements HashImplementation {
 
   /**
-   * MD5
+   * Retrieve hash code for a given string
    *
-   * @see   php://md5
-   * @see   xp://util.collections.HashProvider
-   * @test  xp://net.xp_framework.unittest.util.collections.MD5HashImplementationTest:
+   * @param   string str
+   * @return  int hashcode
    */
-  class MD5HashImplementation extends Object implements HashImplementation {
-
-    /**
-     * Retrieve hash code for a given string
-     *
-     * @param   string str
-     * @return  int hashcode
-     */
-    public function hashOf($str) {
-      return '0x'.md5($str);
-    }
-  } 
-?>
+  public function hashOf($str) {
+    return '0x'.md5($str);
+  }
+} 

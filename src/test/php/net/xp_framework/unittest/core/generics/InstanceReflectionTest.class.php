@@ -15,7 +15,7 @@ class InstanceReflectionTest extends \unittest\TestCase {
    *
    */  
   public function setUp() {
-    $this->fixture= create('new net.xp_framework.unittest.core.generics.Lookup<String, TestCase>()');
+    $this->fixture= create('new net.xp_framework.unittest.core.generics.Lookup<String, unittest.TestCase>()');
   }
 
   #[@test]
@@ -46,7 +46,7 @@ class InstanceReflectionTest extends \unittest\TestCase {
   public function reflectedNameOfClass() {
     $class= $this->fixture->getClass();
     $this->assertEquals(
-      'net\xp_framework\unittest\core\generics\Lookup··String¸TestCase', 
+      'net\xp_framework\unittest\core\generics\Lookup··lang¦types¦String¸unittest¦TestCase', 
       \xp::reflect($class->getName())
     );
   }

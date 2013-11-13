@@ -1,70 +1,65 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace util\log;
+
+/**
+ * Log levels
  *
- * $Id$ 
+ * @see      xp://util.log.Logger
+ * @test     xp://net.xp_framework.unittest.logging.LogLevelTest
+ * @purpose  Constants
  */
+abstract class LogLevel extends \lang\Object {
+  const 
+    INFO  = 0x0001,
+    WARN  = 0x0002,
+    ERROR = 0x0004,
+    DEBUG = 0x0008;
+  
+  const
+    NONE  = 0x0000,
+    ALL   = 0x000F; // (INFO | WARN | ERROR | DEBUG)
+  
+  /**
+   * Retrieve a loglevel by its name
+   *
+   * @param   string name
+   * @return  int
+   * @throws  lang.IllegalArgumentException
+   */
+  public static function named($name) {
+    static $map= array(
+      'INFO'  => self::INFO,
+      'WARN'  => self::WARN,
+      'ERROR' => self::ERROR,
+      'DEBUG' => self::DEBUG,
+      'ALL'   => self::ALL,
+      'NONE'  => self::NONE,
+    );
+  
+    $key= strtoupper($name);
+    if (!isset($map[$key])) {
+      throw new \lang\IllegalArgumentException('No such loglevel named "'.$name.'"');
+    }
+    return $map[$key];
+  }
 
   /**
-   * Log levels
+   * Retrieve a loglevel name for a given level
    *
-   * @see      xp://util.log.Logger
-   * @test     xp://net.xp_framework.unittest.logging.LogLevelTest
-   * @purpose  Constants
+   * @param   int level
+   * @return  string
+   * @throws  lang.IllegalArgumentException
    */
-  abstract class LogLevel extends Object {
-    const 
-      INFO  = 0x0001,
-      WARN  = 0x0002,
-      ERROR = 0x0004,
-      DEBUG = 0x0008;
-    
-    const
-      NONE  = 0x0000,
-      ALL   = 0x000F; // (INFO | WARN | ERROR | DEBUG)
-    
-    /**
-     * Retrieve a loglevel by its name
-     *
-     * @param   string name
-     * @return  int
-     * @throws  lang.IllegalArgumentException
-     */
-    public static function named($name) {
-      static $map= array(
-        'INFO'  => self::INFO,
-        'WARN'  => self::WARN,
-        'ERROR' => self::ERROR,
-        'DEBUG' => self::DEBUG,
-        'ALL'   => self::ALL,
-        'NONE'  => self::NONE,
-      );
-    
-      $key= strtoupper($name);
-      if (!isset($map[$key])) {
-        throw new IllegalArgumentException('No such loglevel named "'.$name.'"');
-      }
-      return $map[$key];
+  public static function nameOf($level) {
+    static $map= array(
+      self::INFO  => 'INFO',
+      self::WARN  => 'WARN',
+      self::ERROR => 'ERROR',
+      self::DEBUG => 'DEBUG',
+    );
+  
+    if (!isset($map[$level])) {
+      throw new \lang\IllegalArgumentException('No such loglevel '.$level);
     }
-
-    /**
-     * Retrieve a loglevel name for a given level
-     *
-     * @param   int level
-     * @return  string
-     * @throws  lang.IllegalArgumentException
-     */
-    public static function nameOf($level) {
-      static $map= array(
-        self::INFO  => 'INFO',
-        self::WARN  => 'WARN',
-        self::ERROR => 'ERROR',
-        self::DEBUG => 'DEBUG',
-      );
-    
-      if (!isset($map[$level])) {
-        throw new IllegalArgumentException('No such loglevel '.$level);
-      }
-      return $map[$level];
-    }
+    return $map[$level];
   }
-?>
+}

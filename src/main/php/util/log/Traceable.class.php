@@ -1,23 +1,18 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace util\log;
+
+/**
+ * Classes implementing the traceable interface define they can
+ * be debugged by passing an util.log.LogCategory object to their
+ * setTrace() method.
  *
- * $Id$ 
+ * @purpose  Interface
  */
+interface Traceable {
 
   /**
-   * Classes implementing the traceable interface define they can
-   * be debugged by passing an util.log.LogCategory object to their
-   * setTrace() method.
+   * Set a trace for debugging
    *
-   * @purpose  Interface
+   * @param   util.log.LogCategory cat
    */
-  interface Traceable {
-  
-    /**
-     * Set a trace for debugging
-     *
-     * @param   util.log.LogCategory cat
-     */
-    public function setTrace($cat);
-  }
-?>
+  public function setTrace($cat);
+}

@@ -177,41 +177,48 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function aStringVectorIsIsItself() {
-    $this->assertTrue(is('Vector<string>', create('new Vector<string>')));
-  }
-
-  #[@test]
-  public function aStringVectorIsIsItselfQualified() {
-    $this->assertTrue(is('util.collections.Vector<string>', create('new Vector<string>')));
+    $this->assertTrue(is('util.collections.Vector<string>', create('new util.collections.Vector<string>')));
   }
 
   #[@test]
   public function aVectorIsNotAStringVector() {
-    $this->assertFalse(is('Vector<string>', new Vector()));
+    $this->assertFalse(is('util.collections.Vector<string>', new Vector()));
   }
 
   #[@test]
   public function aStringVectorIsNotAVector() {
-    $this->assertFalse(is('Vector', create('new Vector<string>')));
+    $this->assertFalse(is(
+      'util.collections.Vector',
+      create('new util.collections.Vector<string>')
+    ));
   }
 
   #[@test]
   public function anIntVectorIsNotAStringVector() {
-    $this->assertFalse(is('Vector<string>', create('new Vector<int>')));
+    $this->assertFalse(is(
+      'util.collections.Vector<string>',
+      create('new util.collections.Vector<int>')
+    ));
   }
 
   #[@test]
   public function aVectorOfIntVectorsIsItself() {
-    $this->assertTrue(is('Vector<Vector<int>>', create('new Vector<Vector<int>>')));
+    $this->assertTrue(is(
+      'util.collections.Vector<util.collections.Vector<int>>',
+      create('new util.collections.Vector<util.collections.Vector<int>>')
+    ));
   }
 
   #[@test]
   public function aVectorOfIntVectorsIsNotAVectorOfStringVectors() {
-    $this->assertFalse(is('Vector<Vector<string>>', create('new Vector<Vector<int>>')));
+    $this->assertFalse(is(
+      'util.collections.Vector<Vector<string>>',
+      create('new util.collections.Vector<util.collections.Vector<int>>')
+    ));
   }
  
   #[@test]
   public function anIntVectorIsNotAnUndefinedGeneric() {
-    $this->assertFalse(is('Undefined_Class<string>', create('new Vector<int>')));
+    $this->assertFalse(is('Undefined_Class<string>', create('new util.collections.Vector<int>')));
   }
 }

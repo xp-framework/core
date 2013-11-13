@@ -1,16 +1,9 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$
- */
+<?php namespace lang;
  
-  /**
-   * Thrown to indicate that a method has been passed an illegal or 
-   * inappropriate argument.
-   *
-   * @see      xp://lang.XPException
-   * @purpose  Exception
-   */
-  class IllegalArgumentException extends XPException {
-  }
-?>
+/**
+ * Thrown to indicate that a method has been passed an illegal or 
+ * inappropriate argument.
+ */
+class IllegalArgumentException extends XPException {
+
+}

@@ -1,25 +1,20 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace util\log;
+
+
+
+
+
+/**
+ * Takes care of formatting log entries
  *
- * $Id$ 
  */
-
-  $package= 'util.log';
-
-  uses('util.log.LoggingEvent');
-
+abstract class Layout extends \lang\Object {
+  
   /**
-   * Takes care of formatting log entries
+   * Formats a logging event according to this layout
    *
+   * @param   util.log.LoggingEvent event
+   * @return  string
    */
-  abstract class util·log·Layout extends Object {
-    
-    /**
-     * Formats a logging event according to this layout
-     *
-     * @param   util.log.LoggingEvent event
-     * @return  string
-     */
-    public abstract function format(LoggingEvent $event);
-  }
-?>
+  public abstract function format(LoggingEvent $event);
+}

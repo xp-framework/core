@@ -21,13 +21,14 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
   /**
    * Helper
    *
-   * @param   string input
+   * @param   string $input
+   * @param   [:var] $imports
    * @return  [:var]
    */
-  protected function parse($input) {
-    return \lang\XPClass::parseAnnotations($input, $this->getClassName(), array(
+  protected function parse($input, $imports= array()) {
+    return \lang\XPClass::parseAnnotations($input, $this->getClassName(), array_merge($imports, array(
       'Namespaced' => 'net.xp_framework.unittest.annotations.fixture.Namespaced'
-    ));
+    )));
   }
 
   #[@test]
@@ -386,7 +387,7 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
   public function class_instance_value() {
     $this->assertEquals(
       array(0 => array('value' => new \lang\types\String('hello')), 1 => array()),
-      $this->parse('#[@value(new String("hello"))]')
+      $this->parse('#[@value(new String("hello"))]', array('String' => 'lang.types.String'))
     );
   }
 

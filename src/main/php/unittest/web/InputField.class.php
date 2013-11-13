@@ -1,38 +1,33 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace unittest\web;
 
-  $package= 'unittest.web';
-  
-  uses('unittest.web.Field');
+
+
+
+
+/**
+ * Represents a HTML input field
+ *
+ * @see      http://www.w3schools.com/TAGS/tag_input.asp
+ * @see      xp://unittest.web.Field
+ * @purpose  Value object
+ */
+class InputField extends Field {
 
   /**
-   * Represents a HTML input field
+   * Get this field's value
    *
-   * @see      http://www.w3schools.com/TAGS/tag_input.asp
-   * @see      xp://unittest.web.Field
-   * @purpose  Value object
+   * @return  string
    */
-  class unittest·web·InputField extends unittest·web·Field {
-
-    /**
-     * Get this field's value
-     *
-     * @return  string
-     */
-    public function getValue() {
-      return $this->node->hasAttribute('value') ? iconv('utf-8', xp::ENCODING, $this->node->getAttribute('value')) : NULL;
-    }
-
-    /**
-     * Set this field's value
-     *
-     * @param   string value
-     */
-    public function setValue($value) {
-      $this->node->setAttribute('value', iconv(xp::ENCODING, 'utf-8', $value));
-    }
+  public function getValue() {
+    return $this->node->hasAttribute('value') ? iconv('utf-8', \xp::ENCODING, $this->node->getAttribute('value')) : null;
   }
-?>
+
+  /**
+   * Set this field's value
+   *
+   * @param   string value
+   */
+  public function setValue($value) {
+    $this->node->setAttribute('value', iconv(\xp::ENCODING, 'utf-8', $value));
+  }
+}

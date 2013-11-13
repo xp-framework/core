@@ -1,36 +1,31 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$
- */
+<?php namespace io\collections\iterate;
 
-  uses('io.collections.iterate.IterationFilter');
+
+
+/**
+ * Filter that accepts only IOCollections (e.g. directories)
+ *
+ * @purpose  Iteration Filter
+ */
+class CollectionFilter extends \lang\Object implements IterationFilter {
+    
+  /**
+   * Accepts an element
+   *
+   * @param   io.collections.IOElement element
+   * @return  bool
+   */
+  public function accept($element) {
+    return is('io.collections.IOCollection', $element);
+  }
 
   /**
-   * Filter that accepts only IOCollections (e.g. directories)
+   * Creates a string representation of this iterator
    *
-   * @purpose  Iteration Filter
+   * @return  string
    */
-  class CollectionFilter extends Object implements IterationFilter {
-      
-    /**
-     * Accepts an element
-     *
-     * @param   io.collections.IOElement element
-     * @return  bool
-     */
-    public function accept($element) {
-      return is('io.collections.IOCollection', $element);
-    }
+  public function toString() {
+    return $this->getClassName();
+  }
 
-    /**
-     * Creates a string representation of this iterator
-     *
-     * @return  string
-     */
-    public function toString() {
-      return $this->getClassName();
-    }
-  
-  } 
-?>
+} 

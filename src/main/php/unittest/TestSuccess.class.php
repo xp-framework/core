@@ -1,17 +1,12 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace unittest;
+
+
+
+/**
+ * Indicates a test was successful
  *
- * $Id$ 
+ * @see      xp://unittest.TestExpectationMet
  */
+interface TestSuccess extends TestOutcome {
 
-  uses('unittest.TestOutcome');
-
-  /**
-   * Indicates a test was successful
-   *
-   * @see      xp://unittest.TestExpectationMet
-   */
-  interface TestSuccess extends TestOutcome {
-
-  }
-?>
+}

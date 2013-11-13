@@ -1,36 +1,31 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace io\streams;
+
+/**
+ * Reads data from an InputStream
  *
- * $Id$
+ * @purpose  Interface
  */
+interface InputStreamReader {
 
   /**
-   * Reads data from an InputStream
+   * Constructor
    *
-   * @purpose  Interface
+   * @param   io.streams.InputStream in
    */
-  interface InputStreamReader {
+  public function __construct($in);
 
-    /**
-     * Constructor
-     *
-     * @param   io.streams.InputStream in
-     */
-    public function __construct($in);
-  
-    /**
-     * Read a number of bytes
-     *
-     * @param   int size default 8192
-     * @return  string
-     */
-    public function read($size= 8192);
+  /**
+   * Read a number of bytes
+   *
+   * @param   int size default 8192
+   * @return  string
+   */
+  public function read($size= 8192);
 
-    /**
-     * Read an entire line
-     *
-     * @return  string
-     */
-    public function readLine();
-  }
-?>
+  /**
+   * Read an entire line
+   *
+   * @return  string
+   */
+  public function readLine();
+}

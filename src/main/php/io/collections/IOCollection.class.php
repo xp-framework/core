@@ -1,43 +1,38 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace io\collections;
 
-  uses('io.collections.IOElement');
+
+
+/**
+ * IO Collection interface
+ *
+ * @purpose  Interface
+ */
+interface IOCollection extends IOElement {
 
   /**
-   * IO Collection interface
+   * Open this collection
    *
-   * @purpose  Interface
    */
-  interface IOCollection extends IOElement {
+  public function open();
 
-    /**
-     * Open this collection
-     *
-     */
-    public function open();
+  /**
+   * Rewind this collection (reset internal pointer to beginning of list)
+   *
+   */
+  public function rewind();
 
-    /**
-     * Rewind this collection (reset internal pointer to beginning of list)
-     *
-     */
-    public function rewind();
-  
-    /**
-     * Retrieve next element in collection. Return NULL if no more entries
-     * are available
-     *
-     * @return  io.collections.IOElement
-     */
-    public function next();
+  /**
+   * Retrieve next element in collection. Return NULL if no more entries
+   * are available
+   *
+   * @return  io.collections.IOElement
+   */
+  public function next();
 
-    /**
-     * Close this collection
-     *
-     */
-    public function close();
+  /**
+   * Close this collection
+   *
+   */
+  public function close();
 
-  }
-?>
+}

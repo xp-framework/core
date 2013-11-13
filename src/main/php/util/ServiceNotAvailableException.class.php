@@ -1,17 +1,12 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace util;
+
+
+
+/**
+ * Indicates a service is not available
  *
- * $Id$ 
+ * @see   xp://util.ServiceException
  */
-
-  uses('util.ServiceException');
-
-  /**
-   * Indicates a service is not available
-   *
-   * @see   xp://util.ServiceException
-   */
-  class ServiceNotAvailableException extends ServiceException {
-    
-  }
-?>
+class ServiceNotAvailableException extends ServiceException {
+  
+}

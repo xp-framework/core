@@ -1,24 +1,19 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace io\collections\iterate;
+
+/**
+ * Iteration filter
  *
- * $Id$ 
+ * @see      xp://io.collections.iterate.FilteredIOCollectionIterator
+ * @purpose  Interface
  */
+interface IterationFilter {
 
   /**
-   * Iteration filter
+   * Accepts an element
    *
-   * @see      xp://io.collections.iterate.FilteredIOCollectionIterator
-   * @purpose  Interface
+   * @param   io.collections.IOElement element
+   * @return  bool
    */
-  interface IterationFilter {
-  
-    /**
-     * Accepts an element
-     *
-     * @param   io.collections.IOElement element
-     * @return  bool
-     */
-    public function accept($element);
-  
-  }
-?>
+  public function accept($element);
+
+}

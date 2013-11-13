@@ -1,15 +1,10 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace security;
 
-  /**
-   * This exception is thrown to indicate a specific algorithm is not
-   * available.
-   *
-   */
-  class NoSuchAlgorithmException extends XPException {
-    
-  }
-?>
+/**
+ * This exception is thrown to indicate a specific algorithm is not
+ * available.
+ *
+ */
+class NoSuchAlgorithmException extends \lang\XPException {
+  
+}

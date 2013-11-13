@@ -1,17 +1,13 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace io;
+
+use security\Permission;
+
+
+/**
+ * File permission
  *
- * $Id$ 
+ * @purpose  Permission
  */
+class FilePermission extends Permission {
 
-  uses('security.Permission');
-
-  /**
-   * File permission
-   *
-   * @purpose  Permission
-   */
-  class FilePermission extends Permission {
-  
-  }
-?>
+}

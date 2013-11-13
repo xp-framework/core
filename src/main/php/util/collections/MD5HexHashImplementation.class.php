@@ -1,38 +1,31 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$
- */
+<?php namespace util\collections;
 
-  uses('util.collections.HashImplementation');
+/**
+ * MD5 implementation that uses hexdec() on md5() to calculate the
+ * numeric value instead of relying on addition taking care of this.
+ *
+ * Bug this works around:
+ * <pre>
+ *   $ php -r '$o= 0; $o+= "0x12195d4e54299a3cc1bde564c5de04b6"; var_dump($o);'
+ *
+ *   // 5.2.0 : int(0)
+ *   // 5.2.10: float(2.4057803815529E+37)
+ * </pre>
+ *
+ * @see   php://md5
+ * @see   php://hexdec
+ * @see   xp://util.collections.HashProvider
+ * @test  xp://net.xp_framework.unittest.util.collections.MD5HexHashImplementationTest:
+ */
+class MD5HexHashImplementation extends \lang\Object implements HashImplementation {
 
   /**
-   * MD5 implementation that uses hexdec() on md5() to calculate the
-   * numeric value instead of relying on addition taking care of this.
+   * Retrieve hash code for a given string
    *
-   * Bug this works around:
-   * <pre>
-   *   $ php -r '$o= 0; $o+= "0x12195d4e54299a3cc1bde564c5de04b6"; var_dump($o);'
-   *
-   *   // 5.2.0 : int(0)
-   *   // 5.2.10: float(2.4057803815529E+37)
-   * </pre>
-   *
-   * @see   php://md5
-   * @see   php://hexdec
-   * @see   xp://util.collections.HashProvider
-   * @test  xp://net.xp_framework.unittest.util.collections.MD5HexHashImplementationTest:
+   * @param   string str
+   * @return  int hashcode
    */
-  class MD5HexHashImplementation extends Object implements HashImplementation {
-
-    /**
-     * Retrieve hash code for a given string
-     *
-     * @param   string str
-     * @return  int hashcode
-     */
-    public function hashOf($str) {
-      return hexdec(md5($str));
-    }
-  } 
-?>
+  public function hashOf($str) {
+    return hexdec(md5($str));
+  }
+} 

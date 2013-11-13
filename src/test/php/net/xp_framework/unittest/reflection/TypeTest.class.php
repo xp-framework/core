@@ -5,7 +5,6 @@ use lang\Type;
 use util\collections\Vector;
 use util\collections\HashTable;
 
-
 /**
  * TestCase
  *
@@ -116,18 +115,6 @@ class TypeTest extends TestCase {
   }
 
   /**
-   * Test "Vector<string>"
-   *
-   */
-  #[@test]
-  public function genericShortClass() {
-    $this->assertEquals(
-      \lang\XPClass::forName('util.collections.Vector')->newGenericType(array(\lang\Primitive::$STRING)), 
-      Type::forName('Vector<string>')
-    );
-  }
-
-  /**
    * Test "Vector<Vector<int>>"
    *
    */
@@ -137,19 +124,6 @@ class TypeTest extends TestCase {
     $this->assertEquals(
       $vectorClass->newGenericType(array($vectorClass->newGenericType(array(\lang\Primitive::$INT)))), 
       Type::forName('util.collections.Vector<util.collections.Vector<int>>')
-    );
-  }
-
-  /**
-   * Test "Vector<Vector<int>>"
-   *
-   */
-  #[@test]
-  public function genericOfGenenericShortClass() {
-    $vectorClass= \lang\XPClass::forName('util.collections.Vector');
-    $this->assertEquals(
-      $vectorClass->newGenericType(array($vectorClass->newGenericType(array(\lang\Primitive::$INT)))), 
-      Type::forName('Vector<Vector<int>>')
     );
   }
 

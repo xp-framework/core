@@ -1,25 +1,20 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace unittest\mock\arguments;
 
-  uses('unittest.mock.arguments.IArgumentMatcher');
+
+
+/**
+ * Trivial argument matcher, that just returns true.
+ *
+ */
+class AnyMatcher extends \lang\Object implements IArgumentMatcher {
 
   /**
-   * Trivial argument matcher, that just returns true.
-   *
+   * Trivial matches implementations.
+   * 
+   * @param   var value
+   * @return  bool
    */
-  class AnyMatcher extends Object implements IArgumentMatcher {
-
-    /**
-     * Trivial matches implementations.
-     * 
-     * @param   var value
-     * @return  bool
-     */
-    public function matches($value) {
-      return TRUE;
-    }
+  public function matches($value) {
+    return true;
   }
-?>
+}

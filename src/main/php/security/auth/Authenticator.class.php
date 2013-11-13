@@ -1,27 +1,22 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace security\auth;
 
-  uses('security.auth.AuthenticatorException');
+
+
+/**
+ * This interface describes objects that are able to authenticate 
+ * username / password combinations.
+ *
+ * @purpose  Authenticator
+ */
+interface Authenticator {
 
   /**
-   * This interface describes objects that are able to authenticate 
-   * username / password combinations.
+   * Authenticate a user
    *
-   * @purpose  Authenticator
+   * @param   string user
+   * @param   string pass
+   * @return  bool
+   * @throws  security.auth.AuthenticatorException
    */
-  interface Authenticator {
-  
-    /**
-     * Authenticate a user
-     *
-     * @param   string user
-     * @param   string pass
-     * @return  bool
-     * @throws  security.auth.AuthenticatorException
-     */
-    public function authenticate($user, $pass);
-  }
-?>
+  public function authenticate($user, $pass);
+}

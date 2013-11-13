@@ -1,28 +1,23 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace lang;
+
+
+/**
+ * Indicates a class specified by a name cannot be found - that is,
+ * no classloader provides such a class.
  *
- * $Id$
+ * @see   xp://lang.IClassLoader#loadClass
+ * @see   xp://lang.XPClass#forName
+ * @test  xp://net.xp_framework.unittest.reflection.ClassLoaderTest
  */
-  uses('lang.ClassNotFoundException');
+class ClassLinkageException extends ClassNotFoundException {
 
   /**
-   * Indicates a class specified by a name cannot be found - that is,
-   * no classloader provides such a class.
+   * Returns the exception's message - override this in
+   * subclasses to provide exact error hints.
    *
-   * @see   xp://lang.IClassLoader#loadClass
-   * @see   xp://lang.XPClass#forName
-   * @test  xp://net.xp_framework.unittest.reflection.ClassLoaderTest
+   * @return  string
    */
-  class ClassLinkageException extends ClassNotFoundException {
-
-    /**
-     * Returns the exception's message - override this in
-     * subclasses to provide exact error hints.
-     *
-     * @return  string
-     */
-    protected function message() {
-      return 'Class definition for "%s" is not complete';
-    }
+  protected function message() {
+    return 'Class definition for "%s" is not complete';
   }
-?>
+}

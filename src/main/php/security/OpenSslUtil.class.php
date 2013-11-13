@@ -1,37 +1,32 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace security;
+
+/**
+ * OpenSSL utility functions
  *
- * $Id$ 
+ * @ext      openssl
+ * @purpose  Utiltiy functions
  */
+class OpenSslUtil extends \lang\Object {
 
   /**
-   * OpenSSL utility functions
+   * Retrieve errors
    *
-   * @ext      openssl
-   * @purpose  Utiltiy functions
+   * @return  string[] error
    */
-  class OpenSslUtil extends Object {
-  
-    /**
-     * Retrieve errors
-     *
-     * @return  string[] error
-     */
-    public static function getErrors() {
-      $e= array();
-      while ($msg= openssl_error_string()) {
-        $e[]= $msg;
-      }
-      return $e;
+  public static function getErrors() {
+    $e= array();
+    while ($msg= openssl_error_string()) {
+      $e[]= $msg;
     }
-    
-    /**
-     * Get OpenSSL configuration file environment value
-     *
-     * @return  string
-     */
-    public function getConfiguration() {
-      return getenv('OPENSSL_CONF');
-    }
+    return $e;
   }
-?>
+  
+  /**
+   * Get OpenSSL configuration file environment value
+   *
+   * @return  string
+   */
+  public function getConfiguration() {
+    return getenv('OPENSSL_CONF');
+  }
+}

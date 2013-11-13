@@ -30,7 +30,7 @@ class AnonymousInstanceTest extends \unittest\TestCase {
     }');
     $n= $instance->getClassName();
     $this->assertEquals(
-      'util.collections.Vector··Object',
+      'util.collections.Vector··lang¦Object',
       substr($n, 0, strrpos($n, '·')),
       $n
     );
@@ -43,7 +43,7 @@ class AnonymousInstanceTest extends \unittest\TestCase {
     }');
     $n= $instance->getClassName();
     $this->assertEquals(
-      'net.xp_framework.unittest.core.generics.ArrayFilter··Object',
+      'net.xp_framework.unittest.core.generics.ArrayFilter··lang¦Object',
       substr($n, 0, strrpos($n, '·')),
       $n
     );

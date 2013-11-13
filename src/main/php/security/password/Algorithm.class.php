@@ -1,24 +1,19 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace security\password;
  
-  $package= 'security.password';
 
+
+/**
+ * Defines an algorithm that calculates the strength of a password
+ *
+ * @purpose  Interface
+ */
+interface Algorithm {
+  
   /**
-   * Defines an algorithm that calculates the strength of a password
+   * Calculate the strength of a password
    *
-   * @purpose  Interface
+   * @param   string password
+   * @return  int
    */
-  interface security·password·Algorithm {
-    
-    /**
-     * Calculate the strength of a password
-     *
-     * @param   string password
-     * @return  int
-     */
-    public function strengthOf($password);
-  }
-?>
+  public function strengthOf($password);
+}

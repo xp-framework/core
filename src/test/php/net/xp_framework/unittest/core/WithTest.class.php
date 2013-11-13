@@ -17,7 +17,7 @@ class WithTest extends \unittest\TestCase {
       public function close() { $this->closed= true; }
     }');
     self::$raises= ClassLoader::defineClass('_WithTest_C1', 'lang.Object', array('lang.Closeable'), '{
-      public function close() { throw new IllegalArgumentException("Cannot close"); }
+      public function close() { throw new \lang\IllegalArgumentException("Cannot close"); }
     }');
   }
 

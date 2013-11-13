@@ -1,15 +1,8 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$
- */
+<?php namespace lang;
  
-  /**
-   * Encapsulates ElementNotFoundException
-   *
-   * @see Exception
-   */
-  class ElementNotFoundException extends XPException {
-  
-  }
-?>
+/**
+ * Encapsulates ElementNotFoundException
+ */
+class ElementNotFoundException extends XPException {
+
+}

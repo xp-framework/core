@@ -1,59 +1,54 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace io\streams;
+
+/**
+ * Writes data to an OutputStream
  *
- * $Id$ 
+ * @purpose  Interface
  */
+interface OutputStreamWriter {
 
   /**
-   * Writes data to an OutputStream
+   * Constructor
    *
-   * @purpose  Interface
+   * @param   io.streams.OutputStream out
    */
-  interface OutputStreamWriter {
+  public function __construct($out);
 
-    /**
-     * Constructor
-     *
-     * @param   io.streams.OutputStream out
-     */
-    public function __construct($out);
+  /**
+   * Flush output buffer
+   *
+   */
+  public function flush();
+
+  /**
+   * Print arguments
+   *
+   * @param   var* args
+   */
+  public function write();
   
-    /**
-     * Flush output buffer
-     *
-     */
-    public function flush();
-
-    /**
-     * Print arguments
-     *
-     * @param   var* args
-     */
-    public function write();
-    
-    /**
-     * Print arguments and append a newline
-     *
-     * @param   var* args
-     */
-    public function writeLine();
-    
-    /**
-     * Print a formatted string
-     *
-     * @param   string format
-     * @param   var* args
-     * @see     php://writef
-     */
-    public function writef();
-
-    /**
-     * Print a formatted string and append a newline
-     *
-     * @param   string format
-     * @param   var* args
-     */
-    public function writeLinef();
+  /**
+   * Print arguments and append a newline
+   *
+   * @param   var* args
+   */
+  public function writeLine();
   
-  }
-?>
+  /**
+   * Print a formatted string
+   *
+   * @param   string format
+   * @param   var* args
+   * @see     php://writef
+   */
+  public function writef();
+
+  /**
+   * Print a formatted string and append a newline
+   *
+   * @param   string format
+   * @param   var* args
+   */
+  public function writeLinef();
+
+}

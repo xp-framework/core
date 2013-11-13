@@ -1,21 +1,16 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace unittest;
+
+/**
+ * Outcome from a test
  *
- * $Id$ 
  */
+interface TestOutcome {
 
   /**
-   * Outcome from a test
+   * Returns elapsed time
    *
+   * @return  float
    */
-  interface TestOutcome {
+  public function elapsed();
 
-    /**
-     * Returns elapsed time
-     *
-     * @return  float
-     */
-    public function elapsed();
-
-  }
-?>
+}

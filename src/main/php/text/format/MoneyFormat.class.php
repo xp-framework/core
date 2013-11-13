@@ -1,41 +1,36 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace text\format;
+
+
+
+/**
+ * Money formatter
  *
- * $Id$
+ * @purpose  Provide a Format wrapper for money_format
+ * @see      php://money_format
+ * @see      xp://text.format.IFormat
  */
+class MoneyFormat extends IFormat {
 
-  uses('text.format.IFormat');
-  
   /**
-   * Money formatter
+   * Get an instance
    *
-   * @purpose  Provide a Format wrapper for money_format
-   * @see      php://money_format
-   * @see      xp://text.format.IFormat
+   * @return  text.format.MoneyFormat
    */
-  class MoneyFormat extends IFormat {
+  public function getInstance() {
+    return parent::getInstance('MoneyFormat');
+  }  
 
-    /**
-     * Get an instance
-     *
-     * @return  text.format.MoneyFormat
-     */
-    public function getInstance() {
-      return parent::getInstance('MoneyFormat');
-    }  
-  
-    /**
-     * Apply format to argument
-     *
-     * @param   var fmt
-     * @param   var argument
-     * @return  string
-     */
-    public function apply($fmt, $argument) {
-      if (!function_exists('money_format')) {
-        throw new FormatException('money_format requires PHP >= 4.3.0');
-      }
-      return money_format($fmt, $argument);
+  /**
+   * Apply format to argument
+   *
+   * @param   var fmt
+   * @param   var argument
+   * @return  string
+   */
+  public function apply($fmt, $argument) {
+    if (!function_exists('money_format')) {
+      throw new \lang\FormatException('money_format requires PHP >= 4.3.0');
     }
+    return money_format($fmt, $argument);
   }
-?>
+}

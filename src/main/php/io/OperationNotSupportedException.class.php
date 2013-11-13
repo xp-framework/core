@@ -1,17 +1,12 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace io;
+
+
+
+/**
+ * Indicates an operation is not supported
  *
- * $Id$
+ * @see    xp://io.IOException
  */
+class OperationNotSupportedException extends IOException {
 
-  uses('io.IOException');
-
-  /**
-   * Indicates an operation is not supported
-   *
-   * @see    xp://io.IOException
-   */
-  class OperationNotSupportedException extends IOException {
-  
-  }
-?>
+}

@@ -1,22 +1,17 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace lang;
+
+/**
+ * Denotes instances of implementing classes are runnable by 
+ * invoking the run() method.
  *
- * $Id$ 
+ * @purpose  Interface
  */
+interface Runnable {
 
   /**
-   * Denotes instances of implementing classes are runnable by 
-   * invoking the run() method.
+   * Runs this object
    *
-   * @purpose  Interface
    */
-  interface Runnable {
-  
-    /**
-     * Runs this object
-     *
-     */
-    public function run();
-  
-  }
-?>
+  public function run();
+
+}

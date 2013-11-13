@@ -1,67 +1,62 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace security\checksum;
+
+/**
+ * Message digest implementation
  *
- * $Id$
+ * @see      xp://security.checksum.MessageDigest
  */
+abstract class MessageDigestImpl extends \lang\Object {
+  protected $finalized= false;
 
   /**
-   * Message digest implementation
+   * Initialize this implementation
    *
-   * @see      xp://security.checksum.MessageDigest
+   * @param   string algo
+   * @throws  lang.IllegalStateException
    */
-  abstract class MessageDigestImpl extends Object {
-    protected $finalized= FALSE;
+  public abstract function __construct($algo);
 
-    /**
-     * Initialize this implementation
-     *
-     * @param   string algo
-     * @throws  lang.IllegalStateException
-     */
-    public abstract function __construct($algo);
-
-    /**
-     * Update hash with data
-     *
-     * @param   string data
-     */
-    public abstract function doUpdate($data);
-    
-    /**
-     * Finalizes digest and returns checksum
-     *
-     * @return  string
-     */
-    public abstract function doFinal();
-    
-    /**
-     * Update hash with data
-     *
-     * @param   string data
-     * @throws  lang.IllegalStateException if digest already finalized
-     */
-    public function update($data) {
-      if ($this->finalized) {
-        throw new IllegalStateException('Digest already finalized');
-      }
-      $this->doUpdate($data);
+  /**
+   * Update hash with data
+   *
+   * @param   string data
+   */
+  public abstract function doUpdate($data);
+  
+  /**
+   * Finalizes digest and returns checksum
+   *
+   * @return  string
+   */
+  public abstract function doFinal();
+  
+  /**
+   * Update hash with data
+   *
+   * @param   string data
+   * @throws  lang.IllegalStateException if digest already finalized
+   */
+  public function update($data) {
+    if ($this->finalized) {
+      throw new \lang\IllegalStateException('Digest already finalized');
     }
-    
-    /**
-     * Finalizes digest and returns a checksum object
-     *
-     * @param   string data default NULL
-     * @return  string final
-     * @throws  lang.IllegalStateException if digest already finalized
-     */
-    public function digest($data= NULL) {
-      if ($this->finalized) {
-        throw new IllegalStateException('Digest already finalized');
-      }
-      if (NULL !== $data) $this->doUpdate($data);
-      $final= $this->doFinal();
-      $this->finalized= TRUE;
-      return $final;
-    }
+    $this->doUpdate($data);
   }
-?>
+  
+  /**
+   * Finalizes digest and returns a checksum object
+   *
+   * @param   string data default NULL
+   * @return  string final
+   * @throws  lang.IllegalStateException if digest already finalized
+   */
+  public function digest($data= null) {
+    if ($this->finalized) {
+      throw new \lang\IllegalStateException('Digest already finalized');
+    }
+    if (null !== $data) $this->doUpdate($data);
+    $final= $this->doFinal();
+    $this->finalized= true;
+    return $final;
+  }
+}

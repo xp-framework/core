@@ -1,44 +1,39 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$
- */
+<?php namespace util\log;
 
-  uses('util.log.Appender');
+
+
+/**
+ * Appender which appends all data to a buffer
+ *
+ * @see   xp://util.log.Appender
+ * @test  xp://net.xp_framework.unittest.logging.BufferedAppenderTest
+ */  
+class BufferedAppender extends Appender {
+  public $buffer= '';
 
   /**
-   * Appender which appends all data to a buffer
+   * Append data
    *
-   * @see   xp://util.log.Appender
-   * @test  xp://net.xp_framework.unittest.logging.BufferedAppenderTest
-   */  
-  class BufferedAppender extends Appender {
-    public $buffer= '';
-
-    /**
-     * Append data
-     *
-     * @param   util.log.LoggingEvent event
-     */ 
-    public function append(LoggingEvent $event) {
-      $this->buffer.= $this->layout->format($event);
-    }
-    
-    /**
-     * Get buffer's contents
-     *
-     * @return  string
-     */
-    public function getBuffer() {
-      return $this->buffer;
-    }
-    
-    /**
-     * Clears the buffers content.
-     *
-     */
-    public function clear() {
-      $this->buffer= '';
-    }    
+   * @param   util.log.LoggingEvent event
+   */ 
+  public function append(\LoggingEvent $event) {
+    $this->buffer.= $this->layout->format($event);
   }
-?>
+  
+  /**
+   * Get buffer's contents
+   *
+   * @return  string
+   */
+  public function getBuffer() {
+    return $this->buffer;
+  }
+  
+  /**
+   * Clears the buffers content.
+   *
+   */
+  public function clear() {
+    $this->buffer= '';
+  }    
+}

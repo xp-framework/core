@@ -1,28 +1,23 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace lang;
+
+
+/**
+ * Indicates a class specified by a name cannot be found - that is,
+ * no classloader provides such a class.
  *
- * $Id$
+ * @see   xp://lang.IClassLoader#loadClass
+ * @see   xp://lang.XPClass#forName
+ * @test  xp://net.xp_framework.unittest.reflection.ClassLoaderTest
  */
-  uses('lang.ClassNotFoundException');
+class ClassDependencyException extends ClassNotFoundException {
 
   /**
-   * Indicates a class specified by a name cannot be found - that is,
-   * no classloader provides such a class.
+   * Returns the exception's message - override this in
+   * subclasses to provide exact error hints.
    *
-   * @see   xp://lang.IClassLoader#loadClass
-   * @see   xp://lang.XPClass#forName
-   * @test  xp://net.xp_framework.unittest.reflection.ClassLoaderTest
+   * @return  string
    */
-  class ClassDependencyException extends ClassNotFoundException {
-
-    /**
-     * Returns the exception's message - override this in
-     * subclasses to provide exact error hints.
-     *
-     * @return  string
-     */
-    protected function message() {
-      return 'Dependencies for class "%s" could not be loaded';
-    }
+  protected function message() {
+    return 'Dependencies for class "%s" could not be loaded';
   }
-?>
+}

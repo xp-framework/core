@@ -1,23 +1,19 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace util\log;
 
-  uses('util.Observer');
+use util\Observer;
+
+
+/**
+ * Generic DB observer interface.
+ *
+ */
+interface BoundLogObserver extends Observer {
 
   /**
-   * Generic DB observer interface.
+   * Retrieves an instance.
    *
+   * @param   var argument
+   * @return  rdbms.DBObserver
    */
-  interface BoundLogObserver extends Observer {
-  
-    /**
-     * Retrieves an instance.
-     *
-     * @param   var argument
-     * @return  rdbms.DBObserver
-     */
-    public static function instanceFor($arg);
-  }
-?>
+  public static function instanceFor($arg);
+}

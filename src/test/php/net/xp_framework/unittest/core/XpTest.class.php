@@ -94,7 +94,7 @@ class XpTest extends \unittest\TestCase {
 
   #[@test]
   public function reflect_object() {
-    $this->assertEquals('Object', \xp::reflect('lang.Object'));
+    $this->assertEquals('lang\Object', \xp::reflect('lang.Object'));
   }
 
   #[@test]

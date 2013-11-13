@@ -1,38 +1,34 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace io\sys;
 
-  uses('io.File');
+use io\File;
+
+
+/**
+ * Standard I/O streams
+ *
+ * @see      http://www.opengroup.org/onlinepubs/007908799/xsh/stdin.html
+ * @purpose  Wrap standard I/O streams with File objects
+ */
+class StdStream extends \lang\Object {
 
   /**
-   * Standard I/O streams
+   * Retrieve a file object
    *
-   * @see      http://www.opengroup.org/onlinepubs/007908799/xsh/stdin.html
-   * @purpose  Wrap standard I/O streams with File objects
+   * <code>
+   *   $stdout= StdStream::get(STDOUT);
+   *   $stdout->write('Hello');
+   * </code>
+   *
+   * @param   resource handle one of STDIN | STDOUT | STDERR
+   * @return  io.File
    */
-  class StdStream extends Object {
-  
-    /**
-     * Retrieve a file object
-     *
-     * <code>
-     *   $stdout= StdStream::get(STDOUT);
-     *   $stdout->write('Hello');
-     * </code>
-     *
-     * @param   resource handle one of STDIN | STDOUT | STDERR
-     * @return  io.File
-     */
-    public static function get($handle) {
-      static $f= array();
-      
-      if (!isset($f[$handle])) {
-        $f[$handle]= new File($handle);
-      }
-      return $f[$handle];
+  public static function get($handle) {
+    static $f= array();
+    
+    if (!isset($f[$handle])) {
+      $f[$handle]= new File($handle);
     }
-  
+    return $f[$handle];
   }
-?>
+
+}

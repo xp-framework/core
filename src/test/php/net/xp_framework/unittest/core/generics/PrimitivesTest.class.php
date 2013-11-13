@@ -12,7 +12,7 @@ class PrimitivesTest extends TestCase {
 
   #[@test]
   public function primitiveStringKey() {
-    $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, TestCase>', array(
+    $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, unittest.TestCase>', array(
       'this' => $this
     ));
     $this->assertEquals($this, $l->get('this'));
@@ -20,20 +20,20 @@ class PrimitivesTest extends TestCase {
 
   #[@test]
   public function primitiveStringValue() {
-    $l= create('new net.xp_framework.unittest.core.generics.Lookup<TestCase, string>()');
+    $l= create('new net.xp_framework.unittest.core.generics.Lookup<unittest.TestCase, string>()');
     $l->put($this, 'this');
     $this->assertEquals('this', $l->get($this));
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function primitiveVerification() {
-    $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, TestCase>()');
+    $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, unittest.TestCase>()');
     $l->put(1, $this);
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function instanceVerification() {
-    $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, TestCase>()');
+    $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, unittest.TestCase>()');
     $l->put(new String('Hello'), $this);
   }
 
@@ -50,7 +50,7 @@ class PrimitivesTest extends TestCase {
   public function typeArguments() {
     $this->assertEquals(
       array(\lang\Primitive::$STRING, \lang\XPClass::forName('unittest.TestCase')),
-      create('new net.xp_framework.unittest.core.generics.Lookup<string, TestCase>()')->getClass()->genericArguments()
+      create('new net.xp_framework.unittest.core.generics.Lookup<string, unittest.TestCase>()')->getClass()->genericArguments()
     );
   }
 }

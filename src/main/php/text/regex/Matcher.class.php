@@ -1,33 +1,28 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace text\regex;
 
-  uses('text.regex.MatchResult');
+
+
+/**
+ * Matcher interface
+ *
+ * @see      xp://text.regex.Scanner
+ * @see      xp://text.regex.Pattern
+ */
+interface Matcher {
 
   /**
-   * Matcher interface
+   * Checks whether a given string matches
    *
-   * @see      xp://text.regex.Scanner
-   * @see      xp://text.regex.Pattern
+   * @param   string str
+   * @return  bool
    */
-  interface Matcher {
+  public function matches($str);
 
-    /**
-     * Checks whether a given string matches
-     *
-     * @param   string str
-     * @return  bool
-     */
-    public function matches($str);
-
-    /**
-     * Returns match results
-     *
-     * @param   string str
-     * @return  text.regex.MatchResult
-     */
-    public function match($str);
-  }
-?>
+  /**
+   * Returns match results
+   *
+   * @param   string str
+   * @return  text.regex.MatchResult
+   */
+  public function match($str);
+}

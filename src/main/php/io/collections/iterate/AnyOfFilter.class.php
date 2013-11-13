@@ -1,44 +1,39 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace io\collections\iterate;
+
+
+
+/**
+ * Combined filter that accepts an element if any of its filters
+ * accept the element.
  *
- * $Id$
+ * This filter:
+ * <code>
+ *   $filter= new AnyOfFilter(array(
+ *     new SizeSmallerThanFilter(500),
+ *     new ExtensionEqualsFilter('txt')
+ *   ));
+ * </code>
+ * will accept any elements smaller than 500 bytes or with a
+ * ".txt"-extension.
+ *
+ * @purpose  Iteration Filter
  */
-
-  uses('io.collections.iterate.AbstractCombinedFilter');
-
+class AnyOfFilter extends AbstractCombinedFilter {
+  
   /**
-   * Combined filter that accepts an element if any of its filters
-   * accept the element.
+   * Accepts an element
    *
-   * This filter:
-   * <code>
-   *   $filter= new AnyOfFilter(array(
-   *     new SizeSmallerThanFilter(500),
-   *     new ExtensionEqualsFilter('txt')
-   *   ));
-   * </code>
-   * will accept any elements smaller than 500 bytes or with a
-   * ".txt"-extension.
-   *
-   * @purpose  Iteration Filter
+   * @param   io.collections.IOElement element
+   * @return  bool
    */
-  class AnyOfFilter extends AbstractCombinedFilter {
+  public function accept($element) {
+    for ($i= 0; $i < $this->_size; $i++) {
     
-    /**
-     * Accepts an element
-     *
-     * @param   io.collections.IOElement element
-     * @return  bool
-     */
-    public function accept($element) {
-      for ($i= 0; $i < $this->_size; $i++) {
-      
-        // The first filter that accepts the element => we accept the element
-        if ($this->list[$i]->accept($element)) return TRUE;
-      }
-      
-      // None of the filters have accepted the element, so we won't accept it
-      return FALSE;
+      // The first filter that accepts the element => we accept the element
+      if ($this->list[$i]->accept($element)) return true;
     }
+    
+    // None of the filters have accepted the element, so we won't accept it
+    return false;
   }
-?>
+}

@@ -1,14 +1,9 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
-  
-  /**
-   * DeferredInitialization Exception
-   *
-   */
-  class DeferredInitializationException extends XPException {
+<?php namespace util;
 
-  }
-?>
+/**
+ * DeferredInitialization Exception
+ *
+ */
+class DeferredInitializationException extends \lang\XPException {
+
+}

@@ -1,53 +1,48 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$
- */
+<?php namespace unittest;
 
-  uses('unittest.TestSuccess');
+
+
+/**
+ * Indicates a test was successful
+ *
+ * @see      xp://unittest.TestSuccess
+ */
+class TestExpectationMet extends \lang\Object implements TestSuccess {
+  public
+    $test     = null,
+    $elapsed  = 0.0;
+    
+  /**
+   * Constructor
+   *
+   * @param   unittest.TestCase test
+   * @param   float elapsed
+   */
+  public function __construct(TestCase $test, $elapsed) {
+    $this->test= $test;
+    $this->elapsed= $elapsed;
+  }
 
   /**
-   * Indicates a test was successful
+   * Returns elapsed time
    *
-   * @see      xp://unittest.TestSuccess
+   * @return  float
    */
-  class TestExpectationMet extends Object implements TestSuccess {
-    public
-      $test     = NULL,
-      $elapsed  = 0.0;
-      
-    /**
-     * Constructor
-     *
-     * @param   unittest.TestCase test
-     * @param   float elapsed
-     */
-    public function __construct(TestCase $test, $elapsed) {
-      $this->test= $test;
-      $this->elapsed= $elapsed;
-    }
-
-    /**
-     * Returns elapsed time
-     *
-     * @return  float
-     */
-    public function elapsed() {
-      return $this->elapsed;
-    }
-    
-    /**
-     * Return a string representation of this class
-     *
-     * @return  string
-     */
-    public function toString() {
-      return sprintf(
-        '%s(test= %s, time= %.3f seconds)',
-        $this->getClassName(),
-        $this->test->getName(TRUE),
-        $this->elapsed
-      );
-    }
+  public function elapsed() {
+    return $this->elapsed;
   }
-?>
+  
+  /**
+   * Return a string representation of this class
+   *
+   * @return  string
+   */
+  public function toString() {
+    return sprintf(
+      '%s(test= %s, time= %.3f seconds)',
+      $this->getClassName(),
+      $this->test->getName(true),
+      $this->elapsed
+    );
+  }
+}

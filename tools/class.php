@@ -51,12 +51,12 @@
   
   ini_set('error_prepend_string', EPREPEND_IDENTIFIER);
   set_exception_handler('__except');
-  ob_start('__output');
+  #ob_start('__output');
 
   array_shift($_SERVER['argv']);
   try {
-    exit(XPClass::forName($argv[1])->getMethod('main')->invoke(NULL, array(array_slice($argv, 2)))); 
-  } catch (SystemExit $e) {
+    exit(\lang\XPClass::forName($argv[1])->getMethod('main')->invoke(NULL, array(array_slice($argv, 2)))); 
+  } catch (\lang\SystemExit $e) {
     if ($message= $e->getMessage()) echo $message, "\n";
     exit($e->getCode());
   }

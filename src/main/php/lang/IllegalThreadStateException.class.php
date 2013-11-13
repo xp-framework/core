@@ -1,15 +1,8 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace lang;
 
-  /**
-   * Indicate a thread is already running
-   *
-   * @purpose  Exception
-   */
-  class IllegalThreadStateException extends XPException {
-  
-  }
-?>
+/**
+ * Indicate a thread is already running
+ */
+class IllegalThreadStateException extends XPException {
+
+}

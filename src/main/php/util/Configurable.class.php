@@ -1,24 +1,19 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace util;
+
+/**
+ * Denotes a class is configurable - that is, an util.Properties object
+ * can be passed to its instance.
  *
- * $Id$ 
+ * @see      xp://util.Properties
+ * @purpose  Interface
  */
+interface Configurable {
 
   /**
-   * Denotes a class is configurable - that is, an util.Properties object
-   * can be passed to its instance.
+   * Configure
    *
-   * @see      xp://util.Properties
-   * @purpose  Interface
+   * @param   util.Properties properties
+   * @return  bool
    */
-  interface Configurable {
-  
-    /**
-     * Configure
-     *
-     * @param   util.Properties properties
-     * @return  bool
-     */
-    public function configure($properties);
-  }
-?>
+  public function configure($properties);
+}

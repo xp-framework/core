@@ -1,16 +1,11 @@
-<?php
-/* This class is part of the XP framework
- * 
- * $Id$
- */
+<?php namespace security;
  
-  /**
-   * SecurityException
-   *
-   * @purpose  Indicate a security violation has occured
-   * @see      xp://lang.XPException
-   */
-  class SecurityException extends XPException {
-  
-  }
-?>
+/**
+ * SecurityException
+ *
+ * @purpose  Indicate a security violation has occured
+ * @see      xp://lang.XPException
+ */
+class SecurityException extends \lang\XPException {
+
+}

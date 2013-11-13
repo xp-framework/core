@@ -1,23 +1,18 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace peer\server\protocol;
+
+/**
+ * Server Protocol: Accept sockets handler
  *
- * $Id$ 
+ * @test  xp://net.xp_framework.unittest.peer.server.AcceptingServerTest
  */
+interface SocketAcceptHandler {
 
   /**
-   * Server Protocol: Accept sockets handler
+   * Handle accepted socket. Return FALSE to make server drop connection
+   * immediately, TRUE to continue on to handleConnect().
    *
-   * @test  xp://net.xp_framework.unittest.peer.server.AcceptingServerTest
+   * @param   peer.Socket socket
+   * @return  bool
    */
-  interface SocketAcceptHandler {
-
-    /**
-     * Handle accepted socket. Return FALSE to make server drop connection
-     * immediately, TRUE to continue on to handleConnect().
-     *
-     * @param   peer.Socket socket
-     * @return  bool
-     */
-    public function handleAccept($socket);
-  }
-?>
+  public function handleAccept($socket);
+}

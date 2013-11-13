@@ -1,15 +1,8 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$
- */
+<?php namespace lang;
  
-  /**
-   * Encapsulates FormatException
-   *
-   * @see   xp://lang.XPException
-   */
-  class FormatException extends XPException {
-  
-  }
-?>
+/**
+ * Encapsulates FormatException
+ */
+class FormatException extends XPException {
+
+}

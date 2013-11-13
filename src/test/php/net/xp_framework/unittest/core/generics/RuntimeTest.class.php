@@ -17,15 +17,15 @@ class RuntimeTest extends TestCase {
    * types.
    */  
   public function setUp() {
-    $this->fixture= create('new net.xp_framework.unittest.core.generics.Lookup<String, TestCase>()');
+    $this->fixture= create('new net.xp_framework.unittest.core.generics.Lookup<String, unittest.TestCase>()');
   }
 
   #[@test]
   public function name() {
-    $this->assertTrue(class_exists(
-      'net\\xp_framework\\unittest\\core\\generics\\Lookup··String¸TestCase',
-      false
-    ));
+    $this->assertEquals(
+      'net\\xp_framework\\unittest\\core\\generics\\Lookup··lang¦types¦String¸unittest¦TestCase',
+      $this->fixture->getClass()->literal()
+    );
   }
 
   #[@test]

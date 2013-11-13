@@ -1,17 +1,12 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace security\cert;
+ 
+
+ 
+/**
+ * Certificate
  *
- * $Id$
+ * @purpose  Certificate base class
  */
- 
-  uses('security.cert.CertificateException');
- 
-  /**
-   * Certificate
-   *
-   * @purpose  Certificate base class
-   */
-  class Certificate extends Object {
-  
-  }
-?>
+class Certificate extends \lang\Object {
+
+}

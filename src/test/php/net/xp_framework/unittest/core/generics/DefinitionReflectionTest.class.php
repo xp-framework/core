@@ -22,6 +22,6 @@ class DefinitionReflectionTest extends AbstractDefinitionReflectionTest {
    * @return  var
    */
   protected function fixtureInstance() {
-    return create('new net.xp_framework.unittest.core.generics.Lookup<String, TestCase>()');
+    return create('new net.xp_framework.unittest.core.generics.Lookup<String, unittest.TestCase>()');
   }
 }

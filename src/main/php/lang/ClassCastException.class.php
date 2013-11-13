@@ -1,15 +1,10 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$ 
- */
+<?php namespace lang;
 
-  /**
-   * Indicates a class cast failed
-   *
-   * @test    xp://net.xp_framework.unittest.core.CastingTest
-   */
-  class ClassCastException extends XPException {
-    
-  }
-?>
+/**
+ * Indicates a class cast failed
+ *
+ * @test    xp://net.xp_framework.unittest.core.CastingTest
+ */
+class ClassCastException extends XPException {
+  
+}

@@ -1,24 +1,18 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace util\collections;
+
+/**
+ * Hash implementation
  *
- * $Id$ 
+ * @see   xp://util.collections.HashProvider
  */
+interface HashImplementation {
 
   /**
-   * Hash implementation
+   * Retrieve hash code for a given string
    *
-   * @see      xp://util.collections.HashProvider
-   * @purpose  Interface
+   * @param   string $str
+   * @return  int hashcode
    */
-  interface HashImplementation {
+  public function hashOf($str);
 
-    /**
-     * Retrieve hash code for a given string
-     *
-     * @param   string str
-     * @return  int hashcode
-     */
-    public function hashOf($str);
-
-  }
-?>
+}
