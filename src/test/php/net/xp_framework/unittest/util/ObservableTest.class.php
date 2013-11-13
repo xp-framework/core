@@ -67,9 +67,11 @@ class ObservableTest extends TestCase {
    */
   #[@test]
   public function add_observer_returns_added_observer() {
-    $observer= newinstance('util.Observer', array(), '{
-      public function update($obs, $arg= NULL) { /* Intentionally empty */ }
-    }');
+    $observer= newinstance('util.Observer', array(), array(
+      'update' => function($self, $obs, $arg= null) {
+        /* Intentionally empty */
+      }
+    ));
     $o= self::$observable->newInstance();
     $this->assertEquals($observer, $o->addObserver($observer));
   }
@@ -79,12 +81,12 @@ class ObservableTest extends TestCase {
    */
   #[@test]
   public function observer_gets_called_with_observable() {
-    $observer= newinstance('util.Observer', array(), '{
-      public $calls= array();
-      public function update($obs, $arg= NULL) {
-        $this->calls[]= array($obs, $arg);
+    $observer= newinstance('util.Observer', array(), array(
+      'calls' => array(),
+      'update' => function($self, $obs, $arg= null) {
+        $self->calls[]= array($obs, $arg);
       }
-    }');
+    ));
     $o= self::$observable->newInstance();
     $o->addObserver($observer);
     $o->setValue(5);
