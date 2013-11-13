@@ -20,8 +20,8 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
-* Implemented RFC #136: PHP namespaces adoption. All classes in the core
-  are now in PHP 5.3 namespaces - (@thekid)
+* Implemented RFC #136: PHP namespaces adoption. All classes in the XP
+  framework are now in PHP 5.3 namespaces - (@thekid)
 * Implemented RFC #279: Newinstance with closures in xp-framework/core#2
   (@thekid)
 * Implemented RFC #186: Drop SAPI feature alltogether; after it was 
