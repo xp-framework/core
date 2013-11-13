@@ -46,7 +46,7 @@ abstract class BeforeAndAfterClassTest extends \unittest\TestCase {
 
       #[@beforeClass]
       public static function prepareTestData() {
-        throw new IllegalStateException("Test data not available");
+        throw new \lang\IllegalStateException("Test data not available");
       }
 
       #[@test]
@@ -66,7 +66,7 @@ abstract class BeforeAndAfterClassTest extends \unittest\TestCase {
 
       #[@beforeClass]
       public static function prepareTestData() {
-        throw new PrerequisitesNotMetError("Test data not available", NULL, array("data"));
+        throw new \unittest\PrerequisitesNotMetError("Test data not available", NULL, array("data"));
       }
 
       #[@test]
@@ -148,7 +148,7 @@ abstract class BeforeAndAfterClassTest extends \unittest\TestCase {
 
       #[@beforeClass]
       public static function prepareTestData() {
-        throw new PrerequisitesNotMetError("Test data not available", NULL, array("data"));
+        throw new \unittest\PrerequisitesNotMetError("Test data not available", NULL, array("data"));
       }
 
       #[@afterClass]

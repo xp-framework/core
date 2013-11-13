@@ -1,15 +1,13 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use unittest\TestCase;
 use lang\types\Bytes;
 use io\streams\MemoryInputStream;
-
 
 /**
  * Abstract base class for all compressing output stream tests
  *
  */
-abstract class AbstractDecompressingInputStreamTest extends TestCase {
+abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
 
   /**
    * Get extension we depend on

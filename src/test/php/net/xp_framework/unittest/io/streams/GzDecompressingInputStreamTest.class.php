@@ -2,12 +2,11 @@
 
 use io\streams\GzDecompressingInputStream;
 
-
 /**
  * TestCase
  *
- * @ext      zlib
- * @see      xp://io.streams.GzDecompressingInputStream
+ * @ext   zlib
+ * @see   xp://io.streams.GzDecompressingInputStream
  */
 class GzDecompressingInputStreamTest extends AbstractDecompressingInputStreamTest {
 

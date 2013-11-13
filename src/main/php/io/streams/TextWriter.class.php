@@ -1,7 +1,5 @@
 <?php namespace io\streams;
 
-
-
 /**
  * Writes text from to underlying output stream. When writing lines,
  * uses the newLine property's bytes as newline separator, defaulting
@@ -21,7 +19,7 @@ class TextWriter extends Writer {
    * @param   io.streams.OutputStream stream
    * @param   string charset the charset the stream is encoded in.
    */
-  public function __construct(\OutputStream $stream, $charset= \xp::ENCODING) {
+  public function __construct(OutputStream $stream, $charset= \xp::ENCODING) {
     parent::__construct($stream);
     $this->charset= $charset;
   }

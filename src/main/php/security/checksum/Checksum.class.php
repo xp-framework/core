@@ -1,33 +1,32 @@
 <?php namespace security\checksum;
 
-
-
 /**
- * Checksum
+ * Abstract base class to all other checksums
  *
  * Usage [Getting an MD5 checksum from a string]
- * <code>
- *   $md5= MD5::fromString('Hello world');
- *   var_dump($md5->getValue());
- * </code>
+ * 
+ * ```php
+ * $md5= MD5::fromString('Hello world');
+ * var_dump($md5->getValue());
+ * ```
  *
  * Usage [Getting an SHA1 checksum from a file]
- * <code>
- *   $sha1= SHA1::fromFile(new File('dummy'));
- *   var_dump($sha1->getValue());
- * </code>
+ * 
+ * ```php
+ * $sha1= SHA1::fromFile(new File('dummy'));
+ * var_dump($sha1->getValue());
+ * ```
  *
  * Usage [Verifying a CRC32 against a file]
- * <code>
- *   $crc32= new CRC32(1140816021);
- *   if (!$crc32->verify(CRC32::fromFile(new File('verify.me')))) {
- *     echo 'Verify failed';
- *   } else {
- *     echo 'Verify OK';
- *   }
- * </code>
- *
- * @purpose  Abstract base class to all other checksums
+ * 
+ * ```php
+ * $crc32= new CRC32(1140816021);
+ * if (!$crc32->verify(CRC32::fromFile(new File('verify.me')))) {
+ *   echo 'Verify failed';
+ * } else {
+ *   echo 'Verify OK';
+ * }
+ * ```
  */
 class Checksum extends \lang\Object {
   public $value = '';

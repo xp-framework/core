@@ -2,12 +2,10 @@
  
 use io\FileUtil;
 
-
 /**
- * HMAC_MD5 checksum
+ * Provide an API to check HMAC_MD5 checksums
  *
- * @see      xp://security.checksum.Checksum
- * @purpose  Provide an API to check HMAC_MD5 checksums
+ * @see   xp://security.checksum.Checksum
  */
 class HMAC_MD5 extends Checksum {
 
@@ -29,7 +27,7 @@ class HMAC_MD5 extends Checksum {
     $ip= $key ^ str_repeat("\x36", 0x40);
     $op= $key ^ str_repeat("\x5c", 0x40);
     
-    return HMAC_MD5::hash($op.pack('H*', md5($ip.$str)));
+    return self::hash($op.pack('H*', md5($ip.$str)));
   }
     
   /**
@@ -37,10 +35,10 @@ class HMAC_MD5 extends Checksum {
    *
    * @param   string str
    * @param   string key default NULL
-   * @return  security.checksum.HMAC_MD5
+   * @return  self
    */
   public static function fromString($str, $key= null) {
-    return new HMAC_MD5(HMAC_MD5::hash($str, $key));
+    return new self(self::hash($str, $key));
   }
 
   /**
@@ -48,9 +46,9 @@ class HMAC_MD5 extends Checksum {
    *
    * @param   io.File file
    * @param   string key default NULL
-   * @return  security.checksum.HMAC_MD5
+   * @return  self
    */
   public static function fromFile($file, $key= null) {
-    return new HMAC_MD5(HMAC_MD5::hash(FileUtil::getContents($file), $key));
+    return new self(self::hash(FileUtil::getContents($file), $key));
   }
 }

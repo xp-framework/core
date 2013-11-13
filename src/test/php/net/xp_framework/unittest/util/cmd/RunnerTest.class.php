@@ -7,11 +7,8 @@ use util\log\Logger;
 use io\streams\MemoryInputStream;
 use io\streams\MemoryOutputStream;
 
-
 /**
- * TestCase
- *
- * @purpose  Unittest
+ * TestCase for XPCLI runner
  */
 class RunnerTest extends TestCase {
   protected
@@ -19,6 +16,10 @@ class RunnerTest extends TestCase {
     $in     = null,
     $out    = null,
     $err    = null;
+
+  static function __static() {
+    \lang\XPClass::forName('lang.ResourceProvider');
+  }
 
   /**
    * Sets up test case
@@ -179,9 +180,9 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function runWritingToStandardOutput() {
-    $command= newinstance('util.cmd.Command', array(), '{
-      public function run() { $this->out->write("UNITTEST"); }
-    }');
+    $command= newinstance('util.cmd.Command', array(), array(
+      'run' => function($self) { $self->out->write('UNITTEST'); }
+    ));
 
     $return= $this->runWith(array($command->getClassName()));
     $this->assertEquals(0, $return);
@@ -195,9 +196,9 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function runWritingToStandardError() {
-    $command= newinstance('util.cmd.Command', array(), '{
-      public function run() { $this->err->write("UNITTEST"); }
-    }');
+    $command= newinstance('util.cmd.Command', array(), array(
+      'run' => function($self) { $self->err->write('UNITTEST'); }
+    ));
 
     $return= $this->runWith(array($command->getClassName()));
     $this->assertEquals(0, $return);
@@ -211,13 +212,13 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function runEchoInput() {
-    $command= newinstance('util.cmd.Command', array(), '{
-      public function run() { 
-        while ($chunk= $this->in->read()) {
+    $command= newinstance('util.cmd.Command', array(), array(
+      'run' => function($self) {
+        while ($chunk= $self->in->read()) {
           $this->out->write($chunk); 
         }
       }
-    }');
+    ));
 
     $return= $this->runWith(array($command->getClassName()), 'UNITTEST');
     $this->assertEquals(0, $return);
@@ -257,7 +258,7 @@ class RunnerTest extends TestCase {
 
       #[@arg(position= 0)]
       public function setArg($arg) { $this->arg= $arg; }
-      public function run() { throw new AssertionFailedError("Should not be executed"); }
+      public function run() { throw new \unittest\AssertionFailedError("Should not be executed"); }
     }');
 
     $return= $this->runWith(array($command->getClassName()));
@@ -359,7 +360,7 @@ class RunnerTest extends TestCase {
 
       #[@arg]
       public function setArg($arg) { $this->arg= $arg; }
-      public function run() { throw new AssertionFailedError("Should not be executed"); }
+      public function run() { throw new \unittest\AssertionFailedError("Should not be executed"); }
     }');
 
     $return= $this->runWith(array($command->getClassName()));
@@ -482,7 +483,7 @@ class RunnerTest extends TestCase {
       
       #[@arg(position= 0)]
       public function setHost($host) { 
-        throw new IllegalArgumentException("Connecting to ".$host." disallowed by policy");
+        throw new \lang\IllegalArgumentException("Connecting to ".$host." disallowed by policy");
       }
       
       public function run() { 
@@ -504,7 +505,7 @@ class RunnerTest extends TestCase {
       
       #[@arg]
       public function setHost($host) { 
-        throw new IllegalArgumentException("Connecting to ".$host." disallowed by policy");
+        throw new \lang\IllegalArgumentException("Connecting to ".$host." disallowed by policy");
       }
       
       public function run() { 
@@ -683,7 +684,7 @@ class RunnerTest extends TestCase {
       
       #[@arg(short= "cp")]
       public function setCopy($copy) { 
-        $this->copy= Package::forName("net.xp_forge.instructions")->loadClass($copy); 
+        $this->copy= \lang\reflect\Package::forName("net.xp_forge.instructions")->loadClass($copy); 
       }
       
       public function run() { 
@@ -772,7 +773,7 @@ class RunnerTest extends TestCase {
       protected $cat= NULL;
       
       #[@inject(name= "debug")]
-      public function setTrace(LogCategory $cat) { 
+      public function setTrace(\util\log\LogCategory $cat) { 
         $this->cat= $cat;
       }
       
@@ -850,8 +851,8 @@ class RunnerTest extends TestCase {
     $command= newinstance('util.cmd.Command', array(), '{
       
       #[@inject(name= "debug")]
-      public function setTrace(LogCategory $cat) { 
-        throw new IllegalArgumentException("Logging disabled by policy");
+      public function setTrace(\util\log\LogCategory $cat) { 
+        throw new \lang\IllegalArgumentException("Logging disabled by policy");
       }
       
       public function run() { 
@@ -872,7 +873,7 @@ class RunnerTest extends TestCase {
     $command= newinstance('util.cmd.Command', array(), '{
 
       #[@inject(name= "debug")]
-      public function setTrace(Properties $prop) {
+      public function setTrace(\util\Properties $prop) {
         $this->out->write("Have ", $prop->readString("section", "key"));
       }
 
@@ -894,7 +895,7 @@ class RunnerTest extends TestCase {
     $command= newinstance('util.cmd.Command', array(), '{
 
       #[@inject(name= "debug")]
-      public function setTrace(Properties $prop) {
+      public function setTrace(\util\Properties $prop) {
         $this->out->write("Have ", $prop->readString("section", "key"));
       }
 
@@ -920,7 +921,7 @@ key=overwritten_value'
     $command= newinstance('util.cmd.Command', array(), '{
 
       #[@inject(name= "debug")]
-      public function setTrace(Properties $prop) {
+      public function setTrace(\util\Properties $prop) {
         $this->out->write("Have ", $prop->readString("section", "key"));
       }
 

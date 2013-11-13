@@ -1,5 +1,7 @@
 <?php namespace lang;
 
+use lang\archive\ArchiveClassLoader;
+
 /** 
  * Entry point class to loading classes, packages and resources.
  * Keeps a list of class loaders that load classes from the file

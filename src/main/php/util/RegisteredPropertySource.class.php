@@ -1,11 +1,9 @@
 <?php namespace util;
 
-
-
 /**
  * Memory-based property source
  *
- * @test     xp://net.xp_framework.unittest.RegisteredPropertySourceTest
+ * @test  xp://net.xp_framework.unittest.RegisteredPropertySourceTest
  */
 class RegisteredPropertySource extends \lang\Object implements PropertySource {
   protected
@@ -18,7 +16,7 @@ class RegisteredPropertySource extends \lang\Object implements PropertySource {
    * @param   string name
    * @param   util.PropertyAccess prop
    */
-  public function __construct($name, \PropertyAccess $prop) {
+  public function __construct($name, PropertyAccess $prop) {
     $this->name= $name;
     $this->prop= $prop;
   }

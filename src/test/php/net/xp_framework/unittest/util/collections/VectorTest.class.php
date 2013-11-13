@@ -123,7 +123,7 @@ class VectorTest extends TestCase {
    */
   #[@test]
   public function unchangedAfterNullInAddAll() {
-    $v= create('new Vector<Object>()');
+    $v= create('new util.collections.Vector<Object>()');
     try {
       $v->addAll(array(new \lang\Object(), null));
       $this->fail('addAll() did not throw an exception', null, 'lang.IllegalArgumentException');
@@ -138,7 +138,7 @@ class VectorTest extends TestCase {
    */
   #[@test]
   public function unchangedAfterIntInAddAll() {
-    $v= create('new Vector<string>()');
+    $v= create('new util.collections.Vector<string>()');
     try {
       $v->addAll(array('hello', 5));
       $this->fail('addAll() did not throw an exception', null, 'lang.IllegalArgumentException');
@@ -153,7 +153,7 @@ class VectorTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function addingNull() {
-    create('new Vector<Object>()')->add(null);
+    create('new util.collections.Vector<Object>()')->add(null);
   }
 
   /**
@@ -176,7 +176,7 @@ class VectorTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function replacingWithNull() {
-    create('new Vector<Object>', array(new \lang\Object()))->set(0, null);
+    create('new util.collections.Vector<Object>', array(new \lang\Object()))->set(0, null);
   }
 
   /**

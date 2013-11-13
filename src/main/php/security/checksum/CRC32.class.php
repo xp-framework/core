@@ -2,14 +2,12 @@
  
 use io\FileUtil;
 
-
 /**
- * CRC32 checksum
+ * Provide an API to check CRC32 checksums
  *
- * @test     xp://net.xp_framework.unittest.security.checksum.CRC32Test
- * @see      xp://security.checksum.Checksum
- * @see      php://crc32
- * @purpose  Provide an API to check CRC32 checksums
+ * @test  xp://net.xp_framework.unittest.security.checksum.CRC32Test
+ * @see   xp://security.checksum.Checksum
+ * @see   php://crc32
  */
 class CRC32 extends Checksum {
 
@@ -33,7 +31,7 @@ class CRC32 extends Checksum {
    * @return  security.checksum.CRC32
    */
   public static function fromString($str) {
-    return new CRC32(crc32($str));
+    return new self(crc32($str));
   }
   
   /**
@@ -42,7 +40,7 @@ class CRC32 extends Checksum {
    * @return  security.checksum.MessageDigestImpl
    */
   public static function digest() {
-    return \MessageDigest::newInstance('crc32b');
+    return MessageDigest::newInstance('crc32b');
   }
 
   /**
@@ -52,7 +50,7 @@ class CRC32 extends Checksum {
    * @return  security.checksum.CRC32
    */
   public static function fromFile($file) {
-    return CRC32::fromString(FileUtil::getContents($file));
+    return self::fromString(FileUtil::getContents($file));
   }
   
   /**

@@ -44,7 +44,7 @@ class ArrayAccessTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function hashTableReadIllegalElement() {
-    $c= create('new HashTable<string, Object>()');
+    $c= create('new util.collections.HashTable<string, Object>()');
     $c[STDIN];
   }
 
@@ -66,7 +66,7 @@ class ArrayAccessTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function hashTableWriteIllegalKey() {
-    $c= create('new HashTable<string, Object>()');
+    $c= create('new util.collections.HashTable<string, Object>()');
     $c[STDIN]= new String('Hello');
   }
 
@@ -76,7 +76,7 @@ class ArrayAccessTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function hashTableWriteIllegalValue() {
-    $c= create('new HashTable<string, Object>()');
+    $c= create('new util.collections.HashTable<string, Object>()');
     $c['hello']= 'scalar';
   }
 

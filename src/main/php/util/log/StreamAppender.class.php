@@ -1,13 +1,10 @@
 <?php namespace util\log;
 
-
-
 /**
  * StreamAppender which appends data to a stream
  *
- * @see      xp://util.log.Appender
- * @test     xp://net.xp_framework.unittest.logging.StreamAppenderTest
- * @purpose  Appender
+ * @see   xp://util.log.Appender
+ * @test  xp://net.xp_framework.unittest.logging.StreamAppenderTest
  */  
 class StreamAppender extends Appender {
   public $stream= null;
@@ -26,7 +23,7 @@ class StreamAppender extends Appender {
    *
    * @param   util.log.LoggingEvent event
    */ 
-  public function append(\LoggingEvent $event) {
+  public function append(LoggingEvent $event) {
     $this->stream->write($this->layout->format($event));
   }
 }

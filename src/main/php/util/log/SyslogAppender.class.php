@@ -1,21 +1,14 @@
 <?php namespace util\log;
 
-
-
 /**
  * Appender which appends data to syslog
  *
- * @see      xp://util.log.Appender
- * @see      php://syslog
- * @purpose  Appender
+ * @see  xp://util.log.Appender
+ * @see  php://syslog
  */  
 class SyslogAppender extends Appender {
-  protected
-    $lastIdentifier= false;
-  
-  public
-    $identifier,
-    $facility;
+  protected $lastIdentifier= false;
+  public $identifier, $facility;
 
   /**
    * Constructor
@@ -34,7 +27,7 @@ class SyslogAppender extends Appender {
    *
    * @param   util.log.LoggingEvent event
    */ 
-  public function append(\LoggingEvent $event) {
+  public function append(LoggingEvent $event) {
     if ($this->identifier != $this->lastIdentifier) {
       closelog();
       openlog(
@@ -46,15 +39,15 @@ class SyslogAppender extends Appender {
     }
   
     static $map= array(
-      \LogLevel::INFO    => LOG_INFO,
-      \LogLevel::WARN    => LOG_WARNING,
-      \LogLevel::ERROR   => LOG_ERR,
-      \LogLevel::DEBUG   => LOG_DEBUG,
-      \LogLevel::NONE    => LOG_NOTICE
+      LogLevel::INFO    => LOG_INFO,
+      LogLevel::WARN    => LOG_WARNING,
+      LogLevel::ERROR   => LOG_ERR,
+      LogLevel::DEBUG   => LOG_DEBUG,
+      LogLevel::NONE    => LOG_NOTICE
     );
     
     $l= $event->getLevel();
-    syslog($map[isset($map[$l]) ? $l : \LogLevel::NONE], $this->layout->format($event));
+    syslog($map[isset($map[$l]) ? $l : LogLevel::NONE], $this->layout->format($event));
   }
   
   /**

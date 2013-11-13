@@ -1,13 +1,10 @@
 <?php namespace security\checksum;
  
-
-
 /**
- * MD5 checksum
+ * Provide an API to check MD5 checksums
  *
- * @see      xp://security.checksum.Checksum
- * @see      php://md5
- * @purpose  Provide an API to check MD5 checksums
+ * @see   xp://security.checksum.Checksum
+ * @see   php://md5
  */
 class MD5 extends Checksum {
 
@@ -18,7 +15,7 @@ class MD5 extends Checksum {
    * @return  security.checksum.MD5
    */
   public static function fromString($str) {
-    return new MD5(md5($str));
+    return new self(md5($str));
   }
 
   /**
@@ -27,7 +24,7 @@ class MD5 extends Checksum {
    * @return  security.checksum.MessageDigestImpl
    */
   public static function digest() {
-    return \MessageDigest::newInstance('md5');
+    return MessageDigest::newInstance('md5');
   }
 
   /**
@@ -37,6 +34,6 @@ class MD5 extends Checksum {
    * @return  security.checksum.MD5
    */
   public static function fromFile($file) {
-    return new MD5(md5_file($file->uri));
+    return new self(md5_file($file->uri));
   }
 }

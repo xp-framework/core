@@ -2,34 +2,39 @@
 
 use security\NoSuchAlgorithmException;
 
-
 /**
- * Factor class for message digests
+ * Factory class for message digests
  *
  * Creating a message digest incrementally
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * <code>
- *   $digest= MessageDigest::newInstance('md5');
- *   while ($in->available() > 0) {
- *     $digest->update($in->read());
- *   }
- *   $md5= new MD5($digest->final());
- * </code>
+ *
+ * ```php
+ * $digest= MessageDigest::newInstance('md5');
+ * while ($in->available() > 0) {
+ *   $digest->update($in->read());
+ * }
+ * $md5= new MD5($digest->final());
+ * ```
  *
  * Verifying
  * ~~~~~~~~~
- * <code>
- *   if ($md5->verify(new MD5('...'))) {
- *     // Checksums match
- *   }
- * </code>
  *
- * @test     xp://net.xp_framework.unittest.security.checksum.MessageDigestTest
- * @see      xp://security.checksum.DefaultDigestImpl
+ * ```php
+ * if ($md5->verify(new MD5('...'))) {
+ *   // Checksums match
+ * }
+ * ```
+ *
+ * @test  xp://net.xp_framework.unittest.security.checksum.MessageDigestTest
+ * @see   xp://security.checksum.DefaultDigestImpl
  */
 class MessageDigest extends \lang\Object {
   protected static $implementations= array();
-  
+
+  static function __static() {
+    \lang\XPClass::forName('security.checksum.DefaultDigestImpl');
+  }
+
   /**
    * Register an implementation
    *

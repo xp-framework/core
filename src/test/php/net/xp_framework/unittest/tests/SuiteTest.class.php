@@ -182,7 +182,7 @@ class SuiteTest extends \unittest\TestCase {
     $t= newinstance('unittest.TestCase', array('irrelevant'), '{
       #[@beforeClass]
       public static function raise() {
-        throw new PrerequisitesNotMetError("Cannot run");
+        throw new \unittest\PrerequisitesNotMetError("Cannot run");
       }
       
       #[@test]
@@ -203,7 +203,7 @@ class SuiteTest extends \unittest\TestCase {
     $t= newinstance('unittest.TestCase', array('irrelevant'), '{
       #[@beforeClass]
       public static function raise() {
-        throw new IllegalStateException("Skip");
+        throw new \lang\IllegalStateException("Skip");
       }
       
       #[@test]

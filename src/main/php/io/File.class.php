@@ -610,7 +610,7 @@ class File extends Stream {
     
     if ($target instanceof self) {
       $uri= $target->getURI();
-    } else if ($target instanceof \Folder) {
+    } else if ($target instanceof Folder) {
       $uri= $target->getURI().$this->getFilename();
     } else {
       $uri= $target;
@@ -644,7 +644,7 @@ class File extends Stream {
 
     if ($target instanceof self) {
       $uri= $target->getURI();
-    } else if ($target instanceof \Folder) {
+    } else if ($target instanceof Folder) {
       $uri= $target->getURI().$this->getFilename();
     } else {
       $uri= $target;

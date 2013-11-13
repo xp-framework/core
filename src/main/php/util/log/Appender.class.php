@@ -3,8 +3,7 @@
 /**
  * Abstract base class for appenders
  *
- * @see      xp://util.log.LogCategory#addAppender
- * @purpose  Base class
+ * @see   xp://util.log.LogCategory#addAppender
  */
 abstract class Appender extends \lang\Object {
   protected $layout= null;
@@ -14,7 +13,7 @@ abstract class Appender extends \lang\Object {
    *
    * @param   util.log.Layout layout
    */
-  public function setLayout(\Layout $layout) {
+  public function setLayout(Layout $layout) {
     $this->layout= $layout;
   }
   
@@ -24,7 +23,7 @@ abstract class Appender extends \lang\Object {
    * @param   util.log.Layout layout
    * @return  util.log.Appender
    */
-  public function withLayout(\Layout $layout) {
+  public function withLayout(Layout $layout) {
     $this->layout= $layout;
     return $this;
   }
@@ -43,7 +42,7 @@ abstract class Appender extends \lang\Object {
    *
    * @param   util.log.LoggingEvent event
    */ 
-  public abstract function append(\LoggingEvent $event);
+  public abstract function append(LoggingEvent $event);
   
   /**
    * Finalize this appender. This method is called when the logger

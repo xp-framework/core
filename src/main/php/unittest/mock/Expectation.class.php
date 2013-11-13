@@ -2,7 +2,6 @@
 
 use util\Objects;
 
-
 /**
  * Expectation to a method call.
  *
@@ -179,7 +178,7 @@ class Expectation extends \lang\Object {
    */
   private function doesMatchArg($pos, $value) {
     $argVal= $this->args[$pos];
-    if ($argVal instanceof IArgumentMatcher) {
+    if ($argVal instanceof \unittest\mock\arguments\IArgumentMatcher) {
       return $argVal->matches($value);
     } else {
       return Objects::equal($argVal, $value);

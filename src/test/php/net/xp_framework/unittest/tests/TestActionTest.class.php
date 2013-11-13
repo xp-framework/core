@@ -69,18 +69,18 @@ class TestActionTest extends \unittest\TestCase {
   #[@test]
   public function beforeTest_can_skip_test() {
     ClassLoader::defineClass('net.xp_framework.unittest.tests.SkipThisTest', 'lang.Object', array('unittest.TestAction'), '{
-      public function beforeTest(TestCase $t) {
-        throw new PrerequisitesNotMetError("Skip");
+      public function beforeTest(\unittest\TestCase $t) {
+        throw new \unittest\PrerequisitesNotMetError("Skip");
       }
 
-      public function afterTest(TestCase $t) {
+      public function afterTest(\unittest\TestCase $t) {
         // NOOP
       }
     }');
     $test= newinstance('unittest.TestCase', array('fixture'), '{
       #[@test, @action(new \net\xp_framework\unittest\tests\SkipThisTest())]
       public function fixture() {
-        throw new IllegalStateException("This test should have been skipped");
+        throw new \lang\IllegalStateException("This test should have been skipped");
       }
     }');
     $r= $this->suite->runTest($test);
@@ -106,20 +106,20 @@ class TestActionTest extends \unittest\TestCase {
         $this->platform= $platform;
       }
 
-      public function beforeTest(TestCase $t) {
+      public function beforeTest(\unittest\TestCase $t) {
         if (PHP_OS !== $this->platform) {
-          throw new PrerequisitesNotMetError("Skip", NULL, $this->platform);
+          throw new \unittest\PrerequisitesNotMetError("Skip", NULL, $this->platform);
         }
       }
 
-      public function afterTest(TestCase $t) {
+      public function afterTest(\unittest\TestCase $t) {
         // NOOP
       }
     }');
     $test= newinstance('unittest.TestCase', array('fixture'), '{
       #[@test, @action(new \net\xp_framework\unittest\tests\PlatformVerification("Test"))]
       public function fixture() {
-        throw new IllegalStateException("This test should have been skipped");
+        throw new \lang\IllegalStateException("This test should have been skipped");
       }
     }');
     $outcome= $this->suite->runTest($test)->outcomeOf($test);

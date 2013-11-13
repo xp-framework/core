@@ -1,16 +1,10 @@
-<?php namespace io\streams;/* This file is part of the XP framework's experiments
- *
- * $Id$
- */
-
-
+<?php namespace io\streams;
 
 /**
  * A InputStreamReader implementation that reads string values of
  * the given arguments from the underlying input stream.
  *
- * @test     xp://net.xp_framework.unittest.io.streams.StringReaderTest
- * @purpose  InputStreamReader implementation
+ * @test  xp://net.xp_framework.unittest.io.streams.StringReaderTest
  */
 class StringReader extends \lang\Object implements InputStreamReader {
   protected
@@ -40,7 +34,7 @@ class StringReader extends \lang\Object implements InputStreamReader {
    *
    * @param   io.streams.InputStream stream
    */
-  public function setStream(\InputStream $stream) {
+  public function setStream(InputStream $stream) {
     $this->in= $stream;
     $this->buf= '';
   }

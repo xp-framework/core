@@ -232,7 +232,7 @@ class ValuesTest extends \unittest\TestCase {
       public $values= array();
 
       public function values() {
-        return new ArrayList(1, 2, 3);
+        return new \lang\types\ArrayList(1, 2, 3);
       }
 
       #[@test, @values("values")]
@@ -303,7 +303,7 @@ class ValuesTest extends \unittest\TestCase {
     $test= newinstance('unittest.TestCase', array('not_at_number'), '{
       #[@test, @values(array("a")), @expect("lang.FormatException")]
       public function not_at_number($value) {
-        throw new FormatException("Not a number: ".$value);
+        throw new \lang\FormatException("Not a number: ".$value);
       }
     }');
     $r= $this->suite->runTest($test);

@@ -264,7 +264,7 @@ class DateTest extends TestCase {
    */
   #[@test]
   public function serializationOfLegacyDates() {
-    $serialized= 'O:4:"Date":12:{s:6:"_utime";i:1185310311;s:7:"seconds";i:51;s:7:"minutes";i:51;s:5:"hours";i:22;s:4:"mday";i:24;s:4:"wday";i:2;s:3:"mon";i:7;s:4:"year";i:2007;s:4:"yday";i:204;s:7:"weekday";s:7:"Tuesday";s:5:"month";s:4:"July";s:4:"__id";N;}';
+    $serialized= 'O:9:"util\Date":12:{s:6:"_utime";i:1185310311;s:7:"seconds";i:51;s:7:"minutes";i:51;s:5:"hours";i:22;s:4:"mday";i:24;s:4:"wday";i:2;s:3:"mon";i:7;s:4:"year";i:2007;s:4:"yday";i:204;s:7:"weekday";s:7:"Tuesday";s:5:"month";s:4:"July";s:4:"__id";N;}';
 
     $date= unserialize($serialized);
     $this->assertDateEquals('2007-07-24T20:51:51+00:00', $date);

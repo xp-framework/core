@@ -2,7 +2,6 @@
 
 use util\cmd\Console;
 
-
 /**
  * Appender which appends data to console. The data goes to STDERR.
  *
@@ -18,7 +17,6 @@ class ConsoleAppender extends Appender {
 
   /**
    * Constructor
-   *
    */
   public function __construct() {
     $this->writer= Console::$err;
@@ -29,7 +27,7 @@ class ConsoleAppender extends Appender {
    *
    * @param   util.log.LoggingEvent event
    */ 
-  public function append(\LoggingEvent $event) {
+  public function append(LoggingEvent $event) {
     $this->writer->write($this->layout->format($event));
   }
 }

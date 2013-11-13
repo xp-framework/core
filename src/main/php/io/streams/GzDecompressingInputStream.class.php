@@ -22,7 +22,7 @@ class GzDecompressingInputStream extends \lang\Object implements InputStream {
       public $context = NULL;
       
       public function stream_open($path, $mode, $options, $opened_path) {
-        $this->st= GzDecompressingInputStream::$wrapped[$path];
+        $this->st= \io\streams\GzDecompressingInputStream::$wrapped[$path];
         $this->id= $path;
         return TRUE;
       }
@@ -53,7 +53,7 @@ class GzDecompressingInputStream extends \lang\Object implements InputStream {
       
       public function stream_close() {
         $this->st->close();
-        unset(GzDecompressingInputStream::$wrapped[$this->id]);
+        unset(\io\streams\GzDecompressingInputStream::$wrapped[$this->id]);
       }
     }')));
   }

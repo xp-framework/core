@@ -105,7 +105,7 @@ class MockProxyBuilder extends \lang\Object {
   private function generateHead($baseClass, $interfaces) {
     // Create proxy class' name, using a unique identifier and a prefix
     $name= $this->getProxyName();
-    $bytes= 'class '.$name.' extends '.\xp::reflect($baseClass->getName()).' implements IMockProxy, ';
+    $bytes= 'class '.$name.' extends '.\xp::reflect($baseClass->getName()).' implements \unittest\mock\IMockProxy, ';
 
     for ($j= 0; $j < sizeof($interfaces); $j++) {
       $bytes.= \xp::reflect($interfaces[$j]->getName()).', ';
@@ -266,7 +266,7 @@ class MockProxyBuilder extends \lang\Object {
       $bytes.= (
         'public function '.$method->getName().'($_'.implode('= NULL, $_', range(0, $methodax)).'= NULL) { '.
         'switch (func_num_args()) {'.implode("\n", $cases).
-        ' default: throw new IllegalArgumentException(\'Illegal number of arguments\'); }'.
+        ' default: throw new \lang\IllegalArgumentException(\'Illegal number of arguments\'); }'.
         '}'."\n"
       );
     } else {

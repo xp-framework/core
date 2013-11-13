@@ -1,19 +1,17 @@
 <?php namespace security\checksum;
 
-
-
 /**
  * CRC16 digest. 
  *
- * @test     xp://net.xp_framework.unittest.security.checksum.CRC16DigestTest
- * @see      xp://security.checksum.MessageDigestImpl
- * @see      xp://security.checksum.CRC16
+ * @test  xp://net.xp_framework.unittest.security.checksum.CRC16DigestTest
+ * @see   xp://security.checksum.MessageDigestImpl
+ * @see   xp://security.checksum.CRC16
  */
 class CRC16DigestImpl extends MessageDigestImpl {
   protected $sum= 0;
 
   static function __static() {
-    \MessageDigest::register('crc16', new \lang\XPClass(__CLASS__));
+    MessageDigest::register('crc16', new \lang\XPClass(__CLASS__));
   }
 
   /**

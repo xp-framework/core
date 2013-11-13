@@ -1,7 +1,5 @@
 <?php namespace util;
 
-
-
 /**
  * Property-Manager
  * 
@@ -20,19 +18,15 @@
  * @purpose  Container
  */
 class PropertyManager extends \lang\Object {
-  protected static 
-    $instance     = null;
-
-  protected
-    $provider     = array();
+  protected static $instance= null;
+  protected $provider= array();
 
   static function __static() {
     self::$instance= new self();
   }
   
   /**
-   * Constructor.
-   *
+   * Constructor
    */
   protected function __construct() {
   }
@@ -61,7 +55,7 @@ class PropertyManager extends \lang\Object {
    * @param   util.PropertySource source
    * @return  bool
    */
-  public function hasSource(\PropertySource $source) {
+  public function hasSource(PropertySource $source) {
     return isset($this->provider[$source->hashCode()]);
   }
 
@@ -71,7 +65,7 @@ class PropertyManager extends \lang\Object {
    * @param   util.PropertySource source
    * @return  util.PropertySource the added path
    */
-  public function appendSource(\PropertySource $source) {
+  public function appendSource(PropertySource $source) {
     $this->provider[$source->hashCode()]= $source;
     return $source;
   }
@@ -100,7 +94,7 @@ class PropertyManager extends \lang\Object {
    * @param   util.PropertySource source
    * @return  util.PropertySource the added path
    */
-  public function prependSource(\PropertySource $source) {
+  public function prependSource(PropertySource $source) {
     if (!$this->hasSource($source)) $this->provider= array_merge(array($source->hashCode() => $source), $this->provider);
     return $source;
   }
@@ -120,7 +114,7 @@ class PropertyManager extends \lang\Object {
    * @param   util.PropertySource source
    * @return  bool whether the path was removed
    */
-  public function removeSource(\PropertySource $source) {
+  public function removeSource(PropertySource $source) {
     $removed= isset($this->provider[$source->hashCode()]);
     unset($this->provider[$source->hashCode()]);
     return $removed;
@@ -175,5 +169,5 @@ class PropertyManager extends \lang\Object {
       ));
       default: return new CompositeProperties($found);
     }
-	  }
+	}
 }

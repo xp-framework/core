@@ -1,13 +1,10 @@
 <?php namespace security\checksum;
- 
-
 
 /**
- * SHA1 checksum
+ * Provide an API to check SHA1 checksums
  *
- * @see      xp://security.checksum.Checksum
- * @see      php://sha1
- * @purpose  Provide an API to check SHA1 checksums
+ * @see   xp://security.checksum.Checksum
+ * @see   php://sha1
  */
 class SHA1 extends Checksum {
 
@@ -18,7 +15,7 @@ class SHA1 extends Checksum {
    * @return  security.checksum.SHA1
    */
   public static function fromString($str) {
-    return new SHA1(sha1($str));
+    return new self(sha1($str));
   }
 
   /**
@@ -27,7 +24,7 @@ class SHA1 extends Checksum {
    * @return  security.checksum.MessageDigestImpl
    */
   public static function digest() {
-    return \MessageDigest::newInstance('sha1');
+    return MessageDigest::newInstance('sha1');
   }
 
   /**
@@ -37,6 +34,6 @@ class SHA1 extends Checksum {
    * @return  security.checksum.SHA1
    */
   public static function fromFile($file) {
-    return new SHA1(sha1_file($file->uri));
+    return new self(sha1_file($file->uri));
   }
 }

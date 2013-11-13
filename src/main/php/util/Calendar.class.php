@@ -7,8 +7,6 @@ define('CAL_SEC_WEEK',    604800);
 define('CAL_DST_EU',      0x0000);
 define('CAL_DST_US',      0x0001);
 
-
-
 /**
  * Calendar class
  *

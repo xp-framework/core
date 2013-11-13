@@ -33,7 +33,7 @@ abstract class Streams extends \lang\Object {
       }
 
       public function stream_write($data) {
-        throw new IOException("Cannot write to readable stream");
+        throw new \io\IOException("Cannot write to readable stream");
       }
 
       public function stream_read($count) {
@@ -59,7 +59,7 @@ abstract class Streams extends \lang\Object {
       }
 
       public function stream_read($count) {
-        throw new IOException("Cannot read from writeable stream");
+        throw new \io\IOException("Cannot read from writeable stream");
       }
 
       public function stream_flush() {
@@ -167,7 +167,7 @@ abstract class Streams extends \lang\Object {
    * @return  bool
    */
   public function stream_seek($offset, $whence) {
-    if (!self::$streams[$this->id] instanceof \Seekable) {
+    if (!self::$streams[$this->id] instanceof Seekable) {
       throw new IOException('Underlying stream does not support seeking');
     }
 
@@ -181,7 +181,7 @@ abstract class Streams extends \lang\Object {
    * @return  int position
    */
   public function stream_tell() {
-    if (!self::$streams[$this->id] instanceof \Seekable) {
+    if (!self::$streams[$this->id] instanceof Seekable) {
       throw new IOException('Underlying stream does not support seeking');
     }
     return self::$streams[$this->id]->tell();

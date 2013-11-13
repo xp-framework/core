@@ -1,17 +1,14 @@
 <?php namespace util\log;
 
-
-
 /**
  * ConsoleAppender which colorizes output depending on the
  * logger flag (error, warn, info or debug).
  *
  * Uses the terminal emulation escape sequences to set colors.
  *
- * @see      http://www.catalyst.com/support/help/cstools3/visual/terminal/escapeseq.html
- * @see      http://www.termsys.demon.co.uk/vtansi.htm#colors  
- * @see      xp://util.log.ConsoleAppender
- * @purpose  Appender
+ * @see  http://www.catalyst.com/support/help/cstools3/visual/terminal/escapeseq.html
+ * @see  http://www.termsys.demon.co.uk/vtansi.htm#colors  
+ * @see  xp://util.log.ConsoleAppender
  */  
 class ColoredConsoleAppender extends ConsoleAppender {
   protected $colors= array();
@@ -33,11 +30,11 @@ class ColoredConsoleAppender extends ConsoleAppender {
     $cdefault = '07;37'
   ) {
     $this->colors= array(
-      \LogLevel::INFO    => $cinfo,
-      \LogLevel::WARN    => $cwarn,
-      \LogLevel::ERROR   => $cerror,
-      \LogLevel::DEBUG   => $cdebug,
-      \LogLevel::NONE    => $cdefault
+      LogLevel::INFO    => $cinfo,
+      LogLevel::WARN    => $cwarn,
+      LogLevel::ERROR   => $cerror,
+      LogLevel::DEBUG   => $cdebug,
+      LogLevel::NONE    => $cdefault
     );
   }
   
@@ -46,9 +43,9 @@ class ColoredConsoleAppender extends ConsoleAppender {
    *
    * @param   util.log.LoggingEvent event
    */ 
-  public function append(\LoggingEvent $event) {
+  public function append(LoggingEvent $event) {
     $l= $event->getLevel();
-    fwrite(STDERR, "\x1b[".$this->colors[isset($this->colors[$l]) ? $l : \LogLevel::NONE]."m");
+    fwrite(STDERR, "\x1b[".$this->colors[isset($this->colors[$l]) ? $l : LogLevel::NONE]."m");
     fwrite(STDERR, $this->layout->format($event));
     fwrite(STDERR, "\x1b[0m");
   }

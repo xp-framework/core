@@ -83,13 +83,13 @@ class ChannelStreamTest extends TestCase {
    */
   #[@test, @expect('io.IOException')]
   public function writeToClosedChannel() {
-    $r= ChannelWrapper::capture(newinstance('lang.Runnable', array(), '{
-      public function run() {
+    ChannelWrapper::capture(newinstance('lang.Runnable', array(), array(
+      'run' => function($self) {
         $s= new ChannelOutputStream("output");
         $s->close();
         $s->write("whatever");
       }
-    }'));
+    )));
   }
 
   /**
@@ -98,13 +98,13 @@ class ChannelStreamTest extends TestCase {
    */
   #[@test, @expect('io.IOException')]
   public function readingFromClosedChannel() {
-    $r= ChannelWrapper::capture(newinstance('lang.Runnable', array(), '{
-      public function run() {
-        $s= new ChannelInputStream("input");
+    ChannelWrapper::capture(newinstance('lang.Runnable', array(), array(
+      'run' => function($self) {
+        $s= new ChannelInputStream('input');
         $s->close();
         $s->read();
       }
-    }'));
+    )));
   }
 
   /**
@@ -113,13 +113,12 @@ class ChannelStreamTest extends TestCase {
    */
   #[@test]
   public function output() {
-    $r= ChannelWrapper::capture(newinstance('lang.Runnable', array(), '{
-      public function run() {
-        $s= new ChannelOutputStream("output");
+    $r= ChannelWrapper::capture(newinstance('lang.Runnable', array(), array(
+      'run' => function($self) {
+        $s= new ChannelOutputStream('output');
         $s->write("+OK Hello");
       }
-    }'));
-      
+    )));      
     $this->assertEquals('+OK Hello', $r['output']);
   }
 
@@ -129,13 +128,12 @@ class ChannelStreamTest extends TestCase {
    */
   #[@test]
   public function stdout() {
-    $r= ChannelWrapper::capture(newinstance('lang.Runnable', array(), '{
-      public function run() {
-        $s= new ChannelOutputStream("stdout");
+    $r= ChannelWrapper::capture(newinstance('lang.Runnable', array(), array(
+      'run' => function($self) {
+        $s= new ChannelOutputStream('stdout');
         $s->write("+OK Hello");
       }
-    }'));
-      
+    )));      
     $this->assertEquals('+OK Hello', $r['stdout']);
   }
 
@@ -145,13 +143,12 @@ class ChannelStreamTest extends TestCase {
    */
   #[@test]
   public function stderr() {
-    $r= ChannelWrapper::capture(newinstance('lang.Runnable', array(), '{
-      public function run() {
-        $s= new ChannelOutputStream("stderr");
+    $r= ChannelWrapper::capture(newinstance('lang.Runnable', array(), array(
+      'run' => function($self) {
+        $s= new ChannelOutputStream('stderr');
         $s->write("+OK Hello");
       }
-    }'));
-      
+    )));      
     $this->assertEquals('+OK Hello', $r['stderr']);
   }
 
@@ -161,16 +158,15 @@ class ChannelStreamTest extends TestCase {
    */
   #[@test]
   public function stdin() {
-    $r= ChannelWrapper::capture(newinstance('lang.Runnable', array(), '{
-      public function run() {
-        $i= new ChannelInputStream("stdin");
-        $o= new ChannelOutputStream("stdout");
+    $r= ChannelWrapper::capture(newinstance('lang.Runnable', array(), array(
+      'run' => function($self) {
+        $i= new ChannelInputStream('stdin');
+        $o= new ChannelOutputStream('stdout');
         while ($i->available()) {
           $o->write($i->read());
         }
       }
-    }'), array('stdin' => '+OK Piped input'));
-      
+    )), array('stdin' => '+OK Piped input'));
     $this->assertEquals('+OK Piped input', $r['stdout']);
   }
 
@@ -180,16 +176,15 @@ class ChannelStreamTest extends TestCase {
    */
   #[@test]
   public function input() {
-    $r= ChannelWrapper::capture(newinstance('lang.Runnable', array(), '{
-      public function run() {
-        $i= new ChannelInputStream("input");
-        $o= new ChannelOutputStream("stdout");
+    $r= ChannelWrapper::capture(newinstance('lang.Runnable', array(), array(
+      'run' => function($self) {
+        $i= new ChannelInputStream('input');
+        $o= new ChannelOutputStream('stdout');
         while ($i->available()) {
           $o->write($i->read());
         }
       }
-    }'), array('input' => '+OK Piped input'));
-      
+    )), array('input' => '+OK Piped input'));      
     $this->assertEquals('+OK Piped input', $r['stdout']);
   }
 }

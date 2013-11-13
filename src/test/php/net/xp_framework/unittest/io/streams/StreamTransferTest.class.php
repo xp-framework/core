@@ -22,7 +22,7 @@ class StreamTransferTest extends TestCase {
     return newinstance('io.streams.InputStream', array(), '{
       public function read($length= 8192) { }
       public function available() { }
-      public function close() { throw new IOException("Close error"); }
+      public function close() { throw new \io\IOException("Close error"); }
     }');
   }
 
@@ -49,7 +49,7 @@ class StreamTransferTest extends TestCase {
     return newinstance('io.streams.OutputStream', array(), '{
       public function write($data) { }
       public function flush() { }
-      public function close() { throw new IOException("Close error"); }
+      public function close() { throw new \io\IOException("Close error"); }
     }');
   }
 

@@ -25,7 +25,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
     self::$iterate= newinstance('Iterator', array(), '{
       private $i= 0, $v, $b;
       public function on($v) { $self= new self(); $self->v= $v; return $self; }
-      public function current() { return new Pair($this->b[0], $this->b[1]); }
+      public function current() { return new \util\collections\Pair($this->b[0], $this->b[1]); }
       public function key() { return $this->i; }
       public function next() { $this->b= next($this->v); $this->i++; }
       public function rewind() { reset($this->v); $this->b= current($this->v); $this->i= 0;  }
@@ -108,7 +108,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
     }
 
     $this->_buckets[$h]= array($key, $value);
-    $this->_hash+= \HashProvider::hashOf($h.($value instanceof \lang\Generic ? $value->hashCode() : $value));
+    $this->_hash+= HashProvider::hashOf($h.($value instanceof \lang\Generic ? $value->hashCode() : $value));
     return $previous;
   }
 
@@ -140,7 +140,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
       $prev= null;
     } else {
       $prev= $this->_buckets[$h][1];
-      $this->_hash-= \HashProvider::hashOf($h.($prev instanceof \lang\Generic ? $prev->hashCode() : $prev));
+      $this->_hash-= HashProvider::hashOf($h.($prev instanceof \lang\Generic ? $prev->hashCode() : $prev));
       unset($this->_buckets[$h]);
     }
 

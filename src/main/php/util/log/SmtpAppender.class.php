@@ -1,7 +1,5 @@
 <?php namespace util\log;
 
-
-
 /**
  * Appender which sends log to an email address
  *
@@ -32,7 +30,6 @@ class SmtpAppender extends Appender {
   
   /**
    * Destructor
-   *
    */
   public function __destruct() {
     $this->finalize();
@@ -53,7 +50,7 @@ class SmtpAppender extends Appender {
    *
    * @param   util.log.LoggingEvent event
    */ 
-  public function append(\LoggingEvent $event) {
+  public function append(LoggingEvent $event) {
     $body= $this->layout->format($event);
     if ($this->sync) {
       $this->send($this->prefix, $body);

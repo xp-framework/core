@@ -4,15 +4,17 @@
  * Provides hashing functionality for maps.
  * 
  * Basic usage:
- * <code>
- *   $hashCode= HashProvider::hashOf($string);
- * </code>
+ * 
+ * ```php
+ * $hashCode= HashProvider::hashOf($string);
+ * ```
  *
  * Uses MD5 as default hashing implementation. To change the hashing
  * implementation to be used, use the following:
- * <code>
+ *
+ * ```php
  *   HashProvider::getInstance()->setImplementation(new MyHashImplementation());
- * </code>
+ * ```
  * 
  * @see   xp://util.collections.DJBX33AHashImplementation
  * @see   xp://util.collections.MD5HashImplementation
@@ -73,7 +75,7 @@ class HashProvider extends \lang\Object {
    * @param   util.collections.HashImplementation impl
    * @throws  lang.IllegalArgumentException when impl is not a HashImplementation
    */
-  public function setImplementation(\HashImplementation $impl) {
+  public function setImplementation(HashImplementation $impl) {
     $this->impl= $impl;
   }
 

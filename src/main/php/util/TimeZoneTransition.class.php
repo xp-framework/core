@@ -20,7 +20,7 @@ class TimeZoneTransition extends \lang\Object {
    * @param   util.TimeZone tz
    * @param   util.Date date
    */
-  public function __construct(\TimeZone $tz, \Date $date) {
+  public function __construct(TimeZone $tz, Date $date) {
     $this->tz= $tz;
     $this->date= $date;
   }
@@ -34,7 +34,7 @@ class TimeZoneTransition extends \lang\Object {
    * @return  util.TimeZoneTransition
    * @throws  lang.IllegalArgumentException if timezone has no transitions
    */
-  public static function nextTransition(\TimeZone $tz, \Date $date) {
+  public static function nextTransition(TimeZone $tz, Date $date) {
     $t= new self($tz, $date);
     $t->next();
     return $t;
@@ -49,7 +49,7 @@ class TimeZoneTransition extends \lang\Object {
    * @return  util.TimeZoneTransition
    * @throws  lang.IllegalArgumentException if timezone has no transitions
    */
-  public static function previousTransition(\TimeZone $tz, \Date $date) {
+  public static function previousTransition(TimeZone $tz, Date $date) {
     $t= new self($tz, $date);
     $t->previous();
     return $t;
@@ -67,7 +67,7 @@ class TimeZoneTransition extends \lang\Object {
     }
     if (!isset($t)) throw new \lang\IllegalArgumentException('Timezone '.$this->tz->getName().' does not have DST transitions.');
     
-    $this->date= new \Date($t['ts']);
+    $this->date= new Date($t['ts']);
     $this->isDst= $t['isdst'];
     $this->offset= $t['offset'];
     $this->abbr= $t['abbr'];
@@ -86,7 +86,7 @@ class TimeZoneTransition extends \lang\Object {
     }
     if (!isset($t)) throw new \lang\IllegalArgumentException('Timezone '.$this->tz->getName().' does not have DST transitions.');
 
-    $this->date= new \Date($last['ts'], new \TimeZone($last['abbr']));
+    $this->date= new Date($last['ts'], new TimeZone($last['abbr']));
     $this->isDst= $last['isdst'];
     $this->offset= $last['offset'];
     $this->abbr= $last['abbr'];

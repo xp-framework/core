@@ -1,16 +1,10 @@
-<?php namespace io\streams;/* This file is part of the XP framework's experiments
- *
- * $Id$
- */
-
-
+<?php namespace io\streams;
 
 /**
  * A OutputStreamWriter implementation that writes the string values of
  * the given arguments to the underlying output stream.
  *
- * @test     xp://net.xp_framework.unittest.io.streams.StringWriterTest
- * @purpose  OutputStreamWriter implementation
+ * @test  xp://net.xp_framework.unittest.io.streams.StringWriterTest
  */
 class StringWriter extends \lang\Object implements OutputStreamWriter {
   protected
@@ -39,7 +33,7 @@ class StringWriter extends \lang\Object implements OutputStreamWriter {
    *
    * @param   io.streams.OutputStream stream
    */
-  public function setStream(\OutputStream $stream) {
+  public function setStream(OutputStream $stream) {
     $this->out= $stream;
   }
 

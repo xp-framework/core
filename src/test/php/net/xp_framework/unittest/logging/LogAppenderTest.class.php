@@ -6,7 +6,6 @@ use util\log\LogCategory;
 use util\log\layout\PatternLayout;
 use util\collections\Vector;
 
-
 /**
  * TestCase
  *
@@ -21,7 +20,7 @@ class LogAppenderTest extends TestCase {
    *
    */
   public function setUp() {
-    $this->events= create('new Vector<String>()');
+    $this->events= create('new util.collections.Vector<String>()');
     $appender= newinstance('util.log.Appender', array($this->events), '{
       private $events= NULL;
 
@@ -29,8 +28,8 @@ class LogAppenderTest extends TestCase {
         $this->events= $events;
       }
 
-      public function append(LoggingEvent $event) {
-        $this->events[]= new String($this->layout->format($event));
+      public function append(\util\log\LoggingEvent $event) {
+        $this->events[]= new \lang\types\String($this->layout->format($event));
       }
     }');
     $this->fixture= create(new LogCategory('default'))

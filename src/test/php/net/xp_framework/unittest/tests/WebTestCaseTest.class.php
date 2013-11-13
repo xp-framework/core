@@ -18,7 +18,7 @@ class WebTestCaseTest extends TestCase {
   public function setUp() {
     $this->fixture= newinstance('unittest.web.WebTestCase', array($this->name), '{
       protected function getConnection($url= NULL) {
-        return new HttpConnection("http://localhost/");
+        return new \peer\http\HttpConnection("http://localhost/");
       }
       
       protected function doRequest($method, $params) {
@@ -27,7 +27,7 @@ class WebTestCaseTest extends TestCase {
       
       public function respondWith($status, $headers= array(), $body= "") {
         $headers[]= "Content-Length: ".strlen($body);
-        $this->response= new HttpResponse(new MemoryInputStream(sprintf(
+        $this->response= new \peer\http\HttpResponse(new \io\streams\MemoryInputStream(sprintf(
           "HTTP/1.0 %d Message\r\n%s\r\n\r\n%s",
           $status,
           implode("\r\n", $headers),

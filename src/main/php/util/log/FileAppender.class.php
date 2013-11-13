@@ -1,7 +1,5 @@
 <?php namespace util\log;
 
-
-
 /**
  * Appender which appends data to a file
  *
@@ -27,7 +25,7 @@ class FileAppender extends Appender {
    *
    * @param   util.log.LoggingEvent event
    */ 
-  public function append(\LoggingEvent $event) {
+  public function append(LoggingEvent $event) {
     $line= $this->layout->format($event);
     $fd= fopen($this->filename, 'a');
 

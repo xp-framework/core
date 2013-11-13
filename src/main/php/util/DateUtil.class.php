@@ -157,7 +157,7 @@ class DateUtil extends \lang\Object {
    * @param   util.TimeZone tz
    * @return  util.Date
    */
-  public static function moveToTimezone(Date $date, \TimeZone $tz) {
+  public static function moveToTimezone(Date $date, TimeZone $tz) {
     return $tz->translate($date);
   }
   
@@ -170,7 +170,7 @@ class DateUtil extends \lang\Object {
    * @param   util.TimeZone tz
    * @return  util.Date
    */
-  public static function setTimezone(Date $date, \TimeZone $tz) {
+  public static function setTimezone(Date $date, TimeZone $tz) {
     return Date::create(
       $date->getYear(),
       $date->getMonth(),

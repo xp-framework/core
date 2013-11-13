@@ -2,13 +2,11 @@
  
 use io\FileUtil;
 
-
 /**
  * CRC16 checksum [CRC-16 (Modbus)]
  *
- * @see      xp://security.checksum.Checksum
- * @purpose  Provide an API to check CRC16 checksums
- * @see      http://en.wikipedia.org/wiki/Cyclic_redundancy_check
+ * @see   xp://security.checksum.Checksum
+ * @see   http://en.wikipedia.org/wiki/Cyclic_redundancy_check
  */
 class CRC16 extends Checksum {
 
@@ -29,7 +27,7 @@ class CRC16 extends Checksum {
    * Create a new checksum from a string
    *
    * @param   string str
-   * @return  security.checksum.CRC16
+   * @return  self
    */
   public static function fromString($str) {
     $sum= 0xFFFF;
@@ -39,7 +37,7 @@ class CRC16 extends Checksum {
         $sum= (1 === ($sum & 1) ? ($sum >> 1) ^ 0xA001 : $sum >> 1);
       }
     }
-    return new CRC16($sum);
+    return new self($sum);
   }
 
   /**
@@ -48,16 +46,16 @@ class CRC16 extends Checksum {
    * @return  security.checksum.MessageDigestImpl
    */
   public static function digest() {
-    return \MessageDigest::newInstance('crc16');
+    return MessageDigest::newInstance('crc16');
   }
 
   /**
    * Create a new checksum from a file object
    *
    * @param   io.File file
-   * @return  security.checksum.CRC16
+   * @return  self
    */
   public static function fromFile($file) {
-    return CRC16::fromString(FileUtil::getContents($file));
+    return self::fromString(FileUtil::getContents($file));
   }
 }

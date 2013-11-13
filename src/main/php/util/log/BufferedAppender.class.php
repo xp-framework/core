@@ -1,7 +1,5 @@
 <?php namespace util\log;
 
-
-
 /**
  * Appender which appends all data to a buffer
  *
@@ -16,7 +14,7 @@ class BufferedAppender extends Appender {
    *
    * @param   util.log.LoggingEvent event
    */ 
-  public function append(\LoggingEvent $event) {
+  public function append(LoggingEvent $event) {
     $this->buffer.= $this->layout->format($event);
   }
   
