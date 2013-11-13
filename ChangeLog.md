@@ -12,6 +12,8 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented RFC #279: Newinstance with closures in xp-framework/core#2
+  (@thekid)
 * Implemented RFC #186: Drop SAPI feature alltogether; after it was 
   deprecated since 5.9.0 - (@thekid)
 * Implemented RFC #262: Split up framework into minimal pieces:
