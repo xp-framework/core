@@ -719,12 +719,7 @@
   function __load($class) {
     $name= strtr($class, '\\', '.');
     $cl= xp::$loader->findClass($name);
-    if ($cl instanceof null) {
-      #fputs(STDERR, "! $class -> $name\n");
-      #ob_end_clean();
-      #debug_print_backtrace();
-      return FALSE;
-    }
+    if ($cl instanceof null) return FALSE;
     $cl->loadClass0($name);
     return TRUE;
   }
