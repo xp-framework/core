@@ -717,8 +717,6 @@
   // {{{ proto bool __load(string class)
   //     SPL Autoload callback
   function __load($class) {
-    if ('Date' === $class) $class= 'util.Date';
-    if ('Error' === $class) $class= 'lang.Error';
     $name= strtr($class, '\\', '.');
     $cl= xp::$loader->findClass($name);
     if ($cl instanceof null) {
