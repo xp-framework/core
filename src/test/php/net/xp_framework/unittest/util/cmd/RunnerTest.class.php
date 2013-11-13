@@ -215,7 +215,7 @@ class RunnerTest extends TestCase {
     $command= newinstance('util.cmd.Command', array(), array(
       'run' => function($self) {
         while ($chunk= $self->in->read()) {
-          $this->out->write($chunk); 
+          $self->out->write($chunk);
         }
       }
     ));
