@@ -634,11 +634,15 @@
       foreach ($def as $name => $member) {
         if ($member instanceof \Closure) {
           $r= new ReflectionFunction($member);
-          $pass= '';
+          $pass= $sig= '';
           foreach (array_slice($r->getParameters(), 1) as $param) {
+            $sig.= ', $'.$param->getName();
+            if ($param->isOptional()) {
+              $sig.= '= '.var_export($param->getDefaultValue(), TRUE);
+            }
             $pass.= ', $'.$param->getName();
           }
-          $bytes.= 'function '.$name.'('.substr($pass, 2).') {
+          $bytes.= 'function '.$name.'('.substr($sig, 2).') {
             $f= self::$__func["'.$name.'"];
             return call_user_func($f, $this'.('' === $pass ? '' : ', '.substr($pass, 2)).');
             return $f($this'.('' === $pass ? '' : ', '.substr($pass, 2)).');
