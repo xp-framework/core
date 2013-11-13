@@ -92,7 +92,7 @@ class MockProxyBuilderTest extends TestCase {
   #[@test]
   public function proxyClassNamesGetPrefixed() {
     $class= $this->proxyClassFor(array($this->iteratorClass));
-    $this->assertEquals(MOCK_PROXY_PREFIX, substr($class->getName(), 0, strlen(MOCK_PROXY_PREFIX)));
+    $this->assertEquals(MockProxyBuilder::PREFIX, substr($class->getName(), 0, strlen(MockProxyBuilder::PREFIX)));
   }
 
   /**

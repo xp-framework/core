@@ -2,15 +2,13 @@
 
 use lang\ClassLoader;
 
-
-define('MOCK_PROXY_PREFIX',    'MockProxy·');
-
 /**
  * Provides functionallity for creating dynamic proxy
  * classes and instances.
- *
  */
 class MockProxyBuilder extends \lang\Object {   
+  const PREFIX = 'MockProxy·';
+
   private
     $classLoader       = null,
     $overwriteExisting = false,
@@ -121,7 +119,7 @@ class MockProxyBuilder extends \lang\Object {
    * @return  string
    */
   public function getProxyName() {
-    return MOCK_PROXY_PREFIX.(self::$num);
+    return self::PREFIX.(self::$num);
   }
 
   /**
