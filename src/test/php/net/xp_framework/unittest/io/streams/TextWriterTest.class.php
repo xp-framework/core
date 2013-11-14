@@ -5,7 +5,6 @@ use lang\types\Character;
 use io\streams\TextWriter;
 use io\streams\MemoryOutputStream;
 
-
 /**
  * TestCase
  *
@@ -141,8 +140,8 @@ class TextWriterTest extends TestCase {
    */
   #[@test]
   public function writeUtf8() {
-    $this->newWriter('utf-8')->write('�bercoder');
-    $this->assertEquals('Übercoder', $this->out->getBytes());
+    $this->newWriter('utf-8')->write('Übercoder');
+    $this->assertEquals("\303\234bercoder", $this->out->getBytes());
   }
 
   /**
@@ -151,8 +150,8 @@ class TextWriterTest extends TestCase {
    */
   #[@test]
   public function writeLineUtf8() {
-    $this->newWriter('utf-8')->writeLine('�bercoder');
-    $this->assertEquals("Übercoder\n", $this->out->getBytes());
+    $this->newWriter('utf-8')->writeLine('Übercoder');
+    $this->assertEquals("\303\234bercoder\n", $this->out->getBytes());
   }
 
   /**
@@ -161,8 +160,8 @@ class TextWriterTest extends TestCase {
    */
   #[@test]
   public function writeUtf8StringInstance() {
-    $this->newWriter('utf-8')->write(new \lang\types\String('�bercoder', 'iso-8859-1'));
-    $this->assertEquals('Übercoder', $this->out->getBytes());
+    $this->newWriter('utf-8')->write(new \lang\types\String('Übercoder'));
+    $this->assertEquals("\303\234bercoder", $this->out->getBytes());
   }
 
   /**
@@ -171,8 +170,8 @@ class TextWriterTest extends TestCase {
    */
   #[@test]
   public function writeLineUtf8StringInstance() {
-    $this->newWriter('utf-8')->writeLine(new \lang\types\String('�bercoder', 'iso-8859-1'));
-    $this->assertEquals("Übercoder\n", $this->out->getBytes());
+    $this->newWriter('utf-8')->writeLine(new \lang\types\String('Übercoder'));
+    $this->assertEquals("\303\234bercoder\n", $this->out->getBytes());
   }
 
   /**
@@ -181,8 +180,8 @@ class TextWriterTest extends TestCase {
    */
   #[@test]
   public function writeUtf8CharacterInstance() {
-    $this->newWriter('utf-8')->write(new Character('�', 'iso-8859-1'));
-    $this->assertEquals('Ü', $this->out->getBytes());
+    $this->newWriter('utf-8')->write(new Character('Ü'));
+    $this->assertEquals("\303\234", $this->out->getBytes());
   }
 
   /**
@@ -191,8 +190,8 @@ class TextWriterTest extends TestCase {
    */
   #[@test]
   public function writeLineUtf8CharacterInstance() {
-    $this->newWriter('utf-8')->writeLine(new Character('�', 'iso-8859-1'));
-    $this->assertEquals("Ü\n", $this->out->getBytes());
+    $this->newWriter('utf-8')->writeLine(new Character('Ü'));
+    $this->assertEquals("\303\234\n", $this->out->getBytes());
   }
 
   /**

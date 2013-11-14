@@ -62,7 +62,7 @@ class TextReader extends Reader {
    * @return  string
    */
   protected function detectCharset() {
-    $c= $this->read(2);
+    $c= fread($this->in, 2);
 
     // Check for UTF-16 (BE)
     if ("\376\377" === $c) {
@@ -77,13 +77,13 @@ class TextReader extends Reader {
     }
 
     // Check for UTF-8 BOM
-    if ("\357\273" === $c && "\357\273\277" === ($c.= $this->read(1))) {
+    if ("\357\273" === $c && "\357\273\277" === ($c.= fread($this->in, 1))) {
       $this->bom= 3;
       return 'utf-8';
     }
 
     // Fall back to ISO-8859-1
-    $this->buf= (string)$c;
+    $this->buf= iconv('iso-8859-1', \xp::ENCODING, (string)$c);
     $this->bom= 0;
     return 'iso-8859-1';
   }
@@ -97,25 +97,27 @@ class TextReader extends Reader {
   public function read($size= 8192) {
     if (0 === $size) return '';
 
-    while (strlen($this->buf) < $size) {
-      $c= fread($this->in, $size- strlen($this->buf));
+    // fread() will always work with bytes, so reading may actually read part of
+    // an incomplete multi-byte sequence. In this case, iconv_strlen() will raise
+    // a warning, and return FALSE (or 0, for the "less than" operator), causing
+    // the loop to read more. Maybe there's a more elegant way to do this?
+    while (($l= @iconv_strlen($this->buf, \xp::ENCODING)) < $size) {
+      $c= fread($this->in, $size- $l);
       if ('' === $c) {
         if (\xp::errorAt(__FILE__, __LINE__ - 2)) {
           $message= key(\xp::$errors[__FILE__][__LINE__ - 3]);
           \xp::gc(__FILE__);
           throw new \lang\FormatException($message);
         }
-
         break;
       }
-
       $this->buf.= $c;
     }
 
     if ('' === $this->buf) return null;
 
-    $chunk= substr($this->buf, 0, $size);
-    $this->buf= (string)substr($this->buf, $size);
+    $chunk= iconv_substr($this->buf, 0, $size, \xp::ENCODING);
+    $this->buf= (string)iconv_substr($this->buf, $size, strlen($this->buf), \xp::ENCODING);
     return $chunk;
   }
   

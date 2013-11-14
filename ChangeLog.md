@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Changed xp::ENCODING to 'utf-8', all strings are now per default to be
+  regarded as containing this charset except where explicitely stated
+  otherwise! - (@thekid)
 * Classes are now only referenceable by their namespaced names except
   for those in the `lang` package (and subpackages thereof) - (@thekid)
 * Removed support for `__generic` style generics which have been deprecated
@@ -20,6 +23,9 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented RFC #146: Unicode - (@thekid)
+* Implemented RFC #136: PHP namespaces adoption. All classes in the XP
+  framework are now in PHP 5.3 namespaces - (@thekid)
 * Implemented RFC #136: PHP namespaces adoption. All classes in the XP
   framework are now in PHP 5.3 namespaces - (@thekid)
 * Implemented RFC #279: Newinstance with closures in xp-framework/core#2

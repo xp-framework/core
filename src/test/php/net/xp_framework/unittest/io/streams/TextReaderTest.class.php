@@ -4,7 +4,6 @@ use unittest\TestCase;
 use io\streams\TextReader;
 use io\streams\MemoryInputStream;
 
-
 /**
  * TestCase
  *
@@ -19,7 +18,7 @@ class TextReaderTest extends TestCase {
    * @param   string charset
    * @return  io.streams.TextReader
    */
-  protected function newReader($str, $charset= 'iso-8859-1') {
+  protected function newReader($str, $charset= \xp::ENCODING) {
     return new TextReader(new MemoryInputStream($str), $charset);
   }
 
@@ -29,7 +28,7 @@ class TextReaderTest extends TestCase {
    */
   #[@test]
   public function readOne() {
-    $this->assertEquals('H', $this->newReader('Hello')->read(1));
+    $this->assertEquals('H', $this->newReader('Hello', 'iso-8859-1')->read(1));
   }
 
   /**
@@ -38,7 +37,7 @@ class TextReaderTest extends TestCase {
    */
   #[@test]
   public function readOneUtf8() {
-    $this->assertEquals('�', $this->newReader('Übercoder', 'utf-8')->read(1));
+    $this->assertEquals('Ü', $this->newReader('Übercoder', 'utf-8')->read(1));
   }
 
   /**
@@ -56,7 +55,7 @@ class TextReaderTest extends TestCase {
    */
   #[@test]
   public function readLengthUtf8() {
-    $this->assertEquals('�bercoder', $this->newReader('Übercoder', 'utf-8')->read(9));
+    $this->assertEquals('Übercoder', $this->newReader('Übercoder', 'utf-8')->read(9));
   }
 
   /**
@@ -65,7 +64,7 @@ class TextReaderTest extends TestCase {
    */
   #[@test, @expect('lang.FormatException')]
   public function readBrokenUtf8() {
-    $this->newReader('Hello �|', 'utf-8')->read(0x1000);
+    $this->newReader("Hello \334|", 'utf-8')->read(0x1000);
   }
 
   /**
@@ -74,7 +73,7 @@ class TextReaderTest extends TestCase {
    */
   #[@test, @expect('lang.FormatException')]
   public function readMalformedUtf8() {
-    $this->newReader('Hello �bercoder', 'utf-8')->read(0x1000);
+    $this->newReader("Hello \334bercoder", 'utf-8')->read(0x1000);
   }
 
   /**
@@ -83,7 +82,7 @@ class TextReaderTest extends TestCase {
    */
   #[@test]
   public function readingDoesNotContinueAfterBrokenCharacters() {
-    $r= $this->newReader("Hello �bercoder\n".str_repeat('*', 512), 'utf-8');
+    $r= $this->newReader("Hello \334bercoder\n".str_repeat('*', 512), 'utf-8');
     try {
       $r->read(1);
       $this->fail('No exception caught', null, 'lang.FormatException');
@@ -94,14 +93,14 @@ class TextReaderTest extends TestCase {
   }
 
   /**
-   * Test reading "'�:ina" which contains two characters not convertible
-   * to iso-8859-1, our internal encoding.
+   * Test reading Unicode which contains two characters not convertible
+   * to iso-8859-1, now works.
    *
-   * @see     http://de.wikipedia.org/wiki/China (the word in the first square brackets on this page).
+   * @see     http://de.wikipedia.org/wiki/China
    */
-  #[@test, @expect('lang.FormatException')]
-  public function readUnconvertible() {
-    $this->newReader('ˈçiːna', 'utf-8')->read();
+  #[@test, @values(['ˈçiːna', 'ˈkiːna', '中國 / 中国', 'Zhōngguó'])]
+  public function readPreviouslyUnconvertible($value) {
+    $this->assertEquals($value, $this->newReader($value, 'utf-8')->read());
   }
 
   /**
@@ -120,8 +119,8 @@ class TextReaderTest extends TestCase {
   #[@test]
   public function encodedBytesOnly() {
     $this->assertEquals(
-      str_repeat('�', 1024), 
-      $this->newReader(str_repeat('Ü', 1024), 'utf-8')->read(1024)
+      str_repeat('Ü', 1024), 
+      $this->newReader(str_repeat("\303\234", 1024), 'utf-8')->read(1024)
     );
   }
 
@@ -238,8 +237,8 @@ class TextReaderTest extends TestCase {
    */
   #[@test]
   public function readLinesUtf8() {
-    $r= $this->newReader("Über\nCoder", 'utf-8');
-    $this->assertEquals('�ber', $r->readLine());
+    $r= $this->newReader("\303\234ber\nCoder", 'utf-8');
+    $this->assertEquals('Über', $r->readLine());
     $this->assertEquals('Coder', $r->readLine());
     $this->assertNull($r->readLine());
   }
@@ -250,8 +249,8 @@ class TextReaderTest extends TestCase {
    */
   #[@test]
   public function readLinesAutodetectIso88591() {
-    $r= $this->newReader('�bercoder', null);
-    $this->assertEquals('�bercoder', $r->readLine());
+    $r= $this->newReader("\334bercoder", null);
+    $this->assertEquals('Übercoder', $r->readLine());
   }
   
   /**
@@ -261,8 +260,8 @@ class TextReaderTest extends TestCase {
    */
   #[@test]
   public function readShortLinesAutodetectIso88591() {
-    $r= $this->newReader('�', null);
-    $this->assertEquals('�', $r->readLine());
+    $r= $this->newReader("\334", null);
+    $this->assertEquals('Ü', $r->readLine());
   }
   
   
@@ -273,7 +272,7 @@ class TextReaderTest extends TestCase {
   #[@test]
   public function readLinesAutodetectUtf8() {
     $r= $this->newReader("\357\273\277\303\234bercoder", null);
-    $this->assertEquals('�bercoder', $r->readLine());
+    $this->assertEquals('Übercoder', $r->readLine());
   }
 
   /**
@@ -293,7 +292,7 @@ class TextReaderTest extends TestCase {
   #[@test]
   public function readLinesAutodetectUtf16BE() {
     $r= $this->newReader("\376\377\000\334\000b\000e\000r\000c\000o\000d\000e\000r", null);
-    $this->assertEquals('�bercoder', $r->readLine());
+    $this->assertEquals('Übercoder', $r->readLine());
   }
 
   /**
@@ -313,7 +312,7 @@ class TextReaderTest extends TestCase {
   #[@test]
   public function readLinesAutodetectUtf16Le() {
     $r= $this->newReader("\377\376\334\000b\000e\000r\000c\000o\000d\000e\000r\000", null);
-    $this->assertEquals('�bercoder', $r->readLine());
+    $this->assertEquals('Übercoder', $r->readLine());
   }
 
   /**
@@ -332,7 +331,7 @@ class TextReaderTest extends TestCase {
    */
   #[@test]
   public function defaultCharsetIsIso88591() {
-    $r= $this->newReader('�bercoder', null);
+    $r= $this->newReader('Übercoder', null);
     $this->assertEquals('iso-8859-1', $r->charset());
   }
 
@@ -546,16 +545,16 @@ class TextReaderTest extends TestCase {
   /**
    * Test reading
    */
-  #[@test, @values(array("\377", "\377\377", "\377\377\377"))]
-  public function readNonBOMInputWithAutoDetectedIso88591Charset($value) {
-    $this->assertEquals($value, $this->newReader($value, null)->read(0xFF));
+  #[@test, @values(array(["\377", 'ÿ'], ["\377\377", 'ÿÿ'], ["\377\377\377", 'ÿÿÿ']))]
+  public function readNonBOMInputWithAutoDetectedIso88591Charset($bytes, $characters) {
+    $this->assertEquals($characters, $this->newReader($bytes, null)->read(0xFF));
   }
 
   /**
    * Test reading
    */
-  #[@test, @values(array("\377", "\377\377", "\377\377\377"))]
-  public function readLineNonBOMInputWithAutoDetectedIso88591Charset($value) {
-    $this->assertEquals($value, $this->newReader($value, null)->readLine());
+  #[@test, @values(array(["\377", 'ÿ'], ["\377\377", 'ÿÿ'], ["\377\377\377", 'ÿÿÿ']))]
+  public function readLineNonBOMInputWithAutoDetectedIso88591Charset($bytes, $characters) {
+    $this->assertEquals($characters, $this->newReader($bytes, null)->readLine(0xFF));
   }
 }

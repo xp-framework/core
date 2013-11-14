@@ -1,18 +1,16 @@
 <?php namespace net\xp_framework\unittest\core\types;
 
-use unittest\TestCase;
 use lang\types\Bytes;
 use lang\types\String;
 use lang\types\Character;
 use lang\types\Byte;
 
 /**
- * TestCase
+ * TestCase for Bytes class
  *
  * @see      xp://lang.types.Bytes
- * @purpose  Unittest
  */
-class BytesTest extends TestCase {
+class BytesTest extends \unittest\TestCase {
 
   #[@test]
   public function creating_an_empty_bytes_without_supplying_parameters() {
@@ -328,7 +326,7 @@ class BytesTest extends TestCase {
   public function character_from_iso88591_bytes() {
     $this->assertEquals(
       new Character("\xe4", 'iso-8859-1'),
-      new Character(new Bytes("\344"))
+      new Character(new Bytes("\344"), 'iso-8859-1')
     );
   }
 

@@ -551,7 +551,7 @@ value"');
 [section]
 key=Ãœbercoder
     ');
-    $this->assertEquals('Übercoder', $p->readString('section', 'key'));
+    $this->assertEquals('Ãœbercoder', $p->readString('section', 'key'));
   }
 
   /**
@@ -560,11 +560,12 @@ key=Ãœbercoder
    */
   #[@test]
   public function utf16BeBom() {
-    $p= $this->newPropertiesFrom("\376\377".trim('
- [ s e c t i o n ]  
- k e y = Ü b e r c o d e r
-    ', " \r\n"));
-    $this->assertEquals('Übercoder', $p->readString('section', 'key'));
+    $p= $this->newPropertiesFrom(
+      "\376\377".
+      "\0[\0s\0e\0c\0t\0i\0o\0n\0]\0\n".
+      "\0k\0e\0y\0=\0\xdc\0b\0e\0r\0c\0o\0d\0e\0r\0\n"
+    );
+    $this->assertEquals('Ãœbercoder', $p->readString('section', 'key'));
   }
 
   /**
@@ -573,11 +574,12 @@ key=Ãœbercoder
    */
   #[@test]
   public function utf16LeBom() {
-    $p= $this->newPropertiesFrom("\377\376".trim('
-[ s e c t i o n ]  
- k e y = Ü b e r c o d e r 
-    ', " \r\n"));
-    $this->assertEquals('Übercoder', $p->readString('section', 'key'));
+    $p= $this->newPropertiesFrom(
+      "\377\376".
+      "[\0s\0e\0c\0t\0i\0o\0n\0]\0\n\0".
+      "k\0e\0y\0=\0\xdc\0b\0e\0r\0c\0o\0d\0e\0r\0\n\0"
+    );
+    $this->assertEquals('Ãœbercoder', $p->readString('section', 'key'));
   }
 
   /**

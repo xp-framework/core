@@ -23,9 +23,8 @@ if (extension_loaded('mbstring')) {
 /**
  * Represents a string
  *
- * @ext      iconv
- * @test     xp://net.xp_framework.unittest.core.types.StringTest
- * @purpose  Wrapper type
+ * @ext   iconv
+ * @test  xp://net.xp_framework.unittest.core.types.StringTest
  */
 class String extends \lang\Object implements \ArrayAccess {
   protected 
@@ -52,7 +51,7 @@ class String extends \lang\Object implements \ArrayAccess {
     } else if ($arg instanceof Character) {
       return $arg->getBytes(STR_ENC)->buffer;
     } else {
-      $charset= strtoupper($charset ? $charset : iconv_get_encoding('input_encoding'));
+      $charset= strtoupper($charset ? $charset : \xp::ENCODING);
 
       // Convert the input to internal encoding
       $buffer= iconv($charset, STR_ENC, $arg);
@@ -302,7 +301,7 @@ class String extends \lang\Object implements \ArrayAccess {
    * @return  string
    */
   public function toString() {
-    return iconv(STR_ENC, iconv_get_encoding('output_encoding').'//TRANSLIT', $this->buffer);
+    return iconv(STR_ENC, \xp::ENCODING.'//TRANSLIT', $this->buffer);
   }
 
   /**
@@ -312,7 +311,7 @@ class String extends \lang\Object implements \ArrayAccess {
    * @return  string
    */
   public function __toString() {
-    return iconv(STR_ENC, iconv_get_encoding('output_encoding').'//TRANSLIT', $this->buffer);
+    return iconv(STR_ENC, \xp::ENCODING.'//TRANSLIT', $this->buffer);
   }
  
   /**
@@ -322,7 +321,7 @@ class String extends \lang\Object implements \ArrayAccess {
    * @return  lang.types.Bytes
    */
   public function getBytes($charset= null) {
-    $charset= strtoupper($charset ? $charset : iconv_get_encoding('input_encoding'));
+    $charset= strtoupper($charset ? $charset : \xp::ENCODING);
     if (STR_ENC === $charset) {
       return new Bytes($this->buffer);
     }

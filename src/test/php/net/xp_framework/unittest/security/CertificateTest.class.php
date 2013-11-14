@@ -1,31 +1,21 @@
 <?php namespace net\xp_framework\unittest\security;
  
-use unittest\TestCase;
 use security\cert\X509Certificate;
-
 
 /**
  * Test certificate code
  *
- * @purpose  Unit Test
+ * @see    http://www.cilogon.org/openssl1 Hashing changed in OpenSSL 1.0.0
  */
-class CertificateTest extends TestCase {
+#[@action(new \unittest\actions\ExtensionAvailable('openssl'))]
+class CertificateTest extends \unittest\TestCase {
   protected
     $fixture  = null;
 
   /**
    * Set up this testcase
-   *
    */
   public function setUp() {
-    if (!extension_loaded('openssl')) {
-      throw new \unittest\PrerequisitesNotMetError(
-        PREREQUISITE_LIBRARYMISSING, 
-        $cause= null, 
-        array('openssl')
-      );
-    }
-    
     $this->fixture= X509Certificate::fromString(trim('
 -----BEGIN CERTIFICATE-----
 MIICtDCCAh2gAwIBAwIBADANBgkqhkiG9w0BAQQFADCBnzELMAkGA1UEBhMCREUx
@@ -50,9 +40,9 @@ WPDyiSAwwKIzRnlGBb+eJGQX2ZDyvPg7
   /**
    * Assertion helper
    *
-   * @param   string pattern
-   * @param   security.Principal p
-   * @param   string cause
+   * @param   string $pattern
+   * @param   security.Principal $p
+   * @param   string $cause
    * @throws  unittest.AssertionFailedError
    */
   protected function assertPrincipal($pattern, \security\Principal $p, $cause) {
@@ -61,46 +51,29 @@ WPDyiSAwwKIzRnlGBb+eJGQX2ZDyvPg7
     }
   }
   
-  /**
-   * Test an X.509 certificate
-   *
-   */
   #[@test]
   public function subjectDN() {
     $this->assertPrincipal(
-      '#^/C=DE/ST=Baden-Württemberg/L=Karlsruhe/O=XP Team/OU=XP Team/CN=Timm Friebe/EMAIL(ADDRESS)?=friebe@xp-framework.net$#', 
+      '#^/C=DE/ST=Baden-WÃ¼rttemberg/L=Karlsruhe/O=XP Team/OU=XP Team/CN=Timm Friebe/EMAIL(ADDRESS)?=friebe@xp-framework.net$#', 
       $this->fixture->getSubjectDN(), 
       'subject'
     );
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function version() {
     $this->assertEquals(3, $this->fixture->getVersion());
   }
     
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function issuerDN() {
     $this->assertPrincipal(
-      '#^/C=DE/ST=Baden-Württemberg/L=Karlsruhe/O=XP Team/OU=XP Team/CN=Timm Friebe/EMAIL(ADDRESS)?=friebe@xp-framework.net$#', 
+      '#^/C=DE/ST=Baden-WÃ¼rttemberg/L=Karlsruhe/O=XP Team/OU=XP Team/CN=Timm Friebe/EMAIL(ADDRESS)?=friebe@xp-framework.net$#', 
       $this->fixture->getIssuerDN(), 
       'issuer'
     );
   }
-  
-  /**
-   * Test
-   *
-   * @see    http://www.cilogon.org/openssl1 Hashing changed in OpenSSL 1.0.0
-   */
+
   #[@test]
   public function hashMethod() {
     $this->assertEquals(

@@ -1,7 +1,5 @@
 <?php namespace lang\types;
 
-
-
 /**
  * Represents a character, which may consist of one or more bytes.
  *
@@ -9,9 +7,9 @@
  * <code>
  *   $c= new Character(8364);               // The EUR symbol (U+20AC)
  *   $c= new Character(0x20AC);             // ...same, using hexadecimal
- *   $c= new Character('Ä', 'iso-8859-1');  // The German Umlaut A (capital)
+ *   $c= new Character('Ä');                // The German Umlaut A (capital)
  *
- *   $s= new String('Übercoder', 'iso-8859-1');
+ *   $s= new String('Übercoder');
  *   $c= $s->charAt(0);                     // The German Umlaut U (capital)
  *   $c= $s[0];                             // ...same, via [] operator
  *
@@ -19,13 +17,11 @@
  *   $c= $s[1];                             // "b"
  * </code>
  *
- * @ext      iconv
- * @test     xp://net.xp_framework.unittest.core.types.CharacterTest
- * @purpose  Wrapper type
+ * @ext   iconv
+ * @test  xp://net.xp_framework.unittest.core.types.CharacterTest
  */
 class Character extends \lang\Object {
-  protected
-    $buffer= '';
+  protected $buffer= '';
 
   /**
    * Constructor
@@ -39,7 +35,7 @@ class Character extends \lang\Object {
       return;
     }        
 
-    $charset= strtoupper($charset ? $charset : iconv_get_encoding('input_encoding'));
+    $charset= strtoupper($charset ? $charset : \xp::ENCODING);
 
     // Convert the input to internal encoding
     $this->buffer= iconv($charset, 'utf-8', $arg);
@@ -83,7 +79,7 @@ class Character extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return iconv('utf-8', iconv_get_encoding('output_encoding').'//TRANSLIT', $this->buffer);
+    return iconv(STR_ENC, \xp::ENCODING.'//TRANSLIT', $this->buffer);
   }
 
   /**
@@ -93,7 +89,7 @@ class Character extends \lang\Object {
    * @return  string
    */
   public function __toString() {
-    return iconv(STR_ENC, iconv_get_encoding('output_encoding').'//TRANSLIT', $this->buffer);
+    return iconv(STR_ENC, \xp::ENCODING.'//TRANSLIT', $this->buffer);
   }
  
   /**
@@ -103,7 +99,7 @@ class Character extends \lang\Object {
    * @return  lang.types.Bytes
    */
   public function getBytes($charset= null) {
-    $charset= strtoupper($charset ? $charset : iconv_get_encoding('input_encoding'));
+    $charset= strtoupper($charset ? $charset : \xp::ENCODING);
 
     return new Bytes(STR_ENC === $charset 
       ? $this->buffer 

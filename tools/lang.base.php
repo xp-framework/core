@@ -27,7 +27,7 @@
   // {{{ final class xp
   final class xp {
     const CLASS_FILE_EXT= '.class.php';
-    const ENCODING= 'iso-8859-1';
+    const ENCODING= 'utf-8';
 
     public static $ext= array();
     public static $cli= array();
