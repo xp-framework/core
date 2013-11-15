@@ -16,12 +16,12 @@ use rdbms\ConnectionManager;
  * Runs util.cmd.Command subclasses on the command line.
  *
  * Usage:
- * <pre>
+ * ```sh
  * $ xpcli [options] fully.qualified.class.Name [classoptions]
- * </pre>
+ * ```
  *
  * Options includes one of the following:
- * <pre>
+ * ```
  * -c:
  *   Add the path to the PropertyManager sources. The PropertyManager
  *   is used for dependency injection. If files called log.ini exists
@@ -35,11 +35,17 @@ use rdbms\ConnectionManager;
  * -v:
  *   Enable verbosity (show complete stack trace when exceptions
  *   occurred)
- * </pre>
  *
- * @test     xp://net.xp_framework.unittest.util.cmd.RunnerTest
- * @see      xp://util.cmd.Command
- * @purpose  Runner
+ * -?:
+ *   Shows this help text.
+ * ```
+ *
+ * If the class options contain `-?`, the help text supplied via the
+ * class' api documentation is shown. All other class options are
+ * dependant on the class.
+ *
+ * @test  xp://net.xp_framework.unittest.util.cmd.RunnerTest
+ * @see   xp://util.cmd.Command
  */
 class Runner extends \lang\Object {
   private static
@@ -59,7 +65,7 @@ class Runner extends \lang\Object {
   }
 
   /**
-   * Converts api-doc "markup" to plain text w/ ASCII "art"
+   * Converts api-doc markdown to plain text w/ ASCII "art"
    *
    * @param   string markup
    * @return  string text
@@ -67,7 +73,7 @@ class Runner extends \lang\Object {
   protected static function textOf($markup) {
     $line= str_repeat('=', 72);
     return strip_tags(preg_replace(array(
-      '#<pre>#', '#</pre>#', '#<li>#',
+      '#```([a-z]*)#', '#```#', '#^\- #',
     ), array(
       $line, $line, '* ',
     ), trim($markup)));
@@ -142,6 +148,16 @@ class Runner extends \lang\Object {
   }
 
   /**
+   * Show usage
+   *
+   * @return  int
+   */
+  public static function usage() {
+    self::$err->writeLine(self::textOf(\lang\XPClass::forName(\xp::nameOf(__CLASS__))->getComment()));
+    return 1;
+  }
+
+  /**
    * Reassigns standard input stream
    *
    * @param   io.streams.InputStream in
@@ -183,10 +199,7 @@ class Runner extends \lang\Object {
   public function run(ParamString $params) {
 
     // No arguments given - show our own usage
-    if ($params->count < 1) {
-      self::$err->writeLine(self::textOf(\lang\XPClass::forName(\xp::nameOf(__CLASS__))->getComment()));
-      return 1;
-    }
+    if ($params->count < 1) return self::usage();
 
     // Configure properties
     $pm= PropertyManager::getInstance();
@@ -209,6 +222,8 @@ class Runner extends \lang\Object {
         $this->verbose= true;
         $offset+= 1; $i++;
         break;
+      case '-?':
+        return self::usage();
       default:
         break 2;
     }
