@@ -2,7 +2,7 @@
 
 use unittest\TestCase;
 use lang\Runtime;
-
+use lang\Process;
 
 /**
  * TestCase
@@ -16,7 +16,7 @@ class RuntimeInstantiationTest extends TestCase {
    */
   #[@beforeClass]
   public static function verifyProcessExecutionEnabled() {
-    if (\lang\Process::$DISABLED) {
+    if (Process::$DISABLED) {
       throw new \unittest\PrerequisitesNotMetError('Process execution disabled', NULL, array('enabled'));
     }
   }
@@ -37,7 +37,7 @@ class RuntimeInstantiationTest extends TestCase {
       $p->in->close();
 
       // Read output
-        while ($b= $p->out->read()) { $out.= $b; }
+      while ($b= $p->out->read()) { $out.= $b; }
       while ($b= $p->err->read()) { $err.= $b; }
 
       // Check for exitcode
@@ -125,7 +125,7 @@ class RuntimeInstantiationTest extends TestCase {
       '+OK exiting, +OK Shutdown hook run',
       $this->runInNewRuntime(Runtime::getInstance()->startupOptions(), '
         Runtime::getInstance()->addShutdownHook(newinstance("lang.Runnable", array(), "{
-        public function run() {
+          public function run() {
             echo \'+OK Shutdown hook run\';
           }
         }"));
@@ -141,7 +141,7 @@ class RuntimeInstantiationTest extends TestCase {
       '+OK exiting, +OK Shutdown hook run',
       $this->runInNewRuntime(Runtime::getInstance()->startupOptions(), '
         Runtime::getInstance()->addShutdownHook(newinstance("lang.Runnable", array(), "{
-        public function run() {
+          public function run() {
             echo \'+OK Shutdown hook run\';
           }
         }"));
