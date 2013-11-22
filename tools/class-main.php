@@ -9,11 +9,14 @@ if (version_compare(PHP_VERSION, '5.3.0', '<')) {
 // {{{ internal string __output(string buf)
 //     Output handler. Checks for fatal errors
 function __output($buf) {
-  if (false === ($p= strpos($buf, EPREPEND_IDENTIFIER))) return $buf;
-
-  $e= new Error(trim(str_replace(EPREPEND_IDENTIFIER, '', substr($buf, $p))));
-  fputs(STDERR, $e->toString());
-  return substr($buf, 0, $p);
+  if (false === ($s= strpos($buf, EPREPEND_IDENTIFIER))) return $buf;
+  $l= strlen(EPREPEND_IDENTIFIER);
+  $e= strpos($buf, EPREPEND_IDENTIFIER, $s + $l);
+  $message= trim(substr($buf, $s + $l, $e - $l));
+  fputs(STDOUT, substr($buf, 0, $s));
+  fputs(STDERR, create(new Error($message))->toString());
+  fputs(STDOUT, substr($buf, $e + $l));
+  return '';
 }
 // }}}
 
@@ -61,6 +64,7 @@ if ($encoding) {
 }
 
 ini_set('error_prepend_string', EPREPEND_IDENTIFIER);
+ini_set('error_append_string', EPREPEND_IDENTIFIER);
 set_exception_handler('__except');
 ob_start('__output');
 
