@@ -49,7 +49,7 @@ class RuntimeTest extends TestCase {
   #[@test]
   public function certainBootstrapScript() {
     $bootstrap= Runtime::getInstance()->bootstrapScript('class');
-    $this->assertTrue(strstr($bootstrap, 'tools') && strstr($bootstrap, 'class.php'), $bootstrap);
+    $this->assertTrue(strstr($bootstrap, 'tools') && strstr($bootstrap, 'class-main.php'), $bootstrap);
   }
 
   #[@test]

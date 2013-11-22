@@ -223,7 +223,7 @@ class Runtime extends Object {
    */
   public function bootstrapScript($which= null) {
     if ($which) {
-      return dirname($this->startup('bootstrap')).DIRECTORY_SEPARATOR.$which.'.php';
+      return dirname($this->startup('bootstrap')).DIRECTORY_SEPARATOR.$which.'-main.php';
     } else {
       return $this->startup('bootstrap');
     }

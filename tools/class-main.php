@@ -1,6 +1,6 @@
 <?php
 
-define('EPREPEND_IDENTIFIER', "\6100");
+define('EPREPEND_IDENTIFIER', "\356\277\277");
 if (version_compare(PHP_VERSION, '5.3.0', '<')) {
   trigger_error('This version of the XP Framework requires PHP 5.3.0+, have PHP '.PHP_VERSION.PHP_EOL, E_USER_ERROR);
   exit(0x3d);
@@ -9,12 +9,11 @@ if (version_compare(PHP_VERSION, '5.3.0', '<')) {
 // {{{ internal string __output(string buf)
 //     Output handler. Checks for fatal errors
 function __output($buf) {
-  if (false !== ($p= strpos($buf, EPREPEND_IDENTIFIER))) {
-    $e= new Error(str_replace(EPREPEND_IDENTIFIER, '', substr($buf, $p)));
-    fputs(STDERR, $e->toString());
-  }
+  if (false === ($p= strpos($buf, EPREPEND_IDENTIFIER))) return $buf;
 
-  return $buf;
+  $e= new Error(trim(str_replace(EPREPEND_IDENTIFIER, '', substr($buf, $p))));
+  fputs(STDERR, $e->toString());
+  return substr($buf, 0, $p);
 }
 // }}}
 
@@ -50,13 +49,23 @@ bootstrap(
 );
 uses('util.cmd.ParamString', 'util.cmd.Console');
 
+// Start I/O layers
+$encoding= get_cfg_var('encoding');
+iconv_set_encoding('internal_encoding', xp::ENCODING);
+array_shift($_SERVER['argv']);
+array_shift($argv);
+if ($encoding) {
+  foreach ($argv as $i => $val) {
+    $_SERVER['argv'][$i]= $argv[$i]= iconv($encoding, xp::ENCODING, $val);
+  }
+}
+
 ini_set('error_prepend_string', EPREPEND_IDENTIFIER);
 set_exception_handler('__except');
-#ob_start('__output');
+ob_start('__output');
 
-array_shift($_SERVER['argv']);
 try {
-  exit(\lang\XPClass::forName($argv[1])->getMethod('main')->invoke(null, array(array_slice($argv, 2)))); 
+  exit(\lang\XPClass::forName($argv[0])->getMethod('main')->invoke(null, array(array_slice($argv, 1)))); 
 } catch (\lang\SystemExit $e) {
   if ($message= $e->getMessage()) echo $message, "\n";
   exit($e->getCode());
