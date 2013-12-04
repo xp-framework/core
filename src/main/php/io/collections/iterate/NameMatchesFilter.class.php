@@ -1,7 +1,5 @@
 <?php namespace io\collections\iterate;
 
-
-
 /**
  * Name filter
  *
@@ -26,7 +24,7 @@ class NameMatchesFilter extends \lang\Object implements IterationFilter {
    * @return  bool
    */
   public function accept($element) {
-    return (bool)preg_match($this->pattern, $element->getName()));
+    return (bool)preg_match($this->pattern, $element->getName());
   }
 
   /**

@@ -31,7 +31,7 @@ class ArchiveElement extends \lang\Object implements IOElement {
    * @return  string
    */
   public function getName() {
-    return basename($this->base);
+    return basename($this->name);
   }
 
   /**
