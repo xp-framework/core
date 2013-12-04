@@ -5,12 +5,10 @@
 /**
  * Name filter
  *
- * @see      php://preg_match
- * @purpose  Iteration Filter
+ * @see   php://preg_match
  */
 class NameMatchesFilter extends \lang\Object implements IterationFilter {
-  public
-    $pattern= '';
+  public $pattern= '';
     
   /**
    * Constructor
@@ -28,7 +26,7 @@ class NameMatchesFilter extends \lang\Object implements IterationFilter {
    * @return  bool
    */
   public function accept($element) {
-    return (bool)preg_match($this->pattern, basename($element->getURI()));
+    return (bool)preg_match($this->pattern, $element->getName()));
   }
 
   /**
@@ -39,5 +37,4 @@ class NameMatchesFilter extends \lang\Object implements IterationFilter {
   public function toString() {
     return $this->getClassName().'('.$this->pattern.')';
   }
-
-} 
+}

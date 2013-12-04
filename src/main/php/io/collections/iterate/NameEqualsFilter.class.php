@@ -1,15 +1,10 @@
 <?php namespace io\collections\iterate;
 
-
-
 /**
  * Name filter
- *
- * @purpose  Iteration Filter
  */
 class NameEqualsFilter extends \lang\Object implements IterationFilter {
-  public
-    $compare= '';
+  public $compare= '';
     
   /**
    * Constructor
@@ -27,7 +22,7 @@ class NameEqualsFilter extends \lang\Object implements IterationFilter {
    * @return  bool
    */
   public function accept($element) {
-    return $this->compare == basename($element->getURI());
+    return $this->compare === $element->getName();;
   }
 
   /**
@@ -38,5 +33,4 @@ class NameEqualsFilter extends \lang\Object implements IterationFilter {
   public function toString() {
     return $this->getClassName().'("'.$this->compare.'")';
   }
-
 } 

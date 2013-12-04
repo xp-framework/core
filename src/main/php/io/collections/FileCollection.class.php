@@ -1,20 +1,14 @@
 <?php namespace io\collections;
 
-
-
 /**
  * File collection
  *
- * @see      xp://io.collections.IOCollection
- * @purpose  IOCollection implementation
+ * @see   xp://io.collections.IOCollection
  */
 class FileCollection extends \lang\Object implements IOCollection, RandomCollectionAccess {
-  public
-    $uri = '';
-  
-  protected
-    $origin = null,
-    $_hd    = null;
+  public $uri = '';
+  protected $origin = null;
+  protected $_hd    = null;
     
   /**
    * Constructor
@@ -28,7 +22,16 @@ class FileCollection extends \lang\Object implements IOCollection, RandomCollect
       $this->uri= rtrim(realpath($arg), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
     }
   }
-  
+
+  /**
+   * Returns this element's name
+   *
+   * @return  string
+   */
+  public function getName() {
+    return basename($this->uri);
+  }
+
   /**
    * Returns this element's URI
    *

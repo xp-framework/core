@@ -4,13 +4,19 @@ use util\Date;
 use io\streams\InputStream;
 use io\streams\OutputStream;
 
-
 /**
  * IO Element
  *
  * @purpose  Interface
  */
 interface IOElement {
+
+  /**
+   * Retrieve this element's name
+   *
+   * @return  string
+   */
+  public function getName();
 
   /**
    * Retrieve this element's URI

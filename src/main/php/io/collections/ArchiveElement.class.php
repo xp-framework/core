@@ -3,18 +3,15 @@
 use lang\archive\Archive;
 use io\streams\MemoryInputStream;
 
-
 /**
- * Represents a file element
+ * Represents an element inside an archive
  *
- * @see      xp://io.collections.ArchiveCollection
- * @purpose  Interface
+ * @see    xp://io.collections.ArchiveCollection
  */
 class ArchiveElement extends \lang\Object implements IOElement {
-  protected
-    $archive = null,
-    $name    = '',
-    $origin  = null;
+  protected $archive = null;
+  protected $name    = '';
+  protected $origin  = null;
 
   /**
    * Constructor
@@ -26,6 +23,15 @@ class ArchiveElement extends \lang\Object implements IOElement {
     $archive->isOpen() || $archive->open(ARCHIVE_READ);
     $this->archive= $archive;
     $this->name= $name;
+  }
+
+  /**
+   * Returns this element's name
+   *
+   * @return  string
+   */
+  public function getName() {
+    return basename($this->base);
   }
 
   /**
