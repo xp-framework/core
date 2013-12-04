@@ -27,6 +27,15 @@ class FileElement extends \lang\Object implements IOElement {
   }
 
   /**
+   * Returns this element's name
+   *
+   * @return  string
+   */
+  public function getName() {
+    return basename($this->uri);
+  }
+
+  /**
    * Returns this element's URI
    *
    * @return  string
