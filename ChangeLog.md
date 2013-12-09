@@ -59,6 +59,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added util.ConfigurationException and util.ApplicationException as requested
+  in xp-framework/xp-framework#346 - (@thekid)
 * Added support for `xpcli -?` for consistency reasons - (@thekid)
 * Extended the `with` statement to to work with lang.Closeable instances.
   See xp-framework/core#2 - (@thekid)
