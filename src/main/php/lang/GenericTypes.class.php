@@ -19,16 +19,16 @@ class GenericTypes extends \lang\Object {
   /**
    * Creates a generic type
    *
-   * @param   lang.XPClass self
+   * @param   lang.XPClass base
    * @param   lang.Type[] arguments
    * @return  string created type's literal
    */
-  public function newType0($self, $arguments) {
+  public function newType0($base, $arguments) {
 
     // Verify
-    $annotations= $self->getAnnotations();
+    $annotations= $base->getAnnotations();
     if (!isset($annotations['generic']['self'])) {
-      throw new IllegalStateException('Class '.$self->name.' is not a generic definition');
+      throw new IllegalStateException('Class '.$base->name.' is not a generic definition');
     }
     $components= array();
     foreach (explode(',', $annotations['generic']['self']) as $cs => $name) {
@@ -38,7 +38,7 @@ class GenericTypes extends \lang\Object {
     if ($cs !== sizeof($arguments)) {
       throw new IllegalArgumentException(sprintf(
         'Class %s expects %d component(s) <%s>, %d argument(s) given',
-        $self->name,
+        $base->name,
         $cs,
         implode(', ', $components),
         sizeof($arguments)
@@ -51,12 +51,12 @@ class GenericTypes extends \lang\Object {
       $cn.= '¸'.strtr($typearg->literal(), '\\', '¦');
       $qc.= ','.$typearg->getName();
     }
-    $name= $self->literal().'··'.substr($cn, 1);
-    $qname= $self->name.'<'.substr($qc, 1).'>';
+    $name= $base->literal().'··'.substr($cn, 1);
+    $qname= $base->name.'<'.substr($qc, 1).'>';
 
     // Create class if it doesn't exist yet
     if (!class_exists($name, false) && !interface_exists($name, false)) {
-      $meta= \xp::$meta[$self->name];
+      $meta= \xp::$meta[$base->name];
 
       // Parse placeholders into a lookup map
       $placeholders= array();
@@ -65,9 +65,9 @@ class GenericTypes extends \lang\Object {
       }
 
       // Work on sourcecode
-      $cl= $self->getClassLoader();
-      if (!$cl || !($bytes= $cl->loadClassBytes($self->name))) {
-        throw new IllegalStateException($self->name);
+      $cl= $base->getClassLoader();
+      if (!$cl || !($bytes= $cl->loadClassBytes($base->name))) {
+        throw new IllegalStateException($base->name);
       }
 
       // Namespaced class
@@ -94,7 +94,7 @@ class GenericTypes extends \lang\Object {
           if (T_ABSTRACT === $tokens[$i][0] || T_FINAL === $tokens[$i][0]) {
             $src.= $tokens[$i][1].' ';
           } else if (T_CLASS === $tokens[$i][0] || T_INTERFACE === $tokens[$i][0]) {
-            $meta['class'][DETAIL_GENERIC]= array($self->name, $arguments);
+            $meta['class'][DETAIL_GENERIC]= array($base->name, $arguments);
             $src.= $tokens[$i][1].' '.$decl;
             array_unshift($state, $tokens[$i][0]);
           }
@@ -114,7 +114,7 @@ class GenericTypes extends \lang\Object {
               foreach (explode(',', $annotations['generic']['parent']) as $j => $placeholder) {
                 $xargs[]= Type::forName(strtr(ltrim($placeholder), $placeholders));
               }
-              $src.= ' extends \\'.$this->newType0($self->getParentClass(), $xargs);
+              $src.= ' extends \\'.$this->newType0($base->getParentClass(), $xargs);
             } else {
               $src.= ' extends '.$parent;
             }
@@ -283,7 +283,7 @@ class GenericTypes extends \lang\Object {
 
       // Create alias if no PHP namespace is present and a qualified name exists
       if (!$ns && strstr($qname, '.')) {
-        class_alias($name, strtr($self->getName(), '.', '\\').'··'.substr($cn, 1));
+        class_alias($name, strtr($base->getName(), '.', '\\').'··'.substr($cn, 1));
       }
     }
     
