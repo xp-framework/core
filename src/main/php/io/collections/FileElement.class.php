@@ -103,7 +103,7 @@ class FileElement extends \lang\Object implements IOElement {
    *
    * @param   io.collections.IOCollection
    */
-  public function setOrigin(\IOCollection $origin) {
+  public function setOrigin(IOCollection $origin) {
     $this->origin= $origin;
   }
 
