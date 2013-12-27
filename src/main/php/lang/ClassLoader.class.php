@@ -46,27 +46,12 @@ final class ClassLoader extends Object implements IClassLoader {
     
     // Scan include-path, setting up classloaders for each element
     foreach (\xp::$classpath as $element) {
-      if ('' === $element) {
-        continue;
-      } else if ('!' === $element{0}) {
-        $before  = true;
-        $element = substr($element, 1);
+      if (DIRECTORY_SEPARATOR === $element{strlen($element) - 1}) {
+        $cl= FileSystemClassLoader::instanceFor($element, false);
       } else {
-        $before= false;
+        $cl= ArchiveClassLoader::instanceFor($element, false);
       }
-
-      $resolved= realpath($element);
-      if (is_dir($resolved)) {
-        $cl= FileSystemClassLoader::instanceFor($resolved, false);
-      } else if (is_file($resolved)) {
-        $cl= ArchiveClassLoader::instanceFor($resolved, false);
-      } else {
-        if ('/' !== $element{0} && ':' !== $element{1}) {   // If not fully qualified
-          $element.= ' (in '.getcwd().')';
-        }
-        \xp::error('[bootstrap] Classpath element ['.$element.'] not found');
-      }
-      isset(self::$delegates[$cl->instanceId()]) || self::registerLoader($cl, $before);
+      isset(self::$delegates[$cl->instanceId()]) || self::registerLoader($cl);
     }
   }
   
@@ -90,8 +75,8 @@ final class ClassLoader extends Object implements IClassLoader {
    */
   public static function registerPath($element, $before= false) {
     if (null === $before && '!' === $element{0}) {
-      $before  = true;
-      $element = substr($element, 1);
+      $before= true;
+      $element= substr($element, 1);
     } else {
       $before= (bool)$before;
     }

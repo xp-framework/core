@@ -43,11 +43,11 @@ if (!include(__DIR__.DIRECTORY_SEPARATOR.'lang.base.php')) {
 $paths= array();
 $scan= explode(PATH_SEPARATOR.PATH_SEPARATOR, get_include_path());
 foreach (explode(PATH_SEPARATOR, $scan[0]) as $path) {
-  $paths[]= ('~' === $path{0}
-    ? str_replace('~', $webroot, $path)
-    : $path
-  );
+  $paths[]= ('~' === $path{0} ? $webroot.substr($path, 1) : $path);
 }
-bootstrap(scanpath($paths, $webroot).(isset($scan[1]) ? $scan[1] : ''));
+bootstrap(array_merge(
+  scanpath($paths, $webroot),
+  isset($scan[1]) ? explode(PATH_SEPARATOR, $scan[1]) : array()
+));
 
 exit(\xp\scriptlet\Runner::main(array($webroot, $configd, $_SERVER['SERVER_PROFILE'], $_SERVER['SCRIPT_URL'])));

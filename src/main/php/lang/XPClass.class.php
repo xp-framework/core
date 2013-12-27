@@ -14,7 +14,7 @@ define('DETAIL_TARGET_ANNO',    6);
 define('DETAIL_GENERIC',        7);
  
 /**
- * Represents classes. Every instance of an XP class has an method
+ * Represents classes. Every instance of an XP class has a method
  * called getClass() which returns an instance of this class.
  *
  * Warning

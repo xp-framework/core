@@ -29,11 +29,11 @@ class BootstrapTest extends \unittest\TestCase {
       $p->in->close();
 
       // Read output
-        while ($b= $p->out->read()) { $out.= $b; }
+      while ($b= $p->out->read()) { $out.= $b; }
       while ($b= $p->err->read()) { $err.= $b; }
 
       // Close child process
-        $exitv= $p->close();
+      $exitv= $p->close();
     }
     return array($exitv, $out, $err);
   }

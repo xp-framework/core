@@ -48,13 +48,14 @@ final class xp {
     foreach (xp::$classpath as $path) {
 
       // If path is a directory and the included file exists, load it
-      if (is_dir($path) && file_exists($f= $path.DIRECTORY_SEPARATOR.strtr($class, '.', DIRECTORY_SEPARATOR).xp::CLASS_FILE_EXT)) {
+      if (DIRECTORY_SEPARATOR === $path{strlen($path) - 1}) {
+        $f= $path.strtr($class, '.', DIRECTORY_SEPARATOR).xp::CLASS_FILE_EXT;
         $cl= 'lang.FileSystemClassLoader';
-      } else if (is_file($path) && file_exists($f= 'xar://'.$path.'?'.strtr($class, '.', '/').xp::CLASS_FILE_EXT)) {
-        $cl= 'lang.archive.ArchiveClassLoader';
       } else {
-        continue;
+        $f= 'xar://'.$path.'?'.strtr($class, '.', '/').xp::CLASS_FILE_EXT;
+        $cl= 'lang.archive.ArchiveClassLoader';
       }
+      if (!file_exists($f)) continue;
 
       // Load class
       $package= null;
@@ -725,10 +726,10 @@ function __load($class) {
 }
 // }}}
 
-// {{{ string scanpath(string[] path, string home)
-//     Scans a path file 
+// {{{ string[] scanpath(string[] path, string home)
+//     Scans path files inside the given paths
 function scanpath($paths, $home) {
-  $inc= '';
+  $inc= array();
   foreach ($paths as $path) {
     if (!($d= @opendir($path))) continue;
     while ($e= readdir($d)) {
@@ -744,21 +745,16 @@ function scanpath($paths, $home) {
         } else {
           $pre= false;
         }
-        
+
         if ('~' === $line{0}) {
-          $base= $home.DIRECTORY_SEPARATOR; $line= substr($line, 1);
+          $qn= $home.DIRECTORY_SEPARATOR.substr($line, 1);
         } else if ('/' === $line{0} || strlen($line) > 2 && (':' === $line{1} && '\\' === $line{2})) {
-          $base= '';
+          $qn= $line;
         } else {
-          $base= $path.DIRECTORY_SEPARATOR; 
+          $qn= $path.DIRECTORY_SEPARATOR.$line;
         }
 
-        $qn= $base.strtr($line, '/', DIRECTORY_SEPARATOR).PATH_SEPARATOR;
-        if ('.php' === substr($qn, -5, 4)) {
-          require(substr($qn, 0, -1));
-        } else {
-          $pre ? $inc= $qn.$inc : $inc.= $qn;
-        }
+        $pre ? array_unshift($inc, $qn) : $inc[]= $qn;
       }
     }
     closedir($d);
@@ -767,13 +763,29 @@ function scanpath($paths, $home) {
 }
 // }}}
 
-// {{{ void boostrap(string classpath)
+// {{{ void boostrap(string[] classpath)
 //     Loads omnipresent classes and installs class loading
 function bootstrap($classpath) {
-  set_include_path($classpath);
 
-  xp::$classpath= explode(PATH_SEPARATOR, $classpath);
+  // Resolve class path
   xp::$loader= new xp();
+  $inc= '';
+  foreach ($classpath as $element) {
+    $qn= realpath($element);
+    if (false === $qn) {
+      \xp::error('[bootstrap] Classpath element ['.$element.'] not found');
+    } else if (is_dir($qn)) {
+      $qn.= DIRECTORY_SEPARATOR;
+    } else if ('.php' === substr($element, -4, 4)) {
+      require($qn);
+      continue;
+    }
+    xp::$classpath[]= $qn;
+    $inc.= $element.PATH_SEPARATOR;
+  }
+  set_include_path(rtrim($inc, PATH_SEPARATOR));
+
+  // Load omnipresent classes
   uses(
     'lang.Generic',
     'lang.Object',
