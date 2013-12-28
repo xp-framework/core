@@ -3,14 +3,12 @@
 use unittest\TestCase;
 use util\log\Logger;
 use util\log\Appender;
+use util\log\LogLevel;
 use util\log\layout\PatternLayout;
 use util\log\context\NestedLogContext;
 
-
 /**
  * Tests LogCategory class
- *
- * @purpose  Unit Test
  */
 class LogCategoryTest extends TestCase {
   public $cat= null;
@@ -43,19 +41,6 @@ class LogCategoryTest extends TestCase {
     }');
     return $appender->withLayout(new PatternLayout('%m'));
   }
-  
-  /**
-   * Helper method
-   *
-   * @param   string method
-   * @param   mixed[] args default ["Argument"]
-   * @throws  unittest.AssertionFailedError
-   */
-  protected function assertLog($method, $args= array('Argument')) {
-    $app= $this->cat->addAppender($this->mockAppender());
-    call_user_func_array(array($this->cat, $method), $args);
-    $this->assertEquals(array(array_merge((array)$method, $args)), $app->messages);
-  }
 
   /**
    * Helper method
@@ -64,10 +49,10 @@ class LogCategoryTest extends TestCase {
    * @param   mixed[] args default ["Argument"]
    * @throws  unittest.AssertionFailedError
    */
-  protected function assertLogf($method, $args= array('Argument')) {
+  protected function assertLogged($result, $func) {
     $app= $this->cat->addAppender($this->mockAppender());
-    call_user_func_array(array($this->cat, $method), $args);
-    $this->assertEquals(array(array_merge((array)substr($method, 0, -1), (array)vsprintf(array_shift($args), $args))), $app->messages);
+    $func($this->cat);
+    $this->assertEquals($result, $app->messages);
   }
   
   /**
@@ -248,87 +233,84 @@ class LogCategoryTest extends TestCase {
     );
   }
 
-  /**
-   * Tests debug() method
-   *
-   */
   #[@test]
   public function debug() {
-    $this->assertLog(__FUNCTION__);
+    $this->assertLogged(
+      array(array('debug', 'Test')),
+      function($cat) { $cat->debug('Test'); }
+    );
   }
 
-  /**
-   * Tests debugf() method
-   *
-   */
   #[@test]
   public function debugf() {
-    $this->assertLogf(__FUNCTION__, array('Hello %s', __CLASS__));
+    $this->assertLogged(
+      array(array('debug', 'Test 123')),
+      function($cat) { $cat->debugf('Test %d', '123'); }
+    );
   }
 
-  /**
-   * Tests info() method
-   *
-   */
   #[@test]
   public function info() {
-    $this->assertLog(__FUNCTION__);
+    $this->assertLogged(
+      array(array('info', 'Test')),
+      function($cat) { $cat->info('Test'); }
+    );
   }
 
-  /**
-   * Tests infof() method
-   *
-   */
   #[@test]
   public function infof() {
-    $this->assertLogf(__FUNCTION__, array('Hello %s', __CLASS__));
+    $this->assertLogged(
+      array(array('info', 'Test 123')),
+      function($cat) { $cat->infof('Test %d', '123'); }
+    );
   }
 
-  /**
-   * Tests warn() method
-   *
-   */
   #[@test]
   public function warn() {
-    $this->assertLog(__FUNCTION__);
+    $this->assertLogged(
+      array(array('warn', 'Test')),
+      function($cat) { $cat->warn('Test'); }
+    );
   }
 
-  /**
-   * Tests warnf() method
-   *
-   */
   #[@test]
   public function warnf() {
-    $this->assertLogf(__FUNCTION__, array('Hello %s', __CLASS__));
+    $this->assertLogged(
+      array(array('warn', 'Test 123')),
+      function($cat) { $cat->warnf('Test %d', '123'); }
+    );
   }
 
-  /**
-   * Tests error() method
-   *
-   */
   #[@test]
   public function error() {
-    $this->assertLog(__FUNCTION__);
+    $this->assertLogged(
+      array(array('error', 'Test')),
+      function($cat) { $cat->error('Test'); }
+    );
   }
 
-  /**
-   * Tests errorf() method
-   *
-   */
   #[@test]
   public function errorf() {
-    $this->assertLogf(__FUNCTION__, array('Hello %s', __CLASS__));
+    $this->assertLogged(
+      array(array('error', 'Test 123')),
+      function($cat) { $cat->errorf('Test %d', '123'); }
+    );
   }
 
-  /**
-   * Tests mark() method
-   *
-   */
   #[@test]
   public function mark() {
-    $app= $this->cat->addAppender($this->mockAppender());
-    $this->cat->mark();
-    $this->assertEquals(array(array('info', str_repeat('-', 72))), $app->messages); 
+    $this->assertLogged(
+      array(array('info', str_repeat('-', 72))),
+      function($cat) { $cat->mark(); }
+    );
+  }
+
+  #[@test]
+  public function log() {
+    $this->assertLogged(
+      array(array('info', 'Test 123')),
+      function($cat) { $cat->log(LogLevel::INFO, array('Test', '123')); }
+    );
   }
 
   /**

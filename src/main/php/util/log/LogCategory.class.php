@@ -107,7 +107,7 @@ class LogCategory extends \lang\Object {
    * @param   int level
    * @param   var[] args
    */
-  protected function callAppenders($level, $args) {
+  public function log($level, $args) {
     if (!($this->flags & $level)) return;
     $event= new LoggingEvent($this, time(), getmypid(), $level, $args);
     foreach ($this->_appenders as $appflag => $appenders) {
@@ -231,7 +231,7 @@ class LogCategory extends \lang\Object {
    */
   public function info() {
     $args= func_get_args();
-    $this->callAppenders(LogLevel::INFO, $args);
+    $this->log(LogLevel::INFO, $args);
   }
 
   /**
@@ -247,7 +247,7 @@ class LogCategory extends \lang\Object {
    */
   public function infof() {
     $args= func_get_args();
-    $this->callAppenders(LogLevel::INFO, array(vsprintf($args[0], array_slice($args, 1))));
+    $this->log(LogLevel::INFO, array(vsprintf($args[0], array_slice($args, 1))));
   }
 
   /**
@@ -257,7 +257,7 @@ class LogCategory extends \lang\Object {
    */
   public function warn() {
     $args= func_get_args();
-    $this->callAppenders(LogLevel::WARN, $args);
+    $this->log(LogLevel::WARN, $args);
   }
 
   /**
@@ -268,7 +268,7 @@ class LogCategory extends \lang\Object {
    */
   public function warnf() {
     $args= func_get_args();
-    $this->callAppenders(LogLevel::WARN, array(vsprintf($args[0], array_slice($args, 1))));
+    $this->log(LogLevel::WARN, array(vsprintf($args[0], array_slice($args, 1))));
   }
 
   /**
@@ -278,7 +278,7 @@ class LogCategory extends \lang\Object {
    */
   public function error() {
     $args= func_get_args();
-    $this->callAppenders(LogLevel::ERROR, $args);
+    $this->log(LogLevel::ERROR, $args);
   }
 
   /**
@@ -289,7 +289,7 @@ class LogCategory extends \lang\Object {
    */
   public function errorf() {
     $args= func_get_args();
-    $this->callAppenders(LogLevel::ERROR, array(vsprintf($args[0], array_slice($args, 1))));
+    $this->log(LogLevel::ERROR, array(vsprintf($args[0], array_slice($args, 1))));
   }
 
   /**
@@ -299,7 +299,7 @@ class LogCategory extends \lang\Object {
    */
   public function debug() {
     $args= func_get_args();
-    $this->callAppenders(LogLevel::DEBUG, $args);
+    $this->log(LogLevel::DEBUG, $args);
   }
  
   /**
@@ -310,7 +310,7 @@ class LogCategory extends \lang\Object {
    */
   public function debugf() {
     $args= func_get_args();
-    $this->callAppenders(LogLevel::DEBUG, array(vsprintf($args[0], array_slice($args, 1))));
+    $this->log(LogLevel::DEBUG, array(vsprintf($args[0], array_slice($args, 1))));
   }
  
   /**
@@ -318,7 +318,7 @@ class LogCategory extends \lang\Object {
    *
    */
   public function mark() {
-    $this->callAppenders(LogLevel::INFO, array(str_repeat('-', 72)));
+    $this->log(LogLevel::INFO, array(str_repeat('-', 72)));
   }
   
   /**
