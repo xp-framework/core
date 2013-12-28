@@ -44,7 +44,6 @@ final class xp {
   //     Loads a class by its fully qualified name
   function loadClass0($class) {
     if (isset(xp::$cl[$class])) return array_search($class, xp::$cn, true);
-
     foreach (xp::$classpath as $path) {
 
       // If path is a directory and the included file exists, load it
@@ -309,7 +308,7 @@ final class null {
 final class xarloader {
   public
     $position     = 0,
-    $archive      = '',
+    $archive      = null,
     $filename     = '';
     
   // {{{ proto [:var] acquire(string archive)
@@ -326,9 +325,7 @@ final class xarloader {
     }
 
     if (!isset($archives[$archive])) {
-      $archives[$archive]= array();
-      $current= &$archives[$archive];
-      $current['handle']= fopen($archive, 'rb');
+      $current= array('handle' => fopen($archive, 'rb'), 'dev' => crc32($archive));
       $header= unpack('a3id/c1version/V1indexsize/a*reserved', fread($current['handle'], 0x0100));
       if ('CCA' != $header['id']) raise('lang.FormatException', 'Malformed archive '.$archive);
       for ($current['index']= array(), $i= 0; $i < $header['indexsize']; $i++) {
@@ -338,6 +335,8 @@ final class xarloader {
         );
         $current['index'][rtrim($entry['id'], "\0")]= array($entry['size'], $entry['offset'], $i);
       }
+      $current['offset']= 0x0100 + $i * 0x0100;
+      $archives[$archive]= $current;
     }
 
     return $archives[$archive];
@@ -348,21 +347,19 @@ final class xarloader {
   //     Open the given stream and check if file exists
   function stream_open($path, $mode, $options, $opened_path) {
     sscanf(strtr($path, ';', '?'), 'xar://%[^?]?%[^$]', $archive, $this->filename);
-    $this->archive= urldecode($archive);
-    $current= self::acquire($this->archive);
-    return isset($current['index'][$this->filename]);
+    $this->archive= self::acquire(urldecode($archive));
+    return isset($this->archive['index'][$this->filename]);
   }
   // }}}
   
   // {{{ proto string stream_read(int count)
   //     Read $count bytes up-to-length of file
   function stream_read($count) {
-    $current= self::acquire($this->archive);
-    if (!isset($current['index'][$this->filename])) return false;
-    if ($current['index'][$this->filename][0] === $this->position || 0 === $count) return false;
+    $f= $this->archive['index'][$this->filename];
+    if (0 === $count || $this->position >= $f[0]) return false;
 
-    fseek($current['handle'], 0x0100 + sizeof($current['index']) * 0x0100 + $current['index'][$this->filename][1] + $this->position, SEEK_SET);
-    $bytes= fread($current['handle'], min($current['index'][$this->filename][0]- $this->position, $count));
+    fseek($this->archive['handle'], $this->archive['offset'] + $f[1] + $this->position, SEEK_SET);
+    $bytes= fread($this->archive['handle'], min($f[0] - $this->position, $count));
     $this->position+= strlen($bytes);
     return $bytes;
   }
@@ -371,19 +368,17 @@ final class xarloader {
   // {{{ proto bool stream_eof()
   //     Returns whether stream is at end of file
   function stream_eof() {
-    $current= self::acquire($this->archive);
-    return $this->position >= $current['index'][$this->filename][0];
+    return $this->position >= $this->archive['index'][$this->filename][0];
   }
   // }}}
   
   // {{{ proto [:int] stream_stat()
   //     Retrieve status of stream
   function stream_stat() {
-    $current= self::acquire($this->archive);
     return array(
-      'size'  => $current['index'][$this->filename][0],
-      'dev'   => crc32($this->archive),
-      'ino'   => $current['index'][$this->filename][2]
+      'dev'   => $this->archive['dev'],
+      'size'  => $this->archive['index'][$this->filename][0],
+      'ino'   => $this->archive['index'][$this->filename][2]
     );
   }
   // }}}
@@ -394,10 +389,7 @@ final class xarloader {
     switch ($whence) {
       case SEEK_SET: $this->position= $offset; break;
       case SEEK_CUR: $this->position+= $offset; break;
-      case SEEK_END: 
-        $current= self::acquire($this->archive);
-        $this->position= $current['index'][$this->filename][0] + $offset; 
-        break;
+      case SEEK_END: $this->position= $this->archive['index'][$this->filename][0] + $offset; break;
     }
     return true;
   }
@@ -414,15 +406,13 @@ final class xarloader {
   //     Retrieve status of url
   function url_stat($path) {
     sscanf(strtr($path, ';', '?'), 'xar://%[^?]?%[^$]', $archive, $file);
-    $archive= urldecode($archive);
-    $current= self::acquire($archive);
-    if (!isset($current['index'][$file])) return false;
-    return array(
+    $current= self::acquire(urldecode($archive));
+    return isset($current['index'][$file]) ? array(
+      'dev'   => $current['dev'],
       'mode'  => 0100644,
       'size'  => $current['index'][$file][0],
-      'dev'   => crc32($archive),
       'ino'   => $current['index'][$file][2]
-    );
+    ) : false;
   }
   // }}}
 }
