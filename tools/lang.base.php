@@ -776,7 +776,7 @@ function bootstrap($classpath) {
   set_include_path(rtrim($inc, PATH_SEPARATOR));
 
   // Load omnipresent classes
-  uses(
+  foreach (array(
     'lang.Generic',
     'lang.Object',
     'lang.Throwable',
@@ -805,7 +805,9 @@ function bootstrap($classpath) {
     'lang.types.Long',
     'lang.types.Short',
     'lang.types.String'
-  );
+  ) as $class) {
+    xp::$loader->loadClass0($class);
+  }
 }
 // }}}
 
