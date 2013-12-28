@@ -50,7 +50,6 @@ bootstrap(array_merge(
   scanpath(explode(PATH_SEPARATOR, substr($use, 2).PATH_SEPARATOR.'.'), $home),
   explode(PATH_SEPARATOR, $include)
 ));
-uses('util.cmd.ParamString', 'util.cmd.Console');
 
 // Start I/O layers
 $encoding= get_cfg_var('encoding');
