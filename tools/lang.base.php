@@ -664,7 +664,11 @@ function newinstance($spec, $args, $def= null) {
   // Instantiate
   $decl= new \ReflectionClass($cl->loadClass0($spec));
   $functions && $decl->setStaticPropertyValue('__func', $functions);
-  return $decl->newInstanceArgs($args);
+  if ($decl->hasMethod('__construct')) {
+    return $decl->newInstanceArgs($args);
+  } else {
+    return $decl->newInstance();
+  }
 }
 // }}}
 
