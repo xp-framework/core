@@ -3,14 +3,12 @@
 use unittest\TestCase;
 use util\log\Logger;
 use util\log\Appender;
+use util\log\LogLevel;
 use util\log\layout\PatternLayout;
 use util\log\context\NestedLogContext;
 
-
 /**
  * Tests LogCategory class
- *
- * @purpose  Unit Test
  */
 class LogCategoryTest extends TestCase {
   public $cat= null;
@@ -18,7 +16,6 @@ class LogCategoryTest extends TestCase {
   /**
    * Setup method. Creates logger and cat member for easier access to
    * the Logger instance
-   *
    */
   public function setUp() {
     $this->cat= new \util\log\LogCategory('test');
@@ -43,101 +40,64 @@ class LogCategoryTest extends TestCase {
     }');
     return $appender->withLayout(new PatternLayout('%m'));
   }
-  
-  /**
-   * Helper method
-   *
-   * @param   string method
-   * @param   mixed[] args default ["Argument"]
-   * @throws  unittest.AssertionFailedError
-   */
-  protected function assertLog($method, $args= array('Argument')) {
-    $app= $this->cat->addAppender($this->mockAppender());
-    call_user_func_array(array($this->cat, $method), $args);
-    $this->assertEquals(array(array_merge((array)$method, $args)), $app->messages);
-  }
 
   /**
    * Helper method
    *
-   * @param   string method
-   * @param   mixed[] args default ["Argument"]
+   * @param   string $method
+   * @param   var $func A function to be called with `$this->cat` as argument
    * @throws  unittest.AssertionFailedError
    */
-  protected function assertLogf($method, $args= array('Argument')) {
+  protected function assertLogged($result, $func) {
     $app= $this->cat->addAppender($this->mockAppender());
-    call_user_func_array(array($this->cat, $method), $args);
-    $this->assertEquals(array(array_merge((array)substr($method, 0, -1), (array)vsprintf(array_shift($args), $args))), $app->messages);
+    $func($this->cat);
+    $this->assertEquals($result, $app->messages);
   }
   
-  /**
-   * Ensure the logger category initially has no appenders
-   *
-   */
   #[@test]
-  public function initiallyNoAppenders() {
+  public function logger_category_initially_has_no_appenders() {
     $this->assertFalse($this->cat->hasAppenders());
   }
 
-  /**
-   * Tests adding an appender returns the added appender
-   *
-   */
   #[@test]
-  public function addAppenderReturnsAddedAppender() {
+  public function addAappender_returns_added_appender() {
     $appender= $this->mockAppender();
     $this->assertEquals($appender, $this->cat->addAppender($appender));
   }
 
-  /**
-   * Tests adding an appender returns the log category
-   *
-   */
   #[@test]
-  public function withAppenderReturnsCategory() {
+  public function withAppender_returns_category() {
     $this->assertEquals($this->cat, $this->cat->withAppender($this->mockAppender()));
   }
 
-  /**
-   * Tests hasAppenders() and addAppender() methods
-   *
-   */
   #[@test]
-  public function hasAppendersAfterAdding() {
+  public function hasAppenders_initially_returns_false() {
+    $this->assertFalse($this->cat->hasAppenders());
+  }
+
+  #[@test]
+  public function hasAppenders_returns_true_after_adding_an_appender() {
     $this->cat->addAppender($this->mockAppender());
     $this->assertTrue($this->cat->hasAppenders());
   }
 
-  /**
-   * Tests hasAppenders() and removeAppender() methods
-   *
-   */
   #[@test]
-  public function hasNoMoreAppendersAfterRemoving() {
+  public function hasAppenders_returns_false_after_removing_added_appender() {
     $a= $this->cat->addAppender($this->mockAppender());
     $this->cat->removeAppender($a);
     $this->assertFalse($this->cat->hasAppenders());
   }
 
-  /**
-   * Tests addAppender() method
-   *
-   */
   #[@test]
-  public function addAppenderTwice() {
+  public function adding_appender_twice_with_same_flags_has_no_effect() {
     $a= $this->mockAppender();
     $this->cat->addAppender($a);
     $this->cat->addAppender($a);
-    $this->cat->removeAppender($a);
-    $this->assertFalse($this->cat->hasAppenders());
+    $this->assertEquals(array($a), $this->cat->getAppenders());
   }
 
-  /**
-   * Tests addAppender() and removeAppender() methods
-   *
-   */
   #[@test]
-  public function addAppenderTwiceWithDifferentFlags() {
+  public function adding_appender_twice_with_differing_flags() {
     $a= $this->mockAppender();
     $this->cat->addAppender($a, \util\log\LogLevel::INFO);
     $this->cat->addAppender($a, \util\log\LogLevel::WARN);
@@ -147,40 +107,26 @@ class LogCategoryTest extends TestCase {
     $this->assertFalse($this->cat->hasAppenders());
   }
 
-  /**
-   * Tests adding an appender sets default layout if appender does not
-   * have a layout.
-   *
-   */
   #[@test]
-  public function addAppenderSetsDefaultLayout() {
+  public function addAppender_sets_layout_if_appender_does_not_have_layout() {
     $appender= newinstance('util.log.Appender', array(), '{
       public function append(LoggingEvent $event) { }
     }');
     $this->cat->addAppender($appender);
-    $this->assertClass($appender->getLayout(), 'util.log.layout.DefaultLayout');
+    $this->assertInstanceOf('util.log.layout.DefaultLayout', $appender->getLayout());
   }
 
-  /**
-   * Tests adding an appender does not overwrite layout
-   *
-   */
   #[@test]
-  public function addAppenderDoesNotOverwriteLayout() {
+  public function addAppender_does_not_overwrite_layout() {
     $appender= newinstance('util.log.Appender', array(), '{
       public function append(LoggingEvent $event) { }
     }');
     $this->cat->addAppender($appender->withLayout(new PatternLayout('%m')));
-    $this->assertClass($appender->getLayout(), 'util.log.layout.PatternLayout');
+    $this->assertInstanceOf('util.log.layout.PatternLayout', $appender->getLayout());
   }
 
-  /**
-   * Tests adding an appender sets default layout if appender does not
-   * have a layout.
-   *
-   */
   #[@test]
-  public function withAppenderSetsLayout() {
+  public function withAppender_sets_layout_if_appender_does_not_have_layout() {
     $appender= newinstance('util.log.Appender', array(), '{
       public function append(LoggingEvent $event) { }
     }');
@@ -188,46 +134,30 @@ class LogCategoryTest extends TestCase {
     $this->assertClass($appender->getLayout(), 'util.log.layout.DefaultLayout');
   }
 
-  /**
-   * Tests adding an appender does not overwrite layout
-   *
-   */
   #[@test]
-  public function withAppenderDoesNotOverwriteLayout() {
+  public function withAppender_does_not_overwrite_layout() {
     $appender= newinstance('util.log.Appender', array(), '{
       public function append(LoggingEvent $event) { }
     }');
     $this->cat->withAppender($appender->withLayout(new PatternLayout('%m')));
-    $this->assertClass($appender->getLayout(), 'util.log.layout.PatternLayout');
+    $this->assertInstanceOf('util.log.layout.PatternLayout', $appender->getLayout());
   }
 
-  /**
-   * Tests equals() method
-   *
-   */
   #[@test]
-  public function logCategoriesWithSameIdentifierAreEqual() {
+  public function log_categories_with_same_identifiers_are_equal() {
     $this->assertEquals(new \util\log\LogCategory('test'), $this->cat);
   }
 
-  /**
-   * Tests equals() method
-   *
-   */
   #[@test]
-  public function logCategoriesDifferingAppendersNotEqual() {
+  public function log_categories_with_differing_appenders_are_not_equal() {
     $this->assertNotEquals(
       new \util\log\LogCategory('test'), 
       $this->cat->withAppender($this->mockAppender())
     );
   }
 
-  /**
-   * Tests equals() method
-   *
-   */
   #[@test]
-  public function logCategoriesAppendersDifferingInFlagsNotEqual() {
+  public function log_categories_with_appenders_differing_in_flags_are_not_equal() {
     $appender= $this->mockAppender();
     $this->assertNotEquals(
       create(new \util\log\LogCategory('test'))->withAppender($appender, \util\log\LogLevel::WARN), 
@@ -235,12 +165,8 @@ class LogCategoryTest extends TestCase {
     );
   }
 
-  /**
-   * Tests equals() method
-   *
-   */
   #[@test]
-  public function logCategoriesSameAppendersEqual() {
+  public function log_categories_with_same_appenders_are_equal() {
     $appender= $this->mockAppender();
     $this->assertEquals(
       create(new \util\log\LogCategory('test'))->withAppender($appender), 
@@ -248,95 +174,88 @@ class LogCategoryTest extends TestCase {
     );
   }
 
-  /**
-   * Tests debug() method
-   *
-   */
   #[@test]
   public function debug() {
-    $this->assertLog(__FUNCTION__);
+    $this->assertLogged(
+      array(array('debug', 'Test')),
+      function($cat) { $cat->debug('Test'); }
+    );
   }
 
-  /**
-   * Tests debugf() method
-   *
-   */
   #[@test]
   public function debugf() {
-    $this->assertLogf(__FUNCTION__, array('Hello %s', __CLASS__));
+    $this->assertLogged(
+      array(array('debug', 'Test 123')),
+      function($cat) { $cat->debugf('Test %d', '123'); }
+    );
   }
 
-  /**
-   * Tests info() method
-   *
-   */
   #[@test]
   public function info() {
-    $this->assertLog(__FUNCTION__);
+    $this->assertLogged(
+      array(array('info', 'Test')),
+      function($cat) { $cat->info('Test'); }
+    );
   }
 
-  /**
-   * Tests infof() method
-   *
-   */
   #[@test]
   public function infof() {
-    $this->assertLogf(__FUNCTION__, array('Hello %s', __CLASS__));
+    $this->assertLogged(
+      array(array('info', 'Test 123')),
+      function($cat) { $cat->infof('Test %d', '123'); }
+    );
   }
 
-  /**
-   * Tests warn() method
-   *
-   */
   #[@test]
   public function warn() {
-    $this->assertLog(__FUNCTION__);
+    $this->assertLogged(
+      array(array('warn', 'Test')),
+      function($cat) { $cat->warn('Test'); }
+    );
   }
 
-  /**
-   * Tests warnf() method
-   *
-   */
   #[@test]
   public function warnf() {
-    $this->assertLogf(__FUNCTION__, array('Hello %s', __CLASS__));
+    $this->assertLogged(
+      array(array('warn', 'Test 123')),
+      function($cat) { $cat->warnf('Test %d', '123'); }
+    );
   }
 
-  /**
-   * Tests error() method
-   *
-   */
   #[@test]
   public function error() {
-    $this->assertLog(__FUNCTION__);
+    $this->assertLogged(
+      array(array('error', 'Test')),
+      function($cat) { $cat->error('Test'); }
+    );
   }
 
-  /**
-   * Tests errorf() method
-   *
-   */
   #[@test]
   public function errorf() {
-    $this->assertLogf(__FUNCTION__, array('Hello %s', __CLASS__));
+    $this->assertLogged(
+      array(array('error', 'Test 123')),
+      function($cat) { $cat->errorf('Test %d', '123'); }
+    );
   }
 
-  /**
-   * Tests mark() method
-   *
-   */
   #[@test]
   public function mark() {
-    $app= $this->cat->addAppender($this->mockAppender());
-    $this->cat->mark();
-    $this->assertEquals(array(array('info', str_repeat('-', 72))), $app->messages); 
+    $this->assertLogged(
+      array(array('info', str_repeat('-', 72))),
+      function($cat) { $cat->mark(); }
+    );
   }
 
-  /**
-   * Tests flags
-   *
-   */
   #[@test]
-  public function warningMessageOnlyGetsAppendedToWarnAppender() {
+  public function log() {
+    $this->assertLogged(
+      array(array('info', 'Test 123')),
+      function($cat) { $cat->log(LogLevel::INFO, array('Test', '123')); }
+    );
+  }
+
+  #[@test]
+  public function warning_message_only_gets_appended_to_warn_appender() {
     $app1= $this->cat->addAppender($this->mockAppender(), \util\log\LogLevel::INFO);
     $app2= $this->cat->addAppender($this->mockAppender(), \util\log\LogLevel::WARN);
     $this->cat->warn('Test');
@@ -344,72 +263,44 @@ class LogCategoryTest extends TestCase {
     $this->assertEquals(array(array('warn', 'Test')), $app2->messages); 
   }
 
-  /**
-   * Tests getAppenders()
-   *
-   */
   #[@test]
-  public function getAppenders() {
+  public function getAppenders_initially_returns_empty_array() {
+    $this->assertEquals(array(), $this->cat->getAppenders());
+  }
+
+  #[@test]
+  public function getAppenders_returns_added_appender() {
     $appender= $this->mockAppender();
     $this->cat->addAppender($appender);
     $this->assertEquals(array($appender), $this->cat->getAppenders());
   }
 
-  /**
-   * Tests getAppenders()
-   *
-   */
   #[@test]
-  public function getAppendersWithoutAppendersAdded() {
-    $this->assertEquals(array(), $this->cat->getAppenders());
-  }
-
-  /**
-   * Tests getAppenders()
-   *
-   */
-  #[@test]
-  public function getAllAppendersWhenErrorLevelAppenderExists() {
+  public function getAppenders_returns_added_appender_with_error_flags() {
     $appender= $this->cat->addAppender($this->mockAppender(), \util\log\LogLevel::ERROR);
     $this->assertEquals(array($appender), $this->cat->getAppenders());
   }
 
-  /**
-   * Tests getAppenders()
-   *
-   */
   #[@test]
-  public function getErrorLevelAppendersWhenErrorLevelAppendersExist() {
+  public function getAppenders_with_error_flags_returns_added_appender_with_error_flags() {
     $appender= $this->cat->addAppender($this->mockAppender(), \util\log\LogLevel::ERROR);
     $this->assertEquals(array($appender), $this->cat->getAppenders(\util\log\LogLevel::ERROR));
   }
 
-  /**
-   * Tests getAppenders()
-   *
-   */
   #[@test]
-  public function getInfoLevelAppendersWhenOnlyErrorLevelAppendersExist() {
+  public function getAppenders_with_info_flags_does_not_return_added_appender_with_error_flags() {
     $appender= $this->cat->addAppender($this->mockAppender(), \util\log\LogLevel::ERROR);
     $this->assertEquals(array(), $this->cat->getAppenders(\util\log\LogLevel::INFO));
   }
 
-  /**
-   * Tests getAppenders()
-   *
-   */
   #[@test]
-  public function getInfoLevelAppendersWhenErrorAndInfoLevelAppenderExists() {
+  public function getAppenders_with_info_flags_returns_added_appender_with_info_and_error_flags() {
     $appender= $this->cat->addAppender($this->mockAppender(), \util\log\LogLevel::ERROR | \util\log\LogLevel::INFO);
     $this->assertEquals(array($appender), $this->cat->getAppenders(\util\log\LogLevel::INFO));
   }
 
-  /**
-   * Tests getAppenders()
-   *
-   */
   #[@test]
-  public function getAllAppenders() {
+  public function getAppenders_returns_appenders_with_flags() {
     $app1= $this->cat->addAppender($this->mockAppender(), \util\log\LogLevel::ERROR);
     $app2= $this->cat->addAppender($this->mockAppender(), \util\log\LogLevel::WARN);
     $app3= $this->cat->addAppender($this->mockAppender(), \util\log\LogLevel::INFO);
@@ -417,24 +308,19 @@ class LogCategoryTest extends TestCase {
     $this->assertEquals(array($app1, $app2, $app3, $app4), $this->cat->getAppenders());
   }
 
-
-  /**
-   * Tests LogCategory::hasContext()
-   *
-   */
   #[@test]
-  public function hasContext() {
+  public function hasContext_initially_returns_false() {
     $this->assertFalse($this->cat->hasContext());
+  }
+
+  #[@test]
+  public function hasContext_returns_true_after_setting_context() {
     $this->cat->setContext(new NestedLogContext());
     $this->assertTrue($this->cat->hasContext());
   }
 
-  /**
-   * Tests LogCategory::getContext()
-   *
-   */
   #[@test]
-  public function getContext() {
+  public function getContext_returns_context_previously_set_with_setContext() {
     $context= new NestedLogContext();
     $this->cat->setContext($context);
     $this->assertEquals($context, $this->cat->getContext());
