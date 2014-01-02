@@ -46,7 +46,9 @@ final class xp {
     if (isset(xp::$cl[$class])) return array_search($class, xp::$cn, true);
     foreach (xp::$classpath as $path) {
 
-      // If path is a directory and the included file exists, load it
+      // We rely on paths having been expanded including a trailing directory separator
+      // character inside bootstrap(). This way, we can save testing for whether the path
+      // entry is a directory with file system stat() calls.
       if (DIRECTORY_SEPARATOR === $path{strlen($path) - 1}) {
         $f= $path.strtr($class, '.', DIRECTORY_SEPARATOR).xp::CLASS_FILE_EXT;
         $cl= 'lang.FileSystemClassLoader';
