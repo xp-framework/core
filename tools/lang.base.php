@@ -23,6 +23,7 @@ final class import {
 // {{{ final class xp
 final class xp {
   const CLASS_FILE_EXT= '.class.php';
+  const XAR_FILE_EXT= '.xar';
   const ENCODING= 'utf-8';
 
   public static $ext= array();
@@ -47,11 +48,13 @@ final class xp {
 
     foreach (xp::$classpath as $path) {
 
-      // If path is a directory and the included file exists, load it
-      if (is_dir($path) && file_exists($f= $path.DIRECTORY_SEPARATOR.strtr($class, '.', DIRECTORY_SEPARATOR).xp::CLASS_FILE_EXT)) {
-        $cl= 'lang.FileSystemClassLoader';
-      } else if (is_file($path) && file_exists($f= 'xar://'.$path.'?'.strtr($class, '.', '/').xp::CLASS_FILE_EXT)) {
+      // Test for .xar archive first
+      if (xp::XAR_FILE_EXT === substr($path, -4) && file_exists($f= 'xar://'.$path.'?'.strtr($class, '.', '/').xp::CLASS_FILE_EXT)) {
         $cl= 'lang.archive.ArchiveClassLoader';
+
+      // Second case, check for regular file
+      } else if (file_exists($f= $path.DIRECTORY_SEPARATOR.strtr($class, '.', DIRECTORY_SEPARATOR).xp::CLASS_FILE_EXT)) {
+        $cl= 'lang.FileSystemClassLoader';
       } else {
         continue;
       }
@@ -664,7 +667,12 @@ function newinstance($spec, $args, $def= null) {
   // Instantiate
   $decl= new \ReflectionClass($cl->loadClass0($spec));
   $functions && $decl->setStaticPropertyValue('__func', $functions);
-  return $decl->newInstanceArgs($args);
+
+  if (sizeof($args)) {
+    return $decl->newInstanceArgs($args);
+  } else {
+    return $decl->newInstance();
+  }
 }
 // }}}
 
