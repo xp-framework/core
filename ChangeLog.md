@@ -64,6 +64,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Implemented generic util.log.LogCategory::log($level, $args)
+  See xp-framework/core#4 - (@thekid)
 * Added util.ConfigurationException and util.ApplicationException as requested
   in xp-framework/xp-framework#346 - (@thekid)
 * Added support for `xpcli -?` for consistency reasons - (@thekid)
