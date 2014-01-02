@@ -57,6 +57,11 @@ XP Framework Core ChangeLog
   - Extracted `remote` into https://github.com/xp-framework/remote
   (@kiesel, @thekid)
 
+### Bugfixes
+
+* Fixed xp-framework/xp-framework#347 - "Undefined variable: len" in BSDSocket
+  (@haimich)
+
 ### Features
 
 * Added util.ConfigurationException and util.ApplicationException as requested

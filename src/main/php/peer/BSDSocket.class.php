@@ -403,7 +403,8 @@ class BSDSocket extends Socket {
    * @throws  peer.SocketException
    */
   public function write($str) {
-    $bytesWritten= socket_write($this->_sock, $str, strlen($str));
+    $len= strlen($str);
+    $bytesWritten= socket_write($this->_sock, $str, $len);
     if (false === $bytesWritten || null === $bytesWritten) {
       $e= new SocketException('Write of '.$len.' bytes to socket failed: '.$this->getLastError());
       \xp::gc(__FILE__);
