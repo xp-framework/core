@@ -133,7 +133,7 @@ final class xp {
       unset($protect[(string)$arg->hashCode()]);
       return $indent ? str_replace("\n", "\n".$indent, $s) : $s;
     } else if (is_array($arg)) {
-      $ser= serialize($arg);
+      $ser= print_r($arg, true);
       if (isset($protect[$ser])) return '->{:recursion:}';
       $protect[$ser]= true;
       $r= "[\n";
@@ -150,7 +150,7 @@ final class xp {
       }
       return '<function('.substr($sig, 2).')>';
     } else if (is_object($arg)) {
-      $ser= serialize($arg);
+      $ser= spl_object_hash($arg);
       if (isset($protect[$ser])) return '->{:recursion:}';
       $protect[$ser]= true;
       $r= xp::nameOf(get_class($arg))." {\n";

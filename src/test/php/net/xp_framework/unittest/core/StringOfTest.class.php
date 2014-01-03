@@ -223,12 +223,26 @@ class StringOfTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function closureWithOneParam() {
+  public function closure_parameter_is_printed() {
     $this->assertEquals('<function($a)>', \xp::stringOf(function($a) { }));
   }
 
   #[@test]
-  public function closureWithTwoParams() {
+  public function closure_parameters_are_printed() {
     $this->assertEquals('<function($a, $b)>', \xp::stringOf(function($a, $b) { }));
+  }
+
+  #[@test]
+  public function closure_inside_object_does_not_raise_serialization_exception() {
+    $instance= newinstance('lang.Object', array(function($a, $b) { }), array(
+      'closure'     => null,
+      '__construct' => function($self, $closure) { $self->closure= $closure; },
+    ));
+    \xp::stringOf($instance);
+  }
+
+  #[@test]
+  public function closure_inside_array_does_not_raise_serialization_exception() {
+    \xp::stringOf(array(function($a, $b) { }));
   }
 }
