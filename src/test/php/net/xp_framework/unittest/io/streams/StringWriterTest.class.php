@@ -53,6 +53,13 @@ class StringWriterTest extends TestCase {
   }
 
   #[@test]
+  public function write_supports_var_args() {
+    $this->assertWritten('1two3four', function($fixture) {
+      $fixture->write(1, 'two', 3.0, new String('four'));
+    });
+  }
+
+  #[@test]
   public function writef() {
     $this->assertWritten('Some string: test, some int: 6100', function($fixture) {
       $fixture->writef('Some string: %s, some int: %d', 'test', 6100);
@@ -63,6 +70,13 @@ class StringWriterTest extends TestCase {
   public function writeLine($expected, $value) {
     $this->assertWritten($expected."\n", function($fixture) use($value) {
       $fixture->writeLine($value);
+    });
+  }
+
+  #[@test]
+  public function writeLine_supports_var_args() {
+    $this->assertWritten("1two3four\n", function($fixture) {
+      $fixture->writeLine(1, 'two', 3.0, new String('four'));
     });
   }
 
