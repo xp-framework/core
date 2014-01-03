@@ -62,12 +62,10 @@ class StringWriter extends \lang\Object implements OutputStreamWriter {
   public function write() {
     $a= func_get_args();
     foreach ($a as $arg) {
-      if ($arg instanceof \lang\Generic) {
-        $this->out->write($arg->toString());
-      } else if (is_array($arg)) {
-        $this->out->write(\xp::stringOf($arg));
-      } else {
+      if (is_string($arg)) {
         $this->out->write($arg);
+      } else {
+        $this->out->write(\xp::stringOf($arg));
       }
     }
   }
@@ -80,12 +78,10 @@ class StringWriter extends \lang\Object implements OutputStreamWriter {
   public function writeLine() {
     $a= func_get_args();
     foreach ($a as $arg) {
-      if ($arg instanceof \lang\Generic) {
-        $this->out->write($arg->toString());
-      } else if (is_array($arg)) {
-        $this->out->write(\xp::stringOf($arg));
-      } else {
+      if (is_string($arg)) {
         $this->out->write($arg);
+      } else {
+        $this->out->write(\xp::stringOf($arg));
       }
     }
     $this->out->write("\n");

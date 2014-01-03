@@ -3,6 +3,7 @@
 use unittest\TestCase;
 use io\streams\StringWriter;
 use io\streams\MemoryOutputStream;
+use lang\types\String;
 
 /**
  * Test StringReader
@@ -27,10 +28,27 @@ class StringWriterTest extends TestCase {
     });
   }
 
-  #[@test]
-  public function write() {
-    $this->assertWritten('This is a test', function($fixture) {
-      $fixture->write('This is a test');
+  /**
+   * Returns values to be written
+   *
+   * @return var[] args
+   */
+  protected function values() {
+    return array(
+      array('1', 1), array('0', 0), array('-1', -1),
+      array('1', 1.0),
+      array('true', true), array('false', false),
+      array('Test', 'Test'), array('', ''),
+      array("[\n]", array()), array("[\n  0 => 1\n  1 => 2\n  2 => 3\n]", [1, 2, 3]),
+      array("[\n  a => \"b\"\n  c => \"d\"\n]", array('a' => 'b', 'c' => 'd')),
+      array('Test', new String('Test'))
+    );
+  }
+
+  #[@test, @values('values')]
+  public function write($expected, $value) {
+    $this->assertWritten($expected, function($fixture) use($value) {
+      $fixture->write($value);
     });
   }
 
@@ -41,10 +59,10 @@ class StringWriterTest extends TestCase {
     });
   }
 
-  #[@test]
-  public function writeLine() {
-    $this->assertWritten("This is a test\n", function($fixture) {
-      $fixture->writeLine('This is a test');
+  #[@test, @values('values')]
+  public function writeLine($expected, $value) {
+    $this->assertWritten($expected."\n", function($fixture) use($value) {
+      $fixture->writeLine($value);
     });
   }
 
