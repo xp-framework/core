@@ -64,6 +64,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Changed Console class to print `true` and `false` for booleans instead of
+  `1` for true and an empty string for false - (@thekid)
 * Implemented generic util.log.LogCategory::log($level, $args)
   See xp-framework/core#4 - (@thekid)
 * Added util.ConfigurationException and util.ApplicationException as requested

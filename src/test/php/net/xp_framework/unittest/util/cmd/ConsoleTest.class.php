@@ -145,7 +145,7 @@ class ConsoleTest extends TestCase {
   #[@test]
   public function writeTrue() {
     Console::write(true);
-    $this->assertEquals('1', $this->streams[1]->getBytes());
+    $this->assertEquals('true', $this->streams[1]->getBytes());
   }
 
   /**
@@ -155,7 +155,7 @@ class ConsoleTest extends TestCase {
   #[@test]
   public function writeFalse() {
     Console::write(false);
-    $this->assertEquals('', $this->streams[1]->getBytes());
+    $this->assertEquals('false', $this->streams[1]->getBytes());
   }
 
   /**
