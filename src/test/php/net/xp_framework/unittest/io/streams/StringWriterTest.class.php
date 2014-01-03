@@ -36,7 +36,7 @@ class StringWriterTest extends TestCase {
   protected function values() {
     return array(
       array('1', 1), array('0', 0), array('-1', -1),
-      array('1', 1.0),
+      array('1', 1.0), array('0', 0.0), array('-1', -1.0), array('0.5', 0.5),
       array('true', true), array('false', false),
       array('Test', 'Test'), array('', ''),
       array("[\n]", array()), array("[\n  0 => 1\n  1 => 2\n  2 => 3\n]", [1, 2, 3]),
