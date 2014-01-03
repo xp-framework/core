@@ -6,9 +6,9 @@ use io\streams\MemoryOutputStream;
 use lang\types\String;
 
 /**
- * Test StringReader
+ * Test StringWriter
  *
- * @see  xp://io.streams.StringReader
+ * @see  xp://io.streams.StringWriter
  */
 class StringWriterTest extends TestCase {
 
@@ -41,7 +41,8 @@ class StringWriterTest extends TestCase {
       array('Test', 'Test'), array('', ''),
       array("[\n]", array()), array("[\n  0 => 1\n  1 => 2\n  2 => 3\n]", [1, 2, 3]),
       array("[\n  a => \"b\"\n  c => \"d\"\n]", array('a' => 'b', 'c' => 'd')),
-      array('Test', new String('Test'))
+      array('Test', new String('Test')),
+      array('Test', newinstance('lang.Object', array(), array('toString' => function($self) { return 'Test'; } )))
     );
   }
 
