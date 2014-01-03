@@ -4,60 +4,54 @@ use unittest\TestCase;
 use io\streams\StringWriter;
 use io\streams\MemoryOutputStream;
 
-
 /**
  * Test StringReader
  *
- * @see      xp://io.streams.StringReader
- * @purpose  Test case
+ * @see  xp://io.streams.StringReader
  */
 class StringWriterTest extends TestCase {
 
   /**
-   * Test write()
+   * Assert a given string has been written to the fixture after 
+   * invoking a specified closure.
    *
+   * @param  string $bytes
+   * @param  var $closure
+   * @throws unittest.AssertionFailedError
    */
+  protected function assertWritten($bytes, $closure) {
+    with (new MemoryOutputStream(), function($out) use($bytes, $closure) {
+      $fixture= new StringWriter($out);
+      $closure($fixture);
+      $this->assertEquals($bytes, $out->getBytes());
+    });
+  }
+
   #[@test]
   public function write() {
-    $stream= new StringWriter($out= new MemoryOutputStream());
-    $stream->write($data= 'This is a test');
-    
-    $this->assertEquals($data, $out->getBytes());
+    $this->assertWritten('This is a test', function($fixture) {
+      $fixture->write('This is a test');
+    });
   }
-  
-  /**
-   * Test writef()
-   *
-   */
+
   #[@test]
   public function writef() {
-    $stream= new StringWriter($out= new MemoryOutputStream());
-    $stream->writef('Some string: %s, some int: %d', 'test', 6100);
-    
-    $this->assertEquals('Some string: test, some int: 6100', $out->getBytes());
+    $this->assertWritten('Some string: test, some int: 6100', function($fixture) {
+      $fixture->writef('Some string: %s, some int: %d', 'test', 6100);
+    });
   }
-  
-  /**
-   * Test writeLine()
-   *
-   */
+
   #[@test]
   public function writeLine() {
-    $stream= new StringWriter($out= new MemoryOutputStream());
-    $stream->writeLine($line= 'This is the first line');
-    
-    $this->assertEquals($line."\n", $out->getBytes());
+    $this->assertWritten("This is a test\n", function($fixture) {
+      $fixture->writeLine('This is a test');
+    });
   }
-  
-  /**
-   * Test writeLinef()
-   *
-   */
+
   #[@test]
   public function writeLinef() {
-    $stream= new StringWriter($out= new MemoryOutputStream());
-    $stream->writeLinef('This %s the %d line', 'is', 1);
-    
-    $this->assertEquals("This is the 1 line\n", $out->getBytes());
+    $this->assertWritten("Some string: test, some int: 6100\n", function($fixture) {
+      $fixture->writeLinef('Some string: %s, some int: %d', 'test', 6100);
+    });
   }
 }
