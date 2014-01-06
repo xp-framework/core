@@ -44,17 +44,19 @@ final class xp {
   //     Loads a class by its fully qualified name
   function loadClass0($class) {
     if (isset(xp::$cl[$class])) return array_search($class, xp::$cn, true);
-
     foreach (xp::$classpath as $path) {
 
-      // If path is a directory and the included file exists, load it
-      if (is_dir($path) && file_exists($f= $path.DIRECTORY_SEPARATOR.strtr($class, '.', DIRECTORY_SEPARATOR).xp::CLASS_FILE_EXT)) {
+      // We rely on paths having been expanded including a trailing directory separator
+      // character inside bootstrap(). This way, we can save testing for whether the path
+      // entry is a directory with file system stat() calls.
+      if (DIRECTORY_SEPARATOR === $path{strlen($path) - 1}) {
+        $f= $path.strtr($class, '.', DIRECTORY_SEPARATOR).xp::CLASS_FILE_EXT;
         $cl= 'lang.FileSystemClassLoader';
-      } else if (is_file($path) && file_exists($f= 'xar://'.$path.'?'.strtr($class, '.', '/').xp::CLASS_FILE_EXT)) {
-        $cl= 'lang.archive.ArchiveClassLoader';
       } else {
-        continue;
+        $f= 'xar://'.$path.'?'.strtr($class, '.', '/').xp::CLASS_FILE_EXT;
+        $cl= 'lang.archive.ArchiveClassLoader';
       }
+      if (!file_exists($f)) continue;
 
       // Load class
       $package= null;
@@ -308,7 +310,7 @@ final class null {
 final class xarloader {
   public
     $position     = 0,
-    $archive      = '',
+    $archive      = null,
     $filename     = '';
     
   // {{{ proto [:var] acquire(string archive)
@@ -325,9 +327,7 @@ final class xarloader {
     }
 
     if (!isset($archives[$archive])) {
-      $archives[$archive]= array();
-      $current= &$archives[$archive];
-      $current['handle']= fopen($archive, 'rb');
+      $current= array('handle' => fopen($archive, 'rb'), 'dev' => crc32($archive));
       $header= unpack('a3id/c1version/V1indexsize/a*reserved', fread($current['handle'], 0x0100));
       if ('CCA' != $header['id']) raise('lang.FormatException', 'Malformed archive '.$archive);
       for ($current['index']= array(), $i= 0; $i < $header['indexsize']; $i++) {
@@ -337,6 +337,8 @@ final class xarloader {
         );
         $current['index'][rtrim($entry['id'], "\0")]= array($entry['size'], $entry['offset'], $i);
       }
+      $current['offset']= 0x0100 + $i * 0x0100;
+      $archives[$archive]= $current;
     }
 
     return $archives[$archive];
@@ -347,21 +349,19 @@ final class xarloader {
   //     Open the given stream and check if file exists
   function stream_open($path, $mode, $options, $opened_path) {
     sscanf(strtr($path, ';', '?'), 'xar://%[^?]?%[^$]', $archive, $this->filename);
-    $this->archive= urldecode($archive);
-    $current= self::acquire($this->archive);
-    return isset($current['index'][$this->filename]);
+    $this->archive= self::acquire(urldecode($archive));
+    return isset($this->archive['index'][$this->filename]);
   }
   // }}}
   
   // {{{ proto string stream_read(int count)
   //     Read $count bytes up-to-length of file
   function stream_read($count) {
-    $current= self::acquire($this->archive);
-    if (!isset($current['index'][$this->filename])) return false;
-    if ($current['index'][$this->filename][0] === $this->position || 0 === $count) return false;
+    $f= $this->archive['index'][$this->filename];
+    if (0 === $count || $this->position >= $f[0]) return false;
 
-    fseek($current['handle'], 0x0100 + sizeof($current['index']) * 0x0100 + $current['index'][$this->filename][1] + $this->position, SEEK_SET);
-    $bytes= fread($current['handle'], min($current['index'][$this->filename][0]- $this->position, $count));
+    fseek($this->archive['handle'], $this->archive['offset'] + $f[1] + $this->position, SEEK_SET);
+    $bytes= fread($this->archive['handle'], min($f[0] - $this->position, $count));
     $this->position+= strlen($bytes);
     return $bytes;
   }
@@ -370,19 +370,17 @@ final class xarloader {
   // {{{ proto bool stream_eof()
   //     Returns whether stream is at end of file
   function stream_eof() {
-    $current= self::acquire($this->archive);
-    return $this->position >= $current['index'][$this->filename][0];
+    return $this->position >= $this->archive['index'][$this->filename][0];
   }
   // }}}
   
   // {{{ proto [:int] stream_stat()
   //     Retrieve status of stream
   function stream_stat() {
-    $current= self::acquire($this->archive);
     return array(
-      'size'  => $current['index'][$this->filename][0],
-      'dev'   => crc32($this->archive),
-      'ino'   => $current['index'][$this->filename][2]
+      'dev'   => $this->archive['dev'],
+      'size'  => $this->archive['index'][$this->filename][0],
+      'ino'   => $this->archive['index'][$this->filename][2]
     );
   }
   // }}}
@@ -393,10 +391,7 @@ final class xarloader {
     switch ($whence) {
       case SEEK_SET: $this->position= $offset; break;
       case SEEK_CUR: $this->position+= $offset; break;
-      case SEEK_END: 
-        $current= self::acquire($this->archive);
-        $this->position= $current['index'][$this->filename][0] + $offset; 
-        break;
+      case SEEK_END: $this->position= $this->archive['index'][$this->filename][0] + $offset; break;
     }
     return true;
   }
@@ -413,15 +408,13 @@ final class xarloader {
   //     Retrieve status of url
   function url_stat($path) {
     sscanf(strtr($path, ';', '?'), 'xar://%[^?]?%[^$]', $archive, $file);
-    $archive= urldecode($archive);
-    $current= self::acquire($archive);
-    if (!isset($current['index'][$file])) return false;
-    return array(
+    $current= self::acquire(urldecode($archive));
+    return isset($current['index'][$file]) ? array(
+      'dev'   => $current['dev'],
       'mode'  => 0100644,
       'size'  => $current['index'][$file][0],
-      'dev'   => crc32($archive),
       'ino'   => $current['index'][$file][2]
-    );
+    ) : false;
   }
   // }}}
 }
@@ -688,7 +681,7 @@ function create($spec) {
   // BC: Wrap IllegalStateExceptions into IllegalArgumentExceptions
   $class= \lang\XPClass::forName(strstr($base, '.') ? $base : xp::nameOf($base));
   try {
-    $reflect= new ReflectionClass(\lang\XPClass::createGenericType($class, $typeargs));
+    $reflect= $class->newGenericType($typeargs)->_reflect;
     if ($reflect->hasMethod('__construct')) {
       $a= func_get_args();
       return $reflect->newInstanceArgs(array_slice($a, 1));
@@ -729,10 +722,10 @@ function __load($class) {
 }
 // }}}
 
-// {{{ string scanpath(string[] path, string home)
-//     Scans a path file 
+// {{{ string[] scanpath(string[] path, string home)
+//     Scans path files inside the given paths
 function scanpath($paths, $home) {
-  $inc= '';
+  $inc= array();
   foreach ($paths as $path) {
     if (!($d= @opendir($path))) continue;
     while ($e= readdir($d)) {
@@ -748,21 +741,16 @@ function scanpath($paths, $home) {
         } else {
           $pre= false;
         }
-        
+
         if ('~' === $line{0}) {
-          $base= $home.DIRECTORY_SEPARATOR; $line= substr($line, 1);
+          $qn= $home.DIRECTORY_SEPARATOR.substr($line, 1);
         } else if ('/' === $line{0} || strlen($line) > 2 && (':' === $line{1} && '\\' === $line{2})) {
-          $base= '';
+          $qn= $line;
         } else {
-          $base= $path.DIRECTORY_SEPARATOR; 
+          $qn= $path.DIRECTORY_SEPARATOR.$line;
         }
 
-        $qn= $base.strtr($line, '/', DIRECTORY_SEPARATOR).PATH_SEPARATOR;
-        if ('.php' === substr($qn, -5, 4)) {
-          require(substr($qn, 0, -1));
-        } else {
-          $pre ? $inc= $qn.$inc : $inc.= $qn;
-        }
+        $pre ? array_unshift($inc, $qn) : $inc[]= $qn;
       }
     }
     closedir($d);
@@ -771,14 +759,30 @@ function scanpath($paths, $home) {
 }
 // }}}
 
-// {{{ void boostrap(string classpath)
+// {{{ void boostrap(string[] classpath)
 //     Loads omnipresent classes and installs class loading
 function bootstrap($classpath) {
-  set_include_path($classpath);
 
-  xp::$classpath= explode(PATH_SEPARATOR, $classpath);
+  // Resolve class path
   xp::$loader= new xp();
-  uses(
+  $inc= '';
+  foreach ($classpath as $element) {
+    $qn= realpath($element);
+    if (false === $qn) {
+      \xp::error('[bootstrap] Classpath element ['.$element.'] not found');
+    } else if (is_dir($qn)) {
+      $qn.= DIRECTORY_SEPARATOR;
+    } else if ('.php' === substr($element, -4, 4)) {
+      require($qn);
+      continue;
+    }
+    xp::$classpath[]= $qn;
+    $inc.= $element.PATH_SEPARATOR;
+  }
+  set_include_path(rtrim($inc, PATH_SEPARATOR));
+
+  // Load omnipresent classes
+  foreach (array(
     'lang.Generic',
     'lang.Object',
     'lang.Throwable',
@@ -807,7 +811,9 @@ function bootstrap($classpath) {
     'lang.types.Long',
     'lang.types.Short',
     'lang.types.String'
-  );
+  ) as $class) {
+    xp::$loader->loadClass0($class);
+  }
 }
 // }}}
 

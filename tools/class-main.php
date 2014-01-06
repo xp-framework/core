@@ -46,11 +46,10 @@ if (!include(__DIR__.DIRECTORY_SEPARATOR.'lang.base.php')) {
 
 $home= getenv('HOME');
 list($use, $include)= explode(PATH_SEPARATOR.PATH_SEPARATOR, get_include_path());
-bootstrap(
-  scanpath(explode(PATH_SEPARATOR, substr($use, 2).PATH_SEPARATOR.'.'), $home).
-  $include
-);
-uses('util.cmd.ParamString', 'util.cmd.Console');
+bootstrap(array_merge(
+  scanpath(explode(PATH_SEPARATOR, substr($use, 2).PATH_SEPARATOR.'.'), $home),
+  explode(PATH_SEPARATOR, $include)
+));
 
 // Start I/O layers
 $encoding= get_cfg_var('encoding');

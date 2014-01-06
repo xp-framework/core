@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\annotations;
 
+use lang\reflect\ClassParser;
+
 /**
  * Tests the XP Framework's annotation parsing implementation supports
  * the deprecated multi-value syntax for backwards compatibility (BC).
@@ -17,7 +19,7 @@ class MultiValueBCTest extends \unittest\TestCase {
    * @return  [:var]
    */
   protected function parse($input) {
-    $annotations= \lang\XPClass::parseAnnotations($input, $this->getClassName());
+    $annotations= create(new ClassParser())->parseAnnotations($input, $this->getClassName());
     \xp::gc();
     return $annotations;
   }
