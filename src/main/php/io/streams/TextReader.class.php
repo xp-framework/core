@@ -28,10 +28,11 @@ class TextReader extends Reader {
       $charset= $this->detectCharset();
     }
 
-    if (!stream_filter_append($this->in, 'convert.iconv.'.$charset.'/'.\xp::ENCODING, STREAM_FILTER_READ)) {
-      throw new \io\IOException('Could not append stream filter');
+    if (!defined('HHVM_VERSION')) {
+      if (!stream_filter_append($this->in, 'convert.iconv.'.$charset.'/'.\xp::ENCODING, STREAM_FILTER_READ)) {
+        throw new \io\IOException('Could not append stream filter');
+      }
     }
-
     $this->charset= $charset;
   }
 
