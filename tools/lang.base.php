@@ -830,7 +830,14 @@ set_error_handler('__error');
 
 // Get rid of magic quotes 
 get_magic_quotes_gpc() && xp::error('[xp::core] magic_quotes_gpc enabled');
-date_default_timezone_set(ini_get('date.timezone')) || xp::error('[xp::core] date.timezone not configured properly.');
+if (defined('HHVM_VERSION')) {
+  $tz= ini_get('date.timezone');
+  $set= date_default_timezone_set($tz);
+  fputs(STDERR, "$tz -> $set\n");
+  date_default_timezone_set('Europe/Berlin');
+} else {
+  date_default_timezone_set(ini_get('date.timezone')) || xp::error('[xp::core] date.timezone not configured properly.');
+}
 ini_set('magic_quotes_runtime', false);
 
 // Registry initialization
