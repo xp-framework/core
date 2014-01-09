@@ -263,7 +263,7 @@ class Throwable extends \Exception implements Generic {
     $tt= $this->getStackTrace();
     $t= sizeof($tt);
     for ($i= 0; $i < $t; $i++) {
-      $s.= $tt[$i]->toString(); 
+      $s.= \xp::stringOf($tt[$i]); 
     }
     if (!$this->cause) return $s;
     
