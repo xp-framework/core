@@ -48,6 +48,7 @@ class Throwable extends \Exception implements Generic {
     $this->__id= uniqid('', true);
     $this->message= is_string($message) ? $message : \xp::stringOf($message);
     $this->cause= $cause;
+    $this->trace= array();
     $this->fillInStackTrace();
   }
 
