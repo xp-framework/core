@@ -34,7 +34,11 @@ class Process extends Object {
   public static $DISABLED;
 
   static function __static() {
-    self::$DISABLED= (bool)strstr(ini_get('disable_functions'), 'proc_open');
+    if (defined('HHVM_VERSION')) {
+      self::$DISABLED= true;
+    } else {
+      self::$DISABLED= (bool)strstr(ini_get('disable_functions'), 'proc_open');
+    }
   }
 
   /**
