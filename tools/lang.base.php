@@ -135,7 +135,7 @@ final class xp {
       unset($protect[(string)$arg->hashCode()]);
       return $indent ? str_replace("\n", "\n".$indent, $s) : $s;
     } else if (is_array($arg)) {
-      $ser= print_r($arg, true);
+      $ser= defined('HHVM_VERSION') ? hphp_object_pointer($arg) : print_r($arg, true);
       if (isset($protect[$ser])) return '->{:recursion:}';
       $protect[$ser]= true;
       $r= "[\n";
