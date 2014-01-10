@@ -1,7 +1,5 @@
 <?php namespace lang;
 
-
-
 /**
  * Dynamic class loader to define classes at runtime
  *
@@ -14,7 +12,9 @@ class DynamicClassLoader extends AbstractClassLoader {
 
   protected
     $position = 0,
-    $current  = '',
+    $current  = '';
+
+  public
     $context  = null;   // Used by PHP internally for stream support
 
   protected static
