@@ -37,6 +37,10 @@ if ('cgi' === PHP_SAPI || 'cgi-fcgi' === PHP_SAPI) {
 } else if ('cli' !== PHP_SAPI) {
   trigger_error('[bootstrap] Cannot be run under '.PHP_SAPI.' SAPI', E_USER_ERROR);
   exit(0x3d);
+} else if (defined('HHVM_VERSION')) {
+  var_dump($argv);
+  var_dump(strtr(file_get_contents('/proc/'.getmypid().'/cmdline'), "\0", ' '));
+  ini_set('date.timezone', 'Europe/Berlin');
 }
 
 if (!include(__DIR__.DIRECTORY_SEPARATOR.'lang.base.php')) {
