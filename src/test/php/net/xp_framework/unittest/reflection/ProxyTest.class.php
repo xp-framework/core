@@ -105,7 +105,7 @@ class ProxyTest extends \unittest\TestCase {
     $class= $this->proxyClassFor(array($this->iteratorClass));
     $interfaces= $class->getInterfaces();
     $this->assertEquals(2, sizeof($interfaces));
-    $this->assertEquals($this->iteratorClass, $interfaces[1]);
+    $this->assertTrue(in_array($this->iteratorClass, $interfaces)); 
   }
 
   #[@test]
