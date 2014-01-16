@@ -19,10 +19,25 @@ class XPClassTest extends \unittest\TestCase {
   }
  
   #[@test]
-  public function name() {
+  public function getName_returns_fully_qualified_name() {
+    $this->assertEquals('net.xp_framework.unittest.reflection.TestClass', $this->fixture->getName());
+  }
+
+  #[@test]
+  public function literal_returns_name_as_known_to_PHP() {
+    $this->assertEquals(get_class(new TestClass()), $this->fixture->literal());
+  }
+
+  #[@test]
+  public function getSimpleName_returns_class_name_only() {
+    $this->assertEquals('TestClass', $this->fixture->getSimpleName());
+  }
+
+  #[@test]
+  public function getPackage_returns_package_class_resides_in() {
     $this->assertEquals(
-      'net.xp_framework.unittest.reflection.TestClass', 
-      $this->fixture->getName()
+      \lang\reflect\Package::forName('net.xp_framework.unittest.reflection'),
+      $this->fixture->getPackage()
     );
   }
 
