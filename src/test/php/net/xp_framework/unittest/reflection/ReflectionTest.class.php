@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\XPClass;
+use lang\Primitive;
 
 /**
  * Test the XP reflection API
@@ -26,84 +27,109 @@ class ReflectionTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function instanciation() {
-    $instance= $this->class->newInstance(1);
-    $this->assertObject($instance);
-    $this->assertClass($instance, 'net.xp_framework.unittest.reflection.TestClass');
-    $this->assertTrue($this->class->isInstance($instance));
+  public function newInstance_creates_instances_of_class() {
+    $this->assertEquals(new TestClass(1), $this->class->newInstance(1));
+  }
+
+  #[@test]
+  public function instance_created_with_new_is_instance_of_class() {
+    $this->assertTrue($this->class->isInstance(new TestClass(1)));
   }
   
   #[@test]
-  public function subClass() {
+  public function is_subclass_of_lang_Object() {
     $this->assertTrue($this->class->isSubclassOf('lang.Object'));
+  }
+
+  #[@test]
+  public function is_not_subclass_of_util_Date() {
     $this->assertFalse($this->class->isSubclassOf('util.Date'));
+  }
+
+  #[@test]
+  public function is_not_subclass_of_itself() {
     $this->assertFalse($this->class->isSubclassOf('net.xp_framework.unittest.reflection.TestClass'));
   }
 
   #[@test]
-  public function subClassOfClass() {
-    $this->assertTrue($this->class->isSubclassOf(XPClass::forName('lang.Object')));
-    $this->assertFalse($this->class->isSubclassOf(XPClass::forName('util.Date')));
-    $this->assertFalse($this->class->isSubclassOf(XPClass::forName('net.xp_framework.unittest.reflection.TestClass')));
-  }
-
-  #[@test]
-  public function selfIsAssignableFromFixture() {
+  public function class_is_assignable_from_itself() {
     $this->assertTrue($this->class->isAssignableFrom($this->class));
   }
 
   #[@test]
-  public function objectIsAssignableFromFixture() {
+  public function object_class_is_assignable_from_fixture() {
     $this->assertTrue(XPClass::forName('lang.Object')->isAssignableFrom($this->class));
   }
 
   #[@test]
-  public function parentIsAssignableFromFixture() {
+  public function fixtures_parent_class_is_assignable_from_fixture() {
     $this->assertTrue(XPClass::forName('net.xp_framework.unittest.reflection.AbstractTestClass')->isAssignableFrom($this->class));
   }
 
   #[@test]
-  public function thisIsNotAssignableFromFixture() {
+  public function this_class_is_not_assignable_from_fixture() {
     $this->assertFalse($this->getClass()->isAssignableFrom($this->class));
   }
 
-  #[@test]
-  public function primitiveIsNotAssignableFromFixture() {
-    $this->assertFalse($this->getClass()->isAssignableFrom('int'));
-  }
-
-  #[@test]
-  public function primitiveTypeIsNotAssignableFromFixture() {
-    $this->assertFalse($this->getClass()->isAssignableFrom(\lang\Primitive::$INT));
+  #[@test, @values([
+  #  'int', 'double', 'string', 'bool',
+  #  Primitive::$INT, Primitive::$DOUBLE, Primitive::$STRING, Primitive::$BOOL
+  #])]
+  public function fixture_is_not_assignable_from_primitive($name) {
+    $this->assertFalse($this->class->isAssignableFrom($name));
   }
 
   #[@test, @expect('lang.IllegalStateException')]
-  public function isAssignableFromIllegalArgument() {
-    $this->getClass()->isAssignableFrom('@not-a-type@');
+  public function illegal_argument_given_to_isAssignableFrom() {
+    $this->class->isAssignableFrom('@not-a-type@');
   }
 
   #[@test]
-  public function parentClass() {
-    $parent= $this->class->getParentClass();
-    $this->assertClass($parent, 'lang.XPClass');
-    $this->assertEquals('net.xp_framework.unittest.reflection.AbstractTestClass', $parent->getName());
-    $this->assertEquals('lang.Object', $parent->getParentClass()->getName());
-    $this->assertNull($parent->getParentClass()->getParentClass());
+  public function fixtures_parent_class() {
+    $this->assertEquals(
+      XPClass::forName('net.xp_framework.unittest.reflection.AbstractTestClass'),
+      $this->class->getParentClass()
+    );
   }
 
   #[@test]
-  public function interfaces() {
+  public function fixtures_parents_parent_class() {
+    $this->assertEquals(
+      XPClass::forName('lang.Object'),
+      $this->class->getParentClass()->getParentClass()
+    );
+  }
+
+  #[@test]
+  public function object_classes_parent_is_null() {
+    $this->assertNull(XPClass::forName('lang.Object')->getParentClass());
+  }
+
+  #[@test]
+  public function fixture_class_is_not_an_interface() {
     $this->assertFalse($this->class->isInterface());
-    $interfaces= $this->class->getInterfaces();
-    $this->assertArray($interfaces);
-    foreach ($interfaces as $interface) {
-      $this->assertClass($interface, 'lang.XPClass');
-      $this->assertTrue($interface->isInterface());
-    }
   }
 
   #[@test]
-  public function testClassDeclaredInterfaces() {
+  public function lang_Generic_class_is_an_interface() {
+    $this->assertTrue(XPClass::forName('lang.Generic')->isInterface());
+  }
+
+  #[@test]
+  public function getInterfaces_returns_array_of_class() {
+    $this->assertInstanceOf('lang.XPClass[]', $this->class->getInterfaces());
+  }
+
+  #[@test]
+  public function getInterfaces_contains_declared_interface() {
+    $this->assertTrue(in_array(
+      XPClass::forName('util.log.Traceable'),
+      $this->class->getInterfaces()
+    ));
+  }
+
+  #[@test]
+  public function getDeclaredInterfaces_consist_of_declared_interface() {
     $this->assertEquals(
       array(XPClass::forName('util.log.Traceable')), 
       $this->class->getDeclaredInterfaces()
@@ -111,7 +137,7 @@ class ReflectionTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function objectClassDeclaredInterfaces() {
+  public function object_class_has_lang_Generic_interface() {
     $this->assertEquals(
       array(XPClass::forName('lang.Generic')), 
       XPClass::forName('lang.Object')->getDeclaredInterfaces()
@@ -119,15 +145,12 @@ class ReflectionTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function thisClassDeclaredInterfaces() {
-    $this->assertEquals(
-      array(), 
-      $this->getClass()->getDeclaredInterfaces()
-    );
+  public function this_class_does_not_declare_any_interfaces() {
+    $this->assertEquals(array(), $this->getClass()->getDeclaredInterfaces());
   }
 
   #[@test]
-  public function ilistInterfaceDeclaredInterfaces() {
+  public function util_collections_IList_class_declares_ArrayAccess_and_IteratorAggregate_interfaces() {
     $this->assertEquals(
       array(new XPClass('ArrayAccess'), new XPClass('IteratorAggregate')), 
       XPClass::forName('util.collections.IList')->getDeclaredInterfaces()
@@ -135,35 +158,50 @@ class ReflectionTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function constructor() {
+  public function fixture_class_has_a_constructor() {
     $this->assertTrue($this->class->hasConstructor());
-    $this->assertClass($this->class->getConstructor(), 'lang.reflect.Constructor');
   }
 
   #[@test]
-  public function checkNoConstructor() {
+  public function fixture_classes_constructor() {
+    $this->assertInstanceOf('lang.reflect.Constructor', $this->class->getConstructor());
+  }
+
+  #[@test]
+  public function object_class_does_not_have_a_constructor() {
     $this->assertFalse(XPClass::forName('lang.Object')->hasConstructor());
   }
 
   #[@test, @expect('lang.ElementNotFoundException')]
-  public function noConstructor() {
+  public function getting_object_classes_constructor_raises_an_exception() {
     XPClass::forName('lang.Object')->getConstructor();
   }
 
   #[@test]
-  public function constructorInvocation() {
-    $instance= $this->class->getConstructor()->newInstance(array('1977-12-14'));
-    $this->assertEquals($this->class, $instance->getClass());
-    $this->assertEquals(new \util\Date('1977-12-14'), $instance->getDate());
+  public function invoking_fixture_classes_constructor() {
+    $this->assertEquals(
+      new TestClass('1977-12-14'),
+      $this->class->getConstructor()->newInstance(array('1977-12-14'))
+    );
+  }
+
+  #[@test, @expect('lang.IllegalAccessException')]
+  public function newInstance_raises_exception_if_class_is_an_interface() {
+    XPClass::forName('util.log.Traceable')->newInstance();
+  }
+
+  #[@test, @expect('lang.IllegalAccessException')]
+  public function newInstance_raises_exception_if_class_is_abstract() {
+    XPClass::forName('net.xp_framework.unittest.reflection.AbstractTestClass')->newInstance();
   }
 
   #[@test, @expect('lang.reflect.TargetInvocationException')]
-  public function constructorInvocationFailure() {
+  public function constructors_newInstance_method_wraps_exceptions() {
     $this->class->getConstructor()->newInstance(array('@@not-a-valid-date-string@@'));
   }
 
   #[@test, @expect('lang.IllegalAccessException')]
-  public function abstractConstructorInvocation() {
+  public function constructors_newInstance_method_raises_exception_if_class_is_abstract() {
     XPClass::forName('net.xp_framework.unittest.reflection.AbstractTestClass')
       ->getConstructor()
       ->newInstance()
@@ -179,96 +217,70 @@ class ReflectionTest extends \unittest\TestCase {
     $this->assertSubclass($i->getConstructor()->newInstance(), 'net.xp_framework.unittest.reflection.AbstractTestClass');
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
-  public function newInstanceForAbstractClass() {
-    XPClass::forName('net.xp_framework.unittest.reflection.AbstractTestClass')->newInstance();
-  }
-
-  #[@test, @expect('lang.IllegalAccessException')]
-  public function newInstanceForInterface() {
-    XPClass::forName('util.log.Traceable')->newInstance();
-  }
-
   #[@test]
-  public function annotations() {
+  public function fixture_class_has_annotations() {
     $this->assertTrue($this->class->hasAnnotations());
-    $annotations= $this->class->getAnnotations();
-    $this->assertArray($annotations);
   }
 
   #[@test]
-  public function testAnnotation() {
+  public function fixture_class_annotations() {
+    $this->assertEquals(array('test' => 'Annotation'), $this->class->getAnnotations());
+  }
+
+  #[@test]
+  public function fixture_class_has_test_annotation() {
     $this->assertTrue($this->class->hasAnnotation('test'));
+  }
+
+  #[@test]
+  public function fixture_class_test_annotation() {
     $this->assertEquals('Annotation', $this->class->getAnnotation('test'));
   }
   
   #[@test, @expect('lang.ElementNotFoundException')]
-  public function nonExistantAnnotation() {
+  public function getting_non_existant_annotation_raises_exception() {
     $this->class->getAnnotation('non-existant');
   }
   
-  #[@test]
-  public function forName() {
-    $class= XPClass::forName('util.Date');
-    $this->assertClass($class, 'lang.XPClass');
-    $this->assertEquals('util.Date', $class->getName());
-  }
-  
   #[@test, @expect('lang.ClassNotFoundException')]
-  public function nonExistantforName() {
+  public function forName_raises_exceptions_for_nonexistant_classes() {
     XPClass::forName('class.does.not.Exist');
   }
 
   #[@test]
-  public function getClasses() {
+  public function getClasses_returns_a_list_of_class_objects() {
     $this->assertInstanceOf('lang.XPClass[]', XPClass::getClasses());
   }
   
   #[@test]
-  public function getConstants() {
+  public function fixture_class_constants() {
     $this->assertEquals(
       array('CONSTANT_STRING' => 'XP Framework', 'CONSTANT_INT' => 15, 'CONSTANT_NULL' => null),
       $this->class->getConstants()
     );
   }
 
-  #[@test]
-  public function hasConstantString() {
-    $this->assertTrue($this->class->hasConstant('CONSTANT_STRING'));
+  #[@test, @values(['CONSTANT_STRING', 'CONSTANT_INT', 'CONSTANT_NULL'])]
+  public function hasConstant_returns_true_for_existing_constant($name) {
+    $this->assertTrue($this->class->hasConstant($name));
   }
 
-  #[@test]
-  public function getConstantString() {
+  #[@test, @values(['DOES_NOT_EXIST', '', null])]
+  public function hasConstant_returns_false_for_non_existing_constant($name) {
+    $this->assertFalse($this->class->hasConstant($name));
+  }
+
+  #[@test, @values([
+  #  ['XP Framework', 'CONSTANT_STRING'],
+  #  [15, 'CONSTANT_INT'],
+  #  [null, 'CONSTANT_NULL']
+  #])]
+  public function getConstant_returns_constants_value($value, $name) {
     $this->assertEquals('XP Framework', $this->class->getConstant('CONSTANT_STRING'));
   }
 
-  #[@test]
-  public function hasConstantInt() {
-    $this->assertTrue($this->class->hasConstant('CONSTANT_INT'));
-  }
-
-  #[@test]
-  public function getConstantInt() {
-    $this->assertEquals(15, $this->class->getConstant('CONSTANT_INT'));
-  }
-
-  #[@test]
-  public function hasConstantNull() {
-    $this->assertTrue($this->class->hasConstant('CONSTANT_NULL'));
-  }
-
-  #[@test]
-  public function getConstantNull() {
-    $this->assertEquals(null, $this->class->getConstant('CONSTANT_NULL'));
-  }
-
-  #[@test]
-  public function checkNonexistingConstant() {
-    $this->assertFalse($this->class->hasConstant('DOES_NOT_EXIST'));
-  }
-
-  #[@test, @expect('lang.ElementNotFoundException')]
-  public function retrieveNonexistingConstant() {
-    $this->class->getConstant('DOES_NOT_EXIST');
+  #[@test, @expect('lang.ElementNotFoundException'), @values(['DOES_NOT_EXIST', '', null])]
+  public function getConstant_throws_exception_if_constant_doesnt_exist($name) {
+    $this->class->getConstant($name);
   }
 }

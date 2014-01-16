@@ -208,4 +208,14 @@ use util\collections\Vector;
   public function filterMap($pattern= null) {
     // TBI
   }
+
+  /**
+   * Test for equality
+   *
+   * @param  var $cmp
+   * @return bool
+   */
+  public function equals($cmp) {
+    return $cmp instanceof self && $cmp->date->equals($this->date);
+  }
 } 
