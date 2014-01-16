@@ -4,11 +4,11 @@ use lang\XPClass;
 use lang\Primitive;
 
 /**
- * Test the XP reflection API
+ * Test the XPClass class, the entry point to the XP Framework's class reflection API.
  *
  * @see  xp://lang.XPClass
  */
-class ReflectionTest extends \unittest\TestCase {
+class XPClassTest extends \unittest\TestCase {
   protected $fixture;
 
   /**

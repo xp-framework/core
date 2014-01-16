@@ -45,13 +45,12 @@ define('DETAIL_GENERIC',        7);
  *   }
  * </code> 
  *
- * @see      xp://lang.Object#getClass
- * @see      xp://lang.XPClass#forName
- * @test     xp://net.xp_framework.unittest.reflection.ReflectionTest
- * @test     xp://net.xp_framework.unittest.reflection.ClassDetailsTest
- * @test     xp://net.xp_framework.unittest.reflection.IsInstanceTest
- * @test     xp://net.xp_framework.unittest.reflection.ClassCastingTest
- * @purpose  Reflection
+ * @see   xp://lang.Object#getClass
+ * @see   xp://lang.XPClass#forName
+ * @test  xp://net.xp_framework.unittest.reflection.XPClassTest
+ * @test  xp://net.xp_framework.unittest.reflection.ClassDetailsTest
+ * @test  xp://net.xp_framework.unittest.reflection.IsInstanceTest
+ * @test  xp://net.xp_framework.unittest.reflection.ClassCastingTest
  */
 class XPClass extends Type {
   protected $_class= null;

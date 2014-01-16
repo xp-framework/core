@@ -69,7 +69,7 @@ class MethodsTest extends TestCase {
   public function declaredMethods() {
     $methods= $this->fixture->getDeclaredMethods();
     $this->assertInstanceOf('lang.reflect.Method[]', $methods);
-    $this->assertNotContained($this->fixture->getMethod('equals'), $methods);
+    $this->assertNotContained($this->fixture->getMethod('hashCode'), $methods);
   }
   
   /**
