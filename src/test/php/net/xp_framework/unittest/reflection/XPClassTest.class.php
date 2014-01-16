@@ -298,4 +298,33 @@ class XPClassTest extends \unittest\TestCase {
   public function getConstant_throws_exception_if_constant_doesnt_exist($name) {
     $this->fixture->getConstant($name);
   }
+
+  #[@test]
+  public function serialization() {
+    $class= newinstance('lang.Object', array(), '{ }')->getClass();
+    $this->assertEquals($class->getName(), $class->serialize());
+  }
+
+  #[@test]
+  public function serialization_includes_class_meta_once_that_has_been_loaded() {
+    $class= newinstance('lang.Object', array(), '{ }')->getClass();
+    XPClass::detailsForClass($class->getName());
+    $this->assertEquals($class->getName().',a:3:{i:0;a:0:{}i:1;a:0:{}s:5:"class";a:2:{i:4;s:0:"";i:5;a:0:{}}}', $class->serialize());
+  }
+
+  #[@test]
+  public function deserialization() {
+    $class= newinstance('lang.Object', array(), '{ }')->getClass();
+    $this->assertEquals($class, $class->unserialize($class->getName()));
+  }
+
+  #[@test]
+  public function deserialization_also_populates_class_meta_if_included() {
+    $class= newinstance('lang.Object', array(), '{ }')->getClass();
+    $meta= XPClass::detailsForClass($class->getName());
+    unset(\xp::$meta[$class->getName()]);
+
+    $class->unserialize($class->getName().',a:3:{i:0;a:0:{}i:1;a:0:{}s:5:"class";a:2:{i:4;s:0:"";i:5;a:0:{}}}');
+    $this->assertEquals($meta, \xp::$meta[$class->getName()]);
+  }
 }
