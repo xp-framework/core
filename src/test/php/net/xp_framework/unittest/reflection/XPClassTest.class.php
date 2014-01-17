@@ -327,4 +327,10 @@ class XPClassTest extends \unittest\TestCase {
     $class->unserialize($class->getName().',a:3:{i:0;a:0:{}i:1;a:0:{}s:5:"class";a:2:{i:4;s:0:"";i:5;a:0:{}}}');
     $this->assertEquals($meta, \xp::$meta[$class->getName()]);
   }
+
+  #[@test, @expect('lang.ClassNotFoundException')]
+  public function deserialization_throws_exceptions_when_class_does_not_exist() {
+    $class= newinstance('lang.Object', array(), '{ }')->getClass();
+    $class->unserialize('non.existant.Class');
+  }
 }
