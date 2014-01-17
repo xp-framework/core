@@ -6,12 +6,10 @@
  * @see  xp://lang.reflect.Method
  */
 class MethodsTest extends \unittest\TestCase {
-  protected
-    $fixture  = null;
+  protected $fixture= null;
 
   /**
    * Sets up test case
-   *
    */
   public function setUp() {
     $this->fixture= \lang\XPClass::forName('net.xp_framework.unittest.reflection.TestClass');

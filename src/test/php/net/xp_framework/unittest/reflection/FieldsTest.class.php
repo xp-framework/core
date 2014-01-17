@@ -1,21 +1,15 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\TestCase;
-
-
 /**
  * TestCase
  *
- * @see      xp://lang.reflect.Field
- * @purpose  Unittest
+ * @see   xp://lang.reflect.Field
  */
-class FieldsTest extends TestCase {
-  protected
-    $fixture  = null;
+class FieldsTest extends \unittest\TestCase {
+  protected $fixture= null;
 
   /**
    * Sets up test case
-   *
    */
   public function setUp() {
     $this->fixture= \lang\XPClass::forName('net.xp_framework.unittest.reflection.TestClass');
@@ -419,5 +413,31 @@ class FieldsTest extends TestCase {
   #[@test]
   public function fieldTypeNameForInheritedField() {
     $this->assertEquals('lang.Object', $this->fixture->getField('inherited')->getTypeName());
+  }
+
+  #[@test]
+  public function serialize() {
+    $this->assertEquals(
+      'net.xp_framework.unittest.reflection.TestClass,$date',
+      $this->fixture->getField('date')->serialize()
+    );
+  }
+
+  #[@test]
+  public function unserialize() {
+    $this->assertEquals(
+      $this->fixture->getField('date'),
+      create(new \lang\reflect\Field(null, null))->unserialize('net.xp_framework.unittest.reflection.TestClass,$date')
+    );
+  }
+
+  #[@test, @expect('lang.ClassNotFoundException')]
+  public function unserialize_throws_exceptions_when_class_does_not_exist() {
+    create(new \lang\reflect\Field(null, null))->unserialize('non.existant.Class,$field');
+  }
+
+  #[@test, @expect('lang.ElementNotFoundException')]
+  public function unserialize_throws_exceptions_when_field_does_not_exist() {
+    create(new \lang\reflect\Field(null, null))->unserialize('net.xp_framework.unittest.reflection.TestClass,$non_existant_field');
   }
 }

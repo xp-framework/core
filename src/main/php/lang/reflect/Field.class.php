@@ -300,7 +300,7 @@ class Field extends \lang\Object implements \Serializable {
     try {
       $this->_reflect= new \ReflectionProperty($this->_class, $field);
     } catch (\ReflectionException $e) {
-      throw new IllegalStateException($e->getMessage());
+      throw new \lang\ElementNotFoundException($e->getMessage());
     }
     return $this;
   }
