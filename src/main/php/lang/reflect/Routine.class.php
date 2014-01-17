@@ -311,7 +311,7 @@ class Routine extends \lang\Object implements \Serializable {
     try {
       $this->_reflect= new \ReflectionMethod($this->_class, $method);
     } catch (\ReflectionException $e) {
-      throw new IllegalStateException($e->getMessage());
+      throw new \lang\ElementNotFoundException($e->getMessage());
     }
     return $this;
   }

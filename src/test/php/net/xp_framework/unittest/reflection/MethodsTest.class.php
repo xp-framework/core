@@ -1,15 +1,11 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\TestCase;
-
-
 /**
  * TestCase
  *
- * @see      xp://lang.reflect.Method
- * @purpose  Unittest
+ * @see  xp://lang.reflect.Method
  */
-class MethodsTest extends TestCase {
+class MethodsTest extends \unittest\TestCase {
   protected
     $fixture  = null;
 
@@ -680,4 +676,29 @@ class MethodsTest extends TestCase {
     $this->assertEquals(\lang\Type::$VAR, $this->fixture->getMethod('notDocumented')->getParameter(0)->getType());
   }
 
+  #[@test]
+  public function serialize() {
+    $this->assertEquals(
+      'net.xp_framework.unittest.reflection.TestClass,setTrace',
+      $this->fixture->getMethod('setTrace')->serialize()
+    );
+  }
+
+  #[@test]
+  public function unserialize() {
+    $this->assertEquals(
+      $this->fixture->getMethod('setTrace'),
+      create(new \lang\reflect\Method(null, null))->unserialize('net.xp_framework.unittest.reflection.TestClass,setTrace')
+    );
+  }
+
+  #[@test, @expect('lang.ClassNotFoundException')]
+  public function unserialize_throws_exceptions_when_class_does_not_exist() {
+    create(new \lang\reflect\Method(null, null))->unserialize('non.existant.Class,method');
+  }
+
+  #[@test, @expect('lang.ElementNotFoundException')]
+  public function unserialize_throws_exceptions_when_method_does_not_exist() {
+    create(new \lang\reflect\Method(null, null))->unserialize('net.xp_framework.unittest.reflection.TestClass,non_existant_method');
+  }
 }
