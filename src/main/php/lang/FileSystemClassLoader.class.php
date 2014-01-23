@@ -1,6 +1,4 @@
 <?php namespace lang;
- 
-
 
 /** 
  * Loads a class from the filesystem
@@ -10,7 +8,7 @@
  * @see   xp://lang.XPClass#forName
  */
 class FileSystemClassLoader extends AbstractClassLoader {
-  
+
   /**
    * Constructor. 
    *
@@ -22,7 +20,7 @@ class FileSystemClassLoader extends AbstractClassLoader {
   public function __construct($path= '') {
     $this->path= rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
   }
-  
+
   /**
    * Load class bytes
    *
@@ -32,7 +30,7 @@ class FileSystemClassLoader extends AbstractClassLoader {
   public function loadClassBytes($name) {
     return file_get_contents($this->path.strtr($name, '.', DIRECTORY_SEPARATOR).\xp::CLASS_FILE_EXT);
   }
-  
+
   /**
    * Checks whether this loader can provide the requested class
    *
@@ -114,7 +112,7 @@ class FileSystemClassLoader extends AbstractClassLoader {
     }
     return file_get_contents($fn);
   }
-  
+
   /**
    * Retrieve a stream to the resource
    *
