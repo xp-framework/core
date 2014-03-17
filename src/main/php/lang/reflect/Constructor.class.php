@@ -77,9 +77,9 @@ class Constructor extends Routine {
     } catch (\lang\SystemExit $e) {
       throw $e;
     } catch (\lang\Throwable $e) {
-      throw new \TargetInvocationException($this->_class.'::<init>', $e);
+      throw new TargetInvocationException($this->_class.'::<init>', $e);
     } catch (\Exception $e) {
-      throw new \TargetInvocationException($this->_class.'::<init>', new \lang\XPException($e->getMessage()));
+      throw new TargetInvocationException($this->_class.'::<init>', new \lang\XPException($e->getMessage()));
     }
   }
 
