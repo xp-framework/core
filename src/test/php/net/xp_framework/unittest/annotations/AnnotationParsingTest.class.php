@@ -508,4 +508,19 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
   public function parent_private_static_member() {
     $this->parse('#[@value(parent::$parentsInternal)]');
   }
+
+  #[@test]
+  public function closure() {
+    $annotation= $this->parse('#[@value(function() { return true; })]');
+    $this->assertInstanceOf('Closure', $annotation[0]['value']);
+  }
+
+  #[@test]
+  public function closures() {
+    $annotation= $this->parse('#[@values([
+      function() { return true; },
+      function() { return false; }
+    ])]');
+    $this->assertInstanceOf('Closure[]', $annotation[0]['values']);
+  }
 }
