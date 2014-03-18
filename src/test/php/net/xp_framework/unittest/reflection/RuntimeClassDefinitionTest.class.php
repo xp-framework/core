@@ -4,27 +4,17 @@ use unittest\TestCase;
 use util\log\Traceable;
 use lang\reflect\Proxy;
 
-
 /**
  * TestCase
  *
  * @see   xp://lang.CLassLoader
+ * @see   https://github.com/xp-framework/xp-framework/issues/94
  */
 class RuntimeClassDefinitionTest extends TestCase {
 
   /**
    * Helper method
-   * @param   string name
-   * @param   lang.XPClass class
-   * @throws  unittest.AssertionFailedError
-   */
-  protected function assertXPClass($name, $class) {
-    $this->assertClass($class, 'lang.XPClass');
-    $this->assertEquals($name, $class->getName());
-  }
-
-  /**
-   * Helper method
+   *
    * @param   string name
    * @param   string parent
    * @param   string[] interfaces
@@ -40,6 +30,7 @@ class RuntimeClassDefinitionTest extends TestCase {
 
   /**
    * Helper method
+   *
    * @param   string name
    * @param   lang.XPClass class
    * @throws  unittest.AssertionFailedError
@@ -51,9 +42,6 @@ class RuntimeClassDefinitionTest extends TestCase {
     return \lang\ClassLoader::defineInterface($name, $parents, $bytes);
   }
 
-  /**
-   * Test defineClass() method
-   */
   #[@test]
   public function defineClassWithInitializer() {
     $name= 'net.xp_framework.unittest.reflection.RuntimeDefinedClass';
@@ -64,14 +52,11 @@ class RuntimeClassDefinitionTest extends TestCase {
         self::$initializerCalled= TRUE; 
       }
     }');
-    $this->assertXPClass($name, $class);
+    $this->assertEquals($name, $class->getName());
     $this->assertTrue(RuntimeDefinedClass::$initializerCalled);
-    $this->assertClass($class->getClassLoader(), 'lang.DynamicClassLoader');
+    $this->assertInstanceOf('lang.DynamicClassLoader', $class->getClassLoader());
   }
   
-  /**
-   * Tests defineClass() with a given interface
-   */
   #[@test]
   public function defineTraceableClass() {
     $name= 'net.xp_framework.unittest.reflection.RuntimeDefinedClassWithInterface';
@@ -80,12 +65,9 @@ class RuntimeClassDefinitionTest extends TestCase {
     }');
 
     $this->assertTrue($class->isSubclassOf('util.log.Traceable'));
-    $this->assertClass($class->getClassLoader(), 'lang.DynamicClassLoader');
+    $this->assertInstanceOf('lang.DynamicClassLoader', $class->getClassLoader());
   }
 
-  /**
-   * Tests defineClass()
-   */
   #[@test]
   public function defineClassWithXPClassParent() {
     $parent= \lang\XPClass::forName('lang.Object');
@@ -93,9 +75,6 @@ class RuntimeClassDefinitionTest extends TestCase {
     $this->assertEquals($parent, $class->getParentclass());
   }
 
-  /**
-   * Tests defineClass()
-   */
   #[@test]
   public function defineClassWithXPClassInterface() {
     $interface= \lang\XPClass::forName('lang.Runnable');
@@ -105,106 +84,75 @@ class RuntimeClassDefinitionTest extends TestCase {
     $this->assertEquals($interface, this($class->getDeclaredInterfaces(), 0));
   }
 
-  /**
-   * Test defineClass() method
-   */
   #[@test, @expect('lang.ClassNotFoundException')]
   public function defineClassWithNonExistantParent() {
     $name= 'net.xp_framework.unittest.reflection.ErroneousClass';
     $this->defineClass($name, '@@nonexistant@@', array(), '{ }');
   }
 
-  /**
-   * Test defineClass() method
-   */
   #[@test, @expect('lang.ClassNotFoundException')]
   public function defineClassWithOneNonExistantInterface() {
     $name= 'net.xp_framework.unittest.reflection.ErroneousClass';
     $this->defineClass($name, 'lang.Object', array('@@nonexistant@@'), '{ }');
   }
 
-  /**
-   * Test defineClass() method
-   */
   #[@test, @expect('lang.ClassNotFoundException')]
   public function defineClassWithOneExistantAndOneNonExistantInterface() {
     $name= 'net.xp_framework.unittest.reflection.ErroneousClass';
     $this->defineClass($name, 'lang.Object', array('lang.Runnable', '@@nonexistant@@'), '{ }');
   }
 
-  /**
-   * Tests newinstance()
-   */
   #[@test]
   public function newInstance() {
     $i= newinstance('lang.Object', array(), '{ public function bar() { return TRUE; }}');
-    $this->assertClass($i->getClass()->getClassLoader(), 'lang.DynamicClassLoader');
+    $this->assertInstanceOf('lang.DynamicClassLoader', $i->getClass()->getClassLoader());
   }
 
-  /**
-   * Tests Proxy
-   */
   #[@test]
   public function proxyInstance() {
     $c= Proxy::getProxyClass(
       \lang\ClassLoader::getDefault(), 
       array(\lang\XPClass::forName('util.log.Traceable'))
     );
-    $this->assertClass($c->getClassLoader(), 'lang.DynamicClassLoader');
+    $this->assertInstanceOf('lang.DynamicClassLoader', $c->getClassLoader());
   }
 
-  /**
-   * Test defineInterface() method
-   */
   #[@test]
   public function defineSimpleInterface() {
     $name= 'net.xp_framework.unittest.reflection.SimpleInterface';
     $class= $this->defineInterface($name, array(), '{
       public function setTrace($cat);
     }');
-    $this->assertXPClass($name, $class);
+    $this->assertEquals($name, $class->getName());
     $this->assertTrue($class->isInterface());
     $this->assertEquals(array(), $class->getInterfaces());
-    $this->assertClass($class->getClassLoader(), 'lang.DynamicClassLoader');
+    $this->assertInstanceOf('lang.DynamicClassLoader', $class->getClassLoader());
   }
 
-  /**
-   * Test defineInterface() method
-   */
   #[@test]
   public function defineInterfaceWithParent() {
     $name= 'net.xp_framework.unittest.reflection.InterfaceWithParent';
     $class= $this->defineInterface($name, array('util.log.Traceable'), '{
       public function setDebug($cat);
     }');
-    $this->assertXPClass($name, $class);
+    $this->assertEquals($name, $class->getName());
     $this->assertTrue($class->isInterface());
     $this->assertEquals(array(\lang\XPClass::forName('util.log.Traceable')), $class->getInterfaces());
-    $this->assertClass($class->getClassLoader(), 'lang.DynamicClassLoader');
+    $this->assertInstanceOf('lang.DynamicClassLoader', $class->getClassLoader());
   }
 
-  /**
-   * Test defineInterface() method
-   */
   #[@test, @expect('lang.ClassNotFoundException')]
   public function defineInterfaceWithNonExistantParent() {
     $name= 'net.xp_framework.unittest.reflection.ErroneousInterface';
     $this->defineInterface($name, array('@@nonexistant@@'), '{ }');
   }
 
-  /**
-   * Test defineInterface() method
-   */
   #[@test, @expect('lang.ClassNotFoundException')]
   public function defineInterfaceWithOneExistantAndOneNonExistantParent() {
     $name= 'net.xp_framework.unittest.reflection.ErroneousInterface';
     $this->defineInterface($name, array('lang.Runnable', '@@nonexistant@@'), '{ }');
   }
 
-  /**
-   * Test default class loader
-   * @see   https://github.com/xp-framework/xp-framework/issues/94
-   */
   #[@test]
   public function defaultClassLoaderProvidesDefinedClass() {
     $class= 'net.xp_framework.unittest.reflection.lostandfound.CL1';
@@ -213,10 +161,6 @@ class RuntimeClassDefinitionTest extends TestCase {
     $this->assertTrue(\lang\ClassLoader::getDefault()->providesClass($class));
   }
 
-  /**
-   * Test default class loader
-   * @see   https://github.com/xp-framework/xp-framework/issues/94
-   */
   #[@test]
   public function defaultClassLoaderProvidesDefinedInterface() {
     $class= 'net.xp_framework.unittest.reflection.lostandfound.IF1';
@@ -225,10 +169,6 @@ class RuntimeClassDefinitionTest extends TestCase {
     $this->assertTrue(\lang\ClassLoader::getDefault()->providesClass($class));
   }
 
-  /**
-   * Test default class loader
-   * @see   https://github.com/xp-framework/xp-framework/issues/94
-   */
   #[@test]
   public function defaultClassLoaderProvidesPackageOfDefinedClass() {
     $package= 'net.xp_framework.unittest.reflection.lostandfound';

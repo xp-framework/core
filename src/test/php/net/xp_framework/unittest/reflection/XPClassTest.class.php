@@ -225,11 +225,11 @@ class XPClassTest extends \unittest\TestCase {
   
   #[@test]
   public function implementedConstructorInvocation() {
-    $i= \lang\ClassLoader::defineClass('ANonAbstractClass', 'net.xp_framework.unittest.reflection.AbstractTestClass', array(), '{
+    $parent= 'net.xp_framework.unittest.reflection.AbstractTestClass';
+    $i= \lang\ClassLoader::defineClass('ANonAbstractClass', $parent, array(), '{
       public function getDate() {}
-    }');
-    
-    $this->assertSubclass($i->getConstructor()->newInstance(), 'net.xp_framework.unittest.reflection.AbstractTestClass');
+    }');    
+    $this->assertInstanceOf($parent, $i->getConstructor()->newInstance());
   }
 
   #[@test]

@@ -3,12 +3,10 @@
 use unittest\TestCase;
 use util\collections\HashTable;
 
-
 /**
  * Test the XP reflection API
  *
- * @see      xp://lang.reflect.Parameter
- * @purpose  Testcase
+ * @see   xp://lang.reflect.Parameter
  */
 class ParameterTest extends TestCase {
 
@@ -93,10 +91,6 @@ class ParameterTest extends TestCase {
   #[@$conn: inject(name= "db")]
   private function setConnection($conn, $mode) { }
 
-  /**
-   * Tests Method::numParameters()
-   *
-   */
   #[@test]
   public function numParameters() {
     $this->assertEquals(0, $this->getClass()->getMethod('initialize')->numParameters(), 'initialize');
@@ -106,56 +100,33 @@ class ParameterTest extends TestCase {
     $this->assertEquals(2, $this->getClass()->getMethod('serialize')->numParameters(), 'serialize');
   }
 
-  /**
-   * Tests Method::getParameter
-   *
-   */
   #[@test]
   public function getExistingParameter() {
-    $this->assertClass($this->getClass()->getMethod('setName')->getParameter(0), 'lang.reflect.Parameter');
+    $this->assertInstanceOf('lang.reflect.Parameter', $this->getClass()->getMethod('setName')->getParameter(0));
   }
 
-  /**
-   * Tests Method::getParameter
-   *
-   */
   #[@test]
   public function getNonExistantParameter() {
     $this->assertNull($this->getClass()->getMethod('initialize')->getParameter(0));
   }
 
-  /**
-   * Tests Method::getParameters
-   *
-   */
   #[@test]
   public function initializeParameters() {
     $this->assertEquals(array(), $this->getClass()->getMethod('initialize')->getParameters());
   }
 
-  /**
-   * Tests Method::getParameters
-   *
-   */
   #[@test]
   public function setNameParameters() {
     $params= $this->getClass()->getMethod('setName')->getParameters();
-    $this->assertArray($params);
+    $this->assertInstanceOf('lang.reflect.Parameter[]', $params);
     $this->assertEquals(1, sizeof($params));
-    $this->assertClass($params[0], 'lang.reflect.Parameter');
   }
 
-  /**
-   * Tests Method::getParameters
-   *
-   */
   #[@test]
   public function serializeParameters() {
     $params= $this->getClass()->getMethod('serialize')->getParameters();
-    $this->assertArray($params);
+    $this->assertInstanceOf('lang.reflect.Parameter[]', $params);
     $this->assertEquals(2, sizeof($params));
-    $this->assertClass($params[0], 'lang.reflect.Parameter');
-    $this->assertClass($params[1], 'lang.reflect.Parameter');
   }
 
   /**
@@ -169,10 +140,6 @@ class ParameterTest extends TestCase {
     return $this->getClass()->getMethod($name)->getParameter($offset);
   }
 
-  /**
-   * Tests Parameter::getName()
-   *
-   */
   #[@test]
   public function name() {
     $this->assertEquals('name', $this->methodParameter('setName', 0)->getName(), 'setName#0');
@@ -181,138 +148,78 @@ class ParameterTest extends TestCase {
     $this->assertEquals('context', $this->methodParameter('serialize', 1)->getName(), 'serialize#1');
   }
 
-  /**
-   * Tests Parameter::getType()
-   *
-   */
   #[@test]
   public function stringType() {
     $this->assertEquals(\lang\Primitive::$STRING, $this->methodParameter('setName', 0)->getType());
   }
 
-  /**
-   * Tests Parameter::getType()
-   *
-   */
   #[@test]
   public function intType() {
     $this->assertEquals(\lang\Primitive::$INT, $this->methodParameter('inc', 0)->getType(), 'inc$a');
     $this->assertEquals(\lang\Primitive::$INT, $this->methodParameter('inc', 1)->getType(), 'inc$b');
   }
 
-  /**
-   * Tests Parameter::getType()
-   *
-   */
   #[@test]
   public function booleanType() {
     $this->assertEquals(\lang\Primitive::$BOOLEAN, $this->methodParameter('setStatus', 0)->getType());
   }
 
-  /**
-   * Tests Parameter::getType()
-   *
-   */
   #[@test]
   public function anyType() {
     $this->assertEquals(\lang\Type::$VAR, $this->methodParameter('serialize', 0)->getType());
   }
 
-  /**
-   * Tests Parameter::getType()
-   *
-   */
   #[@test]
   public function classType() {
     $this->assertEquals(\lang\XPClass::forName('util.Date'), $this->methodParameter('setDate', 0)->getType());
   }
 
-  /**
-   * Tests Parameter::getType()
-   *
-   */
   #[@test]
   public function interfaceType() {
     $this->assertEquals(\lang\XPClass::forName('util.collections.Map'), $this->methodParameter('serialize', 1)->getType());
   }
 
-  /**
-   * Tests Parameter::getType()
-   *
-   */
   #[@test]
   public function arrayType() {
     $this->assertEquals(\lang\ArrayType::forName('string[]'), $this->methodParameter('setArray', 0)->getType());
   }
 
-  /**
-   * Tests Parameter::getType()
-   *
-   */
   #[@test]
   public function varArgsArrayType() {
     $this->assertEquals(\lang\ArrayType::forName('string[]'), $this->methodParameter('printf', 1)->getType());
   }
 
-  /**
-   * Tests Parameter::getTypeRestriction()
-   *
-   */
   #[@test]
   public function typeRestriction() {
     $this->assertNull($this->methodParameter('setName', 0)->getTypeRestriction());
   }
 
-  /**
-   * Tests Parameter::getTypeRestriction()
-   *
-   */
   #[@test]
   public function isOptional() {
     $this->assertFalse($this->methodParameter('setName', 0)->isOptional());
     $this->assertTrue($this->methodParameter('setDate', 0)->isOptional());
   }
 
-  /**
-   * Tests Parameter::getDefaultValue()
-   *
-   */
   #[@test]
   public function nullDefaultValue() {
     $this->assertNull($this->methodParameter('setDate', 0)->getDefaultValue());
   }
 
-  /**
-   * Tests Parameter::getDefaultValue()
-   *
-   */
   #[@test]
   public function intDefaultValue() {
     $this->assertEquals(1, $this->methodParameter('inc', 1)->getDefaultValue());
   }
 
-  /**
-   * Tests Parameter::getDefaultValue()
-   *
-   */
   #[@test]
   public function booleanDefaultValue() {
     $this->assertEquals(false, $this->methodParameter('setStatus', 0)->getDefaultValue());
   }
 
-  /**
-   * Tests Parameter::getDefaultValue()
-   *
-   */
   #[@test]
   public function arrayDefaultValue() {
     $this->assertEquals(array(), $this->methodParameter('setArray', 0)->getDefaultValue());
   }
 
-  /**
-   * Tests Parameter::toString()
-   *
-   */
   #[@test]
   public function stringOfOptional() {
     $this->assertEquals(
@@ -321,10 +228,6 @@ class ParameterTest extends TestCase {
     );
   }
 
-  /**
-   * Tests Parameter::toString()
-   *
-   */
   #[@test]
   public function stringOfAnyTyped() {
     $this->assertEquals(
@@ -333,10 +236,6 @@ class ParameterTest extends TestCase {
     );
   }
 
-  /**
-   * Tests Parameter::toString()
-   *
-   */
   #[@test]
   public function stringOfClassTyped() {
     $this->assertEquals(
@@ -345,29 +244,16 @@ class ParameterTest extends TestCase {
     );
   }
 
-  /**
-   * Tests Parameter::getDefaultValue() throws an exception if
-   * an Parameter does not have a default value
-   *
-   */
   #[@test, @expect('lang.IllegalStateException')]
   public function defaultValueOfNonOptional() {
     $this->methodParameter('setName', 0)->getDefaultValue();
   }
 
-  /**
-   * Tests non-type hinted parameter's type restriction is NULL
-   *
-   */
   #[@test]
   public function unRestrictedParamType() {
     $this->assertNull($this->methodParameter('setDate', 0)->getTypeRestriction());
   }
 
-  /**
-   * Tests type hinted parameter's type is returned via getTypeRestriction()
-   *
-   */
   #[@test]
   public function restrictedParamClassType() {
     $this->assertEquals(
@@ -376,10 +262,6 @@ class ParameterTest extends TestCase {
     );
   }
 
-  /**
-   * Tests type hinted parameter's type is returned via getTypeRestriction()
-   *
-   */
   #[@test]
   public function restrictedParamArrayType() {
     $this->assertEquals(
@@ -394,19 +276,11 @@ class ParameterTest extends TestCase {
     );
   }
 
-  /**
-   * Tests hasAnnotation()
-   *
-   */
   #[@test]
   public function annotatedParameterHasInjectAnnotation() {
     $this->assertTrue($this->methodParameter('setConnection', 0)->hasAnnotation('inject'));
   }
 
-  /**
-   * Tests getAnnotation()
-   *
-   */
   #[@test]
   public function annotatedParametersInjectAnnotation() {
     $this->assertEquals(
@@ -415,19 +289,11 @@ class ParameterTest extends TestCase {
     );
   }
 
-  /**
-   * Tests hasAnnotations()
-   *
-   */
   #[@test]
   public function annotatedParameterHasAnnotations() {
     $this->assertTrue($this->methodParameter('setConnection', 0)->hasAnnotations());
   }
 
-  /**
-   * Tests getAnnotations()
-   *
-   */
   #[@test]
   public function annotatedParametersAnnotations() {
     $this->assertEquals(
@@ -436,19 +302,11 @@ class ParameterTest extends TestCase {
     );
   }
 
-  /**
-   * Tests hasAnnotations()
-   *
-   */
   #[@test]
   public function normalParameterHasNoAnnotations() {
     $this->assertFalse($this->methodParameter('setConnection', 1)->hasAnnotations());
   }
 
-  /**
-   * Tests getAnnotations()
-   *
-   */
   #[@test]
   public function normalParametersAnnotations() {
     $this->assertEquals(
@@ -457,29 +315,16 @@ class ParameterTest extends TestCase {
     );
   }
 
-  /**
-   * Tests hasAnnotations()
-   *
-   */
   #[@test]
   public function normalParameterHasNoAnnotation() {
     $this->assertFalse($this->methodParameter('setConnection', 1)->hasAnnotation('irrelevant'));
   }
 
-  /**
-   * Tests getAnnotations()
-   *
-   */
   #[@test, @expect('lang.ElementNotFoundException')]
   public function normalParameterGetAnnotationRaisesException() {
     $this->methodParameter('setConnection', 1)->getAnnotation('irrelevant');
   }
 
-  /**
-   * Tests the first parameter of the constructor inherited from 
-   * the unittest.TestCase base class is of type string.
-   *
-   */
   #[@test]
   public function inheritedConstructorsParameter() {
     $this->assertEquals(
@@ -488,11 +333,6 @@ class ParameterTest extends TestCase {
     );
   }
 
-  /**
-   * Tests the first parameter of the constructor inherited from 
-   * the unittest.TestCase base class is of type string.
-   *
-   */
   #[@test]
   public function inheritedConstructorsParameters() {
     $this->assertEquals(

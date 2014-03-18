@@ -52,11 +52,8 @@ class ExceptionsTest extends TestCase {
   #[@test]
   public function stackTrace() {
     $trace= create(new Throwable('Test'))->getStackTrace();
-    $this->assertArray($trace);
-    $this->assertNotEmpty($trace);
-    foreach ($trace as $element) {
-      $this->assertInstanceOf('lang.StackTraceElement', $element);
-    }
+    $this->assertInstanceOf('lang.StackTraceElement[]', $trace);
+    $this->assertNotEquals(0, sizeof($trace));
   }
 
   #[@test]

@@ -209,7 +209,7 @@ class FieldsTest extends TestCase {
   public function dateField() {
     $this->assertTrue($this->fixture->hasField('date'));
     with ($field= $this->fixture->getField('date')); {
-      $this->assertClass($field, 'lang.reflect.Field');
+      $this->assertInstanceOf('lang.reflect.Field', $field);
       $this->assertEquals('date', $field->getName());
       $this->assertEquals(\lang\XPClass::forName('util.Date'), $field->getType());
       $this->assertTrue($this->fixture->equals($field->getDeclaringClass()));
@@ -223,7 +223,7 @@ class FieldsTest extends TestCase {
    */
   #[@test]
   public function dateFieldValue() {
-    $this->assertClass($this->fixture->getField('date')->get($this->fixture->newInstance()), 'util.Date');
+    $this->assertInstanceOf('util.Date', $this->fixture->getField('date')->get($this->fixture->newInstance()));
   }
 
   /**
