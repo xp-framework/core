@@ -45,7 +45,7 @@ class TypeTest extends TestCase {
    */
   #[@test]
   public function boolType() {
-    $this->assertEquals(\lang\Primitive::$BOOLEAN, Type::forName('boolean'));
+    $this->assertEquals(\lang\Primitive::$BOOL, Type::forName('bool'));
   }
 
   /**
@@ -211,7 +211,7 @@ class TypeTest extends TestCase {
    */
   #[@test]
   public function booleanTypeVariant() {
-    $this->assertEquals(\lang\Primitive::$BOOLEAN, Type::forName('bool'));
+    $this->assertEquals(\lang\Primitive::$BOOL, Type::forName('boolean'));
   }
 
   /**

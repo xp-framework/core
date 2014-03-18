@@ -161,7 +161,7 @@ class ParameterTest extends TestCase {
 
   #[@test]
   public function booleanType() {
-    $this->assertEquals(\lang\Primitive::$BOOLEAN, $this->methodParameter('setStatus', 0)->getType());
+    $this->assertEquals(\lang\Primitive::$BOOL, $this->methodParameter('setStatus', 0)->getType());
   }
 
   #[@test]

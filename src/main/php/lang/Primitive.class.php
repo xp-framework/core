@@ -17,15 +17,13 @@ class Primitive extends Type {
     $INT     = null,
     $DOUBLE  = null,
     $BOOL    = null,
-    $BOOLEAN = null,    // deprecated
-    $ARRAY   = null,    // deprecated
-    $INTEGER = null;    // deprecated
+    $ARRAY   = null;
   
   static function __static() {
     self::$STRING= new self('string');
-    self::$INTEGER= self::$INT= new self('int');
+    self::$INT= new self('int');
     self::$DOUBLE= new self('double');
-    self::$BOOLEAN= self::$BOOL= new self('bool');
+    self::$BOOL= new self('bool');
     self::$ARRAY= new self('array');
   }
   

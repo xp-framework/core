@@ -5,6 +5,7 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Removed deprecated Primitive::$[BOOLEAN, INTEGER] - (@thekid) 
 * Removed deprecated lang.types.Number::floatVal() - (@thekid)
 * **Minimum PHP version reqired is now PHP 5.4.0** - (@thekid)
 * Removed deprecated `assertArray()`, `assertObject()`, `assertEmpty()`,

@@ -394,7 +394,7 @@ class MethodsTest extends TestCase {
   #[@test]
   public function boolReturnValue() {
     $this->assertEquals('bool', $this->fixture->getMethod('initializerCalled')->getReturnTypeName());
-    $this->assertEquals(\lang\Primitive::$BOOLEAN, $this->fixture->getMethod('initializerCalled')->getReturnType());
+    $this->assertEquals(\lang\Primitive::$BOOL, $this->fixture->getMethod('initializerCalled')->getReturnType());
   }
   
   /**
