@@ -317,31 +317,4 @@ class MockProxyBuilder extends \lang\Object {
   public function createProxyInstance($classloader, $interfaces, $handler) {
     return $this->createProxyClass($classloader, $interfaces)->newInstance($handler);
   }
-  
-  /**
-   * @deprecated Use non-static getProxyClass instead
-   * 
-   * Retrieves a Proxy instance.
-   *
-   * @param   lang.IClassLoader classloader
-   * @param   lang.XPClass[] interfaces names of the interfaces to implement
-   * @return  lang.XPClass
-   * @throws  lang.IllegalArgumentException
-   */
-  public static function getProxyClass(\lang\IClassLoader $classloader, array $interfaces) {
-    return create(new self())->createProxyClass($classloader, $interfaces);
-  }
-  
-  /**
-   * @deprecated Use non-static createProxyInstance instead
-   *
-   * @param   lang.ClassLoader classloader
-   * @param   lang.XPClass[] interfaces
-   * @param   lang.reflect.InvocationHandler handler
-   * @return  lang.XPClass
-   * @throws  lang.IllegalArgumentException
-   */
-  public static function newProxyInstance($classloader, $interfaces, $handler) {
-    return create(new self())->createProxyInstance($classloader, $interfaces, $handler);
-  }
 }

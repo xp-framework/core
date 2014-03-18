@@ -6,6 +6,8 @@ XP Framework Core ChangeLog
 ### Heads up!
 
 * Removed deprecated `lang.Enum::membersOf()` method - (@thekid)
+* Removed deprecated static getProxyClass() and newProxyInstance() 
+  methods from the unittest.mock.MockProxyBuilder class - (@thekid)
 * Removed deprecated methods in util.Date:
   - mktime() - replaced by create()
   - fromString() - handled by regular constructor

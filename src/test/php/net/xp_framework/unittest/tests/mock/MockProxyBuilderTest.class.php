@@ -40,7 +40,7 @@ class MockProxyBuilderTest extends TestCase {
    * @return  lang.reflect.Proxy
    */
   protected function proxyInstanceFor($interfaces) {
-    return MockProxyBuilder::newProxyInstance(
+    return (new MockProxyBuilder())->createProxyInstance(
       \lang\ClassLoader::getDefault(),
       $interfaces, 
       $this->handler
@@ -56,21 +56,20 @@ class MockProxyBuilderTest extends TestCase {
    * @return  lang.XPClass
    */
   protected function proxyClassFor($interfaces) {
-    return MockProxyBuilder::getProxyClass(
+    return (new MockProxyBuilder())->createProxyClass(
       \lang\ClassLoader::getDefault(),
-      $interfaces,
-      $this->handler
+      $interfaces
     );
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function nullClassLoader() {
-    MockProxyBuilder::getProxyClass(null, array($this->iteratorClass));
+    (new MockProxyBuilder())->createProxyClass(null, array($this->iteratorClass));
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function nullInterfaces() {
-    MockProxyBuilder::getProxyClass(\lang\ClassLoader::getDefault(), null);
+    (new MockProxyBuilder())->createProxyClass(\lang\ClassLoader::getDefault(), null);
   }
 
   #[@test]
