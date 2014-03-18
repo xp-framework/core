@@ -71,6 +71,7 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added support for closures in annotations - xp-framework/core#7 - (@thekid)
 * Merged xp-framework/xp-framework#353: Add support for rolling logfile names 
   in FileAppender (and Logger) - (@thekid, @kiesel)
 * Changed Console class to print `true` and `false` for booleans instead of
