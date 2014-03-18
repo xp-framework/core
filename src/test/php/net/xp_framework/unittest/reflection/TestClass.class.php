@@ -17,7 +17,7 @@ use util\collections\Vector;
   public
     #[@type('util.Date')]
     $date   = null,
-    $map    = array();
+    $map    = [];
   
   protected
     $size   = 0;
@@ -29,7 +29,7 @@ use util\collections\Vector;
     $initializerCalled= false;
   
   private static
-    $cache  = array();
+    $cache  = [];
 
   static function __static() {
     self::$initializerCalled= true;
@@ -144,7 +144,7 @@ use util\collections\Vector;
    * Clear map
    */
   protected function clearMap() {
-    $this->map= array();
+    $this->map= [];
     return true;
   }
 

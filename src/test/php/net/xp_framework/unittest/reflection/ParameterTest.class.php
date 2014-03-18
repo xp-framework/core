@@ -65,7 +65,7 @@ class ParameterTest extends TestCase {
    *
    * @param   string[] map default array
    */
-  private function setArray(array $map= array()) { }
+  private function setArray(array $map= []) { }
 
   /**
    * Method without functionality to be used by tests.
@@ -112,7 +112,7 @@ class ParameterTest extends TestCase {
 
   #[@test]
   public function initializeParameters() {
-    $this->assertEquals(array(), $this->getClass()->getMethod('initialize')->getParameters());
+    $this->assertEquals([], $this->getClass()->getMethod('initialize')->getParameters());
   }
 
   #[@test]
@@ -217,7 +217,7 @@ class ParameterTest extends TestCase {
 
   #[@test]
   public function arrayDefaultValue() {
-    $this->assertEquals(array(), $this->methodParameter('setArray', 0)->getDefaultValue());
+    $this->assertEquals([], $this->methodParameter('setArray', 0)->getDefaultValue());
   }
 
   #[@test]
@@ -310,7 +310,7 @@ class ParameterTest extends TestCase {
   #[@test]
   public function normalParametersAnnotations() {
     $this->assertEquals(
-      array(), 
+      [], 
       $this->methodParameter('setConnection', 1)->getAnnotations()
     );
   }

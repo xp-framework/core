@@ -13,11 +13,11 @@ class MockProxyBuilder extends \lang\Object {
   private
     $classLoader       = null,
     $overwriteExisting = false,
-    $added             = array();
+    $added             = [];
 
   private static 
     $num               = 0,
-    $cache             = array();
+    $cache             = [];
   
   /**
    * Constructor
@@ -53,7 +53,7 @@ class MockProxyBuilder extends \lang\Object {
    * @throws  lang.IllegalArgumentException
    */
   public function createProxyClass(\lang\IClassLoader $classloader, array $interfaces, $baseClass= null) {
-    $this->added= array();
+    $this->added= [];
 
     if (!$baseClass) {
       $baseClass= \lang\XPClass::forName('lang.Object');
@@ -244,7 +244,7 @@ class MockProxyBuilder extends \lang\Object {
     if ($method->hasAnnotation('overloaded')) {
       $signatures= $method->getAnnotation('overloaded', 'signatures');
       $methodax= 0;
-      $cases= array();
+      $cases= [];
       foreach ($signatures as $signature) {
         $args= sizeof($signature);
         $methodax= max($methodax, $args- 1);

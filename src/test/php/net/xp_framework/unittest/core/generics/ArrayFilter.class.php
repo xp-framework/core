@@ -12,7 +12,7 @@
    * Example:
    * <code>
    *   // Set up filter as anonymous class
-   *   $webmethods= create('new ArrayFilter<Method>', array(), '{
+   *   $webmethods= create('new ArrayFilter<Method>', [], '{
    *     protected function accept($method) {
    *       return $method->hasAnnotation("webmethod");
    *     }
@@ -46,7 +46,7 @@
      */
     #[@generic(params= 'T[]', return= 'T[]')]
     public function filter($elements) {
-      $filtered= array();
+      $filtered= [];
       foreach ($elements as $element) {
         if ($this->accept($element)) $filtered[]= $element;
       }

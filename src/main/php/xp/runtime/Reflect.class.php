@@ -226,9 +226,9 @@ class Reflect extends \lang\Object {
     
     // Classes
     $order= array(
-      'interface' => array(),
-      'enum'      => array(),
-      'class'     => array()
+      'interface' => [],
+      'enum'      => [],
+      'class'     => []
     );
     foreach ($package->getClasses() as $class) {
       $mod= $class->getModifiers();

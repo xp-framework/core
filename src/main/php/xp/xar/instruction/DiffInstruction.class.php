@@ -35,7 +35,7 @@ class DiffInstruction extends AbstractInstruction {
    * @return  int
    */
   protected function compare($arcl, $arcr) {
-    $seen= array();
+    $seen= [];
     $retval= 0;
     
     while ($entry= $arcl->getEntry()) {

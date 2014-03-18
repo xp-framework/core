@@ -13,7 +13,7 @@ class Expectation extends \lang\Object {
   private $exception            = null;
   private $isInPropertyBehavior = false;
   private $actualCalls          = 0;
-  private $args                 = array();
+  private $args                 = [];
 
   /**
    * Constructor

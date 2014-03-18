@@ -31,7 +31,7 @@ class RuntimeInstantiationTest extends TestCase {
    * @return  string out
    */
   protected function runInNewRuntime(\lang\RuntimeOptions $startup, $src, $expectedExitCode= 0) {
-    with ($out= $err= '', $p= Runtime::getInstance()->newInstance($startup, 'class', 'xp.runtime.Evaluate', array())); {
+    with ($out= $err= '', $p= Runtime::getInstance()->newInstance($startup, 'class', 'xp.runtime.Evaluate', [])); {
       $p->in->write('uses("lang.Runtime");');
       $p->in->write($src);
       $p->in->close();
@@ -124,7 +124,7 @@ class RuntimeInstantiationTest extends TestCase {
     $this->assertEquals(
       '+OK exiting, +OK Shutdown hook run',
       $this->runInNewRuntime(Runtime::getInstance()->startupOptions(), '
-        Runtime::getInstance()->addShutdownHook(newinstance("lang.Runnable", array(), "{
+        Runtime::getInstance()->addShutdownHook(newinstance("lang.Runnable", [], "{
           public function run() {
             echo \'+OK Shutdown hook run\';
           }
@@ -140,7 +140,7 @@ class RuntimeInstantiationTest extends TestCase {
     $this->assertEquals(
       '+OK exiting, +OK Shutdown hook run',
       $this->runInNewRuntime(Runtime::getInstance()->startupOptions(), '
-        Runtime::getInstance()->addShutdownHook(newinstance("lang.Runnable", array(), "{
+        Runtime::getInstance()->addShutdownHook(newinstance("lang.Runnable", [], "{
           public function run() {
             echo \'+OK Shutdown hook run\';
           }
@@ -155,7 +155,7 @@ class RuntimeInstantiationTest extends TestCase {
   #[@test]
   public function shutdownHookRunOnFatal() {
     $out= $this->runInNewRuntime(Runtime::getInstance()->startupOptions(), '
-      Runtime::getInstance()->addShutdownHook(newinstance("lang.Runnable", array(), "{
+      Runtime::getInstance()->addShutdownHook(newinstance("lang.Runnable", [], "{
         public function run() {
           echo \'+OK Shutdown hook run\';
         }
@@ -172,7 +172,7 @@ class RuntimeInstantiationTest extends TestCase {
   #[@test]
   public function shutdownHookRunOnUncaughtException() {
     $out= $this->runInNewRuntime(Runtime::getInstance()->startupOptions(), '
-      Runtime::getInstance()->addShutdownHook(newinstance("lang.Runnable", array(), "{
+      Runtime::getInstance()->addShutdownHook(newinstance("lang.Runnable", [], "{
         public function run() {
           echo \'+OK Shutdown hook run\';
         }

@@ -33,7 +33,7 @@ abstract class CommandLine extends Enum {
       static function __static() { }
       public function parse($cmd) {
         static $triple= "\"\"\"";
-        $parts= array();
+        $parts= [];
         $r= "";
         for ($i= 0, $s= strlen($cmd); $i < $s; $i++) {
           if (" " === $cmd{$i}) {
@@ -73,7 +73,7 @@ abstract class CommandLine extends Enum {
         return \'"\'.str_replace(\'"\', \'"""\', $arg).\'"\';
       }
       
-      public function compose($command, $arguments= array()) {
+      public function compose($command, $arguments= []) {
         $cmd= self::quote($command);
         foreach ($arguments as $arg) {
           $cmd.= " ".self::quote($arg);
@@ -84,7 +84,7 @@ abstract class CommandLine extends Enum {
     self::$UNIX= newinstance(__CLASS__, array(1, 'UNIX'), '{
       static function __static() { }
       public function parse($cmd) {
-        $parts= array();
+        $parts= [];
         $o= 0;
         while (FALSE !== ($p= strcspn($cmd, " ", $o))) {
           $option= substr($cmd, $o, $p);
@@ -113,7 +113,7 @@ abstract class CommandLine extends Enum {
         return "\'".str_replace("\'", "\'\\\'\'", $arg)."\'";
       }
       
-      public function compose($command, $arguments= array()) {
+      public function compose($command, $arguments= []) {
         $cmd= self::quote($command);
         foreach ($arguments as $arg) {
           $cmd.= " ".self::quote($arg);
@@ -153,5 +153,5 @@ abstract class CommandLine extends Enum {
    * @param   string[] arguments default []
    * @return  string
    */
-  public abstract function compose($command, $arguments= array());
+  public abstract function compose($command, $arguments= []);
 }

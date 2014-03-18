@@ -95,10 +95,10 @@ class Calendar extends \lang\Object {
    *
    * @param   util.Date start
    * @param   util.Date end
-   * @param   array holidays default array() holidays to be included in calculation
+   * @param   array holidays default [] holidays to be included in calculation
    * @return  int number of workdays
    */
-  public static function workdays($start, $end, $holidays= array()) {
+  public static function workdays($start, $end, $holidays= []) {
     $s= $start->getTime();
     $e= $end->getTime();
 

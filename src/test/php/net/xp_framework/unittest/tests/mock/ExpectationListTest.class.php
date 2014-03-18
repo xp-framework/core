@@ -25,12 +25,12 @@ class ExpectationListTest extends \unittest\TestCase {
 
   #[@test]
   public function canCallGetNext() {
-    $this->sut->getNext(array());
+    $this->sut->getNext([]);
   }
   
   #[@test]
   public function getNext_returnNullByDefault() {
-    $this->assertNull($this->sut->getNext(array()));
+    $this->assertNull($this->sut->getNext([]));
   }
   
   #[@test]
@@ -42,16 +42,16 @@ class ExpectationListTest extends \unittest\TestCase {
   public function getNextReturnsAddedExpectation() {
     $expect= new Expectation('method');
     $this->sut->add($expect);    
-    $this->assertEquals($expect, $this->sut->getNext(array()));
+    $this->assertEquals($expect, $this->sut->getNext([]));
   }
   
   #[@test]
   public function getNextReturns_should_return_last_expectation_over_and_over() {
     $expect= new Expectation('method');
     $this->sut->add($expect);
-    $this->assertEquals($expect, $this->sut->getNext(array()));
-    $this->assertEquals($expect, $this->sut->getNext(array()));
-    $this->assertEquals($expect, $this->sut->getNext(array()));
+    $this->assertEquals($expect, $this->sut->getNext([]));
+    $this->assertEquals($expect, $this->sut->getNext([]));
+    $this->assertEquals($expect, $this->sut->getNext([]));
   }
   
   #[@test, @expect('lang.IllegalArgumentException')]
@@ -69,9 +69,9 @@ class ExpectationListTest extends \unittest\TestCase {
     $expect= new Expectation('method');
     $expect->setRepeat(2);
     $this->sut->add($expect);
-    $this->assertEquals($expect, $this->sut->getNext(array()));
-    $this->assertEquals($expect, $this->sut->getNext(array()));
-    $this->assertNull($this->sut->getNext(array()));
+    $this->assertEquals($expect, $this->sut->getNext([]));
+    $this->assertEquals($expect, $this->sut->getNext([]));
+    $this->assertNull($this->sut->getNext([]));
   }
 
   #[@test]
@@ -87,7 +87,7 @@ class ExpectationListTest extends \unittest\TestCase {
   public function should_provide_access_to_used_expectations() {
     $expect= new Expectation('method');
     $this->sut->add($expect);
-    $this->sut->getNext(array());    
+    $this->sut->getNext([]);    
     $list= $this->sut->getCalled();
     $this->assertEquals(1, $list->size());
     $this->assertEquals($expect, $list[0]);
@@ -100,7 +100,7 @@ class ExpectationListTest extends \unittest\TestCase {
     $list= $this->sut->getExpectations();
     $this->assertEquals(1, $list->size());
     $this->assertEquals($expect, $list[0]);
-    $this->sut->getNext(array());
+    $this->sut->getNext([]);
     $list= $this->sut->getCalled();
     $this->assertEquals(1, $list->size());
     $this->assertEquals($expect, $list[0]);

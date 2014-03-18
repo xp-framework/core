@@ -18,7 +18,7 @@ class DynamicClassLoader extends AbstractClassLoader {
     $context  = null;   // Used by PHP internally for stream support
 
   protected static
-    $bytes    = array();
+    $bytes    = [];
   
   static function __static() {
     stream_wrapper_register('dyn', __CLASS__);
@@ -115,7 +115,7 @@ class DynamicClassLoader extends AbstractClassLoader {
    * @return  lang.IClassLoader
    */
   public static function instanceFor($path) {
-    static $pool= array();
+    static $pool= [];
     
     if (!isset($pool[$path])) {
       $pool[$path]= new self($path);
@@ -131,7 +131,7 @@ class DynamicClassLoader extends AbstractClassLoader {
    * @return  string[] filenames
    */
   public function packageContents($package) {
-    return array();
+    return [];
   }
 
   /**

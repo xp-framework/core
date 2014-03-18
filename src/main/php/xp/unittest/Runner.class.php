@@ -122,7 +122,7 @@ class Runner extends \lang\Object {
    */
   protected function listenerUsage($listener) {
     $this->err->writeLine($this->textOf($listener->getComment()));
-    $positional= $options= array();
+    $positional= $options= [];
     foreach ($listener->getMethods() as $method) {
       if ($method->hasAnnotation('arg')) {
         $arg= $method->getAnnotation('arg');
@@ -201,7 +201,7 @@ class Runner extends \lang\Object {
     // Parse arguments
     $sources= new Vector();
     $listener= TestListeners::$DEFAULT;
-    $arguments= array();
+    $arguments= [];
     $colors= null;
     $cmap= array(
       ''      => null,
@@ -233,7 +233,7 @@ class Runner extends \lang\Object {
           $instance= $suite->addListener($class->newInstance($output));
 
           // Get all @arg-annotated methods
-          $options= array();
+          $options= [];
           foreach ($class->getMethods() as $method) {
             if ($method->hasAnnotation('arg')) {
               $arg= $method->getAnnotation('arg');
@@ -261,7 +261,7 @@ class Runner extends \lang\Object {
           }
           $option++;
           if (0 == $method->numParameters()) {
-            $pass= array();
+            $pass= [];
           } else {
             $pass= $this->arg($args, ++$i, 'o '.$name);
           }

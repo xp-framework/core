@@ -73,7 +73,7 @@ class Thread extends Object {
    * 
    * Implementation by passing a Runnable: 
    * <code>
-   *   $thread= new Thread(newinstance('lang.Runnable', array(), '{
+   *   $thread= new Thread(newinstance('lang.Runnable', [], '{
    *     public function run() {
    *       // ...
    *     }

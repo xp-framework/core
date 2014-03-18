@@ -6,7 +6,7 @@
  * @test  xp://net.xp_framework.unittest.util.FilesystemPropertySourceTest
  */
 class FilesystemPropertySource extends \lang\Object implements PropertySource {
-  protected $cache= array();
+  protected $cache= [];
 
   /**
    * Constructor

@@ -9,7 +9,7 @@ abstract class AbstractInstruction extends \lang\Object {
     $err        = null,
     $options    = 0,
     $archive    = null,
-    $args       = array();
+    $args       = [];
   
   /**
    * Constructor

@@ -28,7 +28,7 @@ use util\NoSuchElementException;
  */
 class PasswordStrength extends \lang\Object {
   protected static
-    $algorithms= array();
+    $algorithms= [];
     
   static function __static() {
     self::$algorithms['standard']= \lang\XPClass::forName('security.password.StandardAlgorithm');

@@ -11,7 +11,7 @@ use util\Comparator;
  */
 class Collator extends \lang\Object implements Comparator {
   protected static 
-    $instance     = array();
+    $instance     = [];
 
   public
     $locale = '';

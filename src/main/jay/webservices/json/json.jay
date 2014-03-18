@@ -26,7 +26,7 @@ expression:
 
 object:
       '{' objectcontent '}' { $$= $2; }
-    | '{' '}'               { $$= array(); }
+    | '{' '}'               { $$= []; }
 ;
 
 objectcontent:
@@ -45,7 +45,7 @@ objectkey:
 
 array:
       '[' arraycontent ']' { $$= $2; }
-    | '[' ']'              { $$= array(); }
+    | '[' ']'              { $$= []; }
 ;
 
 arraycontent:

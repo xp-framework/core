@@ -33,7 +33,7 @@ class CreateInstruction extends AbstractInstruction {
    * @return  string[]
    */
   public function addAll($cwd) {
-    $list= array();
+    $list= [];
     $qs= preg_quote(DIRECTORY_SEPARATOR);
 
     foreach ($this->getArguments() as $arg) {

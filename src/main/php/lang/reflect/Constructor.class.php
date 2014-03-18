@@ -29,7 +29,7 @@ class Constructor extends Routine {
    * @throws  lang.IllegalAccessException in case the constructor is not public or if it is abstract
    * @throws  lang.reflect.TargetInvocationException in case the constructor throws an exception
    */
-  public function newInstance(array $args= array()) {
+  public function newInstance(array $args= []) {
 
     // Check whether class is abstract
     $class= new \ReflectionClass($this->_class);

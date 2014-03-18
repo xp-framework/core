@@ -30,7 +30,7 @@ class GenericTypes extends \lang\Object {
     if (!isset($annotations['generic']['self'])) {
       throw new IllegalStateException('Class '.$base->name.' is not a generic definition');
     }
-    $components= array();
+    $components= [];
     foreach (explode(',', $annotations['generic']['self']) as $cs => $name) {
       $components[]= ltrim($name);
     }
@@ -59,7 +59,7 @@ class GenericTypes extends \lang\Object {
       $meta= \xp::$meta[$base->name];
 
       // Parse placeholders into a lookup map
-      $placeholders= array();
+      $placeholders= [];
       foreach ($components as $i => $component) {
         $placeholders[$component]= $arguments[$i]->getName();
       }
@@ -83,7 +83,7 @@ class GenericTypes extends \lang\Object {
 
       // Replace source
       $annotation= null;
-      $matches= array();
+      $matches= [];
       $state= array(0);
       $counter= 0;
       $tokens= token_get_all($bytes);
@@ -110,7 +110,7 @@ class GenericTypes extends \lang\Object {
             $i--;
             '\\' === $parent{0} || $parent= $namespace.'\\'.$parent;
             if (isset($annotations['generic']['parent'])) {
-              $xargs= array();
+              $xargs= [];
               foreach (explode(',', $annotations['generic']['parent']) as $j => $placeholder) {
                 $xargs[]= Type::forName(strtr(ltrim($placeholder), $placeholders));
               }
@@ -144,7 +144,7 @@ class GenericTypes extends \lang\Object {
         } else if (1 === $state[0]) {             // Class body
           if (T_FUNCTION === $tokens[$i][0]) {
             $braces= 0;
-            $parameters= $default= array();
+            $parameters= $default= [];
             array_unshift($state, 3);
             array_unshift($state, 2);
             $m= $tokens[$i+ 2][1];
@@ -188,7 +188,7 @@ class GenericTypes extends \lang\Object {
                 }
               }
             }
-            $annotations= array();
+            $annotations= [];
             unset($meta[1][$m][DETAIL_ANNOTATIONS]['generic']);
             array_shift($state);
           } else if ('{' === $tokens[$i][0]) {
@@ -201,7 +201,7 @@ class GenericTypes extends \lang\Object {
               $meta[1][$m][DETAIL_RETURNS]= strtr($annotations[0]['generic']['return'], $placeholders);
             }
             if (isset($annotations[0]['generic']['params'])) {
-              $generic= array();
+              $generic= [];
               foreach (explode(',', $annotations[0]['generic']['params']) as $j => $placeholder) {
                 if ('' === ($replaced= strtr(ltrim($placeholder), $placeholders))) {
                   $generic[$j]= null;
@@ -233,7 +233,7 @@ class GenericTypes extends \lang\Object {
               }
             }
 
-            $annotations= array();
+            $annotations= [];
             unset($meta[1][$m][DETAIL_ANNOTATIONS]['generic']);
             continue;
           }
@@ -254,7 +254,7 @@ class GenericTypes extends \lang\Object {
             $i--;
             '\\' === $rel{0} || $rel= $namespace.'\\'.$rel;
             if (isset($annotation[$counter])) {
-              $iargs= array();
+              $iargs= [];
               foreach (explode(',', $annotation[$counter]) as $j => $placeholder) {
                 $iargs[]= Type::forName(strtr(ltrim($placeholder), $placeholders));
               }

@@ -49,7 +49,7 @@ class FileUtilTest extends TestCase {
   #[@test]
   public function get_contents_read_returns_less_than_size() {
     $data= 'Test';
-    $f= newinstance('io.Stream', array(), '{
+    $f= newinstance('io.Stream', [], '{
       public function read($size= 4096) { return parent::read(min(1, $size)); }
     }');
     $f->open(STREAM_MODE_WRITE);

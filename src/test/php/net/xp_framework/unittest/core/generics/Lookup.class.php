@@ -5,7 +5,7 @@
  */
 #[@generic(self= 'K, V', parent= 'K, V')]
 class Lookup extends AbstractDictionary {
-  protected $elements= array();
+  protected $elements= [];
   
   /**
    * Put a key/value pairt

@@ -20,7 +20,7 @@ abstract class AbstractSource extends \lang\Object {
     }
     
     // Add all tests cases
-    $r= array();
+    $r= [];
     foreach ($class->getMethods() as $m) {
       $m->hasAnnotation('test') && $r[]= $class->getConstructor()->newInstance(array_merge(
         (array)$m->getName(true), 

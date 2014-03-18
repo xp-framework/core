@@ -14,7 +14,7 @@ class OpenSslUtil extends \lang\Object {
    * @return  string[] error
    */
   public static function getErrors() {
-    $e= array();
+    $e= [];
     while ($msg= openssl_error_string()) {
       $e[]= $msg;
     }

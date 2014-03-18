@@ -30,7 +30,7 @@ class PackageSource extends AbstractSource {
    * @return  lang.XPClass[]
    */
   protected static function testClassesIn(Package $package, $recursive) {
-    $r= array();
+    $r= [];
     foreach ($package->getClasses() as $class) {
       if (
         !$class->isSubclassOf('unittest.TestCase') ||
@@ -51,7 +51,7 @@ class PackageSource extends AbstractSource {
    * @return  unittest.TestCase[]
    */
   public function testCasesWith($arguments) {
-    $tests= array();
+    $tests= [];
     foreach (self::testClassesIn($this->package, $this->recursive) as $class) {
       $tests= array_merge($tests, $this->testCasesInClass($class, $arguments));
     }

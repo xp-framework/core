@@ -34,7 +34,7 @@ use util\NoSuchElementException;
 #[@generic(self= 'T')]
 class Stack extends \lang\Object {
   protected
-    $_elements = array(),
+    $_elements = [],
     $_hash     = 0;
 
   /**

@@ -24,7 +24,7 @@ class BytesTest extends \unittest\TestCase {
 
   #[@test]
   public function creating_an_empty_bytes_from_an_empty_array() {
-    $this->assertEquals(0, (new Bytes(array()))->size());
+    $this->assertEquals(0, (new Bytes([]))->size());
   }
 
   #[@test]

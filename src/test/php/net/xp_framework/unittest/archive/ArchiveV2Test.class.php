@@ -23,7 +23,7 @@ class ArchiveV2Test extends ArchiveTest {
     $a= new Archive($this->archiveBytesAsStream(1));
     $a->open(ARCHIVE_READ);
     $this->assertEquals(1, $a->version);
-    $this->assertEntries($a, array());
+    $this->assertEntries($a, []);
   }
 
   #[@test]

@@ -96,6 +96,6 @@ class ObjectTest extends \unittest\TestCase {
 
   #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method .+::undefMethod\(\) from scope net\.xp_framework\.unittest\.core\.ObjectTest/')]
   public function callUndefinedMethod_call_user_func_array() {
-    call_user_func_array(array(new \lang\Object(), 'undefMethod'), array());
+    call_user_func_array(array(new \lang\Object(), 'undefMethod'), []);
   }
 }

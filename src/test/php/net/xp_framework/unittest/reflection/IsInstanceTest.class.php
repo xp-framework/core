@@ -70,7 +70,7 @@ class IsInstanceTest extends TestCase {
    */
   #[@test]
   public function newInterfaceInstanceIsRunnable() {
-    $this->assertTrue(\lang\XPClass::forName('lang.Runnable')->isInstance(newinstance('lang.Runnable', array(), '{
+    $this->assertTrue(\lang\XPClass::forName('lang.Runnable')->isInstance(newinstance('lang.Runnable', [], '{
       public function run() { }
     }')));
   }

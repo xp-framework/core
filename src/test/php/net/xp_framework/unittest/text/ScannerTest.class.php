@@ -109,7 +109,7 @@ class ScannerTest extends TestCase {
   #[@test]
   public function scanEmptyString() {
     $scanner= new \text\regex\Scanner('%s');
-    $this->assertEquals(array(), $scanner->match('')->groups());
+    $this->assertEquals([], $scanner->match('')->groups());
     $this->assertEquals(0, $scanner->match('')->length());
   }
 

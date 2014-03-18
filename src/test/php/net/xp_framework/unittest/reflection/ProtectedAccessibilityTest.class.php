@@ -32,7 +32,7 @@ class ProtectedAccessibilityTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalAccessException')]
   public function invokingProtectedConstructor() {
-    self::$fixture->getConstructor()->newInstance(array());
+    self::$fixture->getConstructor()->newInstance([]);
   }
 
   /**
@@ -71,7 +71,7 @@ class ProtectedAccessibilityTest extends TestCase {
     $this->assertInstanceOf(self::$fixture, self::$fixture
       ->getConstructor()
       ->setAccessible(true)
-      ->newInstance(array())
+      ->newInstance([])
     );
   }
 

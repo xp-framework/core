@@ -12,11 +12,11 @@
  */
 class GzDecompressingInputStream extends \lang\Object implements InputStream {
   protected $in= null;
-  public static $wrapped= array();
+  public static $wrapped= [];
   public $context = null;
 
   static function __static() {
-    stream_wrapper_register('zlib.bounded', get_class(newinstance('lang.Object', array(), '{
+    stream_wrapper_register('zlib.bounded', get_class(newinstance('lang.Object', [], '{
       protected $id, $st= NULL;
       protected $buffer= "";
       public $context = NULL;

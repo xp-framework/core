@@ -42,15 +42,15 @@ class RecordStateTest extends \unittest\TestCase {
     $this->assertEquals(1, $this->expectationMap->size());
     $expectationList= $this->expectationMap->get('foo');
     $this->assertInstanceOf('unittest.mock.ExpectationList', $expectationList);
-    $this->assertInstanceOf('unittest.mock.Expectation', $expectationList->getNext(array()));
+    $this->assertInstanceOf('unittest.mock.Expectation', $expectationList->getNext([]));
   }
 
   #[@test]
   public function newExpectationCreatedOnHandleInvocation_twoDifferentMethods() {
     $this->sut->handleInvocation('foo', null);
     $this->sut->handleInvocation('bar', null);
-    $this->assertInstanceOf('unittest.mock.Expectation', $this->expectationMap->get('foo')->getNext(array()));
-    $this->assertInstanceOf('unittest.mock.Expectation', $this->expectationMap->get('bar')->getNext(array()));
+    $this->assertInstanceOf('unittest.mock.Expectation', $this->expectationMap->get('foo')->getNext([]));
+    $this->assertInstanceOf('unittest.mock.Expectation', $this->expectationMap->get('bar')->getNext([]));
   }
 
   #[@test]
@@ -60,8 +60,8 @@ class RecordStateTest extends \unittest\TestCase {
     $expectationList= $this->expectationMap->get('foo');
 
     $this->assertInstanceOf('unittest.mock.ExpectationList', $expectationList);
-    $this->assertInstanceOf('unittest.mock.Expectation', $expectationList->getNext(array()));
-    $this->assertInstanceOf('unittest.mock.Expectation', $expectationList->getNext(array()));
+    $this->assertInstanceOf('unittest.mock.Expectation', $expectationList->getNext([]));
+    $this->assertInstanceOf('unittest.mock.Expectation', $expectationList->getNext([]));
   }
 
   #[@test]

@@ -70,7 +70,7 @@ class Type extends Object {
    * @return  lang.Type[] list
    */
   public static function forNames($names) {
-    $types= array();
+    $types= [];
     for ($args= $names.',', $o= 0, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
       if (',' === $args{$i} && 0 === $brackets) {
         $types[]= self::forName(ltrim(substr($args, $o, $i- $o)));

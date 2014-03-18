@@ -14,11 +14,11 @@ class HashSet extends \lang\Object implements Set {
     $iterate   = null;
 
   protected
-    $_elements = array(),
+    $_elements = [],
     $_hash     = 0;
 
   static function __static() {
-    self::$iterate= newinstance('Iterator', array(), '{
+    self::$iterate= newinstance('Iterator', [], '{
       private $i= 0, $v;
       public function on($v) { $self= new self(); $self->v= $v; return $self; }
       public function current() { return current($this->v); }
@@ -144,7 +144,7 @@ class HashSet extends \lang\Object implements Set {
    *
    */
   public function clear() { 
-    $this->_elements= array();
+    $this->_elements= [];
     $this->_hash= 0;
   }
 

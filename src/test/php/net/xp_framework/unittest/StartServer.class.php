@@ -20,7 +20,7 @@ class StartServer extends \lang\Object implements \unittest\TestClassAction {
    * @param string $shutdown Name of method to invoke to shut down
    * @param string[] $arguments Arguments to server process
    */
-  public function __construct($mainClass, $connected, $shutdown, $arguments= array()) {
+  public function __construct($mainClass, $connected, $shutdown, $arguments= []) {
     $this->mainClass= $mainClass;
     $this->connected= $connected;
     $this->shutdown= $shutdown;
@@ -64,7 +64,7 @@ class StartServer extends \lang\Object implements \unittest\TestClassAction {
 
     // Tell the server to shut down
     try {
-      $c->getMethod($this->shutdown)->invoke(null, array());
+      $c->getMethod($this->shutdown)->invoke(null, []);
     } catch (\lang\Throwable $ignored) {
       // Fall through, below should terminate the process anyway
     }

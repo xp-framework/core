@@ -11,7 +11,7 @@
  */
 class ParamString extends \lang\Object {
   public 
-    $list     = array(),
+    $list     = [],
     $count    = 0,
     $string   = '';
   

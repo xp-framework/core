@@ -4,48 +4,32 @@ use unittest\TestCase;
 use util\Hashmap;
 use util\Comparator;
 
-
 /**
  * Test Hashmap class
  *
- * @see      xp://util.Hashmap
- * @purpose  Unit Test
+ * @see   xp://util.Hashmap
  */
 class HashmapTest extends TestCase {
-  public
-    $map= null;
+  public $map= null;
   
   /**
    * Setup method. Creates the map member
-   *
    */
   public function setUp() {
     $this->map= new Hashmap();
   }
       
-  /**
-   * Tests the map is initially empty
-   *
-   */
   #[@test]
   public function initiallyEmpty() {
     $this->assertTrue($this->map->isEmpty());
   }
 
-  /**
-   * Tests map equals its clone
-   *
-   */
   #[@test]
   public function equalsClone() {
     $this->map->put('color', 'green');
     $this->assertTrue($this->map->equals(clone($this->map)));
   }
  
-  /**
-   * Tests map equals another map with the same contents
-   *
-   */
   #[@test]
   public function equalsOtherMapWithSameContents() {
     $other= new Hashmap();
@@ -54,10 +38,6 @@ class HashmapTest extends TestCase {
     $this->assertTrue($this->map->equals($other));
   }
 
-  /**
-   * Tests map does not equal map with different contents
-   *
-   */
   #[@test]
   public function doesNotEqualMapWithDifferentContents() {
     $other= new Hashmap();
@@ -66,10 +46,6 @@ class HashmapTest extends TestCase {
     $this->assertFalse($this->map->equals($other));
   }
  
-  /**
-   * Tests put()
-   *
-   */
   #[@test]
   public function put() {
     $this->map->put('color', 'green');
@@ -77,20 +53,12 @@ class HashmapTest extends TestCase {
     $this->assertEquals(1, $this->map->size());
   }
 
-  /**
-   * Tests get()
-   *
-   */
   #[@test]
   public function get() {
     $this->map->put('key', 'value');
     $this->assertEquals('value', $this->map->get('key'));
   }
 
-  /**
-   * Tests remove()
-   *
-   */
   #[@test]
   public function remove() {
     $this->map->put('key', 'value');
@@ -98,20 +66,12 @@ class HashmapTest extends TestCase {
     $this->assertTrue($this->map->isEmpty());
   }
 
-  /**
-   * Tests get() returns NULL if the list is empty
-   *
-   */
   #[@test]
   public function getReturnsNullOnEmptyList() {
     $this->assertTrue($this->map->isEmpty());
     $this->assertNull($this->map->get('key'));
   }
 
-  /**
-   * Tests containsKey() method
-   *
-   */
   #[@test]
   public function containsKey() {
     $this->map->put('key', 'value');
@@ -134,10 +94,6 @@ class HashmapTest extends TestCase {
     $this->assertEquals($expect, $this->map->toArray());
   }
 
-  /**
-   * Tests merge() method
-   *
-   */
   #[@test]
   public function merge() {
     $this->testMerge(
@@ -147,10 +103,6 @@ class HashmapTest extends TestCase {
     );
   }
 
-  /**
-   * Tests merge() method, using recursive behaviour.
-   *
-   */
   #[@test]
   public function mergeRecursive() {
     $this->testMerge(
@@ -160,19 +112,11 @@ class HashmapTest extends TestCase {
     );
   }
   
-  /**
-   * Tests merge() method when given anything besides an array or a Hashmap
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]    
   public function mergeWithIllegalArgument() {
     $this->map->merge(new \lang\Object());
   }
 
-  /**
-   * Tests swap() method
-   *
-   */
   #[@test]
   public function swap() {
     $this->map->put('color', 'purple');
@@ -185,10 +129,6 @@ class HashmapTest extends TestCase {
     );
   }
 
-  /**
-   * Tests swap() method
-   *
-   */
   #[@test]
   public function swapNonExistantKeys() {
     $this->map->put('color', 'purple');
@@ -198,10 +138,6 @@ class HashmapTest extends TestCase {
     $this->assertFalse($this->map->swap('non-existant-key', 'color'));
   }
 
-  /**
-   * Tests flip() method
-   *
-   */
   #[@test]
   public function flip() {
     $this->map->put('color', 'purple');
@@ -214,10 +150,6 @@ class HashmapTest extends TestCase {
     );
   }
 
-  /**
-   * Tests clear() method
-   *
-   */
   #[@test]
   public function clear() {
     $this->map->put('key', 'value');
@@ -225,10 +157,6 @@ class HashmapTest extends TestCase {
     $this->assertTrue($this->map->isEmpty());
   }
 
-  /**
-   * Tests containsValue() method
-   *
-   */
   #[@test]
   public function containsValue() {
     $this->map->put('key', 'value');
@@ -236,10 +164,6 @@ class HashmapTest extends TestCase {
     $this->assertFalse($this->map->containsValue($v= 'non-existant-value'));
   }
 
-  /**
-   * Tests values() method
-   *
-   */
   #[@test]
   public function keys() {
     $this->map->put('one', 1);
@@ -247,10 +171,6 @@ class HashmapTest extends TestCase {
     $this->assertEquals(array('one', 'two'), $this->map->keys());
   }
 
-  /**
-   * Tests values() method
-   *
-   */
   #[@test]
   public function values() {
     $this->map->put('one', 1);
@@ -258,10 +178,6 @@ class HashmapTest extends TestCase {
     $this->assertEquals(array(1, 2), $this->map->values());
   }
 
-  /**
-   * Tests filter() method
-   *
-   */
   #[@test]
   public function filter() {
     $this->map->put('one', 1);
@@ -271,11 +187,7 @@ class HashmapTest extends TestCase {
     $this->map->filter(create_function('$v', 'return 1 == $v % 2;'));
     $this->assertEquals(array('one' => 1, 'three' => 3), $this->map->toArray());
   }
- 
-  /**
-   * Tests sort() method
-   *
-   */
+
   #[@test]
   public function sort() {
     $this->map->put('two', 2);
@@ -288,10 +200,6 @@ class HashmapTest extends TestCase {
     );
   }
 
-  /**
-   * Tests rsort() method
-   *
-   */
   #[@test]
   public function rsort() {
     $this->map->put('one', 1);
@@ -304,17 +212,13 @@ class HashmapTest extends TestCase {
     );
   }
 
-  /**
-   * Tests usort() method
-   *
-   */
   #[@test]
   public function usort() {
     $this->map->put('one', 'One');
     $this->map->put('two', 'two');
     $this->map->put('eins', 'one');
 
-    $this->map->usort(newinstance('util.Comparator', array(), '{
+    $this->map->usort(newinstance('util.Comparator', [], '{
       function compare($a, $b) { 
         return strcasecmp($a, $b); 
       }
@@ -325,10 +229,6 @@ class HashmapTest extends TestCase {
     );
   }
 
-  /**
-   * Tests iteration
-   *
-   */
   #[@test]
   public function valueIteration() {
     $this->map->put('one', 1);
@@ -341,10 +241,6 @@ class HashmapTest extends TestCase {
     $this->assertEquals(4, $i);
   }    
 
-  /**
-   * Tests iteration
-   *
-   */
   #[@test]
   public function keyIteration() {
     $this->map->put(1, 'one');
@@ -356,10 +252,7 @@ class HashmapTest extends TestCase {
     }
     $this->assertEquals(4, $i);
   }    
-  
-      /**
-   * Test
-   */
+
   #[@test]
   public function containsKey_should_return_true_even_for_null_values() {
     $map= new Hashmap();

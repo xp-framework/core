@@ -69,7 +69,7 @@ class UUID extends \lang\Object {
     $time_hi_and_version          = 0,
     $clock_seq_low                = 0,
     $clock_seq_hi_and_reserved    = 0,
-    $node                         = array();
+    $node                         = [];
 
   protected
     $version                      = null;

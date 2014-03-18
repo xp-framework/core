@@ -10,10 +10,10 @@ interface PropertyAccess {
    *
    * @param   string section
    * @param   string key
-   * @param   mixed default default array()
+   * @param   mixed default default []
    * @return  string[]
    */
-  public function readArray($section, $key, $default= array());
+  public function readArray($section, $key, $default= []);
 
   /**
    * Read hash value
@@ -60,7 +60,7 @@ interface PropertyAccess {
    *
    * @param   string section
    * @param   string key
-   * @param   mixed default default array()
+   * @param   mixed default default []
    * @return  double
    */
   public function readFloat($section, $key, $default= 0.0);
@@ -69,10 +69,10 @@ interface PropertyAccess {
    * Read section
    *
    * @param   string section
-   * @param   mixed default default array()
+   * @param   mixed default default []
    * @return  [:string]
    */
-  public function readSection($section, $default= array());
+  public function readSection($section, $default= []);
 
   /**
    * Read range value
@@ -82,7 +82,7 @@ interface PropertyAccess {
    * @param   mixed default default 0.0
    * @return  int[]
    */
-  public function readRange($section, $key, $default= array());
+  public function readRange($section, $key, $default= []);
 
   /**
    * Test whether a given section exists

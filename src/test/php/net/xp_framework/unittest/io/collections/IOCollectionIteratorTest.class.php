@@ -35,7 +35,7 @@ class IOCollectionIteratorTest extends AbstractCollectionTest {
    * @return  string[] an array of the elements' URIs
    */
   protected function filterFixtureWith($filter, $recursive= false) {
-    $elements= array();
+    $elements= [];
     for (
       $it= new FilteredIOCollectionIterator($this->fixture, $filter, $recursive);
       $it->hasNext(); 
@@ -114,7 +114,7 @@ class IOCollectionIteratorTest extends AbstractCollectionTest {
   #[@test]
   public function nameEquals() {
     $this->assertEquals(
-      array(), 
+      [], 
       $this->filterFixtureWith(new NameEqualsFilter('__xp__.php'), false)
     );
   }
@@ -130,7 +130,7 @@ class IOCollectionIteratorTest extends AbstractCollectionTest {
   #[@test]
   public function extensionEquals() {
     $this->assertEquals(
-      array(), 
+      [], 
       $this->filterFixtureWith(new ExtensionEqualsFilter('.php'), false)
     );
   }

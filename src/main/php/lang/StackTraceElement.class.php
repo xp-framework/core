@@ -14,7 +14,7 @@ class StackTraceElement extends Object {
     $class    = '',
     $method   = '',
     $line     = 0,
-    $args     = array(),
+    $args     = [],
     $message  = '';
     
   /**
@@ -52,7 +52,7 @@ class StackTraceElement extends Object {
    * @return  string
    */
   public function toString() {
-    $args= array();
+    $args= [];
     if (isset($this->args)) {
       for ($j= 0, $a= sizeof($this->args); $j < $a; $j++) {
         if (is_array($this->args[$j])) {

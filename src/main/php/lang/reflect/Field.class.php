@@ -117,7 +117,7 @@ class Field extends \lang\Object {
    */
   public function getAnnotations() {
     $details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
-    return $details ? $details[DETAIL_ANNOTATIONS] : array();
+    return $details ? $details[DETAIL_ANNOTATIONS] : [];
   }
 
   /**

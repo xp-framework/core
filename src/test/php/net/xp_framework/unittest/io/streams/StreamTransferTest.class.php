@@ -19,7 +19,7 @@ class StreamTransferTest extends TestCase {
    * @return  io.streams.InputStream
    */
   protected function uncloseableInputStream() {
-    return newinstance('io.streams.InputStream', array(), '{
+    return newinstance('io.streams.InputStream', [], '{
       public function read($length= 8192) { }
       public function available() { }
       public function close() { throw new \io\IOException("Close error"); }
@@ -32,7 +32,7 @@ class StreamTransferTest extends TestCase {
    * @return  io.streams.InputStream
    */
   protected function closeableInputStream() {
-    return newinstance('io.streams.InputStream', array(), '{
+    return newinstance('io.streams.InputStream', [], '{
       public $closed= FALSE;
       public function read($length= 8192) { }
       public function available() { }
@@ -46,7 +46,7 @@ class StreamTransferTest extends TestCase {
    * @return  io.streams.OutputStream
    */
   protected function uncloseableOutputStream() {
-    return newinstance('io.streams.OutputStream', array(), '{
+    return newinstance('io.streams.OutputStream', [], '{
       public function write($data) { }
       public function flush() { }
       public function close() { throw new \io\IOException("Close error"); }
@@ -59,7 +59,7 @@ class StreamTransferTest extends TestCase {
    * @return  io.streams.OutputStream
    */
   protected function closeableOutputStream() {
-    return newinstance('io.streams.OutputStream', array(), '{
+    return newinstance('io.streams.OutputStream', [], '{
       public $closed= FALSE;
       public function write($data) { }
       public function flush() { }

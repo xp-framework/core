@@ -12,7 +12,7 @@ abstract class NSAbstractDictionary extends \lang\Object implements NSIDictionar
    *
    * @param   array<string, var> initial
    */
-  public function __construct($initial= array()) {
+  public function __construct($initial= []) {
     foreach ($initial as $key => $value) {
       $this->put($key, $value);
     }

@@ -38,8 +38,8 @@ class ExtensionInvocationTest extends TestCase {
   #[@test]
   public function throwabeExtensions() {
     $t= new \lang\Throwable('Test');
-    $this->assertNotEquals(array(), $t->getStackTrace());
+    $this->assertNotEquals([], $t->getStackTrace());
     $t->clearStackTrace();
-    $this->assertEquals(array(), $t->getStackTrace());
+    $this->assertEquals([], $t->getStackTrace());
   }
 }

@@ -23,7 +23,7 @@ class URL extends \lang\Object {
       'https'=> 443
     );
 
-  public $_info= array();
+  public $_info= [];
     
   /**
    * Constructor
@@ -212,9 +212,9 @@ class URL extends \lang\Object {
    * @return  [:var] parsed parameters
    */
   protected function parseQuery($query) {
-    if ('' === $query) return array();
+    if ('' === $query) return [];
 
-    $params= array();
+    $params= [];
     foreach (explode('&', $query) as $pair) {
       $key= $value= null;
       sscanf($pair, "%[^=]=%[^\r]", $key, $value);
@@ -224,7 +224,7 @@ class URL extends \lang\Object {
       }
       if ($start= strpos($key, '[')) {    // Array notation
         $base= substr($key, 0, $start);
-        isset($params[$base]) || $params[$base]= array();
+        isset($params[$base]) || $params[$base]= [];
         $ptr= &$params[$base];
         $offset= 0;
         do {
@@ -466,7 +466,7 @@ class URL extends \lang\Object {
       throw new \lang\FormatException('Cannot parse "'.$str.'"');
     }
     
-    $this->_info= array();
+    $this->_info= [];
     $this->_info['scheme']= $matches[1];
 
     // Credentials
@@ -501,10 +501,10 @@ class URL extends \lang\Object {
 
     // Query string and fragment
     if ('' === $matches[6] || '?' === $matches[6] || '#' === $matches[6]) {
-      $this->_info['params']= array();
+      $this->_info['params']= [];
       $this->_info['fragment']= null;
     } else if ('#' === $matches[6]{0}) {
-      $this->_info['params']= array();
+      $this->_info['params']= [];
       $this->_info['fragment']= substr($matches[6], 1);
     } else if ('?' === $matches[6]{0}) {
       $p= strcspn($matches[6], '#');
@@ -553,7 +553,7 @@ class URL extends \lang\Object {
    * @return  string
    */
   protected function decodePercentEncodedOctets($string) {
-    $unreserved = array();
+    $unreserved = [];
       
     for($octet= 65; $octet <= 90; $octet++) {
       $unreserved[]= dechex($octet);

@@ -13,7 +13,7 @@ class AnonymousInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function testMethods() {
-    $testmethods= newinstance('net.xp_framework.unittest.core.generics.ArrayFilter<Method>', array(), '{
+    $testmethods= newinstance('net.xp_framework.unittest.core.generics.ArrayFilter<Method>', [], '{
       protected function accept($e) {
         return $e->hasAnnotation("test");
       }
@@ -26,7 +26,7 @@ class AnonymousInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function classNameOfGeneric() {
-    $instance= newinstance('util.collections.Vector<Object>', array(), '{
+    $instance= newinstance('util.collections.Vector<Object>', [], '{
     }');
     $n= $instance->getClassName();
     $this->assertEquals(
@@ -38,7 +38,7 @@ class AnonymousInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function classNameOfGenericInPackage() {
-    $instance= newinstance('net.xp_framework.unittest.core.generics.ArrayFilter<Object>', array(), '{
+    $instance= newinstance('net.xp_framework.unittest.core.generics.ArrayFilter<Object>', [], '{
       protected function accept($e) { return TRUE; }
     }');
     $n= $instance->getClassName();

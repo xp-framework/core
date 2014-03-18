@@ -462,7 +462,7 @@ class TextReaderTest extends TestCase {
    */
   #[@test, @expect(class= 'io.IOException', withMessage= 'Underlying stream does not support seeking')]
   public function resetUnseekable() {
-    $r= new TextReader(newinstance('io.streams.InputStream', array(), '{
+    $r= new TextReader(newinstance('io.streams.InputStream', [], '{
       public function read($size= 8192) { return NULL; }
       public function available() { return 0; }
       public function close() { }

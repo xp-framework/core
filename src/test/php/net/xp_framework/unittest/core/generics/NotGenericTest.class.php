@@ -18,7 +18,7 @@ class NotGenericTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.IllegalStateException')]
   public function cannotCreateGenericTypeFromThis() {
-    $this->getClass()->newGenericType(array());
+    $this->getClass()->newGenericType([]);
   }
 
   #[@test, @expect('lang.IllegalStateException')]

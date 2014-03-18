@@ -5,7 +5,7 @@
  */
 #[@action(new RecordClassActionInvocation('run'))]
 class TestWithClassAction extends \unittest\TestCase {
-  public static $run= array();
+  public static $run= [];
 
   #[@test]
   public function fixture() {

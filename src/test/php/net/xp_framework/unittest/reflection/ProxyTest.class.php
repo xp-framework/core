@@ -21,8 +21,8 @@ class ProxyTest extends \unittest\TestCase {
    * Setup method 
    */
   public function setUp() {
-    $this->handler= newinstance('lang.reflect.InvocationHandler', array(), array(
-      'invocations' => array(),
+    $this->handler= newinstance('lang.reflect.InvocationHandler', [], array(
+      'invocations' => [],
       'invoke' => function($self, $proxy, $method, $args) {
         $self->invocations[$method.'_'.sizeof($args)]= $args;
       }
@@ -70,7 +70,7 @@ class ProxyTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function emptyInterfaces() {
-    Proxy::getProxyClass(ClassLoader::getDefault(), array());
+    Proxy::getProxyClass(ClassLoader::getDefault(), []);
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
@@ -141,7 +141,7 @@ class ProxyTest extends \unittest\TestCase {
   public function iteratorNextInvoked() {
     $proxy= $this->proxyInstanceFor(array($this->iteratorClass));
     $proxy->next();
-    $this->assertEquals(array(), $this->handler->invocations['next_0']);
+    $this->assertEquals([], $this->handler->invocations['next_0']);
   }
   
   #[@test, @expect('lang.IllegalArgumentException')]

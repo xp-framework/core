@@ -20,8 +20,8 @@ abstract class WebTestCase extends TestCase {
   protected
     $conn              = null,
     $response          = null,
-    $cookies           = array(),
-    $persistentHeaders = array();
+    $cookies           = [],
+    $persistentHeaders = [];
 
   private
     $dom      = null,

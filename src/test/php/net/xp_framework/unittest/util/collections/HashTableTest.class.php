@@ -230,7 +230,7 @@ class HashTableTest extends TestCase {
    * @throws unittest.AssertionFailedError
    */
   protected function assertMapIteration($expected) {
-    $actual= array('keys' => array(), 'values' => array());
+    $actual= array('keys' => [], 'values' => []);
     foreach ($this->map as $i => $pair) {
       $actual['keys'][$i]= $pair->key;
       $actual['values'][$i]= $pair->value;

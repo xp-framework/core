@@ -48,8 +48,8 @@ class TestCase extends \lang\Object {
    * @param   var[] prerequisites default []
    * @return  void
    */
-  public function skip($reason, $prerequisites= array()) {
-    throw new PrerequisitesNotMetError($reason, $prerequisites= array());
+  public function skip($reason, $prerequisites= []) {
+    throw new PrerequisitesNotMetError($reason, $prerequisites= []);
   }
 
   /**

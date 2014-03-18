@@ -92,7 +92,7 @@ class Runner extends \lang\Object {
       self::$err->writeLine(str_repeat('=', 72));
     }
 
-    $extra= $details= $positional= array();
+    $extra= $details= $positional= [];
     foreach ($class->getMethods() as $method) {
       if (!$method->hasAnnotation('arg')) continue;
 
@@ -377,7 +377,7 @@ class Runner extends \lang\Object {
           $end= $classparams->count;
           $pass= array_slice($classparams->list, 0, $end);
         } else {
-          $pass= array();
+          $pass= [];
           foreach (preg_split('/, ?/', $method->getAnnotation('args', 'select')) as $def) {
             if (is_numeric($def) || '-' == $def{0}) {
               $pass[]= $classparams->value((int)$def);
@@ -414,7 +414,7 @@ class Runner extends \lang\Object {
 
         if (0 == $method->numParameters()) {
           if (!$classparams->exists($select, $short)) continue;
-          $args= array();
+          $args= [];
         } else if (!$classparams->exists($select, $short)) {
           list($first, )= $method->getParameters();
           if (!$first->isOptional()) {
@@ -422,7 +422,7 @@ class Runner extends \lang\Object {
             return 2;
           }
 
-          $args= array();
+          $args= [];
         } else {
           $args= array($classparams->value($select, $short));
         }

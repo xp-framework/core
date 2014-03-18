@@ -96,7 +96,7 @@ class VectorTest extends TestCase {
    */
   #[@test]
   public function addAllEmptyArray() {
-    $this->assertFalse((new Vector())->addAll(array()));
+    $this->assertFalse((new Vector())->addAll([]));
   }
 
   /**
@@ -278,7 +278,7 @@ class VectorTest extends TestCase {
    */
   #[@test]
   public function elementsOfEmptyVector() {
-    $this->assertEquals(array(), (new Vector())->elements());
+    $this->assertEquals([], (new Vector())->elements());
   }
 
   /**

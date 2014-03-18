@@ -16,23 +16,23 @@ class Throwable extends \Exception implements Generic { use \__xp;
   public 
     $cause    = null,
     $message  = '',
-    $trace    = array();
+    $trace    = [];
   
   static function __static() {
   
     // Workaround for missing detail information about return types in
     // builtin classes.
     \xp::$meta['php.Exception']= array(
-      'class' => array(4 => null, array()),
-      0 => array(),
+      'class' => array(4 => null, []),
+      0 => [],
       1 => array(
-        'getMessage'       => array(1 => array(), 'string', array(), null, array()),
-        'getCode'          => array(1 => array(), 'int', array(), null, array()),
-        'getFile'          => array(1 => array(), 'string', array(), null, array()),
-        'getLine'          => array(1 => array(), 'int', array(), null, array()),
-        'getTrace'         => array(1 => array(), 'var[]', array(), null, array()),
-        'getPrevious'      => array(1 => array(), 'lang.Throwable', array(), null, array()),
-        'getTraceAsString' => array(1 => array(), 'string', array(), null, array()),
+        'getMessage'       => array(1 => [], 'string', [], null, []),
+        'getCode'          => array(1 => [], 'int', [], null, []),
+        'getFile'          => array(1 => [], 'string', [], null, []),
+        'getLine'          => array(1 => [], 'int', [], null, []),
+        'getTrace'         => array(1 => [], 'var[]', [], null, []),
+        'getPrevious'      => array(1 => [], 'lang.Throwable', [], null, []),
+        'getTraceAsString' => array(1 => [], 'string', [], null, []),
       )
     );
   }
@@ -46,7 +46,7 @@ class Throwable extends \Exception implements Generic { use \__xp;
     $this->__id= uniqid('', true);
     $this->message= is_string($message) ? $message : \xp::stringOf($message);
     $this->cause= $cause;
-    $this->trace= array();
+    $this->trace= [];
     $this->fillInStackTrace();
   }
 
@@ -81,7 +81,7 @@ class Throwable extends \Exception implements Generic { use \__xp;
 
     // Error messages
     foreach (\xp::$errors as $file => $list) {
-      $this->addStackTraceFor($file, null, null, null, array(), $list);
+      $this->addStackTraceFor($file, null, null, null, [], $list);
     }
 
     foreach (debug_backtrace() as $i => $trace) {

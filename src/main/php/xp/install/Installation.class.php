@@ -7,7 +7,7 @@ use io\Folder;
  */
 class Installation extends \lang\Object {
   protected $base;
-  protected $cl= array();
+  protected $cl= [];
   
   /**
    * Gets base folder

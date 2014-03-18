@@ -17,7 +17,7 @@ class SystemExitTest extends TestCase {
    */
   #[@beforeClass]
   public static function defineExiterClass() {
-    self::$exiterClass= \lang\ClassLoader::defineClass('net.xp_framework.unittest.core.Exiter', 'lang.Object', array(), '{
+    self::$exiterClass= \lang\ClassLoader::defineClass('net.xp_framework.unittest.core.Exiter', 'lang.Object', [], '{
       public function __construct() { throw new SystemExit(0); }
       public static function doExit() { new self(); }
     }');
@@ -25,7 +25,7 @@ class SystemExitTest extends TestCase {
 
   #[@test]
   public function noStack() {
-    $this->assertEquals(array(), (new SystemExit(0))->getStackTrace());
+    $this->assertEquals([], (new SystemExit(0))->getStackTrace());
   }
 
   #[@test]

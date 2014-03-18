@@ -238,7 +238,7 @@ class TypeTest extends TestCase {
    * @return  var[]
    */
   public function instances() {
-    return array($this, null, false, true, '', 0, 0.0, array(array()), array('one' => 'two'));
+    return array($this, null, false, true, '', 0, 0.0, array([]), array('one' => 'two'));
   }
 
   /**

@@ -26,7 +26,7 @@ use util\log\Layout;
  * @test    xp://net.xp_framework.unittest.logging.PatternLayoutTest
  */
 class PatternLayout extends Layout {
-  protected $format= array();
+  protected $format= [];
 
   /**
    * Creates a new pattern layout

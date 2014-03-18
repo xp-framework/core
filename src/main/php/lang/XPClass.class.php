@@ -151,7 +151,7 @@ class XPClass extends Type {
    * @return  lang.reflect.Method[]
    */
   public function getMethods() {
-    $list= array();
+    $list= [];
     foreach ($this->_reflect->getMethods() as $m) {
       if (0 == strncmp('__', $m->getName(), 2)) continue;
       $list[]= new Method($this->_class, $m);
@@ -165,7 +165,7 @@ class XPClass extends Type {
    * @return  lang.reflect.Method[]
    */
   public function getDeclaredMethods() {
-    $list= array();
+    $list= [];
     foreach ($this->_reflect->getMethods() as $m) {
       if (0 == strncmp('__', $m->getName(), 2) || $m->class !== $this->_reflect->name) continue;
       $list[]= new Method($this->_class, $m);
@@ -235,7 +235,7 @@ class XPClass extends Type {
    * @return  lang.reflect.Field[] array of field objects
    */
   public function getFields() {
-    $f= array();
+    $f= [];
     foreach ($this->_reflect->getProperties() as $p) {
       if ('__id' === $p->name) continue;
       $f[]= new Field($this->_class, $p);
@@ -249,7 +249,7 @@ class XPClass extends Type {
    * @return  lang.reflect.Field[] array of field objects
    */
   public function getDeclaredFields() {
-    $list= array();
+    $list= [];
     foreach ($this->_reflect->getProperties() as $p) {
       if ('__id' === $p->name || $p->class !== $this->_reflect->name) continue;
       $list[]= new Field($this->_class, $p);
@@ -419,7 +419,7 @@ class XPClass extends Type {
    * @return  lang.XPClass[]
    */
   public function getInterfaces() {
-    $r= array();
+    $r= [];
     foreach ($this->_reflect->getInterfaces() as $iface) {
       $r[]= new self($iface->getName());
     }
@@ -436,9 +436,9 @@ class XPClass extends Type {
     if ($parent= $this->_reflect->getParentclass()) {
       $ip= $parent->getInterfaces();
     } else {
-      $ip= array();
+      $ip= [];
     }
-    $filter= array();
+    $filter= [];
     foreach ($is as $iname => $i) {
 
       // Parent class implements this interface
@@ -453,7 +453,7 @@ class XPClass extends Type {
       }
     }
     
-    $r= array();
+    $r= [];
     foreach ($is as $iname => $i) {
       if (!isset($filter[$iname])) $r[]= new self($i);
     }
@@ -548,7 +548,7 @@ class XPClass extends Type {
    */
   public function getAnnotations() {
     $details= self::detailsForClass($this->name);
-    return $details ? $details['class'][DETAIL_ANNOTATIONS] : array();
+    return $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
   }
   
   /**
@@ -656,7 +656,7 @@ class XPClass extends Type {
     if (!$this->isGenericDefinition()) {
       throw new IllegalStateException('Class '.$this->name.' is not a generic definition');
     }
-    $components= array();
+    $components= [];
     foreach (explode(',', $this->getAnnotation('generic', 'self')) as $name) {
       $components[]= ltrim($name);
     }
@@ -750,7 +750,7 @@ class XPClass extends Type {
    * @return  lang.XPClass[] class objects
    */
   public static function getClasses() {
-    $ret= array();
+    $ret= [];
     foreach (get_declared_classes() as $name) {
       if (isset(\xp::$cn[$name])) $ret[]= new self($name);
     }

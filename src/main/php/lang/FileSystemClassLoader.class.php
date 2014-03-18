@@ -135,7 +135,7 @@ class FileSystemClassLoader extends AbstractClassLoader {
    * @return  lang.FileSystemClassLoader
    */
   public static function instanceFor($path, $expand= true) {
-    static $pool= array();
+    static $pool= [];
     
     $path= $expand ? realpath($path) : $path;
     if (!isset($pool[$path])) {
@@ -152,7 +152,7 @@ class FileSystemClassLoader extends AbstractClassLoader {
    * @return  string[] filenames
    */
   public function packageContents($package) {
-    $contents= array();
+    $contents= [];
     if ($d= @dir($this->path.strtr($package, '.', DIRECTORY_SEPARATOR))) {
       while ($e= $d->read()) {
         if ('.' != $e{0}) $contents[]= $e.(is_dir($d->path.DIRECTORY_SEPARATOR.$e) ? '/' : '');

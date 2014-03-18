@@ -38,13 +38,13 @@ class Method extends Routine {
    * </code>
    *
    * @param   lang.Object obj
-   * @param   var[] args default array()
+   * @param   var[] args default []
    * @return  var
    * @throws  lang.IllegalArgumentException in case the passed object is not an instance of the declaring class
    * @throws  lang.IllegalAccessException in case the method is not public or if it is abstract
    * @throws  lang.reflect.TargetInvocationException for any exception raised from the invoked method
    */
-  public function invoke($obj, $args= array()) {
+  public function invoke($obj, $args= []) {
     if (null !== $obj && !($obj instanceof $this->_class)) {
       throw new \lang\IllegalArgumentException(sprintf(
         'Passed argument is not a %s class (%s)',

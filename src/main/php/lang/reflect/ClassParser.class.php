@@ -97,7 +97,7 @@ class ClassParser extends \lang\Object {
     } else if (T_DNUMBER === $tokens[$i][0]) {
       return (double)$tokens[$i][1];
     } else if ('[' === $tokens[$i] || T_ARRAY === $tokens[$i][0]) {
-      $value= array();
+      $value= [];
       $element= null;
       $key= 0;
       $end= '[' === $tokens[$i] ? ']' : ')';
@@ -148,7 +148,7 @@ class ClassParser extends \lang\Object {
         if (T_STRING === $tokens[$i][0]) $type.= '.'.$tokens[$i][1];
       }
       $class= $this->resolve(substr($type, 1), $context, $imports);
-      for ($args= array(), $arg= null, $s= sizeof($tokens); ; $i++) {
+      for ($args= [], $arg= null, $s= sizeof($tokens); ; $i++) {
         if (')' === $tokens[$i]) {
           $arg && $args[]= $arg[0];
           break;
@@ -201,7 +201,7 @@ class ClassParser extends \lang\Object {
    * @return  [:var]
    * @throws  lang.ClassFormatException
    */
-  public function parseAnnotations($bytes, $context, $imports= array(), $line= -1) {
+  public function parseAnnotations($bytes, $context, $imports= [], $line= -1) {
     static $states= array(
       'annotation', 'annotation name', 'annotation value',
       'annotation map key', 'annotation map value',
@@ -209,7 +209,7 @@ class ClassParser extends \lang\Object {
     );
 
     $tokens= token_get_all('<?php '.trim($bytes, "[# \t\n\r"));
-    $annotations= array(0 => array(), 1 => array());
+    $annotations= array(0 => [], 1 => []);
     $place= $context.(-1 === $line ? '' : ', line '.$line);
 
     // Parse tokens
@@ -257,7 +257,7 @@ class ClassParser extends \lang\Object {
             $state= 1;
           } else if ($i + 2 < $s && ('=' === $tokens[$i + 1] || '=' === $tokens[$i + 2])) {
             $key= $tokens[$i][1];
-            $value= array();
+            $value= [];
             $state= 3;
           } else {
             $value= $this->valueOf($tokens, $i, $context, $imports);
@@ -291,9 +291,9 @@ class ClassParser extends \lang\Object {
    * @return  [:var] details
    */
   public function parseDetails($bytes, $context= '') {
-    $details= array(array(), array());
-    $annotations= array(0 => array(), 1 => array());
-    $imports= array();
+    $details= array([], []);
+    $annotations= array(0 => [], 1 => []);
+    $imports= [];
     $comment= null;
     $members= true;
     $parsed= '';
@@ -337,7 +337,7 @@ class ClassParser extends \lang\Object {
             ))),
             DETAIL_ANNOTATIONS  => $annotations[0]
           );
-          $annotations= array(0 => array(), 1 => array());
+          $annotations= array(0 => [], 1 => []);
           $comment= null;
           break;
 
@@ -351,7 +351,7 @@ class ClassParser extends \lang\Object {
           $details[0][$name]= array(
             DETAIL_ANNOTATIONS => $annotations[0]
           );
-          $annotations= array(0 => array(), 1 => array());
+          $annotations= array(0 => [], 1 => []);
           break;
 
         case T_FUNCTION:
@@ -364,9 +364,9 @@ class ClassParser extends \lang\Object {
           $i+= 2;
           $m= $tokens[$i][1];
           $details[1][$m]= array(
-            DETAIL_ARGUMENTS    => array(),
+            DETAIL_ARGUMENTS    => [],
             DETAIL_RETURNS      => null,
-            DETAIL_THROWS       => array(),
+            DETAIL_THROWS       => [],
             DETAIL_COMMENT      => trim(preg_replace('/\n\s+\* ?/', "\n", "\n".substr(
               $comment, 
               4,                              // "/**\n"
@@ -375,7 +375,7 @@ class ClassParser extends \lang\Object {
             DETAIL_ANNOTATIONS  => $annotations[0],
             DETAIL_TARGET_ANNO  => $annotations[1]
           );
-          $annotations= array(0 => array(), 1 => array());
+          $annotations= array(0 => [], 1 => []);
           $matches= null;
           preg_match_all(
             '/@([a-z]+)\s*([^<\r\n]+<[^>]+>|[^\r\n ]+) ?([^\r\n ]+)?/',

@@ -17,7 +17,7 @@ abstract class AbstractCombinedFilter extends \lang\Object implements IterationF
    *
    * @param   io.collections.iterate.IterationFilter[] list
    */
-  public function __construct($list= array()) {
+  public function __construct($list= []) {
     $this->list= $list;
     $this->_size= sizeof($list);
   }

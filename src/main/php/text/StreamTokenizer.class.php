@@ -19,7 +19,7 @@
  */
 class StreamTokenizer extends Tokenizer {
   protected
-    $_stack = array(),
+    $_stack = [],
     $_buf   = '',
     $_src   = null;
 
@@ -28,7 +28,7 @@ class StreamTokenizer extends Tokenizer {
    *
    */
   public function reset() {
-    $this->_stack= array();
+    $this->_stack= [];
     
     if ($this->_src) {
       if ($this->_src instanceof \io\streams\Seekable) {
@@ -59,7 +59,7 @@ class StreamTokenizer extends Tokenizer {
    */
   public function pushBack($str) {
     $this->_buf= $str.implode('', $this->_stack).$this->_buf;
-    $this->_stack= array();
+    $this->_stack= [];
   }
   
   /**

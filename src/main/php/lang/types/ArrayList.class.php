@@ -10,7 +10,7 @@
  */
 class ArrayList extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
   public
-    $values   = array(),
+    $values   = [],
     $length   = 0;
 
   /**

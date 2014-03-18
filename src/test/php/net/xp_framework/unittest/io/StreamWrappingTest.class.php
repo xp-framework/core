@@ -209,7 +209,7 @@ class StreamWrappingTest extends TestCase {
    */
   #[@test, @expect('io.IOException')]
   public function readAllWithException() {
-    Streams::readAll(newinstance('io.streams.InputStream', array(), '{
+    Streams::readAll(newinstance('io.streams.InputStream', [], '{
       public function read($limit= 8192) { throw new \io\IOException("FAIL"); }
       public function available() { return 1; }
       public function close() { }
@@ -223,7 +223,7 @@ class StreamWrappingTest extends TestCase {
   #[@test]
   public function whileNotEof() {
     $fd= Streams::readableFd(new MemoryInputStream(str_repeat('x', 1024)));
-    $l= array();
+    $l= [];
     while (!feof($fd)) {
       $c= fread($fd, 128);
       $l[]= strlen($c);

@@ -32,7 +32,7 @@ class ObjectsTest extends TestCase {
    */
   public function arrays() {
     return array(
-      array(array()), array(array(1, 2, 3)), array(array(null, null)),
+      array([]), array(array(1, 2, 3)), array(array(null, null)),
       array(array(array('Nested'), array('Array')))
     );
   }

@@ -10,7 +10,7 @@ class ReferencesTest extends \unittest\TestCase {
   static function __static() {
     
     // For singletonInstance test
-    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousSingleton', 'lang.Object', array(), '{
+    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousSingleton', 'lang.Object', [], '{
       protected static $instance= NULL;
 
       static function getInstance() {
@@ -20,17 +20,17 @@ class ReferencesTest extends \unittest\TestCase {
     }');
 
     // For returnNewObject and returnNewObjectViaReflection tests
-    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousList', 'lang.Object', array(), '{
+    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousList', 'lang.Object', [], '{
       public function __construct() {
         \net\xp_framework\unittest\core\ReferencesTest::registry("list", $this);
       }
     }');
-    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousFactory', 'lang.Object', array(), '{
+    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousFactory', 'lang.Object', [], '{
       static function factory() {
         return new AnonymousList();
       }
     }');
-    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousNewInstanceFactory', 'lang.Object', array(), '{
+    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousNewInstanceFactory', 'lang.Object', [], '{
       static function factory() {
         return \lang\XPClass::forName("net.xp_framework.unittest.core.AnonymousList")->newInstance();
       }
@@ -66,7 +66,7 @@ class ReferencesTest extends \unittest\TestCase {
    * @return  &mixed
    */
   public static function registry($key, $val) {
-    static $registry= array();
+    static $registry= [];
     
     if (NULL !== $val) $registry[$key]= $val;
     return $registry[$key];

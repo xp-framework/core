@@ -36,7 +36,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
 
   #[@test]
   public function selfUsage() {
-    $return= $this->runner->run(array());
+    $return= $this->runner->run([]);
     $this->assertEquals(1, $return);
     $this->assertOnStream($this->err, 'Usage:');
     $this->assertEquals('', $this->out->getBytes());
@@ -239,21 +239,21 @@ class UnittestRunnerTest extends \unittest\TestCase {
 
   #[@test]
   public function withListener() {
-    $class= \lang\ClassLoader::getDefault()->defineClass('net.xp_framework.unittest.tests.WithListenerTestFixture', 'xp.unittest.DefaultListener', array(), '{
-      public static $options= array();
+    $class= \lang\ClassLoader::getDefault()->defineClass('net.xp_framework.unittest.tests.WithListenerTestFixture', 'xp.unittest.DefaultListener', [], '{
+      public static $options= [];
     }');
 
     $return= $this->runner->run(array('-l', $class->getName(), '-'));
     $this->assertEquals(
-      array(), 
+      [], 
       $class->getField('options')->get(null)
     );
   }
 
   #[@test]
   public function withListenerOptions() {
-    $class= \lang\ClassLoader::getDefault()->defineClass('net.xp_framework.unittest.tests.WithListenerOptionsTestFixture', 'xp.unittest.DefaultListener', array(), '{
-      public static $options= array();
+    $class= \lang\ClassLoader::getDefault()->defineClass('net.xp_framework.unittest.tests.WithListenerOptionsTestFixture', 'xp.unittest.DefaultListener', [], '{
+      public static $options= [];
       #[@arg]
       public function setOption($value) { self::$options[__FUNCTION__]= $value; }
       #[@arg]
@@ -269,8 +269,8 @@ class UnittestRunnerTest extends \unittest\TestCase {
 
   #[@test]
   public function withLongListenerOption() {
-    $class= \lang\ClassLoader::getDefault()->defineClass('net.xp_framework.unittest.tests.WithLongListenerOptionTestFixture', 'xp.unittest.DefaultListener', array(), '{
-      public static $options= array();
+    $class= \lang\ClassLoader::getDefault()->defineClass('net.xp_framework.unittest.tests.WithLongListenerOptionTestFixture', 'xp.unittest.DefaultListener', [], '{
+      public static $options= [];
       #[@arg]
       public function setOption($value) { self::$options[__FUNCTION__]= $value; }
     }');
@@ -284,8 +284,8 @@ class UnittestRunnerTest extends \unittest\TestCase {
 
   #[@test]
   public function withNamedLongListenerOption() {
-    $class= \lang\ClassLoader::getDefault()->defineClass('net.xp_framework.unittest.tests.WithNamedLongListenerOptionTestFixture', 'xp.unittest.DefaultListener', array(), '{
-      public static $options= array();
+    $class= \lang\ClassLoader::getDefault()->defineClass('net.xp_framework.unittest.tests.WithNamedLongListenerOptionTestFixture', 'xp.unittest.DefaultListener', [], '{
+      public static $options= [];
       #[@arg(name = "use")]
       public function setOption($value) { self::$options[__FUNCTION__]= $value; }
     }');
@@ -299,8 +299,8 @@ class UnittestRunnerTest extends \unittest\TestCase {
 
   #[@test]
   public function withNamedLongListenerOptionShort() {
-    $class= \lang\ClassLoader::getDefault()->defineClass('net.xp_framework.unittest.tests.WithNamedLongListenerOptionShortTestFixture', 'xp.unittest.DefaultListener', array(), '{
-      public static $options= array();
+    $class= \lang\ClassLoader::getDefault()->defineClass('net.xp_framework.unittest.tests.WithNamedLongListenerOptionShortTestFixture', 'xp.unittest.DefaultListener', [], '{
+      public static $options= [];
       #[@arg(name = "use")]
       public function setOption($value) { self::$options[__FUNCTION__]= $value; }
     }');
@@ -314,8 +314,8 @@ class UnittestRunnerTest extends \unittest\TestCase {
 
   #[@test]
   public function withShortListenerOption() {
-    $class= \lang\ClassLoader::getDefault()->defineClass('net.xp_framework.unittest.tests.WithShortListenerOptionTestFixture', 'xp.unittest.DefaultListener', array(), '{
-      public static $options= array();
+    $class= \lang\ClassLoader::getDefault()->defineClass('net.xp_framework.unittest.tests.WithShortListenerOptionTestFixture', 'xp.unittest.DefaultListener', [], '{
+      public static $options= [];
       #[@arg]
       public function setOption($value) { self::$options[__FUNCTION__]= $value; }
     }');
@@ -329,8 +329,8 @@ class UnittestRunnerTest extends \unittest\TestCase {
 
   #[@test]
   public function withNamedShortListenerOption() {
-    $class= \lang\ClassLoader::getDefault()->defineClass('net.xp_framework.unittest.tests.WithNamedShortListenerOptionTestFixture', 'xp.unittest.DefaultListener', array(), '{
-      public static $options= array();
+    $class= \lang\ClassLoader::getDefault()->defineClass('net.xp_framework.unittest.tests.WithNamedShortListenerOptionTestFixture', 'xp.unittest.DefaultListener', [], '{
+      public static $options= [];
       #[@arg(short = "O")]
       public function setOption($value) { self::$options[__FUNCTION__]= $value; }
     }');
@@ -344,8 +344,8 @@ class UnittestRunnerTest extends \unittest\TestCase {
 
   #[@test]
   public function withPositionalOptionListenerOption() {
-    $class= \lang\ClassLoader::getDefault()->defineClass('net.xp_framework.unittest.tests.WithPositionalOptionTestFixture', 'xp.unittest.DefaultListener', array(), '{
-      public static $options= array();
+    $class= \lang\ClassLoader::getDefault()->defineClass('net.xp_framework.unittest.tests.WithPositionalOptionTestFixture', 'xp.unittest.DefaultListener', [], '{
+      public static $options= [];
       #[@arg(position= 0)]
       public function setOption($value) { self::$options[__FUNCTION__]= $value; }
     }');

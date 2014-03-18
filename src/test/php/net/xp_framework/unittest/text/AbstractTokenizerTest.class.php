@@ -93,7 +93,7 @@ abstract class AbstractTokenizerTest extends TestCase {
    */
   #[@test]
   public function forIteration() {
-    $r= array();
+    $r= [];
     for ($t= $this->tokenizerInstance('A B C', ' '); $t->hasMoreTokens(); ) {
       $r[]= $t->nextToken();
     }
@@ -106,7 +106,7 @@ abstract class AbstractTokenizerTest extends TestCase {
    */
   #[@test]
   public function whileIteration() {
-    $r= array();
+    $r= [];
     $t= $this->tokenizerInstance('A B C', ' ');
     while ($t->hasMoreTokens()) {
       $r[]= $t->nextToken();
@@ -120,7 +120,7 @@ abstract class AbstractTokenizerTest extends TestCase {
    */
   #[@test]
   public function foreachIteration() {
-    $r= array();
+    $r= [];
     foreach ($this->tokenizerInstance('A B C', ' ') as $token) {
       $r[]= $token;
     }
@@ -194,7 +194,7 @@ abstract class AbstractTokenizerTest extends TestCase {
    */
   protected function allTokens($input, $delim) {
     $t= $this->tokenizerInstance($input, $delim, true);
-    $tokens= array();
+    $tokens= [];
     while ($t->hasMoreTokens()) {
       $token= $t->nextToken();
       if ('/' === $token) {

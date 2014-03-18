@@ -15,7 +15,7 @@ class LRUBuffer extends \lang\Object {
   protected
     $prefix    = 0,
     $size      = 0,
-    $_elements = array();
+    $_elements = [];
 
   /**
    * Constructor

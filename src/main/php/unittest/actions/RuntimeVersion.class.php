@@ -7,7 +7,7 @@
  * @see  http://getcomposer.org/doc/01-basic-usage.md#package-versions
  */
 class RuntimeVersion extends \lang\Object implements \unittest\TestAction {
-  protected $compare= array();
+  protected $compare= [];
 
   /**
    * Create a new RuntimeVersion match

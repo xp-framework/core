@@ -37,7 +37,7 @@ class Semaphore extends \lang\Object {
    * @throws  io.IOException
    */
   public static function get($key, $maxAquire= 1, $permissions= 0666) {
-    static $semaphores= array();
+    static $semaphores= [];
     
     if (!isset($semaphores[$key])) {
       $s= new self();

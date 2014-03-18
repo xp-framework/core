@@ -37,7 +37,7 @@ class SelectField extends Field {
    * @return  unittest.web.SelectOption[]
    */
   public function getOptions() {
-    $r= array();
+    $r= [];
     foreach ($this->node->childNodes as $child) {
       if ('option' != $child->tagName) continue;
       $r[]= new SelectOption($this->form, $child);
@@ -51,7 +51,7 @@ class SelectField extends Field {
    * @return  unittest.web.SelectOption[]
    */
   public function getSelectedOptions() {
-    $r= array();
+    $r= [];
     foreach ($this->node->childNodes as $child) {
       if ('option' != $child->tagName || !$child->hasAttribute('selected')) continue;
       $r[]= new SelectOption($this->form, $child);

@@ -17,7 +17,7 @@ class ObservableTest extends TestCase {
    */
   #[@beforeClass]
   public static function defineObservable() {
-    self::$observable= \lang\ClassLoader::defineClass('net.xp_framework.unittest.util.ObservableFixture', 'util.Observable', array(), '{
+    self::$observable= \lang\ClassLoader::defineClass('net.xp_framework.unittest.util.ObservableFixture', 'util.Observable', [], '{
       private $value= 0;
 
       public function setValue($value) {
@@ -67,7 +67,7 @@ class ObservableTest extends TestCase {
    */
   #[@test]
   public function add_observer_returns_added_observer() {
-    $observer= newinstance('util.Observer', array(), array(
+    $observer= newinstance('util.Observer', [], array(
       'update' => function($self, $obs, $arg= null) {
         /* Intentionally empty */
       }
@@ -81,8 +81,8 @@ class ObservableTest extends TestCase {
    */
   #[@test]
   public function observer_gets_called_with_observable() {
-    $observer= newinstance('util.Observer', array(), array(
-      'calls' => array(),
+    $observer= newinstance('util.Observer', [], array(
+      'calls' => [],
       'update' => function($self, $obs, $arg= null) {
         $self->calls[]= array($obs, $arg);
       }

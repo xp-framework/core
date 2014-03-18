@@ -42,7 +42,7 @@ class InfoAction extends Action {
    * @return var[]
    */
   protected function installedReleases($cwd, $module) {
-    $releases= array();
+    $releases= [];
     $vendor= $cwd->getCollection($module->vendor);
     $find= new NameMatchesFilter('/^'.$module->name.'@.+/');
     foreach (new FilteredIOCollectionIterator($vendor, $find) as $installed) {

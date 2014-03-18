@@ -64,7 +64,7 @@ class ExceptionsTest extends TestCase {
     $this->assertEquals($this->getName(), $trace[0]->method);
     $this->assertEquals(NULL, $trace[0]->file);
     $this->assertEquals(0, $trace[0]->line);
-    $this->assertEquals(array(), $trace[0]->args);
+    $this->assertEquals([], $trace[0]->args);
     $this->assertEquals('', $trace[0]->message);
   }
 

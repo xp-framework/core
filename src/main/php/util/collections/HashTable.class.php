@@ -18,11 +18,11 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
     $iterate   = null;
 
   protected
-    $_buckets  = array(),
+    $_buckets  = [],
     $_hash     = 0;
 
   static function __static() {
-    self::$iterate= newinstance('Iterator', array(), '{
+    self::$iterate= newinstance('Iterator', [], '{
       private $i= 0, $v, $b;
       public function on($v) { $self= new self(); $self->v= $v; return $self; }
       public function current() { return new \util\collections\Pair($this->b[0], $this->b[1]); }
@@ -152,7 +152,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    *
    */
   public function clear() {
-    $this->_buckets= array();
+    $this->_buckets= [];
     $this->_hash= 0;
   }
 
@@ -236,7 +236,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    */
   #[@generic(return= 'K[]')]
   public function keys() {
-    $keys= array();
+    $keys= [];
     foreach (array_keys($this->_buckets) as $key) {
       $keys[]= $this->_buckets[$key][0];
     }
@@ -250,7 +250,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    */
   #[@generic(return= 'V[]')]
   public function values() {
-    $values= array();
+    $values= [];
     foreach (array_keys($this->_buckets) as $key) {
       $values[]= $this->_buckets[$key][1];
     }

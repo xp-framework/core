@@ -14,7 +14,7 @@ class BSDSocket extends Socket {
     $domain   = AF_INET,
     $type     = SOCK_STREAM,
     $protocol = SOL_TCP,
-    $options  = array();
+    $options  = [];
   
   protected 
     $rq       = '';

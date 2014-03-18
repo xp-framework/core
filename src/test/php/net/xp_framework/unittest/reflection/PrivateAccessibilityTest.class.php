@@ -28,7 +28,7 @@ class PrivateAccessibilityTest extends TestCase {
 
   #[@test, @expect('lang.IllegalAccessException')]
   public function invokingPrivateConstructor() {
-    self::$fixture->getConstructor()->newInstance(array());
+    self::$fixture->getConstructor()->newInstance([]);
   }
 
   #[@test]
@@ -51,7 +51,7 @@ class PrivateAccessibilityTest extends TestCase {
     $this->assertInstanceOf(self::$fixture, self::$fixture
       ->getConstructor()
       ->setAccessible(true)
-      ->newInstance(array())
+      ->newInstance([])
     );
   }
 

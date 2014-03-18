@@ -25,7 +25,7 @@ class IFormat extends \lang\Object {
    * @return  text.format.Format
    */
   public function getInstance($name) {
-    static $instance= array();
+    static $instance= [];
     
     if (!isset($instance[$name])) $instance[$name]= new $name();
     return $instance[$name];

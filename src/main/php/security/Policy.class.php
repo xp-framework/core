@@ -27,7 +27,7 @@ define('PF_ST_EREFLECT', 0x1004);
  */
 class Policy extends \lang\Object {
   public
-    $permissions  = array();
+    $permissions  = [];
     
   /**
    * Add a permission
@@ -181,7 +181,7 @@ class Policy extends \lang\Object {
             }
             
             // Parse actions
-            $actions= array();
+            $actions= [];
             while ($t= strtok(', ";')) $actions[]= $t;
             
             // Add permission

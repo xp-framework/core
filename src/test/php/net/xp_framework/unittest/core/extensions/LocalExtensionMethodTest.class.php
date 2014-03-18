@@ -21,7 +21,7 @@ class LocalExtensionMethodTest extends TestCase {
    */
   public static function methodsAnnotatedWith(\lang\XPClass $self, $annotation) {
     $name= substr($annotation, 1);
-    $r= array();
+    $r= [];
     foreach ($self->getMethods() as $method) {
       if ($method->hasAnnotation($name)) $r[]= $method;
     }

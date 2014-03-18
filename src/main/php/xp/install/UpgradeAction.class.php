@@ -53,7 +53,7 @@ class UpgradeAction extends Action {
   protected function installedReleasesOf($cwd, $module) {
     $find= new NameMatchesFilter('/^'.$module->name.'@.+/');
     $base= new FileCollection(new Folder($cwd, $module->vendor));
-    $releases= array();
+    $releases= [];
     foreach (new FilteredIOCollectionIterator($base, $find) as $installed) {
       sscanf(basename($installed->getURI()), '%[^@]@%[^/\\]', $name, $version);
       $releases[$version]= $installed;

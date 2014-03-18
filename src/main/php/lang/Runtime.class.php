@@ -268,7 +268,7 @@ class Runtime extends Object {
     RuntimeOptions $options= null, 
     $bootstrap= 'class', 
     $class= null, 
-    $arguments= array(), 
+    $arguments= [], 
     $cwd= null, 
     $env= null
   ) {
@@ -295,8 +295,8 @@ class Runtime extends Object {
     }
     $cmdline= array_merge(
       $options->withSetting('include_path', $include)->asArguments(),
-      $bootstrap ? array($this->bootstrapScript($bootstrap)) : array(),
-      $class ? array($class) : array()
+      $bootstrap ? array($this->bootstrapScript($bootstrap)) : [],
+      $class ? array($class) : []
     );
     
     // Pass XP_CMDLINE via environment - part 2 of workaround from above,

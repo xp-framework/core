@@ -41,7 +41,7 @@ class Archive extends \lang\Object {
     $version  = 2;
   
   public
-    $_index  = array();
+    $_index  = [];
       
   /**
    * Constructor

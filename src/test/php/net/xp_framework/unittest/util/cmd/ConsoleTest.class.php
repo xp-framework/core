@@ -14,8 +14,8 @@ use unittest\TestCase;
  */
 class ConsoleTest extends TestCase {
   protected
-    $original = array(),
-    $streams  = array();
+    $original = [],
+    $streams  = [];
 
   /**
    * Sets up test case. Redirects console standard output/error streams
@@ -207,7 +207,7 @@ class ConsoleTest extends TestCase {
    */
   #[@test]
   public function writeObject() {
-    Console::write(newinstance('lang.Object', array(), '{
+    Console::write(newinstance('lang.Object', [], '{
       public function toString() { return "Hello"; }
     }'));
     $this->assertEquals('Hello', $this->streams[1]->getBytes());
@@ -220,7 +220,7 @@ class ConsoleTest extends TestCase {
   #[@test]
   public function exceptionFromToString() {
     try {
-      Console::write(newinstance('lang.Object', array(), '{
+      Console::write(newinstance('lang.Object', [], '{
         public function toString() { throw new IllegalStateException("Cannot render string"); }
       }'));
       $this->fail('Expected exception not thrown', null, 'lang.IllegalStateException');

@@ -85,7 +85,7 @@ class RuntimeOptionsTest extends TestCase {
   #[@test]
   public function getClassPath() {
     $options= new RuntimeOptions();
-    $this->assertEquals(array(), $options->getClassPath());
+    $this->assertEquals([], $options->getClassPath());
   }
 
   #[@test]
@@ -105,7 +105,7 @@ class RuntimeOptionsTest extends TestCase {
   #[@test]
   public function argumentsOnEmptyOptions() {
     $options= new RuntimeOptions();
-    $this->assertEquals(array(), $options->asArguments());
+    $this->assertEquals([], $options->asArguments());
   }
 
   #[@test]
@@ -135,8 +135,8 @@ class RuntimeOptionsTest extends TestCase {
   #[@test]
   public function argumentsWithEmptyMultiSetting() {
     $options= new RuntimeOptions(); 
-    $options->withSetting('extension', array());
-    $this->assertEquals(array(), $options->asArguments());
+    $options->withSetting('extension', []);
+    $this->assertEquals([], $options->asArguments());
   }
 
   #[@test]
@@ -157,6 +157,6 @@ class RuntimeOptionsTest extends TestCase {
   public function classPathDoesntAppearInArguments() {
     $options= new RuntimeOptions(); 
     $options->withClassPath('/opt/xp/lib/mysql-1.0.0.xar');
-    $this->assertEquals(array(), $options->asArguments());
+    $this->assertEquals([], $options->asArguments());
   }
 }

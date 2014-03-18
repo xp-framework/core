@@ -173,7 +173,7 @@ class ArchiveClassLoader extends AbstractClassLoader {
    * @return  lang.archive.ArchiveClassLoader
    */
   public static function instanceFor($path, $expand= true) {
-    static $pool= array();
+    static $pool= [];
     
     $path= $expand && 0 !== strncmp('xar://', urldecode($path), 6) ? realpath($path) : $path;
     if (!isset($pool[$path])) {
@@ -190,7 +190,7 @@ class ArchiveClassLoader extends AbstractClassLoader {
    * @return  string[] filenames
    */
   public function packageContents($package) {
-    $contents= array();
+    $contents= [];
     $acquired= \xarloader::acquire(urldecode(substr($this->archive, 6, -1)));
     $cmps= strtr($package, '.', '/');
     $cmpl= strlen($cmps);

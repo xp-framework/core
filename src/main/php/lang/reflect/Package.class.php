@@ -76,7 +76,7 @@ class Package extends \lang\Object {
    * @return  string[]
    */
   public function getClassNames() { 
-    $classes= array();
+    $classes= [];
     foreach (\lang\ClassLoader::getDefault()->packageContents($this->name) as $file) {
       if (\xp::CLASS_FILE_EXT == substr($file, -10)) $classes[]= ltrim($this->name.'.'.substr($file, 0, -10), '.');
     }
@@ -119,7 +119,7 @@ class Package extends \lang\Object {
    * @return  string[]
    */
   public function getPackageNames() { 
-    $packages= array();
+    $packages= [];
     foreach (\lang\ClassLoader::getDefault()->packageContents($this->name) as $file) {
       if ('/' == substr($file, -1)) $packages[]= ltrim($this->name.'.'.substr($file, 0, -1), '.');
     }
@@ -132,7 +132,7 @@ class Package extends \lang\Object {
    * @return  string[]
    */
   public function getResources() {
-    $resources= array();
+    $resources= [];
     foreach (\lang\ClassLoader::getDefault()->packageContents($this->name) as $file) {
       if ('/' == substr($file, -1) || \xp::CLASS_FILE_EXT == substr($file, -10)) continue;
       $resources[]= strtr($this->name, '.', '/').'/'.$file;
@@ -231,7 +231,7 @@ class Package extends \lang\Object {
       if (!$cl->providesResource($info)) return null;
 
       $tokens= token_get_all($cl->getResource($info));
-      $details= array();
+      $details= [];
       $comment= null;
       for ($i= 0, $s= sizeof($tokens); $i < $s; $i++) {
         switch ($tokens[$i][0]) {

@@ -51,7 +51,7 @@ class TestingServer extends \lang\Object {
    * @param   string[] args
    */
   public static function main(array $args) {
-    $protocol= newinstance('peer.server.ServerProtocol', array(), '{
+    $protocol= newinstance('peer.server.ServerProtocol', [], '{
       public function initialize() { }
       public function handleDisconnect($socket) { }
       public function handleError($socket, $e) { }

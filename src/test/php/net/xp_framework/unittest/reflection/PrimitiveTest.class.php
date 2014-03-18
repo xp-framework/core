@@ -147,7 +147,7 @@ class PrimitiveTest extends TestCase {
       array(''), array('Hello'),
       array(0), array(-1),
       array(0.0), array(-1.5),
-      array(array()),
+      array([]),
       array(array('one' => 'two'))
     );
     return array_filter($values, function($value) use ($except) {

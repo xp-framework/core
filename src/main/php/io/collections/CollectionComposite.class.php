@@ -24,7 +24,7 @@
  */
 class CollectionComposite extends \lang\Object {
   public
-    $collections = array();
+    $collections = [];
   
   protected
     $_current    = 0;

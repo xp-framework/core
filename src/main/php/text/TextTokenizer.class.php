@@ -20,7 +20,7 @@ use io\streams\Reader;
  */
 class TextTokenizer extends Tokenizer {
   protected
-    $_stack = array(),
+    $_stack = [],
     $_buf   = '';
 
   /**
@@ -36,7 +36,7 @@ class TextTokenizer extends Tokenizer {
       }
     } 
 
-    $this->_stack= array();
+    $this->_stack= [];
     $this->_buf= '';
   }
   
@@ -56,7 +56,7 @@ class TextTokenizer extends Tokenizer {
    */
   public function pushBack($str) {
     $this->_buf= $str.implode('', $this->_stack).$this->_buf;
-    $this->_stack= array();
+    $this->_stack= [];
   }
   
   /**

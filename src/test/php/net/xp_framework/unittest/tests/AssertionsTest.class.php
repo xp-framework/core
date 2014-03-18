@@ -50,12 +50,12 @@ class AssertionsTest extends \unittest\TestCase {
 
   #[@test, @expect('unittest.AssertionFailedError')]
   public function emptyArrayIsNotNull() {
-    $this->assertNull(array());
+    $this->assertNull([]);
   }
 
   #[@test]
   public function equalsMethodIsInvoked() {
-    $instance= newinstance('lang.Object', array(), '{
+    $instance= newinstance('lang.Object', [], '{
       public $equalsInvoked= 0;
 
       public function equals($other) {
@@ -80,18 +80,18 @@ class AssertionsTest extends \unittest\TestCase {
   }    
 
   #[@test, @values(array(
-  #  array(array()),
+  #  array([]),
   #  array(array(1, 2, 3)),
-  #  array(array(array(1), array(), array(-1, 4), array(new String('baz'))))
+  #  array(array(array(1), [], array(-1, 4), array(new String('baz'))))
   #))]
   public function arraysAreEqual($array) {
     $this->assertEquals($array, $array);
   }    
 
   #[@test, @values(array(
-  #  array(array()),
+  #  array([]),
   #  array(array('foo' => 2)),
-  #  array(array(array('bar' => 'baz'), array(), array('bool' => TRUE, 'bar' => new String('baz'))))
+  #  array(array(array('bar' => 'baz'), [], array('bool' => TRUE, 'bar' => new String('baz'))))
   #))]
   public function hashesAreEqual($hash) {
     $this->assertEquals($hash, $hash);
@@ -113,19 +113,19 @@ class AssertionsTest extends \unittest\TestCase {
     $this->assertEquals(false, null);
   }    
 
-  #[@test, @values(array(-1, 1.0, NULL, FALSE, TRUE, '', array(array()), new String('1')))]
+  #[@test, @values(array(-1, 1.0, NULL, FALSE, TRUE, '', array([]), new String('1')))]
   public function integersAreNotEqual($cmp) {
     $this->assertNotEquals(1, $cmp);
   }    
 
-  #[@test, @values(array(-1, 1.0, NULL, FALSE, TRUE, 1, array(array()), new String('1')))]
+  #[@test, @values(array(-1, 1.0, NULL, FALSE, TRUE, 1, array([]), new String('1')))]
   public function stringsAreNotEqual($cmp) {
     $this->assertNotEquals('', $cmp);
   }
 
   #[@test, @values(array(-1, 1.0, NULL, FALSE, TRUE, 1, array(1), new String('1')))]
   public function arraysAreNotEqual($cmp) {
-    $this->assertNotEquals(array(), $cmp);
+    $this->assertNotEquals([], $cmp);
   }    
 
   #[@test, @expect('unittest.AssertionFailedError')]
@@ -210,7 +210,7 @@ class AssertionsTest extends \unittest\TestCase {
 
   #[@test]
   public function emptyArrayIsInstanceOfArray() {
-    $this->assertInstanceOf('array', array());
+    $this->assertInstanceOf('array', []);
   }
 
   #[@test]

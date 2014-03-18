@@ -9,16 +9,16 @@ define('PREREQUISITE_INITFAILED',     'initialization.failed');
  * @purpose  Exception
  */
 class PrerequisitesNotMetError extends \lang\XPException {
-  public $prerequisites= array();
+  public $prerequisites= [];
     
   /**
    * Constructor
    *
    * @param   string message
    * @param   lang.Throwable cause 
-   * @param   array prerequisites default array()
+   * @param   array prerequisites default []
    */
-  public function __construct($message, $cause= null, $prerequisites= array()) {
+  public function __construct($message, $cause= null, $prerequisites= []) {
     parent::__construct($message, $cause);
     $this->prerequisites= (array)$prerequisites;
   }

@@ -148,7 +148,7 @@ class QuotedPrintableInputStreamTest extends TestCase {
       }
       
       public function close() {
-        $this->chunks= array();
+        $this->chunks= [];
       }
     }'));
     $chunk= $stream->read(strlen($expected));

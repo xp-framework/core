@@ -12,7 +12,7 @@ use io\collections\IOCollection;
  */
 abstract class AbstractCollectionTest extends \unittest\TestCase {
   protected $fixture = null;
-  protected $sizes   = array();
+  protected $sizes   = [];
   protected $total   = 0;
 
   /**
@@ -48,7 +48,7 @@ abstract class AbstractCollectionTest extends \unittest\TestCase {
    * @param   io.collections.IOElement[] $elements
    * @return  io.collections.IOCollection
    */
-  protected function newCollection($name, $elements= array()) {
+  protected function newCollection($name, $elements= []) {
     $c= new MockCollection($name);
     foreach ($elements as $element) {
       $c->addElement($element);

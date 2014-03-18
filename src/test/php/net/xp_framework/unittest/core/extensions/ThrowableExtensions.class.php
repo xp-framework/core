@@ -18,6 +18,6 @@ class ThrowableExtensions extends \lang\Object {
    * @param   lang.Throwable self
    */
   public static function clearStackTrace(\lang\Throwable $self) {
-    $self->trace= array();
+    $self->trace= [];
   }
 }

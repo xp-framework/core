@@ -33,7 +33,7 @@ class ArraysTest extends TestCase {
   }
 
   #[@test]
-  public function emptyArray() {
+  public function empty_array() {
     $this->assertEquals(\lang\types\ArrayList::newInstance(0), Arrays::$EMPTY);
   }
 
@@ -47,7 +47,7 @@ class ArraysTest extends TestCase {
   #[@test]
   public function sortWithComparator() {
     $a= new \lang\types\ArrayList(new Integer(2), new Integer(4), new Integer(3));
-    Arrays::sort($a, newinstance('util.Comparator', array(), '{
+    Arrays::sort($a, newinstance('util.Comparator', [], '{
       public function compare($a, $b) {
         return $a->value - $b->value;
       }

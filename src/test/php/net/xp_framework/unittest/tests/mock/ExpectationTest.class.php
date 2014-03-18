@@ -149,7 +149,7 @@ class ExpectationTest extends \unittest\TestCase {
    */
   #[@test]
   public function cancall_doesMatchArgs() {
-    $this->sut->doesMatchArgs(array());
+    $this->sut->doesMatchArgs([]);
   }
 
   /**
@@ -160,7 +160,7 @@ class ExpectationTest extends \unittest\TestCase {
   public function argument_count_should_be_considered_when_matching_args() {
     $this->sut->setArguments(array(1, 2));
     $this->assertTrue($this->sut->doesMatchArgs(array(1, 2)));
-    $this->assertFalse($this->sut->doesMatchArgs(array()));
+    $this->assertFalse($this->sut->doesMatchArgs([]));
     $this->assertFalse($this->sut->doesMatchArgs(array(1)));
     $this->assertFalse($this->sut->doesMatchArgs(array(1, 2, 3)));
   }

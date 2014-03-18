@@ -39,7 +39,7 @@ use lang\archive\ArchiveClassLoader;
  */
 final class ClassLoader extends Object implements IClassLoader {
   protected static
-    $delegates  = array();
+    $delegates  = [];
 
   static function __static() {
     \xp::$loader= new self();
@@ -156,7 +156,7 @@ final class ClassLoader extends Object implements IClassLoader {
 
       // Load parent class and implemented interfaces
       $super= self::classOf($parent)->literal();
-      $if= array();
+      $if= [];
       foreach ((array)$interfaces as $interface) {
         $if[]= self::classOf($interface)->literal();
       }
@@ -192,7 +192,7 @@ final class ClassLoader extends Object implements IClassLoader {
     if (!isset(\xp::$cl[$class])) {
 
       // Load parent class and implemented interfaces
-      $if= array();
+      $if= [];
       foreach ((array)$parents as $interface) {
         $if[]= self::classOf($interface)->literal();
       }
@@ -403,7 +403,7 @@ final class ClassLoader extends Object implements IClassLoader {
    * @return  string[] filenames
    */
   public function packageContents($package) {
-    $contents= array();
+    $contents= [];
     foreach (self::$delegates as $delegate) {
       $contents= array_merge($contents, $delegate->packageContents($package));
     }

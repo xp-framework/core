@@ -56,7 +56,7 @@ class ArrayListTest extends TestCase {
   #[@test]
   public function inner_iteration() {
     $a= new ArrayList(1, 2, 3);
-    $r= array();
+    $r= [];
     foreach ($a as $vo) {
       foreach ($a as $vi) {
         $r[]= $vi;

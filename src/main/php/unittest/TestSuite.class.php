@@ -30,11 +30,11 @@ use lang\MethodNotImplementedException;
  */
 class TestSuite extends \lang\Object {
   public
-    $tests     = array();
+    $tests     = [];
 
   protected
-    $order     = array(),
-    $listeners = array();
+    $order     = [],
+    $listeners = [];
 
   /**
    * Add a test
@@ -61,7 +61,7 @@ class TestSuite extends \lang\Object {
       ));
     }
     
-    if (!isset($this->order[$className])) $this->order[$className]= array();
+    if (!isset($this->order[$className])) $this->order[$className]= [];
     $this->order[$className][]= sizeof($this->tests);
     $this->tests[]= $test;
     return $test;
@@ -76,18 +76,18 @@ class TestSuite extends \lang\Object {
    * @throws  lang.IllegalArgumentException in case given argument is not a testcase class
    * @throws  util.NoSuchElementException in case given testcase class does not contain any tests
    */
-  public function addTestClass($class, $arguments= array()) {
+  public function addTestClass($class, $arguments= []) {
     $base= \lang\XPClass::forName('unittest.TestCase');
     if (!$class->isSubclassOf($base)) {
       throw new \lang\IllegalArgumentException('Given argument is not a TestCase class ('.\xp::stringOf($class).')');
     }
 
-    $ignored= array();
+    $ignored= [];
     $numBefore= $this->numTests();
     $className= $class->getName();
     $tests= $this->tests;
     $order= $this->order;
-    if (!isset($this->order[$className])) $this->order[$className]= array();
+    if (!isset($this->order[$className])) $this->order[$className]= [];
     foreach ($class->getMethods() as $m) {
       if (!$m->hasAnnotation('test')) continue;
       if ($m->hasAnnotation('ignore')) $ignored[]= $m;
@@ -133,8 +133,8 @@ class TestSuite extends \lang\Object {
    *
    */
   public function clearTests() {
-    $this->tests= array();
-    $this->order= array();
+    $this->tests= [];
+    $this->order= [];
   }
   
   /**
@@ -186,10 +186,10 @@ class TestSuite extends \lang\Object {
   protected function valuesFor($test, $annotation) {
     if (!is_array($annotation)) {               // values("source")
       $source= $annotation;
-      $args= array();
+      $args= [];
     } else if (isset($annotation['source'])) {  // values(source= "src" [, args= ...])
       $source= $annotation['source'];
-      $args= isset($annotation['args']) ? $annotation['args'] : array();
+      $args= isset($annotation['args']) ? $annotation['args'] : [];
     } else {                                    // values([1, 2, 3])
       return $annotation;
     }
@@ -219,7 +219,7 @@ class TestSuite extends \lang\Object {
    * @return var[]
    */
   protected function actionsFor($annotatable, $impl) {
-    $r= array();
+    $r= [];
     if ($annotatable->hasAnnotation('action')) {
       $action= $annotatable->getAnnotation('action');
       $type= \lang\XPClass::forName($impl);
@@ -287,7 +287,7 @@ class TestSuite extends \lang\Object {
       $values= $this->valuesFor($test, $annotation);
     } else {
       $variation= false;
-      $values= array(array());
+      $values= array([]);
     }
 
     // Check for @actions, initialize setUp and tearDown call chains
@@ -440,7 +440,7 @@ class TestSuite extends \lang\Object {
    * @return  string[]
    */
   protected function formatErrors($registry) {
-    $w= array();
+    $w= [];
     foreach ($registry as $file => $lookup) {
       foreach ($lookup as $line => $messages) {
         foreach ($messages as $message => $detail) {
@@ -485,7 +485,7 @@ class TestSuite extends \lang\Object {
     foreach ($class->getMethods() as $m) {
       if (!$m->hasAnnotation('beforeClass')) continue;
       try {
-        $m->invoke(null, array());
+        $m->invoke(null, []);
       } catch (\lang\reflect\TargetInvocationException $e) {
         $cause= $e->getCause();
         if ($cause instanceof PrerequisitesNotMetError) {
@@ -507,7 +507,7 @@ class TestSuite extends \lang\Object {
     foreach ($class->getMethods() as $m) {
       if (!$m->hasAnnotation('afterClass')) continue;
       try {
-        $m->invoke(null, array());
+        $m->invoke(null, []);
       } catch (\lang\reflect\TargetInvocationException $ignored) { }
     }
     foreach ($this->actionsFor($class, 'unittest.TestClassAction') as $action) {

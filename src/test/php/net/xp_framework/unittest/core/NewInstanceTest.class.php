@@ -28,7 +28,7 @@ class NewInstanceTest extends \unittest\TestCase {
    * @return  var[] an array with three elements: exitcode, stdout and stderr contents
    */
   protected function runInNewRuntime($uses, $src) {
-    with ($out= $err= '', $p= Runtime::getInstance()->newInstance(null, 'class', 'xp.runtime.Evaluate', array())); {
+    with ($out= $err= '', $p= Runtime::getInstance()->newInstance(null, 'class', 'xp.runtime.Evaluate', [])); {
       $uses && $p->in->write('uses("'.implode('", "', $uses).'");');
       $p->in->write($src);
       $p->in->close();
@@ -45,25 +45,25 @@ class NewInstanceTest extends \unittest\TestCase {
   
   #[@test]
   public function new_class_with_empty_body() {
-    $o= newinstance('lang.Object', array());
+    $o= newinstance('lang.Object', []);
     $this->assertInstanceOf('lang.Object', $o);
   }
 
   #[@test]
   public function new_class_with_empty_body_as_string() {
-    $o= newinstance('lang.Object', array(), '{}');
+    $o= newinstance('lang.Object', [], '{}');
     $this->assertInstanceOf('lang.Object', $o);
   }
 
   #[@test]
   public function new_class_with_empty_body_as_closuremap() {
-    $o= newinstance('lang.Object', array(), array());
+    $o= newinstance('lang.Object', [], []);
     $this->assertInstanceOf('lang.Object', $o);
   }
 
   #[@test]
   public function new_class_with_member_as_string() {
-    $o= newinstance('lang.Object', array(), '{
+    $o= newinstance('lang.Object', [], '{
       public $test= "Test";
     }');
     $this->assertEquals('Test', $o->test);
@@ -71,7 +71,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function new_class_with_member_as_closuremap() {
-    $o= newinstance('lang.Object', array(), array(
+    $o= newinstance('lang.Object', [], array(
       'test' => 'Test'
     ));
     $this->assertEquals('Test', $o->test);
@@ -79,13 +79,13 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function new_interface_with_body_as_string() {
-    $o= newinstance('lang.Runnable', array(), '{ public function run() { } }');
+    $o= newinstance('lang.Runnable', [], '{ public function run() { } }');
     $this->assertInstanceOf('lang.Runnable', $o);
   }
 
   #[@test]
   public function new_interface_with_body_as_closuremap() {
-    $o= newinstance('lang.Runnable', array(), array(
+    $o= newinstance('lang.Runnable', [], array(
       'run' => function($self) { }
     ));
     $this->assertInstanceOf('lang.Runnable', $o);
@@ -116,7 +116,7 @@ class NewInstanceTest extends \unittest\TestCase {
   #[@test]
   public function missingMethodImplementationFatals() {
     $r= $this->runInNewRuntime(array('lang.Runnable'), '
-      newinstance("lang.Runnable", array(), "{}");
+      newinstance("lang.Runnable", [], "{}");
     ');
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
@@ -128,7 +128,7 @@ class NewInstanceTest extends \unittest\TestCase {
   #[@test]
   public function syntaxErrorFatals() {
     $r= $this->runInNewRuntime(array('lang.Runnable'), '
-      newinstance("lang.Runnable", array(), "{ @__SYNTAX ERROR__@ }");
+      newinstance("lang.Runnable", [], "{ @__SYNTAX ERROR__@ }");
     ');
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
@@ -139,8 +139,8 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function missingClassFatals() {
-    $r= $this->runInNewRuntime(array(), '
-      newinstance("lang.NonExistantClass", array(), "{}");
+    $r= $this->runInNewRuntime([], '
+      newinstance("lang.NonExistantClass", [], "{}");
     ');
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
@@ -151,11 +151,11 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function notPreviouslyDefinedClassIsLoaded() {
-    $r= $this->runInNewRuntime(array(), '
+    $r= $this->runInNewRuntime([], '
       if (isset(xp::$cl["lang.Runnable"])) {
         xp::error("Class lang.Runnable may not have been previously loaded");
       }
-      $r= newinstance("lang.Runnable", array(), "{ public function run() { echo \"Hi\"; } }");
+      $r= newinstance("lang.Runnable", [], "{ public function run() { echo \"Hi\"; } }");
       $r->run();
     ');
     $this->assertEquals(0, $r[0], 'exitcode');
@@ -167,7 +167,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function packageOfNewInstancedClass() {
-    $i= newinstance('lang.Object', array(), '{}');
+    $i= newinstance('lang.Object', [], '{}');
     $this->assertEquals(
       Package::forName('lang'),
       $i->getClass()->getPackage()
@@ -176,7 +176,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function packageOfNewInstancedFullyQualifiedClass() {
-    $i= newinstance('net.xp_framework.unittest.core.PackagedClass', array(), '{}');
+    $i= newinstance('net.xp_framework.unittest.core.PackagedClass', [], '{}');
     $this->assertEquals(
       Package::forName('net.xp_framework.unittest.core'),
       $i->getClass()->getPackage()
@@ -185,7 +185,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function packageOfNewInstancedNamespacedClass() {
-    $i= newinstance('net.xp_framework.unittest.core.NamespacedClass', array(), '{}');
+    $i= newinstance('net.xp_framework.unittest.core.NamespacedClass', [], '{}');
     $this->assertEquals(
       Package::forName('net.xp_framework.unittest.core'),
       $i->getClass()->getPackage()
@@ -194,7 +194,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function packageOfNewInstancedNamespacedInterface() {
-    $i= newinstance('net.xp_framework.unittest.core.NamespacedInterface', array(), '{}');
+    $i= newinstance('net.xp_framework.unittest.core.NamespacedInterface', [], '{}');
     $this->assertEquals(
       Package::forName('net.xp_framework.unittest.core'),
       $i->getClass()->getPackage()
@@ -203,7 +203,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function className() {
-    $instance= newinstance('Object', array(), '{ }');
+    $instance= newinstance('Object', [], '{ }');
     $n= $instance->getClassName();
     $this->assertEquals(
       'lang.Object',
@@ -214,7 +214,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function classNameWithFullyQualifiedClassName() {
-    $instance= newinstance('lang.Object', array(), '{ }');
+    $instance= newinstance('lang.Object', [], '{ }');
     $n= $instance->getClassName();
     $this->assertEquals(
       'lang.Object',
@@ -225,7 +225,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function anonymousClassWithoutConstructor() {
-    newinstance('util.log.Traceable', array(), '{
+    newinstance('util.log.Traceable', [], '{
       public function setTrace($cat) {}
     }');
   }

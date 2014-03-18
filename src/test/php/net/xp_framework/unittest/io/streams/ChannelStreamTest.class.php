@@ -83,7 +83,7 @@ class ChannelStreamTest extends TestCase {
    */
   #[@test, @expect('io.IOException')]
   public function writeToClosedChannel() {
-    ChannelWrapper::capture(newinstance('lang.Runnable', array(), array(
+    ChannelWrapper::capture(newinstance('lang.Runnable', [], array(
       'run' => function($self) {
         $s= new ChannelOutputStream("output");
         $s->close();
@@ -98,7 +98,7 @@ class ChannelStreamTest extends TestCase {
    */
   #[@test, @expect('io.IOException')]
   public function readingFromClosedChannel() {
-    ChannelWrapper::capture(newinstance('lang.Runnable', array(), array(
+    ChannelWrapper::capture(newinstance('lang.Runnable', [], array(
       'run' => function($self) {
         $s= new ChannelInputStream('input');
         $s->close();
@@ -113,7 +113,7 @@ class ChannelStreamTest extends TestCase {
    */
   #[@test]
   public function output() {
-    $r= ChannelWrapper::capture(newinstance('lang.Runnable', array(), array(
+    $r= ChannelWrapper::capture(newinstance('lang.Runnable', [], array(
       'run' => function($self) {
         $s= new ChannelOutputStream('output');
         $s->write("+OK Hello");
@@ -128,7 +128,7 @@ class ChannelStreamTest extends TestCase {
    */
   #[@test]
   public function stdout() {
-    $r= ChannelWrapper::capture(newinstance('lang.Runnable', array(), array(
+    $r= ChannelWrapper::capture(newinstance('lang.Runnable', [], array(
       'run' => function($self) {
         $s= new ChannelOutputStream('stdout');
         $s->write("+OK Hello");
@@ -143,7 +143,7 @@ class ChannelStreamTest extends TestCase {
    */
   #[@test]
   public function stderr() {
-    $r= ChannelWrapper::capture(newinstance('lang.Runnable', array(), array(
+    $r= ChannelWrapper::capture(newinstance('lang.Runnable', [], array(
       'run' => function($self) {
         $s= new ChannelOutputStream('stderr');
         $s->write("+OK Hello");
@@ -158,7 +158,7 @@ class ChannelStreamTest extends TestCase {
    */
   #[@test]
   public function stdin() {
-    $r= ChannelWrapper::capture(newinstance('lang.Runnable', array(), array(
+    $r= ChannelWrapper::capture(newinstance('lang.Runnable', [], array(
       'run' => function($self) {
         $i= new ChannelInputStream('stdin');
         $o= new ChannelOutputStream('stdout');
@@ -176,7 +176,7 @@ class ChannelStreamTest extends TestCase {
    */
   #[@test]
   public function input() {
-    $r= ChannelWrapper::capture(newinstance('lang.Runnable', array(), array(
+    $r= ChannelWrapper::capture(newinstance('lang.Runnable', [], array(
       'run' => function($self) {
         $i= new ChannelInputStream('input');
         $o= new ChannelOutputStream('stdout');

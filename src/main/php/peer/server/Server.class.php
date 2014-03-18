@@ -118,7 +118,7 @@ class Server extends \lang\Object {
     if (!$this->socket->isConnected()) return false;
 
     $null= null;
-    $handles= $lastAction= array();
+    $handles= $lastAction= [];
     $accepting= $this->socket->getHandle();
     $this->protocol->initialize();
 

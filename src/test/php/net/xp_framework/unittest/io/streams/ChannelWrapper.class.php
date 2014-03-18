@@ -12,7 +12,7 @@ use lang\Runnable;
  */
 class ChannelWrapper extends \lang\Object {
   protected static 
-    $streams = array();
+    $streams = [];
 
   protected 
     $offset  = 0,
@@ -28,7 +28,7 @@ class ChannelWrapper extends \lang\Object {
    * @param   array<string, string> initial
    * @return  array<string, string>
    */
-  public static function capture(Runnable $r, $initial= array()) {
+  public static function capture(Runnable $r, $initial= []) {
     self::$streams= $initial;
     stream_wrapper_unregister('php');
     stream_wrapper_register('php', __CLASS__);

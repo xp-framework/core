@@ -135,9 +135,9 @@ empty=""
 spaces=" "
 unquoted= 
     ');
-    $this->assertEquals(array(), $p->readArray('section', 'empty'));
+    $this->assertEquals([], $p->readArray('section', 'empty'));
     $this->assertEquals(array(' '), $p->readArray('section', 'spaces'));
-    $this->assertEquals(array(), $p->readArray('section', 'unquoted'));
+    $this->assertEquals([], $p->readArray('section', 'unquoted'));
   }
   
   /**

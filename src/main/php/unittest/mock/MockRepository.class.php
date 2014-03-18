@@ -9,7 +9,7 @@ use lang\Type;
  * @test  xp://net.xp_framework.unittest.tests.mock.MockeryTest
  */
 class MockRepository extends \lang\Object {
-  private $mocks= array();
+  private $mocks= [];
 
   /**
    * Builds a stub instance for the specified type.

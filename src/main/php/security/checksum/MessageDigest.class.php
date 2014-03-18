@@ -29,7 +29,7 @@ use security\NoSuchAlgorithmException;
  * @see   xp://security.checksum.DefaultDigestImpl
  */
 class MessageDigest extends \lang\Object {
-  protected static $implementations= array();
+  protected static $implementations= [];
 
   static function __static() {
     \lang\XPClass::forName('security.checksum.DefaultDigestImpl');

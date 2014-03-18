@@ -47,7 +47,7 @@ class System extends Object {
    * @return  var
    */
   public static function getProperty($name) {
-    static $prop= array();
+    static $prop= [];
     
     if (!isset($prop[$name])) switch ($name) {
       case 'php.version': 
@@ -196,7 +196,7 @@ class System extends Object {
       throw new SystemException('Cannot execute "'.$cmdLine.'"');
     }
     
-    $buf= array();
+    $buf= [];
     while (
       (!feof($pd)) && 
       (false !== ($line= fgets($pd, 4096)))

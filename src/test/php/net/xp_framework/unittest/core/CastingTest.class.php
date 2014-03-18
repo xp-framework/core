@@ -18,7 +18,7 @@ class CastingTest extends TestCase implements Runnable {
 
   #[@test]
   public function newinstance() {
-    $runnable= newinstance('lang.Runnable', array(), array(
+    $runnable= newinstance('lang.Runnable', [], array(
       'run' => function($self) {
         return 'Test';
       }

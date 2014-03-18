@@ -47,7 +47,7 @@ class CompositePropertiesTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function createEmptyCompositeThrowsException() {
-    new CompositeProperties(array());
+    new CompositeProperties([]);
   }
 
   /**
@@ -252,7 +252,7 @@ anotherkey="is there, too"
    */
   #[@test]
   public function readArrayUsesEmptyArrayDefaultOnNoOccurrance() {
-    $this->assertEquals(array(), $this->fixture()->readArray('section', 'non-existant-key'));
+    $this->assertEquals([], $this->fixture()->readArray('section', 'non-existant-key'));
   }
 
   /**
@@ -405,7 +405,7 @@ anotherkey="is there, too"
    */
   #[@test]
   public function readRangeUsesEmptyArrayForDefaultOnNoOccurrance() {
-    $this->assertEquals(array(), $this->fixture()->readRange('section', 'non-existant-key'));
+    $this->assertEquals([], $this->fixture()->readRange('section', 'non-existant-key'));
   }
 
   /**
@@ -435,7 +435,7 @@ anotherkey="is there, too"
    */
   #[@test]
   public function readSectionThatDoesNotExistReturnsEmptyArrayPerDefault() {
-    $this->assertEquals(array(), $this->fixture()->readSection('doesnotexist'));
+    $this->assertEquals([], $this->fixture()->readSection('doesnotexist'));
   }
 
   /**
@@ -444,7 +444,7 @@ anotherkey="is there, too"
    */
   #[@test]
   public function readEmptySectionOverridesDefault() {
-    $this->assertEquals(array(), $this->fixture()->readSection('empty', array('default' => 'value')));
+    $this->assertEquals([], $this->fixture()->readSection('empty', array('default' => 'value')));
   }
 
   /**

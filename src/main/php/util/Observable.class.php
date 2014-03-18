@@ -58,7 +58,7 @@
  */
 class Observable extends \lang\Object {
   public
-    $_obs      = array(),
+    $_obs      = [],
     $_changed  = false;
     
   /**

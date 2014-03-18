@@ -19,7 +19,7 @@ class PasswordStrengthTest extends \unittest\TestCase {
 
   #[@test]
   public function register_algorithm() {
-    with ($class= newinstance('security.password.Algorithm', array(), '{
+    with ($class= newinstance('security.password.Algorithm', [], '{
       public function strengthOf($password) { return 0; }
     }')->getClass()); {
       PasswordStrength::setAlgorithm('null', $class);

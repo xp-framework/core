@@ -39,10 +39,10 @@ class StringWriterTest extends TestCase {
       array('1', 1.0), array('0', 0.0), array('-1', -1.0), array('0.5', 0.5),
       array('true', true), array('false', false),
       array('Test', 'Test'), array('', ''),
-      array("[\n]", array()), array("[\n  0 => 1\n  1 => 2\n  2 => 3\n]", [1, 2, 3]),
+      array("[\n]", []), array("[\n  0 => 1\n  1 => 2\n  2 => 3\n]", [1, 2, 3]),
       array("[\n  a => \"b\"\n  c => \"d\"\n]", array('a' => 'b', 'c' => 'd')),
       array('Test', new String('Test')),
-      array('Test', newinstance('lang.Object', array(), array('toString' => function($self) { return 'Test'; } )))
+      array('Test', newinstance('lang.Object', [], array('toString' => function($self) { return 'Test'; } )))
     );
   }
 

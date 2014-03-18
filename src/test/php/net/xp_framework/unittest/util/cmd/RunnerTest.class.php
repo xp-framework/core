@@ -34,10 +34,10 @@ class RunnerTest extends TestCase {
    *
    * @param   string[] args
    * @param   string in
-   * @param   util.PropertySource[] propertySources default array()
+   * @param   util.PropertySource[] propertySources default []
    * @return  int
    */
-  protected function runWith(array $args, $in= '', $propertySources= array()) {
+  protected function runWith(array $args, $in= '', $propertySources= []) {
     $pm= \util\PropertyManager::getInstance();
     $sources= $pm->getSources();
     $pm->setSources($propertySources);
@@ -72,7 +72,7 @@ class RunnerTest extends TestCase {
    * @return  util.cmd.Command
    */
   protected function newCommand() {
-    return newinstance('util.cmd.Command', array(), '{
+    return newinstance('util.cmd.Command', [], '{
       public static $wasRun= FALSE;
       public function __construct() { self::$wasRun= FALSE; }
       public function run() { self::$wasRun= TRUE; }
@@ -87,7 +87,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function selfUsage() {
-    $return= $this->runWith(array());
+    $return= $this->runWith([]);
     $this->assertEquals(1, $return);
     $this->assertOnStream($this->err, 'Usage:');
     $this->assertEquals('', $this->out->getBytes());
@@ -180,7 +180,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function runWritingToStandardOutput() {
-    $command= newinstance('util.cmd.Command', array(), array(
+    $command= newinstance('util.cmd.Command', [], array(
       'run' => function($self) { $self->out->write('UNITTEST'); }
     ));
 
@@ -196,7 +196,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function runWritingToStandardError() {
-    $command= newinstance('util.cmd.Command', array(), array(
+    $command= newinstance('util.cmd.Command', [], array(
       'run' => function($self) { $self->err->write('UNITTEST'); }
     ));
 
@@ -212,7 +212,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function runEchoInput() {
-    $command= newinstance('util.cmd.Command', array(), array(
+    $command= newinstance('util.cmd.Command', [], array(
       'run' => function($self) {
         while ($chunk= $self->in->read()) {
           $self->out->write($chunk);
@@ -232,7 +232,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function positionalArgument() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       protected $arg= NULL;
 
       #[@arg(position= 0)]
@@ -253,7 +253,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function missingPositionalArgumentt() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       protected $arg= NULL;
 
       #[@arg(position= 0)]
@@ -273,7 +273,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function shortNamedArgument() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       protected $arg= NULL;
 
       #[@arg]
@@ -293,7 +293,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function longNamedArgument() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       protected $arg= NULL;
 
       #[@arg]
@@ -314,7 +314,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function shortRenamedArgument() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       protected $arg= NULL;
 
       #[@arg(name= "pass")]
@@ -334,7 +334,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function longRenamedArgument() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       protected $arg= NULL;
 
       #[@arg(name= "pass")]
@@ -355,7 +355,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function missingNamedArgument() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       protected $arg= NULL;
 
       #[@arg]
@@ -375,7 +375,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function existanceArgumentNotPassed() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       protected $verbose= FALSE;
 
       #[@arg]
@@ -395,7 +395,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function optionalArgument() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       protected $verbose= FALSE;
       protected $name= NULL;
 
@@ -416,7 +416,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function optionalArgumentNotPassed() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       protected $verbose= FALSE;
       protected $name= NULL;
 
@@ -438,7 +438,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function shortExistanceArgumentPassed() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       protected $verbose= FALSE;
 
       #[@arg]
@@ -459,7 +459,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function longExistanceArgumentPassed() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       protected $verbose= FALSE;
 
       #[@arg]
@@ -479,7 +479,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function positionalArgumentException() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       
       #[@arg(position= 0)]
       public function setHost($host) { 
@@ -501,7 +501,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function namedArgumentException() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       
       #[@arg]
       public function setHost($host) { 
@@ -537,9 +537,9 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function allArgs() {
-    $this->assertAllArgs('a, b, c, d, e, f, g', newinstance('util.cmd.Command', array(), '{
+    $this->assertAllArgs('a, b, c, d, e, f, g', newinstance('util.cmd.Command', [], '{
       protected $verbose= FALSE;
-      protected $args= array();
+      protected $args= [];
 
       #[@args(select= "[0..]")]
       public function setArgs($args) { $this->args= $args; }
@@ -554,9 +554,9 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function allArgsCompactNotation() {
-    $this->assertAllArgs('a, b, c, d, e, f, g', newinstance('util.cmd.Command', array(), '{
+    $this->assertAllArgs('a, b, c, d, e, f, g', newinstance('util.cmd.Command', [], '{
       protected $verbose= FALSE;
-      protected $args= array();
+      protected $args= [];
 
       #[@args(select= "*")]
       public function setArgs($args) { $this->args= $args; }
@@ -571,9 +571,9 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function boundedArgs() {
-    $this->assertAllArgs('a, b, c', newinstance('util.cmd.Command', array(), '{
+    $this->assertAllArgs('a, b, c', newinstance('util.cmd.Command', [], '{
       protected $verbose= FALSE;
-      protected $args= array();
+      protected $args= [];
 
       #[@args(select= "[0..2]")]
       public function setArgs($args) { $this->args= $args; }
@@ -588,9 +588,9 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function boundedArgsFromOffset() {
-    $this->assertAllArgs('c, d, e', newinstance('util.cmd.Command', array(), '{
+    $this->assertAllArgs('c, d, e', newinstance('util.cmd.Command', [], '{
       protected $verbose= FALSE;
-      protected $args= array();
+      protected $args= [];
 
       #[@args(select= "[2..4]")]
       public function setArgs($args) { $this->args= $args; }
@@ -605,9 +605,9 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function positionalAndBoundedArgsFromOffset() {
-    $this->assertAllArgs('a, c, d, e', newinstance('util.cmd.Command', array(), '{
+    $this->assertAllArgs('a, c, d, e', newinstance('util.cmd.Command', [], '{
       protected $verbose= FALSE;
-      protected $args= array();
+      protected $args= [];
 
       #[@args(select= "0, [2..4]")]
       public function setArgs($args) { $this->args= $args; }
@@ -622,9 +622,9 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function boundedAndPositionalArgsWithOverlap() {
-    $this->assertAllArgs('a, b, c, b', newinstance('util.cmd.Command', array(), '{
+    $this->assertAllArgs('a, b, c, b', newinstance('util.cmd.Command', [], '{
       protected $verbose= FALSE;
-      protected $args= array();
+      protected $args= [];
 
       #[@args(select= "[0..2], 1")]
       public function setArgs($args) { $this->args= $args; }
@@ -639,9 +639,9 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function positionalArgs() {
-    $this->assertAllArgs('a, c, e, f', newinstance('util.cmd.Command', array(), '{
+    $this->assertAllArgs('a, c, e, f', newinstance('util.cmd.Command', [], '{
       protected $verbose= FALSE;
-      protected $args= array();
+      protected $args= [];
 
       #[@args(select= "0, 2, 4, 5")]
       public function setArgs($args) { $this->args= $args; }
@@ -655,7 +655,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function configOption() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       protected $choke= FALSE;
 
       #[@arg]
@@ -679,7 +679,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function classPathOption() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       protected $copy= NULL;
       
       #[@arg(short= "cp")]
@@ -707,7 +707,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function unknownInjectionType() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       #[@inject(type= "io.Folder", name= "output")]
       public function setOutput($f) { 
       }
@@ -727,7 +727,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function noInjectionType() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       #[@inject(name= "output")]
       public function setOutput($f) { 
       }
@@ -747,7 +747,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function loggerCategoryInjection() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       protected $cat= NULL;
       
       #[@inject(type= "util.log.LogCategory", name= "debug")]
@@ -769,7 +769,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function loggerCategoryInjectionViaTypeRestriction() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       protected $cat= NULL;
       
       #[@inject(name= "debug")]
@@ -791,7 +791,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function loggerCategoryInjectionViaTypeDocumentation() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       protected $cat= NULL;
       
       /**
@@ -816,7 +816,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function injectionOccursBeforeArguments() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       protected $cat= NULL;
 
       /**
@@ -848,7 +848,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function injectionException() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
       
       #[@inject(name= "debug")]
       public function setTrace(\util\log\LogCategory $cat) { 
@@ -870,7 +870,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function injectProperties() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
 
       #[@inject(name= "debug")]
       public function setTrace(\util\Properties $prop) {
@@ -892,7 +892,7 @@ class RunnerTest extends TestCase {
    */
   #[@test]
   public function injectCompositeProperties() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
 
       #[@inject(name= "debug")]
       public function setTrace(\util\Properties $prop) {
@@ -918,7 +918,7 @@ key=overwritten_value'
    */
   #[@test]
   public function injectPropertiesMultipleSources() {
-    $command= newinstance('util.cmd.Command', array(), '{
+    $command= newinstance('util.cmd.Command', [], '{
 
       #[@inject(name= "debug")]
       public function setTrace(\util\Properties $prop) {

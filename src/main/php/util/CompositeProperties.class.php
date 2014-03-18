@@ -9,14 +9,14 @@
  * @test    xp://net.xp_framework.unittest.util.CompositePropertiesTest
  */
 class CompositeProperties extends \lang\Object implements PropertyAccess {
-  protected $props  = array();
+  protected $props  = [];
   private $sections = null;
 
   /**
    * Constructor
    *
    * @param   util.Properties p
-   * @param   util.Properties[] s default array()
+   * @param   util.Properties[] s default []
    */
   public function __construct(array $properties) {
     if (empty($properties)) throw new \lang\IllegalArgumentException(__CLASS__.' requires at least 1 util.Properties child.');
@@ -96,10 +96,10 @@ class CompositeProperties extends \lang\Object implements PropertyAccess {
    *
    * @param   string section
    * @param   string key
-   * @param   mixed default default array()
+   * @param   mixed default default []
    * @return  string[]
    */
-  public function readArray($section, $key, $default= array()) {
+  public function readArray($section, $key, $default= []) {
     return $this->_read(__FUNCTION__, $section, $key, $default);
   }
 
@@ -144,10 +144,10 @@ class CompositeProperties extends \lang\Object implements PropertyAccess {
    *
    * @param   string section
    * @param   string key
-   * @param   mixed default default array()
+   * @param   mixed default default []
    * @return  int[]
    */
-  public function readRange($section, $key, $default= array()) {
+  public function readRange($section, $key, $default= []) {
     return $this->_read(__FUNCTION__, $section, $key, $default);
   }
 
@@ -155,11 +155,11 @@ class CompositeProperties extends \lang\Object implements PropertyAccess {
    * Read section
    *
    * @param   string section
-   * @param   mixed default default array()
+   * @param   mixed default default []
    * @return  [:string]
    */
-  public function readSection($section, $default= array()) {
-    $result= array(); $sectionFound= false;
+  public function readSection($section, $default= []) {
+    $result= []; $sectionFound= false;
     foreach (array_reverse($this->props) as $p) {
       if (!$p->hasSection($section)) continue;
       $sectionFound= true;
@@ -193,7 +193,7 @@ class CompositeProperties extends \lang\Object implements PropertyAccess {
 
     // Lazy initialize - for subsequent loops
     if (null === $this->sections) {
-      $this->sections= array();
+      $this->sections= [];
       foreach ($this->props as $p) {
         $section= $p->getFirstSection();
         while ($section) {

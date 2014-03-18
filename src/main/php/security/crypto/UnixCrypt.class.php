@@ -45,7 +45,7 @@ class UnixCrypt extends \lang\Object {
       // On systems >= 5.3.2, check for usage of libc crypt() which also  
       // allows salts which are too short and unsafe characters \n and : 
       if (':' === substr(crypt('', ':'), 0, 1)) {
-        self::$STANDARD= newinstance('security.crypto.NativeCryptImpl', array(), '{
+        self::$STANDARD= newinstance('security.crypto.NativeCryptImpl', [], '{
           public function crypt($plain, $salt) {
             if (strlen($salt) < 1 || strcspn($salt, "\n:") < 2) {
               throw new CryptoException("Malformed salt");
@@ -72,7 +72,7 @@ class UnixCrypt extends \lang\Object {
       // broken as the "__" in "$2a$__$" for example makes PHP not jump 
       // into the blowfish branch but fall back to the else branch, and thus 
       // to standard DES. See line 247 and following in ext/standard/crypt.c
-      self::$BLOWFISH= newinstance('security.crypto.NativeCryptImpl', array(), '{
+      self::$BLOWFISH= newinstance('security.crypto.NativeCryptImpl', [], '{
         public function crypt($plain, $salt) {
           if (1 !== sscanf($salt, "$2a$%02d$", $cost)) {
             throw new CryptoException("Malformed cost parameter");
@@ -100,7 +100,7 @@ class UnixCrypt extends \lang\Object {
       // notes in PHP Bug #51254. As there is no reliable way to detect whether
       // the patch (referenced in this bug) is applied, always use the check
       // and strip off rest of crypted when matching. 
-      self::$EXTENDED= newinstance('security.crypto.NativeCryptImpl', array(), '{
+      self::$EXTENDED= newinstance('security.crypto.NativeCryptImpl', [], '{
         public function crypt($plain, $salt) {
           if (strlen($salt) < 9) {
             throw new CryptoException("Extended DES: Salt too short");

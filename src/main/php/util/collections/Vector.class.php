@@ -14,11 +14,11 @@ class Vector extends \lang\Object implements IList {
     $iterate   = null;
 
   protected
-    $elements  = array(),
+    $elements  = [],
     $size      = 0;
 
   static function __static() {
-    self::$iterate= newinstance('Iterator', array(), '{
+    self::$iterate= newinstance('Iterator', [], '{
       private $i= 0, $v;
       public function on($v) { $self= new self(); $self->v= $v; return $self; }
       public function current() { return $this->v[$this->i]; }
@@ -32,10 +32,10 @@ class Vector extends \lang\Object implements IList {
   /**
    * Constructor
    *
-   * @param   T[] elements default array()
+   * @param   T[] elements default []
    */
   #[@generic(params= 'T[]')]
-  public function __construct($elements= array()) {
+  public function __construct($elements= []) {
     $this->elements= $elements;
     $this->size= sizeof($this->elements);
   }
@@ -209,7 +209,7 @@ class Vector extends \lang\Object implements IList {
    *
    */
   public function clear() {
-    $this->elements= array();
+    $this->elements= [];
     $this->size= 0;
   }
   

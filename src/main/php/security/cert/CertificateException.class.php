@@ -8,15 +8,15 @@
  */
 class CertificateException extends \lang\XPException {
   public
-    $errors = array();
+    $errors = [];
     
   /**
    * Constructor
    *
    * @param   string message
-   * @param   string[] errors default array()
+   * @param   string[] errors default []
    */
-  public function __construct($message, $errors= array()) {
+  public function __construct($message, $errors= []) {
     parent::__construct($message);
     $this->errors= $errors;
   }

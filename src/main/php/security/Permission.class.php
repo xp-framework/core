@@ -10,7 +10,7 @@
 class Permission extends \lang\Object {
   public
     $name     = '',
-    $actions  = array();
+    $actions  = [];
     
   /**
    * Constructor

@@ -17,8 +17,8 @@ class FileAppenderTest extends AppenderTest {
    */
   #[@beforeClass]
   public static function defineStreamWrapper() {
-    $sw= \lang\ClassLoader::defineClass('FileAppender_StreamWrapper', 'lang.Object', array(), '{
-      public static $buffer= array();
+    $sw= \lang\ClassLoader::defineClass('FileAppender_StreamWrapper', 'lang.Object', [], '{
+      public static $buffer= [];
       private static $meta= array(STREAM_META_ACCESS => 0666);
       private $handle;
 

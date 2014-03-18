@@ -304,7 +304,7 @@ class FieldsTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalAccessException')]
   public function setCacheFieldValue() {
-    $this->fixture->getField('cache')->set(null, array());
+    $this->fixture->getField('cache')->set(null, []);
   }
 
   /**

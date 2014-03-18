@@ -29,7 +29,7 @@ class Process extends Object {
   
   protected
     $_proc  = null,
-    $status = array();
+    $status = [];
 
   public static $DISABLED;
 
@@ -46,7 +46,7 @@ class Process extends Object {
    * @param   [:string] default NULL the environment
    * @throws  io.IOException in case the command could not be executed
    */
-  public function __construct($command= null, $arguments= array(), $cwd= null, $env= null) {
+  public function __construct($command= null, $arguments= [], $cwd= null, $env= null) {
     static $spec= array(
       0 => array('pipe', 'r'),  // stdin
       1 => array('pipe', 'w'),  // stdout
@@ -92,7 +92,7 @@ class Process extends Object {
    * @param   [:string] default NULL the environment
    * @throws  io.IOException in case the command could not be executed
    */
-  public function newInstance($arguments= array(), $cwd= null, $env= null) {
+  public function newInstance($arguments= [], $cwd= null, $env= null) {
     return new self($this->status['exe'], $arguments, $cwd, $env);
   }
 

@@ -30,7 +30,7 @@ use util\log\layout\DefaultLayout;
  */
 class LogCategory extends \lang\Object {
   protected static $DEFAULT_LAYOUT= null;
-  protected $_appenders= array();
+  protected $_appenders= [];
   protected $context= null;
 
   public $flags= 0;
@@ -51,7 +51,7 @@ class LogCategory extends \lang\Object {
     $this->flags= $flags;
     $this->identifier= $identifier;
     $this->context= $context;
-    $this->_appenders= array();
+    $this->_appenders= [];
   }
 
   /**
@@ -204,7 +204,7 @@ class LogCategory extends \lang\Object {
    * @return  util.log.Appender[]
    */
   public function getAppenders($flag= LogLevel::ALL) {
-    $r= array();
+    $r= [];
     foreach ($this->_appenders as $f => $appenders) {
       if ($f & $flag) $r= array_merge($r, array_values($appenders));
     }

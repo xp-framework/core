@@ -12,16 +12,16 @@
  */
 class ClassNotFoundException extends XPException implements ClassLoadingException {
   protected $failedClass= null;
-  protected $loaders= array();
+  protected $loaders= [];
 
   /**
    * Constructor
    *
    * @param   string failedClass
-   * @param   lang.IClassLoader[] loaders default array()
+   * @param   lang.IClassLoader[] loaders default []
    * @param   lang.Throwable cause default NULL
    */
-  public function __construct($failedClass, $loaders= array(), $cause= null) {
+  public function __construct($failedClass, $loaders= [], $cause= null) {
     parent::__construct(sprintf($this->message(), $failedClass).($cause ? ': '.$cause->getMessage() : ''), $cause);
     $this->failedClass= $failedClass;
     $this->loaders= $loaders;

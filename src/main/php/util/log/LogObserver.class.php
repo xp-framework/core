@@ -27,7 +27,7 @@ class LogObserver extends \lang\Object implements BoundLogObserver {
    * @return  util.log.LogObserver
    */
   public static function instanceFor($arg) {
-    static $inst= array();
+    static $inst= [];
     
     if (!isset($inst[$arg])) {
       $inst[$arg]= new self(Logger::getInstance()->getCategory($arg));

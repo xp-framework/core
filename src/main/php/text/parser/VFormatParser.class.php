@@ -32,7 +32,7 @@ use lang\MethodNotImplementedException;
 class VFormatParser extends \lang\Object {
   public
     $identifier   = '',
-    $handlers     = array();
+    $handlers     = [];
     
   /**
    * Constructor
@@ -146,7 +146,7 @@ class VFormatParser extends \lang\Object {
   }
   
   protected function _parseProperties($str) {
-    $arr= array();
+    $arr= [];
     $key= $val= ''; $tok= strtok ($str, ";:=");
     while ($tok) {
       if (!$key) { $key= $tok; }

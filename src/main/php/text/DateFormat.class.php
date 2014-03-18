@@ -57,7 +57,7 @@ use util\Date;
  * @test     xp://net.xp_framework.unittest.text.DateFormatTest
  */
 class DateFormat extends \lang\Object {
-  protected $format= array();
+  protected $format= [];
   
   /**
    * Constructor

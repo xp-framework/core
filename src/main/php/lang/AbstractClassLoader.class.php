@@ -141,7 +141,7 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
     method_exists($name, '__static') && \xp::$cli[]= array($name, '__static');
     if (0 === \xp::$cll) {
       $invocations= \xp::$cli;
-      \xp::$cli= array();
+      \xp::$cli= [];
       foreach ($invocations as $inv) call_user_func($inv);
     }
     return $name;

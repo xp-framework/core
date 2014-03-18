@@ -104,7 +104,7 @@ class ArchiveClassLoaderTest extends TestCase {
   #[@test]
   public function non_existant_package_contents() {
     $this->assertEquals(
-      array(),
+      [],
       $this->fixture->packageContents('non.existant')
     );
   }

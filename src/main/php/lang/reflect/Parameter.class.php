@@ -185,7 +185,7 @@ class Parameter extends \lang\Object {
       !($details= \lang\XPClass::detailsForMethod($this->_details[0], $this->_details[1])) ||  
       !isset($details[DETAIL_TARGET_ANNO][$n])
     ) {   // Unknown or unparseable
-      return array();
+      return [];
     }
     return $details[DETAIL_TARGET_ANNO][$n];
   }

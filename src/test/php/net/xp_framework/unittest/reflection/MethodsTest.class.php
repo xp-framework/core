@@ -514,7 +514,7 @@ class MethodsTest extends TestCase {
       'with throws'
     );
     $this->assertEquals(
-      array(), 
+      [], 
       $this->fixture->getMethod('currentTimestamp')->getExceptionNames(),
       'without throws'
     );
@@ -538,7 +538,7 @@ class MethodsTest extends TestCase {
       'with throws'
     );
     $this->assertEquals(
-      array(), 
+      [], 
       $this->fixture->getMethod('currentTimestamp')->getExceptionTypes(),
       'without throws'
     );

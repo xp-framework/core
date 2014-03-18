@@ -20,19 +20,19 @@ class StackTraceElementTest extends \unittest\TestCase {
 
   #[@test]
   public function can_create() {
-    new StackTraceElement('file', 'class', 'method', 1, array(), 'Message');
+    new StackTraceElement('file', 'class', 'method', 1, [], 'Message');
   }
 
   #[@test]
   public function is_equal_to_itself() {
-    $a= new StackTraceElement('file', 'class', 'method', 1, array(), 'Message');
+    $a= new StackTraceElement('file', 'class', 'method', 1, [], 'Message');
     $this->assertEquals($a, $a);
   }
 
   #[@test]
   public function two_identical_stacktraceelements_are_equal() {
-    $a= new StackTraceElement('file', 'class', 'method', 1, array(), 'Message');
-    $b= new StackTraceElement('file', 'class', 'method', 1, array(), 'Message');
+    $a= new StackTraceElement('file', 'class', 'method', 1, [], 'Message');
+    $b= new StackTraceElement('file', 'class', 'method', 1, [], 'Message');
     $this->assertEquals($a, $b);
   }
 
@@ -40,7 +40,7 @@ class StackTraceElementTest extends \unittest\TestCase {
   public function to_string() {
     $this->assertEquals(
       self::NEW_FIXTURE_METHOD."() [line 1 of Test.class.php] Test\n",
-      $this->newFixtureWith(array())->toString()
+      $this->newFixtureWith([])->toString()
     );
   }
 
@@ -56,7 +56,7 @@ class StackTraceElementTest extends \unittest\TestCase {
   public function to_string_with_empty_array_arg() {
     $this->assertEquals(
       self::NEW_FIXTURE_METHOD."(array[0]) [line 1 of Test.class.php] Test\n",
-      $this->newFixtureWith(array(array()))->toString()
+      $this->newFixtureWith(array([]))->toString()
     );
   }
 

@@ -24,7 +24,7 @@
  */
 class Hashmap extends \lang\Object {
   public 
-    $_hash= array();
+    $_hash= [];
 
   /**
    * Constructor
@@ -33,7 +33,6 @@ class Hashmap extends \lang\Object {
    */
   public function __construct($map= null) {
     if (is_array($map)) $this->_hash= $map;
-    
   }
   
   /**
@@ -201,7 +200,7 @@ class Hashmap extends \lang\Object {
    *
    */
   public function clear() {
-    $this->_hash= array();
+    $this->_hash= [];
   }
 
   /**

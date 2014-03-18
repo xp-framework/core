@@ -29,7 +29,7 @@ class DaemonMessage extends Message {
   public 
     $failed=   null,
     $reason=   '',
-    $details=  array(),
+    $details=  [],
     $status=   DAEMON_UNKNOWN;
     
   /**
