@@ -135,4 +135,19 @@ class BrokenAnnotationTest extends \unittest\TestCase {
   public function class_private_static_member() {
     $this->parse('#[@value(AnnotationParsingTest::$internal)]');
   }
+
+  #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/In `.+`: Parse error/')]
+  public function function_without_braces() {
+    $this->parse('#[@value(function)]');
+  }
+
+  #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/In `.+`: Parse error/')]
+  public function function_without_body() {
+    $this->parse('#[@value(function())]');
+  }
+
+  #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/In `.+`: Parse error/')]
+  public function function_without_closing_curly() {
+    $this->parse('#[@value(function() {)]');
+  }
 }

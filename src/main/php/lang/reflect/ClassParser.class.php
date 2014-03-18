@@ -160,6 +160,29 @@ class ClassParser extends \lang\Object {
         }
       }
       return $class->hasConstructor() ? $class->getConstructor()->newInstance($args) : $class->newInstance();
+    } else if (T_FUNCTION === $tokens[$i][0]) {
+      $b= 0;
+      $code= 'function';
+      for ($i++, $s= sizeof($tokens); $i < $s; $i++) {
+        if ('{' === $tokens[$i]) {
+          $b++;
+          $code.= '{';
+        } else if ('}' === $tokens[$i]) {
+          $b--;
+          $code.= '}';
+          if (0 === $b) break;
+        } else {
+          $code.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
+        }
+      }
+      ob_start();
+      $func= eval('return '.$code.';');
+      $error= ob_get_clean();
+      if (!($func instanceof \Closure)) {
+        preg_match("/(Parse.+) in .+.php/", $error, $m);
+        throw new IllegalStateException('In `'.$code.'`: '.$m[1]);
+      }
+      return $func;
     } else {
       throw new IllegalStateException(sprintf(
         'Parse error: Unexpected %s',
