@@ -5,6 +5,7 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* **Minimum PHP version reqired is now PHP 5.4.0** - (@thekid)
 * Removed deprecated `assertArray()`, `assertObject()`, `assertEmpty()`,
   `assertNotEmpty()`, `assertClass()` and `assertSubclass()` methods from
   unittest.TestCase - (@thekid)
@@ -26,6 +27,7 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented RFC #281: PHP 5.4.0 - (@thekid)
 * Implemented RFC #146: Unicode - (@thekid)
 * Implemented RFC #136: PHP namespaces adoption. All classes in the XP
   framework are now in PHP 5.3 namespaces - (@thekid)
