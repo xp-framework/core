@@ -6,7 +6,7 @@
  *
  * @test  xp://net.xp_framework.unittest.core.ObjectTest
  */
-class Object implements Generic {
+class Object implements Generic { use \__xp;
   public $__id;
   
   /**
@@ -14,48 +14,6 @@ class Object implements Generic {
    */
   public function __clone() {
     $this->__id= uniqid('', true);
-  }
-
-  /**
-   * Static method handler
-   */
-  public static function __callStatic($name, $args) {
-    $self= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'];
-    throw new Error('Call to undefined static method '.\xp::nameOf($self).'::'.$name.'()');
-  }
-
-  /**
-   * Field read handler
-   */
-  public function __get($name) {
-    return null;
-  }
-
-  /**
-   * Field write handler
-   */
-  public function __set($name, $value) {
-    $this->{$name}= $value;
-  }
-  
-  /**
-   * Method handler
-   */
-  public function __call($name, $args) {
-    $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
-    $self= $t[1]['class'];
-
-    // Check scope for extension methods
-    $scope= isset($t[2]['class']) ? $t[2]['class'] : $t[3]['class'];
-    if (null != $scope && isset(\xp::$ext[$scope])) {
-      foreach (\xp::$ext[$scope] as $type => $class) {
-        if (!$this instanceof $type || !method_exists($class, $name)) continue;
-        array_unshift($args, $this);
-        return call_user_func_array([$class, $name], $args);
-      }
-    }
-
-    throw new Error('Call to undefined method '.\xp::nameOf($self).'::'.$name.'() from scope '.\xp::nameOf($scope));
   }
 
   /**

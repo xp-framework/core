@@ -20,6 +20,50 @@ final class import {
 }
 // }}}
 
+// {{{ trait xp
+trait __xp {
+
+  // {{{ static invocation handler
+  public static function __callStatic($name, $args) {
+    $self= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'];
+    throw new Error('Call to undefined static method '.\xp::nameOf($self).'::'.$name.'()');
+  }
+  // }}}
+
+  // {{{ field read handler
+  public function __get($name) {
+    return null;
+  }
+  // }}}
+
+  // {{{ field write handler
+  public function __set($name, $value) {
+    $this->{$name}= $value;
+  }
+  // }}}
+
+  // {{{ invocation handler
+  public function __call($name, $args) {
+    $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
+    $self= $t[1]['class'];
+
+    // Check scope for extension methods
+    $scope= isset($t[2]['class']) ? $t[2]['class'] : $t[3]['class'];
+    if (null != $scope && isset(\xp::$ext[$scope])) {
+      foreach (\xp::$ext[$scope] as $type => $class) {
+        if (!$this instanceof $type || !method_exists($class, $name)) continue;
+        array_unshift($args, $this);
+        return call_user_func_array([$class, $name], $args);
+      }
+    }
+
+    throw new Error('Call to undefined method '.\xp::nameOf($self).'::'.$name.'() from scope '.\xp::nameOf($scope));
+  }
+  // }}}
+
+}
+// }}}
+
 // {{{ final class xp
 final class xp {
   const CLASS_FILE_EXT= '.class.php';

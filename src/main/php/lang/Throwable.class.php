@@ -10,9 +10,8 @@
  * @test  xp://net.xp_framework.unittest.core.ExceptionsTest
  * @test  xp://net.xp_framework.unittest.core.ChainedExceptionTest
  */
-class Throwable extends \Exception implements Generic {
-  public
-    $__id;
+class Throwable extends \Exception implements Generic { use \__xp;
+  public $__id;
 
   public 
     $cause    = null,
@@ -50,65 +49,6 @@ class Throwable extends \Exception implements Generic {
     $this->cause= $cause;
     $this->trace= array();
     $this->fillInStackTrace();
-  }
-
-  /**
-   * Static method handler
-   *
-   */
-  public static function __callStatic($name, $args) {
-    $self= get_called_class();
-    if ("\7" === $name{0}) {
-      return call_user_func_array(array($self, substr($name, 1)), $args);
-    }
-    throw new Error('Call to undefined method '.$self.'::'.$name);
-  }
-
-  /**
-   * Field read handler
-   *
-   */
-  public function __get($name) {
-    return null;
-  }
-
-  /**
-   * Field write handler
-   *
-   */
-  public function __set($name, $value) {
-    $this->{$name}= $value;
-  }
-  
-  /**
-   * Method handler
-   *
-   */
-  public function __call($name, $args) {
-    if ("\7" === $name{0}) {
-      return call_user_func_array(array($this, substr($name, 1)), $args);
-    }
-
-    $t= debug_backtrace();
-
-    // Get self
-    $i= 1; $s= sizeof($t);
-    while (!isset($t[$i]['class']) && $i++ < $s) { }
-    $self= $t[$i]['class'];
-
-    // Get scope
-    $i++;
-    while (!isset($t[$i]['class']) && $i++ < $s) { }
-    $scope= isset($t[$i]['class']) ? $t[$i]['class'] : null;
-
-    if (null != $scope && isset(\xp::$ext[$scope])) {
-      foreach (\xp::$ext[$scope] as $type => $class) {
-        if (!$this instanceof $type || !method_exists($class, $name)) continue;
-        array_unshift($args, $this);
-        return call_user_func_array(array($class, $name), $args);
-      }
-    }
-    throw new Error('Call to undefined method '.\xp::nameOf($self).'::'.$name.'() from scope '.\xp::nameOf($scope));
   }
 
   /**
