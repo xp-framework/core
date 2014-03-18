@@ -5,6 +5,7 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Removed deprecated lang.ChainedException - (@thekid)
 * Removed deprecated text.CSVGenerator and text.parser.CSVParser classes.
   Use https://github.com/xp-framework/csv instead - (@thekid)
 * Removed deprecated Primitive::$[BOOLEAN, INTEGER] - (@thekid) 
