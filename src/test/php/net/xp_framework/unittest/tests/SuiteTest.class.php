@@ -54,16 +54,23 @@ class SuiteTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function addingATestClass() {
-    $ignored= $this->suite->addTestClass(\lang\XPClass::forName('net.xp_framework.unittest.tests.SimpleTestCase'));
-    $this->assertNotEmpty($ignored);
+  public function adding_a_testclass_returns_ignored_methods() {
+    $class= \lang\XPClass::forName('net.xp_framework.unittest.tests.SimpleTestCase');
+    $ignored= $this->suite->addTestClass($class);
+    $this->assertEquals([$class->getMethod('ignored')], $ignored);
+  }
+
+  #[@test]
+  public function adding_a_testclass_fills_suites_tests() {
+    $class= \lang\XPClass::forName('net.xp_framework.unittest.tests.SimpleTestCase');
+    $this->suite->addTestClass($class);
     for ($i= 0, $s= $this->suite->numTests(); $i < $s; $i++) {
-      $this->assertSubclass($this->suite->testAt($i), 'unittest.TestCase');
+      $this->assertInstanceOf('unittest.TestCase', $this->suite->testAt($i));
     }
   }
 
   #[@test]
-  public function addingATestClassTwice() {
+  public function adding_a_testclass_twice_fills_suites_tests_twice() {
     $class= \lang\XPClass::forName('net.xp_framework.unittest.tests.SimpleTestCase');
     $this->suite->addTestClass($class);
     $n= $this->suite->numTests();
@@ -104,7 +111,7 @@ class SuiteTest extends \unittest\TestCase {
   #[@test]
   public function runningASingleSucceedingTest() {
     $r= $this->suite->runTest(new SimpleTestCase('succeeds'));
-    $this->assertClass($r, 'unittest.TestResult');
+    $this->assertInstanceOf('unittest.TestResult', $r);
     $this->assertEquals(1, $r->count(), 'count');
     $this->assertEquals(1, $r->runCount(), 'runCount');
     $this->assertEquals(1, $r->successCount(), 'successCount');
@@ -115,7 +122,7 @@ class SuiteTest extends \unittest\TestCase {
   #[@test]
   public function runningASingleFailingTest() {
     $r= $this->suite->runTest(new SimpleTestCase('fails'));
-    $this->assertClass($r, 'unittest.TestResult');
+    $this->assertInstanceOf('unittest.TestResult', $r);
     $this->assertEquals(1, $r->count(), 'count');
     $this->assertEquals(1, $r->runCount(), 'runCount');
     $this->assertEquals(0, $r->successCount(), 'successCount');
@@ -130,7 +137,7 @@ class SuiteTest extends \unittest\TestCase {
     $this->suite->addTest(new SimpleTestCase('skipped'));
     $this->suite->addTest(new SimpleTestCase('ignored'));
     $r= $this->suite->run();
-    $this->assertClass($r, 'unittest.TestResult');
+    $this->assertInstanceOf('unittest.TestResult', $r);
     $this->assertEquals(4, $r->count(), 'count');
     $this->assertEquals(2, $r->runCount(), 'runCount');
     $this->assertEquals(1, $r->successCount(), 'successCount');
@@ -193,8 +200,8 @@ class SuiteTest extends \unittest\TestCase {
     $this->suite->addTest($t);
     $r= $this->suite->run();
     $this->assertEquals(1, $r->skipCount(), 'skipCount');
-    $this->assertClass($r->outcomeOf($t), 'unittest.TestPrerequisitesNotMet');
-    $this->assertClass($r->outcomeOf($t)->reason, 'unittest.PrerequisitesNotMetError');
+    $this->assertInstanceOf('unittest.TestPrerequisitesNotMet', $r->outcomeOf($t));
+    $this->assertInstanceOf('unittest.PrerequisitesNotMetError', $r->outcomeOf($t)->reason);
     $this->assertEquals('Cannot run', $r->outcomeOf($t)->reason->getMessage());
   }    
 
@@ -214,8 +221,8 @@ class SuiteTest extends \unittest\TestCase {
     $this->suite->addTest($t);
     $r= $this->suite->run();
     $this->assertEquals(1, $r->skipCount(), 'skipCount');
-    $this->assertClass($r->outcomeOf($t), 'unittest.TestPrerequisitesNotMet');
-    $this->assertClass($r->outcomeOf($t)->reason, 'unittest.PrerequisitesNotMetError');
+    $this->assertInstanceOf('unittest.TestPrerequisitesNotMet', $r->outcomeOf($t));
+    $this->assertInstanceOf('unittest.PrerequisitesNotMetError', $r->outcomeOf($t)->reason);
     $this->assertEquals('Exception in beforeClass method raise', $r->outcomeOf($t)->reason->getMessage());
   }    
 
@@ -248,9 +255,9 @@ class SuiteTest extends \unittest\TestCase {
   #[@test]
   public function exceptionsMakeTestFail() {
     with ($test= new SimpleTestCase('throws')); {
-      $this->assertClass(
-        $this->suite->runTest($test)->failed[$test->hashCode()]->reason,
-        'lang.IllegalArgumentException'
+      $this->assertInstanceOf(
+        'lang.IllegalArgumentException',
+        $this->suite->runTest($test)->failed[$test->hashCode()]->reason
       );
     }
   }
