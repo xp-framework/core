@@ -873,10 +873,8 @@ define('LONG_MIN', -PHP_INT_MAX - 1);
 call_user_func('spl_autoload_register', '__load');
 set_error_handler('__error');
 
-// Get rid of magic quotes 
-get_magic_quotes_gpc() && xp::error('[xp::core] magic_quotes_gpc enabled');
+// Verify timezone
 date_default_timezone_set(ini_get('date.timezone')) || xp::error('[xp::core] date.timezone not configured properly.');
-ini_set('magic_quotes_runtime', false);
 
 // Registry initialization
 xp::$null= new null();
