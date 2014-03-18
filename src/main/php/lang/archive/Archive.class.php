@@ -60,34 +60,6 @@ class Archive extends \lang\Object {
   public function getURI() {
     return $this->file->getURI();
   }
-  
-  /**
-   * Add a file
-   *
-   * @param   io.File file
-   * @param   string id the id under which this entry will be located
-   * @return  bool success
-   * @deprecated Use addFile() instead
-   */
-  public function add($file, $id) {
-    $bytes= FileUtil::getContents($file);
-    $this->_index[$id]= array(strlen($bytes), -1, $bytes);
-    return true;
-  }
-  
-  /**
-   * Add a file by its bytes
-   *
-   * @param   string id the id under which this entry will be located
-   * @param   string path
-   * @param   string filename
-   * @param   string bytes
-   * @deprecated Use addBytes() instead
-   */
-  public function addFileBytes($id, $path, $filename, $bytes) {
-    $this->_index[$id]= array(strlen($bytes), -1, $bytes);
-  }
-
 
   /**
    * Add a file by its bytes

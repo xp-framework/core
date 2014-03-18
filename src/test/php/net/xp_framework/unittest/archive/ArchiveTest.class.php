@@ -131,7 +131,7 @@ abstract class ArchiveTest extends TestCase {
     $a= new Archive(new Stream());
     $a->open(ARCHIVE_CREATE);
     foreach ($contents as $filename => $bytes) {
-      $a->addFileBytes($filename, NULL, NULL, $bytes);
+      $a->addBytes($filename, $bytes);
     }
     $a->create();
     
