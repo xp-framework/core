@@ -22,19 +22,19 @@ class Throwable extends \Exception implements Generic { use \__xp;
   
     // Workaround for missing detail information about return types in
     // builtin classes.
-    \xp::$meta['php.Exception']= array(
-      'class' => array(4 => null, []),
+    \xp::$meta['php.Exception']= [
+      'class' => [4 => null, []],
       0 => [],
-      1 => array(
-        'getMessage'       => array(1 => [], 'string', [], null, []),
-        'getCode'          => array(1 => [], 'int', [], null, []),
-        'getFile'          => array(1 => [], 'string', [], null, []),
-        'getLine'          => array(1 => [], 'int', [], null, []),
-        'getTrace'         => array(1 => [], 'var[]', [], null, []),
-        'getPrevious'      => array(1 => [], 'lang.Throwable', [], null, []),
-        'getTraceAsString' => array(1 => [], 'string', [], null, []),
-      )
-    );
+      1 => [
+        'getMessage'       => [1 => [], 'string', [], null, []],
+        'getCode'          => [1 => [], 'int', [], null, []],
+        'getFile'          => [1 => [], 'string', [], null, []],
+        'getLine'          => [1 => [], 'int', [], null, []],
+        'getTrace'         => [1 => [], 'var[]', [], null, []],
+        'getPrevious'      => [1 => [], 'lang.Throwable', [], null, []],
+        'getTraceAsString' => [1 => [], 'string', [], null, []]
+      ]
+    ];
   }
 
   /**
@@ -74,10 +74,10 @@ class Throwable extends \Exception implements Generic { use \__xp;
    * @return  lang.Throwable this
    */
   public function fillInStackTrace() {
-    static $except= array(
+    static $except= [
       'call_user_func_array'  => 1, 
       'call_user_func'        => 1
-    );
+    ];
 
     // Error messages
     foreach (\xp::$errors as $file => $list) {
@@ -99,7 +99,7 @@ class Throwable extends \Exception implements Generic { use \__xp;
         isset($trace['function']) ? $trace['function'] : null,
         isset($trace['line']) ? $trace['line'] : null,
         isset($trace['args']) ? $trace['args'] : null,
-        array(array('' => 1))
+        [['' => 1]]
       );
     }
     return $this;

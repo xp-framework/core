@@ -87,7 +87,7 @@ class Routine extends \lang\Object {
     $r= [];
     $c= $this->_reflect->getDeclaringClass()->getName();
     foreach ($this->_reflect->getParameters() as $offset => $param) {
-      $r[]= new Parameter($param, array($c, $this->_reflect->getName(), $offset));
+      $r[]= new Parameter($param, [$c, $this->_reflect->getName(), $offset]);
     }
     return $r;
   }
@@ -101,7 +101,7 @@ class Routine extends \lang\Object {
   public function getParameter($offset) {
     $list= $this->_reflect->getParameters();
     return isset($list[$offset]) 
-      ? new Parameter($list[$offset], array($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName(), $offset))
+      ? new Parameter($list[$offset], [$this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName(), $offset])
       : null
     ;
   }
@@ -159,7 +159,7 @@ class Routine extends \lang\Object {
    */
   public function getExceptionTypes() {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
-    return $details ? array_map(array(\xp::reflect('lang.XPClass'), 'forName'), $details[DETAIL_THROWS]) : [];
+    return $details ? array_map([\xp::reflect('lang.XPClass'), 'forName'], $details[DETAIL_THROWS]) : [];
   }
   
   /**

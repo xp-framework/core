@@ -123,7 +123,7 @@ class Runtime extends Object {
    * @return  lang.Runnable the given runnable
    */
   public function addShutdownHook(Runnable $r) {
-    register_shutdown_function(array($r, 'run'));
+    register_shutdown_function([$r, 'run']);
     return $r;
   }
   
@@ -147,7 +147,7 @@ class Runtime extends Object {
    * @throws  lang.FormatException in case an unrecognized argument is encountered
    */
   public static function parseArguments($arguments) {
-    $return= array('options' => new RuntimeOptions(), 'bootstrap' => null, 'main' => null);
+    $return= ['options' => new RuntimeOptions(), 'bootstrap' => null, 'main' => null];
     while (null !== ($argument= array_shift($arguments))) {
       if ('-' !== $argument{0}) {
         $return['bootstrap']= trim($argument, '"\'');;
@@ -295,8 +295,8 @@ class Runtime extends Object {
     }
     $cmdline= array_merge(
       $options->withSetting('include_path', $include)->asArguments(),
-      $bootstrap ? array($this->bootstrapScript($bootstrap)) : [],
-      $class ? array($class) : []
+      $bootstrap ? [$this->bootstrapScript($bootstrap)] : [],
+      $class ? [$class] : []
     );
     
     // Pass XP_CMDLINE via environment - part 2 of workaround from above,

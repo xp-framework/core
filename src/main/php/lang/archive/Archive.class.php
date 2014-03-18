@@ -68,7 +68,7 @@ class Archive extends \lang\Object {
    * @param   string bytes
    */
   public function addBytes($id, $bytes) {
-    $this->_index[$id]= array(strlen($bytes), -1, $bytes);
+    $this->_index[$id]= [strlen($bytes), -1, $bytes];
   }
 
   /**
@@ -79,7 +79,7 @@ class Archive extends \lang\Object {
    */
   public function addFile($id, $file) {
     $bytes= FileUtil::getContents($file);
-    $this->_index[$id]= array(strlen($bytes), -1, $bytes);
+    $this->_index[$id]= [strlen($bytes), -1, $bytes];
   }
   
   /**
@@ -217,10 +217,10 @@ class Archive extends \lang\Object {
    * @throws  lang.FormatException in case the header is malformed
    */
   public function open($mode) {
-    static $unpack= array(
+    static $unpack= [
       1 => 'a80id/a80*filename/a80*path/V1size/V1offset/a*reserved',
       2 => 'a240id/V1size/V1offset/a*reserved'
-    );
+    ];
     
     switch ($mode) {
       case ARCHIVE_READ:      // Load
@@ -243,7 +243,7 @@ class Archive extends \lang\Object {
         // Read index
         for ($i= 0; $i < $data['indexsize']; $i++) {
           $entry= unpack($unpack[$this->version], $this->file->read(ARCHIVE_INDEX_ENTRY_SIZE));
-          $this->_index[rtrim($entry['id'], "\0")]= array($entry['size'], $entry['offset'], null);
+          $this->_index[rtrim($entry['id'], "\0")]= [$entry['size'], $entry['offset'], null];
         }
         return true;
         

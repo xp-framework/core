@@ -232,7 +232,7 @@ class XPClass extends Type {
   /**
    * Retrieve a list of all member variables
    *
-   * @return  lang.reflect.Field[] array of field objects
+   * @return  lang.reflect.Field[]
    */
   public function getFields() {
     $f= [];
@@ -246,7 +246,7 @@ class XPClass extends Type {
   /**
    * Retrieve a list of member variables declared in this class
    *
-   * @return  lang.reflect.Field[] array of field objects
+   * @return  lang.reflect.Field[]
    */
   public function getDeclaredFields() {
     $list= [];
@@ -569,7 +569,7 @@ class XPClass extends Type {
   protected static function _classLoaderFor($name) {
     if (isset(\xp::$cl[$name])) {
       sscanf(\xp::$cl[$name], '%[^:]://%[^$]', $cl, $argument);
-      return call_user_func(array(\xp::reflect($cl), 'instanceFor'), $argument);
+      return call_user_func([\xp::reflect($cl), 'instanceFor'], $argument);
     }
     return null;    // Internal class, e.g.
   }
@@ -699,7 +699,7 @@ class XPClass extends Type {
     }
     if (!isset($details['class'][DETAIL_GENERIC][1])) {
       $details['class'][DETAIL_GENERIC][1]= array_map(
-        array(\xp::reflect('lang.Type'), 'forName'), 
+        [\xp::reflect('lang.Type'), 'forName'], 
         $details['class'][DETAIL_GENERIC][2]
       );
       unset($details['class'][DETAIL_GENERIC][2]);

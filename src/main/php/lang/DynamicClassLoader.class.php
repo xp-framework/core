@@ -203,11 +203,11 @@ class DynamicClassLoader extends AbstractClassLoader {
    * @return  [:string]
    */
   public function stream_stat() {
-    return array(
+    return [
       'size' => strlen(self::$bytes[$this->current]),
       'dev'  => self::DEVICE,
       'ino'  => crc32(self::$bytes[$this->current])
-    );
+    ];
   }
 
   /**
@@ -261,10 +261,10 @@ class DynamicClassLoader extends AbstractClassLoader {
    */
   public function url_stat($path) {
     sscanf($path, 'dyn://%s', $name);
-    return array(
+    return [
       'size' => strlen(self::$bytes[$name]),
       'dev'  => self::DEVICE,
       'ino'  => crc32(self::$bytes[$name])
-    );
+    ];
   }
 }

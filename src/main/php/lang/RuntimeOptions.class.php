@@ -85,7 +85,7 @@ class RuntimeOptions extends Object {
    */
   public function withClassPath($element) {
     $this->backing["\0cp"]= [];
-    foreach (is_array($element) ? $element : array($element) as $path) {
+    foreach ((array)$element as $path) {
       $this->backing["\0cp"][]= rtrim($path, DIRECTORY_SEPARATOR);
     }
     return $this;

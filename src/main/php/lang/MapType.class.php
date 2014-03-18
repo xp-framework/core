@@ -1,7 +1,5 @@
 <?php namespace lang;
 
-
-
 /**
  * Represents map types
  *

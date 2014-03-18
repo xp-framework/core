@@ -27,7 +27,7 @@ class Method extends Routine {
    * <code>
    *   $method= XPClass::forName('lang.types.String')->getMethod('concat');
    *
-   *   var_dump($method->invoke(new String('Hello'), array('World')));
+   *   var_dump($method->invoke(new String('Hello'), ['World']));
    * </code>
    *
    * Example (static invokation):

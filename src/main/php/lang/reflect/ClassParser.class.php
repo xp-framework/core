@@ -121,7 +121,7 @@ class ClassParser extends \lang\Object {
           continue;
         } else {
           $element && raise('lang.IllegalStateException', 'Parse error: Malformed array - missing comma');
-          $element= array($this->valueOf($tokens, $i, $context, $imports));
+          $element= [$this->valueOf($tokens, $i, $context, $imports)];
         }
       }
       return $value;
@@ -156,7 +156,7 @@ class ClassParser extends \lang\Object {
           $args[]= $arg[0];
           $arg= null;
         } else if (T_WHITESPACE !== $tokens[$i][0]) {
-          $arg= array($this->valueOf($tokens, $i, $context, $imports));
+          $arg= [$this->valueOf($tokens, $i, $context, $imports)];
         }
       }
       return $class->hasConstructor() ? $class->getConstructor()->newInstance($args) : $class->newInstance();
@@ -202,14 +202,14 @@ class ClassParser extends \lang\Object {
    * @throws  lang.ClassFormatException
    */
   public function parseAnnotations($bytes, $context, $imports= [], $line= -1) {
-    static $states= array(
+    static $states= [
       'annotation', 'annotation name', 'annotation value',
       'annotation map key', 'annotation map value',
       'multi-value'
-    );
+    ];
 
     $tokens= token_get_all('<?php '.trim($bytes, "[# \t\n\r"));
-    $annotations= array(0 => [], 1 => []);
+    $annotations= [0 => [], 1 => []];
     $place= $context.(-1 === $line ? '' : ', line '.$line);
 
     // Parse tokens
@@ -291,8 +291,8 @@ class ClassParser extends \lang\Object {
    * @return  [:var] details
    */
   public function parseDetails($bytes, $context= '') {
-    $details= array([], []);
-    $annotations= array(0 => [], 1 => []);
+    $details= [[], []];
+    $annotations= [0 => [], 1 => []];
     $imports= [];
     $comment= null;
     $members= true;
@@ -329,15 +329,15 @@ class ClassParser extends \lang\Object {
             $annotations= $this->parseAnnotations($parsed, $context, $imports, isset($tokens[$i][2]) ? $tokens[$i][2] : -1);
             $parsed= '';
           }
-          $details['class']= array(
+          $details['class']= [
             DETAIL_COMMENT      => trim(preg_replace('/\n\s+\* ?/', "\n", "\n".substr(
               $comment, 
               4,                              // "/**\n"
               strpos($comment, '* @')- 2      // position of first details token
             ))),
             DETAIL_ANNOTATIONS  => $annotations[0]
-          );
-          $annotations= array(0 => [], 1 => []);
+          ];
+          $annotations= [0 => [], 1 => []];
           $comment= null;
           break;
 
@@ -348,10 +348,10 @@ class ClassParser extends \lang\Object {
             $parsed= '';
           }
           $name= substr($tokens[$i][1], 1);
-          $details[0][$name]= array(
+          $details[0][$name]= [
             DETAIL_ANNOTATIONS => $annotations[0]
-          );
-          $annotations= array(0 => [], 1 => []);
+          ];
+          $annotations= [0 => [], 1 => []];
           break;
 
         case T_FUNCTION:
@@ -363,7 +363,7 @@ class ClassParser extends \lang\Object {
           $members= false;
           $i+= 2;
           $m= $tokens[$i][1];
-          $details[1][$m]= array(
+          $details[1][$m]= [
             DETAIL_ARGUMENTS    => [],
             DETAIL_RETURNS      => null,
             DETAIL_THROWS       => [],
@@ -374,8 +374,8 @@ class ClassParser extends \lang\Object {
             ))),
             DETAIL_ANNOTATIONS  => $annotations[0],
             DETAIL_TARGET_ANNO  => $annotations[1]
-          );
-          $annotations= array(0 => [], 1 => []);
+          ];
+          $annotations= [0 => [], 1 => []];
           $matches= null;
           preg_match_all(
             '/@([a-z]+)\s*([^<\r\n]+<[^>]+>|[^\r\n ]+) ?([^\r\n ]+)?/',

@@ -89,8 +89,8 @@ class Proxy extends \lang\Object {
             
             $cases[$args]= (
               'case '.$args.': '.
-              'return $this->_h->invoke($this, \''.$m->getName(true).'\', array('.
-              ($args ? '$_'.implode(', $_', range(0, $args- 1)) : '').'));'
+              'return $this->_h->invoke($this, \''.$m->getName(true).'\', ['.
+              ($args ? '$_'.implode(', $_', range(0, $args- 1)) : '').']);'
             );
           }
 
@@ -115,7 +115,7 @@ class Proxy extends \lang\Object {
           // Create method
           $bytes.= (
             'function '.$m->getName().'('.$signature.') { '.
-            'return $this->_h->invoke($this, \''.$m->getName(true).'\', array('.$args.')); '.
+            'return $this->_h->invoke($this, \''.$m->getName(true).'\', ['.$args.']); '.
             '}'."\n"
           );
         }

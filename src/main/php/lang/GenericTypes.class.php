@@ -84,7 +84,7 @@ class GenericTypes extends \lang\Object {
       // Replace source
       $annotation= null;
       $matches= [];
-      $state= array(0);
+      $state= [0];
       $counter= 0;
       $tokens= token_get_all($bytes);
       for ($i= 0, $s= sizeof($tokens); $i < $s; $i++) {
@@ -94,7 +94,7 @@ class GenericTypes extends \lang\Object {
           if (T_ABSTRACT === $tokens[$i][0] || T_FINAL === $tokens[$i][0]) {
             $src.= $tokens[$i][1].' ';
           } else if (T_CLASS === $tokens[$i][0] || T_INTERFACE === $tokens[$i][0]) {
-            $meta['class'][DETAIL_GENERIC]= array($base->name, $arguments);
+            $meta['class'][DETAIL_GENERIC]= [$base->name, $arguments];
             $src.= $tokens[$i][1].' '.$decl;
             array_unshift($state, $tokens[$i][0]);
           }
@@ -149,7 +149,7 @@ class GenericTypes extends \lang\Object {
             array_unshift($state, 2);
             $m= $tokens[$i+ 2][1];
             $p= 0;
-            $annotations= array($meta[1][$m][DETAIL_ANNOTATIONS], $meta[1][$m][DETAIL_TARGET_ANNO]);
+            $annotations= [$meta[1][$m][DETAIL_ANNOTATIONS], $meta[1][$m][DETAIL_TARGET_ANNO]];
           } else if ('}' === $tokens[$i][0]) {
             $src.= '}';
             break;
@@ -276,7 +276,7 @@ class GenericTypes extends \lang\Object {
       // Create class
       // DEBUG fputs(STDERR, "@* ".substr($src, 0, strpos($src, '{'))." -> $qname\n");
       eval($src);
-      method_exists($name, '__static') && call_user_func(array($name, '__static'));
+      method_exists($name, '__static') && call_user_func([$name, '__static']);
       unset($meta['class'][DETAIL_ANNOTATIONS]['generic']);
       \xp::$meta[$qname]= $meta;
       \xp::$cn[$name]= $qname;

@@ -21,7 +21,7 @@ class Constructor extends Routine {
    *   $constructor= XPClass::forName('util.Binford')->getConstructor();
    *
    *   $instance= $constructor->newInstance();
-   *   $instance= $constructor->newInstance(array(6100));
+   *   $instance= $constructor->newInstance([6100]);
    * </code>
    *
    * @param   var[] args

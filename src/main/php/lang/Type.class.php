@@ -101,7 +101,7 @@ class Type extends Object {
    * @return  lang.Type
    */
   public static function forName($name) {
-    static $deprecated= array(
+    static $deprecated= [
       'char'      => 'string',
       'integer'   => 'int',
       'boolean'   => 'bool',
@@ -110,13 +110,13 @@ class Type extends Object {
       '*'         => 'var',
       'array'     => 'var[]',
       'resource'  => 'var'
-    );
-    static $primitives= array(
+    ];
+    static $primitives= [
       'string'    => true,
       'int'       => true,
       'double'    => true,
       'bool'      => true
-    );
+    ];
     
     // Map deprecated type names
     $type= isset($deprecated[$name]) ? $deprecated[$name] : $name;
