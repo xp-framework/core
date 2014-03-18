@@ -35,6 +35,7 @@ class TestCase extends \lang\Object {
    * @param   string reason
    * @param   var actual
    * @param   var expect
+   * @return  void
    */
   public function fail($reason, $actual, $expect) {
     throw new AssertionFailedError($reason, $actual, $expect);
@@ -45,6 +46,7 @@ class TestCase extends \lang\Object {
    *
    * @param   string reason
    * @param   var[] prerequisites default []
+   * @return  void
    */
   public function skip($reason, $prerequisites= array()) {
     throw new PrerequisitesNotMetError($reason, $prerequisites= array());
@@ -162,7 +164,8 @@ class TestCase extends \lang\Object {
   /**
    * Returns whether an object is equal to this testcase
    *
-   * @param   lang.Generic cmp
+   * @param   var $cmp
+   * @return  bool
    */
   public function equals($cmp) {
     return $cmp instanceof self && $this->name == $cmp->name;
