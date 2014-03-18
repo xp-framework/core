@@ -24,7 +24,7 @@ class FileAppenderTest extends AppenderTest {
 
       public function stream_open($path, $mode, $options, $opened_path) {
         if (strstr($mode, "r")) {
-          if (!isset(self::$buffer[$path])) return FALSE;
+          if (!isset(self::$buffer[$path])) return false;
           self::$buffer[$path][0]= $mode;
           self::$buffer[$path][1]= 0;
         } else if (strstr($mode, "w")) {
@@ -37,7 +37,7 @@ class FileAppenderTest extends AppenderTest {
           }
         }
         $this->handle= &self::$buffer[$path];
-        return TRUE;
+        return true;
       }
 
       public function stream_write($data) {
@@ -54,7 +54,7 @@ class FileAppenderTest extends AppenderTest {
       }
 
       public function stream_flush() {
-        return TRUE;
+        return true;
       }
 
       public function stream_seek($offset, $whence) {
@@ -77,17 +77,17 @@ class FileAppenderTest extends AppenderTest {
       }
 
       public function stream_close() {
-        return TRUE;
+        return true;
       }
 
       public static function stream_metadata($path, $option, $value) {
-        if (!isset(self::$buffer[$path])) return FALSE;
+        if (!isset(self::$buffer[$path])) return false;
         self::$buffer[$path][3][$option]= $value;
-        return TRUE;
+        return true;
       }
 
       public static function url_stat($path) {
-        if (!isset(self::$buffer[$path])) return FALSE;
+        if (!isset(self::$buffer[$path])) return false;
         return array(
           "size" => strlen(self::$buffer[$path][2]),
           "mode" => self::$buffer[$path][3][STREAM_META_ACCESS]
@@ -146,7 +146,7 @@ class FileAppenderTest extends AppenderTest {
   public function filename_syncs_with_time() {
     $fixture= newinstance('util.log.FileAppender', array('test://fn%H'), '{
       protected $hour= 0;
-      public function filename($ref= NULL) {
+      public function filename($ref= null) {
         return parent::filename(0 + 3600 * $this->hour++);
       }
     }');
@@ -156,7 +156,7 @@ class FileAppenderTest extends AppenderTest {
     $fixture->append($this->newEvent(\util\log\LogLevel::INFO, 'Two'));
 
     $this->assertEquals(
-      array('fn1' => TRUE, 'fn2' => TRUE, 'fn3' => FALSE),
+      array('fn1' => true, 'fn2' => true, 'fn3' => false),
       array('fn1' => file_exists('test://fn01'), 'fn2' => file_exists('test://fn02'), 'fn3' => file_exists('test://fn03'))
     );
   }
