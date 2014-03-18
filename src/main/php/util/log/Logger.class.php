@@ -170,12 +170,10 @@ class Logger extends \lang\Object implements Configurable {
         
         // Params
         foreach ($params as $param) {
-          $a->{$param}= strftime(
-            $prop->readString(
-              $section,
-              'appender.'.$appender.'.param.'.$param,
-              ''
-            )
+          $a->{$param}= $prop->readString(
+            $section,
+            'appender.'.$appender.'.param.'.$param,
+            ''
           );
         }
 

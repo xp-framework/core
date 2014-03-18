@@ -71,6 +71,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged xp-framework/xp-framework#353: Add support for rolling logfile names 
+  in FileAppender (and Logger) - (@thekid, @kiesel)
 * Changed Console class to print `true` and `false` for booleans instead of
   `1` for true and an empty string for false - (@thekid)
 * Implemented generic util.log.LogCategory::log($level, $args)
