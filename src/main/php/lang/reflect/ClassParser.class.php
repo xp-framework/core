@@ -255,10 +255,6 @@ class ClassParser extends \lang\Object {
         } else if (2 === $state) {              // Inside braces of @attr(...)
           if (')' === $tokens[$i]) {
             $state= 1;
-          } else if (',' === $tokens[$i]) {
-            trigger_error('Deprecated usage of multi-value annotations in '.$place, E_USER_DEPRECATED);
-            $value= (array)$value;
-            $state= 5;
           } else if ($i + 2 < $s && ('=' === $tokens[$i + 1] || '=' === $tokens[$i + 2])) {
             $key= $tokens[$i][1];
             $value= array();
@@ -279,15 +275,6 @@ class ClassParser extends \lang\Object {
         } else if (4 === $state) {              // Parsing value inside @attr(a= b, c= d)
           $value[$key]= $this->valueOf($tokens, $i, $context, $imports);
           $state= 3;
-        } else if (5 === $state) {
-          if (')' === $tokens[$i]) {            // BC: Deprecated multi-value annotations
-            $value[]= $element;
-            $state= 1;
-          } else if (',' === $tokens[$i]) {
-            $value[]= $element;
-          } else {
-            $element= $this->valueOf($tokens, $i, $context, $imports);
-          }
         }
       }
     } catch (\lang\XPException $e) {
