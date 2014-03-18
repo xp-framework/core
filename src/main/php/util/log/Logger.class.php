@@ -2,10 +2,6 @@
 
 use util\Configurable;
 
-
-// Deprecated
-  define('LOG_DEFINES_DEFAULT', 'default');
-
 /**
  * A singleton logger
  * 
