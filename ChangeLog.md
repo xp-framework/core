@@ -8,7 +8,7 @@ XP Framework Core ChangeLog
 * Removed deprecated lang.ChainedException - (@thekid)
 * Removed deprecated text.CSVGenerator and text.parser.CSVParser classes.
   Use https://github.com/xp-framework/csv instead - (@thekid)
-* Removed deprecated Primitive::$[BOOLEAN, INTEGER] - (@thekid) 
+* Removed deprecated Primitive::$[BOOLEAN, INTEGER] and Type::$ANY- (@thekid) 
 * Removed deprecated lang.types.Number::floatVal() - (@thekid)
 * **Minimum PHP version reqired is now PHP 5.4.0** - (@thekid)
 * Removed deprecated `assertArray()`, `assertObject()`, `assertEmpty()`,

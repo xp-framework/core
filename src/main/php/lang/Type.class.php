@@ -3,22 +3,17 @@
 /**
  * Type is the base class for the XPClass and Primitive classes.
  *
- * @see      xp://lang.XPClass
- * @see      xp://lang.Primitive
- * @test     xp://net.xp_framework.unittest.reflection.TypeTest 
- * @purpose  Base class
+ * @see    xp://lang.XPClass
+ * @see    xp://lang.Primitive
+ * @test   xp://net.xp_framework.unittest.reflection.TypeTest 
  */
 class Type extends Object {
-  public static
-    $ANY,           // deprecated
-    $VAR,
-    $VOID;
-
-  public
-    $name= '';
+  public static $VAR;
+  public static $VOID;
+  public $name= '';
 
   static function __static() {
-    self::$ANY= self::$VAR= new self('var');
+    self::$VAR= new self('var');
     self::$VOID= new self('void');
   }
 
