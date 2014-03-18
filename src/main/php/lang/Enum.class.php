@@ -3,9 +3,9 @@
 /**
  * Enumeration base class
  *
- * @see      http://news.xp-framework.net/article/222/2007/11/12/
- * @see      http://news.xp-framework.net/article/207/2007/07/29/
- * @test     xp://net.xp_framework.unittest.core.EnumTest
+ * @see   http://news.xp-framework.net/article/222/2007/11/12/
+ * @see   http://news.xp-framework.net/article/207/2007/07/29/
+ * @test  xp://net.xp_framework.unittest.core.EnumTest
  */
 abstract class Enum extends Object {
   public $name= '';
@@ -66,7 +66,7 @@ abstract class Enum extends Object {
     if (!$class->isEnum()) {
       throw new \IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
     }
-    $r= array();
+    $r= [];
     foreach ($class->_reflect->getStaticProperties() as $prop) {
       $class->isInstance($prop) && $r[]= $prop;
     }
@@ -79,10 +79,12 @@ abstract class Enum extends Object {
    * @return  lang.Enum[]
    */
   public static function values() {
-    $r= array();
+    $r= [];
     $c= new \ReflectionClass(get_called_class());
     foreach ($c->getStaticProperties() as $prop) {
-      $c->isInstance($prop) && $r[]= $prop;
+      if ($prop instanceof Generic && $c->isInstance($prop)) {
+        $r[]= $prop;
+      }
     }
     return $r;
   }
@@ -124,21 +126,5 @@ abstract class Enum extends Object {
    */
   public function toString() {
     return $this->name;
-  }
-  
-  /**
-   * Returns all members for a given enum.
-   *
-   * @deprecated
-   * @param   string class
-   * @return  lang.Enum[]
-   */
-  protected static function membersOf($class) {
-    $r= array();
-    $c= new \ReflectionClass($class);
-    foreach ($c->getStaticProperties() as $prop) {
-      $prop instanceof $class && $r[]= $prop;
-    }
-    return $r;
   }
 }

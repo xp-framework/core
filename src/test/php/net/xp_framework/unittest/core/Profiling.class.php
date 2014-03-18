@@ -4,24 +4,13 @@
  * Profiling enumeration
  */
 class Profiling extends \lang\Enum {
-  public static
-    $INSTANCE,
-    $EXTENSION;
-  
-  public static
-    $fixture = NULL;
+  public static $INSTANCE;
+  public static $EXTENSION;
+
+  public static $fixture = null;
   
   static function __static() {
     self::$INSTANCE= new self(0, 'INSTANCE');
     self::$EXTENSION= new self(1, 'EXTENSION');
-  }
-
-  /**
-   * Returns all enum members
-   *
-   * @return  lang.Enum[]
-   */
-  public static function values() {
-    return parent::membersOf(__CLASS__);
   }
 }
