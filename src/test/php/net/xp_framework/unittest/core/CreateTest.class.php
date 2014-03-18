@@ -15,7 +15,7 @@ use util\collections\HashTable;
  * 2) Returning an object passed in, for use in fluent interfaces, e.g.
  *
  * ```php
- * $c= create(new Criteria())->add('bz_id', 20000, EQUAL);
+ * $c= (new Criteria())->add('bz_id', 20000, EQUAL);
  * ````
  * 
  * @see   http://news.xp-framework.net/article/184/2007/05/06/

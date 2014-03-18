@@ -18,7 +18,7 @@ class TimerTest extends TestCase {
    */
   #[@test]
   public function initiallyZero() {
-    $this->assertEquals(0.0, create(new Timer())->elapsedTime());
+    $this->assertEquals(0.0, (new Timer())->elapsedTime());
   }
 
   /**

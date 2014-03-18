@@ -347,6 +347,6 @@ class Runner extends \lang\Object {
    * @param   string[] args
    */
   public static function main(array $args) {
-    return create(new self())->run($args);
+    return (new self())->run($args);
   }    
 }

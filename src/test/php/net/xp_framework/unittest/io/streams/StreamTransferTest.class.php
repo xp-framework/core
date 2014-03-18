@@ -115,7 +115,7 @@ class StreamTransferTest extends TestCase {
   public function close() {
     $in= $this->closeableInputStream();
     $out= $this->closeableOutputStream();
-    create(new StreamTransfer($in, $out))->close();
+    (new StreamTransfer($in, $out))->close();
     $this->assertTrue($in->closed, 'input closed');
     $this->assertTrue($out->closed, 'output closed');
   }
@@ -130,7 +130,7 @@ class StreamTransferTest extends TestCase {
     $out= $this->uncloseableOutputStream();
     
     try {
-      create(new StreamTransfer($in, $out))->close();
+      (new StreamTransfer($in, $out))->close();
       $this->fail('Expected exception not caught', null, 'io.IOException');
     } catch (\io\IOException $expected) {
       $this->assertEquals('Could not close output stream: Close error', $expected->getMessage());
@@ -149,7 +149,7 @@ class StreamTransferTest extends TestCase {
     $out= $this->closeableOutputStream();
     
     try {
-      create(new StreamTransfer($in, $out))->close();
+      (new StreamTransfer($in, $out))->close();
       $this->fail('Expected exception not caught', null, 'io.IOException');
     } catch (\io\IOException $expected) {
       $this->assertEquals('Could not close input stream: Close error', $expected->getMessage());
@@ -168,7 +168,7 @@ class StreamTransferTest extends TestCase {
     $out= $this->uncloseableOutputStream();
     
     try {
-      create(new StreamTransfer($in, $out))->close();
+      (new StreamTransfer($in, $out))->close();
       $this->fail('Expected exception not caught', null, 'io.IOException');
     } catch (\io\IOException $expected) {
       $this->assertEquals('Could not close input stream: Close error, Could not close output stream: Close error', $expected->getMessage());

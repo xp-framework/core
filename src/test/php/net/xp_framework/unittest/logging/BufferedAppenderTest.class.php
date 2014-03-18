@@ -17,7 +17,7 @@ class BufferedAppenderTest extends AppenderTest {
    * @return  util.log.BufferedAppender
    */
   protected function newFixture() {
-    return create(new BufferedAppender())->withLayout(new PatternLayout("[%l] %m\n"));
+    return (new BufferedAppender())->withLayout(new PatternLayout("[%l] %m\n"));
   }
 
   /**

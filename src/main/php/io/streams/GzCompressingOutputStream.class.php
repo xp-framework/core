@@ -83,7 +83,7 @@ class GzCompressingOutputStream extends \lang\Object implements OutputStream {
     // Write GZIP footer:
     // * CRC32    (CRC-32 checksum)
     // * ISIZE    (Input size)
-    fwrite($this->out, pack('VV', create(new CRC32($this->md->digest()))->asInt32(), $this->length));
+    fwrite($this->out, pack('VV', (new CRC32($this->md->digest()))->asInt32(), $this->length));
     fclose($this->out);
     $this->out= null;
   }

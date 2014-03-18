@@ -108,7 +108,7 @@ class InfoAction extends Action {
     if ($remote) {
       Console::writeLine('@', $this->api->getBase()->getURL());
 
-      $request= create(new RestRequest('/vendors/{vendor}/modules/{module}'))
+      $request= (new RestRequest('/vendors/{vendor}/modules/{module}'))
         ->withSegment('vendor', $module->vendor)
         ->withSegment('module', $module->name)
       ;

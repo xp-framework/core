@@ -19,7 +19,7 @@ class Inet4AddressTest extends TestCase {
    */
   #[@test]
   public function createAddress() {
-    $this->assertEquals('127.0.0.1', create(new Inet4Address('127.0.0.1'))->asString());
+    $this->assertEquals('127.0.0.1', (new Inet4Address('127.0.0.1'))->asString());
   }
 
   /**
@@ -56,7 +56,7 @@ class Inet4AddressTest extends TestCase {
    */
   #[@test]
   public function loopbackAddress() {
-    $this->assertTrue(create(new Inet4Address('127.0.0.1'))->isLoopback());
+    $this->assertTrue((new Inet4Address('127.0.0.1'))->isLoopback());
   }
   
   /**
@@ -65,7 +65,7 @@ class Inet4AddressTest extends TestCase {
    */
   #[@test]
   public function alternativeLoopbackAddress() {
-    $this->assertTrue(create(new Inet4Address('127.0.0.200'))->isLoopback());
+    $this->assertTrue((new Inet4Address('127.0.0.200'))->isLoopback());
   }
   
   /**
@@ -74,7 +74,7 @@ class Inet4AddressTest extends TestCase {
    */
   #[@test]
   public function inSubnet() {
-    $this->assertTrue(create(new Inet4Address('192.168.2.1'))->inSubnet(new Network(new Inet4Address('192.168.2'), 24)));
+    $this->assertTrue((new Inet4Address('192.168.2.1'))->inSubnet(new Network(new Inet4Address('192.168.2'), 24)));
   }
   
   /**
@@ -83,7 +83,7 @@ class Inet4AddressTest extends TestCase {
    */
   #[@test]
   public function notInSubnet() {
-    $this->assertFalse(create(new Inet4Address('192.168.2.1'))->inSubnet(new Network(new Inet4Address('172.17.0.0'), 12)));
+    $this->assertFalse((new Inet4Address('192.168.2.1'))->inSubnet(new Network(new Inet4Address('172.17.0.0'), 12)));
   }
   
   /**
@@ -92,7 +92,7 @@ class Inet4AddressTest extends TestCase {
    */
   #[@test]
   public function hostInOwnHostSubnet() {
-    $this->assertTrue(create(new Inet4Address('172.17.29.6'))->inSubnet(new Network(new Inet4Address('172.17.29.6'), 32)));
+    $this->assertTrue((new Inet4Address('172.17.29.6'))->inSubnet(new Network(new Inet4Address('172.17.29.6'), 32)));
   }
   
   /**
@@ -101,7 +101,7 @@ class Inet4AddressTest extends TestCase {
    */
   #[@test, @expect('lang.FormatException')]
   public function illegalSubnet() {
-    create(new Inet4Address('172.17.29.6'))->inSubnet(new Network(new Inet4Address('172.17.29.6'), 33));
+    (new Inet4Address('172.17.29.6'))->inSubnet(new Network(new Inet4Address('172.17.29.6'), 33));
   }
 
   /**
@@ -137,7 +137,7 @@ class Inet4AddressTest extends TestCase {
    */
   #[@test]
   public function reverseNotationLocalhost() {
-    $this->assertEquals('1.0.0.127.in-addr.arpa', create(new Inet4Address('127.0.0.1'))->reversedNotation());
+    $this->assertEquals('1.0.0.127.in-addr.arpa', (new Inet4Address('127.0.0.1'))->reversedNotation());
   }
   
   /**

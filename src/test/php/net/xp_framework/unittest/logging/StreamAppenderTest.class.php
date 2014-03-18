@@ -22,8 +22,8 @@ class StreamAppenderTest extends TestCase {
    */
   public function setUp() {
     $this->out= new MemoryOutputStream();
-    $this->cat= create(new LogCategory('default'))->withAppender(
-      create(new StreamAppender($this->out))->withLayout(new PatternLayout('%l: %m%n'))
+    $this->cat= (new LogCategory('default'))->withAppender(
+      (new StreamAppender($this->out))->withLayout(new PatternLayout('%l: %m%n'))
     );
   }
   

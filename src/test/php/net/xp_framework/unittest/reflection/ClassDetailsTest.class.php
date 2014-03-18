@@ -21,7 +21,7 @@ class ClassDetailsTest extends TestCase {
    * @throws  unittest.AssertionFailedError
    */
   protected function parseComment($comment) {
-    $details= create(new ClassParser())->parseDetails('
+    $details= (new ClassParser())->parseDetails('
       <?php
         class Test extends Object {
           '.$comment.'
@@ -237,7 +237,7 @@ class ClassDetailsTest extends TestCase {
    */
   #[@test]
   public function withClosure() {
-    $details= create(new ClassParser())->parseDetails('<?php
+    $details= (new ClassParser())->parseDetails('<?php
       class WithClosure_1 extends Object {
 
         /**
@@ -260,7 +260,7 @@ class ClassDetailsTest extends TestCase {
    */
   #[@test]
   public function withClosures() {
-    $details= create(new ClassParser())->parseDetails('<?php
+    $details= (new ClassParser())->parseDetails('<?php
       class WithClosure_2 extends Object {
 
         /**
@@ -291,7 +291,7 @@ class ClassDetailsTest extends TestCase {
    * @return var details
    */
   protected function dummyDetails() {
-    return create(new ClassParser())->parseDetails('<?php
+    return (new ClassParser())->parseDetails('<?php
       class DummyDetails extends Object {
         protected $test = TRUE;
 
@@ -329,7 +329,7 @@ class ClassDetailsTest extends TestCase {
 
   #[@test]
   public function use_statements_evaluated() {
-    $actual= create(new ClassParser())->parseDetails('<?php namespace test\\use;
+    $actual= (new ClassParser())->parseDetails('<?php namespace test\\use;
       use lang\\Object;
 
       #[@value(new Object())]
@@ -341,7 +341,7 @@ class ClassDetailsTest extends TestCase {
 
   #[@test]
   public function closure_use_not_evaluated() {
-    create(new ClassParser())->parseDetails('<?php 
+    (new ClassParser())->parseDetails('<?php 
       class Test extends Object {
         public function run() {
           $closure= function($a) use($b) { };
@@ -352,7 +352,7 @@ class ClassDetailsTest extends TestCase {
 
   #[@test]
   public function short_array_syntax_in_arrays_of_arrays() {
-    $actual= create(new ClassParser())->parseDetails('<?php
+    $actual= (new ClassParser())->parseDetails('<?php
       #[@values([
       #  [1, 2],
       #  [3, 4]

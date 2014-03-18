@@ -15,33 +15,33 @@ class SocketEndpointTest extends TestCase {
 
   #[@test]
   public function v4_string_passed_to_constructor() {
-    $this->assertEquals('127.0.0.1', create(new SocketEndpoint('127.0.0.1', 6100))->getHost());
+    $this->assertEquals('127.0.0.1', (new SocketEndpoint('127.0.0.1', 6100))->getHost());
   }
 
   #[@test]
   public function v4_addr_passed_to_constructor() {
     $this->assertEquals(
       '127.0.0.1',
-      create(new SocketEndpoint(new Inet4Address('127.0.0.1'), 6100))->getHost()
+      (new SocketEndpoint(new Inet4Address('127.0.0.1'), 6100))->getHost()
     );
   }
 
   #[@test]
   public function v6_string_passed_to_constructor() {
-    $this->assertEquals('fe80::1', create(new SocketEndpoint('fe80::1', 6100))->getHost());
+    $this->assertEquals('fe80::1', (new SocketEndpoint('fe80::1', 6100))->getHost());
   }
 
   #[@test]
   public function v6_addr_passed_to_constructor() {
     $this->assertEquals(
       'fe80::1',
-      create(new SocketEndpoint(new Inet6Address('fe80::1'), 6100))->getHost()
+      (new SocketEndpoint(new Inet6Address('fe80::1'), 6100))->getHost()
     );
   }
 
   #[@test]
   public function port_passed_to_constructor() {
-    $this->assertEquals(6100, create(new SocketEndpoint('127.0.0.1', 6100))->getPort());
+    $this->assertEquals(6100, (new SocketEndpoint('127.0.0.1', 6100))->getPort());
   }
 
   #[@test]
@@ -70,17 +70,17 @@ class SocketEndpointTest extends TestCase {
 
   #[@test]
   public function v4_address() {
-    $this->assertEquals('127.0.0.1:6100', create(new SocketEndpoint('127.0.0.1', 6100))->getAddress());
+    $this->assertEquals('127.0.0.1:6100', (new SocketEndpoint('127.0.0.1', 6100))->getAddress());
   }
 
   #[@test]
   public function v6_address() {
-    $this->assertEquals('[fe80::1]:6100', create(new SocketEndpoint('fe80::1', 6100))->getAddress());
+    $this->assertEquals('[fe80::1]:6100', (new SocketEndpoint('fe80::1', 6100))->getAddress());
   }
 
   #[@test]
   public function hashcode_returns_address() {
-    $this->assertEquals('127.0.0.1:6100', create(new SocketEndpoint('127.0.0.1', 6100))->hashCode());
+    $this->assertEquals('127.0.0.1:6100', (new SocketEndpoint('127.0.0.1', 6100))->hashCode());
   }
 
   #[@test]

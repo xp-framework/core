@@ -107,7 +107,7 @@ class UpgradeAction extends Action {
     if (isset($args[1])) {
 
       // Target version given, check it exists
-      $request= create(new RestRequest('/vendors/{vendor}/modules/{module}/releases/{release}'))
+      $request= (new RestRequest('/vendors/{vendor}/modules/{module}/releases/{release}'))
         ->withSegment('vendor', $module->vendor)
         ->withSegment('module', $module->name)
         ->withSegment('release', $args[1])
@@ -130,7 +130,7 @@ class UpgradeAction extends Action {
     } else {
 
       // No target version given: Check for module online, and upgrade to newest
-      $request= create(new RestRequest('/vendors/{vendor}/modules/{module}/releases'))
+      $request= (new RestRequest('/vendors/{vendor}/modules/{module}/releases'))
         ->withSegment('vendor', $module->vendor)
         ->withSegment('module', $module->name)
       ;

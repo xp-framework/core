@@ -14,17 +14,17 @@ class BytesTest extends \unittest\TestCase {
 
   #[@test]
   public function creating_an_empty_bytes_without_supplying_parameters() {
-    $this->assertEquals(0, create(new Bytes())->size());
+    $this->assertEquals(0, (new Bytes())->size());
   }
 
   #[@test]
   public function creating_an_empty_bytes_from_an_empty_string() {
-    $this->assertEquals(0, create(new Bytes(''))->size());
+    $this->assertEquals(0, (new Bytes(''))->size());
   }
 
   #[@test]
   public function creating_an_empty_bytes_from_an_empty_array() {
-    $this->assertEquals(0, create(new Bytes(array()))->size());
+    $this->assertEquals(0, (new Bytes(array()))->size());
   }
 
   #[@test]
@@ -232,7 +232,7 @@ class BytesTest extends \unittest\TestCase {
   public function abcBytesToString() {
     $this->assertEquals(
       'lang.types.Bytes(6)@{@ ABC!}', 
-      create(new Bytes('@ ABC!'))->toString()
+      (new Bytes('@ ABC!'))->toString()
     );
   }
 
@@ -245,7 +245,7 @@ class BytesTest extends \unittest\TestCase {
       '\020\021\022\023\024\025\026\027'.   // 16 - 23
       '\030\031\032\033\034\035\036\037'.   // 24 - 31
       '}',
-      create(new Bytes(range(0, 31)))->toString()
+      (new Bytes(range(0, 31)))->toString()
     );
   }
 
@@ -253,7 +253,7 @@ class BytesTest extends \unittest\TestCase {
   public function umlautsToString() {
     $this->assertEquals(
       'lang.types.Bytes(6)@{A\344O\366U\374}', 
-      create(new Bytes('AäOöUü'))->toString()
+      (new Bytes('AäOöUü'))->toString()
     );
   }
 
@@ -310,7 +310,7 @@ class BytesTest extends \unittest\TestCase {
   public function utf8_bytes_from_string() {
     $this->assertEquals(
       new Bytes("H\303\244llo"),
-      create(new String("H\xe4llo", 'iso-8859-1'))->getBytes('utf-8')
+      (new String("H\xe4llo", 'iso-8859-1'))->getBytes('utf-8')
     );
   }
 
@@ -318,7 +318,7 @@ class BytesTest extends \unittest\TestCase {
   public function iso88591_bytes_from_string() {
     $this->assertEquals(
       new Bytes("H\344llo"),
-      create(new String("H\xe4llo", 'iso-8859-1'))->getBytes('iso-8859-1')
+      (new String("H\xe4llo", 'iso-8859-1'))->getBytes('iso-8859-1')
     );
   }
 
@@ -342,7 +342,7 @@ class BytesTest extends \unittest\TestCase {
   public function utf8_bytes_from_character() {
     $this->assertEquals(
       new Bytes("\303\244"),
-      create(new Character("\xe4", 'iso-8859-1'))->getBytes('utf-8')
+      (new Character("\xe4", 'iso-8859-1'))->getBytes('utf-8')
     );
   }
 
@@ -350,7 +350,7 @@ class BytesTest extends \unittest\TestCase {
   public function iso88591_bytes_from_character() {
     $this->assertEquals(
       new Bytes("\344"),
-      create(new Character("\xe4", 'iso-8859-1'))->getBytes('iso-8859-1')
+      (new Character("\xe4", 'iso-8859-1'))->getBytes('iso-8859-1')
     );
   }
 

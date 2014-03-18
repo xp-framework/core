@@ -33,7 +33,7 @@ class HashmapIteratorTest extends TestCase {
    */
   #[@test, @expect('util.NoSuchElementException')]
   public function nextOnEmpty() {
-    create(new HashmapIterator(array()))->next();
+    (new HashmapIterator(array()))->next();
   }
 
   /**
@@ -42,7 +42,7 @@ class HashmapIteratorTest extends TestCase {
    */
   #[@test]
   public function hasNextOnEmpty() {
-    $this->assertFalse(create(new HashmapIterator(array()))->hasNext());
+    $this->assertFalse((new HashmapIterator(array()))->hasNext());
   }
 
   /**
@@ -53,7 +53,7 @@ class HashmapIteratorTest extends TestCase {
   public function nextOnArray() {
     $this->assertEquals(
       'v1',
-      create(new HashmapIterator(array('k1' => 'v1')))->next()
+      (new HashmapIterator(array('k1' => 'v1')))->next()
     );
   }
 
@@ -64,7 +64,7 @@ class HashmapIteratorTest extends TestCase {
   #[@test]
   public function hasNextOnArray() {
     $this->assertTrue(
-      create(new HashmapIterator(array('k1' => 'v1')))->hasNext()
+      (new HashmapIterator(array('k1' => 'v1')))->hasNext()
     );
   }
 

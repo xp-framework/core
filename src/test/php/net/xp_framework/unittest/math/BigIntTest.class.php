@@ -18,17 +18,17 @@ class BigIntTest extends TestCase {
 
   #[@test]
   public function lotsOfZeroesFractionCut() {
-    $this->assertEquals(new BigInt(4), create(new BigInt('4.00000000000000000')));
+    $this->assertEquals(new BigInt(4), (new BigInt('4.00000000000000000')));
   }
 
   #[@test]
   public function dotOneFraction() {
-    $this->assertEquals(new BigInt(4), create(new BigInt('4.1')));
+    $this->assertEquals(new BigInt(4), (new BigInt('4.1')));
   }
 
   #[@test]
   public function dotNineFraction() {
-    $this->assertEquals(new BigInt(4), create(new BigInt('4.9')));
+    $this->assertEquals(new BigInt(4), (new BigInt('4.9')));
   }
 
   #[@test]
@@ -43,47 +43,47 @@ class BigIntTest extends TestCase {
 
   #[@test]
   public function intValue() {
-    $this->assertEquals(6100, create(new BigInt(6100))->intValue());
+    $this->assertEquals(6100, (new BigInt(6100))->intValue());
   }
 
   #[@test]
   public function intValueNegative() {
-    $this->assertEquals(-6100, create(new BigInt(-6100))->intValue());
+    $this->assertEquals(-6100, (new BigInt(-6100))->intValue());
   }
 
   #[@test]
   public function byteValue() {
-    $this->assertEquals(16, create(new BigInt(16))->byteValue());
+    $this->assertEquals(16, (new BigInt(16))->byteValue());
   }
 
   #[@test]
   public function byteValueLarge() {
-    $this->assertEquals(222, create(new BigInt(2546003422))->byteValue());
+    $this->assertEquals(222, (new BigInt(2546003422))->byteValue());
   }
 
   #[@test]
   public function doubleValue() {
-    $this->assertEquals(6100.0, create(new BigInt(6100))->doubleValue());
+    $this->assertEquals(6100.0, (new BigInt(6100))->doubleValue());
   }
 
   #[@test]
   public function doubleValueNegative() {
-    $this->assertEquals(-6100.0, create(new BigInt(-6100))->doubleValue());
+    $this->assertEquals(-6100.0, (new BigInt(-6100))->doubleValue());
   }
 
   #[@test]
   public function addition() {
-    $this->assertEquals(new BigInt(2), create(new BigInt(1))->add(new BigInt(1)));
+    $this->assertEquals(new BigInt(2), (new BigInt(1))->add(new BigInt(1)));
   }
 
   #[@test]
   public function additionOneNegative() {
-    $this->assertEquals(new BigInt(0), create(new BigInt(-1))->add(new BigInt(1)));
+    $this->assertEquals(new BigInt(0), (new BigInt(-1))->add(new BigInt(1)));
   }
 
   #[@test]
   public function additionBothNegative() {
-    $this->assertEquals(new BigInt(-2), create(new BigInt(-1))->add(new BigInt(-1)));
+    $this->assertEquals(new BigInt(-2), (new BigInt(-1))->add(new BigInt(-1)));
   }
  
   #[@test]
@@ -96,22 +96,22 @@ class BigIntTest extends TestCase {
 
   #[@test]
   public function additionWithPrimitive() {
-    $this->assertEquals(new BigInt(6100), create(new BigInt(1))->add(6099));
+    $this->assertEquals(new BigInt(6100), (new BigInt(1))->add(6099));
   }
 
   #[@test]
   public function subtraction() {
-    $this->assertEquals(new BigInt(0), create(new BigInt(1))->subtract(new BigInt(1)));
+    $this->assertEquals(new BigInt(0), (new BigInt(1))->subtract(new BigInt(1)));
   }
 
   #[@test]
   public function subtractionOneNegative() {
-    $this->assertEquals(new BigInt(-2), create(new BigInt(-1))->subtract(new BigInt(1)));
+    $this->assertEquals(new BigInt(-2), (new BigInt(-1))->subtract(new BigInt(1)));
   }
 
   #[@test]
   public function subtractionBothNegative() {
-    $this->assertEquals(new BigInt(0), create(new BigInt(-1))->subtract(new BigInt(-1)));
+    $this->assertEquals(new BigInt(0), (new BigInt(-1))->subtract(new BigInt(-1)));
   }
 
   #[@test]
@@ -124,22 +124,22 @@ class BigIntTest extends TestCase {
 
   #[@test]
   public function subtractionWithPrimitive() {
-    $this->assertEquals(new BigInt(-6100), create(new BigInt(-1))->subtract(6099));
+    $this->assertEquals(new BigInt(-6100), (new BigInt(-1))->subtract(6099));
   }
 
   #[@test]
   public function multiplication() {
-    $this->assertEquals(new BigInt(1), create(new BigInt(1))->multiply(new BigInt(1)));
+    $this->assertEquals(new BigInt(1), (new BigInt(1))->multiply(new BigInt(1)));
   }
 
   #[@test]
   public function multiplicationOneNegative() {
-    $this->assertEquals(new BigInt(-1), create(new BigInt(-1))->multiply(new BigInt(1)));
+    $this->assertEquals(new BigInt(-1), (new BigInt(-1))->multiply(new BigInt(1)));
   }
 
   #[@test]
   public function multiplicationBothNegative() {
-    $this->assertEquals(new BigInt(1), create(new BigInt(-1))->multiply(new BigInt(-1)));
+    $this->assertEquals(new BigInt(1), (new BigInt(-1))->multiply(new BigInt(-1)));
   }
 
   #[@test]
@@ -152,22 +152,22 @@ class BigIntTest extends TestCase {
 
   #[@test]
   public function multiplicationWithPrimitive() {
-    $this->assertEquals(new BigInt(6100), create(new BigInt(-1))->multiply(-6100));
+    $this->assertEquals(new BigInt(6100), (new BigInt(-1))->multiply(-6100));
   }
 
   #[@test]
   public function division() {
-    $this->assertEquals(new BigInt(2), create(new BigInt(4))->divide(new BigInt(2)));
+    $this->assertEquals(new BigInt(2), (new BigInt(4))->divide(new BigInt(2)));
   }
 
   #[@test]
   public function divisionOneNegative() {
-    $this->assertEquals(new BigInt(-2), create(new BigInt(-4))->divide(new BigInt(2)));
+    $this->assertEquals(new BigInt(-2), (new BigInt(-4))->divide(new BigInt(2)));
   }
 
   #[@test]
   public function divisionBothNegative() {
-    $this->assertEquals(new BigInt(2), create(new BigInt(-4))->divide(new BigInt(-2)));
+    $this->assertEquals(new BigInt(2), (new BigInt(-4))->divide(new BigInt(-2)));
   }
 
   #[@test]
@@ -180,112 +180,112 @@ class BigIntTest extends TestCase {
 
   #[@test]
   public function integerDivision1() {
-    $this->assertEquals(new BigInt(0), create(new BigInt(1))->divide(new BigInt(2)));
+    $this->assertEquals(new BigInt(0), (new BigInt(1))->divide(new BigInt(2)));
   }
 
   #[@test]
   public function integerDivision2() {
-    $this->assertEquals(new BigInt(2), create(new BigInt(8))->divide(new BigInt(3)));
+    $this->assertEquals(new BigInt(2), (new BigInt(8))->divide(new BigInt(3)));
   }
 
   #[@test]
   public function integerDivision3() {
-    $this->assertEquals(new BigInt(-2), create(new BigInt(-8))->divide(new BigInt(3)));
+    $this->assertEquals(new BigInt(-2), (new BigInt(-8))->divide(new BigInt(3)));
   }
 
   #[@test]
   public function divisionWithPrimitive() {
-    $this->assertEquals(new BigInt(6100), create(new BigInt(37210000))->divide(6100));
+    $this->assertEquals(new BigInt(6100), (new BigInt(37210000))->divide(6100));
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function divisionByZero() {
-    create(new BigInt(5))->divide(new BigInt(0));
+    (new BigInt(5))->divide(new BigInt(0));
   }
 
   #[@test]
   public function moduloWithoutRemainder() {
-    $this->assertEquals(new BigInt(0), create(new BigInt(4))->modulo(new BigInt(2)));
+    $this->assertEquals(new BigInt(0), (new BigInt(4))->modulo(new BigInt(2)));
   }
 
   #[@test]
   public function moduloWithRemainder() {
-    $this->assertEquals(new BigInt(1), create(new BigInt(5))->modulo(new BigInt(2)));
+    $this->assertEquals(new BigInt(1), (new BigInt(5))->modulo(new BigInt(2)));
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function moduloZero() {
-    create(new BigInt(5))->modulo(new BigInt(0));
+    (new BigInt(5))->modulo(new BigInt(0));
   }
 
   #[@test]
   public function moduloWithPrimitive() {
-    $this->assertEquals(new BigInt(1), create(new BigInt(5))->modulo(2));
+    $this->assertEquals(new BigInt(1), (new BigInt(5))->modulo(2));
   }
 
   #[@test]
   public function power() {
-    $this->assertEquals(new BigInt(16), create(new BigInt(2))->power(new BigInt(4)));
+    $this->assertEquals(new BigInt(16), (new BigInt(2))->power(new BigInt(4)));
   }
 
   #[@test]
   public function powerNegativeOne() {
-    $this->assertEquals(new BigInt(0), create(new BigInt(2))->power(new BigInt(-1)));
+    $this->assertEquals(new BigInt(0), (new BigInt(2))->power(new BigInt(-1)));
   }
 
   #[@test]
   public function powerOfZero() {
-    $this->assertEquals(new BigInt(0), create(new BigInt(0))->power(new BigInt(2)));
+    $this->assertEquals(new BigInt(0), (new BigInt(0))->power(new BigInt(2)));
   }
 
   #[@test]
   public function powerOfZeroZero() {
-    $this->assertEquals(new BigInt(1), create(new BigInt(0))->power(new BigInt(0)));
+    $this->assertEquals(new BigInt(1), (new BigInt(0))->power(new BigInt(0)));
   }
 
   #[@test]
   public function powerOfZeroNegative() {
-    $this->assertEquals(new BigInt(0), create(new BigInt(0))->power(new BigInt(-2)));
+    $this->assertEquals(new BigInt(0), (new BigInt(0))->power(new BigInt(-2)));
   }
 
   #[@test]
   public function powerOfNegativeNumberEven() {
-    $this->assertEquals(new BigInt(4), create(new BigInt(-2))->power(new BigInt(2)));
+    $this->assertEquals(new BigInt(4), (new BigInt(-2))->power(new BigInt(2)));
   }
 
   #[@test]
   public function powerOfNegativeNumberOdd() {
-    $this->assertEquals(new BigInt(-8), create(new BigInt(-2))->power(new BigInt(3)));
+    $this->assertEquals(new BigInt(-8), (new BigInt(-2))->power(new BigInt(3)));
   }
 
   #[@test]
   public function powerOne() {
-    $this->assertEquals(new BigInt(2), create(new BigInt(2))->power(new BigInt(1)));
+    $this->assertEquals(new BigInt(2), (new BigInt(2))->power(new BigInt(1)));
   }
 
   #[@test]
   public function powerZero() {
-    $this->assertEquals(new BigInt(1), create(new BigInt(2))->power(new BigInt(0)));
+    $this->assertEquals(new BigInt(1), (new BigInt(2))->power(new BigInt(0)));
   }
 
   #[@test]
   public function powerWithPrimitive() {
-    $this->assertEquals(new BigInt(4), create(new BigInt(2))->power(2));
+    $this->assertEquals(new BigInt(4), (new BigInt(2))->power(2));
   }
 
   #[@test]
   public function bitwiseAnd() {
-    $this->assertEquals(new BigInt(1), create(new BigInt(1))->bitwiseAnd(new BigInt(1)));
+    $this->assertEquals(new BigInt(1), (new BigInt(1))->bitwiseAnd(new BigInt(1)));
   }
 
   #[@test]
   public function bitwiseAndZero() {
-    $this->assertEquals(new BigInt(0), create(new BigInt(1))->bitwiseAnd(new BigInt(0)));
+    $this->assertEquals(new BigInt(0), (new BigInt(1))->bitwiseAnd(new BigInt(0)));
   }
 
   #[@test]
   public function bitwiseAndDifferentSizes() {
-    $this->assertEquals(new BigInt(0x0000), create(new BigInt(0x0100))->bitwiseAnd(new BigInt(0x0001)));
+    $this->assertEquals(new BigInt(0x0000), (new BigInt(0x0100))->bitwiseAnd(new BigInt(0x0001)));
   }
 
   #[@test]
@@ -293,7 +293,7 @@ class BigIntTest extends TestCase {
     $mask= MODIFIER_PUBLIC | MODIFIER_PROTECTED | MODIFIER_PRIVATE;
     $this->assertEquals(
       new BigInt(MODIFIER_PUBLIC), 
-      create(new BigInt(MODIFIER_PUBLIC | MODIFIER_STATIC))->bitwiseAnd(new BigInt($mask))
+      (new BigInt(MODIFIER_PUBLIC | MODIFIER_STATIC))->bitwiseAnd(new BigInt($mask))
     );
   }
 
@@ -301,35 +301,35 @@ class BigIntTest extends TestCase {
   public function bitwiseAndLarge() {
     $this->assertEquals(
       new BigInt('18446744073709551616'), 
-      create(new BigInt('18446744073709551617'))->bitwiseAnd(new BigInt('18446744073709551616'))
+      (new BigInt('18446744073709551617'))->bitwiseAnd(new BigInt('18446744073709551616'))
     );
   }
 
   #[@test]
   public function bitwiseOr() {
-    $this->assertEquals(new BigInt(1), create(new BigInt(1))->bitwiseOr(new BigInt(1)));
+    $this->assertEquals(new BigInt(1), (new BigInt(1))->bitwiseOr(new BigInt(1)));
   }
 
   #[@test]
   public function bitwiseOrZero() {
-    $this->assertEquals(new BigInt(1), create(new BigInt(1))->bitwiseOr(new BigInt(0)));
+    $this->assertEquals(new BigInt(1), (new BigInt(1))->bitwiseOr(new BigInt(0)));
   }
 
   #[@test]
   public function bitwiseOrTwo() {
-    $this->assertEquals(new BigInt(3), create(new BigInt(1))->bitwiseOr(new BigInt(2)));
+    $this->assertEquals(new BigInt(3), (new BigInt(1))->bitwiseOr(new BigInt(2)));
   }
 
   #[@test]
   public function bitwiseOrThree() {
-    $this->assertEquals(new BigInt(3), create(new BigInt(1))->bitwiseOr(new BigInt(3)));
+    $this->assertEquals(new BigInt(3), (new BigInt(1))->bitwiseOr(new BigInt(3)));
   }
 
   #[@test]
   public function bitwiseOrModifierMask() {
     $this->assertEquals(
       new BigInt(MODIFIER_PUBLIC | MODIFIER_STATIC), 
-      create(new BigInt(MODIFIER_PUBLIC))->bitwiseOr(new BigInt(MODIFIER_STATIC))
+      (new BigInt(MODIFIER_PUBLIC))->bitwiseOr(new BigInt(MODIFIER_STATIC))
     );
   }
 
@@ -337,7 +337,7 @@ class BigIntTest extends TestCase {
   public function bitwiseOrLarge() {
     $this->assertEquals(
       new BigInt('18446744078004518912'), 
-      create(new BigInt('4294967296'))->bitwiseOr(new BigInt('18446744073709551616'))
+      (new BigInt('4294967296'))->bitwiseOr(new BigInt('18446744073709551616'))
     );
   }
 
@@ -345,7 +345,7 @@ class BigIntTest extends TestCase {
   public function bitwiseXorOneZero() {
     $this->assertEquals(
       new BigInt(1), 
-      create(new BigInt(1))->bitwiseXor(new BigInt(0))
+      (new BigInt(1))->bitwiseXor(new BigInt(0))
     );
   }
 
@@ -353,7 +353,7 @@ class BigIntTest extends TestCase {
   public function bitwiseXorDifferenSizes() {
     $this->assertEquals(
       new BigInt(256), 
-      create(new BigInt(1))->bitwiseXor(new BigInt(257))
+      (new BigInt(1))->bitwiseXor(new BigInt(257))
     );
   }
 
@@ -361,7 +361,7 @@ class BigIntTest extends TestCase {
   public function leftShift() {
     $this->assertEquals(
       new BigInt(512), 
-      create(new BigInt(2))->shiftLeft(new BigInt(8))
+      (new BigInt(2))->shiftLeft(new BigInt(8))
     );
   }
 
@@ -369,7 +369,7 @@ class BigIntTest extends TestCase {
   public function rightShift() {
     $this->assertEquals(
       new BigInt(2), 
-      create(new BigInt(512))->shiftRight(new BigInt(8))
+      (new BigInt(512))->shiftRight(new BigInt(8))
     );
   }
 }

@@ -19,7 +19,7 @@ class BrokenAnnotationTest extends \unittest\TestCase {
    * @return  [:var]
    */
   protected function parse($input) {
-    return create(new ClassParser())->parseAnnotations($input, $this->getClassName());
+    return (new ClassParser())->parseAnnotations($input, $this->getClassName());
   }
 
   #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Unterminated annotation/')]

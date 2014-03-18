@@ -14,11 +14,11 @@ class ExtensionAvailableTest extends \unittest\TestCase {
 
   #[@test]
   public function verify_core_extension() {
-    $this->assertTrue(create(new ExtensionAvailable('core'))->verify());
+    $this->assertTrue((new ExtensionAvailable('core'))->verify());
   }
 
   #[@test]
   public function verify_non_existant_extension() {
-    $this->assertFalse(create(new ExtensionAvailable('@@non-existant@@'))->verify());
+    $this->assertFalse((new ExtensionAvailable('@@non-existant@@'))->verify());
   }
 }

@@ -32,7 +32,7 @@ class LogAppenderTest extends TestCase {
         $this->events[]= new \lang\types\String($this->layout->format($event));
       }
     }');
-    $this->fixture= create(new LogCategory('default'))
+    $this->fixture= (new LogCategory('default'))
       ->withAppender($appender->withLayout(new PatternLayout('[%l] %m')))
     ;
   }

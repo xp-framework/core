@@ -21,7 +21,7 @@ class SearchAction extends Action {
    * @return int exit code
    */
   public function perform($args) {
-    $request= create(new RestRequest('/search'))->withParameter('q', $args[0]);
+    $request= (new RestRequest('/search'))->withParameter('q', $args[0]);
 
     $total= 0;
     Console::writeLine('@', $this->api->getBase()->getURL());

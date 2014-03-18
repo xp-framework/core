@@ -141,7 +141,7 @@ class RuntimeOptionsTest extends TestCase {
 
   #[@test]
   public function arguments() {
-    $options= create(new RuntimeOptions())
+    $options= (new RuntimeOptions())
       ->withSwitch('q')
       ->withSwitch('n')
       ->withSetting('enable_dl', 1)

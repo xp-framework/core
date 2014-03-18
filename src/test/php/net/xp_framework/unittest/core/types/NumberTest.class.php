@@ -85,37 +85,37 @@ class NumberTest extends \unittest\TestCase {
 
   #[@test, @values(['12389192458912430951248958921958154', '-12389192458912430951248958921958154'])]
   public function longNumericStringIsANumber($string) {
-    $this->assertEquals($string, create(new Long($string))->hashCode());
+    $this->assertEquals($string, (new Long($string))->hashCode());
   }
 
   #[@test]
   public function zeroIsANumber() {
-    $this->assertEquals(0, create(new Long(0))->intValue());
+    $this->assertEquals(0, (new Long(0))->intValue());
   }
 
   #[@test, @values([['-1', -1], ['+1', 1]])]
   public function prefixedNumbersAreNumbers($arg, $num) {
-    $this->assertEquals($num, create(new Long($arg))->intValue());
+    $this->assertEquals($num, (new Long($arg))->intValue());
   }
 
   #[@test, @values([['1e4', 1e4], ['1E4', 1e4], ['1e-4', 1e-4], ['1E-4', 1e-4]])]
   public function numbers_with_exponent_notation($arg, $num) {
-    $this->assertEquals($num, create(new Double($arg))->doubleValue());
+    $this->assertEquals($num, (new Double($arg))->doubleValue());
   }
 
   #[@test, @values([['-1e4', -1e4], ['-1E4', -1e4], ['-1e-4', -1e-4], ['-1E-4', -1e-4]])]
   public function negative_numbers_with_exponent_notation($arg, $num) {
-    $this->assertEquals($num, create(new Double($arg))->doubleValue());
+    $this->assertEquals($num, (new Double($arg))->doubleValue());
   }
 
   #[@test, @values([['1.5', 1.5], ['+0.5', +0.5], ['-0.5', -0.5], ['0.0', 0.0]])]
   public function floatingNotationIsANumber($arg, $num) {
-    $this->assertEquals($num, create(new Double($arg))->doubleValue());
+    $this->assertEquals($num, (new Double($arg))->doubleValue());
   }
 
   #[@test]
   public function numberWithLeadingSpaceIsANumber() {
-    $this->assertEquals(123, create(new Long(' 123'))->intValue());
+    $this->assertEquals(123, (new Long(' 123'))->intValue());
   }
 
   #[@test]

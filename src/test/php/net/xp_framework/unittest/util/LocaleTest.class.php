@@ -24,7 +24,7 @@ class LocaleTest extends TestCase {
    */
   #[@test]
   public function constructor_with_one_arg() {
-    $this->assertEquals('de_DE', create(new Locale('de_DE'))->toString());
+    $this->assertEquals('de_DE', (new Locale('de_DE'))->toString());
   }
 
   /**
@@ -32,7 +32,7 @@ class LocaleTest extends TestCase {
    */
   #[@test]
   public function constructor_with_two_args() {
-    $this->assertEquals('de_DE', create(new Locale('de', 'DE'))->toString());
+    $this->assertEquals('de_DE', (new Locale('de', 'DE'))->toString());
   }
 
   /**
@@ -40,7 +40,7 @@ class LocaleTest extends TestCase {
    */
   #[@test]
   public function constructor_with_three_args() {
-    $this->assertEquals('de_DE@utf-8', create(new Locale('de', 'DE', 'utf-8'))->toString());
+    $this->assertEquals('de_DE@utf-8', (new Locale('de', 'DE', 'utf-8'))->toString());
   }
 
   /**
@@ -48,7 +48,7 @@ class LocaleTest extends TestCase {
    */
   #[@test]
   public function de_DE_language() {
-    $this->assertEquals('de', create(new Locale('de_DE'))->getLanguage());
+    $this->assertEquals('de', (new Locale('de_DE'))->getLanguage());
   }
 
   /**
@@ -56,7 +56,7 @@ class LocaleTest extends TestCase {
    */
   #[@test]
   public function de_DE_country() {
-    $this->assertEquals('DE', create(new Locale('de_DE'))->getCountry());
+    $this->assertEquals('DE', (new Locale('de_DE'))->getCountry());
   }
 
   /**
@@ -64,7 +64,7 @@ class LocaleTest extends TestCase {
    */
   #[@test]
   public function de_DE_variant() {
-    $this->assertEquals('', create(new Locale('de_DE'))->getVariant());
+    $this->assertEquals('', (new Locale('de_DE'))->getVariant());
   }
 
   /**
@@ -72,6 +72,6 @@ class LocaleTest extends TestCase {
    */
   #[@test]
   public function de_DE_with_variant() {
-    $this->assertEquals('@utf-8', create(new Locale('de_DE@utf-8'))->getVariant());
+    $this->assertEquals('@utf-8', (new Locale('de_DE@utf-8'))->getVariant());
   }
 }

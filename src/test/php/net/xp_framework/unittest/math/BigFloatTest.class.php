@@ -33,37 +33,37 @@ class BigFloatTest extends TestCase {
 
   #[@test]
   public function intValue() {
-    $this->assertEquals(6100, create(new BigFloat(6100.0))->intValue());
+    $this->assertEquals(6100, (new BigFloat(6100.0))->intValue());
   }
 
   #[@test]
   public function intValueNegative() {
-    $this->assertEquals(-6100, create(new BigFloat(-6100.0))->intValue());
+    $this->assertEquals(-6100, (new BigFloat(-6100.0))->intValue());
   }
 
   #[@test]
   public function doubleValue() {
-    $this->assertEquals(6100.0, create(new BigFloat(6100.0))->doubleValue());
+    $this->assertEquals(6100.0, (new BigFloat(6100.0))->doubleValue());
   }
 
   #[@test]
   public function doubleValueNegative() {
-    $this->assertEquals(-6100.0, create(new BigFloat(-6100.0))->doubleValue());
+    $this->assertEquals(-6100.0, (new BigFloat(-6100.0))->doubleValue());
   }
 
   #[@test]
   public function addition() {
-    $this->assertEquals(new BigFloat(2.0), create(new BigFloat(1.0))->add(new BigFloat(1.0)));
+    $this->assertEquals(new BigFloat(2.0), (new BigFloat(1.0))->add(new BigFloat(1.0)));
   }
 
   #[@test]
   public function additionOneNegative() {
-    $this->assertEquals(new BigFloat(0.0), create(new BigFloat(-1.0))->add(new BigFloat(1.0)));
+    $this->assertEquals(new BigFloat(0.0), (new BigFloat(-1.0))->add(new BigFloat(1.0)));
   }
 
   #[@test]
   public function additionBothNegative() {
-    $this->assertEquals(new BigFloat(-2), create(new BigFloat(-1.0))->add(new BigFloat(-1.0)));
+    $this->assertEquals(new BigFloat(-2), (new BigFloat(-1.0))->add(new BigFloat(-1.0)));
   }
  
   #[@test]
@@ -76,22 +76,22 @@ class BigFloatTest extends TestCase {
 
   #[@test]
   public function additionWithPrimitive() {
-    $this->assertEquals(new BigFloat(6100.0), create(new BigFloat(1.0))->add(6099.0));
+    $this->assertEquals(new BigFloat(6100.0), (new BigFloat(1.0))->add(6099.0));
   }
 
   #[@test]
   public function subtraction() {
-    $this->assertEquals(new BigFloat(0.0), create(new BigFloat(1.0))->subtract(new BigFloat(1.0)));
+    $this->assertEquals(new BigFloat(0.0), (new BigFloat(1.0))->subtract(new BigFloat(1.0)));
   }
 
   #[@test]
   public function subtractionOneNegative() {
-    $this->assertEquals(new BigFloat(-2.0), create(new BigFloat(-1.0))->subtract(new BigFloat(1.0)));
+    $this->assertEquals(new BigFloat(-2.0), (new BigFloat(-1.0))->subtract(new BigFloat(1.0)));
   }
 
   #[@test]
   public function subtractionBothNegative() {
-    $this->assertEquals(new BigFloat(0.0), create(new BigFloat(-1.0))->subtract(new BigFloat(-1.0)));
+    $this->assertEquals(new BigFloat(0.0), (new BigFloat(-1.0))->subtract(new BigFloat(-1.0)));
   }
 
   #[@test]
@@ -104,22 +104,22 @@ class BigFloatTest extends TestCase {
 
   #[@test]
   public function subtractionWithPrimitive() {
-    $this->assertEquals(new BigFloat(-6100.0), create(new BigFloat(-1.0))->subtract(6099.0));
+    $this->assertEquals(new BigFloat(-6100.0), (new BigFloat(-1.0))->subtract(6099.0));
   }
 
   #[@test]
   public function multiplication() {
-    $this->assertEquals(new BigFloat(1.0), create(new BigFloat(1.0))->multiply(new BigFloat(1.0)));
+    $this->assertEquals(new BigFloat(1.0), (new BigFloat(1.0))->multiply(new BigFloat(1.0)));
   }
 
   #[@test]
   public function multiplicationOneNegative() {
-    $this->assertEquals(new BigFloat(-1.0), create(new BigFloat(-1.0))->multiply(new BigFloat(1.0)));
+    $this->assertEquals(new BigFloat(-1.0), (new BigFloat(-1.0))->multiply(new BigFloat(1.0)));
   }
 
   #[@test]
   public function multiplicationBothNegative() {
-    $this->assertEquals(new BigFloat(1.0), create(new BigFloat(-1.0))->multiply(new BigFloat(-1.0)));
+    $this->assertEquals(new BigFloat(1.0), (new BigFloat(-1.0))->multiply(new BigFloat(-1.0)));
   }
 
   #[@test]
@@ -132,22 +132,22 @@ class BigFloatTest extends TestCase {
 
   #[@test]
   public function multiplicationWithPrimitive() {
-    $this->assertEquals(new BigFloat(6100.0), create(new BigFloat(-1.0))->multiply(-6100.0));
+    $this->assertEquals(new BigFloat(6100.0), (new BigFloat(-1.0))->multiply(-6100.0));
   }
 
   #[@test]
   public function division() {
-    $this->assertEquals(new BigFloat(2.0), create(new BigFloat(4.0))->divide(new BigFloat(2.0)));
+    $this->assertEquals(new BigFloat(2.0), (new BigFloat(4.0))->divide(new BigFloat(2.0)));
   }
 
   #[@test]
   public function divisionOneNegative() {
-    $this->assertEquals(new BigFloat(-2.0), create(new BigFloat(-4.0))->divide(new BigFloat(2.0)));
+    $this->assertEquals(new BigFloat(-2.0), (new BigFloat(-4.0))->divide(new BigFloat(2.0)));
   }
 
   #[@test]
   public function divisionBothNegative() {
-    $this->assertEquals(new BigFloat(2.0), create(new BigFloat(-4.0))->divide(new BigFloat(-2.0)));
+    $this->assertEquals(new BigFloat(2.0), (new BigFloat(-4.0))->divide(new BigFloat(-2.0)));
   }
 
   #[@test]
@@ -160,166 +160,166 @@ class BigFloatTest extends TestCase {
 
   #[@test]
   public function divisionWithPrimitive() {
-    $this->assertEquals(new BigFloat(6100.0), create(new BigFloat(37210000.0))->divide(6100.0));
+    $this->assertEquals(new BigFloat(6100.0), (new BigFloat(37210000.0))->divide(6100.0));
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function divisionByZero() {
-    create(new BigFloat(5.0))->divide(new BigFloat(0.0));
+    (new BigFloat(5.0))->divide(new BigFloat(0.0));
   }
 
   #[@test]
   public function power() {
-    $this->assertEquals(new BigFloat(16.0), create(new BigFloat(2.0))->power(new BigFloat(4.0)));
+    $this->assertEquals(new BigFloat(16.0), (new BigFloat(2.0))->power(new BigFloat(4.0)));
   }
 
   #[@test]
   public function powerNegativeOne() {
-    $this->assertEquals(new BigFloat('0.5'), create(new BigFloat(2.0))->power(new BigFloat(-1.0)));
+    $this->assertEquals(new BigFloat('0.5'), (new BigFloat(2.0))->power(new BigFloat(-1.0)));
   }
 
   #[@test]
   public function powerOfZero() {
-    $this->assertEquals(new BigFloat(0.0), create(new BigFloat(0.0))->power(new BigFloat(2.0)));
+    $this->assertEquals(new BigFloat(0.0), (new BigFloat(0.0))->power(new BigFloat(2.0)));
   }
 
   #[@test]
   public function powerOfZeroZero() {
-    $this->assertEquals(new BigFloat(1.0), create(new BigFloat(0.0))->power(new BigFloat(0.0)));
+    $this->assertEquals(new BigFloat(1.0), (new BigFloat(0.0))->power(new BigFloat(0.0)));
   }
 
   #[@test]
   public function powerOfZeroNegative() {
-    $this->assertEquals(new BigFloat(0.0), create(new BigFloat(0.0))->power(new BigFloat(-2)));
+    $this->assertEquals(new BigFloat(0.0), (new BigFloat(0.0))->power(new BigFloat(-2)));
   }
 
   #[@test]
   public function powerOfNegativeNumberEven() {
-    $this->assertEquals(new BigFloat(4.0), create(new BigFloat(-2.0))->power(new BigFloat(2.0)));
+    $this->assertEquals(new BigFloat(4.0), (new BigFloat(-2.0))->power(new BigFloat(2.0)));
   }
 
   #[@test]
   public function powerOfNegativeNumberOdd() {
-    $this->assertEquals(new BigFloat(-8.0), create(new BigFloat(-2.0))->power(new BigFloat(3.0)));
+    $this->assertEquals(new BigFloat(-8.0), (new BigFloat(-2.0))->power(new BigFloat(3.0)));
   }
 
   #[@test]
   public function powerOne() {
-    $this->assertEquals(new BigFloat(2.0), create(new BigFloat(2.0))->power(new BigFloat(1.0)));
+    $this->assertEquals(new BigFloat(2.0), (new BigFloat(2.0))->power(new BigFloat(1.0)));
   }
 
   #[@test]
   public function powerZero() {
-    $this->assertEquals(new BigFloat(1.0), create(new BigFloat(2.0))->power(new BigFloat(0.0)));
+    $this->assertEquals(new BigFloat(1.0), (new BigFloat(2.0))->power(new BigFloat(0.0)));
   }
 
   #[@test]
   public function powerWithPrimitive() {
-    $this->assertEquals(new BigFloat(4.0), create(new BigFloat(2.0))->power(2.0));
+    $this->assertEquals(new BigFloat(4.0), (new BigFloat(2.0))->power(2.0));
   }
 
   #[@test]
   public function ceil() {
-    $this->assertEquals(new BigFloat(5.0), create(new BigFloat(4.5))->ceil());
+    $this->assertEquals(new BigFloat(5.0), (new BigFloat(4.5))->ceil());
   }
 
   #[@test]
   public function ceilInt() {
-    $this->assertEquals(new BigFloat(4.0), create(new BigFloat(4.0))->ceil());
+    $this->assertEquals(new BigFloat(4.0), (new BigFloat(4.0))->ceil());
   }
 
   #[@test]
   public function ceilClose() {
-    $this->assertEquals(new BigFloat(10.0), create(new BigFloat(9.999))->ceil());
+    $this->assertEquals(new BigFloat(10.0), (new BigFloat(9.999))->ceil());
   }
 
   #[@test]
   public function ceilNegative() {
-    $this->assertEquals(new BigFloat(-4.0), create(new BigFloat(-4.5))->ceil());
+    $this->assertEquals(new BigFloat(-4.0), (new BigFloat(-4.5))->ceil());
   }
 
   #[@test]
   public function floor() {
-    $this->assertEquals(new BigFloat(4.0), create(new BigFloat(4.5))->floor());
+    $this->assertEquals(new BigFloat(4.0), (new BigFloat(4.5))->floor());
   }
 
   #[@test]
   public function floorInt() {
-    $this->assertEquals(new BigFloat(4.0), create(new BigFloat(4.0))->floor());
+    $this->assertEquals(new BigFloat(4.0), (new BigFloat(4.0))->floor());
   }
 
   #[@test]
   public function floorClose() {
-    $this->assertEquals(new BigFloat(9.0), create(new BigFloat(9.999))->floor());
+    $this->assertEquals(new BigFloat(9.0), (new BigFloat(9.999))->floor());
   }
 
   #[@test]
   public function floorNegative() {
-    $this->assertEquals(new BigFloat(-5.0), create(new BigFloat(-4.5))->floor());
+    $this->assertEquals(new BigFloat(-5.0), (new BigFloat(-4.5))->floor());
   }
 
   #[@test]
   public function roundWhole() {
-    $this->assertEquals(new BigFloat(4.0), create(new BigFloat(4.0))->round());
+    $this->assertEquals(new BigFloat(4.0), (new BigFloat(4.0))->round());
   }
 
   #[@test]
   public function round() {
-    $this->assertEquals(new BigFloat(4.0), create(new BigFloat(4.4))->round());
+    $this->assertEquals(new BigFloat(4.0), (new BigFloat(4.4))->round());
   }
 
   #[@test]
   public function roundNegative() {
-    $this->assertEquals(new BigFloat(-4.0), create(new BigFloat(-4.4))->round());
+    $this->assertEquals(new BigFloat(-4.0), (new BigFloat(-4.4))->round());
   }
 
   #[@test]
   public function roundHalf() {
-    $this->assertEquals(new BigFloat(5.0), create(new BigFloat(4.5))->round());
+    $this->assertEquals(new BigFloat(5.0), (new BigFloat(4.5))->round());
   }
 
   #[@test]
   public function roundNegativeHalf() {
-    $this->assertEquals(new BigFloat(-5.0), create(new BigFloat(-4.5))->round());
+    $this->assertEquals(new BigFloat(-5.0), (new BigFloat(-4.5))->round());
   }
 
   #[@test]
   public function roundAlmostHalf() {
-    $this->assertEquals(new BigFloat(4.0), create(new BigFloat(4.499999))->round());
+    $this->assertEquals(new BigFloat(4.0), (new BigFloat(4.499999))->round());
   }
 
   #[@test]
   public function roundNegativeAlmostHalf() {
-    $this->assertEquals(new BigFloat(-4.0), create(new BigFloat(-4.499999))->round());
+    $this->assertEquals(new BigFloat(-4.0), (new BigFloat(-4.499999))->round());
   }
 
   #[@test]
   public function roundEuroToDeutscheMarkExchangeRateToTwoDigits() {
-    $this->assertEquals(new BigFloat(1.96), create(new BigFloat(1.95583))->round(2));
+    $this->assertEquals(new BigFloat(1.96), (new BigFloat(1.95583))->round(2));
   }
 
   #[@test]
   public function roundSample1() {
-    $this->assertEquals(new BigFloat(323.35), create(new BigFloat(323.346))->round(2));
+    $this->assertEquals(new BigFloat(323.35), (new BigFloat(323.346))->round(2));
   }
 
   #[@test]
   public function roundSample2() {
-    $this->assertEquals(new BigFloat(323.01), create(new BigFloat(323.006))->round(2));
+    $this->assertEquals(new BigFloat(323.01), (new BigFloat(323.006))->round(2));
   }
 
   #[@test]
   public function ceilLotsOfZeros() {
-    $this->assertEquals(new BigFloat(4.0), create(new BigFloat('4.00000000000000000'))->ceil());
+    $this->assertEquals(new BigFloat(4.0), (new BigFloat('4.00000000000000000'))->ceil());
   }
 
   #[@test]
   public function floorLotsOfZeros() {
-    $this->assertEquals(new BigFloat(4.0), create(new BigFloat('4.00000000000000000'))->floor());
+    $this->assertEquals(new BigFloat(4.0), (new BigFloat('4.00000000000000000'))->floor());
   }
 
   #[@test]
   public function roundLotsOfZeros() {
-    $this->assertEquals(new BigFloat(4.0), create(new BigFloat('4.00000000000000000'))->round());
+    $this->assertEquals(new BigFloat(4.0), (new BigFloat('4.00000000000000000'))->round());
   }
 }

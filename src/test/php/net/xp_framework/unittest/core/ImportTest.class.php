@@ -12,7 +12,7 @@ class ImportTest extends \unittest\TestCase {
   public function sorted_method() {
     $this->assertEquals(
       new ArrayList(-1, 0, 1, 7, 10),
-      create(new ArrayList(7, 0, 10, 1, -1))->sorted(SORT_NUMERIC)
+      (new ArrayList(7, 0, 10, 1, -1))->sorted(SORT_NUMERIC)
     );
   }
 }

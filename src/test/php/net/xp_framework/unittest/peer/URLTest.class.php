@@ -19,7 +19,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function scheme() {
-    $this->assertEquals('http', create(new URL('http://localhost'))->getScheme());
+    $this->assertEquals('http', (new URL('http://localhost'))->getScheme());
   }
 
   /**
@@ -28,7 +28,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function schemeWithPlus() {
-    $this->assertEquals('svn+ssl', create(new URL('svn+ssl://localhost'))->getScheme());
+    $this->assertEquals('svn+ssl', (new URL('svn+ssl://localhost'))->getScheme());
   }
 
   /**
@@ -39,7 +39,7 @@ class URLTest extends TestCase {
   public function schemeMutability() {
     $this->assertEquals(
       'ftp://localhost', 
-      create(new URL('http://localhost'))->setScheme('ftp')->getURL()
+      (new URL('http://localhost'))->setScheme('ftp')->getURL()
     );
   }
 
@@ -49,7 +49,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function host() {
-    $this->assertEquals('localhost', create(new URL('http://localhost'))->getHost());
+    $this->assertEquals('localhost', (new URL('http://localhost'))->getHost());
   }
 
   /**
@@ -58,7 +58,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function uppercaseHost() {
-    $this->assertEquals('TEST', create(new URL('http://TEST'))->getHost());
+    $this->assertEquals('TEST', (new URL('http://TEST'))->getHost());
   }
 
   /**
@@ -69,7 +69,7 @@ class URLTest extends TestCase {
   public function hostMutability() {
     $this->assertEquals(
       'http://127.0.0.1', 
-      create(new URL('http://localhost'))->setHost('127.0.0.1')->getURL()
+      (new URL('http://localhost'))->setHost('127.0.0.1')->getURL()
     );
   }
 
@@ -79,7 +79,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function path() {
-    $this->assertEquals('/news/index.html', create(new URL('http://localhost/news/index.html'))->getPath());
+    $this->assertEquals('/news/index.html', (new URL('http://localhost/news/index.html'))->getPath());
   }
 
   /**
@@ -88,7 +88,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function emptyPath() {
-    $this->assertEquals(null, create(new URL('http://localhost'))->getPath());
+    $this->assertEquals(null, (new URL('http://localhost'))->getPath());
   }
 
   /**
@@ -97,7 +97,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function slashPath() {
-    $this->assertEquals('/', create(new URL('http://localhost/'))->getPath());
+    $this->assertEquals('/', (new URL('http://localhost/'))->getPath());
   }
 
   /**
@@ -106,7 +106,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function pathDefault() {
-    $this->assertEquals('/', create(new URL('http://localhost'))->getPath('/'));
+    $this->assertEquals('/', (new URL('http://localhost'))->getPath('/'));
   }
 
   /**
@@ -117,7 +117,7 @@ class URLTest extends TestCase {
   public function pathMutability() {
     $this->assertEquals(
       'http://localhost/index.html', 
-      create(new URL('http://localhost'))->setPath('/index.html')->getURL()
+      (new URL('http://localhost'))->setPath('/index.html')->getURL()
     );
   }
 
@@ -127,7 +127,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function user() {
-    $this->assertEquals('user', create(new URL('http://user@localhost'))->getUser());
+    $this->assertEquals('user', (new URL('http://user@localhost'))->getUser());
   }
 
   /**
@@ -136,7 +136,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function emptyUser() {
-    $this->assertEquals(null, create(new URL('http://localhost'))->getUser());
+    $this->assertEquals(null, (new URL('http://localhost'))->getUser());
   }
 
   /**
@@ -145,7 +145,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function userDefault() {
-    $this->assertEquals('nobody', create(new URL('http://localhost'))->getUser('nobody'));
+    $this->assertEquals('nobody', (new URL('http://localhost'))->getUser('nobody'));
   }
 
   /**
@@ -154,7 +154,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function urlEncodedUser() {
-    $this->assertEquals('user?', create(new URL('http://user%3F@localhost'))->getUser());
+    $this->assertEquals('user?', (new URL('http://user%3F@localhost'))->getUser());
   }
 
   /**
@@ -163,7 +163,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function setUrlEncodedUser() {
-    $this->assertEquals('http://user%3F@localhost', create(new URL('http://localhost'))->setUser('user?')->getURL());
+    $this->assertEquals('http://user%3F@localhost', (new URL('http://localhost'))->setUser('user?')->getURL());
   }
 
   /**
@@ -174,7 +174,7 @@ class URLTest extends TestCase {
   public function userMutability() {
     $this->assertEquals(
       'http://thekid@localhost', 
-      create(new URL('http://localhost'))->setUser('thekid')->getURL()
+      (new URL('http://localhost'))->setUser('thekid')->getURL()
     );
   }
 
@@ -184,7 +184,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function password() {
-    $this->assertEquals('password', create(new URL('http://user:password@localhost'))->getPassword());
+    $this->assertEquals('password', (new URL('http://user:password@localhost'))->getPassword());
   }
 
   /**
@@ -193,7 +193,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function urlEncodedPassword() {
-    $this->assertEquals('pass?word', create(new URL('http://user:pass%3Fword@localhost'))->getPassword());
+    $this->assertEquals('pass?word', (new URL('http://user:pass%3Fword@localhost'))->getPassword());
   }
 
   /**
@@ -202,7 +202,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function setUrlEncodedPassword() {
-    $this->assertEquals('http://user:pass%3Fword@localhost', create(new URL('http://user@localhost'))->setPassword('pass?word')->getURL());
+    $this->assertEquals('http://user:pass%3Fword@localhost', (new URL('http://user@localhost'))->setPassword('pass?word')->getURL());
   }
 
   /**
@@ -211,7 +211,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function emptyPassword() {
-    $this->assertEquals(null, create(new URL('http://localhost'))->getPassword());
+    $this->assertEquals(null, (new URL('http://localhost'))->getPassword());
   }
 
   /**
@@ -220,7 +220,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function passwordDefault() {
-    $this->assertEquals('secret', create(new URL('http://user@localhost'))->getPassword('secret'));
+    $this->assertEquals('secret', (new URL('http://user@localhost'))->getPassword('secret'));
   }
 
   /**
@@ -231,7 +231,7 @@ class URLTest extends TestCase {
   public function passwordMutability() {
     $this->assertEquals(
       'http://anon:anon@localhost', 
-      create(new URL('http://anon@localhost'))->setPassword('anon')->getURL()
+      (new URL('http://anon@localhost'))->setPassword('anon')->getURL()
     );
   }
 
@@ -241,7 +241,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function query() {
-    $this->assertEquals('a=b', create(new URL('http://localhost?a=b'))->getQuery());
+    $this->assertEquals('a=b', (new URL('http://localhost?a=b'))->getQuery());
   }
 
   /**
@@ -252,7 +252,7 @@ class URLTest extends TestCase {
   public function queryModifiedByParams() {
     $this->assertEquals(
       'a=b&c=d', 
-      create(new URL('http://localhost?a=b'))->addParam('c', 'd')->getQuery()
+      (new URL('http://localhost?a=b'))->addParam('c', 'd')->getQuery()
     );
   }
 
@@ -262,7 +262,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function emptyQuery() {
-    $this->assertEquals(null, create(new URL('http://localhost'))->getQuery());
+    $this->assertEquals(null, (new URL('http://localhost'))->getQuery());
   }
 
   /**
@@ -271,7 +271,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function parameterLessQuery() {
-    $this->assertEquals('1549', create(new URL('http://localhost/?1549'))->getQuery());
+    $this->assertEquals('1549', (new URL('http://localhost/?1549'))->getQuery());
   }
 
   /**
@@ -280,7 +280,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function addToParameterLessQuery() {
-    $this->assertEquals('1549&a=b', create(new URL('http://localhost/?1549'))->addParam('a', 'b')->getQuery());
+    $this->assertEquals('1549&a=b', (new URL('http://localhost/?1549'))->addParam('a', 'b')->getQuery());
   }
 
   /**
@@ -289,7 +289,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function createParameterLessQueryWithAdd() {
-    $this->assertEquals('1549', create(new URL('http://localhost/'))->addParam('1549')->getQuery());
+    $this->assertEquals('1549', (new URL('http://localhost/'))->addParam('1549')->getQuery());
   }
 
   /**
@@ -298,7 +298,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function createParameterLessQueryWithSet() {
-    $this->assertEquals('1549', create(new URL('http://localhost/'))->setParam('1549')->getQuery());
+    $this->assertEquals('1549', (new URL('http://localhost/'))->setParam('1549')->getQuery());
   }
 
   /**
@@ -307,7 +307,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function questionMarkOnly() {
-    $this->assertEquals(null, create(new URL('http://localhost?'))->getQuery());
+    $this->assertEquals(null, (new URL('http://localhost?'))->getQuery());
   }
 
   /**
@@ -316,7 +316,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function questionMarkAndFragmentOnly() {
-    $this->assertEquals(null, create(new URL('http://localhost?#'))->getQuery());
+    $this->assertEquals(null, (new URL('http://localhost?#'))->getQuery());
   }
 
   /**
@@ -325,7 +325,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function queryDefault() {
-    $this->assertEquals('1,2,3', create(new URL('http://localhost'))->getQuery('1,2,3'));
+    $this->assertEquals('1,2,3', (new URL('http://localhost'))->getQuery('1,2,3'));
   }
 
   /**
@@ -336,7 +336,7 @@ class URLTest extends TestCase {
   public function queryMutability() {
     $this->assertEquals(
       'http://localhost?a=b', 
-      create(new URL('http://localhost'))->setQuery('a=b')->getURL()
+      (new URL('http://localhost'))->setQuery('a=b')->getURL()
     );
   }
 
@@ -346,7 +346,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function getParameterLessQuery() {
-    $this->assertEquals('', create(new URL('http://localhost/?1549'))->getParam('1549'));
+    $this->assertEquals('', (new URL('http://localhost/?1549'))->getParam('1549'));
   }
 
   /**
@@ -355,7 +355,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function hasParameterLessQuery() {
-    $this->assertTrue(create(new URL('http://localhost/?1549'))->hasParam('1549'));
+    $this->assertTrue((new URL('http://localhost/?1549'))->hasParam('1549'));
   }
 
   /**
@@ -364,7 +364,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function fragment() {
-    $this->assertEquals('top', create(new URL('http://localhost#top'))->getFragment());
+    $this->assertEquals('top', (new URL('http://localhost#top'))->getFragment());
   }
 
   /**
@@ -373,7 +373,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function fragmentWithSlash() {
-    $this->assertEquals('top', create(new URL('http://localhost/#top'))->getFragment());
+    $this->assertEquals('top', (new URL('http://localhost/#top'))->getFragment());
   }
 
   /**
@@ -382,7 +382,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function fragmentWithSlashAndQuestionMark() {
-    $this->assertEquals('top', create(new URL('http://localhost/?#top'))->getFragment());
+    $this->assertEquals('top', (new URL('http://localhost/?#top'))->getFragment());
   }
 
   /**
@@ -391,7 +391,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function fragmentWithQuery() {
-    $this->assertEquals('top', create(new URL('http://localhost/?query#top'))->getFragment());
+    $this->assertEquals('top', (new URL('http://localhost/?query#top'))->getFragment());
   }
 
   /**
@@ -400,7 +400,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function emptyFragment() {
-    $this->assertEquals(null, create(new URL('http://localhost'))->getFragment());
+    $this->assertEquals(null, (new URL('http://localhost'))->getFragment());
   }
 
   /**
@@ -409,7 +409,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function hashOnly() {
-    $this->assertEquals(null, create(new URL('http://localhost#'))->getFragment());
+    $this->assertEquals(null, (new URL('http://localhost#'))->getFragment());
   }
 
   /**
@@ -418,7 +418,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function hashAtEnd() {
-    $this->assertEquals(null, create(new URL('http://localhost?#'))->getFragment());
+    $this->assertEquals(null, (new URL('http://localhost?#'))->getFragment());
   }
 
   /**
@@ -427,7 +427,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function hashAtEndWithQuery() {
-    $this->assertEquals(null, create(new URL('http://localhost?query#'))->getFragment());
+    $this->assertEquals(null, (new URL('http://localhost?query#'))->getFragment());
   }
 
   /**
@@ -436,7 +436,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function fragmentDefault() {
-    $this->assertEquals('top', create(new URL('http://localhost'))->getFragment('top'));
+    $this->assertEquals('top', (new URL('http://localhost'))->getFragment('top'));
   }
 
   /**
@@ -447,7 +447,7 @@ class URLTest extends TestCase {
   public function fragmentMutability() {
     $this->assertEquals(
       'http://localhost#list', 
-      create(new URL('http://localhost'))->setFragment('list')->getURL()
+      (new URL('http://localhost'))->setFragment('list')->getURL()
     );
   }
 
@@ -457,7 +457,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function port() {
-    $this->assertEquals(8080, create(new URL('http://localhost:8080'))->getPort());
+    $this->assertEquals(8080, (new URL('http://localhost:8080'))->getPort());
   }
 
   /**
@@ -466,7 +466,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function emptyPort() {
-    $this->assertEquals(null, create(new URL('http://localhost'))->getPort());
+    $this->assertEquals(null, (new URL('http://localhost'))->getPort());
   }
 
   /**
@@ -475,7 +475,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function portDefault() {
-    $this->assertEquals(80, create(new URL('http://localhost'))->getPort(80));
+    $this->assertEquals(80, (new URL('http://localhost'))->getPort(80));
   }
 
   /**
@@ -486,7 +486,7 @@ class URLTest extends TestCase {
   public function portMutability() {
     $this->assertEquals(
       'http://localhost:8081', 
-      create(new URL('http://localhost'))->setPort(8081)->getURL()
+      (new URL('http://localhost'))->setPort(8081)->getURL()
     );
   }
 
@@ -496,7 +496,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function param() {
-    $this->assertEquals('b', create(new URL('http://localhost?a=b'))->getParam('a'));
+    $this->assertEquals('b', (new URL('http://localhost?a=b'))->getParam('a'));
   }
 
   /**
@@ -505,7 +505,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function getArrayParameter() {
-    $this->assertEquals(array('b'), create(new URL('http://localhost?a[]=b'))->getParam('a'));
+    $this->assertEquals(array('b'), (new URL('http://localhost?a[]=b'))->getParam('a'));
   }
 
   /**
@@ -514,7 +514,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function getEncodedArrayParameter() {
-    $this->assertEquals(array('='), create(new URL('http://localhost?a[]=%3D'))->getParam('a'));
+    $this->assertEquals(array('='), (new URL('http://localhost?a[]=%3D'))->getParam('a'));
   }
 
   /**
@@ -523,7 +523,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function getArrayParameters() {
-    $this->assertEquals(array('b', 'c'), create(new URL('http://localhost?a[]=b&a[]=c'))->getParam('a'));
+    $this->assertEquals(array('b', 'c'), (new URL('http://localhost?a[]=b&a[]=c'))->getParam('a'));
   }
 
   /**
@@ -534,7 +534,7 @@ class URLTest extends TestCase {
   public function getArrayParametersAsHash() {
     $this->assertEquals(
       array('name' => 'b', 'color' => 'c'), 
-      create(new URL('http://localhost?a[name]=b&a[color]=c'))->getParam('a')
+      (new URL('http://localhost?a[name]=b&a[color]=c'))->getParam('a')
     );
   }
 
@@ -546,7 +546,7 @@ class URLTest extends TestCase {
   public function getArrayParametersAsHashWithEncodedNames() {
     $this->assertEquals(
       array('=name=' => 'b', '=color=' => 'c'), 
-      create(new URL('http://localhost?a[%3Dname%3D]=b&a[%3Dcolor%3D]=c'))->getParam('a')
+      (new URL('http://localhost?a[%3Dname%3D]=b&a[%3Dcolor%3D]=c'))->getParam('a')
     );
   }
 
@@ -558,7 +558,7 @@ class URLTest extends TestCase {
   public function arrayOffsetsInDifferentArrays() {
     $this->assertEquals(
       array('a' => array('c'), 'b' => array('d')), 
-      create(new URL('http://localhost/?a[]=c&b[]=d'))->getParams()
+      (new URL('http://localhost/?a[]=c&b[]=d'))->getParams()
     );
   }
 
@@ -570,7 +570,7 @@ class URLTest extends TestCase {
   public function duplicateOffsetsOverwriteEachother() {
     $this->assertEquals(
       array('c'), 
-      create(new URL('http://localhost/?a[0]=b&a[0]=c'))->getParam('a')
+      (new URL('http://localhost/?a[0]=b&a[0]=c'))->getParam('a')
     );
   }
 
@@ -582,7 +582,7 @@ class URLTest extends TestCase {
   public function duplicateNamesOverwriteEachother() {
     $this->assertEquals(
       array('name' => 'c'), 
-      create(new URL('http://localhost/?a[name]=b&a[name]=c'))->getParam('a')
+      (new URL('http://localhost/?a[name]=b&a[name]=c'))->getParam('a')
     );
   }
 
@@ -594,7 +594,7 @@ class URLTest extends TestCase {
   public function twoDimensionalArray() {
     $this->assertEquals(
       array(array('b')), 
-      create(new URL('http://localhost/?a[][]=b'))->getParam('a')
+      (new URL('http://localhost/?a[][]=b'))->getParam('a')
     );
   }
 
@@ -606,7 +606,7 @@ class URLTest extends TestCase {
   public function threeDimensionalArray() {
     $this->assertEquals(
       array(array(array('b'))), 
-      create(new URL('http://localhost/?a[][][]=b'))->getParam('a')
+      (new URL('http://localhost/?a[][][]=b'))->getParam('a')
     );
   }
 
@@ -618,7 +618,7 @@ class URLTest extends TestCase {
   public function arrayOfHash() {
     $this->assertEquals(
       array(array(array('name' => 'b'))), 
-      create(new URL('http://localhost/?a[][][name]=b'))->getParam('a')
+      (new URL('http://localhost/?a[][][name]=b'))->getParam('a')
     );
   }
 
@@ -630,7 +630,7 @@ class URLTest extends TestCase {
   public function hashOfArray() {
     $this->assertEquals(
       array('name' => array(array('b'))), 
-      create(new URL('http://localhost/?a[name][][]=b'))->getParam('a')
+      (new URL('http://localhost/?a[name][][]=b'))->getParam('a')
     );
   }
 
@@ -642,7 +642,7 @@ class URLTest extends TestCase {
   public function hashOfArrayOfHash() {
     $this->assertEquals(
       array('name' => array(array('key' => 'b'))), 
-      create(new URL('http://localhost/?a[name][][key]=b'))->getParam('a')
+      (new URL('http://localhost/?a[name][][key]=b'))->getParam('a')
     );
   }
 
@@ -654,7 +654,7 @@ class URLTest extends TestCase {
   public function hashNotationWithoutValues() {
     $this->assertEquals(
       array('name' => '', 'color' => ''), 
-      create(new URL('http://localhost/?a[name]&a[color]'))->getParam('a')
+      (new URL('http://localhost/?a[name]&a[color]'))->getParam('a')
     );
   }
 
@@ -666,7 +666,7 @@ class URLTest extends TestCase {
   public function arrayNotationWithoutValues() {
     $this->assertEquals(
       array('', ''), 
-      create(new URL('http://localhost/?a[]&a[]'))->getParam('a')
+      (new URL('http://localhost/?a[]&a[]'))->getParam('a')
     );
   }
 
@@ -678,7 +678,7 @@ class URLTest extends TestCase {
   public function getArrayParams() {
     $this->assertEquals(
       array('a' => array('b', 'c')), 
-      create(new URL('http://localhost?a[]=b&a[]=c'))->getParams()
+      (new URL('http://localhost?a[]=b&a[]=c'))->getParams()
     );
   }
 
@@ -690,7 +690,7 @@ class URLTest extends TestCase {
   public function mixedOffsetsAndKeys() {
     $this->assertEquals(
       array(0 => 'b', 'name' => 'c', 1 => 'd'), 
-      create(new URL('http://localhost/?a[]=b&a[name]=c&a[]=d'))->getParam('a')
+      (new URL('http://localhost/?a[]=b&a[name]=c&a[]=d'))->getParam('a')
     );
   }
 
@@ -702,7 +702,7 @@ class URLTest extends TestCase {
   public function nestedBraces() {
     $this->assertEquals(
       array('a' => array('nested[]' => 'b')), 
-      create(new URL('http://localhost/?a[nested[]]=b'))->getParams()
+      (new URL('http://localhost/?a[nested[]]=b'))->getParams()
     );
   }
  
@@ -714,7 +714,7 @@ class URLTest extends TestCase {
   public function nestedBracesTwice() {
     $this->assertEquals(
       array('a' => array('nested[a]' => 'b', 'nested[b]' => 'c')), 
-      create(new URL('http://localhost/?a[nested[a]]=b&a[nested[b]]=c'))->getParams()
+      (new URL('http://localhost/?a[nested[a]]=b&a[nested[b]]=c'))->getParams()
     );
   }
 
@@ -726,7 +726,7 @@ class URLTest extends TestCase {
   public function nestedBracesChained() {
     $this->assertEquals(
       array('a' => array('nested[a]' => array('c'))), 
-      create(new URL('http://localhost/?a[nested[a]][]=c'))->getParams()
+      (new URL('http://localhost/?a[nested[a]][]=c'))->getParams()
     );
   }
 
@@ -738,7 +738,7 @@ class URLTest extends TestCase {
   public function unnamedArrayParameterDoesNotCreateArray() {
     $this->assertEquals(
       array('[]' => 'c'), 
-      create(new URL('http://localhost/?[]=c'))->getParams()
+      (new URL('http://localhost/?[]=c'))->getParams()
     );
   }
 
@@ -748,7 +748,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function nonExistantParam() {
-    $this->assertEquals(null, create(new URL('http://localhost?a=b'))->getParam('b'));
+    $this->assertEquals(null, (new URL('http://localhost?a=b'))->getParam('b'));
   }
 
   /**
@@ -757,7 +757,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function emptyParam() {
-    $this->assertEquals('', create(new URL('http://localhost?x='))->getParam('x'));
+    $this->assertEquals('', (new URL('http://localhost?x='))->getParam('x'));
   }
 
   /**
@@ -766,7 +766,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function paramDefault() {
-    $this->assertEquals('x', create(new URL('http://localhost?a=b'))->getParam('c', 'x'));
+    $this->assertEquals('x', (new URL('http://localhost?a=b'))->getParam('c', 'x'));
   }
  
   /**
@@ -777,7 +777,7 @@ class URLTest extends TestCase {
   public function addNewParam() {
     $this->assertEquals(
       'http://localhost?a=b', 
-      create(new URL('http://localhost'))->addParam('a', 'b')->getURL()
+      (new URL('http://localhost'))->addParam('a', 'b')->getURL()
     );
   }
 
@@ -789,7 +789,7 @@ class URLTest extends TestCase {
   public function setNewParam() {
     $this->assertEquals(
       'http://localhost?a=b', 
-      create(new URL('http://localhost'))->setParam('a', 'b')->getURL()
+      (new URL('http://localhost'))->setParam('a', 'b')->getURL()
     );
   }
 
@@ -801,7 +801,7 @@ class URLTest extends TestCase {
   public function addAdditionalParam() {
     $this->assertEquals(
       'http://localhost?a=b&c=d', 
-      create(new URL('http://localhost?a=b'))->addParam('c', 'd')->getURL()
+      (new URL('http://localhost?a=b'))->addParam('c', 'd')->getURL()
     );
   }
 
@@ -813,7 +813,7 @@ class URLTest extends TestCase {
   public function setAdditionalParam() {
     $this->assertEquals(
       'http://localhost?a=b&c=d', 
-      create(new URL('http://localhost?a=b'))->setParam('c', 'd')->getURL()
+      (new URL('http://localhost?a=b'))->setParam('c', 'd')->getURL()
     );
   }
 
@@ -825,7 +825,7 @@ class URLTest extends TestCase {
   public function addAdditionalParamChained() {
     $this->assertEquals(
       'http://localhost?a=b&c=d&e=f', 
-      create(new URL('http://localhost?a=b'))->addParam('c', 'd')->addParam('e', 'f')->getURL()
+      (new URL('http://localhost?a=b'))->addParam('c', 'd')->addParam('e', 'f')->getURL()
     );
   }
 
@@ -837,7 +837,7 @@ class URLTest extends TestCase {
   public function setAdditionalParamChained() {
     $this->assertEquals(
       'http://localhost?a=b&c=d&e=f', 
-      create(new URL('http://localhost?a=b'))->setParam('c', 'd')->setParam('e', 'f')->getURL()
+      (new URL('http://localhost?a=b'))->setParam('c', 'd')->setParam('e', 'f')->getURL()
     );
   }
 
@@ -847,7 +847,7 @@ class URLTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function addExistingParam() {
-    create(new URL('http://localhost?a=b'))->addParam('a', 'b');
+    (new URL('http://localhost?a=b'))->addParam('a', 'b');
   }
 
   /**
@@ -858,7 +858,7 @@ class URLTest extends TestCase {
   public function setExistingParam() {
     $this->assertEquals(
       'http://localhost?a=c', 
-      create(new URL('http://localhost?a=b'))->setParam('a', 'c')->getURL()
+      (new URL('http://localhost?a=b'))->setParam('a', 'c')->getURL()
     );
   }
 
@@ -868,7 +868,7 @@ class URLTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function addExistingParams() {
-    create(new URL('http://localhost?a=b'))->addParams(array('a' => 'b'));
+    (new URL('http://localhost?a=b'))->addParams(array('a' => 'b'));
   }
 
   /**
@@ -894,7 +894,7 @@ class URLTest extends TestCase {
   public function setExistingParams() {
     $this->assertEquals(
       'http://localhost?a=c', 
-      create(new URL('http://localhost?a=b'))->setParams(array('a' => 'c'))->getURL()
+      (new URL('http://localhost?a=b'))->setParams(array('a' => 'c'))->getURL()
     );
   }
 
@@ -906,7 +906,7 @@ class URLTest extends TestCase {
   public function addNewParams() {
     $this->assertEquals(
       'http://localhost?a=b&c=d', 
-      create(new URL('http://localhost'))->addParams(array('a' => 'b', 'c' => 'd'))->getURL()
+      (new URL('http://localhost'))->addParams(array('a' => 'b', 'c' => 'd'))->getURL()
     );
   }
 
@@ -918,7 +918,7 @@ class URLTest extends TestCase {
   public function setNewParams() {
     $this->assertEquals(
       'http://localhost?a=b&c=d', 
-      create(new URL('http://localhost'))->setParams(array('a' => 'b', 'c' => 'd'))->getURL()
+      (new URL('http://localhost'))->setParams(array('a' => 'b', 'c' => 'd'))->getURL()
     );
   }
 
@@ -930,7 +930,7 @@ class URLTest extends TestCase {
   public function addAdditionalParams() {
     $this->assertEquals(
       'http://localhost?z=x&a=b&c=d', 
-      create(new URL('http://localhost?z=x'))->addParams(array('a' => 'b', 'c' => 'd'))->getURL()
+      (new URL('http://localhost?z=x'))->addParams(array('a' => 'b', 'c' => 'd'))->getURL()
     );
   }
 
@@ -942,7 +942,7 @@ class URLTest extends TestCase {
   public function setAdditionalParams() {
     $this->assertEquals(
       'http://localhost?z=x&a=b&c=d', 
-      create(new URL('http://localhost?z=x'))->setParams(array('a' => 'b', 'c' => 'd'))->getURL()
+      (new URL('http://localhost?z=x'))->setParams(array('a' => 'b', 'c' => 'd'))->getURL()
     );
   }
 
@@ -974,7 +974,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function params() {
-    $this->assertEquals(array('a' => 'b', 'c' => 'd'), create(new URL('http://localhost?a=b&c=d'))->getParams());
+    $this->assertEquals(array('a' => 'b', 'c' => 'd'), (new URL('http://localhost?a=b&c=d'))->getParams());
   }
 
   /**
@@ -983,7 +983,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function withParams() {
-    $this->assertTrue(create(new URL('http://localhost?a=b&c=d'))->hasParams());
+    $this->assertTrue((new URL('http://localhost?a=b&c=d'))->hasParams());
   }
 
   /**
@@ -992,7 +992,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function withArrayParams() {
-    $this->assertTrue(create(new URL('http://localhost?a[]=b&a[]=d'))->hasParams());
+    $this->assertTrue((new URL('http://localhost?a[]=b&a[]=d'))->hasParams());
   }
 
   /**
@@ -1001,7 +1001,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function noParams() {
-    $this->assertFalse(create(new URL('http://localhost'))->hasParams());
+    $this->assertFalse((new URL('http://localhost'))->hasParams());
   }
 
   /**
@@ -1010,7 +1010,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function withParam() {
-    $this->assertTrue(create(new URL('http://localhost?a=b&c=d'))->hasParam('a'));
+    $this->assertTrue((new URL('http://localhost?a=b&c=d'))->hasParam('a'));
   }
 
   /**
@@ -1019,7 +1019,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function withArrayParam() {
-    $this->assertTrue(create(new URL('http://localhost?a[]=b&a[]=d'))->hasParam('a'));
+    $this->assertTrue((new URL('http://localhost?a[]=b&a[]=d'))->hasParam('a'));
   }
 
   /**
@@ -1028,7 +1028,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function withNonExistantParam() {
-    $this->assertFalse(create(new URL('http://localhost?a=b&c=d'))->hasParam('d'));
+    $this->assertFalse((new URL('http://localhost?a=b&c=d'))->hasParam('d'));
   }
 
   /**
@@ -1037,7 +1037,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function noParam() {
-    $this->assertFalse(create(new URL('http://localhost'))->hasParam('a'));
+    $this->assertFalse((new URL('http://localhost'))->hasParam('a'));
   }
 
   /**
@@ -1046,7 +1046,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function hasDotParam() {
-    $this->assertTrue(create(new URL('http://localhost/?a.b=c'))->hasParam('a.b'));
+    $this->assertTrue((new URL('http://localhost/?a.b=c'))->hasParam('a.b'));
   }
 
   /**
@@ -1055,7 +1055,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function getDotParam() {
-    $this->assertEquals('c', create(new URL('http://localhost/?a.b=c'))->getParam('a.b'));
+    $this->assertEquals('c', (new URL('http://localhost/?a.b=c'))->getParam('a.b'));
   }
 
   /**
@@ -1064,7 +1064,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function getDotParams() {
-    $this->assertEquals(array('a.b' => 'c'), create(new URL('http://localhost/?a.b=c'))->getParams());
+    $this->assertEquals(array('a.b' => 'c'), (new URL('http://localhost/?a.b=c'))->getParams());
   }
 
   /**
@@ -1073,7 +1073,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function addDotParam() {
-    $this->assertEquals('a.b=c', create(new URL('http://localhost/'))->addParam('a.b', 'c')->getQuery());
+    $this->assertEquals('a.b=c', (new URL('http://localhost/'))->addParam('a.b', 'c')->getQuery());
   }
 
   /**
@@ -1082,7 +1082,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function removeExistingParam() {
-    $this->assertEquals(new URL('http://localhost'), create(new URL('http://localhost?a=b'))->removeParam('a'));
+    $this->assertEquals(new URL('http://localhost'), (new URL('http://localhost?a=b'))->removeParam('a'));
   }
 
   /**
@@ -1091,7 +1091,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function removeNonExistantParam() {
-    $this->assertEquals(new URL('http://localhost'), create(new URL('http://localhost'))->removeParam('a'));
+    $this->assertEquals(new URL('http://localhost'), (new URL('http://localhost'))->removeParam('a'));
   }
 
   /**
@@ -1100,7 +1100,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function removeExistingArrayParam() {
-    $this->assertEquals(new URL('http://localhost'), create(new URL('http://localhost?a[]=b&a[]=c'))->removeParam('a'));
+    $this->assertEquals(new URL('http://localhost'), (new URL('http://localhost?a[]=b&a[]=c'))->removeParam('a'));
   }
 
   /**
@@ -1128,8 +1128,8 @@ class URLTest extends TestCase {
   #[@test]
   public function hashCodesForSameUrls() {
     $this->assertEquals(
-      create(new URL('http://localhost'))->hashCode(), 
-      create(new URL('http://localhost'))->hashCode()
+      (new URL('http://localhost'))->hashCode(), 
+      (new URL('http://localhost'))->hashCode()
     );
   }
 
@@ -1140,8 +1140,8 @@ class URLTest extends TestCase {
   #[@test]
   public function hashCodesForDifferentUrls() {
     $this->assertNotEquals(
-      create(new URL('http://localhost'))->hashCode(), 
-      create(new URL('ftp://localhost'))->hashCode()
+      (new URL('http://localhost'))->hashCode(), 
+      (new URL('ftp://localhost'))->hashCode()
     );
   }
 
@@ -1155,7 +1155,7 @@ class URLTest extends TestCase {
     $u->addParam('a', 'b');
     
     $this->assertNotEquals(
-      create(new URL('http://localhost'))->hashCode(), 
+      (new URL('http://localhost'))->hashCode(), 
       $u->hashCode()
     );
   }
@@ -1229,7 +1229,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function numericAsPartOfSchemeAllowed() {
-    $this->assertEquals('foo+v2', create(new URL('foo+v2://host'))->getScheme());
+    $this->assertEquals('foo+v2', (new URL('foo+v2://host'))->getScheme());
   }
 
   /**
@@ -1238,7 +1238,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function oneLetterScheme() {
-    $this->assertEquals('f', create(new URL('f://host'))->getScheme());
+    $this->assertEquals('f', (new URL('f://host'))->getScheme());
   }
 
   /**
@@ -1644,7 +1644,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function getURLWithEmptyParameter() {
-    $this->assertEquals('http://example.com/test?a=v1&b&c=v2', create(new URL('http://example.com/test?a=v1&b=&c=v2'))->getURL());
+    $this->assertEquals('http://example.com/test?a=v1&b&c=v2', (new URL('http://example.com/test?a=v1&b=&c=v2'))->getURL());
   }
 
   /**
@@ -1653,7 +1653,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function getURLWithParameterWithoutValue() {
-    $this->assertEquals('http://example.com/test?a=v1&b&c=v2', create(new URL('http://example.com/test?a=v1&b&c=v2'))->getURL());
+    $this->assertEquals('http://example.com/test?a=v1&b&c=v2', (new URL('http://example.com/test?a=v1&b&c=v2'))->getURL());
   }
 
   /**
@@ -1662,7 +1662,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function getURLAfterSettingEmptyQueryString() {
-    $this->assertEquals('http://example.com/test', create(new URL('http://example.com/test'))->setQuery('')->getURL());
+    $this->assertEquals('http://example.com/test', (new URL('http://example.com/test'))->setQuery('')->getURL());
   }
 
   /**
@@ -1671,7 +1671,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function getURLAfterSettingNullQueryString() {
-    $this->assertEquals('http://example.com/test', create(new URL('http://example.com/test'))->setQuery(null)->getURL());
+    $this->assertEquals('http://example.com/test', (new URL('http://example.com/test'))->setQuery(null)->getURL());
   }
 
   /**
@@ -1680,7 +1680,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function getURLWithEmptyQueryStringConstructor() {
-    $this->assertEquals('http://example.com/test', create(new URL('http://example.com/test?'))->getURL());
+    $this->assertEquals('http://example.com/test', (new URL('http://example.com/test?'))->getURL());
   }
 
   /**
@@ -1701,7 +1701,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function ipv4Address() {
-    $this->assertEquals('64.246.30.37', create(new URL('http://64.246.30.37'))->getHost());
+    $this->assertEquals('64.246.30.37', (new URL('http://64.246.30.37'))->getHost());
   }
 
   /**
@@ -1710,7 +1710,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function ipv6Address() {
-    $this->assertEquals('[::1]', create(new URL('http://[::1]'))->getHost());
+    $this->assertEquals('[::1]', (new URL('http://[::1]'))->getHost());
   }
 
   /**
@@ -1818,7 +1818,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function parseIpv6LocalhostURL() {
-    $this->assertEquals('http://[::1]:80/authenticate/', create(new URL('http://[::1]:80/authenticate/'))->getURL());
+    $this->assertEquals('http://[::1]:80/authenticate/', (new URL('http://[::1]:80/authenticate/'))->getURL());
   }
 
   /**
@@ -1827,7 +1827,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function parseIpv6URL() {
-    $this->assertEquals('http://[2001:8d8f:1fe:5:abba:dbff:fefe:7755]:80/authenticate/', create(new URL('http://[2001:8d8f:1fe:5:abba:dbff:fefe:7755]:80/authenticate/'))->getURL());
+    $this->assertEquals('http://[2001:8d8f:1fe:5:abba:dbff:fefe:7755]:80/authenticate/', (new URL('http://[2001:8d8f:1fe:5:abba:dbff:fefe:7755]:80/authenticate/'))->getURL());
   }
 
   /**
@@ -1836,7 +1836,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function canonicalURLScheme() {
-   $this->assertEquals('https://localhost/', create(new URL('https+v3://localhost'))->getCanonicalUrl());
+   $this->assertEquals('https://localhost/', (new URL('https+v3://localhost'))->getCanonicalUrl());
   }
 
   /**
@@ -1845,7 +1845,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function canonicalURLLowerCaseHost() {
-    $this->assertEquals('http://localhost/', create(new URL('http://LOCALHOST'))->getCanonicalUrl());
+    $this->assertEquals('http://localhost/', (new URL('http://LOCALHOST'))->getCanonicalUrl());
   }
   
   /**
@@ -1854,7 +1854,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function failCanonicalURLLowerCaseHost() {
-    $this->assertNotEquals('http://LOCALHOST/', create(new URL('http://LOCALHOST'))->getCanonicalUrl());
+    $this->assertNotEquals('http://LOCALHOST/', (new URL('http://LOCALHOST'))->getCanonicalUrl());
   }
   
   /**
@@ -1863,7 +1863,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function canonicalURLRemoveDefaultPort() {
-    $this->assertEquals('http://localhost/', create(new URL('http://localhost:80'))->getCanonicalUrl());
+    $this->assertEquals('http://localhost/', (new URL('http://localhost:80'))->getCanonicalUrl());
   }
   
   /**
@@ -1872,7 +1872,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function canonicalURLPort() {
-    $this->assertEquals('http://localhost:81/', create(new URL('http://localhost:81'))->getCanonicalUrl());
+    $this->assertEquals('http://localhost:81/', (new URL('http://localhost:81'))->getCanonicalUrl());
   }
   
   /**
@@ -1881,7 +1881,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function canonicalURLCapitalizeLettersInEscapeSequenceForPath() {
-    $this->assertEquals('http://localhost/a%C2%B1b', create(new URL('http://localhost/a%c2%b1b'))->getCanonicalUrl());
+    $this->assertEquals('http://localhost/a%C2%B1b', (new URL('http://localhost/a%c2%b1b'))->getCanonicalUrl());
   }
   
   /**
@@ -1890,7 +1890,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function canonicalURLdecodePercentEncodedOctetsForPath() {
-    $this->assertEquals('http://localhost/-._~', create(new URL('http://localhost/%2D%2E%5F%7E'))->getCanonicalUrl());
+    $this->assertEquals('http://localhost/-._~', (new URL('http://localhost/%2D%2E%5F%7E'))->getCanonicalUrl());
   }
   
   /**
@@ -1899,7 +1899,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function canonicalURLremoveDotSegmentsForPath() {
-    $this->assertEquals('http://localhost/a/g', create(new URL('http://localhost/a/b/c/./../../g'))->getCanonicalUrl());
+    $this->assertEquals('http://localhost/a/g', (new URL('http://localhost/a/b/c/./../../g'))->getCanonicalUrl());
   }
   
   /**
@@ -1910,7 +1910,7 @@ class URLTest extends TestCase {
   public function canonicalURL() {
     $srcURL='https+v3://LOCALHOST:443/%c2/%7E?q1=%2D&q2=%b1#/a/b/c/./../../g';
     $destURL='https://localhost/%C2/~?q1=-&q2=%B1#/a/g';
-    $this->assertEquals($destURL, create(new URL($srcURL))->getCanonicalUrl());
+    $this->assertEquals($destURL, (new URL($srcURL))->getCanonicalUrl());
   }
 
   /**
@@ -1919,7 +1919,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function atInParams() {
-    $this->assertEquals('@', create(new URL('http://localhost/?q=@'))->getParam('q'));
+    $this->assertEquals('@', (new URL('http://localhost/?q=@'))->getParam('q'));
   }
 
   /**
@@ -1928,7 +1928,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function atInQuerystring() {
-    $this->assertEquals('%40', create(new URL('http://localhost/?@'))->getQuery());
+    $this->assertEquals('%40', (new URL('http://localhost/?@'))->getQuery());
   }
 
   /**
@@ -1937,7 +1937,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function atInFragment() {
-    $this->assertEquals('@', create(new URL('http://localhost/#@'))->getFragment());
+    $this->assertEquals('@', (new URL('http://localhost/#@'))->getFragment());
   }
 
   /**
@@ -1946,7 +1946,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function atInPath() {
-    $this->assertEquals('/@', create(new URL('http://localhost/@'))->getPath());
+    $this->assertEquals('/@', (new URL('http://localhost/@'))->getPath());
   }
 
   /**

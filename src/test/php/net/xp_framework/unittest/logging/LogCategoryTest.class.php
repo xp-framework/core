@@ -160,7 +160,7 @@ class LogCategoryTest extends TestCase {
   public function log_categories_with_appenders_differing_in_flags_are_not_equal() {
     $appender= $this->mockAppender();
     $this->assertNotEquals(
-      create(new \util\log\LogCategory('test'))->withAppender($appender, \util\log\LogLevel::WARN), 
+      (new \util\log\LogCategory('test'))->withAppender($appender, \util\log\LogLevel::WARN), 
       $this->cat->withAppender($appender)
     );
   }
@@ -169,7 +169,7 @@ class LogCategoryTest extends TestCase {
   public function log_categories_with_same_appenders_are_equal() {
     $appender= $this->mockAppender();
     $this->assertEquals(
-      create(new \util\log\LogCategory('test'))->withAppender($appender), 
+      (new \util\log\LogCategory('test'))->withAppender($appender), 
       $this->cat->withAppender($appender)
     );
   }

@@ -48,7 +48,7 @@ abstract class SecureStringTest extends \unittest\TestCase {
 
   #[@test]
   public function toString_not_revealing_payload() {
-    $output= create(new SecureString('payload'))->toString();
+    $output= (new SecureString('payload'))->toString();
     $this->assertFalse(strpos($output, 'payload'));
   }
 

@@ -19,7 +19,7 @@ class DateFormatTest extends TestCase {
   public function parseUsFormat() {
     $this->assertEquals(
       new \util\Date('2009-01-01'),
-      create(new DateFormat('%Y-%m-%d'))->parse('2009-01-01')
+      (new DateFormat('%Y-%m-%d'))->parse('2009-01-01')
     );
   }
 
@@ -31,7 +31,7 @@ class DateFormatTest extends TestCase {
   public function formatUsFormat() {
     $this->assertEquals(
       '2009-12-14',
-      create(new DateFormat('%Y-%m-%d'))->format(new \util\Date('2009-12-14'))
+      (new DateFormat('%Y-%m-%d'))->format(new \util\Date('2009-12-14'))
     );
   }
 
@@ -43,7 +43,7 @@ class DateFormatTest extends TestCase {
   public function parseUsFormatWithTime() {
     $this->assertEquals(
       new \util\Date('2009-12-14 14:24:36'),
-      create(new DateFormat('%Y-%m-%d %I:%M:%S %p'))->parse('2009-12-14 02:24:36 PM')
+      (new DateFormat('%Y-%m-%d %I:%M:%S %p'))->parse('2009-12-14 02:24:36 PM')
     );
   }
 
@@ -55,7 +55,7 @@ class DateFormatTest extends TestCase {
   public function formatUsFormatWithTime() {
     $this->assertEquals(
       '2009-12-14 02:24:36 PM',
-      create(new DateFormat('%Y-%m-%d %I:%M:%S %p'))->format(new \util\Date('2009-12-14 14:24:36'))
+      (new DateFormat('%Y-%m-%d %I:%M:%S %p'))->format(new \util\Date('2009-12-14 14:24:36'))
     );
   }
 
@@ -67,7 +67,7 @@ class DateFormatTest extends TestCase {
   public function parseUsFormatWith24HourTime() {
     $this->assertEquals(
       new \util\Date('2009-12-14 14:00:01'),
-      create(new DateFormat('%Y-%m-%d %H:%M:%S'))->parse('2009-12-14 14:00:01')
+      (new DateFormat('%Y-%m-%d %H:%M:%S'))->parse('2009-12-14 14:00:01')
     );
   }
 
@@ -79,7 +79,7 @@ class DateFormatTest extends TestCase {
   public function formatUsFormatWith24HourTime() {
     $this->assertEquals(
       '2009-12-14 14:24:36',
-      create(new DateFormat('%Y-%m-%d %H:%M:%S'))->format(new \util\Date('2009-12-14 14:24:36'))
+      (new DateFormat('%Y-%m-%d %H:%M:%S'))->format(new \util\Date('2009-12-14 14:24:36'))
     );
   }
 
@@ -91,7 +91,7 @@ class DateFormatTest extends TestCase {
   public function parseEuFormat() {
     $this->assertEquals(
       new \util\Date('2009-12-14'),
-      create(new DateFormat('%d.%m.%Y'))->parse('14.12.2009')
+      (new DateFormat('%d.%m.%Y'))->parse('14.12.2009')
     );
   }
 
@@ -103,7 +103,7 @@ class DateFormatTest extends TestCase {
   public function formatEuFormat() {
     $this->assertEquals(
       '09.01.2009',
-      create(new DateFormat('%d.%m.%Y'))->format(new \util\Date('2009-01-09'))
+      (new DateFormat('%d.%m.%Y'))->format(new \util\Date('2009-01-09'))
     );
   }
 
@@ -115,7 +115,7 @@ class DateFormatTest extends TestCase {
   public function parseEuFormatWithTime() {
     $this->assertEquals(
       new \util\Date('2009-12-14 11:45:00'),
-      create(new DateFormat('%d.%m.%Y %H:%M:%S'))->parse('14.12.2009 11:45:00')
+      (new DateFormat('%d.%m.%Y %H:%M:%S'))->parse('14.12.2009 11:45:00')
     );
   }
 
@@ -127,7 +127,7 @@ class DateFormatTest extends TestCase {
   public function formatEuFormatWithTime() {
     $this->assertEquals(
       '14.12.2009 11:45:00',
-      create(new DateFormat('%d.%m.%Y %H:%M:%S'))->format(new \util\Date('2009-12-14 11:45:00'))
+      (new DateFormat('%d.%m.%Y %H:%M:%S'))->format(new \util\Date('2009-12-14 11:45:00'))
     );
   }
 
@@ -139,7 +139,7 @@ class DateFormatTest extends TestCase {
   public function parseDateWithTimeZoneName() {
     $this->assertEquals(
       new \util\Date('2009-12-14 11:45:00', new \util\TimeZone('Europe/Berlin')),
-      create(new DateFormat('%Y-%m-%d %H:%M:%S %z'))->parse('2009-12-14 11:45:00 Europe/Berlin')
+      (new DateFormat('%Y-%m-%d %H:%M:%S %z'))->parse('2009-12-14 11:45:00 Europe/Berlin')
     );
   }
 
@@ -151,7 +151,7 @@ class DateFormatTest extends TestCase {
   public function formatDateWithTimeZoneName() {
     $this->assertEquals(
       '2009-12-14 11:45:00 Europe/Berlin',
-      create(new DateFormat('%Y-%m-%d %H:%M:%S %z'))->format(new \util\Date('2009-12-14 11:45:00', new \util\TimeZone('Europe/Berlin')))
+      (new DateFormat('%Y-%m-%d %H:%M:%S %z'))->format(new \util\Date('2009-12-14 11:45:00', new \util\TimeZone('Europe/Berlin')))
     );
   }
 
@@ -163,7 +163,7 @@ class DateFormatTest extends TestCase {
   public function parseDateWithTimeZoneOffset() {
     $this->assertEquals(
       new \util\Date('2009-12-14 11:45:00-0800'),
-      create(new DateFormat('%Y-%m-%d %H:%M:%S%Z'))->parse('2009-12-14 11:45:00-0800')
+      (new DateFormat('%Y-%m-%d %H:%M:%S%Z'))->parse('2009-12-14 11:45:00-0800')
     );
   }
 
@@ -175,7 +175,7 @@ class DateFormatTest extends TestCase {
   public function formatDateWithTimeZoneOffset() {
     $this->assertEquals(
       '2009-12-14 11:45:00-0800',
-      create(new DateFormat('%Y-%m-%d %H:%M:%S%Z'))->format(new \util\Date('2009-12-14 11:45:00-0800'))
+      (new DateFormat('%Y-%m-%d %H:%M:%S%Z'))->format(new \util\Date('2009-12-14 11:45:00-0800'))
     );
   }
 
@@ -185,7 +185,7 @@ class DateFormatTest extends TestCase {
    */
   #[@test]
   public function formatLiteralPercent() {
-    $this->assertEquals('%', create(new DateFormat('%%'))->format(new \util\Date()));
+    $this->assertEquals('%', (new DateFormat('%%'))->format(new \util\Date()));
   }
 
   /**
@@ -196,7 +196,7 @@ class DateFormatTest extends TestCase {
   public function parseGermanMonthNamesInInput() {
     $this->assertEquals(
       new \util\Date('2011-03-07'),
-      create(new DateFormat('%d-%[month=Jan,Feb,Mrz,Apr,Mai,Jun,Jul,Aug,Sep,Okt,Nov,Dez]-%Y'))->parse('07-Mrz-2011')
+      (new DateFormat('%d-%[month=Jan,Feb,Mrz,Apr,Mai,Jun,Jul,Aug,Sep,Okt,Nov,Dez]-%Y'))->parse('07-Mrz-2011')
     );
   }
 
@@ -208,7 +208,7 @@ class DateFormatTest extends TestCase {
   public function formatGermanMonthNames() {
     $this->assertEquals(
       '07-Mrz-2011',
-      create(new DateFormat('%d-%[month=Jan,Feb,Mrz,Apr,Mai,Jun,Jul,Aug,Sep,Okt,Nov,Dez]-%Y'))->format(new \util\Date('2011-03-07'))
+      (new DateFormat('%d-%[month=Jan,Feb,Mrz,Apr,Mai,Jun,Jul,Aug,Sep,Okt,Nov,Dez]-%Y'))->format(new \util\Date('2011-03-07'))
     );
   }
 
@@ -227,7 +227,7 @@ class DateFormatTest extends TestCase {
    */
   #[@test, @expect('lang.FormatException')]
   public function stringTooShort() {
-    create(new DateFormat('%Y-%m-%d'))->parse('2004');
+    (new DateFormat('%Y-%m-%d'))->parse('2004');
   }
 
   /**
@@ -236,7 +236,7 @@ class DateFormatTest extends TestCase {
    */
   #[@test, @expect('lang.FormatException')]
   public function formatMismatch() {
-    create(new DateFormat('%Y-%m-%d'))->parse('12.12.2004');
+    (new DateFormat('%Y-%m-%d'))->parse('12.12.2004');
   }
 
 
@@ -246,6 +246,6 @@ class DateFormatTest extends TestCase {
    */
   #[@test, @expect('lang.FormatException')]
   public function nonNumericInput() {
-    create(new DateFormat('%Y'))->parse('Hello');
+    (new DateFormat('%Y'))->parse('Hello');
   }
 }

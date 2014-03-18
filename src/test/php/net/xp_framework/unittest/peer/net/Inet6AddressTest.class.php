@@ -21,7 +21,7 @@ class Inet6AddressTest extends TestCase {
   public function createAddress() {
     $this->assertEquals(
       'febc:a574:382b:23c1:aa49:4592:4efe:9982',
-      create(new Inet6Address('febc:a574:382b:23c1:aa49:4592:4efe:9982'))->asString()
+      (new Inet6Address('febc:a574:382b:23c1:aa49:4592:4efe:9982'))->asString()
     );
   }
 
@@ -33,7 +33,7 @@ class Inet6AddressTest extends TestCase {
   public function createAddressFromUpperCase() {
     $this->assertEquals(
       'febc:a574:382b:23c1:aa49:4592:4efe:9982',
-      create(new Inet6Address('FEBC:A574:382B:23C1:AA49:4592:4EFE:9982'))->asString()
+      (new Inet6Address('FEBC:A574:382B:23C1:AA49:4592:4EFE:9982'))->asString()
     );
   }
 
@@ -45,13 +45,13 @@ class Inet6AddressTest extends TestCase {
   public function createAddressFromPackedForm() {
     $this->assertEquals(
       '::1',
-      create(new Inet6Address("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\1", true))->asString()
+      (new Inet6Address("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\1", true))->asString()
     );
     
     //special case when a colon is part of the packed address string
     $this->assertEquals(
       '::3a',
-      create(new Inet6Address("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0:", true))->asString() // ord(':')==0x32
+      (new Inet6Address("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0:", true))->asString() // ord(':')==0x32
     );
   }
 
@@ -63,7 +63,7 @@ class Inet6AddressTest extends TestCase {
   public function addressIsShortened() {
     $this->assertEquals(
       'febc:a574:382b::4592:4efe:9982',
-      create(new Inet6Address('febc:a574:382b:0000:0000:4592:4efe:9982'))->asString()
+      (new Inet6Address('febc:a574:382b:0000:0000:4592:4efe:9982'))->asString()
     );
   }
   
@@ -75,7 +75,7 @@ class Inet6AddressTest extends TestCase {
   public function addressShorteningOnlyTakesPlaceOnce() {
     $this->assertEquals(
       'febc::23c1:aa49:0:0:9982',
-      create(new Inet6Address('febc:0000:0000:23c1:aa49:0000:0000:9982'))->asString()
+      (new Inet6Address('febc:0000:0000:23c1:aa49:0000:0000:9982'))->asString()
     );
   }
   
@@ -88,7 +88,7 @@ class Inet6AddressTest extends TestCase {
   public function hexquadsAreShortenedWhenStartingWithZero() {
     $this->assertEquals(
       'febc:a574:2b:23c1:aa49:4592:4efe:9982',
-      create(new Inet6Address('febc:a574:002b:23c1:aa49:4592:4efe:9982'))->asString()
+      (new Inet6Address('febc:a574:002b:23c1:aa49:4592:4efe:9982'))->asString()
     );
   }
   
@@ -100,7 +100,7 @@ class Inet6AddressTest extends TestCase {
   public function addressPrefixIsShortened() {
     $this->assertEquals(
       '::382b:23c1:aa49:4592:4efe:9982',
-      create(new Inet6Address('0000:0000:382b:23c1:aa49:4592:4efe:9982'))->asString()
+      (new Inet6Address('0000:0000:382b:23c1:aa49:4592:4efe:9982'))->asString()
     );
   }
   
@@ -112,7 +112,7 @@ class Inet6AddressTest extends TestCase {
   public function addressPostfixIsShortened() {
     $this->assertEquals(
       'febc:a574:382b:23c1:aa49::',
-      create(new Inet6Address('febc:a574:382b:23c1:aa49:0000:0000:0000'))->asString()
+      (new Inet6Address('febc:a574:382b:23c1:aa49:0000:0000:0000'))->asString()
     );
   }
   
@@ -123,7 +123,7 @@ class Inet6AddressTest extends TestCase {
    */
   #[@test]
   public function loopbackAddress() {
-    $this->assertEquals('::1', create(new Inet6Address('::1'))->asString());
+    $this->assertEquals('::1', (new Inet6Address('::1'))->asString());
   }
   
   /**
@@ -132,7 +132,7 @@ class Inet6AddressTest extends TestCase {
    */
   #[@test]
   public function isLoopbackAddress() {
-    $this->assertTrue(create(new Inet6Address('::1'))->isLoopback());
+    $this->assertTrue((new Inet6Address('::1'))->isLoopback());
   }
   
   /**
@@ -141,7 +141,7 @@ class Inet6AddressTest extends TestCase {
    */
   #[@test]
   public function isNotLoopbackAddress() {
-    $this->assertFalse(create(new Inet6Address('::2'))->isLoopback());
+    $this->assertFalse((new Inet6Address('::2'))->isLoopback());
   }
   
   /**
@@ -150,7 +150,7 @@ class Inet6AddressTest extends TestCase {
    */
   #[@test]
   public function inSubnet() {
-    $this->assertTrue(create(new Inet6Address('::1'))->inSubnet(new Network(new Inet6Address('::1'), 120)));
+    $this->assertTrue((new Inet6Address('::1'))->inSubnet(new Network(new Inet6Address('::1'), 120)));
   }
   
   /**
@@ -159,7 +159,7 @@ class Inet6AddressTest extends TestCase {
    */
   #[@test]
   public function inSmallestPossibleSubnet() {
-    $this->assertTrue(create(new Inet6Address('::1'))->inSubnet(new Network(new Inet6Address('::0'), 127)));
+    $this->assertTrue((new Inet6Address('::1'))->inSubnet(new Network(new Inet6Address('::0'), 127)));
   }
   
   /**
@@ -168,7 +168,7 @@ class Inet6AddressTest extends TestCase {
    */
   #[@test]
   public function notInSubnet() {
-    $this->assertFalse(create(new Inet6Address('::1'))->inSubnet(new Network(new Inet6Address('::0101'), 120)));
+    $this->assertFalse((new Inet6Address('::1'))->inSubnet(new Network(new Inet6Address('::0101'), 120)));
   }
 
   /**
@@ -270,7 +270,7 @@ class Inet6AddressTest extends TestCase {
   public function reversedNotation() {
     $this->assertEquals(
       'b.a.9.8.7.6.5.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.b.d.0.1.0.0.2.ip6.arpa',
-      create(new Inet6Address('2001:db8::567:89ab'))->reversedNotation()
+      (new Inet6Address('2001:db8::567:89ab'))->reversedNotation()
     );
   }
   

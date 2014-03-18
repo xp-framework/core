@@ -115,7 +115,7 @@ class ParamStringTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function nonExistantPositional() {
-    create(new ParamString(array('a')))->value(1);
+    (new ParamString(array('a')))->value(1);
   }
 
   /**
@@ -126,7 +126,7 @@ class ParamStringTest extends TestCase {
   public function nonExistantPositionalWithDefault() {
     $this->assertEquals(
       'Default', 
-      create(new ParamString(array('--verbose')))->value(1, null, 'Default')
+      (new ParamString(array('--verbose')))->value(1, null, 'Default')
     );
   }
 
@@ -136,7 +136,7 @@ class ParamStringTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function nonExistantNamed() {
-    create(new ParamString(array('--verbose')))->value('name');
+    (new ParamString(array('--verbose')))->value('name');
   }
 
   /**
@@ -147,7 +147,7 @@ class ParamStringTest extends TestCase {
   public function nonExistantNamedWithDefault() {
     $this->assertEquals(
       'Default', 
-      create(new ParamString(array('--verbose')))->value('name', 'n', 'Default')
+      (new ParamString(array('--verbose')))->value('name', 'n', 'Default')
     );
   }
   

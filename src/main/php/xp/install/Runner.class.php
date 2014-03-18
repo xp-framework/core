@@ -67,7 +67,7 @@ class Runner extends \lang\Object {
       } else if ('-a' === $args[$i]) {
         $api->setBase($args[++$i]);
       } else if ('-v' === $args[$i]) {
-        $cat= create(new LogCategory('console'))->withAppender(new ColoredConsoleAppender());
+        $cat= (new LogCategory('console'))->withAppender(new ColoredConsoleAppender());
       } else if ('-' === $args[$i]{0}) {
         Console::$err->writeLine('*** Unknown argument ', $args[$i]);
         return 128;

@@ -66,7 +66,7 @@ class AddAction extends Action {
     }
 
     // Search for module
-    $request= create(new RestRequest('/vendors/{vendor}/modules/{module}'))
+    $request= (new RestRequest('/vendors/{vendor}/modules/{module}'))
       ->withSegment('vendor', $module->vendor)
       ->withSegment('module', $module->name)
     ;
@@ -122,7 +122,7 @@ class AddAction extends Action {
 
         // Save module meta data
         unset($info['releases']);
-        self::$json->encodeTo($info, create(new File($base, $module->name.'.json'))->getOutputStream());
+        self::$json->encodeTo($info, (new File($base, $module->name.'.json'))->getOutputStream());
       } catch (\lang\Throwable $e) {
         Console::writeLine('*** ', $e);
         $target->unlink();

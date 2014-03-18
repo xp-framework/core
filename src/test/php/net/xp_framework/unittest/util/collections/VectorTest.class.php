@@ -20,7 +20,7 @@ class VectorTest extends TestCase {
    */
   #[@test]
   public function initiallyEmpty() {
-    $this->assertTrue(create(new Vector())->isEmpty());
+    $this->assertTrue((new Vector())->isEmpty());
   }
 
   /**
@@ -29,7 +29,7 @@ class VectorTest extends TestCase {
    */
   #[@test]
   public function sizeOfEmptyVector() {
-    $this->assertEquals(0, create(new Vector())->size());
+    $this->assertEquals(0, (new Vector())->size());
   }
   
   /**
@@ -96,7 +96,7 @@ class VectorTest extends TestCase {
    */
   #[@test]
   public function addAllEmptyArray() {
-    $this->assertFalse(create(new Vector())->addAll(array()));
+    $this->assertFalse((new Vector())->addAll(array()));
   }
 
   /**
@@ -105,7 +105,7 @@ class VectorTest extends TestCase {
    */
   #[@test]
   public function addAllEmptyVector() {
-    $this->assertFalse(create(new Vector())->addAll(new Vector()));
+    $this->assertFalse((new Vector())->addAll(new Vector()));
   }
 
   /**
@@ -114,7 +114,7 @@ class VectorTest extends TestCase {
    */
   #[@test]
   public function addAllEmptyArrayList() {
-    $this->assertFalse(create(new Vector())->addAll(new ArrayList()));
+    $this->assertFalse((new Vector())->addAll(new ArrayList()));
   }
 
   /**
@@ -185,7 +185,7 @@ class VectorTest extends TestCase {
    */
   #[@test, @expect('lang.IndexOutOfBoundsException')]
   public function settingPastEnd() {
-    create(new Vector())->set(0, new \lang\Object());
+    (new Vector())->set(0, new \lang\Object());
   }
 
   /**
@@ -194,7 +194,7 @@ class VectorTest extends TestCase {
    */
   #[@test, @expect('lang.IndexOutOfBoundsException')]
   public function settingNegative() {
-    create(new Vector())->set(-1, new \lang\Object());
+    (new Vector())->set(-1, new \lang\Object());
   }
 
   /**
@@ -216,7 +216,7 @@ class VectorTest extends TestCase {
    */
   #[@test, @expect('lang.IndexOutOfBoundsException')]
   public function readingPastEnd() {
-    create(new Vector())->get(0);
+    (new Vector())->get(0);
   }
 
   /**
@@ -225,7 +225,7 @@ class VectorTest extends TestCase {
    */
   #[@test, @expect('lang.IndexOutOfBoundsException')]
   public function readingNegative() {
-    create(new Vector())->get(-1);
+    (new Vector())->get(-1);
   }
 
   /**
@@ -248,7 +248,7 @@ class VectorTest extends TestCase {
    */
   #[@test, @expect('lang.IndexOutOfBoundsException')]
   public function removingPastEnd() {
-    create(new Vector())->get(0);
+    (new Vector())->get(0);
   }
 
   /**
@@ -257,7 +257,7 @@ class VectorTest extends TestCase {
    */
   #[@test, @expect('lang.IndexOutOfBoundsException')]
   public function removingNegative() {
-    create(new Vector())->get(-1);
+    (new Vector())->get(-1);
   }
 
   /**
@@ -278,7 +278,7 @@ class VectorTest extends TestCase {
    */
   #[@test]
   public function elementsOfEmptyVector() {
-    $this->assertEquals(array(), create(new Vector())->elements());
+    $this->assertEquals(array(), (new Vector())->elements());
   }
 
   /**
@@ -288,7 +288,7 @@ class VectorTest extends TestCase {
   #[@test]
   public function elementsOf() {
     $el= array(new String('a'), new \lang\Object());
-    $this->assertEquals($el, create(new Vector($el))->elements());
+    $this->assertEquals($el, (new Vector($el))->elements());
   }
 
   /**
@@ -309,7 +309,7 @@ class VectorTest extends TestCase {
    */
   #[@test]
   public function emptyVectorDoesNotContainString() {
-    $this->assertFalse(create(new Vector())->contains(new \lang\Object()));
+    $this->assertFalse((new Vector())->contains(new \lang\Object()));
   }
 
   /**
@@ -318,7 +318,7 @@ class VectorTest extends TestCase {
    */
   #[@test]
   public function indexOfOnEmptyVector() {
-    $this->assertFalse(create(new Vector())->indexOf(new \lang\Object()));
+    $this->assertFalse((new Vector())->indexOf(new \lang\Object()));
   }
 
   /**
@@ -328,7 +328,7 @@ class VectorTest extends TestCase {
   #[@test]
   public function indexOf() {
     $a= new String('A');
-    $this->assertEquals(0, create(new Vector(array($a)))->indexOf($a));
+    $this->assertEquals(0, (new Vector(array($a)))->indexOf($a));
   }
 
   /**
@@ -338,7 +338,7 @@ class VectorTest extends TestCase {
   #[@test]
   public function indexOfElementContainedTwice() {
     $a= new String('A');
-    $this->assertEquals(0, create(new Vector(array($a, new \lang\Object(), $a)))->indexOf($a));
+    $this->assertEquals(0, (new Vector(array($a, new \lang\Object(), $a)))->indexOf($a));
   }
 
   /**
@@ -347,7 +347,7 @@ class VectorTest extends TestCase {
    */
   #[@test]
   public function lastIndexOfOnEmptyVector() {
-    $this->assertFalse(create(new Vector())->lastIndexOf(new \lang\Object()));
+    $this->assertFalse((new Vector())->lastIndexOf(new \lang\Object()));
   }
 
   /**
@@ -357,7 +357,7 @@ class VectorTest extends TestCase {
   #[@test]
   public function lastIndexOf() {
     $a= new String('A');
-    $this->assertEquals(0, create(new Vector(array($a)))->lastIndexOf($a));
+    $this->assertEquals(0, (new Vector(array($a)))->lastIndexOf($a));
   }
 
   /**
@@ -367,7 +367,7 @@ class VectorTest extends TestCase {
   #[@test]
   public function lastIndexOfElementContainedTwice() {
     $a= new String('A');
-    $this->assertEquals(2, create(new Vector(array($a, new \lang\Object(), $a)))->lastIndexOf($a));
+    $this->assertEquals(2, (new Vector(array($a, new \lang\Object(), $a)))->lastIndexOf($a));
   }
 
   /**
@@ -378,7 +378,7 @@ class VectorTest extends TestCase {
   public function stringOfEmptyVector() {
     $this->assertEquals(
       "util.collections.Vector[0]@{\n}",
-      create(new Vector())->toString()
+      (new Vector())->toString()
     );
   }
 
@@ -390,7 +390,7 @@ class VectorTest extends TestCase {
   public function stringOf() {
     $this->assertEquals(
       "util.collections.Vector[2]@{\n  0: One\n  1: Two\n}",
-      create(new Vector(array(new String('One'), new String('Two'))))->toString()
+      (new Vector(array(new String('One'), new String('Two'))))->toString()
     );
   }
 
@@ -419,7 +419,7 @@ class VectorTest extends TestCase {
    */
   #[@test]
   public function twoEmptyVectorsAreEqual() {
-    $this->assertTrue(create(new Vector())->equals(new Vector()));
+    $this->assertTrue((new Vector())->equals(new Vector()));
   }
 
   /**
@@ -449,7 +449,7 @@ class VectorTest extends TestCase {
    */
   #[@test]
   public function aVectorIsNotEqualToNull() {
-    $this->assertFalse(create(new Vector())->equals(null));
+    $this->assertFalse((new Vector())->equals(null));
   }
 
   /**
@@ -458,7 +458,7 @@ class VectorTest extends TestCase {
    */
   #[@test]
   public function twoVectorsOfDifferentSizeAreNotEqual() {
-    $this->assertFalse(create(new Vector(array(new \lang\Object())))->equals(new Vector()));
+    $this->assertFalse((new Vector(array(new \lang\Object())))->equals(new Vector()));
   }
 
   /**
@@ -469,6 +469,6 @@ class VectorTest extends TestCase {
   public function orderMattersForEquality() {
     $a= array(new String('a'), new String('b'));
     $b= array(new String('b'), new String('a'));
-    $this->assertFalse(create(new Vector($a))->equals(new Vector($b)));
+    $this->assertFalse((new Vector($a))->equals(new Vector($b)));
   }
 }
