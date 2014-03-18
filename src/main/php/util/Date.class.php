@@ -1,12 +1,9 @@
 <?php namespace util;
 
-
-
 /**
  * The class Date represents a specific instant in time.
  *
- * @test     xp://net.xp_framework.unittest.util.DateTest
- * @purpose  Represent a date
+ * @test  xp://net.xp_framework.unittest.util.DateTest
  */
 class Date extends \lang\Object {
   protected
@@ -144,23 +141,6 @@ class Date extends \lang\Object {
   }
   
   /**
-   * Create a timestamp for a date given by it's values.
-   *
-   * @param   int year
-   * @param   int month
-   * @param   int day
-   * @param   int hour
-   * @param   int minute
-   * @param   int second
-   * @param   util.TimeZone tz default NULL
-   * @return  util.Date
-   */
-  #[@deprecated]
-  public static function mktime($hour, $minute, $second, $month, $day, $year, TimeZone $tz= null) {
-    return self::create($year, $month, $day, $hour, $minute, $second, $tz)->getTime();
-  }
-  
-  /**
    * Indicates whether the date to compare equals this date.
    *
    * @param   util.Date cmp
@@ -178,23 +158,6 @@ class Date extends \lang\Object {
    */
   public static function now(TimeZone $tz= null) {
     return new self(null, $tz);
-  }
-  
-  /**
-   * Create a date from a string
-   *
-   * <code>
-   *   $d= Date::fromString('2003-02-01');
-   * </code>
-   *
-   * @see     php://date_create
-   * @param   string str
-   * @param   util.TimeZone tz
-   * @return  util.Date
-   */
-  #[@deprecated]
-  public static function fromString($str, TimeZone $tz= null) {
-    return new self($str, $tz);
   }
   
   /**

@@ -4,11 +4,8 @@ use unittest\TestCase;
 use util\Date;
 use util\TimeZone;
 
-
 /**
- * Test framework code
- *
- * @purpose  Unit Test
+ * Tests Date class
  */
 class DateTest extends TestCase {
   public
@@ -28,7 +25,7 @@ class DateTest extends TestCase {
     
     $this->nowTime= time();
     $this->nowDate= new Date($this->nowTime);
-    $this->refDate= Date::fromString('1977-12-14 11:55');
+    $this->refDate= new Date('1977-12-14 11:55');
   }
 
   /**
@@ -135,8 +132,8 @@ class DateTest extends TestCase {
   public function testDate() {
     $this->assertEquals($this->nowDate->getTime(), $this->nowTime);
     $this->assertEquals($this->nowDate->toString('r'), date('r', $this->nowTime));
-    $this->assertTrue($this->nowDate->isAfter(Date::fromString('yesterday')));
-    $this->assertTrue($this->nowDate->isBefore(Date::fromString('tomorrow')));
+    $this->assertTrue($this->nowDate->isAfter(new Date('yesterday')));
+    $this->assertTrue($this->nowDate->isBefore(new Date('tomorrow')));
   }
   
   /**
@@ -144,7 +141,7 @@ class DateTest extends TestCase {
    */
   #[@test]
   public function preUnixEpoch() {
-    $this->assertDateEquals('1969-12-31T00:00:00+00:00', Date::fromString('31.12.1969 00:00 GMT'));
+    $this->assertDateEquals('1969-12-31T00:00:00+00:00', new Date('31.12.1969 00:00 GMT'));
   }
 
   /**
@@ -159,7 +156,7 @@ class DateTest extends TestCase {
    */
   #[@test, @ignore('PHP date functions do not support dates before 1753')]
   public function pre1582() {
-    $this->assertDateEquals('1499-12-21T00:00:00+00:00', Date::fromString('01.01.1500 00:00 GMT'));
+    $this->assertDateEquals('1499-12-21T00:00:00+00:00', new Date('01.01.1500 00:00 GMT'));
   }
 
   /**
@@ -178,8 +175,8 @@ class DateTest extends TestCase {
    */
   #[@test, @ignore('PHP date functions do not support dates before 1753')]
   public function calendarAct1750() {
-    $this->assertDateEquals('1753-01-01T00:00:00+00:00', Date::fromString('01.01.1753 00:00 GMT'));
-    $this->assertDateEquals('1751-12-21T00:00:00+00:00', Date::fromString('01.01.1752 00:00 GMT'));
+    $this->assertDateEquals('1753-01-01T00:00:00+00:00', new Date('01.01.1753 00:00 GMT'));
+    $this->assertDateEquals('1751-12-21T00:00:00+00:00', new Date('01.01.1752 00:00 GMT'));
   }
 
   /**
@@ -189,10 +186,10 @@ class DateTest extends TestCase {
    */
   #[@test]
   public function anteAndPostMeridiem() {
-    $this->assertEquals(1, Date::fromString('May 28 1980 1:00AM')->getHours(), '1:00AM != 1h');
-    $this->assertEquals(0, Date::fromString('May 28 1980 12:00AM')->getHours(), '12:00AM != 0h');
-    $this->assertEquals(13, Date::fromString('May 28 1980 1:00PM')->getHours(), '1:00PM != 13h');
-    $this->assertEquals(12, Date::fromString('May 28 1980 12:00PM')->getHours(), '12:00PM != 12h');
+    $this->assertEquals(1, (new Date('May 28 1980 1:00AM'))->getHours(), '1:00AM != 1h');
+    $this->assertEquals(0, (new Date('May 28 1980 12:00AM'))->getHours(), '12:00AM != 0h');
+    $this->assertEquals(13, (new Date('May 28 1980 1:00PM'))->getHours(), '1:00PM != 13h');
+    $this->assertEquals(12, (new Date('May 28 1980 12:00PM'))->getHours(), '12:00PM != 12h');
   }
   
   /**
@@ -201,10 +198,10 @@ class DateTest extends TestCase {
    */
   #[@test]
   public function anteAndPostMeridiemInMidage() {
-    $this->assertEquals(1, Date::fromString('May 28 1580 1:00AM')->getHours(), '1:00AM != 1h');
-    $this->assertEquals(0, Date::fromString('May 28 1580 12:00AM')->getHours(), '12:00AM != 0h');
-    $this->assertEquals(13, Date::fromString('May 28 1580 1:00PM')->getHours(), '1:00PM != 13h');
-    $this->assertEquals(12, Date::fromString('May 28 1580 12:00PM')->getHours(), '12:00PM != 12h');
+    $this->assertEquals(1, (new Date('May 28 1580 1:00AM'))->getHours(), '1:00AM != 1h');
+    $this->assertEquals(0, (new Date('May 28 1580 12:00AM'))->getHours(), '12:00AM != 0h');
+    $this->assertEquals(13, (new Date('May 28 1580 1:00PM'))->getHours(), '1:00PM != 13h');
+    $this->assertEquals(12, (new Date('May 28 1580 12:00PM'))->getHours(), '12:00PM != 12h');
   }
   
   /**
@@ -225,9 +222,9 @@ class DateTest extends TestCase {
    */    
   #[@test]
   public function pre1970() {
-    $this->assertDateEquals('1969-02-01T00:00:00+00:00', Date::fromString('01.02.1969'));
-    $this->assertDateEquals('1969-02-01T00:00:00+00:00', Date::fromString('1969-02-01'));
-    $this->assertDateEquals('1969-02-01T00:00:00+00:00', Date::fromString('1969-02-01 12:00AM'));
+    $this->assertDateEquals('1969-02-01T00:00:00+00:00', new Date('01.02.1969'));
+    $this->assertDateEquals('1969-02-01T00:00:00+00:00', new Date('1969-02-01'));
+    $this->assertDateEquals('1969-02-01T00:00:00+00:00', new Date('1969-02-01 12:00AM'));
   }
   
   /**
@@ -236,7 +233,7 @@ class DateTest extends TestCase {
    */
   #[@test]
   public function serialization() {
-    $original= Date::fromString('2007-07-18T09:42:08 Europe/Athens');
+    $original= new Date('2007-07-18T09:42:08 Europe/Athens');
     $copy= unserialize(serialize($original));
     $this->assertEquals($original, $copy);
   }
