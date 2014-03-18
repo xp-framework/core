@@ -131,7 +131,7 @@ class LogCategoryTest extends TestCase {
       public function append(LoggingEvent $event) { }
     }');
     $this->cat->withAppender($appender);
-    $this->assertClass($appender->getLayout(), 'util.log.layout.DefaultLayout');
+    $this->assertInstanceOf('util.log.layout.DefaultLayout', $appender->getLayout());
   }
 
   #[@test]
