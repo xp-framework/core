@@ -3,7 +3,6 @@
 use unittest\mock\RecordState;
 use util\Hashmap;
 
-
 /**
  * Testcase for RecordState
  *
@@ -16,44 +15,27 @@ class RecordStateTest extends \unittest\TestCase {
   
   /**
    * Creates the fixture
-   *
    */
   public function setUp() {
     $this->expectationMap= new Hashmap();
     $this->sut= new RecordState($this->expectationMap);
   }
     
-  /**
-   * Cannot create without valid Hasmap.
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function expectationMapRequiredOnCreate() {
     new RecordState(null);
   }
   
-  /**
-   * Can create with valid hasmap.
-   *
-   */
   #[@test]
   public function canCreate() {
     new RecordState(new Hashmap());
   }
 
-  /**
-   *
-   * Can call handleInvocation.
-   */
   #[@test]
   public function canHandleInvocation() {
     $this->sut->handleInvocation('methodName', null);
   }
 
-  /**
-   * A new expectation is created when calling handleInvocation
-   *
-   */
   #[@test]
   public function newExpectationCreatedOnHandleInvocation() {
     $this->sut->handleInvocation('foo', null);
@@ -63,10 +45,6 @@ class RecordStateTest extends \unittest\TestCase {
     $this->assertInstanceOf('unittest.mock.Expectation', $expectationList->getNext(array()));
   }
 
-  /**
-   * A new expectation is created when calling handleInvocation
-   *
-   */
   #[@test]
   public function newExpectationCreatedOnHandleInvocation_twoDifferentMethods() {
     $this->sut->handleInvocation('foo', null);
@@ -75,10 +53,6 @@ class RecordStateTest extends \unittest\TestCase {
     $this->assertInstanceOf('unittest.mock.Expectation', $this->expectationMap->get('bar')->getNext(array()));
   }
 
-  /**
-   * A new expectation is created when calling handleInvocation
-   *
-   */
   #[@test]
   public function newExpectationCreatedOn_EACH_HandleInvocationCall() {
     $this->sut->handleInvocation('foo', null);
@@ -90,10 +64,6 @@ class RecordStateTest extends \unittest\TestCase {
     $this->assertInstanceOf('unittest.mock.Expectation', $expectationList->getNext(array()));
   }
 
-  /**
-   * The expectations arguments should be set in handleInvocation.
-   *
-   */
   #[@test]
   public function method_call_should_set_arguments() {
     $args= array('1', 2, 3.0);
@@ -101,6 +71,6 @@ class RecordStateTest extends \unittest\TestCase {
 
     $expectationList= $this->expectationMap->get('foo');
     $expectedExpectaton= $expectationList->getNext($args);
-    $this->assertObject($expectedExpectaton);
+    $this->assertInstanceOf('lang.Object', $expectedExpectaton);
   }
 }

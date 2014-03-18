@@ -1,8 +1,7 @@
 <?php namespace net\xp_framework\unittest\tests\mock;
 
 /**
- * A abstract dummy class for testing.
- *
+ * An abstract dummy class for testing.
  */
 abstract class AbstractDummy extends \lang\Object {
 
@@ -17,14 +16,13 @@ abstract class AbstractDummy extends \lang\Object {
 
   /**
    * An abstract method
-   *
    */
   public abstract function abstractMethod();
   
   /**
    * Returns whether a given value is equal to this class
    *
-   * @param   lang.Generic cmp
+   * @param   var $cmp
    * @return  bool
    */
   public function equals($cmp) {

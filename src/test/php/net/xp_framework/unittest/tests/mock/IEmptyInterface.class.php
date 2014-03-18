@@ -2,7 +2,6 @@
 
 /**
  * Dummy interface used in other tests
- *
  */
 interface IEmptyInterface {
 
