@@ -28,7 +28,7 @@ class NumberTest extends \unittest\TestCase {
    */
   protected function testType(\lang\types\Number $number, $int, $float) {
     $this->assertEquals($int, $number->intValue(), 'intValue');
-    $this->assertEquals($float, $number->floatValue(), 'floatValue');
+    $this->assertEquals($float, $number->doubleValue(), 'doubleValue');
     $this->assertEquals($number, clone($number), 'clone');
   }
 

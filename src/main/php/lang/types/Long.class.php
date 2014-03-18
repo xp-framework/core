@@ -1,7 +1,5 @@
 <?php namespace lang\types;
 
-
-
 /**
  * The Long class wraps a value of the type long 
  * 

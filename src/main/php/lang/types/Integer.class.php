@@ -1,7 +1,5 @@
 <?php namespace lang\types;
 
-
-
 /**
  * The Integer class wraps a value of the type int 
  * 

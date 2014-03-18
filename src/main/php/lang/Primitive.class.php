@@ -54,7 +54,7 @@ class Primitive extends Type {
    */
   public static function unboxed($in) {
     if ($in instanceof \lang\types\String) return $in->toString();
-    if ($in instanceof \lang\types\Double) return $in->floatValue();
+    if ($in instanceof \lang\types\Double) return $in->doubleValue();
     if ($in instanceof \lang\types\Integer) return $in->intValue();
     if ($in instanceof \lang\types\Boolean) return $in->value;
     if ($in instanceof \lang\types\ArrayList) return $in->values;   // deprecated

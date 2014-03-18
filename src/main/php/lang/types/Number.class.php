@@ -21,11 +21,6 @@ abstract class Number extends \lang\Object {
   /**
    * ValueOf factory
    *
-   * NOTE: We don't use a base-class version with "new static" here because
-   * in PHP 5.3.3 there is a bug with the class resolution when this method
-   * is invoked via reflection.
-   *
-   * @see     https://github.com/xp-framework/xp-framework/issues/293
    * @param   string $value
    * @return  self
    * @throws  lang.IllegalArgumentException
@@ -41,16 +36,6 @@ abstract class Number extends \lang\Object {
    */
   public function intValue() {
     return $this->value + 0;
-  }
-
-  /**
-   * Returns the value of this number as a double.
-   *
-   * @deprecated Inconsistent with XP type system - use doubleValue() instead
-   * @return  double
-   */
-  public function floatValue() {
-    return $this->doubleValue();
   }
 
   /**

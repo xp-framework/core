@@ -5,6 +5,7 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Removed deprecated lang.types.Number::floatVal() - (@thekid)
 * **Minimum PHP version reqired is now PHP 5.4.0** - (@thekid)
 * Removed deprecated `assertArray()`, `assertObject()`, `assertEmpty()`,
   `assertNotEmpty()`, `assertClass()` and `assertSubclass()` methods from

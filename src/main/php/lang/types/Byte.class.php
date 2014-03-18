@@ -1,7 +1,5 @@
 <?php namespace lang\types;
 
-
-
 /**
  * The Byte class wraps a value of the type byte 
  * 

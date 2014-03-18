@@ -1,7 +1,5 @@
 <?php namespace lang\types;
 
-
-
 /**
  * The Float class wraps a value of the type float
  */
