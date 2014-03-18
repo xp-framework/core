@@ -43,7 +43,6 @@ class Throwable extends \Exception implements Generic { use \__xp;
    * @param   string message
    */
   public function __construct($message, $cause= null) {
-    static $u= 0;
     $this->__id= uniqid('', true);
     $this->message= is_string($message) ? $message : \xp::stringOf($message);
     $this->cause= $cause;
