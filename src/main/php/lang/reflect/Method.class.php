@@ -66,12 +66,12 @@ class Method extends Routine {
     }
     $public= $m & MODIFIER_PUBLIC;
     if (!$public && !$this->accessible) {
-      $t= debug_backtrace(0);
+      $t= debug_backtrace(0, 2);
       $decl= $this->_reflect->getDeclaringClass()->getName();
       if ($m & MODIFIER_PROTECTED) {
         $allow= $t[1]['class'] === $decl || is_subclass_of($t[1]['class'], $decl);
       } else {
-        $allow= $t[1]['class'] === $decl && self::$SETACCESSIBLE_AVAILABLE;
+        $allow= $t[1]['class'] === $decl;
       }
       if (!$allow) {
         throw new \lang\IllegalAccessException(sprintf(
@@ -87,18 +87,10 @@ class Method extends Routine {
     // For non-public methods: Use setAccessible() / invokeArgs() combination 
     // if possible, resort to __call() workaround.
     try {
-      if ($public) {
-        return $this->_reflect->invokeArgs($obj, (array)$args);
-      }
-
-      if (self::$SETACCESSIBLE_AVAILABLE) {
+      if (!$public) {
         $this->_reflect->setAccessible(true);
-        return $this->_reflect->invokeArgs($obj, (array)$args);
-      } else if ($m & MODIFIER_STATIC) {
-        return call_user_func(array($this->_class, '__callStatic'), "\7".$this->_reflect->getName(), $args);
-      } else {
-        return $obj->__call("\7".$this->_reflect->getName(), $args);
       }
+      return $this->_reflect->invokeArgs($obj, (array)$args);
     } catch (\lang\SystemExit $e) {
       throw $e;
     } catch (\lang\Throwable $e) {

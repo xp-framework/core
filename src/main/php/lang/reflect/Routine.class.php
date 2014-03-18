@@ -1,7 +1,5 @@
 <?php namespace lang\reflect;
 
-
-
 /**
  * Base class for methods and constructors. Note that the methods provided
  * in this class (except for getName()) are implemented using a tokenizer
@@ -23,12 +21,6 @@ class Routine extends \lang\Object {
 
   public 
     $_reflect   = null;
-
-  protected static $SETACCESSIBLE_AVAILABLE;    // 5.3.0 .. 5.3.2
-
-  static function __static() {
-    self::$SETACCESSIBLE_AVAILABLE= method_exists('ReflectionMethod', 'setAccessible');
-  }
 
   /**
    * Constructor
@@ -260,9 +252,6 @@ class Routine extends \lang\Object {
    * @return  lang.reflect.Routine this
    */
   public function setAccessible($flag) {
-    if (!self::$SETACCESSIBLE_AVAILABLE && $this->_reflect->isPrivate()) {
-      throw new \lang\IllegalAccessException('Cannot make private fields accessible');
-    }
     $this->accessible= $flag;
     return $this;
   }

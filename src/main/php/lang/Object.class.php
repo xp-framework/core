@@ -21,15 +21,11 @@ class Object implements Generic {
    */
   public static function __callStatic($name, $args) {
     $self= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'];
-    if ("\7" === $name{0}) {
-      return call_user_func_array([$self, substr($name, 1)], $args);
-    }
     throw new Error('Call to undefined static method '.\xp::nameOf($self).'::'.$name.'()');
   }
 
   /**
    * Field read handler
-   *
    */
   public function __get($name) {
     return null;
@@ -37,7 +33,6 @@ class Object implements Generic {
 
   /**
    * Field write handler
-   *
    */
   public function __set($name, $value) {
     $this->{$name}= $value;
@@ -45,15 +40,12 @@ class Object implements Generic {
   
   /**
    * Method handler
-   *
    */
   public function __call($name, $args) {
-    if ("\7" === $name{0}) {
-      return call_user_func_array([$this, substr($name, 1)], $args);
-    }
-
     $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
     $self= $t[1]['class'];
+
+    // Check scope for extension methods
     $scope= isset($t[2]['class']) ? $t[2]['class'] : $t[3]['class'];
     if (null != $scope && isset(\xp::$ext[$scope])) {
       foreach (\xp::$ext[$scope] as $type => $class) {
