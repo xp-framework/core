@@ -11,7 +11,7 @@ define('MODIFIER_PRIVATE',   1024);
 final class import {
   function __construct($str) {
     $class= xp::$loader->loadClass0($str);
-    $trace= debug_backtrace();
+    $trace= debug_backtrace(~DEBUG_BACKTRACE_IGNORE_ARGS, 3);
     $scope= $trace[2]['args'][0];
     xp::$cli[]= function() use ($class, $scope) {
       $class::__import(xp::reflect($scope));
@@ -25,20 +25,20 @@ final class xp {
   const CLASS_FILE_EXT= '.class.php';
   const ENCODING= 'utf-8';
 
-  public static $ext= array();
-  public static $cli= array();
+  public static $ext= [];
+  public static $cli= [];
   public static $cll= 0;
-  public static $cl= array();
-  public static $cn= array(
+  public static $cl= [];
+  public static $cn= [
     'xp'    => '<xp>',
     'null'  => '<null>'
-  );
+  ];
   public static $null= null;
   public static $loader= null;
   public static $classpath= null;
-  public static $errors= array();
-  public static $meta= array();
-  public static $registry= array();
+  public static $errors= [];
+  public static $meta= [];
+  public static $registry= [];
   
   // {{{ proto string loadClass0(string name)
   //     Loads a class by its fully qualified name
@@ -87,10 +87,10 @@ final class xp {
         xp::$cn[$short]= $class;
       }
 
-      method_exists($name, '__static') && xp::$cli[]= array($name, '__static');
+      method_exists($name, '__static') && xp::$cli[]= [$name, '__static'];
       if (0 === xp::$cll) {
         $invocations= xp::$cli;
-        xp::$cli= array();
+        xp::$cli= [];
         foreach ($invocations as $inv) call_user_func($inv);
       }
 
@@ -118,7 +118,7 @@ final class xp {
   // {{{ proto string stringOf(var arg [, string indent default ''])
   //     Returns a string representation of the given argument
   static function stringOf($arg, $indent= '') {
-    static $protect= array();
+    static $protect= [];
     
     if (is_string($arg)) {
       return '"'.$arg.'"';
@@ -172,7 +172,7 @@ final class xp {
   // {{{ proto void extensions(string class, string scope)
   //     Registers extension methods for a certain scope
   static function extensions($class, $scope) {
-    foreach (create(new \lang\XPClass($class))->getMethods() as $method) {
+    foreach ((new \lang\XPClass($class))->getMethods() as $method) {
       if (MODIFIER_STATIC & $method->getModifiers() && $method->numParameters() > 0) {
         $param= $method->getParameter(0);
         if ('self' === $param->getName()) {
@@ -189,7 +189,7 @@ final class xp {
     if ($file) {
       unset(xp::$errors[$file]);
     } else {
-      xp::$errors= array();
+      xp::$errors= [];
     }
   }
   // }}}
@@ -317,26 +317,26 @@ final class xarloader {
   // {{{ proto [:var] acquire(string archive)
   //     Archive instance handling pool function, opens an archive and reads header only once
   static function acquire($archive) {
-    static $archives= array();
-    static $unpack= array(
+    static $archives= [];
+    static $unpack= [
       1 => 'a80id/a80*filename/a80*path/V1size/V1offset/a*reserved',
       2 => 'a240id/V1size/V1offset/a*reserved'
-    );
+    ];
     
     if ('/' === $archive{0} && ':' === $archive{2}) {
       $archive= substr($archive, 1);    // Handle xar:///f:/archive.xar => f:/archive.xar
     }
 
     if (!isset($archives[$archive])) {
-      $current= array('handle' => fopen($archive, 'rb'), 'dev' => crc32($archive));
+      $current= ['handle' => fopen($archive, 'rb'), 'dev' => crc32($archive)];
       $header= unpack('a3id/c1version/V1indexsize/a*reserved', fread($current['handle'], 0x0100));
       if ('CCA' != $header['id']) raise('lang.FormatException', 'Malformed archive '.$archive);
-      for ($current['index']= array(), $i= 0; $i < $header['indexsize']; $i++) {
+      for ($current['index']= [], $i= 0; $i < $header['indexsize']; $i++) {
         $entry= unpack(
           $unpack[$header['version']], 
           fread($current['handle'], 0x0100)
         );
-        $current['index'][rtrim($entry['id'], "\0")]= array($entry['size'], $entry['offset'], $i);
+        $current['index'][rtrim($entry['id'], "\0")]= [$entry['size'], $entry['offset'], $i];
       }
       $current['offset']= 0x0100 + $i * 0x0100;
       $archives[$archive]= $current;
@@ -378,11 +378,11 @@ final class xarloader {
   // {{{ proto [:int] stream_stat()
   //     Retrieve status of stream
   function stream_stat() {
-    return array(
+    return [
       'dev'   => $this->archive['dev'],
       'size'  => $this->archive['index'][$this->filename][0],
       'ino'   => $this->archive['index'][$this->filename][2]
-    );
+    ];
   }
   // }}}
 
@@ -410,12 +410,12 @@ final class xarloader {
   function url_stat($path) {
     sscanf(strtr($path, ';', '?'), 'xar://%[^?]?%[^$]', $archive, $file);
     $current= self::acquire(urldecode($archive));
-    return isset($current['index'][$file]) ? array(
+    return isset($current['index'][$file]) ? [
       'dev'   => $current['dev'],
       'mode'  => 0100644,
       'size'  => $current['index'][$file][0],
       'ino'   => $current['index'][$file][2]
-    ) : false;
+    ] : false;
   }
   // }}}
 }
@@ -429,16 +429,16 @@ function __error($code, $msg, $file, $line) {
   if (E_RECOVERABLE_ERROR === $code) {
     throw new \lang\IllegalArgumentException($msg.' @ '.$file.':'.$line);
   } else {
-    $bt= debug_backtrace();
+    $bt= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
     $class= (isset($bt[1]['class']) ? $bt[1]['class'] : null);
     $method= (isset($bt[1]['function']) ? $bt[1]['function'] : null);
     
     if (!isset(xp::$errors[$file][$line][$msg])) {
-      xp::$errors[$file][$line][$msg]= array(
+      xp::$errors[$file][$line][$msg]= [
         'class'   => $class,
         'method'  => $method,
         'cnt'     => 1
-      );
+      ];
     } else {
       xp::$errors[$file][$line][$msg]['cnt']++;
     }
@@ -462,10 +462,10 @@ function uses() {
     // Check with class_exists(), because method_exists() triggers autoloading.
     if (class_exists($class, false) && method_exists($class, '__import')) {
       if (null === $scope) {
-        $trace= debug_backtrace();
+        $trace= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
         $scope= xp::reflect($trace[2]['args'][0]);
       }
-      call_user_func(array($class, '__import'), $scope);
+      call_user_func([$class, '__import'], $scope);
     }
   }
 }
@@ -481,7 +481,7 @@ function raise($classname) {
   }
   
   $a= func_get_args();
-  throw call_user_func_array(array($class, 'newInstance'), array_slice($a, 1));
+  throw call_user_func_array([$class, 'newInstance'], array_slice($a, 1));
 }
 // }}}
 
@@ -616,7 +616,7 @@ function newinstance($spec, $args, $def= null) {
   }
 
   // No definition: Emty body, array => closure style, string: source code
-  $functions= array();
+  $functions= [];
   if (null === $def) {
     $bytes= '{}';
   } else if (is_array($def)) {
@@ -726,7 +726,7 @@ function __load($class) {
 // {{{ string[] scanpath(string[] path, string home)
 //     Scans path files inside the given paths
 function scanpath($paths, $home) {
-  $inc= array();
+  $inc= [];
   foreach ($paths as $path) {
     if (!($d= @opendir($path))) continue;
     while ($e= readdir($d)) {
@@ -783,7 +783,7 @@ function bootstrap($classpath) {
   set_include_path(rtrim($inc, PATH_SEPARATOR));
 
   // Load omnipresent classes
-  foreach (array(
+  foreach ([
     'lang.Generic',
     'lang.Object',
     'lang.Throwable',
@@ -812,7 +812,7 @@ function bootstrap($classpath) {
     'lang.types.Long',
     'lang.types.Short',
     'lang.types.String'
-  ) as $class) {
+  ] as $class) {
     xp::$loader->loadClass0($class);
   }
 }
