@@ -3,9 +3,8 @@
 /**
  * Represents a span of time
  *
- * @see      xp://util.DateUtil#timespanBetween
- * @test     xp://net.xp_framework.unittest.util.TimeSpanTest
- * @purpose  Time and date
+ * @see   xp://util.DateUtil#timespanBetween
+ * @test  xp://net.xp_framework.unittest.util.TimeSpanTest
  */
 class TimeSpan extends \lang\Object {
   protected $_seconds = 0;
@@ -163,16 +162,6 @@ class TimeSpan extends \lang\Object {
   }
   
   /**
-   * Adds an amount of minutes to this span of time
-   *
-   * @param   int mins
-   * @deprecated
-   */
-  public function addMinutes($mins) {
-    $this->_seconds+= (int)$mins * 60;
-  }
-
-  /**
    * Returns an amount of hours less than or equal
    * to this span of time
    *
@@ -203,16 +192,6 @@ class TimeSpan extends \lang\Object {
   }
   
   /**
-   * Adds an amount of Hours to this span of time
-   *
-   * @param   int hours
-   * @deprecated
-   */
-  public function addHours($hours) {
-    $this->_seconds+= (int)$hours * 3600;
-  }
-
-  /**
    * Returns an amount of days less than or equal
    * to this span of time
    *
@@ -240,16 +219,6 @@ class TimeSpan extends \lang\Object {
    */
   public function getWholeDays() {
     return $this->getDays();
-  }
-
-  /**
-   * Adds an amount of Days to this span of time
-   *
-   * @param   int days
-   * @deprecated
-   */
-  public function addDays($days) {
-    $this->_seconds+= (int)$days * 86400;
   }
 
   /**
