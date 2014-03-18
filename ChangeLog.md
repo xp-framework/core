@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Removed deprecated `assertArray()`, `assertObject()`, `assertEmpty()`,
+  `assertNotEmpty()`, `assertClass()` and `assertSubclass()` methods from
+  unittest.TestCase - (@thekid)
 * Changed xp::ENCODING to 'utf-8', all strings are now per default to be
   regarded as containing this charset except where explicitely stated
   otherwise! - (@thekid)

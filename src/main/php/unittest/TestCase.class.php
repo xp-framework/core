@@ -2,7 +2,6 @@
 
 use util\Objects;
 
-
 /**
  * Test case is the base class for all unittests
  *
@@ -50,102 +49,14 @@ class TestCase extends \lang\Object {
   public function skip($reason, $prerequisites= array()) {
     throw new PrerequisitesNotMetError($reason, $prerequisites= array());
   }
-  
-  /**
-   * Assert that a value is an array. This is TRUE if the given value 
-   * is either an array type itself or the wrapper type lang.types.ArrayList
-   *
-   * @deprecated
-   * @param   var var
-   * @param   string error default 'is_array'
-   */
-  public function assertArray($var, $error= 'is_array') {
-    if (!is_array($var) && !is('lang.types.ArrayList', $var)) {
-      $this->fail($error, \xp::typeOf($var), 'array');
-    }
-  }
-  
-  /**
-   * Assert that a value is an object
-   *
-   * @deprecated
-   * @param   var var
-   * @param   string error default 'is_object'
-   */
-  public function assertObject($var, $error= 'is_object') {
-    if (!is_object($var)) {
-      $this->fail($error, \xp::typeOf($var), 'object');
-    }
-  }
-  
-  /**
-   * Assert that a value is empty
-   *
-   * @deprecated
-   * @param   var var
-   * @param   string error default 'empty'
-   * @see     php://empty
-   */
-  public function assertEmpty($var, $error= 'empty') {
-    if (!empty($var)) {
-      $this->fail($error, $var, '<empty>');
-    }
-  }
 
-  /**
-   * Assert that a value is not empty
-   *
-   * @deprecated
-   * @param   var var
-   * @param   string error default '!empty'
-   * @see     php://empty
-   */
-  public function assertNotEmpty($var, $error= '!empty') {
-    if (empty($var)) {
-      $this->fail($error, $var, '<not empty>');
-    }
-  }
-
-  /**
-   * Assert that a given object is of a specified class
-   *
-   * @deprecated Use assertInstanceOf() instead
-   * @param   lang.Generic var
-   * @param   string name
-   * @param   string error default 'typeof'
-   */
-  public function assertClass($var, $name, $error= 'typeof') {
-    if (!($var instanceof \lang\Generic)) {
-      $this->fail($error, $var, $name);
-    }
-    if ($var->getClassName() !== $name) {
-      $this->fail($error, $var->getClassName(), $name);
-    }
-  }
-
-  /**
-   * Assert that a given object is a subclass of a specified class
-   *
-   * @deprecated Use assertInstanceOf() instead
-   * @param   lang.Generic var
-   * @param   string name
-   * @param   string error default 'instanceof'
-   */
-  public function assertSubclass($var, $name, $error= 'instanceof') {
-    if (!($var instanceof \lang\Generic)) {
-      $this->fail($error, $var, $name);
-    }
-    if (!is($name, $var)) {
-      $this->fail($error, $name, $var->getClassName());
-    }
-  }
-  
   /**
    * Assert that two values are equal
    *
    * @param   var expected
    * @param   var actual
    * @param   string error default 'notequal'
+   * @return  void
    */
   public function assertEquals($expected, $actual, $error= 'equals') {
     if (!Objects::equal($expected, $actual)) {
@@ -159,6 +70,7 @@ class TestCase extends \lang\Object {
    * @param   var expected
    * @param   var actual
    * @param   string error default 'equal'
+   * @return  void
    */
   public function assertNotEquals($expected, $actual, $error= '!equals') {
     if (Objects::equal($expected, $actual)) {
@@ -171,6 +83,7 @@ class TestCase extends \lang\Object {
    *
    * @param   var var
    * @param   string error default '==='
+   * @return  void
    */
   public function assertTrue($var, $error= '===') {
     if (true !== $var) {
@@ -183,6 +96,7 @@ class TestCase extends \lang\Object {
    *
    * @param   var var
    * @param   string error default '==='
+   * @return  void
    */
   public function assertFalse($var, $error= '===') {
     if (false !== $var) {
@@ -195,6 +109,7 @@ class TestCase extends \lang\Object {
    *
    * @param   var var
    * @param   string error default '==='
+   * @return  void
    */
   public function assertNull($var, $error= '===') {
     if (null !== $var) {
@@ -208,6 +123,7 @@ class TestCase extends \lang\Object {
    * @param   var type either a type name or a lang.Type instance
    * @param   var var
    * @param   string error default 'instanceof'
+   * @return  void
    */
   public function assertInstanceOf($type, $var, $error= 'instanceof') {
     if (!($type instanceof \lang\Type)) {
@@ -222,6 +138,7 @@ class TestCase extends \lang\Object {
    * PrerequisitesNotMetError to indicate this case should be
    * skipped.
    *
+   * @return  void
    * @throws  unittest.PrerequisitesNotMetError
    */
   public function setUp() { }
@@ -229,6 +146,7 @@ class TestCase extends \lang\Object {
   /**
    * Tear down this test case. Overwrite in subclasses.
    *
+   * @return  void
    */
   public function tearDown() { }
   
