@@ -82,6 +82,8 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed `BufferedInputStream::available()` (see xp-framework/xp-runners#17)
+  (@thekid)
 * Fixed closures inside objects and arrays leading to xp::stringOf() raising
   an exception (Serialization of 'Closure' is not allowed) - (@thekid)
 * Fixed xp-framework/xp-framework#347 - "Undefined variable: len" in BSDSocket

@@ -43,7 +43,7 @@ class BufferedInputStream extends \lang\Object implements InputStream {
    * @return int
    */
   public function available() {
-    return strlen($this->buf);
+    return strlen($this->buf) ?: $this->in->available();
   }
 
   /**

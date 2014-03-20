@@ -43,12 +43,18 @@ class BufferedInputStreamTest extends TestCase {
     $this->assertEquals('Hello', $this->in->read(5));
     $this->assertEquals(5, $this->in->available());   // Five buffered bytes
     $this->assertEquals(' Worl', $this->in->read(5));
-    $this->assertEquals(0, $this->in->available());   // Buffer completely empty
+    $this->assertNotEquals(0, $this->in->available());   // Buffer completely empty, but underlying stream has bytes
   }
 
   #[@test]
   public function closingTwiceHasNoEffect() {
     $this->in->close();
     $this->in->close();
+  }
+
+  #[@test]
+  public function readSize() {
+    $this->assertEquals('Hello Worl', $this->in->read(10));
+    $this->assertEquals(strlen(self::BUFFER) - 10, $this->in->available());
   }
 }
