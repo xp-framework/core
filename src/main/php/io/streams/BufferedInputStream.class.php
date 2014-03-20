@@ -1,14 +1,7 @@
-<?php namespace io\streams;/* This file is part of the XP framework
- *
- * $Id$
- */
-
-
+<?php namespace io\streams;
 
 /**
  * Buffered InputStream
- *
- * @purpose  InputStream implementation
  */
 class BufferedInputStream extends \lang\Object implements InputStream {
   protected 
@@ -47,6 +40,7 @@ class BufferedInputStream extends \lang\Object implements InputStream {
    * Returns the number of bytes that can be read from this stream 
    * without blocking.
    *
+   * @return int
    */
   public function available() {
     return strlen($this->buf);
@@ -55,6 +49,7 @@ class BufferedInputStream extends \lang\Object implements InputStream {
   /**
    * Close this buffer
    *
+   * @return void
    */
   public function close() {
   }
