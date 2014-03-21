@@ -15,7 +15,7 @@ class NewInstanceTest extends \unittest\TestCase {
   #[@beforeClass]
   public static function verifyProcessExecutionEnabled() {
     if (\lang\Process::$DISABLED) {
-      throw new \unittest\PrerequisitesNotMetError('Process execution disabled', null, array('enabled'));
+      throw new \unittest\PrerequisitesNotMetError('Process execution disabled', null, ['enabled']);
     }
   }
 
@@ -40,7 +40,7 @@ class NewInstanceTest extends \unittest\TestCase {
       // Close child process
       $exitv= $p->close();
     }
-    return array($exitv, $out, $err);
+    return [$exitv, $out, $err];
   }
   
   #[@test]
@@ -71,9 +71,9 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function new_class_with_member_as_closuremap() {
-    $o= newinstance('lang.Object', [], array(
+    $o= newinstance('lang.Object', [], [
       'test' => 'Test'
-    ));
+    ]);
     $this->assertEquals('Test', $o->test);
   }
 
@@ -85,15 +85,15 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function new_interface_with_body_as_closuremap() {
-    $o= newinstance('lang.Runnable', [], array(
+    $o= newinstance('lang.Runnable', [], [
       'run' => function($self) { }
-    ));
+    ]);
     $this->assertInstanceOf('lang.Runnable', $o);
   }
 
   #[@test]
   public function arguments_are_passed_to_constructor() {
-    $instance= newinstance('lang.Object', array($this), '{
+    $instance= newinstance('lang.Object', [$this], '{
       public $test= null;
       public function __construct($test) {
         $this->test= $test;
@@ -104,36 +104,36 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function arguments_are_passed_to_constructor_in_closuremap() {
-    $instance= newinstance('lang.Object', array($this), array(
+    $instance= newinstance('lang.Object', [$this], [
       'test' => null,
       '__construct' => function($self, $test) {
         $self->test= $test;
       }
-    ));
+    ]);
     $this->assertEquals($this, $instance->test);
   }
 
   #[@test]
   public function missingMethodImplementationFatals() {
-    $r= $this->runInNewRuntime(array('lang.Runnable'), '
+    $r= $this->runInNewRuntime(['lang.Runnable'], '
       newinstance("lang.Runnable", [], "{}");
     ');
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
       (bool)strstr($r[1].$r[2], 'Fatal error:'),
-      \xp::stringOf(array('out' => $r[1], 'err' => $r[2]))
+      \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
   }
 
   #[@test]
   public function syntaxErrorFatals() {
-    $r= $this->runInNewRuntime(array('lang.Runnable'), '
+    $r= $this->runInNewRuntime(['lang.Runnable'], '
       newinstance("lang.Runnable", [], "{ @__SYNTAX ERROR__@ }");
     ');
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
       (bool)strstr($r[1].$r[2], 'Parse error:'),
-      \xp::stringOf(array('out' => $r[1], 'err' => $r[2]))
+      \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
   }
 
@@ -145,7 +145,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
       (bool)strstr($r[1].$r[2], 'Class "lang.NonExistantClass" could not be found'),
-      \xp::stringOf(array('out' => $r[1], 'err' => $r[2]))
+      \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
   }
 
@@ -161,7 +161,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals(0, $r[0], 'exitcode');
     $this->assertTrue(
       (bool)strstr($r[1].$r[2], 'Hi'),
-      \xp::stringOf(array('out' => $r[1], 'err' => $r[2]))
+      \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
   }
 
@@ -232,14 +232,14 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function anonymousClassWithoutConstructorIgnoresConstructArgs() {
-    newinstance('util.log.Traceable', array('arg1'), '{
+    newinstance('util.log.Traceable', ['arg1'], '{
       public function setTrace($cat) {}
     }');
   }
 
   #[@test]
   public function anonymousClassWithConstructor() {
-    newinstance('util.log.Traceable', array('arg1'), '{
+    newinstance('util.log.Traceable', ['arg1'], '{
       public function __construct($arg) {
         if ($arg != "arg1") {
           throw new \\unittest\\AssertionFailedError("equals", $arg, "arg1");
