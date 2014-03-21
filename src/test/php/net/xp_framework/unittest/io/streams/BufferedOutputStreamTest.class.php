@@ -53,4 +53,11 @@ class BufferedOutputStreamTest extends \unittest\TestCase {
     $this->out->close();
     $this->assertEquals('Hello', $this->mem->getBytes());
   }
+
+  #[@test]
+  public function flushedOnDestruction() {
+    $this->out->write('Hello');
+    delete($this->out);
+    $this->assertEquals('Hello', $this->mem->getBytes());
+  }
 }
