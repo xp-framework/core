@@ -86,7 +86,7 @@ class NewInstanceTest extends \unittest\TestCase {
   #[@test]
   public function new_interface_with_body_as_closuremap() {
     $o= newinstance('lang.Runnable', [], [
-      'run' => function($self) { }
+      'run' => function() { }
     ]);
     $this->assertInstanceOf('lang.Runnable', $o);
   }
@@ -106,8 +106,8 @@ class NewInstanceTest extends \unittest\TestCase {
   public function arguments_are_passed_to_constructor_in_closuremap() {
     $instance= newinstance('lang.Object', [$this], [
       'test' => null,
-      '__construct' => function($self, $test) {
-        $self->test= $test;
+      '__construct' => function($test) {
+        $this->test= $test;
       }
     ]);
     $this->assertEquals($this, $instance->test);
@@ -247,5 +247,21 @@ class NewInstanceTest extends \unittest\TestCase {
       }
       public function setTrace($cat) {}
     }');
+  }
+
+  #[@test]
+  public function this_can_be_accessed() {
+    $instance= newinstance('lang.Object', [], [
+      'test'    => null,
+      'setTest' => function($test) {
+        $this->test= $test;
+      },
+      'getTest' => function() {
+        return $this->test;
+      }
+    ]);
+
+    $instance->setTest('Test');
+    $this->assertEquals('Test', $instance->getTest());
   }
 }

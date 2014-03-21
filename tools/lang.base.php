@@ -669,7 +669,7 @@ function newinstance($spec, $args, $def= null) {
       if ($member instanceof \Closure) {
         $r= new ReflectionFunction($member);
         $pass= $sig= '';
-        foreach (array_slice($r->getParameters(), 1) as $param) {
+        foreach ($r->getParameters() as $param) {
           $sig.= ', $'.$param->getName();
           if ($param->isOptional()) {
             $sig.= '= '.var_export($param->getDefaultValue(), true);
@@ -677,9 +677,8 @@ function newinstance($spec, $args, $def= null) {
           $pass.= ', $'.$param->getName();
         }
         $bytes.= 'function '.$name.'('.substr($sig, 2).') {
-          $f= self::$__func["'.$name.'"];
-          return call_user_func($f, $this'.('' === $pass ? '' : ', '.substr($pass, 2)).');
-          return $f($this'.('' === $pass ? '' : ', '.substr($pass, 2)).');
+          $f= self::$__func["'.$name.'"]->bindTo($this, $this);
+          return $f('.('' === $pass ? '' : substr($pass, 2)).');
         }';
         $functions[$name]= $member;
       } else {
