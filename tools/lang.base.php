@@ -626,6 +626,7 @@ function this($expr, $offset) {
 //     Anonymous instance creation
 function newinstance($spec, $args, $def= null) {
   static $u= 0;
+  static $bind= 'foreach (self::$__func as $_ => $f) { self::$__func[$_]= $f->bindTo($this, $this); } ';
 
   // Check for an anonymous generic 
   if (strstr($spec, '<')) {
@@ -661,10 +662,8 @@ function newinstance($spec, $args, $def= null) {
 
   // No definition: Emty body, array => closure style, string: source code
   $functions= [];
-  if (null === $def) {
-    $bytes= '{}';
-  } else if (is_array($def)) {
-    $bytes= '{ static $__func;';
+  if (is_array($def)) {
+    $bytes= '';
     foreach ($def as $name => $member) {
       if ($member instanceof \Closure) {
         $r= new ReflectionFunction($member);
@@ -677,26 +676,32 @@ function newinstance($spec, $args, $def= null) {
           }
           $pass.= $p;
         }
-        $bytes.= 'function '.$name.'('.substr($sig, 2).') {
-          $f= self::$__func["'.$name.'"]->bindTo($this, $this);
-          return $f('.('' === $pass ? '' : substr($pass, 2)).');
-        }';
+        $bytes.= (
+          'function '.$name.'('.substr($sig, 2).') {'.
+          ('__construct' === $name ? $bind : '').
+          '$f= self::$__func["'.$name.'"]; '.
+          'return $f('.('' === $pass ? '' : substr($pass, 2)).'); }'
+        );
         $functions[$name]= $member;
       } else {
         $bytes.= 'public $'.$name.'= '.var_export($member, true).';';
       }
     }
-    $bytes.= '}';
+    $bytes= (
+      'static $__func= [];'.
+      (isset($functions['__construct']) ? '' : 'function __construct() {'.$bind.'}').
+      $bytes
+    );
   } else {
-    $bytes= (string)$def;
+    $bytes= trim($def, '{}');
   }
 
   // Checks whether an interface or a class was given
   $cl= \lang\DynamicClassLoader::instanceFor(__FUNCTION__);
   if (interface_exists($type)) {
-    $cl->setClassBytes($spec, $ns.'class '.$decl.' extends \lang\Object implements '.$type.' '.$bytes);
+    $cl->setClassBytes($spec, $ns.'class '.$decl.' extends \lang\Object implements '.$type.' {'.$bytes.'}');
   } else {
-    $cl->setClassBytes($spec, $ns.'class '.$decl.' extends '.$type.' '.$bytes);
+    $cl->setClassBytes($spec, $ns.'class '.$decl.' extends '.$type.' {'.$bytes.'}');
   }
 
   // Instantiate
