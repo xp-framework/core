@@ -670,11 +670,12 @@ function newinstance($spec, $args, $def= null) {
         $r= new ReflectionFunction($member);
         $pass= $sig= '';
         foreach ($r->getParameters() as $param) {
-          $sig.= ', $'.$param->getName();
+          $p= ', $'.$param->getName();
+          $sig.= $p;
           if ($param->isOptional()) {
             $sig.= '= '.var_export($param->getDefaultValue(), true);
           }
-          $pass.= ', $'.$param->getName();
+          $pass.= $p;
         }
         $bytes.= 'function '.$name.'('.substr($sig, 2).') {
           $f= self::$__func["'.$name.'"]->bindTo($this, $this);
