@@ -142,7 +142,7 @@ class StringOfTest extends \unittest\TestCase {
   #[@test]
   public function toString_calling_xp_stringOf_does_not_loop_forever() {
     $test= newinstance('lang.Object', [], array(
-      'toString' => function() { return \xp::stringOf($self); }
+      'toString' => function() { return \xp::stringOf($this); }
     ));
     $this->assertEquals(
       $test->getClassName()." {\n  __id => \"".$test->hashCode()."\"\n}",
