@@ -181,7 +181,7 @@ class RunnerTest extends TestCase {
   #[@test]
   public function runWritingToStandardOutput() {
     $command= newinstance('util.cmd.Command', [], array(
-      'run' => function($self) { $self->out->write('UNITTEST'); }
+      'run' => function() { $this->out->write('UNITTEST'); }
     ));
 
     $return= $this->runWith(array($command->getClassName()));
@@ -197,7 +197,7 @@ class RunnerTest extends TestCase {
   #[@test]
   public function runWritingToStandardError() {
     $command= newinstance('util.cmd.Command', [], array(
-      'run' => function($self) { $self->err->write('UNITTEST'); }
+      'run' => function() { $this->err->write('UNITTEST'); }
     ));
 
     $return= $this->runWith(array($command->getClassName()));
@@ -213,9 +213,9 @@ class RunnerTest extends TestCase {
   #[@test]
   public function runEchoInput() {
     $command= newinstance('util.cmd.Command', [], array(
-      'run' => function($self) {
-        while ($chunk= $self->in->read()) {
-          $self->out->write($chunk);
+      'run' => function() {
+        while ($chunk= $this->in->read()) {
+          $this->out->write($chunk);
         }
       }
     ));
