@@ -16,7 +16,7 @@ class StringOfTest extends \unittest\TestCase {
    */
   protected function testStringInstance() {
     return newinstance('lang.Object', [], array(
-      'toString' => function($self) { return 'TestString(6) { String }'; }
+      'toString' => function() { return 'TestString(6) { String }'; }
     ));
   }
 
@@ -119,7 +119,7 @@ class StringOfTest extends \unittest\TestCase {
   #[@test]
   public function twice_the_same_object_inside_array_not_recursion() {
     $test= newinstance('lang.Object', [], array(
-      'toString' => function($self) { return 'Test'; }
+      'toString' => function() { return 'Test'; }
     ));
     $this->assertEquals(
       "[\n  a => Test\n  b => Test\n]", 
@@ -130,8 +130,8 @@ class StringOfTest extends \unittest\TestCase {
   #[@test]
   public function twice_the_same_object_with_huge_hashcode_inside_array_not_recursion() {
     $test= newinstance('lang.Object', [], array(
-      'hashCode' => function($self) { return 9E100; },
-      'toString' => function($self) { return 'Test'; }
+      'hashCode' => function() { return 9E100; },
+      'toString' => function() { return 'Test'; }
     ));
     $this->assertEquals(
       "[\n  a => Test\n  b => Test\n]", 
@@ -142,7 +142,7 @@ class StringOfTest extends \unittest\TestCase {
   #[@test]
   public function toString_calling_xp_stringOf_does_not_loop_forever() {
     $test= newinstance('lang.Object', [], array(
-      'toString' => function($self) { return \xp::stringOf($self); }
+      'toString' => function() { return \xp::stringOf($self); }
     ));
     $this->assertEquals(
       $test->getClassName()." {\n  __id => \"".$test->hashCode()."\"\n}",
@@ -196,7 +196,7 @@ class StringOfTest extends \unittest\TestCase {
   public function closure_inside_object_does_not_raise_serialization_exception() {
     $instance= newinstance('lang.Object', array(function($a, $b) { }), array(
       'closure'     => null,
-      '__construct' => function($self, $closure) { $self->closure= $closure; },
+      '__construct' => function($closure) { $this->closure= $closure; },
     ));
     \xp::stringOf($instance);
   }

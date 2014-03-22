@@ -19,9 +19,7 @@ class CastingTest extends TestCase implements Runnable {
   #[@test]
   public function newinstance() {
     $runnable= newinstance('lang.Runnable', [], array(
-      'run' => function($self) {
-        return 'Test';
-      }
+      'run' => function() { return 'Test'; }
     ));
     $this->assertEquals('Test', cast($runnable, 'lang.Runnable')->run());
   }
