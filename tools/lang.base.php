@@ -662,7 +662,9 @@ function newinstance($spec, $args, $def= null) {
 
   // No definition: Emty body, array => closure style, string: source code
   $functions= [];
-  if (is_array($def)) {
+  if (null === $def) {
+    $bytes= '{}';
+  } else if (is_array($def)) {
     $bytes= '';
     foreach ($def as $name => $member) {
       if ($member instanceof \Closure) {
@@ -688,20 +690,20 @@ function newinstance($spec, $args, $def= null) {
       }
     }
     $bytes= (
-      'static $__func= [];'.
+      '{ static $__func= [];'.
       (isset($functions['__construct']) ? '' : 'function __construct() {'.$bind.'}').
-      $bytes
+      $bytes.' }'
     );
   } else {
-    $bytes= trim($def, '{}');
+    $bytes= (string)$def;
   }
 
   // Checks whether an interface or a class was given
   $cl= \lang\DynamicClassLoader::instanceFor(__FUNCTION__);
   if (interface_exists($type)) {
-    $cl->setClassBytes($spec, $ns.'class '.$decl.' extends \lang\Object implements '.$type.' {'.$bytes.'}');
+    $cl->setClassBytes($spec, $ns.'class '.$decl.' extends \lang\Object implements '.$type.' '.$bytes);
   } else {
-    $cl->setClassBytes($spec, $ns.'class '.$decl.' extends '.$type.' {'.$bytes.'}');
+    $cl->setClassBytes($spec, $ns.'class '.$decl.' extends '.$type.' '.$bytes);
   }
 
   // Instantiate
