@@ -23,8 +23,8 @@ class ProxyTest extends \unittest\TestCase {
   public function setUp() {
     $this->handler= newinstance('lang.reflect.InvocationHandler', [], array(
       'invocations' => [],
-      'invoke' => function($self, $proxy, $method, $args) {
-        $self->invocations[$method.'_'.sizeof($args)]= $args;
+      'invoke' => function($proxy, $method, $args) {
+        $this->invocations[$method.'_'.sizeof($args)]= $args;
       }
     ));
     $this->iteratorClass= XPClass::forName('util.XPIterator');

@@ -626,6 +626,7 @@ function this($expr, $offset) {
 //     Anonymous instance creation
 function newinstance($spec, $args, $def= null) {
   static $u= 0;
+  static $bind= 'foreach (self::$__func as $_ => $f) { self::$__func[$_]= $f->bindTo($this, $this); } ';
 
   // Check for an anonymous generic 
   if (strstr($spec, '<')) {
@@ -664,29 +665,35 @@ function newinstance($spec, $args, $def= null) {
   if (null === $def) {
     $bytes= '{}';
   } else if (is_array($def)) {
-    $bytes= '{ static $__func;';
+    $bytes= '';
     foreach ($def as $name => $member) {
       if ($member instanceof \Closure) {
         $r= new ReflectionFunction($member);
         $pass= $sig= '';
-        foreach (array_slice($r->getParameters(), 1) as $param) {
-          $sig.= ', $'.$param->getName();
+        foreach ($r->getParameters() as $param) {
+          $p= ', $'.$param->getName();
+          $sig.= $p;
           if ($param->isOptional()) {
             $sig.= '= '.var_export($param->getDefaultValue(), true);
           }
-          $pass.= ', $'.$param->getName();
+          $pass.= $p;
         }
-        $bytes.= 'function '.$name.'('.substr($sig, 2).') {
-          $f= self::$__func["'.$name.'"];
-          return call_user_func($f, $this'.('' === $pass ? '' : ', '.substr($pass, 2)).');
-          return $f($this'.('' === $pass ? '' : ', '.substr($pass, 2)).');
-        }';
+        $bytes.= (
+          'function '.$name.'('.substr($sig, 2).') {'.
+          ('__construct' === $name ? $bind : '').
+          '$f= self::$__func["'.$name.'"]; '.
+          'return $f('.('' === $pass ? '' : substr($pass, 2)).'); }'
+        );
         $functions[$name]= $member;
       } else {
         $bytes.= 'public $'.$name.'= '.var_export($member, true).';';
       }
     }
-    $bytes.= '}';
+    $bytes= (
+      '{ static $__func= [];'.
+      (isset($functions['__construct']) ? '' : 'function __construct() {'.$bind.'}').
+      $bytes.' }'
+    );
   } else {
     $bytes= (string)$def;
   }
