@@ -208,15 +208,51 @@ class ConsoleTest extends TestCase {
     Console::$out->writeLinef('Hello %s', 'World');
     $this->assertEquals("Hello World\n", $this->streams[1]->getBytes());
   }
+
   #[@test]
   public function writeLinef_to_standard_error() {
     Console::$err->writeLinef('Hello %s', 'World');
     $this->assertEquals("Hello World\n", $this->streams[2]->getBytes());
   }
 
+  /**
+   * Test initialization
+   *
+   * @param  bool console
+   * @param  var assertions
+   */
+  protected function initialize($console, $assertions) {
+    $in= Console::$in;
+    $out= Console::$out;
+    $err= Console::$err;
+    Console::initialize($console);
+    try {
+      $assertions();
+    } catch (\unittest\AssertionFailedError $e) {
+      // finally
+    } ensure($e); {
+      Console::$in= $in;
+      Console::$out= $out;
+      Console::$err= $err;
+      if ($e) throw($e);
+    }
+  }
+
   #[@test]
-  public function write_to_standard_out() {
-    Console::$out->write('.');
-    $this->assertEquals('.', $this->streams[1]->getBytes());
+  public function initialize_on_console() {
+    $this->initialize(true, function() {
+      $this->assertInstanceOf('io.streams.ConsoleInputStream', Console::$in->getStream());
+      $this->assertInstanceOf('io.streams.ConsoleOutputStream', Console::$out->getStream());
+      $this->assertInstanceOf('io.streams.ConsoleOutputStream', Console::$err->getStream());
+    });
+  }
+
+  #[@test]
+  public function initialize_without_console() {
+    $this->initialize(false, function() {
+      $this->assertEquals(\xp::null(), Console::$in);
+      $this->assertEquals(\xp::null(), Console::$out);
+      $this->assertEquals(\xp::null(), Console::$err);
+    });
   }
 }

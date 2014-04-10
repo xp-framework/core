@@ -34,9 +34,22 @@ class Console extends \lang\Object {
     $in = null;
 
   static function __static() {
-    self::$in= new StringReader(new ConsoleInputStream(STDIN));
-    self::$out= new StringWriter(new ConsoleOutputStream(STDOUT));
-    self::$err= new StringWriter(new ConsoleOutputStream(STDERR));
+    self::initialize(defined('STDIN'));
+  }
+
+  /**
+   * Initialize streams
+   *
+   * @param  bool console
+   */
+  public static function initialize($console) {
+    if ($console) {
+      self::$in= new StringReader(new ConsoleInputStream(STDIN));
+      self::$out= new StringWriter(new ConsoleOutputStream(STDOUT));
+      self::$err= new StringWriter(new ConsoleOutputStream(STDERR));
+    } else {
+      self::$in= self::$out= self::$err= \xp::null();
+    }
   }
 
   /**
