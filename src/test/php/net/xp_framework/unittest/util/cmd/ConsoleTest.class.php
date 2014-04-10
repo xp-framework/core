@@ -43,35 +43,25 @@ class ConsoleTest extends TestCase {
     $this->assertEquals('.', Console::read());
   }
 
-  #[@test]
-  public function readLineUnix() {
-    Console::$in->setStream(new MemoryInputStream("Hello\nHallo"));
+  #[@test, @values([
+  #  "Hello\nHallo",
+  #  "Hello\rHallo",
+  #  "Hello\r\nHallo",
+  #])]
+  public function readLine($variation) {
+    Console::$in->setStream(new MemoryInputStream($variation));
     $this->assertEquals('Hello', Console::readLine());
     $this->assertEquals('Hallo', Console::readLine());
   }
 
   #[@test]
-  public function readLineMac() {
-    Console::$in->setStream(new MemoryInputStream("Hello\rHallo"));
-    $this->assertEquals('Hello', Console::readLine());
-    $this->assertEquals('Hallo', Console::readLine());
-  }
-
-  #[@test]
-  public function readLineWindows() {
-    Console::$in->setStream(new MemoryInputStream("Hello\r\nHallo"));
-    $this->assertEquals('Hello', Console::readLine());
-    $this->assertEquals('Hallo', Console::readLine());
-  }
-
-  #[@test]
-  public function readFromIn() {
+  public function read_from_standard_input() {
     Console::$in->setStream(new MemoryInputStream('.'));
     $this->assertEquals('.', Console::$in->read(1));
   }
  
   #[@test]
-  public function readLineFromIn() {
+  public function readLine_from_standard_input() {
     Console::$in->setStream(new MemoryInputStream("Hello\nHallo\nOla"));
     $this->assertEquals('Hello', Console::$in->readLine());
     $this->assertEquals('Hallo', Console::$in->readLine());
@@ -85,38 +75,38 @@ class ConsoleTest extends TestCase {
   }
 
   #[@test]
-  public function writeMultiple() {
+  public function write_multiple() {
     Console::write('.', 'o', 'O', '0');
     $this->assertEquals('.oO0', $this->streams[1]->getBytes());
   }
 
   #[@test]
-  public function writeInt() {
+  public function write_int() {
     Console::write(1);
     $this->assertEquals('1', $this->streams[1]->getBytes());
   }
 
   #[@test]
-  public function writeTrue() {
+  public function write_true() {
     Console::write(true);
     $this->assertEquals('true', $this->streams[1]->getBytes());
   }
 
   #[@test]
-  public function writeFalse() {
+  public function write_false() {
     Console::write(false);
     $this->assertEquals('false', $this->streams[1]->getBytes());
   }
 
   #[@test]
-  public function writeFloat() {
+  public function write_float() {
     Console::write(1.5);
     $this->assertEquals('1.5', $this->streams[1]->getBytes());
   }
 
   #[@test]
-  public function writeArray() {
-    Console::write(array(1, 2, 3));
+  public function write_an_array() {
+    Console::write([1, 2, 3]);
     $this->assertEquals(
       "[\n".
       "  0 => 1\n".
@@ -128,8 +118,8 @@ class ConsoleTest extends TestCase {
   }
 
   #[@test]
-  public function writeMap() {
-    Console::write(array('key' => 'value', 'color' => 'blue'));
+  public function write_a_map() {
+    Console::write(['key' => 'value', 'color' => 'blue']);
     $this->assertEquals(
       "[\n".
       "  key => \"value\"\n".
@@ -140,7 +130,7 @@ class ConsoleTest extends TestCase {
   }
 
   #[@test]
-  public function writeObject() {
+  public function write_an_object() {
     Console::write(newinstance('lang.Object', [], '{
       public function toString() { return "Hello"; }
     }'));
@@ -148,7 +138,7 @@ class ConsoleTest extends TestCase {
   }
 
   #[@test]
-  public function exceptionFromToString() {
+  public function exception_from_toString() {
     try {
       Console::write(newinstance('lang.Object', [], '{
         public function toString() { throw new IllegalStateException("Cannot render string"); }
@@ -160,13 +150,13 @@ class ConsoleTest extends TestCase {
   }
 
   #[@test]
-  public function writeToOut() {
+  public function write_to_standard_out() {
     Console::$out->write('.');
     $this->assertEquals('.', $this->streams[1]->getBytes());
   }
 
   #[@test]
-  public function writeToErr() {
+  public function write_to_standard_error() {
     Console::$err->write('.');
     $this->assertEquals('.', $this->streams[2]->getBytes());
   }
@@ -178,13 +168,13 @@ class ConsoleTest extends TestCase {
   }
 
   #[@test]
-  public function writefToOut() {
+  public function writef_to_standard_out() {
     Console::$out->writef('Hello "%s"', 'Timm');
     $this->assertEquals('Hello "Timm"', $this->streams[1]->getBytes());
   }
 
   #[@test]
-  public function writefToErr() {
+  public function writef_to_standard_error() {
     Console::$err->writef('Hello "%s"', 'Timm');
     $this->assertEquals('Hello "Timm"', $this->streams[2]->getBytes());
   }
@@ -196,13 +186,13 @@ class ConsoleTest extends TestCase {
   }
 
   #[@test]
-  public function writeLineToOut() {
+  public function writeLine_to_standard_out() {
     Console::$out->writeLine('.');
     $this->assertEquals(".\n", $this->streams[1]->getBytes());
   }
 
   #[@test]
-  public function writeLineToErr() {
+  public function writeLine_to_standard_error() {
     Console::$err->writeLine('.');
     $this->assertEquals(".\n", $this->streams[2]->getBytes());
   }
@@ -214,13 +204,19 @@ class ConsoleTest extends TestCase {
   }
 
   #[@test]
-  public function writeLinefToOut() {
+  public function writeLinef_to_standard_out() {
     Console::$out->writeLinef('Hello %s', 'World');
     $this->assertEquals("Hello World\n", $this->streams[1]->getBytes());
   }
   #[@test]
-  public function writeLinefToErr() {
+  public function writeLinef_to_standard_error() {
     Console::$err->writeLinef('Hello %s', 'World');
     $this->assertEquals("Hello World\n", $this->streams[2]->getBytes());
+  }
+
+  #[@test]
+  public function write_to_standard_out() {
+    Console::$out->write('.');
+    $this->assertEquals('.', $this->streams[1]->getBytes());
   }
 }
