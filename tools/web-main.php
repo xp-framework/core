@@ -10,7 +10,7 @@ $configd= ini_get('user_dir') ?: $webroot.'/etc';
 // this guarantees to at least send an error code.
 switch (php_sapi_name()) {
   case 'cgi':
-    header('Status: 516 Fatal Error');
+    header('Status: 516 Unrecoverable Error');
     break;
 
   case 'cli-server':
@@ -18,7 +18,7 @@ switch (php_sapi_name()) {
       return false;
     }
 
-    header('HTTP/1.0 516 Fatal Error');
+    header('HTTP/1.0 516 Unrecoverable Error');
     $_SERVER['SCRIPT_URL']= substr($_SERVER['REQUEST_URI'], 0, strcspn($_SERVER['REQUEST_URI'], '?#'));
     $_SERVER['SERVER_PROFILE']= getenv('SERVER_PROFILE');
     define('STDIN', fopen('php://stdin', 'rb'));
@@ -27,7 +27,7 @@ switch (php_sapi_name()) {
     break;
 
   default:
-    header('HTTP/1.0 516 Fatal Error');
+    header('HTTP/1.0 516 Unrecoverable Error');
 }
 ini_set('error_prepend_string', '<xmp>');
 ini_set('error_append_string', '</xmp>');
