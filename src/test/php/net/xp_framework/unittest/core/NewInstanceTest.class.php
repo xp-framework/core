@@ -264,4 +264,49 @@ class NewInstanceTest extends \unittest\TestCase {
     $instance->setTest('Test');
     $this->assertEquals('Test', $instance->getTest());
   }
+
+  #[@test]
+  public function declaration_with_array_typehint() {
+    $r= $this->runInNewRuntime([], '
+      abstract class Base extends \lang\Object {
+        public abstract function fixture(array $args);
+      }
+      $instance= newinstance("Base", [], ["fixture" => function(array $args) { return "Hello"; }]);
+      echo $instance->fixture([]);
+    ');
+    $this->assertEquals(
+      ['exitcode' => 0, 'output' => 'Hello'],
+      ['exitcode' => $r[0], 'output' => $r[1].$r[2]]
+    );
+  }
+
+  #[@test]
+  public function declaration_with_callable_typehint() {
+    $r= $this->runInNewRuntime([], '
+      abstract class Base extends \lang\Object {
+        public abstract function fixture(callable $args);
+      }
+      $instance= newinstance("Base", [], ["fixture" => function(callable $args) { return "Hello"; }]);
+      echo $instance->fixture(function() { });
+    ');
+    $this->assertEquals(
+      ['exitcode' => 0, 'output' => 'Hello'],
+      ['exitcode' => $r[0], 'output' => $r[1].$r[2]]
+    );
+  }
+
+  #[@test]
+  public function declaration_with_class_typehint() {
+    $r= $this->runInNewRuntime([], '
+      abstract class Base extends \lang\Object {
+        public abstract function fixture(\lang\Generic $args);
+      }
+      $instance= newinstance("Base", [], ["fixture" => function(\lang\Generic $args) { return "Hello"; }]);
+      echo $instance->fixture(new \lang\Object());
+    ');
+    $this->assertEquals(
+      ['exitcode' => 0, 'output' => 'Hello'],
+      ['exitcode' => $r[0], 'output' => $r[1].$r[2]]
+    );
+  }
 }
