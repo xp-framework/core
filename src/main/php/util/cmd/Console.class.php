@@ -5,30 +5,27 @@ use io\streams\StringReader;
 use io\streams\ConsoleOutputStream;
 use io\streams\ConsoleInputStream;
 
-
 /**
  * Represents system console
  *
  * Example: Writing to standard output
- * <code>
- *   uses('util.cmd.Console');
+ * ```php
+ * use util\cmd\Console;
  *
- *   Console::writeLine('Hello ', 'a', 'b', 1);   // Hello ab1
- *   Console::writeLinef('Hello %s', 'World');    // Hello World
- *
- *   Console::$out->write('.');
- * </code>
+ * Console::writeLine('Hello ', 'a', 'b', 1);   // Hello ab1
+ * Console::writeLinef('Hello %s', 'World');    // Hello World
+ * Console::$out->write('.');
+ * ```
  *
  * Example: Writing to standard error
- * <code>
- *   uses('util.cmd.Console');
+ * ```php
+ * use util\cmd\Console;
  *
- *   Console::$err->writeLine('*** An error occured: ', $e->toString());
- * </code>
+ * Console::$err->writeLine('*** An error occured: ', $e->toString());
+ * ```
  *
- * @test     xp://net.xp_framework.unittest.util.cmd.ConsoleTest
- * @see      http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlrfSystemConsoleClassTopic.asp
- * @purpose  I/O functions
+ * @test  xp://net.xp_framework.unittest.util.cmd.ConsoleTest
+ * @see   http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlrfSystemConsoleClassTopic.asp
  */
 class Console extends \lang\Object {
   public static 
@@ -37,14 +34,28 @@ class Console extends \lang\Object {
     $in = null;
 
   static function __static() {
-    self::$in= new StringReader(new ConsoleInputStream(STDIN));
-    self::$out= new StringWriter(new ConsoleOutputStream(STDOUT));
-    self::$err= new StringWriter(new ConsoleOutputStream(STDERR));
+    self::initialize(defined('STDIN'));
+  }
+
+  /**
+   * Initialize streams
+   *
+   * @param  bool console
+   */
+  public static function initialize($console) {
+    if ($console) {
+      self::$in= new StringReader(new ConsoleInputStream(STDIN));
+      self::$out= new StringWriter(new ConsoleOutputStream(STDOUT));
+      self::$err= new StringWriter(new ConsoleOutputStream(STDERR));
+    } else {
+      self::$in= self::$out= self::$err= \xp::null();
+    }
   }
 
   /**
    * Flush output buffer
    *
+   * @return  void
    */
   public static function flush() {
     self::$out->flush();

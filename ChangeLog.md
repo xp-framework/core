@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Changed Console class to throw exceptions if read and/or write operations
+  are invoked outside of a console environment - (@thekid, @kiesel)
 * Removed deprecated `lang.Enum::membersOf()` method - (@thekid)
 * Removed deprecated static getProxyClass() and newProxyInstance() 
   methods from the unittest.mock.MockProxyBuilder class - (@thekid)
