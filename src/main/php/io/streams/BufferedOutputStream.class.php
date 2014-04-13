@@ -52,4 +52,11 @@ class BufferedOutputStream extends \lang\Object implements OutputStream {
     $this->flush();
     $this->out->close();
   }
+
+  /**
+   * Destructor.
+   */
+  public function __destruct() {
+    $this->close();
+  }
 }
