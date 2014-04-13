@@ -309,4 +309,19 @@ class NewInstanceTest extends \unittest\TestCase {
       ['exitcode' => $r[0], 'output' => $r[1].$r[2]]
     );
   }
+
+  #[@test]
+  public function declaration_with_self_typehint() {
+    $r= $this->runInNewRuntime([], '
+      abstract class Base extends \lang\Object {
+        public abstract function fixture(self $args);
+      }
+      $instance= newinstance("Base", [], ["fixture" => function(\Base $args) { return "Hello"; }]);
+      echo $instance->fixture($instance);
+    ');
+    $this->assertEquals(
+      ['exitcode' => 0, 'output' => 'Hello'],
+      ['exitcode' => $r[0], 'output' => $r[1].$r[2]]
+    );
+  }
 }
