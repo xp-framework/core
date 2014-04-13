@@ -671,12 +671,20 @@ function newinstance($spec, $args, $def= null) {
         $r= new ReflectionFunction($member);
         $pass= $sig= '';
         foreach ($r->getParameters() as $param) {
-          $p= ', $'.$param->getName();
-          $sig.= $p;
+          $p= $param->getName();
+          if ($param->isArray()) {
+            $sig.= ', array $'.$p;
+          } else if ($param->isCallable()) {
+            $sig.= ', callable $'.$p;
+          } else if (null !== ($class= $param->getClass())) {
+            $sig.= ', \\'.$class->getName().' $'.$p;
+          } else {
+            $sig.= ', $'.$p;
+          }
           if ($param->isOptional()) {
             $sig.= '= '.var_export($param->getDefaultValue(), true);
           }
-          $pass.= $p;
+          $pass.= ', $'.$p;
         }
         $bytes.= (
           'function '.$name.'('.substr($sig, 2).') {'.

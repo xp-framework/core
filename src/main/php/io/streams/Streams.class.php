@@ -193,7 +193,7 @@ abstract class Streams extends \lang\Object {
    * @return  [:var] stat
    */
   public function stream_stat() {
-    return array('size' => $this->length);
+    return ['size' => $this->length];
   }
 
   /**
@@ -209,9 +209,9 @@ abstract class Streams extends \lang\Object {
     if (!isset(self::$streams[$id])) {
       return false;
     } else if ('r' === $m) {
-      return array('size' => 0);
+      return ['size' => 0, 'mode' => 0100644];
     } else if ('w' === $m) {
-      return array('size' => 0);
+      return ['size' => 0, 'mode' => 0100644];
     }
   }
 

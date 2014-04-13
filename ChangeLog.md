@@ -84,6 +84,8 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed `io.streams.Streams` instances to return true for `is_file()`
+  (@thekid)
 * Fixed `BufferedInputStream::available()` (see xp-framework/xp-runners#17)
   (@thekid)
 * Fixed closures inside objects and arrays leading to xp::stringOf() raising
