@@ -52,7 +52,7 @@ define('DETAIL_GENERIC',        7);
  * @test  xp://net.xp_framework.unittest.reflection.IsInstanceTest
  * @test  xp://net.xp_framework.unittest.reflection.ClassCastingTest
  */
-class XPClass extends Type {
+class XPClass extends Type implements \Serializable {
   protected $_class= null;
   public $_reflect= null;
   
@@ -741,6 +741,38 @@ class XPClass extends Type {
    */
   public function literal() {
     return \xp::reflect($this->name);
+  }
+
+  /**
+   * Serialize implementation
+   *
+   * @return string
+   */
+  public function serialize() {
+    return $this->name.(isset(\xp::$meta[$this->name]) ? ','.serialize(\xp::$meta[$this->name]) : '');
+  }
+
+  /**
+   * Unserialize implementation
+   *
+   * @param  string
+   * @return self
+   */
+  public function unserialize($string) {
+    if ($p= strpos($string, ',')) {
+      $this->name= substr($string, 0, $p);
+      \xp::$meta[$this->name]= unserialize(substr($string, $p + 1));
+    } else {
+      $this->name= $string;
+    }
+    $ref= ClassLoader::getDefault()->loadClass0($this->name);
+    try {
+      $this->_reflect= new \ReflectionClass($ref);
+    } catch (\ReflectionException $e) {
+      throw new IllegalStateException($e->getMessage());
+    }
+    $this->_class= $this->_reflect->name;
+    return $this;
   }
   
   /**

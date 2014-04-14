@@ -7,7 +7,7 @@
  * @see      xp://lang.XPClass
  * @purpose  Reflection
  */
-class Field extends \lang\Object {
+class Field extends \lang\Object implements \Serializable {
   protected
     $accessible = false,
     $_class     = null;
@@ -278,7 +278,33 @@ class Field extends \lang\Object {
   public function hashCode() {
     return 'F['.$this->_reflect->getDeclaringClass().$this->_reflect->getName();
   }
-  
+
+  /**
+   * Serialize implementation
+   *
+   * @return string
+   */
+  public function serialize() {
+    return \xp::nameOf($this->_class).',$'.$this->_reflect->getName();
+  }
+
+  /**
+   * Unserialize implementation
+   *
+   * @param  string
+   * @return self
+   */
+  public function unserialize($string) {
+    sscanf($string, '%[^,],$%s', $class, $field);
+    $this->_class= \lang\ClassLoader::getDefault()->loadClass0($class);
+    try {
+      $this->_reflect= new \ReflectionProperty($this->_class, $field);
+    } catch (\ReflectionException $e) {
+      throw new \lang\ElementNotFoundException($e->getMessage());
+    }
+    return $this;
+  }
+
   /**
    * Creates a string representation of this field
    *

@@ -14,7 +14,7 @@
  * @see   xp://lang.reflect.Constructor
  * @see   http://de3.php.net/manual/en/reflectionmethod.setaccessible.php
  */
-class Routine extends \lang\Object {
+class Routine extends \lang\Object implements \Serializable {
   protected
     $accessible = false,
     $_class     = null;
@@ -279,6 +279,32 @@ class Routine extends \lang\Object {
     return 'R['.$this->_reflect->getDeclaringClass().$this->_reflect->getName();
   }
   
+  /**
+   * Serialize implementation
+   *
+   * @return string
+   */
+  public function serialize() {
+    return \xp::nameOf($this->_class).','.$this->_reflect->getName();
+  }
+
+  /**
+   * Unserialize implementation
+   *
+   * @param  string
+   * @return self
+   */
+  public function unserialize($string) {
+    sscanf($string, '%[^,],%s', $class, $method);
+    $this->_class= \lang\ClassLoader::getDefault()->loadClass0($class);
+    try {
+      $this->_reflect= new \ReflectionMethod($this->_class, $method);
+    } catch (\ReflectionException $e) {
+      throw new \lang\ElementNotFoundException($e->getMessage());
+    }
+    return $this;
+  }
+
   /**
    * Retrieve string representation. Examples:
    *
