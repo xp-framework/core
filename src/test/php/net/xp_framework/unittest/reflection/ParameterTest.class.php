@@ -56,6 +56,13 @@ class ParameterTest extends TestCase {
   /**
    * Method without functionality to be used by tests.
    *
+   * @param   var restriction
+   */
+  private function setUnknownTypeRestriction(UnknownTypeRestriction $restriction) { }
+
+  /**
+   * Method without functionality to be used by tests.
+   *
    * @param   [:var] map
    */
   private function setHash(array $map) { }
@@ -339,5 +346,10 @@ class ParameterTest extends TestCase {
       \lang\Primitive::$STRING,
       this($this->getClass()->getConstructor()->getParameters(), 0)->getType()
     );
+  }
+
+  #[@test, @expect('lang.ClassFormatException')]
+  public function restrictedParameter_raises_exception_when_unknown() { 
+    $this->getClass()->getMethod('setUnknownTypeRestriction')->getParameter(0)->getTypeRestriction();
   }
 }
