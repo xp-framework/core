@@ -41,8 +41,9 @@ class Throwable extends \Exception implements Generic { use \__xp;
    * Constructor
    *
    * @param   string message
+   * @param   lang.Throwable cause default null
    */
-  public function __construct($message, $cause= null) {
+  public function __construct($message, self $cause= null) {
     $this->__id= uniqid('', true);
     $this->message= is_string($message) ? $message : \xp::stringOf($message);
     $this->cause= $cause;
