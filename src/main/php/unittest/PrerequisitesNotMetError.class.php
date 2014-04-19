@@ -18,7 +18,7 @@ class PrerequisitesNotMetError extends \lang\XPException {
    * @param   lang.Throwable cause 
    * @param   array prerequisites default []
    */
-  public function __construct($message, $cause= null, $prerequisites= []) {
+  public function __construct($message, \lang\Throwable $cause= null, $prerequisites= []) {
     parent::__construct($message, $cause);
     $this->prerequisites= (array)$prerequisites;
   }
