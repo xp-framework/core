@@ -1,7 +1,5 @@
 <?php namespace lang\reflect;
 
-
-
 /**
  * Represents a method's parameter
  *
@@ -75,14 +73,25 @@ class Parameter extends \lang\Object {
    * Get parameter's type restriction.
    *
    * @return  lang.Type or NULL if there is no restriction
+   * @throws  lang.ClassFormatException if the restriction cannot be resolved
    */
   public function getTypeRestriction() {
-    if ($this->_reflect->isArray()) {
-      return \lang\Primitive::$ARRAY;
-    } else if ($c= $this->_reflect->getClass()) {
-      return new \lang\XPClass($c);
-    } else {
-      return null;
+    try {
+      if ($this->_reflect->isArray()) {
+        return \lang\Primitive::$ARRAY;
+      } else if ($c= $this->_reflect->getClass()) {
+        return new \lang\XPClass($c);
+      } else {
+        return null;
+      }
+    } catch (\ReflectionException $e) {
+      throw new \lang\ClassFormatException(sprintf(
+        'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',
+        $this->_details[0],
+        $this->_details[1],
+        $this->_reflect->getName(),
+        $e->getMessage()
+      ));
     }
   }
 
