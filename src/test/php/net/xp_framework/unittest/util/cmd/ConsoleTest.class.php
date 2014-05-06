@@ -107,14 +107,7 @@ class ConsoleTest extends TestCase {
   #[@test]
   public function write_an_array() {
     Console::write([1, 2, 3]);
-    $this->assertEquals(
-      "[\n".
-      "  0 => 1\n".
-      "  1 => 2\n".
-      "  2 => 3\n".
-      "]", 
-      $this->streams[1]->getBytes()
-    );
+    $this->assertEquals('[1, 2, 3]', $this->streams[1]->getBytes());
   }
 
   #[@test]

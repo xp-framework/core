@@ -183,12 +183,21 @@ final class xp {
       $ser= print_r($arg, true);
       if (isset($protect[$ser])) return '->{:recursion:}';
       $protect[$ser]= true;
-      $r= "[\n";
-      foreach (array_keys($arg) as $key) {
-        $r.= $indent.'  '.$key.' => '.xp::stringOf($arg[$key], $indent.'  ')."\n";
+      if (0 === key($arg)) {
+        $r= '';
+        foreach ($arg as $val) {
+          $r.= ', '.xp::stringOf($val);
+        }
+        unset($protect[$ser]);
+        return '['.substr($r, 2).']';
+      } else {
+        $r= "[\n";
+        foreach (array_keys($arg) as $key) {
+          $r.= $indent.'  '.$key.' => '.xp::stringOf($arg[$key], $indent.'  ')."\n";
+        }
+        unset($protect[$ser]);
+        return $r.$indent.']';
       }
-      unset($protect[$ser]);
-      return $r.$indent.']';
     } else if ($arg instanceof \Closure) {
       $sig= '';
       $f= new \ReflectionFunction($arg);
