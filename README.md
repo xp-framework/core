@@ -15,24 +15,6 @@ $ cd /path/to/xp
 $ git clone git://github.com/xp-framework/core.git
 ```
 
-### Directory structure
-```
-[path]/core
-|- ChangeLog.md      # Version log
-|- README.md         # This file
-|- xpbuild.json      # XP build infrastructure
-|- pom.xml           # Maven build infrastructure
-|- boot.pth          # Bootstrap classpath
-|- tools             # Bootstrapping (lang.base.php, class.php, web.php)
-`- src               # Sourcecode, by Maven conventions
-   |- main
-   |  `- php
-   `- test
-      |- php
-      |- config      # Unittest configuration
-      `- resources   # Test resources
-```
-
 ### Runners
 The entry point for software written in the XP Framework is not the PHP
 interpreter's CLI / web server API but either a command line runner or
