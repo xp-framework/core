@@ -1,6 +1,8 @@
 XP Framework Core
 =================
 [![Build Status on TravisCI](https://secure.travis-ci.org/xp-framework/core.png)](http://travis-ci.org/xp-framework/core)
+![BSD Licence](https://raw.githubusercontent.com/xp-framework/web/master/static/licence-bsd.png)
+![Required PHP 5.4+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-5_4plus.png)
 
 This is the XP Framework's development checkout
 
