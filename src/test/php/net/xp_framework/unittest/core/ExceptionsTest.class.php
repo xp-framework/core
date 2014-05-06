@@ -132,4 +132,9 @@ class ExceptionsTest extends TestCase {
       $this->assertEquals(__FUNCTION__, $e->method);
     }
   }
+
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function withCause_must_be_a_throwable() {
+    new \lang\XPException('Message', 'Anything...');
+  }
 }
