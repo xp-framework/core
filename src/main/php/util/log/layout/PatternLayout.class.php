@@ -1,8 +1,5 @@
 <?php namespace util\log\layout;
 
-use util\log\Layout;
-
-
 /**
  * Pattern layout
  *
@@ -25,7 +22,7 @@ use util\log\Layout;
  *
  * @test    xp://net.xp_framework.unittest.logging.PatternLayoutTest
  */
-class PatternLayout extends Layout {
+class PatternLayout extends \util\log\Layout {
   protected $format= [];
 
   /**
@@ -62,18 +59,6 @@ class PatternLayout extends Layout {
   }
 
   /**
-   * Creates a string representation of the given argument. For any 
-   * string given, the result is the string itself, for any other type,
-   * the result is the xp::stringOf() output.
-   *
-   * @param   var arg
-   * @return  string
-   */
-  protected function stringOf($arg) {
-    return is_string($arg) ? $arg : \xp::stringOf($arg);
-  }
-
-  /**
    * Formats a logging event according to this layout
    *
    * @param   util.log.LoggingEvent event
@@ -83,7 +68,7 @@ class PatternLayout extends Layout {
     $out= '';
     foreach ($this->format as $token) {
       switch ($token) {
-        case '%m': $out.= implode(' ', array_map(array($this, 'stringOf'), $event->getArguments())); break;
+        case '%m': $out.= implode(' ', array_map([$this, 'stringOf'], $event->getArguments())); break;
         case '%t': $out.= gmdate('H:i:s', $event->getTimestamp()); break;
         case '%c': $out.= $event->getCategory()->identifier; break;
         case '%l': $out.= strtolower(\util\log\LogLevel::nameOf($event->getLevel())); break;
