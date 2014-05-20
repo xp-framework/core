@@ -302,7 +302,7 @@ final class xp {
     static $version= null;
 
     if (null === $version) {
-      $version= trim(\lang\XPClass::forName('lang.Object')->getClassLoader()->getResource('VERSION'));
+      $version= trim(ClassLoader::getDefault()->getResource('VERSION'));
     }
     return $version;
   }
