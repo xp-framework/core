@@ -2,7 +2,6 @@
 
 use lang\types\ArrayList;
 
-
 /**
  * ArrayList extension methods
  *
