@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\types\ArrayList;
-new \import('net.xp_framework.unittest.core.extensions.ArrayListExtensions');
+new import('net.xp_framework.unittest.core.extensions.ArrayListExtensions');
 
 /**
  * Tests the XP Framework's import() functionality
