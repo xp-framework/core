@@ -44,16 +44,16 @@ class StringOfTest extends \unittest\TestCase {
   #[@test]
   public function array_of_ints_representation() {
     $this->assertEquals(
-      "[\n  0 => 1\n  1 => 2\n  2 => 3\n]", 
-      \xp::stringOf(array(1, 2, 3))
+      '[1, 2, 3]',
+      \xp::stringOf([1, 2, 3])
     );
   }
 
   #[@test]
   public function array_of_array_of_ints_representation() {
     $this->assertEquals(
-      "[\n  0 => [\n    0 => 1\n    1 => 2\n    2 => 3\n  ]\n]", 
-      \xp::stringOf(array(array(1, 2, 3)))
+      '[[1, 2, 3]]',
+      \xp::stringOf([[1, 2, 3]])
     );
   }
 
@@ -93,14 +93,7 @@ class StringOfTest extends \unittest\TestCase {
     $a[1]= [];
     $a[1][0]= 'Inner array';
     $a[1][1]= &$a;
-    $this->assertEquals('[
-  0 => "Outer array"
-  1 => [
-    0 => "Inner array"
-    1 => ->{:recursion:}
-  ]
-]', 
-    \xp::stringOf($a));
+    $this->assertEquals('["Outer array", ["Inner array", ->{:recursion:}]]', \xp::stringOf($a));
   }
 
   #[@test]
