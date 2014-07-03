@@ -2,7 +2,7 @@
 
 use util\cmd\Console;
 use lang\types\ArrayList;
-new \import('net.xp_framework.unittest.core.extensions.ArrayListExtensions');
+new import('net.xp_framework.unittest.core.extensions.ArrayListExtensions');
 
 /**
  * Demo class that uses the ArrayList extension methods

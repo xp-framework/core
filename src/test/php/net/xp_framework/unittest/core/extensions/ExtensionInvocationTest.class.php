@@ -2,8 +2,8 @@
 
 use unittest\TestCase;
 use lang\types\ArrayList;
-new \import('net.xp_framework.unittest.core.extensions.ArrayListExtensions');
-new \import('net.xp_framework.unittest.core.extensions.ThrowableExtensions');
+new import('net.xp_framework.unittest.core.extensions.ArrayListExtensions');
+new import('net.xp_framework.unittest.core.extensions.ThrowableExtensions');
 
 /**
  * TestCase

@@ -7,19 +7,6 @@ define('MODIFIER_PUBLIC',     256);
 define('MODIFIER_PROTECTED',  512);
 define('MODIFIER_PRIVATE',   1024);
 
-// {{{ final class import
-final class import {
-  function __construct($str) {
-    $class= xp::$loader->loadClass0($str);
-    $trace= debug_backtrace(~DEBUG_BACKTRACE_IGNORE_ARGS, 3);
-    $scope= $trace[2]['args'][0];
-    xp::$cli[]= function() use ($class, $scope) {
-      $class::__import(xp::reflect($scope));
-    };
-  }
-}
-// }}}
-
 // {{{ trait xp
 trait __xp {
 
@@ -135,7 +122,7 @@ final class xp {
       if (0 === xp::$cll) {
         $invocations= xp::$cli;
         xp::$cli= [];
-        foreach ($invocations as $inv) call_user_func($inv);
+        foreach ($invocations as $inv) call_user_func($inv, $name);
       }
 
       return $name;
@@ -183,12 +170,21 @@ final class xp {
       $ser= print_r($arg, true);
       if (isset($protect[$ser])) return '->{:recursion:}';
       $protect[$ser]= true;
-      $r= "[\n";
-      foreach (array_keys($arg) as $key) {
-        $r.= $indent.'  '.$key.' => '.xp::stringOf($arg[$key], $indent.'  ')."\n";
+      if (0 === key($arg)) {
+        $r= '';
+        foreach ($arg as $val) {
+          $r.= ', '.xp::stringOf($val);
+        }
+        unset($protect[$ser]);
+        return '['.substr($r, 2).']';
+      } else {
+        $r= "[\n";
+        foreach (array_keys($arg) as $key) {
+          $r.= $indent.'  '.$key.' => '.xp::stringOf($arg[$key], $indent.'  ')."\n";
+        }
+        unset($protect[$ser]);
+        return $r.$indent.']';
       }
-      unset($protect[$ser]);
-      return $r.$indent.']';
     } else if ($arg instanceof \Closure) {
       $sig= '';
       $f= new \ReflectionFunction($arg);
@@ -782,6 +778,29 @@ function __load($class) {
 }
 // }}}
 
+// {{{ class import
+class import {
+  function __construct($str) {
+    $class= xp::$loader->loadClass0($str);
+    xp::$cli[]= function($scope) use ($class) {
+      $class::__import($scope);
+    };
+  }
+}
+// }}}
+
+// {{{ proto bool __import(string class)
+//     SPL Autoload callback
+function __import($class) {
+  if (false === strrpos($class, '\\import')) {
+    return false;
+  } else {
+    class_alias('import', $class);
+    return true;
+  }
+}
+// }}}
+
 // {{{ string[] scanpath(string[] path, string home)
 //     Scans path files inside the given paths
 function scanpath($paths, $home) {
@@ -885,7 +904,8 @@ define('LONG_MAX', PHP_INT_MAX);
 define('LONG_MIN', -PHP_INT_MAX - 1);
 
 // Hooks
-call_user_func('spl_autoload_register', '__load');
+spl_autoload_register('__load');
+spl_autoload_register('__import');
 set_error_handler('__error');
 
 // Verify timezone

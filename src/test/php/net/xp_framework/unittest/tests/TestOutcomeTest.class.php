@@ -21,10 +21,10 @@ class TestOutcomeTest extends \unittest\TestCase {
    * @return unittest.TestCase[]
    */
   public function fixtures() {
-    return array(
-      array($this, ''),
-      array(new \unittest\TestVariation($this, array('v')), '("v")')
-    );
+    return [
+      [$this, ''],
+      [new \unittest\TestVariation($this, ['v']), '("v")']
+    ];
   }
 
   /**
@@ -87,7 +87,7 @@ class TestOutcomeTest extends \unittest\TestCase {
   #[@test, @values('fixtures')]
   public function string_representation_of_TestWarning($test, $variant) {
     $this->assertStringRepresentation(
-      "unittest.TestWarning(test= %s, time= 0.000 seconds) {\n  [\n    0 => \"Could not open file\"\n  ]\n }",
+      "unittest.TestWarning(test= %s, time= 0.000 seconds) {\n  [\"Could not open file\"]\n }",
       new TestWarning($test, array('Could not open file'), 0.0), $variant
     );
   }
