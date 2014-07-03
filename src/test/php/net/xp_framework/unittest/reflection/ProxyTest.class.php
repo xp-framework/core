@@ -186,7 +186,7 @@ class ProxyTest extends \unittest\TestCase {
     $proxy= $this->newProxyWith('{ public function fixture(\lang\types\Long $param); }');
     $this->assertEquals(
       XPClass::forName('lang.types.Long'),
-      this($proxy->getMethod('fixture')->getParameters(), 0)->getTypeRestriction()
+      $proxy->getMethod('fixture')->getParameters()[0]->getTypeRestriction()
     );
   }
 
@@ -195,7 +195,7 @@ class ProxyTest extends \unittest\TestCase {
     $proxy= $this->newProxyWith('{ public function fixture(Long $param); }');
     $this->assertEquals(
       XPClass::forName('lang.types.Long'),
-      this($proxy->getMethod('fixture')->getParameters(), 0)->getTypeRestriction()
+      $proxy->getMethod('fixture')->getParameters()[0]->getTypeRestriction()
     );
   }
 
@@ -204,7 +204,7 @@ class ProxyTest extends \unittest\TestCase {
     $proxy= $this->newProxyWith('{ public function fixture(ReflectionClass $param); }');
     $this->assertEquals(
       new XPClass('ReflectionClass'),
-      this($proxy->getMethod('fixture')->getParameters(), 0)->getTypeRestriction()
+      $proxy->getMethod('fixture')->getParameters()[0]->getTypeRestriction()
     );
   }
 
@@ -213,7 +213,7 @@ class ProxyTest extends \unittest\TestCase {
     $proxy= $this->newProxyWith('{ public function fixture(array $param); }');
     $this->assertEquals(
       \lang\Primitive::$ARRAY,
-      this($proxy->getMethod('fixture')->getParameters(), 0)->getTypeRestriction()
+      $proxy->getMethod('fixture')->getParameters()[0]->getTypeRestriction()
     );
   }
 }
