@@ -55,6 +55,21 @@ class ProxyTest extends \unittest\TestCase {
     return Proxy::getProxyClass(ClassLoader::getDefault(), $interfaces);
   }
 
+  /**
+   * Helper method which returns a proxy class with a unique name and
+   * a given body, using the default classloader.
+   *
+   * @param   string body
+   * @return  lang.XPClass
+   */
+  protected function newProxyWith($body) {
+    return $this->proxyClassFor(array(ClassLoader::defineInterface(
+      'net.xp_framework.unittest.reflection.__NP_'.$this->name,
+      array(),
+      $body
+    )));
+  }
+
   #[@test, @expect('lang.IllegalArgumentException')]
   public function nullClassLoader() {
     Proxy::getProxyClass(null, [$this->iteratorClass]);
@@ -167,13 +182,38 @@ class ProxyTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function namespaced_parameters_handled_correctly() {
-    $proxy= $this->proxyClassFor([ClassLoader::defineInterface('net.xp_framework.unittest.reflection.NSInterface', [], '{
-      public function fixture(\lang\types\Long $param);
-    }')]);
+  public function namespaced_typehinted_parameters_handled_correctly() {
+    $proxy= $this->newProxyWith('{ public function fixture(\lang\types\Long $param); }');
     $this->assertEquals(
       XPClass::forName('lang.types.Long'),
-      $proxy->getMethod('fixture')->getParameters()[0]->getType()
+      this($proxy->getMethod('fixture')->getParameters(), 0)->getTypeRestriction()
+    );
+  }
+
+  #[@test]
+  public function unnamespaced_typehinted_parameters_handled_correctly() {
+    $proxy= $this->newProxyWith('{ public function fixture(Long $param); }');
+    $this->assertEquals(
+      XPClass::forName('lang.types.Long'),
+      this($proxy->getMethod('fixture')->getParameters(), 0)->getTypeRestriction()
+    );
+  }
+
+  #[@test]
+  public function builtin_typehinted_parameters_handled_correctly() {
+    $proxy= $this->newProxyWith('{ public function fixture(ReflectionClass $param); }');
+    $this->assertEquals(
+      new XPClass('ReflectionClass'),
+      this($proxy->getMethod('fixture')->getParameters(), 0)->getTypeRestriction()
+    );
+  }
+
+  #[@test]
+  public function builtin_array_parameters_handled_correctly() {
+    $proxy= $this->newProxyWith('{ public function fixture(array $param); }');
+    $this->assertEquals(
+      \lang\Primitive::$ARRAY,
+      this($proxy->getMethod('fixture')->getParameters(), 0)->getTypeRestriction()
     );
   }
 }
