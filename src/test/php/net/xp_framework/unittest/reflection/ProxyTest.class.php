@@ -172,5 +172,16 @@ class ProxyTest extends \unittest\TestCase {
     $proxy->overloaded('foo', 'bar');
     $this->assertEquals(array('foo'), $this->handler->invocations['overloaded_1']);
     $this->assertEquals(array('foo', 'bar'), $this->handler->invocations['overloaded_2']);
-  }    
+  }
+
+  #[@test]
+  public function namespaced_parameters_handled_correctly() {
+    $proxy= $this->proxyClassFor([ClassLoader::defineInterface('net.xp_framework.unittest.reflection.NSInterface', [], '{
+      public function fixture(\lang\types\Long $param);
+    }')]);
+    $this->assertEquals(
+      XPClass::forName('lang.types.Long'),
+      $proxy->getMethod('fixture')->getParameters()[0]->getType()
+    );
+  }
 }
