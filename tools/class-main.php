@@ -1,22 +1,23 @@
 <?php
 
-define('EPREPEND_IDENTIFIER', "\356\277\277");
 if (version_compare(PHP_VERSION, '5.4.0', '<')) {
   trigger_error('This version of the XP Framework requires PHP 5.4.0+, have PHP '.PHP_VERSION.PHP_EOL, E_USER_ERROR);
   exit(0x3d);
 }
 
-// {{{ internal string __output(string buf)
-//     Output handler. Checks for fatal errors
-function __output($buf) {
-  if (false === ($s= strpos($buf, EPREPEND_IDENTIFIER))) return $buf;
-  $l= strlen(EPREPEND_IDENTIFIER);
-  $e= strpos($buf, EPREPEND_IDENTIFIER, $s + $l);
-  $message= trim(substr($buf, $s + $l, $e - $l));
-  fputs(STDOUT, substr($buf, 0, $s));
-  fputs(STDERR, create(new Error($message))->toString());
-  fputs(STDOUT, substr($buf, $e + $l));
-  return '';
+// {{{ internal void __error
+function __fatal() {
+  static $types= array(
+    E_ERROR      => 'Fatal error',
+    E_USER_ERROR => 'Fatal error',
+    E_PARSE      => 'Parse error'
+  );
+
+  $e= error_get_last();
+  if (null !== $e && isset($types[$e['type']])) {
+    __error($e['type'], $e['message'], $e['file'], $e['line']);
+    create(new Error($types[$e['type']]))->printStackTrace();
+  }
 }
 // }}}
 
@@ -62,10 +63,9 @@ if ($encoding) {
   }
 }
 
-ini_set('error_prepend_string', EPREPEND_IDENTIFIER);
-ini_set('error_append_string', EPREPEND_IDENTIFIER);
+ini_set('display_errors', 'false');
 set_exception_handler('__except');
-ob_start('__output');
+register_shutdown_function('__fatal');
 
 try {
   exit(\lang\XPClass::forName($argv[0])->getMethod('main')->invoke(null, array(array_slice($argv, 1)))); 
