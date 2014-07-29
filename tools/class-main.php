@@ -8,9 +8,10 @@ if (version_compare(PHP_VERSION, '5.4.0', '<')) {
 // {{{ internal void __error
 function __fatal() {
   static $types= array(
-    E_ERROR      => 'Fatal error',
-    E_USER_ERROR => 'Fatal error',
-    E_PARSE      => 'Parse error'
+    E_ERROR         => 'Fatal error',
+    E_USER_ERROR    => 'Fatal error',
+    E_PARSE         => 'Parse error',
+    E_COMPILE_ERROR => 'Compile error'
   );
 
   $e= error_get_last();
