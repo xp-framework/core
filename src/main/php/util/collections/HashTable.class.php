@@ -272,5 +272,4 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
     }
     return substr($s, 0, -2)."\n}";
   }
-
-} 
+}
