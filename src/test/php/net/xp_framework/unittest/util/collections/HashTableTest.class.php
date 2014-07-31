@@ -56,6 +56,11 @@ class HashTableTest extends TestCase {
   }
 
   #[@test, @values('variations')]
+  public function array_access_for_writing($fixture, $pairs) {
+    $fixture[$pairs[0]->key]= $pairs[0]->value;
+  }
+
+  #[@test, @values('variations')]
   public function put_returns_previously_value($fixture, $pairs) {
     $fixture->put($pairs[0]->key, $pairs[0]->value);
     $this->assertEquals($pairs[0]->value, $fixture->put($pairs[0]->key, $pairs[1]->value));
@@ -77,6 +82,16 @@ class HashTableTest extends TestCase {
     create('new util.collections.HashTable<string, lang.types.String>')->put('hello', new Integer(1));
   }
 
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function put_raises_when_using_null_for_string_instance() {
+    create('new util.collections.HashTable<string, lang.types.String>')->put('test', null);
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function put_raises_when_using_null_for_arrays() {
+    create('new util.collections.HashTable<string, var[]>')->put('test', null);
+  }
+
   #[@test, @values('variations')]
   public function get_returns_null_when_key_does_not_exist($fixture, $pairs) {
     $this->assertNull($fixture->get($pairs[0]->key));
@@ -86,6 +101,17 @@ class HashTableTest extends TestCase {
   public function get_returns_previously_put_element($fixture, $pairs) {
     $fixture->put($pairs[0]->key, $pairs[0]->value);
     $this->assertEquals($pairs[0]->value, $fixture->get($pairs[0]->key));
+  }
+
+  #[@test, @values('variations')]
+  public function array_access_for_reading_non_existant($fixture, $pairs) {
+    $this->assertNull($fixture[$pairs[0]->key]);
+  }
+
+  #[@test, @values('variations')]
+  public function array_access_for_reading($fixture, $pairs) {
+    $fixture->put($pairs[0]->key, $pairs[0]->value);
+    $this->assertEquals($pairs[0]->value, $fixture[$pairs[0]->key]);
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
@@ -102,6 +128,17 @@ class HashTableTest extends TestCase {
   public function containsKey_returns_true_when_element_exists($fixture, $pairs) {
     $fixture->put($pairs[0]->key, $pairs[0]->value);
     $this->assertTrue($fixture->containsKey($pairs[0]->key));
+  }
+
+  #[@test, @values('variations')]
+  public function array_access_for_testing_non_existant($fixture, $pairs) {
+    $this->assertFalse(isset($fixture[$pairs[0]->key]));
+  }
+
+  #[@test, @values('variations')]
+  public function array_access_for_testing($fixture, $pairs) {
+    $fixture->put($pairs[0]->key, $pairs[0]->value);
+    $this->assertTrue(isset($fixture[$pairs[0]->key]));
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
@@ -139,8 +176,21 @@ class HashTableTest extends TestCase {
   }
 
   #[@test, @values('variations')]
-  public function remove_non_existing_element($fixture, $pairs) {
+  public function array_access_for_removing($fixture, $pairs) {
+    $fixture->put($pairs[0]->key, $pairs[0]->value);
+    unset($fixture[$pairs[0]->key]);
+    $this->assertFalse($fixture->containsKey($pairs[0]->key));
+  }
+
+  #[@test, @values('variations')]
+  public function remove_non_existant_element($fixture, $pairs) {
     $fixture->remove($pairs[0]->key);
+    $this->assertFalse($fixture->containsKey($pairs[0]->key));
+  }
+
+  #[@test, @values('variations')]
+  public function array_access_for_removing_non_existant_element($fixture, $pairs) {
+    unset($fixture[$pairs[0]->key]);
     $this->assertFalse($fixture->containsKey($pairs[0]->key));
   }
 
