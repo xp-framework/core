@@ -28,6 +28,14 @@ class HashTableTest extends TestCase {
       [create('new util.collections.HashTable<string, lang.types.String>'), [
         new Pair('hello', new String('World')),
         new Pair('hallo', new String('Welt'))
+      ]],
+      [create('new util.collections.HashTable<lang.types.Integer, string[]>'), [
+        new Pair(new Integer(1), ['one', 'eins']),
+        new Pair(new Integer(2), ['two', 'zwei'])
+      ]],
+      [create('new util.collections.HashTable<int[], var>'), [
+        new Pair([1, 2], 3),
+        new Pair([0, -1], 'Test')
       ]]
     ];
   }

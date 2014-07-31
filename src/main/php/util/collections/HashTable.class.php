@@ -108,7 +108,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
     }
 
     $this->_buckets[$h]= array($key, $value);
-    $this->_hash+= HashProvider::hashOf($h.($value instanceof \lang\Generic ? $value->hashCode() : $value));
+    $this->_hash+= HashProvider::hashOf($h.($value instanceof \lang\Generic ? $value->hashCode() : serialize($value)));
     return $previous;
   }
 
@@ -140,7 +140,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
       $prev= null;
     } else {
       $prev= $this->_buckets[$h][1];
-      $this->_hash-= HashProvider::hashOf($h.($prev instanceof \lang\Generic ? $prev->hashCode() : $prev));
+      $this->_hash-= HashProvider::hashOf($h.($prev instanceof \lang\Generic ? $prev->hashCode() : serialize($prev)));
       unset($this->_buckets[$h]);
     }
 
