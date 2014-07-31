@@ -237,8 +237,8 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
   #[@generic(return= 'K[]')]
   public function keys() {
     $keys= [];
-    foreach (array_keys($this->_buckets) as $key) {
-      $keys[]= $this->_buckets[$key][0];
+    foreach ($this->_buckets as $key => $value) {
+      $keys[]= $value[0];
     }
     return $keys;
   }
@@ -251,8 +251,8 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
   #[@generic(return= 'V[]')]
   public function values() {
     $values= [];
-    foreach (array_keys($this->_buckets) as $key) {
-      $values[]= $this->_buckets[$key][1];
+    foreach ($this->_buckets as $key => $value) {
+      $values[]= $value[1];
     }
     return $values;
   }
