@@ -6,6 +6,8 @@ use util\collections\Vector;
 use util\collections\Stack;
 use util\collections\Queue;
 use util\collections\LRUBuffer;
+use lang\types\Integer;
+use lang\types\String;
 
 /**
  * TestCase
@@ -20,10 +22,6 @@ use util\collections\LRUBuffer;
  */
 class GenericsTest extends \unittest\TestCase {
 
-  /**
-   * Tests HashTable::equals()
-   *
-   */
   #[@test]
   public function differingGenericHashTablesNotEquals() {
     $this->assertNotEquals(
@@ -32,10 +30,6 @@ class GenericsTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests HashTable::equals()
-   *
-   */
   #[@test]
   public function sameGenericHashTablesAreEqual() {
     $this->assertEquals(
@@ -44,10 +38,6 @@ class GenericsTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests HashSet::equals()
-   *
-   */
   #[@test]
   public function differingGenericHashSetsNotEquals() {
     $this->assertNotEquals(
@@ -56,10 +46,6 @@ class GenericsTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests HashSet::equals()
-   *
-   */
   #[@test]
   public function sameGenericHashSetsAreEqual() {
     $this->assertEquals(
@@ -68,10 +54,6 @@ class GenericsTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests Vector::equals()
-   *
-   */
   #[@test]
   public function differingGenericVectorsNotEquals() {
     $this->assertNotEquals(
@@ -80,10 +62,6 @@ class GenericsTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests Vector::equals()
-   *
-   */
   #[@test]
   public function sameGenericVectorsAreEqual() {
     $this->assertEquals(
@@ -92,10 +70,6 @@ class GenericsTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests Queue::equals()
-   *
-   */
   #[@test]
   public function differingGenericQueuesNotEquals() {
     $this->assertNotEquals(
@@ -104,10 +78,6 @@ class GenericsTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests Queue::equals()
-   *
-   */
   #[@test]
   public function sameGenericQueuesAreEqual() {
     $this->assertEquals(
@@ -116,10 +86,6 @@ class GenericsTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests Stack::equals()
-   *
-   */
   #[@test]
   public function differingGenericStacksNotEquals() {
     $this->assertNotEquals(
@@ -128,10 +94,6 @@ class GenericsTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests Stack::equals()
-   *
-   */
   #[@test]
   public function sameGenericStacksAreEqual() {
     $this->assertEquals(
@@ -140,10 +102,6 @@ class GenericsTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests LRUBuffer::equals()
-   *
-   */
   #[@test]
   public function differingGenericLRUBuffersNotEquals() {
     $this->assertNotEquals(
@@ -152,10 +110,6 @@ class GenericsTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests LRUBuffer::equals()
-   *
-   */
   #[@test]
   public function sameGenericLRUBuffersAreEqual() {
     $this->assertEquals(
@@ -164,127 +118,16 @@ class GenericsTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests non-generic objects
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function nonGenericPassedToCreate() {
     create('new lang.Object<lang.types.String>');
   }
 
-  /**
-   * Tests HashTable<string, lang.types.String>
-   *
-   */
-  #[@test]
-  public function stringStringHash() {
-    create('new util.collections.HashTable<string, lang.types.String>')->put('hello', new \lang\types\String('World'));
-  }
-
-  /**
-   * Tests HashTable<string, lang.types.String>
-   *
-   */
-  #[@test]
-  public function getFromStringStringHash() {
-    with ($h= create('new util.collections.HashTable<string, lang.types.String>')); {
-      $h->put('hello', new \lang\types\String('World'));
-      $this->assertEquals(new \lang\types\String('World'), $h->get('hello'));
-    }
-  }
-
-  /**
-   * Tests HashTable<string, lang.types.String>
-   *
-   */
-  #[@test]
-  public function removeFromStringStringHash() {
-    with ($h= create('new util.collections.HashTable<string, lang.types.String>')); {
-      $h->put('hello', new \lang\types\String('World'));
-      $this->assertEquals(new \lang\types\String('World'), $h->remove('hello'));
-    }
-  }
-
-  /**
-   * Tests HashTable<lang.types.String, lang.types.String>
-   *
-   */
-  #[@test]
-  public function testStringStringHash() {
-    with ($h= create('new util.collections.HashTable<string, lang.types.String>')); {
-      $h->put('hello', new \lang\types\String('World'));
-      $this->assertTrue($h->containsKey('hello'));
-    }
-  }
-
-  /**
-   * Tests HashTable<lang.types.String, lang.types.String>
-   *
-   */
-  #[@test, @expect('lang.IllegalArgumentException')]
-  public function stringStringHashPutIllegalValue() {
-    create('new util.collections.HashTable<string, lang.types.String>')->put('hello', new \lang\types\Integer(1));
-  }
-
-  /**
-   * Tests HashTable<lang.types.String, lang.types.String>
-   *
-   */
-  #[@test, @expect('lang.IllegalArgumentException')]
-  public function stringStringHashGetIllegalValue() {
-    create('new util.collections.HashTable<lang.types.String, lang.types.String>')->get(new \lang\types\Integer(1));
-  }
-
-  /**
-   * Tests HashTable<lang.types.String, lang.types.String>
-   *
-   */
-  #[@test, @expect('lang.IllegalArgumentException')]
-  public function stringStringHashRemoveIllegalValue() {
-    create('new util.collections.HashTable<lang.types.String, lang.types.String>')->remove(new \lang\types\Integer(1));
-  }
-
-  /**
-   * Tests HashTable<lang.types.String, lang.types.String>
-   *
-   */
-  #[@test, @expect('lang.IllegalArgumentException')]
-  public function stringStringHashContainsKeyIllegalValue() {
-    create('new util.collections.HashTable<lang.types.String, lang.types.String>')->containsKey(new \lang\types\Integer(1));
-  }
-
-  /**
-   * Tests HashTable<lang.types.String, lang.types.String>
-   *
-   */
-  #[@test, @expect('lang.IllegalArgumentException')]
-  public function stringStringHashContainsValueIllegalValue() {
-    create('new util.collections.HashTable<lang.types.String, lang.types.String>')->containsValue(new \lang\types\Integer(1));
-  }
-
-  /**
-   * Tests HashTable<lang.types.String, lang.types.String>
-   *
-   */
-  #[@test, @expect('lang.IllegalArgumentException')]
-  public function stringStringHashIllegalKey() {
-    create('new util.collections.HashTable<lang.types.String, lang.types.String>')->put(1, new \lang\types\String('World'));
-  }
-
-  /**
-   * Tests Vector<lang.types.String>
-   *
-   */
   #[@test]
   public function stringVector() {
     create('new util.collections.Vector<lang.types.String>')->add(new \lang\types\String('Hi'));
   }
 
-  /**
-   * Tests Vector<lang.types.String>
-   *
-   */
   #[@test]
   public function createStringVector() {
     $this->assertEquals(
@@ -293,172 +136,96 @@ class GenericsTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests Vector<lang.types.String>
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function stringVectorAddIllegalValue() {
     create('new util.collections.Vector<lang.types.String>')->add(new \lang\types\Integer(1));
   }
 
-  /**
-   * Tests Vector<lang.types.String>
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function stringVectorSetIllegalValue() {
     create('new util.collections.Vector<lang.types.String>', array(new \lang\types\String('')))->set(0, new \lang\types\Integer(1));
   }
 
-  /**
-   * Tests Vector<lang.types.String>
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function stringVectorContainsIllegalValue() {
     create('new util.collections.Vector<lang.types.String>')->contains(new \lang\types\Integer(1));
   }
 
-  /**
-   * Tests Vector<lang.types.String>
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function createStringVectorWithIllegalValue() {
     create('new util.collections.Vector<lang.types.String>', array(new \lang\types\Integer(1)));
   }
 
-  /**
-   * Tests Stack<lang.types.String>
-   *
-   */
   #[@test]
   public function stringStack() {
     create('new util.collections.Stack<lang.types.String>')->push(new \lang\types\String('One'));
   }
 
-  /**
-   * Tests Stack<lang.types.String>
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function stringStackPushIllegalValue() {
     create('new util.collections.Stack<lang.types.String>')->push(new \lang\types\Integer(1));
   }
 
-  /**
-   * Tests Stack<lang.types.String>
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function stringStackSearchIllegalValue() {
     create('new util.collections.Stack<lang.types.String>')->search(new \lang\types\Integer(1));
   }
 
-  /**
-   * Tests Queue<lang.types.String>
-   *
-   */
   #[@test]
   public function stringQueue() {
     create('new util.collections.Queue<lang.types.String>')->put(new \lang\types\String('One'));
   }
 
-  /**
-   * Tests Queue<lang.types.String>
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function stringQueuePutIllegalValue() {
     create('new util.collections.Queue<lang.types.String>')->put(new \lang\types\Integer(1));
   }
 
-  /**
-   * Tests Queue<lang.types.String>
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function stringQueueSearchIllegalValue() {
     create('new util.collections.Queue<lang.types.String>')->search(new \lang\types\Integer(1));
   }
 
-  /**
-   * Tests Queue<lang.types.String>
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function stringQueueRemoveIllegalValue() {
     create('new util.collections.Queue<lang.types.String>')->remove(new \lang\types\Integer(1));
   }
 
-  /**
-   * Tests LRUBuffer<lang.types.String>
-   *
-   */
   #[@test]
   public function stringLRUBuffer() {
     create('new util.collections.LRUBuffer<lang.types.String>', 1)->add(new \lang\types\String('One'));
   }
 
-  /**
-   * Tests LRUBuffer<lang.types.String>
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function stringLRUBufferAddIllegalValue() {
     create('new util.collections.LRUBuffer<lang.types.String>', 1)->add(new \lang\types\Integer(1));
   }
 
-  /**
-   * Tests LRUBuffer<lang.types.String>
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function stringLRUBufferUpdateIllegalValue() {
     create('new util.collections.LRUBuffer<lang.types.String>', 1)->update(new \lang\types\Integer(1));
   }
 
-  /**
-   * Tests HashSet<lang.types.String>
-   *
-   */
   #[@test]
   public function stringHashSet() {
     create('new util.collections.HashSet<lang.types.String>')->add(new \lang\types\String('One'));
   }
 
-  /**
-   * Tests HashSet<lang.types.String>
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function stringHashSetAddIllegalValue() {
     create('new util.collections.HashSet<lang.types.String>')->add(new \lang\types\Integer(1));
   }
 
-  /**
-   * Tests HashSet<lang.types.String>
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function stringHashSetContainsIllegalValue() {
     create('new util.collections.HashSet<lang.types.String>')->contains(new \lang\types\Integer(1));
   }
 
-  /**
-   * Tests HashSet<lang.types.String>
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function stringHashSetRemoveIllegalValue() {
     create('new util.collections.HashSet<lang.types.String>')->remove(new \lang\types\Integer(1));
   }
 
-  /**
-   * Tests HashSet<lang.types.String>
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function stringHashSetAddAllIllegalValue() {
     create('new util.collections.HashSet<lang.types.String>')->addAll(array(
@@ -467,10 +234,6 @@ class GenericsTest extends \unittest\TestCase {
     ));
   }
 
-  /**
-   * Tests HashSet<lang.types.String>
-   *
-   */
   #[@test]
   public function stringHashSetUnchangedAferAddAllIllegalValue() {
     $h= create('new util.collections.HashSet<lang.types.String>');
@@ -481,10 +244,6 @@ class GenericsTest extends \unittest\TestCase {
     $this->assertTrue($h->isEmpty());
   }
 
-  /**
-   * Tests HashTable<string[], lang.types.String>
-   *
-   */
   #[@test]
   public function arrayAsKeyLookupWithMatchingKey() {
     with ($h= create('new util.collections.HashTable<string[], lang.types.String>')); {
@@ -493,10 +252,6 @@ class GenericsTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Tests HashTable<string[], lang.types.String>
-   *
-   */
   #[@test]
   public function arrayAsKeyLookupWithMismatchingKey() {
     with ($h= create('new util.collections.HashTable<string[], lang.types.String>')); {
@@ -505,19 +260,11 @@ class GenericsTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Tests HashTable<string[], lang.types.String>
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function arrayAsKeyArrayComponentTypeMismatch() {
     create('new util.collections.HashTable<string[], lang.types.String>')->put(array(1), new \lang\types\String('World'));
   }
 
-  /**
-   * Tests HashTable<string[], lang.types.String>
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function arrayAsKeyTypeMismatch() {
     create('new util.collections.HashTable<string[], lang.types.String>')->put('hello', new \lang\types\String('World'));
