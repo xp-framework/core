@@ -51,6 +51,11 @@ class HashTableTest extends TestCase {
   }
 
   #[@test, @values('variations')]
+  public function map_size_is_initially_zero($fixture, $pairs) {
+    $this->assertEquals(0, $fixture->size());
+  }
+
+  #[@test, @values('variations')]
   public function put($fixture, $pairs) {
     $fixture->put($pairs[0]->key, $pairs[0]->value);
   }
@@ -70,6 +75,12 @@ class HashTableTest extends TestCase {
   public function map_no_longer_empty_after_put($fixture, $pairs) {
     $fixture->put($pairs[0]->key, $pairs[0]->value);
     $this->assertFalse($fixture->isEmpty());
+  }
+
+  #[@test, @values('variations')]
+  public function map_size_no_longer_zero_after_put($fixture, $pairs) {
+    $fixture->put($pairs[0]->key, $pairs[0]->value);
+    $this->assertEquals(1, $fixture->size());
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
