@@ -2,6 +2,8 @@
 
 /**
  * Generate generic runtime types.
+ *
+ * @test  xp://net.xp_framework.unittest.core.generics.GenericTypesTest
  */
 class GenericTypes extends \lang\Object {
 
@@ -83,6 +85,7 @@ class GenericTypes extends \lang\Object {
 
       // Replace source
       $annotation= null;
+      $imports= [];
       $matches= [];
       $state= [0];
       $counter= 0;
@@ -97,6 +100,15 @@ class GenericTypes extends \lang\Object {
             $meta['class'][DETAIL_GENERIC]= [$base->name, $arguments];
             $src.= $tokens[$i][1].' '.$decl;
             array_unshift($state, $tokens[$i][0]);
+          } else if (T_USE === $tokens[$i][0]) {
+            $i+= 2;
+            $use= '';
+            while ((T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0]) && $i < $s) {
+              $use.= $tokens[$i][1];
+              $i++;
+            }
+            $imports[substr($use, strrpos($use, '\\')+ 1)]= $use;
+            $src.= 'use '.$use.';';
           }
           continue;
         } else if (T_CLASS === $state[0]) {
@@ -108,7 +120,6 @@ class GenericTypes extends \lang\Object {
               $i++;
             }
             $i--;
-            '\\' === $parent{0} || $parent= $namespace.'\\'.$parent;
             if (isset($annotations['generic']['parent'])) {
               $xargs= [];
               foreach (explode(',', $annotations['generic']['parent']) as $j => $placeholder) {
@@ -252,7 +263,7 @@ class GenericTypes extends \lang\Object {
               $i++;
             }
             $i--;
-            '\\' === $rel{0} || $rel= $namespace.'\\'.$rel;
+            '\\' === $rel{0} || $rel= isset($imports[$rel]) ? $imports[$rel] : $namespace.'\\'.$rel;
             if (isset($annotation[$counter])) {
               $iargs= [];
               foreach (explode(',', $annotation[$counter]) as $j => $placeholder) {
