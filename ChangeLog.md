@@ -84,6 +84,7 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed xp-framework/core#20: Generic classes and namespaces - (@thekid)
 * Fixed `io.streams.Streams` instances to return true for `is_file()`
   (@thekid)
 * Fixed `BufferedInputStream::available()` (see xp-framework/xp-runners#17)
