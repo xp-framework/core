@@ -116,7 +116,7 @@ final class ClassLoader extends Object implements IClassLoader {
       raise('lang.ElementNotFoundException', 'Missing or malformed module-info in '.$l->toString());
     }
 
-    $decl= ucfirst(strtr($m[1], '.-/', '___')).'Module';
+    $decl= strtr($m[1], '.-/', '___').'Module';
     if (preg_match('/namespace ([^;]+)/', $moduleInfo, $n)) {
       $class= strtr($n[1], '\\', '.').'.'.$decl;
     } else {
@@ -128,7 +128,7 @@ final class ClassLoader extends Object implements IClassLoader {
       $moduleInfo,
       ['<?php' => '', '?>' => '']
     )));
-    $dyn->loadClass($class);
+    $dyn->loadClass0($class);
   }
 
   /**
