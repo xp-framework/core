@@ -223,7 +223,7 @@ class XmlTestListener extends \lang\Object implements TestListener {
    * @param   unittest.TestSuite suite
    * @param   unittest.TestResult result
    */
-  public function testRunFinished(TestSuite $suite, \TestResult $result) {
+  public function testRunFinished(TestSuite $suite, TestResult $result) {
     $this->out->write($this->tree->getDeclaration()."\n");
     $this->out->write($this->tree->getSource(INDENT_DEFAULT));
   }
