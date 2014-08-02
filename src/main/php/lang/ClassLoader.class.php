@@ -43,6 +43,7 @@ final class ClassLoader extends Object implements IClassLoader {
 
   static function __static() {
     \xp::$loader= new self();
+    $modules= [];
     
     // Scan include-path, setting up classloaders for each element
     foreach (\xp::$classpath as $element) {
@@ -51,8 +52,14 @@ final class ClassLoader extends Object implements IClassLoader {
       } else {
         $cl= ArchiveClassLoader::instanceFor($element, false);
       }
-      isset(self::$delegates[$cl->instanceId()]) || self::registerLoader($cl);
+      if (isset(self::$delegates[$cl->instanceId()])) continue;
+
+      self::$delegates[$cl->instanceId()]= $cl;
+      if ($cl->providesResource('module.xp')) $modules[]= $cl;
     }
+
+    // Initialize modules
+    foreach ($modules as $cl) self::declareModule($cl);
   }
   
   /**
