@@ -112,7 +112,8 @@ final class ClassLoader extends Object implements IClassLoader {
    * @param   lang.IClassLoader l
    */
   public static function declareModule($l) {
-    if (!preg_match('/module ([a-z_\/\.-]+)(\(([^\)]+)\))?\s*{/', $moduleInfo= $l->getResource('module.xp'), $m)) {
+    $moduleInfo= $l->getResource('module.xp');
+    if (!preg_match('/module ([a-z_\/\.-]+)(\(([^\)]+)\))?\s*{/', $moduleInfo, $m)) {
       raise('lang.ElementNotFoundException', 'Missing or malformed module-info in '.$l->toString());
     }
 
@@ -124,10 +125,10 @@ final class ClassLoader extends Object implements IClassLoader {
     }
 
     $dyn= DynamicClassLoader::instanceFor('modules');
-    $dyn->setClassBytes($class, str_replace($m[0], 'class '.$decl.' extends \lang\Object {', strtr(
-      $moduleInfo,
-      ['<?php' => '', '?>' => '']
-    )));
+    $dyn->setClassBytes($class, strtr($moduleInfo, [
+      $m[0] => 'class '.$decl.' extends \lang\Object {',
+      '<?php' => '', '?>' => ''
+    ]));
     $dyn->loadClass0($class);
   }
 
