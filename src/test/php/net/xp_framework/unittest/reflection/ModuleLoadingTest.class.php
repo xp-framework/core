@@ -7,7 +7,7 @@ use lang\ClassLoader;
  *
  * @see   xp://lang.ClassLoader
  */
-class ModuleTest extends \unittest\TestCase {
+class ModuleLoadingTest extends \unittest\TestCase {
   public static $verify;
   protected $registered= [];
 
