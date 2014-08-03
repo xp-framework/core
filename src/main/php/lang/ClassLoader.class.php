@@ -109,7 +109,14 @@ final class ClassLoader extends Object implements IClassLoader {
       self::$delegates[$l->instanceId()]= $l;
     }
 
-    $l->providesResource('module.xp') && self::declareModule($l);
+    if ($l->providesResource('module.xp')) {
+      try {
+        self::declareModule($l);
+      } catch (Throwable $e) {
+        unset(self::$delegates[$l->instanceId()]);
+        throw $e;
+      }
+    }
     return $l;
   }
 
