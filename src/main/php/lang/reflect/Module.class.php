@@ -61,7 +61,7 @@ class Module extends \lang\Object {
   }
 
   /**
-   * Register a module
+   * Register a module. Calls module's initializer.
    *
    * @param  self $module
    * @return self
@@ -73,7 +73,7 @@ class Module extends \lang\Object {
   }
 
   /**
-   * Remove a registered module
+   * Remove a registered module. Calls module's finalizer.
    *
    * @param  self $module
    */
