@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\ClassLoader;
+use lang\reflect\Module;
 
 /**
  * TestCase for modules
@@ -54,7 +55,7 @@ class ModuleLoadingTest extends \unittest\TestCase {
     self::$verify= 0;
     $this->register(new LoaderProviding(['module.xp' => 'module xp-framework/initialized {
       static function __static() {
-        \net\xp_framework\unittest\reflection\ModuleTest::$verify++;
+        \net\xp_framework\unittest\reflection\ModuleLoadingTest::$verify++;
       }
     }']));
     $this->assertEquals(1, self::$verify);
@@ -76,5 +77,12 @@ class ModuleLoadingTest extends \unittest\TestCase {
   #[@test, @expect(class= 'lang.ElementNotFoundException', withMessage= '/Missing or malformed module-info/')]
   public function module_without_name() {
     $this->register(new LoaderProviding(['module.xp' => 'module { }']));
+  }
+
+  #[@test]
+  public function loaded_module() {
+    $cl= new LoaderProviding(['module.xp' => 'module xp-framework/loaded { }']);
+    $this->register($cl);
+    $this->assertEquals(new Module('xp-framework/loaded', $cl), Module::forName('xp-framework/loaded'));
   }
 }

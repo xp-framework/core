@@ -1,6 +1,7 @@
 <?php namespace lang;
 
 use lang\archive\ArchiveClassLoader;
+use lang\reflect\Module;
 
 /** 
  * Entry point class to loading classes, packages and resources.
@@ -34,12 +35,14 @@ use lang\archive\ArchiveClassLoader;
  * @test  xp://net.xp_framework.unittest.reflection.PackageTest
  * @test  xp://net.xp_framework.unittest.reflection.RuntimeClassDefinitionTest
  * @test  xp://net.xp_framework.unittest.reflection.FullyQualifiedTest
+ * @test  xp://net.xp_framework.unittest.reflection.ModuleLoadingTest
  * @see   xp://lang.XPClass#forName
  * @see   xp://lang.reflect.Package#loadClass
  */
 final class ClassLoader extends Object implements IClassLoader {
   protected static
-    $delegates  = [];
+    $delegates = [],
+    $modules   = [];
 
   static function __static() {
     \xp::$loader= new self();
@@ -59,7 +62,9 @@ final class ClassLoader extends Object implements IClassLoader {
     }
 
     // Initialize modules
-    foreach ($modules as $cl) self::declareModule($cl);
+    foreach ($modules as $cl) {
+      self::$modules[$cl->instanceId()]= Module::register(self::declareModule($cl));
+    }
   }
   
   /**
@@ -103,15 +108,16 @@ final class ClassLoader extends Object implements IClassLoader {
    * @return  lang.IClassLoader the registered loader
    */
   public static function registerLoader(IClassLoader $l, $before= false) {
+    $id= $l->instanceId();
     if ($before) {
-      self::$delegates= array_merge([$l->instanceId() => $l], self::$delegates);
+      self::$delegates= array_merge([$id => $l], self::$delegates);
     } else {
-      self::$delegates[$l->instanceId()]= $l;
+      self::$delegates[$id]= $l;
     }
 
     if ($l->providesResource('module.xp')) {
       try {
-        self::declareModule($l);
+        self::$modules[$id]= Module::register(self::declareModule($l));
       } catch (Throwable $e) {
         unset(self::$delegates[$l->instanceId()]);
         throw $e;
@@ -124,6 +130,7 @@ final class ClassLoader extends Object implements IClassLoader {
    * Declare a module
    *
    * @param   lang.IClassLoader l
+   * @return  lang.reflect.Module
    */
   public static function declareModule($l) {
     $moduleInfo= $l->getResource('module.xp');
@@ -140,10 +147,10 @@ final class ClassLoader extends Object implements IClassLoader {
 
     $dyn= DynamicClassLoader::instanceFor('modules');
     $dyn->setClassBytes($class, strtr($moduleInfo, [
-      $m[0] => 'class '.$decl.' extends \lang\Object {',
+      $m[0] => 'class '.$decl.' extends \lang\reflect\Module {',
       '<?php' => '', '?>' => ''
     ]));
-    $dyn->loadClass0($class);
+    return $dyn->loadClass($class)->newInstance($m[1], $l);
   }
 
   /**
@@ -154,9 +161,16 @@ final class ClassLoader extends Object implements IClassLoader {
    */
   public static function removeLoader(IClassLoader $l) {
     $id= $l->instanceId();
-    if (!isset(self::$delegates[$id])) return false;
-    unset(self::$delegates[$id]);
-    return true;
+    if (isset(self::$delegates[$id])) {
+      unset(self::$delegates[$id]);
+
+      if (isset(self::$modules[$id])) {
+        Module::remove(self::$modules[$id]);
+        unset(self::$modules[$id]);
+      }
+      return true;
+    }
+    return false;
   }
 
   /**
