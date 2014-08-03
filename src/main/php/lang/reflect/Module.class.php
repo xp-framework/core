@@ -19,7 +19,6 @@ class Module extends \lang\Object {
   public function __construct($name, IClassLoader $classLoader) {
     $this->name= $name;
     $this->classLoader= $classLoader;
-    $this->initialize();
   }
 
   /** @return string */
@@ -31,9 +30,16 @@ class Module extends \lang\Object {
   /**
    * Initialize this module. Template method, override in subclasses!
    *
-   * @return void 
+   * @return void
    */
   public function initialize() { }
+
+  /**
+   * Finalize this module. Template method, override in subclasses!
+   *
+   * @return void
+   */
+  public function finalize() { }
 
   /**
    * Returns whether a given value equals this module
@@ -62,6 +68,7 @@ class Module extends \lang\Object {
    */
   public static function register(self $module) {
     self::$registered[$module->name()]= $module;
+    $module->initialize();
     return $module;
   }
 
@@ -71,6 +78,7 @@ class Module extends \lang\Object {
    * @param  self $module
    */
   public static function remove(self $module) {
+    $module->finalize();
     unset(self::$registered[$module->name()]);
   }
 
