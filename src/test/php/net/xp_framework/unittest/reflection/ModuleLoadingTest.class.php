@@ -9,7 +9,6 @@ use lang\reflect\Module;
  * @see   xp://lang.ClassLoader
  */
 class ModuleLoadingTest extends \unittest\TestCase {
-  public static $verify;
   protected $registered= [];
 
   /**
@@ -51,17 +50,6 @@ class ModuleLoadingTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function modules_static_initializer_is_invoked() {
-    self::$verify= 0;
-    $this->register(new LoaderProviding(['module.xp' => 'module xp-framework/initialized {
-      static function __static() {
-        \net\xp_framework\unittest\reflection\ModuleLoadingTest::$verify++;
-      }
-    }']));
-    $this->assertEquals(1, self::$verify);
-  }
-
-  #[@test]
   public function module_in_namespace() {
     $this->register(new LoaderProviding(['module.xp' => '<?php namespace net\xp_framework\unittest\reflection;
     module xp-framework/namespaced { 
@@ -84,5 +72,17 @@ class ModuleLoadingTest extends \unittest\TestCase {
     $cl= new LoaderProviding(['module.xp' => 'module xp-framework/loaded { }']);
     $this->register($cl);
     $this->assertEquals(new Module('xp-framework/loaded', $cl), Module::forName('xp-framework/loaded'));
+  }
+
+  #[@test]
+  public function modules_initializer_is_invoked() {
+    $this->register(new LoaderProviding(['module.xp' => 'module xp-framework/initialized {
+      public $initialized= 0;
+
+      public function initialize() {
+        $this->initialized++;
+      }
+    }']));
+    $this->assertEquals(1, Module::forName('xp-framework/initialized')->initialized);
   }
 }

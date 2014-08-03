@@ -19,6 +19,7 @@ class Module extends \lang\Object {
   public function __construct($name, IClassLoader $classLoader) {
     $this->name= $name;
     $this->classLoader= $classLoader;
+    $this->initialize();
   }
 
   /** @return string */
@@ -26,6 +27,13 @@ class Module extends \lang\Object {
 
   /** @return lang.IClassLoader */
   public function classLoader() { return $this->classLoader; }
+
+  /**
+   * Initialize this module. Template method, override in subclasses!
+   *
+   * @return void 
+   */
+  public function initialize() { }
 
   /**
    * Returns whether a given value equals this module
