@@ -16,6 +16,31 @@ class Filters extends \lang\Object implements Filter {
   protected $list;
   protected $accept;
 
+  public static $ALL;
+  public static $ANY;
+  public static $NONE;
+
+  static function __static() {
+    self::$ALL= function($list, $e) {
+      foreach ($list as $filter) {
+        if (!$filter->accept($e)) return false;
+      }
+      return true;
+    };
+    self::$ANY= function($list, $e) {
+      foreach ($list as $filter) {
+        if ($filter->accept($e)) return true;
+      }
+      return false;
+    };
+    self::$NONE= function($list, $e) {
+      foreach ($list as $filter) {
+        if ($filter->accept($e)) return false;
+      }
+      return true;
+    };
+  }
+
   /**
    * Constructor
    *
@@ -72,12 +97,7 @@ class Filters extends \lang\Object implements Filter {
    * @return util.Filter<R>
    */
   public static function allOf(array $filters) {
-    return new self($filters, function($list, $e) {
-      foreach ($list as $filter) {
-        if (!$filter->accept($e)) return false;
-      }
-      return true;
-    });
+    return new self($filters, self::$ALL);
   }
 
   /**
@@ -88,12 +108,7 @@ class Filters extends \lang\Object implements Filter {
    * @return util.Filter<R>
    */
   public static function anyOf(array $filters) {
-    return new self($filters, function($list, $e) {
-      foreach ($list as $filter) {
-        if ($filter->accept($e)) return true;
-      }
-      return false;
-    });
+    return new self($filters, self::$ANY);
   }
 
   /**
@@ -104,11 +119,6 @@ class Filters extends \lang\Object implements Filter {
    * @return util.Filter<R>
    */
   public static function noneOf(array $filters) {
-    return new self($filters, function($list, $e) {
-      foreach ($list as $filter) {
-        if ($filter->accept($e)) return false;
-      }
-      return true;
-    });
+    return new self($filters, self::$NONE);
   }
 }

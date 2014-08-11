@@ -24,17 +24,29 @@ class FiltersTest extends TestCase {
     return $output;
   }
 
-  #[@test]
-  public function can_create() {
+  /** @return var[][] */
+  protected function accepting() {
+    return [[Filters::$ALL], [Filters::$ANY], [Filters::$NONE]];
+  }
+
+  #[@test, @values('accepting')]
+  public function can_create($accepting) {
     create('new util.Filters<int>',
       [newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }])],
-      function($list, $e) { return true; }
+      $accepting
     );
   }
 
+  #[@test, @values('accepting')]
+  public function can_create_with_empty_filters($accepting) {
+    create('new util.Filters<int>', [], $accepting);
+  }
+
   #[@test]
-  public function can_create_with_empty_filters() {
-    create('new util.Filters<int>', [], function($list, $e) { return true; });
+  public function add_filter() {
+    $filters= create('new util.Filters<int>', [], Filters::$ALL);
+    $filters->add(newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }]));
+    $this->assertTrue($filters->accept(2));
   }
 
   #[@test]
