@@ -36,7 +36,10 @@ class FolderSource extends AbstractSource {
    */
   protected function findLoaderFor($path) {
     foreach (\lang\ClassLoader::getLoaders() as $cl) {
-      if (0 === strncmp($cl->path, $path, strlen($cl->path))) return $cl;
+      if (
+        $cl instanceof \lang\FileSystemClassLoader &&
+        0 === strncmp($cl->path, $path, strlen($cl->path))
+      ) return $cl;
     }
     return null;      
   }
