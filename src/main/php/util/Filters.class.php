@@ -1,5 +1,7 @@
 <?php namespace util;
 
+use lang\IllegalArgumentException;
+
 /**
  * Instances of this class act on a list of given filters, accepting
  * a closure which will be invoked with the list and the given element
@@ -46,11 +48,18 @@ class Filters extends \lang\Object implements Filter {
    *
    * @param   util.Filter<T>[] $list
    * @param   php.Closure $accept
+   * @throws  lang.IllegalArgumentException if accept is neither a closure nor NULL
    */
   #[@generic(params= 'util.Filter<T>[]')]
   public function __construct(array $list= array(), $accept= null) {
     $this->list= $list;
-    $this->accept= $accept;
+    if (null === $accept) {
+      $this->accept= \xp::null();
+    } else if ($accept instanceof \Closure) {
+      $this->accept= $accept;
+    } else {
+      throw new IllegalArgumentException('Expecting either a closure or null, '.\xp::typeOf($accept).' given');
+    }
   }
 
   /**
@@ -71,7 +80,7 @@ class Filters extends \lang\Object implements Filter {
    * @param   php.Closure $accept
    * @return  self<T>
    */
-  public function accepting($accept) {
+  public function accepting(\Closure $accept) {
     $this->accept= $accept;
     return $this;
   }

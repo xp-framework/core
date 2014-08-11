@@ -50,6 +50,11 @@ class FiltersTest extends TestCase {
     create('new util.Filters<int>', [], $accepting);
   }
 
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function constructor_raises_exception_when_neither_null_nor_closure_given_for_accepting() {
+    create('new util.Filters<int>', [], 'callback');
+  }
+
   #[@test]
   public function add_filter() {
     $filters= create('new util.Filters<int>', [], Filters::$ALL);
@@ -71,6 +76,14 @@ class FiltersTest extends TestCase {
       ->accepting(Filters::$ALL)
       ->accept(2)
     );
+  }
+
+  #[@test, @expect('lang.NullPointerException')]
+  public function accept_called_without_accepting_function_set() {
+    create('new util.Filters<int>')
+      ->add(newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }]))
+      ->accept(2)
+    ;
   }
 
   #[@test]
