@@ -1,11 +1,9 @@
 <?php namespace io\collections\iterate;
 
-
-
 /**
  * Negation filter
  *
- * @purpose  Iteration Filter
+ * @deprecated Use util.Filters::noneOf() instead
  */
 class NegationOfFilter extends \lang\Object implements IterationFilter {
   public
@@ -38,5 +36,4 @@ class NegationOfFilter extends \lang\Object implements IterationFilter {
   public function toString() {
     return $this->getClassName().'<'.$this->filter->toString().'>';
   }
-
 } 

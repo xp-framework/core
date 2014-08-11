@@ -1,12 +1,11 @@
 <?php namespace io\collections\iterate;
 
-
-
 /**
  * Abstract base class for combined filters
  *
  * @see   xp://io.collections.iterate.AnyOfFilter
  * @see   xp://io.collections.iterate.AllOfFilter
+ * @deprecated  Use util.FilterComposite instead
  */
 abstract class AbstractCombinedFilter extends \lang\Object implements IterationFilter {
   public $list;
@@ -46,5 +45,4 @@ abstract class AbstractCombinedFilter extends \lang\Object implements IterationF
     }
     return $s.'}';
   }
-
 } 
