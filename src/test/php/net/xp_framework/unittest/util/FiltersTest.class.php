@@ -37,17 +37,17 @@ class FiltersTest extends TestCase {
     );
   }
 
+  #[@test, @values('accepting')]
+  public function can_create_with_empty_filters($accepting) {
+    create('new util.Filters<int>', [], $accepting);
+  }
+
   #[@test]
   public function can_create_with_empty_acceptor() {
     create('new util.Filters<int>',
       [newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }])],
       null
     );
-  }
-
-  #[@test, @values('accepting')]
-  public function can_create_with_empty_filters($accepting) {
-    create('new util.Filters<int>', [], $accepting);
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
