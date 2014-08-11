@@ -57,12 +57,23 @@ class Filters extends \lang\Object implements Filter {
    * Adds a filter
    *
    * @param   util.Filter<T> $filter
-   * @return  util.Filter<T> the added filter
+   * @return  self<T>
    */
-  #[@generic(params= 'util.Filter<T>', return= 'util.Filter<T>')]
+  #[@generic(params= 'util.Filter<T>', return= 'self<T>')]
   public function add($filter) {
     $this->list[]= $filter;
-    return $filter;
+    return $this;
+  }
+
+  /**
+   * Sets accept function
+   *
+   * @param   php.Closure $accept
+   * @return  self<T>
+   */
+  public function accepting($accept) {
+    $this->accept= $accept;
+    return $this;
   }
 
   /**

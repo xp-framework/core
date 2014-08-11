@@ -37,6 +37,14 @@ class FiltersTest extends TestCase {
     );
   }
 
+  #[@test]
+  public function can_create_with_empty_acceptor() {
+    create('new util.Filters<int>',
+      [newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }])],
+      null
+    );
+  }
+
   #[@test, @values('accepting')]
   public function can_create_with_empty_filters($accepting) {
     create('new util.Filters<int>', [], $accepting);
@@ -47,6 +55,22 @@ class FiltersTest extends TestCase {
     $filters= create('new util.Filters<int>', [], Filters::$ALL);
     $filters->add(newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }]));
     $this->assertTrue($filters->accept(2));
+  }
+
+  #[@test]
+  public function set_accepting() {
+    $filters= create('new util.Filters<int>', [newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }])]);
+    $filters->accepting(Filters::$ALL);
+    $this->assertTrue($filters->accept(2));
+  }
+
+  #[@test]
+  public function fluent_interface() {
+    $this->assertTrue(create('new util.Filters<int>')
+      ->add(newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }]))
+      ->accepting(Filters::$ALL)
+      ->accept(2)
+    );
   }
 
   #[@test]
