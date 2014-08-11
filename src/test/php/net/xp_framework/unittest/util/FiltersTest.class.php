@@ -23,7 +23,20 @@ class FiltersTest extends TestCase {
     }
     return $output;
   }
-  
+
+  #[@test]
+  public function can_create() {
+    create('new util.Filters<int>',
+      [newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }])],
+      function($list, $e) { return true; }
+    );
+  }
+
+  #[@test]
+  public function can_create_with_empty_filters() {
+    create('new util.Filters<int>', [], function($list, $e) { return true; });
+  }
+
   #[@test]
   public function allOf() {
     $this->assertEquals([2, 3], $this->filter([1, 2, 3, 4], Filters::allOf([
