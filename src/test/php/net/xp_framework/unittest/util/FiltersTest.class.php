@@ -12,9 +12,9 @@ class FiltersTest extends TestCase {
   /**
    * Helper method
    *
-   * @param  T[] $input
-   * @param  util.Filter<T>[] $filter
-   * @param  T[]
+   * @param  var[] $input
+   * @param  util.Filter<var>[] $filter
+   * @param  var[]
    */
   protected function filter($input, Filter $filter) {
     $output= [];
