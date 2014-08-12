@@ -35,19 +35,6 @@ class ClassDetailsTest extends TestCase {
     return $details[1]['test'];
   }
   
-  /**
-   * Protected helper method
-   *
-   * @param   int modifiers
-   * @param   string comment
-   * @return  bool
-   * @throws  unittest.AssertionFailedError
-   */
-  public function assertAccessFlags($modifiers, $comment) {
-    if (!($details= $this->parseComment($comment))) return;
-    return $this->assertEquals($modifiers, $details[DETAIL_MODIFIERS]);
-  }
-  
   #[@test]
   public function commentString() {
     $details= $this->parseComment('
