@@ -222,4 +222,12 @@ class WildcardTypeTest extends \unittest\TestCase {
       Type::forName('util.collections.HashTable<string, lang.Generic>')
     ));
   }
+
+  #[@test]
+  public function lang_Type_forName_parsed_base_type_with_one_wildcard() {
+    $this->assertEquals(
+      new WildcardType(XPClass::forName('util.collections.Vector'), [Wildcard::$ANY]),
+      Type::forName('util.collections.Vector<?>')
+    );
+  }
 }

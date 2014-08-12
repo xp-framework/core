@@ -145,8 +145,14 @@ class Type extends Object {
     }
     
     // Generics
-    // * D<K, V> is a generic type definition D with K and V componenty
+    // * D<K, V> is a generic type definition D with K and V components
+    //   except if any of K, V contains a ?, in which case it's a wild 
+    //   card type.
     // * Deprecated: array<T> is T[], array<K, V> is [:T]
+    if (strstr($type, '?')) {
+      return WildcardType::forName($type);
+    }
+
     $base= substr($type, 0, $p);
     $components= self::forNames(substr($type, $p+ 1, -1));
     if ('array' !== $base) {
