@@ -91,15 +91,15 @@ class FunctionType extends Type {
       $r= new \ReflectionFunction($obj);
       $params= $r->getParameters();
       if (sizeof($params) !== sizeof($this->signature)) return false;
-      foreach ($params as $i => $param) {
-        if ($param->isArray()) {
-          if (!$this->signature[$i] instanceof ArrayType && !$this->signature[$i] instanceof MapType) return false;
-        } else if ($param->isCallable()) {
-          if (!$this->signature[$i] instanceof FunctionType) return false;
-        } else if (null === ($class= $param->getClass())) {
-          if (!$this->signature[$i]->equals(Type::$VAR)) return false;
+      foreach ($this->signature as $i => $type) {
+        if ($params[$i]->isArray()) {
+          if (!$type instanceof ArrayType && !$type instanceof MapType) return false;
+        } else if ($params[$i]->isCallable()) {
+          if (!$type instanceof FunctionType) return false;
+        } else if (null === ($class= $params[$i]->getClass())) {
+          if (!$type->equals(Type::$VAR)) return false;
         } else {
-          if (!$this->signature[$i]->isAssignableFrom(new XPClass($class))) return false;
+          if (!$type->isAssignableFrom(new XPClass($class))) return false;
         }
       }
       return true;
