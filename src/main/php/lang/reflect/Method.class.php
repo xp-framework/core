@@ -29,35 +29,6 @@ class Method extends Routine {
   }
 
   /**
-   * Retrieve how many parameters this method declares (including optional 
-   * ones)
-   *
-   * @return  int
-   */
-  public function numParameters() {
-    return parent::numParameters() - sizeof($this->genericParameters());
-  }
-
-  /**
-   * Returns this method's parameters
-   *
-   * @return  lang.reflect.Parameter[]
-   */
-  public function getParameters() {
-    return array_slice(parent::getParameters(), sizeof($this->genericParameters()));
-  }
-
-  /**
-   * Retrieve one of this method's parameters by its offset
-   *
-   * @param   int $offset
-   * @return  lang.reflect.Parameter or NULL if it does not exist
-   */
-  public function getParameter($offset) {
-    return parent::getParameter($offset + sizeof($this->genericParameters()));
-  }
-
-  /**
    * Invokes the underlying method represented by this Method object, 
    * on the specified object with the specified parameters.
    *

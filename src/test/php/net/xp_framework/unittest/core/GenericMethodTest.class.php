@@ -73,11 +73,25 @@ class GenericMethodTest extends \unittest\TestCase {
 
   #[@test]
   public function get_method_to_string_contains_generic_marker() {
-    $this->assertEquals('public T get<T>([var $arg= null])', $this->fixtureClass()->getMethod('get')->toString());
+    $this->assertEquals(
+      'public T get<T>([var $arg= null])',
+      $this->fixtureClass()->getMethod('get')->toString()
+    );
+  }
+
+  #[@test]
+  public function asList_method_to_string_contains_generic_marker() {
+    $this->assertEquals(
+      'public static util.collections.IList<T> asList<T>(T[] $arg)',
+      $this->fixtureClass()->getMethod('asList')->toString()
+    );
   }
 
   #[@test]
   public function newHash_method_to_string_contains_generic_marker() {
-    $this->assertEquals('public static util.collections.HashTable<K, V> newHash<K, V>()', $this->fixtureClass()->getMethod('newHash')->toString());
+    $this->assertEquals(
+      'public static util.collections.HashTable<K, V> newHash<K, V>()',
+      $this->fixtureClass()->getMethod('newHash')->toString()
+    );
   }
 }

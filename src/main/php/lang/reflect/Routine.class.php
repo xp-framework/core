@@ -91,9 +91,10 @@ class Routine extends \lang\Object {
    */
   public function getParameters() {
     $r= [];
+    $g= sizeof($this->genericParameters());
     $c= $this->_reflect->getDeclaringClass()->getName();
     foreach ($this->_reflect->getParameters() as $offset => $param) {
-      $r[]= new Parameter($param, [$c, $this->_reflect->getName(), $offset]);
+      $offset >= $g && $r[]= new Parameter($param, [$c, $this->_reflect->getName(), $offset - $g]);
     }
     return $r;
   }
@@ -106,8 +107,10 @@ class Routine extends \lang\Object {
    */
   public function getParameter($offset) {
     $list= $this->_reflect->getParameters();
+    $g= sizeof($this->genericParameters());
+    $offset+= $g;
     return isset($list[$offset]) 
-      ? new Parameter($list[$offset], [$this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName(), $offset])
+      ? new Parameter($list[$offset], [$this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName(), $offset - $g])
       : null
     ;
   }
@@ -119,7 +122,7 @@ class Routine extends \lang\Object {
    * @return  int
    */
   public function numParameters() {
-    return $this->_reflect->getNumberOfParameters();
+    return $this->_reflect->getNumberOfParameters() - sizeof($this->genericParameters());
   }
 
   /**
