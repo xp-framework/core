@@ -39,7 +39,6 @@ class Primitive extends Type {
       case self::$INT: return XPClass::forName('lang.types.Integer');
       case self::$DOUBLE: return XPClass::forName('lang.types.Double');
       case self::$BOOL: return XPClass::forName('lang.types.Boolean');
-      case self::$ARRAY: return XPClass::forName('lang.types.ArrayList'); // deprecated
     }
   }
   
@@ -93,8 +92,6 @@ class Primitive extends Type {
       case 'int': return self::$INT;
       case 'double': return self::$DOUBLE;
       case 'bool': return self::$BOOL;
-      case 'array': return self::$ARRAY;    // deprecated
-      case 'integer': return self::$INT;    // deprecated
       default: throw new \IllegalArgumentException('Not a primitive: '.$name);
     }
   }
@@ -120,6 +117,50 @@ class Primitive extends Type {
       ? false 
       : $this === Type::forName(gettype($obj))
     ;
+  }
+
+  /**
+   * Returns a new instance of this object
+   *
+   * @param   var value
+   * @return  var
+   */
+  public function newInstance($value= null) {
+    switch ($this) {
+      case self::$STRING:
+        if ($value instanceof \lang\types\String) return $value->toString();
+        if ($value instanceof \lang\types\Double) return (string)$value->doubleValue();
+        if ($value instanceof \lang\types\Integer) return (string)$value->intValue();
+        if ($value instanceof \lang\types\Boolean) return (string)$value->value;
+        if ($value instanceof Generic) return $value->toString();
+        return (string)$value;
+
+      case self::$INT:
+        if ($value instanceof \lang\types\String) return (int)$value->toString();
+        if ($value instanceof \lang\types\Double) return (int)$value->doubleValue();
+        if ($value instanceof \lang\types\Integer) return $value->intValue();
+        if ($value instanceof \lang\types\Boolean) return (int)$value->value;
+        if ($value instanceof Generic) return (int)$value->toString();
+        return (int)$value;
+
+      case self::$DOUBLE:
+        if ($value instanceof \lang\types\String) return (double)$value->toString();
+        if ($value instanceof \lang\types\Double) return $value->doubleValue();
+        if ($value instanceof \lang\types\Integer) return (double)$value->intValue();
+        if ($value instanceof \lang\types\Boolean) return (double)$value->value;
+        if ($value instanceof Generic) return (double)$value->toString();
+        return (double)$value;
+
+      case self::$BOOL:
+        if ($value instanceof \lang\types\String) return (bool)$value->toString();
+        if ($value instanceof \lang\types\Double) return (bool)$value->doubleValue();
+        if ($value instanceof \lang\types\Integer) return (bool)$value->intValue();
+        if ($value instanceof \lang\types\Boolean) return $value->value;
+        if ($value instanceof Generic) return (bool)$value->toString();
+        return (bool)$value;
+    }
+
+    return parent::newInstance($value);
   }
 
   /**
