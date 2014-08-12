@@ -2,6 +2,10 @@
 
 use unittest\TestCase;
 use lang\Type;
+use lang\Primitive;
+use lang\ArrayType;
+use lang\MapType;
+use lang\XPClass;
 use util\collections\Vector;
 use util\collections\HashTable;
 
@@ -12,278 +16,163 @@ use util\collections\HashTable;
  */
 class TypeTest extends TestCase {
 
-  /**
-   * Test string type
-   *
-   */
   #[@test]
   public function stringType() {
-    $this->assertEquals(\lang\Primitive::$STRING, Type::forName('string'));
+    $this->assertEquals(Primitive::$STRING, Type::forName('string'));
   }
 
-  /**
-   * Test int type
-   *
-   */
   #[@test]
   public function intType() {
-    $this->assertEquals(\lang\Primitive::$INT, Type::forName('int'));
+    $this->assertEquals(Primitive::$INT, Type::forName('int'));
   }
 
-  /**
-   * Test double type
-   *
-   */
   #[@test]
   public function doubleType() {
-    $this->assertEquals(\lang\Primitive::$DOUBLE, Type::forName('double'));
+    $this->assertEquals(Primitive::$DOUBLE, Type::forName('double'));
   }
 
-  /**
-   * Test boolean type
-   *
-   */
   #[@test]
   public function boolType() {
-    $this->assertEquals(\lang\Primitive::$BOOL, Type::forName('bool'));
+    $this->assertEquals(Primitive::$BOOL, Type::forName('bool'));
   }
 
-  /**
-   * Test void type
-   *
-   */
   #[@test]
   public function voidType() {
     $this->assertEquals(Type::$VOID, Type::forName('void'));
   }
 
-  /**
-   * Test var type
-   *
-   */
   #[@test]
   public function varType() {
     $this->assertEquals(Type::$VAR, Type::forName('var'));
   }
 
-  /**
-   * Test "string[]"
-   *
-   */
   #[@test]
   public function arrayOfString() {
-    $this->assertEquals(\lang\ArrayType::forName('string[]'), Type::forName('string[]'));
+    $this->assertEquals(ArrayType::forName('string[]'), Type::forName('string[]'));
   }
 
-  /**
-   * Test "[:string]"
-   *
-   */
   #[@test]
   public function mapOfString() {
-    $this->assertEquals(\lang\MapType::forName('[:string]'), Type::forName('[:string]'));
+    $this->assertEquals(MapType::forName('[:string]'), Type::forName('[:string]'));
   }
 
-  /**
-   * Test lang.Object
-   *
-   */
   #[@test]
   public function objectType() {
-    $this->assertEquals(\lang\XPClass::forName('lang.Object'), Type::forName('lang.Object'));
+    $this->assertEquals(XPClass::forName('lang.Object'), Type::forName('lang.Object'));
   }
 
-  /**
-   * Test Object
-   *
-   */
   #[@test]
   public function objectTypeShortClass() {
-    $this->assertEquals(\lang\XPClass::forName('lang.Object'), Type::forName('Object'));
+    $this->assertEquals(XPClass::forName('lang.Object'), Type::forName('Object'));
   }
 
-  /**
-   * Test "Vector<string>"
-   *
-   */
   #[@test]
   public function generic() {
     $this->assertEquals(
-      \lang\XPClass::forName('util.collections.Vector')->newGenericType(array(\lang\Primitive::$STRING)), 
+      XPClass::forName('util.collections.Vector')->newGenericType([Primitive::$STRING]),
       Type::forName('util.collections.Vector<string>')
     );
   }
 
-  /**
-   * Test "Vector<Vector<int>>"
-   *
-   */
   #[@test]
   public function genericOfGeneneric() {
-    $vectorClass= \lang\XPClass::forName('util.collections.Vector');
+    $t= XPClass::forName('util.collections.Vector');
     $this->assertEquals(
-      $vectorClass->newGenericType(array($vectorClass->newGenericType(array(\lang\Primitive::$INT)))), 
+      $t->newGenericType([$t->newGenericType([Primitive::$INT])]), 
       Type::forName('util.collections.Vector<util.collections.Vector<int>>')
     );
   }
 
-  /**
-   * Test util.collections.HashTable<String, Object>
-   *
-   */
   #[@test]
   public function genericObjectType() {
     with ($t= Type::forName('util.collections.HashTable<String, Object>')); {
       $this->assertInstanceOf('lang.XPClass', $t);
       $this->assertTrue($t->isGeneric());
-      $this->assertEquals(\lang\XPClass::forName('util.collections.HashTable'), $t->genericDefinition());
+      $this->assertEquals(XPClass::forName('util.collections.HashTable'), $t->genericDefinition());
       $this->assertEquals(
-        array(\lang\XPClass::forName('lang.types.String'), \lang\XPClass::forName('lang.Object')), 
+        [XPClass::forName('lang.types.String'), XPClass::forName('lang.Object')],
         $t->genericArguments()
       );
     }
   }
 
-  /**
-   * Test "array"
-   *
-   * @deprecated
-   */
   #[@test]
-  public function arrayKeyword() {
-    $this->assertEquals(\lang\ArrayType::forName('var[]'), Type::forName('array'));
+  public function deprecated_arrayKeyword() {
+    $this->assertEquals(ArrayType::forName('var[]'), Type::forName('array'));
   }
 
-  /**
-   * Test string type mis-spelled as "char"
-   *
-   * @deprecated
-   */
   #[@test]
-  public function stringTypeVariant() {
-    $this->assertEquals(\lang\Primitive::$STRING, Type::forName('char'));
+  public function deprecated_stringTypeVariant() {
+    $this->assertEquals(Primitive::$STRING, Type::forName('char'));
   }
 
-  /**
-   * Test int type mis-spelled as "integer"
-   *
-   * @deprecated
-   */
   #[@test]
-  public function intTypeVariant() {
-    $this->assertEquals(\lang\Primitive::$INT, Type::forName('integer'));
+  public function deprecated_intTypeVariant() {
+    $this->assertEquals(Primitive::$INT, Type::forName('integer'));
   }
 
-  /**
-   * Test "array<string, string>" (deprecated syntax)
-   *
-   * @deprecated
-   */
   #[@test]
-  public function mapOfStringDeprecatedSyntax() {
-    $this->assertEquals(\lang\MapType::forName('[:string]'), Type::forName('array<string, string>'));
+  public function deprecated_mapOfStringDeprecatedSyntax() {
+    $this->assertEquals(MapType::forName('[:string]'), Type::forName('array<string, string>'));
   }
 
-  /**
-   * Test "array<string>" (deprecated syntax)
-   *
-   * @deprecated
-   */
   #[@test]
-  public function stringArrayDeprecatedSyntax() {
-    $this->assertEquals(\lang\ArrayType::forName('string[]'), Type::forName('array<string>'));
+  public function deprecated_stringArrayDeprecatedSyntax() {
+    $this->assertEquals(ArrayType::forName('string[]'), Type::forName('array<string>'));
   }
 
-  /**
-   * Test double type mis-spelled as "float"
-   *
-   * @deprecated
-   */
   #[@test]
-  public function doubleTypeVariant() {
-    $this->assertEquals(\lang\Primitive::$DOUBLE, Type::forName('float'));
+  public function deprecated_doubleTypeVariant() {
+    $this->assertEquals(Primitive::$DOUBLE, Type::forName('float'));
   }
 
-  /**
-   * Test bool type mis-spelled as "boolean"
-   *
-   * @deprecated
-   */
   #[@test]
-  public function booleanTypeVariant() {
-    $this->assertEquals(\lang\Primitive::$BOOL, Type::forName('boolean'));
+  public function deprecated_booleanTypeVariant() {
+    $this->assertEquals(Primitive::$BOOL, Type::forName('boolean'));
   }
 
-  /**
-   * Test var type mis-spelled as "mixed" or "*"
-   *
-   * @deprecated
-   */
   #[@test, @values(['mixed', '*'])]
-  public function varTypeVariant($name) {
+  public function deprecated_varTypeVariant($name) {
     $this->assertEquals(Type::$VAR, Type::forName($name));
   }
 
-  /**
-   * Test "resource" as type name
-   */
   #[@test]
   public function resourceType() {
     $this->assertEquals(Type::$VAR, Type::forName('resource'));
   }
 
-  /**
-   * Returns instances of all types
-   *
-   * @return  var[]
-   */
-  public function instances() {
-    return array($this, null, false, true, '', 0, 0.0, array([]), array('one' => 'two'));
+  /** @return var[] */
+  protected function instances() {
+    return [$this, null, false, true, '', 0, -1, 0.0, [[]], [['one' => 'two']], $this];
   }
 
-  /**
-   * Test isInstance() method on Type::$VAR
-   */
   #[@test, @values('instances')]
   public function anythingIsAnInstanceOfVar($value) {
     $this->assertTrue(Type::$VAR->isInstance($value));
   }
 
-  /**
-   * Test isInstance() method on Type::$VOID
-   */
   #[@test, @values('instances')]
   public function nothingIsAnInstanceOfVoid($value) {
     $this->assertFalse(Type::$VOID->isInstance($value));
   }
 
-  /**
-   * Returns all types
-   *
-   * @return  var[]
-   */
-  public function types() {
-    return array(
+  /** @return var[] */
+  protected function types() {
+    return [
       $this->getClass(),
       Type::$VAR, Type::$VOID,
-      \lang\Primitive::$BOOLEAN, \lang\Primitive::$STRING, \lang\Primitive::$INT, \lang\Primitive::$DOUBLE,
-      \lang\ArrayType::forName('var[]'),
-      \lang\MapType::forName('[:var]')
-    );
+      Primitive::$BOOL, Primitive::$STRING, Primitive::$INT, Primitive::$DOUBLE,
+      new ArrayType('var'),
+      new MapType('var')
+    ];
   }
 
-  /**
-   * Test isInstance() method on Type::$VAR
-   */
-  #[@test, @values('instances')]
+  #[@test, @values('types')]
   public function varIsAssignableFromAnything($type) {
     $this->assertTrue(Type::$VAR->isAssignableFrom($type));
   }
 
-  /**
-   * Test isInstance() method on Type::$VOID
-   */
-  #[@test, @values('instances')]
+  #[@test, @values('types')]
   public function voidIsAssignableFromNothing($type) {
     $this->assertFalse(Type::$VOID->isAssignableFrom($type));
   }
