@@ -176,4 +176,14 @@ class TypeTest extends TestCase {
   public function voidIsAssignableFromNothing($type) {
     $this->assertFalse(Type::$VOID->isAssignableFrom($type));
   }
+
+  #[@test, @values('instances')]
+  public function newInstance_of_var($value) {
+    $this->assertEquals($value, Type::$VAR->newInstance($value));
+  }
+
+  #[@test, @expect('lang.IllegalAccessException'), @values('instances')]
+  public function newInstance_of_void($value) {
+    Type::$VOID->newInstance($value);
+  }
 }

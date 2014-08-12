@@ -189,6 +189,17 @@ class Type extends Object {
   }
 
   /**
+   * Returns a new instance of this object
+   *
+   * @param   var value
+   * @return  var
+   */
+  public function newInstance($value= null) {
+    if (self::$VAR === $this) return $value;
+    throw new IllegalAccessException('Cannot instantiate '.$this->name.' type');
+  }
+
+  /**
    * Tests whether this type is assignable from another type
    *
    * @param   var type
