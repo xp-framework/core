@@ -1,15 +1,13 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
-use lang\Type;
-
 /**
- * List of elements
+ * Unserializer
  */
 #[@generic(self= 'T')]
 class Unserializer extends \lang\Object {
 
   /**
-   * Returns a list of all elements
+   * Creates a new instance of a given value
    *
    * @param   var $arg
    * @return  T element
