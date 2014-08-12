@@ -12,6 +12,10 @@ trait __xp {
 
   // {{{ static invocation handler
   public static function __callStatic($name, $args) {
+    if (false !== ($p= strpos($name, '<'))) {
+      array_unshift($args, \lang\Type::forName(substr($name, $p+ 1, -1)));
+      return call_user_func_array([get_called_class(), substr($name, 0, $p)], $args);
+    }
     $self= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'];
     throw new Error('Call to undefined static method '.\xp::nameOf($self).'::'.$name.'()');
   }
@@ -31,19 +35,23 @@ trait __xp {
 
   // {{{ invocation handler
   public function __call($name, $args) {
-    $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
-    $self= $t[1]['class'];
+    if (false !== ($p= strpos($name, '<'))) {
+      array_unshift($args, \lang\Type::forName(substr($name, $p+ 1, -1)));
+      return call_user_func_array([$this, substr($name, 0, $p)], $args);
+    } else {
+      $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
+      $self= $t[1]['class'];
 
-    // Check scope for extension methods
-    $scope= isset($t[2]['class']) ? $t[2]['class'] : $t[3]['class'];
-    if (null != $scope && isset(\xp::$ext[$scope])) {
-      foreach (\xp::$ext[$scope] as $type => $class) {
-        if (!$this instanceof $type || !method_exists($class, $name)) continue;
-        array_unshift($args, $this);
-        return call_user_func_array([$class, $name], $args);
+      // Check scope for extension methods
+      $scope= isset($t[2]['class']) ? $t[2]['class'] : $t[3]['class'];
+      if (null != $scope && isset(\xp::$ext[$scope])) {
+        foreach (\xp::$ext[$scope] as $type => $class) {
+          if (!$this instanceof $type || !method_exists($class, $name)) continue;
+          array_unshift($args, $this);
+          return call_user_func_array([$class, $name], $args);
+        }
       }
     }
-
     throw new Error('Call to undefined method '.\xp::nameOf($self).'::'.$name.'() from scope '.\xp::nameOf($scope));
   }
   // }}}
