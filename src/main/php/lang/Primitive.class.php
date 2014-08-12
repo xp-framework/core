@@ -133,7 +133,7 @@ class Primitive extends Type {
    * @return var
    */
   protected function coerce($value, $default) {
-    switch ($this) {
+    if (!is_array($value)) switch ($this) {
       case self::$STRING:
         if ($value instanceof String) return $value->toString();
         if ($value instanceof Double) return (string)$value->doubleValue();

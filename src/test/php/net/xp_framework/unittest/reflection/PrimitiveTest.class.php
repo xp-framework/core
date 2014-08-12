@@ -335,4 +335,24 @@ class PrimitiveTest extends TestCase {
   public function cast_of_bool($expected, $value) {
     $this->assertEquals($expected, Primitive::$BOOL->cast($value));
   }
+
+  #[@test, @expect('lang.IllegalArgumentException'), @values(['int', 'double', 'bool', 'string'])]
+  public function cannot_create_instances_of_primitives_from_arrays($name) {
+    Primitive::forName($name)->newInstance([1, 2, 3]);
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException'), @values(['int', 'double', 'bool', 'string'])]
+  public function cannot_create_instances_of_primitives_from_maps($name) {
+    Primitive::forName($name)->newInstance(['one' => 'two']);
+  }
+
+  #[@test, @expect('lang.ClassCastException'), @values(['int', 'double', 'bool', 'string'])]
+  public function cannot_cast_arrays_to_primitives($name) {
+    Primitive::forName($name)->cast([1, 2, 3]);
+  }
+
+  #[@test, @expect('lang.ClassCastException'), @values(['int', 'double', 'bool', 'string'])]
+  public function cannot_cast_maps_to_primitives($name) {
+    Primitive::forName($name)->cast(['one' => 'two']);
+  }
 }
