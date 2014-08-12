@@ -243,8 +243,8 @@ class PrimitiveTest extends TestCase {
   #[@test, @values([
   #  ['', ''], ['Test', 'Test'],
   #  ['', null],
-  #  ['0', 0], ['-1', -1], ['4711', new Integer(4711)],
-  #  ['0.5', 0.5], ['4711', new Double(4711.0)],
+  #  ['0', 0], ['-1', -1], ['4711', new Integer(4711)], ['32', new Short(32)],
+  #  ['0.5', 0.5], ['4711', new Double(4711.0)], ['4711', new Float(4711.0)],
   #  ['', false], ['1', true], ['1', Boolean::$TRUE], ['', Boolean::$FALSE],
   #  ['Test', new String('Test')], ['', new String('')]
   #])]
@@ -255,8 +255,8 @@ class PrimitiveTest extends TestCase {
   #[@test, @values([
   #  [0, ''], [0, 'Test'], [123, '123'], [0xFF, '0xFF'], [0755, '0755'],
   #  [0, null],
-  #  [0, 0], [-1, -1], [4711, new Integer(4711)],
-  #  [0, 0.5], [4711, new Double(4711.0)],
+  #  [0, 0], [-1, -1], [4711, new Integer(4711)], [32, new Short(32)],
+  #  [0, 0.5], [4711, new Double(4711.0)], [4711, new Float(4711.0)],
   #  [0, false], [1, true], [1, Boolean::$TRUE], [0, Boolean::$FALSE],
   #  [4711, new String('4711')], [0, new String('')]
   #])]
@@ -267,8 +267,8 @@ class PrimitiveTest extends TestCase {
   #[@test, @values([
   #  [0.0, ''], [0.0, 'Test'], [123.0, '123'], [0.0, '0xFF'], [755.0, '0755'],
   #  [0.0, null],
-  #  [0.0, 0], [-1.0, -1], [4711.0, new Integer(4711)],
-  #  [0.5, 0.5], [47.11, new Double(47.11)],
+  #  [0.0, 0], [-1.0, -1], [4711.0, new Integer(4711)], [32.0, new Short(32)],
+  #  [0.5, 0.5], [47.11, new Double(47.11)], [47.11, new Float(47.11)],
   #  [0.0, false], [1.0, true], [1.0, Boolean::$TRUE], [0.0, Boolean::$FALSE],
   #  [47.11, new String('47.11')], [0.0, new String('')]
   #])]
@@ -279,8 +279,8 @@ class PrimitiveTest extends TestCase {
   #[@test, @values([
   #  [false, ''], [true, 'Test'],
   #  [false, null],
-  #  [false, 0], [true, -1], [true, new Integer(4711)],
-  #  [true, 0.5], [true, new Double(4711.0)],
+  #  [false, 0], [true, -1], [true, new Integer(4711)], [true, new Short(32)],
+  #  [true, 0.5], [true, new Double(4711.0)], [true, new Float(4711.0)],
   #  [false, false], [true, true], [true, Boolean::$TRUE], [false, Boolean::$FALSE],
   #  [true, new String('Test')], [false, new String('')]
   #])]
@@ -291,8 +291,8 @@ class PrimitiveTest extends TestCase {
   #[@test, @values([
   #  ['', ''], ['Test', 'Test'],
   #  [null, null],
-  #  ['0', 0], ['-1', -1], ['4711', new Integer(4711)],
-  #  ['0.5', 0.5], ['4711', new Double(4711.0)],
+  #  ['0', 0], ['-1', -1], ['4711', new Integer(4711)], ['32', new Short(32)],
+  #  ['0.5', 0.5], ['4711', new Double(4711.0)], ['4711', new Float(4711.0)],
   #  ['', false], ['1', true], ['1', Boolean::$TRUE], ['', Boolean::$FALSE],
   #  ['Test', new String('Test')], ['', new String('')]
   #])]
@@ -303,8 +303,8 @@ class PrimitiveTest extends TestCase {
   #[@test, @values([
   #  [0, ''], [0, 'Test'], [123, '123'], [0xFF, '0xFF'], [0755, '0755'],
   #  [null, null],
-  #  [0, 0], [-1, -1], [4711, new Integer(4711)],
-  #  [0, 0.5], [4711, new Double(4711.0)],
+  #  [0, 0], [-1, -1], [4711, new Integer(4711)], [32, new Short(32)],
+  #  [0, 0.5], [4711, new Double(4711.0)], [4711, new Float(4711.0)],
   #  [0, false], [1, true], [1, Boolean::$TRUE], [0, Boolean::$FALSE],
   #  [4711, new String('4711')], [0, new String('')]
   #])]
@@ -315,8 +315,8 @@ class PrimitiveTest extends TestCase {
   #[@test, @values([
   #  [0.0, ''], [0.0, 'Test'], [123.0, '123'], [0.0, '0xFF'], [755.0, '0755'],
   #  [null, null],
-  #  [0.0, 0], [-1.0, -1], [4711.0, new Integer(4711)],
-  #  [0.5, 0.5], [47.11, new Double(47.11)],
+  #  [0.0, 0], [-1.0, -1], [4711.0, new Integer(4711)], [32.0, new Short(32)],
+  #  [0.5, 0.5], [47.11, new Double(47.11)], [47.11, new Float(47.11)],
   #  [0.0, false], [1.0, true], [1.0, Boolean::$TRUE], [0.0, Boolean::$FALSE],
   #  [47.11, new String('47.11')], [0.0, new String('')]
   #])]
@@ -327,8 +327,8 @@ class PrimitiveTest extends TestCase {
   #[@test, @values([
   #  [false, ''], [true, 'Test'],
   #  [null, null],
-  #  [false, 0], [true, -1], [true, new Integer(4711)],
-  #  [true, 0.5], [true, new Double(4711.0)],
+  #  [false, 0], [true, -1], [true, new Integer(4711)], [true, new Short(4711)],
+  #  [true, 0.5], [true, new Double(4711.0)], [true, new Float(47.11)],
   #  [false, false], [true, true], [true, Boolean::$TRUE], [false, Boolean::$FALSE],
   #  [true, new String('Test')], [false, new String('')]
   #])]
