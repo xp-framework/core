@@ -283,6 +283,15 @@ class ClassParser extends \lang\Object {
     raise('lang.ClassFormatException', 'Parse error: Unterminated '.$states[$state].' in '.$place);
   }
 
+  /**
+   * Returns position of matching closing brace, or the string's length
+   * if no closing / opening brace is found.
+   *
+   * @param  string $text
+   * @param  string $open
+   * @param  string $close
+   * @param  int
+   */
   protected function matching($text, $open, $close) {
     for ($braces= $open.$close, $i= 0, $b= 0, $s= strlen($text); $i < $s; $i+= strcspn($text, $braces, $i)) {
       if ($text{$i} === $open) {
@@ -295,6 +304,12 @@ class ClassParser extends \lang\Object {
     return $i;
   }
 
+  /**
+   * Extracts type from a text
+   *
+   * @param  string $text
+   * @return string
+   */
   protected function typeIn($text) {
     if (0 === strncmp($text, 'function(', 9)) {
       $p= $this->matching($text, '(', ')');
