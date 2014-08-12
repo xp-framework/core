@@ -4,6 +4,8 @@ use lang\WildcardType;
 use lang\Wildcard;
 use lang\XPClass;
 use lang\Primitive;
+use lang\ArrayType;
+use lang\MapType;
 use lang\Type;
 
 /**
@@ -131,6 +133,15 @@ class WildcardTypeTest extends \unittest\TestCase {
   }
 
   /** @return var[][] */
+  protected function unGenericTypes() {
+    return [
+      [Primitive::$INT], [Primitive::$DOUBLE], [Primitive::$BOOL], [Primitive::$STRING],
+      [new ArrayType('var'), new MapType('var')],
+      [$this->getClass()]
+    ];
+  }
+
+  /** @return var[][] */
   protected function unGenericInstances() {
     return [
       [[0], [-1], [6.1], [true], [false], [''], ['Test']],
@@ -189,6 +200,11 @@ class WildcardTypeTest extends \unittest\TestCase {
   #[@test, @values('unGenericInstances')]
   public function ungeneric_instances_are_not_instances_of_vector_of_any($value) {
     $this->assertFalse(WildcardType::forName('util.collections.Vector<?>')->isInstance($value));
+  }
+
+  #[@test, @values('unGenericTypes')]
+  public function ungeneric_instances_are_not_assignable_to_vector_of_any($value) {
+    $this->assertFalse(WildcardType::forName('util.collections.Vector<?>')->isAssignableFrom($value));
   }
 
   #[@test, @expect('lang.ClassCastException'), @values('unGenericInstances')]
