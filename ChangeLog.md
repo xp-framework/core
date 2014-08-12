@@ -47,6 +47,7 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented RFC #266: Extend the XP typesystem - (@thekid)
 * Implemented RFC #281: PHP 5.4.0 - (@thekid)
 * Implemented RFC #146: Unicode - (@thekid)
 * Implemented RFC #136: PHP namespaces adoption. All classes in the XP
