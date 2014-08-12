@@ -35,13 +35,13 @@ class BufferedInputStreamTest extends TestCase {
   #[@test]
   public function readChunk() {
     $this->assertEquals('Hello', $this->in->read(5));
-    $this->assertEquals(5, $this->in->available());   // Five buffered bytes
+    $this->assertEquals(5, $this->in->available());      // Five buffered bytes
   }
   
   #[@test]
   public function readChunks() {
     $this->assertEquals('Hello', $this->in->read(5));
-    $this->assertEquals(5, $this->in->available());   // Five buffered bytes
+    $this->assertEquals(5, $this->in->available());      // Five buffered bytes
     $this->assertEquals(' Worl', $this->in->read(5));
     $this->assertNotEquals(0, $this->in->available());   // Buffer completely empty, but underlying stream has bytes
   }
@@ -56,5 +56,12 @@ class BufferedInputStreamTest extends TestCase {
   public function readSize() {
     $this->assertEquals('Hello Worl', $this->in->read(10));
     $this->assertEquals(strlen(self::BUFFER) - 10, $this->in->available());
+  }
+
+  #[@test, @values([1, 5, 10, 11])]
+  public function pushBack($count) {
+    $chunk= $this->in->read($count);
+    $this->in->pushBack($chunk);
+    $this->assertEquals('Hello World', $this->in->read(11));
   }
 }
