@@ -573,6 +573,8 @@ function is($type, $object) {
       if (!is($type, $element)) return false;
     }
     return true;
+  } else if (strstr($type, '?')) {
+    return \lang\WildcardType::forName($type)->isInstance($object);
   } else {
     $type= xp::reflect($type);
     return $object instanceof $type;
