@@ -24,7 +24,7 @@ class GenericMethodFixture extends \lang\Object {
    */
   #[@generic(self= 'T', return= 'util.collections.IList<T>', params= 'T[]')]
   public static function asList($T, $arg) {
-    $list= \lang\XPClass::forName('util.collections.Vector')->newGenericType([$T])->newInstance();
+    $list= create("new util.collections.Vector<$T>");
     $list->addAll($arg);
     return $list;
   }
