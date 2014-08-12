@@ -134,11 +134,11 @@ class Type extends Object {
     } else if ('void' === $type) {
       return self::$VOID;
       return $type;
-    } else if ('[]' === substr($type, -2)) {
+    } else if (0 === substr_compare($type, '[]', -2)) {
       return new ArrayType(substr($type, 0, -2));
-    } else if ('[:' === substr($type, 0, 2)) {
+    } else if (0 === substr_compare($type, '[:', 0, 2)) {
       return new MapType(substr($type, 2, -1));
-    } else if ('*' === substr($type, -1)) {
+    } else if (0 === substr_compare($type, '*', -1)) {
       return new ArrayType(substr($type, 0, -1));
     } else if (false === ($p= strpos($type, '<'))) {
       return strstr($type, '.') ? XPClass::forName($type) : new XPClass($type);
