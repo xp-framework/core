@@ -16,7 +16,6 @@ class Unserializer extends \lang\Object {
    */
   #[@generic(return= 'T')]
   public function newInstance($arg= null) {
-    $type= Type::forName($T);
-    return null === $arg ? $type->default : $type->newInstance($arg);
+    return null === $arg ? $T->default : $T->newInstance($arg);
   }
 }
