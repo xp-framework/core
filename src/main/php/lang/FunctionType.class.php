@@ -102,7 +102,7 @@ class FunctionType extends Type {
           if (!$type->isAssignableFrom(new XPClass($class))) return false;
         }
       }
-      return true;
+      return $this->returnType->equals(Type::$VAR);
     }
     return false;
   }
