@@ -135,11 +135,11 @@ class Type extends Object {
       return self::$VOID;
       return $type;
     } else if ('[]' === substr($type, -2)) {
-      return ArrayType::forName($type);
+      return new ArrayType(substr($type, 0, -2));
     } else if ('[:' === substr($type, 0, 2)) {
-      return MapType::forName($type);
+      return new MapType(substr($type, 2, -1));
     } else if ('*' === substr($type, -1)) {
-      return ArrayType::forName(substr($type, 0, -1).'[]');
+      return new ArrayType(substr($type, 0, -1));
     } else if (false === ($p= strpos($type, '<'))) {
       return strstr($type, '.') ? XPClass::forName($type) : new XPClass($type);
     }
@@ -151,19 +151,18 @@ class Type extends Object {
     // * Deprecated: array<T> is T[], array<K, V> is [:T]
     if (strstr($type, '?')) {
       return WildcardType::forName($type);
-    }
-
-    $base= substr($type, 0, $p);
-    $components= self::forNames(substr($type, $p+ 1, -1));
-    if ('array' !== $base) {
+    } else if (0 === substr_compare($type, 'array', 0, $p)) {
+      $components= self::forNames(substr($type, $p+ 1, -1));
+      $s= sizeof($components);
+      if (2 === $s) {
+        return new MapType($components[1]);
+      } else if (1 === $s) {
+        return new ArrayType($components[0]);
+      }
+    } else {
+      $base= substr($type, 0, $p);
+      $components= self::forNames(substr($type, $p+ 1, -1));
       return cast(self::forName($base), 'lang.XPClass')->newGenericType($components);
-    }
-    
-    $s= sizeof($components);
-    if (2 === $s) {
-      return MapType::forName('[:'.$components[1]->name.']');
-    } else if (1 === $s) {
-      return ArrayType::forName($components[0]->name.'[]');
     }
 
     throw new \IllegalArgumentException('Unparseable name '.$name);
