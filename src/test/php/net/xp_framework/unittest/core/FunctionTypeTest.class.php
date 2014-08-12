@@ -90,14 +90,7 @@ class FunctionTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function function_with_array_hinted_arg_is_instance_of_function_type_with_array_signature() {
-    $this->assertTrue((new FunctionType([new ArrayType('var')], Type::$VAR))->isInstance(
-      function(array $a) { }
-    ));
-  }
-
-  #[@test]
-  public function function_with_array_hinted_arg_is_instance_of_function_type_with_map_signature() {
-    $this->assertTrue((new FunctionType([new MapType('var')], Type::$VAR))->isInstance(
+    $this->assertTrue((new FunctionType([Primitive::$ARRAY], Type::$VAR))->isInstance(
       function(array $a) { }
     ));
   }

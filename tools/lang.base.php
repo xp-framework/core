@@ -754,6 +754,21 @@ function typeof($arg) {
     return $arg->getClass();
   } else if (null === $arg) {
     return \lang\Type::$VOID;
+  } else if ($arg instanceof \Closure) {
+    $r= new \ReflectionFunction($arg);
+    $signature= [];
+    foreach ($r->getParameters() as $param) {
+      if ($param->isArray()) {
+        $signature[]= \lang\Primitive::$ARRAY;
+      } else if ($param->isCallable()) {
+        $signature[]= new \lang\FunctionType([], \lang\Type::$VAR); 
+      } else if (null === ($class= $param->getClass())) {
+        $signature[]= \lang\Type::$VAR;
+      } else {
+        $signature[]= new \lang\XPClass($class);
+      }
+    }
+    return new \lang\FunctionType($signature, \lang\Type::$VAR);
   } else if (is_array($arg)) {
     return 0 === key($arg) ? \lang\ArrayType::forName('var[]') : \lang\MapType::forName('[:var]');
   } else {
