@@ -129,4 +129,38 @@ class MapTypeTest extends TestCase {
   public function varMapAssignableFromIntMap() {
     $this->assertFalse(MapType::forName('[:var]')->isAssignableFrom('[:int]'));
   }
+
+  #[@test, @values([
+  #  [[], null],
+  #  [[], []], [['key' => 'Test'], ['key' => 'Test']],
+  #  [['one' => '1', 'two' => '2'], ['one' => 1, 'two' => 2]]
+  #])]
+  public function newInstance($expected, $value) {
+    $this->assertEquals($expected, MapType::forName('[:string]')->newInstance($value));
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException'), @values([
+  #  0, -1, 0.5, '', 'Test', new String('a'), true, false,
+  #  [[0, 1, 2]]
+  #])]
+  public function newInstance_raises_exceptions_for_non_arrays($value) {
+    MapType::forName('var[]')->newInstance($value);
+  }
+
+  #[@test, @values([
+  #  [null, null],
+  #  [[], []], [['key' => 'Test'], ['key' => 'Test']],
+  #  [['one' => '1', 'two' => '2'], ['one' => 1, 'two' => 2]]
+  #])]
+  public function cast($expected, $value) {
+    $this->assertEquals($expected, MapType::forName('[:string]')->cast($value));
+  }
+
+  #[@test, @expect('lang.ClassCastException'), @values([
+  #  0, -1, 0.5, '', 'Test', new String('a'), true, false,
+  #  [[0, 1, 2]]
+  #])]
+  public function cast_raises_exceptions_for_non_arrays($value) {
+    MapType::forName('[:var]')->cast($value);
+  }
 }

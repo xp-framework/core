@@ -86,7 +86,7 @@ class ArrayType extends Type {
       $self= [];
       $c= $this->componentType();
       foreach ($value as $i => $element) {
-        if (!is_int($i)) raise('lang.ClassCastException', 'Cannot cast to the '.$this->getName().' type from [:var]');
+        if (!is_int($i)) raise('lang.IllegalArgumentException', 'Cannot create instances of the '.$this->getName().' type from [:var]');
         $self[]= $c->cast($element);
       }
       return $self;

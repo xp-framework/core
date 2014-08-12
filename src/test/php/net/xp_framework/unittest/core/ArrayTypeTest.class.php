@@ -121,7 +121,7 @@ class ArrayTypeTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.IllegalArgumentException'), @values([
   #  0, -1, 0.5, '', 'Test', new String('a'), true, false,
-  #  ['key' => 'color', 'value' => 'price']
+  #  [['key' => 'color', 'value' => 'price']]
   #])]
   public function newInstance_raises_exceptions_for_non_arrays($value) {
     ArrayType::forName('var[]')->newInstance($value);
@@ -139,7 +139,7 @@ class ArrayTypeTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.ClassCastException'), @values([
   #  0, -1, 0.5, '', 'Test', new String('a'), true, false,
-  #  ['key' => 'color', 'value' => 'price']
+  #  [['key' => 'color', 'value' => 'price']]
   #])]
   public function cast_raises_exceptions_for_non_arrays($value) {
     ArrayType::forName('var[]')->cast($value);
