@@ -72,94 +72,79 @@ class ClassDetailsTest extends TestCase {
        * @see   php://comment
        */
     ');
-    $this->assertEquals(
-      '',
-      $details[DETAIL_COMMENT]
-    );
+    $this->assertEquals('', $details[DETAIL_COMMENT]);
   }
   
   #[@test]
-  public function scalarParameter() {
-    $details= $this->parseComment('
-      /**
-       * A protected method
-       *
-       * @param   string param1
-       */
-    ');
+  public function scalar_parameter() {
+    $details= $this->parseComment('/** @param  string param1 */');
     $this->assertEquals('string', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[@test]
-  public function arrayParameter() {
-    $details= $this->parseComment('
-      /**
-       * Another protected method
-       *
-       * @param   string[] param1
-       */
-    ');
+  public function array_parameter() {
+    $details= $this->parseComment('/** @param  string[] param1 */');
     $this->assertEquals('string[]', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[@test]
-  public function objectParameter() {
-    $details= $this->parseComment('
-      /**
-       * Yet another protected method
-       *
-       * @param   util.Date param1
-       */
-    ');
+  public function object_parameter() {
+    $details= $this->parseComment('/** @param  util.Date param1 */');
     $this->assertEquals('util.Date', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[@test]
   public function defaultParameter() {
-    $details= $this->parseComment('
-      /**
-       * A private method
-       *
-       * @param   int param1 default 1
-       */
-    ');
+    $details= $this->parseComment('/** @param  int param1 default 1 */');
     $this->assertEquals('int', $details[DETAIL_ARGUMENTS][0]);
   }
   
   #[@test]
-  public function mapParameter() {
-    $details= $this->parseComment('
-      /**
-       * Final protected method
-       *
-       * @param   [:string] map
-       */
-    ');
+  public function map_parameter() {
+    $details= $this->parseComment('/** @param  [:string] map */');
     $this->assertEquals('[:string]', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[@test]
-  public function genericParameterWithTwoComponents() {
-    $details= $this->parseComment('
-      /**
-       * Final protected method
-       *
-       * @param   util.collection.HashTable<string, util.Traceable> map
-       */
-    ');
+  public function generic_parameter_with_two_components() {
+    $details= $this->parseComment('/** @param  util.collection.HashTable<string, util.Traceable> map */');
     $this->assertEquals('util.collection.HashTable<string, util.Traceable>', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[@test]
-  public function genericParameterWithOneComponent() {
-    $details= $this->parseComment('
-      /**
-       * Abstract protected method
-       *
-       * @param   util.collections.Vector<lang.Object> param1
-       */
-    ');
+  public function generic_parameter_with_one_component() {
+    $details= $this->parseComment('/** @param  util.collections.Vector<lang.Object> param1 */');
     $this->assertEquals('util.collections.Vector<lang.Object>', $details[DETAIL_ARGUMENTS][0]);
+  }
+
+  #[@test]
+  public function nested_generic_parameter() {
+    $details= $this->parseComment('/** @param  util.collections.Vector<util.collections.Vector<?>> map */');
+    $this->assertEquals('util.collections.Vector<util.collections.Vector<?>>', $details[DETAIL_ARGUMENTS][0]);
+  }
+
+  #[@test]
+  public function function_parameter() {
+    $details= $this->parseComment('/** @param  function(string): string param1 */');
+    $this->assertEquals('function(string): string', $details[DETAIL_ARGUMENTS][0]);
+  }
+
+  #[@test]
+  public function function_accepting_function_parameter() {
+    $details= $this->parseComment('/** @param  function(function(): void): string param1 */');
+    $this->assertEquals('function(function(): void): string', $details[DETAIL_ARGUMENTS][0]);
+  }
+
+  #[@test]
+  public function function_returning_function_parameter() {
+    $details= $this->parseComment('/** @param  function(): function(): void param1 */');
+    $this->assertEquals('function(): function(): void', $details[DETAIL_ARGUMENTS][0]);
+  }
+
+  #[@test]
+  public function function_returning_generic() {
+    $details= $this->parseComment('/** @param  function(): util.Filter<string> param1 */');
+    $this->assertEquals('function(): util.Filter<string>', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[@test]
@@ -177,14 +162,8 @@ class ClassDetailsTest extends TestCase {
   }
  
   #[@test]
-  public function returnType() {
-    $details= $this->parseComment('
-      /**
-       * Test method
-       *
-       * @return  int
-       */
-    ');
+  public function int_return_type() {
+    $details= $this->parseComment('/** @return int */');
     $this->assertEquals('int', $details[DETAIL_RETURNS]);
   }
 
