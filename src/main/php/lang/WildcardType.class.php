@@ -23,7 +23,7 @@ class WildcardType extends Type {
       '%s<%s>',
       $base->getName(),
       implode(',', array_map(function($e) { return $e->getName(); }, $components))
-    ));
+    ), null);
   }
 
   /** @return lang.XPClass */

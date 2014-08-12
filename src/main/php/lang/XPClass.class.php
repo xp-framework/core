@@ -77,7 +77,7 @@ class XPClass extends Type {
       }
       $this->_class= $ref;
     }
-    parent::__construct(\xp::nameOf($this->_class));
+    parent::__construct(\xp::nameOf($this->_class), null);
   }
   
   /**

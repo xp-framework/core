@@ -196,4 +196,39 @@ class TypeTest extends TestCase {
   public function cast_to_void($value) {
     Type::$VOID->cast($value);
   }
+
+  #[@test]
+  public function string_type_default() {
+    $this->assertEquals('', Primitive::$STRING->default);
+  }
+
+  #[@test]
+  public function int_type_default() {
+    $this->assertEquals(0, Primitive::$INT->default);
+  }
+
+  #[@test]
+  public function double_type_default() {
+    $this->assertEquals(0.0, Primitive::$DOUBLE->default);
+  }
+
+  #[@test]
+  public function bool_type_default() {
+    $this->assertEquals(false, Primitive::$BOOL->default);
+  }
+
+  #[@test]
+  public function array_type_default() {
+    $this->assertEquals([], (new ArrayType('var'))->default);
+  }
+
+  #[@test]
+  public function map_type_default() {
+    $this->assertEquals([], (new MapType('var'))->default);
+  }
+
+  #[@test]
+  public function class_type_default() {
+    $this->assertEquals(null, XPClass::forName('lang.Object')->default);
+  }
 }

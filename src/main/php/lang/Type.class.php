@@ -10,20 +10,23 @@
 class Type extends Object {
   public static $VAR;
   public static $VOID;
-  public $name= '';
+  public $name;
+  public $default;
 
   static function __static() {
-    self::$VAR= new self('var');
-    self::$VOID= new self('void');
+    self::$VAR= new self('var', null);
+    self::$VOID= new self('void', \xp::null());
   }
 
   /**
    * Constructor
    *
-   * @param   string name
+   * @param   string $name
+   * @param   var $default
    */
-  public function __construct($name) {
+  public function __construct($name, $default) {
     $this->name= $name;
+    $this->default= $default;
   }
 
   /**

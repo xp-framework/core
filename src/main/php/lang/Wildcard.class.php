@@ -11,7 +11,7 @@ class Wildcard extends Type {
   public static $ANY;
 
   static function __static() {
-    self::$ANY= new self('?');
+    self::$ANY= new self('?', \xp::null());
   }
 
   /**

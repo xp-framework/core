@@ -1,7 +1,5 @@
 <?php namespace lang;
 
-
-
 /**
  * Represents array types
  *
@@ -17,9 +15,9 @@ class ArrayType extends Type {
    */
   public function __construct($component) {
     if ($component instanceof Type) {
-      parent::__construct($component->getName().'[]');
+      parent::__construct($component->getName().'[]', []);
     } else {
-      parent::__construct($component.'[]');
+      parent::__construct($component.'[]', []);
     }
   }
 
