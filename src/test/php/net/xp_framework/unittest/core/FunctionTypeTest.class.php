@@ -5,6 +5,7 @@ use lang\Primitive;
 use lang\XPClass;
 use lang\Type;
 use lang\ArrayType;
+use lang\MapType;
 
 /**
  * TestCase
@@ -64,6 +65,62 @@ class FunctionTypeTest extends \unittest\TestCase {
       new FunctionType([new ArrayType(XPClass::forName('lang.Generic'))], Type::$VOID),
       FunctionType::forName('function(lang.Generic[]): void')
     );
+  }
+
+  #[@test]
+  public function function_with_zero_args_is_instance_of_zero_arg_function_type() {
+    $this->assertTrue((new FunctionType([], Type::$VAR))->isInstance(
+      function() { }
+    ));
+  }
+
+  #[@test]
+  public function function_with_two_args_is_instance_of_two_arg_function_type() {
+    $this->assertTrue((new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR))->isInstance(
+      function($a, $b) { }
+    ));
+  }
+
+  #[@test]
+  public function function_with_type_hinted_arg_is_instance_of_function_type_with_class_signature() {
+    $this->assertTrue((new FunctionType([XPClass::forName('lang.XPClass')], Type::$VAR))->isInstance(
+      function(XPClass $c) { }
+    ));
+  }
+
+  #[@test]
+  public function function_with_array_hinted_arg_is_instance_of_function_type_with_array_signature() {
+    $this->assertTrue((new FunctionType([new ArrayType('var')], Type::$VAR))->isInstance(
+      function(array $a) { }
+    ));
+  }
+
+  #[@test]
+  public function function_with_array_hinted_arg_is_instance_of_function_type_with_map_signature() {
+    $this->assertTrue((new FunctionType([new MapType('var')], Type::$VAR))->isInstance(
+      function(array $a) { }
+    ));
+  }
+
+  #[@test]
+  public function function_with_callable_hinted_arg_is_instance_of_function_type_with_function_signature() {
+    $this->assertTrue((new FunctionType([new FunctionType([], Type::$VAR)], Type::$VAR))->isInstance(
+      function(callable $a) { }
+    ));
+  }
+
+  #[@test]
+  public function function_with_two_args_is_not_instance_of_zero_arg_function_type() {
+    $this->assertFalse((new FunctionType([], Type::$VAR))->isInstance(
+      function($a, $b) { }
+    ));
+  }
+
+  #[@test]
+  public function function_with_zero_args_is_not_instance_of_two_arg_function_type() {
+    $this->assertFalse((new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR))->isInstance(
+      function() { }#
+    ));
   }
 
   #[@test]

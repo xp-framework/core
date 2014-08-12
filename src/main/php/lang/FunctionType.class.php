@@ -87,7 +87,24 @@ class FunctionType extends Type {
    * @return  bool
    */
   public function isInstance($obj) {
-    // TBI
+    if ($obj instanceof \Closure) {
+      $r= new \ReflectionFunction($obj);
+      $params= $r->getParameters();
+      if (sizeof($params) !== sizeof($this->signature)) return false;
+      foreach ($params as $i => $param) {
+        if ($param->isArray()) {
+          if (!$this->signature[$i] instanceof ArrayType && !$this->signature[$i] instanceof MapType) return false;
+        } else if ($param->isCallable()) {
+          if (!$this->signature[$i] instanceof FunctionType) return false;
+        } else if (null === ($class= $param->getClass())) {
+          if (!$this->signature[$i]->equals(Type::$VAR)) return false;
+        } else {
+          if (!$this->signature[$i]->isAssignableFrom(new XPClass($class))) return false;
+        }
+      }
+      return true;
+    }
+    return false;
   }
 
   /**
