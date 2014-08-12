@@ -64,7 +64,25 @@ class Method extends Routine {
       ));
     }
 
-    return new self($this->_class, $this->_reflect, function($obj, $args) use($arguments) {
+    $verify= $placeholders= [];
+    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
+    foreach ($components as $i => $placeholder) {
+      $placeholders[$placeholder]= $arguments[$i]->getName();
+    }
+    foreach ($details[DETAIL_ARGUMENTS] as $type) {
+      $verify[]= strtr($type, $placeholders);
+    }
+
+    return new self($this->_class, $this->_reflect, function($obj, $args) use($arguments, $verify) {
+      foreach ($args as $i => $arg) {
+        if (!is($verify[$i], $arg)) throw new IllegalArgumentException(sprintf(
+          'Argument %d passed to %s must be of %s, %s given',
+          $i,
+          $this->_reflect->name,
+          $verify[$i],
+          \xp::typeOf($arg)
+        ));
+      }
       return $this->_reflect->invokeArgs($obj, array_merge($arguments, $args));
     });
   }
