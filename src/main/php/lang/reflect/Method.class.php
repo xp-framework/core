@@ -1,5 +1,9 @@
 <?php namespace lang\reflect;
 
+use lang\IllegalStateException;
+use lang\IllegalArgumentException;
+use lang\IllegalAccessException;
+
 /**
  * Represents a class method
  *
@@ -9,6 +13,21 @@
  * @test  xp://net.xp_framework.unittest.reflection.ReflectionTest
  */
 class Method extends Routine {
+  public $invoke0;
+
+  /**
+   * Constructor
+   *
+   * @param   string $class The effective class
+   * @param   php.ReflectionMethod $reflect
+   * @param   var $invoke0 A function
+   */
+  public function __construct($class, $reflect, $invoke0= null) {
+    parent::__construct($class, $reflect);
+    $this->invoke0= $invoke0 ?: function($obj, $args) {
+      return $this->_reflect->invokeArgs($obj, $args);
+    };
+  }
 
   /** @return string[] */
   protected function genericParameters() {
@@ -26,6 +45,28 @@ class Method extends Routine {
    */
   public function isGeneric() {
     return sizeof($this->genericParameters()) > 0;
+  }
+
+  public function newGenericMethod($arguments) {
+    $components= $this->genericParameters();
+    if (empty($components)) {
+      throw new IllegalStateException('Method '.$this->_reflect->name.' is not generic');
+    }
+
+    $cs= sizeof($components);
+    if ($cs !== sizeof($arguments)) {
+      throw new IllegalArgumentException(sprintf(
+        'Method %s expects %d component(s) <%s>, %d argument(s) given',
+        $this->_reflect->name,
+        $cs,
+        implode(', ', $components),
+        sizeof($arguments)
+      ));
+    }
+
+    return new self($this->_class, $this->_reflect, function($obj, $args) use($arguments) {
+      return $this->_reflect->invokeArgs($obj, array_merge($arguments, $args));
+    });
   }
 
   /**
@@ -62,7 +103,7 @@ class Method extends Routine {
    */
   public function invoke($obj, $args= []) {
     if (null !== $obj && !($obj instanceof $this->_class)) {
-      throw new \lang\IllegalArgumentException(sprintf(
+      throw new IllegalArgumentException(sprintf(
         'Passed argument is not a %s class (%s)',
         \xp::nameOf($this->_class),
         \xp::typeOf($obj)
@@ -74,7 +115,7 @@ class Method extends Routine {
     // not).
     $m= $this->_reflect->getModifiers();
     if ($m & MODIFIER_ABSTRACT) {
-      throw new \lang\IllegalAccessException(sprintf(
+      throw new IllegalAccessException(sprintf(
         'Cannot invoke abstract %s::%s',
         $this->_class,
         $this->_reflect->getName()
@@ -90,7 +131,7 @@ class Method extends Routine {
         $allow= $t[1]['class'] === $decl;
       }
       if (!$allow) {
-        throw new \lang\IllegalAccessException(sprintf(
+        throw new IllegalAccessException(sprintf(
           'Cannot invoke %s %s::%s from scope %s',
           Modifiers::stringOf($this->getModifiers()),
           $this->_class,
@@ -106,7 +147,7 @@ class Method extends Routine {
       if (!$public) {
         $this->_reflect->setAccessible(true);
       }
-      return $this->_reflect->invokeArgs($obj, (array)$args);
+      return $this->invoke0->__invoke($obj, (array)$args);
     } catch (\lang\SystemExit $e) {
       throw $e;
     } catch (\lang\Throwable $e) {

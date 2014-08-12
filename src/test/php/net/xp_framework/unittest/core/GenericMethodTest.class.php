@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\XPClass;
+use lang\Primitive;
 
 /**
  * TestCase for generic methods
@@ -38,6 +39,31 @@ class GenericMethodTest extends \unittest\TestCase {
       create('new util.collections.HashTable<string, unittest.TestCase>'),
       GenericMethodFixture::{'newHash<string, unittest.TestCase>'}()
     );
+  }
+
+  #[@test]
+  public function invoke_static_method_reflectively() {
+    $method= $this->fixtureClass()->getMethod('asList')->newGenericMethod([Primitive::$STRING]);
+    $this->assertEquals(
+      ['Test'],
+      $method->invoke(null, [['Test']])->elements()
+    );
+  }
+
+  #[@test, @expect(
+  #  class = 'lang.IllegalArgumentException',
+  #  withMessage= 'Method asList expects 1 component(s) <T>, 0 argument(s) given'
+  #)]
+  public function newGenericMethod_with_missing_argument() {
+    $this->fixtureClass()->getMethod('asList')->newGenericMethod([]);
+  }
+
+  #[@test, @expect(
+  #  class = 'lang.IllegalArgumentException',
+  #  withMessage= 'Method asList expects 1 component(s) <T>, 2 argument(s) given'
+  #)]
+  public function newGenericMethod_with_too_many_arguments() {
+    $this->fixtureClass()->getMethod('asList')->newGenericMethod([Primitive::$STRING, Primitive::$STRING]);
   }
 
   #[@test]

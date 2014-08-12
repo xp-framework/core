@@ -13,11 +13,15 @@ trait __xp {
   // {{{ static invocation handler
   public static function __callStatic($name, $args) {
     if (false !== ($p= strpos($name, '<'))) {
-      $args= array_merge(\lang\Type::forNames(substr($name, $p+ 1, -1)), $args);
-      return call_user_func_array([get_called_class(), substr($name, 0, $p)], $args);
+      $self= get_called_class();
+      return (new \lang\reflect\Method($self, new \ReflectionMethod($self, substr($name, 0, $p))))
+        ->newGenericMethod(\lang\Type::forNames(substr($name, $p+ 1, -1)))
+        ->invoke0
+        ->__invoke(null, (array)$args)
+      ;
     }
     $self= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'];
-    throw new Error('Call to undefined static method '.\xp::nameOf($self).'::'.$name.'()');
+    throw new \lang\Error('Call to undefined static method '.\xp::nameOf($self).'::'.$name.'()');
   }
   // }}}
 
@@ -36,8 +40,11 @@ trait __xp {
   // {{{ invocation handler
   public function __call($name, $args) {
     if (false !== ($p= strpos($name, '<'))) {
-      $args= array_merge(\lang\Type::forNames(substr($name, $p+ 1, -1)), $args);
-      return call_user_func_array([$this, substr($name, 0, $p)], $args);
+      return (new \lang\reflect\Method(get_class($this), new \ReflectionMethod($this, substr($name, 0, $p))))
+        ->newGenericMethod(\lang\Type::forNames(substr($name, $p+ 1, -1)))
+        ->invoke0
+        ->__invoke($this, (array)$args)
+      ;
     } else {
       $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
       $self= $t[1]['class'];
