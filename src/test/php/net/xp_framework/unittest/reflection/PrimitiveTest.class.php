@@ -64,13 +64,13 @@ class PrimitiveTest extends TestCase {
 
   #[@test]
   public function boxBoolean() {
-    $this->assertEquals(new Boolean(true), Primitive::boxed(true), 'true');
-    $this->assertEquals(new Boolean(false), Primitive::boxed(false), 'false');
+    $this->assertEquals(Boolean::$TRUE, Primitive::boxed(true), 'true');
+    $this->assertEquals(Boolean::$FALSE, Primitive::boxed(false), 'false');
   }
 
   #[@test]
   public function boxArray() {
-    $this->assertEquals(new ArrayList(1, 2, 3), Primitive::boxed(array(1, 2, 3)));
+    $this->assertEquals(new ArrayList(1, 2, 3), Primitive::boxed([1, 2, 3]));
   }
 
   #[@test]
@@ -115,13 +115,13 @@ class PrimitiveTest extends TestCase {
 
   #[@test]
   public function unboxBoolean() {
-    $this->assertEquals(true, Primitive::unboxed(new Boolean(true)), 'true');
-    $this->assertEquals(false, Primitive::unboxed(new Boolean(false)), 'false');
+    $this->assertEquals(true, Primitive::unboxed(Boolean::$TRUE), 'true');
+    $this->assertEquals(false, Primitive::unboxed(Boolean::$FALSE), 'false');
   }
 
   #[@test]
   public function unboxArray() {
-    $this->assertEquals(array(1, 2, 3), Primitive::unboxed(new ArrayList(1, 2, 3)));
+    $this->assertEquals([1, 2, 3], Primitive::unboxed(new ArrayList(1, 2, 3)));
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
@@ -286,5 +286,53 @@ class PrimitiveTest extends TestCase {
   #])]
   public function newInstance_of_bool($expected, $value) {
     $this->assertEquals($expected, Primitive::$BOOL->newInstance($value));
+  }
+
+  #[@test, @values([
+  #  ['', ''], ['Test', 'Test'],
+  #  [null, null],
+  #  ['0', 0], ['-1', -1], ['4711', new Integer(4711)],
+  #  ['0.5', 0.5], ['4711', new Double(4711.0)],
+  #  ['', false], ['1', true], ['1', Boolean::$TRUE], ['', Boolean::$FALSE],
+  #  ['Test', new String('Test')], ['', new String('')]
+  #])]
+  public function cast_of_string($expected, $value) {
+    $this->assertEquals($expected, Primitive::$STRING->cast($value));
+  }
+
+  #[@test, @values([
+  #  [0, ''], [0, 'Test'], [123, '123'], [0xFF, '0xFF'], [0755, '0755'],
+  #  [null, null],
+  #  [0, 0], [-1, -1], [4711, new Integer(4711)],
+  #  [0, 0.5], [4711, new Double(4711.0)],
+  #  [0, false], [1, true], [1, Boolean::$TRUE], [0, Boolean::$FALSE],
+  #  [4711, new String('4711')], [0, new String('')]
+  #])]
+  public function cast_of_int($expected, $value) {
+    $this->assertEquals($expected, Primitive::$INT->cast($value));
+  }
+
+  #[@test, @values([
+  #  [0.0, ''], [0.0, 'Test'], [123.0, '123'], [0.0, '0xFF'], [755.0, '0755'],
+  #  [null, null],
+  #  [0.0, 0], [-1.0, -1], [4711.0, new Integer(4711)],
+  #  [0.5, 0.5], [47.11, new Double(47.11)],
+  #  [0.0, false], [1.0, true], [1.0, Boolean::$TRUE], [0.0, Boolean::$FALSE],
+  #  [47.11, new String('47.11')], [0.0, new String('')]
+  #])]
+  public function cast_of_double($expected, $value) {
+    $this->assertEquals($expected, Primitive::$DOUBLE->cast($value));
+  }
+
+  #[@test, @values([
+  #  [false, ''], [true, 'Test'],
+  #  [null, null],
+  #  [false, 0], [true, -1], [true, new Integer(4711)],
+  #  [true, 0.5], [true, new Double(4711.0)],
+  #  [false, false], [true, true], [true, Boolean::$TRUE], [false, Boolean::$FALSE],
+  #  [true, new String('Test')], [false, new String('')]
+  #])]
+  public function cast_of_bool($expected, $value) {
+    $this->assertEquals($expected, Primitive::$BOOL->cast($value));
   }
 }

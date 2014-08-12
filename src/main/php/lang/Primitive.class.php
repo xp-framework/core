@@ -1,5 +1,11 @@
 <?php namespace lang;
 
+use lang\types\String;
+use lang\types\Double;
+use lang\types\Integer;
+use lang\types\Boolean;
+use lang\types\ArrayList;
+
 /**
  * Represents primitive types:
  * 
@@ -50,11 +56,11 @@ class Primitive extends Type {
    * @throws  lang.IllegalArgumentException in case in cannot be unboxed.
    */
   public static function unboxed($in) {
-    if ($in instanceof \lang\types\String) return $in->toString();
-    if ($in instanceof \lang\types\Double) return $in->doubleValue();
-    if ($in instanceof \lang\types\Integer) return $in->intValue();
-    if ($in instanceof \lang\types\Boolean) return $in->value;
-    if ($in instanceof \lang\types\ArrayList) return $in->values;   // deprecated
+    if ($in instanceof String) return $in->toString();
+    if ($in instanceof Double) return $in->doubleValue();
+    if ($in instanceof Integer) return $in->intValue();
+    if ($in instanceof Boolean) return $in->value;
+    if ($in instanceof ArrayList) return $in->values;   // deprecated
     if ($in instanceof Generic) {
       throw new \IllegalArgumentException('Cannot unbox '.\xp::typeOf($in));
     }
@@ -71,11 +77,11 @@ class Primitive extends Type {
   public static function boxed($in) {
     if (null === $in || $in instanceof Generic) return $in;
     $t= gettype($in);
-    if ('string' === $t) return new \lang\types\String($in);
-    if ('integer' === $t) return new \lang\types\Integer($in);
-    if ('double' === $t) return new \lang\types\Double($in);
-    if ('boolean' === $t) return new \lang\types\Boolean($in);
-    if ('array' === $t) return \lang\types\ArrayList::newInstance($in);   // deprecated
+    if ('string' === $t) return new String($in);
+    if ('integer' === $t) return new Integer($in);
+    if ('double' === $t) return new Double($in);
+    if ('boolean' === $t) return new Boolean($in);
+    if ('array' === $t) return ArrayList::newInstance($in);   // deprecated
     throw new \IllegalArgumentException('Cannot box '.\xp::typeOf($in));
   }
   
@@ -120,47 +126,73 @@ class Primitive extends Type {
   }
 
   /**
+   * Helper for cast() and newInstance()
+   *
+   * @param  var $value
+   * @param  var $default A function
+   * @return var
+   */
+  protected function coerce($value, $default) {
+    switch ($this) {
+      case self::$STRING:
+        if ($value instanceof String) return $value->toString();
+        if ($value instanceof Double) return (string)$value->doubleValue();
+        if ($value instanceof Integer) return (string)$value->intValue();
+        if ($value instanceof Boolean) return (string)$value->value;
+        if ($value instanceof Generic) return $value->toString();
+        return (string)$value;
+
+      case self::$INT:
+        if ($value instanceof String) return (int)$value->toString();
+        if ($value instanceof Double) return (int)$value->doubleValue();
+        if ($value instanceof Integer) return $value->intValue();
+        if ($value instanceof Boolean) return (int)$value->value;
+        if ($value instanceof Generic) return (int)$value->toString();
+        return (int)$value;
+
+      case self::$DOUBLE:
+        if ($value instanceof String) return (double)$value->toString();
+        if ($value instanceof Double) return $value->doubleValue();
+        if ($value instanceof Integer) return (double)$value->intValue();
+        if ($value instanceof Boolean) return (double)$value->value;
+        if ($value instanceof Generic) return (double)$value->toString();
+        return (double)$value;
+
+      case self::$BOOL:
+        if ($value instanceof String) return (bool)$value->toString();
+        if ($value instanceof Double) return (bool)$value->doubleValue();
+        if ($value instanceof Integer) return (bool)$value->intValue();
+        if ($value instanceof Boolean) return $value->value;
+        if ($value instanceof Generic) return (bool)$value->toString();
+        return (bool)$value;
+    }
+
+    return $default($value);
+  }
+
+  /**
    * Returns a new instance of this object
    *
    * @param   var value
    * @return  var
    */
   public function newInstance($value= null) {
-    switch ($this) {
-      case self::$STRING:
-        if ($value instanceof \lang\types\String) return $value->toString();
-        if ($value instanceof \lang\types\Double) return (string)$value->doubleValue();
-        if ($value instanceof \lang\types\Integer) return (string)$value->intValue();
-        if ($value instanceof \lang\types\Boolean) return (string)$value->value;
-        if ($value instanceof Generic) return $value->toString();
-        return (string)$value;
+    return $this->coerce($value, function($value) {
+      raise('lang.IllegalArgumentException', 'Cannot create instances of '.$this->getName().' from '.\xp::typeOf($value));
+    });
+  }
 
-      case self::$INT:
-        if ($value instanceof \lang\types\String) return (int)$value->toString();
-        if ($value instanceof \lang\types\Double) return (int)$value->doubleValue();
-        if ($value instanceof \lang\types\Integer) return $value->intValue();
-        if ($value instanceof \lang\types\Boolean) return (int)$value->value;
-        if ($value instanceof Generic) return (int)$value->toString();
-        return (int)$value;
-
-      case self::$DOUBLE:
-        if ($value instanceof \lang\types\String) return (double)$value->toString();
-        if ($value instanceof \lang\types\Double) return $value->doubleValue();
-        if ($value instanceof \lang\types\Integer) return (double)$value->intValue();
-        if ($value instanceof \lang\types\Boolean) return (double)$value->value;
-        if ($value instanceof Generic) return (double)$value->toString();
-        return (double)$value;
-
-      case self::$BOOL:
-        if ($value instanceof \lang\types\String) return (bool)$value->toString();
-        if ($value instanceof \lang\types\Double) return (bool)$value->doubleValue();
-        if ($value instanceof \lang\types\Integer) return (bool)$value->intValue();
-        if ($value instanceof \lang\types\Boolean) return $value->value;
-        if ($value instanceof Generic) return (bool)$value->toString();
-        return (bool)$value;
-    }
-
-    return parent::newInstance($value);
+  /**
+   * Cast a value to this type
+   *
+   * @param   var value
+   * @return  var
+   * @throws  lang.ClassCastException
+   */
+  public function cast($value) {
+    return null === $value ? null : $this->coerce($value, function($value) {
+      raise('lang.ClassCastException', 'Cannot cast to '.$this->getName().' from '.\xp::typeOf($value));
+    });
   }
 
   /**
