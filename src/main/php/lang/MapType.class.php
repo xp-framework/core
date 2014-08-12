@@ -15,9 +15,9 @@ class MapType extends Type {
    */
   public function __construct($component) {
     if ($component instanceof Type) {
-      parent::__construct('[:'.$component->getName().']');
+      parent::__construct('[:'.$component->getName().']', []);
     } else {
-      parent::__construct('[:'.$component.']');
+      parent::__construct('[:'.$component.']', []);
     }
   }
 
@@ -69,6 +69,50 @@ class MapType extends Type {
       if (is_int($k) || !$c->isInstance($element)) return false;
     }
     return true;
+  }
+
+  /**
+   * Returns a new instance of this object
+   *
+   * @param   var value
+   * @return  var
+   */
+  public function newInstance($value= null) {
+    if (null === $value) {
+      return [];
+    } else if (is_array($value)) {
+      $self= [];
+      $c= $this->componentType();
+      foreach ($value as $k => $element) {
+        if (is_int($k)) raise('lang.IllegalArgumentException', 'Cannot create instances of the '.$this->getName().' type from var[]');
+        $self[$k]= $c->cast($element);
+      }
+      return $self;
+    } else {
+      raise('lang.IllegalArgumentException', 'Cannot create instances of the '.$this->getName().' type from '.\xp::typeOf($value));
+    }
+  }
+
+  /**
+   * Cast a value to this type
+   *
+   * @param   var value
+   * @return  var
+   * @throws  lang.ClassCastException
+   */
+  public function cast($value) {
+    if (null === $value) {
+      return null;
+    } else if (is_array($value)) {
+      $c= $this->componentType();
+      foreach ($value as $k => $element) {
+        if (is_int($k)) raise('lang.ClassCastException', 'Cannot cast to the '.$this->getName().' type from var[]');
+        $value[$k]= $c->cast($element);
+      }
+      return $value;
+    } else {
+      raise('lang.ClassCastException', 'Cannot cast to the '.$this->getName().' type from '.\xp::typeOf($value));
+    }
   }
 
   /**

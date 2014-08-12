@@ -77,7 +77,7 @@ class XPClass extends Type {
       }
       $this->_class= $ref;
     }
-    parent::__construct(\xp::nameOf($this->_class));
+    parent::__construct(\xp::nameOf($this->_class), null);
   }
   
   /**
@@ -129,7 +129,7 @@ class XPClass extends Type {
    * @return  lang.Object 
    * @throws  lang.IllegalAccessException in case this class cannot be instantiated
    */
-  public function newInstance() {
+  public function newInstance($value= null) {
     if ($this->_reflect->isInterface()) {
       throw new IllegalAccessException('Cannot instantiate interfaces ('.$this->name.')');
     } else if ($this->_reflect->isAbstract()) {
@@ -328,17 +328,17 @@ class XPClass extends Type {
   /**
    * Cast a given object to the class represented by this object
    *
-   * @param   lang.Generic expression
+   * @param   var value
    * @return  lang.Generic the given expression
    * @throws  lang.ClassCastException
    */
-  public function cast(\Generic $expression= null) {
-    if (null === $expression) {
+  public function cast($value) {
+    if (null === $value) {
       return \xp::null();
-    } else if (is($this->name, $expression)) {
-      return $expression;
+    } else if (is($this->name, $value)) {
+      return $value;
     }
-    raise('lang.ClassCastException', 'Cannot cast '.\xp::typeOf($expression).' to '.$this->name);
+    raise('lang.ClassCastException', 'Cannot cast '.\xp::typeOf($value).' to '.$this->name);
   }
   
   /**

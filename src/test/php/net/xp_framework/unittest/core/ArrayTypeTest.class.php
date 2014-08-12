@@ -108,4 +108,40 @@ class ArrayTypeTest extends \unittest\TestCase {
   public function varArrayAssignableFromIntArray() {
     $this->assertFalse(ArrayType::forName('var[]')->isAssignableFrom('int[]'));
   }
+
+  #[@test, @values([
+  #  [[], null],
+  #  [[], []], [['Test'], ['Test']],
+  #  [['0', '1', '2'], [0, 1, 2]],
+  #  [['a', 'b', 'c'], [new String('a'), new String('b'), new String('c')]]
+  #])]
+  public function newInstance($expected, $value) {
+    $this->assertEquals($expected, ArrayType::forName('string[]')->newInstance($value));
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException'), @values([
+  #  0, -1, 0.5, '', 'Test', new String('a'), true, false,
+  #  [['key' => 'color', 'value' => 'price']]
+  #])]
+  public function newInstance_raises_exceptions_for_non_arrays($value) {
+    ArrayType::forName('var[]')->newInstance($value);
+  }
+
+  #[@test, @values([
+  #  [null, null],
+  #  [[], []], [['Test'], ['Test']],
+  #  [['0', '1', '2'], [0, 1, 2]],
+  #  [['a', 'b', 'c'], [new String('a'), new String('b'), new String('c')]]
+  #])]
+  public function cast($expected, $value) {
+    $this->assertEquals($expected, ArrayType::forName('string[]')->cast($value));
+  }
+
+  #[@test, @expect('lang.ClassCastException'), @values([
+  #  0, -1, 0.5, '', 'Test', new String('a'), true, false,
+  #  [['key' => 'color', 'value' => 'price']]
+  #])]
+  public function cast_raises_exceptions_for_non_arrays($value) {
+    ArrayType::forName('var[]')->cast($value);
+  }
 }
