@@ -150,6 +150,12 @@ class WildcardTypeTest extends \unittest\TestCase {
   }
 
   #[@test, @values('vectorOfAny')]
+  public function generic_vectors_can_be_cast_to_vector_of_any($value) {
+    $instance= $value->newInstance();
+    $this->assertEquals($instance, WildcardType::forName('util.collections.Vector<?>')->cast($instance));
+  }
+
+  #[@test, @values('vectorOfAny')]
   public function generic_vectors_are_instances_of_ilist_of_any($value) {
     $this->assertTrue(WildcardType::forName('util.collections.IList<?>')->isInstance($value->newInstance()));
   }
@@ -157,6 +163,12 @@ class WildcardTypeTest extends \unittest\TestCase {
   #[@test, @values('vectorOfAny')]
   public function generic_vectors_are_assignable_to_ilist_of_any($value) {
     $this->assertTrue(WildcardType::forName('util.collections.IList<?>')->isAssignableFrom($value));
+  }
+
+  #[@test, @values('vectorOfAny')]
+  public function generic_vectors_can_be_cast_to_ilist_of_any($value) {
+    $instance= $value->newInstance();
+    $this->assertEquals($instance, WildcardType::forName('util.collections.IList<?>')->cast($instance));
   }
 
   #[@test, @values('hashTableOfAny')]
@@ -169,9 +181,19 @@ class WildcardTypeTest extends \unittest\TestCase {
     $this->assertFalse(WildcardType::forName('util.collections.Vector<?>')->isAssignableFrom($value));
   }
 
+  #[@test, @expect('lang.ClassCastException'), @values('hashTableOfAny')]
+  public function generic_hashtables_cannot_be_cast_to_vector_of_any($value) {
+    WildcardType::forName('util.collections.Vector<?>')->cast($value->newInstance());
+  }
+
   #[@test, @values('unGenericInstances')]
   public function ungeneric_instances_are_not_instances_of_vector_of_any($value) {
     $this->assertFalse(WildcardType::forName('util.collections.Vector<?>')->isInstance($value));
+  }
+
+  #[@test, @expect('lang.ClassCastException'), @values('unGenericInstances')]
+  public function ungeneric_instancess_cannot_be_cast_to_vector_of_any($value) {
+    WildcardType::forName('util.collections.Vector<?>')->cast($value);
   }
 
   #[@test, @values('hashTableOfAny')]
@@ -229,5 +251,10 @@ class WildcardTypeTest extends \unittest\TestCase {
       new WildcardType(XPClass::forName('util.collections.Vector'), [Wildcard::$ANY]),
       Type::forName('util.collections.Vector<?>')
     );
+  }
+
+  #[@test, @expect('lang.IllegalAccessException')]
+  public function wildcard_types_cannot_be_instantiated() {
+    Type::forName('util.collections.Vector<?>')->newInstance();
   }
 }

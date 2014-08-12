@@ -107,6 +107,30 @@ class WildcardType extends Type {
   }
 
   /**
+   * Returns a new instance of this object
+   *
+   * @param   var value
+   * @return  var
+   */
+  public function newInstance($value= null) {
+    throw new IllegalAccessException('Cannot instantiate wildcard types');
+  }
+
+  /**
+   * Cast a value to this type
+   *
+   * @param   var value
+   * @return  var
+   * @throws  lang.ClassCastException
+   */
+  public function cast($value) {
+    if ($value instanceof Generic && $this->assignableFromClass($value->getClass())) {
+      return $value;
+    }
+    raise('lang.ClassCastException', 'Cannot cast '.\xp::typeOf($value).' to the '.$this->getName().' type');
+  }
+
+  /**
    * Tests whether this type is assignable from another type
    *
    * @param   var $type
