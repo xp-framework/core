@@ -22,14 +22,14 @@ class GenericMethodTest extends \unittest\TestCase {
     (new GenericMethodFixture())->{'get<string>'}([1, 2, 3]);
   }
 
-  #[@test, @values([['Test', 'Test'], ['', null], ['1', 1]])]
-  public function invoke_static_method($expect, $value) {
-    $this->assertEquals($expect, GenericMethodFixture::{'newInstance<string>'}($value));
+  #[@test]
+  public function invoke_static_method() {
+    $this->assertEquals(['a', 'b', 'c'], GenericMethodFixture::{'asList<string>'}(['a', 'b', 'c'])->elements());
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function invoke_static_method_failing() {
-    GenericMethodFixture::{'newInstance<string>'}([1, 2, 3]);
+    GenericMethodFixture::{'asList<string>'}(['a', 'b', 3]);
   }
 
   #[@test]
