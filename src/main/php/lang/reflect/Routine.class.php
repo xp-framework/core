@@ -78,7 +78,7 @@ class Routine extends \lang\Object {
     // ==
     return $this->_reflect->getModifiers() & ~0x1fb7f008;
   }
-  
+
   /**
    * Returns this method's parameters
    *
@@ -106,7 +106,7 @@ class Routine extends \lang\Object {
       : null
     ;
   }
-  
+
   /**
    * Retrieve how many parameters this method declares (including optional 
    * ones)
@@ -162,7 +162,7 @@ class Routine extends \lang\Object {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
     return $details ? array_map([\xp::reflect('lang.XPClass'), 'forName'], $details[DETAIL_THROWS]) : [];
   }
-  
+
   /**
    * Returns the XPClass object representing the class or interface 
    * that declares the method represented by this Method object.
@@ -172,7 +172,7 @@ class Routine extends \lang\Object {
   public function getDeclaringClass() {
     return new \lang\XPClass($this->_reflect->getDeclaringClass());
   }
-  
+
   /**
    * Retrieves the api doc comment for this method. Returns NULL if
    * no documentation is present.
@@ -183,7 +183,7 @@ class Routine extends \lang\Object {
     if (!($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName()))) return null;
     return $details[DETAIL_COMMENT];
   }
-  
+
   /**
    * Check whether an annotation exists
    *
@@ -244,7 +244,7 @@ class Routine extends \lang\Object {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
     return $details ? $details[DETAIL_ANNOTATIONS] : [];
   }
-  
+
   /**
    * Sets whether this routine should be accessible from anywhere, 
    * regardless of its visibility level.
@@ -256,7 +256,7 @@ class Routine extends \lang\Object {
     $this->accessible= $flag;
     return $this;
   }
-  
+
   /**
    * Returns whether an object is equal to this routine
    *
@@ -279,7 +279,7 @@ class Routine extends \lang\Object {
   public function hashCode() {
     return 'R['.$this->_reflect->getDeclaringClass().$this->_reflect->getName();
   }
-  
+
   /**
    * Retrieve string representation. Examples:
    *

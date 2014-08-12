@@ -1,7 +1,5 @@
 <?php namespace lang\reflect;
 
-
-
 /**
  * Represents a class method
  *
@@ -11,6 +9,45 @@
  * @test  xp://net.xp_framework.unittest.reflection.ReflectionTest
  */
 class Method extends Routine {
+
+  /**
+   * Retrieve whether this method is generic
+   *
+   * @return  bool
+   */
+  public function isGeneric() {
+    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
+    return isset($details[DETAIL_ANNOTATIONS]['generic']['self']);
+  }
+
+  /**
+   * Retrieve how many parameters this method declares (including optional 
+   * ones)
+   *
+   * @return  int
+   */
+  public function numParameters() {
+    return parent::numParameters() - $this->isGeneric();
+  }
+
+  /**
+   * Returns this method's parameters
+   *
+   * @return  lang.reflect.Parameter[]
+   */
+  public function getParameters() {
+    return array_slice(parent::getParameters(), $this->isGeneric());
+  }
+
+  /**
+   * Retrieve one of this method's parameters by its offset
+   *
+   * @param   int $offset
+   * @return  lang.reflect.Parameter or NULL if it does not exist
+   */
+  public function getParameter($offset) {
+    return parent::getParameter($offset + $this->isGeneric());
+  }
 
   /**
    * Invokes the underlying method represented by this Method object, 
