@@ -231,4 +231,14 @@ class TypeTest extends TestCase {
   public function class_type_default() {
     $this->assertEquals(null, XPClass::forName('lang.Object')->default);
   }
+
+  #[@test]
+  public function var_type_default() {
+    $this->assertEquals(null, Type::$VAR->default);
+  }
+
+  #[@test]
+  public function void_type_default() {
+    $this->assertEquals(\xp::null(), Type::$VOID->default);
+  }
 }
