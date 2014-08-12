@@ -33,6 +33,14 @@ class GenericMethodTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function invoke_method_with_two_components() {
+    $this->assertEquals(
+      create('new util.collections.HashTable<string, unittest.TestCase>'),
+      GenericMethodFixture::{'newHash<string, unittest.TestCase>'}()
+    );
+  }
+
+  #[@test]
   public function method_is_generic() {
     $this->assertTrue($this->fixtureClass()->getMethod('get')->isGeneric());
   }
@@ -51,7 +59,25 @@ class GenericMethodTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function type_parameter_not_reported_in_getParameter() {
+  public function type_parameter_not_reported_in_getParameters_for_newHash() {
+    $this->assertEquals([], array_map(
+      function($e) { return $e->getName(); },
+      $this->fixtureClass()->getMethod('newHash')->getParameters()
+    ));
+  }
+
+  #[@test]
+  public function type_parameter_not_reported_in_getParameter_for_get() {
     $this->assertEquals('arg', $this->fixtureClass()->getMethod('get')->getParameter(0)->getName());
+  }
+
+  #[@test]
+  public function get_method_to_string_contains_generic_marker() {
+    $this->assertEquals('public T get<T>([var $arg= null])', $this->fixtureClass()->getMethod('get')->toString());
+  }
+
+  #[@test]
+  public function newHash_method_to_string_contains_generic_marker() {
+    $this->assertEquals('public static util.collections.HashTable<K, V> newHash<K, V>()', $this->fixtureClass()->getMethod('newHash')->toString());
   }
 }

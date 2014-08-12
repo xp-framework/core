@@ -32,6 +32,11 @@ class Routine extends \lang\Object {
     $this->_class= $class;
     $this->_reflect= $reflect;
   }
+
+  /** @return string[] */
+  protected function genericParameters() {
+    return [];
+  }
   
   /**
    * Get routine's name.
@@ -305,11 +310,13 @@ class Routine extends \lang\Object {
     } else {
       $throws= '';
     }
+    $generic= $this->genericParameters();
     return sprintf(
-      '%s %s %s(%s)%s',
+      '%s %s %s%s(%s)%s',
       Modifiers::stringOf($this->getModifiers()),
       $this->getReturnTypeName(),
       $this->getName(),
+      $generic ? '<'.implode(',', $generic).'>' : '',
       substr($signature, 2),
       $throws
     );

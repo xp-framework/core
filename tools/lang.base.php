@@ -13,7 +13,7 @@ trait __xp {
   // {{{ static invocation handler
   public static function __callStatic($name, $args) {
     if (false !== ($p= strpos($name, '<'))) {
-      array_unshift($args, \lang\Type::forName(substr($name, $p+ 1, -1)));
+      $args= array_merge(\lang\Type::forNames(substr($name, $p+ 1, -1)), $args);
       return call_user_func_array([get_called_class(), substr($name, 0, $p)], $args);
     }
     $self= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'];
@@ -36,7 +36,7 @@ trait __xp {
   // {{{ invocation handler
   public function __call($name, $args) {
     if (false !== ($p= strpos($name, '<'))) {
-      array_unshift($args, \lang\Type::forName(substr($name, $p+ 1, -1)));
+      $args= array_merge(\lang\Type::forNames(substr($name, $p+ 1, -1)), $args);
       return call_user_func_array([$this, substr($name, 0, $p)], $args);
     } else {
       $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);

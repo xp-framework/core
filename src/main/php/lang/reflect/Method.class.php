@@ -10,14 +10,22 @@
  */
 class Method extends Routine {
 
+  /** @return string[] */
+  protected function genericParameters() {
+    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
+    if (isset($details[DETAIL_ANNOTATIONS]['generic']['self'])) {
+      return explode(',', $details[DETAIL_ANNOTATIONS]['generic']['self']);
+    }
+    return [];
+  }
+
   /**
    * Retrieve whether this method is generic
    *
    * @return  bool
    */
   public function isGeneric() {
-    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
-    return isset($details[DETAIL_ANNOTATIONS]['generic']['self']);
+    return sizeof($this->genericParameters()) > 0;
   }
 
   /**
@@ -27,7 +35,7 @@ class Method extends Routine {
    * @return  int
    */
   public function numParameters() {
-    return parent::numParameters() - $this->isGeneric();
+    return parent::numParameters() - sizeof($this->genericParameters());
   }
 
   /**
@@ -36,7 +44,7 @@ class Method extends Routine {
    * @return  lang.reflect.Parameter[]
    */
   public function getParameters() {
-    return array_slice(parent::getParameters(), $this->isGeneric());
+    return array_slice(parent::getParameters(), sizeof($this->genericParameters()));
   }
 
   /**
@@ -46,7 +54,7 @@ class Method extends Routine {
    * @return  lang.reflect.Parameter or NULL if it does not exist
    */
   public function getParameter($offset) {
-    return parent::getParameter($offset + $this->isGeneric());
+    return parent::getParameter($offset + sizeof($this->genericParameters()));
   }
 
   /**
