@@ -99,7 +99,7 @@ XP Framework Core ChangeLog
 ### Features
 
 * Implemented pushing back bytes to buffered stream (see xp-framework/core#16)
- (@thekid)
+  (@thekid)
 * Added support for closures in annotations - xp-framework/core#7 - (@thekid)
 * Merged xp-framework/xp-framework#353: Add support for rolling logfile names 
   in FileAppender (and Logger) - (@thekid, @kiesel)
