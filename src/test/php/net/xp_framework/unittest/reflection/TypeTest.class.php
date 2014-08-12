@@ -239,6 +239,6 @@ class TypeTest extends TestCase {
 
   #[@test]
   public function void_type_default() {
-    $this->assertEquals(\xp::null(), Type::$VOID->default);
+    $this->assertEquals(null, Type::$VOID->default);
   }
 }

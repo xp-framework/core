@@ -15,7 +15,7 @@ class Type extends Object {
 
   static function __static() {
     self::$VAR= new self('var', null);
-    self::$VOID= new self('void', \xp::null());
+    self::$VOID= new self('void', null);
   }
 
   /**
