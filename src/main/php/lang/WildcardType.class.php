@@ -7,6 +7,8 @@
  * @test  xp://net.xp_framework.unittest.core.WildcardTypeTest
  */
 class WildcardType extends Type {
+  protected $base;
+  protected $components;
 
   /**
    * Creates a new array type instance
