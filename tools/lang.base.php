@@ -621,6 +621,7 @@ function newinstance($spec, $args, $def= null) {
     $class= Type::forName($spec);
     $type= $class->literal();
     $p= strrpos(substr($type, 0, strpos($type, '··')), '·');
+    $generic= xp::$meta[$class->getName()]['class'][DETAIL_GENERIC];
   } else {
     false === strrpos($spec, '.') && $spec= xp::nameOf($spec);
     try {
@@ -629,6 +630,7 @@ function newinstance($spec, $args, $def= null) {
       xp::error($e->getMessage());
     }
     $p= strrpos($type, '·');
+    $generic= null;
   }
 
   // Create unique name
@@ -705,6 +707,7 @@ function newinstance($spec, $args, $def= null) {
   // Instantiate
   $decl= new \ReflectionClass($cl->loadClass0($spec));
   $functions && $decl->setStaticPropertyValue('__func', $functions);
+  $generic && xp::$meta[$spec]= ['class' => [DETAIL_COMMENT => null, DETAIL_GENERIC => $generic]];
   if ($decl->hasMethod('__construct')) {
     return $decl->newInstanceArgs($args);
   } else {

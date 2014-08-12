@@ -260,4 +260,11 @@ class IsTest extends \unittest\TestCase {
   public function wildcard_check_for_type_parameters_partial() {
     $this->assertTrue(is('util.collections.HashTable<string, ?>', create('new util.collections.HashTable<string, lang.Generic>')));
   }
+
+  #[@test]
+  public function wildcard_check_for_newinstance() {
+    $this->assertTrue(is('util.Filter<?>', newinstance('util.Filter<string>', [], [
+      'accept' => function($e) { return true; }
+    ])));
+  }
 }
