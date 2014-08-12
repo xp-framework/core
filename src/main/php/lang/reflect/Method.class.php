@@ -47,6 +47,14 @@ class Method extends Routine {
     return sizeof($this->genericParameters()) > 0;
   }
 
+  /**
+   * Reflectively creates a new method
+   *
+   * @param   lang.Type[] arguments
+   * @return  lang.reflect.Method
+   * @throws  lang.IllegalStateException if this class is not a generic definition
+   * @throws  lang.IllegalArgumentException if number of arguments does not match components
+   */
   public function newGenericMethod($arguments) {
     $components= $this->genericParameters();
     if (empty($components)) {
