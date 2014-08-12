@@ -127,4 +127,10 @@ class ImplementationTest extends \unittest\TestCase {
       Type::forName('net.xp_framework.unittest.core.generics.NSTypeLookup<string>')->getParentclass()
     );
   }
+
+  #[@test, @values([['', null], ['1', 1], ['Test', 'Test']])]
+  public function type_variable_available($expect, $value) {
+    $fixture= create('new net.xp_framework.unittest.core.generics.Unserializer<string>');
+    $this->assertEquals($expect, $fixture->newInstance($value));
+  }
 }

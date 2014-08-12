@@ -209,7 +209,9 @@ class GenericTypes extends \lang\Object {
             array_shift($state);
             array_unshift($state, 4);
             $src.= '{';
-            
+            foreach ($placeholders as $placeholder => $type) {
+              $src.= 'static $'.$placeholder.'= "'.$type.'";';
+            }
             if (isset($annotations[0]['generic']['return'])) {
               $meta[1][$m][DETAIL_RETURNS]= strtr($annotations[0]['generic']['return'], $placeholders);
             }
