@@ -200,6 +200,18 @@ class Type extends Object {
   }
 
   /**
+   * Cast a value to this type
+   *
+   * @param   var value
+   * @return  var
+   * @throws  lang.ClassCastException
+   */
+  public function cast($value) {
+    if (self::$VAR === $this) return $value;
+    raise('lang.ClassCastException', 'Cannot cast '.\xp::typeOf($value).' to the void type');
+  }
+
+  /**
    * Tests whether this type is assignable from another type
    *
    * @param   var type

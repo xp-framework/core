@@ -186,4 +186,14 @@ class TypeTest extends TestCase {
   public function newInstance_of_void($value) {
     Type::$VOID->newInstance($value);
   }
+
+  #[@test, @values('instances')]
+  public function cast_to_var($value) {
+    $this->assertEquals($value, Type::$VAR->cast($value));
+  }
+
+  #[@test, @expect('lang.ClassCastException'), @values('instances')]
+  public function cast_to_void($value) {
+    Type::$VOID->cast($value);
+  }
 }
