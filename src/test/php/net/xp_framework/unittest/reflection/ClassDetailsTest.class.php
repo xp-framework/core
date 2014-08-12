@@ -9,7 +9,9 @@ define('APIDOC_VALUE',      0x0002);
 /**
  * Tests the class details gathering internals
  *
- * @see      xp://lang.XPClass#detailsForClass
+ * @see  xp://lang.XPClass#detailsForClass
+ * @see  https://github.com/xp-framework/xp-framework/issues/230
+ * @see  https://github.com/xp-framework/xp-framework/issues/270
  */
 class ClassDetailsTest extends TestCase {
 
@@ -46,10 +48,6 @@ class ClassDetailsTest extends TestCase {
     return $this->assertEquals($modifiers, $details[DETAIL_MODIFIERS]);
   }
   
-  /**
-   * Tests separation of the comment from the "tags part".
-   *
-   */
   #[@test]
   public function commentString() {
     $details= $this->parseComment('
@@ -67,10 +65,6 @@ class ClassDetailsTest extends TestCase {
     );
   }
 
-  /**
-   * Tests comment is empty when no comment is available in apidoc
-   *
-   */
   #[@test]
   public function noCommentString() {
     $details= $this->parseComment('
@@ -84,10 +78,6 @@ class ClassDetailsTest extends TestCase {
     );
   }
   
-  /**
-   * Tests parsing of the "param" tag with a scalar parameter
-   *
-   */
   #[@test]
   public function scalarParameter() {
     $details= $this->parseComment('
@@ -100,10 +90,6 @@ class ClassDetailsTest extends TestCase {
     $this->assertEquals('string', $details[DETAIL_ARGUMENTS][0]);
   }
 
-  /**
-   * Tests parsing of the "param" tag with an array parameter
-   *
-   */
   #[@test]
   public function arrayParameter() {
     $details= $this->parseComment('
@@ -116,10 +102,6 @@ class ClassDetailsTest extends TestCase {
     $this->assertEquals('string[]', $details[DETAIL_ARGUMENTS][0]);
   }
 
-  /**
-   * Tests parsing of the "param" tag with an object parameter
-   *
-   */
   #[@test]
   public function objectParameter() {
     $details= $this->parseComment('
@@ -132,10 +114,6 @@ class ClassDetailsTest extends TestCase {
     $this->assertEquals('util.Date', $details[DETAIL_ARGUMENTS][0]);
   }
 
-  /**
-   * Tests parsing of the "param" tag with a parameter with default value
-   *
-   */
   #[@test]
   public function defaultParameter() {
     $details= $this->parseComment('
@@ -148,10 +126,6 @@ class ClassDetailsTest extends TestCase {
     $this->assertEquals('int', $details[DETAIL_ARGUMENTS][0]);
   }
   
-  /**
-   * Tests parsing of the "param" tag with a map parameter
-   *
-   */
   #[@test]
   public function mapParameter() {
     $details= $this->parseComment('
@@ -164,10 +138,6 @@ class ClassDetailsTest extends TestCase {
     $this->assertEquals('[:string]', $details[DETAIL_ARGUMENTS][0]);
   }
 
-  /**
-   * Tests parsing of the "param" tag with a generic parameter
-   *
-   */
   #[@test]
   public function genericParameterWithTwoComponents() {
     $details= $this->parseComment('
@@ -180,10 +150,6 @@ class ClassDetailsTest extends TestCase {
     $this->assertEquals('util.collection.HashTable<string, util.Traceable>', $details[DETAIL_ARGUMENTS][0]);
   }
 
-  /**
-   * Tests parsing of the "param" tag with a generic parameter
-   *
-   */
   #[@test]
   public function genericParameterWithOneComponent() {
     $details= $this->parseComment('
@@ -195,11 +161,7 @@ class ClassDetailsTest extends TestCase {
     ');
     $this->assertEquals('util.collections.Vector<lang.Object>', $details[DETAIL_ARGUMENTS][0]);
   }
-  
-  /**
-   * Tests parsing of the "throws" tag
-   *
-   */
+
   #[@test]
   public function throwsList() {
     $details= $this->parseComment('
@@ -214,10 +176,6 @@ class ClassDetailsTest extends TestCase {
     $this->assertEquals('lang.IllegalAccessException', $details[DETAIL_THROWS][1]);
   }
  
-  /**
-   * Tests parsing of the "return" tag
-   *
-   */
   #[@test]
   public function returnType() {
     $details= $this->parseComment('
@@ -230,11 +188,6 @@ class ClassDetailsTest extends TestCase {
     $this->assertEquals('int', $details[DETAIL_RETURNS]);
   }
 
-  /**
-   * Tests parsing of classes with closures inside
-   *
-   * @see   https://github.com/xp-framework/xp-framework/issues/230
-   */
   #[@test]
   public function withClosure() {
     $details= (new ClassParser())->parseDetails('<?php
@@ -253,11 +206,6 @@ class ClassDetailsTest extends TestCase {
     $this->assertEquals('Creates a new answer', $details[1]['newAnswer'][DETAIL_COMMENT]);
   }
 
-  /**
-   * Tests parsing of classes with closures inside
-   *
-   * @see   https://github.com/xp-framework/xp-framework/issues/230
-   */
   #[@test]
   public function withClosures() {
     $details= (new ClassParser())->parseDetails('<?php
@@ -285,15 +233,11 @@ class ClassDetailsTest extends TestCase {
     $this->assertEquals('Creates a new question', $details[1]['newQuestion'][DETAIL_COMMENT]);
   }
 
-  /**
-   * Returns dummy details
-   *
-   * @return var details
-   */
+  /** @return [:var] */
   protected function dummyDetails() {
     return (new ClassParser())->parseDetails('<?php
       class DummyDetails extends Object {
-        protected $test = TRUE;
+        protected $test = true;
 
         #[@test]
         public function test() { }
@@ -301,9 +245,6 @@ class ClassDetailsTest extends TestCase {
     ?>');
   }
 
-  /**
-   * Tests detailsForClass() caching via xp::$meta
-   */
   #[@test]
   public function canBeCached() {
     with (\xp::$meta[$fixture= 'DummyDetails']= $details= $this->dummyDetails()); {
@@ -313,11 +254,6 @@ class ClassDetailsTest extends TestCase {
     $this->assertEquals($details, $actual);
   }
 
-  /**
-   * Tests detailsForClass() caching via xp::registry
-   *
-   * @deprecated See https://github.com/xp-framework/xp-framework/issues/270
-   */
   #[@test]
   public function canBeCachedViaXpRegistry() {
     with (\xp::$registry['details.'.($fixture= 'DummyDetails')]= $details= $this->dummyDetails()); {
@@ -360,6 +296,6 @@ class ClassDetailsTest extends TestCase {
       class Test extends Object {
       }
     ');
-    $this->assertEquals(array(array(1, 2), array(3, 4)), $actual['class'][DETAIL_ANNOTATIONS]['values']);
+    $this->assertEquals([[1, 2], [3, 4]], $actual['class'][DETAIL_ANNOTATIONS]['values']);
   }
 }
