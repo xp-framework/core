@@ -616,6 +616,14 @@ function newinstance($spec, $args, $def= null) {
   static $u= 0;
   static $bind= 'foreach (self::$__func as $_ => $f) { self::$__func[$_]= $f->bindTo($this, $this); } ';
 
+  if ('#' === $spec{0}) {
+    $p= strrpos($spec, ' ');
+    $annotations= substr($spec, 0, $p)."\n";
+    $spec= substr($spec, $p+ 1);
+  } else {
+    $annotations= '';
+  }
+
   // Check for an anonymous generic 
   if (strstr($spec, '<')) {
     $class= Type::forName($spec);
@@ -699,9 +707,9 @@ function newinstance($spec, $args, $def= null) {
   // Checks whether an interface or a class was given
   $cl= \lang\DynamicClassLoader::instanceFor(__FUNCTION__);
   if (interface_exists($type)) {
-    $cl->setClassBytes($spec, $ns.'class '.$decl.' extends \lang\Object implements '.$type.' '.$bytes);
+    $cl->setClassBytes($spec, $ns.$annotations.'class '.$decl.' extends \lang\Object implements '.$type.' '.$bytes);
   } else {
-    $cl->setClassBytes($spec, $ns.'class '.$decl.' extends '.$type.' '.$bytes);
+    $cl->setClassBytes($spec, $ns.$annotations.'class '.$decl.' extends '.$type.' '.$bytes);
   }
 
   // Instantiate

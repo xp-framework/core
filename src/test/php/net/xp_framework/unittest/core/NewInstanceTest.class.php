@@ -78,6 +78,12 @@ class NewInstanceTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function new_class_with_annotations() {
+    $o= newinstance('#[@test] lang.Object', []);
+    $this->assertTrue($o->getClass()->hasAnnotation('test'));
+  }
+
+  #[@test]
   public function new_interface_with_body_as_string() {
     $o= newinstance('lang.Runnable', [], '{ public function run() { } }');
     $this->assertInstanceOf('lang.Runnable', $o);
@@ -89,6 +95,14 @@ class NewInstanceTest extends \unittest\TestCase {
       'run' => function() { }
     ]);
     $this->assertInstanceOf('lang.Runnable', $o);
+  }
+
+  #[@test]
+  public function new_interface_with_annotations() {
+    $o= newinstance('#[@test] lang.Runnable', [], [
+      'run' => function() { }
+    ]);
+    $this->assertTrue($o->getClass()->hasAnnotation('test'));
   }
 
   #[@test]
