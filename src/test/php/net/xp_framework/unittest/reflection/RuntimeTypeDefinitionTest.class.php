@@ -55,4 +55,9 @@ abstract class RuntimeTypeDefinitionTest extends TestCase {
   public function default_classloader_provides_packaged_of_defined_type() {
     $this->assertTrue(ClassLoader::getDefault()->providesPackage($this->define()->getPackage()->getName()));
   }
+
+  #[@test]
+  public function declares_passed_annotation() {
+    $this->assertTrue($this->define('#[@test]')->hasAnnotation('test'));
+  }
 }

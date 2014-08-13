@@ -11,13 +11,13 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
   /**
    * This `define()` implementation creates interfaces
    *
+   * @param   string $annotations
    * @param   var $parent
    * @param   var[] $interfaces
    * @param   string $bytes
-   * @param   string $annotations
    * @return  lang.XPClass
    */
-  protected function define($parent= 'lang.Object', $interfaces= [], $bytes= '{}', $annotations= '') {
+  protected function define($annotations= '', $parent= 'lang.Object', $interfaces= [], $bytes= '{}') {
     return $this->defineType($annotations, function($spec) use($parent, $interfaces, $bytes) {
       return ClassLoader::defineClass($spec, $parent, $interfaces, $bytes);
     });
@@ -25,17 +25,17 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
 
   #[@test]
   public function given_parent_is_inherited() {
-    $this->assertTrue($this->define('lang.Throwable')->isSubclassOf('lang.Throwable'));
+    $this->assertTrue($this->define('', 'lang.Throwable')->isSubclassOf('lang.Throwable'));
   }
 
   #[@test]
   public function given_parent_class_is_inherited() {
-    $this->assertTrue($this->define(XPClass::forName('lang.Throwable'))->isSubclassOf('lang.Throwable'));
+    $this->assertTrue($this->define('', XPClass::forName('lang.Throwable'))->isSubclassOf('lang.Throwable'));
   }
 
   #[@test]
   public function given_interface_is_implemented() {
-    $class= $this->define('lang.Object', ['lang.Runnable'], '{
+    $class= $this->define('', 'lang.Object', ['lang.Runnable'], '{
       public function run() { } 
     }');
 
@@ -44,7 +44,7 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
 
   #[@test]
   public function given_interface_class_is_implemented() {
-    $class= $this->define('lang.Object', [XPClass::forName('lang.Runnable')], '{
+    $class= $this->define('', 'lang.Object', [XPClass::forName('lang.Runnable')], '{
       public function run() { } 
     }');
 
@@ -53,13 +53,13 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
 
   #[@test]
   public function field_exists() {
-    $class= $this->define('lang.Object', [], '{ public $fixture= null; }');
+    $class= $this->define('', 'lang.Object', [], '{ public $fixture= null; }');
     $this->assertTrue($class->hasField('fixture'));
   }
 
   #[@test]
   public function method_exists() {
-    $class= $this->define('lang.Object', [], '{ public function fixture() { } }');
+    $class= $this->define('', 'lang.Object', [], '{ public function fixture() { } }');
     $this->assertTrue($class->hasMethod('fixture'));
   }
 
@@ -70,12 +70,12 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
 
   #[@test]
   public function parents_field_exists() {
-    $this->assertTrue($this->define('lang.Throwable')->hasField('message'));
+    $this->assertTrue($this->define('', 'lang.Throwable')->hasField('message'));
   }
 
   #[@test]
   public function static_initializer_is_invoked() {
-    $class= $this->define('lang.Object', [], '{
+    $class= $this->define('', 'lang.Object', [], '{
       public static $initializerCalled= false;
       static function __static() { self::$initializerCalled= true; }
     }');
@@ -84,12 +84,12 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
 
   #[@test, @expect('lang.ClassNotFoundException')]
   public function cannot_define_class_with_non_existant_parent() {
-    $this->define('@@nonexistant@@');
+    $this->define('', '@@nonexistant@@');
   }
 
   #[@test, @expect('lang.ClassNotFoundException')]
   public function cannot_define_class_with_null_parent() {
-    $this->define(null);
+    $this->define('', null);
   }
 
   #[@test, @expect('lang.ClassNotFoundException'), @values([
@@ -98,11 +98,11 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
   #  [['@@nonexistant@@', 'lang.Runnable']]
   #])]
   public function cannot_define_class_with_non_existant_interface($list) {
-    $this->define('lang.Object', $list);
+    $this->define('', 'lang.Object', $list);
   }
 
   #[@test, @expect('lang.ClassNotFoundException')]
   public function cannot_define_class_with_null_interface() {
-    $this->define('lang.Object', [null]);
+    $this->define('', 'lang.Object', [null]);
   }
 }
