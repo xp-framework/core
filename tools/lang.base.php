@@ -47,7 +47,6 @@ trait __xp {
     throw new Error('Call to undefined method '.\xp::nameOf($self).'::'.$name.'() from scope '.\xp::nameOf($scope));
   }
   // }}}
-
 }
 // }}}
 

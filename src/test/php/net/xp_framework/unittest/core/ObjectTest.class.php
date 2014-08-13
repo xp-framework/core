@@ -72,6 +72,16 @@ class ObjectTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function static_type_method_returns_XPClass_for_Object() {
+    $this->assertEquals(XPClass::forName('lang.Object'), Object::type());
+  }
+
+  #[@test]
+  public function static_type_method_returns_XPClass_for_XPClass() {
+    $this->assertEquals(XPClass::forName('lang.XPClass'), XPClass::type());
+  }
+
+  #[@test]
   public function toString_returns_fully_qualified_class_name_and_its_hash_code() {
     $o= new Object();
     $this->assertEquals("lang.Object {\n  __id => \"".$o->hashCode()."\"\n}", $o->toString());

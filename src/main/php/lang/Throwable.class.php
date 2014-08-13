@@ -273,4 +273,14 @@ class Throwable extends \Exception implements Generic { use \__xp;
   public function getClass() {
     return new XPClass($this);
   }
+
+  /**
+   * Returns the runtime class of a class.
+   *
+   * @return  lang.XPClass runtime class
+   * @see     xp://lang.XPClass
+   */
+  public static function type() {
+    return new XPClass(get_called_class());
+  }
 }

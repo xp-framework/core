@@ -58,7 +58,17 @@ class Object implements Generic { use \__xp;
   public function getClass() {
     return new XPClass($this);
   }
-  
+
+  /**
+   * Returns the runtime class of a class.
+   *
+   * @return  lang.XPClass runtime class
+   * @see     xp://lang.XPClass
+   */
+  public static function type() {
+    return new XPClass(get_called_class());
+  }
+
   /**
    * Creates a string representation of this object. In general, the toString 
    * method returns a string that "textually represents" this object. The result 
