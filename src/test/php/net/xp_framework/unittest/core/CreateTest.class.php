@@ -1,5 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use lang\XPClass;
+use lang\Object;
+use lang\types\String;
 use util\collections\Vector;
 use util\collections\HashTable;
 
@@ -24,39 +27,39 @@ use util\collections\HashTable;
 class CreateTest extends \unittest\TestCase {
 
   #[@test]
-  public function createReturnsObjects() {
-    $fixture= new \lang\Object();
+  public function create_returns_given_object_for_BC_reasons() {
+    $fixture= new Object();
     $this->assertEquals($fixture, create($fixture));
   }
 
   #[@test]
-  public function createWithShortNames() {
+  public function create_with_all_short_names_for_components() {
     $h= create('new util.collections.HashTable<String, String>');
     $this->assertEquals(
-      array(\lang\XPClass::forName('lang.types.String'), \lang\XPClass::forName('lang.types.String')), 
+      [XPClass::forName('lang.types.String'), XPClass::forName('lang.types.String')], 
       $h->getClass()->genericArguments()
     );
   }
 
   #[@test]
-  public function createInvokesConstructor() {
-    $this->assertEquals(
-      new \lang\types\String('Hello'), 
-      create('new util.collections.Vector<lang.types.String>', array(new \lang\types\String('Hello')))->get(0)
-    );
-  }
-
-  #[@test]
-  public function createWithQualifiedNames() {
+  public function create_with_all_qualified_names() {
     $h= create('new util.collections.HashTable<lang.types.String, lang.types.String>');
     $this->assertEquals(
-      array(\lang\XPClass::forName('lang.types.String'), \lang\XPClass::forName('lang.types.String')), 
+      [XPClass::forName('lang.types.String'), XPClass::forName('lang.types.String')], 
       $h->getClass()->genericArguments()
+    );
+  }
+
+  #[@test]
+  public function create_invokes_constructor() {
+    $this->assertEquals(
+      new String('Hello'),
+      create('new util.collections.Vector<lang.types.String>', [new String('Hello')])->get(0)
     );
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
-  public function createWithNonGeneric() {
-    create('new lang.Object<String>');
+  public function create_raises_exception_when_non_generic_given() {
+    create('new lang.Object<lang.types.String>');
   }
 }
