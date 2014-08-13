@@ -86,4 +86,13 @@ class ObjectTest extends \unittest\TestCase {
   public function calling_undefined_methods_via_call_user_func_array_raises_an_error() {
     call_user_func_array([new Object(), 'undefMethod'], []);
   }
-}
+
+  #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method .+::undefMethod\(\) from scope net\.xp_framework\.unittest\.core\.ObjectTest/')]
+  public function calling_undefined_static_methods_raises_an_error() {
+    Object::undefMethod();
+  }
+
+  #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method .+::undefMethod\(\) from scope net\.xp_framework\.unittest\.core\.ObjectTest/')]
+  public function calling_undefined_static_methods_via_call_user_func_array_raises_an_error() {
+    call_user_func_array(['lang\Object', 'undefMethod'], []);
+  }}
