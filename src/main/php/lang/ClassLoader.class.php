@@ -183,16 +183,43 @@ final class ClassLoader extends Object implements IClassLoader {
   }
 
   /**
-   * Helper method to turn a given value into a class object
+   * Helper method to turn a given value into a literal
    *
-   * @param  var class
-   * @return lang.XPClass
+   * @param  var class either an XPClass instance or a string
+   * @return string
    */
-  protected static function classOf($class) {
+  protected static function classLiteral($class) {
     if ($class instanceof XPClass) {
-      return $class;
+      return $class->literal();
     } else {
-      return XPClass::forName(strstr($class, '.') ? $class : \xp::nameOf($class));
+      return XPClass::forName(strstr($class, '.') ? $class : \xp::nameOf($class))->literal();
+    }
+  }
+
+  /**
+   * Helper method for defineClass() and defineInterface().
+   *
+   * @param  string $spec
+   * @param  string $declaration
+   * @param  string $bytes
+   * @return  lang.XPClass
+   */
+  public static function defineType($spec, $declaration, $bytes) {
+    if ('#' === $spec{0}) {
+      $p= strrpos($spec, ' ');
+      $annotations= substr($spec, 0, $p)."\n";
+      $spec= substr($spec, $p+ 1);
+    } else {
+      $annotations= '';
+    }
+
+    $name= \xp::reflect($spec);
+    if (isset(\xp::$cl[$spec])) {
+      return new XPClass($name);
+    } else {
+      $dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__));
+      $dyn->setClassBytes($spec, $annotations.sprintf($declaration, $name).$bytes);
+      return $dyn->loadClass($spec);
     }
   }
 
@@ -207,36 +234,12 @@ final class ClassLoader extends Object implements IClassLoader {
    * @throws  lang.FormatException in case the class cannot be defined
    */
   public static function defineClass($spec, $parent, $interfaces, $bytes= '{}') {
-    if ('#' === $spec{0}) {
-      $p= strrpos($spec, ' ');
-      $class= substr($spec, $p+ 1);
-      $annotations= substr($spec, 0, $p)."\n";
-    } else {
-      $class= $spec;
-      $annotations= '';
-    }
-
-    $name= \xp::reflect($class);
-    if (!isset(\xp::$cl[$class])) {
-      $super= self::classOf($parent)->literal();
-      $if= [];
-      foreach ((array)$interfaces as $interface) {
-        $if[]= self::classOf($interface)->literal();
-      }
-      with ($dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__))); {
-        $dyn->setClassBytes($class, sprintf(
-          '%sclass %s extends %s%s %s',
-          $annotations,
-          $name,
-          $super,
-          $interfaces ? ' implements '.implode(', ', $if) : '',
-          $bytes
-        ));
-        return $dyn->loadClass($class);
-      }
-    }
-    
-    return new XPClass($name);
+    $declaration= sprintf(
+      'class %%s extends %s%s',
+      self::classLiteral($parent),
+      $interfaces ? ' implements '.implode(', ', array_map('self::classLiteral', (array)$interfaces)) : ''
+    );
+    return self::defineType($spec, $declaration, $bytes);
   }
   
   /**
@@ -249,34 +252,11 @@ final class ClassLoader extends Object implements IClassLoader {
    * @throws  lang.FormatException in case the class cannot be defined
    */
   public static function defineInterface($spec, $parents, $bytes= '{}') {
-    if ('#' === $spec{0}) {
-      $p= strrpos($spec, ' ');
-      $class= substr($spec, $p+ 1);
-      $annotations= substr($spec, 0, $p)."\n";
-    } else {
-      $class= $spec;
-      $annotations= '';
-    }
-
-    $name= \xp::reflect($class);
-    if (!isset(\xp::$cl[$class])) {
-      $if= [];
-      foreach ((array)$parents as $interface) {
-        $if[]= self::classOf($interface)->literal();
-      }
-      with ($dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__))); {
-        $dyn->setClassBytes($class, sprintf(
-          '%sinterface %s%s %s',
-          $annotations,
-          $name,
-          $parents ? ' extends '.implode(', ', $if) : '',
-          $bytes
-        ));
-        return $dyn->loadClass($class);
-      }
-    }
-    
-    return new XPClass($name);
+    $declaration= sprintf(
+      'interface %%s %s',
+      $parents ? ' extends '.implode(', ', array_map('self::classLiteral', (array)$parents)) : ''
+    );
+    return self::defineType($spec, $declaration, $bytes);
   }
 
   /**
