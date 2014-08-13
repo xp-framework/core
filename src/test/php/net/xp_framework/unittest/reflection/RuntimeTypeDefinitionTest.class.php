@@ -16,6 +16,7 @@ abstract class RuntimeTypeDefinitionTest extends TestCase {
    * verifying the type has not been defined before.
    *
    * @param  string $annotations
+   * @param  var $define A function
    * @return lang.XPClass
    * @throws unittest.AssertionFailedError
    */
