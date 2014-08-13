@@ -203,11 +203,7 @@ class HashSet extends \lang\Object implements Set {
    * @return  bool
    */
   public function equals($cmp) {
-    return (
-      $cmp instanceof self && 
-      $this->__generic === $cmp->__generic &&
-      $this->_hash === $cmp->_hash
-    );
+    return $cmp instanceof self && $this->_hash === $cmp->_hash;
   }
 
   /**
@@ -217,13 +213,12 @@ class HashSet extends \lang\Object implements Set {
    */
   public function toString() {
     $s= $this->getClassName().'['.sizeof($this->_elements).'] {';
-    if (0 == sizeof($this->_elements)) return $s.' }';
+    if (empty($this->_elements)) return $s.' }';
 
     $s.= "\n";
-    foreach (array_keys($this->_elements) as $key) {
-      $s.= '  '.\xp::stringOf($this->_elements[$key]).",\n";
+    foreach ($this->_elements as $e) {
+      $s.= '  '.\xp::stringOf($e).",\n";
     }
     return substr($s, 0, -2)."\n}";
   }
-
 } 

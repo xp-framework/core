@@ -144,10 +144,6 @@ class Stack extends \lang\Object {
    * @return  bool
    */
   public function equals($cmp) {
-    return (
-      $cmp instanceof self && 
-      $this->__generic === $cmp->__generic &&
-      $this->_hash === $cmp->_hash
-    );
+    return $cmp instanceof self && $this->_hash === $cmp->_hash;
   }
 }
