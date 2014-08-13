@@ -222,6 +222,7 @@ final class ClassLoader extends Object implements IClassLoader {
     if (null === $def) {
       $bytes= '{}';
     } else if (is_array($def)) {
+      $iface= 0 === strncmp($declaration, 'interface', 9);
       $bytes= '';
       foreach ($def as $name => $member) {
 
@@ -252,19 +253,21 @@ final class ClassLoader extends Object implements IClassLoader {
             }
             $pass.= ', $'.$p;
           }
-          $bytes.= (
-            $memberAnnotations.
-            'function '.$name.'('.substr($sig, 2).') {'.
-            ('__construct' === $name ? $bind : '').
-            '$f= self::$__func["'.$name.'"]; '.
-            'return $f('.('' === $pass ? '' : substr($pass, 2)).'); }'
-          );
-          $functions[$name]= $member;
+          $bytes.= $memberAnnotations.'function '.$name.'('.substr($sig, 2).')';
+          if ($iface) {
+            $bytes.= ';';
+          } else {
+            $bytes.=
+              '{'.('__construct' === $name ? $bind : '').'$f= self::$__func["'.$name.'"]; '.
+              'return $f('.('' === $pass ? '' : substr($pass, 2)).'); }'
+            ;
+            $functions[$name]= $member;
+          }
         } else {
           $bytes.= $memberAnnotations.'public $'.$name.'= '.var_export($member, true).';';
         }
       }
-      $bytes= (
+      $bytes= $iface ? '{'.$bytes.'}' : (
         '{ static $__func= [];'.
         (isset($functions['__construct']) ? '' : 'function __construct() {'.$bind.'}').
         "\n".$bytes.' }'

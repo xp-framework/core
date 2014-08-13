@@ -74,4 +74,10 @@ class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
   public function cannot_define_interface_with_null_parent() {
     $this->define('', [null]);
   }
+
+  #[@test]
+  public function closure_map_style_declaring_method() {
+    $class= $this->define('', ['lang.Runnable'], ['fixture' => function() { }]);
+    $this->assertTrue($class->hasMethod('fixture'));
+  }
 }
