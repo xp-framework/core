@@ -223,4 +223,13 @@ class Type extends Object {
   public function isAssignableFrom($type) {
     return self::$VAR === $this;      // VAR is always assignable, VOID never
   }
+
+  /**
+   * Creates a string representation of this object
+   *
+   * @return  string
+   */
+  public function __toString() {
+    return $this->name;
+  }
 }

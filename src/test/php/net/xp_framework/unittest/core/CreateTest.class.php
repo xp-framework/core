@@ -51,6 +51,12 @@ class CreateTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function create_can_be_used_with_type_variables() {
+    $T= XPClass::forName('lang.types.String');
+    $this->assertEquals([$T], create("new util.collections.Vector<$T>")->getClass()->genericArguments());
+  }
+
+  #[@test]
   public function create_invokes_constructor() {
     $this->assertEquals(
       new String('Hello'),
