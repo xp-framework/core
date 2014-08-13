@@ -60,4 +60,9 @@ abstract class RuntimeTypeDefinitionTest extends TestCase {
   public function declares_passed_annotation() {
     $this->assertTrue($this->define('#[@test]')->hasAnnotation('test'));
   }
+
+  #[@test]
+  public function declares_passed_annotation_with_value() {
+    $this->assertEquals('/rest', $this->define('#[@webservice(path= "/rest")]')->getAnnotation('webservice', 'path'));
+  }
 }
