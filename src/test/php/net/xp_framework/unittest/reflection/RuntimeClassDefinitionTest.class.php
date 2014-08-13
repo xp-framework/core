@@ -119,6 +119,13 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
   }
 
   #[@test]
+  public function closure_map_field_access() {
+    $class= $this->define('', 'lang.Object', [], ['fixture' => 'Test']);
+    $instance= $class->newInstance();
+    $this->assertEquals('Test', $class->getField('fixture')->get($instance));
+  }
+
+  #[@test]
   public function closure_map_method_invocation() {
     $class= $this->define('', 'lang.Object', [], ['fixture' => function($a, $b) { return [$this, $a, $b]; }]);
     $instance= $class->newInstance();
