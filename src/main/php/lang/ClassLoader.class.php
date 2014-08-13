@@ -290,7 +290,7 @@ final class ClassLoader extends Object implements IClassLoader {
    * @return  lang.XPClass
    * @throws  lang.FormatException in case the class cannot be defined
    */
-  public static function defineClass($spec, $parent, $interfaces, $def= '{}') {
+  public static function defineClass($spec, $parent, $interfaces, $def= null) {
     $declaration= sprintf(
       'class %%s extends %s%s',
       self::classLiteral($parent),
@@ -308,7 +308,7 @@ final class ClassLoader extends Object implements IClassLoader {
    * @return  lang.XPClass
    * @throws  lang.FormatException in case the class cannot be defined
    */
-  public static function defineInterface($spec, $parents, $def= '{}') {
+  public static function defineInterface($spec, $parents, $def= null) {
     $declaration= sprintf(
       'interface %%s %s',
       $parents ? ' extends '.implode(', ', array_map('self::classLiteral', (array)$parents)) : ''
