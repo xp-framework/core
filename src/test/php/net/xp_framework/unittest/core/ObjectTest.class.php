@@ -1,5 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use lang\XPClass;
+use lang\Object;
+
 /**
  * Tests the lang.Object class
  *
@@ -18,84 +21,69 @@ class ObjectTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function noConstructor() {
-    $this->assertFalse(\lang\XPClass::forName('lang.Object')->hasConstructor());
+  public function does_not_have_a_constructor() {
+    $this->assertFalse(XPClass::forName('lang.Object')->hasConstructor());
   }
 
   #[@test]
-  public function baseClass() {
-    $this->assertNull(\lang\XPClass::forName('lang.Object')->getParentClass());
+  public function does_not_have_a_parent_class() {
+    $this->assertNull(XPClass::forName('lang.Object')->getParentClass());
   }
 
   #[@test]
-  public function genericInterface() {
-    $interfaces= \lang\XPClass::forName('lang.Object')->getInterfaces();
-    $this->assertEquals(1, sizeof($interfaces));
-    $this->assertInstanceOf('lang.XPClass', $interfaces[0]);
-    $this->assertEquals('lang.Generic', $interfaces[0]->getName());
+  public function implements_the_lang_Generic_interface() {
+    $this->assertEquals([XPClass::forName('lang.Generic')], XPClass::forName('lang.Object')->getInterfaces());
   }
 
   #[@test]
-  public function typeOf() {
-    $this->assertEquals('lang.Object', \xp::typeOf(new \lang\Object()));
+  public function xp_typeOf_returns_fully_qualified_class_name() {
+    $this->assertEquals('lang.Object', \xp::typeOf(new Object()));
   }
 
   #[@test]
-  public function hashCodeMethod() {
-    $o= new \lang\Object();
-    $this->assertTrue((bool)preg_match('/^[0-9a-z\.]+\.[0-9a-z\.]+$/', $o->hashCode()));
+  public function hashCode_method_returns_uniqid() {
+    $this->assertTrue((bool)preg_match('/^[0-9a-z\.]+\.[0-9a-z\.]+$/', (new Object())->hashCode()));
   }
 
   #[@test]
-  public function objectIsEqualToSelf() {
-    $o= new \lang\Object();
+  public function an_object_is_equal_to_itself() {
+    $o= new Object();
     $this->assertTrue($o->equals($o));
   }
 
   #[@test]
-  public function objectIsNotEqualToOtherObject() {
-    $o= new \lang\Object();
-    $this->assertFalse($o->equals(new \lang\Object()));
+  public function an_object_is_not_equal_to_another_object() {
+    $this->assertFalse((new Object())->equals(new Object()));
   }
 
   #[@test]
-  public function objectIsNotEqualToPrimitive() {
-    $o= new \lang\Object();
-    $this->assertFalse($o->equals(0));
+  public function an_object_is_not_equal_to_a_primitive() {
+    $this->assertFalse((new Object())->equals(0));
   }
   
   #[@test]
-  public function getClassNameMethod() {
-    $o= new \lang\Object();
-    $this->assertEquals('lang.Object', $o->getClassName());
+  public function getClassName_returns_fully_qualified_class_name() {
+    $this->assertEquals('lang.Object', (new Object())->getClassName());
   }
 
   #[@test]
-  public function getClassMethod() {
-    $o= new \lang\Object();
-    $class= $o->getClass();
-    $this->assertInstanceOf('lang.XPClass', $class);
-    $this->assertEquals('lang.Object', $class->getName());
+  public function getClass_returns_XPClass_object() {
+    $this->assertEquals(XPClass::forName('lang.Object'), (new Object())->getClass());
   }
 
   #[@test]
-  public function toStringMethod() {
-    $o= new \lang\Object();
-    $this->assertEquals(
-      'lang.Object {'."\n".
-      '  __id => "'.$o->hashCode().'"'."\n".
-      '}', 
-      $o->toString()
-    );
+  public function toString_returns_fully_qualified_class_name_and_its_hash_code() {
+    $o= new Object();
+    $this->assertEquals("lang.Object {\n  __id => \"".$o->hashCode()."\"\n}", $o->toString());
   }
 
   #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method .+::undefMethod\(\) from scope net\.xp_framework\.unittest\.core\.ObjectTest/')]
-  public function callUndefinedMethod() {
-    (new \lang\Object())->undefMethod();
+  public function calling_undefined_methods_raises_an_error() {
+    (new Object())->undefMethod();
   }
 
   #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method .+::undefMethod\(\) from scope net\.xp_framework\.unittest\.core\.ObjectTest/')]
-  public function callUndefinedMethod_call_user_func_array() {
-    call_user_func_array(array(new \lang\Object(), 'undefMethod'), []);
+  public function calling_undefined_methods_via_call_user_func_array_raises_an_error() {
+    call_user_func_array([new Object(), 'undefMethod'], []);
   }
 }
