@@ -199,34 +199,39 @@ final class ClassLoader extends Object implements IClassLoader {
   /**
    * Define a class with a given name
    *
-   * @param   string class fully qualified class name
+   * @param   string spec fully qualified class name, optionally prepended by annotations
    * @param   var parent The parent class either by qualified name or XPClass instance
    * @param   var[] interfaces The implemented interfaces either by qualified names or XPClass instances
    * @param   string bytes default "{}" inner sourcecode of class (containing {}) 
    * @return  lang.XPClass
    * @throws  lang.FormatException in case the class cannot be defined
    */
-  public static function defineClass($class, $parent, $interfaces, $bytes= '{}') {
+  public static function defineClass($spec, $parent, $interfaces, $bytes= '{}') {
+    if ('#' === $spec{0}) {
+      $p= strrpos($spec, ' ');
+      $class= substr($spec, $p+ 1);
+      $annotations= substr($spec, 0, $p)."\n";
+    } else {
+      $class= $spec;
+      $annotations= '';
+    }
+
     $name= \xp::reflect($class);
     if (!isset(\xp::$cl[$class])) {
-
-      // Load parent class and implemented interfaces
       $super= self::classOf($parent)->literal();
       $if= [];
       foreach ((array)$interfaces as $interface) {
         $if[]= self::classOf($interface)->literal();
       }
-
-      // Define class
       with ($dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__))); {
         $dyn->setClassBytes($class, sprintf(
-          'class %s extends %s%s %s',
+          '%sclass %s extends %s%s %s',
+          $annotations,
           $name,
           $super,
           $interfaces ? ' implements '.implode(', ', $if) : '',
           $bytes
         ));
-        
         return $dyn->loadClass($class);
       }
     }
