@@ -84,6 +84,22 @@ class NewInstanceTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function new_class_with_field_annotations() {
+    $o= newinstance('lang.Object', [], [
+      '#[@test] fixture' => null
+    ]);
+    $this->assertTrue($o->getClass()->getField('fixture')->hasAnnotation('test'));
+  }
+
+  #[@test]
+  public function new_class_with_method_annotations() {
+    $o= newinstance('lang.Object', [], [
+      '#[@test] fixture' => function() { }
+    ]);
+    $this->assertTrue($o->getClass()->getMethod('fixture')->hasAnnotation('test'));
+  }
+
+  #[@test]
   public function new_interface_with_body_as_string() {
     $o= newinstance('lang.Runnable', [], '{ public function run() { } }');
     $this->assertInstanceOf('lang.Runnable', $o);

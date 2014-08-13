@@ -614,14 +614,14 @@ function this($expr, $offset) {
 //     Anonymous instance creation
 function newinstance($spec, $args, $def= null) {
   static $u= 0;
-  static $bind= 'foreach (self::$__func as $_ => $f) { self::$__func[$_]= $f->bindTo($this, $this); } ';
+  static $bind= 'foreach (self::$__func as $_ => $f) { self::$__func[$_]= $f->bindTo($this, $this); }';
 
   if ('#' === $spec{0}) {
     $p= strrpos($spec, ' ');
-    $annotations= substr($spec, 0, $p)."\n";
+    $typeAnotations= substr($spec, 0, $p)."\n";
     $spec= substr($spec, $p+ 1);
   } else {
-    $annotations= '';
+    $typeAnotations= '';
   }
 
   // Check for an anonymous generic 
@@ -665,6 +665,15 @@ function newinstance($spec, $args, $def= null) {
   } else if (is_array($def)) {
     $bytes= '';
     foreach ($def as $name => $member) {
+
+      if ('#' === $name{0}) {
+        $p= strrpos($name, ' ');
+        $memberAnnotations= substr($name, 0, $p)."\n";
+        $name= substr($name, $p+ 1);
+      } else {
+        $memberAnnotations= '';
+      }
+
       if ($member instanceof \Closure) {
         $r= new ReflectionFunction($member);
         $pass= $sig= '';
@@ -685,6 +694,7 @@ function newinstance($spec, $args, $def= null) {
           $pass.= ', $'.$p;
         }
         $bytes.= (
+          $memberAnnotations.
           'function '.$name.'('.substr($sig, 2).') {'.
           ('__construct' === $name ? $bind : '').
           '$f= self::$__func["'.$name.'"]; '.
@@ -692,13 +702,13 @@ function newinstance($spec, $args, $def= null) {
         );
         $functions[$name]= $member;
       } else {
-        $bytes.= 'public $'.$name.'= '.var_export($member, true).';';
+        $bytes.= $memberAnnotations.'public $'.$name.'= '.var_export($member, true).';';
       }
     }
     $bytes= (
       '{ static $__func= [];'.
       (isset($functions['__construct']) ? '' : 'function __construct() {'.$bind.'}').
-      $bytes.' }'
+      "\n".$bytes.' }'
     );
   } else {
     $bytes= (string)$def;
@@ -707,9 +717,9 @@ function newinstance($spec, $args, $def= null) {
   // Checks whether an interface or a class was given
   $cl= \lang\DynamicClassLoader::instanceFor(__FUNCTION__);
   if (interface_exists($type)) {
-    $cl->setClassBytes($spec, $ns.$annotations.'class '.$decl.' extends \lang\Object implements '.$type.' '.$bytes);
+    $cl->setClassBytes($spec, $ns.$typeAnotations.'class '.$decl.' extends \lang\Object implements '.$type.' '.$bytes);
   } else {
-    $cl->setClassBytes($spec, $ns.$annotations.'class '.$decl.' extends '.$type.' '.$bytes);
+    $cl->setClassBytes($spec, $ns.$typeAnotations.'class '.$decl.' extends '.$type.' '.$bytes);
   }
 
   // Instantiate
