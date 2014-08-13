@@ -12,10 +12,11 @@ use util\collections\HashTable;
  * $v= create('new util.collections.Vector<lang.types.String>');
  * ```
  *
- * 2) Returning an object passed in, for use in fluent interfaces, e.g.
+ * 2) For BC with PHP 5.3 - PHP 5.4 has added constructor dereferencing! Returning
+ * an object passed in, for use in fluent interfaces, e.g.
  *
  * ```php
- * $c= (new Criteria())->add('bz_id', 20000, EQUAL);
+ * $c= create(new Criteria())->add('bz_id', 20000, EQUAL);
  * ````
  * 
  * @see   http://news.xp-framework.net/article/184/2007/05/06/
