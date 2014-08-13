@@ -89,6 +89,7 @@ class GenericTypes extends \lang\Object {
       $matches= [];
       $state= [0];
       $counter= 0;
+      $initialize= false;
       $tokens= token_get_all($bytes);
       for ($i= 0, $s= sizeof($tokens); $i < $s; $i++) {
         if (T_COMMENT === $tokens[$i][0]) {
@@ -133,11 +134,13 @@ class GenericTypes extends \lang\Object {
             $src.= ' implements';
             $counter= 0;
             $annotation= @$annotations['generic']['implements'];
+            array_unshift($state, T_CLASS);
             array_unshift($state, 5);
           } else if ('{' === $tokens[$i][0]) {
             array_shift($state);
             array_unshift($state, 1);
-            $src.= ' {';
+            $src.= ' { public static $__generic= [];';
+            $initialize= true;
           }
           continue;
         } else if (T_INTERFACE === $state[0]) {
@@ -145,6 +148,7 @@ class GenericTypes extends \lang\Object {
             $src.= ' extends';
             $counter= 0;
             $annotation= @$annotations['generic']['extends'];
+            array_unshift($state, T_INTERFACE);
             array_unshift($state, 5);
           } else if ('{' === $tokens[$i][0]) {
             array_shift($state);
@@ -209,10 +213,6 @@ class GenericTypes extends \lang\Object {
             array_shift($state);
             array_unshift($state, 4);
             $src.= '{';
-            foreach ($placeholders as $placeholder => $type) {
-              $src.= 'static $'.$placeholder.'= null;';
-              $src.= 'if (!$'.$placeholder.') $'.$placeholder.'= \lang\Type::forName("'.$type.'");';
-            }
             if (isset($annotations[0]['generic']['return'])) {
               $meta[1][$m][DETAIL_RETURNS]= strtr($annotations[0]['generic']['return'], $placeholders);
             }
@@ -259,6 +259,9 @@ class GenericTypes extends \lang\Object {
           } else if ('}' === $tokens[$i][0]) {
             $braces--;
             if (0 === $braces) array_shift($state);
+          } else if (T_VARIABLE === $tokens[$i][0] && isset($placeholders[$v= substr($tokens[$i][1], 1)])) {
+            $src.= 'self::$__generic["'.$v.'"]';
+            continue;
           }
         } else if (5 === $state[0]) {             // Implements (class), Extends (interface)
           if (T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0]) {
@@ -282,7 +285,9 @@ class GenericTypes extends \lang\Object {
             continue;
           } else if ('{' === $tokens[$i][0]) {
             array_shift($state);
-            array_unshift($state, 1);
+            array_shift($state);
+            $i--;
+            continue;
           }
         }
                   
@@ -292,7 +297,12 @@ class GenericTypes extends \lang\Object {
       // Create class
       // DEBUG fputs(STDERR, "@* ".substr($src, 0, strpos($src, '{'))." -> $qname\n");
       eval($src);
-      method_exists($name, '__static') && call_user_func([$name, '__static']);
+      if ($initialize) {
+        foreach ($components as $i => $component) {
+          $name::$__generic[$component]= $arguments[$i];
+        }
+        method_exists($name, '__static') && call_user_func([$name, '__static']);
+      }
       unset($meta['class'][DETAIL_ANNOTATIONS]['generic']);
       \xp::$meta[$qname]= $meta;
       \xp::$cn[$name]= $qname;
