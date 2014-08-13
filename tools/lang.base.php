@@ -614,7 +614,6 @@ function this($expr, $offset) {
 //     Anonymous instance creation
 function newinstance($spec, $args, $def= null) {
   static $u= 0;
-  static $bind= 'foreach (self::$__func as $_ => $f) { self::$__func[$_]= $f->bindTo($this, $this); }';
 
   if ('#' === $spec{0}) {
     $p= strrpos($spec, ' ');
@@ -658,78 +657,18 @@ function newinstance($spec, $args, $def= null) {
     $type= '\\'.$type;
   }
 
-  // No definition: Emty body, array => closure style, string: source code
-  $functions= [];
-  if (null === $def) {
-    $bytes= '{}';
-  } else if (is_array($def)) {
-    $bytes= '';
-    foreach ($def as $name => $member) {
-
-      if ('#' === $name{0}) {
-        $p= strrpos($name, ' ');
-        $memberAnnotations= substr($name, 0, $p)."\n";
-        $name= substr($name, $p+ 1);
-      } else {
-        $memberAnnotations= '';
-      }
-
-      if ($member instanceof \Closure) {
-        $r= new ReflectionFunction($member);
-        $pass= $sig= '';
-        foreach ($r->getParameters() as $param) {
-          $p= $param->getName();
-          if ($param->isArray()) {
-            $sig.= ', array $'.$p;
-          } else if ($param->isCallable()) {
-            $sig.= ', callable $'.$p;
-          } else if (null !== ($class= $param->getClass())) {
-            $sig.= ', \\'.$class->getName().' $'.$p;
-          } else {
-            $sig.= ', $'.$p;
-          }
-          if ($param->isOptional()) {
-            $sig.= '= '.var_export($param->getDefaultValue(), true);
-          }
-          $pass.= ', $'.$p;
-        }
-        $bytes.= (
-          $memberAnnotations.
-          'function '.$name.'('.substr($sig, 2).') {'.
-          ('__construct' === $name ? $bind : '').
-          '$f= self::$__func["'.$name.'"]; '.
-          'return $f('.('' === $pass ? '' : substr($pass, 2)).'); }'
-        );
-        $functions[$name]= $member;
-      } else {
-        $bytes.= $memberAnnotations.'public $'.$name.'= '.var_export($member, true).';';
-      }
-    }
-    $bytes= (
-      '{ static $__func= [];'.
-      (isset($functions['__construct']) ? '' : 'function __construct() {'.$bind.'}').
-      "\n".$bytes.' }'
-    );
-  } else {
-    $bytes= (string)$def;
-  }
-
-  // Checks whether an interface or a class was given
-  $cl= \lang\DynamicClassLoader::instanceFor(__FUNCTION__);
   if (interface_exists($type)) {
-    $cl->setClassBytes($spec, $ns.$typeAnotations.'class '.$decl.' extends \lang\Object implements '.$type.' '.$bytes);
+    $parent= ' extends \lang\Object implements '.$type;
   } else {
-    $cl->setClassBytes($spec, $ns.$typeAnotations.'class '.$decl.' extends '.$type.' '.$bytes);
+    $parent= ' extends '.$type;
   }
 
-  // Instantiate
-  $decl= new \ReflectionClass($cl->loadClass0($spec));
-  $functions && $decl->setStaticPropertyValue('__func', $functions);
+  $type= \lang\ClassLoader::defineType($spec, $ns.$typeAnotations.'class '.$decl.$parent, $def);
   $generic && xp::$meta[$spec]= ['class' => [DETAIL_COMMENT => null, DETAIL_GENERIC => $generic]];
-  if ($decl->hasMethod('__construct')) {
-    return $decl->newInstanceArgs($args);
+  if ($type->hasConstructor()) {
+    return $type->getConstructor()->newInstance($args);
   } else {
-    return $decl->newInstance();
+    return $type->newInstance();
   }
 }
 // }}}

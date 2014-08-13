@@ -105,4 +105,23 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
   public function cannot_define_class_with_null_interface() {
     $this->define('', 'lang.Object', [null]);
   }
+
+  #[@test]
+  public function closure_map_style_declaring_field() {
+    $class= $this->define('', 'lang.Object', [], ['fixture' => null]);
+    $this->assertTrue($class->hasField('fixture'));
+  }
+
+  #[@test]
+  public function closure_map_style_declaring_method() {
+    $class= $this->define('', 'lang.Object', [], ['fixture' => function() { }]);
+    $this->assertTrue($class->hasMethod('fixture'));
+  }
+
+  #[@test]
+  public function closure_map_method_invocation() {
+    $class= $this->define('', 'lang.Object', [], ['fixture' => function($a, $b) { return [$this, $a, $b]; }]);
+    $instance= $class->newInstance();
+    $this->assertEquals([$instance, 1, 2], $class->getMethod('fixture')->invoke($instance, [1, 2]));
+  }
 }

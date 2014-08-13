@@ -201,26 +201,83 @@ final class ClassLoader extends Object implements IClassLoader {
    *
    * @param  string $spec
    * @param  string $declaration
-   * @param  string $bytes
-   * @return  lang.XPClass
+   * @param  var $def
+   * @return lang.XPClass
    */
-  public static function defineType($spec, $declaration, $bytes) {
+  public static function defineType($spec, $declaration, $def) {
+    static $bind= 'foreach (self::$__func as $_ => $f) { self::$__func[$_]= $f->bindTo($this, $this); }';
+
     if ('#' === $spec{0}) {
       $p= strrpos($spec, ' ');
-      $annotations= substr($spec, 0, $p)."\n";
+      $typeAnnotations= substr($spec, 0, $p)."\n";
       $spec= substr($spec, $p+ 1);
     } else {
-      $annotations= '';
+      $typeAnnotations= '';
     }
 
-    $name= \xp::reflect($spec);
-    if (isset(\xp::$cl[$spec])) {
-      return new XPClass($name);
+    $class= \xp::reflect($spec);
+    if (isset(\xp::$cl[$spec])) return new XPClass($class);
+
+    $functions= [];
+    if (null === $def) {
+      $bytes= '{}';
+    } else if (is_array($def)) {
+      $bytes= '';
+      foreach ($def as $name => $member) {
+
+        if ('#' === $name{0}) {
+          $p= strrpos($name, ' ');
+          $memberAnnotations= substr($name, 0, $p)."\n";
+          $name= substr($name, $p+ 1);
+        } else {
+          $memberAnnotations= '';
+        }
+
+        if ($member instanceof \Closure) {
+          $r= new \ReflectionFunction($member);
+          $pass= $sig= '';
+          foreach ($r->getParameters() as $param) {
+            $p= $param->getName();
+            if ($param->isArray()) {
+              $sig.= ', array $'.$p;
+            } else if ($param->isCallable()) {
+              $sig.= ', callable $'.$p;
+            } else if (null !== ($restriction= $param->getClass())) {
+              $sig.= ', \\'.$restriction->getName().' $'.$p;
+            } else {
+              $sig.= ', $'.$p;
+            }
+            if ($param->isOptional()) {
+              $sig.= '= '.var_export($param->getDefaultValue(), true);
+            }
+            $pass.= ', $'.$p;
+          }
+          $bytes.= (
+            $memberAnnotations.
+            'function '.$name.'('.substr($sig, 2).') {'.
+            ('__construct' === $name ? $bind : '').
+            '$f= self::$__func["'.$name.'"]; '.
+            'return $f('.('' === $pass ? '' : substr($pass, 2)).'); }'
+          );
+          $functions[$name]= $member;
+        } else {
+          $bytes.= $memberAnnotations.'public $'.$name.'= '.var_export($member, true).';';
+        }
+      }
+      $bytes= (
+        '{ static $__func= [];'.
+        (isset($functions['__construct']) ? '' : 'function __construct() {'.$bind.'}').
+        "\n".$bytes.' }'
+      );
     } else {
-      $dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__));
-      $dyn->setClassBytes($spec, $annotations.sprintf($declaration, $name).$bytes);
-      return $dyn->loadClass($spec);
+      $bytes= (string)$def;
     }
+
+    $dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__));
+    $dyn->setClassBytes($spec, $typeAnnotations.sprintf($declaration, $class).$bytes);
+    $cl= $dyn->loadClass($spec);
+    $functions && $cl->_reflect->setStaticPropertyValue('__func', $functions);
+    return $cl;
   }
 
   /**
@@ -229,17 +286,17 @@ final class ClassLoader extends Object implements IClassLoader {
    * @param   string spec fully qualified class name, optionally prepended by annotations
    * @param   var parent The parent class either by qualified name or XPClass instance
    * @param   var[] interfaces The implemented interfaces either by qualified names or XPClass instances
-   * @param   string bytes default "{}" inner sourcecode of class (containing {}) 
+   * @param   var $def Code
    * @return  lang.XPClass
    * @throws  lang.FormatException in case the class cannot be defined
    */
-  public static function defineClass($spec, $parent, $interfaces, $bytes= '{}') {
+  public static function defineClass($spec, $parent, $interfaces, $def= '{}') {
     $declaration= sprintf(
       'class %%s extends %s%s',
       self::classLiteral($parent),
       $interfaces ? ' implements '.implode(', ', array_map('self::classLiteral', (array)$interfaces)) : ''
     );
-    return self::defineType($spec, $declaration, $bytes);
+    return self::defineType($spec, $declaration, $def);
   }
   
   /**
@@ -247,16 +304,16 @@ final class ClassLoader extends Object implements IClassLoader {
    *
    * @param   string spec fully qualified class name, optionally prepended by annotations
    * @param   var[] parents The parent interfaces either by qualified names or XPClass instances
-   * @param   string bytes default "{}" inner sourcecode of class (containing {}) 
+   * @param   var $def Code
    * @return  lang.XPClass
    * @throws  lang.FormatException in case the class cannot be defined
    */
-  public static function defineInterface($spec, $parents, $bytes= '{}') {
+  public static function defineInterface($spec, $parents, $def= '{}') {
     $declaration= sprintf(
       'interface %%s %s',
       $parents ? ' extends '.implode(', ', array_map('self::classLiteral', (array)$parents)) : ''
     );
-    return self::defineType($spec, $declaration, $bytes);
+    return self::defineType($spec, $declaration, $def);
   }
 
   /**
