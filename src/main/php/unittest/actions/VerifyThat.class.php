@@ -27,8 +27,9 @@ class VerifyThat extends \lang\Object implements TestAction {
       $this->verify= function() use($method) { return call_user_func(['self', $method]); };
       $this->prerequisite= $callable;
     } else if (false !== ($p= strpos($callable, '::'))) {
-      $method= \lang\XPClass::forName(substr($callable, 0, $p))->getMethod(substr($callable, $p+ 2));
-      $this->verify= function() use($method) { return $method->invoke(null); };
+      $class= \xp::reflect(substr($callable, 0, $p), '.', '\\');
+      $method= substr($callable, $p+ 2);
+      $this->verify= function() use($class, $method) { return call_user_func([$class, $method]); };
       $this->prerequisite= $callable;
     } else {
       $this->verify= function() use($callable) { return call_user_func([$this, $callable]); };

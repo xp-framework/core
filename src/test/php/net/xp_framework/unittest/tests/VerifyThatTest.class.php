@@ -156,4 +156,28 @@ class VerifyThatTest extends \unittest\TestCase {
       public function fixture() { }
     }'));
   }
+
+  #[@test]
+  public function with_non_existant_method_on_this() {
+    $this->assertSkipped(['$this->non_existant_method'], newinstance('unittest.TestCase', ['fixture'], '{
+      #[@test, @action(new \unittest\actions\VerifyThat("non_existant_method"))]
+      public function fixture() { }
+    }'));
+  }
+
+  #[@test]
+  public function with_non_existant_method_on_self() {
+    $this->assertSkipped(['self::non_existant_method'], newinstance('unittest.TestCase', ['fixture'], '{
+      #[@test, @action(new \unittest\actions\VerifyThat("self::non_existant_method"))]
+      public function fixture() { }
+    }'));
+  }
+
+  #[@test]
+  public function with_non_existant_method_on_class() {
+    $this->assertSkipped(['net.xp_framework.unittest.tests.VerifyThatTest::non_existant_method'], newinstance('unittest.TestCase', ['fixture'], '{
+      #[@test, @action(new \unittest\actions\VerifyThat("net.xp_framework.unittest.tests.VerifyThatTest::non_existant_method"))]
+      public function fixture() { }
+    }'));
+  }
 }
