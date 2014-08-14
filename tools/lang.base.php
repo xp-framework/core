@@ -653,9 +653,13 @@ function newinstance($spec, $args, $def= null) {
   } else {
     $decl= 'class %s extends \\'.$type;
   }
-
   $type= \lang\ClassLoader::defineType($annotations.$spec, $decl, $def);
-  $generic && xp::$meta[$spec]= ['class' => [DETAIL_COMMENT => null, DETAIL_GENERIC => $generic]];
+
+  if ($generic) {
+    \lang\XPClass::detailsForClass($spec);
+    xp::$meta[$spec]['class'][DETAIL_GENERIC]= $generic;
+  }
+
   if ($type->hasConstructor()) {
     return $type->getConstructor()->newInstance($args);
   } else {
