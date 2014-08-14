@@ -75,8 +75,14 @@ abstract class RuntimeTypeDefinitionTest extends TestCase {
   }
 
   #[@test]
-  public function class_is_declared_inside_namespace() {
+  public function type_with_package_is_declared_inside_namespace() {
     $n= $this->getClass()->getSimpleName();
     $this->assertEquals('com\\example\\test\\'.$n, $this->define(['name' => 'com.example.test.'.$n])->literal());
+  }
+
+  #[@test]
+  public function type_without_package_is_declared_globally() {
+    $n= $this->getClass()->getSimpleName().'_'.$this->name;
+    $this->assertEquals($n, $this->define(['name' => $n])->literal());
   }
 }
