@@ -55,7 +55,7 @@ class ArrayList extends \lang\Object implements \ArrayAccess, \IteratorAggregate
    * @return  php.Iterator<int, var>
    */
   public function getIterator() {
-    return new ArrayListIterator($this);
+    return new \ArrayIterator($this->values);
   }
 
   /**
