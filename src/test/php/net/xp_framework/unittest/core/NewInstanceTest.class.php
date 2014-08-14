@@ -6,14 +6,13 @@ use lang\reflect\Package;
 use unittest\actions\VerifyThat;
 
 /**
- * TestCase for newinstance() functionality
+ * TestCase for newinstance() functionality. Some tests are skipped if
+ * process execution has been disabled.
  */
 class NewInstanceTest extends \unittest\TestCase {
 
-  /**
-   * Skips tests if process execution has been disabled.
-   */
-  public function processExecutionEnabled() {
+  /** @return bool */
+  protected function processExecutionEnabled() {
     return !\lang\Process::$DISABLED;
   }
 
