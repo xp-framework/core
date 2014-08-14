@@ -22,7 +22,7 @@ abstract class RuntimeTypeDefinitionTest extends TestCase {
    */
   protected function defineType($annotations, $define) {
     $t= $this->getClassName().'__'.$this->name;
-    $spec= $annotations.' '.$t;
+    $spec= trim($annotations.' '.$t);
     if (interface_exists(\xp::reflect($t), false) || class_exists(\xp::reflect($t), false)) {
       $this->fail('Type may not exist!', $t, null);
     }
@@ -44,6 +44,11 @@ abstract class RuntimeTypeDefinitionTest extends TestCase {
   #[@test]
   public function classloader_of_defined_type_is_DynamicClassLoader() {
     $this->assertInstanceOf('lang.DynamicClassLoader', $this->define()->getClassLoader());
+  }
+
+  #[@test]
+  public function package_name() {
+    $this->assertEquals('net.xp_framework.unittest.reflection', $this->define()->getPackage()->getName());
   }
 
   #[@test]
