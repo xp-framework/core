@@ -180,4 +180,12 @@ class VerifyThatTest extends \unittest\TestCase {
       public function fixture() { }
     }'));
   }
+
+  #[@test]
+  public function with_non_existant_class() {
+    $this->assertSkipped(['non.existant.Class::irrelevant'], newinstance('unittest.TestCase', ['fixture'], '{
+      #[@test, @action(new \unittest\actions\VerifyThat("non.existant.Class::irrelevant"))]
+      public function fixture() { }
+    }'));
+  }
 }
