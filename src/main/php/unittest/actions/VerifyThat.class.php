@@ -1,11 +1,15 @@
 <?php namespace unittest\actions;
 
+use unittest\TestAction;
+use unittest\TestCase;;
+use unittest\PrerequisitesNotMetError;
+
 /**
  * Verifies a certain callable works
  *
  * @test  xp://net.xp_framework.unittest.tests.VerifyThatTest
  */
-class VerifyThat extends \lang\Object implements \unittest\TestAction {
+class VerifyThat extends \lang\Object implements TestAction {
   protected $verify;
   protected $prerequisite;
 
@@ -16,26 +20,18 @@ class VerifyThat extends \lang\Object implements \unittest\TestAction {
    */
   public function __construct($callable) {
     if ($callable instanceof \Closure) {
-      $this->verify= function() use($callable) {
-        return call_user_func($callable->bindTo($this, $scope= $this));
-      };
+      $this->verify= $callable;
       $this->prerequisite= '<function()>';
     } else if (0 === strncmp($callable, 'self::', 6)) {
       $method= substr($callable, 6);
-      $this->verify= function() use($method) {
-        return call_user_func(['self', $method]);
-      };
+      $this->verify= function() use($method) { return call_user_func(['self', $method]); };
       $this->prerequisite= $callable;
     } else if (false !== ($p= strpos($callable, '::'))) {
       $method= \lang\XPClass::forName(substr($callable, 0, $p))->getMethod(substr($callable, $p+ 2));
-      $this->verify= function() use($method) {
-        return $method->invoke(null);
-      };
+      $this->verify= function() use($method) { return $method->invoke(null); };
       $this->prerequisite= $callable;
     } else {
-      $this->verify= function() use($callable) {
-        return call_user_func([$this, $callable]);
-      };
+      $this->verify= function() use($callable) { return call_user_func([$this, $callable]); };
       $this->prerequisite= '$this->'.$callable;
     }
   }
@@ -47,16 +43,15 @@ class VerifyThat extends \lang\Object implements \unittest\TestAction {
    * @param  unittest.TestCase $t
    * @throws unittest.PrerequisitesNotMetError
    */
-  public function beforeTest(\unittest\TestCase $t) {
-    $f= $this->verify->bindTo($t, $scope= $t);
+  public function beforeTest(TestCase $t) {
     try {
-      $verified= $f();
+      $verified= $this->verify->bindTo($t, $t)->__invoke();
     } catch (\lang\Throwable $e) {
-      throw new \unittest\PrerequisitesNotMetError('Verification raised '.$e->compoundMessage(), null, [$this->prerequisite]);
+      throw new PrerequisitesNotMetError('Verification raised '.$e->compoundMessage(), null, [$this->prerequisite]);
     }
 
     if (!$verified) {
-      throw new \unittest\PrerequisitesNotMetError('Verification of failed', null, [$this->prerequisite]);
+      throw new PrerequisitesNotMetError('Verification of failed', null, [$this->prerequisite]);
     }
   }
 
@@ -66,7 +61,7 @@ class VerifyThat extends \lang\Object implements \unittest\TestAction {
    *
    * @param  unittest.TestCase $t
    */
-  public function afterTest(\unittest\TestCase $t) {
+  public function afterTest(TestCase $t) {
     // Empty
   }
 }
