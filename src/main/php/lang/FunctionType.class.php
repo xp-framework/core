@@ -1,7 +1,7 @@
 <?php namespace lang;
 
 /**
- * Represents wildcard types
+ * Represents function types
  *
  * @see   xp://lang.Type
  * @test  xp://net.xp_framework.unittest.core.FunctionTypeTest
