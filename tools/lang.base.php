@@ -663,7 +663,7 @@ function newinstance($spec, $args, $def= null) {
     $parent= ' extends '.$type;
   }
 
-  $type= \lang\ClassLoader::defineType($spec, $ns.$typeAnotations.'class '.$decl.$parent, $def);
+  $type= \lang\ClassLoader::defineType($spec, $ns.$typeAnotations.'class '.$decl.$parent, $def, false);
   $generic && xp::$meta[$spec]= ['class' => [DETAIL_COMMENT => null, DETAIL_GENERIC => $generic]];
   if ($type->hasConstructor()) {
     return $type->getConstructor()->newInstance($args);

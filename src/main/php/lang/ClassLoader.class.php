@@ -190,9 +190,9 @@ final class ClassLoader extends Object implements IClassLoader {
    */
   protected static function classLiteral($class) {
     if ($class instanceof XPClass) {
-      return $class->literal();
+      return '\\'.$class->literal();
     } else {
-      return XPClass::forName(strstr($class, '.') ? $class : \xp::nameOf($class))->literal();
+      return '\\'.XPClass::forName(strstr($class, '.') ? $class : \xp::nameOf($class))->literal();
     }
   }
 
@@ -204,7 +204,7 @@ final class ClassLoader extends Object implements IClassLoader {
    * @param  var $def
    * @return lang.XPClass
    */
-  public static function defineType($spec, $declaration, $def) {
+  public static function defineType($spec, $declaration, $def, $namespace= true) {
     static $bind= 'foreach (self::$__func as $_ => $f) { self::$__func[$_]= $f->bindTo($this, $this); }';
 
     if ('#' === $spec{0}) {
@@ -276,8 +276,14 @@ final class ClassLoader extends Object implements IClassLoader {
       $bytes= (string)$def;
     }
 
+    if ($namespace && false !== ($p= strrpos($spec, '.'))) {
+      $header= 'namespace '.strtr(substr($spec, 0, $p), '.', '\\').';';
+    } else {
+      $header= '';
+    }
+
     $dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__));
-    $dyn->setClassBytes($spec, $typeAnnotations.sprintf($declaration, $class).$bytes);
+    $dyn->setClassBytes($spec, $header.$typeAnnotations.sprintf($declaration, $class).$bytes);
     $cl= $dyn->loadClass($spec);
     $functions && $cl->_reflect->setStaticPropertyValue('__func', $functions);
     return $cl;

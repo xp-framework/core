@@ -16,12 +16,13 @@ abstract class RuntimeTypeDefinitionTest extends TestCase {
    * verifying the type has not been defined before.
    *
    * @param  string $annotations
+   * @param  string $name Uses a unique name if NULL is passed
    * @param  var $define A function
    * @return lang.XPClass
    * @throws unittest.AssertionFailedError
    */
-  protected function defineType($annotations, $define) {
-    $t= $this->getClassName().'__'.$this->name;
+  protected function defineType($annotations, $name, $define) {
+    $t= $name ?: $this->getClassName().'__'.$this->name;
     $spec= trim($annotations.' '.$t);
     if (interface_exists(\xp::reflect($t), false) || class_exists(\xp::reflect($t), false)) {
       $this->fail('Type may not exist!', $t, null);
@@ -32,9 +33,11 @@ abstract class RuntimeTypeDefinitionTest extends TestCase {
   /**
    * Define a type
    *
+   * @param   [:var] $decl
+   * @param   string $def
    * @return  lang.XPClass
    */
-  protected abstract function define();
+  protected abstract function define(array $decl= [], $def= null);
 
   #[@test]
   public function returns_XPClass_instances() {
@@ -63,11 +66,17 @@ abstract class RuntimeTypeDefinitionTest extends TestCase {
 
   #[@test]
   public function declares_passed_annotation() {
-    $this->assertTrue($this->define('#[@test]')->hasAnnotation('test'));
+    $this->assertTrue($this->define(['annotations' => '#[@test]'])->hasAnnotation('test'));
   }
 
   #[@test]
   public function declares_passed_annotation_with_value() {
-    $this->assertEquals('/rest', $this->define('#[@webservice(path= "/rest")]')->getAnnotation('webservice', 'path'));
+    $this->assertEquals('/rest', $this->define(['annotations' => '#[@webservice(path= "/rest")]'])->getAnnotation('webservice', 'path'));
+  }
+
+  #[@test]
+  public function class_is_declared_inside_namespace() {
+    $n= $this->getClass()->getSimpleName();
+    $this->assertEquals('com\\example\\test\\'.$n, $this->define(['name' => 'com.example.test.'.$n])->literal());
   }
 }
