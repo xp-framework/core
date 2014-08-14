@@ -138,6 +138,11 @@ class FunctionType extends Type {
    * @return  bool
    */
   public function isAssignableFrom($type) {
-    // TBI
+    $t= $type instanceof Type ? $type : Type::forName($type);
+    if (!($t instanceof self) || sizeof($t->signature) !== sizeof($this->signature)) return false;
+    foreach ($this->signature as $i => $type) {
+      if (!$type->isAssignableFrom($t->signature[$i])) return false;
+    }
+    return $this->returnType->isAssignableFrom($t->returnType);
   }
 }

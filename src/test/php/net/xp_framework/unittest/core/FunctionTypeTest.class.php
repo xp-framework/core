@@ -137,4 +137,34 @@ class FunctionTypeTest extends \unittest\TestCase {
   public function cannot_cast_this($value) {
     (new FunctionType([Type::$VAR], Type::$VAR))->cast($value);
   }
+
+  #[@test]
+  public function can_assign_to_itself() {
+    $type= new FunctionType([Type::$VAR], Type::$VAR);
+    $this->assertTrue($type->isAssignableFrom($type));
+  }
+
+  #[@test]
+  public function cannot_assign_if_number_of_arguments_smaller() {
+    $type= new FunctionType([Type::$VAR], Type::$VAR);
+    $this->assertFalse($type->isAssignableFrom(new FunctionType([], Type::$VAR)));
+  }
+
+  #[@test]
+  public function cannot_assign_if_number_of_arguments_larger() {
+    $type= new FunctionType([Type::$VAR], Type::$VAR);
+    $this->assertFalse($type->isAssignableFrom(new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR)));
+  }
+
+  #[@test]
+  public function cannot_assign_if_return_type_not_assignable() {
+    $type= new FunctionType([], Primitive::$STRING);
+    $this->assertFalse($type->isAssignableFrom(new FunctionType([], Type::$VOID)));
+  }
+
+  #[@test]
+  public function signature_matching() {
+    $type= new FunctionType([Type::$VAR], Type::$VAR);
+    $this->assertTrue($type->isAssignableFrom(new FunctionType([Primitive::$STRING], Type::$VAR)));
+  }
 }
