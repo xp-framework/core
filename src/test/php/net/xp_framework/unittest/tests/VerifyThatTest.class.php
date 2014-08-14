@@ -258,4 +258,19 @@ class VerifyThatTest extends \unittest\TestCase {
       }
     }'));
   }
+
+  #[@test]
+  public function class_verifications_are_run_after_beforeClass_methods() {
+    $this->assertSucceeds(newinstance('#[@action(new \unittest\actions\VerifyThat("self::verify"))] unittest.TestCase', ['fixture'], '{
+      protected static $initialized= false;
+
+      protected function verify() { return self::$initialized; }
+
+      #[@beforeClass]
+      public static function initialize() { self::$initialized= true; }
+
+      #[@test]
+      public function fixture() { }
+    }'));
+  }
 }
