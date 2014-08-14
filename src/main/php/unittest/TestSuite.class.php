@@ -479,9 +479,6 @@ class TestSuite extends \lang\Object {
    * @param  lang.XPClass class
    */
   protected function beforeClass($class) {
-    foreach ($this->actionsFor($class, 'unittest.TestClassAction') as $action) {
-      $action->beforeTestClass($class);
-    }
     foreach ($class->getMethods() as $m) {
       if (!$m->hasAnnotation('beforeClass')) continue;
       try {
@@ -495,6 +492,9 @@ class TestSuite extends \lang\Object {
         }
       }
     }
+    foreach ($this->actionsFor($class, 'unittest.TestClassAction') as $action) {
+      $action->beforeTestClass($class);
+    }
   }
   
   /**
@@ -504,14 +504,14 @@ class TestSuite extends \lang\Object {
    * @param  lang.XPClass class
    */
   protected function afterClass($class) {
+    foreach ($this->actionsFor($class, 'unittest.TestClassAction') as $action) {
+      $action->afterTestClass($class);
+    }
     foreach ($class->getMethods() as $m) {
       if (!$m->hasAnnotation('afterClass')) continue;
       try {
         $m->invoke(null, []);
       } catch (\lang\reflect\TargetInvocationException $ignored) { }
-    }
-    foreach ($this->actionsFor($class, 'unittest.TestClassAction') as $action) {
-      $action->afterTestClass($class);
     }
   }
 

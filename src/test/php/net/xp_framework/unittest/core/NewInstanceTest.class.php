@@ -3,20 +3,17 @@
 use lang\Runnable;
 use lang\Runtime;
 use lang\reflect\Package;
+use unittest\actions\VerifyThat;
 
 /**
- * TestCase for newinstance() functionality
+ * TestCase for newinstance() functionality. Some tests are skipped if
+ * process execution has been disabled.
  */
 class NewInstanceTest extends \unittest\TestCase {
 
-  /**
-   * Skips tests if process execution has been disabled.
-   */
-  #[@beforeClass]
-  public static function verifyProcessExecutionEnabled() {
-    if (\lang\Process::$DISABLED) {
-      throw new \unittest\PrerequisitesNotMetError('Process execution disabled', null, ['enabled']);
-    }
+  /** @return bool */
+  protected function processExecutionEnabled() {
+    return !\lang\Process::$DISABLED;
   }
 
   /**
@@ -143,7 +140,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals($this, $instance->test);
   }
 
-  #[@test]
+  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function missingMethodImplementationFatals() {
     $r= $this->runInNewRuntime(['lang.Runnable'], '
       newinstance("lang.Runnable", [], "{}");
@@ -155,7 +152,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function syntaxErrorFatals() {
     $r= $this->runInNewRuntime(['lang.Runnable'], '
       newinstance("lang.Runnable", [], "{ @__SYNTAX ERROR__@ }");
@@ -167,7 +164,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function missingClassFatals() {
     $r= $this->runInNewRuntime([], '
       newinstance("lang.NonExistantClass", [], "{}");
@@ -179,7 +176,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function notPreviouslyDefinedClassIsLoaded() {
     $r= $this->runInNewRuntime([], '
       if (isset(xp::$cl["lang.Runnable"])) {
@@ -295,7 +292,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals('Test', $instance->getTest());
   }
 
-  #[@test]
+  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function declaration_with_array_typehint() {
     $r= $this->runInNewRuntime([], '
       abstract class Base extends \lang\Object {
@@ -310,7 +307,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function declaration_with_callable_typehint() {
     $r= $this->runInNewRuntime([], '
       abstract class Base extends \lang\Object {
@@ -325,7 +322,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function declaration_with_class_typehint() {
     $r= $this->runInNewRuntime([], '
       abstract class Base extends \lang\Object {
@@ -340,7 +337,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function declaration_with_self_typehint() {
     $r= $this->runInNewRuntime([], '
       abstract class Base extends \lang\Object {
