@@ -191,17 +191,8 @@ class ProxyTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function unnamespaced_typehinted_parameters_handled_correctly() {
-    $proxy= $this->newProxyWith('{ public function fixture(Long $param); }');
-    $this->assertEquals(
-      XPClass::forName('lang.types.Long'),
-      $proxy->getMethod('fixture')->getParameters()[0]->getTypeRestriction()
-    );
-  }
-
-  #[@test]
   public function builtin_typehinted_parameters_handled_correctly() {
-    $proxy= $this->newProxyWith('{ public function fixture(ReflectionClass $param); }');
+    $proxy= $this->newProxyWith('{ public function fixture(\ReflectionClass $param); }');
     $this->assertEquals(
       new XPClass('ReflectionClass'),
       $proxy->getMethod('fixture')->getParameters()[0]->getTypeRestriction()

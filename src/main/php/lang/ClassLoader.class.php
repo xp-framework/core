@@ -183,90 +183,146 @@ final class ClassLoader extends Object implements IClassLoader {
   }
 
   /**
-   * Helper method to turn a given value into a class object
+   * Helper method to turn a given value into a literal
    *
-   * @param  var class
+   * @param  var class either an XPClass instance or a string
+   * @return string
+   */
+  protected static function classLiteral($class) {
+    if ($class instanceof XPClass) {
+      return '\\'.$class->literal();
+    } else {
+      return '\\'.XPClass::forName(strstr($class, '.') ? $class : \xp::nameOf($class))->literal();
+    }
+  }
+
+  /**
+   * Helper method for defineClass() and defineInterface().
+   *
+   * @param  string $spec
+   * @param  string $declaration
+   * @param  var $def
    * @return lang.XPClass
    */
-  protected static function classOf($class) {
-    if ($class instanceof XPClass) {
-      return $class;
+  public static function defineType($spec, $declaration, $def) {
+    static $bind= 'foreach (self::$__func as $_ => $f) { self::$__func[$_]= $f->bindTo($this, $this); }';
+
+    if ('#' === $spec{0}) {
+      $p= strrpos($spec, ' ');
+      $typeAnnotations= substr($spec, 0, $p)."\n";
+      $spec= substr($spec, $p+ 1);
     } else {
-      return XPClass::forName(strstr($class, '.') ? $class : \xp::nameOf($class));
+      $typeAnnotations= '';
     }
+
+    $class= \xp::reflect($spec);
+    if (isset(\xp::$cl[$spec])) return new XPClass($class);
+
+    $functions= [];
+    if (null === $def) {
+      $bytes= '{}';
+    } else if (is_array($def)) {
+      $iface= 0 === strncmp($declaration, 'interface', 9);
+      $bytes= '';
+      foreach ($def as $name => $member) {
+
+        if ('#' === $name{0}) {
+          $p= strrpos($name, ' ');
+          $memberAnnotations= substr($name, 0, $p)."\n";
+          $name= substr($name, $p+ 1);
+        } else {
+          $memberAnnotations= '';
+        }
+
+        if ($member instanceof \Closure) {
+          $r= new \ReflectionFunction($member);
+          $pass= $sig= '';
+          foreach ($r->getParameters() as $param) {
+            $p= $param->getName();
+            if ($param->isArray()) {
+              $sig.= ', array $'.$p;
+            } else if ($param->isCallable()) {
+              $sig.= ', callable $'.$p;
+            } else if (null !== ($restriction= $param->getClass())) {
+              $sig.= ', \\'.$restriction->getName().' $'.$p;
+            } else {
+              $sig.= ', $'.$p;
+            }
+            if ($param->isOptional()) {
+              $sig.= '= '.var_export($param->getDefaultValue(), true);
+            }
+            $pass.= ', $'.$p;
+          }
+          $bytes.= $memberAnnotations.'function '.$name.'('.substr($sig, 2).')';
+          if ($iface) {
+            $bytes.= ';';
+          } else {
+            $bytes.=
+              '{'.('__construct' === $name ? $bind : '').'$f= self::$__func["'.$name.'"]; '.
+              'return $f('.('' === $pass ? '' : substr($pass, 2)).'); }'
+            ;
+            $functions[$name]= $member;
+          }
+        } else {
+          $bytes.= $memberAnnotations.'public $'.$name.'= '.var_export($member, true).';';
+        }
+      }
+      $bytes= $iface ? '{'.$bytes.'}' : (
+        '{ static $__func= [];'.
+        (isset($functions['__construct']) ? '' : 'function __construct() {'.$bind.'}').
+        "\n".$bytes.' }'
+      );
+    } else {
+      $bytes= (string)$def;
+    }
+
+    if (false !== ($p= strrpos($spec, '.'))) {
+      $header= 'namespace '.strtr(substr($spec, 0, $p), '.', '\\').';';
+    } else {
+      $header= '';
+    }
+
+    $dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__));
+    $dyn->setClassBytes($spec, $header.$typeAnnotations.sprintf($declaration, $class).$bytes);
+    $cl= $dyn->loadClass($spec);
+    $functions && $cl->_reflect->setStaticPropertyValue('__func', $functions);
+    return $cl;
   }
 
   /**
    * Define a class with a given name
    *
-   * @param   string class fully qualified class name
+   * @param   string spec fully qualified class name, optionally prepended by annotations
    * @param   var parent The parent class either by qualified name or XPClass instance
    * @param   var[] interfaces The implemented interfaces either by qualified names or XPClass instances
-   * @param   string bytes default "{}" inner sourcecode of class (containing {}) 
+   * @param   var $def Code
    * @return  lang.XPClass
    * @throws  lang.FormatException in case the class cannot be defined
    */
-  public static function defineClass($class, $parent, $interfaces, $bytes= '{}') {
-    $name= \xp::reflect($class);
-    if (!isset(\xp::$cl[$class])) {
-
-      // Load parent class and implemented interfaces
-      $super= self::classOf($parent)->literal();
-      $if= [];
-      foreach ((array)$interfaces as $interface) {
-        $if[]= self::classOf($interface)->literal();
-      }
-
-      // Define class
-      with ($dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__))); {
-        $dyn->setClassBytes($class, sprintf(
-          'class %s extends %s%s %s',
-          $name,
-          $super,
-          $interfaces ? ' implements '.implode(', ', $if) : '',
-          $bytes
-        ));
-        
-        return $dyn->loadClass($class);
-      }
-    }
-    
-    return new XPClass($name);
+  public static function defineClass($spec, $parent, $interfaces, $def= null) {
+    $declaration= sprintf(
+      'class %%s extends %s%s',
+      self::classLiteral($parent),
+      $interfaces ? ' implements '.implode(', ', array_map('self::classLiteral', (array)$interfaces)) : ''
+    );
+    return self::defineType($spec, $declaration, $def);
   }
   
   /**
    * Define an interface with a given name
    *
-   * @param   string class fully qualified class name
+   * @param   string spec fully qualified class name, optionally prepended by annotations
    * @param   var[] parents The parent interfaces either by qualified names or XPClass instances
-   * @param   string bytes default "{}" inner sourcecode of class (containing {}) 
+   * @param   var $def Code
    * @return  lang.XPClass
    * @throws  lang.FormatException in case the class cannot be defined
    */
-  public static function defineInterface($class, $parents, $bytes= '{}') {
-    $name= \xp::reflect($class);
-    if (!isset(\xp::$cl[$class])) {
-
-      // Load parent class and implemented interfaces
-      $if= [];
-      foreach ((array)$parents as $interface) {
-        $if[]= self::classOf($interface)->literal();
-      }
-
-      // Define class
-      with ($dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__))); {
-        $dyn->setClassBytes($class, sprintf(
-          'interface %s%s %s',
-          $name,
-          $parents ? ' extends '.implode(', ', $if) : '',
-          $bytes
-        ));
-        
-        return $dyn->loadClass($class);
-      }
-    }
-    
-    return new XPClass($name);
+  public static function defineInterface($spec, $parents, $def= null) {
+    $declaration= sprintf(
+      'interface %%s %s',
+      $parents ? ' extends '.implode(', ', array_map('self::classLiteral', (array)$parents)) : ''
+    );
+    return self::defineType($spec, $declaration, $def);
   }
 
   /**

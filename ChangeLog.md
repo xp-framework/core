@@ -47,6 +47,10 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented RFC #283: Unittest closure actions - (@thekid)
+* Implemented RFC #276: Be able to define classes with annotations
+  (@thekid)
+* Implemented RFC #282: Generic type variables - (@thekid)
 * Implemented RFC #098: Generic Filter interface - (@thekid)
 * Implemented RFC #266: Extend the XP typesystem - (@thekid)
 * Implemented RFC #281: PHP 5.4.0 - (@thekid)

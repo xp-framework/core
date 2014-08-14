@@ -264,4 +264,75 @@ class ClassDetailsTest extends TestCase {
     ');
     $this->assertEquals([[1, 2], [3, 4]], $actual['class'][DETAIL_ANNOTATIONS]['values']);
   }
+
+  #[@test]
+  public function field_annotations() {
+    $details= (new ClassParser())->parseDetails('<?php
+      class Test extends Object {
+        #[@test]
+        public $fixture;
+      }
+    ');
+    $this->assertEquals(['test' => null], $details[0]['fixture'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[@test]
+  public function method_annotations() {
+    $details= (new ClassParser())->parseDetails('<?php
+      class Test extends Object {
+        #[@test]
+        public function fixture() { }
+      }
+    ');
+    $this->assertEquals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[@test]
+  public function abstract_method_annotations() {
+    $details= (new ClassParser())->parseDetails('<?php
+      abstract class Test extends Object {
+        #[@test]
+        public abstract function fixture();
+      }
+    ');
+    $this->assertEquals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[@test]
+  public function interface_method_annotations() {
+    $details= (new ClassParser())->parseDetails('<?php
+      interface Test {
+        #[@test]
+        public function fixture();
+      }
+    ');
+    $this->assertEquals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[@test]
+  public function parser_not_confused_by_closure() {
+    $details= (new ClassParser())->parseDetails('<?php
+      class Test extends Object {
+        #[@test]
+        public function fixture() {
+          return function() { };
+        }
+      }
+    ');
+    $this->assertEquals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[@test]
+  public function field_with_annotation_after_methods() {
+    $details= (new ClassParser())->parseDetails('<?php
+      class Test extends Object {
+        #[@test]
+        public function fixture() { }
+
+        #[@test]
+        public $fixture;
+      }
+    ');
+    $this->assertEquals(['test' => null], $details[0]['fixture'][DETAIL_ANNOTATIONS]);
+  }
 }
