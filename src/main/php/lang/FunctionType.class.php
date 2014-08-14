@@ -93,7 +93,7 @@ class FunctionType extends Type {
       if (sizeof($params) !== sizeof($this->signature)) return false;
       foreach ($this->signature as $i => $type) {
         if ($params[$i]->isArray()) {
-          if (!$type instanceof ArrayType && !$type instanceof MapType) return false;
+          if (!$type->equals(Primitive::$ARRAY) && !$type instanceof ArrayType && !$type instanceof MapType) return false;
         } else if ($params[$i]->isCallable()) {
           if (!$type instanceof FunctionType) return false;
         } else if (null === ($class= $params[$i]->getClass())) {

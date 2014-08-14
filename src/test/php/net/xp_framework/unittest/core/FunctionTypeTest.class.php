@@ -112,7 +112,7 @@ class FunctionTypeTest extends \unittest\TestCase {
   #[@test]
   public function function_with_zero_args_is_not_instance_of_two_arg_function_type() {
     $this->assertFalse((new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR))->isInstance(
-      function() { }#
+      function() { }
     ));
   }
 
