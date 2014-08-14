@@ -125,7 +125,10 @@ class FunctionType extends Type {
    * @throws  lang.ClassCastException
    */
   public function cast($value) {
-    // TBI
+    if (!$this->isInstance($value)) {
+      raise('lang.ClassCastException', 'Cannot cast to the '.$this->getName().' type from '.\xp::typeOf($value));
+    }
+    return $value;
   }
 
   /**

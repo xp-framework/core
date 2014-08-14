@@ -123,4 +123,18 @@ class FunctionTypeTest extends \unittest\TestCase {
       Type::forName('function(var): bool')
     );
   }
+
+  #[@test]
+  public function cast() {
+    $value= function($a) { };
+    $this->assertEquals($value, (new FunctionType([Type::$VAR], Type::$VAR))->cast($value));
+  }
+
+  #[@test, @expect('lang.ClassCastException'), @values([
+  #  0, -1, 0.5, true, false, '', 'Test',
+  #  [[]], [['key' => 'value']]
+  #])]
+  public function cannot_cast_this($value) {
+    (new FunctionType([Type::$VAR], Type::$VAR))->cast($value);
+  }
 }
