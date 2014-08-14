@@ -130,6 +130,16 @@ class VerifyThatTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function with_method_on_this_returning_false() {
+    $this->assertSkipped(['$this->returnFalse'], newinstance('unittest.TestCase', ['fixture'], '{
+      public function returnFalse() { return false; }
+
+      #[@test, @action(new \unittest\actions\VerifyThat("returnFalse"))]
+      public function fixture() { }
+    }'));
+  }
+
+  #[@test]
   public function with_static_method_on_self_returning_true() {
     $this->assertSucceeds(newinstance('unittest.TestCase', ['fixture'], '{
       public static function returnTrue() { return true; }
@@ -145,6 +155,16 @@ class VerifyThatTest extends \unittest\TestCase {
       protected static function returnTrue() { return true; }
 
       #[@test, @action(new \unittest\actions\VerifyThat("self::returnTrue"))]
+      public function fixture() { }
+    }'));
+  }
+
+  #[@test]
+  public function with_static_method_on_this_returning_false() {
+    $this->assertSkipped(['self::returnFalse'], newinstance('unittest.TestCase', ['fixture'], '{
+      public static function returnFalse() { return false; }
+
+      #[@test, @action(new \unittest\actions\VerifyThat("self::returnFalse"))]
       public function fixture() { }
     }'));
   }
