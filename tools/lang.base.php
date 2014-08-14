@@ -643,27 +643,18 @@ function newinstance($spec, $args, $def= null) {
   // Create unique name
   $n= '·'.(++$u);
   if (false !== $p) {
-    $ns= '$package= "'.strtr(substr($type, 0, $p), '·', '.').'"; ';
     $spec= strtr(substr($type, 0, $p), '·', '.').'.'.substr($type, $p+ 1).$n;
-    $decl= $type.$n;
-  } else if (false === ($p= strrpos($type, '\\'))) {
-    $ns= '';
-    $decl= $type.$n;
-    $spec= substr($spec, 0, strrpos($spec, '.')).'.'.$type.$n;
   } else {
-    $ns= 'namespace '.substr($type, 0, $p).'; ';
-    $decl= substr($type, $p+ 1).$n;
     $spec= strtr($type, '\\', '.').$n;
-    $type= '\\'.$type;
   }
 
   if (interface_exists($type)) {
-    $parent= ' extends \lang\Object implements '.$type;
+    $parent= ' extends \\lang\\Object implements \\'.$type;
   } else {
-    $parent= ' extends '.$type;
+    $parent= ' extends \\'.$type;
   }
 
-  $type= \lang\ClassLoader::defineType($spec, $ns.$typeAnotations.'class '.$decl.$parent, $def, false);
+  $type= \lang\ClassLoader::defineType($spec, $typeAnotations.'class %s'.$parent, $def);
   $generic && xp::$meta[$spec]= ['class' => [DETAIL_COMMENT => null, DETAIL_GENERIC => $generic]];
   if ($type->hasConstructor()) {
     return $type->getConstructor()->newInstance($args);

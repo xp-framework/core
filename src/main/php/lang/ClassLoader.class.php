@@ -204,7 +204,7 @@ final class ClassLoader extends Object implements IClassLoader {
    * @param  var $def
    * @return lang.XPClass
    */
-  public static function defineType($spec, $declaration, $def, $namespace= true) {
+  public static function defineType($spec, $declaration, $def) {
     static $bind= 'foreach (self::$__func as $_ => $f) { self::$__func[$_]= $f->bindTo($this, $this); }';
 
     if ('#' === $spec{0}) {
@@ -276,7 +276,7 @@ final class ClassLoader extends Object implements IClassLoader {
       $bytes= (string)$def;
     }
 
-    if ($namespace && false !== ($p= strrpos($spec, '.'))) {
+    if (false !== ($p= strrpos($spec, '.'))) {
       $header= 'namespace '.strtr(substr($spec, 0, $p), '.', '\\').';';
     } else {
       $header= '';
