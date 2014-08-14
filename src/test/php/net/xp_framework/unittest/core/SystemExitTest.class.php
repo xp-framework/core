@@ -18,7 +18,7 @@ class SystemExitTest extends TestCase {
   #[@beforeClass]
   public static function defineExiterClass() {
     self::$exiterClass= \lang\ClassLoader::defineClass('net.xp_framework.unittest.core.Exiter', 'lang.Object', [], '{
-      public function __construct() { throw new SystemExit(0); }
+      public function __construct() { throw new \lang\SystemExit(0); }
       public static function doExit() { new self(); }
     }');
   }

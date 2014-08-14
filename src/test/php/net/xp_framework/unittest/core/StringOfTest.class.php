@@ -161,7 +161,7 @@ class StringOfTest extends \unittest\TestCase {
         $this->inner= $inner;
       }
       public function toString() {
-        return "object {\n  ".xp::stringOf($this->inner, "  ")."\n}";
+        return "object {\n  ".\xp::stringOf($this->inner, "  ")."\n}";
       }
     }');
     $this->assertEquals(

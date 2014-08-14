@@ -614,7 +614,14 @@ function this($expr, $offset) {
 //     Anonymous instance creation
 function newinstance($spec, $args, $def= null) {
   static $u= 0;
-  static $bind= 'foreach (self::$__func as $_ => $f) { self::$__func[$_]= $f->bindTo($this, $this); } ';
+
+  if ('#' === $spec{0}) {
+    $p= strrpos($spec, ' ');
+    $annotations= substr($spec, 0, $p).' ';
+    $spec= substr($spec, $p+ 1);
+  } else {
+    $annotations= '';
+  }
 
   // Check for an anonymous generic 
   if (strstr($spec, '<')) {
@@ -636,82 +643,27 @@ function newinstance($spec, $args, $def= null) {
   // Create unique name
   $n= '·'.(++$u);
   if (false !== $p) {
-    $ns= '$package= "'.strtr(substr($type, 0, $p), '·', '.').'"; ';
     $spec= strtr(substr($type, 0, $p), '·', '.').'.'.substr($type, $p+ 1).$n;
-    $decl= $type.$n;
-  } else if (false === ($p= strrpos($type, '\\'))) {
-    $ns= '';
-    $decl= $type.$n;
-    $spec= substr($spec, 0, strrpos($spec, '.')).'.'.$type.$n;
   } else {
-    $ns= 'namespace '.substr($type, 0, $p).'; ';
-    $decl= substr($type, $p+ 1).$n;
     $spec= strtr($type, '\\', '.').$n;
-    $type= '\\'.$type;
   }
 
-  // No definition: Emty body, array => closure style, string: source code
-  $functions= [];
-  if (null === $def) {
-    $bytes= '{}';
-  } else if (is_array($def)) {
-    $bytes= '';
-    foreach ($def as $name => $member) {
-      if ($member instanceof \Closure) {
-        $r= new ReflectionFunction($member);
-        $pass= $sig= '';
-        foreach ($r->getParameters() as $param) {
-          $p= $param->getName();
-          if ($param->isArray()) {
-            $sig.= ', array $'.$p;
-          } else if ($param->isCallable()) {
-            $sig.= ', callable $'.$p;
-          } else if (null !== ($class= $param->getClass())) {
-            $sig.= ', \\'.$class->getName().' $'.$p;
-          } else {
-            $sig.= ', $'.$p;
-          }
-          if ($param->isOptional()) {
-            $sig.= '= '.var_export($param->getDefaultValue(), true);
-          }
-          $pass.= ', $'.$p;
-        }
-        $bytes.= (
-          'function '.$name.'('.substr($sig, 2).') {'.
-          ('__construct' === $name ? $bind : '').
-          '$f= self::$__func["'.$name.'"]; '.
-          'return $f('.('' === $pass ? '' : substr($pass, 2)).'); }'
-        );
-        $functions[$name]= $member;
-      } else {
-        $bytes.= 'public $'.$name.'= '.var_export($member, true).';';
-      }
-    }
-    $bytes= (
-      '{ static $__func= [];'.
-      (isset($functions['__construct']) ? '' : 'function __construct() {'.$bind.'}').
-      $bytes.' }'
-    );
-  } else {
-    $bytes= (string)$def;
-  }
-
-  // Checks whether an interface or a class was given
-  $cl= \lang\DynamicClassLoader::instanceFor(__FUNCTION__);
   if (interface_exists($type)) {
-    $cl->setClassBytes($spec, $ns.'class '.$decl.' extends \lang\Object implements '.$type.' '.$bytes);
+    $decl= 'class %s extends \\lang\\Object implements \\'.$type;
   } else {
-    $cl->setClassBytes($spec, $ns.'class '.$decl.' extends '.$type.' '.$bytes);
+    $decl= 'class %s extends \\'.$type;
+  }
+  $type= \lang\ClassLoader::defineType($annotations.$spec, $decl, $def);
+
+  if ($generic) {
+    \lang\XPClass::detailsForClass($spec);
+    xp::$meta[$spec]['class'][DETAIL_GENERIC]= $generic;
   }
 
-  // Instantiate
-  $decl= new \ReflectionClass($cl->loadClass0($spec));
-  $functions && $decl->setStaticPropertyValue('__func', $functions);
-  $generic && xp::$meta[$spec]= ['class' => [DETAIL_COMMENT => null, DETAIL_GENERIC => $generic]];
-  if ($decl->hasMethod('__construct')) {
-    return $decl->newInstanceArgs($args);
+  if ($type->hasConstructor()) {
+    return $type->getConstructor()->newInstance($args);
   } else {
-    return $decl->newInstance();
+    return $type->newInstance();
   }
 }
 // }}}
