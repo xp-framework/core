@@ -58,7 +58,9 @@ class VerifyThatTest extends \unittest\TestCase {
   public function with_closure_returning_false() {
     $this->assertSkipped(['<function()>'], newinstance('unittest.TestCase', ['fixture'], '{
       #[@test, @action(new \unittest\actions\VerifyThat(function() { return false; }))]
-      public function fixture() { }
+      public function fixture() {
+        throw new \lang\IllegalStateException("Should not be reached");
+      }
     }'));
   }
 
@@ -68,7 +70,9 @@ class VerifyThatTest extends \unittest\TestCase {
       #[@test, @action(new \unittest\actions\VerifyThat(function() {
       #  throw new \lang\IllegalStateException("Test");
       #}))]
-      public function fixture() { }
+      public function fixture() {
+        throw new \lang\IllegalStateException("Should not be reached");
+      }
     }'));
   }
 
@@ -101,7 +105,7 @@ class VerifyThatTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function with_closure_accessing_protected_static_ember() {
+  public function with_closure_accessing_protected_static_member() {
     $this->assertSucceeds(newinstance('unittest.TestCase', ['fixture'], '{
       protected static $member= true;
       #[@test, @action(new \unittest\actions\VerifyThat(function() { return self::$member; }))]
@@ -135,7 +139,9 @@ class VerifyThatTest extends \unittest\TestCase {
       public function returnFalse() { return false; }
 
       #[@test, @action(new \unittest\actions\VerifyThat("returnFalse"))]
-      public function fixture() { }
+      public function fixture() {
+        throw new \lang\IllegalStateException("Should not be reached");
+      }
     }'));
   }
 
@@ -165,7 +171,9 @@ class VerifyThatTest extends \unittest\TestCase {
       public static function returnFalse() { return false; }
 
       #[@test, @action(new \unittest\actions\VerifyThat("self::returnFalse"))]
-      public function fixture() { }
+      public function fixture() {
+        throw new \lang\IllegalStateException("Should not be reached");
+      }
     }'));
   }
 
@@ -181,7 +189,9 @@ class VerifyThatTest extends \unittest\TestCase {
   public function with_non_existant_method_on_this() {
     $this->assertSkipped(['$this->non_existant_method'], newinstance('unittest.TestCase', ['fixture'], '{
       #[@test, @action(new \unittest\actions\VerifyThat("non_existant_method"))]
-      public function fixture() { }
+      public function fixture() {
+        throw new \lang\IllegalStateException("Should not be reached");
+      }
     }'));
   }
 
@@ -189,7 +199,9 @@ class VerifyThatTest extends \unittest\TestCase {
   public function with_non_existant_method_on_self() {
     $this->assertSkipped(['self::non_existant_method'], newinstance('unittest.TestCase', ['fixture'], '{
       #[@test, @action(new \unittest\actions\VerifyThat("self::non_existant_method"))]
-      public function fixture() { }
+      public function fixture() {
+        throw new \lang\IllegalStateException("Should not be reached");
+      }
     }'));
   }
 
@@ -197,7 +209,9 @@ class VerifyThatTest extends \unittest\TestCase {
   public function with_non_existant_method_on_class() {
     $this->assertSkipped(['net.xp_framework.unittest.tests.VerifyThatTest::non_existant_method'], newinstance('unittest.TestCase', ['fixture'], '{
       #[@test, @action(new \unittest\actions\VerifyThat("net.xp_framework.unittest.tests.VerifyThatTest::non_existant_method"))]
-      public function fixture() { }
+      public function fixture() {
+        throw new \lang\IllegalStateException("Should not be reached");
+      }
     }'));
   }
 
@@ -205,7 +219,43 @@ class VerifyThatTest extends \unittest\TestCase {
   public function with_non_existant_class() {
     $this->assertSkipped(['non.existant.Class::irrelevant'], newinstance('unittest.TestCase', ['fixture'], '{
       #[@test, @action(new \unittest\actions\VerifyThat("non.existant.Class::irrelevant"))]
+      public function fixture() {
+        throw new \lang\IllegalStateException("Should not be reached");
+      }
+    }'));
+  }
+
+  #[@test]
+  public function on_class_returning_true() {
+    $this->assertSucceeds(newinstance('#[@action(new \unittest\actions\VerifyThat("self::returnTrue"))] unittest.TestCase', ['fixture'], '{
+      protected static function returnTrue() { return true; }
+
+      #[@test]
       public function fixture() { }
+    }'));
+  }
+
+  #[@test]
+  public function on_class_returning_false() {
+    $this->assertSkipped(['self::returnFalse'], newinstance('#[@action(new \unittest\actions\VerifyThat("self::returnFalse"))] unittest.TestCase', ['fixture'], '{
+      protected static function returnFalse() { return false; }
+
+      #[@test]
+      public function fixture() {
+        throw new \lang\IllegalStateException("Should not be reached");
+      }
+    }'));
+  }
+
+  #[@test]
+  public function on_class_with_instance_method() {
+    $this->assertSkipped(['$this->returnFalse'], newinstance('#[@action(new \unittest\actions\VerifyThat("returnFalse"))] unittest.TestCase', ['fixture'], '{
+      protected function returnFalse() { return false; }
+
+      #[@test]
+      public function fixture() {
+        throw new \lang\IllegalStateException("Should not be reached");
+      }
     }'));
   }
 }

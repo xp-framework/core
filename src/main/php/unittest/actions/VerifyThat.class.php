@@ -1,7 +1,8 @@
 <?php namespace unittest\actions;
 
 use unittest\TestAction;
-use unittest\TestCase;;
+use unittest\TestClassAction;
+use unittest\TestCase;
 use unittest\PrerequisitesNotMetError;
 
 /**
@@ -9,7 +10,7 @@ use unittest\PrerequisitesNotMetError;
  *
  * @test  xp://net.xp_framework.unittest.tests.VerifyThatTest
  */
-class VerifyThat extends \lang\Object implements TestAction {
+class VerifyThat extends \lang\Object implements TestAction, TestClassAction {
   protected $verify;
   protected $prerequisite;
 
@@ -63,6 +64,41 @@ class VerifyThat extends \lang\Object implements TestAction {
    * @param  unittest.TestCase $t
    */
   public function afterTest(TestCase $t) {
+    // Empty
+  }
+
+  /**
+   * This method gets invoked before any test method of the given class is
+   * invoked, and before any methods annotated with beforeTest.
+   *
+   * @param  lang.XPClass $c
+   * @return void
+   * @throws unittest.PrerequisitesNotMetError
+   */
+  public function beforeTestClass(\lang\XPClass $c) {
+    if (0 === strncmp($this->prerequisite, '$this', 5)) {
+      throw new PrerequisitesNotMetError('Cannot use instance methods on a class action', null, [$this->prerequisite]);
+    }
+
+    try {
+      $verified= $this->verify->bindTo(null, $c->literal())->__invoke();
+    } catch (\lang\Throwable $e) {
+      throw new PrerequisitesNotMetError('Verification raised '.$e->compoundMessage(), null, [$this->prerequisite]);
+    }
+
+    if (!$verified) {
+      throw new PrerequisitesNotMetError('Verification of failed', null, [$this->prerequisite]);
+    }
+  }
+
+  /**
+   * This method gets invoked after all test methods of a given class have
+   * executed, and after any methods annotated with afterTest
+   *
+   * @param  lang.XPClass $c
+   * @return void
+   */
+  public function afterTestClass(\lang\XPClass $c) {
     // Empty
   }
 }
