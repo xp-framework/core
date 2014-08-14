@@ -617,10 +617,10 @@ function newinstance($spec, $args, $def= null) {
 
   if ('#' === $spec{0}) {
     $p= strrpos($spec, ' ');
-    $typeAnotations= substr($spec, 0, $p)."\n";
+    $annotations= substr($spec, 0, $p).' ';
     $spec= substr($spec, $p+ 1);
   } else {
-    $typeAnotations= '';
+    $annotations= '';
   }
 
   // Check for an anonymous generic 
@@ -654,7 +654,7 @@ function newinstance($spec, $args, $def= null) {
     $parent= ' extends \\'.$type;
   }
 
-  $type= \lang\ClassLoader::defineType($spec, $typeAnotations.'class %s'.$parent, $def);
+  $type= \lang\ClassLoader::defineType($annotations.$spec, 'class %s'.$parent, $def);
   $generic && xp::$meta[$spec]= ['class' => [DETAIL_COMMENT => null, DETAIL_GENERIC => $generic]];
   if ($type->hasConstructor()) {
     return $type->getConstructor()->newInstance($args);
