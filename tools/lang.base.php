@@ -649,12 +649,12 @@ function newinstance($spec, $args, $def= null) {
   }
 
   if (interface_exists($type)) {
-    $parent= ' extends \\lang\\Object implements \\'.$type;
+    $decl= 'class %s extends \\lang\\Object implements \\'.$type;
   } else {
-    $parent= ' extends \\'.$type;
+    $decl= 'class %s extends \\'.$type;
   }
 
-  $type= \lang\ClassLoader::defineType($annotations.$spec, 'class %s'.$parent, $def);
+  $type= \lang\ClassLoader::defineType($annotations.$spec, $decl, $def);
   $generic && xp::$meta[$spec]= ['class' => [DETAIL_COMMENT => null, DETAIL_GENERIC => $generic]];
   if ($type->hasConstructor()) {
     return $type->getConstructor()->newInstance($args);
