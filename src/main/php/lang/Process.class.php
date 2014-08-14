@@ -29,7 +29,7 @@ class Process extends Object {
   
   protected
     $_proc  = null,
-    $status = array();
+    $status = [];
 
   public static $DISABLED;
 
@@ -46,12 +46,12 @@ class Process extends Object {
    * @param   [:string] default NULL the environment
    * @throws  io.IOException in case the command could not be executed
    */
-  public function __construct($command= null, $arguments= array(), $cwd= null, $env= null) {
-    static $spec= array(
-      0 => array('pipe', 'r'),  // stdin
-      1 => array('pipe', 'w'),  // stdout
-      2 => array('pipe', 'w')   // stderr
-    );
+  public function __construct($command= null, $arguments= [], $cwd= null, $env= null) {
+    static $spec= [
+      0 => ['pipe', 'r'],  // stdin
+      1 => ['pipe', 'w'],  // stdout
+      2 => ['pipe', 'w']   // stderr
+    ];
 
     // For `new self()` used in getProcessById()
     if (null === $command) return;
@@ -69,7 +69,7 @@ class Process extends Object {
 
     // Open process
     $cmd= CommandLine::forName(PHP_OS)->compose($binary, $arguments);
-    if (!is_resource($this->_proc= proc_open($cmd, $spec, $pipes, $cwd, $env, array('bypass_shell' => true)))) {
+    if (!is_resource($this->_proc= proc_open($cmd, $spec, $pipes, $cwd, $env, ['bypass_shell' => true]))) {
       throw new \io\IOException('Could not execute "'.$cmd.'"');
     }
 
@@ -92,7 +92,7 @@ class Process extends Object {
    * @param   [:string] default NULL the environment
    * @throws  io.IOException in case the command could not be executed
    */
-  public function newInstance($arguments= array(), $cwd= null, $env= null) {
+  public function newInstance($arguments= [], $cwd= null, $env= null) {
     return new self($this->status['exe'], $arguments, $cwd, $env);
   }
 
@@ -109,7 +109,7 @@ class Process extends Object {
     if ('' === $command) throw new \io\IOException('Empty command not resolveable');
     
     // PATHEXT is in form ".{EXT}[;.{EXT}[;...]]"
-    $extensions= array('') + explode(PATH_SEPARATOR, getenv('PATHEXT'));
+    $extensions= [''] + explode(PATH_SEPARATOR, getenv('PATHEXT'));
     clearstatcache();
   
     // If the command is in fully qualified form and refers to a file
@@ -148,14 +148,14 @@ class Process extends Object {
    */
   public static function getProcessById($pid, $exe= null) {
     $self= new self();
-    $self->status= array(
+    $self->status= [
       'pid'       => $pid, 
       'running'   => true,
       'exe'       => $exe,
       'command'   => '',
       'arguments' => null,
       'owner'     => false
-    );
+    ];
 
     // Determine executable and command line:
     // * On Windows, use Windows Management Instrumentation API - see
@@ -184,7 +184,7 @@ class Process extends Object {
         throw new \IllegalStateException('Cannot find executable in /proc');
       }
       do {
-        foreach (array('/exe', '/file') as $alt) {
+        foreach (['/exe', '/file'] as $alt) {
           if (!file_exists($proc.$alt)) continue;
           $self->status['exe']= readlink($proc.$alt);
           break 2;

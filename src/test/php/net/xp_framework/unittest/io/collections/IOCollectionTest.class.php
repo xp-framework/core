@@ -26,22 +26,22 @@ class IOCollectionTest extends AbstractCollectionTest {
 
   #[@test, @values(['.', './sub', './sub/sec'])]
   public function getUri_adds_trailing_slash_to_collections($dir) {
-    $this->assertEquals($dir.'/', create(new MockCollection($dir))->getURI());
+    $this->assertEquals($dir.'/', (new MockCollection($dir))->getURI());
   }
 
   #[@test, @values(['./first.txt', './sub/sec/lang.base.php'])]
   public function getUri_retuns_absolute_name_of_elements($file) {
-    $this->assertEquals($file, create(new MockElement($file))->getURI());
+    $this->assertEquals($file, (new MockElement($file))->getURI());
   }
 
   #[@test, @values(['.', './sub', './sub/sec'])]
   public function getName_returns_relative_name_of_collections($dir) {
-    $this->assertEquals(basename($dir), create(new MockCollection($dir))->getName());
+    $this->assertEquals(basename($dir), (new MockCollection($dir))->getName());
   }
 
   #[@test, @values(['./first.txt', './sub/sec/lang.base.php'])]
   public function getUri_retuns_relatvie_name_of_elements($file) {
-    $this->assertEquals(basename($file), create(new MockElement($file))->getName());
+    $this->assertEquals(basename($file), (new MockElement($file))->getName());
   }
 
   #[@test]

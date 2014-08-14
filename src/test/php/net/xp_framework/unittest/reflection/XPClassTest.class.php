@@ -161,7 +161,7 @@ class XPClassTest extends \unittest\TestCase {
 
   #[@test]
   public function this_class_does_not_declare_any_interfaces() {
-    $this->assertEquals(array(), $this->getClass()->getDeclaredInterfaces());
+    $this->assertEquals([], $this->getClass()->getDeclaredInterfaces());
   }
 
   #[@test]
@@ -225,11 +225,11 @@ class XPClassTest extends \unittest\TestCase {
   
   #[@test]
   public function implementedConstructorInvocation() {
-    $i= \lang\ClassLoader::defineClass('ANonAbstractClass', 'net.xp_framework.unittest.reflection.AbstractTestClass', array(), '{
+    $parent= 'net.xp_framework.unittest.reflection.AbstractTestClass';
+    $i= \lang\ClassLoader::defineClass('ANonAbstractClass', $parent, [], '{
       public function getDate() {}
-    }');
-    
-    $this->assertSubclass($i->getConstructor()->newInstance(), 'net.xp_framework.unittest.reflection.AbstractTestClass');
+    }');    
+    $this->assertInstanceOf($parent, $i->getConstructor()->newInstance());
   }
 
   #[@test]

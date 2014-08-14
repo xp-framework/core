@@ -14,11 +14,11 @@ class Vector extends \lang\Object implements IList {
     $iterate   = null;
 
   protected
-    $elements  = array(),
+    $elements  = [],
     $size      = 0;
 
   static function __static() {
-    self::$iterate= newinstance('Iterator', array(), '{
+    self::$iterate= newinstance('Iterator', [], '{
       private $i= 0, $v;
       public function on($v) { $self= new self(); $self->v= $v; return $self; }
       public function current() { return $this->v[$this->i]; }
@@ -32,10 +32,10 @@ class Vector extends \lang\Object implements IList {
   /**
    * Constructor
    *
-   * @param   T[] elements default array()
+   * @param   T[] elements default []
    */
   #[@generic(params= 'T[]')]
-  public function __construct($elements= array()) {
+  public function __construct($elements= []) {
     $this->elements= $elements;
     $this->size= sizeof($this->elements);
   }
@@ -209,7 +209,7 @@ class Vector extends \lang\Object implements IList {
    *
    */
   public function clear() {
-    $this->elements= array();
+    $this->elements= [];
     $this->size= 0;
   }
   
@@ -272,8 +272,8 @@ class Vector extends \lang\Object implements IList {
    */
   public function toString() {
     $r= $this->getClassName().'['.$this->size."]@{\n";
-    for ($i= 0; $i < $this->size; $i++) {
-      $r.= '  '.$i.': '.\xp::stringOf($this->elements[$i], '  ')."\n";
+    foreach ($this->elements as $i => $e) {
+      $r.= '  '.$i.': '.\xp::stringOf($e, '  ')."\n";
     } 
     return $r.'}';
   }
@@ -285,7 +285,7 @@ class Vector extends \lang\Object implements IList {
    * @return  bool
    */
   public function equals($cmp) {
-    if (!($cmp instanceof self) || $this->size !== $cmp->size || $this->__generic !== $cmp->__generic) return false;
+    if (!($cmp instanceof self) || $this->size !== $cmp->size) return false;
     
     // Compare element by element
     for ($i= 0; $i < $this->size; $i++) {

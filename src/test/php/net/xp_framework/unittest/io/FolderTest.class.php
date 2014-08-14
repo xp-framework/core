@@ -77,7 +77,7 @@ class FolderTest extends TestCase {
    */
   #[@test]
   public function initiallyNotOpen() {
-    $this->assertFalse(create(new Folder($this->temp))->isOpen());
+    $this->assertFalse((new Folder($this->temp))->isOpen());
   }
 
   /**
@@ -86,7 +86,7 @@ class FolderTest extends TestCase {
    */
   #[@test]
   public function exists() {
-    $this->assertFalse(create(new Folder($this->temp))->exists());
+    $this->assertFalse((new Folder($this->temp))->exists());
   }
 
   /**
@@ -118,7 +118,7 @@ class FolderTest extends TestCase {
    */
   #[@test]
   public function uriOfNonExistantFolder() {
-    $this->assertEquals($this->temp, create(new Folder($this->temp))->getURI());
+    $this->assertEquals($this->temp, (new Folder($this->temp))->getURI());
   }
   
   /**

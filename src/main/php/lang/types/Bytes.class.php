@@ -39,7 +39,7 @@ class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
     if (null === $initial) {
       // Intentionally empty
     } else if (is_array($initial)) {
-      $this->buffer= implode('', array_map(array($this, 'asByte'), $initial));
+      $this->buffer= implode('', array_map([$this, 'asByte'], $initial));
     } else if (is_string($initial)) {
       $this->buffer= $initial;
     } else {
@@ -55,7 +55,7 @@ class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
    * @return  php.Iterator
    */
   public function getIterator() {
-    if (!$this->iterator) $this->iterator= newinstance('Iterator', array($this), '{
+    if (!$this->iterator) $this->iterator= newinstance('Iterator', [$this], '{
       private $i= 0, $v;
       public function __construct($v) { $this->v= $v; }
       public function current() { $n= ord($this->v->buffer{$this->i}); return new Byte($n < 128 ? $n : $n - 256); }

@@ -148,7 +148,7 @@ class QuotedPrintableInputStreamTest extends TestCase {
       }
       
       public function close() {
-        $this->chunks= array();
+        $this->chunks= [];
       }
     }'));
     $chunk= $stream->read(strlen($expected));
@@ -186,6 +186,6 @@ class QuotedPrintableInputStreamTest extends TestCase {
    */
   #[@test, @expect('io.IOException')]
   public function invalidByteSequence() {
-    create(new QuotedPrintableInputStream(new MemoryInputStream('Hell=XX')))->read();
+    (new QuotedPrintableInputStream(new MemoryInputStream('Hell=XX')))->read();
   }
 }

@@ -1,7 +1,5 @@
 <?php namespace io\collections\iterate;
 
-
-
 /**
  * Combined filter that accepts an element if any of its filters
  * accept the element.
@@ -16,7 +14,7 @@
  * will accept any elements smaller than 500 bytes or with a
  * ".txt"-extension.
  *
- * @purpose  Iteration Filter
+ * @deprecated Use util.Filters::anyOf() instead
  */
 class AnyOfFilter extends AbstractCombinedFilter {
   

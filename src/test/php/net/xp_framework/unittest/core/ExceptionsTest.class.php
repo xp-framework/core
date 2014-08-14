@@ -51,23 +51,20 @@ class ExceptionsTest extends TestCase {
 
   #[@test]
   public function stackTrace() {
-    $trace= create(new Throwable('Test'))->getStackTrace();
-    $this->assertArray($trace);
-    $this->assertNotEmpty($trace);
-    foreach ($trace as $element) {
-      $this->assertInstanceOf('lang.StackTraceElement', $element);
-    }
+    $trace= (new Throwable('Test'))->getStackTrace();
+    $this->assertInstanceOf('lang.StackTraceElement[]', $trace);
+    $this->assertNotEquals(0, sizeof($trace));
   }
 
   #[@test]
   public function firstFrame() {
-    $trace= create(new Throwable('Test'))->getStackTrace();
+    $trace= (new Throwable('Test'))->getStackTrace();
     
     $this->assertEquals(get_class($this), $trace[0]->class);
     $this->assertEquals($this->getName(), $trace[0]->method);
     $this->assertEquals(NULL, $trace[0]->file);
     $this->assertEquals(0, $trace[0]->line);
-    $this->assertEquals(array(), $trace[0]->args);
+    $this->assertEquals([], $trace[0]->args);
     $this->assertEquals('', $trace[0]->message);
   }
 
@@ -79,31 +76,31 @@ class ExceptionsTest extends TestCase {
   #[@test]
   public function hashCodesAreUnique() {
     $this->assertNotEquals(
-      create(new Throwable('Test'))->hashCode(),
-      create(new Throwable('Test'))->hashCode()
+      (new Throwable('Test'))->hashCode(),
+      (new Throwable('Test'))->hashCode()
     );
   }
 
   #[@test]
   public function message() {
-    $this->assertEquals('Test', create(new Throwable('Test'))->getMessage());
+    $this->assertEquals('Test', (new Throwable('Test'))->getMessage());
   }
 
   #[@test]
   public function classMethod() {
-    $this->assertEquals(\lang\XPClass::forName('lang.Throwable'), create(new Throwable('Test'))->getClass());
+    $this->assertEquals(\lang\XPClass::forName('lang.Throwable'), (new Throwable('Test'))->getClass());
   }
 
   #[@test]
   public function classNameMethod() {
-    $this->assertEquals('lang.Throwable', create(new Throwable('Test'))->getClassName());
+    $this->assertEquals('lang.Throwable', (new Throwable('Test'))->getClassName());
   }
 
   #[@test]
   public function compoundMessage() {
     $this->assertEquals(
       'Exception lang.Throwable (Test)', 
-      create(new Throwable('Test'))->compoundMessage()
+      (new Throwable('Test'))->compoundMessage()
     );
   }
 
@@ -134,5 +131,10 @@ class ExceptionsTest extends TestCase {
       $this->assertEquals('This is the message', $e->getMessage());
       $this->assertEquals(__FUNCTION__, $e->method);
     }
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function withCause_must_be_a_throwable() {
+    new \lang\XPException('Message', 'Anything...');
   }
 }

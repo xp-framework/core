@@ -12,7 +12,7 @@ use io\collections\IOCollection;
  */
 abstract class AbstractCollectionTest extends \unittest\TestCase {
   protected $fixture = null;
-  protected $sizes   = array();
+  protected $sizes   = [];
   protected $total   = 0;
 
   /**
@@ -48,7 +48,7 @@ abstract class AbstractCollectionTest extends \unittest\TestCase {
    * @param   io.collections.IOElement[] $elements
    * @return  io.collections.IOCollection
    */
-  protected function newCollection($name, $elements= array()) {
+  protected function newCollection($name, $elements= []) {
     $c= new MockCollection($name);
     foreach ($elements as $element) {
       $c->addElement($element);
@@ -82,62 +82,62 @@ abstract class AbstractCollectionTest extends \unittest\TestCase {
     $this->addElement($this->fixture, new MockElement(
       './first.txt', 
       1200, 
-      Date::fromString('Oct 10  2006'), // accessed
-      Date::fromString('Dec 14  2005'), // modified
-      Date::fromString('Oct 30  2005')  // created
+      new Date('Oct 10  2006'), // accessed
+      new Date('Dec 14  2005'), // modified
+      new Date('Oct 30  2005')  // created
     ));
     $this->addElement($this->fixture, new MockElement(
       './second.txt', 
       333, 
-      Date::fromString('Oct 10  2006'), // accessed
-      Date::fromString('Dec 24  2005'), // modified
-      Date::fromString('Oct 30  2005')  // created
+      new Date('Oct 10  2006'), // accessed
+      new Date('Dec 24  2005'), // modified
+      new Date('Oct 30  2005')  // created
     ));
     $this->addElement($this->fixture, new MockElement(
       './third.jpg', 
       18882, 
-      Date::fromString('Dec 11  2003'), // accessed
-      Date::fromString('Dec 10  2003'), // modified
-      Date::fromString('Dec 10  2003')  // created
+      new Date('Dec 11  2003'), // accessed
+      new Date('Dec 10  2003'), // modified
+      new Date('Dec 10  2003')  // created
     ));
     $this->addElement($this->fixture, new MockElement(
       './zerobytes.png', 
       0, 
-      Date::fromString('Dec 11  2003'), // accessed
-      Date::fromString('Dec 10  2003'), // modified
-      Date::fromString('Dec 10  2003')  // created
+      new Date('Dec 11  2003'), // accessed
+      new Date('Dec 10  2003'), // modified
+      new Date('Dec 10  2003')  // created
     ));
 
     with ($sub= $this->addElement($this->fixture, new MockCollection('./sub'))); {
       $this->addElement($sub, new MockElement(
         './sub/IMG_6100.jpg', 
         531718, 
-        Date::fromString('Mar  9  2006'), // accessed
-        Date::fromString('Mar  9  2006'), // modified
-        Date::fromString('Mar  9  2006')  // created
+        new Date('Mar  9  2006'), // accessed
+        new Date('Mar  9  2006'), // modified
+        new Date('Mar  9  2006')  // created
       ));
       $this->addElement($sub, new MockElement(
         './sub/IMG_6100.txt', 
         5932, 
-        Date::fromString('Mar 13  2006'), // accessed
-        Date::fromString('Mar 13  2006'), // modified
-        Date::fromString('Mar 13  2006')  // created
+        new Date('Mar 13  2006'), // accessed
+        new Date('Mar 13  2006'), // modified
+        new Date('Mar 13  2006')  // created
       ));
 
       with ($sec= $this->addElement($this->fixture, new MockCollection('./sub/sec'))); {
         $this->addElement($sec, new MockElement(
           './sub/sec/lang.base.php', 
           16739, 
-          Date::fromString('Oct 11  2006'), // accessed
-          Date::fromString('Oct 11  2006'), // modified
-          Date::fromString('Feb 21  2002')  // created
+          new Date('Oct 11  2006'), // accessed
+          new Date('Oct 11  2006'), // modified
+          new Date('Feb 21  2002')  // created
         ));
         $this->addElement($sec, new MockElement(
           './sub/sec/__xp__.php', 
           8589, 
-          Date::fromString('Oct  8  2006'), // accessed
-          Date::fromString('Oct  8  2006'), // modified
-          Date::fromString('Jul 23  2006')  // created
+          new Date('Oct  8  2006'), // accessed
+          new Date('Oct  8  2006'), // modified
+          new Date('Jul 23  2006')  // created
         ));
       }
     }

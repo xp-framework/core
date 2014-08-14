@@ -1,30 +1,22 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\TestCase;
-
-
 /**
  * Test the XP error handling semantics
- *
- * @purpose  Testcase
  */
-class ErrorsTest extends TestCase {
+class ErrorsTest extends \unittest\TestCase {
 
   /**
    * Setup method. Ensures xp error registry is initially empty and
    * that the error reporting level is set to E_ALL (which is done
    * in lang.base.php).
-   *
    */
   public function setUp() {
     $this->assertEquals(E_ALL, error_reporting(), 'Error reporting level not E_ALL');
-    \xp::$errors= array();
-    $this->assertEmpty(\xp::$errors, 'Error registry initially not empty');
+    \xp::$errors= [];
   }
 
   /**
    * Teardown method. Clears the xp error registry.
-   *
    */
   public function tearDown() {
     \xp::gc();

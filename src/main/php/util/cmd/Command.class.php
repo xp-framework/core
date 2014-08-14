@@ -1,17 +1,9 @@
-<?php namespace util\cmd;/* This file is part of the XP framework's experiments
- *
- * $Id$
- */
-
-use lang\Runnable;
-
+<?php namespace util\cmd;
 
 /**
  * Base class for all commands
- *
- * @purpose  Abstract base class
  */
-abstract class Command extends \lang\Object implements Runnable {
+abstract class Command extends \lang\Object implements \lang\Runnable {
   public
     #[@type('io.streams.StringReader')]
     $in  = null,

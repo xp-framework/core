@@ -14,7 +14,7 @@ class EvaluationSource extends AbstractSource {
    */
   public function __construct($bytes) {
     $name= 'xp.unittest.DynamicallyGeneratedTestCase·'.(self::$uniqId++);
-    $this->testClass= \lang\ClassLoader::defineClass($name, 'unittest.TestCase', array(), '{
+    $this->testClass= \lang\ClassLoader::defineClass($name, 'unittest.TestCase', [], '{
       #[@test] 
       public function run() { '.$bytes.' }
     }');

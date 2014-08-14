@@ -14,7 +14,7 @@
    */
   #[@generic(self= 'V', parent= 'V')]
   class net·xp_framework·unittest·core·generics·TypeDictionary extends net·xp_framework·unittest·core·generics·AbstractTypeDictionary {
-    protected $elements= array();
+    protected $elements= [];
     
     /**
      * Put a key/value pair

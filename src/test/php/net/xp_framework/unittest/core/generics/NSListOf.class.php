@@ -5,7 +5,7 @@
  */
 #[@generic(self= 'T')]
 class NSListOf extends \lang\Object {
-  public $elements= array();
+  public $elements= [];
 
   /**
    * Constructor

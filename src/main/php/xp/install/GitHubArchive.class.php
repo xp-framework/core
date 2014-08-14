@@ -46,7 +46,7 @@ class GitHubArchive extends \lang\Object implements Origin {
    * @return  io.archive.zip.ZipArchiveReader
    */
   protected function zipballOf($url) {
-    $headers= array();
+    $headers= [];
     do {
       Console::write('>> ', $url, ': ');
       $response= $this->connectionTo($url, $headers)->get();

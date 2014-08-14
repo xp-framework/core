@@ -130,7 +130,7 @@ class PropertyWritingTest extends TestCase {
    */
   #[@test]
   public function emptyArray() {
-    $this->fixture->writeArray('section', 'key', array());
+    $this->fixture->writeArray('section', 'key', []);
     $this->assertSavedFixtureEquals('
       [section]
       key=""

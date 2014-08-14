@@ -12,15 +12,6 @@ use lang\types\Bytes;
  */
 class CharacterTest extends TestCase {
 
-  /**
-   * Setup this test. Forces input and output encoding to ISO-8859-1
-   *
-   */
-  public function setUp() {
-    iconv_set_encoding('input_encoding', 'iso-8859-1');
-    iconv_set_encoding('output_encoding', 'iso-8859-1');
-  }
-
   #[@test, @expect('lang.FormatException')]
   public function incompleteMultiByteCharacter() {
     new Character("\xe4", 'utf-8');
@@ -28,12 +19,12 @@ class CharacterTest extends TestCase {
 
   #[@test]
   public function nullByte() {
-    $this->assertEquals(new Bytes("\x00"), create(new Character(0))->getBytes());
+    $this->assertEquals(new Bytes("\x00"), (new Character(0))->getBytes());
   }
 
   #[@test]
   public function euroSymbol() {
-    $this->assertEquals(new Bytes("\xe2\x82\xac"), create(new Character(8364))->getBytes('utf-8')); // &#8364; in HTML
+    $this->assertEquals(new Bytes("\xe2\x82\xac"), (new Character(8364))->getBytes('utf-8')); // &#8364; in HTML
   }
 
   #[@test, @expect('lang.FormatException')]
@@ -48,12 +39,12 @@ class CharacterTest extends TestCase {
 
   #[@test]
   public function usAsciiCharacter() {
-    $this->assertEquals(new Bytes('H'), create(new Character('H'))->getBytes());
+    $this->assertEquals(new Bytes('H'), (new Character('H'))->getBytes());
   }
 
   #[@test]
   public function umlautCharacter() {
-    $this->assertEquals(new Bytes("\303\244"), create(new Character('ä', 'utf-8'))->getBytes('utf-8'));
+    $this->assertEquals(new Bytes("\303\244"), (new Character('ä', 'utf-8'))->getBytes('utf-8'));
   }
 
   #[@test]
@@ -66,7 +57,7 @@ class CharacterTest extends TestCase {
 
   #[@test, @ignore('Does not work with all iconv implementations')]
   public function transliteration() {
-    $this->assertEquals('c', create(new String('Ä', 'utf-8'))->toString());
+    $this->assertEquals('c', (new String('Ä', 'utf-8'))->toString());
   }
 
   #[@test]

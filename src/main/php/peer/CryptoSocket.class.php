@@ -143,7 +143,7 @@ class CryptoSocket extends Socket {
       throw new \lang\IllegalStateException('Cannot get peer\'s certificate chain, if capturing is disabled.');
     }
 
-    $chain= array();
+    $chain= [];
     foreach ($this->getSocketOption(self::CTX_WRP, 'peer_certificate_chain') as $cert) {
       $chain[]= new X509Certificate(null, $cert);
     }

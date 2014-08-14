@@ -20,7 +20,7 @@
  * Invoking a method by its name:
  * <code>
  *   $c= XPClass::forName('util.Binford');
- *   $c->getMethod('setPoweredBy')->invoke($c->newInstance(), array(6100));
+ *   $c->getMethod('setPoweredBy')->invoke($c->newInstance(), [6100]);
  * </code>
  *
  * Retrieving annotations:
@@ -45,8 +45,8 @@
  *  // ...with this:
  *  $account= Proxy::newProxyInstance(
  *    ClassLoader::getDefault(),
- *    array(XPClass::forName('com.acme.banking.IAccount')),
- *    newinstance('lang.reflect.InvocationHandler', array(new Account()), '{
+ *    [XPClass::forName('com.acme.banking.IAccount')],
+ *    newinstance('lang.reflect.InvocationHandler', [new Account()], '{
  *      public function __construct($wrapped) {
  *        $this->wrapped= $wrapped;
  *      }
@@ -55,7 +55,7 @@
  *        if ("transfer" == $method && $args[0] > 1000000) {
  *          throw new IllegalAccessException("Too much money");
  *        }
- *        return call_user_func_array(array($this->wrapped, $method), $args);
+ *        return call_user_func_array([$this->wrapped, $method], $args);
  *      }
  *    }')
  *  );

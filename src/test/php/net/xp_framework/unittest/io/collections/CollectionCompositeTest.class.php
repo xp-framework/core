@@ -29,12 +29,12 @@ class CollectionCompositeTest extends AbstractCollectionTest {
    * @return  io.collections.IOCollection
    */
   protected function emptyCollection($name) {
-    return $this->newCollection($name, array());
+    return $this->newCollection($name, []);
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function constructorThrowsExceptionForEmptyList() {
-    new CollectionComposite(array());
+    new CollectionComposite([]);
   }
 
   #[@test]

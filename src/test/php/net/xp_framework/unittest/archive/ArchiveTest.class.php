@@ -29,7 +29,7 @@ abstract class ArchiveTest extends TestCase {
    */
   protected function assertEntries(Archive $a, array $entries) {
     $a->open(ARCHIVE_READ);
-    $actual= array();
+    $actual= [];
     while ($key= $a->getEntry()) {
       $actual[$key]= $a->extract($key);
     }
@@ -95,7 +95,7 @@ abstract class ArchiveTest extends TestCase {
   public function entries_for_empty_archive_are_an_empty_array() {
     $a= new Archive($this->archiveBytesAsStream());
     $a->open(ARCHIVE_READ);
-    $this->assertEntries($a, array());
+    $this->assertEntries($a, []);
   }
 
   #[@test]
@@ -118,7 +118,7 @@ abstract class ArchiveTest extends TestCase {
     $a->open(ARCHIVE_CREATE);
     $a->create();
     
-    $this->assertEntries($a, array());
+    $this->assertEntries($a, []);
   }
 
   #[@test]
@@ -131,7 +131,7 @@ abstract class ArchiveTest extends TestCase {
     $a= new Archive(new Stream());
     $a->open(ARCHIVE_CREATE);
     foreach ($contents as $filename => $bytes) {
-      $a->addFileBytes($filename, NULL, NULL, $bytes);
+      $a->addBytes($filename, $bytes);
     }
     $a->create();
     

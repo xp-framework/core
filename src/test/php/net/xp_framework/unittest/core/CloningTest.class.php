@@ -23,7 +23,7 @@ class CloningTest extends TestCase {
 
   #[@test]
   public function cloneInterceptorCalled() {
-    $original= newinstance('lang.Object', array(), '{
+    $original= newinstance('lang.Object', [], '{
       public $cloned= FALSE;
 
       public function __clone() {
@@ -38,7 +38,7 @@ class CloningTest extends TestCase {
 
   #[@test, @expect('lang.CloneNotSupportedException')]
   public function cloneInterceptorThrowsException() {
-    clone(newinstance('lang.Object', array(), '{
+    clone(newinstance('lang.Object', [], '{
       public function __clone() {
         throw new CloneNotSupportedException("I am *UN*Cloneable");
       }

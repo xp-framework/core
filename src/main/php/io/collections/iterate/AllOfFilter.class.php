@@ -1,7 +1,5 @@
 <?php namespace io\collections\iterate;
 
-
-
 /**
  * Combined filter that accepts an element if all of its filters
  * accept the element.
@@ -16,7 +14,7 @@
  * will accept all elements modified before Dec 14  2004 AND whose
  * extension is ".jpg"
  *
- * @purpose  Iteration Filter
+ * @deprecated Use util.Filters::allOf() instead
  */
 class AllOfFilter extends AbstractCombinedFilter {
   

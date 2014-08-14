@@ -25,7 +25,7 @@ class DefaultDigestImpl extends MessageDigestImpl {
     // Overwrite crc32b implementation if a buggy implementation is detected. 
     // Workaround for http://bugs.php.net/bug.php?id=45028
     if ('0a1cb779' === hash('crc32b', 'AAAAAAAA')) {
-      MessageDigest::register('crc32b', \lang\ClassLoader::defineClass(__CLASS__.'·CRC32bDigestImpl', $self->getName(), array(), '{
+      MessageDigest::register('crc32b', \lang\ClassLoader::defineClass(__CLASS__.'·CRC32bDigestImpl', $self->getName(), [], '{
         public function doFinal() {
           $n= hexdec(hash_final($this->handle));
           return sprintf("%08x", (($n & 0xFF) << 24) + (($n & 0xFF00) << 8) + (($n & 0xFF0000) >> 8) + (($n >> 24) & 0xFF));

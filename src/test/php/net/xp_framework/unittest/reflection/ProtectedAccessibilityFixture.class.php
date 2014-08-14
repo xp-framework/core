@@ -40,7 +40,7 @@ class ProtectedAccessibilityFixture extends \lang\Object {
    * @return  net.xp_framework.unittest.reflection.ProtectedAccessibilityFixture
    */
   public static function construct(\lang\XPClass $class) {
-    return $class->getConstructor()->newInstance(array());
+    return $class->getConstructor()->newInstance([]);
   }
 
   /**

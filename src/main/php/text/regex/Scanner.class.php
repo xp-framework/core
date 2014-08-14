@@ -9,7 +9,7 @@
  * @see      http://www.kernel.org/doc/man-pages/online/pages/man3/scanf.3.html 
  */
 class Scanner extends \lang\Object implements Matcher {
-  protected $pattern= array();
+  protected $pattern= [];
   
   /**
    * Creates a new character class instance
@@ -18,7 +18,7 @@ class Scanner extends \lang\Object implements Matcher {
    * @throws  lang.FormatException
    */
   public function __construct($pattern) {
-    $this->pattern= array();
+    $this->pattern= [];
     for ($i= 0, $s= strlen($pattern); $i < $s; $i++) {
       if ('%' === $pattern{$i}) {
         if (++$i >= $s) {

@@ -1,63 +1,46 @@
 <?php namespace net\xp_framework\unittest\tests\mock;
 
 use unittest\mock\arguments\PatternMatcher;
-use unittest\TestCase;
-
 
 /**
  * Testcase for PatternMatcher class
  *
  * @see   xp://unittest.mock.arguments.PatternMatcher
  */
-class PatternMatcherTest extends TestCase {
+class PatternMatcherTest extends \unittest\TestCase {
 
-  /**
-   * Test construction
-   */
   #[@test]
   public function construction_should_work_with_string_parameter() {
     new PatternMatcher('foobar');
   }
 
-  /**
-   * Test prefix matching
-   */
-  #[@test]
-  public function prefix_match_test() {
-    $matcher= new PatternMatcher('/^foo/');
-    $this->assertTrue($matcher->matches('foooo'));
-    $this->assertTrue($matcher->matches('foo'));
-    $this->assertTrue($matcher->matches('foo '));
-    $this->assertTrue($matcher->matches('foo asdfa'));
-    $this->assertFalse($matcher->matches('xfoo'));
-    $this->assertFalse($matcher->matches(' foo '));
+  #[@test, @values(['foooo', 'foo', 'foo ', 'foo asdfa'])]
+  public function prefix_match_test_matches($value) {
+    $this->assertTrue((new PatternMatcher('/^foo/'))->matches($value));
   }
 
-  /**
-   * Test exact matching
-   */
+  #[@test, @values(['xfoo', ' foo '])]
+  public function prefix_match_test_does_not_match($value) {
+    $this->assertFalse((new PatternMatcher('/^foo/'))->matches($value));
+  }
+
   #[@test]
   public function exact_match_test() {
-    $matcher= new PatternMatcher('/^foo$/');
-    $this->assertTrue($matcher->matches('foo'));
-    $this->assertFalse($matcher->matches('foooo'));
-    $this->assertFalse($matcher->matches('foo '));
-    $this->assertFalse($matcher->matches('foo asdfa'));
-    $this->assertFalse($matcher->matches('xfoox'));
-    $this->assertFalse($matcher->matches(' foo '));
+    $this->assertTrue((new PatternMatcher('/^foo$/'))->matches('foo'));
   }
 
-  /**
-   * Test pattern matching
-   */
-  #[@test]
-  public function pattern_match_test() {
-    $matcher= new PatternMatcher('/fo+o.*/');
-    $this->assertTrue($matcher->matches('foooo'));
-    $this->assertTrue($matcher->matches('fooooooooo'));
-    $this->assertTrue($matcher->matches('adsfafdsfooooooooo'));
-    $this->assertTrue($matcher->matches('asdfaf fooo dsfasfd'));
-    $this->assertFalse($matcher->matches('fobo'));
-    $this->assertFalse($matcher->matches('fo'));
+  #[@test, @values(['foooo', 'foo ', 'foo asdfa', 'xfoox', ' foo '])]
+  public function exact_match_negative_tests($value) {
+    $this->assertFalse((new PatternMatcher('/^foo$/'))->matches($value));
+  }
+
+  #[@test, @values(['foooo', 'fooooooooo', 'adsfafdsfooooooooo', 'asdfaf fooo dsfasfd'])]
+  public function pattern_match_test($value) {
+    $this->assertTrue((new PatternMatcher('/fo+o.*/'))->matches($value));
+  }
+
+  #[@test, @values(['fobo', 'fo'])]
+  public function pattern_match_test_negative_tests($value) {
+    $this->assertFalse((new PatternMatcher('/fo+o.*/'))->matches($value));
   }
 }

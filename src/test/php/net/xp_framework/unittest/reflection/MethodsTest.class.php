@@ -251,7 +251,7 @@ class MethodsTest extends TestCase {
   public function getDateMethod() {
     $this->assertTrue($this->fixture->hasMethod('getDate'));
     with ($method= $this->fixture->getMethod('getDate')); {
-      $this->assertClass($method, 'lang.reflect.Method');
+      $this->assertInstanceOf('lang.reflect.Method', $method);
       $this->assertEquals('getDate', $method->getName(true));
       $this->assertTrue($this->fixture->equals($method->getDeclaringClass()));
       $this->assertEquals('util.Date', $method->getReturnTypeName());
@@ -270,7 +270,7 @@ class MethodsTest extends TestCase {
     with ($method= $this->fixture->getMethod('setDate')); {
       $this->assertEquals(1, $method->numParameters());
       if ($parameter= $method->getParameter(0)) {
-        $this->assertClass($parameter, 'lang.reflect.Parameter');
+        $this->assertInstanceOf('lang.reflect.Parameter', $parameter);
         $this->assertEquals('date', $parameter->getName());
         $this->assertEquals('util.Date', $parameter->getTypeName());
         $this->assertEquals(\lang\XPClass::forName('util.Date'), $parameter->getType());
@@ -394,7 +394,7 @@ class MethodsTest extends TestCase {
   #[@test]
   public function boolReturnValue() {
     $this->assertEquals('bool', $this->fixture->getMethod('initializerCalled')->getReturnTypeName());
-    $this->assertEquals(\lang\Primitive::$BOOLEAN, $this->fixture->getMethod('initializerCalled')->getReturnType());
+    $this->assertEquals(\lang\Primitive::$BOOL, $this->fixture->getMethod('initializerCalled')->getReturnType());
   }
   
   /**
@@ -514,7 +514,7 @@ class MethodsTest extends TestCase {
       'with throws'
     );
     $this->assertEquals(
-      array(), 
+      [], 
       $this->fixture->getMethod('currentTimestamp')->getExceptionNames(),
       'without throws'
     );
@@ -538,7 +538,7 @@ class MethodsTest extends TestCase {
       'with throws'
     );
     $this->assertEquals(
-      array(), 
+      [], 
       $this->fixture->getMethod('currentTimestamp')->getExceptionTypes(),
       'without throws'
     );

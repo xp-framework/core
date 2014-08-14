@@ -3,7 +3,6 @@
 use unittest\TestCase;
 use unittest\TestSuite;
 use util\collections\HashTable;
-use lang\types\String;
 use lang\types\ArrayList;
 
 /**
@@ -122,9 +121,9 @@ class ListenerTest extends TestCase implements \unittest\TestListener {
       $this->suite->runTest($case);
       $this->assertEquals($this->suite, $this->invocations['testRunStarted'][0]);
       $this->assertEquals($case, $this->invocations['testStarted'][0]);
-      $this->assertSubclass($this->invocations['testSucceeded'][0], 'unittest.TestSuccess');
+      $this->assertInstanceOf('unittest.TestExpectationMet', $this->invocations['testSucceeded'][0]);
       $this->assertEquals($this->suite, $this->invocations['testRunFinished'][0]);
-      $this->assertClass($this->invocations['testRunFinished'][1], 'unittest.TestResult');
+      $this->assertInstanceOf('unittest.TestResult', $this->invocations['testRunFinished'][1]);
     }
   }    
 
@@ -134,9 +133,9 @@ class ListenerTest extends TestCase implements \unittest\TestListener {
       $this->suite->runTest($case);
       $this->assertEquals($this->suite, $this->invocations['testRunStarted'][0]);
       $this->assertEquals($case, $this->invocations['testStarted'][0]);
-      $this->assertSubclass($this->invocations['testFailed'][0], 'unittest.TestFailure');
+      $this->assertInstanceOf('unittest.TestAssertionFailed', $this->invocations['testFailed'][0]);
       $this->assertEquals($this->suite, $this->invocations['testRunFinished'][0]);
-      $this->assertClass($this->invocations['testRunFinished'][1], 'unittest.TestResult');
+      $this->assertInstanceOf('unittest.TestResult', $this->invocations['testRunFinished'][1]);
     }
   }    
 
@@ -146,9 +145,9 @@ class ListenerTest extends TestCase implements \unittest\TestListener {
       $this->suite->runTest($case);
       $this->assertEquals($this->suite, $this->invocations['testRunStarted'][0]);
       $this->assertEquals($case, $this->invocations['testStarted'][0]);
-      $this->assertSubclass($this->invocations['testError'][0], 'unittest.TestFailure');
+      $this->assertInstanceOf('unittest.TestError', $this->invocations['testError'][0]);
       $this->assertEquals($this->suite, $this->invocations['testRunFinished'][0]);
-      $this->assertClass($this->invocations['testRunFinished'][1], 'unittest.TestResult');
+      $this->assertInstanceOf('unittest.TestResult', $this->invocations['testRunFinished'][1]);
     }
   }    
 
@@ -158,9 +157,9 @@ class ListenerTest extends TestCase implements \unittest\TestListener {
       $this->suite->runTest($case);
       $this->assertEquals($this->suite, $this->invocations['testRunStarted'][0]);
       $this->assertEquals($case, $this->invocations['testStarted'][0]);
-      $this->assertSubclass($this->invocations['testWarning'][0], 'unittest.TestFailure');
+      $this->assertInstanceOf('unittest.TestWarning', $this->invocations['testWarning'][0]);
       $this->assertEquals($this->suite, $this->invocations['testRunFinished'][0]);
-      $this->assertClass($this->invocations['testRunFinished'][1], 'unittest.TestResult');
+      $this->assertInstanceOf('unittest.TestResult', $this->invocations['testRunFinished'][1]);
     }
   }    
 
@@ -170,9 +169,9 @@ class ListenerTest extends TestCase implements \unittest\TestListener {
       $this->suite->runTest($case);
       $this->assertEquals($this->suite, $this->invocations['testRunStarted'][0]);
       $this->assertEquals($case, $this->invocations['testStarted'][0]);
-      $this->assertSubclass($this->invocations['testSkipped'][0], 'unittest.TestSkipped');
+      $this->assertInstanceOf('unittest.TestPrerequisitesNotMet', $this->invocations['testSkipped'][0]);
       $this->assertEquals($this->suite, $this->invocations['testRunFinished'][0]);
-      $this->assertClass($this->invocations['testRunFinished'][1], 'unittest.TestResult');
+      $this->assertInstanceOf('unittest.TestResult', $this->invocations['testRunFinished'][1]);
     }
   }    
 
@@ -182,9 +181,9 @@ class ListenerTest extends TestCase implements \unittest\TestListener {
       $this->suite->runTest($case);
       $this->assertEquals($this->suite, $this->invocations['testRunStarted'][0]);
       $this->assertEquals($case, $this->invocations['testStarted'][0]);
-      $this->assertSubclass($this->invocations['testNotRun'][0], 'unittest.TestSkipped');
+      $this->assertInstanceOf('unittest.TestNotRun', $this->invocations['testNotRun'][0]);
       $this->assertEquals($this->suite, $this->invocations['testRunFinished'][0]);
-      $this->assertClass($this->invocations['testRunFinished'][1], 'unittest.TestResult');
+      $this->assertInstanceOf('unittest.TestResult', $this->invocations['testRunFinished'][1]);
     }
   }    
 }

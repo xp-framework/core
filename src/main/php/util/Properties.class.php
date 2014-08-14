@@ -55,7 +55,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    */
   public function load(InputStream $in, $charset= null) {
     $s= new TextTokenizer(new TextReader($in, $charset), "\r\n");
-    $this->_data= array();
+    $this->_data= [];
     $section= null;
     while ($s->hasMoreTokens()) {
       $t= $s->nextToken();
@@ -69,7 +69,7 @@ class Properties extends \lang\Object implements PropertyAccess {
           throw new \lang\FormatException('Unclosed section "'.$trimmedToken.'"');
         }
         $section= substr($trimmedToken, 1, $p- 1);
-        $this->_data[$section]= array();
+        $this->_data[$section]= [];
       } else if (false !== ($p= strpos($t, '='))) {
         $key= trim(substr($t, 0, $p));
         $value= ltrim(substr($t, $p+ 1));
@@ -95,7 +95,7 @@ class Properties extends \lang\Object implements PropertyAccess {
           $offset= substr($key, $p+ 1, -1);
           $key= substr($key, 0, $p);
           if (!isset($this->_data[$section][$key])) {
-            $this->_data[$section][$key]= array();
+            $this->_data[$section][$key]= [];
           }
           if ('' === $offset) {
             $this->_data[$section][$key][]= $value;
@@ -192,7 +192,7 @@ class Properties extends \lang\Object implements PropertyAccess {
       $fd->open(FILE_MODE_WRITE);
       $fd->close();
     }
-    $this->_data= array();
+    $this->_data= [];
   }
   
   /**
@@ -271,10 +271,10 @@ class Properties extends \lang\Object implements PropertyAccess {
    * Read an entire section into an array
    *
    * @param   string name
-   * @param   var[] default default array() what to return in case the section does not exist
+   * @param   var[] default default [] what to return in case the section does not exist
    * @return  array
    */
-  public function readSection($name, $default= array()) {
+  public function readSection($name, $default= []) {
     $this->_load();
     return isset($this->_data[$name]) 
       ? $this->_data[$name] 
@@ -306,7 +306,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    * @param   var[] default default NULL what to return in case the section or key does not exist
    * @return  array
    */
-  public function readArray($section, $key, $default= array()) {
+  public function readArray($section, $key, $default= []) {
     $this->_load();
 
     // New: key[]="a" or key[0]="a"
@@ -316,7 +316,7 @@ class Properties extends \lang\Object implements PropertyAccess {
     } else if (is_array($this->_data[$section][$key])) {
       return $this->_data[$section][$key];
     } else {
-      return '' == $this->_data[$section][$key] ? array() : explode('|', $this->_data[$section][$key]);
+      return '' == $this->_data[$section][$key] ? [] : explode('|', $this->_data[$section][$key]);
     }
   }
   
@@ -338,7 +338,7 @@ class Properties extends \lang\Object implements PropertyAccess {
     } else if (is_array($this->_data[$section][$key])) {
       return new Hashmap($this->_data[$section][$key]);
     } else {
-      $return= array();
+      $return= [];
       foreach (explode('|', $this->_data[$section][$key]) as $val) {
         if (strstr($val, ':')) {
           list($k, $v)= explode(':', $val, 2);
@@ -359,7 +359,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    * @param   int[] default default NULL what to return in case the section or key does not exist
    * @return  array
    */
-  public function readRange($section, $key, $default= array()) {
+  public function readRange($section, $key, $default= []) {
     $this->_load();
     if (!isset($this->_data[$section][$key])) return $default;
     
@@ -438,7 +438,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    */
   public function writeSection($name, $overwrite= false) {
     $this->_load();
-    if ($overwrite || !$this->hasSection($name)) $this->_data[$name]= array();
+    if ($overwrite || !$this->hasSection($name)) $this->_data[$name]= [];
     return $name;
   }
   
@@ -451,7 +451,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    */
   public function writeString($section, $key, $value) {
     $this->_load();
-    if (!$this->hasSection($section)) $this->_data[$section]= array();
+    if (!$this->hasSection($section)) $this->_data[$section]= [];
     $this->_data[$section][$key]= (string)$value;
   }
   
@@ -464,7 +464,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    */
   public function writeInteger($section, $key, $value) {
     $this->_load();
-    if (!$this->hasSection($section)) $this->_data[$section]= array();
+    if (!$this->hasSection($section)) $this->_data[$section]= [];
     $this->_data[$section][$key]= (int)$value;
   }
   
@@ -477,7 +477,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    */
   public function writeFloat($section, $key, $value) {
     $this->_load();
-    if (!$this->hasSection($section)) $this->_data[$section]= array();
+    if (!$this->hasSection($section)) $this->_data[$section]= [];
     $this->_data[$section][$key]= (float)$value;
   }
 
@@ -490,7 +490,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    */
   public function writeBool($section, $key, $value) {
     $this->_load();
-    if (!$this->hasSection($section)) $this->_data[$section]= array();
+    if (!$this->hasSection($section)) $this->_data[$section]= [];
     $this->_data[$section][$key]= $value ? 'yes' : 'no';
   }
   
@@ -503,7 +503,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    */
   public function writeArray($section, $key, $value) {
     $this->_load();
-    if (!$this->hasSection($section)) $this->_data[$section]= array();
+    if (!$this->hasSection($section)) $this->_data[$section]= [];
     $this->_data[$section][$key]= $value;
   }
 
@@ -516,7 +516,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    */
   public function writeHash($section, $key, $value) {
     $this->_load();
-    if (!$this->hasSection($section)) $this->_data[$section]= array();
+    if (!$this->hasSection($section)) $this->_data[$section]= [];
     if ($value instanceof Hashmap) {
       $this->_data[$section][$key]= $value;
     } else {
@@ -533,7 +533,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    */
   public function writeComment($section, $comment) {
     $this->_load();
-    if (!$this->hasSection($section)) $this->_data[$section]= array();
+    if (!$this->hasSection($section)) $this->_data[$section]= [];
     $this->_data[$section][';'.sizeof($this->_data[$section])]= $comment;
   }
   

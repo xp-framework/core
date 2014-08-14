@@ -136,7 +136,7 @@ class ResourceProvider extends Object {
    * @return  [:int]
    */
   public function stream_stat() {
-    return array(
+    return [
       'dev'   => 0,
       'ino'   => 0,
       'mode'  => 0444,
@@ -148,7 +148,7 @@ class ResourceProvider extends Object {
       'atime' => 0,
       'mtime' => 0,
       'ctime' => 0,
-    );
+    ];
   }
   
   /**
@@ -164,7 +164,7 @@ class ResourceProvider extends Object {
     }
 
     $hdl= self::$instance->getLoader()->getResourceAsStream(self::$instance->translatePath($path));
-    return array(
+    return [
       'dev'   => 0,
       'ino'   => 0,
       'mode'  => 0444,
@@ -176,6 +176,6 @@ class ResourceProvider extends Object {
       'atime' => 0,
       'mtime' => 0,
       'ctime' => 0,
-    );
-  }                            
+    ];
+  }
 }

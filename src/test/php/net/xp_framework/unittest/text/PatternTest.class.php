@@ -195,7 +195,7 @@ class PatternTest extends TestCase {
    */
   #[@test]
   public function matchEmptyString() {
-    $this->assertEquals(array(), Pattern::compile('.')->match('')->groups());
+    $this->assertEquals([], Pattern::compile('.')->match('')->groups());
   }
 
   /**

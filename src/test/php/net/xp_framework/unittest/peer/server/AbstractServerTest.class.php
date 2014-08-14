@@ -114,7 +114,7 @@ abstract class AbstractServerTest extends TestCase {
    * @throws  unittest.AssertionFailedError
    */
   protected function assertHandled($verbs) {
-    $actual= $expected= array();
+    $actual= $expected= [];
     foreach ($verbs as $verb) {
       $actual[]= self::$serverProcess->err->readLine();
       $expected[]= $verb.' '.$this->client;

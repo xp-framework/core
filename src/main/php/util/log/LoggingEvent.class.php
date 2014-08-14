@@ -12,7 +12,7 @@ class LoggingEvent extends \lang\Object {
   protected $timestamp= 0;
   protected $processId= 0;
   protected $level= 0;
-  protected $arguments= array();
+  protected $arguments= [];
   
   /**
    * Creates a new logging event

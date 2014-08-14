@@ -23,7 +23,7 @@ class URL extends \lang\Object {
       'https'=> 443
     );
 
-  public $_info= array();
+  public $_info= [];
     
   /**
    * Constructor
@@ -36,33 +36,35 @@ class URL extends \lang\Object {
   }
 
   /**
+   * Helper to create a string representation. Used by toString() and getURL().
+   *
+   * @param  var $pass A function to represent the password
+   * @return string
+   */
+  protected function asString($pass) {
+    $str= $this->_info['scheme'].'://';
+    if (isset($this->_info['user'])) $str.= sprintf(
+      '%s%s@',
+      rawurlencode($this->_info['user']),
+      (isset($this->_info['pass']) ? ':'.$pass($this->_info['pass']) : '')
+    );
+    $str.= $this->_info['host'];
+    isset($this->_info['port']) && $str.= ':'.$this->_info['port'];
+    isset($this->_info['path']) && $str.= $this->_info['path'];
+    if ($this->_info['params']) {
+      $str.= '?'.$this->getQuery();
+    }
+    isset($this->_info['fragment']) && $str.= '#'.$this->_info['fragment'];
+    return $str;
+  }
+
+  /**
    * Creates a string representation of this URL
    *
    * @return  string
-   * @see     xp://lang.Object#toString
    */
   public function toString() {
-    return sprintf(
-      "%s@ {\n".
-      "  [scheme]      %s\n".
-      "  [host]        %s\n".
-      "  [port]        %d\n".
-      "  [user]        %s\n".
-      "  [password]    %s\n".
-      "  [path]        %s\n".
-      "  [query]       %s\n".
-      "  [fragment]    %s\n".
-      "}",
-      $this->getClassName(),
-      $this->getScheme(),
-      $this->getHost(),
-      $this->getPort(),
-      $this->getUser(),
-      $this->getPassword(),
-      $this->getPath(),
-      $this->getQuery(),
-      $this->getFragment()
-    );
+    return $this->asString(function($pass) { return '********'; });
   }
 
   /**
@@ -212,9 +214,9 @@ class URL extends \lang\Object {
    * @return  [:var] parsed parameters
    */
   protected function parseQuery($query) {
-    if ('' === $query) return array();
+    if ('' === $query) return [];
 
-    $params= array();
+    $params= [];
     foreach (explode('&', $query) as $pair) {
       $key= $value= null;
       sscanf($pair, "%[^=]=%[^\r]", $key, $value);
@@ -224,7 +226,7 @@ class URL extends \lang\Object {
       }
       if ($start= strpos($key, '[')) {    // Array notation
         $base= substr($key, 0, $start);
-        isset($params[$base]) || $params[$base]= array();
+        isset($params[$base]) || $params[$base]= [];
         $ptr= &$params[$base];
         $offset= 0;
         do {
@@ -438,19 +440,7 @@ class URL extends \lang\Object {
    */
   public function getURL() {
     if (!isset($this->_info['url'])) {
-      $this->_info['url']= $this->_info['scheme'].'://';
-      if (isset($this->_info['user'])) $this->_info['url'].= sprintf(
-        '%s%s@',
-        rawurlencode($this->_info['user']),
-        (isset($this->_info['pass']) ? ':'.rawurlencode($this->_info['pass']) : '')
-      );
-      $this->_info['url'].= $this->_info['host'];
-      isset($this->_info['port']) && $this->_info['url'].= ':'.$this->_info['port'];
-      isset($this->_info['path']) && $this->_info['url'].= $this->_info['path'];
-      if ($this->_info['params']) {
-        $this->_info['url'].= '?'.$this->getQuery();
-      }
-      isset($this->_info['fragment']) && $this->_info['url'].= '#'.$this->_info['fragment'];
+      $this->_info['url']= $this->asString(function($pass) { return rawurlencode($pass); });
     }
     return $this->_info['url'];
   }
@@ -466,7 +456,7 @@ class URL extends \lang\Object {
       throw new \lang\FormatException('Cannot parse "'.$str.'"');
     }
     
-    $this->_info= array();
+    $this->_info= [];
     $this->_info['scheme']= $matches[1];
 
     // Credentials
@@ -501,10 +491,10 @@ class URL extends \lang\Object {
 
     // Query string and fragment
     if ('' === $matches[6] || '?' === $matches[6] || '#' === $matches[6]) {
-      $this->_info['params']= array();
+      $this->_info['params']= [];
       $this->_info['fragment']= null;
     } else if ('#' === $matches[6]{0}) {
-      $this->_info['params']= array();
+      $this->_info['params']= [];
       $this->_info['fragment']= substr($matches[6], 1);
     } else if ('?' === $matches[6]{0}) {
       $p= strcspn($matches[6], '#');
@@ -553,7 +543,7 @@ class URL extends \lang\Object {
    * @return  string
    */
   protected function decodePercentEncodedOctets($string) {
-    $unreserved = array();
+    $unreserved = [];
       
     for($octet= 65; $octet <= 90; $octet++) {
       $unreserved[]= dechex($octet);

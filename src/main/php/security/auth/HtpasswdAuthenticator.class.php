@@ -13,7 +13,7 @@ class HtpasswdAuthenticator extends \lang\Object implements Authenticator {
   public
     $_modified = 0,
     $_file     = null,
-    $_hash     = array();
+    $_hash     = [];
 
   /**
    * Constructor
@@ -34,7 +34,7 @@ class HtpasswdAuthenticator extends \lang\Object implements Authenticator {
    */
   public function lookup($user) {
     if ($this->_file->lastModified() != $this->_modified) {
-      $hash= array();
+      $hash= [];
       try {
         $this->_file->open(FILE_MODE_READ);
         while ($line= $this->_file->readLine()) {

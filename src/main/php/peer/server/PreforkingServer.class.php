@@ -168,7 +168,7 @@ class PreforkingServer extends Server implements Traceable {
   public function service() {
     if (!$this->socket->isConnected()) return false;
 
-    $children= array();
+    $children= [];
     $i= 0;
     while (!$this->terminate && (sizeof($children) <= $this->count)) {
       $this->cat && $this->cat->debugf('Server #%d: Forking child %d', getmypid(), $i);

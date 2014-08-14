@@ -32,7 +32,7 @@ final class SecureString extends \lang\Object {
   const BACKING_OPENSSL   = 0x02;
   const BACKING_PLAINTEXT = 0x03;
 
-  private static $store   = array();
+  private static $store   = [];
   private static $encrypt = null;
   private static $decrypt = null;
 

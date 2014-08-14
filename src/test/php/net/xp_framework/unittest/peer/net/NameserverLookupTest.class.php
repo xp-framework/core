@@ -16,8 +16,8 @@ class NameserverLookupTest extends TestCase {
    * Sets up test case and defines dummy nameserver lookup fixture
    */
   public function setUp() {
-    $this->cut= newinstance('peer.net.NameserverLookup', array(), '{
-      protected $results= array();
+    $this->cut= newinstance('peer.net.NameserverLookup', [], '{
+      protected $results= [];
 
       public function addLookup($ip, $type= "ip") {
         $this->results[]= array($type => $ip);
@@ -105,7 +105,7 @@ class NameserverLookupTest extends TestCase {
    */
   #[@test]
   public function lookupAllNonexistantGivesEmptyArray() {
-    $this->assertEquals(array(), $this->cut->lookupAll('localhost'));
+    $this->assertEquals([], $this->cut->lookupAll('localhost'));
   }
 
   /**

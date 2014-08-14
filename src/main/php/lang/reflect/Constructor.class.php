@@ -21,7 +21,7 @@ class Constructor extends Routine {
    *   $constructor= XPClass::forName('util.Binford')->getConstructor();
    *
    *   $instance= $constructor->newInstance();
-   *   $instance= $constructor->newInstance(array(6100));
+   *   $instance= $constructor->newInstance([6100]);
    * </code>
    *
    * @param   var[] args
@@ -29,7 +29,7 @@ class Constructor extends Routine {
    * @throws  lang.IllegalAccessException in case the constructor is not public or if it is abstract
    * @throws  lang.reflect.TargetInvocationException in case the constructor throws an exception
    */
-  public function newInstance(array $args= array()) {
+  public function newInstance(array $args= []) {
 
     // Check whether class is abstract
     $class= new \ReflectionClass($this->_class);
@@ -42,12 +42,12 @@ class Constructor extends Routine {
     $m= $this->_reflect->getModifiers();
     $public= $m & MODIFIER_PUBLIC;
     if (!$public && !$this->accessible) {
-      $t= debug_backtrace(0);
+      $t= debug_backtrace(0, 2);
       $decl= $this->_reflect->getDeclaringClass()->getName();
       if ($m & MODIFIER_PROTECTED) {
         $allow= $t[1]['class'] === $decl || is_subclass_of($t[1]['class'], $decl);
       } else {
-        $allow= $t[1]['class'] === $decl && self::$SETACCESSIBLE_AVAILABLE;
+        $allow= $t[1]['class'] === $decl;
       }
       if (!$allow) {
         throw new \lang\IllegalAccessException(sprintf(
@@ -60,19 +60,14 @@ class Constructor extends Routine {
     }
 
     // For non-public constructors: Use setAccessible() / invokeArgs() combination 
-    // if possible, resort to __call() workaround.
     try {
       if ($public) {
         return $class->newInstanceArgs($args);
       }
 
       $instance= unserialize('O:'.strlen($this->_class).':"'.$this->_class.'":0:{}');
-      if (self::$SETACCESSIBLE_AVAILABLE) {
-        $this->_reflect->setAccessible(true);
-        $this->_reflect->invokeArgs($instance, $args);
-      } else {
-        $instance->__call("\7__construct", $args);
-      }
+      $this->_reflect->setAccessible(true);
+      $this->_reflect->invokeArgs($instance, $args);
       return $instance;
     } catch (\lang\SystemExit $e) {
       throw $e;

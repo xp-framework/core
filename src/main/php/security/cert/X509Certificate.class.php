@@ -58,7 +58,7 @@ use util\Date;
 class X509Certificate extends Certificate {
   public
     $_res=  null,
-    $_info= array();
+    $_info= [];
   
   /**
    * Constructor
@@ -172,7 +172,7 @@ class X509Certificate extends Certificate {
    * @return  [:bool]
    */
   public function getKeyUsage() {
-    $usage= array();
+    $usage= [];
     foreach ($this->_info['purposes'] as $v) {
       $usage[$v[2]]= $v[1];
     }

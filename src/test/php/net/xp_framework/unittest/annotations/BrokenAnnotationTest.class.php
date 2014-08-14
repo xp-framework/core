@@ -8,6 +8,7 @@ use lang\reflect\ClassParser;
  *
  * @see   rfc://0185
  * @see   https://github.com/xp-framework/xp-framework/pull/328
+ * @see   https://github.com/xp-framework/xp-framework/issues/313
  */
 class BrokenAnnotationTest extends \unittest\TestCase {
 
@@ -18,7 +19,7 @@ class BrokenAnnotationTest extends \unittest\TestCase {
    * @return  [:var]
    */
   protected function parse($input) {
-    return create(new ClassParser())->parseAnnotations($input, $this->getClassName());
+    return (new ClassParser())->parseAnnotations($input, $this->getClassName());
   }
 
   #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Unterminated annotation/')]
@@ -134,5 +135,40 @@ class BrokenAnnotationTest extends \unittest\TestCase {
   #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Cannot access private static field .+AnnotationParsingTest::\$internal/')]
   public function class_private_static_member() {
     $this->parse('#[@value(AnnotationParsingTest::$internal)]');
+  }
+
+  #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/In `.+`: Parse error/')]
+  public function function_without_braces() {
+    $this->parse('#[@value(function)]');
+  }
+
+  #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/In `.+`: Parse error/')]
+  public function function_without_body() {
+    $this->parse('#[@value(function())]');
+  }
+
+  #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/In `.+`: Parse error/')]
+  public function function_without_closing_curly() {
+    $this->parse('#[@value(function() {)]');
+  }
+
+  #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Parse error: Unexpected ","/')]
+  public function multi_value() {
+    $this->parse("#[@xmlmapping('hw_server', 'server')]");
+  }
+
+  #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Parse error: Unexpected ","/')]
+  public function multi_value_without_whitespace() {
+    $this->parse("#[@xmlmapping('hw_server','server')]");
+  }
+
+  #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Parse error: Unexpected ","/')]
+  public function multi_value_with_variable_types_backwards_compatibility() {
+    $this->parse("#[@xmlmapping('hw_server', TRUE)]");
+  }
+
+  #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Parse error: Unexpected ","/')]
+  public function parsingContinuesAfterMultiValue() {
+    $this->parse("#[@xmlmapping('hw_server', 'server'), @restricted]");
   }
 }

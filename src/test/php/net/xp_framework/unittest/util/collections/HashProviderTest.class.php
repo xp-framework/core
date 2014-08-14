@@ -24,7 +24,7 @@ class HashProviderTest extends TestCase {
    */
   #[@test]
   public function implementation_accessors() {
-    $impl= newinstance('util.collections.HashImplementation', array(), '{
+    $impl= newinstance('util.collections.HashImplementation', [], '{
       public function hashOf($str) { /* Intentionally empty */ }
     }');
 

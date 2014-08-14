@@ -94,7 +94,7 @@ class IPCQueue extends \lang\Object {
   public
     $key      = 0,
     $id       = 0,
-    $stat     = array();
+    $stat     = [];
 
   /**
    * Constructor

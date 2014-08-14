@@ -44,7 +44,7 @@ class XpTest extends \unittest\TestCase {
       \xp::$errors
     );
     \xp::gc();
-    $this->assertEquals(array(), \xp::$errors);
+    $this->assertEquals([], \xp::$errors);
   }
 
   #[@test]

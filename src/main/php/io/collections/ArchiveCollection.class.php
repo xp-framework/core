@@ -12,7 +12,7 @@ class ArchiveCollection extends \lang\Object implements IOCollection {
     $archive = null,
     $origin  = null,
     $base    = '',
-    $_dirs   = array();
+    $_dirs   = [];
     
   /**
    * Constructor
@@ -50,7 +50,7 @@ class ArchiveCollection extends \lang\Object implements IOCollection {
   public function open() { 
     $this->archive->isOpen() || $this->archive->open(ARCHIVE_READ);
     reset($this->archive->_index);
-    $this->_dirs= array();
+    $this->_dirs= [];
   }
 
   /**
@@ -59,7 +59,7 @@ class ArchiveCollection extends \lang\Object implements IOCollection {
    */
   public function rewind() { 
     reset($this->archive->_index);
-    $this->_dirs= array();
+    $this->_dirs= [];
   }
 
   /**
@@ -96,7 +96,7 @@ class ArchiveCollection extends \lang\Object implements IOCollection {
    */
   public function close() { 
     $this->archive->close();
-    $this->_dirs= array();
+    $this->_dirs= [];
   }
 
   /**

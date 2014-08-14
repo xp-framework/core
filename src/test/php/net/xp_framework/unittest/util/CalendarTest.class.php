@@ -1,15 +1,13 @@
 <?php namespace net\xp_framework\unittest\util;
  
-use unittest\TestCase;
 use util\Calendar;
-
+use util\Date;
+use util\TimeZone;
 
 /**
- * Test framework code
- *
- * @purpose  Unit Test
+ * Tests Calendar class
  */
-class CalendarTest extends TestCase {
+class CalendarTest extends \unittest\TestCase {
   public
     $nowTime  = 0,
     $nowDate  = null,
@@ -26,8 +24,8 @@ class CalendarTest extends TestCase {
     date_default_timezone_set('GMT');
     
     $this->nowTime= time();
-    $this->nowDate= new \util\Date($this->nowTime);
-    $this->refDate= \util\Date::fromString('1977-12-14 11:55');
+    $this->nowDate= new Date($this->nowTime);
+    $this->refDate= new Date('1977-12-14 11:55');
   }
 
   /**
@@ -47,7 +45,7 @@ class CalendarTest extends TestCase {
    * @return  bool
    */
   public function assertDateEquals($expected, $date, $error= 'datenotequal') {
-    return $this->assertEquals(new \util\Date($expected), $date, $error);
+    return $this->assertEquals(new Date($expected), $date, $error);
   }
   
   /**
@@ -101,8 +99,8 @@ class CalendarTest extends TestCase {
    */
   #[@test]
   public function testCalendarDSTBeginByDate() {
-    $this->assertDateEquals('2003-03-30T01:00:00+00:00', Calendar::dstBegin(new \util\Date('2003-11-11 22:22:22 Europe/Berlin'), CAL_DST_EU), 'dstbegin');
-    $this->assertDateEquals('2003-03-30T01:00:00+00:00', Calendar::dstBegin(new \util\Date('2003-11-11 22:22:22 Europe/Berlin'), CAL_DST_US), 'dstbegin');
+    $this->assertDateEquals('2003-03-30T01:00:00+00:00', Calendar::dstBegin(new Date('2003-11-11 22:22:22 Europe/Berlin'), CAL_DST_EU), 'dstbegin');
+    $this->assertDateEquals('2003-03-30T01:00:00+00:00', Calendar::dstBegin(new Date('2003-11-11 22:22:22 Europe/Berlin'), CAL_DST_US), 'dstbegin');
   }
 
   /**
@@ -131,7 +129,7 @@ class CalendarTest extends TestCase {
    */
   #[@test]
   public function inDst() {
-    $this->assertEquals(true, Calendar::inDST(new \util\Date('2007-08-24', new \util\TimeZone('Europe/Berlin'))));
+    $this->assertEquals(true, Calendar::inDST(new Date('2007-08-24', new TimeZone('Europe/Berlin'))));
   }
   
   /**
@@ -140,7 +138,7 @@ class CalendarTest extends TestCase {
    */
   #[@test]
   public function notInDst() {
-    $this->assertEquals(false, Calendar::inDST(new \util\Date('2007-01-24', new \util\TimeZone('Europe/Berlin'))));
+    $this->assertEquals(false, Calendar::inDST(new Date('2007-01-24', new TimeZone('Europe/Berlin'))));
   }
 
   /**
@@ -149,7 +147,7 @@ class CalendarTest extends TestCase {
    */
   #[@test]
   public function haveNoDst() {
-    $this->assertEquals(false, Calendar::inDST(new \util\Date('2007-01-24', new \util\TimeZone('Asia/Singapore'))));
-    $this->assertEquals(false, Calendar::inDST(new \util\Date('2007-08-24', new \util\TimeZone('Asia/Singapore'))));
+    $this->assertEquals(false, Calendar::inDST(new Date('2007-01-24', new TimeZone('Asia/Singapore'))));
+    $this->assertEquals(false, Calendar::inDST(new Date('2007-08-24', new TimeZone('Asia/Singapore'))));
   }
 }

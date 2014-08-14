@@ -25,7 +25,7 @@ use util\XPIterator;
  */
 class IOCollectionIterator extends \lang\Object implements XPIterator, \IteratorAggregate {
   public
-    $collections = array(),
+    $collections = [],
     $recursive   = false;
   
   protected

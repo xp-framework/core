@@ -20,7 +20,7 @@ class SocketTimeoutExceptionTest extends TestCase {
   public function getTimeout() {
     $this->assertEquals(
       1.0, 
-      create(new SocketTimeoutException('', 1.0))->getTimeout()
+      (new SocketTimeoutException('', 1.0))->getTimeout()
     );
   }
 
@@ -32,7 +32,7 @@ class SocketTimeoutExceptionTest extends TestCase {
   public function compoundMessage() {
     $this->assertEquals(
       'Exception peer.SocketTimeoutException (Read failed after 1.000 seconds)',
-      create(new SocketTimeoutException('Read failed', 1.0))->compoundMessage()
+      (new SocketTimeoutException('Read failed', 1.0))->compoundMessage()
     );
   }
 }

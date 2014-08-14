@@ -100,7 +100,7 @@ abstract class BeforeAndAfterClassTest extends \unittest\TestCase {
   #[@test]
   public function allBeforeClassMethodsAreExecuted() {
     $t= newinstance('unittest.TestCase', array('fixture'), '{
-      public static $initialized= array();
+      public static $initialized= [];
 
       #[@beforeClass]
       public static function prepareTestData() {
@@ -122,7 +122,7 @@ abstract class BeforeAndAfterClassTest extends \unittest\TestCase {
   #[@test]
   public function allAfterClassMethodsAreExecuted() {
     $t= newinstance('unittest.TestCase', array('fixture'), '{
-      public static $finalized= array();
+      public static $finalized= [];
 
       #[@beforeClass]
       public static function disconnectFromDatabase() {

@@ -14,11 +14,11 @@ class HashSet extends \lang\Object implements Set {
     $iterate   = null;
 
   protected
-    $_elements = array(),
+    $_elements = [],
     $_hash     = 0;
 
   static function __static() {
-    self::$iterate= newinstance('Iterator', array(), '{
+    self::$iterate= newinstance('Iterator', [], '{
       private $i= 0, $v;
       public function on($v) { $self= new self(); $self->v= $v; return $self; }
       public function current() { return current($this->v); }
@@ -144,7 +144,7 @@ class HashSet extends \lang\Object implements Set {
    *
    */
   public function clear() { 
-    $this->_elements= array();
+    $this->_elements= [];
     $this->_hash= 0;
   }
 
@@ -203,11 +203,7 @@ class HashSet extends \lang\Object implements Set {
    * @return  bool
    */
   public function equals($cmp) {
-    return (
-      $cmp instanceof self && 
-      $this->__generic === $cmp->__generic &&
-      $this->_hash === $cmp->_hash
-    );
+    return $cmp instanceof self && $this->_hash === $cmp->_hash;
   }
 
   /**
@@ -217,13 +213,12 @@ class HashSet extends \lang\Object implements Set {
    */
   public function toString() {
     $s= $this->getClassName().'['.sizeof($this->_elements).'] {';
-    if (0 == sizeof($this->_elements)) return $s.' }';
+    if (empty($this->_elements)) return $s.' }';
 
     $s.= "\n";
-    foreach (array_keys($this->_elements) as $key) {
-      $s.= '  '.\xp::stringOf($this->_elements[$key]).",\n";
+    foreach ($this->_elements as $e) {
+      $s.= '  '.\xp::stringOf($e).",\n";
     }
     return substr($s, 0, -2)."\n}";
   }
-
 } 

@@ -30,7 +30,7 @@
  */
 class StringTokenizer extends Tokenizer {
   protected
-    $_stack = array(),
+    $_stack = [],
     $_ofs   = 0,
     $_len   = 0;
 
@@ -39,7 +39,7 @@ class StringTokenizer extends Tokenizer {
    *
    */
   public function reset() {
-    $this->_stack= array();
+    $this->_stack= [];
     $this->_ofs= 0;
     $this->_len= strlen($this->source);
   }
@@ -66,7 +66,7 @@ class StringTokenizer extends Tokenizer {
       substr($this->source, $this->_ofs)
     );
     $this->_len= strlen($this->source);
-    $this->_stack= array();
+    $this->_stack= [];
   }
       
   /**

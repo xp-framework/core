@@ -1,16 +1,13 @@
 <?php namespace unittest\actions;
 
-use unittest\TestAction;
-
-
 /**
- * Only runs this testcase on a given runtime version, e.g. PHP 5.3.0
+ * Only runs this testcase on a given runtime version, e.g. PHP 5.4.0
  *
  * @test xp://net.xp_framework.unittest.tests.RuntimeVersionTest
  * @see  http://getcomposer.org/doc/01-basic-usage.md#package-versions
  */
-class RuntimeVersion extends \lang\Object implements TestAction {
-  protected $compare= array();
+class RuntimeVersion extends \lang\Object implements \unittest\TestAction {
+  protected $compare= [];
 
   /**
    * Create a new RuntimeVersion match

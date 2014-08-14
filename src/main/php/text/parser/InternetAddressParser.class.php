@@ -33,7 +33,7 @@ class InternetAddressParser extends \lang\Object {
    * @throws  lang.FormatException in case the string is malformed
    */
   public function parse($str) {
-    $result= array();
+    $result= [];
     $st= new StringTokenizer($str, ',');
     
     $st->hasMoreTokens() && $tok= $st->nextToken();

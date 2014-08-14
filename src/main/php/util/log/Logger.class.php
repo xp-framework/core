@@ -2,10 +2,6 @@
 
 use util\Configurable;
 
-
-// Deprecated
-  define('LOG_DEFINES_DEFAULT', 'default');
-
 /**
  * A singleton logger
  * 
@@ -83,7 +79,7 @@ class Logger extends \lang\Object implements Configurable {
   const DFLT= "default";
 
   protected static $instance= null;
-  protected $category= array();
+  protected $category= [];
   protected $_finalized= false;
 
   static function __static() {
@@ -136,7 +132,7 @@ class Logger extends \lang\Object implements Configurable {
       );
       
       // Configure appenders
-      $appenders= $prop->readArray($section, 'appenders', array());
+      $appenders= $prop->readArray($section, 'appenders', []);
 
       // Go through all of the appenders, loading classes as necessary
       foreach ($appenders as $appender) {
@@ -166,16 +162,14 @@ class Logger extends \lang\Object implements Configurable {
           \lang\XPClass::forName($appender)->newInstance(),
           $flags
         );
-        $params= $prop->readArray($section, 'appender.'.$appender.'.params', array());
+        $params= $prop->readArray($section, 'appender.'.$appender.'.params', []);
         
         // Params
         foreach ($params as $param) {
-          $a->{$param}= strftime(
-            $prop->readString(
-              $section,
-              'appender.'.$appender.'.param.'.$param,
-              ''
-            )
+          $a->{$param}= $prop->readString(
+            $section,
+            'appender.'.$appender.'.param.'.$param,
+            ''
           );
         }
 

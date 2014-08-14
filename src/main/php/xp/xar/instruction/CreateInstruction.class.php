@@ -1,10 +1,9 @@
 <?php namespace xp\xar\instruction;
 
 use xp\xar\Options;
+use util\Filters;
 use io\collections\FileCollection;
 use io\collections\iterate\FilteredIOCollectionIterator;
-use io\collections\iterate\NegationOfFilter;
-use io\collections\iterate\AllOfFilter;
 use io\collections\iterate\UriMatchesFilter;
 use io\collections\iterate\CollectionFilter;
 
@@ -23,7 +22,7 @@ class CreateInstruction extends AbstractInstruction {
   protected function add($uri, $cwd, $urn= null) {
     $urn || $urn= strtr(preg_replace('#^('.preg_quote($cwd, '#').'|/)#', '', $uri), DIRECTORY_SEPARATOR, '/');
     $this->options & Options::VERBOSE && $this->out->writeLine($urn);
-    $this->archive->add(new \io\File($uri), $urn);
+    $this->archive->addFile($urn, new \io\File($uri));
   }
 
   /**
@@ -33,9 +32,7 @@ class CreateInstruction extends AbstractInstruction {
    * @return  string[]
    */
   public function addAll($cwd) {
-    $list= array();
-    $qs= preg_quote(DIRECTORY_SEPARATOR);
-
+    $list= [];
     foreach ($this->getArguments() as $arg) {
       if (false !== ($p= strrpos($arg, '='))) {
         $urn= substr($arg, $p+ 1);
@@ -46,26 +43,21 @@ class CreateInstruction extends AbstractInstruction {
     
       if (is_file($arg)) {
         $this->add(realpath($arg), $cwd, $urn);
-        continue;
-      }
-      
-      // Recursively retrieve all files from directory, ignoring well-known
-      // VCS control files.
-      if (is_dir($arg)) {
-        $collection= new FileCollection($arg);
-        $iterator= new FilteredIOCollectionIterator(
-          $collection,
-          new AllOfFilter(array(
-            new NegationOfFilter(new UriMatchesFilter('#'.$qs.'(CVS|\.svn|\.git|\.arch|\.hg|_darcs|\.bzr)'.$qs.'#')),
-            new NegationOfFilter(new CollectionFilter())
-          )),
+      } else if (is_dir($arg)) {
+
+        // Recursively retrieve all files from directory, ignoring well-known
+        // VCS control files.
+        $files= new FilteredIOCollectionIterator(
+          new FileCollection($arg),
+          Filters::noneOf([
+            new UriMatchesFilter('#/(CVS|\.svn|\.git|\.arch|\.hg|_darcs|\.bzr)/#'),
+            new CollectionFilter()
+          ]),
           true
         );
-        
-        while ($iterator->hasNext()) {
-          $this->add($iterator->next()->getURI(), $cwd);
+        foreach ($files as $file) {
+          $this->add($file->getURI(), $cwd);
         }
-        continue;
       }
     }
     

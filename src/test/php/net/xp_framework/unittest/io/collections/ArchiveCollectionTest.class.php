@@ -86,7 +86,7 @@ class ArchiveCollectionTest extends TestCase {
         'lang/Runnable.xp'  => 'io.collections.IOElement',
       );
       for (reset($expect); $element= $c->next(), $name= key($expect); next($expect)) {
-        $this->assertSubclass($element, $expect[$name]);
+        $this->assertInstanceOf($expect[$name], $element);
         $this->assertXarUri($name, $element->getURI());
       }
       $this->assertEquals(null, $c->next());

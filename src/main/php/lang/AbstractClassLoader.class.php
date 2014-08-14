@@ -92,18 +92,18 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
       // a "soft" dependency, one that is only required at runtime, was
       // not loaded, the class itself has been declared.
       if (class_exists($decl, false) || interface_exists($decl, false)) {
-        raise('lang.ClassDependencyException', $class, array($this), $e);
+        raise('lang.ClassDependencyException', $class, [$this], $e);
       }
 
       // If otherwise, a "hard" dependency could not be loaded, eg. the
       // base class or a required interface and thus the class could not
       // be declared.
-      raise('lang.ClassLinkageException', $class, array($this), $e);
+      raise('lang.ClassLinkageException', $class, [$this], $e);
     }
     \xp::$cll--;
     if (false === $r) {
       unset(\xp::$cl[$class]);
-      $e= new ClassNotFoundException($class, array($this));
+      $e= new ClassNotFoundException($class, [$this]);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -138,11 +138,11 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
       \xp::$cn[substr($class, $p + 1)]= $class;
     }
 
-    method_exists($name, '__static') && \xp::$cli[]= array($name, '__static');
+    method_exists($name, '__static') && \xp::$cli[]= [$name, '__static'];
     if (0 === \xp::$cll) {
       $invocations= \xp::$cli;
-      \xp::$cli= array();
-      foreach ($invocations as $inv) call_user_func($inv);
+      \xp::$cli= [];
+      foreach ($invocations as $inv) call_user_func($inv, $name);
     }
     return $name;
   }

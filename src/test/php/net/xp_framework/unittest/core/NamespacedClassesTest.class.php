@@ -66,13 +66,13 @@ class NamespacedClassesTest extends TestCase {
 
   #[@test]
   public function newInstanceOnNamespacedClass() {
-    $i= newinstance('net.xp_framework.unittest.core.NamespacedClass', array(), '{}');
+    $i= newinstance('net.xp_framework.unittest.core.NamespacedClass', [], '{}');
     $this->assertInstanceOf('net.xp_framework.unittest.core.NamespacedClass', $i);
   }
 
   #[@test]
   public function packageOfNewInstancedNamespacedClass() {
-    $i= newinstance('net.xp_framework.unittest.core.NamespacedClass', array(), '{}');
+    $i= newinstance('net.xp_framework.unittest.core.NamespacedClass', [], '{}');
     $this->assertEquals(
       \lang\reflect\Package::forName('net.xp_framework.unittest.core'),
       $i->getClass()->getPackage()

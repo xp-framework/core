@@ -9,7 +9,9 @@ define('APIDOC_VALUE',      0x0002);
 /**
  * Tests the class details gathering internals
  *
- * @see      xp://lang.XPClass#detailsForClass
+ * @see  xp://lang.XPClass#detailsForClass
+ * @see  https://github.com/xp-framework/xp-framework/issues/230
+ * @see  https://github.com/xp-framework/xp-framework/issues/270
  */
 class ClassDetailsTest extends TestCase {
 
@@ -21,7 +23,7 @@ class ClassDetailsTest extends TestCase {
    * @throws  unittest.AssertionFailedError
    */
   protected function parseComment($comment) {
-    $details= create(new ClassParser())->parseDetails('
+    $details= (new ClassParser())->parseDetails('
       <?php
         class Test extends Object {
           '.$comment.'
@@ -33,23 +35,6 @@ class ClassDetailsTest extends TestCase {
     return $details[1]['test'];
   }
   
-  /**
-   * Protected helper method
-   *
-   * @param   int modifiers
-   * @param   string comment
-   * @return  bool
-   * @throws  unittest.AssertionFailedError
-   */
-  public function assertAccessFlags($modifiers, $comment) {
-    if (!($details= $this->parseComment($comment))) return;
-    return $this->assertEquals($modifiers, $details[DETAIL_MODIFIERS]);
-  }
-  
-  /**
-   * Tests separation of the comment from the "tags part".
-   *
-   */
   #[@test]
   public function commentString() {
     $details= $this->parseComment('
@@ -67,10 +52,6 @@ class ClassDetailsTest extends TestCase {
     );
   }
 
-  /**
-   * Tests comment is empty when no comment is available in apidoc
-   *
-   */
   #[@test]
   public function noCommentString() {
     $details= $this->parseComment('
@@ -78,128 +59,51 @@ class ClassDetailsTest extends TestCase {
        * @see   php://comment
        */
     ');
-    $this->assertEquals(
-      '',
-      $details[DETAIL_COMMENT]
-    );
+    $this->assertEquals('', $details[DETAIL_COMMENT]);
   }
   
-  /**
-   * Tests parsing of the "param" tag with a scalar parameter
-   *
-   */
   #[@test]
-  public function scalarParameter() {
-    $details= $this->parseComment('
-      /**
-       * A protected method
-       *
-       * @param   string param1
-       */
-    ');
+  public function scalar_parameter() {
+    $details= $this->parseComment('/** @param  string param1 */');
     $this->assertEquals('string', $details[DETAIL_ARGUMENTS][0]);
   }
 
-  /**
-   * Tests parsing of the "param" tag with an array parameter
-   *
-   */
   #[@test]
-  public function arrayParameter() {
-    $details= $this->parseComment('
-      /**
-       * Another protected method
-       *
-       * @param   string[] param1
-       */
-    ');
+  public function array_parameter() {
+    $details= $this->parseComment('/** @param  string[] param1 */');
     $this->assertEquals('string[]', $details[DETAIL_ARGUMENTS][0]);
   }
 
-  /**
-   * Tests parsing of the "param" tag with an object parameter
-   *
-   */
   #[@test]
-  public function objectParameter() {
-    $details= $this->parseComment('
-      /**
-       * Yet another protected method
-       *
-       * @param   util.Date param1
-       */
-    ');
+  public function object_parameter() {
+    $details= $this->parseComment('/** @param  util.Date param1 */');
     $this->assertEquals('util.Date', $details[DETAIL_ARGUMENTS][0]);
   }
 
-  /**
-   * Tests parsing of the "param" tag with a parameter with default value
-   *
-   */
   #[@test]
   public function defaultParameter() {
-    $details= $this->parseComment('
-      /**
-       * A private method
-       *
-       * @param   int param1 default 1
-       */
-    ');
+    $details= $this->parseComment('/** @param  int param1 default 1 */');
     $this->assertEquals('int', $details[DETAIL_ARGUMENTS][0]);
   }
   
-  /**
-   * Tests parsing of the "param" tag with a map parameter
-   *
-   */
   #[@test]
-  public function mapParameter() {
-    $details= $this->parseComment('
-      /**
-       * Final protected method
-       *
-       * @param   [:string] map
-       */
-    ');
+  public function map_parameter() {
+    $details= $this->parseComment('/** @param  [:string] map */');
     $this->assertEquals('[:string]', $details[DETAIL_ARGUMENTS][0]);
   }
 
-  /**
-   * Tests parsing of the "param" tag with a generic parameter
-   *
-   */
   #[@test]
-  public function genericParameterWithTwoComponents() {
-    $details= $this->parseComment('
-      /**
-       * Final protected method
-       *
-       * @param   util.collection.HashTable<string, util.Traceable> map
-       */
-    ');
+  public function generic_parameter_with_two_components() {
+    $details= $this->parseComment('/** @param  util.collection.HashTable<string, util.Traceable> map */');
     $this->assertEquals('util.collection.HashTable<string, util.Traceable>', $details[DETAIL_ARGUMENTS][0]);
   }
 
-  /**
-   * Tests parsing of the "param" tag with a generic parameter
-   *
-   */
   #[@test]
-  public function genericParameterWithOneComponent() {
-    $details= $this->parseComment('
-      /**
-       * Abstract protected method
-       *
-       * @param   util.collections.Vector<lang.Object> param1
-       */
-    ');
+  public function generic_parameter_with_one_component() {
+    $details= $this->parseComment('/** @param  util.collections.Vector<lang.Object> param1 */');
     $this->assertEquals('util.collections.Vector<lang.Object>', $details[DETAIL_ARGUMENTS][0]);
   }
-  
-  /**
-   * Tests parsing of the "throws" tag
-   *
-   */
+
   #[@test]
   public function throwsList() {
     $details= $this->parseComment('
@@ -214,30 +118,15 @@ class ClassDetailsTest extends TestCase {
     $this->assertEquals('lang.IllegalAccessException', $details[DETAIL_THROWS][1]);
   }
  
-  /**
-   * Tests parsing of the "return" tag
-   *
-   */
   #[@test]
-  public function returnType() {
-    $details= $this->parseComment('
-      /**
-       * Test method
-       *
-       * @return  int
-       */
-    ');
+  public function int_return_type() {
+    $details= $this->parseComment('/** @return int */');
     $this->assertEquals('int', $details[DETAIL_RETURNS]);
   }
 
-  /**
-   * Tests parsing of classes with closures inside
-   *
-   * @see   https://github.com/xp-framework/xp-framework/issues/230
-   */
   #[@test]
   public function withClosure() {
-    $details= create(new ClassParser())->parseDetails('<?php
+    $details= (new ClassParser())->parseDetails('<?php
       class WithClosure_1 extends Object {
 
         /**
@@ -253,14 +142,9 @@ class ClassDetailsTest extends TestCase {
     $this->assertEquals('Creates a new answer', $details[1]['newAnswer'][DETAIL_COMMENT]);
   }
 
-  /**
-   * Tests parsing of classes with closures inside
-   *
-   * @see   https://github.com/xp-framework/xp-framework/issues/230
-   */
   #[@test]
   public function withClosures() {
-    $details= create(new ClassParser())->parseDetails('<?php
+    $details= (new ClassParser())->parseDetails('<?php
       class WithClosure_2 extends Object {
 
         /**
@@ -285,15 +169,11 @@ class ClassDetailsTest extends TestCase {
     $this->assertEquals('Creates a new question', $details[1]['newQuestion'][DETAIL_COMMENT]);
   }
 
-  /**
-   * Returns dummy details
-   *
-   * @return var details
-   */
+  /** @return [:var] */
   protected function dummyDetails() {
-    return create(new ClassParser())->parseDetails('<?php
+    return (new ClassParser())->parseDetails('<?php
       class DummyDetails extends Object {
-        protected $test = TRUE;
+        protected $test = true;
 
         #[@test]
         public function test() { }
@@ -301,9 +181,6 @@ class ClassDetailsTest extends TestCase {
     ?>');
   }
 
-  /**
-   * Tests detailsForClass() caching via xp::$meta
-   */
   #[@test]
   public function canBeCached() {
     with (\xp::$meta[$fixture= 'DummyDetails']= $details= $this->dummyDetails()); {
@@ -313,11 +190,6 @@ class ClassDetailsTest extends TestCase {
     $this->assertEquals($details, $actual);
   }
 
-  /**
-   * Tests detailsForClass() caching via xp::registry
-   *
-   * @deprecated See https://github.com/xp-framework/xp-framework/issues/270
-   */
   #[@test]
   public function canBeCachedViaXpRegistry() {
     with (\xp::$registry['details.'.($fixture= 'DummyDetails')]= $details= $this->dummyDetails()); {
@@ -329,7 +201,7 @@ class ClassDetailsTest extends TestCase {
 
   #[@test]
   public function use_statements_evaluated() {
-    $actual= create(new ClassParser())->parseDetails('<?php namespace test\\use;
+    $actual= (new ClassParser())->parseDetails('<?php namespace test\\use;
       use lang\\Object;
 
       #[@value(new Object())]
@@ -341,7 +213,7 @@ class ClassDetailsTest extends TestCase {
 
   #[@test]
   public function closure_use_not_evaluated() {
-    create(new ClassParser())->parseDetails('<?php 
+    (new ClassParser())->parseDetails('<?php 
       class Test extends Object {
         public function run() {
           $closure= function($a) use($b) { };
@@ -352,7 +224,7 @@ class ClassDetailsTest extends TestCase {
 
   #[@test]
   public function short_array_syntax_in_arrays_of_arrays() {
-    $actual= create(new ClassParser())->parseDetails('<?php
+    $actual= (new ClassParser())->parseDetails('<?php
       #[@values([
       #  [1, 2],
       #  [3, 4]
@@ -360,6 +232,77 @@ class ClassDetailsTest extends TestCase {
       class Test extends Object {
       }
     ');
-    $this->assertEquals(array(array(1, 2), array(3, 4)), $actual['class'][DETAIL_ANNOTATIONS]['values']);
+    $this->assertEquals([[1, 2], [3, 4]], $actual['class'][DETAIL_ANNOTATIONS]['values']);
+  }
+
+  #[@test]
+  public function field_annotations() {
+    $details= (new ClassParser())->parseDetails('<?php
+      class Test extends Object {
+        #[@test]
+        public $fixture;
+      }
+    ');
+    $this->assertEquals(['test' => null], $details[0]['fixture'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[@test]
+  public function method_annotations() {
+    $details= (new ClassParser())->parseDetails('<?php
+      class Test extends Object {
+        #[@test]
+        public function fixture() { }
+      }
+    ');
+    $this->assertEquals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[@test]
+  public function abstract_method_annotations() {
+    $details= (new ClassParser())->parseDetails('<?php
+      abstract class Test extends Object {
+        #[@test]
+        public abstract function fixture();
+      }
+    ');
+    $this->assertEquals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[@test]
+  public function interface_method_annotations() {
+    $details= (new ClassParser())->parseDetails('<?php
+      interface Test {
+        #[@test]
+        public function fixture();
+      }
+    ');
+    $this->assertEquals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[@test]
+  public function parser_not_confused_by_closure() {
+    $details= (new ClassParser())->parseDetails('<?php
+      class Test extends Object {
+        #[@test]
+        public function fixture() {
+          return function() { };
+        }
+      }
+    ');
+    $this->assertEquals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[@test]
+  public function field_with_annotation_after_methods() {
+    $details= (new ClassParser())->parseDetails('<?php
+      class Test extends Object {
+        #[@test]
+        public function fixture() { }
+
+        #[@test]
+        public $fixture;
+      }
+    ');
+    $this->assertEquals(['test' => null], $details[0]['fixture'][DETAIL_ANNOTATIONS]);
   }
 }

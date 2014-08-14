@@ -1,17 +1,14 @@
 <?php namespace net\xp_framework\unittest\tests\mock;
 
-
-
 /**
  * An abstract class for tests
- *
  */
 abstract class PartiallyImplementedAbstractDummy extends \lang\Object implements IComplexInterface {
 
   /**
    * Static method
    *
-   * @param   var param1
+   * @param   var $param1
    * @return  var
    */
   public static function aStaticFunction($param1) { 
@@ -21,6 +18,8 @@ abstract class PartiallyImplementedAbstractDummy extends \lang\Object implements
   /**
    * Constructor
    *
+   * @param   var $param1
+   * @param   string $param2
    */
   public function __construct($param1, $param2= 'default') {
     // Empty
@@ -38,6 +37,7 @@ abstract class PartiallyImplementedAbstractDummy extends \lang\Object implements
   /**
    * Abstract method introduced in this class.
    *
+   * @param  var $a
    */
   public abstract function baz($a);
 

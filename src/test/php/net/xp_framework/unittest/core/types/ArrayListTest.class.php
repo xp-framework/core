@@ -13,12 +13,12 @@ class ArrayListTest extends TestCase {
 
   #[@test]
   public function a_newly_created_arraylist_has_zero_length() {
-    $this->assertEquals(0, create(new ArrayList())->length);
+    $this->assertEquals(0, (new ArrayList())->length);
   }
 
   #[@test]
   public function a_newly_created_arraylist_is_empty() {
-    $this->assertEquals(0, sizeof(create(new ArrayList())->values));
+    $this->assertEquals(0, sizeof((new ArrayList())->values));
   }
 
   #[@test]
@@ -56,7 +56,7 @@ class ArrayListTest extends TestCase {
   #[@test]
   public function inner_iteration() {
     $a= new ArrayList(1, 2, 3);
-    $r= array();
+    $r= [];
     foreach ($a as $vo) {
       foreach ($a as $vi) {
         $r[]= $vi;
@@ -170,32 +170,32 @@ class ArrayListTest extends TestCase {
 
   #[@test, @values([1, 2, 3])]
   public function int_contained_in_list_of_ints($value) {
-    $this->assertTrue(create(new ArrayList(1, 2, 3))->contains($value));
+    $this->assertTrue((new ArrayList(1, 2, 3))->contains($value));
   }
 
   #[@test, @values([0, -1, '1', 1.0, true, false, null])]
   public function values_not_contained_in_list_of_ints($value) {
-    $this->assertFalse(create(new ArrayList(1, 2, 3))->contains($value));
+    $this->assertFalse((new ArrayList(1, 2, 3))->contains($value));
   }
 
   #[@test, @values([1, -1, 0, '', false, null])]
   public function an_empty_list_does_not_contain_anything($value) {
-    $this->assertFalse(create(new ArrayList())->contains($value));
+    $this->assertFalse((new ArrayList())->contains($value));
   }
 
   #[@test]
   public function a_list_of_an_object_contains_the_given_object() {
     $o= new \lang\Object();
-    $this->assertTrue(create(new ArrayList($o))->contains($o));
+    $this->assertTrue((new ArrayList($o))->contains($o));
   }
 
   #[@test]
   public function a_list_of_an_object_does_not_contain_null() {
-    $this->assertFalse(create(new ArrayList(new \lang\Object()))->contains(null));
+    $this->assertFalse((new ArrayList(new \lang\Object()))->contains(null));
   }
 
   #[@test]
   public function a_list_of_strings_does_not_contain_an_object() {
-    $this->assertFalse(create(new ArrayList('T', 'e', 's', 't'))->contains(new \lang\Object()));
+    $this->assertFalse((new ArrayList('T', 'e', 's', 't'))->contains(new \lang\Object()));
   }
 }

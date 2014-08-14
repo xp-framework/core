@@ -24,7 +24,7 @@ class ClassFromArchiveTest extends ClassFromUriTest {
    * @return  net.xp_framework.unittest.reflection.ClassFromUriBase
    */
   protected static function baseImpl() {
-    return newinstance('net.xp_framework.unittest.reflection.ClassFromUriBase', array(), '{
+    return newinstance('net.xp_framework.unittest.reflection.ClassFromUriBase', [], '{
       protected $t= NULL;
 
       public function initialize($initializer) {

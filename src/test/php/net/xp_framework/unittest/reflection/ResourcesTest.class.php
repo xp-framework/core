@@ -45,53 +45,33 @@ class ResourcesTest extends TestCase {
     );
   }
   
-  /**
-   * Tests findResource() method
-   *
-   */
   #[@test]
   public function findResource() {
-    $this->assertClass(
-      \lang\ClassLoader::getDefault()->findResource('META-INF/manifest.ini'),
-      'lang.archive.ArchiveClassLoader'
+    $this->assertInstanceOf(
+      'lang.archive.ArchiveClassLoader',
+      \lang\ClassLoader::getDefault()->findResource('META-INF/manifest.ini')
     );
   }
 
-  /**
-   * Tests getResource() method
-   *
-   */
   #[@test]
   public function getResource() {
     $this->assertManifestFile(\lang\ClassLoader::getDefault()->getResource('META-INF/manifest.ini'));
   }
 
-  /**
-   * Tests getResourceAsStream() method
-   *
-   */
   #[@test]
   public function getResourceAsStream() {
     $stream= \lang\ClassLoader::getDefault()->getResourceAsStream('META-INF/manifest.ini');
-    $this->assertSubClass($stream, 'io.Stream');
+    $this->assertInstanceOf('io.Stream', $stream);
     $stream->open(STREAM_MODE_READ);
     $this->assertManifestFile($stream->read($stream->size()));
     $stream->close();
   }
 
-  /**
-   * Tests getResource() method
-   *
-   */
   #[@test, @expect('lang.ElementNotFoundException')]
   public function nonExistantResource() {
     \lang\ClassLoader::getDefault()->getResource('::DOES-NOT-EXIST::');
   }
 
-  /**
-   * Tests getResourceAsStream() method
-   *
-   */
   #[@test, @expect('lang.ElementNotFoundException')]
   public function nonExistantResourceStream() {
     \lang\ClassLoader::getDefault()->getResourceAsStream('::DOES-NOT-EXIST::');

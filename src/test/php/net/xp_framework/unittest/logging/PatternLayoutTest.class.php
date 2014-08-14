@@ -53,7 +53,7 @@ class PatternLayoutTest extends TestCase {
   public function literalPercent() {
     $this->assertEquals(
       '100%',
-      create(new PatternLayout('100%%'))->format($this->newLoggingEvent())
+      (new PatternLayout('100%%'))->format($this->newLoggingEvent())
     );
   }
 
@@ -67,7 +67,7 @@ class PatternLayoutTest extends TestCase {
   public function simpleFormat() {
     $this->assertEquals(
       'WARN [default] Hello',
-      create(new PatternLayout('%L [%c] %m'))->format($this->newLoggingEvent())
+      (new PatternLayout('%L [%c] %m'))->format($this->newLoggingEvent())
     );
   }
 
@@ -81,7 +81,7 @@ class PatternLayoutTest extends TestCase {
   public function defaultFormat() {
     $this->assertEquals(
       '[16:08:04 1214 warn] Hello',
-      create(new PatternLayout('[%t %p %l] %m'))->format($this->newLoggingEvent())
+      (new PatternLayout('[%t %p %l] %m'))->format($this->newLoggingEvent())
     );
   }
 
@@ -104,7 +104,7 @@ class PatternLayoutTest extends TestCase {
 
     $this->assertEquals(
       'key1=val1',
-      create(new PatternLayout('%x'))->format($event)
+      (new PatternLayout('%x'))->format($event)
     );
   }
 }

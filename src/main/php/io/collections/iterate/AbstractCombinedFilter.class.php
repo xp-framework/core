@@ -1,12 +1,11 @@
 <?php namespace io\collections\iterate;
 
-
-
 /**
  * Abstract base class for combined filters
  *
  * @see   xp://io.collections.iterate.AnyOfFilter
  * @see   xp://io.collections.iterate.AllOfFilter
+ * @deprecated  Use util.Filters instead
  */
 abstract class AbstractCombinedFilter extends \lang\Object implements IterationFilter {
   public $list;
@@ -17,7 +16,7 @@ abstract class AbstractCombinedFilter extends \lang\Object implements IterationF
    *
    * @param   io.collections.iterate.IterationFilter[] list
    */
-  public function __construct($list= array()) {
+  public function __construct($list= []) {
     $this->list= $list;
     $this->_size= sizeof($list);
   }
@@ -46,5 +45,4 @@ abstract class AbstractCombinedFilter extends \lang\Object implements IterationF
     }
     return $s.'}';
   }
-
 } 

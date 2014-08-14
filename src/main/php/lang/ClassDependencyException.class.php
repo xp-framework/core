@@ -1,6 +1,5 @@
 <?php namespace lang;
 
-
 /**
  * Indicates a class specified by a name cannot be found - that is,
  * no classloader provides such a class.

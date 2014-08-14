@@ -31,7 +31,7 @@ class NameserverLookup extends \lang\Object {
    * @return  peer.netInet4Address[]
    */
   public function lookupAllInet4($host) {
-    $res= array();
+    $res= [];
     foreach ($this->_nativeLookup($host, DNS_A) as $addr) {
       $res[]= new Inet4Address($addr['ip']);
     }
@@ -59,7 +59,7 @@ class NameserverLookup extends \lang\Object {
    * @return  peer.net.Inet6Address
    */
   public function lookupAllInet6($host) {
-    $res= array();
+    $res= [];
     foreach ($this->_nativeLookup($host, DNS_AAAA) as $addr) {
       $res[]= new Inet6Address($addr['ipv6']);
     }
@@ -87,7 +87,7 @@ class NameserverLookup extends \lang\Object {
    * @return  peer.net.InetAddress[]
    */
   public function lookupAll($host) {
-    $res= array(); $parser= new InetAddressFactory();
+    $res= []; $parser= new InetAddressFactory();
     foreach ($this->_nativeLookup($host, DNS_A|DNS_AAAA) as $addr) {
       if (isset($addr['ip'])) {
         $res[]= $parser->parse($addr['ip']);

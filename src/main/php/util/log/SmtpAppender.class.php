@@ -13,7 +13,7 @@ class SmtpAppender extends Appender {
     $sync     = true;
     
   public
-    $_data    = array();
+    $_data    = [];
   
   /**
    * Constructor

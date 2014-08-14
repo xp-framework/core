@@ -33,7 +33,7 @@ class ValuesTest extends \unittest\TestCase {
   #[@test]
   public function inline_value_source() {
     $test= newinstance('unittest.TestCase', array('fixture'), '{
-      public $values= array();
+      public $values= [];
 
       #[@test, @values(array(1, 2, 3))]
       public function fixture($value) {
@@ -47,7 +47,7 @@ class ValuesTest extends \unittest\TestCase {
   #[@test]
   public function local_value_source() {
     $test= newinstance('unittest.TestCase', array('fixture'), '{
-      public $values= array();
+      public $values= [];
 
       public function values() {
         return array(1, 2, 3);
@@ -65,7 +65,7 @@ class ValuesTest extends \unittest\TestCase {
   #[@test]
   public function local_value_source_with_args() {
     $test= newinstance('unittest.TestCase', array('fixture'), '{
-      public $values= array();
+      public $values= [];
 
       public function range($lo= 1, $hi= 3) {
         return range($lo, $hi);
@@ -83,7 +83,7 @@ class ValuesTest extends \unittest\TestCase {
   #[@test]
   public function local_value_source_without_args() {
     $test= newinstance('unittest.TestCase', array('fixture'), '{
-      public $values= array();
+      public $values= [];
 
       public function range($lo= 1, $hi= 3) {
         return range($lo, $hi);
@@ -101,7 +101,7 @@ class ValuesTest extends \unittest\TestCase {
   #[@test]
   public function external_value_source_fully_qualified_class() {
     $test= newinstance('unittest.TestCase', array('fixture'), '{
-      public $values= array();
+      public $values= [];
 
       #[@test, @values("net.xp_framework.unittest.tests.ValuesTest::range")]
       public function fixture($value) {
@@ -115,7 +115,7 @@ class ValuesTest extends \unittest\TestCase {
   #[@test]
   public function external_value_source_unqualified_class() {
     $test= newinstance('unittest.TestCase', array('fixture'), '{
-      public $values= array();
+      public $values= [];
 
       #[@test, @values("net\\\\xp_framework\\\\unittest\\\\tests\\\\ValuesTest::range")]
       public function fixture($value) {
@@ -129,7 +129,7 @@ class ValuesTest extends \unittest\TestCase {
   #[@test]
   public function external_value_source_provider_and_args() {
     $test= newinstance('unittest.TestCase', array('fixture'), '{
-      public $values= array();
+      public $values= [];
 
       #[@test, @values(source= "net.xp_framework.unittest.tests.ValuesTest::range", args= array(1, 10))]
       public function fixture($value) {
@@ -143,7 +143,7 @@ class ValuesTest extends \unittest\TestCase {
   #[@test]
   public function local_value_source_with_self() {
     $test= newinstance('unittest.TestCase', array('fixture'), '{
-      public $values= array();
+      public $values= [];
 
       public static function range() {
         return array(1, 2, 3);
@@ -214,7 +214,7 @@ class ValuesTest extends \unittest\TestCase {
   #[@test]
   public function supplying_values_for_multiple_parameters() {
     $test= newinstance('unittest.TestCase', array('fixture'), '{
-      public $values= array();
+      public $values= [];
 
       #[@test, @values(array(array(1, 2), array(3, 4), array(5, 6)))]
       public function fixture($a, $b) {
@@ -229,7 +229,7 @@ class ValuesTest extends \unittest\TestCase {
   #[@test]
   public function using_traversable_in_values() {
     $test= newinstance('unittest.TestCase', array('fixture'), '{
-      public $values= array();
+      public $values= [];
 
       public function values() {
         return new \lang\types\ArrayList(1, 2, 3);
@@ -247,7 +247,7 @@ class ValuesTest extends \unittest\TestCase {
   #[@test]
   public function using_this_in_value_provider() {
     $test= newinstance('unittest.TestCase', array('fixture'), '{
-      public $values= array();
+      public $values= [];
 
       public function values() {
         return array($this);
@@ -265,7 +265,7 @@ class ValuesTest extends \unittest\TestCase {
   #[@test]
   public function protected_local_values_method() {
     $test= newinstance('unittest.TestCase', array('fixture'), '{
-      public $values= array();
+      public $values= [];
 
       protected function values() {
         return array(1, 2, 3);
@@ -283,7 +283,7 @@ class ValuesTest extends \unittest\TestCase {
   #[@test]
   public function private_local_values_method() {
     $test= newinstance('unittest.TestCase', array('fixture'), '{
-      public $values= array();
+      public $values= [];
 
       private function values() {
         return array(1, 2, 3);

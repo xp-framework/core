@@ -15,8 +15,8 @@ class StringOfTest extends \unittest\TestCase {
    * @return lang.Object
    */
   protected function testStringInstance() {
-    return newinstance('lang.Object', array(), array(
-      'toString' => function($self) { return 'TestString(6) { String }'; }
+    return newinstance('lang.Object', [], array(
+      'toString' => function() { return 'TestString(6) { String }'; }
     ));
   }
 
@@ -44,16 +44,16 @@ class StringOfTest extends \unittest\TestCase {
   #[@test]
   public function array_of_ints_representation() {
     $this->assertEquals(
-      "[\n  0 => 1\n  1 => 2\n  2 => 3\n]", 
-      \xp::stringOf(array(1, 2, 3))
+      '[1, 2, 3]',
+      \xp::stringOf([1, 2, 3])
     );
   }
 
   #[@test]
   public function array_of_array_of_ints_representation() {
     $this->assertEquals(
-      "[\n  0 => [\n    0 => 1\n    1 => 2\n    2 => 3\n  ]\n]", 
-      \xp::stringOf(array(array(1, 2, 3)))
+      '[[1, 2, 3]]',
+      \xp::stringOf([[1, 2, 3]])
     );
   }
 
@@ -88,19 +88,12 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function array_with_recursion_representation() {
-    $a= array();
+    $a= [];
     $a[0]= 'Outer array';
-    $a[1]= array();
+    $a[1]= [];
     $a[1][0]= 'Inner array';
     $a[1][1]= &$a;
-    $this->assertEquals('[
-  0 => "Outer array"
-  1 => [
-    0 => "Inner array"
-    1 => ->{:recursion:}
-  ]
-]', 
-    \xp::stringOf($a));
+    $this->assertEquals('["Outer array", ["Inner array", ->{:recursion:}]]', \xp::stringOf($a));
   }
 
   #[@test]
@@ -118,8 +111,8 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function twice_the_same_object_inside_array_not_recursion() {
-    $test= newinstance('lang.Object', array(), array(
-      'toString' => function($self) { return 'Test'; }
+    $test= newinstance('lang.Object', [], array(
+      'toString' => function() { return 'Test'; }
     ));
     $this->assertEquals(
       "[\n  a => Test\n  b => Test\n]", 
@@ -129,9 +122,9 @@ class StringOfTest extends \unittest\TestCase {
   
   #[@test]
   public function twice_the_same_object_with_huge_hashcode_inside_array_not_recursion() {
-    $test= newinstance('lang.Object', array(), array(
-      'hashCode' => function($self) { return 9E100; },
-      'toString' => function($self) { return 'Test'; }
+    $test= newinstance('lang.Object', [], array(
+      'hashCode' => function() { return 9E100; },
+      'toString' => function() { return 'Test'; }
     ));
     $this->assertEquals(
       "[\n  a => Test\n  b => Test\n]", 
@@ -141,8 +134,8 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function toString_calling_xp_stringOf_does_not_loop_forever() {
-    $test= newinstance('lang.Object', array(), array(
-      'toString' => function($self) { return \xp::stringOf($self); }
+    $test= newinstance('lang.Object', [], array(
+      'toString' => function() { return \xp::stringOf($this); }
     ));
     $this->assertEquals(
       $test->getClassName()." {\n  __id => \"".$test->hashCode()."\"\n}",
@@ -162,13 +155,13 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function indenting() {
-    $cl= \lang\ClassLoader::defineClass('net.xp_framework.unittest.core.StringOfTest_IndentingFixture', 'lang.Object', array(), '{
+    $cl= \lang\ClassLoader::defineClass('net.xp_framework.unittest.core.StringOfTest_IndentingFixture', 'lang.Object', [], '{
       protected $inner= NULL;
       public function __construct($inner) {
         $this->inner= $inner;
       }
       public function toString() {
-        return "object {\n  ".xp::stringOf($this->inner, "  ")."\n}";
+        return "object {\n  ".\xp::stringOf($this->inner, "  ")."\n}";
       }
     }');
     $this->assertEquals(
@@ -196,7 +189,7 @@ class StringOfTest extends \unittest\TestCase {
   public function closure_inside_object_does_not_raise_serialization_exception() {
     $instance= newinstance('lang.Object', array(function($a, $b) { }), array(
       'closure'     => null,
-      '__construct' => function($self, $closure) { $self->closure= $closure; },
+      '__construct' => function($closure) { $this->closure= $closure; },
     ));
     \xp::stringOf($instance);
   }

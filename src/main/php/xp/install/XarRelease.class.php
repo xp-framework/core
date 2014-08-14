@@ -49,7 +49,7 @@ class XarRelease extends \lang\Object implements Origin {
    */
   public function __construct($api, $vendor, $module, $branch) {
     $this->client= $api;
-    $this->release= create(new RestRequest('/vendors/{vendor}/modules/{module}/releases/{release}'))
+    $this->release= (new RestRequest('/vendors/{vendor}/modules/{module}/releases/{release}'))
       ->withSegment('vendor', $vendor)
       ->withSegment('module', $module)
       ->withSegment('release', $branch)
@@ -70,7 +70,7 @@ class XarRelease extends \lang\Object implements Origin {
     Console::writeLine('Release ', $release['version']['number'], ' published ', $release['published']);
 
     // Download files
-    $pth= create(new File($target, 'class.pth'))->getOutputStream();
+    $pth= (new File($target, 'class.pth'))->getOutputStream();
     foreach ($release['files'] as $file) {
       $d= $this->client->execute(new RestRequest($file['link']));
       $f= new File($target, $file['name']);

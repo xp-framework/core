@@ -31,17 +31,17 @@
  *     
  *     #[@test]
  *     public function addition() {
- *       $this->assertEquals(2, create(new Calculator())->add(1, 1));
+ *       $this->assertEquals(2, (new Calculator())->add(1, 1));
  *     }
  *     
  *     #[@test]
  *     public function division() {
- *       $this->assertEquals(1, create(new Calculator())->divide(1, 1));
+ *       $this->assertEquals(1, (new Calculator())->divide(1, 1));
  *     }
  *     
  *     #[@test, @expect('DivisionByZeroException')]
  *     public function divisionByZero() {
- *       create(new Calculator())->divide(1, 0);
+ *       (new Calculator())->divide(1, 0);
  *     }
  *   }
  * </code>

@@ -11,7 +11,7 @@
  * @see  xp://util.log.ConsoleAppender
  */  
 class ColoredConsoleAppender extends ConsoleAppender {
-  protected $colors= array();
+  protected $colors= [];
 
   /**
    * Constructor

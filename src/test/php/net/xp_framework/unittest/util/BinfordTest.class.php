@@ -33,7 +33,7 @@ class BinfordTest extends TestCase {
    */
   #[@test]
   public function get_powered_by_returns_powerr() {
-    $this->assertEquals(6100, create(new Binford(6100))->getPoweredBy());
+    $this->assertEquals(6100, (new Binford(6100))->getPoweredBy());
   }
 
   /**
@@ -91,7 +91,7 @@ class BinfordTest extends TestCase {
    */
   #[@test]
   public function string_representation() {
-    $this->assertEquals('util.Binford(6100)', create(new Binford(6100))->toString());
+    $this->assertEquals('util.Binford(6100)', (new Binford(6100))->toString());
   }
 
   /**
@@ -101,7 +101,7 @@ class BinfordTest extends TestCase {
   public function header_representation() {
     $this->assertEquals(
       new \peer\Header('X-Binford', '6100 (more power)'),
-      create(new Binford(6100))->getHeader()
+      (new Binford(6100))->getHeader()
     );
   }
 }

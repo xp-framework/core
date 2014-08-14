@@ -9,7 +9,7 @@ use unittest\TestCase;
  * @see    xp://lang.ClassLoader#registerPath
  */
 class ClassPathTest extends TestCase {
-  protected $registered= array();
+  protected $registered= [];
 
   /**
    * Track registration of a class loader

@@ -21,7 +21,7 @@ class Base64OutputStream extends \lang\Object implements OutputStream {
    * @param   int lineLength limit maximum line length
    */
   public function __construct(OutputStream $out, $lineLength= 0) {
-    $params= $lineLength ? array('line-length' => $lineLength, 'line-break-chars' => "\n") : array();
+    $params= $lineLength ? array('line-length' => $lineLength, 'line-break-chars' => "\n") : [];
     $this->out= Streams::writeableFd($out);
     if (!stream_filter_append($this->out, 'convert.base64-encode', STREAM_FILTER_WRITE, $params)) {
       throw new \io\IOException('Could not append stream filter');

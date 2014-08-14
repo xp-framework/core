@@ -36,7 +36,10 @@ class FolderSource extends AbstractSource {
    */
   protected function findLoaderFor($path) {
     foreach (\lang\ClassLoader::getLoaders() as $cl) {
-      if (0 === strncmp($cl->path, $path, strlen($cl->path))) return $cl;
+      if (
+        $cl instanceof \lang\FileSystemClassLoader &&
+        0 === strncmp($cl->path, $path, strlen($cl->path))
+      ) return $cl;
     }
     return null;      
   }
@@ -59,7 +62,7 @@ class FolderSource extends AbstractSource {
       new ExtensionEqualsFilter(\xp::CLASS_FILE_EXT),
       true  // recursive
     );
-    $cases= array();
+    $cases= [];
     foreach ($it as $element) {
       $name= strtr(substr($element->getUri(), $l, $e), DIRECTORY_SEPARATOR, '.');
       $class= XPClass::forName($name);

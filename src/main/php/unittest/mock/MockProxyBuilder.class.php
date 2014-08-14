@@ -13,11 +13,11 @@ class MockProxyBuilder extends \lang\Object {
   private
     $classLoader       = null,
     $overwriteExisting = false,
-    $added             = array();
+    $added             = [];
 
   private static 
     $num               = 0,
-    $cache             = array();
+    $cache             = [];
   
   /**
    * Constructor
@@ -53,7 +53,7 @@ class MockProxyBuilder extends \lang\Object {
    * @throws  lang.IllegalArgumentException
    */
   public function createProxyClass(\lang\IClassLoader $classloader, array $interfaces, $baseClass= null) {
-    $this->added= array();
+    $this->added= [];
 
     if (!$baseClass) {
       $baseClass= \lang\XPClass::forName('lang.Object');
@@ -244,7 +244,7 @@ class MockProxyBuilder extends \lang\Object {
     if ($method->hasAnnotation('overloaded')) {
       $signatures= $method->getAnnotation('overloaded', 'signatures');
       $methodax= 0;
-      $cases= array();
+      $cases= [];
       foreach ($signatures as $signature) {
         $args= sizeof($signature);
         $methodax= max($methodax, $args- 1);
@@ -316,32 +316,5 @@ class MockProxyBuilder extends \lang\Object {
    */
   public function createProxyInstance($classloader, $interfaces, $handler) {
     return $this->createProxyClass($classloader, $interfaces)->newInstance($handler);
-  }
-  
-  /**
-   * @deprecated Use non-static getProxyClass instead
-   * 
-   * Retrieves a Proxy instance.
-   *
-   * @param   lang.IClassLoader classloader
-   * @param   lang.XPClass[] interfaces names of the interfaces to implement
-   * @return  lang.XPClass
-   * @throws  lang.IllegalArgumentException
-   */
-  public static function getProxyClass(\lang\IClassLoader $classloader, array $interfaces) {
-    return create(new self())->createProxyClass($classloader, $interfaces);
-  }
-  
-  /**
-   * @deprecated Use non-static createProxyInstance instead
-   *
-   * @param   lang.ClassLoader classloader
-   * @param   lang.XPClass[] interfaces
-   * @param   lang.reflect.InvocationHandler handler
-   * @return  lang.XPClass
-   * @throws  lang.IllegalArgumentException
-   */
-  public static function newProxyInstance($classloader, $interfaces, $handler) {
-    return create(new self())->createProxyInstance($classloader, $interfaces, $handler);
   }
 }

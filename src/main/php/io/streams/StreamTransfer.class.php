@@ -9,7 +9,7 @@ use lang\Closeable;
  * Example (downloading a file):
  * <code>
  *   $t= new StreamTransfer(
- *     create(new HttpConnection('http://example.com'))->get('/')->getInputStream(), 
+ *     (new HttpConnection('http://example.com'))->get('/')->getInputStream(), 
  *     new FileOutputStream(new File('index.html'))
  *   );
  *   $t->transferAll();

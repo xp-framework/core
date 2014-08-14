@@ -59,8 +59,8 @@ class FileTest extends TestCase {
   public function hashCodesNotEqualForTwoFileHandles() {
     $fn= $this->fileKnownToExist();
     $this->assertNotEquals(
-      create(new File(fopen($fn, 'r')))->hashCode(),
-      create(new File(fopen($fn, 'r')))->hashCode()
+      (new File(fopen($fn, 'r')))->hashCode(),
+      (new File(fopen($fn, 'r')))->hashCode()
     );
   }
 
@@ -72,8 +72,8 @@ class FileTest extends TestCase {
   public function hashCodesEqualForSameFileHandles() {
     $fn= fopen($this->fileKnownToExist(), 'r');
     $this->assertEquals(
-      create(new File($fn))->hashCode(),
-      create(new File($fn))->hashCode()
+      (new File($fn))->hashCode(),
+      (new File($fn))->hashCode()
     );
   }
 
@@ -85,8 +85,8 @@ class FileTest extends TestCase {
   public function hashCodesEqualForSameFiles() {
     $fn= $this->fileKnownToExist();
     $this->assertEquals(
-      create(new File($fn))->hashCode(),
-      create(new File($fn))->hashCode()
+      (new File($fn))->hashCode(),
+      (new File($fn))->hashCode()
     );
   }
 
@@ -98,8 +98,8 @@ class FileTest extends TestCase {
   public function hashCodesNotEqualForHandleAndUri() {
     $fn= $this->fileKnownToExist();
     $this->assertNotEquals(
-      create(new File(fopen($fn, 'r')))->hashCode(),
-      create(new File($fn))->hashCode()
+      (new File(fopen($fn, 'r')))->hashCode(),
+      (new File($fn))->hashCode()
     );
   }
 
@@ -110,7 +110,7 @@ class FileTest extends TestCase {
   #[@test]
   public function getURI() {
     $fn= $this->fileKnownToExist();
-    $this->assertEquals($fn, create(new File($fn))->getURI());
+    $this->assertEquals($fn, (new File($fn))->getURI());
   }
 
   /**
@@ -122,7 +122,7 @@ class FileTest extends TestCase {
   public function getPath() {
     $fn= $this->fileKnownToExist();
     $info= pathinfo($fn);
-    $this->assertEquals($info['dirname'], create(new File($fn))->getPath());
+    $this->assertEquals($info['dirname'], (new File($fn))->getPath());
   }
 
   /**
@@ -134,7 +134,7 @@ class FileTest extends TestCase {
   public function getFileName() {
     $fn= $this->fileKnownToExist();
     $info= pathinfo($fn);
-    $this->assertEquals($info['basename'], create(new File($fn))->getFileName());
+    $this->assertEquals($info['basename'], (new File($fn))->getFileName());
   }
 
   /**
@@ -148,7 +148,7 @@ class FileTest extends TestCase {
     $info= pathinfo($fn);
     $this->assertEquals(
       isset($info['extension']) ? $info['extension'] : null, 
-      create(new File($fn))->getExtension()
+      (new File($fn))->getExtension()
     );
   }
 
@@ -204,7 +204,7 @@ class FileTest extends TestCase {
   #[@test]
   public function newInstance() {
     $fn= $this->fileKnownToExist();
-    $this->assertEquals($fn, create(new File($fn))->getURI());
+    $this->assertEquals($fn, (new File($fn))->getURI());
   }
 
   /**
@@ -214,7 +214,7 @@ class FileTest extends TestCase {
   #[@test]
   public function composingFromFolderAndString() {
     $fn= $this->fileKnownToExist();
-    $this->assertEquals($fn, create(new File(new Folder(dirname($fn)), basename($fn)))->getURI());
+    $this->assertEquals($fn, (new File(new Folder(dirname($fn)), basename($fn)))->getURI());
   }
 
   /**
@@ -224,7 +224,7 @@ class FileTest extends TestCase {
   #[@test]
   public function composingFromStringAndString() {
     $fn= $this->fileKnownToExist();
-    $this->assertEquals($fn, create(new File(dirname($fn), basename($fn)))->getURI());
+    $this->assertEquals($fn, (new File(dirname($fn), basename($fn)))->getURI());
   }
 
   /**
@@ -233,7 +233,7 @@ class FileTest extends TestCase {
    */
   #[@test]
   public function fromResource() {
-    $this->assertNull(create(new File(fopen($this->fileKnownToExist(), 'r')))->getURI());
+    $this->assertNull((new File(fopen($this->fileKnownToExist(), 'r')))->getURI());
   }
 
   /**
@@ -242,7 +242,7 @@ class FileTest extends TestCase {
    */
   #[@test]
   public function stderr() {
-    $this->assertEquals('php://stderr', create(new File('php://stderr'))->getURI());
+    $this->assertEquals('php://stderr', (new File('php://stderr'))->getURI());
   }
 
   /**
@@ -251,7 +251,7 @@ class FileTest extends TestCase {
    */
   #[@test]
   public function stdout() {
-    $this->assertEquals('php://stdout', create(new File('php://stdout'))->getURI());
+    $this->assertEquals('php://stdout', (new File('php://stdout'))->getURI());
   }
 
   /**
@@ -260,7 +260,7 @@ class FileTest extends TestCase {
    */
   #[@test]
   public function stdin() {
-    $this->assertEquals('php://stdin', create(new File('php://stdin'))->getURI());
+    $this->assertEquals('php://stdin', (new File('php://stdin'))->getURI());
   }
 
   /**
@@ -269,7 +269,7 @@ class FileTest extends TestCase {
    */
   #[@test]
   public function xarSchemeAllowed() {
-    $this->assertEquals('xar://test.xar?test.txt', create(new File('xar://test.xar?test.txt'))->getURI());
+    $this->assertEquals('xar://test.xar?test.txt', (new File('xar://test.xar?test.txt'))->getURI());
   }
 
   /**
@@ -278,7 +278,7 @@ class FileTest extends TestCase {
    */
   #[@test]
   public function resSchemeAllowed() {
-    $this->assertEquals('res://test.txt', create(new File('res://test.txt'))->getURI());
+    $this->assertEquals('res://test.txt', (new File('res://test.txt'))->getURI());
   }
 
   /**
@@ -287,7 +287,7 @@ class FileTest extends TestCase {
    */
   #[@test]
   public function xarSchemeFileNameInRoot() {
-    $this->assertEquals('test.txt', create(new File('xar://test.xar?test.txt'))->getFileName());
+    $this->assertEquals('test.txt', (new File('xar://test.xar?test.txt'))->getFileName());
   }
 
   /**
@@ -296,7 +296,7 @@ class FileTest extends TestCase {
    */
   #[@test]
   public function xarSchemePathInRoot() {
-    $this->assertEquals('xar://test.xar?', create(new File('xar://test.xar?test.txt'))->getPath());
+    $this->assertEquals('xar://test.xar?', (new File('xar://test.xar?test.txt'))->getPath());
   }
 
   /**
@@ -305,7 +305,7 @@ class FileTest extends TestCase {
    */
   #[@test]
   public function xarSchemeFileNameInSubdir() {
-    $this->assertEquals('test.txt', create(new File('xar://test.xar?dir/test.txt'))->getFileName());
+    $this->assertEquals('test.txt', (new File('xar://test.xar?dir/test.txt'))->getFileName());
   }
 
   /**
@@ -314,7 +314,7 @@ class FileTest extends TestCase {
    */
   #[@test]
   public function xarSchemePathInSubdir() {
-    $this->assertEquals('xar://test.xar?dir', create(new File('xar://test.xar?dir/test.txt'))->getPath());
+    $this->assertEquals('xar://test.xar?dir', (new File('xar://test.xar?dir/test.txt'))->getPath());
   }
 
   /**
@@ -323,7 +323,7 @@ class FileTest extends TestCase {
    */
   #[@test]
   public function resSchemeFileName() {
-    $this->assertEquals('test.txt', create(new File('res://test.txt'))->getFileName());
+    $this->assertEquals('test.txt', (new File('res://test.txt'))->getFileName());
   }
 
   /**
@@ -332,7 +332,7 @@ class FileTest extends TestCase {
    */
   #[@test]
   public function resSchemePath() {
-    $this->assertEquals('res://', create(new File('res://test.txt'))->getPath());
+    $this->assertEquals('res://', (new File('res://test.txt'))->getPath());
   }
 
   /**
@@ -341,7 +341,7 @@ class FileTest extends TestCase {
    */
   #[@test]
   public function resSchemePathInSubDir() {
-    $this->assertEquals('res://dir', create(new File('res://dir/test.txt'))->getPath());
+    $this->assertEquals('res://dir', (new File('res://dir/test.txt'))->getPath());
   }
 
   /**
@@ -350,6 +350,6 @@ class FileTest extends TestCase {
    */
   #[@test]
   public function resSchemeExtension() {
-    $this->assertEquals('txt', create(new File('res://test.txt'))->getExtension());
+    $this->assertEquals('txt', (new File('res://test.txt'))->getExtension());
   }
 }

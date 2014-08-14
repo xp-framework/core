@@ -1,7 +1,5 @@
 <?php namespace lang\reflect;
 
-
-
 /**
  * Base class for methods and constructors. Note that the methods provided
  * in this class (except for getName()) are implemented using a tokenizer
@@ -23,12 +21,6 @@ class Routine extends \lang\Object {
 
   public 
     $_reflect   = null;
-
-  protected static $SETACCESSIBLE_AVAILABLE;    // 5.3.0 .. 5.3.2
-
-  static function __static() {
-    self::$SETACCESSIBLE_AVAILABLE= method_exists('ReflectionMethod', 'setAccessible');
-  }
 
   /**
    * Constructor
@@ -82,8 +74,9 @@ class Routine extends \lang\Object {
     // #define ZEND_ACC_PASS_REST_PREFER_REF   0x2000000
     // #define ZEND_ACC_RETURN_REFERENCE       0x4000000
     // #define ZEND_ACC_DONE_PASS_TWO          0x8000000
+    // #define ZEND_ACC_HAS_TYPE_HINTS         0x10000000
     // ==
-    return $this->_reflect->getModifiers() & ~0xfb7f008;
+    return $this->_reflect->getModifiers() & ~0x1fb7f008;
   }
   
   /**
@@ -92,10 +85,10 @@ class Routine extends \lang\Object {
    * @return  lang.reflect.Parameter[]
    */
   public function getParameters() {
-    $r= array();
+    $r= [];
     $c= $this->_reflect->getDeclaringClass()->getName();
     foreach ($this->_reflect->getParameters() as $offset => $param) {
-      $r[]= new Parameter($param, array($c, $this->_reflect->getName(), $offset));
+      $r[]= new Parameter($param, [$c, $this->_reflect->getName(), $offset]);
     }
     return $r;
   }
@@ -109,7 +102,7 @@ class Routine extends \lang\Object {
   public function getParameter($offset) {
     $list= $this->_reflect->getParameters();
     return isset($list[$offset]) 
-      ? new Parameter($list[$offset], array($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName(), $offset))
+      ? new Parameter($list[$offset], [$this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName(), $offset])
       : null
     ;
   }
@@ -157,7 +150,7 @@ class Routine extends \lang\Object {
    */
   public function getExceptionNames() {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
-    return $details ? $details[DETAIL_THROWS] : array();
+    return $details ? $details[DETAIL_THROWS] : [];
   }
 
   /**
@@ -167,7 +160,7 @@ class Routine extends \lang\Object {
    */
   public function getExceptionTypes() {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
-    return $details ? array_map(array(\xp::reflect('lang.XPClass'), 'forName'), $details[DETAIL_THROWS]) : array();
+    return $details ? array_map([\xp::reflect('lang.XPClass'), 'forName'], $details[DETAIL_THROWS]) : [];
   }
   
   /**
@@ -249,7 +242,7 @@ class Routine extends \lang\Object {
    */
   public function getAnnotations() {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
-    return $details ? $details[DETAIL_ANNOTATIONS] : array();
+    return $details ? $details[DETAIL_ANNOTATIONS] : [];
   }
   
   /**
@@ -260,9 +253,6 @@ class Routine extends \lang\Object {
    * @return  lang.reflect.Routine this
    */
   public function setAccessible($flag) {
-    if (!self::$SETACCESSIBLE_AVAILABLE && $this->_reflect->isPrivate()) {
-      throw new \lang\IllegalAccessException('Cannot make private fields accessible');
-    }
     $this->accessible= $flag;
     return $this;
   }

@@ -1,16 +1,10 @@
-<?php namespace io\streams;/* This file is part of the XP framework's experiments
- *
- * $Id$
- */
-
-use lang\Closeable;
-
+<?php namespace io\streams;
 
 /**
  * An InputStream can be read from
  *
  */
-interface InputStream extends Closeable {
+interface InputStream extends \lang\Closeable {
 
   /**
    * Read a string
@@ -24,6 +18,7 @@ interface InputStream extends Closeable {
    * Returns the number of bytes that can be read from this stream 
    * without blocking.
    *
+   * @return int
    */
   public function available();
 }

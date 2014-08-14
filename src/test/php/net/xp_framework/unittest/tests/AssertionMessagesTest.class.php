@@ -91,8 +91,8 @@ class AssertionMessagesTest extends TestCase {
   #[@test]
   public function twoArrays() {
     $this->assertMessageEquals(
-      "expected [[\n  0 => 1\n  1 => 2\n]] but was [[\n  0 => 2\n  1 => 3\n]] using: 'equals'",
-      new AssertionFailedError('equals', array(2, 3), array(1, 2))
+      "expected [[1, 2]] but was [[2, 3]] using: 'equals'",
+      new AssertionFailedError('equals', [2, 3], [1, 2])
     );
   }
 

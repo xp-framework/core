@@ -19,7 +19,7 @@ class TestActionTest extends \unittest\TestCase {
   #[@test]
   public function beforeTest_and_afterTest_invocation_order() {
     $test= newinstance('unittest.TestCase', array('fixture'), '{
-      public $run= array();
+      public $run= [];
 
       #[@test, @action(new \net\xp_framework\unittest\tests\RecordActionInvocation("run"))]
       public function fixture() {
@@ -33,7 +33,7 @@ class TestActionTest extends \unittest\TestCase {
   #[@test]
   public function beforeTest_is_invoked_before_setUp() {
     $test= newinstance('unittest.TestCase', array('fixture'), '{
-      public $run= array();
+      public $run= [];
 
       public function setUp() {
         $this->run[]= "setup";
@@ -51,7 +51,7 @@ class TestActionTest extends \unittest\TestCase {
   #[@test]
   public function afterTest_is_invoked_after_tearDown() {
     $test= newinstance('unittest.TestCase', array('fixture'), '{
-      public $run= array();
+      public $run= [];
 
       public function tearDown() {
         $this->run[]= "teardown";
@@ -130,7 +130,7 @@ class TestActionTest extends \unittest\TestCase {
   #[@test]
   public function multiple_actions() {
     $test= newinstance('unittest.TestCase', array('fixture'), '{
-      public $one= array(), $two= array();
+      public $one= [], $two= [];
 
       #[@test, @action([
       #  new \net\xp_framework\unittest\tests\RecordActionInvocation("one"),

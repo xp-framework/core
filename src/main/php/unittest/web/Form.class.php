@@ -67,7 +67,7 @@ class Form extends \lang\Object {
       $this->fields= $this->test->getXPath()->query('.//input|.//textarea|.//select', $this->node);
     }
 
-    $fields= array();
+    $fields= [];
     foreach ($this->fields as $element) {
       $fields[]= Fields::forTag($element->tagName)->newInstance($this, $element);
     }

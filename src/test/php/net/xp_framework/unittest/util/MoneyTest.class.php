@@ -19,7 +19,7 @@ class MoneyTest extends TestCase {
   public function tenUsDollarsFromInt() {
     $this->assertEquals(
       new \lang\types\Double(10.00), 
-      create(new Money(10, \util\Currency::$USD))->amount()
+      (new Money(10, \util\Currency::$USD))->amount()
     );
   }
 
@@ -31,7 +31,7 @@ class MoneyTest extends TestCase {
   public function tenUsDollarsFromFloat() {
     $this->assertEquals(
       new \lang\types\Double(10.00), 
-      create(new Money(10.00, \util\Currency::$USD))->amount()
+      (new Money(10.00, \util\Currency::$USD))->amount()
     );
   }
 
@@ -43,7 +43,7 @@ class MoneyTest extends TestCase {
   public function tenUsDollarsFromString() {
     $this->assertEquals(
       new \lang\types\Double(10.00), 
-      create(new Money('10.00', \util\Currency::$USD))->amount()
+      (new Money('10.00', \util\Currency::$USD))->amount()
     );
   }
 
@@ -53,7 +53,7 @@ class MoneyTest extends TestCase {
    */
   #[@test]
   public function currency() {
-    $this->assertEquals(\util\Currency::$USD, create(new Money('1.00', \util\Currency::$USD))->currency());
+    $this->assertEquals(\util\Currency::$USD, (new Money('1.00', \util\Currency::$USD))->currency());
   }
 
   /**
@@ -64,7 +64,7 @@ class MoneyTest extends TestCase {
   public function stringRepresentation() {
     $this->assertEquals(
       '19.99 USD', 
-      create(new Money('19.99', \util\Currency::$USD))->toString()
+      (new Money('19.99', \util\Currency::$USD))->toString()
     );
   }
 
@@ -76,7 +76,7 @@ class MoneyTest extends TestCase {
   public function add() {
     $this->assertEquals(
       new Money('20.00', \util\Currency::$EUR),
-      create(new Money('11.50', \util\Currency::$EUR))->add(new Money('8.50', \util\Currency::$EUR))
+      (new Money('11.50', \util\Currency::$EUR))->add(new Money('8.50', \util\Currency::$EUR))
     );
   }
 
@@ -86,7 +86,7 @@ class MoneyTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function cannotAddDifferentCurrencies() {
-    create(new Money('11.50', \util\Currency::$EUR))->add(new Money('8.50', \util\Currency::$USD));
+    (new Money('11.50', \util\Currency::$EUR))->add(new Money('8.50', \util\Currency::$USD));
   }
 
   /**
@@ -97,7 +97,7 @@ class MoneyTest extends TestCase {
   public function subtract() {
     $this->assertEquals(
       new Money('3.00', \util\Currency::$EUR),
-      create(new Money('11.50', \util\Currency::$EUR))->subtract(new Money('8.50', \util\Currency::$EUR))
+      (new Money('11.50', \util\Currency::$EUR))->subtract(new Money('8.50', \util\Currency::$EUR))
     );
   }
 
@@ -107,7 +107,7 @@ class MoneyTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function cannotSubtractDifferentCurrencies() {
-    create(new Money('11.50', \util\Currency::$EUR))->subtract(new Money('8.50', \util\Currency::$USD));
+    (new Money('11.50', \util\Currency::$EUR))->subtract(new Money('8.50', \util\Currency::$USD));
   }
 
   /**
@@ -118,7 +118,7 @@ class MoneyTest extends TestCase {
   public function multiplyBy() {
     $this->assertEquals(
       new Money('2.98', \util\Currency::$EUR),
-      create(new Money('1.49', \util\Currency::$EUR))->multiplyBy(2)
+      (new Money('1.49', \util\Currency::$EUR))->multiplyBy(2)
     );
   }
 
@@ -130,7 +130,7 @@ class MoneyTest extends TestCase {
   public function divideBy() {
     $this->assertEquals(
       new Money('9.99', \util\Currency::$EUR),
-      create(new Money('19.98', \util\Currency::$EUR))->divideBy(2)
+      (new Money('19.98', \util\Currency::$EUR))->divideBy(2)
     );
   }
 
@@ -142,7 +142,7 @@ class MoneyTest extends TestCase {
   public function compareToReturnsZeroOnEquality() {
     $this->assertEquals(
       0,
-      create(new Money('1.01', \util\Currency::$EUR))->compareTo(new Money('1.01', \util\Currency::$EUR))
+      (new Money('1.01', \util\Currency::$EUR))->compareTo(new Money('1.01', \util\Currency::$EUR))
     );
   }
 
@@ -154,7 +154,7 @@ class MoneyTest extends TestCase {
   public function compareToReturnsNegativeOneIfArgumentIsLess() {
     $this->assertEquals(
       -1,
-      create(new Money('1.01', \util\Currency::$EUR))->compareTo(new Money('0.99', \util\Currency::$EUR))
+      (new Money('1.01', \util\Currency::$EUR))->compareTo(new Money('0.99', \util\Currency::$EUR))
     );
   }
 
@@ -166,7 +166,7 @@ class MoneyTest extends TestCase {
   public function compareToReturnsOneIfArgumentIsMore() {
     $this->assertEquals(
       1,
-      create(new Money('0.99', \util\Currency::$EUR))->compareTo(new Money('1.01', \util\Currency::$EUR))
+      (new Money('0.99', \util\Currency::$EUR))->compareTo(new Money('1.01', \util\Currency::$EUR))
     );
   }
 
@@ -176,7 +176,7 @@ class MoneyTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function cannotCompareDifferentCurrencies() {
-    create(new Money('1.01', \util\Currency::$EUR))->compareTo(new Money('0.99', \util\Currency::$USD));
+    (new Money('1.01', \util\Currency::$EUR))->compareTo(new Money('0.99', \util\Currency::$USD));
   }
   
   /**
@@ -187,7 +187,7 @@ class MoneyTest extends TestCase {
   public function tenGallonsOfRegular() {
     $this->assertEquals(
       new Money('32.99', \util\Currency::$EUR),
-      create(new Money('3.299', \util\Currency::$EUR))->multiplyBy(10)
+      (new Money('3.299', \util\Currency::$EUR))->multiplyBy(10)
     );
   }
 
@@ -199,7 +199,7 @@ class MoneyTest extends TestCase {
   public function aThousandEurosInDollars() {
     $this->assertEquals(
       new Money('1496.64', \util\Currency::$EUR),
-      create(new Money('1000.00', \util\Currency::$EUR))->multiplyBy(1.49664)
+      (new Money('1000.00', \util\Currency::$EUR))->multiplyBy(1.49664)
     );
   }
 }

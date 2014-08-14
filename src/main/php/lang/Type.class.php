@@ -3,32 +3,30 @@
 /**
  * Type is the base class for the XPClass and Primitive classes.
  *
- * @see      xp://lang.XPClass
- * @see      xp://lang.Primitive
- * @test     xp://net.xp_framework.unittest.reflection.TypeTest 
- * @purpose  Base class
+ * @see    xp://lang.XPClass
+ * @see    xp://lang.Primitive
+ * @test   xp://net.xp_framework.unittest.reflection.TypeTest 
  */
 class Type extends Object {
-  public static
-    $ANY,           // deprecated
-    $VAR,
-    $VOID;
-
-  public
-    $name= '';
+  public static $VAR;
+  public static $VOID;
+  public $name;
+  public $default;
 
   static function __static() {
-    self::$ANY= self::$VAR= new self('var');
-    self::$VOID= new self('void');
+    self::$VAR= new self('var', null);
+    self::$VOID= new self('void', null);
   }
 
   /**
    * Constructor
    *
-   * @param   string name
+   * @param   string $name
+   * @param   var $default
    */
-  public function __construct($name) {
+  public function __construct($name, $default) {
     $this->name= $name;
+    $this->default= $default;
   }
 
   /**
@@ -75,7 +73,7 @@ class Type extends Object {
    * @return  lang.Type[] list
    */
   public static function forNames($names) {
-    $types= array();
+    $types= [];
     for ($args= $names.',', $o= 0, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
       if (',' === $args{$i} && 0 === $brackets) {
         $types[]= self::forName(ltrim(substr($args, $o, $i- $o)));
@@ -106,7 +104,7 @@ class Type extends Object {
    * @return  lang.Type
    */
   public static function forName($name) {
-    static $deprecated= array(
+    static $deprecated= [
       'char'      => 'string',
       'integer'   => 'int',
       'boolean'   => 'bool',
@@ -115,13 +113,13 @@ class Type extends Object {
       '*'         => 'var',
       'array'     => 'var[]',
       'resource'  => 'var'
-    );
-    static $primitives= array(
+    ];
+    static $primitives= [
       'string'    => true,
       'int'       => true,
       'double'    => true,
       'bool'      => true
-    );
+    ];
     
     // Map deprecated type names
     $type= isset($deprecated[$name]) ? $deprecated[$name] : $name;
@@ -139,30 +137,35 @@ class Type extends Object {
     } else if ('void' === $type) {
       return self::$VOID;
       return $type;
-    } else if ('[]' === substr($type, -2)) {
-      return ArrayType::forName($type);
-    } else if ('[:' === substr($type, 0, 2)) {
-      return MapType::forName($type);
-    } else if ('*' === substr($type, -1)) {
-      return ArrayType::forName(substr($type, 0, -1).'[]');
+    } else if (0 === substr_compare($type, '[]', -2)) {
+      return new ArrayType(substr($type, 0, -2));
+    } else if (0 === substr_compare($type, '[:', 0, 2)) {
+      return new MapType(substr($type, 2, -1));
+    } else if (0 === substr_compare($type, '*', -1)) {
+      return new ArrayType(substr($type, 0, -1));
     } else if (false === ($p= strpos($type, '<'))) {
       return strstr($type, '.') ? XPClass::forName($type) : new XPClass($type);
     }
     
     // Generics
-    // * D<K, V> is a generic type definition D with K and V componenty
+    // * D<K, V> is a generic type definition D with K and V components
+    //   except if any of K, V contains a ?, in which case it's a wild 
+    //   card type.
     // * Deprecated: array<T> is T[], array<K, V> is [:T]
-    $base= substr($type, 0, $p);
-    $components= self::forNames(substr($type, $p+ 1, -1));
-    if ('array' !== $base) {
+    if (strstr($type, '?')) {
+      return WildcardType::forName($type);
+    } else if (0 === substr_compare($type, 'array', 0, $p)) {
+      $components= self::forNames(substr($type, $p+ 1, -1));
+      $s= sizeof($components);
+      if (2 === $s) {
+        return new MapType($components[1]);
+      } else if (1 === $s) {
+        return new ArrayType($components[0]);
+      }
+    } else {
+      $base= substr($type, 0, $p);
+      $components= self::forNames(substr($type, $p+ 1, -1));
       return cast(self::forName($base), 'lang.XPClass')->newGenericType($components);
-    }
-    
-    $s= sizeof($components);
-    if (2 === $s) {
-      return MapType::forName('[:'.$components[1]->name.']');
-    } else if (1 === $s) {
-      return ArrayType::forName($components[0]->name.'[]');
     }
 
     throw new \IllegalArgumentException('Unparseable name '.$name);
@@ -189,6 +192,29 @@ class Type extends Object {
   }
 
   /**
+   * Returns a new instance of this object
+   *
+   * @param   var value
+   * @return  var
+   */
+  public function newInstance($value= null) {
+    if (self::$VAR === $this) return $value;
+    throw new IllegalAccessException('Cannot instantiate '.$this->name.' type');
+  }
+
+  /**
+   * Cast a value to this type
+   *
+   * @param   var value
+   * @return  var
+   * @throws  lang.ClassCastException
+   */
+  public function cast($value) {
+    if (self::$VAR === $this) return $value;
+    raise('lang.ClassCastException', 'Cannot cast '.\xp::typeOf($value).' to the void type');
+  }
+
+  /**
    * Tests whether this type is assignable from another type
    *
    * @param   var type
@@ -196,5 +222,14 @@ class Type extends Object {
    */
   public function isAssignableFrom($type) {
     return self::$VAR === $this;      // VAR is always assignable, VOID never
+  }
+
+  /**
+   * Creates a string representation of this object
+   *
+   * @return  string
+   */
+  public function __toString() {
+    return $this->name;
   }
 }

@@ -84,7 +84,7 @@ class Modifiers extends \lang\Object {
    * @return  string[]
    */
   public static function namesOf($m) {
-    $names= array();
+    $names= [];
     switch ($m & (MODIFIER_PUBLIC | MODIFIER_PROTECTED | MODIFIER_PRIVATE)) {
       case MODIFIER_PRIVATE: $names[]= 'private'; break;
       case MODIFIER_PROTECTED: $names[]= 'protected'; break;

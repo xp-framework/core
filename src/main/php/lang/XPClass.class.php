@@ -77,7 +77,7 @@ class XPClass extends Type {
       }
       $this->_class= $ref;
     }
-    parent::__construct(\xp::nameOf($this->_class));
+    parent::__construct(\xp::nameOf($this->_class), null);
   }
   
   /**
@@ -129,7 +129,7 @@ class XPClass extends Type {
    * @return  lang.Object 
    * @throws  lang.IllegalAccessException in case this class cannot be instantiated
    */
-  public function newInstance() {
+  public function newInstance($value= null) {
     if ($this->_reflect->isInterface()) {
       throw new IllegalAccessException('Cannot instantiate interfaces ('.$this->name.')');
     } else if ($this->_reflect->isAbstract()) {
@@ -151,7 +151,7 @@ class XPClass extends Type {
    * @return  lang.reflect.Method[]
    */
   public function getMethods() {
-    $list= array();
+    $list= [];
     foreach ($this->_reflect->getMethods() as $m) {
       if (0 == strncmp('__', $m->getName(), 2)) continue;
       $list[]= new Method($this->_class, $m);
@@ -165,7 +165,7 @@ class XPClass extends Type {
    * @return  lang.reflect.Method[]
    */
   public function getDeclaredMethods() {
-    $list= array();
+    $list= [];
     foreach ($this->_reflect->getMethods() as $m) {
       if (0 == strncmp('__', $m->getName(), 2) || $m->class !== $this->_reflect->name) continue;
       $list[]= new Method($this->_class, $m);
@@ -232,10 +232,10 @@ class XPClass extends Type {
   /**
    * Retrieve a list of all member variables
    *
-   * @return  lang.reflect.Field[] array of field objects
+   * @return  lang.reflect.Field[]
    */
   public function getFields() {
-    $f= array();
+    $f= [];
     foreach ($this->_reflect->getProperties() as $p) {
       if ('__id' === $p->name) continue;
       $f[]= new Field($this->_class, $p);
@@ -246,10 +246,10 @@ class XPClass extends Type {
   /**
    * Retrieve a list of member variables declared in this class
    *
-   * @return  lang.reflect.Field[] array of field objects
+   * @return  lang.reflect.Field[]
    */
   public function getDeclaredFields() {
-    $list= array();
+    $list= [];
     foreach ($this->_reflect->getProperties() as $p) {
       if ('__id' === $p->name || $p->class !== $this->_reflect->name) continue;
       $list[]= new Field($this->_class, $p);
@@ -328,17 +328,17 @@ class XPClass extends Type {
   /**
    * Cast a given object to the class represented by this object
    *
-   * @param   lang.Generic expression
+   * @param   var value
    * @return  lang.Generic the given expression
    * @throws  lang.ClassCastException
    */
-  public function cast(\Generic $expression= null) {
-    if (null === $expression) {
+  public function cast($value) {
+    if (null === $value) {
       return \xp::null();
-    } else if (is($this->name, $expression)) {
-      return $expression;
+    } else if (is($this->name, $value)) {
+      return $value;
     }
-    raise('lang.ClassCastException', 'Cannot cast '.\xp::typeOf($expression).' to '.$this->name);
+    raise('lang.ClassCastException', 'Cannot cast '.\xp::typeOf($value).' to '.$this->name);
   }
   
   /**
@@ -419,7 +419,7 @@ class XPClass extends Type {
    * @return  lang.XPClass[]
    */
   public function getInterfaces() {
-    $r= array();
+    $r= [];
     foreach ($this->_reflect->getInterfaces() as $iface) {
       $r[]= new self($iface->getName());
     }
@@ -436,9 +436,9 @@ class XPClass extends Type {
     if ($parent= $this->_reflect->getParentclass()) {
       $ip= $parent->getInterfaces();
     } else {
-      $ip= array();
+      $ip= [];
     }
-    $filter= array();
+    $filter= [];
     foreach ($is as $iname => $i) {
 
       // Parent class implements this interface
@@ -453,7 +453,7 @@ class XPClass extends Type {
       }
     }
     
-    $r= array();
+    $r= [];
     foreach ($is as $iname => $i) {
       if (!isset($filter[$iname])) $r[]= new self($i);
     }
@@ -548,7 +548,7 @@ class XPClass extends Type {
    */
   public function getAnnotations() {
     $details= self::detailsForClass($this->name);
-    return $details ? $details['class'][DETAIL_ANNOTATIONS] : array();
+    return $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
   }
   
   /**
@@ -569,7 +569,7 @@ class XPClass extends Type {
   protected static function _classLoaderFor($name) {
     if (isset(\xp::$cl[$name])) {
       sscanf(\xp::$cl[$name], '%[^:]://%[^$]', $cl, $argument);
-      return call_user_func(array(\xp::reflect($cl), 'instanceFor'), $argument);
+      return call_user_func([\xp::reflect($cl), 'instanceFor'], $argument);
     }
     return null;    // Internal class, e.g.
   }
@@ -656,7 +656,7 @@ class XPClass extends Type {
     if (!$this->isGenericDefinition()) {
       throw new IllegalStateException('Class '.$this->name.' is not a generic definition');
     }
-    $components= array();
+    $components= [];
     foreach (explode(',', $this->getAnnotation('generic', 'self')) as $name) {
       $components[]= ltrim($name);
     }
@@ -699,7 +699,7 @@ class XPClass extends Type {
     }
     if (!isset($details['class'][DETAIL_GENERIC][1])) {
       $details['class'][DETAIL_GENERIC][1]= array_map(
-        array(\xp::reflect('lang.Type'), 'forName'), 
+        [\xp::reflect('lang.Type'), 'forName'], 
         $details['class'][DETAIL_GENERIC][2]
       );
       unset($details['class'][DETAIL_GENERIC][2]);
@@ -750,7 +750,7 @@ class XPClass extends Type {
    * @return  lang.XPClass[] class objects
    */
   public static function getClasses() {
-    $ret= array();
+    $ret= [];
     foreach (get_declared_classes() as $name) {
       if (isset(\xp::$cn[$name])) $ret[]= new self($name);
     }

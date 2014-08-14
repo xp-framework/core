@@ -23,7 +23,7 @@ class PropertyManagerTest extends TestCase {
    * @return  util.PropertyManager
    */
   private function fixture() {
-    $class= ClassLoader::getDefault()->defineClass('NonSingletonPropertyManager', 'util.PropertyManager', array(), '{
+    $class= ClassLoader::getDefault()->defineClass('NonSingletonPropertyManager', 'util.PropertyManager', [], '{
       public static function newInstance() {
         return new self();
       }
@@ -218,7 +218,7 @@ class PropertyManagerTest extends TestCase {
    */
   #[@test]
   public function getSourcesInitiallyEmpty() {
-    $this->assertEquals(array(),  $this->fixture()->getSources());
+    $this->assertEquals([],  $this->fixture()->getSources());
   }
 
   /**
@@ -324,9 +324,9 @@ key="overwritten value"'));
   #[@test]
   public function setSource() {
     $fixture= $this->fixture();
-    $fixture->setSources(array());
+    $fixture->setSources([]);
 
-    $this->assertEquals(array(), $fixture->getSources());
+    $this->assertEquals([], $fixture->getSources());
   }
 
   /**
@@ -372,7 +372,7 @@ key="overwritten value"'));
     } catch (\lang\IllegalArgumentException $expected) {
     }
 
-    $this->assertEquals(array(), $fixture->getSources());
+    $this->assertEquals([], $fixture->getSources());
   }
 
   /**
@@ -386,7 +386,7 @@ key="overwritten value"'));
     $fixture= $this->fixture();
     $fixture->appendSource($one);
 
-    $fixture->setSources(array());
-    $this->assertEquals(array(), $fixture->getSources());
+    $fixture->setSources([]);
+    $this->assertEquals([], $fixture->getSources());
   }
 }

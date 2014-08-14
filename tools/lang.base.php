@@ -7,16 +7,47 @@ define('MODIFIER_PUBLIC',     256);
 define('MODIFIER_PROTECTED',  512);
 define('MODIFIER_PRIVATE',   1024);
 
-// {{{ final class import
-final class import {
-  function __construct($str) {
-    $class= xp::$loader->loadClass0($str);
-    $trace= debug_backtrace();
-    $scope= $trace[2]['args'][0];
-    xp::$cli[]= function() use ($class, $scope) {
-      $class::__import(xp::reflect($scope));
-    };
+// {{{ trait xp
+trait __xp {
+
+  // {{{ static invocation handler
+  public static function __callStatic($name, $args) {
+    $self= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'];
+    throw new Error('Call to undefined static method '.\xp::nameOf($self).'::'.$name.'()');
   }
+  // }}}
+
+  // {{{ field read handler
+  public function __get($name) {
+    return null;
+  }
+  // }}}
+
+  // {{{ field write handler
+  public function __set($name, $value) {
+    $this->{$name}= $value;
+  }
+  // }}}
+
+  // {{{ invocation handler
+  public function __call($name, $args) {
+    $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
+    $self= $t[1]['class'];
+
+    // Check scope for extension methods
+    $scope= isset($t[2]['class']) ? $t[2]['class'] : $t[3]['class'];
+    if (null != $scope && isset(\xp::$ext[$scope])) {
+      foreach (\xp::$ext[$scope] as $type => $class) {
+        if (!$this instanceof $type || !method_exists($class, $name)) continue;
+        array_unshift($args, $this);
+        return call_user_func_array([$class, $name], $args);
+      }
+    }
+
+    throw new Error('Call to undefined method '.\xp::nameOf($self).'::'.$name.'() from scope '.\xp::nameOf($scope));
+  }
+  // }}}
+
 }
 // }}}
 
@@ -25,20 +56,20 @@ final class xp {
   const CLASS_FILE_EXT= '.class.php';
   const ENCODING= 'utf-8';
 
-  public static $ext= array();
-  public static $cli= array();
+  public static $ext= [];
+  public static $cli= [];
   public static $cll= 0;
-  public static $cl= array();
-  public static $cn= array(
+  public static $cl= [];
+  public static $cn= [
     'xp'    => '<xp>',
     'null'  => '<null>'
-  );
+  ];
   public static $null= null;
   public static $loader= null;
   public static $classpath= null;
-  public static $errors= array();
-  public static $meta= array();
-  public static $registry= array();
+  public static $errors= [];
+  public static $meta= [];
+  public static $registry= [];
   
   // {{{ proto string loadClass0(string name)
   //     Loads a class by its fully qualified name
@@ -87,11 +118,11 @@ final class xp {
         xp::$cn[$short]= $class;
       }
 
-      method_exists($name, '__static') && xp::$cli[]= array($name, '__static');
+      method_exists($name, '__static') && xp::$cli[]= [$name, '__static'];
       if (0 === xp::$cll) {
         $invocations= xp::$cli;
-        xp::$cli= array();
-        foreach ($invocations as $inv) call_user_func($inv);
+        xp::$cli= [];
+        foreach ($invocations as $inv) call_user_func($inv, $name);
       }
 
       return $name;
@@ -118,7 +149,7 @@ final class xp {
   // {{{ proto string stringOf(var arg [, string indent default ''])
   //     Returns a string representation of the given argument
   static function stringOf($arg, $indent= '') {
-    static $protect= array();
+    static $protect= [];
     
     if (is_string($arg)) {
       return '"'.$arg.'"';
@@ -139,12 +170,21 @@ final class xp {
       $ser= print_r($arg, true);
       if (isset($protect[$ser])) return '->{:recursion:}';
       $protect[$ser]= true;
-      $r= "[\n";
-      foreach (array_keys($arg) as $key) {
-        $r.= $indent.'  '.$key.' => '.xp::stringOf($arg[$key], $indent.'  ')."\n";
+      if (0 === key($arg)) {
+        $r= '';
+        foreach ($arg as $val) {
+          $r.= ', '.xp::stringOf($val);
+        }
+        unset($protect[$ser]);
+        return '['.substr($r, 2).']';
+      } else {
+        $r= "[\n";
+        foreach (array_keys($arg) as $key) {
+          $r.= $indent.'  '.$key.' => '.xp::stringOf($arg[$key], $indent.'  ')."\n";
+        }
+        unset($protect[$ser]);
+        return $r.$indent.']';
       }
-      unset($protect[$ser]);
-      return $r.$indent.']';
     } else if ($arg instanceof \Closure) {
       $sig= '';
       $f= new \ReflectionFunction($arg);
@@ -172,7 +212,7 @@ final class xp {
   // {{{ proto void extensions(string class, string scope)
   //     Registers extension methods for a certain scope
   static function extensions($class, $scope) {
-    foreach (create(new \lang\XPClass($class))->getMethods() as $method) {
+    foreach ((new \lang\XPClass($class))->getMethods() as $method) {
       if (MODIFIER_STATIC & $method->getModifiers() && $method->numParameters() > 0) {
         $param= $method->getParameter(0);
         if ('self' === $param->getName()) {
@@ -189,7 +229,7 @@ final class xp {
     if ($file) {
       unset(xp::$errors[$file]);
     } else {
-      xp::$errors= array();
+      xp::$errors= [];
     }
   }
   // }}}
@@ -258,7 +298,7 @@ final class xp {
     static $version= null;
 
     if (null === $version) {
-      $version= trim(\lang\XPClass::forName('lang.Object')->getClassLoader()->getResource('VERSION'));
+      $version= trim(ClassLoader::getDefault()->getResource('VERSION'));
     }
     return $version;
   }
@@ -317,26 +357,26 @@ final class xarloader {
   // {{{ proto [:var] acquire(string archive)
   //     Archive instance handling pool function, opens an archive and reads header only once
   static function acquire($archive) {
-    static $archives= array();
-    static $unpack= array(
+    static $archives= [];
+    static $unpack= [
       1 => 'a80id/a80*filename/a80*path/V1size/V1offset/a*reserved',
       2 => 'a240id/V1size/V1offset/a*reserved'
-    );
+    ];
     
     if ('/' === $archive{0} && ':' === $archive{2}) {
       $archive= substr($archive, 1);    // Handle xar:///f:/archive.xar => f:/archive.xar
     }
 
     if (!isset($archives[$archive])) {
-      $current= array('handle' => fopen($archive, 'rb'), 'dev' => crc32($archive));
+      $current= ['handle' => fopen($archive, 'rb'), 'dev' => crc32($archive)];
       $header= unpack('a3id/c1version/V1indexsize/a*reserved', fread($current['handle'], 0x0100));
       if ('CCA' != $header['id']) raise('lang.FormatException', 'Malformed archive '.$archive);
-      for ($current['index']= array(), $i= 0; $i < $header['indexsize']; $i++) {
+      for ($current['index']= [], $i= 0; $i < $header['indexsize']; $i++) {
         $entry= unpack(
           $unpack[$header['version']], 
           fread($current['handle'], 0x0100)
         );
-        $current['index'][rtrim($entry['id'], "\0")]= array($entry['size'], $entry['offset'], $i);
+        $current['index'][rtrim($entry['id'], "\0")]= [$entry['size'], $entry['offset'], $i];
       }
       $current['offset']= 0x0100 + $i * 0x0100;
       $archives[$archive]= $current;
@@ -378,11 +418,11 @@ final class xarloader {
   // {{{ proto [:int] stream_stat()
   //     Retrieve status of stream
   function stream_stat() {
-    return array(
+    return [
       'dev'   => $this->archive['dev'],
       'size'  => $this->archive['index'][$this->filename][0],
       'ino'   => $this->archive['index'][$this->filename][2]
-    );
+    ];
   }
   // }}}
 
@@ -410,12 +450,12 @@ final class xarloader {
   function url_stat($path) {
     sscanf(strtr($path, ';', '?'), 'xar://%[^?]?%[^$]', $archive, $file);
     $current= self::acquire(urldecode($archive));
-    return isset($current['index'][$file]) ? array(
+    return isset($current['index'][$file]) ? [
       'dev'   => $current['dev'],
       'mode'  => 0100644,
       'size'  => $current['index'][$file][0],
       'ino'   => $current['index'][$file][2]
-    ) : false;
+    ] : false;
   }
   // }}}
 }
@@ -429,16 +469,16 @@ function __error($code, $msg, $file, $line) {
   if (E_RECOVERABLE_ERROR === $code) {
     throw new \lang\IllegalArgumentException($msg.' @ '.$file.':'.$line);
   } else {
-    $bt= debug_backtrace();
+    $bt= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
     $class= (isset($bt[1]['class']) ? $bt[1]['class'] : null);
     $method= (isset($bt[1]['function']) ? $bt[1]['function'] : null);
     
     if (!isset(xp::$errors[$file][$line][$msg])) {
-      xp::$errors[$file][$line][$msg]= array(
+      xp::$errors[$file][$line][$msg]= [
         'class'   => $class,
         'method'  => $method,
         'cnt'     => 1
-      );
+      ];
     } else {
       xp::$errors[$file][$line][$msg]['cnt']++;
     }
@@ -462,10 +502,10 @@ function uses() {
     // Check with class_exists(), because method_exists() triggers autoloading.
     if (class_exists($class, false) && method_exists($class, '__import')) {
       if (null === $scope) {
-        $trace= debug_backtrace();
+        $trace= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
         $scope= xp::reflect($trace[2]['args'][0]);
       }
-      call_user_func(array($class, '__import'), $scope);
+      call_user_func([$class, '__import'], $scope);
     }
   }
 }
@@ -481,7 +521,7 @@ function raise($classname) {
   }
   
   $a= func_get_args();
-  throw call_user_func_array(array($class, 'newInstance'), array_slice($a, 1));
+  throw call_user_func_array([$class, 'newInstance'], array_slice($a, 1));
 }
 // }}}
 
@@ -519,20 +559,12 @@ function is($type, $object) {
     return is_bool($object);
   } else if ('var' === $type) {
     return true;
-  } else if ('[]' === substr($type, -2)) {
-    if (!is_array($object) || (!empty($object) && !is_int(key($object)))) return false;
-    $type= substr($type, 0, -2);
-    foreach ($object as $element) {
-      if (!is($type, $element)) return false;
-    }
-    return true;
-  } else if ('[:' === substr($type, 0, 2)) {
-    if (!is_array($object) || (!empty($object) && !is_string(key($object)))) return false;
-    $type= substr($type, 2, -1);
-    foreach ($object as $element) {
-      if (!is($type, $element)) return false;
-    }
-    return true;
+  } else if (0 === substr_compare($type, '[]', -2)) {
+    return (new \lang\ArrayType(substr($type, 0, -2)))->isInstance($object);
+  } else if (0 === substr_compare($type, '[:', 0, 2)) {
+    return (new \lang\MapType(substr($type, 2, -1)))->isInstance($object);
+  } else if (strstr($type, '?')) {
+    return \lang\WildcardType::forName($type)->isInstance($object);
   } else {
     $type= xp::reflect($type);
     return $object instanceof $type;
@@ -583,11 +615,20 @@ function this($expr, $offset) {
 function newinstance($spec, $args, $def= null) {
   static $u= 0;
 
+  if ('#' === $spec{0}) {
+    $p= strrpos($spec, ' ');
+    $annotations= substr($spec, 0, $p).' ';
+    $spec= substr($spec, $p+ 1);
+  } else {
+    $annotations= '';
+  }
+
   // Check for an anonymous generic 
   if (strstr($spec, '<')) {
     $class= Type::forName($spec);
     $type= $class->literal();
     $p= strrpos(substr($type, 0, strpos($type, '··')), '·');
+    $generic= xp::$meta[$class->getName()]['class'][DETAIL_GENERIC];
   } else {
     false === strrpos($spec, '.') && $spec= xp::nameOf($spec);
     try {
@@ -596,72 +637,33 @@ function newinstance($spec, $args, $def= null) {
       xp::error($e->getMessage());
     }
     $p= strrpos($type, '·');
+    $generic= null;
   }
 
   // Create unique name
   $n= '·'.(++$u);
   if (false !== $p) {
-    $ns= '$package= "'.strtr(substr($type, 0, $p), '·', '.').'"; ';
     $spec= strtr(substr($type, 0, $p), '·', '.').'.'.substr($type, $p+ 1).$n;
-    $decl= $type.$n;
-  } else if (false === ($p= strrpos($type, '\\'))) {
-    $ns= '';
-    $decl= $type.$n;
-    $spec= substr($spec, 0, strrpos($spec, '.')).'.'.$type.$n;
   } else {
-    $ns= 'namespace '.substr($type, 0, $p).'; ';
-    $decl= substr($type, $p+ 1).$n;
     $spec= strtr($type, '\\', '.').$n;
-    $type= '\\'.$type;
   }
 
-  // No definition: Emty body, array => closure style, string: source code
-  $functions= array();
-  if (null === $def) {
-    $bytes= '{}';
-  } else if (is_array($def)) {
-    $bytes= '{ static $__func;';
-    foreach ($def as $name => $member) {
-      if ($member instanceof \Closure) {
-        $r= new ReflectionFunction($member);
-        $pass= $sig= '';
-        foreach (array_slice($r->getParameters(), 1) as $param) {
-          $sig.= ', $'.$param->getName();
-          if ($param->isOptional()) {
-            $sig.= '= '.var_export($param->getDefaultValue(), true);
-          }
-          $pass.= ', $'.$param->getName();
-        }
-        $bytes.= 'function '.$name.'('.substr($sig, 2).') {
-          $f= self::$__func["'.$name.'"];
-          return call_user_func($f, $this'.('' === $pass ? '' : ', '.substr($pass, 2)).');
-          return $f($this'.('' === $pass ? '' : ', '.substr($pass, 2)).');
-        }';
-        $functions[$name]= $member;
-      } else {
-        $bytes.= 'public $'.$name.'= '.var_export($member, true).';';
-      }
-    }
-    $bytes.= '}';
-  } else {
-    $bytes= (string)$def;
-  }
-
-  // Checks whether an interface or a class was given
-  $cl= \lang\DynamicClassLoader::instanceFor(__FUNCTION__);
   if (interface_exists($type)) {
-    $cl->setClassBytes($spec, $ns.'class '.$decl.' extends \lang\Object implements '.$type.' '.$bytes);
+    $decl= 'class %s extends \\lang\\Object implements \\'.$type;
   } else {
-    $cl->setClassBytes($spec, $ns.'class '.$decl.' extends '.$type.' '.$bytes);
+    $decl= 'class %s extends \\'.$type;
+  }
+  $type= \lang\ClassLoader::defineType($annotations.$spec, $decl, $def);
+
+  if ($generic) {
+    \lang\XPClass::detailsForClass($spec);
+    xp::$meta[$spec]['class'][DETAIL_GENERIC]= $generic;
   }
 
-  // Instantiate
-  $decl= new \ReflectionClass($cl->loadClass0($spec));
-  $functions && $decl->setStaticPropertyValue('__func', $functions);
-  if ($decl->hasMethod('__construct')) {
-    return $decl->newInstanceArgs($args);
+  if ($type->hasConstructor()) {
+    return $type->getConstructor()->newInstance($args);
   } else {
-    return $decl->newInstance();
+    return $type->newInstance();
   }
 }
 // }}}
@@ -723,10 +725,33 @@ function __load($class) {
 }
 // }}}
 
+// {{{ class import
+class import {
+  function __construct($str) {
+    $class= xp::$loader->loadClass0($str);
+    xp::$cli[]= function($scope) use ($class) {
+      $class::__import($scope);
+    };
+  }
+}
+// }}}
+
+// {{{ proto bool __import(string class)
+//     SPL Autoload callback
+function __import($class) {
+  if (false === strrpos($class, '\\import')) {
+    return false;
+  } else {
+    class_alias('import', $class);
+    return true;
+  }
+}
+// }}}
+
 // {{{ string[] scanpath(string[] path, string home)
 //     Scans path files inside the given paths
 function scanpath($paths, $home) {
-  $inc= array();
+  $inc= [];
   foreach ($paths as $path) {
     if (!($d= @opendir($path))) continue;
     while ($e= readdir($d)) {
@@ -783,7 +808,7 @@ function bootstrap($classpath) {
   set_include_path(rtrim($inc, PATH_SEPARATOR));
 
   // Load omnipresent classes
-  foreach (array(
+  foreach ([
     'lang.Generic',
     'lang.Object',
     'lang.Throwable',
@@ -812,7 +837,7 @@ function bootstrap($classpath) {
     'lang.types.Long',
     'lang.types.Short',
     'lang.types.String'
-  ) as $class) {
+  ] as $class) {
     xp::$loader->loadClass0($class);
   }
 }
@@ -826,13 +851,12 @@ define('LONG_MAX', PHP_INT_MAX);
 define('LONG_MIN', -PHP_INT_MAX - 1);
 
 // Hooks
-call_user_func('spl_autoload_register', '__load');
+spl_autoload_register('__load');
+spl_autoload_register('__import');
 set_error_handler('__error');
 
-// Get rid of magic quotes 
-get_magic_quotes_gpc() && xp::error('[xp::core] magic_quotes_gpc enabled');
+// Verify timezone
 date_default_timezone_set(ini_get('date.timezone')) || xp::error('[xp::core] date.timezone not configured properly.');
-ini_set('magic_quotes_runtime', false);
 
 // Registry initialization
 xp::$null= new null();

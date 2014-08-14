@@ -4,7 +4,7 @@
  * Tests destructor functionality
  */
 class DestructorTest extends \unittest\TestCase implements DestructionCallback {
-  protected $destroyed   = array();
+  protected $destroyed   = [];
   protected $destroyable = null;
     
   /**

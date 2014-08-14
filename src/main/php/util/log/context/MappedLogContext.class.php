@@ -9,7 +9,7 @@ use util\log\Context;
  * @see http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/MDC.html
  */
 class MappedLogContext extends \lang\Object implements Context {
-  protected $queue= array();
+  protected $queue= [];
 
   /**
    * Put a context value as identified with the key parameter into the current context map
@@ -48,7 +48,7 @@ class MappedLogContext extends \lang\Object implements Context {
    * @return void
    */
   public function clear() {
-    $this->queue= array();
+    $this->queue= [];
   }
 
   /**
@@ -69,7 +69,7 @@ class MappedLogContext extends \lang\Object implements Context {
   public function format() {
     if (0 === count($this->queue)) return '';
 
-    $s= array();
+    $s= [];
     foreach ($this->queue as $key => $info) {
       $s[]= $key.'='.$info;
     }

@@ -44,7 +44,7 @@ class CRC32Test extends TestCase {
    */
   #[@test]
   public function asInt32() {
-    $this->assertEquals(1140816021, create(new CRC32(1140816021))->asInt32());
+    $this->assertEquals(1140816021, (new CRC32(1140816021))->asInt32());
   }
 
   /**
@@ -53,7 +53,7 @@ class CRC32Test extends TestCase {
    */
   #[@test]
   public function asInt32Negative() {
-    $this->assertEquals(-137262718, create(new CRC32('f7d18982'))->asInt32());
+    $this->assertEquals(-137262718, (new CRC32('f7d18982'))->asInt32());
   }
  
   /**
@@ -62,6 +62,6 @@ class CRC32Test extends TestCase {
    */
   #[@test]
   public function getValue() {
-    $this->assertEquals('43ff7895', create(new CRC32(1140816021))->getValue());
+    $this->assertEquals('43ff7895', (new CRC32(1140816021))->getValue());
   }
 }

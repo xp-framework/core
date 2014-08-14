@@ -18,6 +18,6 @@ class NotImportedHereTest extends TestCase {
    */
   #[@test, @expect('lang.Error')]
   public function test() {
-    create(new ArrayList(7, 0, 10, 1, -1))->sorted();
+    (new ArrayList(7, 0, 10, 1, -1))->sorted();
   }
 }

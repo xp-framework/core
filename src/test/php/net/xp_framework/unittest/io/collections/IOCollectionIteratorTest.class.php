@@ -16,8 +16,7 @@ use io\collections\iterate\UriMatchesFilter;
 use io\collections\iterate\SizeBiggerThanFilter;
 use io\collections\iterate\SizeEqualsFilter;
 use io\collections\iterate\SizeSmallerThanFilter;
-use io\collections\iterate\AllOfFilter;
-use io\collections\iterate\AnyOfFilter;
+use util\Filters;
 
 /**
  * Unit tests for I/O collection iterator classes
@@ -35,7 +34,7 @@ class IOCollectionIteratorTest extends AbstractCollectionTest {
    * @return  string[] an array of the elements' URIs
    */
   protected function filterFixtureWith($filter, $recursive= false) {
-    $elements= array();
+    $elements= [];
     for (
       $it= new FilteredIOCollectionIterator($this->fixture, $filter, $recursive);
       $it->hasNext(); 
@@ -114,7 +113,7 @@ class IOCollectionIteratorTest extends AbstractCollectionTest {
   #[@test]
   public function nameEquals() {
     $this->assertEquals(
-      array(), 
+      [], 
       $this->filterFixtureWith(new NameEqualsFilter('__xp__.php'), false)
     );
   }
@@ -130,7 +129,7 @@ class IOCollectionIteratorTest extends AbstractCollectionTest {
   #[@test]
   public function extensionEquals() {
     $this->assertEquals(
-      array(), 
+      [], 
       $this->filterFixtureWith(new ExtensionEqualsFilter('.php'), false)
     );
   }
@@ -258,7 +257,7 @@ class IOCollectionIteratorTest extends AbstractCollectionTest {
   public function allOf() {
     $this->assertEquals(
       array('./third.jpg'), 
-      $this->filterFixtureWith(new AllOfFilter(array(
+      $this->filterFixtureWith(Filters::allOf(array(
         new ModifiedBeforeFilter(new \util\Date('Dec 14  2004')),
         new ExtensionEqualsFilter('jpg')
       )), true)
@@ -269,7 +268,18 @@ class IOCollectionIteratorTest extends AbstractCollectionTest {
   public function anyOf() {
     $this->assertEquals(
       array('./first.txt', './second.txt', './zerobytes.png', './sub/IMG_6100.txt'), 
-      $this->filterFixtureWith(new AnyOfFilter(array(
+      $this->filterFixtureWith(Filters::anyOf(array(
+        new SizeSmallerThanFilter(500),
+        new ExtensionEqualsFilter('txt')
+      )), true)
+    );
+  }
+
+  #[@test]
+  public function noneOf() {
+    $this->assertEquals(
+      array('./third.jpg', './sub/', './sub/IMG_6100.jpg', './sub/sec/', './sub/sec/lang.base.php', './sub/sec/__xp__.php'), 
+      $this->filterFixtureWith(Filters::noneOf(array(
         new SizeSmallerThanFilter(500),
         new ExtensionEqualsFilter('txt')
       )), true)

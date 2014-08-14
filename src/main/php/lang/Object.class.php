@@ -1,109 +1,19 @@
 <?php namespace lang;
  
-
- 
 /**
  * Class Object is the root of the class hierarchy. Every class has 
  * Object as a superclass. 
  *
- * @test     xp://net.xp_framework.unittest.core.ObjectTest
- * @purpose  Base class for all others
+ * @test  xp://net.xp_framework.unittest.core.ObjectTest
  */
-class Object implements Generic {
+class Object implements Generic { use \__xp;
   public $__id;
   
   /**
    * Cloning handler
-   *
    */
   public function __clone() {
     $this->__id= uniqid('', true);
-  }
-
-  /**
-   * Static method handler
-   *
-   */
-  public static function __callStatic($name, $args) {
-    $t= debug_backtrace();
-
-    // Get self
-    $i= 1; $s= sizeof($t);
-    while (!isset($t[$i]['class']) && $i++ < $s) { }
-    $self= $t[$i]['class'];
-
-    // This is a bug in PHP 5.3.3, parent::method() will always invoke __callStatic()
-    // Check up to the next level if we can find an object, this is an indicator that 
-    // this situations is occurring. In other PHP version, we don't have an object here
-    // in any case reproducable at the time of writing, thus saving version_compare()
-    if (isset($t[$i+ 1]['object'])) {
-      $instance= $t[$i+ 1]['object'];
-
-      // Get scope
-      $i++;
-      while (!isset($t[$i]['class']) && $i++ < $s) { }
-      $scope= isset($t[$i]['class']) ? $t[$i]['class'] : null;
-
-      if (null != $scope && isset(\xp::$ext[$scope])) {
-        foreach (\xp::$ext[$scope] as $type => $class) {
-          if (!$instance instanceof $type || !method_exists($class, $name)) continue;
-          array_unshift($args, $instance);
-          return call_user_func_array(array($class, $name), $args);
-        }
-      }
-      throw new Error('Call to undefined method '.\xp::nameOf($self).'::'.$name.'() from scope '.\xp::nameOf($scope));
-    }
-
-    if ("\7" === $name{0}) {
-      return call_user_func_array(array($self, substr($name, 1)), $args);
-    }
-    throw new Error('Call to undefined static method '.\xp::nameOf($self).'::'.$name.'()');
-  }
-
-  /**
-   * Field read handler
-   *
-   */
-  public function __get($name) {
-    return null;
-  }
-
-  /**
-   * Field write handler
-   *
-   */
-  public function __set($name, $value) {
-    $this->{$name}= $value;
-  }
-  
-  /**
-   * Method handler
-   *
-   */
-  public function __call($name, $args) {
-    if ("\7" === $name{0}) {
-      return call_user_func_array(array($this, substr($name, 1)), $args);
-    }
-    $t= debug_backtrace();
-
-    // Get self
-    $i= 1; $s= sizeof($t);
-    while (!isset($t[$i]['class']) && $i++ < $s) { }
-    $self= $t[$i]['class'];
-
-    // Get scope
-    $i++;
-    while (!isset($t[$i]['class']) && $i++ < $s) { }
-    $scope= isset($t[$i]['class']) ? $t[$i]['class'] : null;
-
-    if (null != $scope && isset(\xp::$ext[$scope])) {
-      foreach (\xp::$ext[$scope] as $type => $class) {
-        if (!$this instanceof $type || !method_exists($class, $name)) continue;
-        array_unshift($args, $this);
-        return call_user_func_array(array($class, $name), $args);
-      }
-    }
-    throw new Error('Call to undefined method '.\xp::nameOf($self).'::'.$name.'() from scope '.\xp::nameOf($scope));
   }
 
   /**

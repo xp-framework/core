@@ -41,6 +41,6 @@ class RandomCodeGeneratorTest extends TestCase {
 
   #[@test]
   public function hugeLength() {
-    $this->assertEquals(10000, strlen(create(new RandomCodeGenerator(10000))->generate()));
+    $this->assertEquals(10000, strlen((new RandomCodeGenerator(10000))->generate()));
   }
 }

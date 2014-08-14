@@ -15,7 +15,7 @@ class MissingMethodsTest extends \unittest\TestCase {
 
   #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method lang.Object::run()/')]
   public function missingParentMethodInvocation() {
-    $f= \lang\ClassLoader::defineClass('MissingMethodsTest_Fixture', 'lang.Object', array(), '{
+    $f= \lang\ClassLoader::defineClass('MissingMethodsTest_Fixture', 'lang.Object', [], '{
       public function run() {
         parent::run();
       }
@@ -25,8 +25,8 @@ class MissingMethodsTest extends \unittest\TestCase {
 
   #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method MissingMethodsTest_BaseFixture::run()/')]
   public function missingParentParentMethodInvocation() {
-    $b= \lang\ClassLoader::defineClass('MissingMethodsTest_BaseFixture', 'lang.Object', array(), '{}');
-    $c= \lang\ClassLoader::defineClass('MissingMethodsTest_ChildFixture', $b->getName(), array(), '{
+    $b= \lang\ClassLoader::defineClass('MissingMethodsTest_BaseFixture', 'lang.Object', [], '{}');
+    $c= \lang\ClassLoader::defineClass('MissingMethodsTest_ChildFixture', $b->getName(), [], '{
       public function run() {
         parent::run();
       }
@@ -36,12 +36,12 @@ class MissingMethodsTest extends \unittest\TestCase {
 
   #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method lang.Object::run()/')]
   public function missingParentPassMethodInvocation() {
-    $b= \lang\ClassLoader::defineClass('MissingMethodsTest_PassBaseFixture', 'lang.Object', array(), '{
+    $b= \lang\ClassLoader::defineClass('MissingMethodsTest_PassBaseFixture', 'lang.Object', [], '{
       public function run() {
         parent::run();
       }
     }');
-    $c= \lang\ClassLoader::defineClass('MissingMethodsTest_PassChildFixture', $b->getName(), array(), '{
+    $c= \lang\ClassLoader::defineClass('MissingMethodsTest_PassChildFixture', $b->getName(), [], '{
       public function run() {
         parent::run();
       }
@@ -51,7 +51,7 @@ class MissingMethodsTest extends \unittest\TestCase {
 
   #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined static method lang.Object::run()/')]
   public function missingStaticParentMethodInvocation() {
-    $f= \lang\ClassLoader::defineClass('MissingMethodsTest_StaticFixture', 'lang.Object', array(), '{
+    $f= \lang\ClassLoader::defineClass('MissingMethodsTest_StaticFixture', 'lang.Object', [], '{
       public static function run() {
         parent::run();
       }
@@ -61,8 +61,8 @@ class MissingMethodsTest extends \unittest\TestCase {
 
   #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined static method MissingMethodsTest_StaticBaseFixture::run()/')]
   public function missingStaticParentParentMethodInvocation() {
-    $b= \lang\ClassLoader::defineClass('MissingMethodsTest_StaticBaseFixture', 'lang.Object', array(), '{}');
-    $c= \lang\ClassLoader::defineClass('MissingMethodsTest_StaticChildFixture', $b->getName(), array(), '{
+    $b= \lang\ClassLoader::defineClass('MissingMethodsTest_StaticBaseFixture', 'lang.Object', [], '{}');
+    $c= \lang\ClassLoader::defineClass('MissingMethodsTest_StaticChildFixture', $b->getName(), [], '{
       public static function run() {
         parent::run();
       }
@@ -72,12 +72,12 @@ class MissingMethodsTest extends \unittest\TestCase {
 
   #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined static method lang.Object::run()/')]
   public function missingStaticParentPassMethodInvocation() {
-    $b= \lang\ClassLoader::defineClass('MissingMethodsTest_StaticPassBaseFixture', 'lang.Object', array(), '{
+    $b= \lang\ClassLoader::defineClass('MissingMethodsTest_StaticPassBaseFixture', 'lang.Object', [], '{
       public static function run() {
         parent::run();
       }
     }');
-    $c= \lang\ClassLoader::defineClass('MissingMethodsTest_StaticPassChildFixture', $b->getName(), array(), '{
+    $c= \lang\ClassLoader::defineClass('MissingMethodsTest_StaticPassChildFixture', $b->getName(), [], '{
       public static function run() {
         parent::run();
       }

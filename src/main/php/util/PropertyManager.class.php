@@ -19,7 +19,7 @@
  */
 class PropertyManager extends \lang\Object {
   protected static $instance= null;
-  protected $provider= array();
+  protected $provider= [];
 
   static function __static() {
     self::$instance= new self();
@@ -77,7 +77,7 @@ class PropertyManager extends \lang\Object {
    */
   public function setSources(array $sources) {
     $provider= $this->provider;
-    $this->provider= array();
+    $this->provider= [];
     try {
       foreach ($sources as $source) {
         $this->appendSource($source);
@@ -152,7 +152,7 @@ class PropertyManager extends \lang\Object {
    * throws   lang.ElementNotFoundException
    */
   public function getProperties($name) {
-    $found= array();
+    $found= [];
 
     foreach ($this->provider as $source) {
       if ($source->provides($name)) {

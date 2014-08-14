@@ -34,7 +34,7 @@ use util\NoSuchElementException;
 #[@generic(self= 'T')]
 class Stack extends \lang\Object {
   protected
-    $_elements = array(),
+    $_elements = [],
     $_hash     = 0;
 
   /**
@@ -144,10 +144,6 @@ class Stack extends \lang\Object {
    * @return  bool
    */
   public function equals($cmp) {
-    return (
-      $cmp instanceof self && 
-      $this->__generic === $cmp->__generic &&
-      $this->_hash === $cmp->_hash
-    );
+    return $cmp instanceof self && $this->_hash === $cmp->_hash;
   }
 }

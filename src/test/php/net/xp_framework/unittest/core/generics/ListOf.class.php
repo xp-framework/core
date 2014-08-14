@@ -12,7 +12,7 @@
    */
   #[@generic(self= 'T')]
   class net·xp_framework·unittest·core·generics·ListOf extends Object {
-    public $elements= array();
+    public $elements= [];
 
     /**
      * Constructor

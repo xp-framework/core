@@ -4,20 +4,15 @@ use unittest\TestCase;
 use io\streams\MemoryInputStream;
 use io\streams\MemoryOutputStream;
 use io\streams\Streams;
-
+use io\IOException;
 
 /**
  * TestCase
  *
- * @see      xp://io.streams.Streams
- * @purpose  Unittest
+ * @see   xp://io.streams.Streams
  */
 class StreamWrappingTest extends TestCase {
 
-  /**
-   * Test readableFd() method
-   *
-   */
   #[@test]
   public function reading() {
     $buffer= 'Hello World';
@@ -30,10 +25,6 @@ class StreamWrappingTest extends TestCase {
     $this->assertEquals($buffer, $read);
   }
 
-  /**
-   * Test feof callbacks
-   *
-   */
   #[@test]
   public function endOfFile() {
     $fd= Streams::readableFd(new MemoryInputStream(str_repeat('x', 10)));
@@ -48,10 +39,6 @@ class StreamWrappingTest extends TestCase {
     fclose($fd);
   }
 
-  /**
-   * Test fstat callbacks
-   *
-   */
   #[@test]
   public function fstat() {
     $fd= Streams::readableFd(new MemoryInputStream(str_repeat('x', 10)));
@@ -65,10 +52,6 @@ class StreamWrappingTest extends TestCase {
     fclose($fd);
   }
 
-  /**
-   * Test stat callbacks
-   *
-   */
   #[@test]
   public function statExistingReadableUri() {
     $uri= Streams::readableUri(new MemoryInputStream(str_repeat('x', 10)));
@@ -76,10 +59,6 @@ class StreamWrappingTest extends TestCase {
     $this->assertEquals(0, $stat['size']);
   }
 
-  /**
-   * Test stat callbacks
-   *
-   */
   #[@test]
   public function statExistingWriteableUri() {
     $uri= Streams::writeableUri(new MemoryOutputStream());
@@ -87,10 +66,6 @@ class StreamWrappingTest extends TestCase {
     $this->assertEquals(0, $stat['size']);
   }
 
-  /**
-   * Test stat callbacks
-   *
-   */
   #[@test]
   public function statNonExistingReadableUri() {
     $uri= Streams::readableUri(new MemoryInputStream(str_repeat('x', 10)));
@@ -98,10 +73,6 @@ class StreamWrappingTest extends TestCase {
     $this->assertFalse(@stat($uri));
   }
 
-  /**
-   * Test stat callbacks
-   *
-   */
   #[@test]
   public function statNonExistingWriteableUri() {
     $uri= Streams::writeableUri(new MemoryOutputStream());
@@ -109,11 +80,6 @@ class StreamWrappingTest extends TestCase {
     $this->assertFalse(@stat($uri));
   }
 
-
-  /**
-   * Test ftell callbacks
-   *
-   */
   #[@test]
   public function tellFromReadable() {
     $fd= Streams::readableFd(new MemoryInputStream(str_repeat('x', 10)));
@@ -128,10 +94,6 @@ class StreamWrappingTest extends TestCase {
     fclose($fd);
   }
 
-  /**
-   * Test ftell callbacks
-   *
-   */
   #[@test]
   public function tellFromWriteable() {
     $fd= Streams::writeableFd(new MemoryOutputStream());
@@ -146,10 +108,6 @@ class StreamWrappingTest extends TestCase {
     fclose($fd);
   }
 
-  /**
-   * Test writeableFd() method
-   *
-   */
   #[@test]
   public function writing() {
     $buffer= 'Hello World';
@@ -163,97 +121,55 @@ class StreamWrappingTest extends TestCase {
     $this->assertEquals($buffer, $m->getBytes());
   }
 
-  /**
-   * Test reading from a file descriptor opened with writeableFd()
-   * results in an IOException
-   *
-   */
   #[@test, @expect('io.IOException')]
-  public function readFromWriteableFd() {
+  public function reading_from_writeable_fd_raises_exception() {
     $fd= Streams::writeableFd(new MemoryOutputStream());
     fread($fd, 1024);
   }
 
-  /**
-   * Test reading from a file descriptor opened with writeableFd()
-   * results in an IOException
-   *
-   */
   #[@test, @expect('io.IOException')]
-  public function writeToReadableFd() {
+  public function writing_to_readable_fd_raises_exception() {
     $fd= Streams::readableFd(new MemoryInputStream(''));
     fwrite($fd, 1024);
   }
 
-  /**
-   * Test readAll()
-   *
-   */
-  #[@test]
-  public function readAll() {
-    $this->assertEquals('Hello', Streams::readAll(new MemoryInputStream('Hello')));
+  #[@test, @values(['', 'Hello', "Hello\nWorld\n"])]
+  public function readAll($value) {
+    $this->assertEquals($value, Streams::readAll(new MemoryInputStream($value)));
   }
 
-  /**
-   * Test readAll()
-   *
-   */
-  #[@test]
-  public function readAllFromEmptyStream() {
-    $this->assertEquals('', Streams::readAll(new MemoryInputStream('')));
-  }
-
-  /**
-   * Test readAll()
-   *
-   */
   #[@test, @expect('io.IOException')]
-  public function readAllWithException() {
-    Streams::readAll(newinstance('io.streams.InputStream', array(), '{
-      public function read($limit= 8192) { throw new \io\IOException("FAIL"); }
-      public function available() { return 1; }
-      public function close() { }
-    }'));
+  public function readAll_propagates_exception() {
+    Streams::readAll(newinstance('io.streams.InputStream', [], [
+      'read'      => function($limit= 8192) { throw new IOException('FAIL'); },
+      'available' => function() { return 1; },
+      'close'     => function() { }
+    ]));
   }
 
-  /**
-   * Test feof() / fread()
-   *
-   */
   #[@test]
-  public function whileNotEof() {
+  public function read_while_not_eof() {
     $fd= Streams::readableFd(new MemoryInputStream(str_repeat('x', 1024)));
-    $l= array();
+    $l= [];
     while (!feof($fd)) {
       $c= fread($fd, 128);
       $l[]= strlen($c);
     }
     fclose($fd);
-    $this->assertEquals(array(128, 128, 128, 128, 128, 128, 128, 128), $l);
+    $this->assertEquals([128, 128, 128, 128, 128, 128, 128, 128], $l);
   }
 
-  /**
-   * Test file_get_contents()
-   *
-   */
-  #[@test]
-  public function fileGetContents() {
-    $this->assertEquals(
-      'Hello',
-      file_get_contents(Streams::readableUri(new MemoryInputStream('Hello')))
-    );
-  }
-
-  /**
-   * Test file_get_contents()
-   *
-   */
-  #[@test]
-  public function largefileGetContents() {
-    $data= str_repeat('x', 16384);
+  #[@test, @values([0, 10, 10485760])]
+  public function file_get_contents($length) {
+    $data= str_repeat('x', $length);
     $this->assertEquals(
       $data,
       file_get_contents(Streams::readableUri(new MemoryInputStream($data)))
     );
+  }
+
+  #[@test]
+  public function is_file() {
+    $this->assertTrue(is_file(Streams::readableUri(new MemoryInputStream('Hello'))));
   }
 }

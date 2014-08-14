@@ -18,7 +18,7 @@ class VarArgsTest extends \unittest\TestCase {
   #[@test]
   public function withoutArguments() {
     $this->assertEquals(
-      array(),
+      [],
       create('new net.xp_framework.unittest.core.generics.ListOf<string>')->elements()
     );
   }

@@ -16,7 +16,7 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
   protected static $fileStreamAdapter;
   
   static function __static() {
-    self::$fileStreamAdapter= \lang\ClassLoader::defineClass('FileStreamAdapter', 'io.File', array(), '{
+    self::$fileStreamAdapter= \lang\ClassLoader::defineClass('FileStreamAdapter', 'io.File', [], '{
       protected $stream= NULL;
       public function __construct($stream) { $this->stream= $stream; }
       public function exists() { return NULL !== $this->stream; }

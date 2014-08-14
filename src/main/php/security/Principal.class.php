@@ -9,7 +9,7 @@
  */
 class Principal extends \lang\Object {
   public
-    $dn= array();
+    $dn= [];
     
   /**
    * Constructor

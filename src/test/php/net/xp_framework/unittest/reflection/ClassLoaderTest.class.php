@@ -59,18 +59,6 @@ class ClassLoaderTest extends TestCase {
   }
 
   /**
-   * Helper method
-   *
-   * @param   string name
-   * @param   lang.XPClass class
-   * @throws  unittest.AssertionFailedError
-   */
-  protected function assertXPClass($name, $class) {
-    $this->assertClass($class, 'lang.XPClass');
-    $this->assertEquals($name, $class->getName());
-  }
-
-  /**
    * Display some information
    *
    * Annotate this method w/ @test to retrieve debug information.
@@ -119,9 +107,9 @@ class ClassLoaderTest extends TestCase {
    */
   #[@test]
   public function archiveClassLoader() {
-    $this->assertClass(
-       \lang\XPClass::forName('net.xp_framework.unittest.reflection.classes.ClassThree')->getClassLoader(),
-      'lang.archive.ArchiveClassLoader'
+    $this->assertInstanceOf(
+      'lang.archive.ArchiveClassLoader',
+       \lang\XPClass::forName('net.xp_framework.unittest.reflection.classes.ClassThree')->getClassLoader()
     );
   }
 
@@ -131,9 +119,9 @@ class ClassLoaderTest extends TestCase {
    */
   #[@test]
   public function containedArchiveClassLoader() {
-    $this->assertClass(
-       \lang\XPClass::forName('net.xp_framework.unittest.reflection.classes.ClassFive')->getClassLoader(),
-      'lang.archive.ArchiveClassLoader'
+    $this->assertInstanceOf(
+      'lang.archive.ArchiveClassLoader',
+       \lang\XPClass::forName('net.xp_framework.unittest.reflection.classes.ClassFive')->getClassLoader()
     );
   }
 
@@ -156,7 +144,7 @@ class ClassLoaderTest extends TestCase {
    */
   #[@test]
   public function loadClass() {
-    $this->assertXPClass('lang.Object', \lang\ClassLoader::getDefault()->loadClass('lang.Object'));
+    $this->assertEquals(\lang\XPClass::forName('lang.Object'), \lang\ClassLoader::getDefault()->loadClass('lang.Object'));
   }
 
   /**
@@ -192,8 +180,11 @@ class ClassLoaderTest extends TestCase {
       return $this->fail('Class "'.$name.'" may not exist!');
     }
 
-    $this->assertXPClass($name, \lang\ClassLoader::getDefault()->loadClass($name));
-    $this->assertTrue(LoaderTestClass::initializerCalled());
+    $this->assertTrue(\lang\ClassLoader::getDefault()
+      ->loadClass($name)
+      ->getMethod('initializerCalled')
+      ->invoke(null)
+    );
   }
 
   /**

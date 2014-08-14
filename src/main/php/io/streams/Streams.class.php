@@ -13,7 +13,7 @@ use io\FileNotFoundException;
  */
 abstract class Streams extends \lang\Object {
   protected static 
-    $streams = array();
+    $streams = [];
   
   public
     $context = null;
@@ -23,7 +23,7 @@ abstract class Streams extends \lang\Object {
     $id      = null;
     
   static function __static() {
-    stream_wrapper_register('iostrr', get_class(newinstance(__CLASS__, array(), '{
+    stream_wrapper_register('iostrr', get_class(newinstance(__CLASS__, [], '{
       static function __static() { }
 
       public function stream_open($path, $mode, $options, $opened_path) {
@@ -48,7 +48,7 @@ abstract class Streams extends \lang\Object {
         return 0 === parent::$streams[$this->id]->available();
       }
     }')));
-    stream_wrapper_register('iostrw', get_class(newinstance(__CLASS__, array(), '{
+    stream_wrapper_register('iostrw', get_class(newinstance(__CLASS__, [], '{
       static function __static() { }
 
       public function stream_write($data) {
@@ -193,7 +193,7 @@ abstract class Streams extends \lang\Object {
    * @return  [:var] stat
    */
   public function stream_stat() {
-    return array('size' => $this->length);
+    return ['size' => $this->length];
   }
 
   /**
@@ -209,9 +209,9 @@ abstract class Streams extends \lang\Object {
     if (!isset(self::$streams[$id])) {
       return false;
     } else if ('r' === $m) {
-      return array('size' => 0);
+      return ['size' => 0, 'mode' => 0100644];
     } else if ('w' === $m) {
-      return array('size' => 0);
+      return ['size' => 0, 'mode' => 0100644];
     }
   }
 

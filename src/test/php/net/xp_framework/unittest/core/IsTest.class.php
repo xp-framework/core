@@ -21,42 +21,42 @@ class IsTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function stringArray() {
+  public function string_array() {
     $this->assertTrue(is('string[]', array('Hello')));
   }
 
   #[@test]
-  public function varArray() {
+  public function var_array() {
     $this->assertFalse(is('string[]', array('Hello', 1, TRUE)));
   }
 
   #[@test]
-  public function intArray() {
+  public function int_array() {
     $this->assertTrue(is('int[]', array(1, 2, 3)));
   }
 
   #[@test]
-  public function mapIsNotAnIntArray() {
+  public function mapIsNotAnInt_array() {
     $this->assertFalse(is('int[]', array('one' => 1, 'two' => 2)));
   }
 
   #[@test]
-  public function intIsNotAnIntArray() {
+  public function intIsNotAnInt_array() {
     $this->assertFalse(is('int[]', 1));
   }
 
   #[@test]
-  public function thisIsNotAnIntArray() {
+  public function thisIsNotAnInt_array() {
     $this->assertFalse(is('int[]', $this));
   }
 
   #[@test]
-  public function emptyArrayIsAnIntArray() {
-    $this->assertTrue(is('int[]', array()));
+  public function emptyArrayIsAnInt_array() {
+    $this->assertTrue(is('int[]', []));
   }
 
   #[@test]
-  public function objectArray() {
+  public function object_array() {
     $this->assertTrue(is('lang.Object[]', array(new \lang\Object(), new \lang\Object(), new \lang\Object())));
   }
 
@@ -92,7 +92,7 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function emptyArrayIsAnIntMap() {
-    $this->assertTrue(is('[:int]', array()));
+    $this->assertTrue(is('[:int]', []));
   }
 
   #[@test]
@@ -220,5 +220,51 @@ class IsTest extends \unittest\TestCase {
   #[@test]
   public function anIntVectorIsNotAnUndefinedGeneric() {
     $this->assertFalse(is('Undefined_Class<string>', create('new util.collections.Vector<int>')));
+  }
+
+  /** @return var[][] */
+  protected function genericVectors() {
+    return [
+      [create('new util.collections.Vector<string>')],
+      [create('new util.collections.Vector<lang.Generic>')],
+      [create('new util.collections.Vector<util.collections.Vector<int>>')],
+    ];
+  }
+
+  #[@test, @values('genericVectors')]
+  public function wildcard_check_for_single_type_parameter($value) {
+    $this->assertTrue(is('util.collections.Vector<?>', $value));
+  }
+
+  #[@test, @values('genericVectors')]
+  public function wildcard_check_for_single_type_parameter_super_type($value) {
+    $this->assertTrue(is('util.collections.IList<?>', $value));
+  }
+
+  #[@test]
+  public function wildcard_check_for_single_type_parameter_generic() {
+    $this->assertTrue(is('util.collections.IList<util.collections.IList<?>>', create('new util.collections.Vector<util.collections.Vector<int>>')));
+  }
+
+  #[@test]
+  public function wildcard_check_for_type_parameters() {
+    $this->assertTrue(is('util.collections.HashTable<?, ?>', create('new util.collections.HashTable<string, lang.Generic>')));
+  }
+
+  #[@test]
+  public function wildcard_check_for_type_parameters_super_type() {
+    $this->assertTrue(is('util.collections.Map<?, ?>', create('new util.collections.HashTable<string, lang.Generic>')));
+  }
+
+  #[@test]
+  public function wildcard_check_for_type_parameters_partial() {
+    $this->assertTrue(is('util.collections.HashTable<string, ?>', create('new util.collections.HashTable<string, lang.Generic>')));
+  }
+
+  #[@test]
+  public function wildcard_check_for_newinstance() {
+    $this->assertTrue(is('util.Filter<?>', newinstance('util.Filter<string>', [], [
+      'accept' => function($e) { return true; }
+    ])));
   }
 }

@@ -12,7 +12,7 @@ use io\collections\RandomCollectionAccess;
 class MockCollection extends \lang\Object implements IOCollection {
   protected
     $uri       = '',
-    $_elements = array(),
+    $_elements = [],
     $_offset   = -1,
     $origin    = null;
     

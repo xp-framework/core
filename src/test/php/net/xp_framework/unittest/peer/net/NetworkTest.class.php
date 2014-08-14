@@ -41,7 +41,7 @@ class NetworkTest extends TestCase {
   public function createNetworkV6() {
     $this->assertEquals(
       'fe00::/7',
-      create(new Network(new Inet6Address('fe00::'), 7))->asString()
+      (new Network(new Inet6Address('fe00::'), 7))->asString()
     );
   }
 
@@ -53,7 +53,7 @@ class NetworkTest extends TestCase {
   public function createNetworkV6WorkAlsoWithNetmaskTooBigInV4() {
     $this->assertEquals(
       'fe00::/35',
-      create(new Network(new Inet6Address('fe00::'), 35))->asString()
+      (new Network(new Inet6Address('fe00::'), 35))->asString()
     );
   }
 
@@ -109,7 +109,7 @@ class NetworkTest extends TestCase {
    */
   #[@test]
   public function loopbackNetworkContainsLoopbackAddressV4() {
-    $this->assertTrue(create(new Network(new Inet4Address('127.0.0.5'), 24))->contains(new Inet4Address('127.0.0.1')));
+    $this->assertTrue((new Network(new Inet4Address('127.0.0.5'), 24))->contains(new Inet4Address('127.0.0.1')));
   }
 
   #[@test]

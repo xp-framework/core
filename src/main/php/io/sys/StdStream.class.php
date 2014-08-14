@@ -23,7 +23,7 @@ class StdStream extends \lang\Object {
    * @return  io.File
    */
   public static function get($handle) {
-    static $f= array();
+    static $f= [];
     
     if (!isset($f[$handle])) {
       $f[$handle]= new File($handle);

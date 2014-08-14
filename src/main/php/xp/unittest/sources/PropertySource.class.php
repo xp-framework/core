@@ -29,7 +29,7 @@ class PropertySource extends AbstractSource {
    * @return  unittest.TestCase[]
    */
   public function testCasesWith($arguments) {
-    $r= array();
+    $r= [];
     $section= $this->prop->getFirstSection();
     do {
       if ('this' == $section) continue;   // Ignore special section

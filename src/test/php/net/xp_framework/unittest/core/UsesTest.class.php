@@ -29,7 +29,7 @@ class UsesTest extends TestCase {
    * @return  var[] an array with three elements: exitcode, stdout and stderr contents
    */
   protected function useAllOf($uses, $decl= '') {
-    with ($out= $err= '', $p= Runtime::getInstance()->newInstance(NULL, 'class', 'xp.runtime.Evaluate', array())); {
+    with ($out= $err= '', $p= Runtime::getInstance()->newInstance(NULL, 'class', 'xp.runtime.Evaluate', [])); {
       $p->in->write($decl.'
         ClassLoader::registerPath(\''.strtr($this->getClass()->getClassLoader()->path, '\\', '/').'\');
         $errors= 0;

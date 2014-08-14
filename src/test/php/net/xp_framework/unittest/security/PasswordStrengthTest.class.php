@@ -1,36 +1,25 @@
 <?php namespace net\xp_framework\unittest\security;
 
-use unittest\TestCase;
 use security\password\PasswordStrength;
-
 
 /**
  * TestCase for PasswordStrength entry point class
  *
- * @see      xp://security.password.PasswordStrength
- * @purpose  Unittest
+ * @see   xp://security.password.PasswordStrength
  */
-class PasswordStrengthTest extends TestCase {
+class PasswordStrengthTest extends \unittest\TestCase {
 
-  /**
-   * Test standard algortihm is always available
-   *
-   */
   #[@test]
-  public function standardAlgorithm() {
-    $this->assertClass(
-      PasswordStrength::getAlgorithm('standard'), 
-      'security.password.StandardAlgorithm'
+  public function standard_algorithm_is_always_available() {
+    $this->assertInstanceOf(
+      'security.password.StandardAlgorithm',
+      PasswordStrength::getAlgorithm('standard')
     );
   }
 
-  /**
-   * Test setAlgorithm() / getAlgorithm() roundtrip
-   *
-   */
   #[@test]
-  public function registerAlgorithm() {
-    with ($class= newinstance('security.password.Algorithm', array(), '{
+  public function register_algorithm() {
+    with ($class= newinstance('security.password.Algorithm', [], '{
       public function strengthOf($password) { return 0; }
     }')->getClass()); {
       PasswordStrength::setAlgorithm('null', $class);
@@ -38,23 +27,13 @@ class PasswordStrengthTest extends TestCase {
     }
   }
 
-  /**
-   * Test getAlgorithm() throws an exception when no algorithm is
-   * registered by the given name
-   *
-   */
   #[@test, @expect('util.NoSuchElementException')]
-  public function noSuchAlgorithm() {
+  public function getAlgorithm_throws_an_exception_for_non_existant_algorithm() {
     PasswordStrength::getAlgorithm('@@NON_EXISTANT@@');
   }
 
-  /**
-   * Test setAlgorithm() throws an exception when the given algorithm
-   * is not a security.password.Algorithm subclass
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
-  public function registerNonAlgorithm() {
+  public function setAlgorithm_throws_an_exception_for_non_algorithms() {
     PasswordStrength::setAlgorithm('object', $this->getClass());
   }
 }

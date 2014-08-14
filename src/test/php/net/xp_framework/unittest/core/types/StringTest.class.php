@@ -17,12 +17,12 @@ class StringTest extends \unittest\TestCase {
 
   #[@test]
   public function stringIsEqualSameString() {
-    $this->assertTrue(create(new String('ABC'))->equals(new String('ABC')));
+    $this->assertTrue((new String('ABC'))->equals(new String('ABC')));
   }
 
   #[@test]
   public function stringIsNotEqualToDifferentString() {
-    $this->assertFalse(create(new String('ABC'))->equals(new String('CBA')));
+    $this->assertFalse((new String('ABC'))->equals(new String('CBA')));
   }
 
   #[@test, @expect('lang.FormatException')]
@@ -103,7 +103,7 @@ class StringTest extends \unittest\TestCase {
   public function transliteration() {
     $this->assertEquals(
       'Trenciansky kraj', 
-      create(new String('TrenÄiansky kraj', 'utf-8'))->toString()
+      (new String('TrenÄiansky kraj', 'utf-8'))->toString()
     );
   }
 
@@ -164,7 +164,7 @@ class StringTest extends \unittest\TestCase {
 
   #[@test]
   public function concat() {
-    $this->assertEquals(new String('www.müller.com'), create(new String('www'))
+    $this->assertEquals(new String('www.müller.com'), (new String('www'))
       ->concat(new \lang\types\Character('.'))
       ->concat('müller')
       ->concat('.com')
@@ -174,37 +174,37 @@ class StringTest extends \unittest\TestCase {
   #[@test]
   public function hashesOfSameStringEqual() {
     $this->assertEquals(
-      create(new String(''))->hashCode(),
-      create(new String(''))->hashCode()
+      (new String(''))->hashCode(),
+      (new String(''))->hashCode()
     );
   }
 
   #[@test]
   public function hashesOfDifferentStringsNotEqual() {
     $this->assertNotEquals(
-      create(new String('A'))->hashCode(),
-      create(new String('B'))->hashCode()
+      (new String('A'))->hashCode(),
+      (new String('B'))->hashCode()
     );
   }
   
   #[@test]
   public function charAt() {
-    $this->assertEquals(new \lang\types\Character('ü'), create(new String('www.müller.com'))->charAt(5));
+    $this->assertEquals(new \lang\types\Character('ü'), (new String('www.müller.com'))->charAt(5));
   }
 
   #[@test, @expect('lang.IndexOutOfBoundsException')]
   public function charAtNegative() {
-    create(new String('ABC'))->charAt(-1);
+    (new String('ABC'))->charAt(-1);
   }
 
   #[@test, @expect('lang.IndexOutOfBoundsException')]
   public function charAtAfterEnd() {
-    create(new String('ABC'))->charAt(4);
+    (new String('ABC'))->charAt(4);
   }
 
   #[@test, @expect('lang.IndexOutOfBoundsException')]
   public function charAtEnd() {
-    create(new String('ABC'))->charAt(3);
+    (new String('ABC'))->charAt(3);
   }
 
   #[@test]
@@ -315,14 +315,14 @@ class StringTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.FormatException')]
   public function getUmlautsAsAsciiBytes() {
-    create(new String('äöü', 'iso-8859-1'))->getBytes('ASCII');
+    (new String('äöü', 'iso-8859-1'))->getBytes('ASCII');
   }
 
   #[@test]
   public function getAsciiAsAsciiBytes() {
     $this->assertEquals(
       new \lang\types\Bytes('aou'), 
-      create(new String('aou', 'iso-8859-1'))->getBytes('ASCII')
+      (new String('aou', 'iso-8859-1'))->getBytes('ASCII')
     );
   }
 }

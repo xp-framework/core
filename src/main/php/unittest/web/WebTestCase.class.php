@@ -20,8 +20,8 @@ abstract class WebTestCase extends TestCase {
   protected
     $conn              = null,
     $response          = null,
-    $cookies           = array(),
-    $persistentHeaders = array();
+    $cookies           = [],
+    $persistentHeaders = [];
 
   private
     $dom      = null,
@@ -98,7 +98,7 @@ abstract class WebTestCase extends TestCase {
    * @return  peer.http.HttpResponse
    */
   protected function doRequest($method, $params) {
-    $request= $this->conn->create(new \peer\http\HttpRequest());
+    $request= $this->conn->(new \peer\http\HttpRequest());
     $request->setMethod($method);
     $request->setParameters($params);
 

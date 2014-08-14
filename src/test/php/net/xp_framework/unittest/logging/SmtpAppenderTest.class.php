@@ -20,7 +20,7 @@ class SmtpAppenderTest extends AppenderTest {
    */
   protected function newFixture($prefix, $sync) {
     $appender= newinstance('util.log.SmtpAppender', array('test@example.com', $prefix, $sync), '{
-      public $sent= array();
+      public $sent= [];
       protected function send($prefix, $content) {
         $this->sent[]= array($prefix, $content);
       }
@@ -71,7 +71,7 @@ class SmtpAppenderTest extends AppenderTest {
   public function append_async() {
     $fixture= $this->newFixture('test', $sync= false);
     $fixture->append($this->newEvent(\util\log\LogLevel::WARN, 'Test'));
-    $this->assertEquals(array(), $fixture->sent);
+    $this->assertEquals([], $fixture->sent);
   }
 
   /**
@@ -81,7 +81,7 @@ class SmtpAppenderTest extends AppenderTest {
   public function finalize_async_no_messages() {
     $fixture= $this->newFixture('test', $sync= false);
     $fixture->finalize();
-    $this->assertEquals(array(), $fixture->sent);
+    $this->assertEquals([], $fixture->sent);
   }
 
   /**

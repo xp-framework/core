@@ -1,16 +1,16 @@
 <?php namespace util\collections;
 
 use lang\Primitive;
+use lang\Generic;
 
 /**
  * Hash table consisting of non-null objects as keys and values
  *
- * @test     xp://net.xp_framework.unittest.util.collections.HashTableTest
- * @test     xp://net.xp_framework.unittest.util.collections.GenericsTest
- * @test     xp://net.xp_framework.unittest.util.collections.ArrayAccessTest
- * @test     xp://net.xp_framework.unittest.util.collections.BoxingTest
- * @see      xp://util.collections.Map
- * @purpose  Map interface implementation
+ * @test  xp://net.xp_framework.unittest.util.collections.HashTableTest
+ * @test  xp://net.xp_framework.unittest.util.collections.GenericsTest
+ * @test  xp://net.xp_framework.unittest.util.collections.ArrayAccessTest
+ * @test  xp://net.xp_framework.unittest.util.collections.BoxingTest
+ * @see   xp://util.collections.Map
  */
 #[@generic(self= 'K, V', implements= array('K, V'))]
 class HashTable extends \lang\Object implements Map, \IteratorAggregate {
@@ -18,18 +18,18 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
     $iterate   = null;
 
   protected
-    $_buckets  = array(),
+    $_buckets  = [],
     $_hash     = 0;
 
   static function __static() {
-    self::$iterate= newinstance('Iterator', array(), '{
+    self::$iterate= newinstance('Iterator', [], '{
       private $i= 0, $v, $b;
       public function on($v) { $self= new self(); $self->v= $v; return $self; }
       public function current() { return new \util\collections\Pair($this->b[0], $this->b[1]); }
       public function key() { return $this->i; }
       public function next() { $this->b= next($this->v); $this->i++; }
       public function rewind() { reset($this->v); $this->b= current($this->v); $this->i= 0;  }
-      public function valid() { return $this->b !== FALSE; }
+      public function valid() { return $this->b !== false; }
     }');
   }
 
@@ -100,7 +100,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    */
   #[@generic(params= 'K, V', return= 'V')]
   public function put($key, $value) {
-    $h= $key instanceof \lang\Generic ? $key->hashCode() : serialize($key);
+    $h= $key instanceof Generic ? $key->hashCode() : serialize($key);
     if (!isset($this->_buckets[$h])) {
       $previous= null;
     } else {
@@ -108,7 +108,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
     }
 
     $this->_buckets[$h]= array($key, $value);
-    $this->_hash+= HashProvider::hashOf($h.($value instanceof \lang\Generic ? $value->hashCode() : $value));
+    $this->_hash+= HashProvider::hashOf($h.($value instanceof Generic ? $value->hashCode() : serialize($value)));
     return $previous;
   }
 
@@ -121,7 +121,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    */
   #[@generic(params= 'K', return= 'V')]
   public function get($key) {
-    $h= $key instanceof \lang\Generic ? $key->hashCode() : serialize($key);
+    $h= $key instanceof Generic ? $key->hashCode() : serialize($key);
     return isset($this->_buckets[$h]) ? $this->_buckets[$h][1] : null; 
   }
   
@@ -135,12 +135,12 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    */
   #[@generic(params= 'K', return= 'V')]
   public function remove($key) {
-    $h= $key instanceof \lang\Generic ? $key->hashCode() : serialize($key);
+    $h= $key instanceof Generic ? $key->hashCode() : serialize($key);
     if (!isset($this->_buckets[$h])) {
       $prev= null;
     } else {
       $prev= $this->_buckets[$h][1];
-      $this->_hash-= HashProvider::hashOf($h.($prev instanceof \lang\Generic ? $prev->hashCode() : $prev));
+      $this->_hash-= HashProvider::hashOf($h.($prev instanceof Generic ? $prev->hashCode() : serialize($prev)));
       unset($this->_buckets[$h]);
     }
 
@@ -152,7 +152,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    *
    */
   public function clear() {
-    $this->_buckets= array();
+    $this->_buckets= [];
     $this->_hash= 0;
   }
 
@@ -182,7 +182,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    */
   #[@generic(params= 'K')]
   public function containsKey($key) {
-    $h= $key instanceof \lang\Generic ? $key->hashCode() : serialize($key);
+    $h= $key instanceof Generic ? $key->hashCode() : serialize($key);
     return isset($this->_buckets[$h]);
   }
 
@@ -194,7 +194,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    */
   #[@generic(params= 'V')]
   public function containsValue($value) {
-    if ($value instanceof \lang\Generic) {
+    if ($value instanceof Generic) {
       foreach (array_keys($this->_buckets) as $key) {
         if ($value->equals($this->_buckets[$key][1])) return true;
       }
@@ -222,11 +222,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    * @return  bool
    */
   public function equals($cmp) {
-    return (
-      $cmp instanceof self && 
-      $this->__generic === $cmp->__generic &&
-      $this->_hash === $cmp->_hash
-    );
+    return $cmp instanceof self && $this->_hash === $cmp->_hash;
   }
   
   /**
@@ -236,9 +232,9 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    */
   #[@generic(return= 'K[]')]
   public function keys() {
-    $keys= array();
-    foreach (array_keys($this->_buckets) as $key) {
-      $keys[]= $this->_buckets[$key][0];
+    $keys= [];
+    foreach ($this->_buckets as $key => $value) {
+      $keys[]= $value[0];
     }
     return $keys;
   }
@@ -250,9 +246,9 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    */
   #[@generic(return= 'V[]')]
   public function values() {
-    $values= array();
-    foreach (array_keys($this->_buckets) as $key) {
-      $values[]= $this->_buckets[$key][1];
+    $values= [];
+    foreach ($this->_buckets as $key => $value) {
+      $values[]= $value[1];
     }
     return $values;
   }
@@ -264,13 +260,12 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    */
   public function toString() {
     $s= $this->getClassName().'['.sizeof($this->_buckets).'] {';
-    if (0 == sizeof($this->_buckets)) return $s.' }';
+    if (empty($this->_buckets)) return $s.' }';
 
     $s.= "\n";
-    foreach (array_keys($this->_buckets) as $key) {
-      $s.= '  '.\xp::stringOf($this->_buckets[$key][0]).' => '.\xp::stringOf($this->_buckets[$key][1]).",\n";
+    foreach ($this->_buckets as $b) {
+      $s.= '  '.\xp::stringOf($b[0]).' => '.\xp::stringOf($b[1]).",\n";
     }
     return substr($s, 0, -2)."\n}";
   }
-
-} 
+}

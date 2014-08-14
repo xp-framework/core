@@ -97,7 +97,7 @@ class ClassParser extends \lang\Object {
     } else if (T_DNUMBER === $tokens[$i][0]) {
       return (double)$tokens[$i][1];
     } else if ('[' === $tokens[$i] || T_ARRAY === $tokens[$i][0]) {
-      $value= array();
+      $value= [];
       $element= null;
       $key= 0;
       $end= '[' === $tokens[$i] ? ']' : ')';
@@ -121,7 +121,7 @@ class ClassParser extends \lang\Object {
           continue;
         } else {
           $element && raise('lang.IllegalStateException', 'Parse error: Malformed array - missing comma');
-          $element= array($this->valueOf($tokens, $i, $context, $imports));
+          $element= [$this->valueOf($tokens, $i, $context, $imports)];
         }
       }
       return $value;
@@ -148,7 +148,7 @@ class ClassParser extends \lang\Object {
         if (T_STRING === $tokens[$i][0]) $type.= '.'.$tokens[$i][1];
       }
       $class= $this->resolve(substr($type, 1), $context, $imports);
-      for ($args= array(), $arg= null, $s= sizeof($tokens); ; $i++) {
+      for ($args= [], $arg= null, $s= sizeof($tokens); ; $i++) {
         if (')' === $tokens[$i]) {
           $arg && $args[]= $arg[0];
           break;
@@ -156,10 +156,33 @@ class ClassParser extends \lang\Object {
           $args[]= $arg[0];
           $arg= null;
         } else if (T_WHITESPACE !== $tokens[$i][0]) {
-          $arg= array($this->valueOf($tokens, $i, $context, $imports));
+          $arg= [$this->valueOf($tokens, $i, $context, $imports)];
         }
       }
       return $class->hasConstructor() ? $class->getConstructor()->newInstance($args) : $class->newInstance();
+    } else if (T_FUNCTION === $tokens[$i][0]) {
+      $b= 0;
+      $code= 'function';
+      for ($i++, $s= sizeof($tokens); $i < $s; $i++) {
+        if ('{' === $tokens[$i]) {
+          $b++;
+          $code.= '{';
+        } else if ('}' === $tokens[$i]) {
+          $b--;
+          $code.= '}';
+          if (0 === $b) break;
+        } else {
+          $code.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
+        }
+      }
+      ob_start();
+      $func= eval('return '.$code.';');
+      $error= ob_get_clean();
+      if (!($func instanceof \Closure)) {
+        preg_match("/(Parse.+) in .+.php/", $error, $m);
+        throw new IllegalStateException('In `'.$code.'`: '.$m[1]);
+      }
+      return $func;
     } else {
       throw new IllegalStateException(sprintf(
         'Parse error: Unexpected %s',
@@ -178,15 +201,15 @@ class ClassParser extends \lang\Object {
    * @return  [:var]
    * @throws  lang.ClassFormatException
    */
-  public function parseAnnotations($bytes, $context, $imports= array(), $line= -1) {
-    static $states= array(
+  public function parseAnnotations($bytes, $context, $imports= [], $line= -1) {
+    static $states= [
       'annotation', 'annotation name', 'annotation value',
       'annotation map key', 'annotation map value',
       'multi-value'
-    );
+    ];
 
     $tokens= token_get_all('<?php '.trim($bytes, "[# \t\n\r"));
-    $annotations= array(0 => array(), 1 => array());
+    $annotations= [0 => [], 1 => []];
     $place= $context.(-1 === $line ? '' : ', line '.$line);
 
     // Parse tokens
@@ -232,13 +255,9 @@ class ClassParser extends \lang\Object {
         } else if (2 === $state) {              // Inside braces of @attr(...)
           if (')' === $tokens[$i]) {
             $state= 1;
-          } else if (',' === $tokens[$i]) {
-            trigger_error('Deprecated usage of multi-value annotations in '.$place, E_USER_DEPRECATED);
-            $value= (array)$value;
-            $state= 5;
           } else if ($i + 2 < $s && ('=' === $tokens[$i + 1] || '=' === $tokens[$i + 2])) {
             $key= $tokens[$i][1];
-            $value= array();
+            $value= [];
             $state= 3;
           } else {
             $value= $this->valueOf($tokens, $i, $context, $imports);
@@ -256,15 +275,6 @@ class ClassParser extends \lang\Object {
         } else if (4 === $state) {              // Parsing value inside @attr(a= b, c= d)
           $value[$key]= $this->valueOf($tokens, $i, $context, $imports);
           $state= 3;
-        } else if (5 === $state) {
-          if (')' === $tokens[$i]) {            // BC: Deprecated multi-value annotations
-            $value[]= $element;
-            $state= 1;
-          } else if (',' === $tokens[$i]) {
-            $value[]= $element;
-          } else {
-            $element= $this->valueOf($tokens, $i, $context, $imports);
-          }
         }
       }
     } catch (\lang\XPException $e) {
@@ -281,11 +291,10 @@ class ClassParser extends \lang\Object {
    * @return  [:var] details
    */
   public function parseDetails($bytes, $context= '') {
-    $details= array(array(), array());
-    $annotations= array(0 => array(), 1 => array());
-    $imports= array();
+    $details= [[], []];
+    $annotations= [0 => [], 1 => []];
+    $imports= [];
     $comment= null;
-    $members= true;
     $parsed= '';
     $tokens= token_get_all($bytes);
     for ($i= 0, $s= sizeof($tokens); $i < $s; $i++) {
@@ -319,44 +328,41 @@ class ClassParser extends \lang\Object {
             $annotations= $this->parseAnnotations($parsed, $context, $imports, isset($tokens[$i][2]) ? $tokens[$i][2] : -1);
             $parsed= '';
           }
-          $details['class']= array(
+          $details['class']= [
             DETAIL_COMMENT      => trim(preg_replace('/\n\s+\* ?/', "\n", "\n".substr(
               $comment, 
               4,                              // "/**\n"
               strpos($comment, '* @')- 2      // position of first details token
             ))),
             DETAIL_ANNOTATIONS  => $annotations[0]
-          );
-          $annotations= array(0 => array(), 1 => array());
+          ];
+          $annotations= [0 => [], 1 => []];
           $comment= null;
           break;
 
         case T_VARIABLE:                      // Have a member variable
-          if (!$members) break;
           if ($parsed) {
             $annotations= $this->parseAnnotations($parsed, $context, $imports, isset($tokens[$i][2]) ? $tokens[$i][2] : -1);
             $parsed= '';
           }
           $name= substr($tokens[$i][1], 1);
-          $details[0][$name]= array(
+          $details[0][$name]= [
             DETAIL_ANNOTATIONS => $annotations[0]
-          );
-          $annotations= array(0 => array(), 1 => array());
+          ];
+          $annotations= [0 => [], 1 => []];
           break;
 
         case T_FUNCTION:
-          if (T_STRING !== $tokens[$i+ 2][0]) break;    // A closure, `function($params) { return TRUE; }`
           if ($parsed) {
             $annotations= $this->parseAnnotations($parsed, $context, $imports, isset($tokens[$i][2]) ? $tokens[$i][2] : -1);
             $parsed= '';
           }
-          $members= false;
           $i+= 2;
           $m= $tokens[$i][1];
-          $details[1][$m]= array(
-            DETAIL_ARGUMENTS    => array(),
+          $details[1][$m]= [
+            DETAIL_ARGUMENTS    => [],
             DETAIL_RETURNS      => null,
-            DETAIL_THROWS       => array(),
+            DETAIL_THROWS       => [],
             DETAIL_COMMENT      => trim(preg_replace('/\n\s+\* ?/', "\n", "\n".substr(
               $comment, 
               4,                              // "/**\n"
@@ -364,8 +370,8 @@ class ClassParser extends \lang\Object {
             ))),
             DETAIL_ANNOTATIONS  => $annotations[0],
             DETAIL_TARGET_ANNO  => $annotations[1]
-          );
-          $annotations= array(0 => array(), 1 => array());
+          ];
+          $annotations= [0 => [], 1 => []];
           $matches= null;
           preg_match_all(
             '/@([a-z]+)\s*([^<\r\n]+<[^>]+>|[^\r\n ]+) ?([^\r\n ]+)?/',
@@ -388,6 +394,16 @@ class ClassParser extends \lang\Object {
               case 'throws': 
                 $details[1][$m][DETAIL_THROWS][]= $match[2];
                 break;
+            }
+          }
+          $b= 0;
+          while (++$i < $s) {
+            if ('{' === $tokens[$i][0]) {
+              $b++;
+            } else if ('}' === $tokens[$i][0]) {
+              if (0 === --$b) break;
+            } else if (0 === $b && ';' === $tokens[$i][0]) {
+              break;    // Abstract or interface method
             }
           }
           break;

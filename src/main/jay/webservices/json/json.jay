@@ -26,7 +26,7 @@ expression:
 
 object:
       '{' objectcontent '}' { $$= $2; }
-    | '{' '}'               { $$= array(); }
+    | '{' '}'               { $$= []; }
 ;
 
 objectcontent:
@@ -45,7 +45,7 @@ objectkey:
 
 array:
       '[' arraycontent ']' { $$= $2; }
-    | '[' ']'              { $$= array(); }
+    | '[' ']'              { $$= []; }
 ;
 
 arraycontent:
@@ -56,7 +56,7 @@ arraycontent:
 string:
     '"' word '"' {
       if (xp::errorAt(__FILE__)) {
-        $e= new FormatException('Cannot decode string '.create(new Bytes($1))->toString().' to '.$this->targetEncoding);
+        $e= new FormatException('Cannot decode string '.(new Bytes($1))->toString().' to '.$this->targetEncoding);
         xp::gc(__FILE__);
         throw $e;
       }

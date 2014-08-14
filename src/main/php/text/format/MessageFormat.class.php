@@ -19,7 +19,7 @@
  *     'The disk "{1}" contains {0,choice,0:no files|1:one file|*:{0,number,0#,#`} files}.'
  *   );
  *   
- *   $message= array();
+ *   $message= [];
  *   $message[]= $mf->format(1282, 'MyDisk');
  *   $message[]= $mf->format(1, 'MyDisk');
  *   $message[]= $mf->format(0, 'MyDisk');
@@ -31,7 +31,7 @@
  */
 class MessageFormat extends IFormat {
   public
-    $formatters   = array();
+    $formatters   = [];
     
   /**
    * Constructor

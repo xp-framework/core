@@ -17,7 +17,7 @@ class HeaderTest extends TestCase {
    */
   #[@test]
   public function newHeader() {
-    $this->assertEquals('name: value', create(new Header('name', 'value'))->toString());
+    $this->assertEquals('name: value', (new Header('name', 'value'))->toString());
   }
 
   /**

@@ -115,8 +115,8 @@ class PairTest extends TestCase {
   #[@test]
   public function hashcode_of_nulls_equal() {
     $this->assertEquals(
-      create(new Pair(null, null))->hashCode(),
-      create(new Pair(null, null))->hashCode()
+      (new Pair(null, null))->hashCode(),
+      (new Pair(null, null))->hashCode()
     );
   }
 
@@ -126,8 +126,8 @@ class PairTest extends TestCase {
   #[@test]
   public function hashcode_of_different_keys_not_equal() {
     $this->assertNotEquals(
-      create(new Pair(null, null))->hashCode(),
-      create(new Pair('key', null))->hashCode()
+      (new Pair(null, null))->hashCode(),
+      (new Pair('key', null))->hashCode()
     );
   }
 
@@ -137,8 +137,8 @@ class PairTest extends TestCase {
   #[@test]
   public function hashcode_of_different_values_not_equal() {
     $this->assertNotEquals(
-      create(new Pair(null, null))->hashCode(),
-      create(new Pair(null, 'value'))->hashCode()
+      (new Pair(null, null))->hashCode(),
+      (new Pair(null, 'value'))->hashCode()
     );
   }
 }

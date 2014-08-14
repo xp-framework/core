@@ -47,7 +47,7 @@ class System extends Object {
    * @return  var
    */
   public static function getProperty($name) {
-    static $prop= array();
+    static $prop= [];
     
     if (!isset($prop[$name])) switch ($name) {
       case 'php.version': 
@@ -138,7 +138,7 @@ class System extends Object {
     if (!($dir= self::_env('TEMP', 'TMP', 'TMPDIR', 'TEMPDIR'))) {
       if (0 === strcasecmp(substr(PHP_OS, 0, 3), 'WIN')) {
         $dir= 'C:';
-        foreach (array(getenv('LOCALAPPDATA'), getenv('WINDIR'), getenv('SYSTEMDRIVE')) as $base) {
+        foreach ([getenv('LOCALAPPDATA'), getenv('WINDIR'), getenv('SYSTEMDRIVE')] as $base) {
           if (!$base || !is_dir($t= $base.DIRECTORY_SEPARATOR.'Temp')) continue;
           $dir= $t;
           break;
@@ -196,7 +196,7 @@ class System extends Object {
       throw new SystemException('Cannot execute "'.$cmdLine.'"');
     }
     
-    $buf= array();
+    $buf= [];
     while (
       (!feof($pd)) && 
       (false !== ($line= fgets($pd, 4096)))

@@ -10,105 +10,45 @@
  * @test  xp://net.xp_framework.unittest.core.ExceptionsTest
  * @test  xp://net.xp_framework.unittest.core.ChainedExceptionTest
  */
-class Throwable extends \Exception implements Generic {
-  public
-    $__id;
+class Throwable extends \Exception implements Generic { use \__xp;
+  public $__id;
 
   public 
     $cause    = null,
     $message  = '',
-    $trace    = array();
+    $trace    = [];
   
   static function __static() {
   
     // Workaround for missing detail information about return types in
     // builtin classes.
-    \xp::$meta['php.Exception']= array(
-      'class' => array(4 => null, array()),
-      0 => array(),
-      1 => array(
-        'getMessage'       => array(1 => array(), 'string', array(), null, array()),
-        'getCode'          => array(1 => array(), 'int', array(), null, array()),
-        'getFile'          => array(1 => array(), 'string', array(), null, array()),
-        'getLine'          => array(1 => array(), 'int', array(), null, array()),
-        'getTrace'         => array(1 => array(), 'var[]', array(), null, array()),
-        'getPrevious'      => array(1 => array(), 'lang.Throwable', array(), null, array()),
-        'getTraceAsString' => array(1 => array(), 'string', array(), null, array()),
-      )
-    );
+    \xp::$meta['php.Exception']= [
+      'class' => [4 => null, []],
+      0 => [],
+      1 => [
+        'getMessage'       => [1 => [], 'string', [], null, []],
+        'getCode'          => [1 => [], 'int', [], null, []],
+        'getFile'          => [1 => [], 'string', [], null, []],
+        'getLine'          => [1 => [], 'int', [], null, []],
+        'getTrace'         => [1 => [], 'var[]', [], null, []],
+        'getPrevious'      => [1 => [], 'lang.Throwable', [], null, []],
+        'getTraceAsString' => [1 => [], 'string', [], null, []]
+      ]
+    ];
   }
 
   /**
    * Constructor
    *
    * @param   string message
+   * @param   lang.Throwable cause default null
    */
-  public function __construct($message, $cause= null) {
-    static $u= 0;
+  public function __construct($message, self $cause= null) {
     $this->__id= uniqid('', true);
     $this->message= is_string($message) ? $message : \xp::stringOf($message);
     $this->cause= $cause;
-    $this->trace= array();
+    $this->trace= [];
     $this->fillInStackTrace();
-  }
-
-  /**
-   * Static method handler
-   *
-   */
-  public static function __callStatic($name, $args) {
-    $self= get_called_class();
-    if ("\7" === $name{0}) {
-      return call_user_func_array(array($self, substr($name, 1)), $args);
-    }
-    throw new Error('Call to undefined method '.$self.'::'.$name);
-  }
-
-  /**
-   * Field read handler
-   *
-   */
-  public function __get($name) {
-    return null;
-  }
-
-  /**
-   * Field write handler
-   *
-   */
-  public function __set($name, $value) {
-    $this->{$name}= $value;
-  }
-  
-  /**
-   * Method handler
-   *
-   */
-  public function __call($name, $args) {
-    if ("\7" === $name{0}) {
-      return call_user_func_array(array($this, substr($name, 1)), $args);
-    }
-
-    $t= debug_backtrace();
-
-    // Get self
-    $i= 1; $s= sizeof($t);
-    while (!isset($t[$i]['class']) && $i++ < $s) { }
-    $self= $t[$i]['class'];
-
-    // Get scope
-    $i++;
-    while (!isset($t[$i]['class']) && $i++ < $s) { }
-    $scope= isset($t[$i]['class']) ? $t[$i]['class'] : null;
-
-    if (null != $scope && isset(\xp::$ext[$scope])) {
-      foreach (\xp::$ext[$scope] as $type => $class) {
-        if (!$this instanceof $type || !method_exists($class, $name)) continue;
-        array_unshift($args, $this);
-        return call_user_func_array(array($class, $name), $args);
-      }
-    }
-    throw new Error('Call to undefined method '.\xp::nameOf($self).'::'.$name.'() from scope '.\xp::nameOf($scope));
   }
 
   /**
@@ -135,14 +75,14 @@ class Throwable extends \Exception implements Generic {
    * @return  lang.Throwable this
    */
   public function fillInStackTrace() {
-    static $except= array(
+    static $except= [
       'call_user_func_array'  => 1, 
       'call_user_func'        => 1
-    );
+    ];
 
     // Error messages
     foreach (\xp::$errors as $file => $list) {
-      $this->addStackTraceFor($file, null, null, null, array(), $list);
+      $this->addStackTraceFor($file, null, null, null, [], $list);
     }
 
     foreach (debug_backtrace() as $i => $trace) {
@@ -160,7 +100,7 @@ class Throwable extends \Exception implements Generic {
         isset($trace['function']) ? $trace['function'] : null,
         isset($trace['line']) ? $trace['line'] : null,
         isset($trace['args']) ? $trace['args'] : null,
-        array(array('' => 1))
+        [['' => 1]]
       );
     }
     return $this;

@@ -11,12 +11,12 @@ use lang\IndexOutOfBoundsException;
  */
 class MatchResult extends \lang\Object {
   protected $length  = 0;
-  protected $matches = array();
+  protected $matches = [];
   
   public static $EMPTY;
   
   static function __static() {
-    self::$EMPTY= new self(0, array());
+    self::$EMPTY= new self(0, []);
   }
   
   /**

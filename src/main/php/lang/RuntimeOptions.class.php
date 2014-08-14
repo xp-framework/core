@@ -7,14 +7,14 @@
  * @see   xp://lang.Runtime#startupOptions
  */
 class RuntimeOptions extends Object {
-  protected $backing= array();
+  protected $backing= [];
 
   /**
    * Constructor
    *
-   * @param   [:var] backing default array()
+   * @param   [:var] backing default []
    */
-  public function __construct($backing= array()) {
+  public function __construct($backing= []) {
     $this->backing= $backing;
   }
   
@@ -84,8 +84,8 @@ class RuntimeOptions extends Object {
    * @return  lang.RuntimeOptions this object
    */
   public function withClassPath($element) {
-    $this->backing["\0cp"]= array();
-    foreach (is_array($element) ? $element : array($element) as $path) {
+    $this->backing["\0cp"]= [];
+    foreach ((array)$element as $path) {
       $this->backing["\0cp"][]= rtrim($path, DIRECTORY_SEPARATOR);
     }
     return $this;
@@ -97,7 +97,7 @@ class RuntimeOptions extends Object {
    * @return  string[]
    */
   public function getClassPath() {
-    return isset($this->backing["\0cp"]) ? $this->backing["\0cp"] : array();
+    return isset($this->backing["\0cp"]) ? $this->backing["\0cp"] : [];
   }
 
   /**
@@ -106,7 +106,7 @@ class RuntimeOptions extends Object {
    * @return  string[]
    */
   public function asArguments() {
-    $s= array();
+    $s= [];
     foreach ($this->backing as $key => $value) {
       if ("\1" === $key{0}) {
         $s[]= '-'.substr($key, 1);

@@ -54,7 +54,7 @@ class DownloadAction extends \lang\Object {
 
     // Open a HTTP connection
     $url= new \peer\URL($base.$ar.'.ar');
-    $r= create(new HttpConnection($url))->get();
+    $r= (new HttpConnection($url))->get();
     if (\peer\http\HttpConstants::STATUS_OK != $r->getStatusCode()) {
       throw new \lang\IllegalStateException(sprintf(
         'Unexpected response %d:%s for %s',

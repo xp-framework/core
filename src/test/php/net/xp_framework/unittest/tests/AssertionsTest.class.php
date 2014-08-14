@@ -50,12 +50,12 @@ class AssertionsTest extends \unittest\TestCase {
 
   #[@test, @expect('unittest.AssertionFailedError')]
   public function emptyArrayIsNotNull() {
-    $this->assertNull(array());
+    $this->assertNull([]);
   }
 
   #[@test]
   public function equalsMethodIsInvoked() {
-    $instance= newinstance('lang.Object', array(), '{
+    $instance= newinstance('lang.Object', [], '{
       public $equalsInvoked= 0;
 
       public function equals($other) {
@@ -80,18 +80,18 @@ class AssertionsTest extends \unittest\TestCase {
   }    
 
   #[@test, @values(array(
-  #  array(array()),
+  #  array([]),
   #  array(array(1, 2, 3)),
-  #  array(array(array(1), array(), array(-1, 4), array(new String('baz'))))
+  #  array(array(array(1), [], array(-1, 4), array(new String('baz'))))
   #))]
   public function arraysAreEqual($array) {
     $this->assertEquals($array, $array);
   }    
 
   #[@test, @values(array(
-  #  array(array()),
+  #  array([]),
   #  array(array('foo' => 2)),
-  #  array(array(array('bar' => 'baz'), array(), array('bool' => TRUE, 'bar' => new String('baz'))))
+  #  array(array(array('bar' => 'baz'), [], array('bool' => TRUE, 'bar' => new String('baz'))))
   #))]
   public function hashesAreEqual($hash) {
     $this->assertEquals($hash, $hash);
@@ -113,19 +113,19 @@ class AssertionsTest extends \unittest\TestCase {
     $this->assertEquals(false, null);
   }    
 
-  #[@test, @values(array(-1, 1.0, NULL, FALSE, TRUE, '', array(array()), new String('1')))]
+  #[@test, @values(array(-1, 1.0, NULL, FALSE, TRUE, '', array([]), new String('1')))]
   public function integersAreNotEqual($cmp) {
     $this->assertNotEquals(1, $cmp);
   }    
 
-  #[@test, @values(array(-1, 1.0, NULL, FALSE, TRUE, 1, array(array()), new String('1')))]
+  #[@test, @values(array(-1, 1.0, NULL, FALSE, TRUE, 1, array([]), new String('1')))]
   public function stringsAreNotEqual($cmp) {
     $this->assertNotEquals('', $cmp);
   }
 
   #[@test, @values(array(-1, 1.0, NULL, FALSE, TRUE, 1, array(1), new String('1')))]
   public function arraysAreNotEqual($cmp) {
-    $this->assertNotEquals(array(), $cmp);
+    $this->assertNotEquals([], $cmp);
   }    
 
   #[@test, @expect('unittest.AssertionFailedError')]
@@ -210,7 +210,7 @@ class AssertionsTest extends \unittest\TestCase {
 
   #[@test]
   public function emptyArrayIsInstanceOfArray() {
-    $this->assertInstanceOf('array', array());
+    $this->assertInstanceOf('array', []);
   }
 
   #[@test]
@@ -236,110 +236,5 @@ class AssertionsTest extends \unittest\TestCase {
   #[@test, @expect('unittest.AssertionFailedError')]
   public function primitiveIsNotAnInstanceOfStringClass() {
     $this->assertInstanceOf('string', new String());
-  }    
-
-  #[@test]
-  public function emptyArrayEmpty() {
-    $this->assertEmpty(array());
-  }    
-
-  #[@test, @expect('unittest.AssertionFailedError')]
-  public function nonEmptyArrayEmpty() {
-    $this->assertEmpty(array(1));
-  }    
-
-  #[@test]
-  public function nonEmptyArrayNotEmpty() {
-    $this->assertNotEmpty(array(0));
-  }    
-
-  #[@test, @expect('unittest.AssertionFailedError')]
-  public function emptyArrayNotEmpty() {
-    $this->assertNotEmpty(array());
-  }    
-
-  #[@test, @expect('unittest.AssertionFailedError')]
-  public function nullIsNotAClass() {
-    $this->assertClass(null, 'lang.Object');
-  }    
-
-  #[@test, @expect('unittest.AssertionFailedError')]
-  public function primitiveIsNotOfStringClass() {
-    $this->assertClass('string', 'lang.types.String');
-  }    
-
-  #[@test]
-  public function objectIsOfObjectClass() {
-    $this->assertClass(new \lang\Object(), 'lang.Object');
-  }    
-
-  #[@test, @expect('unittest.AssertionFailedError')]
-  public function thisIsOfNotObjectClass() {
-    $this->assertClass($this, 'lang.Object');
-  }    
-
-  #[@test, @expect('unittest.AssertionFailedError')]
-  public function nullIsNotASubClass() {
-    $this->assertClass(null, 'lang.Object');
-  }    
-
-  #[@test]
-  public function objectIsOfObjectSubclass() {
-    $this->assertClass(new \lang\Object(), 'lang.Object');
-  }    
-
-  #[@test]
-  public function thisIsOfObjectSubclass() {
-    $this->assertSubClass($this, 'lang.Object');
-  }    
-
-  #[@test, @expect('unittest.AssertionFailedError')]
-  public function primitiveIsNotOfStringSubclass() {
-    $this->assertClass('string', 'lang.types.String');
-  }    
-
-  #[@test]
-  public function thisIsAnObject() {
-    $this->assertObject($this);
-  }    
-
-  #[@test, @expect('unittest.AssertionFailedError')]
-  public function nullIsNotAnObject() {
-    $this->assertObject(null);
-  }    
-
-  #[@test, @expect('unittest.AssertionFailedError')]
-  public function primitiveIsNotAnObject() {
-    $this->assertObject('string');
-  }    
-
-  #[@test]
-  public function emptyArrayIsAnArray() {
-    $this->assertArray(array());
-  }    
-
-  #[@test]
-  public function arrayIsAnArray() {
-    $this->assertArray(array(1, 2, 3));
-  }    
-
-  #[@test]
-  public function hashIsAnArray() {
-    $this->assertArray(array('key' => 'value'));
-  }    
-
-  #[@test]
-  public function arrayListIsAnArray() {
-    $this->assertArray(new ArrayList());
-  }    
-
-  #[@test, @expect('unittest.AssertionFailedError')]
-  public function objectIsNotAnArray() {
-    $this->assertArray(new \lang\Object());
-  }    
-
-  #[@test, @expect('unittest.AssertionFailedError')]
-  public function nullIsNotAnArray() {
-    $this->assertArray(null);
   }    
 }

@@ -10,9 +10,9 @@
  */
 class TestResult extends \lang\Object {
   public
-    $succeeded    = array(),
-    $failed       = array(),
-    $skipped      = array();
+    $succeeded    = [],
+    $failed       = [],
+    $skipped      = [];
     
   /**
    * Set outcome for a given test

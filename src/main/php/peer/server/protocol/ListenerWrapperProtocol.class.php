@@ -13,7 +13,7 @@ use peer\server\ServerProtocol;
  */
 class ListenerWrapperProtocol extends \lang\Object implements ServerProtocol {
   public
-    $listeners= array();
+    $listeners= [];
 
   /**
    * Add a connection listener

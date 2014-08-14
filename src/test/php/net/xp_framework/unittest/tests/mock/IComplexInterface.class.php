@@ -1,27 +1,20 @@
-<?php namespace net\xp_framework\unittest\tests\mock;/* This interface is part of the XP framework
- *
- * $Id$
- */
-
-
+<?php namespace net\xp_framework\unittest\tests\mock;
 
 /**
  * Dummy interface used in other tests
- *
  */
 interface IComplexInterface extends IEmptyInterface {
 
   /**
    * Foo
-   *
    */
   public function foo();
 
   /**
    * Bar
    *
-   * @param   var a
-   * @param   var b
+   * @param   var $a
+   * @param   var $b
    */
   public function bar($a, $b);
   
@@ -35,14 +28,15 @@ interface IComplexInterface extends IEmptyInterface {
   /**
    * Foo set accessor
    *
-   * @param   var value
+   * @param   var $value
+   * @return  void
    */
   public function setFoo($value);
   
   /**
    * Foo with type hint
    *
-   * @param   net.xp_framework.unittest.tests.mock.IEmptyInterface arg
+   * @param   net.xp_framework.unittest.tests.mock.IEmptyInterface $arg
    */
   public function fooWithTypeHint(IEmptyInterface $arg);
 }

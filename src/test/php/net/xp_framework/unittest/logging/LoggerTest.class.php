@@ -1,21 +1,16 @@
 <?php namespace net\xp_framework\unittest\logging;
  
-use unittest\TestCase;
 use util\log\Logger;
-
 
 /**
  * Tests Logger class
- *
- * @purpose  Unit Test
  */
-class LoggerTest extends TestCase {
+class LoggerTest extends \unittest\TestCase {
   protected $logger= null;
   
   /**
    * Setup method. Creates logger member for easier access to the
    * Logger instance
-   *
    */
   public function setUp() {
     $this->logger= Logger::getInstance();
@@ -23,46 +18,29 @@ class LoggerTest extends TestCase {
   
   /**
    * Teardown method. Finalizes the logger.
-   *
    */
   public function tearDown() {
     $this->logger->finalize();
   }
   
-  /**
-   * Ensure Logger is a singleton
-   *
-   */
   #[@test]
   public function loggerIsASingleton() {
     $this->assertTrue($this->logger === Logger::getInstance());
   }
 
-  /**
-   * Test a default category exists (but has no appenders)
-   *
-   */
   #[@test]
   public function defaultCategory() {
     with ($cat= $this->logger->getCategory()); {
-      $this->assertClass($cat, 'util.log.LogCategory');
+      $this->assertInstanceOf('util.log.LogCategory', $cat);
       $this->assertFalse($cat->hasAppenders());
     }
   }
 
-  /**
-   * Test Logger is configurable
-   *
-   */
   #[@test]
   public function isConfigurable() {
-    $this->assertSubclass($this->logger, 'util.Configurable');
+    $this->assertInstanceOf('util.Configurable', $this->logger);
   }
 
-  /**
-   * Test configuring the logger
-   *
-   */
   #[@test]
   public function configureMultipleCategories() {
     $this->logger->configure(\util\Properties::fromString(trim('
@@ -79,21 +57,17 @@ appender.util.log.FileAppender.param.filename="/var/log/xp/remote.log"
     
     with ($sql= $this->logger->getCategory('sql')); {
       $appenders= $sql->getAppenders();
-      $this->assertClass($appenders[0], 'util.log.FileAppender');
+      $this->assertInstanceOf('util.log.FileAppender', $appenders[0]);
       $this->assertEquals('/var/log/xp/sql.log', $appenders[0]->filename);
     }
     
     with ($sql= $this->logger->getCategory('remote')); {
       $appenders= $sql->getAppenders();
-      $this->assertClass($appenders[0], 'util.log.FileAppender');
+      $this->assertInstanceOf('util.log.FileAppender', $appenders[0]);
       $this->assertEquals('/var/log/xp/remote.log', $appenders[0]->filename);
     }
   }
 
-  /**
-   * Test configuring the logger
-   *
-   */
   #[@test]
   public function configureMultipleAppenders() {
     $this->logger->configure(\util\Properties::fromString(trim('
@@ -107,17 +81,13 @@ appender.util.log.SmtpAppender.param.email="xp@example.com"
     
     with ($sql= $this->logger->getCategory('sql')); {
       $appenders= $sql->getAppenders();
-      $this->assertClass($appenders[0], 'util.log.FileAppender');
+      $this->assertInstanceOf('util.log.FileAppender', $appenders[0]);
       $this->assertEquals('/var/log/xp/sql.log', $appenders[0]->filename);
-      $this->assertClass($appenders[1], 'util.log.SmtpAppender');
+      $this->assertInstanceOf('util.log.SmtpAppender', $appenders[1]);
       $this->assertEquals('xp@example.com', $appenders[1]->email);
     }
   }
 
-  /**
-   * Test configuring the logger
-   *
-   */
   #[@test]
   public function configureWithFlags() {
     $this->logger->configure(\util\Properties::fromString(trim('
@@ -130,18 +100,14 @@ appender.util.log.FileAppender.flags="LOGGER_FLAG_ERROR|LOGGER_FLAG_WARN"
     
     with ($cat= $this->logger->getCategory('sql')); {
       $this->assertFalse($cat === $this->logger->getCategory());
-      $this->assertClass($cat, 'util.log.LogCategory');
+      $this->assertInstanceOf('util.log.LogCategory', $cat);
       $this->assertTrue($cat->hasAppenders());
       with ($appenders= $cat->getAppenders(\util\log\LogLevel::ERROR | \util\log\LogLevel::WARN)); {
-        $this->assertClass($appenders[0], 'util.log.FileAppender');
+        $this->assertInstanceOf('util.log.FileAppender', $appenders[0]);
       }
     }
   }
 
-  /**
-   * Test configuring the logger
-   *
-   */
   #[@test]
   public function configureWithLevels() {
     $this->logger->configure(\util\Properties::fromString(trim('
@@ -154,18 +120,14 @@ appender.util.log.FileAppender.levels="ERROR|WARN"
     
     with ($cat= $this->logger->getCategory('sql')); {
       $this->assertFalse($cat === $this->logger->getCategory());
-      $this->assertClass($cat, 'util.log.LogCategory');
+      $this->assertInstanceOf('util.log.LogCategory', $cat);
       $this->assertTrue($cat->hasAppenders());
       with ($appenders= $cat->getAppenders(\util\log\LogLevel::ERROR | \util\log\LogLevel::WARN)); {
-        $this->assertClass($appenders[0], 'util.log.FileAppender');
+        $this->assertInstanceOf('util.log.FileAppender', $appenders[0]);
       }
     }
   }
 
-  /**
-   * Test configuring the logger with context
-   *
-   */
   #[@test]
   public function configureWithContext() {
     $this->logger->configure(\util\Properties::fromString(trim('

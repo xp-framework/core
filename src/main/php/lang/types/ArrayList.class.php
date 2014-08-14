@@ -1,16 +1,13 @@
 <?php namespace lang\types;
 
-
-
 /**
  * Represents a "numeric" array
  *
- * @test     xp://net.xp_framework.unittest.core.types.ArrayListTest
- * @purpose  Wrapper
+ * @test   xp://net.xp_framework.unittest.core.types.ArrayListTest
  */
 class ArrayList extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
   public
-    $values   = array(),
+    $values   = [],
     $length   = 0;
 
   /**
@@ -175,7 +172,7 @@ class ArrayList extends \lang\Object implements \ArrayAccess, \IteratorAggregate
   public function toString() {
     return (
       $this->getClassName().'['.sizeof($this->values)."]@{".
-      implode(', ', array_map(array('xp', 'stringOf'), $this->values)).
+      implode(', ', array_map(['xp', 'stringOf'], $this->values)).
       '}'
     );
   }

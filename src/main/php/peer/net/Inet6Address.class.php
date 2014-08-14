@@ -78,7 +78,7 @@ class Inet6Address extends \lang\Object implements InetAddress {
    * @return  string
    */
   public function asString() {
-    $skipZero= false; $hasSkipped= false; $hexquads= array();
+    $skipZero= false; $hasSkipped= false; $hexquads= [];
     for ($i= 0; $i < 16; $i+=2) {
       if (!$hasSkipped && "\x00\x00" == $this->addr{$i}.$this->addr{$i+1}) {
         $skipZero= true;

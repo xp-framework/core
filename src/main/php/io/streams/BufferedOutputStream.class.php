@@ -1,13 +1,9 @@
 <?php namespace io\streams;
 
-
-
 /**
  * OuputStream that writes to another OutputStream but buffers the
  * results internally. This means not every single byte passed to
  * write() will be written.
- *
- * @purpose  OuputStream implementation
  */
 class BufferedOutputStream extends \lang\Object implements OutputStream {
   protected 
@@ -39,6 +35,7 @@ class BufferedOutputStream extends \lang\Object implements OutputStream {
   /**
    * Flush this buffer
    *
+   * @return void
    */
   public function flush() { 
     $this->out->write($this->buf);
@@ -49,9 +46,17 @@ class BufferedOutputStream extends \lang\Object implements OutputStream {
    * Close this buffer. Flushes this buffer and then calls the close()
    * method on the underlying OuputStream.
    *
+   * @return void
    */
   public function close() {
     $this->flush();
     $this->out->close();
+  }
+
+  /**
+   * Destructor.
+   */
+  public function __destruct() {
+    $this->close();
   }
 }

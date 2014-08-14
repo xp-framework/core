@@ -9,7 +9,7 @@ use util\log\Context;
  * @see http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/NDC.html
  */
 class NestedLogContext extends \lang\Object implements Context {
-  protected $queue= array();
+  protected $queue= [];
 
   /**
    * Push new context information on the queue
@@ -55,7 +55,7 @@ class NestedLogContext extends \lang\Object implements Context {
    * @return void
    */
   public function clear() {
-    $this->queue= array();
+    $this->queue= [];
   }
 
   /**

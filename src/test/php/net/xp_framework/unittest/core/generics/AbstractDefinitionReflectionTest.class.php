@@ -119,7 +119,7 @@ abstract class AbstractDefinitionReflectionTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function missingArguments() {
-    $this->fixture->newGenericType(array());
+    $this->fixture->newGenericType([]);
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]

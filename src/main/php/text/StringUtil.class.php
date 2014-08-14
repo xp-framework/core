@@ -57,7 +57,7 @@ class StringUtil extends \lang\Object {
       ));
     }
 
-    $r= array();
+    $r= [];
     do {
       $r[]= substr($string, 0, $length);
       $string= substr($string, $length);

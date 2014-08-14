@@ -38,7 +38,7 @@ class Proxy extends \lang\Object {
    */
   public static function getProxyClass(\lang\IClassLoader $classloader, array $interfaces) {
     static $num= 0;
-    static $cache= array();
+    static $cache= [];
     
     $t= sizeof($interfaces);
     if (0 === $t) {
@@ -55,7 +55,7 @@ class Proxy extends \lang\Object {
     // Create proxy class' name, using a unique identifier and a prefix
     $name= self::PREFIX.($num++);
     $bytes= 'class '.$name.' extends '.\xp::reflect('lang.reflect.Proxy').' implements ';
-    $added= array();
+    $added= [];
     
     for ($j= 0; $j < $t; $j++) {
       $bytes.= \xp::reflect($interfaces[$j]->getName()).', ';
@@ -81,7 +81,7 @@ class Proxy extends \lang\Object {
         if ($m->hasAnnotation('overloaded')) {
           $signatures= $m->getAnnotation('overloaded', 'signatures');
           $max= 0;
-          $cases= array();
+          $cases= [];
           foreach ($signatures as $signature) {
             $args= sizeof($signature);
             $max= max($max, $args- 1);
@@ -89,8 +89,8 @@ class Proxy extends \lang\Object {
             
             $cases[$args]= (
               'case '.$args.': '.
-              'return $this->_h->invoke($this, \''.$m->getName(true).'\', array('.
-              ($args ? '$_'.implode(', $_', range(0, $args- 1)) : '').'));'
+              'return $this->_h->invoke($this, \''.$m->getName(true).'\', ['.
+              ($args ? '$_'.implode(', $_', range(0, $args- 1)) : '').']);'
             );
           }
 
@@ -115,7 +115,7 @@ class Proxy extends \lang\Object {
           // Create method
           $bytes.= (
             'function '.$m->getName().'('.$signature.') { '.
-            'return $this->_h->invoke($this, \''.$m->getName(true).'\', array('.$args.')); '.
+            'return $this->_h->invoke($this, \''.$m->getName(true).'\', ['.$args.']); '.
             '}'."\n"
           );
         }

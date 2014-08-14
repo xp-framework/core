@@ -26,7 +26,7 @@ class NamespaceAliasTest extends \unittest\TestCase {
     \lang\ClassLoader::defineClass(
       'net.xp_framework.unittest.core.NamespaceAliasClassFixture', 
       'lang.Object', 
-      array(), 
+      [], 
       '{}'
     );
     $this->assertTrue(class_exists('net\xp_framework\unittest\core\NamespaceAliasClassFixture', false));
@@ -36,7 +36,7 @@ class NamespaceAliasTest extends \unittest\TestCase {
   public function defined_interface_exists() {
     \lang\ClassLoader::defineInterface(
       'net.xp_framework.unittest.core.NamespaceAliasInterfaceFixture', 
-      array(), 
+      [], 
       '{}'
     );
     $this->assertTrue(interface_exists('net\xp_framework\unittest\core\NamespaceAliasInterfaceFixture', false));

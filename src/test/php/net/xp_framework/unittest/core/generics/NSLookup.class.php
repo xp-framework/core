@@ -9,7 +9,7 @@ use lang\Generic;
  */
 #[@generic(self= 'K, V', parent= 'K, V')]
 class NSLookup extends NSAbstractDictionary {
-  protected $elements= array();
+  protected $elements= [];
 
   /**
    * Put a key/value pair
