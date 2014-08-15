@@ -128,7 +128,7 @@ class FunctionType extends Type {
     return true;
   }
 
-  /**;
+  /**
    * Determines whether the specified object is an instance of this
    * type. 
    *
