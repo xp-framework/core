@@ -79,31 +79,47 @@ class FunctionType extends Type {
     throw new IllegalStateException('Function types cannot be used in type literals');
   }
 
-  protected function verify($r, $false) {
-    if (!Type::$VAR->isAssignableFrom($this->returnType)) {
-      return $false('Return type mismatch, expecting '.$this->returnType->getName().', have var'); 
-    };
+  protected function verify($r, $false, $class= null) {
+    if ($class) {
+      $details= XPClass::detailsForMethod($class->getName(), $r->getName());
+    } else {
+      $details= null;
+    }
+    if (isset($details[DETAIL_RETURNS])) {
+      $returnType= Type::forName($details[DETAIL_RETURNS]);
+      if (!$this->returnType->isAssignableFrom($returnType)) {
+        return $false('Return type mismatch, expecting '.$this->returnType->getName().', have '.$returnType->getName()); 
+      }
+    }
 
     $params= $r->getParameters();
-    if ($r->getNumberOfRequiredParameters() !== sizeof($this->signature)) {
+    if (sizeof($this->signature) < $r->getNumberOfRequiredParameters()) {
       return $false('Required signature length mismatch, expecting '.sizeof($this->signature).', have '.sizeof($params));
     }
     foreach ($this->signature as $i => $type) {
-      if ($params[$i]->isArray()) {
+      if (!isset($params[$i]))  return $false('No parameter #'.($i + 1));
+      if (isset($details[DETAIL_ARGUMENTS][$i])) {
+        $param= Type::forName($details[DETAIL_ARGUMENTS][$i]);
+        if (!$type->isAssignableFrom($param)) {
+          return $false('Parameter #'.($i + 1).' not a '.$type->getName().' type');
+        }
+      }
+      $param= $params[$i];
+      if ($param->isArray()) {
         if (!$type->equals(Primitive::$ARRAY) && !$type instanceof ArrayType && !$type instanceof MapType) {
-          return $false('Parameter #'.$i.' not an array type: '.$type->getName());
+          return $false('Parameter #'.($i + 1).' not an array type: '.$type->getName());
         }
-      } else if ($params[$i]->isCallable()) {
+      } else if ($param->isCallable()) {
         if (!$type instanceof FunctionType) {
-          return $false('Parameter #'.$i.' not a function type: '.$type->getName());
+          return $false('Parameter #'.($i + 1).' not a function type: '.$type->getName());
         }
-      } else if (null === ($class= $params[$i]->getClass())) {
+      } else if (null === ($class= $param->getClass())) {
         if (!Type::$VAR->isAssignableFrom($type)) {
-          return $false('Parameter #'.$i.' not a primitive: '.$type->getName());
+          return $false('Parameter #'.($i + 1).' not a primitive: '.$type->getName());
         }
       } else {
         if (!$type->isAssignableFrom(new XPClass($class))) {
-          return $false('Parameter #'.$i.' not a '.$class->getName().': '.$type->getName());
+          return $false('Parameter #'.($i + 1).' not a '.$class->getName().': '.$type->getName());
         }
       }
     }
@@ -125,9 +141,11 @@ class FunctionType extends Type {
       return $this->verify(new \ReflectionFunction($obj), $false);
     } else if (is_array($obj) && 2 === sizeof($obj)) {
       if (is_string($obj[0]) && method_exists($class= \xp::reflect($obj[0]), $obj[1])) {
-        return $this->verify(new \ReflectionMethod($class, $obj[1]), $false);
+        $r= new \ReflectionMethod($class, $obj[1]);
+        return $this->verify($r, $false, $r->getDeclaringClass());
       } else if (method_exists($obj[0], $obj[1])) {
-        return $this->verify(new \ReflectionMethod($obj[0], $obj[1]), $false);
+        $r= new \ReflectionMethod($obj[0], $obj[1]);
+        return $this->verify($r, $false, $r->getDeclaringClass());
       }
     }
     return false;
@@ -147,12 +165,12 @@ class FunctionType extends Type {
         $class= \xp::reflect($value[0]);
         if (!method_exists($class, $value[1])) $throw('Method '.$class.'::'.$value[1].' does not exist');
         $r= new \ReflectionMethod($class, $value[1]);
-        $this->verify($r, $throw);
+        $this->verify($r, $throw, $r->getDeclaringClass());
         return $r->getClosure(null);
       } else {
         if (!method_exists($value[0], $value[1])) $throw('Method '.\xp::nameOf(get_class($value[0])).'::'.$value[1].' does not exist');
         $r= new \ReflectionMethod($value[0], $value[1]);
-        $this->verify($r, $throw);
+        $this->verify($r, $throw, $r->getDeclaringClass());
         return $r->getClosure($value[0]);
       }
     } else {

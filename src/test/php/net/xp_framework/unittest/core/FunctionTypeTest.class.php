@@ -123,8 +123,26 @@ class FunctionTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function array_referencing_static_class_method_is_instance() {
+    $type= new FunctionType([Primitive::$STRING, XPClass::forName('lang.IClassLoader')], XPClass::forName('lang.XPClass'));
+    $this->assertTrue($type->isInstance(['lang.XPClass', 'forName']));
+  }
+
+  #[@test]
+  public function array_referencing_static_class_method_is_instance_without_optional_parameter() {
     $type= new FunctionType([Primitive::$STRING], XPClass::forName('lang.XPClass'));
     $this->assertTrue($type->isInstance(['lang.XPClass', 'forName']));
+  }
+
+  #[@test]
+  public function return_type_verified_for_static_class_methods() {
+    $type= new FunctionType([Primitive::$STRING], Type::$VOID);
+    $this->assertFalse($type->isInstance(['lang.XPClass', 'forName']));
+  }
+
+  #[@test]
+  public function parameter_type_verified_for_static_class_methods() {
+    $type= new FunctionType([XPClass::forName('lang.Object')], XPClass::forName('lang.XPClass'));
+    $this->assertFalse($type->isInstance(['lang.XPClass', 'forName']));
   }
 
   #[@test]
@@ -140,7 +158,13 @@ class FunctionTypeTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function array_referencing_non_existant_instance_method_is_not_nstance() {
+  public function return_type_verified_for_instance_methods() {
+    $type= new FunctionType([], Primitive::$INT);
+    $this->assertFalse($type->isInstance([$this, 'getName']));
+  }
+
+  #[@test]
+  public function array_referencing_non_existant_instance_method_is_not_instance() {
     $type= new FunctionType([], Primitive::$STRING);
     $this->assertFalse($type->isInstance([$this, 'non-existant']));
   }
@@ -169,6 +193,11 @@ class FunctionTypeTest extends \unittest\TestCase {
     (new FunctionType([Type::$VAR], Type::$VAR))->cast($value);
   }
 
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function return_type_verified_for_instance_methods_when_casting() {
+    (new FunctionType([], Primitive::$VOID))->newInstance([$this, 'getName']);
+  }
+
   #[@test]
   public function create_instances_from_function() {
     $value= (new FunctionType([], Type::$VAR))->newInstance(function() { return 'Test'; });
@@ -191,6 +220,11 @@ class FunctionTypeTest extends \unittest\TestCase {
   public function create_instances_from_array_referencing_instance_method() {
     $value= (new FunctionType([], Primitive::$STRING))->newInstance([$this, 'getName']);
     $this->assertEquals($this->getName(), $value());
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function return_type_verified_for_instance_methods_when_creating_instances() {
+    (new FunctionType([], Primitive::$VOID))->newInstance([$this, 'getName']);
   }
 
   #[@test, @expect('lang.IllegalArgumentException'), @values([
