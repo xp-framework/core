@@ -139,6 +139,20 @@ class FunctionTypeTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function newInstance() {
+    $value= (new FunctionType([], Type::$VAR))->newInstance(function() { return 'Test'; });
+    $this->assertEquals('Test', $value());
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException'), @values([
+  #  0, -1, 0.5, true, false, '', 'Test',
+  #  [[]], [['key' => 'value']]
+  #])]
+  public function cannot_create_instances_from($value) {
+    (new FunctionType([], Type::$VAR))->newInstance($value);
+  }
+
+  #[@test]
   public function can_assign_to_itself() {
     $type= new FunctionType([Type::$VAR], Type::$VAR);
     $this->assertTrue($type->isAssignableFrom($type));

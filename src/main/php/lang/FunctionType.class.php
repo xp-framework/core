@@ -114,7 +114,10 @@ class FunctionType extends Type {
    * @return  var
    */
   public function newInstance($value= null) {
-    // TBI
+    if (!$this->isInstance($value)) {
+      raise('lang.IllegalArgumentException', 'Cannot create instances of the '.$this->getName().' type from '.\xp::typeOf($value));
+    }
+    return clone $value;
   }
 
   /**
