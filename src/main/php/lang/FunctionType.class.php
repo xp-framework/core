@@ -80,11 +80,11 @@ class FunctionType extends Type {
   }
 
   protected function verify($r, $false, $class= null) {
-    if ($class) {
-      $details= XPClass::detailsForMethod($class->getName(), $r->getName());
-    } else {
-      $details= null;
+    if (sizeof($this->signature) < $r->getNumberOfRequiredParameters()) {
+      return $false('Required signature length mismatch, expecting '.sizeof($this->signature).', have '.$r->getNumberOfParameters());
     }
+
+    $details= $class ? XPClass::detailsForMethod($class->getName(), $r->getName()) : null;
     if (isset($details[DETAIL_RETURNS])) {
       $returnType= Type::forName($details[DETAIL_RETURNS]);
       if (!$this->returnType->isAssignableFrom($returnType)) {
@@ -93,33 +93,27 @@ class FunctionType extends Type {
     }
 
     $params= $r->getParameters();
-    if (sizeof($this->signature) < $r->getNumberOfRequiredParameters()) {
-      return $false('Required signature length mismatch, expecting '.sizeof($this->signature).', have '.sizeof($params));
-    }
     foreach ($this->signature as $i => $type) {
-      if (!isset($params[$i]))  return $false('No parameter #'.($i + 1));
+      if (!isset($params[$i])) return $false('No parameter #'.($i + 1));
       if (isset($details[DETAIL_ARGUMENTS][$i])) {
         $param= Type::forName($details[DETAIL_ARGUMENTS][$i]);
         if (!$type->isAssignableFrom($param)) {
-          return $false('Parameter #'.($i + 1).' not a '.$type->getName().' type');
-        }
-      }
-      $param= $params[$i];
-      if ($param->isArray()) {
-        if (!$type->equals(Primitive::$ARRAY) && !$type instanceof ArrayType && !$type instanceof MapType) {
-          return $false('Parameter #'.($i + 1).' not an array type: '.$type->getName());
-        }
-      } else if ($param->isCallable()) {
-        if (!$type instanceof FunctionType) {
-          return $false('Parameter #'.($i + 1).' not a function type: '.$type->getName());
-        }
-      } else if (null === ($class= $param->getClass())) {
-        if (!Type::$VAR->isAssignableFrom($type)) {
-          return $false('Parameter #'.($i + 1).' not a primitive: '.$type->getName());
+          return $false('Parameter #'.($i + 1).' not a '.$param->getName().' type: '.$type->getName());
         }
       } else {
-        if (!$type->isAssignableFrom(new XPClass($class))) {
-          return $false('Parameter #'.($i + 1).' not a '.$class->getName().': '.$type->getName());
+        $param= $params[$i];
+        if ($param->isArray()) {
+          if (!$type->equals(Primitive::$ARRAY) && !$type instanceof ArrayType && !$type instanceof MapType) {
+            return $false('Parameter #'.($i + 1).' not an array type: '.$type->getName());
+          }
+        } else if ($param->isCallable()) {
+          if (!$type instanceof FunctionType) {
+            return $false('Parameter #'.($i + 1).' not a function type: '.$type->getName());
+          }
+        } else if (null !== ($class= $param->getClass())) {
+          if (!$type->isAssignableFrom(new XPClass($class))) {
+            return $false('Parameter #'.($i + 1).' not a '.$class->getName().': '.$type->getName());
+          }
         }
       }
     }
