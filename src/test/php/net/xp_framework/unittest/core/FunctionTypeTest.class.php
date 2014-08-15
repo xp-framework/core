@@ -193,6 +193,11 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertEquals($value, (new FunctionType([Type::$VAR], Type::$VAR))->cast($value));
   }
 
+  #[@test]
+  public function cast_null() {
+    $this->assertNull((new FunctionType([Type::$VAR], Type::$VAR))->cast(null));
+  }
+
   #[@test, @expect('lang.ClassCastException'), @values([
   #  0, -1, 0.5, true, false, '', 'Test',
   #  [[]], [['key' => 'value']],

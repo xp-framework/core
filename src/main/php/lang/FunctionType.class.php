@@ -179,13 +179,12 @@ class FunctionType extends Type {
    * @return  var
    */
   public function newInstance($value= null) {
-    $throw= function($m) use($value) { raise('lang.IllegalArgumentException', sprintf(
+    return $this->instance($value, function($m) use($value) { raise('lang.IllegalArgumentException', sprintf(
       'Cannot create instances of the %s type from %s: %s',
       $this->getName(),
       \xp::typeOf($value),
       $m
-    )); };
-    return $this->instance($value, $throw);
+    )); });
   }
 
   /**
@@ -196,13 +195,12 @@ class FunctionType extends Type {
    * @throws  lang.ClassCastException
    */
   public function cast($value) {
-    $throw= function($m) use($value) { raise('lang.ClassCastException', sprintf(
+    return null === $value ? null : $this->instance($value, function($m) use($value) { raise('lang.ClassCastException', sprintf(
       'Cannot cast %s to the %s type: %s',
       \xp::typeOf($value),
       $this->getName(),
       $m
-    )); };
-    return $this->instance($value, $throw);
+    )); });
   }
 
   /**
