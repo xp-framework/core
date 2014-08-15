@@ -79,6 +79,14 @@ class FunctionType extends Type {
     throw new IllegalStateException('Function types cannot be used in type literals');
   }
 
+  /**
+   * Verifies a reflection function or method
+   *
+   * @param  php.ReflectionFunctionAbstract $value
+   * @param  function(string): var $value A function to invoke when verification fails
+   * @param  php.ReflectionClass $class Class to get details from, optionally
+   * @return var
+   */
   protected function verify($r, $false, $class= null) {
     if (sizeof($this->signature) < $r->getNumberOfRequiredParameters()) {
       return $false('Required signature length mismatch, expecting '.sizeof($this->signature).', have '.$r->getNumberOfParameters());
@@ -145,6 +153,13 @@ class FunctionType extends Type {
     return false;
   }
 
+  /**
+   * Returns a function instance for a given value
+   *
+   * @param  var $value
+   * @param  function(string): var $value A function that throws an exception
+   * @return php.Closure
+   */
   protected function instance($value, $throw) {
     if ($value instanceof \Closure) {
       $this->verify(new \ReflectionFunction($value), $throw);
