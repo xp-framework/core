@@ -8,21 +8,21 @@
  */
 class FunctionType extends Type {
   protected $signature;
-  protected $returnType;
+  protected $returns;
 
   /**
    * Creates a new array type instance
    *
    * @param  lang.Type[] $signature
-   * @param  lang.Type $returnType
+   * @param  lang.Type $returns
    */
-  public function __construct(array $signature, $returnType) {
+  public function __construct(array $signature, $returns) {
     $this->signature= $signature;
-    $this->returnType= $returnType;
+    $this->returns= $returns;
     parent::__construct(sprintf(
       'function(%s): %s',
       implode(',', array_map(function($e) { return $e->getName(); }, $signature)),
-      $this->returnType->getName()
+      $this->returns->getName()
     ), null);
   }
 
@@ -32,8 +32,8 @@ class FunctionType extends Type {
   }
 
   /** @return lang.Type */
-  public function returnType() {
-    return $this->returnType;
+  public function returns() {
+    return $this->returns;
   }
 
   /**
@@ -86,9 +86,9 @@ class FunctionType extends Type {
 
     $details= $class ? XPClass::detailsForMethod($class->getName(), $r->getName()) : null;
     if (isset($details[DETAIL_RETURNS])) {
-      $returnType= Type::forName($details[DETAIL_RETURNS]);
-      if (!$this->returnType->isAssignableFrom($returnType)) {
-        return $false('Return type mismatch, expecting '.$this->returnType->getName().', have '.$returnType->getName()); 
+      $returns= Type::forName($details[DETAIL_RETURNS]);
+      if (!$this->returns->isAssignableFrom($returns)) {
+        return $false('Return type mismatch, expecting '.$this->returns->getName().', have '.$returns->getName()); 
       }
     }
 
@@ -217,6 +217,6 @@ class FunctionType extends Type {
     foreach ($this->signature as $i => $type) {
       if (!$type->isAssignableFrom($t->signature[$i])) return false;
     }
-    return $this->returnType->isAssignableFrom($t->returnType);
+    return $this->returns->isAssignableFrom($t->returns);
   }
 }

@@ -20,6 +20,16 @@ class FunctionTypeTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function returns() {
+    $this->assertEquals(Type::$VOID, (new FunctionType([Primitive::$STRING], Type::$VOID))->returns());
+  }
+
+  #[@test]
+  public function signature() {
+    $this->assertEquals([Primitive::$STRING], (new FunctionType([Primitive::$STRING], Type::$VOID))->signature());
+  }
+
+  #[@test]
   public function a_function_accepting_one_string_arg_and_returning_a_string() {
     $this->assertEquals(
       new FunctionType([Primitive::$STRING], Primitive::$STRING),
