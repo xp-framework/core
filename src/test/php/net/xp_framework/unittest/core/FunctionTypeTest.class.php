@@ -208,9 +208,14 @@ class FunctionTypeTest extends \unittest\TestCase {
     (new FunctionType([Type::$VAR], Type::$VAR))->cast($value);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect('lang.ClassCastException')]
   public function return_type_verified_for_instance_methods_when_casting() {
-    (new FunctionType([], Primitive::$VOID))->newInstance([$this, 'getName']);
+    (new FunctionType([], Primitive::$VOID))->cast([$this, 'getName']);
+  }
+
+  #[@test, @expect('lang.ClassCastException')]
+  public function number_of_required_parameters_is_verified_when_casting() {
+    (new FunctionType([], Type::$VAR))->cast('strlen');
   }
 
   #[@test]
@@ -223,6 +228,11 @@ class FunctionTypeTest extends \unittest\TestCase {
   public function create_instances_from_string_referencing_builtin() {
     $value= (new FunctionType([Primitive::$STRING], Type::$VAR))->newInstance('strlen');
     $this->assertEquals(4, $value('Test'));
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function number_of_required_parameters_is_verified_when_creating_instances() {
+    (new FunctionType([], Type::$VAR))->newInstance('strlen');
   }
 
   #[@test]
