@@ -79,7 +79,38 @@ class FunctionType extends Type {
     throw new IllegalStateException('Function types cannot be used in type literals');
   }
 
-  /**
+  protected function verify($r, $false) {
+    if (!Type::$VAR->isAssignableFrom($this->returnType)) {
+      return $false('Return type mismatch, expecting '.$this->returnType->getName().', have var'); 
+    };
+
+    $params= $r->getParameters();
+    if ($r->getNumberOfRequiredParameters() !== sizeof($this->signature)) {
+      return $false('Required signature length mismatch, expecting '.sizeof($this->signature).', have '.sizeof($params));
+    }
+    foreach ($this->signature as $i => $type) {
+      if ($params[$i]->isArray()) {
+        if (!$type->equals(Primitive::$ARRAY) && !$type instanceof ArrayType && !$type instanceof MapType) {
+          return $false('Parameter #'.$i.' not an array type: '.$type->getName());
+        }
+      } else if ($params[$i]->isCallable()) {
+        if (!$type instanceof FunctionType) {
+          return $false('Parameter #'.$i.' not a function type: '.$type->getName());
+        }
+      } else if (null === ($class= $params[$i]->getClass())) {
+        if (!Type::$VAR->isAssignableFrom($type)) {
+          return $false('Parameter #'.$i.' not a primitive: '.$type->getName());
+        }
+      } else {
+        if (!$type->isAssignableFrom(new XPClass($class))) {
+          return $false('Parameter #'.$i.' not a '.$class->getName().': '.$type->getName());
+        }
+      }
+    }
+    return true;
+  }
+
+  /**;
    * Determines whether the specified object is an instance of this
    * type. 
    *
@@ -87,24 +118,46 @@ class FunctionType extends Type {
    * @return  bool
    */
   public function isInstance($obj) {
+    $false= function($m) { return false; };
     if ($obj instanceof \Closure) {
-      $r= new \ReflectionFunction($obj);
-      $params= $r->getParameters();
-      if (sizeof($params) !== sizeof($this->signature)) return false;
-      foreach ($this->signature as $i => $type) {
-        if ($params[$i]->isArray()) {
-          if (!$type->equals(Primitive::$ARRAY) && !$type instanceof ArrayType && !$type instanceof MapType) return false;
-        } else if ($params[$i]->isCallable()) {
-          if (!$type instanceof FunctionType) return false;
-        } else if (null === ($class= $params[$i]->getClass())) {
-          if (!$type->equals(Type::$VAR)) return false;
-        } else {
-          if (!$type->isAssignableFrom(new XPClass($class))) return false;
-        }
+      return $this->verify(new \ReflectionFunction($obj), $false);
+    } else if (is_string($obj) && function_exists($obj)) {
+      return $this->verify(new \ReflectionFunction($obj), $false);
+    } else if (is_array($obj) && 2 === sizeof($obj)) {
+      if (is_string($obj[0]) && method_exists($class= \xp::reflect($obj[0]), $obj[1])) {
+        return $this->verify(new \ReflectionMethod($class, $obj[1]), $false);
+      } else if (method_exists($obj[0], $obj[1])) {
+        return $this->verify(new \ReflectionMethod($obj[0], $obj[1]), $false);
       }
-      return $this->returnType->equals(Type::$VAR);
     }
     return false;
+  }
+
+  protected function instance($value, $throw) {
+    if ($value instanceof \Closure) {
+      $this->verify(new \ReflectionFunction($value), $throw);
+      return $value;
+    } else if (is_string($value)) {
+      if (!function_exists($value)) $throw('Function '.$value.' does not exist');
+      $r= new \ReflectionFunction($value);
+      $this->verify($r, $throw);
+      return $r->getClosure();
+    } else if (is_array($value) && 2 === sizeof($value)) {
+      if (is_string($value[0])) {
+        $class= \xp::reflect($value[0]);
+        if (!method_exists($class, $value[1])) $throw('Method '.$class.'::'.$value[1].' does not exist');
+        $r= new \ReflectionMethod($class, $value[1]);
+        $this->verify($r, $throw);
+        return $r->getClosure(null);
+      } else {
+        if (!method_exists($value[0], $value[1])) $throw('Method '.\xp::nameOf(get_class($value[0])).'::'.$value[1].' does not exist');
+        $r= new \ReflectionMethod($value[0], $value[1]);
+        $this->verify($r, $throw);
+        return $r->getClosure($value[0]);
+      }
+    } else {
+      $throw('Unsupported type');
+    }
   }
 
   /**
@@ -114,10 +167,13 @@ class FunctionType extends Type {
    * @return  var
    */
   public function newInstance($value= null) {
-    if (!$this->isInstance($value)) {
-      raise('lang.IllegalArgumentException', 'Cannot create instances of the '.$this->getName().' type from '.\xp::typeOf($value));
-    }
-    return clone $value;
+    $throw= function($m) use($value) { raise('lang.IllegalArgumentException', sprintf(
+      'Cannot create instances of the %s type from %s: %s',
+      $this->getName(),
+      \xp::typeOf($value),
+      $m
+    )); };
+    return $this->instance($value, $throw);
   }
 
   /**
@@ -128,10 +184,13 @@ class FunctionType extends Type {
    * @throws  lang.ClassCastException
    */
   public function cast($value) {
-    if (!$this->isInstance($value)) {
-      raise('lang.ClassCastException', 'Cannot cast to the '.$this->getName().' type from '.\xp::typeOf($value));
-    }
-    return $value;
+    $throw= function($m) use($value) { raise('lang.ClassCastException', sprintf(
+      'Cannot cast %s to the %s type: %s',
+      \xp::typeOf($value),
+      $this->getName(),
+      $m
+    )); };
+    return $this->instance($value, $throw);
   }
 
   /**

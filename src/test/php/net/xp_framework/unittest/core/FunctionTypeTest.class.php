@@ -117,6 +117,35 @@ class FunctionTypeTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function builtin_strlen_isInstance() {
+    $this->assertTrue((new FunctionType([Primitive::$STRING], Primitive::$INT))->isInstance('strlen'));
+  }
+
+  #[@test]
+  public function array_referencing_static_class_method_is_instance() {
+    $type= new FunctionType([Primitive::$STRING], XPClass::forName('lang.XPClass'));
+    $this->assertTrue($type->isInstance(['lang.XPClass', 'forName']));
+  }
+
+  #[@test]
+  public function array_referencing_non_existant_static_class_method_is_instance() {
+    $type= new FunctionType([Primitive::$STRING], XPClass::forName('lang.XPClass'));
+    $this->assertFalse($type->isInstance(['lang.XPClass', 'non-existant']));
+  }
+
+  #[@test]
+  public function array_referencing_instance_method_is_instance() {
+    $type= new FunctionType([], Primitive::$STRING);
+    $this->assertTrue($type->isInstance([$this, 'getName']));
+  }
+
+  #[@test]
+  public function array_referencing_non_existant_instance_method_is_not_nstance() {
+    $type= new FunctionType([], Primitive::$STRING);
+    $this->assertFalse($type->isInstance([$this, 'non-existant']));
+  }
+
+  #[@test]
   public function lang_Type_forName_parsed_function_type() {
     $this->assertEquals(
       new FunctionType([Type::$VAR], Primitive::$BOOL),
@@ -132,21 +161,43 @@ class FunctionTypeTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.ClassCastException'), @values([
   #  0, -1, 0.5, true, false, '', 'Test',
-  #  [[]], [['key' => 'value']]
+  #  [[]], [['key' => 'value']],
+  #  [['non-existant', 'method']], [['lang.XPClass', 'non-existant']],
+  #  [[null, 'method']], [[new \lang\Object(), 'non-existant']]
   #])]
   public function cannot_cast_this($value) {
     (new FunctionType([Type::$VAR], Type::$VAR))->cast($value);
   }
 
   #[@test]
-  public function newInstance() {
+  public function create_instances_from_function() {
     $value= (new FunctionType([], Type::$VAR))->newInstance(function() { return 'Test'; });
     $this->assertEquals('Test', $value());
   }
 
+  #[@test]
+  public function create_instances_from_string_referencing_builtin() {
+    $value= (new FunctionType([Primitive::$STRING], Type::$VAR))->newInstance('strlen');
+    $this->assertEquals(4, $value('Test'));
+  }
+
+  #[@test]
+  public function create_instances_from_array_referencing_static_class_method() {
+    $value= (new FunctionType([Primitive::$STRING], XPClass::forName('lang.XPClass')))->newInstance(['lang.XPClass', 'forName']);
+    $this->assertEquals(XPClass::forName('lang.Object'), $value('lang.Object'));
+  }
+
+  #[@test]
+  public function create_instances_from_array_referencing_instance_method() {
+    $value= (new FunctionType([], Primitive::$STRING))->newInstance([$this, 'getName']);
+    $this->assertEquals($this->getName(), $value());
+  }
+
   #[@test, @expect('lang.IllegalArgumentException'), @values([
   #  0, -1, 0.5, true, false, '', 'Test',
-  #  [[]], [['key' => 'value']]
+  #  [[]], [['key' => 'value']],
+  #  [['non-existant', 'method']], [['lang.XPClass', 'non-existant']],
+  #  [[null, 'method']], [[new \lang\Object(), 'non-existant']]
   #])]
   public function cannot_create_instances_from($value) {
     (new FunctionType([], Type::$VAR))->newInstance($value);
