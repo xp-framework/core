@@ -139,8 +139,13 @@ class FunctionType extends Type {
     $false= function($m) { return false; };
     if ($obj instanceof \Closure) {
       return $this->verify(new \ReflectionFunction($obj), $false);
-    } else if (is_string($obj) && function_exists($obj)) {
-      return $this->verify(new \ReflectionFunction($obj), $false);
+    } else if (is_string($obj)) {
+      if (2 === sscanf($obj, '%[^:]::%s', $class, $method) && method_exists($class= \xp::reflect($class), $method)) {
+        $r= new \ReflectionMethod($class, $method);
+        return $this->verify($r, $false, $r->getDeclaringClass());
+      } else if (function_exists($obj)) {
+        return $this->verify(new \ReflectionFunction($obj), $false);
+      }
     } else if (is_array($obj) && 2 === sizeof($obj)) {
       if (is_string($obj[0]) && method_exists($class= \xp::reflect($obj[0]), $obj[1])) {
         $r= new \ReflectionMethod($class, $obj[1]);
@@ -165,10 +170,18 @@ class FunctionType extends Type {
       $this->verify(new \ReflectionFunction($value), $throw);
       return $value;
     } else if (is_string($value)) {
-      if (!function_exists($value)) $throw('Function '.$value.' does not exist');
-      $r= new \ReflectionFunction($value);
-      $this->verify($r, $throw);
-      return $r->getClosure();
+      if (2 === sscanf($value, '%[^:]::%s', $class, $method)) {
+        $class= \xp::reflect($class);
+        if (!method_exists($class, $method)) $throw('Method '.$class.'::'.$method.' does not exist');
+        $r= new \ReflectionMethod($class, $method);
+        $this->verify($r, $throw, $r->getDeclaringClass());
+        return $r->getClosure(null);
+      } else {
+        if (!function_exists($value)) $throw('Function '.$value.' does not exist');
+        $r= new \ReflectionFunction($value);
+        $this->verify($r, $throw);
+        return $r->getClosure();
+      }
     } else if (is_array($value) && 2 === sizeof($value)) {
       if (is_string($value[0])) {
         $class= \xp::reflect($value[0]);

@@ -131,10 +131,10 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertTrue((new FunctionType([Primitive::$STRING], Primitive::$INT))->isInstance('strlen'));
   }
 
-  #[@test]
-  public function array_referencing_static_class_method_is_instance() {
+  #[@test, @values([[['lang.XPClass', 'forName']], ['lang.XPClass::forName']])]
+  public function array_referencing_static_class_method_is_instance($value) {
     $type= new FunctionType([Primitive::$STRING, XPClass::forName('lang.IClassLoader')], XPClass::forName('lang.XPClass'));
-    $this->assertTrue($type->isInstance(['lang.XPClass', 'forName']));
+    $this->assertTrue($type->isInstance($value));
   }
 
   #[@test]
@@ -245,9 +245,9 @@ class FunctionTypeTest extends \unittest\TestCase {
     (new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR))->newInstance('strlen');
   }
 
-  #[@test]
-  public function create_instances_from_array_referencing_static_class_method() {
-    $value= (new FunctionType([Primitive::$STRING], XPClass::forName('lang.XPClass')))->newInstance(['lang.XPClass', 'forName']);
+  #[@test, @values([[['lang.XPClass', 'forName']], ['lang.XPClass::forName']])]
+  public function create_instances_from_array_referencing_static_class_method($value) {
+    $value= (new FunctionType([Primitive::$STRING], XPClass::forName('lang.XPClass')))->newInstance($value);
     $this->assertEquals(XPClass::forName('lang.Object'), $value('lang.Object'));
   }
 
