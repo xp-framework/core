@@ -302,4 +302,36 @@ class FunctionTypeTest extends \unittest\TestCase {
     $type= new FunctionType([Type::$VAR], Type::$VAR);
     $this->assertTrue($type->isAssignableFrom(new FunctionType([Primitive::$STRING], Type::$VAR)));
   }
+
+  #[@test]
+  public function invoke() {
+    $f= function(Type $in) { return $in->getName(); };
+    $t= new FunctionType([XPClass::forName('lang.Type')], Primitive::$STRING);
+    $this->assertEquals('string', $t->invoke($f, [Primitive::$STRING]));
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function invoke_not_instance() {
+    $t= new FunctionType([XPClass::forName('lang.Type')], Primitive::$STRING);
+    $this->assertEquals('string', $t->invoke(function() { }, [Primitive::$STRING]));
+  }
+
+  #[@test, @expect('lang.reflect.TargetInvocationException')]
+  public function invoke_wraps_exceptions_in_TargetInvocationExceptions() {
+    $f= function() { throw new \lang\IllegalArgumentException('Test'); };
+    $t= new FunctionType([], Primitive::$VOID);
+    $t->invoke($f, []);
+  }
+
+  #[@test]
+  public function invoke_does_not_wrap_SystemExit() {
+    $f= function() { throw new \lang\SystemExit(0); };
+    $t= new FunctionType([], Primitive::$VOID);
+    try {
+      $t->invoke($f, []);
+      $this->fail('No exception thrown', null, 'lang.SystemExit');
+    } catch (\lang\SystemExit $expected) {
+      // OK
+    }
+  }
 }

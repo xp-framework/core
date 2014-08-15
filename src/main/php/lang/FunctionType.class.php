@@ -40,7 +40,7 @@ class FunctionType extends Type {
    * Get a type instance for a given name
    *
    * @param   string name
-   * @return  lang.ArrayType
+   * @return  self
    * @throws  lang.IllegalArgumentException if the given name does not correspond to a function type
    */
   public static function forName($name) {
@@ -244,5 +244,29 @@ class FunctionType extends Type {
       if (!$type->isAssignableFrom($t->signature[$i])) return false;
     }
     return $this->returns->isAssignableFrom($t->returns);
+  }
+
+  /**
+   * Invokes a given function with the given arguments.
+   *
+   * @param   var $func
+   * @return  var
+   * @throws  lang.IllegalArgumentException in case the passed function is not an instance of this type
+   * @throws  lang.reflect.TargetInvocationException for any exception raised from the invoked function
+   */
+  public function invoke($func, $args= []) {
+    $closure= $this->instance($func, function($m) use($func) { raise('lang.IllegalArgumentException', sprintf(
+      'Passed argument is not of a %s type (%s): %s',
+      $this->getName(),
+      \xp::typeOf($func),
+      $m
+    )); });
+    try {
+      return call_user_func_array($closure, $args);
+    } catch (SystemExit $e) {
+      throw $e;
+    } catch (Throwable $e) {
+      throw new \lang\reflect\TargetInvocationException($this->getName(), $e);
+    }
   }
 }
