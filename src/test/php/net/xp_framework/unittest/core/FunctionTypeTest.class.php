@@ -218,6 +218,11 @@ class FunctionTypeTest extends \unittest\TestCase {
     (new FunctionType([], Type::$VAR))->cast('strlen');
   }
 
+  #[@test, @expect('lang.ClassCastException')]
+  public function excess_parameters_are_verified_when_casting() {
+    (new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR))->cast('strlen');
+  }
+
   #[@test]
   public function create_instances_from_function() {
     $value= (new FunctionType([], Type::$VAR))->newInstance(function() { return 'Test'; });
@@ -233,6 +238,11 @@ class FunctionTypeTest extends \unittest\TestCase {
   #[@test, @expect('lang.IllegalArgumentException')]
   public function number_of_required_parameters_is_verified_when_creating_instances() {
     (new FunctionType([], Type::$VAR))->newInstance('strlen');
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function excess_parameters_are_verified_when_creating_instances() {
+    (new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR))->newInstance('strlen');
   }
 
   #[@test]
@@ -253,6 +263,7 @@ class FunctionTypeTest extends \unittest\TestCase {
   }
 
   #[@test, @expect('lang.IllegalArgumentException'), @values([
+  #  null,
   #  0, -1, 0.5, true, false, '', 'Test',
   #  [[]], [['key' => 'value']],
   #  [['non-existant', 'method']], [['lang.XPClass', 'non-existant']],
