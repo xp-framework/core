@@ -522,11 +522,25 @@ class Properties extends \lang\Object implements PropertyAccess {
   }
 
   /**
+   * Add a map (and the section, if necessary)
+   *
+   * @param   string section
+   * @param   string key
+   * @param   [:var] $value
+   */
+  public function writeMap($section, $key, $value) {
+    $this->_load();
+    if (!$this->hasSection($section)) $this->_data[$section]= [];
+    $this->_data[$section][$key]= new Hashmap($value);
+  }
+
+  /**
    * Add a hashmap (and the section, if necessary)
    *
    * @param   string section
    * @param   string key
    * @param   var value either a util.Hashmap or an array
+   * @deprecated Use writeMap() instead
    */
   public function writeHash($section, $key, $value) {
     $this->_load();

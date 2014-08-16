@@ -182,6 +182,45 @@ class PropertyWritingTest extends TestCase {
   }
 
   /**
+   * Test writing a map
+   *
+   */
+  #[@test]
+  public function mapOneElement() {
+    $this->fixture->writeMap('section', 'key', ['color' => 'green']);
+    $this->assertSavedFixtureEquals('
+      [section]
+      key="color:green"
+    ');
+  }
+
+  /**
+   * Test writing a map
+   *
+   */
+  #[@test]
+  public function mapTwoElements() {
+    $this->fixture->writeMap('section', 'key', ['color' => 'green', 'size' => 'L']);
+    $this->assertSavedFixtureEquals('
+      [section]
+      key="color:green|size:L"
+    ');
+  }
+
+  /**
+   * Test writing a map
+   *
+   */
+  #[@test]
+  public function emptyMap() {
+    $this->fixture->writeMap('section', 'key', []);
+    $this->assertSavedFixtureEquals('
+      [section]
+      key=""
+    ');
+  }
+
+  /**
    * Test writing a comment
    *
    */
