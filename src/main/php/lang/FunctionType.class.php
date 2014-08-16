@@ -128,6 +128,47 @@ class FunctionType extends Type {
     return true;
   }
 
+  /**
+   * Returns a verified function instance for a given value. Supports the following:
+   *
+   * - A closure
+   * - A string referencing a function, e.g. 'strlen' or 'typeof'
+   * - A string referencing an instance creation expression: 'lang.Object::new'
+   * - A string referencing a static method: 'lang.XPClass::forName'
+   * - An array of two strings referencing a static method: ['lang.XPClass', 'forName']
+   * - An array of an instance and a string referencing an instance method: [$this, 'getName']
+   *
+   * @param  var $arg
+   * @param  function(string): var $value A function to return when verification fails
+   * @param  bool $return
+   * @return php.Closure
+   */
+  protected function verified($arg, $false, $return= true) {
+    $result= false;
+    if ($arg instanceof \Closure) {
+      if ($this->verify(new \ReflectionFunction($arg), $false)) {
+        $result= $return ? $arg : true;
+      }
+    } else if (is_string($arg)) {
+      $r= sscanf($arg, '%[^:]::%s', $class, $method);
+      if (2 === $r) {
+        $result= $this->closureOf($class, $method, $false, $return);
+      } else if (function_exists($arg)) {
+        $r= new \ReflectionFunction($arg);
+        if ($this->verify($r, $false)) {
+          $result= $return ? $r->getClosure() : true;
+        }
+      } else {
+        return $false('Function "'.$arg.'" does not exist');
+      }
+    } else if (is_array($arg) && 2 === sizeof($arg)) {
+      $result= $this->closureOf($arg[0], $arg[1], $false, $return);
+    } else {
+      return $false('Unsupported type');
+    }
+    return $result;
+  }
+
   protected function closureOf($arg, $method, $throw, $return) {
     if ('new' === $method) {
       $class= \xp::reflect($arg);
@@ -139,7 +180,9 @@ class FunctionType extends Type {
       }
       if ($return) {
         $c= new \ReflectionClass($class);
-        return function() use($c) { return $c->newInstanceArgs(func_get_args()); };
+        $result= function() use($c) { return $c->newInstanceArgs(func_get_args()); };
+      } else {
+        $result= true;
       }
     } else if (is_string($arg)) {
       $class= \xp::reflect($arg);
@@ -147,14 +190,14 @@ class FunctionType extends Type {
       $r= new \ReflectionMethod($class, $method);
       if (!$r->isStatic()) return $throw('Method '.\xp::nameOf($class).'::'.$method.' referenced as static method but not static');
       if (!$this->verify($r, $throw, $r->getDeclaringClass())) return false;
-      if ($return) return $r->getClosure(null);
+      $result= $return ? $r->getClosure(null) : true;
     } else {
       if (!method_exists($arg, $method)) return $throw('Method '.\xp::nameOf(get_class($arg)).'::'.$method.' does not exist');
       $r= new \ReflectionMethod($arg, $method);
       if (!$this->verify($r, $throw, $r->getDeclaringClass())) return false;
-      if ($return) return $r->getClosure($arg);
+      $result= $return ? $r->getClosure($arg) : true;
     }
-    return true;
+    return $result;
   }
 
   /**
@@ -165,55 +208,7 @@ class FunctionType extends Type {
    * @return  bool
    */
   public function isInstance($obj) {
-    $false= function($m) { return false; };
-    if ($obj instanceof \Closure) {
-      return $this->verify(new \ReflectionFunction($obj), $false);
-    } else if (is_string($obj) && '' !== $obj) {
-      $r= sscanf($obj, '%[^:]::%s', $class, $method);
-      if (2 === $r) {
-        return $this->closureOf($class, $method, $false, false);
-      } else if (function_exists($obj)) {
-        return $this->verify(new \ReflectionFunction($obj), $false);
-      }
-    } else if (is_array($obj) && 2 === sizeof($obj)) {
-      return $this->closureOf($obj[0], $obj[1], $false, false);
-    }
-    return false;
-  }
-
-  /**
-   * Returns a function instance for a given value. Supports the following:
-   *
-   * - A closure
-   * - A string referencing a function, e.g. 'strlen' or 'typeof'
-   * - A string referencing an instance creation expression: 'lang.Object::new'
-   * - A string referencing a static method: 'lang.XPClass::forName'
-   * - An array of two strings referencing a static method: ['lang.XPClass', 'forName']
-   * - An array of an instance and a string referencing an instance method: [$this, 'getName']
-   *
-   * @param  var $value
-   * @param  function(string): var $value A function that throws an exception
-   * @return php.Closure
-   */
-  protected function instance($value, $throw) {
-    if ($value instanceof \Closure) {
-      $this->verify(new \ReflectionFunction($value), $throw);
-      return $value;
-    } else if (is_string($value)) {
-      $r= sscanf($value, '%[^:]::%s', $class, $method);
-      if (2 === $r) {
-        return $this->closureOf($class, $method, $throw, true);
-      } else if (function_exists($value)) {
-        $r= new \ReflectionFunction($value);
-        $this->verify($r, $throw);
-        return $r->getClosure();
-      } else {
-        $throw('Function "'.$value.'" does not exist');
-      }
-    } else if (is_array($value) && 2 === sizeof($value)) {
-      return $this->closureOf($value[0], $value[1], $throw, true);
-    }
-    $throw('Unsupported type');
+    return $this->verified($obj, function($m) { return false; }, false);
   }
 
   /**
@@ -223,7 +218,7 @@ class FunctionType extends Type {
    * @return  var
    */
   public function newInstance($value= null) {
-    return $this->instance($value, function($m) use($value) { raise('lang.IllegalArgumentException', sprintf(
+    return $this->verified($value, function($m) use($value) { raise('lang.IllegalArgumentException', sprintf(
       'Cannot create instances of the %s type from %s: %s',
       $this->getName(),
       \xp::typeOf($value),
@@ -239,7 +234,7 @@ class FunctionType extends Type {
    * @throws  lang.ClassCastException
    */
   public function cast($value) {
-    return null === $value ? null : $this->instance($value, function($m) use($value) { raise('lang.ClassCastException', sprintf(
+    return null === $value ? null : $this->verified($value, function($m) use($value) { raise('lang.ClassCastException', sprintf(
       'Cannot cast %s to the %s type: %s',
       \xp::typeOf($value),
       $this->getName(),
@@ -271,7 +266,7 @@ class FunctionType extends Type {
    * @throws  lang.reflect.TargetInvocationException for any exception raised from the invoked function
    */
   public function invoke($func, $args= []) {
-    $closure= $this->instance($func, function($m) use($func) { raise('lang.IllegalArgumentException', sprintf(
+    $closure= $this->verified($func, function($m) use($func) { raise('lang.IllegalArgumentException', sprintf(
       'Passed argument is not of a %s type (%s): %s',
       $this->getName(),
       \xp::typeOf($func),
