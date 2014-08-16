@@ -131,9 +131,19 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertTrue((new FunctionType([Primitive::$STRING], Primitive::$INT))->isInstance('strlen'));
   }
 
+  #[@test]
+  public function parameter_types_not_verified_for_builtin_strlen() {
+    $this->assertTrue((new FunctionType([Type::$VAR], Primitive::$INT))->isInstance('strlen'));
+  }
+
+  #[@test]
+  public function return_type_not_verified_for_builtin_strlen() {
+    $this->assertTrue((new FunctionType([Primitive::$STRING], Type::$VAR))->isInstance('strlen'));
+  }
+
   #[@test, @values([
   #  [['lang.XPClass', 'forName']], ['lang.XPClass::forName'],
-  #  [['lang\XPClass', 'forName']], ['lang\XPClass::forName']
+  #  [['lang\XPClass', 'forName']]
   #])]
   public function array_referencing_static_class_method_is_instance($value) {
     $type= new FunctionType([Primitive::$STRING, XPClass::forName('lang.IClassLoader')], XPClass::forName('lang.XPClass'));
@@ -141,30 +151,39 @@ class FunctionTypeTest extends \unittest\TestCase {
   }
 
   #[@test, @values([
+  #  [['lang.XPClass', 'forName']], ['lang.XPClass::forName'],
+  #  [['lang\XPClass', 'forName']]
+  #])]
+  public function array_referencing_static_class_method_is_instance_without_optional_parameter($value) {
+    $type= new FunctionType([Primitive::$STRING], XPClass::forName('lang.XPClass'));
+    $this->assertTrue($type->isInstance($value));
+  }
+
+  #[@test, @values([
+  #  [['lang.XPClass', 'forName']], ['lang.XPClass::forName'],
+  #  [['lang\XPClass', 'forName']]
+  #])]
+  public function return_type_verified_for_static_class_methods($value) {
+    $type= new FunctionType([Primitive::$STRING], Type::$VOID);
+    $this->assertFalse($type->isInstance($value));
+  }
+
+  #[@test, @values([
+  #  [['lang.XPClass', 'forName']], ['lang.XPClass::forName'],
+  #  [['lang\XPClass', 'forName']]
+  #])]
+  public function parameter_type_verified_for_static_class_methods($value) {
+    $type= new FunctionType([XPClass::forName('lang.Object')], XPClass::forName('lang.XPClass'));
+    $this->assertFalse($type->isInstance($value));
+  }
+
+  #[@test, @values([
   #  [['lang.Object', 'new']], ['lang.Object::new'],
-  #  [['lang\Object', 'new']], ['lang\Object::new']
+  #  [['lang\Object', 'new']]
   #])]
   public function array_referencing_constructor_is_instance($value) {
     $type= new FunctionType([], XPClass::forName('lang.Object'));
     $this->assertTrue($type->isInstance($value));
-  }
-
-  #[@test]
-  public function array_referencing_static_class_method_is_instance_without_optional_parameter() {
-    $type= new FunctionType([Primitive::$STRING], XPClass::forName('lang.XPClass'));
-    $this->assertTrue($type->isInstance(['lang.XPClass', 'forName']));
-  }
-
-  #[@test]
-  public function return_type_verified_for_static_class_methods() {
-    $type= new FunctionType([Primitive::$STRING], Type::$VOID);
-    $this->assertFalse($type->isInstance(['lang.XPClass', 'forName']));
-  }
-
-  #[@test]
-  public function parameter_type_verified_for_static_class_methods() {
-    $type= new FunctionType([XPClass::forName('lang.Object')], XPClass::forName('lang.XPClass'));
-    $this->assertFalse($type->isInstance(['lang.XPClass', 'forName']));
   }
 
   #[@test]
@@ -270,7 +289,7 @@ class FunctionTypeTest extends \unittest\TestCase {
 
   #[@test, @values([
   #  [['lang.XPClass', 'forName']], ['lang.XPClass::forName'],
-  #  [['lang\XPClass', 'forName']], ['lang\XPClass::forName']
+  #  [['lang\XPClass', 'forName']]
   #])]
   public function create_instances_from_array_referencing_static_class_method($value) {
     $value= (new FunctionType([Primitive::$STRING], XPClass::forName('lang.XPClass')))->newInstance($value);
@@ -279,7 +298,7 @@ class FunctionTypeTest extends \unittest\TestCase {
 
   #[@test, @values([
   #  [['lang.Object', 'new']], ['lang.Object::new'],
-  #  [['lang\Object', 'new']], ['lang\Object::new']
+  #  [['lang\Object', 'new']]
   #])]
   public function create_instances_from_array_referencing_constructor($value) {
     $new= (new FunctionType([], XPClass::forName('lang.Object')))->newInstance($value);
@@ -288,7 +307,7 @@ class FunctionTypeTest extends \unittest\TestCase {
 
   #[@test, @values([
   #  [['unittest.TestCase', 'new']], ['unittest.TestCase::new'],
-  #  [['unittest\TestCase', 'new']], ['unittest\TestCase::new']
+  #  [['unittest\TestCase', 'new']]
   #])]
   public function create_instances_from_array_referencing_declared_constructor($value) {
     $new= (new FunctionType([Type::$VAR], XPClass::forName('unittest.TestCase')))->newInstance($value);
