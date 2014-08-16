@@ -7,7 +7,7 @@
  */
 class ArrayMap extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
   public
-    $pairs  = [],
+    $values = [],
     $size   = 0;
 
   /**
@@ -16,17 +16,17 @@ class ArrayMap extends \lang\Object implements \ArrayAccess, \IteratorAggregate 
    * @return  string
    */
   public function hashCode() {
-    return $this->size.'{'.serialize($this->pairs);
+    return $this->size.'{'.serialize($this->values);
   }
   
   /**
    * Constructor
    *
-   * @param   [:var] pairs
+   * @param   [:var] values
    */
-  public function __construct(array $pairs) {
-    $this->pairs= $pairs;
-    $this->size= sizeof($this->pairs);
+  public function __construct(array $values) {
+    $this->values= $values;
+    $this->size= sizeof($this->values);
   }
   
   /**
@@ -36,7 +36,7 @@ class ArrayMap extends \lang\Object implements \ArrayAccess, \IteratorAggregate 
    * @return  php.Iterator<int, var>
    */
   public function getIterator() {
-    return new \ArrayIterator($this->pairs);
+    return new \ArrayIterator($this->values);
   }
 
   /**
@@ -47,10 +47,10 @@ class ArrayMap extends \lang\Object implements \ArrayAccess, \IteratorAggregate 
    * @throws  lang.IndexOutOfBoundsException if key does not exist
    */
   public function offsetGet($key) {
-    if (!isset($this->pairs[$key])) {
+    if (!isset($this->values[$key])) {
       raise('lang.IndexOutOfBoundsException', 'No element for key "'.$key.'"');
     }
-    return $this->pairs[$key];
+    return $this->values[$key];
   }
 
   /**
@@ -64,7 +64,7 @@ class ArrayMap extends \lang\Object implements \ArrayAccess, \IteratorAggregate 
     if (!is_string($key)) {
       throw new \lang\IllegalArgumentException('Incorrect type '.gettype($key).' for index');
     }
-    $this->pairs[$key]= $value;
+    $this->values[$key]= $value;
   }
 
   /**
@@ -74,7 +74,7 @@ class ArrayMap extends \lang\Object implements \ArrayAccess, \IteratorAggregate 
    * @return  bool
    */
   public function offsetExists($key) {
-    return array_key_exists($key, $this->pairs);
+    return array_key_exists($key, $this->values);
   }
 
   /**
@@ -83,7 +83,7 @@ class ArrayMap extends \lang\Object implements \ArrayAccess, \IteratorAggregate 
    * @param   string $key
    */
   public function offsetUnset($key) {
-    unset($this->pairs[$key]);
+    unset($this->values[$key]);
   }
 
   /**
@@ -94,8 +94,8 @@ class ArrayMap extends \lang\Object implements \ArrayAccess, \IteratorAggregate 
    */
   public function contains($value) {
     if (!$value instanceof \lang\Generic) {
-      return in_array($value, $this->pairs, true);
-    } else foreach ($this->pairs as $v) {
+      return in_array($value, $this->values, true);
+    } else foreach ($this->values as $v) {
       if ($value->equals($v)) return true;
     }
     return false;
@@ -138,7 +138,7 @@ class ArrayMap extends \lang\Object implements \ArrayAccess, \IteratorAggregate 
    * @return  bool
    */
   public function equals($cmp) {
-    return $cmp instanceof self && $this->arrayequals($this->pairs, $cmp->pairs);
+    return $cmp instanceof self && $this->arrayequals($this->values, $cmp->values);
   }
   
   /**
@@ -148,9 +148,9 @@ class ArrayMap extends \lang\Object implements \ArrayAccess, \IteratorAggregate 
    */
   public function toString() {
     $r= '';
-    foreach ($this->pairs as $key => $value) {
+    foreach ($this->values as $key => $value) {
       $r.= ', '.$key.' = '.\xp::stringOf($value);
     }
-    return $this->getClassName().'['.sizeof($this->pairs).']@{'.substr($r, 2).'}';
+    return $this->getClassName().'['.sizeof($this->values).']@{'.substr($r, 2).'}';
   }
 }
