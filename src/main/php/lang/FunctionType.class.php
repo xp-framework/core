@@ -16,12 +16,12 @@ class FunctionType extends Type {
    * @param  lang.Type[] $signature
    * @param  lang.Type $returns
    */
-  public function __construct(array $signature, $returns) {
+  public function __construct(array $signature= null, $returns) {
     $this->signature= $signature;
     $this->returns= $returns;
     parent::__construct(sprintf(
       'function(%s): %s',
-      implode(',', array_map(function($e) { return $e->getName(); }, $signature)),
+      null === $signature ? '?' : implode(',', array_map(function($e) { return $e->getName(); }, $signature)),
       $this->returns->getName()
     ), null);
   }
@@ -48,10 +48,14 @@ class FunctionType extends Type {
       throw new IllegalArgumentException('Not a function type: '.$name);
     }
 
-    $signature= [];
     if (')' === $name{9}) {
       $args= substr($name, 10);
       $o= strpos($args, ':');
+      $signature= [];
+    } else if ('?' === $name{9}) {
+      $args= substr($name, 11);
+      $o= strpos($args, ':');
+      $signature= null;
     } else for ($args= substr($name, 8), $o= 0, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
       if (':' === $args{$i} && 0 === $brackets) {
         $signature[]= parent::forName(substr($args, $o + 1, $i- $o- 2));
@@ -88,7 +92,7 @@ class FunctionType extends Type {
    * @return var
    */
   protected function verify($r, $false, $class= null) {
-    if (sizeof($this->signature) < $r->getNumberOfRequiredParameters()) {
+    if (null !== $this->signature && sizeof($this->signature) < $r->getNumberOfRequiredParameters()) {
       return $false('Required signature length mismatch, expecting '.sizeof($this->signature).', have '.$r->getNumberOfParameters());
     }
 
@@ -100,6 +104,7 @@ class FunctionType extends Type {
       }
     }
 
+    if (null === $this->signature) return true;
     $params= $r->getParameters();
     foreach ($this->signature as $i => $type) {
       if (!isset($params[$i])) return $false('No parameter #'.($i + 1));
@@ -259,11 +264,13 @@ class FunctionType extends Type {
    */
   public function isAssignableFrom($type) {
     $t= $type instanceof Type ? $type : Type::forName($type);
-    if (!($t instanceof self) || sizeof($t->signature) !== sizeof($this->signature)) return false;
+    if (!($t instanceof self) || !$this->returns->isAssignableFrom($t->returns)) return false;
+    if (null === $this->signature) return true;
+    if (sizeof($t->signature) !== sizeof($this->signature)) return false;
     foreach ($this->signature as $i => $type) {
       if (!$type->isAssignableFrom($t->signature[$i])) return false;
     }
-    return $this->returns->isAssignableFrom($t->returns);
+    return true;
   }
 
   /**

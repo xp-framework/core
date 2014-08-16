@@ -107,7 +107,7 @@ class FunctionTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function function_with_callable_hinted_arg_is_instance_of_function_type_with_function_signature() {
-    $this->assertTrue((new FunctionType([new FunctionType([], Type::$VAR)], Type::$VAR))->isInstance(
+    $this->assertTrue((new FunctionType([new FunctionType(null, Type::$VAR)], Type::$VAR))->isInstance(
       function(callable $a) { }
     ));
   }
@@ -124,6 +124,16 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertFalse((new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR))->isInstance(
       function() { }
     ));
+  }
+
+  #[@test, @values([
+  #  [function() { }],
+  #  [function($a) { }],
+  #  [function($a, $b) { }],
+  #  [function(array $a, callable $b, \lang\Object $c, $d, $e= false) { }]
+  #])]
+  public function function_with_no_args_is_instance_of_null_signature_function_type($value) {
+    $this->assertTrue((new FunctionType(null, Type::$VAR))->isInstance($value));
   }
 
   #[@test]
@@ -230,6 +240,14 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertEquals(
       new FunctionType([Type::$VAR], Primitive::$BOOL),
       Type::forName('function(var): bool')
+    );
+  }
+
+  #[@test]
+  public function lang_Type_forName_parsed_wildcard_function_type() {
+    $this->assertEquals(
+      new FunctionType(null, Primitive::$BOOL),
+      Type::forName('function(?): bool')
     );
   }
 
@@ -384,6 +402,16 @@ class FunctionTypeTest extends \unittest\TestCase {
   public function can_assign_to_itself() {
     $type= new FunctionType([Type::$VAR], Type::$VAR);
     $this->assertTrue($type->isAssignableFrom($type));
+  }
+
+  #[@test, @values([
+  #  [[]],
+  #  [[Type::$VAR]],
+  #  [[Type::$VAR, Type::$VAR]]
+  #])]
+  public function can_assign_to_wildcard_function($signature) {
+    $type= new FunctionType(null, Type::$VAR);
+    $this->assertTrue($type->isAssignableFrom(new FunctionType($signature, Type::$VAR)));
   }
 
   #[@test]
