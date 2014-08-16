@@ -139,8 +139,8 @@ class FunctionType extends Type {
    * - An array of an instance and a string referencing an instance method: [$this, 'getName']
    *
    * @param  var $arg
-   * @param  function(string): var $value A function to return when verification fails
-   * @param  bool $return
+   * @param  function(string): var $false A function to return when verification fails
+   * @param  bool $return Whether to return the closure, or TRUE
    * @return php.Closure
    */
   protected function verified($arg, $false, $return= true) {
@@ -174,8 +174,8 @@ class FunctionType extends Type {
    *
    * @param  var $arg Either a string referencing a class or an object
    * @param  string $method
-   * @param  function(string): var $value A function to return when verification fails
-   * @param  bool $return
+   * @param  function(string): var $false A function to return when verification fails
+   * @param  bool $return Whether to return the closure, or TRUE
    * @return php.Closure
    */
   protected function verifiedMethod($arg, $method, $false, $return) {
