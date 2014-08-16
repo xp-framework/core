@@ -186,6 +186,12 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertTrue($type->isInstance($value));
   }
 
+  #[@test, @values([[['util.collections.Vector<int>', 'new']], ['util.collections.Vector<int>::new']])]
+  public function array_referencing_generic_constructor_is_instance($value) {
+    $type= new FunctionType([], Type::forName('util.collections.Vector<int>'));
+    $this->assertTrue($type->isInstance($value));
+  }
+
   #[@test]
   public function array_referencing_non_existant_static_class_method_is_instance() {
     $type= new FunctionType([Primitive::$STRING], XPClass::forName('lang.XPClass'));
@@ -305,6 +311,7 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertInstanceOf('lang.Object', $new());
   }
 
+
   #[@test, @values([
   #  [['unittest.TestCase', 'new']], ['unittest.TestCase::new'],
   #  [['unittest\TestCase', 'new']]
@@ -312,6 +319,22 @@ class FunctionTypeTest extends \unittest\TestCase {
   public function create_instances_from_array_referencing_declared_constructor($value) {
     $new= (new FunctionType([Type::$VAR], XPClass::forName('unittest.TestCase')))->newInstance($value);
     $this->assertEquals($this, $new($this->getName()));
+  }
+
+  #[@test, @values([[['util.collections.Vector<int>', 'new']], ['util.collections.Vector<int>::new']])]
+  public function create_instances_from_array_referencing_generic_constructor($value) {
+    $new= (new FunctionType([Type::$VAR], Type::forName('util.collections.Vector<int>')))->newInstance($value);
+    $this->assertInstanceOf('util.collections.Vector<int>', $new());
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException'), @values([[['lang.Generic', 'new']], ['lang.Generic::new']])]
+  public function cannot_create_instances_from_interfaces($value) {
+    (new FunctionType([Type::$VAR], Type::forName('lang.Generic')))->newInstance($value);
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException'), @values([[['util.collections.IList<int>', 'new']], ['util.collections.IList<int>::new']])]
+  public function cannot_create_instances_from_generic_interfaces($value) {
+    (new FunctionType([Type::$VAR], Type::forName('util.collections.IList<int>')))->newInstance($value);
   }
 
   #[@test]
