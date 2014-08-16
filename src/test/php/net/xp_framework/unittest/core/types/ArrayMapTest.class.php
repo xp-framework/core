@@ -114,4 +114,30 @@ class ArrayMapTest extends TestCase {
     $this->assertEquals($repr, (new ArrayMap($value))->toString()
     );
   }
+
+  #[@test, @values([1, 2, 3])]
+  public function int_contained_in_map_of_ints($value) {
+    $this->assertTrue((new ArrayMap(['one' => 1, 'two' => 2, 'three' => 3]))->contains($value));
+  }
+
+  #[@test, @values([1, -1, 0, '', false, null])]
+  public function an_empty_map_does_not_contain_anything($value) {
+    $this->assertFalse((new ArrayMap([]))->contains($value));
+  }
+
+  #[@test]
+  public function a_map_of_an_object_contains_the_given_object() {
+    $o= new \lang\Object();
+    $this->assertTrue((new ArrayMap(['key' => $o]))->contains($o));
+  }
+
+  #[@test]
+  public function a_map_of_an_object_does_not_contain_null() {
+    $this->assertFalse((new ArrayMap(['key' => new \lang\Object()]))->contains(null));
+  }
+
+  #[@test]
+  public function a_map_of_strings_does_not_contain_an_object() {
+    $this->assertFalse((new ArrayMap(['T' => 'e', 's' => 't']))->contains(new \lang\Object()));
+  }
 }
