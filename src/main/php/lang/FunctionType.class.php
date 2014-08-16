@@ -196,7 +196,7 @@ class FunctionType extends Type {
       $c= new \ReflectionClass($class);
       if (!$c->isInstantiable()) return $false(\xp::nameOf($class).' cannot be instantiated');
       $result= $return ? function() use($c) { return $c->newInstanceArgs(func_get_args()); } : true;
-    } else if (is_string($arg)) {
+    } else if (is_string($arg) && is_string($method)) {
       $class= \xp::reflect($arg);
       if (!method_exists($class, $method)) return $false('Method '.\xp::nameOf($class).'::'.$method.' does not exist');
       $r= new \ReflectionMethod($class, $method);
@@ -204,12 +204,14 @@ class FunctionType extends Type {
       if ($this->verify($r, $false, $r->getDeclaringClass())) {
         $result= $return ? $r->getClosure(null) : true;
       }
-    } else {
+    } else if (is_object($arg) && is_string($method)) {
       if (!method_exists($arg, $method)) return $false('Method '.\xp::nameOf(get_class($arg)).'::'.$method.' does not exist');
       $r= new \ReflectionMethod($arg, $method);
       if ($this->verify($r, $false, $r->getDeclaringClass())) {
         $result= $return ? $r->getClosure($arg) : true;
       }
+    } else {
+      return $false('Array argument must either be [string, string] or an [object, string]');
     }
     return $result;
   }
