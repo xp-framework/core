@@ -152,7 +152,7 @@ class FunctionType extends Type {
     } else if (is_string($arg)) {
       $r= sscanf($arg, '%[^:]::%s', $class, $method);
       if (2 === $r) {
-        $result= $this->closureOf($class, $method, $false, $return);
+        $result= $this->verifiedMethod($class, $method, $false, $return);
       } else if (function_exists($arg)) {
         $r= new \ReflectionFunction($arg);
         if ($this->verify($r, $false)) {
@@ -162,21 +162,31 @@ class FunctionType extends Type {
         return $false('Function "'.$arg.'" does not exist');
       }
     } else if (is_array($arg) && 2 === sizeof($arg)) {
-      $result= $this->closureOf($arg[0], $arg[1], $false, $return);
+      $result= $this->verifiedMethod($arg[0], $arg[1], $false, $return);
     } else {
       return $false('Unsupported type');
     }
     return $result;
   }
 
-  protected function closureOf($arg, $method, $throw, $return) {
+  /**
+   * Returns a verified function instance for a given arg and method.
+   *
+   * @param  var $arg Either a string referencing a class or an object
+   * @param  string $method
+   * @param  function(string): var $value A function to return when verification fails
+   * @param  bool $return
+   * @return php.Closure
+   */
+  protected function verifiedMethod($arg, $method, $false, $return) {
+    $result= false;
     if ('new' === $method) {
       $class= \xp::reflect($arg);
       if (method_exists($class, '__construct')) {
         $r= new \ReflectionMethod($class, '__construct');
-        if (!$this->verify($r, $throw, $r->getDeclaringClass())) return false;
+        if (!$this->verify($r, $false, $r->getDeclaringClass())) return false;
       } else {
-        if (!$this->returns->isAssignableFrom(XPClass::forName(\xp::nameOf($class)))) return $throw('Class type mismatch');
+        if (!$this->returns->isAssignableFrom(XPClass::forName(\xp::nameOf($class)))) return $false('Class type mismatch');
       }
       if ($return) {
         $c= new \ReflectionClass($class);
@@ -186,16 +196,18 @@ class FunctionType extends Type {
       }
     } else if (is_string($arg)) {
       $class= \xp::reflect($arg);
-      if (!method_exists($class, $method)) return $throw('Method '.\xp::nameOf($class).'::'.$method.' does not exist');
+      if (!method_exists($class, $method)) return $false('Method '.\xp::nameOf($class).'::'.$method.' does not exist');
       $r= new \ReflectionMethod($class, $method);
-      if (!$r->isStatic()) return $throw('Method '.\xp::nameOf($class).'::'.$method.' referenced as static method but not static');
-      if (!$this->verify($r, $throw, $r->getDeclaringClass())) return false;
-      $result= $return ? $r->getClosure(null) : true;
+      if (!$r->isStatic()) return $false('Method '.\xp::nameOf($class).'::'.$method.' referenced as static method but not static');
+      if ($this->verify($r, $false, $r->getDeclaringClass())) {
+        $result= $return ? $r->getClosure(null) : true;
+      }
     } else {
-      if (!method_exists($arg, $method)) return $throw('Method '.\xp::nameOf(get_class($arg)).'::'.$method.' does not exist');
+      if (!method_exists($arg, $method)) return $false('Method '.\xp::nameOf(get_class($arg)).'::'.$method.' does not exist');
       $r= new \ReflectionMethod($arg, $method);
-      if (!$this->verify($r, $throw, $r->getDeclaringClass())) return false;
-      $result= $return ? $r->getClosure($arg) : true;
+      if ($this->verify($r, $false, $r->getDeclaringClass())) {
+        $result= $return ? $r->getClosure($arg) : true;
+      }
     }
     return $result;
   }
