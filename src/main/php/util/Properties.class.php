@@ -9,7 +9,6 @@ use io\streams\FileInputStream;
 use io\streams\TextReader;
 use text\TextTokenizer;
 
-
 /**
  * An interface to property-files (aka "ini-files")
  *
@@ -112,6 +111,16 @@ class Properties extends \lang\Object implements PropertyAccess {
   }
 
   /**
+   * Quote a value if necessary
+   *
+   * @param  var $value
+   * @return string
+   */
+  protected function quote($val) {
+    return is_string($val) ? '"'.$val.'"' : (string)$val;
+  }
+
+  /**
    * Store to an output stream, e.g. a file
    *
    * @param   io.streams.OutputStream out
@@ -136,10 +145,8 @@ class Properties extends \lang\Object implements PropertyAccess {
             }
             $out->write($key.'="'.substr($str, 1)."\"\n");
           }
-        } else if (is_string($val)) {
-          $out->write($key.'="'.$val."\"\n");
         } else {
-          $out->write($key.'='.$val."\n");
+          $out->write($key.'='.$this->quote($val)."\n");
         }
       }
       $out->write("\n");
