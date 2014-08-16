@@ -139,17 +139,31 @@ class FunctionType extends Type {
     $false= function($m) { return false; };
     if ($obj instanceof \Closure) {
       return $this->verify(new \ReflectionFunction($obj), $false);
-    } else if (is_string($obj)) {
-      if (2 === sscanf($obj, '%[^:]::%s', $class, $method) && method_exists($class= \xp::reflect($class), $method)) {
+    } else if (is_string($obj) && '' !== $obj) {
+      if (0 === substr_compare($obj, '::new', -5)) {
+        $class= \xp::reflect(substr($obj, 0, -5));
+        if (method_exists($class, '__construct')) {
+          $r= new \ReflectionMethod($class, '__construct');
+          return $this->verify($r, $false, $r->getDeclaringClass());
+        }
+        return $this->returns->isAssignableFrom(XPClass::forName(\xp::nameOf($class)));
+      } else if (2 === sscanf($obj, '%[^:]::%s', $class, $method) && method_exists($class= \xp::reflect($class), $method)) {
         $r= new \ReflectionMethod($class, $method);
-        return $this->verify($r, $false, $r->getDeclaringClass());
+        return $r->isStatic() && $this->verify($r, $false, $r->getDeclaringClass());
       } else if (function_exists($obj)) {
         return $this->verify(new \ReflectionFunction($obj), $false);
       }
     } else if (is_array($obj) && 2 === sizeof($obj)) {
-      if (is_string($obj[0]) && method_exists($class= \xp::reflect($obj[0]), $obj[1])) {
+      if ('new' === $obj[1]) {
+        $class= \xp::reflect($obj[0]);
+        if (method_exists($class, '__construct')) {
+          $r= new \ReflectionMethod($class, '__construct');
+          return $this->verify($r, $false, $r->getDeclaringClass());
+        }
+        return $this->returns->isAssignableFrom(XPClass::forName(\xp::nameOf($class)));
+      } else if (is_string($obj[0]) && method_exists($class= \xp::reflect($obj[0]), $obj[1])) {
         $r= new \ReflectionMethod($class, $obj[1]);
-        return $this->verify($r, $false, $r->getDeclaringClass());
+        return $r->isStatic() && $this->verify($r, $false, $r->getDeclaringClass());
       } else if (method_exists($obj[0], $obj[1])) {
         $r= new \ReflectionMethod($obj[0], $obj[1]);
         return $this->verify($r, $false, $r->getDeclaringClass());
@@ -169,11 +183,22 @@ class FunctionType extends Type {
     if ($value instanceof \Closure) {
       $this->verify(new \ReflectionFunction($value), $throw);
       return $value;
-    } else if (is_string($value)) {
-      if (2 === sscanf($value, '%[^:]::%s', $class, $method)) {
+    } else if (is_string($value) && '' !== $value) {
+      if (0 === substr_compare($value, '::new', -5)) {
+        $class= \xp::reflect(substr($value, 0, -5));
+        if (method_exists($class, '__construct')) {
+          $r= new \ReflectionMethod($class, '__construct');
+          $this->verify($r, $throw, $r->getDeclaringClass());
+        } else {
+          if (!$this->returns->isAssignableFrom(XPClass::forName(\xp::nameOf($class)))) $throw('Return type mismatch');
+        }
+        $c= new \ReflectionClass($class);
+        return function() use($c) { return $c->newInstanceArgs(func_get_args()); };
+      } else if (2 === sscanf($value, '%[^:]::%s', $class, $method)) {
         $class= \xp::reflect($class);
         if (!method_exists($class, $method)) $throw('Method '.$class.'::'.$method.' does not exist');
         $r= new \ReflectionMethod($class, $method);
+        if (!$r->isStatic()) $throw('Method '.$class.'::'.$method.' referenced as static method but not static');
         $this->verify($r, $throw, $r->getDeclaringClass());
         return $r->getClosure(null);
       } else {
@@ -183,10 +208,21 @@ class FunctionType extends Type {
         return $r->getClosure();
       }
     } else if (is_array($value) && 2 === sizeof($value)) {
-      if (is_string($value[0])) {
+      if ('new' === $value[1]) {
+        $class= \xp::reflect($value[0]);
+        if (method_exists($class, '__construct')) {
+          $r= new \ReflectionMethod($class, '__construct');
+          $this->verify($r, $throw, $r->getDeclaringClass());
+        } else {
+          if (!$this->returns->isAssignableFrom(XPClass::forName(\xp::nameOf($class)))) $throw('Return type mismatch');
+        }
+        $c= new \ReflectionClass($class);
+        return function() use($c) { return $c->newInstanceArgs(func_get_args()); };
+      } else if (is_string($value[0])) {
         $class= \xp::reflect($value[0]);
         if (!method_exists($class, $value[1])) $throw('Method '.$class.'::'.$value[1].' does not exist');
         $r= new \ReflectionMethod($class, $value[1]);
+        if (!$r->isStatic()) $throw('Method '.$class.'::'.$value[1].' referenced as static method but not static');
         $this->verify($r, $throw, $r->getDeclaringClass());
         return $r->getClosure(null);
       } else {
