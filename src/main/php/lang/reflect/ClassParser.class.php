@@ -284,6 +284,46 @@ class ClassParser extends \lang\Object {
   }
 
   /**
+   * Returns position of matching closing brace, or the string's length
+   * if no closing / opening brace is found.
+   *
+   * @param  string $text
+   * @param  string $open
+   * @param  string $close
+   * @param  int
+   */
+  protected function matching($text, $open, $close) {
+    for ($braces= $open.$close, $i= 0, $b= 0, $s= strlen($text); $i < $s; $i+= strcspn($text, $braces, $i)) {
+      if ($text{$i} === $open) {
+        $b++;
+      } else if ($text{$i} === $close) {
+        if (0 === --$b) return $i + 1;
+      }
+      $i++;
+    }
+    return $i;
+  }
+
+  /**
+   * Extracts type from a text
+   *
+   * @param  string $text
+   * @return string
+   */
+  protected function typeIn($text) {
+    if (0 === strncmp($text, 'function(', 9)) {
+      $p= $this->matching($text, '(', ')');
+      $p+= strspn($text, ': ', $p);
+      return substr($text, 0, $p).$this->typeIn(substr($text, $p));
+    } else if (strstr($text, '<')) {
+      $p= $this->matching($text, '<', '>');
+      return substr($text, 0, $p);
+    } else {
+      return substr($text, 0, strcspn($text, ' '));
+    }
+  }
+
+  /**
    * Parse details from a given input string
    *
    * @param   string bytes
@@ -373,26 +413,21 @@ class ClassParser extends \lang\Object {
           ];
           $annotations= [0 => [], 1 => []];
           $matches= null;
-          preg_match_all(
-            '/@([a-z]+)\s*([^<\r\n]+<[^>]+>|[^\r\n ]+) ?([^\r\n ]+)?/',
-            $comment, 
-            $matches, 
-            PREG_SET_ORDER
-          );
+          preg_match_all('/@([a-z]+)\s*([^\r\n]+)?/', $comment, $matches, PREG_SET_ORDER);
           $comment= null;
           $arg= 0;
           foreach ($matches as $match) {
             switch ($match[1]) {
               case 'param':
-                $details[1][$m][DETAIL_ARGUMENTS][$arg++]= $match[2];
+                $details[1][$m][DETAIL_ARGUMENTS][$arg++]= $this->typeIn($match[2]);
                 break;
 
               case 'return':
-                $details[1][$m][DETAIL_RETURNS]= $match[2];
+                $details[1][$m][DETAIL_RETURNS]= $this->typeIn($match[2]);
                 break;
 
               case 'throws': 
-                $details[1][$m][DETAIL_THROWS][]= $match[2];
+                $details[1][$m][DETAIL_THROWS][]= $this->typeIn($match[2]);
                 break;
             }
           }

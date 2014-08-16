@@ -105,6 +105,36 @@ class ClassDetailsTest extends TestCase {
   }
 
   #[@test]
+  public function nested_generic_parameter() {
+    $details= $this->parseComment('/** @param  util.collections.Vector<util.collections.Vector<?>> map */');
+    $this->assertEquals('util.collections.Vector<util.collections.Vector<?>>', $details[DETAIL_ARGUMENTS][0]);
+  }
+
+  #[@test]
+  public function function_parameter() {
+    $details= $this->parseComment('/** @param  function(string): string param1 */');
+    $this->assertEquals('function(string): string', $details[DETAIL_ARGUMENTS][0]);
+  }
+
+  #[@test]
+  public function function_accepting_function_parameter() {
+    $details= $this->parseComment('/** @param  function(function(): void): string param1 */');
+    $this->assertEquals('function(function(): void): string', $details[DETAIL_ARGUMENTS][0]);
+  }
+
+  #[@test]
+  public function function_returning_function_parameter() {
+    $details= $this->parseComment('/** @param  function(): function(): void param1 */');
+    $this->assertEquals('function(): function(): void', $details[DETAIL_ARGUMENTS][0]);
+  }
+
+  #[@test]
+  public function function_returning_generic() {
+    $details= $this->parseComment('/** @param  function(): util.Filter<string> param1 */');
+    $this->assertEquals('function(): util.Filter<string>', $details[DETAIL_ARGUMENTS][0]);
+  }
+
+  #[@test]
   public function throwsList() {
     $details= $this->parseComment('
       /**
