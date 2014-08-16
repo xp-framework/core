@@ -32,7 +32,7 @@ class ArrayMapTest extends TestCase {
 
   #[@test, @values('fixtures')]
   public function pairs($value) {
-    $this->assertEquals($value, (new ArrayMap($value))->pairs);
+    $this->assertEquals($value, (new ArrayMap($value))->values);
   }
 
   #[@test, @values('fixtures')]
@@ -87,6 +87,12 @@ class ArrayMapTest extends TestCase {
     $map= new ArrayMap([]);
     $map['key']= 'Written';
     $this->assertEquals('Written', $map['key']);
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function adding_values_is_forbidden() {
+    $map= new ArrayMap([]);
+    $map[]= 'Forbidden';
   }
 
   #[@test]
