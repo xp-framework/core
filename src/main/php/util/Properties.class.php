@@ -128,22 +128,17 @@ class Properties extends \lang\Object implements PropertyAccess {
    */
   public function store(\io\streams\OutputStream $out) {
     foreach (array_keys($this->_data) as $section) {
-      $out->write(sprintf("[%s]\n", $section));
-      
+      $out->write('['.$section."]\n");
       foreach ($this->_data[$section] as $key => $val) {
         if (';' == $key{0}) {
-          $out->write(sprintf("\n; %s\n", $val)); 
+          $out->write("\n; ".$val."\n");
         } else if (is_array($val)) {
           if (empty($val)) {
-            $out->write($key."=\"\"\n");
+            $out->write($key."=\n");
           } else if (0 === key($val)) {
-            $out->write($key.'="'.implode('|', $val)."\"\n");
+            foreach ($val as $v) { $out->write($key.'[]='.$this->quote($v)."\n"); }
           } else {
-            $str= '';
-            foreach ($val as $k => $v) {
-              $str.= '|'.$k.':'.$v;
-            }
-            $out->write($key.'="'.substr($str, 1)."\"\n");
+            foreach ($val as $k => $v) { $out->write($key.'['.$k.']='.$this->quote($v)."\n"); }
           }
         } else {
           $out->write($key.'='.$this->quote($val)."\n");

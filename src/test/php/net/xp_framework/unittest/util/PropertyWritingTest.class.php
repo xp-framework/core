@@ -120,7 +120,9 @@ class PropertyWritingTest extends TestCase {
     $this->fixture->writeArray('section', 'key', array(1, 2, 3));
     $this->assertSavedFixtureEquals('
       [section]
-      key="1|2|3"
+      key[]=1
+      key[]=2
+      key[]=3
     ');
   }
 
@@ -133,7 +135,7 @@ class PropertyWritingTest extends TestCase {
     $this->fixture->writeArray('section', 'key', []);
     $this->assertSavedFixtureEquals('
       [section]
-      key=""
+      key=
     ');
   }
 
@@ -148,7 +150,7 @@ class PropertyWritingTest extends TestCase {
     $this->fixture->writeHash('section', 'key', $h);
     $this->assertSavedFixtureEquals('
       [section]
-      key="color:green"
+      key[color]="green"
     ');
   }
 
@@ -164,7 +166,8 @@ class PropertyWritingTest extends TestCase {
     $this->fixture->writeHash('section', 'key', $h);
     $this->assertSavedFixtureEquals('
       [section]
-      key="color:green|size:L"
+      key[color]="green"
+      key[size]="L"
     ');
   }
 
@@ -177,7 +180,7 @@ class PropertyWritingTest extends TestCase {
     $this->fixture->writeHash('section', 'key', new Hashmap());
     $this->assertSavedFixtureEquals('
       [section]
-      key=""
+      key=
     ');
   }
 
@@ -190,7 +193,7 @@ class PropertyWritingTest extends TestCase {
     $this->fixture->writeMap('section', 'key', ['color' => 'green']);
     $this->assertSavedFixtureEquals('
       [section]
-      key="color:green"
+      key[color]="green"
     ');
   }
 
@@ -203,7 +206,8 @@ class PropertyWritingTest extends TestCase {
     $this->fixture->writeMap('section', 'key', ['color' => 'green', 'size' => 'L']);
     $this->assertSavedFixtureEquals('
       [section]
-      key="color:green|size:L"
+      key[color]="green"
+      key[size]="L"
     ');
   }
 
@@ -216,7 +220,7 @@ class PropertyWritingTest extends TestCase {
     $this->fixture->writeMap('section', 'key', []);
     $this->assertSavedFixtureEquals('
       [section]
-      key=""
+      key=
     ');
   }
 
