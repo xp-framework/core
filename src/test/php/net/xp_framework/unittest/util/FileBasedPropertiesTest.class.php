@@ -3,7 +3,7 @@
 use io\File;
 use io\streams\Streams;
 use io\streams\MemoryInputStream;
-
+use util\Properties;
 
 /**
  * Testcase for util.Properties class.
@@ -32,7 +32,7 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
    * @return  util.Properties
    */
   protected function newPropertiesFrom($source) {
-    return \util\Properties::fromFile(self::$fileStreamAdapter->newInstance(new MemoryInputStream($source)));
+    return Properties::fromFile(self::$fileStreamAdapter->newInstance(new MemoryInputStream($source)));
   }
 
   /**
@@ -41,7 +41,7 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
    */
   #[@test, @expect('io.IOException')]
   public function fromNonExistantFile() {
-    \util\Properties::fromFile(new File('@@does-not-exist.ini@@'));
+    Properties::fromFile(new File('@@does-not-exist.ini@@'));
   }
 
   /**
@@ -51,7 +51,7 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
    */
   #[@test]
   public function fromFile() {
-    $p= \util\Properties::fromFile($this->getClass()->getPackage()->getResourceAsStream('example.ini'));
+    $p= Properties::fromFile($this->getClass()->getPackage()->getResourceAsStream('example.ini'));
     $this->assertEquals('value', $p->readString('section', 'key'));
   }
 
@@ -61,7 +61,7 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
    */
   #[@test]
   public function lazyRead() {
-    $p= new \util\Properties('@@does-not-exist.ini@@');
+    $p= new Properties('@@does-not-exist.ini@@');
     
     // This cannot be done via @expect because it would also catch if an
     // exception was thrown from util.Properties' constructor. We explicitely
@@ -80,8 +80,8 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
    */
   #[@test]
   public function propertiesFromSameFileAreEqual() {
-    $one= \util\Properties::fromFile($this->getClass()->getPackage()->getResourceAsStream('example.ini'));
-    $two= \util\Properties::fromFile($this->getClass()->getPackage()->getResourceAsStream('example.ini'));
+    $one= Properties::fromFile($this->getClass()->getPackage()->getResourceAsStream('example.ini'));
+    $two= Properties::fromFile($this->getClass()->getPackage()->getResourceAsStream('example.ini'));
 
     $this->assertFalse($one === $two);
     $this->assertTrue($one->equals($two));

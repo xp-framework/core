@@ -319,16 +319,16 @@ class Properties extends \lang\Object implements PropertyAccess {
       return '' == $this->_data[$section][$key] ? [] : explode('|', $this->_data[$section][$key]);
     }
   }
-  
+
   /**
-   * Read a value as hash
+   * Read a value as maop
    *
    * @param   string section
    * @param   string key
-   * @param   util.Hashmap default default NULL what to return in case the section or key does not exist
-   * @return  util.Hashmap
+   * @param   [:var] default default NULL what to return in case the section or key does not exist
+   * @return  [:var]
    */
-  public function readHash($section, $key, $default= null) {
+  public function readMap($section, $key, $default= null) {
     $this->_load();
 
     // New: key[color]="green" and key[make]="model"
@@ -336,7 +336,7 @@ class Properties extends \lang\Object implements PropertyAccess {
     if (!isset($this->_data[$section][$key])) {
       return $default;
     } else if (is_array($this->_data[$section][$key])) {
-      return new Hashmap($this->_data[$section][$key]);
+      return $this->_data[$section][$key];
     } else {
       $return= [];
       foreach (explode('|', $this->_data[$section][$key]) as $val) {
@@ -347,8 +347,22 @@ class Properties extends \lang\Object implements PropertyAccess {
           $return[]= $val;
         } 
       }
-      return new Hashmap($return);
+      return $return;
     }
+  }
+
+  /**
+   * Read a value as hash
+   *
+   * @param   string section
+   * @param   string key
+   * @param   util.Hashmap default default NULL what to return in case the section or key does not exist
+   * @return  util.Hashmap
+   * @deprecated Use readMap() instead
+   */
+  public function readHash($section, $key, $default= null) {
+    $value= $this->readMap($section, $key, $default);
+    return is_array($value) ? new HashMap($value) : $value;
   }
 
   /**

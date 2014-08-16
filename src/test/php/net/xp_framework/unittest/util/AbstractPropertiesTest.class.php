@@ -4,7 +4,6 @@ use unittest\TestCase;
 use util\Properties;
 use util\Hashmap;
 
-
 /**
  * Testcase for util.Properties class.
  *
@@ -154,8 +153,24 @@ hash="foo:bar|bar:foo"
       new Hashmap(array('foo' => 'bar', 'bar' => 'foo')),
       $p->readHash('section', 'hash')
     );
+  }
+
+  /**
+   * Test simple reading of hashes
+   *
+   */
+  #[@test]
+  public function readMap() {
+    $p= $this->newPropertiesFrom('
+[section]
+hash="foo:bar|bar:foo"
+    ');
+    $this->assertEquals(
+      array('foo' => 'bar', 'bar' => 'foo'),
+      $p->readMap('section', 'hash')
+    );
   }   
-  
+
   /**
    * Test simple reading of range
    *
@@ -420,7 +435,25 @@ class[two]=util.PropertyManager
       $p->readHash('section', 'class')
     );
   }
-  
+
+  /**
+   * Test keys with a hash keys
+   *
+   */
+  #[@test]
+  public function readMapFromHashKeys() {
+   $p= $this->newPropertiesFrom('
+[section]
+class[one]=util.Properties
+class[two]=util.PropertyManager
+    ');
+    
+    $this->assertEquals(
+      array('one' => 'util.Properties', 'two' => 'util.PropertyManager'),
+      $p->readMap('section', 'class')
+    );
+  }
+
   /**
    * Test multiline value
    *
