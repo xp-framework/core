@@ -124,21 +124,22 @@ class Properties extends \lang\Object implements PropertyAccess {
       foreach ($this->_data[$section] as $key => $val) {
         if (';' == $key{0}) {
           $out->write(sprintf("\n; %s\n", $val)); 
-        } else {
-          if ($val instanceof Hashmap) {
+        } else if (is_array($val)) {
+          if (empty($val)) {
+            $out->write($key."=\"\"\n");
+          } else if (0 === key($val)) {
+            $out->write($key.'="'.implode('|', $val)."\"\n");
+          } else {
             $str= '';
-            foreach ($val->keys() as $k) {
-              $str.= '|'.$k.':'.$val->get($k);
+            foreach ($val as $k => $v) {
+              $str.= '|'.$k.':'.$v;
             }
-            $val= (string)substr($str, 1);
-          } 
-          if (is_array($val)) $val= implode('|', $val);
-          if (is_string($val)) $val= '"'.$val.'"';
-          $out->write(sprintf(
-            "%s=%s\n",
-            $key,
-            strval($val)
-          ));
+            $out->write($key.'="'.substr($str, 1)."\"\n");
+          }
+        } else if (is_string($val)) {
+          $out->write($key.'="'.$val."\"\n");
+        } else {
+          $out->write($key.'='.$val."\n");
         }
       }
       $out->write("\n");
@@ -531,7 +532,7 @@ class Properties extends \lang\Object implements PropertyAccess {
   public function writeMap($section, $key, $value) {
     $this->_load();
     if (!$this->hasSection($section)) $this->_data[$section]= [];
-    $this->_data[$section][$key]= new Hashmap($value);
+    $this->_data[$section][$key]= $value;
   }
 
   /**
@@ -546,9 +547,9 @@ class Properties extends \lang\Object implements PropertyAccess {
     $this->_load();
     if (!$this->hasSection($section)) $this->_data[$section]= [];
     if ($value instanceof Hashmap) {
-      $this->_data[$section][$key]= $value;
+      $this->_data[$section][$key]= $value->toArray();
     } else {
-      $this->_data[$section][$key]= new Hashmap($value);
+      $this->_data[$section][$key]= $value;
     }
   }
   
