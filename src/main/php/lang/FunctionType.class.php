@@ -128,6 +128,35 @@ class FunctionType extends Type {
     return true;
   }
 
+  protected function closureOf($arg, $method, $throw, $return) {
+    if ('new' === $method) {
+      $class= \xp::reflect($arg);
+      if (method_exists($class, '__construct')) {
+        $r= new \ReflectionMethod($class, '__construct');
+        if (!$this->verify($r, $throw, $r->getDeclaringClass())) return false;
+      } else {
+        if (!$this->returns->isAssignableFrom(XPClass::forName(\xp::nameOf($class)))) return $throw('Class type mismatch');
+      }
+      if ($return) {
+        $c= new \ReflectionClass($class);
+        return function() use($c) { return $c->newInstanceArgs(func_get_args()); };
+      }
+    } else if (is_string($arg)) {
+      $class= \xp::reflect($arg);
+      if (!method_exists($class, $method)) return $throw('Method '.\xp::nameOf($class).'::'.$method.' does not exist');
+      $r= new \ReflectionMethod($class, $method);
+      if (!$r->isStatic()) return $throw('Method '.\xp::nameOf($class).'::'.$method.' referenced as static method but not static');
+      if (!$this->verify($r, $throw, $r->getDeclaringClass())) return false;
+      if ($return) return $r->getClosure(null);
+    } else {
+      if (!method_exists($arg, $method)) return $throw('Method '.\xp::nameOf(get_class($arg)).'::'.$method.' does not exist');
+      $r= new \ReflectionMethod($arg, $method);
+      if (!$this->verify($r, $throw, $r->getDeclaringClass())) return false;
+      if ($return) return $r->getClosure($arg);
+    }
+    return true;
+  }
+
   /**
    * Determines whether the specified object is an instance of this
    * type. 
@@ -140,40 +169,27 @@ class FunctionType extends Type {
     if ($obj instanceof \Closure) {
       return $this->verify(new \ReflectionFunction($obj), $false);
     } else if (is_string($obj) && '' !== $obj) {
-      if (0 === substr_compare($obj, '::new', -5)) {
-        $class= \xp::reflect(substr($obj, 0, -5));
-        if (method_exists($class, '__construct')) {
-          $r= new \ReflectionMethod($class, '__construct');
-          return $this->verify($r, $false, $r->getDeclaringClass());
-        }
-        return $this->returns->isAssignableFrom(XPClass::forName(\xp::nameOf($class)));
-      } else if (2 === sscanf($obj, '%[^:]::%s', $class, $method) && method_exists($class= \xp::reflect($class), $method)) {
-        $r= new \ReflectionMethod($class, $method);
-        return $r->isStatic() && $this->verify($r, $false, $r->getDeclaringClass());
+      $r= sscanf($obj, '%[^:]::%s', $class, $method);
+      if (2 === $r) {
+        return $this->closureOf($class, $method, $false, false);
       } else if (function_exists($obj)) {
         return $this->verify(new \ReflectionFunction($obj), $false);
       }
     } else if (is_array($obj) && 2 === sizeof($obj)) {
-      if ('new' === $obj[1]) {
-        $class= \xp::reflect($obj[0]);
-        if (method_exists($class, '__construct')) {
-          $r= new \ReflectionMethod($class, '__construct');
-          return $this->verify($r, $false, $r->getDeclaringClass());
-        }
-        return $this->returns->isAssignableFrom(XPClass::forName(\xp::nameOf($class)));
-      } else if (is_string($obj[0]) && method_exists($class= \xp::reflect($obj[0]), $obj[1])) {
-        $r= new \ReflectionMethod($class, $obj[1]);
-        return $r->isStatic() && $this->verify($r, $false, $r->getDeclaringClass());
-      } else if (method_exists($obj[0], $obj[1])) {
-        $r= new \ReflectionMethod($obj[0], $obj[1]);
-        return $this->verify($r, $false, $r->getDeclaringClass());
-      }
+      return $this->closureOf($obj[0], $obj[1], $false, false);
     }
     return false;
   }
 
   /**
-   * Returns a function instance for a given value
+   * Returns a function instance for a given value. Supports the following:
+   *
+   * - A closure
+   * - A string referencing a function, e.g. 'strlen' or 'typeof'
+   * - A string referencing an instance creation expression: 'lang.Object::new'
+   * - A string referencing a static method: 'lang.XPClass::forName'
+   * - An array of two strings referencing a static method: ['lang.XPClass', 'forName']
+   * - An array of an instance and a string referencing an instance method: [$this, 'getName']
    *
    * @param  var $value
    * @param  function(string): var $value A function that throws an exception
@@ -183,57 +199,21 @@ class FunctionType extends Type {
     if ($value instanceof \Closure) {
       $this->verify(new \ReflectionFunction($value), $throw);
       return $value;
-    } else if (is_string($value) && '' !== $value) {
-      if (0 === substr_compare($value, '::new', -5)) {
-        $class= \xp::reflect(substr($value, 0, -5));
-        if (method_exists($class, '__construct')) {
-          $r= new \ReflectionMethod($class, '__construct');
-          $this->verify($r, $throw, $r->getDeclaringClass());
-        } else {
-          if (!$this->returns->isAssignableFrom(XPClass::forName(\xp::nameOf($class)))) $throw('Return type mismatch');
-        }
-        $c= new \ReflectionClass($class);
-        return function() use($c) { return $c->newInstanceArgs(func_get_args()); };
-      } else if (2 === sscanf($value, '%[^:]::%s', $class, $method)) {
-        $class= \xp::reflect($class);
-        if (!method_exists($class, $method)) $throw('Method '.$class.'::'.$method.' does not exist');
-        $r= new \ReflectionMethod($class, $method);
-        if (!$r->isStatic()) $throw('Method '.$class.'::'.$method.' referenced as static method but not static');
-        $this->verify($r, $throw, $r->getDeclaringClass());
-        return $r->getClosure(null);
-      } else {
-        if (!function_exists($value)) $throw('Function '.$value.' does not exist');
+    } else if (is_string($value)) {
+      $r= sscanf($value, '%[^:]::%s', $class, $method);
+      if (2 === $r) {
+        return $this->closureOf($class, $method, $throw, true);
+      } else if (function_exists($value)) {
         $r= new \ReflectionFunction($value);
         $this->verify($r, $throw);
         return $r->getClosure();
+      } else {
+        $throw('Function "'.$value.'" does not exist');
       }
     } else if (is_array($value) && 2 === sizeof($value)) {
-      if ('new' === $value[1]) {
-        $class= \xp::reflect($value[0]);
-        if (method_exists($class, '__construct')) {
-          $r= new \ReflectionMethod($class, '__construct');
-          $this->verify($r, $throw, $r->getDeclaringClass());
-        } else {
-          if (!$this->returns->isAssignableFrom(XPClass::forName(\xp::nameOf($class)))) $throw('Return type mismatch');
-        }
-        $c= new \ReflectionClass($class);
-        return function() use($c) { return $c->newInstanceArgs(func_get_args()); };
-      } else if (is_string($value[0])) {
-        $class= \xp::reflect($value[0]);
-        if (!method_exists($class, $value[1])) $throw('Method '.$class.'::'.$value[1].' does not exist');
-        $r= new \ReflectionMethod($class, $value[1]);
-        if (!$r->isStatic()) $throw('Method '.$class.'::'.$value[1].' referenced as static method but not static');
-        $this->verify($r, $throw, $r->getDeclaringClass());
-        return $r->getClosure(null);
-      } else {
-        if (!method_exists($value[0], $value[1])) $throw('Method '.\xp::nameOf(get_class($value[0])).'::'.$value[1].' does not exist');
-        $r= new \ReflectionMethod($value[0], $value[1]);
-        $this->verify($r, $throw, $r->getDeclaringClass());
-        return $r->getClosure($value[0]);
-      }
-    } else {
-      $throw('Unsupported type');
+      return $this->closureOf($value[0], $value[1], $throw, true);
     }
+    $throw('Unsupported type');
   }
 
   /**
