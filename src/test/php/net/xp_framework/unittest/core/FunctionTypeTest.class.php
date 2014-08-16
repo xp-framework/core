@@ -445,10 +445,19 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertEquals('string', $t->invoke($f, [Primitive::$STRING]));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
-  public function invoke_not_instance() {
+  #[@test, @expect('lang.IllegalArgumentException'), @values([
+  #  null,
+  #  0, -1, 0.5, true, false, '', 'Test',
+  #  [[]], [['key' => 'value']],
+  #  [['non-existant', 'method']], [['lang.XPClass', 'non-existant']],
+  #  [[null, 'method']], [[new \lang\Object(), 'non-existant']],
+  #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
+  #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName'],
+  #  function() { }
+  #])]
+  public function invoke_not_instance($value) {
     $t= new FunctionType([XPClass::forName('lang.Type')], Primitive::$STRING);
-    $this->assertEquals('string', $t->invoke(function() { }, [Primitive::$STRING]));
+    $t->invoke($value);
   }
 
   #[@test, @expect('lang.reflect.TargetInvocationException')]

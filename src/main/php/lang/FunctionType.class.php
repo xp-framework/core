@@ -277,6 +277,7 @@ class FunctionType extends Type {
    * Invokes a given function with the given arguments.
    *
    * @param   var $func
+   * @param   var[] $args
    * @return  var
    * @throws  lang.IllegalArgumentException in case the passed function is not an instance of this type
    * @throws  lang.reflect.TargetInvocationException for any exception raised from the invoked function
