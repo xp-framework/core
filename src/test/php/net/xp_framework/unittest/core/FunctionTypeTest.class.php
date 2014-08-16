@@ -343,6 +343,25 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertEquals($this->getName(), $value());
   }
 
+  #[@test]
+  public function create_instances_from_array_referencing_generic_instance_method() {
+    $vector= create('new util.collections.Vector<int>', [1, 2, 3]);
+    $value= (new FunctionType([], new ArrayType('int')))->newInstance([$vector, 'elements']);
+    $this->assertEquals([1, 2, 3], $value());
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function generic_argument_parameter_types_are_verified_when_creating_instances() {
+    $vector= create('new util.collections.Vector<int>');
+    (new FunctionType([Primitive::$STRING], Primitive::$INT))->newInstance([$vector, 'add']);
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function generic_argument_return_type_is_verified_when_creating_instances() {
+    $vector= create('new util.collections.Vector<int>');
+    (new FunctionType([Primitive::$INT], Primitive::$STRING))->newInstance([$vector, 'add']);
+  }
+
   #[@test, @expect('lang.IllegalArgumentException')]
   public function return_type_verified_for_instance_methods_when_creating_instances() {
     (new FunctionType([], Primitive::$VOID))->newInstance([$this, 'getName']);
