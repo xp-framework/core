@@ -131,13 +131,19 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertTrue((new FunctionType([Primitive::$STRING], Primitive::$INT))->isInstance('strlen'));
   }
 
-  #[@test, @values([[['lang.XPClass', 'forName']], ['lang.XPClass::forName']])]
+  #[@test, @values([
+  #  [['lang.XPClass', 'forName']], ['lang.XPClass::forName'],
+  #  [['lang\XPClass', 'forName']], ['lang\XPClass::forName']
+  #])]
   public function array_referencing_static_class_method_is_instance($value) {
     $type= new FunctionType([Primitive::$STRING, XPClass::forName('lang.IClassLoader')], XPClass::forName('lang.XPClass'));
     $this->assertTrue($type->isInstance($value));
   }
 
-  #[@test, @values([[['lang.Object', 'new']], ['lang.Object::new']])]
+  #[@test, @values([
+  #  [['lang.Object', 'new']], ['lang.Object::new'],
+  #  [['lang\Object', 'new']], ['lang\Object::new']
+  #])]
   public function array_referencing_constructor_is_instance($value) {
     $type= new FunctionType([], XPClass::forName('lang.Object'));
     $this->assertTrue($type->isInstance($value));
@@ -262,19 +268,28 @@ class FunctionTypeTest extends \unittest\TestCase {
     (new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR))->newInstance('strlen');
   }
 
-  #[@test, @values([[['lang.XPClass', 'forName']], ['lang.XPClass::forName']])]
+  #[@test, @values([
+  #  [['lang.XPClass', 'forName']], ['lang.XPClass::forName'],
+  #  [['lang\XPClass', 'forName']], ['lang\XPClass::forName']
+  #])]
   public function create_instances_from_array_referencing_static_class_method($value) {
     $value= (new FunctionType([Primitive::$STRING], XPClass::forName('lang.XPClass')))->newInstance($value);
     $this->assertEquals(XPClass::forName('lang.Object'), $value('lang.Object'));
   }
 
-  #[@test, @values([[['lang.Object', 'new']], ['lang.Object::new']])]
+  #[@test, @values([
+  #  [['lang.Object', 'new']], ['lang.Object::new'],
+  #  [['lang\Object', 'new']], ['lang\Object::new']
+  #])]
   public function create_instances_from_array_referencing_constructor($value) {
     $new= (new FunctionType([], XPClass::forName('lang.Object')))->newInstance($value);
     $this->assertInstanceOf('lang.Object', $new());
   }
 
-  #[@test, @values([[['unittest.TestCase', 'new']], ['unittest.TestCase::new']])]
+  #[@test, @values([
+  #  [['unittest.TestCase', 'new']], ['unittest.TestCase::new'],
+  #  [['unittest\TestCase', 'new']], ['unittest\TestCase::new']
+  #])]
   public function create_instances_from_array_referencing_declared_constructor($value) {
     $new= (new FunctionType([Type::$VAR], XPClass::forName('unittest.TestCase')))->newInstance($value);
     $this->assertEquals($this, $new($this->getName()));
