@@ -64,6 +64,6 @@ class TypeOfTest extends \unittest\TestCase {
 
   #[@test]
   public function function_with_callable_hint() {
-    $this->assertEquals(new FunctionType([new FunctionType([], Type::$VAR)], Type::$VAR), typeof(function(callable $c) { }));
+    $this->assertEquals(new FunctionType([new FunctionType(null, Type::$VAR)], Type::$VAR), typeof(function(callable $c) { }));
   }
 }
