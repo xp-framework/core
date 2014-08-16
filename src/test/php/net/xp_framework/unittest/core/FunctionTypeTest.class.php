@@ -453,17 +453,15 @@ class FunctionTypeTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.reflect.TargetInvocationException')]
   public function invoke_wraps_exceptions_in_TargetInvocationExceptions() {
-    $f= function() { throw new \lang\IllegalArgumentException('Test'); };
     $t= new FunctionType([], Primitive::$VOID);
-    $t->invoke($f, []);
+    $t->invoke(function() { throw new \lang\IllegalArgumentException('Test'); }, []);
   }
 
   #[@test]
   public function invoke_does_not_wrap_SystemExit() {
-    $f= function() { throw new \lang\SystemExit(0); };
     $t= new FunctionType([], Primitive::$VOID);
     try {
-      $t->invoke($f, []);
+      $t->invoke(function() { throw new \lang\SystemExit(0); }, []);
       $this->fail('No exception thrown', null, 'lang.SystemExit');
     } catch (\lang\SystemExit $expected) {
       // OK
