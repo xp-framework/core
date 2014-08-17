@@ -70,6 +70,11 @@ class ArrayMapTest extends TestCase {
     (new ArrayMap([]))['key'];
   }
 
+  #[@test]
+  public function accessing_non_existant_key_via_get_returns_default() {
+    $this->assertNull((new ArrayMap([]))->get('key', null));
+  }
+
   #[@test, @values([[['key' => 'value']], [['key' => null]]])]
   public function test_existing_value($value) {
     $map= new ArrayMap($value);

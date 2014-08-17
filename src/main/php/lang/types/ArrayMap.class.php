@@ -87,6 +87,17 @@ class ArrayMap extends \lang\Object implements \ArrayAccess, \IteratorAggregate 
   }
 
   /**
+   * Get a value
+   *
+   * @param   string key
+   * @param   var default
+   * @return  var
+   */
+  public function get($key, $default= null) {
+    return isset($this->values[$key]) ? $this->values[$key] : $default;
+  }
+
+  /**
    * Returns whether a given value exists in this list
    *
    * @param   var value

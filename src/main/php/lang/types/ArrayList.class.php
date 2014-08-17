@@ -110,6 +110,17 @@ class ArrayList extends \lang\Object implements \ArrayAccess, \IteratorAggregate
   }
 
   /**
+   * Get a value
+   *
+   * @param   int offset
+   * @param   var default
+   * @return  var
+   */
+  public function get($offset, $default= null) {
+    return isset($this->values[$offset]) ? $this->values[$offset] : $default;
+  }
+
+  /**
    * Returns whether a given value exists in this list
    *
    * @param   var value
