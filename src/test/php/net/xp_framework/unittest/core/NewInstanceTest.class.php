@@ -147,7 +147,7 @@ class NewInstanceTest extends \unittest\TestCase {
     ');
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
-      (bool)strstr($r[1].$r[2], 'Fatal error:'),
+      (bool)strstr($r[1].$r[2], 'Fatal error'),
       \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
   }
@@ -159,7 +159,7 @@ class NewInstanceTest extends \unittest\TestCase {
     ');
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
-      (bool)strstr($r[1].$r[2], 'Parse error:'),
+      (bool)strstr($r[1].$r[2], 'Parse error'),
       \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
   }
