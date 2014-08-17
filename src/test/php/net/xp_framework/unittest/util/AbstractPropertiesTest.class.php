@@ -14,330 +14,243 @@ abstract class AbstractPropertiesTest extends TestCase {
   /**
    * Create a new properties object from a string source
    *
-   * @param   string source
+   * @param   string $source
    * @return  util.Properties
    */
   protected abstract function newPropertiesFrom($source);
 
-
   /**
-   * Test construction via fromString() when given an empty string
+   * Gets a fixture
    *
+   * @param   string $section They key/value pairs inside the section
+   * @return  util.Properties
    */
+  protected function fixture($section) {
+    return $this->newPropertiesFrom("[section]\n".$section);
+  }
+
   #[@test]
-  public function fromEmptySource() {
+  public function can_create_from_empty_string() {
     $this->newPropertiesFrom('');
   }
 
-  /**
-   * Test simple reading of values.
-   *
-   */
-  #[@test]
-  public function basicTest() {
-    $p= $this->newPropertiesFrom('
-[section]
-string="value1"
-int=2
-bool=0
-    ');
-    
-    $this->assertEquals('value1', $p->readString('section', 'string'));
-    $this->assertEquals(2, $p->readInteger('section', 'int'));
-    $this->assertEquals(false, $p->readBool('Section', 'bool'));
-  }
-  
-  /**
-   * Test reading values with comments
-   *
-   */
-  #[@test]
-  public function valuesCommented() {
-    $p= $this->newPropertiesFrom('
-[section]
-notQuotedComment=value1  ; A comment
-quotedComment="value1"  ; A comment
-quotedWithComment="value1 ; With comment"
-    ');
-    
-    $this->assertEquals('value1', $p->readString('section', 'notQuotedComment'), 'not-quoted-with-comment');
-    $this->assertEquals('value1', $p->readString('section', 'quotedComment'), 'quoted-comment');
-    $this->assertEquals('value1 ; With comment', $p->readString('section', 'quotedWithComment'), 'quoted-with-comment');
-  }
-  
-  /**
-   * Test reading values are trimmed
-   *
-   */
-  #[@test]
-  public function valuesTrimmed() {
-    $p= $this->newPropertiesFrom('
-[section]
-trim=  value1  
-    ');
-    
-    $this->assertEquals('value1', $p->readString('section', 'trim'));
-  }
-  
-  /**
-   * Test reading quoted values, which are not trimmed
-   *
-   */
-  #[@test]
-  public function valuesQuoted() {
-    $p= $this->newPropertiesFrom('
-[section]
-quoted="  value1  "
-    ');
-    
-    $this->assertEquals('  value1  ', $p->readString('section', 'quoted'));
-  }
-  
-  /**
-   * Test string reading
-   *
-   */
-  #[@test]
-  public function readString() {
-    $p= $this->newPropertiesFrom('
-[section]
-string1=string
-string2="string"
-    ');
-    
-    $this->assertEquals('string', $p->readString('section', 'string1'));
-    $this->assertEquals('string', $p->readString('section', 'string2'));
-  }    
-  
-  /**
-   * Test simple reading of arrays
-   *
-   */
-  #[@test]
-  public function readArray() {
-    $p= $this->newPropertiesFrom('
-[section]
-array="foo|bar|baz"
-    ');
-    $this->assertEquals(array('foo', 'bar', 'baz'), $p->readArray('section', 'array'));
+  #[@test, @values(['key="value"', 'key=value'])]
+  public function read_string($section) {
+    $this->assertEquals('value', $this->fixture($section)->readString('section', 'key'));
   }
 
-  /**
-   * Test that an empty key (e.g. values="" or values=" ") will become an empty array.
-   *
-   */
-  #[@test]
-  public function readEmptyArray() {
-    $p= $this->newPropertiesFrom('
-[section]
-empty=""
-spaces=" "
-unquoted= 
-    ');
-    $this->assertEquals([], $p->readArray('section', 'empty'));
-    $this->assertEquals(array(' '), $p->readArray('section', 'spaces'));
-    $this->assertEquals([], $p->readArray('section', 'unquoted'));
-  }
-  
-  /**
-   * Test simple reading of hashes
-   *
-   */
-  #[@test]
-  public function readHash() {
-    $p= $this->newPropertiesFrom('
-[section]
-hash="foo:bar|bar:foo"
-    ');
-    $this->assertEquals(
-      new Hashmap(array('foo' => 'bar', 'bar' => 'foo')),
-      $p->readHash('section', 'hash')
-    );
+  #[@test, @values(['key=""', 'key='])]
+  public function read_empty_string($section) {
+    $this->assertEquals('', $this->fixture($section)->readString('section', 'key'));
   }
 
-  /**
-   * Test simple reading of hashes
-   *
-   */
   #[@test]
-  public function readMap() {
-    $p= $this->newPropertiesFrom('
-[section]
-hash="foo:bar|bar:foo"
-    ');
-    $this->assertEquals(
-      array('foo' => 'bar', 'bar' => 'foo'),
-      $p->readMap('section', 'hash')
-    );
-  }   
-
-  /**
-   * Test simple reading of range
-   *
-   */
-  #[@test]
-  public function readRange() {
-    $p= $this->newPropertiesFrom('
-[section]
-range="1..5"
-    ');
-    $this->assertEquals(
-      range(1, 5),
-      $p->readRange('section', 'range')
-    );
+  public function readString_returns_default_for_non_existant_key() {
+    $this->assertEquals('(Default)', $this->fixture('')->readString('section', 'non-existant', '(Default)'));
   }
 
-  /**
-   * Test simple reading of range
-   *
-   */
+  #[@test, @values(['key=2', 'key=2.0', 'key="2"'])]
+  public function read_int($section) {
+    $this->assertEquals(2, $this->fixture($section)->readInteger('section', 'key'));
+  }
+
   #[@test]
-  public function readRangeUpperBoundaryLessThanLower() {
+  public function readInteger_returns_default_for_non_existant_key() {
+    $this->assertEquals(0xFFFF, $this->fixture('')->readInteger('section', 'non-existant', 0xFFFF));
+  }
+
+  #[@test, @values(['key=2.0', 'key=2', 'key="2"'])]
+  public function read_float($section) {
+    $this->assertEquals(2.0, $this->fixture($section)->readFloat('section', 'key'));
+  }
+
+  #[@test]
+  public function readFloat_returns_default_for_non_existant_key() {
+    $this->assertEquals(61.0, $this->fixture('')->readFloat('section', 'non-existant', 61.0));
+  }
+
+  #[@test, @values(['key=0', 'key=off', 'key=false', 'key=no'])]
+  public function read_bool_false($section) {
+    $this->assertFalse($this->fixture($section)->readBool('section', 'key'));
+  }
+
+  #[@test, @values(['key=1', 'key=on', 'key=true', 'key=yes'])]
+  public function read_bool_true($section) {
+    $this->assertTrue($this->fixture($section)->readBool('section', 'key'));
+  }
+
+  #[@test]
+  public function readBool_returns_default_for_non_existant_key() {
+    $this->assertNull($this->fixture('')->readBool('section', 'non-existant', null));
+  }
+
+  #[@test, @values(['key=1..3', 'key="1..3"'])]
+  public function read_range($section) {
+    $this->assertEquals([1, 2, 3], $this->fixture($section)->readRange('section', 'key'));
+  }
+
+  #[@test, @values(['key=-3..-1', 'key="-3..-1"'])]
+  public function read_range_with_negative_numbers($section) {
+    $this->assertEquals([-3, -2, -1], $this->fixture($section)->readRange('section', 'key'));
+  }
+
+  #[@test, @values(['key=3..1', 'key="3..1"'])]
+  public function read_range_backwards($section) {
+    $this->assertEquals([3, 2, 1], $this->fixture($section)->readRange('section', 'key'));
+  }
+
+  #[@test, @values(['key=""', 'key='])]
+  public function read_empty_range($section) {
+    $this->assertEquals([], $this->fixture($section)->readRange('section', 'key'));
+  }
+
+  #[@test]
+  public function readRange_returns_default_for_non_existant_key() {
+    $this->assertEquals([1, 2, 3], $this->fixture('')->readRange('section', 'non-existant', [1, 2, 3]));
+  }
+
+  #[@test, @values(['key[]=value', 'key="value"', 'key=value'])]
+  public function read_array_with_one_element($section) {
+    $this->assertEquals(['value'], $this->fixture($section)->readArray('section', 'key'));
+  }
+
+  #[@test, @values(["key[]=a\nkey[]=b\nkey[]=c", 'key="a|b|c"'])]
+  public function read_array($section) {
+    $this->assertEquals(['a', 'b', 'c'], $this->fixture($section)->readArray('section', 'key'));
+  }
+
+  #[@test, @values(['key=""', 'key='])]
+  public function read_empty_array($section) {
+    $this->assertEquals([], $this->fixture($section)->readArray('section', 'key'));
+  }
+
+  #[@test]
+  public function readArray_returns_default_for_non_existant_key() {
+    $this->assertEquals([1, 2, 3], $this->fixture('')->readFloat('section', 'non-existant', [1, 2, 3]));
+  }
+
+  #[@test, @values(['key[k]=value', 'key="k:value"'])]
+  public function read_map_with_one_element($section) {
+    $this->assertEquals(['k' => 'value'], $this->fixture($section)->readMap('section', 'key'));
+  }
+
+  #[@test, @values(["key[a]=1\nkey[b]=2\nkey[c]=3", 'key="a:1|b:2|c:3"'])]
+  public function read_map($section) {
+    $this->assertEquals(['a' => '1', 'b' => '2', 'c' => '3'], $this->fixture($section)->readMap('section', 'key'));
+  }
+
+  #[@test, @values(['key=""', 'key='])]
+  public function read_empty_map($section) {
+    $this->assertEquals([], $this->fixture($section)->readMap('section', 'key'));
+  }
+
+  #[@test]
+  public function readMap_returns_default_for_non_existant_key() {
+    $this->assertEquals(['key' => 'value'], $this->fixture('')->readFloat('section', 'non-existant', ['key' => 'value']));
+  }
+
+  /** @deprecated */
+  #[@test, @values(['key[k]=value', 'key="k:value"'])]
+  public function read_hash_with_one_element($section) {
+    $this->assertEquals(new Hashmap(['k' => 'value']), $this->fixture($section)->readHash('section', 'key'));
+  }
+
+  /** @deprecated */
+  #[@test, @values(["key[a]=1\nkey[b]=2\nkey[c]=3", 'key="a:1|b:2|c:3"'])]
+  public function read_hash($section) {
+    $this->assertEquals(new Hashmap(['a' => '1', 'b' => '2', 'c' => '3']), $this->fixture($section)->readHash('section', 'key'));
+  }
+
+  /** @deprecated */
+  #[@test, @values(['key=""', 'key='])]
+  public function read_empty_hash($section) {
+    $this->assertEquals(new Hashmap([]), $this->fixture($section)->readHash('section', 'key'));
+  }
+
+  /** @deprecated */
+  #[@test]
+  public function readHash_returns_default_for_non_existant_key() {
+    $this->assertNull($this->fixture('')->readFloat('section', 'non-existant', null));
+  }
+
+  #[@test, @values([
+  #  'key=value    ; A comment',
+  #  'key="value"  ; A comment'
+  #])]
+  public function comment_at_end_of_line_ignored($section) {
+    $this->assertEquals('value', $this->fixture($section)->readString('section', 'key'));
+  }
+
+  #[@test]
+  public function semicolon_inside_quoted_string_does_not_become_a_comment() {
+    $this->assertEquals('value ; no comment', $this->fixture('key="value ; no comment"')->readString('section', 'key'));
+  }
+
+  #[@test, @values([
+  #  ' [section]',
+  #  '[section]',
+  #  ' [section] '
+  #])]
+  public function sections_can_be_surrounded_by_whitespace($source) {
+    $this->assertTrue($this->newPropertiesFrom($source)->hasSection('section'));
+  }
+
+  #[@test, @values([
+  #  ' key=value',
+  #  'key =value',
+  #  ' key =value'
+  #])]
+  public function keys_can_be_surrounded_by_whitespace($section) {
+    $this->assertEquals('value', $this->fixture($section)->readString('section', 'key'));
+  }
+
+  #[@test, @values([
+  #  'key=  value  ',
+  #  'key=value  ',
+  #  'key=  value'
+  #])]
+  public function unquoted_values_are_trimmed($section) {
+    $this->assertEquals('value', $this->fixture($section)->readString('section', 'key'));
+  }
+
+  #[@test]
+  public function quoted_values_are_not_trimmed() {
+    $this->assertEquals('  value  ', $this->fixture('key="  value  "')->readString('section', 'key'));
+  }
+
+  #[@test]
+  public function quoted_strings_can_span_multiple_lines() {
+    $this->assertEquals("\nfirst\nsecond\nthird", $this->fixture("key=\"\nfirst\nsecond\nthird\"")->readString('section', 'key'));
+  }
+
+  #[@test]
+  public function whitespace_is_relevant_in_multiline_strings() {
+    $this->assertEquals("value  \n   value ", $this->fixture("key=\"value  \n   value \"")->readString('section', 'key'));
+  }
+
+  #[@test, @values(['key=value', ''])]
+  public function has_section_with($section) {
+    $this->assertTrue($this->fixture($section)->hasSection('section'));
+  }
+
+  #[@test]
+  public function does_not_have_non_existant_section() {
+    $this->assertFalse($this->fixture('')->hasSection('nonexistant'));
+  }
+
+  #[@test]
+  public function iterate_sections_with_first_and_next() {
     $p= $this->newPropertiesFrom('
-[section]
-range="1..0"
-    ');
-    $this->assertEquals(
-      range(1, 0),
-      $p->readRange('section', 'range')
-    );
-  }
+      [section]
+      foo=bar
 
-  /**
-   * Test simple reading of range
-   *
-   */
-  #[@test]
-  public function readRangeNegativeNumbers() {
-    $p= $this->newPropertiesFrom('
-[section]
-range="-3..3"
-    ');
-    $this->assertEquals(
-      range(-3, 3),
-      $p->readRange('section', 'range')
-    );
-  }
-  
-  /**
-   * Test simple reading of integer
-   *
-   */
-  #[@test]
-  public function readInteger() {
-    $p= $this->newPropertiesFrom('
-[section]
-int1=1
-int2=0
-int3=-5
-    ');
-    $this->assertEquals(1, $p->readInteger('section', 'int1'));
-    $this->assertEquals(0, $p->readInteger('section', 'int2'));
-    $this->assertEquals(-5, $p->readInteger('section', 'int3'));
-  }
-  
-  /**
-   * Test simple reading of float
-   *
-   */
-  #[@test]
-  public function readFloat() {
-    $p= $this->newPropertiesFrom('
-[section]
-float1=1
-float2=0
-float3=0.5
-float4=-5.0
-    ');
-    $this->assertEquals(1.0, $p->readFloat('section', 'float1'));
-    $this->assertEquals(0.0, $p->readFloat('section', 'float2'));
-    $this->assertEquals(0.5, $p->readFloat('section', 'float3'));
-    $this->assertEquals(-5.0, $p->readFloat('section', 'float4'));
-  }
-  
-  /**
-   * Tests reading of a boolean
-   *
-   */
-  #[@test]
-  public function readBool() {
-   $p= $this->newPropertiesFrom('
-[section]
-bool1=1
-bool2=yes
-bool3=Yes
-bool4=YES
-bool5=on
-bool6=On
-bool7=ON
-bool8=true
-bool9=True
-bool10=TRUE
-bool11=0
-bool12=no
-bool13=No
-bool14=NO
-bool15=off
-bool16=Off
-bool17=OFF
-bool18=false
-bool19=False
-bool20=FALSE
-    ');
-    $this->assertTrue($p->readBool('section', 'bool1'), '1');
-    $this->assertTrue($p->readBool('section', 'bool2'), 'yes');
-    $this->assertTrue($p->readBool('section', 'bool3'), 'Yes');
-    $this->assertTrue($p->readBool('section', 'bool4'), 'YES');
-    $this->assertTrue($p->readBool('section', 'bool5'), 'on');
-    $this->assertTrue($p->readBool('section', 'bool6'), 'On');
-    $this->assertTrue($p->readBool('section', 'bool7'), 'ON');
-    $this->assertTrue($p->readBool('section', 'bool8'), 'true');
-    $this->assertTrue($p->readBool('section', 'bool9'), 'True');
-    $this->assertTrue($p->readBool('section', 'bool10'), 'TRUE');
-    $this->assertFalse($p->readBool('section', 'bool11'), '0');
-    $this->assertFalse($p->readBool('section', 'bool12'), 'no');
-    $this->assertFalse($p->readBool('section', 'bool13'), 'No');
-    $this->assertFalse($p->readBool('section', 'bool14'), 'NO');
-    $this->assertFalse($p->readBool('section', 'bool15'), 'off');
-    $this->assertFalse($p->readBool('section', 'bool16'), 'Off');
-    $this->assertFalse($p->readBool('section', 'bool17'), 'OFF');
-    $this->assertFalse($p->readBool('section', 'bool18'), 'false');
-    $this->assertFalse($p->readBool('section', 'bool19'), 'False');
-    $this->assertFalse($p->readBool('section', 'bool120'), 'FALSE');
-  }
+      [next]
+      foo=bar
 
-  /**
-   * Test simple reading of section
-   *
-   */
-  #[@test]
-  public function hasSection() {
-    $p= $this->newPropertiesFrom('
-[section]
-foo=bar
-    ');
-    
-    $this->assertTrue($p->hasSection('section'));
-    $this->assertFalse($p->hasSection('nonexistant'));
-  }
+      [empty]
 
-  /**
-   * Test iterating over sections
-   *
-   */
-  #[@test]
-  public function iterateSections() {
-   $p= $this->newPropertiesFrom('
-[section]
-foo=bar
-
-[next]
-foo=bar
-
-[empty]
-
-[final]
-foo=bar
+      [final]
+      foo=bar
     ');
     
     $this->assertEquals('section', $p->getFirstSection());
@@ -346,253 +259,27 @@ foo=bar
     $this->assertEquals('final', $p->getNextSection());
   }
 
-  /**
-   * Test keys with a array keys
-   *
-   */
+  #[@test, @expect('lang.FormatException'), @values([
+  #  ["[section]\nfoo", 'missing equals sign for key'],
+  #  ["[section]\nfoo]=value", 'key contains unbalanced bracket'],
+  #  ["[section\nfoo=bar", 'section missing closing bracket']
+  #])]
+  public function malformed_property_file($source) {
+    $this->newPropertiesFrom($source);
+  }
+
   #[@test]
-  public function arrayKeys() {
-   $p= $this->newPropertiesFrom('
-[section]
-class[0]=util.Properties
-class[1]=util.PropertyManager
-    ');
-    
-    $this->assertEquals(
-      array('class' => array('util.Properties', 'util.PropertyManager')),
-      $p->readSection('section')
+  public function honors_utf8_BOM() {
+    $p= $this->newPropertiesFrom(
+      "\357\273\277".
+      "[section]\n".
+      "key=Übercoder"
     );
-  }
-
-  /**
-   * Test keys with array keys
-   *
-   */
-  #[@test]
-  public function arrayKeysEmptyOffset() {
-   $p= $this->newPropertiesFrom('
-[section]
-class[]=util.Properties
-class[]=util.PropertyManager
-    ');
-    
-    $this->assertEquals(
-      array('class' => array('util.Properties', 'util.PropertyManager')),
-      $p->readSection('section')
-    );
-  }
-
-  /**
-   * Test keys with array keys
-   *
-   */
-  #[@test]
-  public function readArrayFromArrayKeys() {
-   $p= $this->newPropertiesFrom('
-[section]
-class[]=util.Properties
-class[]=util.PropertyManager
-    ');
-    
-    $this->assertEquals(
-      array('util.Properties', 'util.PropertyManager'),
-      $p->readArray('section', 'class')
-    );
-  }
-
-  /**
-   * Test keys with a hash keys
-   *
-   */
-  #[@test]
-  public function hashKeys() {
-   $p= $this->newPropertiesFrom('
-[section]
-class[one]=util.Properties
-class[two]=util.PropertyManager
-    ');
-    
-    $this->assertEquals(
-      array('class' => array('one' => 'util.Properties', 'two' => 'util.PropertyManager')),
-      $p->readSection('section')
-    );
-  }
-
-  /**
-   * Test keys with a hash keys
-   *
-   */
-  #[@test]
-  public function readHashFromHashKeys() {
-   $p= $this->newPropertiesFrom('
-[section]
-class[one]=util.Properties
-class[two]=util.PropertyManager
-    ');
-    
-    $this->assertEquals(
-      new Hashmap(array('one' => 'util.Properties', 'two' => 'util.PropertyManager')),
-      $p->readHash('section', 'class')
-    );
-  }
-
-  /**
-   * Test keys with a hash keys
-   *
-   */
-  #[@test]
-  public function readMapFromHashKeys() {
-   $p= $this->newPropertiesFrom('
-[section]
-class[one]=util.Properties
-class[two]=util.PropertyManager
-    ');
-    
-    $this->assertEquals(
-      array('one' => 'util.Properties', 'two' => 'util.PropertyManager'),
-      $p->readMap('section', 'class')
-    );
-  }
-
-  /**
-   * Test multiline value
-   *
-   */
-  #[@test]
-  public function verifyMultilineValuesEquals() {
-    $p= $this->newPropertiesFrom('
-[section]
-key="
-first line
-second line
-third line"
-    ');
-    $expected= '
-first line
-second line
-third line';
-
-    $this->assertEquals($expected, $p->readString('section', 'key'));
-  }
-
-  /**
-   * Test a property file where everything is indented from the left
-   *
-   */
-  #[@test]
-  public function identedKey() {
-    $p= $this->newPropertiesFrom('
-[section]
-key1="value1"
-key2="value2"
-    ');
-    $this->assertEquals(
-      array('key1' => 'value1', 'key2' => 'value2'), 
-      $p->readSection('section')
-    );
-  }
-
-  /**
-   * Test a property file where a key without value exists
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
-  public function malformedLine() {
-    $p= $this->newPropertiesFrom('
-[section]
-foo
-    ');
-  }
-
-  /**
-   * Test a property file where a key without value exists
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
-  public function malformedKey() {
-    $p= $this->newPropertiesFrom('
-[section]
-foo]=value
-    ');
-  }
-
-  /**
-   * Malformed section (unclosed brackets)
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
-  public function malformedSection() {
-    $p= $this->newPropertiesFrom('
-[section
-foo=bar
-    ');
-  }
-
-  /**
-   * Lines may have leading whitespaces.
-   *
-   */
-  #[@test]
-  public function sectionWithLeadingWhitespace() {
-    $p= $this->newPropertiesFrom('
-      [section]
-      key=value
-
-      [section2]
-      key="value"
-    ');
-
-    $this->assertEquals('value', $p->readString('section', 'key'));
-    $this->assertEquals('value', $p->readString('section2', 'key'));
-  }
-
-  /**
-   * Multilines strings work
-   *
-   */
-  #[@test]
-  public function multilineValues() {
-    $p= $this->newPropertiesFrom('
-      [section]
-      key="value
-value"');
-
-    $this->assertEquals("value\nvalue", $p->readString('section', 'key'));
-  }
-
-  /**
-   * Multilines strings with arbitrary spaces work
-   *
-   */
-  #[@test]
-  public function multilineValuesWithWhitespaces() {
-    $value= "value  \n   value ";
-    $p= $this->newPropertiesFrom('
-      [section]
-      key="'.$value.'"');  
-
-    $this->assertEquals(new \lang\types\Bytes($value), new \lang\types\Bytes($p->readString('section', 'key')));
-  }
-
-  /**
-   * Unicode file format
-   *
-   */
-  #[@test]
-  public function utf8Bom() {
-    $p= $this->newPropertiesFrom("\357\273\277".'
-[section]
-key=Übercoder
-    ');
     $this->assertEquals('Übercoder', $p->readString('section', 'key'));
   }
 
-  /**
-   * Unicode file format
-   *
-   */
   #[@test]
-  public function utf16BeBom() {
+  public function honors_utf16BE_BOM() {
     $p= $this->newPropertiesFrom(
       "\376\377".
       "\0[\0s\0e\0c\0t\0i\0o\0n\0]\0\n".
@@ -601,12 +288,8 @@ key=Übercoder
     $this->assertEquals('Übercoder', $p->readString('section', 'key'));
   }
 
-  /**
-   * Unicode file format
-   *
-   */
   #[@test]
-  public function utf16LeBom() {
+  public function honors_utf16LE_BOM() {
     $p= $this->newPropertiesFrom(
       "\377\376".
       "[\0s\0e\0c\0t\0i\0o\0n\0]\0\n\0".
@@ -615,131 +298,56 @@ key=Übercoder
     $this->assertEquals('Übercoder', $p->readString('section', 'key'));
   }
 
-  /**
-   * Removing a section
-   *
-   */
   #[@test]
-  public function removeSection() {
-    $p= $this->newPropertiesFrom('[section1]
-key=value
-    ');
-
-    $this->assertTrue($p->hasSection('section1'));
-    $p->removeSection('section1');
-    $this->assertFalse($p->hasSection('section1'));
+  public function remove_existant_section() {
+    $p= $this->fixture('');
+    $p->removeSection('section');
+    $this->assertFalse($p->hasSection('section'));
   }
 
-  /**
-   * Removing nonexistant section
-   *
-   */
   #[@test, @expect('lang.IllegalStateException')]
-  public function removeNonexistingSectionThrowsException() {
-    $p= $this->newPropertiesFrom('[section1]
-key=value
-    ');
-
-    $p->removeSection('section2');
+  public function remove_non_existant_section() {
+    $this->fixture('')->removeSection('non-existant');
   }
 
-  /**
-   * Removing a key
-   *
-   */
   #[@test]
-  public function removeKey() {
-    $p= $this->newPropertiesFrom('[section1]
-key=value
-    ');
-
-    $this->assertEquals('value', $p->readString('section1', 'key'));
-    $p->removeKey('section1', 'key');
-    $this->assertNull($p->readString('section1', 'key', null));
+  public function remove_existant_key() {
+    $p= $this->fixture('key=value');
+    $p->removeKey('section', 'key');
+    $this->assertNull($p->readString('section', 'key', null));
   }
 
-  /**
-   * Remove nonexistant key
-   *
-   */
-  #[@test, @expect('lang.IllegalStateException')]
-  public function removeNonexistingKeyThrowsException() {
-    $p= $this->newPropertiesFrom('[section1]
-key=value
-    ');
-
-    $p->removeKey('section1', 'key2');
+  #[@test, @expect('lang.IllegalStateException'), @values(['section', 'non-existant'])]
+  public function remove_non_existant_key($section) {
+    $this->fixture('key=value')->removeKey($section, 'non-existant');
   }
 
-  /**
-   * Remove nonexistant key in nonexistant section
-   *
-   */
-  #[@test, @expect('lang.IllegalStateException')]
-  public function removeNonexistingKeyInNonExistingSectionThrowsException() {
-    $p= $this->newPropertiesFrom('[section1]
-key=value
-    ');
-
-    $p->removeKey('section2', 'key2');
+  #[@test, @values([
+  #  ['', '', 'empty properties'],
+  #  ["[section]", "[section]", 'with one empty section'],
+  #  ["[section]\nkey=value", "[section]\nkey=value", 'with one non-empty section'],
+  #  ["[a]\ncolor=red\n[b]\ncolor=green", "[a]\ncolor=red\n[b]\ncolor=green", 'with two sections'],
+  #  ["[a]\ncolor=red\n[b]\ncolor=green", "[b]\ncolor=green\n[a]\ncolor=red", 'with two sections in different order']
+  #])]
+  public function equals_other_properties_with_same_keys_and_values($a, $b) {
+    $this->assertEquals($this->newPropertiesFrom($a), $this->newPropertiesFrom($b));
   }
 
-  /**
-   * Test
-   *
-   */
-  #[@test]
-  public function equalsComparesContent() {
-    $one= $this->newPropertiesFrom('[section1]
-key=value');
-    $two= $this->newPropertiesFrom('[section1]
-key=value');
-
-    $this->assertEquals($one, $two);
+  #[@test, @values([
+  #  ["[section]", 'with one empty section'],
+  #  ["[section]\nkey=value", 'with one non-empty section'],
+  #  ["[a]\ncolor=red\n[b]\ncolor=green", 'with two sections']
+  #])]
+  public function empty_properties_not_equal_to_non_empty($source) {
+    $this->assertNotEquals($this->newPropertiesFrom(''), $this->newPropertiesFrom($source));
   }
 
-  /**
-   * Test
-   *
-   */
-  #[@test]
-  public function equalsWorksWithBiggerLeftSideArg() {
-    $one= $this->newPropertiesFrom('[section1]
-key=value
-
-[section2]
-key=value');
-    $two= $this->newPropertiesFrom('[section1]
-key=value');
-
-    $this->assertNotEquals($one, $two);
-  }
-
-  /**
-   * Test
-   *
-   */
-  #[@test]
-  public function equalsWorksWithBiggerRightSideArg() {
-    $one= $this->newPropertiesFrom('[section1]
-key=value');
-    $two= $this->newPropertiesFrom('[section1]
-key=value
-
-[section2]
-key=value');
-
-    $this->assertNotEquals($one, $two);
-  }
-
-  /**
-   * Test
-   *
-   */
-  #[@test]
-  public function emptyPropertiesAreEqual() {
-    $one= new Properties(null);
-    $two= new Properties(null);
-    $this->assertEquals($one, $two);
+  #[@test, @values([
+  #  ["[section]", 'with one empty section'],
+  #  ["[section]\nkey=value", 'with one non-empty section'],
+  #  ["[a]\ncolor=red\n[b]\ncolor=green", 'with two sections']
+  #])]
+  public function different_properties_not_equal_to_non_empty($source) {
+    $this->assertNotEquals($this->newPropertiesFrom("[section]\ndifferent=value"), $this->newPropertiesFrom($source));
   }
 }

@@ -86,4 +86,13 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
     $this->assertFalse($one === $two);
     $this->assertTrue($one->equals($two));
   }
+
+  /**
+   * Test
+   *
+   */
+  #[@test]
+  public function propertiesFromOtherFilesAreNotEqual() {
+    $this->assertNotEquals(new Properties('a.ini'), new Properties('b.ini'));
+  }
 }

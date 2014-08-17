@@ -58,7 +58,7 @@ class Properties extends \lang\Object implements PropertyAccess {
     $section= null;
     while ($s->hasMoreTokens()) {
       $t= $s->nextToken();
-      $trimmedToken=trim($t);
+      $trimmedToken= trim($t);
       if ('' === $trimmedToken) continue;                // Empty lines
       $c= $trimmedToken{0};
       if (';' === $c || '#' === $c) {                            // One line comments
@@ -84,7 +84,6 @@ class Properties extends \lang\Object implements PropertyAccess {
           }
           $value= rtrim($value);
         }
-        
 
         // Arrays and maps: key[], key[0], key[assoc]
         if (']' === substr($key, -1)) {
@@ -340,6 +339,8 @@ class Properties extends \lang\Object implements PropertyAccess {
       return $default;
     } else if (is_array($this->_data[$section][$key])) {
       return $this->_data[$section][$key];
+    } else if ('' === $this->_data[$section][$key]) {
+      return [];
     } else {
       $return= [];
       foreach (explode('|', $this->_data[$section][$key]) as $val) {
@@ -365,7 +366,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    */
   public function readHash($section, $key, $default= null) {
     $value= $this->readMap($section, $key, $default);
-    return is_array($value) ? new HashMap($value) : $value;
+    return is_array($value) ? new Hashmap($value) : $value;
   }
 
   /**
@@ -379,9 +380,11 @@ class Properties extends \lang\Object implements PropertyAccess {
   public function readRange($section, $key, $default= []) {
     $this->_load();
     if (!isset($this->_data[$section][$key])) return $default;
-    
-    list($min, $max)= explode('..', $this->_data[$section][$key]);
-    return range((int)$min, (int)$max);
+    if (2 === sscanf($this->_data[$section][$key], '%d..%d', $min, $max)) {
+      return range($min, $max);
+    } else {
+      return [];
+    }
   }
   
   /**
@@ -602,26 +605,12 @@ class Properties extends \lang\Object implements PropertyAccess {
   public function equals($cmp) {
     if (!$cmp instanceof self) return false;
 
-    if ($this->_data && $cmp->_data) {
-      return $this->_data == $cmp->_data;
-    }
-
-    // If based on files, and both base on same file, then they're equal
-    if ($this->_file && $cmp->_file) {
+    // If based on files, and both base on the same file, then they're equal
+    if (null === $this->_data && null === $cmp->_data) {
       return $this->_file === $cmp->_file;
+    } else {
+      return Objects::equal($this->_data, $cmp->_data);
     }
-
-    // Bordercase
-    if (
-      $this->_file === null &&
-      $cmp->_file === null &&
-      $this->_data === null &&
-      $cmp->_data === null
-    ) {
-      return true;
-    }
-
-    return false;
   }
 
   /**
