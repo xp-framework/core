@@ -1,9 +1,7 @@
 <?php namespace unittest\mock;
 
 use lang\IllegalArgumentException;
-use util\Hashmap;
-use util\collections\Vector;
-
+use util\collections\HashTable;
 
 /**
  * Record expectations on a mock object.
@@ -16,13 +14,9 @@ class RecordState extends \lang\Object implements IMockState {
   /**
    * Constructor
    *
-   * @param   util.Hashmap expectationsMap
+   * @param   util.collections.HashTable $expectationsMap
    */
-  public function  __construct($expectationMap) {
-    if(!($expectationMap instanceof Hashmap)) {
-      throw new IllegalArgumentException('Invalid expectation map passed.');
-    }
-    
+  public function  __construct(HashTable $expectationMap) {
     $this->expectationMap= $expectationMap;
   }
 
@@ -38,10 +32,10 @@ class RecordState extends \lang\Object implements IMockState {
     $expectation->setArguments($args);
 
     if ($this->expectationMap->containsKey($method)) {
-      $methodExpectations= $this->expectationMap->get($method);
+      $methodExpectations= $this->expectationMap[$method];
     } else {
       $methodExpectations= new ExpectationList();
-      $this->expectationMap->put($method, $methodExpectations);
+      $this->expectationMap[$method]= $methodExpectations;
     }
     $methodExpectations->add($expectation);
 

@@ -1,9 +1,6 @@
 <?php namespace unittest\mock;
 
-use lang\IllegalArgumentException;
-use util\Hashmap;
-use util\collections\Vector;
-
+use util\collections\HashTable;
 
 /**
  * Replaying state.
@@ -19,20 +16,13 @@ class ReplayState extends \lang\Object implements IMockState {
   /**
    * Constructor
    *
-   * @param   util.Hashmap expectationsMap
-   * @param   util.Hashmap properties
+   * @param   util.collections.HashTable $expectationsMap
+   * @param   util.collections.HashTable $properties
    */
-  public function  __construct($expectationMap, $properties) {
-    if (!($expectationMap instanceof Hashmap)) {
-      throw new IllegalArgumentException('Invalid expectation map passed.');
-    }
-    if (!($properties instanceof Hashmap)) {
-      throw new IllegalArgumentException('Invalid properties passed.');
-    }
-    
+  public function  __construct(HashTable $expectationMap, HashTable $properties) {
     $this->expectationMap= $expectationMap;
     $this->properties= $properties;
-    $this->unexpectedCalls= new Hashmap();
+    $this->unexpectedCalls= new HashTable();
     $this->buildUpProperties();
   }
   

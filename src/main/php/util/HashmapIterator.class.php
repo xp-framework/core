@@ -15,6 +15,7 @@
  *
  * @see   xp://util.Hashmap
  * @test  xp://net.xp_framework.unittest.util.HashmapIteratorTest
+ * @deprecated Use util.collections.HashTable or lang.types.ArrayMap
  */
 class HashmapIterator extends \lang\Object implements XPIterator {
   public
