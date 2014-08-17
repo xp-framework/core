@@ -37,6 +37,15 @@ class BufferedInputStream extends \lang\Object implements InputStream {
   }
 
   /**
+   * Push back
+   *
+   * @param   string bytes
+   */
+  public function pushBack($bytes) {
+    $this->buf= $bytes.$this->buf;
+  }
+
+  /**
    * Returns the number of bytes that can be read from this stream 
    * without blocking.
    *

@@ -91,6 +91,11 @@ class ArrayListTest extends TestCase {
     $c[0];
   }
 
+  #[@test]
+  public function accessing_non_existant_key_via_get_returns_default() {
+    $this->assertNull((new ArrayList())->get(0, null));
+  }
+
   #[@test, @expect('lang.IllegalArgumentException')]
   public function adding_an_element_raises_an_exception() {
     $c= new ArrayList();

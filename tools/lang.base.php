@@ -559,20 +559,12 @@ function is($type, $object) {
     return is_bool($object);
   } else if ('var' === $type) {
     return true;
-  } else if ('[]' === substr($type, -2)) {
-    if (!is_array($object) || (!empty($object) && !is_int(key($object)))) return false;
-    $type= substr($type, 0, -2);
-    foreach ($object as $element) {
-      if (!is($type, $element)) return false;
-    }
-    return true;
-  } else if ('[:' === substr($type, 0, 2)) {
-    if (!is_array($object) || (!empty($object) && !is_string(key($object)))) return false;
-    $type= substr($type, 2, -1);
-    foreach ($object as $element) {
-      if (!is($type, $element)) return false;
-    }
-    return true;
+  } else if (0 === substr_compare($type, '[]', -2)) {
+    return (new \lang\ArrayType(substr($type, 0, -2)))->isInstance($object);
+  } else if (0 === substr_compare($type, '[:', 0, 2)) {
+    return (new \lang\MapType(substr($type, 2, -1)))->isInstance($object);
+  } else if (strstr($type, '?')) {
+    return \lang\WildcardType::forName($type)->isInstance($object);
   } else {
     $type= xp::reflect($type);
     return $object instanceof $type;
@@ -622,13 +614,21 @@ function this($expr, $offset) {
 //     Anonymous instance creation
 function newinstance($spec, $args, $def= null) {
   static $u= 0;
-  static $bind= 'foreach (self::$__func as $_ => $f) { self::$__func[$_]= $f->bindTo($this, $this); } ';
+
+  if ('#' === $spec{0}) {
+    $p= strrpos($spec, ' ');
+    $annotations= substr($spec, 0, $p).' ';
+    $spec= substr($spec, $p+ 1);
+  } else {
+    $annotations= '';
+  }
 
   // Check for an anonymous generic 
   if (strstr($spec, '<')) {
     $class= Type::forName($spec);
     $type= $class->literal();
     $p= strrpos(substr($type, 0, strpos($type, '··')), '·');
+    $generic= xp::$meta[$class->getName()]['class'][DETAIL_GENERIC];
   } else {
     false === strrpos($spec, '.') && $spec= xp::nameOf($spec);
     try {
@@ -637,86 +637,33 @@ function newinstance($spec, $args, $def= null) {
       xp::error($e->getMessage());
     }
     $p= strrpos($type, '·');
+    $generic= null;
   }
 
   // Create unique name
   $n= '·'.(++$u);
   if (false !== $p) {
-    $ns= '$package= "'.strtr(substr($type, 0, $p), '·', '.').'"; ';
     $spec= strtr(substr($type, 0, $p), '·', '.').'.'.substr($type, $p+ 1).$n;
-    $decl= $type.$n;
-  } else if (false === ($p= strrpos($type, '\\'))) {
-    $ns= '';
-    $decl= $type.$n;
-    $spec= substr($spec, 0, strrpos($spec, '.')).'.'.$type.$n;
   } else {
-    $ns= 'namespace '.substr($type, 0, $p).'; ';
-    $decl= substr($type, $p+ 1).$n;
     $spec= strtr($type, '\\', '.').$n;
-    $type= '\\'.$type;
   }
 
-  // No definition: Emty body, array => closure style, string: source code
-  $functions= [];
-  if (null === $def) {
-    $bytes= '{}';
-  } else if (is_array($def)) {
-    $bytes= '';
-    foreach ($def as $name => $member) {
-      if ($member instanceof \Closure) {
-        $r= new ReflectionFunction($member);
-        $pass= $sig= '';
-        foreach ($r->getParameters() as $param) {
-          $p= $param->getName();
-          if ($param->isArray()) {
-            $sig.= ', array $'.$p;
-          } else if ($param->isCallable()) {
-            $sig.= ', callable $'.$p;
-          } else if (null !== ($class= $param->getClass())) {
-            $sig.= ', \\'.$class->getName().' $'.$p;
-          } else {
-            $sig.= ', $'.$p;
-          }
-          if ($param->isOptional()) {
-            $sig.= '= '.var_export($param->getDefaultValue(), true);
-          }
-          $pass.= ', $'.$p;
-        }
-        $bytes.= (
-          'function '.$name.'('.substr($sig, 2).') {'.
-          ('__construct' === $name ? $bind : '').
-          '$f= self::$__func["'.$name.'"]; '.
-          'return $f('.('' === $pass ? '' : substr($pass, 2)).'); }'
-        );
-        $functions[$name]= $member;
-      } else {
-        $bytes.= 'public $'.$name.'= '.var_export($member, true).';';
-      }
-    }
-    $bytes= (
-      '{ static $__func= [];'.
-      (isset($functions['__construct']) ? '' : 'function __construct() {'.$bind.'}').
-      $bytes.' }'
-    );
-  } else {
-    $bytes= (string)$def;
-  }
-
-  // Checks whether an interface or a class was given
-  $cl= \lang\DynamicClassLoader::instanceFor(__FUNCTION__);
   if (interface_exists($type)) {
-    $cl->setClassBytes($spec, $ns.'class '.$decl.' extends \lang\Object implements '.$type.' '.$bytes);
+    $decl= 'class %s extends \\lang\\Object implements \\'.$type;
   } else {
-    $cl->setClassBytes($spec, $ns.'class '.$decl.' extends '.$type.' '.$bytes);
+    $decl= 'class %s extends \\'.$type;
+  }
+  $type= \lang\ClassLoader::defineType($annotations.$spec, $decl, $def);
+
+  if ($generic) {
+    \lang\XPClass::detailsForClass($spec);
+    xp::$meta[$spec]['class'][DETAIL_GENERIC]= $generic;
   }
 
-  // Instantiate
-  $decl= new \ReflectionClass($cl->loadClass0($spec));
-  $functions && $decl->setStaticPropertyValue('__func', $functions);
-  if ($decl->hasMethod('__construct')) {
-    return $decl->newInstanceArgs($args);
+  if ($type->hasConstructor()) {
+    return $type->getConstructor()->newInstance($args);
   } else {
-    return $decl->newInstance();
+    return $type->newInstance();
   }
 }
 // }}}
@@ -759,6 +706,21 @@ function typeof($arg) {
     return $arg->getClass();
   } else if (null === $arg) {
     return \lang\Type::$VOID;
+  } else if ($arg instanceof \Closure) {
+    $r= new \ReflectionFunction($arg);
+    $signature= [];
+    foreach ($r->getParameters() as $param) {
+      if ($param->isArray()) {
+        $signature[]= \lang\Primitive::$ARRAY;
+      } else if ($param->isCallable()) {
+        $signature[]= new \lang\FunctionType(null, \lang\Type::$VAR); 
+      } else if (null === ($class= $param->getClass())) {
+        $signature[]= \lang\Type::$VAR;
+      } else {
+        $signature[]= new \lang\XPClass($class);
+      }
+    }
+    return new \lang\FunctionType($signature, \lang\Type::$VAR);
   } else if (is_array($arg)) {
     return 0 === key($arg) ? \lang\ArrayType::forName('var[]') : \lang\MapType::forName('[:var]');
   } else {

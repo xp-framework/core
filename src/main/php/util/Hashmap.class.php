@@ -20,7 +20,7 @@
  *
  * @test     xp://net.xp_framework.unittest.util.HashmapTest
  * @see      php://array
- * @purpose  Associative array wrapper class
+ * @deprecated Use util.collections.HashTable or lang.types.ArrayMap
  */
 class Hashmap extends \lang\Object {
   public 

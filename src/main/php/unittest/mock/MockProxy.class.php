@@ -2,8 +2,7 @@
 
 use lang\reflect\InvocationHandler;
 use lang\reflect\Proxy;
-use util\Hashmap;
-
+use util\collections\HashTable;
 
 /**
  * A mock proxy.
@@ -20,8 +19,8 @@ class MockProxy extends \lang\Object implements InvocationHandler {
    *
    */
   public function __construct() {
-    $this->expectionMap= new Hashmap();
-    $this->properties= new Hashmap();
+    $this->expectionMap= new HashTable();
+    $this->properties= new HashTable();
     $this->mockState= new RecordState($this->expectionMap);
   }
 

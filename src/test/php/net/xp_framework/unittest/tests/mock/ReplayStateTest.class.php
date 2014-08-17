@@ -3,6 +3,7 @@
 use unittest\mock\ReplayState;
 use unittest\mock\Expectation;
 use unittest\mock\ExpectationList;
+use util\collections\HashTable;
 
 /**
  * Testcase for ReplayState
@@ -19,8 +20,8 @@ class ReplayStateTest extends \unittest\TestCase {
    * Creates the fixture
    */
   public function setUp() {
-    $this->expectationMap= new \util\Hashmap();
-    $this->properties= new \util\Hashmap();
+    $this->expectationMap= new HashTable();
+    $this->properties= new HashTable();
     $this->sut= new ReplayState($this->expectationMap, $this->properties);
   }
 
@@ -31,12 +32,12 @@ class ReplayStateTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function propertiesRequiredOnCreate() {
-    new ReplayState(new \util\Hashmap(), null);
+    new ReplayState(new HashTable(), null);
   }
 
   #[@test]
   public function canCreate() {
-    new ReplayState(new \util\Hashmap(), new \util\Hashmap());
+    new ReplayState(new HashTable(), new HashTable());
   }
   
   #[@test]

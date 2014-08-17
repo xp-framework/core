@@ -272,8 +272,8 @@ class Vector extends \lang\Object implements IList {
    */
   public function toString() {
     $r= $this->getClassName().'['.$this->size."]@{\n";
-    for ($i= 0; $i < $this->size; $i++) {
-      $r.= '  '.$i.': '.\xp::stringOf($this->elements[$i], '  ')."\n";
+    foreach ($this->elements as $i => $e) {
+      $r.= '  '.$i.': '.\xp::stringOf($e, '  ')."\n";
     } 
     return $r.'}';
   }
@@ -285,7 +285,7 @@ class Vector extends \lang\Object implements IList {
    * @return  bool
    */
   public function equals($cmp) {
-    if (!($cmp instanceof self) || $this->size !== $cmp->size || $this->__generic !== $cmp->__generic) return false;
+    if (!($cmp instanceof self) || $this->size !== $cmp->size) return false;
     
     // Compare element by element
     for ($i= 0; $i < $this->size; $i++) {

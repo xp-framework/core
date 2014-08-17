@@ -221,4 +221,50 @@ class IsTest extends \unittest\TestCase {
   public function anIntVectorIsNotAnUndefinedGeneric() {
     $this->assertFalse(is('Undefined_Class<string>', create('new util.collections.Vector<int>')));
   }
+
+  /** @return var[][] */
+  protected function genericVectors() {
+    return [
+      [create('new util.collections.Vector<string>')],
+      [create('new util.collections.Vector<lang.Generic>')],
+      [create('new util.collections.Vector<util.collections.Vector<int>>')],
+    ];
+  }
+
+  #[@test, @values('genericVectors')]
+  public function wildcard_check_for_single_type_parameter($value) {
+    $this->assertTrue(is('util.collections.Vector<?>', $value));
+  }
+
+  #[@test, @values('genericVectors')]
+  public function wildcard_check_for_single_type_parameter_super_type($value) {
+    $this->assertTrue(is('util.collections.IList<?>', $value));
+  }
+
+  #[@test]
+  public function wildcard_check_for_single_type_parameter_generic() {
+    $this->assertTrue(is('util.collections.IList<util.collections.IList<?>>', create('new util.collections.Vector<util.collections.Vector<int>>')));
+  }
+
+  #[@test]
+  public function wildcard_check_for_type_parameters() {
+    $this->assertTrue(is('util.collections.HashTable<?, ?>', create('new util.collections.HashTable<string, lang.Generic>')));
+  }
+
+  #[@test]
+  public function wildcard_check_for_type_parameters_super_type() {
+    $this->assertTrue(is('util.collections.Map<?, ?>', create('new util.collections.HashTable<string, lang.Generic>')));
+  }
+
+  #[@test]
+  public function wildcard_check_for_type_parameters_partial() {
+    $this->assertTrue(is('util.collections.HashTable<string, ?>', create('new util.collections.HashTable<string, lang.Generic>')));
+  }
+
+  #[@test]
+  public function wildcard_check_for_newinstance() {
+    $this->assertTrue(is('util.Filter<?>', newinstance('util.Filter<string>', [], [
+      'accept' => function($e) { return true; }
+    ])));
+  }
 }

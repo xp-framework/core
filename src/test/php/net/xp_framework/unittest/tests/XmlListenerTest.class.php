@@ -63,7 +63,7 @@ class XmlListenerTest extends \unittest\TestCase {
    * @throws  unittest.AssertionFailedError
    */
   protected function assertSuiteNode($name, $attr, $suite) {
-    $this->assertClass($suite, 'xml.Node');
+    $this->assertInstanceOf('xml.Node', $suite);
     $this->assertEquals('testsuite', $suite->getName());
     $this->assertEquals($name, $suite->getAttribute('name'));
     
@@ -80,7 +80,7 @@ class XmlListenerTest extends \unittest\TestCase {
    * @throws  unittest.AssertionFailedError
    */
   protected function assertCaseNode($attr, $suite) {
-    $this->assertClass($suite, 'xml.Node');
+    $this->assertInstanceOf('xml.Node', $suite);
     $this->assertEquals('testcase', $suite->getName());
     
     foreach ($attr as $key => $value) {
@@ -148,7 +148,7 @@ class XmlListenerTest extends \unittest\TestCase {
         $this->assertNotEquals(null, $case->getAttribute('time'));
 
         with ($failure= @$case->nodeAt(0)); {
-          $this->assertClass($failure, 'xml.Node');
+          $this->assertInstanceOf('xml.Node', $failure);
           $this->assertEquals('failure', $failure->getName());
           $this->assertNotEquals(null, $failure->getAttribute('message'));
           $this->assertNotEquals(null, $failure->getContent());
@@ -174,7 +174,7 @@ class XmlListenerTest extends \unittest\TestCase {
         $this->assertNotEquals(null, $case->getAttribute('time'));
 
         with ($failure= @$case->nodeAt(0)); {
-          $this->assertClass($failure, 'xml.Node');
+          $this->assertInstanceOf('xml.Node', $failure);
           $this->assertEquals('error', $failure->getName());
           $this->assertNotEquals(null, $failure->getAttribute('message'));
           $this->assertNotEquals(null, $failure->getContent());
@@ -200,7 +200,7 @@ class XmlListenerTest extends \unittest\TestCase {
         $this->assertNotEquals(null, $case->getAttribute('time'));
 
         with ($failure= @$case->nodeAt(0)); {
-          $this->assertClass($failure, 'xml.Node');
+          $this->assertInstanceOf('xml.Node', $failure);
           $this->assertEquals('error', $failure->getName());
           $this->assertNotEquals(null, $failure->getAttribute('message'));
           $this->assertNotEquals(null, $failure->getContent());

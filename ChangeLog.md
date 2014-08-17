@@ -47,6 +47,13 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented RFC #184: ArrayMap and ArrayList - (@thekid)
+* Implemented RFC #286: Function types - (@thekid)
+* Implemented RFC #283: Unittest closure actions - (@thekid)
+* Implemented RFC #276: Define classes with annotations - (@thekid)
+* Implemented RFC #282: Generic type variables - (@thekid)
+* Implemented RFC #098: Generic Filter interface - (@thekid)
+* Implemented RFC #266: Extend the XP typesystem - (@thekid)
 * Implemented RFC #281: PHP 5.4.0 - (@thekid)
 * Implemented RFC #146: Unicode - (@thekid)
 * Implemented RFC #136: PHP namespaces adoption. All classes in the XP
@@ -84,6 +91,7 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed xp-framework/core#20: Generic classes and namespaces - (@thekid)
 * Fixed `io.streams.Streams` instances to return true for `is_file()`
   (@thekid)
 * Fixed `BufferedInputStream::available()` (see xp-framework/xp-runners#17)
@@ -95,6 +103,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Implemented pushing back bytes to buffered stream (see xp-framework/core#16)
+  (@thekid)
 * Added support for closures in annotations - xp-framework/core#7 - (@thekid)
 * Merged xp-framework/xp-framework#353: Add support for rolling logfile names 
   in FileAppender (and Logger) - (@thekid, @kiesel)

@@ -1,6 +1,6 @@
 <?php namespace net\xp_framework\unittest\util;
 
-
+use util\Properties;
 
 /**
  * Testcase for util.Properties class.
@@ -17,6 +17,6 @@ class StringBasedPropertiesTest extends AbstractPropertiesTest {
    * @return  util.Properties
    */
   protected function newPropertiesFrom($source) {
-    return \util\Properties::fromString($source);
+    return Properties::fromString($source);
   }
 }
