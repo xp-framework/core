@@ -9,7 +9,6 @@ use io\streams\FileInputStream;
 use io\streams\TextReader;
 use text\TextTokenizer;
 
-
 /**
  * An interface to property-files (aka "ini-files")
  *
@@ -59,7 +58,7 @@ class Properties extends \lang\Object implements PropertyAccess {
     $section= null;
     while ($s->hasMoreTokens()) {
       $t= $s->nextToken();
-      $trimmedToken=trim($t);
+      $trimmedToken= trim($t);
       if ('' === $trimmedToken) continue;                // Empty lines
       $c= $trimmedToken{0};
       if (';' === $c || '#' === $c) {                            // One line comments
@@ -85,7 +84,6 @@ class Properties extends \lang\Object implements PropertyAccess {
           }
           $value= rtrim($value);
         }
-        
 
         // Arrays and maps: key[], key[0], key[assoc]
         if (']' === substr($key, -1)) {
@@ -112,6 +110,16 @@ class Properties extends \lang\Object implements PropertyAccess {
   }
 
   /**
+   * Quote a value if necessary
+   *
+   * @param  var $value
+   * @return string
+   */
+  protected function quote($val) {
+    return is_string($val) ? '"'.$val.'"' : (string)$val;
+  }
+
+  /**
    * Store to an output stream, e.g. a file
    *
    * @param   io.streams.OutputStream out
@@ -119,26 +127,20 @@ class Properties extends \lang\Object implements PropertyAccess {
    */
   public function store(\io\streams\OutputStream $out) {
     foreach (array_keys($this->_data) as $section) {
-      $out->write(sprintf("[%s]\n", $section));
-      
+      $out->write('['.$section."]\n");
       foreach ($this->_data[$section] as $key => $val) {
         if (';' == $key{0}) {
-          $out->write(sprintf("\n; %s\n", $val)); 
+          $out->write("\n; ".$val."\n");
+        } else if (is_array($val)) {
+          if (empty($val)) {
+            $out->write($key."=\n");
+          } else if (0 === key($val)) {
+            foreach ($val as $v) { $out->write($key.'[]='.$this->quote($v)."\n"); }
+          } else {
+            foreach ($val as $k => $v) { $out->write($key.'['.$k.']='.$this->quote($v)."\n"); }
+          }
         } else {
-          if ($val instanceof Hashmap) {
-            $str= '';
-            foreach ($val->keys() as $k) {
-              $str.= '|'.$k.':'.$val->get($k);
-            }
-            $val= (string)substr($str, 1);
-          } 
-          if (is_array($val)) $val= implode('|', $val);
-          if (is_string($val)) $val= '"'.$val.'"';
-          $out->write(sprintf(
-            "%s=%s\n",
-            $key,
-            strval($val)
-          ));
+          $out->write($key.'='.$this->quote($val)."\n");
         }
       }
       $out->write("\n");
@@ -319,16 +321,16 @@ class Properties extends \lang\Object implements PropertyAccess {
       return '' == $this->_data[$section][$key] ? [] : explode('|', $this->_data[$section][$key]);
     }
   }
-  
+
   /**
-   * Read a value as hash
+   * Read a value as maop
    *
    * @param   string section
    * @param   string key
-   * @param   util.Hashmap default default NULL what to return in case the section or key does not exist
-   * @return  util.Hashmap
+   * @param   [:var] default default NULL what to return in case the section or key does not exist
+   * @return  [:var]
    */
-  public function readHash($section, $key, $default= null) {
+  public function readMap($section, $key, $default= null) {
     $this->_load();
 
     // New: key[color]="green" and key[make]="model"
@@ -336,7 +338,9 @@ class Properties extends \lang\Object implements PropertyAccess {
     if (!isset($this->_data[$section][$key])) {
       return $default;
     } else if (is_array($this->_data[$section][$key])) {
-      return new Hashmap($this->_data[$section][$key]);
+      return $this->_data[$section][$key];
+    } else if ('' === $this->_data[$section][$key]) {
+      return [];
     } else {
       $return= [];
       foreach (explode('|', $this->_data[$section][$key]) as $val) {
@@ -347,8 +351,22 @@ class Properties extends \lang\Object implements PropertyAccess {
           $return[]= $val;
         } 
       }
-      return new Hashmap($return);
+      return $return;
     }
+  }
+
+  /**
+   * Read a value as hash
+   *
+   * @param   string section
+   * @param   string key
+   * @param   util.Hashmap default default NULL what to return in case the section or key does not exist
+   * @return  util.Hashmap
+   * @deprecated Use readMap() instead
+   */
+  public function readHash($section, $key, $default= null) {
+    $value= $this->readMap($section, $key, $default);
+    return is_array($value) ? new Hashmap($value) : $value;
   }
 
   /**
@@ -362,9 +380,11 @@ class Properties extends \lang\Object implements PropertyAccess {
   public function readRange($section, $key, $default= []) {
     $this->_load();
     if (!isset($this->_data[$section][$key])) return $default;
-    
-    list($min, $max)= explode('..', $this->_data[$section][$key]);
-    return range((int)$min, (int)$max);
+    if (2 === sscanf($this->_data[$section][$key], '%d..%d', $min, $max)) {
+      return range($min, $max);
+    } else {
+      return [];
+    }
   }
   
   /**
@@ -508,19 +528,33 @@ class Properties extends \lang\Object implements PropertyAccess {
   }
 
   /**
+   * Add a map (and the section, if necessary)
+   *
+   * @param   string section
+   * @param   string key
+   * @param   [:var] $value
+   */
+  public function writeMap($section, $key, $value) {
+    $this->_load();
+    if (!$this->hasSection($section)) $this->_data[$section]= [];
+    $this->_data[$section][$key]= $value;
+  }
+
+  /**
    * Add a hashmap (and the section, if necessary)
    *
    * @param   string section
    * @param   string key
    * @param   var value either a util.Hashmap or an array
+   * @deprecated Use writeMap() instead
    */
   public function writeHash($section, $key, $value) {
     $this->_load();
     if (!$this->hasSection($section)) $this->_data[$section]= [];
     if ($value instanceof Hashmap) {
-      $this->_data[$section][$key]= $value;
+      $this->_data[$section][$key]= $value->toArray();
     } else {
-      $this->_data[$section][$key]= new Hashmap($value);
+      $this->_data[$section][$key]= $value;
     }
   }
   
@@ -571,26 +605,12 @@ class Properties extends \lang\Object implements PropertyAccess {
   public function equals($cmp) {
     if (!$cmp instanceof self) return false;
 
-    if ($this->_data && $cmp->_data) {
-      return $this->_data == $cmp->_data;
-    }
-
-    // If based on files, and both base on same file, then they're equal
-    if ($this->_file && $cmp->_file) {
+    // If based on files, and both base on the same file, then they're equal
+    if (null === $this->_data && null === $cmp->_data) {
       return $this->_file === $cmp->_file;
+    } else {
+      return Objects::equal($this->_data, $cmp->_data);
     }
-
-    // Bordercase
-    if (
-      $this->_file === null &&
-      $cmp->_file === null &&
-      $this->_data === null &&
-      $cmp->_data === null
-    ) {
-      return true;
-    }
-
-    return false;
   }
 
   /**
