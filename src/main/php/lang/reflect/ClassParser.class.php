@@ -179,7 +179,7 @@ class ClassParser extends \lang\Object {
       if (!($func instanceof \Closure)) {
         $error= error_get_last();
         set_error_handler('__error', 0);
-        $r= @$clear_last_error;
+        trigger_error('clear_last_error');
         restore_error_handler();
         throw new IllegalStateException('In `'.$code.'`: '.ucfirst($error['message']));
       }
