@@ -149,6 +149,21 @@ abstract class AbstractPropertiesTest extends TestCase {
     $this->assertEquals(['key' => 'value'], $this->fixture('')->readFloat('section', 'non-existant', ['key' => 'value']));
   }
 
+  #[@test]
+  public function read_section() {
+    $this->assertEquals(['key' => 'value'], $this->fixture('key=value')->readSection('section'));
+  }
+
+  #[@test]
+  public function read_empty_section() {
+    $this->assertEquals([], $this->fixture('')->readSection('section'));
+  }
+
+  #[@test]
+  public function readSection_returns_default_for_non_existant_key() {
+    $this->assertEquals(['default' => 'value'], $this->fixture('')->readSection('non-existant', ['default' => 'value']));
+  }
+
   /** @deprecated */
   #[@test, @values(['key[k]=value', 'key="k:value"'])]
   public function read_hash_with_one_element($section) {
