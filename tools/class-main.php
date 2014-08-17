@@ -5,7 +5,7 @@ if (version_compare(PHP_VERSION, '5.4.0', '<')) {
   exit(0x3d);
 }
 
-// {{{ internal void __error
+// {{{ internal void __fatal
 function __fatal() {
   static $types= array(
     E_ERROR         => 'Fatal error',
