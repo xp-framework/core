@@ -175,12 +175,13 @@ class ClassParser extends \lang\Object {
           $code.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
         }
       }
-      ob_start();
       $func= eval('return '.$code.';');
-      $error= ob_get_clean();
       if (!($func instanceof \Closure)) {
-        preg_match("/(Parse.+) in .+.php/", $error, $m);
-        throw new IllegalStateException('In `'.$code.'`: '.$m[1]);
+        $error= error_get_last();
+        set_error_handler('__error', 0);
+        trigger_error('clear_last_error');
+        restore_error_handler();
+        throw new IllegalStateException('In `'.$code.'`: '.ucfirst($error['message']));
       }
       return $func;
     } else {
