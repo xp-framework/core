@@ -47,6 +47,7 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented RFC #184: ArrayMap and ArrayList - (@thekid)
 * Implemented RFC #286: Function types - (@thekid)
 * Implemented RFC #283: Unittest closure actions - (@thekid)
 * Implemented RFC #276: Define classes with annotations - (@thekid)
