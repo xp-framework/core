@@ -85,4 +85,22 @@ class ModuleLoadingTest extends \unittest\TestCase {
     }']));
     $this->assertEquals(1, Module::forName('xp-framework/initialized')->initialized);
   }
+
+  #[@test]
+  public function module_inheritance() {
+    $cl= ClassLoader::defineClass('net.xp_framework.unittest.reflection.BaseModule', 'lang.reflect.Module', []);
+    $this->register(new LoaderProviding([
+      'module.xp' => '<?php module xp-framework/child extends net\xp_framework\unittest\reflection\BaseModule { }'
+    ]));
+    $this->assertEquals($cl, Module::forName('xp-framework/child')->getClass()->getParentclass());
+  }
+
+  #[@test]
+  public function module_implementation() {
+    $cl= ClassLoader::defineInterface('net.xp_framework.unittest.reflection.IModule', []);
+    $this->register(new LoaderProviding([
+      'module.xp' => '<?php module xp-framework/impl implements net\xp_framework\unittest\reflection\IModule { }'
+    ]));
+    $this->assertTrue(in_array($cl, Module::forName('xp-framework/impl')->getClass()->getInterfaces()));
+  }
 }
