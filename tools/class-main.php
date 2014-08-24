@@ -228,4 +228,9 @@ if ($encoding) {
   }
 }
 
-exit(\lang\XPClass::forName($argv[0])->getMethod('main')->invoke(null, [array_slice($argv, 1)]));
+try {
+  exit(\lang\XPClass::forName($argv[0])->getMethod('main')->invoke(null, [array_slice($argv, 1)]));
+} catch (\lang\SystemExit $e) {
+  if ($message= $e->getMessage()) echo $message, "\n";
+  exit($e->getCode());
+}
