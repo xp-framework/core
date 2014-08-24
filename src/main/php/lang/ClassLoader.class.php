@@ -203,6 +203,43 @@ final class ClassLoader extends Object implements IClassLoader {
   }
 
   /**
+   * Define a forward to a given function
+   *
+   * @param  string $name
+   * @param  php.ReflectionParameter[] $params
+   * @param  string $invoke
+   */
+  protected static function defineForward($name, $params, $invoke) {
+    static $bind= 'foreach (self::$__func as &$f) { $f= $f->bindTo($this, $this); }';
+
+    $pass= $sig= '';
+    foreach ($params as $param) {
+      $p= $param->getName();
+      if ($param->isArray()) {
+        $sig.= ', array $'.$p;
+      } else if ($param->isCallable()) {
+        $sig.= ', callable $'.$p;
+      } else if (null !== ($restriction= $param->getClass())) {
+        $sig.= ', \\'.$restriction->getName().' $'.$p;
+      } else {
+        $sig.= ', $'.$p;
+      }
+      if ($param->isOptional()) {
+        $sig.= '= '.var_export($param->getDefaultValue(), true);
+      }
+      $pass.= ', $'.$p;
+    }
+
+    $decl= 'function '.$name.'('.substr($sig, 2).')';
+    if (null === $invoke) {
+      return $decl.';';
+    } else {
+      $init= ('__construct' === $name ? $bind : '');
+      return $decl.'{'.$init.sprintf($invoke, substr($pass, 2)).'}';
+    }
+  }
+
+  /**
    * Helper method for defineClass() and defineInterface().
    *
    * @param  string $spec
@@ -211,8 +248,6 @@ final class ClassLoader extends Object implements IClassLoader {
    * @return lang.XPClass
    */
   public static function defineType($spec, $declaration, $def) {
-    static $bind= 'foreach (self::$__func as $_ => $f) { self::$__func[$_]= $f->bindTo($this, $this); }';
-
     if ('#' === $spec{0}) {
       $p= strrpos($spec, ' ');
       $typeAnnotations= substr($spec, 0, $p)."\n";
@@ -231,7 +266,6 @@ final class ClassLoader extends Object implements IClassLoader {
       $iface= 0 === strncmp($declaration, 'interface', 9);
       $bytes= '';
       foreach ($def as $name => $member) {
-
         if ('#' === $name{0}) {
           $p= strrpos($name, ' ');
           $memberAnnotations= substr($name, 0, $p)."\n";
@@ -241,43 +275,30 @@ final class ClassLoader extends Object implements IClassLoader {
         }
 
         if ($member instanceof \Closure) {
-          $r= new \ReflectionFunction($member);
-          $pass= $sig= '';
-          foreach ($r->getParameters() as $param) {
-            $p= $param->getName();
-            if ($param->isArray()) {
-              $sig.= ', array $'.$p;
-            } else if ($param->isCallable()) {
-              $sig.= ', callable $'.$p;
-            } else if (null !== ($restriction= $param->getClass())) {
-              $sig.= ', \\'.$restriction->getName().' $'.$p;
-            } else {
-              $sig.= ', $'.$p;
-            }
-            if ($param->isOptional()) {
-              $sig.= '= '.var_export($param->getDefaultValue(), true);
-            }
-            $pass.= ', $'.$p;
-          }
-          $bytes.= $memberAnnotations.'function '.$name.'('.substr($sig, 2).')';
-          if ($iface) {
-            $bytes.= ';';
-          } else {
-            $bytes.=
-              '{'.('__construct' === $name ? $bind : '').'$f= self::$__func["'.$name.'"]; '.
-              'return $f('.('' === $pass ? '' : substr($pass, 2)).'); }'
-            ;
-            $functions[$name]= $member;
-          }
+          $bytes.= $memberAnnotations.self::defineForward(
+            $name,
+            (new \ReflectionFunction($member))->getParameters(),
+            $iface ? null : 'return self::$__func["'.$name.'"]->__invoke(%s);'
+          );
+          $iface || $functions[$name]= $member;
         } else {
           $bytes.= $memberAnnotations.'public $'.$name.'= '.var_export($member, true).';';
         }
       }
-      $bytes= $iface ? '{'.$bytes.'}' : (
-        '{ static $__func= [];'.
-        (isset($functions['__construct']) ? '' : 'function __construct() {'.$bind.'}').
-        "\n".$bytes.' }'
-      );
+
+      if ($iface) {
+        $bytes= '{ '.$bytes.'}';
+      } else if (isset($functions['__construct'])) {
+        $bytes= '{ static $__func= []; '.$bytes.'}';
+      } else {
+        if (preg_match('/extends ([^ \{]+)/', $declaration, $p) && method_exists($p[1], '__construct')) {
+          $params= (new \ReflectionMethod($p[1], '__construct'))->getParameters();
+          $constructor= self::defineForward('__construct', $params, 'parent::__construct(%s);');
+        } else {
+          $constructor= self::defineForward('__construct', [], '');
+        }
+        $bytes= '{ static $__func= []; '.$constructor.$bytes.'}';
+      }
     } else {
       $bytes= (string)$def;
     }

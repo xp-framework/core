@@ -3,6 +3,7 @@
 use lang\Runnable;
 use lang\Runtime;
 use lang\reflect\Package;
+use lang\ClassLoader;
 use unittest\actions\VerifyThat;
 
 /**
@@ -138,6 +139,17 @@ class NewInstanceTest extends \unittest\TestCase {
       }
     ]);
     $this->assertEquals($this, $instance->test);
+  }
+
+  #[@test]
+  public function arguments_are_passed_to_base_constructor_in_closuremap() {
+    $base= ClassLoader::defineClass($this->getClassName().'_BaseFixture', 'lang.Object', [], [
+      'test' => null,
+      '__construct' => function($test) {
+        $this->test= $test;
+      }
+    ]);
+    $this->assertEquals($this, newinstance($base->getName(), [$this], [])->test);
   }
 
   #[@test, @action(new VerifyThat('processExecutionEnabled'))]
