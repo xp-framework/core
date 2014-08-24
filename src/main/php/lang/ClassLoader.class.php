@@ -45,7 +45,6 @@ final class ClassLoader extends Object implements IClassLoader {
     $modules   = [];
 
   static function __static() {
-    \xp::$loader= new self();
     $modules= [];
     
     // Scan include-path, setting up classloaders for each element
@@ -65,6 +64,8 @@ final class ClassLoader extends Object implements IClassLoader {
     foreach ($modules as $cl) {
       self::$modules[$cl->instanceId()]= Module::register(self::declareModule($cl));
     }
+
+    \xp::$loader= new self();
   }
   
   /**
