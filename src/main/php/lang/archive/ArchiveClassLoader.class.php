@@ -155,7 +155,7 @@ class ArchiveClassLoader extends AbstractClassLoader {
    * @return  bool
    */
   public function providesPackage($package) {
-    $acquired= \xarloader::acquire(urldecode(substr($this->archive, 6, -1)));
+    $acquired= \xp\xar::acquire(urldecode(substr($this->archive, 6, -1)));
     $cmps= strtr($package, '.', '/').'/';
     $cmpl= strlen($cmps);
     
@@ -191,7 +191,7 @@ class ArchiveClassLoader extends AbstractClassLoader {
    */
   public function packageContents($package) {
     $contents= [];
-    $acquired= \xarloader::acquire(urldecode(substr($this->archive, 6, -1)));
+    $acquired= \xp\xar::acquire(urldecode(substr($this->archive, 6, -1)));
     $cmps= strtr($package, '.', '/');
     $cmpl= strlen($cmps);
     

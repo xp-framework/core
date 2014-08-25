@@ -61,11 +61,10 @@ final class ClassLoader extends Object implements IClassLoader {
     }
 
     // Initialize modules
+    \xp::$loader= new self();
     foreach ($modules as $cl) {
       self::$modules[$cl->instanceId()]= Module::register(self::declareModule($cl));
     }
-
-    \xp::$loader= new self();
   }
   
   /**
