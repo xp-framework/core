@@ -167,7 +167,7 @@ do {
     }
 
     if (is_file($f)) {
-      echo '-> '.$f, "\n";
+      // DEBUG echo '-> '.$f, "\n";
       $bootstrap= $f;
       break;
     }
@@ -177,7 +177,7 @@ do {
     trigger_error('[bootstrap] Cannot determine boot class path', E_USER_ERROR);
     exit(0x3d);
   } else if (!$merged) {
-    echo "[MERGE $use, $inc]\n";
+    // DEBUG echo "[MERGE $use, $inc]\n";
     $paths= array_merge(
       $paths,
       scan(array_unique(explode(PATH_SEPARATOR, $use)), $home),
