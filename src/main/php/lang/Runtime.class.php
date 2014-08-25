@@ -43,7 +43,7 @@ class Runtime extends Object {
   
     // dl() will fatal if any of these are set - prevent this
     if (!(bool)ini_get('enable_dl') || (bool)ini_get('safe_mode')) {
-      throw new \IllegalAccessException(sprintf(
+      throw new IllegalAccessException(sprintf(
         'Loading libraries not permitted by system configuration [enable_dl= %s, safe_mode= %s]',
         ini_get('enable_dl'),
         ini_get('safe_mode')
