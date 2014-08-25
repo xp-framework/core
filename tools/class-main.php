@@ -114,7 +114,12 @@ final class xar {
 
 function path($in) {
   $qn= realpath($in);
-  return is_dir($qn) ? $qn.DIRECTORY_SEPARATOR : $qn;
+  if (false === $qn) {
+    trigger_error('[bootstrap] Classpath element ['.$in.'] not found', E_USER_ERROR);
+    exit(0x3d);
+  } else {
+    return is_dir($qn) ? $qn.DIRECTORY_SEPARATOR : $qn;
+  }
 }
 
 function scan($paths, $home= '.') {

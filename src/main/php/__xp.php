@@ -663,13 +663,13 @@ define('LONG_MIN', -PHP_INT_MAX - 1);
 // Hooks
 spl_autoload_register('__load');
 spl_autoload_register('__import');
-ini_set('display_errors', 'false');
 set_error_handler('__error');
 
 // Verify timezone
 date_default_timezone_set(ini_get('date.timezone')) || xp::error('[xp::core] date.timezone not configured properly.');
 
 // Registry initialization
+ini_set('display_errors', 'false');
 xp::$null= new null();
 xp::$loader= new xp();
 xp::$classpath= $paths;
