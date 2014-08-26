@@ -3,6 +3,7 @@
 use unittest\TestCase;
 use util\log\Appender;
 use util\log\LogCategory;
+use util\log\LoggingEvent;
 use util\log\layout\PatternLayout;
 use util\collections\Vector;
 
@@ -17,73 +18,48 @@ class LogAppenderTest extends TestCase {
 
   /**
    * Sets up test case
-   *
    */
   public function setUp() {
-    $this->events= create('new util.collections.Vector<String>()');
-    $appender= newinstance('util.log.Appender', array($this->events), '{
-      private $events= NULL;
-
-      public function __construct($events) {
-        $this->events= $events;
+    $this->events= create('new util.collections.Vector<string>()');
+    $appender= newinstance('util.log.Appender', [$this->events], [
+      'events' => null,
+      '__construct' => function($events) { $this->events= $events; },
+      'append' => function(LoggingEvent $event) {
+        $this->events[]= $this->layout->format($event);
       }
-
-      public function append(\util\log\LoggingEvent $event) {
-        $this->events[]= new \lang\types\String($this->layout->format($event));
-      }
-    }');
+    ]);
     $this->fixture= (new LogCategory('default'))
       ->withAppender($appender->withLayout(new PatternLayout('[%l] %m')))
     ;
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function info() {
     $this->fixture->info('Hello');
-    $this->assertEquals(new \lang\types\String('[info] Hello'), $this->events[0]);
+    $this->assertEquals('[info] Hello', $this->events[0]);
   }
 
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function infoWithMultipleArguments() {
     $this->fixture->info('Hello', 'World');
-    $this->assertEquals(new \lang\types\String('[info] Hello World'), $this->events[0]);
+    $this->assertEquals('[info] Hello World', $this->events[0]);
   }
 
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function warn() {
     $this->fixture->warn('Hello');
-    $this->assertEquals(new \lang\types\String('[warn] Hello'), $this->events[0]);
+    $this->assertEquals('[warn] Hello', $this->events[0]);
   }
 
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function debug() {
     $this->fixture->debug('Hello');
-    $this->assertEquals(new \lang\types\String('[debug] Hello'), $this->events[0]);
+    $this->assertEquals('[debug] Hello', $this->events[0]);
   }
 
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function error() {
     $this->fixture->error('Hello');
-    $this->assertEquals(new \lang\types\String('[error] Hello'), $this->events[0]);
+    $this->assertEquals('[error] Hello', $this->events[0]);
   }
 }
