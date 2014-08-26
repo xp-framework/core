@@ -158,7 +158,6 @@ function scan($paths, $home= '.') {
 
 // Bootstrap
 stream_wrapper_register('xar', 'xp\xar');
-list($use, $inc)= explode(PATH_SEPARATOR.PATH_SEPARATOR, get_include_path());
 $home= getenv('HOME');
 $paths= scan(['.'], $home);
 $merged= false;
@@ -183,6 +182,7 @@ do {
     exit(0x3d);
   } else if (!$merged) {
     // DEBUG echo "[MERGE $use, $inc]\n";
+    list($use, $inc)= explode(PATH_SEPARATOR.PATH_SEPARATOR, get_include_path());
     $paths= array_merge(
       $paths,
       scan(array_unique(explode(PATH_SEPARATOR, $use)), $home),
