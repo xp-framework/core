@@ -660,17 +660,18 @@ error_reporting(E_ALL);
 define('LONG_MAX', PHP_INT_MAX);
 define('LONG_MIN', -PHP_INT_MAX - 1);
 
+// Verify timezone
+date_default_timezone_set(ini_get('date.timezone')) || xp::error('[xp::core] date.timezone not configured properly.');
+
 // Hooks
 spl_autoload_register('__load');
 spl_autoload_register('__import');
 set_error_handler('__error');
-
-// Verify timezone
-date_default_timezone_set(ini_get('date.timezone')) || xp::error('[xp::core] date.timezone not configured properly.');
+ini_set('display_errors', 'false');
 
 // Registry initialization
+global $paths;
 if (!isset($paths)) $paths= [__DIR__.DIRECTORY_SEPARATOR, '.'.DIRECTORY_SEPARATOR];
-ini_set('display_errors', 'false');
 xp::$null= new null();
 xp::$loader= new xp();
 xp::$classpath= $paths;
