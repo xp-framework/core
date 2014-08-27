@@ -672,6 +672,6 @@ date_default_timezone_set(ini_get('date.timezone')) || xp::error('[xp::core] dat
 ini_set('display_errors', 'false');
 xp::$null= new null();
 xp::$loader= new xp();
-xp::$classpath= $paths;
+xp::$classpath= $paths ?: [__DIR__.DIRECTORY_SEPARATOR];
 set_include_path(rtrim(implode(PATH_SEPARATOR, $paths), PATH_SEPARATOR));
 // }}}
