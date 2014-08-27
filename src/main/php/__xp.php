@@ -669,9 +669,10 @@ set_error_handler('__error');
 date_default_timezone_set(ini_get('date.timezone')) || xp::error('[xp::core] date.timezone not configured properly.');
 
 // Registry initialization
+if (!isset($paths)) $paths= [__DIR__.DIRECTORY_SEPARATOR, '.'];
 ini_set('display_errors', 'false');
 xp::$null= new null();
 xp::$loader= new xp();
-xp::$classpath= $paths ?: [__DIR__.DIRECTORY_SEPARATOR];
+xp::$classpath= $paths;
 set_include_path(rtrim(implode(PATH_SEPARATOR, $paths), PATH_SEPARATOR));
 // }}}
