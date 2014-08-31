@@ -17,7 +17,6 @@ define('MODIFIER_PROTECTED',  512);
 define('MODIFIER_PRIVATE',   1024);
 
 error_reporting(E_ALL);
-ini_set('display_errors', 'false');
 set_error_handler('__error');
 
 global $paths;
@@ -42,3 +41,5 @@ spl_autoload_register(function($class) {
     return true;
   }
 });
+
+\lang\ClassLoader::getDefault();
