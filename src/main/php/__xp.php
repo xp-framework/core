@@ -11,6 +11,12 @@ date_default_timezone_set(ini_get('date.timezone')) || xp::error('[xp::core] dat
 
 define('LONG_MAX', PHP_INT_MAX);
 define('LONG_MIN', -PHP_INT_MAX - 1);
+define('MODIFIER_STATIC',       1);
+define('MODIFIER_ABSTRACT',     2);
+define('MODIFIER_FINAL',        4);
+define('MODIFIER_PUBLIC',     256);
+define('MODIFIER_PROTECTED',  512);
+define('MODIFIER_PRIVATE',   1024);
 
 spl_autoload_register('__load');
 spl_autoload_register('__import');
