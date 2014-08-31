@@ -104,7 +104,7 @@ final class xp {
       if (false === ($p= strrpos($class, '.'))) {
         $name= $class;
       } else if (null !== $package) {
-        $name= strtr($class, '.', '·');
+        $name= strtr($class, '.', 'Â·');
         class_alias($name, strtr($class, '.', '\\'));
       } else {
         $name= strtr($class, '.', '\\');
@@ -256,18 +256,18 @@ final class xp {
   //     Retrieve type literal for a given type name
   static function reflect($type) {
     if ('string' === $type || 'int' === $type || 'double' === $type || 'bool' == $type) {
-      return 'þ'.$type;
+      return "\xfe".$type;
     } else if ('var' === $type) {
       return $type;
     } else if ('[]' === substr($type, -2)) {
-      return '¦'.xp::reflect(substr($type, 0, -2));
+      return "\xa6".xp::reflect(substr($type, 0, -2));
     } else if ('[:' === substr($type, 0, 2)) {
-      return '»'.xp::reflect(substr($type, 2, -1));
+      return "\xbb".xp::reflect(substr($type, 2, -1));
     } else if (false !== ($p= strpos($type, '<'))) {
-      $l= xp::reflect(substr($type, 0, $p)).'··';
+      $l= xp::reflect(substr($type, 0, $p))."\xb7\xb7";
       for ($args= substr($type, $p+ 1, -1).',', $o= 0, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
         if (',' === $args{$i} && 0 === $brackets) {
-          $l.= strtr(xp::reflect(ltrim(substr($args, $o, $i- $o))).'¸', '\\', '¦');
+          $l.= strtr(xp::reflect(ltrim(substr($args, $o, $i- $o)))."\xb8", '\\', "\xa6");
           $o= $i+ 1;
         } else if ('<' === $args{$i}) {
           $brackets++;
@@ -513,7 +513,7 @@ function newinstance($spec, $args, $def= null) {
   if (strstr($spec, '<')) {
     $class= Type::forName($spec);
     $type= $class->literal();
-    $p= strrpos(substr($type, 0, strpos($type, '··')), '·');
+    $p= strrpos(substr($type, 0, strpos($type, "\xb7\xb7")), "\xb7");
     $generic= xp::$meta[$class->getName()]['class'][DETAIL_GENERIC];
   } else {
     false === strrpos($spec, '.') && $spec= xp::nameOf($spec);
@@ -522,14 +522,14 @@ function newinstance($spec, $args, $def= null) {
     } catch (\lang\ClassLoadingException $e) {
       xp::error($e->getMessage());
     }
-    $p= strrpos($type, '·');
+    $p= strrpos($type, "\xb7");
     $generic= null;
   }
 
   // Create unique name
-  $n= '·'.(++$u);
+  $n= "\xb7".(++$u);
   if (false !== $p) {
-    $spec= strtr(substr($type, 0, $p), '·', '.').'.'.substr($type, $p+ 1).$n;
+    $spec= strtr(substr($type, 0, $p), "\xb7", '.').'.'.substr($type, $p+ 1).$n;
   } else {
     $spec= strtr($type, '\\', '.').$n;
   }
