@@ -519,7 +519,7 @@ function newinstance($spec, $args, $def= null) {
     false === strrpos($spec, '.') && $spec= xp::nameOf($spec);
     try {
       $type= 0 === strncmp($spec, 'php.', 4) ? substr($spec, 4) : xp::$loader->loadClass0($spec);
-    } catch (ClassLoadingException $e) {
+    } catch (\lang\ClassLoadingException $e) {
       xp::error($e->getMessage());
     }
     $p= strrpos($type, '·');
