@@ -615,17 +615,6 @@ function typeof($arg) {
 }
 // }}}
 
-// {{{ proto bool __load(string class)
-//     SPL Autoload callback
-function __load($class) {
-  $name= strtr($class, '\\', '.');
-  $cl= xp::$loader->findClass($name);
-  if ($cl instanceof null) return false;
-  $cl->loadClass0($name);
-  return true;
-}
-// }}}
-
 // {{{ class import
 class import {
   function __construct($str) {
@@ -633,18 +622,6 @@ class import {
     xp::$cli[]= function($scope) use ($class) {
       $class::__import($scope);
     };
-  }
-}
-// }}}
-
-// {{{ proto bool __import(string class)
-//     SPL Autoload callback
-function __import($class) {
-  if (false === strrpos($class, '\\import')) {
-    return false;
-  } else {
-    class_alias('import', $class);
-    return true;
   }
 }
 // }}}
