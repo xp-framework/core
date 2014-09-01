@@ -6,7 +6,7 @@ trait __xp {
   // {{{ static invocation handler
   public static function __callStatic($name, $args) {
     $self= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'];
-    throw new Error('Call to undefined static method '.\xp::nameOf($self).'::'.$name.'()');
+    throw new \lang\Error('Call to undefined static method '.\xp::nameOf($self).'::'.$name.'()');
   }
   // }}}
 
@@ -37,7 +37,7 @@ trait __xp {
       }
     }
 
-    throw new Error('Call to undefined method '.\xp::nameOf($self).'::'.$name.'() from scope '.\xp::nameOf($scope));
+    throw new \lang\Error('Call to undefined method '.\xp::nameOf($self).'::'.$name.'() from scope '.\xp::nameOf($scope));
   }
   // }}}
 
