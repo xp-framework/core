@@ -1,12 +1,5 @@
 <?php
 
-define('MODIFIER_STATIC',       1);
-define('MODIFIER_ABSTRACT',     2);
-define('MODIFIER_FINAL',        4);
-define('MODIFIER_PUBLIC',     256);
-define('MODIFIER_PROTECTED',  512);
-define('MODIFIER_PRIVATE',   1024);
-
 // {{{ trait xp
 trait __xp {
 
@@ -71,7 +64,14 @@ final class xp {
   public static $meta= [];
   public static $registry= [];
   
-  // {{{ proto string loadClass0(string name)
+  // {{{ proto lang.IClassLoader findClass(string class)
+  //     Finds the class loader for a class by its fully qualified name
+  function findClass($class) {
+    return $this;
+  }
+  // }}}
+
+  // {{{ proto string loadClass0(string class)
   //     Loads a class by its fully qualified name
   function loadClass0($class) {
     if (isset(xp::$cl[$class])) return array_search($class, xp::$cn, true);
@@ -104,7 +104,7 @@ final class xp {
       if (false === ($p= strrpos($class, '.'))) {
         $name= $class;
       } else if (null !== $package) {
-        $name= strtr($class, '.', '·');
+        $name= strtr($class, '.', 'Â·');
         class_alias($name, strtr($class, '.', '\\'));
       } else {
         $name= strtr($class, '.', '\\');
@@ -256,18 +256,18 @@ final class xp {
   //     Retrieve type literal for a given type name
   static function reflect($type) {
     if ('string' === $type || 'int' === $type || 'double' === $type || 'bool' == $type) {
-      return 'þ'.$type;
+      return "\xfe".$type;
     } else if ('var' === $type) {
       return $type;
     } else if ('[]' === substr($type, -2)) {
-      return '¦'.xp::reflect(substr($type, 0, -2));
+      return "\xa6".xp::reflect(substr($type, 0, -2));
     } else if ('[:' === substr($type, 0, 2)) {
-      return '»'.xp::reflect(substr($type, 2, -1));
+      return "\xbb".xp::reflect(substr($type, 2, -1));
     } else if (false !== ($p= strpos($type, '<'))) {
-      $l= xp::reflect(substr($type, 0, $p)).'··';
+      $l= xp::reflect(substr($type, 0, $p))."\xb7\xb7";
       for ($args= substr($type, $p+ 1, -1).',', $o= 0, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
         if (',' === $args{$i} && 0 === $brackets) {
-          $l.= strtr(xp::reflect(ltrim(substr($args, $o, $i- $o))).'¸', '\\', '¦');
+          $l.= strtr(xp::reflect(ltrim(substr($args, $o, $i- $o)))."\xb8", '\\', "\xa6");
           $o= $i+ 1;
         } else if ('<' === $args{$i}) {
           $brackets++;
@@ -298,7 +298,7 @@ final class xp {
     static $version= null;
 
     if (null === $version) {
-      $version= trim(ClassLoader::getDefault()->getResource('VERSION'));
+      $version= trim(\lang\ClassLoader::getDefault()->getResource('VERSION'));
     }
     return $version;
   }
@@ -342,120 +342,6 @@ final class null {
   //     Set proxy
   function __get($name) {
     throw new \lang\NullPointerException('Property.read('.$name.')');
-  }
-  // }}}
-}
-// }}}
-
-// {{{ final class xarloader
-final class xarloader {
-  public
-    $position     = 0,
-    $archive      = null,
-    $filename     = '';
-    
-  // {{{ proto [:var] acquire(string archive)
-  //     Archive instance handling pool function, opens an archive and reads header only once
-  static function acquire($archive) {
-    static $archives= [];
-    static $unpack= [
-      1 => 'a80id/a80*filename/a80*path/V1size/V1offset/a*reserved',
-      2 => 'a240id/V1size/V1offset/a*reserved'
-    ];
-    
-    if ('/' === $archive{0} && ':' === $archive{2}) {
-      $archive= substr($archive, 1);    // Handle xar:///f:/archive.xar => f:/archive.xar
-    }
-
-    if (!isset($archives[$archive])) {
-      $current= ['handle' => fopen($archive, 'rb'), 'dev' => crc32($archive)];
-      $header= unpack('a3id/c1version/V1indexsize/a*reserved', fread($current['handle'], 0x0100));
-      if ('CCA' != $header['id']) raise('lang.FormatException', 'Malformed archive '.$archive);
-      for ($current['index']= [], $i= 0; $i < $header['indexsize']; $i++) {
-        $entry= unpack(
-          $unpack[$header['version']], 
-          fread($current['handle'], 0x0100)
-        );
-        $current['index'][rtrim($entry['id'], "\0")]= [$entry['size'], $entry['offset'], $i];
-      }
-      $current['offset']= 0x0100 + $i * 0x0100;
-      $archives[$archive]= $current;
-    }
-
-    return $archives[$archive];
-  }
-  // }}}
-  
-  // {{{ proto bool stream_open(string path, string mode, int options, string opened_path)
-  //     Open the given stream and check if file exists
-  function stream_open($path, $mode, $options, $opened_path) {
-    sscanf(strtr($path, ';', '?'), 'xar://%[^?]?%[^$]', $archive, $this->filename);
-    $this->archive= self::acquire(urldecode($archive));
-    return isset($this->archive['index'][$this->filename]);
-  }
-  // }}}
-  
-  // {{{ proto string stream_read(int count)
-  //     Read $count bytes up-to-length of file
-  function stream_read($count) {
-    $f= $this->archive['index'][$this->filename];
-    if (0 === $count || $this->position >= $f[0]) return false;
-
-    fseek($this->archive['handle'], $this->archive['offset'] + $f[1] + $this->position, SEEK_SET);
-    $bytes= fread($this->archive['handle'], min($f[0] - $this->position, $count));
-    $this->position+= strlen($bytes);
-    return $bytes;
-  }
-  // }}}
-  
-  // {{{ proto bool stream_eof()
-  //     Returns whether stream is at end of file
-  function stream_eof() {
-    return $this->position >= $this->archive['index'][$this->filename][0];
-  }
-  // }}}
-  
-  // {{{ proto [:int] stream_stat()
-  //     Retrieve status of stream
-  function stream_stat() {
-    return [
-      'dev'   => $this->archive['dev'],
-      'size'  => $this->archive['index'][$this->filename][0],
-      'ino'   => $this->archive['index'][$this->filename][2]
-    ];
-  }
-  // }}}
-
-  // {{{ proto bool stream_seek(int offset, int whence)
-  //     Callback for fseek
-  function stream_seek($offset, $whence) {
-    switch ($whence) {
-      case SEEK_SET: $this->position= $offset; break;
-      case SEEK_CUR: $this->position+= $offset; break;
-      case SEEK_END: $this->position= $this->archive['index'][$this->filename][0] + $offset; break;
-    }
-    return true;
-  }
-  // }}}
-  
-  // {{{ proto int stream_tell
-  //     Callback for ftell
-  function stream_tell() {
-    return $this->position;
-  }
-  // }}}
-  
-  // {{{ proto [:int] url_stat(string path)
-  //     Retrieve status of url
-  function url_stat($path) {
-    sscanf(strtr($path, ';', '?'), 'xar://%[^?]?%[^$]', $archive, $file);
-    $current= self::acquire(urldecode($archive));
-    return isset($current['index'][$file]) ? [
-      'dev'   => $current['dev'],
-      'mode'  => 0100644,
-      'size'  => $current['index'][$file][0],
-      'ino'   => $current['index'][$file][2]
-    ] : false;
   }
   // }}}
 }
@@ -627,23 +513,23 @@ function newinstance($spec, $args, $def= null) {
   if (strstr($spec, '<')) {
     $class= Type::forName($spec);
     $type= $class->literal();
-    $p= strrpos(substr($type, 0, strpos($type, '··')), '·');
+    $p= strrpos(substr($type, 0, strpos($type, "\xb7\xb7")), "\xb7");
     $generic= xp::$meta[$class->getName()]['class'][DETAIL_GENERIC];
   } else {
     false === strrpos($spec, '.') && $spec= xp::nameOf($spec);
     try {
       $type= 0 === strncmp($spec, 'php.', 4) ? substr($spec, 4) : xp::$loader->loadClass0($spec);
-    } catch (ClassLoadingException $e) {
+    } catch (\lang\ClassLoadingException $e) {
       xp::error($e->getMessage());
     }
-    $p= strrpos($type, '·');
+    $p= strrpos($type, "\xb7");
     $generic= null;
   }
 
   // Create unique name
-  $n= '·'.(++$u);
+  $n= "\xb7".(++$u);
   if (false !== $p) {
-    $spec= strtr(substr($type, 0, $p), '·', '.').'.'.substr($type, $p+ 1).$n;
+    $spec= strtr(substr($type, 0, $p), "\xb7", '.').'.'.substr($type, $p+ 1).$n;
   } else {
     $spec= strtr($type, '\\', '.').$n;
   }
@@ -729,17 +615,6 @@ function typeof($arg) {
 }
 // }}}
 
-// {{{ proto bool __load(string class)
-//     SPL Autoload callback
-function __load($class) {
-  $name= strtr($class, '\\', '.');
-  $cl= xp::$loader->findClass($name);
-  if ($cl instanceof null) return false;
-  $cl->loadClass0($name);
-  return true;
-}
-// }}}
-
 // {{{ class import
 class import {
   function __construct($str) {
@@ -751,131 +626,41 @@ class import {
 }
 // }}}
 
-// {{{ proto bool __import(string class)
-//     SPL Autoload callback
-function __import($class) {
+// {{{ main
+date_default_timezone_set(ini_get('date.timezone')) || xp::error('[xp::core] date.timezone not configured properly.');
+
+define('LONG_MAX', PHP_INT_MAX);
+define('LONG_MIN', -PHP_INT_MAX - 1);
+define('MODIFIER_STATIC',       1);
+define('MODIFIER_ABSTRACT',     2);
+define('MODIFIER_FINAL',        4);
+define('MODIFIER_PUBLIC',     256);
+define('MODIFIER_PROTECTED',  512);
+define('MODIFIER_PRIVATE',   1024);
+
+error_reporting(E_ALL);
+set_error_handler('__error');
+
+global $paths;
+if (!isset($paths)) $paths= array(__DIR__.DIRECTORY_SEPARATOR, '.'.DIRECTORY_SEPARATOR);
+xp::$null= new null();
+xp::$loader= new xp();
+xp::$classpath= $paths;
+set_include_path(rtrim(implode(PATH_SEPARATOR, $paths), PATH_SEPARATOR));
+
+spl_autoload_register(function($class) {
+  $name= strtr($class, '\\', '.');
+  $cl= xp::$loader->findClass($name);
+  if ($cl instanceof null) return false;
+  $cl->loadClass0($name);
+  return true;
+});
+spl_autoload_register(function($class) {
   if (false === strrpos($class, '\\import')) {
     return false;
   } else {
     class_alias('import', $class);
     return true;
   }
-}
-// }}}
-
-// {{{ string[] scanpath(string[] path, string home)
-//     Scans path files inside the given paths
-function scanpath($paths, $home) {
-  $inc= [];
-  foreach ($paths as $path) {
-    if (!($d= @opendir($path))) continue;
-    while ($e= readdir($d)) {
-      if ('.pth' !== substr($e, -4)) continue;
-
-      foreach (file($path.DIRECTORY_SEPARATOR.$e) as $line) {
-        $line= trim($line);
-        if ('' === $line || '#' === $line{0}) {
-          continue;
-        } else if ('!' === $line{0}) {
-          $pre= true;
-          $line= substr($line, 1);
-        } else {
-          $pre= false;
-        }
-
-        if ('~' === $line{0}) {
-          $qn= $home.DIRECTORY_SEPARATOR.substr($line, 1);
-        } else if ('/' === $line{0} || strlen($line) > 2 && (':' === $line{1} && '\\' === $line{2})) {
-          $qn= $line;
-        } else {
-          $qn= $path.DIRECTORY_SEPARATOR.$line;
-        }
-
-        $pre ? array_unshift($inc, $qn) : $inc[]= $qn;
-      }
-    }
-    closedir($d);
-  }
-  return $inc;
-}
-// }}}
-
-// {{{ void boostrap(string[] classpath)
-//     Loads omnipresent classes and installs class loading
-function bootstrap($classpath) {
-
-  // Resolve class path
-  xp::$loader= new xp();
-  $inc= '';
-  foreach ($classpath as $element) {
-    $qn= realpath($element);
-    if (false === $qn) {
-      \xp::error('[bootstrap] Classpath element ['.$element.'] not found');
-    } else if (is_dir($qn)) {
-      $qn.= DIRECTORY_SEPARATOR;
-    } else if ('.php' === substr($element, -4, 4)) {
-      require($qn);
-      continue;
-    }
-    xp::$classpath[]= $qn;
-    $inc.= $element.PATH_SEPARATOR;
-  }
-  set_include_path(rtrim($inc, PATH_SEPARATOR));
-
-  // Load omnipresent classes
-  foreach ([
-    'lang.Generic',
-    'lang.Object',
-    'lang.Throwable',
-    'lang.Error',
-    'lang.XPException',
-    'lang.Type',
-    'lang.XPClass',
-    'lang.NullPointerException',
-    'lang.IllegalAccessException',
-    'lang.IllegalArgumentException',
-    'lang.IllegalStateException',
-    'lang.FormatException',
-    'lang.IClassLoader',
-    'lang.AbstractClassLoader',
-    'lang.FileSystemClassLoader',
-    'lang.archive.ArchiveClassLoader',
-    'lang.ClassLoader',
-    'lang.types.ArrayList',
-    'lang.types.Boolean',
-    'lang.types.Byte',
-    'lang.types.Bytes',
-    'lang.types.Character',
-    'lang.types.Double',
-    'lang.types.Float',
-    'lang.types.Integer',
-    'lang.types.Long',
-    'lang.types.Short',
-    'lang.types.String'
-  ] as $class) {
-    xp::$loader->loadClass0($class);
-  }
-}
-// }}}
-
-// {{{ initialization
-error_reporting(E_ALL);
-
-// Constants
-define('LONG_MAX', PHP_INT_MAX);
-define('LONG_MIN', -PHP_INT_MAX - 1);
-
-// Hooks
-spl_autoload_register('__load');
-spl_autoload_register('__import');
-set_error_handler('__error');
-
-// Verify timezone
-date_default_timezone_set(ini_get('date.timezone')) || xp::error('[xp::core] date.timezone not configured properly.');
-
-// Registry initialization
-xp::$null= new null();
-
-// Register stream wrapper for .xar class loading
-stream_wrapper_register('xar', 'xarloader');
+});
 // }}}

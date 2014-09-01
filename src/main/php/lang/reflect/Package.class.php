@@ -44,7 +44,7 @@ class Package extends \lang\Object {
    * @param   string name
    * @return  bool
    */
-  public function providesPackage($name) { 
+  public function providesPackage($name) {
     return \lang\ClassLoader::getDefault()->providesPackage($this->name.'.'.$name);
   }
 
@@ -170,7 +170,7 @@ class Package extends \lang\Object {
   public static function forName($name) { 
     $p= new self();
     $p->name= rtrim($name, '.');   // Normalize
-    
+
     if (!\lang\ClassLoader::getDefault()->providesPackage($p->name)) {
       raise('lang.ElementNotFoundException', 'No classloaders provide '.$name);
     }
