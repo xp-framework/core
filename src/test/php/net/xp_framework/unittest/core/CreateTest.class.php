@@ -32,7 +32,7 @@ class CreateTest extends \unittest\TestCase {
     $this->assertEquals($fixture, create($fixture));
   }
 
-  #[@test]
+  #[@test, @ignore('No short aliases at the moment')]
   public function create_with_all_short_names_for_components() {
     $h= create('new util.collections.HashTable<String, String>');
     $this->assertEquals(

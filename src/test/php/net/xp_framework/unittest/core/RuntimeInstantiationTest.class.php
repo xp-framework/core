@@ -63,7 +63,7 @@ class RuntimeInstantiationTest extends TestCase {
         try {
           Runtime::getInstance()->loadLibrary("standard");
           echo "+OK No exception thrown";
-        } catch (Throwable $e) {
+        } catch (\lang\Throwable $e) {
           echo "-ERR ".$e->getClassName();
         }
       ')
@@ -78,7 +78,7 @@ class RuntimeInstantiationTest extends TestCase {
         try {
           Runtime::getInstance()->loadLibrary(":DOES-NOT-EXIST");
           echo "-ERR No exception thrown";
-        } catch (ElementNotFoundException $e) {
+        } catch (\lang\ElementNotFoundException $e) {
           echo "+OK ".$e->getClassName();
         }
       ')
@@ -93,7 +93,7 @@ class RuntimeInstantiationTest extends TestCase {
         try {
           Runtime::getInstance()->loadLibrary("irrelevant");
           echo "-ERR No exception thrown";
-        } catch (IllegalAccessException $e) {
+        } catch (\lang\IllegalAccessException $e) {
           echo "+OK ".$e->getClassName();
         }
       ')
@@ -106,7 +106,7 @@ class RuntimeInstantiationTest extends TestCase {
       try {
         $r= Runtime::getInstance()->loadLibrary("xsl");
         echo "+OK: ", $r ? "Loaded" : "Compiled";
-      } catch (Throwable $e) {
+      } catch (\lang\Throwable $e) {
         echo "-ERR ".$e->toString();
       }
     ');
