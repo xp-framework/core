@@ -69,12 +69,12 @@ class AssertionsTest extends \unittest\TestCase {
     $this->assertEquals(2, $instance->equalsInvoked);
   }
 
-  #[@test, @values([0, 1, -1, LONG_MAX, LONG_MIN])]
+  #[@test, @values([0, 1, -1, PHP_INT_MAX])]
   public function integersAreEqual($int) {
     $this->assertEquals($int, $int);
   }    
 
-  #[@test, @values(['', 'Hello', 'äöüß'])]
+  #[@test, @values(['', 'Hello', 'Ã¤Ã¶Ã¼ÃŸ'])]
   public function stringsAreEqual($str) {
     $this->assertEquals($str, $str);
   }    
@@ -103,7 +103,7 @@ class AssertionsTest extends \unittest\TestCase {
     $this->assertEquals($hash, array_reverse($hash, true), \xp::stringOf($hash));
   }    
 
-  #[@test, @values([new String(''), new String('Hello'), new String('äöüß', 'iso-8859-1')])]
+  #[@test, @values([new String(''), new String('Hello'), new String('Ã¤Ã¶Ã¼ÃŸ')])]
   public function stringObjectsAreEqual($str) {
     $this->assertEquals($str, $str);
   }

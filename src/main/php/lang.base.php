@@ -629,8 +629,6 @@ class import {
 // {{{ main
 date_default_timezone_set(ini_get('date.timezone')) || xp::error('[xp::core] date.timezone not configured properly.');
 
-define('LONG_MAX', PHP_INT_MAX);
-define('LONG_MIN', -PHP_INT_MAX - 1);
 define('MODIFIER_STATIC',       1);
 define('MODIFIER_ABSTRACT',     2);
 define('MODIFIER_FINAL',        4);

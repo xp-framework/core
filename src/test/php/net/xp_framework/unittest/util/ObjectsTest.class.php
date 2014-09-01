@@ -14,7 +14,7 @@ class ObjectsTest extends TestCase {
   public function primitives() {
     return [
       [false], [true],
-      [1], [0], [-1], [LONG_MAX], [LONG_MIN],
+      [1], [0], [-1], [PHP_INT_MAX], [-PHP_INT_MAX -1],
       [1.0], [0.5], [-6.1],
       [''], ['String'], ["\0"]
     ];
