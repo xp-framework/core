@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Made xp-framework available [via Composer](https://packagist.org/packages/xp-framework/core)
+  (@thekid)
 * Refactor fatal error handling, see xp-framework/core#30 - (@thekid)
 * Changed Console class to throw exceptions if read and/or write operations
   are invoked outside of a console environment - (@thekid, @kiesel)
