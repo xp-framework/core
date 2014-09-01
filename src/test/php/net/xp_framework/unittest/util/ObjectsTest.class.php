@@ -3,7 +3,6 @@
 use unittest\TestCase;
 use util\Objects;
 
-
 /**
  * TestCase for Objects class
  *
@@ -11,63 +10,47 @@ use util\Objects;
  */
 class ObjectsTest extends TestCase {
 
-  /**
-   * Creates primitives
-   *
-   * @return  var[]
-   */
+  /** @return  var[][] */
   public function primitives() {
-    return array(
-      array(false), array(true),
-      array(1), array(0), array(-1), array(LONG_MAX), array(LONG_MIN),
-      array(1.0), array(0.5), array(-6.1),
-      array('', 'String', "\0")
-    );
+    return [
+      [false], [true],
+      [1], [0], [-1], [LONG_MAX], [LONG_MIN],
+      [1.0], [0.5], [-6.1],
+      [''], ['String'], ["\0"]
+    ];
   }
 
-  /**
-   * Creates arrays
-   *
-   * @return  var[]
-   */
+  /** @return  var[][] */
   public function arrays() {
-    return array(
-      array([]), array(array(1, 2, 3)), array(array(null, null)),
-      array(array(array('Nested'), array('Array')))
-    );
+    return [
+      [[]],
+      [[1, 2, 3]],
+      [[null, null]],
+      [[['Nested'], ['Array']]]
+    ];
   }
 
-  /**
-   * Creates maps
-   *
-   * @return  var[]
-   */
+  /** @return  var[][] */
   public function maps() {
-    return array(
-      array(array('one' => 'two'))
-    );
+    return [
+      [['one' => 'two']]
+    ];
   }
 
-  /**
-   * Creates objects
-   *
-   * @return  var[]
-   */
+  /** @return  var[][] */
   public function objects() {
-    return array(
-      array($this), array(new \lang\Object()),
-      array(new \lang\types\String(''), new \lang\types\String('Test'))
-    );
+    return [
+      [$this],
+      [new \lang\Object()],
+      [new \lang\types\String('')],
+      [new \lang\types\String('Test')]
+    ];
   }
 
-  /**
-   * Creates values of all types
-   *
-   * @return  var[]
-   */
+  /** @return  var[][] */
   public function values() {
     return array_merge(
-      array(null),
+      [null],
       $this->primitives(),
       $this->arrays(),
       $this->maps(),
@@ -92,17 +75,17 @@ class ObjectsTest extends TestCase {
     $this->assertTrue(Objects::equal($val, $val));
   }
 
-  #[@test, @values(source= 'valuesExcept', args= array(NULL))]
+  #[@test, @values(source= 'valuesExcept', args= [null])]
   public function null_not_equal_to_other_values($val) {
     $this->assertFalse(Objects::equal(null, $val));
   }
 
-  #[@test, @values(source= 'valuesExcept', args= array(FALSE))]
+  #[@test, @values(source= 'valuesExcept', args= [false])]
   public function false_not_equal_to_other_values($val) {
     $this->assertFalse(Objects::equal(false, $val));
   }
 
-  #[@test, @values(source= 'valuesExcept', args= array(TRUE))]
+  #[@test, @values(source= 'valuesExcept', args= [true])]
   public function true_not_equal_to_other_values($val) {
     $this->assertFalse(Objects::equal(true, $val));
   }
@@ -124,12 +107,12 @@ class ObjectsTest extends TestCase {
 
   #[@test, @values(source= 'values')]
   public function array_not_equal_to_other_values($val) {
-    $this->assertFalse(Objects::equal(array(4, 5, 6), $val));
+    $this->assertFalse(Objects::equal([4, 5, 6], $val));
   }
 
   #[@test, @values(source= 'values')]
   public function hash_not_equal_to_other_values($val) {
-    $this->assertFalse(Objects::equal(array('color' => 'blue'), $val));
+    $this->assertFalse(Objects::equal(['color' => 'blue'], $val));
   }
 
   #[@test, @values(source= 'values')]
@@ -144,17 +127,14 @@ class ObjectsTest extends TestCase {
 
   #[@test]
   public function differently_ordered_arrays_not_equal() {
-    $this->assertFalse(Objects::equal(
-      array(1, 2, 3),
-      array(3, 2, 1)
-    ));
+    $this->assertFalse(Objects::equal([1, 2, 3], [3, 2, 1]));
   }
 
   #[@test]
   public function differently_ordered_hashes_are_equal() {
     $this->assertTrue(Objects::equal(
-      array('price' => 12.99, 'color' => 'blue'),
-      array('color' => 'blue', 'price' => 12.99)
+      ['price' => 12.99, 'color' => 'blue'],
+      ['color' => 'blue', 'price' => 12.99]
     ));
   }
 
