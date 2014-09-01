@@ -50,6 +50,7 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented RFC #288: Deprecate LONG_MIN / LONG_MAX (@thekid)
 * Implemented RFC #287: Get rid of tools (@thekid)
 * Implemented RFC #184: ArrayMap and ArrayList - (@thekid)
 * Implemented RFC #286: Function types - (@thekid)
