@@ -5,6 +5,7 @@ if (version_compare(PHP_VERSION, '5.4.0', '<')) {
   exit(0x3d);
 }
 
-require __DIR__.DIRECTORY_SEPARATOR.'lang.base.php';
+$p= max(strrpos(__FILE__, DIRECTORY_SEPARATOR), strrpos(__FILE__, '?'));
+require substr(__FILE__, 0, $p + 1).'lang.base.php';
 
-\lang\ClassLoader::registerPath(__DIR__);
+\lang\ClassLoader::getDefault();
