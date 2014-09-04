@@ -18,16 +18,15 @@ before_script:
   - echo "use=." > xp.ini
   - echo "[runtime]" >> xp.ini
   - echo "date.timezone=Europe/Berlin" >> xp.ini
-  - export PATH=$PATH:.
 
 script:
-  - (EXCD=0; for i in src/test/config/unittest/*.ini; do echo "---> $i"; unittest $i; RES=$?; if [ $RES -ne 0 ]; then EXCD=$RES; fi; done; exit $EXCD;)
+  - (EXCD=0; for i in src/test/config/unittest/*.ini; do echo "---> $i"; ./unittest $i; RES=$?; if [ $RES -ne 0 ]; then EXCD=$RES; fi; done; exit $EXCD;)
 
 before_deploy:
-  - export PATH=$PATH:.
+  - ls -al
   - export REL=`echo $TRAVIS_TAG | sed -e 's/^v//g'`
   - echo "===> Building release $REL"
-  - sh build.sh $REL
+  - sh .travis-build.sh $REL
 
 deploy:
   provider: releases
@@ -40,4 +39,4 @@ deploy:
   on:
     tags: true
     all_branches: true
-    php: 5.6
+    php: 5.4
