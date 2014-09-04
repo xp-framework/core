@@ -18,15 +18,14 @@ before_script:
   - echo "use=." > xp.ini
   - echo "[runtime]" >> xp.ini
   - echo "date.timezone=Europe/Berlin" >> xp.ini
+  - export PATH=$PATH:.
 
 script:
-  - (EXCD=0; for i in src/test/config/unittest/*.ini; do echo "---> $i"; ./unittest $i; RES=$?; if [ $RES -ne 0 ]; then EXCD=$RES; fi; done; exit $EXCD;)
+  - (EXCD=0; for i in src/test/config/unittest/*.ini; do echo "---> $i"; unittest $i; RES=$?; if [ $RES -ne 0 ]; then EXCD=$RES; fi; done; exit $EXCD;)
 
 before_deploy:
   - export REL=`echo $TRAVIS_TAG | sed -e 's/^v//g`
-  - cd src/main/php ; echo $REL > VERSION ; xar cvf ../../../xp-rt-$REL.xar . VERSION ; cd ../../..
-  - cat glue.json | sed -e "s/.version.*:.*,/\"version\" : \"$REL\",/g" > tmp ; mv tmp glue.json
-  - ls -al xp-rt-$REL.xar
+  - sh build.sh $REL
 
 deploy:
   provider: releases
