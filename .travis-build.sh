@@ -8,5 +8,6 @@ echo $REL > VERSION
 cd ../../..
 
 cat glue.json | sed -e "s/.version.*:.*,/\"version\" : \"$REL\",/g" > tmp ; mv tmp glue.json
+
 ls -al xp-rt-$REL.xar
 cat glue.json
