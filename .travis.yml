@@ -10,8 +10,8 @@ php:
   - hhvm
 
 matrix:
-    allow_failures:
-        - php: hhvm
+  allow_failures:
+    - php: hhvm
 
 before_script:
   - wget 'https://github.com/xp-framework/xp-runners/releases/download/v5.0.0/setup' -O - | php
@@ -20,5 +20,20 @@ before_script:
   - echo "date.timezone=Europe/Berlin" >> xp.ini
 
 script:
-  - export
   - (EXCD=0; for i in src/test/config/unittest/*.ini; do echo "---> $i"; ./unittest $i; RES=$?; if [ $RES -ne 0 ]; then EXCD=$RES; fi; done; exit $EXCD;)
+
+before_deploy:
+  - export REL=`echo $TRAVIS_TAG | sed -e 's/^v//g`
+  - cd src/main/php ; echo $REL > VERSION ; xar cvf ../../../xp-rt-$REL.xar . VERSION ; cd ../../..
+  - cat glue.json | sed -e "s/.version.*:.*,/\"version\" : \"$REL\",/g" > tmp ; mv tmp glue.json
+  - ls -al xp-rt-$REL.xar
+
+deploy:
+  provider: releases
+  user: thekid
+  password: "XY1YOzPCn0BF1AigB+V5ujRiuc3pGkPxR+EaAY1SpcQBTbiOmoGLSsO5TL7BDZ3aQnvfEQZo+vwHzye2MI069KP26PDWiX/3oCjkQ7l/ngIPys9WVJUgDdm79CQ01e9lrhd7nzlujABe0/BWO39FHVqBshO2nXainZz+OFGihqE"
+  file: xp-rt-$REL.xar
+  skip_cleanup: true
+  on:
+    tags: true
+    all_branches: true
