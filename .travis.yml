@@ -29,8 +29,6 @@ before_deploy:
 
 deploy:
   provider: releases
-  user: thekid
-  api-key: "RWIat4juB/7BpUs7PHDXoBvKqqQsZib/SI+V22VcjfP5jd4n0MabFohMnAzkFVPxBGdMvNiDXtic01RxOXzUDnvdVthAQFN9wZgRj2UIXjv0NR2cvVsh80p/2A0DivSZIxuK76Rv325SD/BKvNdRdlcCbIWJXF8IPpRD1tBOd6I"
   file: 
     - xp-rt-$REL.xar
     - glue.json
@@ -40,3 +38,5 @@ deploy:
     tags: true
     all_branches: true
     php: 5.4
+  api_key:
+    secure: ck29a/HdY45doKYcDC/8T/aC3wtmFIcB5pKtbvyQg1P/Uqeqp8/tWybOAPpZlmVVkEbXGi0yLkumnb6tC1qVeIID8rUhyNHiTQZlPzWT5rMWAvYp1cGGWFuGyNcHxWnioef+5Hnlq7/COLogdby4wknbI+LJiiztHscWwTH3klA=
