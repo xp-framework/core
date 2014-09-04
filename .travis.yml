@@ -32,7 +32,9 @@ deploy:
   provider: releases
   user: thekid
   password: "XY1YOzPCn0BF1AigB+V5ujRiuc3pGkPxR+EaAY1SpcQBTbiOmoGLSsO5TL7BDZ3aQnvfEQZo+vwHzye2MI069KP26PDWiX/3oCjkQ7l/ngIPys9WVJUgDdm79CQ01e9lrhd7nzlujABe0/BWO39FHVqBshO2nXainZz+OFGihqE"
-  file: xp-rt-$REL.xar
+  file: 
+    - xp-rt-$REL.xar
+    - glue.json
   skip_cleanup: true
   on:
     tags: true
