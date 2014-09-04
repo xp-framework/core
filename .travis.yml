@@ -20,4 +20,5 @@ before_script:
   - echo "date.timezone=Europe/Berlin" >> xp.ini
 
 script:
+  - export
   - (EXCD=0; for i in src/test/config/unittest/*.ini; do echo "---> $i"; ./unittest $i; RES=$?; if [ $RES -ne 0 ]; then EXCD=$RES; fi; done; exit $EXCD;)
