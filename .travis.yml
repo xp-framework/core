@@ -38,5 +38,4 @@ deploy:
     tags: true
     all_branches: true
     php: 5.4
-  api_key:
-    secure: ck29a/HdY45doKYcDC/8T/aC3wtmFIcB5pKtbvyQg1P/Uqeqp8/tWybOAPpZlmVVkEbXGi0yLkumnb6tC1qVeIID8rUhyNHiTQZlPzWT5rMWAvYp1cGGWFuGyNcHxWnioef+5Hnlq7/COLogdby4wknbI+LJiiztHscWwTH3klA=
+  api_key: 7b463f0bce03a218c65fbd2761bcdb569e92e9c2
