@@ -23,7 +23,6 @@ script:
   - (EXCD=0; for i in src/test/config/unittest/*.ini; do echo "---> $i"; ./unittest $i; RES=$?; if [ $RES -ne 0 ]; then EXCD=$RES; fi; done; exit $EXCD;)
 
 before_deploy:
-  - ls -al
   - export REL=`echo $TRAVIS_TAG | sed -e 's/^v//g'`
   - echo "===> Building release $REL"
   - sh .travis-build.sh $REL
