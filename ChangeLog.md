@@ -108,6 +108,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Implemented taking exceptions from tearDown() into account for test failure / 
+  success in the unittest package, see xp-framework/core#32 - (@thekid)
 * Implemented pushing back bytes to buffered stream (see xp-framework/core#16)
   (@thekid)
 * Added support for closures in annotations - xp-framework/core#7 - (@thekid)
