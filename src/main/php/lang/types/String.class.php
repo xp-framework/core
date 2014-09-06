@@ -260,7 +260,8 @@ class String extends \lang\Object implements \ArrayAccess {
    */
   public function startsWith($arg) {
     $bytes= $this->asIntern($arg);
-    return 0 === strncmp($this->buffer, $bytes, strlen($bytes));
+    $l= strlen($bytes);
+    return $l > 0 && 0 === strncmp($this->buffer, $bytes, $l);
   }
 
   /**
@@ -272,7 +273,7 @@ class String extends \lang\Object implements \ArrayAccess {
   public function endsWith($arg) {
     $bytes= $this->asIntern($arg);
     $l= strlen($bytes);
-    return 0 === substr_compare($this->buffer, $bytes, -$l, $l);
+    return $l > 0 && 0 === substr_compare($this->buffer, $bytes, -$l, $l);
   }
  
   /**
