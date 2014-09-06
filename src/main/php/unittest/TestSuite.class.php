@@ -365,7 +365,10 @@ class TestSuite extends \lang\Object {
             $this->notifyListeners('testFailed', array(
               $result->setFailed(
                 $t,
-                new AssertionFailedError('Timeout', sprintf('%.3f', $timer->elapsedTime()), sprintf('%.3f', $eta)), 
+                new AssertionFailedError(new FormattedMessage(
+                  'Test runtime of %.3f seconds longer than eta of %.3f seconds',
+                  [$timer->elapsedTime(), $eta]
+                )),
                 $timer->elapsedTime()
               )
             ));
@@ -373,7 +376,10 @@ class TestSuite extends \lang\Object {
             $this->notifyListeners('testFailed', array(
               $result->setFailed(
                 $t,
-                new AssertionFailedError('Expected '.$e->getClassName().'\'s message differs', $e->getMessage(), $expected[1]),
+                new AssertionFailedError(new FormattedMessage(
+                  'Expected %s\'s message "%s" differs from expected %s',
+                  [$e->getClassName(), $e->getMessage(), $expected[1]]
+                )),
                 $timer->elapsedTime()
               )
             ));
@@ -390,7 +396,10 @@ class TestSuite extends \lang\Object {
           $this->notifyListeners('testFailed', array(
             $result->setFailed(
               $t,
-              new AssertionFailedError('Expected exception not caught', $e->getClassName(), $expected[0]->getName()),
+              new AssertionFailedError(new FormattedMessage(
+                'Caught %s instead of expected %s',
+                [$e->compoundMessage(), $expected[0]->getName()]
+              )),
               $timer->elapsedTime()
             )
           ));
@@ -413,7 +422,7 @@ class TestSuite extends \lang\Object {
         $this->notifyListeners('testFailed', array(
           $result->setFailed(
             $t,
-            new AssertionFailedError('Expected exception not caught', null, $expected[0]->getName()),
+            new AssertionFailedError(new FormattedMessage('Expected %s not caught', [$expected[0]->getName()])),
             $timer->elapsedTime()
           )
         ));
