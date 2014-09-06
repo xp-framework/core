@@ -145,4 +145,56 @@ class TestActionTest extends \unittest\TestCase {
       array('one' =>  $test->one, 'two' => $test->two)
     );
   }
+
+  #[@test]
+  public function afterTest_can_raise_AssertionFailedErrors() {
+    ClassLoader::defineClass('net.xp_framework.unittest.tests.FailOnTearDown', 'lang.Object', array('unittest.TestAction'), '{
+      public function beforeTest(\unittest\TestCase $t) {
+        // NOOP
+      }
+
+      public function afterTest(\unittest\TestCase $t) {
+        throw new \unittest\AssertionFailedError("Skip");
+      }
+    }');
+    $test= newinstance('unittest.TestCase', array('fixture'), '{
+      #[@test, @action(new \net\xp_framework\unittest\tests\FailOnTearDown())]
+      public function fixture() {
+        // NOOP
+      }
+    }');
+    $r= $this->suite->runTest($test);
+    $this->assertEquals(1, $r->failureCount());
+  }
+
+  #[@test]
+  public function all_afterTest_exceptions_are_chained_into_one() {
+    ClassLoader::defineClass('net.xp_framework.unittest.tests.FailOnTearDownWith', 'lang.Object', array('unittest.TestAction'), '{
+      protected $message;
+
+      public function __construct($message) {
+        $this->message= $message;
+      }
+
+      public function beforeTest(\unittest\TestCase $t) {
+        // NOOP
+      }
+
+      public function afterTest(\unittest\TestCase $t) {
+        throw new \unittest\AssertionFailedError($this->message);
+      }
+    }');
+    $test= newinstance('unittest.TestCase', array('fixture'), '{
+      #[@test, @action([
+      #  new \net\xp_framework\unittest\tests\FailOnTearDownWith("First"),
+      #  new \net\xp_framework\unittest\tests\FailOnTearDownWith("Second")
+      #])]
+      public function fixture() {
+        // NOOP
+      }
+    }');
+    $r= $this->suite->runTest($test);
+    $outcome= $r->outcomeOf($test);
+    $this->assertEquals(['Second', 'First'], [$outcome->reason->getMessage(), $outcome->reason->getCause()->getMessage()]);
+  }
 }
