@@ -38,4 +38,4 @@ deploy:
     tags: true
     all_branches: true
     php: 5.4
-  api_key: 7b463f0bce03a218c65fbd2761bcdb569e92e9c2
+  api_key: 93d3517c8da0c6e51fa74e01cb279a8a6c6c2527
