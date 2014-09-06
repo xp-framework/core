@@ -303,15 +303,16 @@ class TestSuite extends \lang\Object {
     };
     $tearDown= function($test) use($actions) {
       $test->tearDown();
-      $raised= [];
+      $raised= null;
       foreach ($actions as $action) {
         try {
           $action->afterTest($test);
         } catch (\lang\Throwable $e) {
-          $raised[]= $e;
+          $e->setCause($raised);
+          $raised= $e;
         }
       }
-      if ($raised) throw $raised[0];
+      if ($raised) throw $raised;
     };
 
     $timer= new Timer();

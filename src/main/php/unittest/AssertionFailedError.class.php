@@ -18,6 +18,12 @@ class AssertionFailedError extends \lang\XPException {
     } else {
       parent::__construct((string)$message);
     }
+
+    // Omit 1st element, this is always unittest.TestCase::fail()
+    array_shift($this->trace);
+    foreach ($this->trace as $element) {
+      $element->args= null;
+    }
   }
 
   /**
@@ -26,23 +32,6 @@ class AssertionFailedError extends \lang\XPException {
    * @return  string
    */
   public function compoundMessage() {
-    return $this->getClassName().'{ '.$this->message." }\n";
-  }
-  
-  /**
-   * Retrieve string representation
-   *
-   * @return  string
-   */
-  public function toString() {
-    $s= $this->compoundMessage();
-    
-    // Slice first stack trace element, this is always unittest.TestCase::fail()
-    // Also don't show the arguments
-    for ($i= 1, $t= sizeof($this->trace); $i < $t; $i++) {
-      $this->trace[$i]->args= null;
-      $s.= $this->trace[$i]->toString();
-    }
-    return $s;
+    return $this->getClassName().'{ '.$this->message.' }';
   }
 }
