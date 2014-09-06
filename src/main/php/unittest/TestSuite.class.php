@@ -303,9 +303,15 @@ class TestSuite extends \lang\Object {
     };
     $tearDown= function($test) use($actions) {
       $test->tearDown();
+      $raised= [];
       foreach ($actions as $action) {
-        $action->afterTest($test);
+        try {
+          $action->afterTest($test);
+        } catch (\lang\Throwable $e) {
+          $raised[]= $e;
+        }
       }
+      if ($raised) throw $raised[0];
     };
 
     $timer= new Timer();
@@ -341,14 +347,19 @@ class TestSuite extends \lang\Object {
       }
 
       // Run test
+      $e= null;
       try {
         $method->invoke($test, is_array($args) ? $args : array($args));
+        $tearDown($test);
       } catch (\lang\reflect\TargetInvocationException $x) {
-        $timer->stop();
         $tearDown($test);
         $e= $x->getCause();
+      } catch (\lang\Throwable $e) {
+        // Exception inside teardown
+      }
+      $timer->stop();
 
-        // Was that an expected exception?
+      if ($e) {
         if ($expected && $expected[0]->isInstance($e)) {
           if ($eta && $timer->elapsedTime() > $eta) {
             $this->notifyListeners('testFailed', array(
@@ -398,13 +409,7 @@ class TestSuite extends \lang\Object {
         }
         \xp::gc();
         continue;
-      }
-
-      $timer->stop();
-      $tearDown($test);
-      
-      // Check expected exception
-      if ($expected) {
+      } else if ($expected) {
         $this->notifyListeners('testFailed', array(
           $result->setFailed(
             $t,

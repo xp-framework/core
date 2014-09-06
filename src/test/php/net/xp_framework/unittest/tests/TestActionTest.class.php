@@ -145,4 +145,25 @@ class TestActionTest extends \unittest\TestCase {
       array('one' =>  $test->one, 'two' => $test->two)
     );
   }
+
+  #[@test]
+  public function afterTest_can_raise_AssertionFailedErrors() {
+    ClassLoader::defineClass('net.xp_framework.unittest.tests.FailOnTearDown', 'lang.Object', array('unittest.TestAction'), '{
+      public function beforeTest(\unittest\TestCase $t) {
+        // NOOP
+      }
+
+      public function afterTest(\unittest\TestCase $t) {
+        throw new \unittest\AssertionFailedError("Skip");
+      }
+    }');
+    $test= newinstance('unittest.TestCase', array('fixture'), '{
+      #[@test, @action(new \net\xp_framework\unittest\tests\FailOnTearDown())]
+      public function fixture() {
+        // NOOP
+      }
+    }');
+    $r= $this->suite->runTest($test);
+    $this->assertEquals(1, $r->failureCount());
+  }
 }
