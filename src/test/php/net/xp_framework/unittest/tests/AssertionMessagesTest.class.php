@@ -1,12 +1,13 @@
 <?php namespace net\xp_framework\unittest\tests;
 
 use unittest\TestCase;
-use unittest\AssertionFailedError;
+use unittest\AssertionFailedMessage;
+use lang\types\String;
 
 /**
  * TestCase
  *
- * @see   xp://unittest.AssertionFailedError
+ * @see   xp://unittest.AssertionFailedMessage
  */
 class AssertionMessagesTest extends TestCase {
 
@@ -14,45 +15,43 @@ class AssertionMessagesTest extends TestCase {
    * Assertion helper
    *
    * @param   string expected
-   * @param   unittest.AssertionFailedError error
+   * @param   unittest.AssertionFailedMessage $message
    * @throws  unittest.AssertionFailedError
    */
-  protected function assertMessageEquals($expected, $error) {
-    $this->assertEquals(
-      "unittest.AssertionFailedError { ".$expected." }\n",
-      $error->compoundMessage()
-    );
+  protected function assertFormatted($expected, $message) {
+    $this->assertEquals($expected, $message->format());
   }
+
 
   #[@test]
   public function differentIntegerPrimitives() {
-    $this->assertMessageEquals(
+    $this->assertFormatted(
       'expected [2] but was [1] using: \'equals\'',
-      new AssertionFailedError('equals', 1, 2)
+      new AssertionFailedMessage('equals', 2, 1)
     );
   }
 
   #[@test]
   public function differentBoolPrimitives() {
-    $this->assertMessageEquals(
+    $this->assertFormatted(
       'expected [true] but was [false] using: \'equals\'',
-      new AssertionFailedError('equals', false, true)
+      new AssertionFailedMessage('equals', true, false)
     );
   }
 
   #[@test]
   public function differentPrimitives() {
-    $this->assertMessageEquals(
+    $this->assertFormatted(
       'expected [integer:2] but was [double:2] using: \'equals\'',
-      new AssertionFailedError('equals', 2.0, 2)
+      new AssertionFailedMessage('equals', 2, 2.0)
     );
   }
 
   #[@test]
   public function differentStrings() {
-    $this->assertMessageEquals(
+    $this->assertFormatted(
       'expected [abc] but was [] using: \'equals\'',
-      new AssertionFailedError('equals', new \lang\types\String(''), new \lang\types\String('abc'))
+      new AssertionFailedMessage('equals', new String('abc'), new String(''))
     );
   }
 
@@ -62,91 +61,75 @@ class AssertionMessagesTest extends TestCase {
    */
   #[@test]
   public function differentStringPrimitives() {
-    $this->assertMessageEquals(
+    $this->assertFormatted(
       'expected ["Hello"] but was ["World"] using: \'equals\'',
-      new AssertionFailedError('equals', 'World', 'Hello')
+      new AssertionFailedMessage('equals', 'Hello', 'World')
     );
   }
 
   #[@test]
   public function stringAndStringPrimitive() {
-    $this->assertMessageEquals(
+    $this->assertFormatted(
       'expected [lang.types.String:] but was [string:""] using: \'equals\'',
-      new AssertionFailedError('equals', '', new \lang\types\String(''))
+      new AssertionFailedMessage('equals', new String(''), '')
     );
   }
 
   #[@test]
   public function differentTypes() {
-    $this->assertMessageEquals(
+    $this->assertFormatted(
       'expected [] but was [net.xp_framework.unittest.tests.AssertionMessagesTest<differentTypes>] using: \'equals\'',
-      new AssertionFailedError('equals', $this, new \lang\types\String(''))
+      new AssertionFailedMessage('equals', new String(''), $this)
     );
   }
 
-  /**
-   * Test two integer arrays
-   *
-   */
   #[@test]
   public function twoArrays() {
-    $this->assertMessageEquals(
+    $this->assertFormatted(
       "expected [[1, 2]] but was [[2, 3]] using: 'equals'",
-      new AssertionFailedError('equals', [2, 3], [1, 2])
+      new AssertionFailedMessage('equals', [1, 2], [2, 3])
     );
   }
 
-  /**
-   * Test two objects of the same type
-   *
-   */
   #[@test]
   public function twoObjects() {
-    $this->assertMessageEquals(
+    $this->assertFormatted(
       "expected [unittest.TestCase<a>] but was [unittest.TestCase<b>] using: 'equals'",
-      new AssertionFailedError('equals', new TestCase('b'), new TestCase('a'))
+      new AssertionFailedMessage('equals', new TestCase('a'), new TestCase('b'))
     );
   }
 
-  /**
-   * Test NULL
-   *
-   */
   #[@test]
   public function nullVsObject() {
-    $this->assertMessageEquals(
+    $this->assertFormatted(
       "expected [unittest.TestCase:unittest.TestCase<b>] but was [null] using: 'equals'",
-      new AssertionFailedError('equals', null, new TestCase('b'))
+      new AssertionFailedMessage('equals', new TestCase('b'), null)
     );
   }
 
-  /**
-   * Test NULL
-   *
-   */
   #[@test]
   public function nullVsString() {
-    $this->assertMessageEquals(
+    $this->assertFormatted(
       "expected [string:\"NULL\"] but was [null] using: 'equals'",
-      new AssertionFailedError('equals', null, 'NULL')
+      new AssertionFailedMessage('equals', 'NULL', null)
     );
   }
 
   #[@test]
   public function differentStringsWithCommonLeadingPart() {
     $prefix= str_repeat('*', 100);
-    $this->assertMessageEquals(
-      'expected ["...def"] but was ["...abc"] using: \'equals\'',
-      new AssertionFailedError('equals', $prefix.'abc', $prefix.'def')
+    $this->assertFormatted(
+      'expected ["...abc"] but was ["...def"] using: \'equals\'',
+      new AssertionFailedMessage('equals', $prefix.'abc', $prefix.'def')
     );
   }
 
   #[@test]
   public function differentStringsWithCommonTrailingPart() {
     $postfix= str_repeat('*', 100);
-    $this->assertMessageEquals(
-      'expected ["def..."] but was ["abc..."] using: \'equals\'',
-      new AssertionFailedError('equals', 'abc'.$postfix, 'def'.$postfix)
+    $this->assertFormatted(
+      'expected ["abc..."] but was ["def..."] using: \'equals\'',
+      new AssertionFailedMessage('equals', 'abc'.$postfix, 'def'.$postfix)
     );
   }
 
@@ -154,25 +137,25 @@ class AssertionMessagesTest extends TestCase {
   public function differentStringsWithCommonLeadingAndTrailingPart() {
     $prefix= str_repeat('<', 100);
     $postfix= str_repeat('>', 100);
-    $this->assertMessageEquals(
-      'expected ["...def..."] but was ["...abc..."] using: \'equals\'',
-      new AssertionFailedError('equals', $prefix.'abc'.$postfix, $prefix.'def'.$postfix)
+    $this->assertFormatted(
+      'expected ["...abc..."] but was ["...def..."] using: \'equals\'',
+      new AssertionFailedMessage('equals', $prefix.'abc'.$postfix, $prefix.'def'.$postfix)
     );
   }
 
   #[@test]
   public function prefixShorterThanContextLength() {
-    $this->assertMessageEquals(
+    $this->assertFormatted(
       'expected ["abc!"] but was ["abc."] using: \'equals\'',
-      new AssertionFailedError('equals', 'abc.', 'abc!')
+      new AssertionFailedMessage('equals', 'abc!', 'abc.')
     );
   }
 
   #[@test]
   public function postfixShorterThanContextLength() {
-    $this->assertMessageEquals(
+    $this->assertFormatted(
       'expected ["!abc"] but was [".abc"] using: \'equals\'',
-      new AssertionFailedError('equals', '.abc', '!abc')
+      new AssertionFailedMessage('equals', '!abc', '.abc')
     );
   }
 }

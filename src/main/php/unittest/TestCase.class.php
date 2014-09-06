@@ -38,7 +38,7 @@ class TestCase extends \lang\Object {
    * @return  void
    */
   public function fail($reason, $actual, $expect) {
-    throw new AssertionFailedError($reason, $actual, $expect);
+    throw new AssertionFailedError(new AssertionFailedMessage($reason, $expect, $actual));
   }
 
   /**
