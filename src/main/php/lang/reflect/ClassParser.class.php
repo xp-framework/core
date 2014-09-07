@@ -34,8 +34,8 @@ class ClassParser extends \lang\Object {
       return XPClass::forName($type);
     } else if (isset($imports[$type])) {
       return XPClass::forName($imports[$type]);
-    } else if (isset(\xp::$cn[$type])) {
-      return XPClass::forName(\xp::$cn[$type]);
+    } else if ($name= array_search($type, \xp::$sn, true)) {
+      return XPClass::forName($name);
     } else if (false !== ($p= strrpos($context, '.'))) {
       return XPClass::forName(substr($context, 0, $p + 1).$type);
     } else {
