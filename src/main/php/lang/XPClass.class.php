@@ -750,9 +750,8 @@ class XPClass extends Type {
    * @return  lang.XPClass[] class objects
    */
   public static function getClasses() {
-    $ret= [];
-    foreach (get_declared_classes() as $name) {
-      if (isset(\xp::$cn[$name])) $ret[]= new self($name);
+    foreach (\xp::$cl as $class => $loader) {
+      $ret[]= new self(literal($class));
     }
     return $ret;
   }

@@ -79,6 +79,7 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
     try {
       $r= include($this->classUri($class));
     } catch (ClassLoadingException $e) {
+      unset(\xp::$cl[$class]);
       \xp::$cll--;
 
       $decl= null;
