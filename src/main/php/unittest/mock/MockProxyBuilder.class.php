@@ -104,10 +104,10 @@ class MockProxyBuilder extends \lang\Object {
   private function generateHead($baseClass, $interfaces) {
     // Create proxy class' name, using a unique identifier and a prefix
     $name= $this->getProxyName();
-    $bytes= 'class '.$name.' extends '.\xp::reflect($baseClass->getName()).' implements \unittest\mock\IMockProxy, ';
+    $bytes= 'class '.$name.' extends '.$baseClass->literal().' implements \unittest\mock\IMockProxy, ';
 
     for ($j= 0; $j < sizeof($interfaces); $j++) {
-      $bytes.= \xp::reflect($interfaces[$j]->getName()).', ';
+      $bytes.= $interfaces[$j]->literal().', ';
     }
     $bytes= substr($bytes, 0, -2)." {\n";
 
@@ -268,7 +268,7 @@ class MockProxyBuilder extends \lang\Object {
       $signature= $args= '';
       foreach ($method->getParameters() as $param) {
         $restriction= $param->getTypeRestriction();
-        $signature.= ', '.($restriction ? \xp::reflect($restriction->getName()) : '').' $'.$param->getName();
+        $signature.= ', '.($restriction ? literal($restriction->getName()) : '').' $'.$param->getName();
         $args.= ', $'.$param->getName();
         $param->isOptional() && $signature.= '= '.var_export($param->getDefaultValue(), true);
       }

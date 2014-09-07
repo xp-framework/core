@@ -24,7 +24,7 @@ abstract class RuntimeTypeDefinitionTest extends TestCase {
   protected function defineType($annotations, $name, $define) {
     $t= $name ?: $this->getClassName().'__'.$this->name;
     $spec= trim($annotations.' '.$t);
-    if (interface_exists(\xp::reflect($t), false) || class_exists(\xp::reflect($t), false)) {
+    if (interface_exists(literal($t), false) || class_exists(literal($t), false)) {
       $this->fail('Type may not exist!', $t, null);
     }
     return $define($spec);
