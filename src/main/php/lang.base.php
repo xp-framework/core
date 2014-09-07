@@ -99,7 +99,6 @@ final class xp {
       if (!file_exists($f)) continue;
 
       // Load class
-      $package= null;
       xp::$cl[$class]= $cl.'://'.$path;
       xp::$cll++;
       $r= include($f);
@@ -110,17 +109,10 @@ final class xp {
       }
 
       // Register class name and call static initializer if available
-      if (false === ($p= strrpos($class, '.'))) {
-        $name= $class;
-      } else if (null !== $package) {
-        $name= strtr($class, '.', '·');
-        class_alias($name, strtr($class, '.', '\\'));
-      } else {
-        $name= strtr($class, '.', '\\');
-      }
+      $p= strrpos($class, '.');
+      $name= strtr($class, '.', '\\');
 
       xp::$cn[$name]= $class;
-
       if (0 === strncmp($class, 'lang.', 5)) {
         $short= substr($class, $p + 1);
         class_alias($name, $short);
