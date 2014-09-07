@@ -389,7 +389,7 @@ function uses() {
     if (class_exists($class, false) && method_exists($class, '__import')) {
       if (null === $scope) {
         $trace= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
-        $scope= xp::reflect($trace[2]['args'][0]);
+        $scope= literal($trace[2]['args'][0]);
       }
       call_user_func([$class, '__import'], $scope);
     }
