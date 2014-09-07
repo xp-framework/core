@@ -466,14 +466,14 @@ function literal($type) {
   } else if ('var' === $type) {
     return $type;
   } else if ('[]' === substr($type, -2)) {
-    return "\xa6".xp::reflect(substr($type, 0, -2));
+    return "\xa6".literal(substr($type, 0, -2));
   } else if ('[:' === substr($type, 0, 2)) {
-    return "\xbb".xp::reflect(substr($type, 2, -1));
+    return "\xbb".literal(substr($type, 2, -1));
   } else if (false !== ($p= strpos($type, '<'))) {
     $l= literal(substr($type, 0, $p))."\xb7\xb7";
     for ($args= substr($type, $p+ 1, -1).',', $o= 0, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
       if (',' === $args{$i} && 0 === $brackets) {
-        $l.= strtr(xp::reflect(ltrim(substr($args, $o, $i- $o)))."\xb8", '\\', "\xa6");
+        $l.= strtr(literal(ltrim(substr($args, $o, $i- $o)))."\xb8", '\\', "\xa6");
         $o= $i+ 1;
       } else if ('<' === $args{$i}) {
         $brackets++;
