@@ -256,7 +256,7 @@ final class ClassLoader extends Object implements IClassLoader {
       $typeAnnotations= '';
     }
 
-    if (isset(\xp::$cl[$spec])) return new XPClass(\xp::reflect($spec));
+    if (isset(\xp::$cl[$spec])) return new XPClass(literal($spec));
 
     $functions= [];
     if (null === $def) {
