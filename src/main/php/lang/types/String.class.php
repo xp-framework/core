@@ -273,7 +273,7 @@ class String extends \lang\Object implements \ArrayAccess {
   public function endsWith($arg) {
     $bytes= $this->asIntern($arg);
     $l= strlen($bytes);
-    return $l > 0 && 0 === substr_compare($this->buffer, $bytes, -$l, $l);
+    return $l > 0 && $l <= $this->length && 0 === substr_compare($this->buffer, $bytes, -$l, $l);
   }
  
   /**
