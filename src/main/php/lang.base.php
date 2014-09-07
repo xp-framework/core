@@ -260,37 +260,6 @@ final class xp {
   }
   // }}}
   
-  // {{{ proto string reflect(string type)
-  //     Retrieve type literal for a given type name
-  static function reflect($type) {
-    if ('string' === $type || 'int' === $type || 'double' === $type || 'bool' == $type) {
-      return "\xfe".$type;
-    } else if ('var' === $type) {
-      return $type;
-    } else if ('[]' === substr($type, -2)) {
-      return "\xa6".xp::reflect(substr($type, 0, -2));
-    } else if ('[:' === substr($type, 0, 2)) {
-      return "\xbb".xp::reflect(substr($type, 2, -1));
-    } else if (false !== ($p= strpos($type, '<'))) {
-      $l= xp::reflect(substr($type, 0, $p))."\xb7\xb7";
-      for ($args= substr($type, $p+ 1, -1).',', $o= 0, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
-        if (',' === $args{$i} && 0 === $brackets) {
-          $l.= strtr(xp::reflect(ltrim(substr($args, $o, $i- $o)))."\xb8", '\\', "\xa6");
-          $o= $i+ 1;
-        } else if ('<' === $args{$i}) {
-          $brackets++;
-        } else if ('>' === $args{$i}) {
-          $brackets--;
-        }
-      }
-      return substr($l, 0, -1);
-    } else {
-      $l= array_search($type, xp::$cn, true);
-      return $l ?: substr($type, (false === $p= strrpos($type, '.')) ? 0 : $p+ 1);
-    }
-  }
-  // }}}
-
   // {{{ proto void error(string message)
   //     Throws a fatal error and exits with exitcode 61
   static function error($message) {

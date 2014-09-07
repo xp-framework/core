@@ -104,6 +104,7 @@ class MockProxyBuilder extends \lang\Object {
   private function generateHead($baseClass, $interfaces) {
     // Create proxy class' name, using a unique identifier and a prefix
     $name= $this->getProxyName();
+    \xp::$cn[$name]= $name;
     $bytes= 'class '.$name.' extends '.$baseClass->literal().' implements \unittest\mock\IMockProxy, ';
 
     for ($j= 0; $j < sizeof($interfaces); $j++) {
