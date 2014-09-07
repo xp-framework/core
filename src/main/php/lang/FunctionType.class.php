@@ -99,7 +99,7 @@ class FunctionType extends Type {
     $details= $class ? XPClass::detailsForMethod($class->getName(), $r->getName()) : null;
     if (isset($details[DETAIL_RETURNS])) {
       $returns= Type::forName($details[DETAIL_RETURNS]);
-      if (!$this->returns->isAssignableFrom($returns)) {
+      if (!$this->returns->equals($returns) && !$this->returns->isAssignableFrom($returns)) {
         return $false('Return type mismatch, expecting '.$this->returns->getName().', have '.$returns->getName()); 
       }
     }
@@ -186,7 +186,7 @@ class FunctionType extends Type {
   protected function verifiedMethod($arg, $method, $false, $return) {
     $result= false;
     if ('new' === $method) {
-      $class= \xp::reflect($arg);
+      $class= literal($arg);
       if (method_exists($class, '__construct')) {
         $r= new \ReflectionMethod($class, '__construct');
         if (!$this->verify($r, $false, $r->getDeclaringClass())) return false;
@@ -197,7 +197,7 @@ class FunctionType extends Type {
       if (!$c->isInstantiable()) return $false(\xp::nameOf($class).' cannot be instantiated');
       $result= $return ? function() use($c) { return $c->newInstanceArgs(func_get_args()); } : true;
     } else if (is_string($arg) && is_string($method)) {
-      $class= \xp::reflect($arg);
+      $class= literal($arg);
       if (!method_exists($class, $method)) return $false('Method '.\xp::nameOf($class).'::'.$method.' does not exist');
       $r= new \ReflectionMethod($class, $method);
       if (!$r->isStatic()) return $false('Method '.\xp::nameOf($class).'::'.$method.' referenced as static method but not static');

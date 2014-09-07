@@ -476,4 +476,16 @@ class FunctionTypeTest extends \unittest\TestCase {
       // OK
     }
   }
+
+  #[@test]
+  public function cast_loads_class_if_necessary_with_new() {
+    $t= new FunctionType([Type::$VAR], Primitive::$VOID);
+    $t->cast('net.xp_framework.unittest.core.FunctionTypeFixture::new');
+  }
+
+  #[@test]
+  public function cast_loads_class_if_necessary_with_method() {
+    $t= new FunctionType([Type::$VAR], Primitive::$VOID);
+    $t->cast('net.xp_framework.unittest.core.FunctionTypeMethodFixture::method');
+  }
 }
