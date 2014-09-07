@@ -139,7 +139,6 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
     if (0 === strncmp($class, 'lang.', 5)) {
       class_alias($name, substr($class, $p + 1));
       \xp::$cn[substr($class, $p + 1)]= $class;
-      \xp::$sn[$class]= substr($class, $p + 1);
     }
 
     method_exists($name, '__static') && \xp::$cli[]= [$name, '__static'];
