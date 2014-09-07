@@ -308,7 +308,7 @@ final class ClassLoader extends Object implements IClassLoader {
     } else {
       $header= '';
       $name= $spec;
-      \xp::$sn[$name]= $name;
+      \xp::$cn[$name]= $name;
     }
 
     $dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__));
