@@ -54,11 +54,11 @@ class Proxy extends \lang\Object {
     
     // Create proxy class' name, using a unique identifier and a prefix
     $name= self::PREFIX.($num++);
-    $bytes= 'class '.$name.' extends '.\xp::reflect('lang.reflect.Proxy').' implements ';
+    $bytes= 'class '.$name.' extends \lang\reflect\Proxy implements ';
     $added= [];
     
     for ($j= 0; $j < $t; $j++) {
-      $bytes.= \xp::reflect($interfaces[$j]->getName()).', ';
+      $bytes.= $interfaces[$j]->literal().', ';
     }
     $bytes= substr($bytes, 0, -2)." {\n";
 
@@ -105,7 +105,7 @@ class Proxy extends \lang\Object {
           $signature= $args= '';
           foreach ($m->getParameters() as $param) {
             $restriction= $param->getTypeRestriction();
-            $signature.= ', '.($restriction ? \xp::reflect($restriction->getName()) : '').' $'.$param->getName();
+            $signature.= ', '.($restriction ? literal($restriction->getName()) : '').' $'.$param->getName();
             $args.= ', $'.$param->getName();
             $param->isOptional() && $signature.= '= '.var_export($param->getDefaultValue(), true);
           }
@@ -127,6 +127,7 @@ class Proxy extends \lang\Object {
     try {
       $dyn= \lang\DynamicClassLoader::instanceFor(__METHOD__);
       $dyn->setClassBytes($name, $bytes);
+      \xp::$sn[$name]= $name;
       $class= $dyn->loadClass($name);
     } catch (\lang\FormatException $e) {
       throw new \lang\IllegalArgumentException($e->getMessage());

@@ -409,8 +409,7 @@ class XPClass extends Type {
    * @return  bool
    */
   public function isEnum() {
-    $e= \xp::reflect('lang.Enum');
-    return class_exists($e, false) && $this->_reflect->isSubclassOf($e);
+    return class_exists('lang\Enum', false) && $this->_reflect->isSubclassOf('lang\Enum');
   }
   
   /**
@@ -569,7 +568,7 @@ class XPClass extends Type {
   protected static function _classLoaderFor($name) {
     if (isset(\xp::$cl[$name])) {
       sscanf(\xp::$cl[$name], '%[^:]://%[^$]', $cl, $argument);
-      return call_user_func([\xp::reflect($cl), 'instanceFor'], $argument);
+      return call_user_func([literal($cl), 'instanceFor'], $argument);
     }
     return null;    // Internal class, e.g.
   }
@@ -699,7 +698,7 @@ class XPClass extends Type {
     }
     if (!isset($details['class'][DETAIL_GENERIC][1])) {
       $details['class'][DETAIL_GENERIC][1]= array_map(
-        [\xp::reflect('lang.Type'), 'forName'], 
+        ['lang\Type', 'forName'], 
         $details['class'][DETAIL_GENERIC][2]
       );
       unset($details['class'][DETAIL_GENERIC][2]);
@@ -740,7 +739,7 @@ class XPClass extends Type {
    * @return  string
    */
   public function literal() {
-    return \xp::reflect($this->name);
+    return literal($this->name);
   }
   
   /**

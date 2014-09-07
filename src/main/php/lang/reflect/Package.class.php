@@ -65,7 +65,7 @@ class Package extends \lang\Object {
    * @return  lang.XPClass[]
    */
   public function getClasses() { 
-    return array_map([\xp::reflect('lang.XPClass'), 'forName'], $this->getClassNames());
+    return array_map(['lang\XPClass', 'forName'], $this->getClassNames());
   }
 
   /**
@@ -108,7 +108,7 @@ class Package extends \lang\Object {
    * @return  lang.reflect.Package[]
    */
   public function getPackages() {
-    return array_map([\xp::reflect('lang.reflect.Package'), 'forName'], $this->getPackageNames());
+    return array_map(['lang\reflect\Package', 'forName'], $this->getPackageNames());
   } 
 
   /**

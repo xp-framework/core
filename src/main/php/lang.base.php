@@ -63,7 +63,7 @@ final class xp {
     'string' => "\xfestring",
     'int'    => "\xfeint",
     'double' => "\xfedouble",
-    'bool'   => "\xfestring",
+    'bool'   => "\xfebool",
     'var'    => "var",
   ];
   public static $null= null;
@@ -112,11 +112,10 @@ final class xp {
       $p= strrpos($class, '.');
       $name= strtr($class, '.', '\\');
 
-      xp::$cn[$name]= $class;
       if (0 === strncmp($class, 'lang.', 5)) {
         $short= substr($class, $p + 1);
         class_alias($name, $short);
-        xp::$cn[$short]= $class;
+        \xp::$cn[$short]= $class;
       }
 
       method_exists($name, '__static') && xp::$cli[]= [$name, '__static'];
@@ -136,7 +135,15 @@ final class xp {
   // {{{ proto string nameOf(string name)
   //     Returns the fully qualified name
   static function nameOf($name) {
-    return isset(xp::$cn[$name]) ? xp::$cn[$name] : 'php.'.$name;
+    if (isset(xp::$cn[$name])) {
+      return xp::$cn[$name];
+    } else if (strstr($name, '\\')) {
+      return strtr($name, '\\', '.');
+    } else if ($result= array_search($name, \xp::$sn, true)) {
+      return $result;
+    } else {
+      return 'php.'.$name;
+    }
   }
   // }}}
 

@@ -134,8 +134,6 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
       raise('lang.ClassFormatException', 'Class "'.$class.'" not declared in loaded file');
     }
 
-    \xp::$cn[$name]= $class;
-
     if (0 === strncmp($class, 'lang.', 5)) {
       class_alias($name, substr($class, $p + 1));
       \xp::$cn[substr($class, $p + 1)]= $class;
