@@ -260,6 +260,13 @@ final class xp {
   }
   // }}}
   
+  // {{{ proto deprecated string reflect(string type)
+  //     Retrieve type literal for a given type name
+  static function reflect($type) {
+    return literal($type);
+  }
+  // }}}
+
   // {{{ proto void error(string message)
   //     Throws a fatal error and exits with exitcode 61
   static function error($message) {
