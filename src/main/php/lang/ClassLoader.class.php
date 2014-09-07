@@ -362,7 +362,7 @@ final class ClassLoader extends Object implements IClassLoader {
    * @throws  lang.ClassFormatException in case the class format is invalud
    */
   public function loadClass0($class) {
-    if (isset(\xp::$cl[$class])) return \xp::reflect($class);
+    if (isset(\xp::$cl[$class])) return literal($class);
     
     // Ask delegates
     foreach (self::$delegates as $delegate) {

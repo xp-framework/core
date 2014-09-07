@@ -57,6 +57,15 @@ final class xp {
     'xp'    => '<xp>',
     'null'  => '<null>'
   ];
+  public static $sn= [
+    'xp'     => 'xp',
+    'null'   => 'null',
+    'string' => "\xfestring",
+    'int'    => "\xfeint",
+    'double' => "\xfedouble",
+    'bool'   => "\xfestring",
+    'var'    => "var",
+  ];
   public static $null= null;
   public static $loader= null;
   public static $classpath= null;
@@ -461,10 +470,8 @@ function is($type, $object) {
 // {{{ proto string literal(string type)
 //     Returns the correct literal
 function literal($type) {
-  if ('string' === $type || 'int' === $type || 'double' === $type || 'bool' == $type) {
-    return "\xfe".$type;
-  } else if ('var' === $type) {
-    return $type;
+  if (isset(\xp::$sn[$type])) {
+    return \xp::$sn[$type];
   } else if ('[]' === substr($type, -2)) {
     return "\xa6".literal(substr($type, 0, -2));
   } else if ('[:' === substr($type, 0, 2)) {

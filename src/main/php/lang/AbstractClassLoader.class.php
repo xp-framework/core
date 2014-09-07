@@ -121,11 +121,13 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
     } else if (NULL !== $package) {
       $name= strtr($class, '.', '·');
       class_alias($name, strtr($class, '.', '\\'));
+      \xp::$sn[$class]= $name;
     } else if (($ns= strtr($class, '.', '\\')) && (class_exists($ns, false) || interface_exists($ns, false))) {
       $name= $ns;
     } else if (($cl= substr($class, $p+ 1)) && (class_exists($cl, false) || interface_exists($cl, false))) {
       $name= $cl;
       class_alias($name, strtr($class, '.', '\\'));
+      \xp::$sn[$class]= $name;
     } else {
       unset(\xp::$cl[$class]);
       raise('lang.ClassFormatException', 'Class "'.$class.'" not declared in loaded file');
