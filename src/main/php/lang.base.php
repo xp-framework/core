@@ -452,8 +452,8 @@ function is($type, $object) {
   } else if (strstr($type, '?')) {
     return \lang\WildcardType::forName($type)->isInstance($object);
   } else {
-    $type= xp::reflect($type);
-    return $object instanceof $type;
+    $literal= literal($type);
+    return $object instanceof $literal;
   }
 }
 // }}}
@@ -482,6 +482,8 @@ function literal($type) {
       }
     }
     return substr($l, 0, -1);
+  } else if (0 === strncmp($type, 'php.', 4)) {
+    return substr($type, 4);
   } else {
     return strtr($type, '.', '\\');
   }
