@@ -256,8 +256,7 @@ final class ClassLoader extends Object implements IClassLoader {
       $typeAnnotations= '';
     }
 
-    $class= \xp::reflect($spec);
-    if (isset(\xp::$cl[$spec])) return new XPClass($class);
+    if (isset(\xp::$cl[$spec])) return new XPClass(\xp::reflect($spec));
 
     $functions= [];
     if (null === $def) {
@@ -305,12 +304,14 @@ final class ClassLoader extends Object implements IClassLoader {
 
     if (false !== ($p= strrpos($spec, '.'))) {
       $header= 'namespace '.strtr(substr($spec, 0, $p), '.', '\\').';';
+      $name= substr($spec, $p + 1);
     } else {
       $header= '';
+      $name= $spec;
     }
 
     $dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__));
-    $dyn->setClassBytes($spec, $header.$typeAnnotations.sprintf($declaration, $class).$bytes);
+    $dyn->setClassBytes($spec, $header.$typeAnnotations.sprintf($declaration, $name).$bytes);
     $cl= $dyn->loadClass($spec);
     $functions && $cl->_reflect->setStaticPropertyValue('__func', $functions);
     return $cl;
