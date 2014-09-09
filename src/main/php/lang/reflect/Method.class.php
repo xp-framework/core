@@ -13,7 +13,7 @@ use lang\IllegalAccessException;
  * @test  xp://net.xp_framework.unittest.reflection.ReflectionTest
  */
 class Method extends Routine {
-  public $invoke0;
+  protected $invoke0;
   protected $generic= null;
 
   /**
