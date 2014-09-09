@@ -96,6 +96,7 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed xp-framework/core#34: FunctionType doesn't load classes - (@thekid)
 * Fixed xp-framework/core#32: Warning in String::endsWith() - (@thekid)
 * Fixed xp-framework/core#20: Generic classes and namespaces - (@thekid)
 * Fixed `io.streams.Streams` instances to return true for `is_file()`
