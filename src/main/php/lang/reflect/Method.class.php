@@ -14,46 +14,57 @@ use lang\IllegalAccessException;
  */
 class Method extends Routine {
   protected $invoke0;
-  protected $generic= null;
+  protected $generic;
 
   /**
    * Constructor
    *
    * @param   string $class The effective class
    * @param   php.ReflectionMethod $reflect
+   * @param   var[] $generic
    * @param   var $invoke0 A function
    */
-  public function __construct($class, $reflect, $invoke0= null) {
+  public function __construct($class, $reflect, $generic= null, $invoke0= null) {
     parent::__construct($class, $reflect);
+    $this->generic= $generic;
     $this->invoke0= $invoke0 ?: function($obj, $args) {
       return $this->_reflect->invokeArgs($obj, $args);
     };
   }
 
-  /** @return string[] */
+  /** @return var[] */
   protected function generic() {
     if (!isset($this->generic)) {
       $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
       if (isset($details[DETAIL_ANNOTATIONS]['generic']['self'])) {
-        $this->generic= explode(',', $details[DETAIL_ANNOTATIONS]['generic']['self']);
+        $this->generic= [explode(',', $details[DETAIL_ANNOTATIONS]['generic']['self']), null];
       } else {
-        $this->generic= [];
+        $this->generic= [null, null];
       }
     }
     return $this->generic;
   }
 
   /**
+   * Retrieve whether this method is generic
+   *
+   * @return  bool
+   */
+  public function isGenericDefinition() {
+    return (bool)$this->generic()[0];
+  }
+
+  /**
    * Returns generic type components
    *
    * @return  string[]
-   * @throws  lang.IllegalStateException if this class is not a generic definition
+   * @throws  lang.IllegalStateException if this method is not a generic definition
    */
   public function genericComponents() {
-    if (!($generic= $this->generic())) {
+    if (!($c= $this->generic()[0])) {
       throw new IllegalStateException('Method '.$this->getName().' is not a generic definition');
     }
-    return $generic;
+    return $c;
   }
 
   /**
@@ -62,7 +73,20 @@ class Method extends Routine {
    * @return  bool
    */
   public function isGeneric() {
-    return (bool)$this->generic();
+    return (bool)$this->generic()[1];
+  }
+
+  /**
+   * Returns generic type arguments
+   *
+   * @return  lang.Type[]
+   * @throws  lang.IllegalStateException if this method is not generic
+   */
+  public function genericArguments() {
+    if (!($a= $this->generic()[1])) {
+      throw new IllegalStateException('Method '.$this->getName().' is not generic');
+    }
+    return $a;
   }
 
   /**
@@ -83,7 +107,7 @@ class Method extends Routine {
     if ($cs !== sizeof($arguments)) {
       throw new IllegalArgumentException(sprintf(
         'Method %s expects %d component(s) <%s>, %d argument(s) given',
-        $this->_reflect->name,
+        $this->getName(),
         $cs,
         implode(', ', $components),
         sizeof($arguments)
@@ -99,7 +123,7 @@ class Method extends Routine {
       $verify[]= strtr(ltrim($placeholder), $placeholders);
     }
 
-    return new self($this->_class, $this->_reflect, function($obj, $args) use($arguments, $verify) {
+    return new self($this->_class, $this->_reflect, [null, $arguments], function($obj, $args) use($arguments, $verify) {
       foreach ($args as $i => $arg) {
         if ($verify[$i] && !is($verify[$i], $arg)) throw new IllegalArgumentException(sprintf(
           'Argument %d passed to %s must be of %s, %s given',

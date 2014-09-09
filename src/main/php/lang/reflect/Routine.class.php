@@ -33,9 +33,9 @@ class Routine extends \lang\Object {
     $this->_reflect= $reflect;
   }
 
-  /** @return string[] */
+  /** @return var[] */
   protected function generic() {
-    return [];
+    return [null, null];
   }
   
   /**
@@ -91,7 +91,7 @@ class Routine extends \lang\Object {
    */
   public function getParameters() {
     $r= [];
-    $g= sizeof($this->generic());
+    $g= sizeof($this->generic()[0]);
     $c= $this->_reflect->getDeclaringClass()->getName();
     foreach ($this->_reflect->getParameters() as $offset => $param) {
       $offset >= $g && $r[]= new Parameter($param, [$c, $this->_reflect->getName(), $offset - $g]);
@@ -107,7 +107,7 @@ class Routine extends \lang\Object {
    */
   public function getParameter($offset) {
     $list= $this->_reflect->getParameters();
-    $g= sizeof($this->generic());
+    $g= sizeof($this->generic()[0]);
     $offset+= $g;
     return isset($list[$offset]) 
       ? new Parameter($list[$offset], [$this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName(), $offset - $g])
@@ -122,7 +122,7 @@ class Routine extends \lang\Object {
    * @return  int
    */
   public function numParameters() {
-    return $this->_reflect->getNumberOfParameters() - sizeof($this->generic());
+    return $this->_reflect->getNumberOfParameters() - sizeof($this->generic()[0]);
   }
 
   /**
@@ -313,7 +313,7 @@ class Routine extends \lang\Object {
     } else {
       $throws= '';
     }
-    $generic= $this->generic();
+    $generic= $this->generic()[0];
     return sprintf(
       '%s %s %s%s(%s)%s',
       Modifiers::stringOf($this->getModifiers()),

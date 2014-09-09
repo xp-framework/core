@@ -67,13 +67,13 @@ class GenericMethodTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function method_is_generic() {
-    $this->assertTrue($this->fixtureClass()->getMethod('get')->isGeneric());
+  public function method_is_generic_definition() {
+    $this->assertTrue($this->fixtureClass()->getMethod('get')->isGenericDefinition());
   }
 
   #[@test]
-  public function this_method_is_not_generic() {
-    $this->assertFalse($this->getClass()->getMethod(__FUNCTION__)->isGeneric());
+  public function this_method_is_not_generic_definition() {
+    $this->assertFalse($this->getClass()->getMethod(__FUNCTION__)->isGenericDefinition());
   }
 
   #[@test]
@@ -84,6 +84,23 @@ class GenericMethodTest extends \unittest\TestCase {
   #[@test, @expect('lang.IllegalStateException')]
   public function this_method_has_no_generic_components() {
     $this->getClass()->getMethod(__FUNCTION__)->genericComponents();
+  }
+
+  #[@test]
+  public function new_generic_method_is_generic() {
+    $method= $this->fixtureClass()->getMethod('asList')->newGenericMethod([Primitive::$STRING]);
+    $this->assertTrue($method->isGeneric());
+  }
+
+  #[@test]
+  public function new_generic_methods_arguments() {
+    $method= $this->fixtureClass()->getMethod('asList')->newGenericMethod([Primitive::$STRING]);
+    $this->assertEquals([Primitive::$STRING], $method->genericArguments());
+  }
+
+  #[@test, @expect('lang.IllegalStateException')]
+  public function generic_definition_methoddoes_not_have_arguments() {
+    $this->fixtureClass()->getMethod('asList')->genericArguments();
   }
 
   #[@test]
