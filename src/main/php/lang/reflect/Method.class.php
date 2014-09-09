@@ -99,10 +99,6 @@ class Method extends Routine {
    */
   public function newGenericMethod($arguments) {
     $components= $this->genericComponents();
-    if (empty($components)) {
-      throw new IllegalStateException('Method '.$this->_reflect->name.' is not generic');
-    }
-
     $cs= sizeof($components);
     if ($cs !== sizeof($arguments)) {
       throw new IllegalArgumentException(sprintf(
