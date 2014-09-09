@@ -1,4 +1,4 @@
-<?php namespace net\xp_framework\unittest\core;
+<?php namespace net\xp_framework\unittest\core\generics;
 
 use lang\XPClass;
 use lang\Primitive;
@@ -10,7 +10,7 @@ class GenericMethodTest extends \unittest\TestCase {
 
   /** @return lang.XPClass */
   protected function fixtureClass() {
-    return XPClass::forName('net.xp_framework.unittest.core.GenericMethodFixture');
+    return XPClass::forName('net.xp_framework.unittest.core.generics.GenericMethodFixture');
   }
 
   #[@test, @values([['Test', 'Test'], ['', null], ['1', 1]])]
