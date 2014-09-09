@@ -57,6 +57,15 @@ final class xp {
     'xp'    => '<xp>',
     'null'  => '<null>'
   ];
+  public static $sn= [
+    'xp'     => 'xp',
+    'null'   => 'null',
+    'string' => "\xfestring",
+    'int'    => "\xfeint",
+    'double' => "\xfedouble",
+    'bool'   => "\xfebool",
+    'var'    => "var",
+  ];
   public static $null= null;
   public static $loader= null;
   public static $classpath= null;
@@ -90,7 +99,6 @@ final class xp {
       if (!file_exists($f)) continue;
 
       // Load class
-      $package= null;
       xp::$cl[$class]= $cl.'://'.$path;
       xp::$cll++;
       $r= include($f);
@@ -101,21 +109,13 @@ final class xp {
       }
 
       // Register class name and call static initializer if available
-      if (false === ($p= strrpos($class, '.'))) {
-        $name= $class;
-      } else if (null !== $package) {
-        $name= strtr($class, '.', '·');
-        class_alias($name, strtr($class, '.', '\\'));
-      } else {
-        $name= strtr($class, '.', '\\');
-      }
-
-      xp::$cn[$name]= $class;
+      $p= strrpos($class, '.');
+      $name= strtr($class, '.', '\\');
 
       if (0 === strncmp($class, 'lang.', 5)) {
         $short= substr($class, $p + 1);
         class_alias($name, $short);
-        xp::$cn[$short]= $class;
+        \xp::$cn[$short]= $class;
       }
 
       method_exists($name, '__static') && xp::$cli[]= [$name, '__static'];
@@ -135,7 +135,15 @@ final class xp {
   // {{{ proto string nameOf(string name)
   //     Returns the fully qualified name
   static function nameOf($name) {
-    return isset(xp::$cn[$name]) ? xp::$cn[$name] : 'php.'.$name;
+    if (isset(xp::$cn[$name])) {
+      return xp::$cn[$name];
+    } else if (strstr($name, '\\')) {
+      return strtr($name, '\\', '.');
+    } else if ($result= array_search($name, \xp::$sn, true)) {
+      return $result;
+    } else {
+      return 'php.'.$name;
+    }
   }
   // }}}
 
@@ -252,34 +260,10 @@ final class xp {
   }
   // }}}
   
-  // {{{ proto string reflect(string type)
+  // {{{ proto deprecated string reflect(string type)
   //     Retrieve type literal for a given type name
   static function reflect($type) {
-    if ('string' === $type || 'int' === $type || 'double' === $type || 'bool' == $type) {
-      return "\xfe".$type;
-    } else if ('var' === $type) {
-      return $type;
-    } else if ('[]' === substr($type, -2)) {
-      return "\xa6".xp::reflect(substr($type, 0, -2));
-    } else if ('[:' === substr($type, 0, 2)) {
-      return "\xbb".xp::reflect(substr($type, 2, -1));
-    } else if (false !== ($p= strpos($type, '<'))) {
-      $l= xp::reflect(substr($type, 0, $p))."\xb7\xb7";
-      for ($args= substr($type, $p+ 1, -1).',', $o= 0, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
-        if (',' === $args{$i} && 0 === $brackets) {
-          $l.= strtr(xp::reflect(ltrim(substr($args, $o, $i- $o)))."\xb8", '\\', "\xa6");
-          $o= $i+ 1;
-        } else if ('<' === $args{$i}) {
-          $brackets++;
-        } else if ('>' === $args{$i}) {
-          $brackets--;
-        }
-      }
-      return substr($l, 0, -1);
-    } else {
-      $l= array_search($type, xp::$cn, true);
-      return $l ?: substr($type, (false === $p= strrpos($type, '.')) ? 0 : $p+ 1);
-    }
+    return literal($type);
   }
   // }}}
 
@@ -389,7 +373,7 @@ function uses() {
     if (class_exists($class, false) && method_exists($class, '__import')) {
       if (null === $scope) {
         $trace= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
-        $scope= xp::reflect($trace[2]['args'][0]);
+        $scope= literal($trace[2]['args'][0]);
       }
       call_user_func([$class, '__import'], $scope);
     }
@@ -452,8 +436,38 @@ function is($type, $object) {
   } else if (strstr($type, '?')) {
     return \lang\WildcardType::forName($type)->isInstance($object);
   } else {
-    $type= xp::reflect($type);
-    return $object instanceof $type;
+    $literal= literal($type);
+    return $object instanceof $literal;
+  }
+}
+// }}}
+
+// {{{ proto string literal(string type)
+//     Returns the correct literal
+function literal($type) {
+  if (isset(\xp::$sn[$type])) {
+    return \xp::$sn[$type];
+  } else if ('[]' === substr($type, -2)) {
+    return "\xa6".literal(substr($type, 0, -2));
+  } else if ('[:' === substr($type, 0, 2)) {
+    return "\xbb".literal(substr($type, 2, -1));
+  } else if (false !== ($p= strpos($type, '<'))) {
+    $l= literal(substr($type, 0, $p))."\xb7\xb7";
+    for ($args= substr($type, $p+ 1, -1).',', $o= 0, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
+      if (',' === $args{$i} && 0 === $brackets) {
+        $l.= strtr(literal(ltrim(substr($args, $o, $i- $o)))."\xb8", '\\', "\xa6");
+        $o= $i+ 1;
+      } else if ('<' === $args{$i}) {
+        $brackets++;
+      } else if ('>' === $args{$i}) {
+        $brackets--;
+      }
+    }
+    return substr($l, 0, -1);
+  } else if (0 === strncmp($type, 'php.', 4)) {
+    return substr($type, 4);
+  } else {
+    return strtr($type, '.', '\\');
   }
 }
 // }}}

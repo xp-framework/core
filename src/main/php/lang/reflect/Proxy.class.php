@@ -12,7 +12,8 @@ define('PROXY_PREFIX',    'Proxy·');
  * @see      http://java.sun.com/j2se/1.5.0/docs/api/java/lang/reflect/Proxy.html
  */
 class Proxy extends \lang\Object {
-  const PREFIX = 'Proxy·';
+  const PREFIX  = 'Proxy$';
+  const LITERAL = "Proxy\xb7";
 
   public $_h= null;
 
@@ -53,12 +54,13 @@ class Proxy extends \lang\Object {
     if (isset($cache[$key])) return $cache[$key];
     
     // Create proxy class' name, using a unique identifier and a prefix
-    $name= self::PREFIX.($num++);
-    $bytes= 'class '.$name.' extends '.\xp::reflect('lang.reflect.Proxy').' implements ';
+    $decl= self::LITERAL.$num;
+    $name= self::PREFIX.$num;
+    $bytes= 'class '.$decl.' extends \lang\reflect\Proxy implements ';
     $added= [];
     
     for ($j= 0; $j < $t; $j++) {
-      $bytes.= \xp::reflect($interfaces[$j]->getName()).', ';
+      $bytes.= $interfaces[$j]->literal().', ';
     }
     $bytes= substr($bytes, 0, -2)." {\n";
 
@@ -105,7 +107,7 @@ class Proxy extends \lang\Object {
           $signature= $args= '';
           foreach ($m->getParameters() as $param) {
             $restriction= $param->getTypeRestriction();
-            $signature.= ', '.($restriction ? \xp::reflect($restriction->getName()) : '').' $'.$param->getName();
+            $signature.= ', '.($restriction ? literal($restriction->getName()) : '').' $'.$param->getName();
             $args.= ', $'.$param->getName();
             $param->isOptional() && $signature.= '= '.var_export($param->getDefaultValue(), true);
           }
@@ -124,16 +126,19 @@ class Proxy extends \lang\Object {
     $bytes.= ' }';
 
     // Define the generated class
+    \xp::$cn[$decl]= $name;
     try {
       $dyn= \lang\DynamicClassLoader::instanceFor(__METHOD__);
-      $dyn->setClassBytes($name, $bytes);
-      $class= $dyn->loadClass($name);
+      $dyn->setClassBytes($decl, $bytes);
+      $class= $dyn->loadClass($decl);
     } catch (\lang\FormatException $e) {
+      unset(\xp::$cn[$decl]);
       throw new \lang\IllegalArgumentException($e->getMessage());
     }
 
     // Update cache and return XPClass object
     $cache[$key]= $class;
+    $num++;
     return $class;
   }
 

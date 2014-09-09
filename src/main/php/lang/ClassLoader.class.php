@@ -256,7 +256,7 @@ final class ClassLoader extends Object implements IClassLoader {
       $typeAnnotations= '';
     }
 
-    if (isset(\xp::$cl[$spec])) return new XPClass(\xp::reflect($spec));
+    if (isset(\xp::$cl[$spec])) return new XPClass(literal($spec));
 
     $functions= [];
     if (null === $def) {
@@ -308,6 +308,7 @@ final class ClassLoader extends Object implements IClassLoader {
     } else {
       $header= '';
       $name= $spec;
+      \xp::$cn[$name]= $name;
     }
 
     $dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__));
@@ -362,7 +363,7 @@ final class ClassLoader extends Object implements IClassLoader {
    * @throws  lang.ClassFormatException in case the class format is invalud
    */
   public function loadClass0($class) {
-    if (isset(\xp::$cl[$class])) return \xp::reflect($class);
+    if (isset(\xp::$cl[$class])) return literal($class);
     
     // Ask delegates
     foreach (self::$delegates as $delegate) {

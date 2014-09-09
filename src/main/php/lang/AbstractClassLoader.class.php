@@ -70,7 +70,7 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
    * @throws  lang.ClassFormatException in case the class format is invalud
    */
   public function loadClass0($class) {
-    if (isset(\xp::$cl[$class])) return \xp::reflect($class);
+    if (isset(\xp::$cl[$class])) return literal($class);
 
     // Load class
     $package= null;
@@ -79,6 +79,7 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
     try {
       $r= include($this->classUri($class));
     } catch (ClassLoadingException $e) {
+      unset(\xp::$cl[$class]);
       \xp::$cll--;
 
       $decl= null;
@@ -121,17 +122,17 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
     } else if (NULL !== $package) {
       $name= strtr($class, '.', '·');
       class_alias($name, strtr($class, '.', '\\'));
+      \xp::$sn[$class]= $name;
     } else if (($ns= strtr($class, '.', '\\')) && (class_exists($ns, false) || interface_exists($ns, false))) {
       $name= $ns;
     } else if (($cl= substr($class, $p+ 1)) && (class_exists($cl, false) || interface_exists($cl, false))) {
       $name= $cl;
       class_alias($name, strtr($class, '.', '\\'));
+      \xp::$sn[$class]= $name;
     } else {
       unset(\xp::$cl[$class]);
       raise('lang.ClassFormatException', 'Class "'.$class.'" not declared in loaded file');
     }
-
-    \xp::$cn[$name]= $class;
 
     if (0 === strncmp($class, 'lang.', 5)) {
       class_alias($name, substr($class, $p + 1));

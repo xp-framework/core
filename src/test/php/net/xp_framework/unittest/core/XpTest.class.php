@@ -53,52 +53,52 @@ class XpTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function reflect_int() {
-    $this->assertEquals('þint', \xp::reflect('int'));
+  public function literal_of_int() {
+    $this->assertEquals('þint', literal('int'));
   }
 
   #[@test]
-  public function reflect_double() {
-    $this->assertEquals('þdouble', \xp::reflect('double'));
+  public function literal_of_double() {
+    $this->assertEquals('þdouble', literal('double'));
   }
 
   #[@test]
-  public function reflect_string() {
-    $this->assertEquals('þstring', \xp::reflect('string'));
+  public function literal_of_string() {
+    $this->assertEquals('þstring', literal('string'));
   }
 
   #[@test]
-  public function reflect_bool() {
-    $this->assertEquals('þbool', \xp::reflect('bool'));
+  public function literal_of_bool() {
+    $this->assertEquals('þbool', literal('bool'));
   }
 
   #[@test]
-  public function reflect_var() {
-    $this->assertEquals('var', \xp::reflect('var'));
+  public function literal_of_var() {
+    $this->assertEquals('var', literal('var'));
   }
 
   #[@test]
-  public function reflect_int_array() {
-    $this->assertEquals('¦þint', \xp::reflect('int[]'));
+  public function literal_of_int_array() {
+    $this->assertEquals('¦þint', literal('int[]'));
   }
 
   #[@test]
-  public function reflect_int_map() {
-    $this->assertEquals('»þint', \xp::reflect('[:int]'));
+  public function literal_of_int_map() {
+    $this->assertEquals('»þint', literal('[:int]'));
   }
 
   #[@test]
-  public function reflect_generic_list_of_int() {
-    $this->assertEquals('List··þint', \xp::reflect('List<int>'));
+  public function literal_of_generic_list_of_int() {
+    $this->assertEquals('List··þint', literal('List<int>'));
   }
 
   #[@test]
-  public function reflect_object() {
-    $this->assertEquals('lang\Object', \xp::reflect('lang.Object'));
+  public function literal_of_object() {
+    $this->assertEquals('lang\Object', literal('lang.Object'));
   }
 
   #[@test]
-  public function reflect_this() {
-    $this->assertEquals(__CLASS__, \xp::reflect($this->getClassName()));
+  public function literal_of_this() {
+    $this->assertEquals(__CLASS__, literal($this->getClassName()));
   }
 }

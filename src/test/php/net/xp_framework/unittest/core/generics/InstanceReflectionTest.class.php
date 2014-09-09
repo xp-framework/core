@@ -47,7 +47,7 @@ class InstanceReflectionTest extends \unittest\TestCase {
     $class= $this->fixture->getClass();
     $this->assertEquals(
       'net\xp_framework\unittest\core\generics\Lookup··lang¦types¦String¸unittest¦TestCase', 
-      \xp::reflect($class->getName())
+      literal($class->getName())
     );
   }
 
