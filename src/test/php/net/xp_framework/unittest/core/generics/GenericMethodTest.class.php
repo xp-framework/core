@@ -72,6 +72,21 @@ class GenericMethodTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function this_method_is_not_generic() {
+    $this->assertFalse($this->getClass()->getMethod(__FUNCTION__)->isGeneric());
+  }
+
+  #[@test]
+  public function methods_generic_components() {
+    $this->assertEquals(['T'], $this->fixtureClass()->getMethod('get')->genericComponents());
+  }
+
+  #[@test, @expect('lang.IllegalStateException')]
+  public function this_method_has_no_generic_components() {
+    $this->getClass()->getMethod(__FUNCTION__)->genericComponents();
+  }
+
+  #[@test]
   public function type_parameter_not_reported_in_numParameters() {
     $this->assertEquals(1, $this->fixtureClass()->getMethod('get')->numParameters());
   }

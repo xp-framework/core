@@ -14,6 +14,7 @@ use lang\IllegalAccessException;
  */
 class Method extends Routine {
   public $invoke0;
+  protected $generic= null;
 
   /**
    * Constructor
@@ -30,12 +31,29 @@ class Method extends Routine {
   }
 
   /** @return string[] */
-  protected function genericParameters() {
-    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
-    if (isset($details[DETAIL_ANNOTATIONS]['generic']['self'])) {
-      return explode(',', $details[DETAIL_ANNOTATIONS]['generic']['self']);
+  protected function generic() {
+    if (!isset($this->generic)) {
+      $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
+      if (isset($details[DETAIL_ANNOTATIONS]['generic']['self'])) {
+        $this->generic= explode(',', $details[DETAIL_ANNOTATIONS]['generic']['self']);
+      } else {
+        $this->generic= [];
+      }
     }
-    return [];
+    return $this->generic;
+  }
+
+  /**
+   * Returns generic type components
+   *
+   * @return  string[]
+   * @throws  lang.IllegalStateException if this class is not a generic definition
+   */
+  public function genericComponents() {
+    if (!($generic= $this->generic())) {
+      throw new IllegalStateException('Method '.$this->getName().' is not a generic definition');
+    }
+    return $generic;
   }
 
   /**
@@ -44,7 +62,7 @@ class Method extends Routine {
    * @return  bool
    */
   public function isGeneric() {
-    return sizeof($this->genericParameters()) > 0;
+    return (bool)$this->generic();
   }
 
   /**
@@ -56,7 +74,7 @@ class Method extends Routine {
    * @throws  lang.IllegalArgumentException if number of arguments does not match components
    */
   public function newGenericMethod($arguments) {
-    $components= $this->genericParameters();
+    $components= $this->genericComponents();
     if (empty($components)) {
       throw new IllegalStateException('Method '.$this->_reflect->name.' is not generic');
     }
