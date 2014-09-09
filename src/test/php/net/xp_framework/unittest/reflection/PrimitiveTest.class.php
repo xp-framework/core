@@ -5,6 +5,8 @@ use lang\Primitive;
 use lang\types\String;
 use lang\types\Double;
 use lang\types\Integer;
+use lang\types\Short;
+use lang\types\Float;
 use lang\types\Boolean;
 use lang\types\ArrayList;
 use io\streams\Streams;

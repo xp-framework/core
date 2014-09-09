@@ -176,7 +176,7 @@ class ClassLoaderTest extends TestCase {
   #[@test]
   public function initializerCalled() {
     $name= 'net.xp_framework.unittest.reflection.LoaderTestClass';
-    if (class_exists(\xp::reflect($name), false)) {
+    if (class_exists(literal($name), false)) {
       return $this->fail('Class "'.$name.'" may not exist!');
     }
 

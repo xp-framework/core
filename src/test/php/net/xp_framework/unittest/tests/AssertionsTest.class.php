@@ -69,41 +69,41 @@ class AssertionsTest extends \unittest\TestCase {
     $this->assertEquals(2, $instance->equalsInvoked);
   }
 
-  #[@test, @values(array(0, 1, -1, LONG_MAX, LONG_MIN))]
+  #[@test, @values([0, 1, -1, PHP_INT_MAX])]
   public function integersAreEqual($int) {
     $this->assertEquals($int, $int);
   }    
 
-  #[@test, @values(array('', 'Hello', 'äöüß'))]
+  #[@test, @values(['', 'Hello', 'Ã¤Ã¶Ã¼ÃŸ'])]
   public function stringsAreEqual($str) {
     $this->assertEquals($str, $str);
   }    
 
-  #[@test, @values(array(
-  #  array([]),
-  #  array(array(1, 2, 3)),
-  #  array(array(array(1), [], array(-1, 4), array(new String('baz'))))
-  #))]
+  #[@test, @values([
+  #  [[]],
+  #  [[1, 2, 3]],
+  #  [[[1], [], [-1, 4], [new String('baz')]]]
+  #])]
   public function arraysAreEqual($array) {
     $this->assertEquals($array, $array);
   }    
 
-  #[@test, @values(array(
-  #  array([]),
-  #  array(array('foo' => 2)),
-  #  array(array(array('bar' => 'baz'), [], array('bool' => TRUE, 'bar' => new String('baz'))))
-  #))]
+  #[@test, @values([
+  #  [[]],
+  #  [['foo' => 2]],
+  #  [[['bar' => 'baz'], [], ['bool' => true, 'bar' => new String('baz')]]]
+  #])]
   public function hashesAreEqual($hash) {
     $this->assertEquals($hash, $hash);
   }    
 
   #[@test]
   public function hashesOrderNotRelevant() {
-    $hash= array('&' => '&amp;', '"' => '&quot;');
+    $hash= ['&' => '&amp;', '"' => '&quot;'];
     $this->assertEquals($hash, array_reverse($hash, true), \xp::stringOf($hash));
   }    
 
-  #[@test, @values(array(new String(''), new String('Hello'), new String('äöüß', 'iso-8859-1')))]
+  #[@test, @values([new String(''), new String('Hello'), new String('Ã¤Ã¶Ã¼ÃŸ')])]
   public function stringObjectsAreEqual($str) {
     $this->assertEquals($str, $str);
   }
@@ -113,17 +113,17 @@ class AssertionsTest extends \unittest\TestCase {
     $this->assertEquals(false, null);
   }    
 
-  #[@test, @values(array(-1, 1.0, NULL, FALSE, TRUE, '', array([]), new String('1')))]
+  #[@test, @values([-1, 1.0, null, false, true, '', [[1]], new String('1')])]
   public function integersAreNotEqual($cmp) {
     $this->assertNotEquals(1, $cmp);
   }    
 
-  #[@test, @values(array(-1, 1.0, NULL, FALSE, TRUE, 1, array([]), new String('1')))]
+  #[@test, @values([-1, 1.0, null, false, true, 1, [[1]], new String('1')])]
   public function stringsAreNotEqual($cmp) {
     $this->assertNotEquals('', $cmp);
   }
 
-  #[@test, @values(array(-1, 1.0, NULL, FALSE, TRUE, 1, array(1), new String('1')))]
+  #[@test, @values([-1, 1.0, null, false, true, 1, [[1]], new String('1')])]
   public function arraysAreNotEqual($cmp) {
     $this->assertNotEquals([], $cmp);
   }    
@@ -215,12 +215,12 @@ class AssertionsTest extends \unittest\TestCase {
 
   #[@test]
   public function intArrayIsInstanceOfArray() {
-    $this->assertInstanceOf('array', array(1, 2, 3));
+    $this->assertInstanceOf('array', [1, 2, 3]);
   }
 
   #[@test, @expect('unittest.AssertionFailedError')]
   public function hashIsNotInstanceOfArray() {
-    $this->assertInstanceOf('array', array('color' => 'green'));
+    $this->assertInstanceOf('array', ['color' => 'green']);
   }
 
   #[@test, @expect('unittest.AssertionFailedError')]

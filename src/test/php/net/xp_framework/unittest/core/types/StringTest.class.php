@@ -154,12 +154,32 @@ class StringTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function does_not_start_with_empty_string() {
+    $this->assertFalse((new String('test'))->startsWith(''));
+  }
+
+  #[@test, @values(['', 'test'])]
+  public function empty_string_does_not_start_with_anything($value) {
+    $this->assertFalse(String::$EMPTY->startsWith($value));
+  }
+
+  #[@test]
   public function endsWith() {
     $str= new String('www.müller.com');
     $this->assertTrue($str->endsWith('.com'));
     $this->assertTrue($str->endsWith('üller.com'));
     $this->assertFalse($str->endsWith('.co'));
     $this->assertFalse($str->endsWith('müller'));
+  }
+
+  #[@test]
+  public function does_not_end_with_empty_string() {
+    $this->assertFalse((new String('test'))->endsWith(''));
+  }
+
+  #[@test, @values(['', 'test'])]
+  public function empty_string_does_not_end_with_anything($value) {
+    $this->assertFalse(String::$EMPTY->endsWith($value));
   }
 
   #[@test]

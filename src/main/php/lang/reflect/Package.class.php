@@ -3,13 +3,11 @@
 /**
  * Represents a package
  *
- * @test     xp://net.xp_framework.unittest.reflection.PackageTest
- * @see      http://news.xp-framework.net/article/187/2007/05/12/
- * @purpose  Reflection
+ * @test xp://net.xp_framework.unittest.reflection.PackageTest
+ * @see  http://news.xp-framework.net/article/187/2007/05/12/
  */
 class Package extends \lang\Object {
-  protected
-    $name= '';
+  protected $name= '';
 
   /**
    * Gets the fully qualified package name
@@ -46,7 +44,7 @@ class Package extends \lang\Object {
    * @param   string name
    * @return  bool
    */
-  public function providesPackage($name) { 
+  public function providesPackage($name) {
     return \lang\ClassLoader::getDefault()->providesPackage($this->name.'.'.$name);
   }
 
@@ -67,7 +65,7 @@ class Package extends \lang\Object {
    * @return  lang.XPClass[]
    */
   public function getClasses() { 
-    return array_map([\xp::reflect('lang.XPClass'), 'forName'], $this->getClassNames());
+    return array_map(['lang\XPClass', 'forName'], $this->getClassNames());
   }
 
   /**
@@ -110,7 +108,7 @@ class Package extends \lang\Object {
    * @return  lang.reflect.Package[]
    */
   public function getPackages() {
-    return array_map([\xp::reflect('lang.reflect.Package'), 'forName'], $this->getPackageNames());
+    return array_map(['lang\reflect\Package', 'forName'], $this->getPackageNames());
   } 
 
   /**
@@ -172,7 +170,7 @@ class Package extends \lang\Object {
   public static function forName($name) { 
     $p= new self();
     $p->name= rtrim($name, '.');   // Normalize
-    
+
     if (!\lang\ClassLoader::getDefault()->providesPackage($p->name)) {
       raise('lang.ElementNotFoundException', 'No classloaders provide '.$name);
     }

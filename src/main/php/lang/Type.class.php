@@ -141,6 +141,8 @@ class Type extends Object {
       return new ArrayType(substr($type, 0, -2));
     } else if (0 === substr_compare($type, '[:', 0, 2)) {
       return new MapType(substr($type, 2, -1));
+    } else if (0 === substr_compare($type, 'function(', 0, 9)) {
+      return FunctionType::forName($type);
     } else if (0 === substr_compare($type, '*', -1)) {
       return new ArrayType(substr($type, 0, -1));
     } else if (false === ($p= strpos($type, '<'))) {
@@ -224,6 +226,12 @@ class Type extends Object {
     return self::$VAR === $this;      // VAR is always assignable, VOID never
   }
 
-  /** @return string */
-  public function __toString() { return $this->name; }
+  /**
+   * Creates a string representation of this object
+   *
+   * @return  string
+   */
+  public function __toString() {
+    return $this->name;
+  }
 }

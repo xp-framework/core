@@ -168,7 +168,7 @@ class Routine extends \lang\Object {
    */
   public function getExceptionTypes() {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
-    return $details ? array_map([\xp::reflect('lang.XPClass'), 'forName'], $details[DETAIL_THROWS]) : [];
+    return $details ? array_map(['lang\XPClass', 'forName'], $details[DETAIL_THROWS]) : [];
   }
 
   /**

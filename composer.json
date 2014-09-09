@@ -1,0 +1,13 @@
+{
+  "name" : "xp-framework/core",
+  "type" : "library",
+  "homepage" : "http://xp-framework.net/",
+  "license" : "BSD-3-Clause",
+  "description" : "The XP framework is an all-purpose, object oriented PHP framework.",
+  "require" : {
+    "php" : ">=5.4.0"
+  },
+  "autoload" : {
+    "files" : ["src/main/php/__xp.php"]
+  }
+}

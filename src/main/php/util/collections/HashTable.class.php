@@ -222,11 +222,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    * @return  bool
    */
   public function equals($cmp) {
-    return (
-      $cmp instanceof self && 
-      $this->__generic === $cmp->__generic &&
-      $this->_hash === $cmp->_hash
-    );
+    return $cmp instanceof self && $this->_hash === $cmp->_hash;
   }
   
   /**
@@ -264,11 +260,11 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    */
   public function toString() {
     $s= $this->getClassName().'['.sizeof($this->_buckets).'] {';
-    if (0 == sizeof($this->_buckets)) return $s.' }';
+    if (empty($this->_buckets)) return $s.' }';
 
     $s.= "\n";
-    foreach (array_keys($this->_buckets) as $key) {
-      $s.= '  '.\xp::stringOf($this->_buckets[$key][0]).' => '.\xp::stringOf($this->_buckets[$key][1]).",\n";
+    foreach ($this->_buckets as $b) {
+      $s.= '  '.\xp::stringOf($b[0]).' => '.\xp::stringOf($b[1]).",\n";
     }
     return substr($s, 0, -2)."\n}";
   }

@@ -318,7 +318,7 @@ class SuiteTest extends \unittest\TestCase {
     $r= $this->suite->run();
     $this->assertEquals(1, $r->failureCount());
     $this->assertEquals(
-      'Expected exception not caught', 
+      'Caught Exception lang.FormatException (Test) instead of expected lang.IllegalArgumentException', 
       cast($r->outcomeOf($this->suite->testAt(0)), 'unittest.TestFailure')->reason->getMessage()
     );
   }
@@ -336,7 +336,7 @@ class SuiteTest extends \unittest\TestCase {
     $r= $this->suite->run();
     $this->assertEquals(1, $r->failureCount());
     $this->assertEquals(
-      'Expected lang.IllegalArgumentException\'s message differs',
+      'Expected lang.IllegalArgumentException\'s message "Another message" differs from expected /Hello/',
       cast($r->outcomeOf($this->suite->testAt(0)), 'unittest.TestFailure')->reason->getMessage()
     );
   }

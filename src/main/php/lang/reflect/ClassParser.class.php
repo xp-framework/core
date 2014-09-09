@@ -34,12 +34,10 @@ class ClassParser extends \lang\Object {
       return XPClass::forName($type);
     } else if (isset($imports[$type])) {
       return XPClass::forName($imports[$type]);
-    } else if (isset(\xp::$cn[$type])) {
-      return XPClass::forName(\xp::$cn[$type]);
+    } else if (class_exists($type, false) || interface_exists($type, false)) {
+      return new XPClass($type);
     } else if (false !== ($p= strrpos($context, '.'))) {
       return XPClass::forName(substr($context, 0, $p + 1).$type);
-    } else {
-      return XPClass::forName($type);
     }
   }
 
@@ -175,12 +173,13 @@ class ClassParser extends \lang\Object {
           $code.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
         }
       }
-      ob_start();
       $func= eval('return '.$code.';');
-      $error= ob_get_clean();
       if (!($func instanceof \Closure)) {
-        preg_match("/(Parse.+) in .+.php/", $error, $m);
-        throw new IllegalStateException('In `'.$code.'`: '.$m[1]);
+        $error= error_get_last();
+        set_error_handler('__error', 0);
+        trigger_error('clear_last_error');
+        restore_error_handler();
+        throw new IllegalStateException('In `'.$code.'`: '.ucfirst($error['message']));
       }
       return $func;
     } else {
@@ -284,6 +283,46 @@ class ClassParser extends \lang\Object {
   }
 
   /**
+   * Returns position of matching closing brace, or the string's length
+   * if no closing / opening brace is found.
+   *
+   * @param  string $text
+   * @param  string $open
+   * @param  string $close
+   * @param  int
+   */
+  protected function matching($text, $open, $close) {
+    for ($braces= $open.$close, $i= 0, $b= 0, $s= strlen($text); $i < $s; $i+= strcspn($text, $braces, $i)) {
+      if ($text{$i} === $open) {
+        $b++;
+      } else if ($text{$i} === $close) {
+        if (0 === --$b) return $i + 1;
+      }
+      $i++;
+    }
+    return $i;
+  }
+
+  /**
+   * Extracts type from a text
+   *
+   * @param  string $text
+   * @return string
+   */
+  protected function typeIn($text) {
+    if (0 === strncmp($text, 'function(', 9)) {
+      $p= $this->matching($text, '(', ')');
+      $p+= strspn($text, ': ', $p);
+      return substr($text, 0, $p).$this->typeIn(substr($text, $p));
+    } else if (strstr($text, '<')) {
+      $p= $this->matching($text, '<', '>');
+      return substr($text, 0, $p);
+    } else {
+      return substr($text, 0, strcspn($text, ' '));
+    }
+  }
+
+  /**
    * Parse details from a given input string
    *
    * @param   string bytes
@@ -295,7 +334,6 @@ class ClassParser extends \lang\Object {
     $annotations= [0 => [], 1 => []];
     $imports= [];
     $comment= null;
-    $members= true;
     $parsed= '';
     $tokens= token_get_all($bytes);
     for ($i= 0, $s= sizeof($tokens); $i < $s; $i++) {
@@ -342,7 +380,6 @@ class ClassParser extends \lang\Object {
           break;
 
         case T_VARIABLE:                      // Have a member variable
-          if (!$members) break;
           if ($parsed) {
             $annotations= $this->parseAnnotations($parsed, $context, $imports, isset($tokens[$i][2]) ? $tokens[$i][2] : -1);
             $parsed= '';
@@ -355,12 +392,10 @@ class ClassParser extends \lang\Object {
           break;
 
         case T_FUNCTION:
-          if (T_STRING !== $tokens[$i+ 2][0]) break;    // A closure, `function($params) { return TRUE; }`
           if ($parsed) {
             $annotations= $this->parseAnnotations($parsed, $context, $imports, isset($tokens[$i][2]) ? $tokens[$i][2] : -1);
             $parsed= '';
           }
-          $members= false;
           $i+= 2;
           $m= $tokens[$i][1];
           $details[1][$m]= [
@@ -377,27 +412,32 @@ class ClassParser extends \lang\Object {
           ];
           $annotations= [0 => [], 1 => []];
           $matches= null;
-          preg_match_all(
-            '/@([a-z]+)\s*([^<\r\n]+<[^>]+>|[^\r\n ]+) ?([^\r\n ]+)?/',
-            $comment, 
-            $matches, 
-            PREG_SET_ORDER
-          );
+          preg_match_all('/@([a-z]+)\s*([^\r\n]+)?/', $comment, $matches, PREG_SET_ORDER);
           $comment= null;
           $arg= 0;
           foreach ($matches as $match) {
             switch ($match[1]) {
               case 'param':
-                $details[1][$m][DETAIL_ARGUMENTS][$arg++]= $match[2];
+                $details[1][$m][DETAIL_ARGUMENTS][$arg++]= $this->typeIn($match[2]);
                 break;
 
               case 'return':
-                $details[1][$m][DETAIL_RETURNS]= $match[2];
+                $details[1][$m][DETAIL_RETURNS]= $this->typeIn($match[2]);
                 break;
 
               case 'throws': 
-                $details[1][$m][DETAIL_THROWS][]= $match[2];
+                $details[1][$m][DETAIL_THROWS][]= $this->typeIn($match[2]);
                 break;
+            }
+          }
+          $b= 0;
+          while (++$i < $s) {
+            if ('{' === $tokens[$i][0]) {
+              $b++;
+            } else if ('}' === $tokens[$i][0]) {
+              if (0 === --$b) break;
+            } else if (0 === $b && ';' === $tokens[$i][0]) {
+              break;    // Abstract or interface method
             }
           }
           break;

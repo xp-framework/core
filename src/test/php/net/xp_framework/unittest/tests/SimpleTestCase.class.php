@@ -95,7 +95,7 @@ class SimpleTestCase extends \unittest\TestCase {
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function expectedExceptionNotThrown() {
-    throw new \lang\FormatException('');
+    throw new \lang\FormatException('Test');
   }
 
   #[@test, @expect(class= 'lang.IllegalArgumentException', withMessage= 'Hello')]

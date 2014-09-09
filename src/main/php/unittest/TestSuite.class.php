@@ -303,9 +303,16 @@ class TestSuite extends \lang\Object {
     };
     $tearDown= function($test) use($actions) {
       $test->tearDown();
+      $raised= null;
       foreach ($actions as $action) {
-        $action->afterTest($test);
+        try {
+          $action->afterTest($test);
+        } catch (\lang\Throwable $e) {
+          $e->setCause($raised);
+          $raised= $e;
+        }
       }
+      if ($raised) throw $raised;
     };
 
     $timer= new Timer();
@@ -341,20 +348,28 @@ class TestSuite extends \lang\Object {
       }
 
       // Run test
+      $e= null;
       try {
         $method->invoke($test, is_array($args) ? $args : array($args));
+        $tearDown($test);
       } catch (\lang\reflect\TargetInvocationException $x) {
-        $timer->stop();
         $tearDown($test);
         $e= $x->getCause();
+      } catch (\lang\Throwable $e) {
+        // Exception inside teardown
+      }
+      $timer->stop();
 
-        // Was that an expected exception?
+      if ($e) {
         if ($expected && $expected[0]->isInstance($e)) {
           if ($eta && $timer->elapsedTime() > $eta) {
             $this->notifyListeners('testFailed', array(
               $result->setFailed(
                 $t,
-                new AssertionFailedError('Timeout', sprintf('%.3f', $timer->elapsedTime()), sprintf('%.3f', $eta)), 
+                new AssertionFailedError(new FormattedMessage(
+                  'Test runtime of %.3f seconds longer than eta of %.3f seconds',
+                  [$timer->elapsedTime(), $eta]
+                )),
                 $timer->elapsedTime()
               )
             ));
@@ -362,7 +377,10 @@ class TestSuite extends \lang\Object {
             $this->notifyListeners('testFailed', array(
               $result->setFailed(
                 $t,
-                new AssertionFailedError('Expected '.$e->getClassName().'\'s message differs', $e->getMessage(), $expected[1]),
+                new AssertionFailedError(new FormattedMessage(
+                  'Expected %s\'s message "%s" differs from expected %s',
+                  [$e->getClassName(), $e->getMessage(), $expected[1]]
+                )),
                 $timer->elapsedTime()
               )
             ));
@@ -379,7 +397,10 @@ class TestSuite extends \lang\Object {
           $this->notifyListeners('testFailed', array(
             $result->setFailed(
               $t,
-              new AssertionFailedError('Expected exception not caught', $e->getClassName(), $expected[0]->getName()),
+              new AssertionFailedError(new FormattedMessage(
+                'Caught %s instead of expected %s',
+                [$e->compoundMessage(), $expected[0]->getName()]
+              )),
               $timer->elapsedTime()
             )
           ));
@@ -398,17 +419,11 @@ class TestSuite extends \lang\Object {
         }
         \xp::gc();
         continue;
-      }
-
-      $timer->stop();
-      $tearDown($test);
-      
-      // Check expected exception
-      if ($expected) {
+      } else if ($expected) {
         $this->notifyListeners('testFailed', array(
           $result->setFailed(
             $t,
-            new AssertionFailedError('Expected exception not caught', null, $expected[0]->getName()),
+            new AssertionFailedError(new FormattedMessage('Expected %s not caught', [$expected[0]->getName()])),
             $timer->elapsedTime()
           )
         ));
@@ -479,9 +494,6 @@ class TestSuite extends \lang\Object {
    * @param  lang.XPClass class
    */
   protected function beforeClass($class) {
-    foreach ($this->actionsFor($class, 'unittest.TestClassAction') as $action) {
-      $action->beforeTestClass($class);
-    }
     foreach ($class->getMethods() as $m) {
       if (!$m->hasAnnotation('beforeClass')) continue;
       try {
@@ -495,6 +507,9 @@ class TestSuite extends \lang\Object {
         }
       }
     }
+    foreach ($this->actionsFor($class, 'unittest.TestClassAction') as $action) {
+      $action->beforeTestClass($class);
+    }
   }
   
   /**
@@ -504,14 +519,14 @@ class TestSuite extends \lang\Object {
    * @param  lang.XPClass class
    */
   protected function afterClass($class) {
+    foreach ($this->actionsFor($class, 'unittest.TestClassAction') as $action) {
+      $action->afterTestClass($class);
+    }
     foreach ($class->getMethods() as $m) {
       if (!$m->hasAnnotation('afterClass')) continue;
       try {
         $m->invoke(null, []);
       } catch (\lang\reflect\TargetInvocationException $ignored) { }
-    }
-    foreach ($this->actionsFor($class, 'unittest.TestClassAction') as $action) {
-      $action->afterTestClass($class);
     }
   }
 

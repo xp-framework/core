@@ -55,7 +55,7 @@ class ArrayList extends \lang\Object implements \ArrayAccess, \IteratorAggregate
    * @return  php.Iterator<int, var>
    */
   public function getIterator() {
-    return new ArrayListIterator($this);
+    return new \ArrayIterator($this->values);
   }
 
   /**
@@ -107,6 +107,17 @@ class ArrayList extends \lang\Object implements \ArrayAccess, \IteratorAggregate
    */
   public function offsetUnset($offset) {
     throw new \lang\IllegalArgumentException('Cannot remove from immutable list');
+  }
+
+  /**
+   * Get a value
+   *
+   * @param   int offset
+   * @param   var default
+   * @return  var
+   */
+  public function get($offset, $default= null) {
+    return isset($this->values[$offset]) ? $this->values[$offset] : $default;
   }
 
   /**

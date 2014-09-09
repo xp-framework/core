@@ -10,14 +10,33 @@ php:
   - hhvm
 
 matrix:
-    allow_failures:
-        - php: hhvm
+  allow_failures:
+    - php: hhvm
 
 before_script:
-  - wget 'http://xp-framework.net/downloads/releases/bin/setup' -O - | php
+  - wget 'https://github.com/xp-framework/xp-runners/releases/download/v5.0.0/setup' -O - | php
   - echo "use=." > xp.ini
   - echo "[runtime]" >> xp.ini
   - echo "date.timezone=Europe/Berlin" >> xp.ini
 
 script:
   - (EXCD=0; for i in src/test/config/unittest/*.ini; do echo "---> $i"; ./unittest $i; RES=$?; if [ $RES -ne 0 ]; then EXCD=$RES; fi; done; exit $EXCD;)
+
+before_deploy:
+  - export REL=`echo $TRAVIS_TAG | sed -e 's/^v//g'`
+  - echo "===> Building release $REL"
+  - sh .travis-build.sh $REL
+
+deploy:
+  provider: releases
+  file: 
+    - xp-rt-$REL.xar
+    - glue.json
+  skip_cleanup: true
+  on:
+    repo: xp-framework/core
+    tags: true
+    all_branches: true
+    php: 5.4
+  api_key:
+    secure: "GPtSCuhiYHBwMk5WRa4tFhzr8d59igQN/IDp241qhOJ55vabJnD87dbX+qUCO0eZTBfB2KFSPGKmzUCQtd+rzZqmlvTOrb4XGgi2GHVJeA9UK7UQcUvGctvAKGy8a0OKku9m45ar1JqTTtFZiXlv/bxbfT5wg0aKwPSWPWOe8vs="

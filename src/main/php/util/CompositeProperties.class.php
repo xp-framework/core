@@ -1,7 +1,5 @@
 <?php namespace util;
 
-
-
 /**
  * Composite class for util.Properties; can be used to group together
  * arbitrary many Properties objects

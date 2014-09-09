@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\tests\mock;
  
 use unittest\mock\RecordState;
-use util\Hashmap;
+use util\collections\HashTable;
 
 /**
  * Testcase for RecordState
@@ -17,7 +17,7 @@ class RecordStateTest extends \unittest\TestCase {
    * Creates the fixture
    */
   public function setUp() {
-    $this->expectationMap= new Hashmap();
+    $this->expectationMap= new HashTable();
     $this->sut= new RecordState($this->expectationMap);
   }
     
@@ -28,7 +28,7 @@ class RecordStateTest extends \unittest\TestCase {
   
   #[@test]
   public function canCreate() {
-    new RecordState(new Hashmap());
+    new RecordState(new HashTable());
   }
 
   #[@test]
