@@ -120,4 +120,21 @@ class GenericMethodTest extends \unittest\TestCase {
       $this->fixtureClass()->getMethod('newHash')->toString()
     );
   }
+
+  #[@test]
+  public function generic_method_inside_generic_class() {
+    $this->assertEquals(
+      'public static self<L> of<L>(L[] $args)',
+      XPClass::forName('net.xp_framework.unittest.core.generics.NSListOf')->getMethod('of')->toString()
+    );
+  }
+
+  #[@test]
+  public function generic_method_inside_generic_instance() {
+    $instance= create('new net.xp_framework.unittest.core.generics.NSListOf<string>');
+    $this->assertEquals(
+      'public static self<L> of<L>(L[] $args)',
+      $instance->getClass()->getMethod('of')->toString()
+    );
+  }
 }
