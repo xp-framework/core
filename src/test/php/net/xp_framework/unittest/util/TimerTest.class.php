@@ -4,56 +4,68 @@ use unittest\TestCase;
 use util\profiling\Timer;
 use util\Comparator;
 
-
 /**
  * Tests Timer class
  *
  * @see      xp://util.profiling.Timer
  */
 class TimerTest extends TestCase {
-  
-  /**
-   * Tests elapsed time is zero if not started yet
-   *
-   */
+
   #[@test]
-  public function initiallyZero() {
+  public function can_create() {
+    new Timer();
+  }
+
+  #[@test]
+  public function elapsed_time_is_zero_before_timer_is_started() {
     $this->assertEquals(0.0, (new Timer())->elapsedTime());
   }
 
-  /**
-   * Tests elapsed time after 100 milliseconds
-   *
-   */
   #[@test]
-  public function elapsedTimeGreaterThanZeroUsingStartAndStop() {
-    $fixture= new Timer();
-    $fixture->start();
-    usleep(100 * 1000);
-    $fixture->stop();
-    $elapsed= $fixture->elapsedTime();
-    $this->assertTrue($elapsed > 0.0, 'Elapsed time should be greater than zero');
+  public function start_returns_timer() {
+    $t= new Timer();
+    $this->assertEquals($t, $t->start());
   }
 
-  /**
-   * Tests elapsed time after 100 milliseconds
-   *
-   */
   #[@test]
-  public function elapsedTimeGreaterThanZeroUsingMeasure() {
+  public function stop_returns_timer() {
+    $t= new Timer();
+    $t->start();
+    $this->assertEquals($t, $t->stop());
+  }
+
+  #[@test]
+  public function calling_stop_before_start_does_not_raise_exception() {
+    (new Timer())->stop();
+  }
+
+  #[@test]
+  public function elapsed_time_after_50_milliseconds() {
+    $fixture= (new Timer())->start();
+    usleep(50 * 1000);
+    $elapsed= $fixture->stop()->elapsedTime();
+    $this->assertTrue($elapsed > 0.0, 'Elapsed time '.$elapsed.' should be greater than zero');
+  }
+
+  #[@test]
+  public function elapsed_time_without_stop_after_50_milliseconds() {
+    $fixture= (new Timer())->start();
+    usleep(50 * 1000);
+    $elapsed= $fixture->elapsedTime();
+    $this->assertTrue($elapsed > 0.0, 'Elapsed time '.$elapsed.' should be greater than zero');
+  }
+
+  #[@test]
+  public function elapsed_time_measured_after_50_milliseconds() {
     $fixture= Timer::measure(function() {
       usleep(100 * 1000);
     });
     $elapsed= $fixture->elapsedTime();
-    $this->assertTrue($elapsed > 0.0, 'Elapsed time should be greater than zero');
+    $this->assertTrue($elapsed > 0.0, 'Elapsed time '.$elapsed.' should be greater than zero');
   }
 
-  /**
-   * Tests measure()
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
-  public function notCallable() {
+  public function not_callable_argument_passed_to_measure() {
     Timer::measure('@not-callable@');
   }
 }

@@ -110,6 +110,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Changed util.profiling.Timer to be able to provide intermediate results
+  with `elapsedTime()` without prior call to `stop()`, and added fluent
+  interface to util.profiling.Timer's start() and stop() methods - (@thekid)
 * Implemented taking exceptions from tearDown() into account for test failure / 
   success in the unittest package, see xp-framework/core#32 - (@thekid)
 * Implemented pushing back bytes to buffered stream (see xp-framework/core#16)

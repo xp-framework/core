@@ -15,24 +15,27 @@
  * @purpose  Provide a simple profiling timer
  */
 class Timer extends \lang\Object {
-  public
-    $start = 0.0,
-    $stop  = 0.0;
+  protected $start= null;
+  protected $stop= null;
     
   /**
    * Start the timer
    *
+   * @return  self
    */
   public function start() {
     $this->start= microtime(true);
+    return $this;
   }
   
   /**
    * Stop the timer
    *
+   * @return  self
    */
   public function stop() {
     $this->stop= microtime(true);
+    return $this;
   }
 
   /**
@@ -61,6 +64,12 @@ class Timer extends \lang\Object {
    * @return  float seconds elapsed
    */
   public function elapsedTime() {
-    return $this->stop - $this->start;
+    if (null === $this->start) {
+      return 0.0;
+    } else if (null === $this->stop) {
+      return microtime(true) - $this->start;
+    } else {
+      return $this->stop - $this->start;
+    }
   }
 }
