@@ -210,7 +210,6 @@ class Routine extends \lang\Object {
    */
   public function getAnnotation($name, $key= null) {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
-
     if (!$details || !($key 
       ? array_key_exists($key, @$details[DETAIL_ANNOTATIONS][$name]) 
       : array_key_exists($name, @$details[DETAIL_ANNOTATIONS])
