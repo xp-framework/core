@@ -4,6 +4,7 @@
   "homepage" : "http://xp-framework.net/",
   "license" : "BSD-3-Clause",
   "description" : "The XP framework is an all-purpose, object oriented PHP framework.",
+  "keywords": ["framework", "xp"],
   "require" : {
     "php" : ">=5.4.0"
   },

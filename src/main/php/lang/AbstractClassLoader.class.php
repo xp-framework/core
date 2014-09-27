@@ -117,9 +117,10 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
     // * Global namespace -> ClassName, alias as com\example\ClassName
     // 
     // Alias lang.** classes into global namespace
-    if (FALSE === ($p= strrpos($class, '.'))) {
+    if (false === ($p= strrpos($class, '.'))) {
       $name= $class;
-    } else if (NULL !== $package) {
+      \xp::$sn[$class]= $name;
+    } else if (null !== $package) {
       $name= strtr($class, '.', '·');
       class_alias($name, strtr($class, '.', '\\'));
       \xp::$sn[$class]= $name;
