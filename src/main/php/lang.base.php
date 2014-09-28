@@ -670,7 +670,8 @@ spl_autoload_register(function($class) {
 });
 
 foreach ([
-  'lang.Generic', 'lang.Object', 'lang.Type', 'lang.XPClass', 'lang.ClassLoader', 'lang.Throwable',
+  'lang.Generic', 'lang.Object', 'lang.Type', 'lang.XPClass', 'lang.ClassLoader',
+  'lang.Throwable', 'lang.XPException', 'lang.Error',
   'lang.types.String', 'lang.types.Bytes', 'lang.types.Integer', 'lang.types.Double', 'lang.types.Boolean',
   'lang.types.ArrayList', 'lang.types.ArrayMap',
   'lang.reflect.Method', 'lang.reflect.Constructor', 'lang.reflect.Field'
