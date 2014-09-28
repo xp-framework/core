@@ -145,7 +145,7 @@ class Stream extends \lang\Object {
   public function read($bytes= 4096) {
     if ($this->eof()) return '';
     if (false === ($data= substr($this->buffer, $this->offset, $bytes))) {
-      throw new \IOException('Cannot read '.$bytes.' bytes from stream.');
+      throw new IOException('Cannot read '.$bytes.' bytes from stream.');
     }
     
     $this->offset+= strlen($data);

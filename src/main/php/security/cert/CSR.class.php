@@ -2,7 +2,6 @@
 
 use security\KeyPair;
 
-
 /**
  * Certificate signing requests
  *
@@ -42,6 +41,7 @@ use security\KeyPair;
  * @purpose  Represent a CSR
  */
 class CSR extends \lang\Object {
+  public $_res;
 
   /**
    * Constructor
@@ -50,7 +50,7 @@ class CSR extends \lang\Object {
    * @param   security.KeyPair keypair
    */
   public function __construct($principal, $keypair) {
-    $this->_res= openssl_csr_new(array(
+    $this->_res= openssl_csr_new([
       'countryName'               => $principal->getCountryName(),
       'stateOrProvinceName'       => $principal->getStateOrProvinceName(),
       'localityName'              => $principal->getLocalityName(),
@@ -58,8 +58,7 @@ class CSR extends \lang\Object {
       'organizationalUnitName'    => $principal->getOrganizationalUnitName(),
       'commonName'                => $principal->getCommonName(),
       'emailAddress'              => $principal->getEmailAddress()
-    ), $keypair->_res);
-    
+    ], $keypair->_res);
   }
   
   /**
@@ -87,11 +86,11 @@ class CSR extends \lang\Object {
   public function sign($keypair, $days= 365, $cacert= null) {
     if (false === ($x509= openssl_csr_sign($this->_res, $cacert, $keypair->_res, $days))) {
       trigger_error(implode("\n  @", \security\OpenSslUtil::getErrors()), E_USER_NOTICE);
-      throw new \CertificateException('Cannot sign certificate');
+      throw new CertificateException('Cannot sign certificate');
     }      
     if (false === openssl_x509_export($x509, $str)) {
       trigger_error(implode("\n  @", \security\OpenSslUtil::getErrors()), E_USER_NOTICE);
-      throw new \CertificateException('Cannot export certificate');
+      throw new CertificateException('Cannot export certificate');
     }
     
     return X509Certificate::fromString($str);

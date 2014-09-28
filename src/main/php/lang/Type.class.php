@@ -170,7 +170,7 @@ class Type extends Object {
       return cast(self::forName($base), 'lang.XPClass')->newGenericType($components);
     }
 
-    throw new \IllegalArgumentException('Unparseable name '.$name);
+    throw new IllegalArgumentException('Unparseable name '.$name);
   }
   
   /**

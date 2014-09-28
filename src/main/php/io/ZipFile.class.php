@@ -1,6 +1,4 @@
 <?php namespace io;
- 
-
 
 /**
  * Represents a zip file
@@ -26,10 +24,10 @@ class ZipFile extends File {
       ('php://' != substr($this->uri, 0, 6)) &&
       (FILE_MODE_READ == $mode) && 
       (!$this->exists())
-    ) throw new \FileNotFoundException('File "'.$this->uri.'" not found');
+    ) throw new FileNotFoundException('File "'.$this->uri.'" not found');
     
     $this->_fd= gzopen($this->uri, $this->mode.$compression);
-    if (!$this->_fd) throw new \IOException('cannot open '.$this->uri.' mode '.$this->mode);
+    if (!$this->_fd) throw new IOException('cannot open '.$this->uri.' mode '.$this->mode);
     return true;
   }
   
@@ -56,7 +54,7 @@ class ZipFile extends File {
    */
   public function readChar() {
     if (false === ($result= gzgetc($this->_fd))) {
-      throw new \IOException('readChar() cannot read '.$bytes.' bytes from '.$this->uri);
+      throw new IOException('readChar() cannot read '.$bytes.' bytes from '.$this->uri);
     }
     return $result;
   }
@@ -73,7 +71,7 @@ class ZipFile extends File {
    */
   public function gets($bytes= 4096) {
     if (false === ($result= gzgets($this->_fd, $bytes))) {
-      throw new \IOException('gets() cannot read '.$bytes.' bytes from '.$this->uri);
+      throw new IOException('gets() cannot read '.$bytes.' bytes from '.$this->uri);
     }
     return $result;
   }
@@ -87,7 +85,7 @@ class ZipFile extends File {
    */
   public function read($bytes= 4096) {
     if (false === ($result= gzread($this->_fd, $bytes))) {
-      throw new \IOException('read() cannot read '.$bytes.' bytes from '.$this->uri);
+      throw new IOException('read() cannot read '.$bytes.' bytes from '.$this->uri);
     }
     return $result;
   }
@@ -101,7 +99,7 @@ class ZipFile extends File {
    */
   public function write($string) {
     if (false === ($result= gzwrite($this->_fd, $string))) {
-      throw new \IOException('cannot write '.strlen($string).' bytes to '.$this->uri);
+      throw new IOException('cannot write '.strlen($string).' bytes to '.$this->uri);
     }
     return $result;
   }
@@ -115,7 +113,7 @@ class ZipFile extends File {
    */
   public function writeLine($string) {
     if (false === ($result= gzputs($this->_fd, $string."\n"))) {
-      throw new \IOException('cannot write '.(strlen($string)+ 1).' bytes to '.$this->uri);
+      throw new IOException('cannot write '.(strlen($string)+ 1).' bytes to '.$this->uri);
     }
     return $result;
   }
@@ -133,7 +131,7 @@ class ZipFile extends File {
   public function eof() {
     $result= gzeof($this->_fd);
     if (\xp::errorAt(__FILE__, __LINE__ - 1)) {
-      $e= new \IOException('cannot determine eof of '.$this->uri);
+      $e= new IOException('cannot determine eof of '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -150,7 +148,7 @@ class ZipFile extends File {
    */
   public function rewind() {
     if (false === ($result= gzrewind($this->_fd))) {
-      throw new \IOException('cannot rewind file pointer');
+      throw new IOException('cannot rewind file pointer');
     }
     return true;
   }
@@ -166,7 +164,7 @@ class ZipFile extends File {
    */
   public function seek($position= 0, $mode= SEEK_SET) {
     if (0 != ($result= gzseek($this->_fd, $position, $mode))) {
-      throw new \IOException('seek error, position '.$position.' in mode '.$mode);
+      throw new IOException('seek error, position '.$position.' in mode '.$mode);
     }
     return true;
   }
@@ -180,7 +178,7 @@ class ZipFile extends File {
   public function tell($position= 0, $mode= SEEK_SET) {
     $result= gztell($this->_fd);
     if ((false === $result) && \xp::errorAt(__FILE__, __LINE__ - 1)) {
-      throw new \IOException('retrieve file pointer\'s position '.$this->uri);
+      throw new IOException('retrieve file pointer\'s position '.$this->uri);
     }
     return $result;
   }

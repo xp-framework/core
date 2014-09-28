@@ -63,7 +63,7 @@ class Primitive extends Type {
     if ($in instanceof Boolean) return $in->value;
     if ($in instanceof ArrayList) return $in->values;   // deprecated
     if ($in instanceof Generic) {
-      throw new \IllegalArgumentException('Cannot unbox '.\xp::typeOf($in));
+      throw new IllegalArgumentException('Cannot unbox '.\xp::typeOf($in));
     }
     return $in; // Already primitive
   }
@@ -83,7 +83,7 @@ class Primitive extends Type {
     if ('double' === $t) return new Double($in);
     if ('boolean' === $t) return new Boolean($in);
     if ('array' === $t) return ArrayList::newInstance($in);   // deprecated
-    throw new \IllegalArgumentException('Cannot box '.\xp::typeOf($in));
+    throw new IllegalArgumentException('Cannot box '.\xp::typeOf($in));
   }
   
   /**
@@ -99,7 +99,7 @@ class Primitive extends Type {
       case 'int': return self::$INT;
       case 'double': return self::$DOUBLE;
       case 'bool': return self::$BOOL;
-      default: throw new \IllegalArgumentException('Not a primitive: '.$name);
+      default: throw new IllegalArgumentException('Not a primitive: '.$name);
     }
   }
 

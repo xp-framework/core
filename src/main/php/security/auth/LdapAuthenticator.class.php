@@ -36,13 +36,13 @@ class LdapAuthenticator extends \lang\Object implements Authenticator {
     try {
       $r= $this->lc->search($this->basedn, '(uid='.$user.')');
     } catch (\peer\ldap\LDAPException $e) {
-      throw new \AuthenticatorException(sprintf(
+      throw new AuthenticatorException(sprintf(
         'Authentication failed (#%d: "%s")', 
         $e->getErrorCode(),
         $e->getMessage()
       ), $e);
     } catch (\peer\ConnectException $e) {
-      throw new \AuthenticatorException(sprintf(
+      throw new AuthenticatorException(sprintf(
         'Authentication failed (<connect>: "%s")', 
         $e->getMessage()
       ), $e);

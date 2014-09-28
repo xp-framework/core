@@ -71,7 +71,7 @@ class ServerSocket extends BSDSocket {
    */
   public function create() {
     if (!is_resource($this->_sock= socket_create($this->domain, $this->type, $this->protocol))) {
-      throw new \SocketException(sprintf(
+      throw new SocketException(sprintf(
         'Creating socket failed: %s',
         $this->getLastError()
       ));
@@ -91,7 +91,7 @@ class ServerSocket extends BSDSocket {
       (false === socket_setopt($this->_sock, SOL_SOCKET, SO_REUSEADDR, $reuse)) ||
       (false === socket_bind($this->_sock, $this->host, $this->port))
     ) {
-      throw new \SocketException(sprintf(
+      throw new SocketException(sprintf(
         'Binding socket to '.$this->host.':'.$this->port.' failed: %s',
         $this->getLastError()
       ));
@@ -119,7 +119,7 @@ class ServerSocket extends BSDSocket {
    */
   public function listen($backlog= 10) {
     if (false === socket_listen($this->_sock, $backlog)) {
-      throw new \SocketException(sprintf(
+      throw new SocketException(sprintf(
         'Listening on socket failed: %s',
         $this->getLastError()
       ));
@@ -146,7 +146,7 @@ class ServerSocket extends BSDSocket {
    */
   public function accept() {
     if (0 > ($msgsock= socket_accept($this->_sock))) {
-      throw new \SocketException(sprintf(
+      throw new SocketException(sprintf(
         'Accept failed: %s',
         $this->getLastError()
       ));
@@ -155,7 +155,7 @@ class ServerSocket extends BSDSocket {
     
     // Get peer
     if (false === socket_getpeername($msgsock, $host, $port)) {
-      throw new \SocketException(sprintf(
+      throw new SocketException(sprintf(
         'Cannot get peer: %s',
         $this->getLastError()
       ));      

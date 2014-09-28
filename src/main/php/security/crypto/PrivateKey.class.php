@@ -20,7 +20,7 @@ class PrivateKey extends CryptoKey {
    */
   public static function fromString($str, $passphrase= null) {
     if (!is_resource($_hdl= openssl_pkey_get_private($str, $passphrase))) {
-      throw new \CryptoException(
+      throw new CryptoException(
         'Could not read private key', OpenSslUtil::getErrors()
       );
     }
@@ -38,7 +38,7 @@ class PrivateKey extends CryptoKey {
    */
   public function sign($data) {
     if (false === openssl_sign($data, $signature, $this->_hdl)) {
-      throw new \CryptoException(
+      throw new CryptoException(
         'Could not sign data', OpenSslUtil::getErrors()
       );
     }
@@ -61,7 +61,7 @@ class PrivateKey extends CryptoKey {
    */
   public function encrypt($data) {
     if (false === openssl_private_encrypt($data, $crypted, $this->_hdl)) {
-      throw new \CryptoException(
+      throw new CryptoException(
         'Could not decrypt data', OpenSslUtil::getErrors()
       );
     }
@@ -79,7 +79,7 @@ class PrivateKey extends CryptoKey {
    */
   public function decrypt($data) {
     if (false === openssl_private_decrypt($data, $decrypted, $this->_hdl)) {
-      throw new \CryptoException(
+      throw new CryptoException(
         'Could not decrypt data', OpenSslUtil::getErrors()
       );
     }
@@ -96,7 +96,7 @@ class PrivateKey extends CryptoKey {
    */
   public function export($passphrase= null) {
     if (false === openssl_pkey_export($this->_hdl, $out, $passphrase)) {
-      throw new \CryptoException(
+      throw new CryptoException(
         'Could not export private key', OpenSslUtil::getErrors()
       );
     }
@@ -115,7 +115,7 @@ class PrivateKey extends CryptoKey {
    */
   public function unseal($data, $key) {
     if (false === openssl_open($data, $unsealed, $key, $this->_hdl)) {
-      throw new \CryptoException(
+      throw new CryptoException(
         'Could not export private key', OpenSslUtil::getErrors()
       );
     }

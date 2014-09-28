@@ -1,7 +1,5 @@
 <?php namespace security\crypto;
 
-
-
 /**
  * Implementation which always raises a "Not Implemented" exception
  *
@@ -27,7 +25,7 @@ class CryptNotImplemented extends CryptImpl {
    * @return  string
    */
   public function crypt($plain, $salt) {
-    throw new \CryptoException('Method '.$this->method.' not implemented');
+    throw new CryptoException('Method '.$this->method.' not implemented');
   }
 
   /**

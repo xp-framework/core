@@ -44,7 +44,7 @@ abstract class Enum extends Object {
    */
   public static function valueOf(XPClass $class, $name) {
     if (!$class->isEnum()) {
-      throw new \IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
+      throw new IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
     }
     try {
       $prop= $class->_reflect->getStaticPropertyValue($name);
@@ -64,7 +64,7 @@ abstract class Enum extends Object {
    */
   public static function valuesOf(XPClass $class) {
     if (!$class->isEnum()) {
-      throw new \IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
+      throw new IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
     }
     $r= [];
     foreach ($class->_reflect->getStaticProperties() as $prop) {

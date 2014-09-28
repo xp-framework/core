@@ -177,11 +177,11 @@ class Process extends Object {
         $self->status['exe']= $p->executablePath;
         $self->status['command']= $p->commandLine;
       } catch (\Exception $e) {
-        throw new \IllegalStateException('Cannot find executable: '.$e->getMessage());
+        throw new IllegalStateException('Cannot find executable: '.$e->getMessage());
       }
     } else if (is_dir('/proc/1')) {
       if (!file_exists($proc= '/proc/'.$pid)) {
-        throw new \IllegalStateException('Cannot find executable in /proc');
+        throw new IllegalStateException('Cannot find executable in /proc');
       }
       do {
         foreach (['/exe', '/file'] as $alt) {
@@ -189,7 +189,7 @@ class Process extends Object {
           $self->status['exe']= readlink($proc.$alt);
           break 2;
         }
-        throw new \IllegalStateException('Cannot find executable in '.$proc);
+        throw new IllegalStateException('Cannot find executable in '.$proc);
       } while (0);
       $self->status['command']= strtr(file_get_contents($proc.'/cmdline'), "\0", ' ');
     } else {
@@ -199,14 +199,14 @@ class Process extends Object {
         } else if ($_= getenv('_')) {
           $self->status['exe']= self::resolve($_);
         } else {
-          throw new \IllegalStateException('Cannot find executable');
+          throw new IllegalStateException('Cannot find executable');
         }
         $self->status['command']= exec('ps -ww -p '.$pid.' -ocommand 2>&1', $out, $exit);
         if (0 !== $exit) {
-          throw new \IllegalStateException('Cannot find executable: '.implode('', $out));
+          throw new IllegalStateException('Cannot find executable: '.implode('', $out));
         }
       } catch (\io\IOException $e) {
-        throw new \IllegalStateException($e->getMessage());
+        throw new IllegalStateException($e->getMessage());
       }
     }
 
@@ -300,7 +300,7 @@ class Process extends Object {
    */
   public function close() {
     if (!$this->status['owner']) {
-      throw new \IllegalStateException('Cannot close not-owned process #'.$this->status['pid']);
+      throw new IllegalStateException('Cannot close not-owned process #'.$this->status['pid']);
     }
     if (null !== $this->_proc) {
       $this->in->isOpen() && $this->in->close();
