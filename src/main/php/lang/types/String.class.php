@@ -11,7 +11,7 @@ if (extension_loaded('mbstring')) {
     static function rpos($buf, $needle) { return mb_strrpos($buf, $needle); }
   }
 } else {
-  iconv_set_encoding('internal_encoding', STR_ENC);
+  @iconv_set_encoding('internal_encoding', STR_ENC);
   class __str {
     static function len($buf) { return iconv_strlen($buf); }
     static function substr($buf, $start, $length) { return iconv_substr($buf, $start, $length); }
