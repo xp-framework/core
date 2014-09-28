@@ -1,9 +1,7 @@
 <?php namespace lang\types;
 
-define('STR_ENC', 'utf-8');
-
 if (extension_loaded('mbstring')) {
-  mb_internal_encoding(STR_ENC);
+  mb_internal_encoding(\xp::ENCODING);
   class __str {
     static function len($buf) { return mb_strlen($buf); }
     static function substr($buf, $start, $length) { return mb_substr($buf, $start, $length); }
@@ -11,7 +9,7 @@ if (extension_loaded('mbstring')) {
     static function rpos($buf, $needle) { return mb_strrpos($buf, $needle); }
   }
 } else {
-  @iconv_set_encoding('internal_encoding', STR_ENC);
+  @iconv_set_encoding('internal_encoding', \xp::ENCODING);
   class __str {
     static function len($buf) { return iconv_strlen($buf); }
     static function substr($buf, $start, $length) { return iconv_substr($buf, $start, $length); }
@@ -34,7 +32,7 @@ class String extends \lang\Object implements \ArrayAccess {
   public static $EMPTY = null;
 
   static function __static() {
-    self::$EMPTY= new self('', STR_ENC);
+    self::$EMPTY= new self('', \xp::ENCODING);
   }
 
   /**
@@ -49,18 +47,18 @@ class String extends \lang\Object implements \ArrayAccess {
     if ($arg instanceof self) {
       return $arg->buffer;
     } else if ($arg instanceof Character) {
-      return $arg->getBytes(STR_ENC)->buffer;
+      return $arg->getBytes(\xp::ENCODING)->buffer;
     } else {
-      $charset= strtoupper($charset ? $charset : \xp::ENCODING);
+      $charset= strtolower($charset ?: \xp::ENCODING);
 
       // Convert the input to internal encoding
-      $buffer= iconv($charset, STR_ENC, $arg);
+      $buffer= iconv($charset, \xp::ENCODING, $arg);
       if (\xp::errorAt(__FILE__, __LINE__ - 1)) {
         $message= key(\xp::$errors[__FILE__][__LINE__ - 2]);
         \xp::gc(__FILE__);
-        throw new \lang\FormatException($message.($charset == STR_ENC  
+        throw new \lang\FormatException($message.($charset == \xp::ENCODING  
           ? ' with charset '.$charset
-          : $message.' while converting input from '.$charset.' to '.STR_ENC
+          : $message.' while converting input from '.$charset.' to '.\xp::ENCODING
         ));
       }
       return $buffer;
@@ -165,7 +163,7 @@ class String extends \lang\Object implements \ArrayAccess {
     if ($offset >= $this->length || $offset < 0) {
       raise('lang.IndexOutOfBoundsException', 'Offset '.$offset.' out of bounds');
     }
-    return new Character(__str::substr($this->buffer, $offset, 1), STR_ENC);
+    return new Character(__str::substr($this->buffer, $offset, 1), \xp::ENCODING);
   }
 
   /**
@@ -302,7 +300,7 @@ class String extends \lang\Object implements \ArrayAccess {
    * @return  string
    */
   public function toString() {
-    return iconv(STR_ENC, \xp::ENCODING.'//TRANSLIT', $this->buffer);
+    return $this->buffer;
   }
 
   /**
@@ -312,7 +310,7 @@ class String extends \lang\Object implements \ArrayAccess {
    * @return  string
    */
   public function __toString() {
-    return iconv(STR_ENC, \xp::ENCODING.'//TRANSLIT', $this->buffer);
+    return $this->buffer;
   }
  
   /**
@@ -322,15 +320,15 @@ class String extends \lang\Object implements \ArrayAccess {
    * @return  lang.types.Bytes
    */
   public function getBytes($charset= null) {
-    $charset= strtoupper($charset ? $charset : \xp::ENCODING);
-    if (STR_ENC === $charset) {
+    $charset= strtolower($charset ?: \xp::ENCODING);
+    if (\xp::ENCODING === $charset) {
       return new Bytes($this->buffer);
     }
-    $bytes= iconv(STR_ENC, $charset, $this->buffer);
+    $bytes= iconv(\xp::ENCODING, $charset, $this->buffer);
     if (\xp::errorAt(__FILE__, __LINE__ - 1)) {
       $message= key(\xp::$errors[__FILE__][__LINE__ - 2]);
       \xp::gc(__FILE__);
-      throw new \lang\FormatException($message.' while converting input from '.STR_ENC.' to '.$charset);
+      throw new \lang\FormatException($message.' while converting input from '.\xp::ENCODING.' to '.$charset);
     }
     return new Bytes($bytes);
   }

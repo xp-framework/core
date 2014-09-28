@@ -35,7 +35,7 @@ class Character extends \lang\Object {
       return;
     }        
 
-    $charset= strtoupper($charset ? $charset : \xp::ENCODING);
+    $charset= strtolower($charset ?: \xp::ENCODING);
 
     // Convert the input to internal encoding
     $this->buffer= iconv($charset, 'utf-8', $arg);
@@ -79,7 +79,7 @@ class Character extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return iconv(STR_ENC, \xp::ENCODING.'//TRANSLIT', $this->buffer);
+    return $this->buffer;
   }
 
   /**
@@ -89,7 +89,7 @@ class Character extends \lang\Object {
    * @return  string
    */
   public function __toString() {
-    return iconv(STR_ENC, \xp::ENCODING.'//TRANSLIT', $this->buffer);
+    return $this->buffer;
   }
  
   /**
@@ -99,11 +99,11 @@ class Character extends \lang\Object {
    * @return  lang.types.Bytes
    */
   public function getBytes($charset= null) {
-    $charset= strtoupper($charset ? $charset : \xp::ENCODING);
+    $charset= strtolower($charset ?: \xp::ENCODING);
 
-    return new Bytes(STR_ENC === $charset 
+    return new Bytes(\xp::ENCODING === $charset 
       ? $this->buffer 
-      : iconv(STR_ENC, $charset, $this->buffer)
+      : iconv(\xp::ENCODING, $charset, $this->buffer)
     );
   }
 }
