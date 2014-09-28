@@ -49,7 +49,7 @@ class ResourceProvider extends Object {
    * @return  lang.IClassLoader
    */
   protected function getLoader() {
-    return \ClassLoader::getDefault();
+    return ClassLoader::getDefault();
   }
 
   /**

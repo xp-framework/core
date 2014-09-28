@@ -1,7 +1,5 @@
 <?php namespace lang\types;
 
-
-
 /**
  * Represents a list of bytes
  *
@@ -58,7 +56,7 @@ class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
     if (!$this->iterator) $this->iterator= newinstance('Iterator', [$this], '{
       private $i= 0, $v;
       public function __construct($v) { $this->v= $v; }
-      public function current() { $n= ord($this->v->buffer{$this->i}); return new Byte($n < 128 ? $n : $n - 256); }
+      public function current() { $n= ord($this->v->buffer{$this->i}); return new \lang\types\Byte($n < 128 ? $n : $n - 256); }
       public function key() { return $this->i; }
       public function next() { $this->i++; }
       public function rewind() { $this->i= 0; }

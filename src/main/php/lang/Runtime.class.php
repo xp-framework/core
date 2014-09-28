@@ -172,7 +172,7 @@ class Runtime extends Object {
         }
 
         default: {
-          throw new \FormatException('Unrecognized argument "'.$argument.'"');
+          throw new FormatException('Unrecognized argument "'.$argument.'"');
         }
       }
     }

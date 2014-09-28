@@ -111,13 +111,6 @@ final class xp {
       // Register class name and call static initializer if available
       $p= strrpos($class, '.');
       $name= strtr($class, '.', '\\');
-
-      if (0 === strncmp($class, 'lang.', 5)) {
-        $short= substr($class, $p + 1);
-        class_alias($name, $short);
-        \xp::$cn[$short]= $class;
-      }
-
       method_exists($name, '__static') && xp::$cli[]= [$name, '__static'];
       if (0 === xp::$cll) {
         $invocations= xp::$cli;
@@ -675,4 +668,15 @@ spl_autoload_register(function($class) {
     return true;
   }
 });
+
+foreach ([
+  'lang.Generic', 'lang.Object', 'lang.Type', 'lang.XPClass', 'lang.ClassLoader', 'lang.Throwable',
+  'lang.types.String', 'lang.types.Bytes', 'lang.types.Integer', 'lang.types.Double', 'lang.types.Boolean',
+  'lang.types.ArrayList', 'lang.types.ArrayMap',
+  'lang.reflect.Method', 'lang.reflect.Constructor', 'lang.reflect.Field'
+] as $class) {
+  $short= substr($class, strrpos($class, '.') + 1);
+  class_alias(strtr($class, '.', '\\'), $short);
+  \xp::$cn[$short]= $class;
+}
 // }}}

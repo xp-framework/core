@@ -216,7 +216,7 @@ class Field extends \lang\Object {
       if (!$allow) {
         throw new \lang\IllegalAccessException(sprintf(
           'Cannot write %s %s::$%s from scope %s',
-          \Modifiers::stringOf($this->getModifiers()),
+          Modifiers::stringOf($this->getModifiers()),
           \xp::nameOf($this->_class),
           $this->_reflect->getName(),
           $t[1]['class']

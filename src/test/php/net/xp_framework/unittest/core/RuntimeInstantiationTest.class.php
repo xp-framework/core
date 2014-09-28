@@ -32,7 +32,7 @@ class RuntimeInstantiationTest extends TestCase {
    */
   protected function runInNewRuntime(\lang\RuntimeOptions $startup, $src, $expectedExitCode= 0) {
     with ($out= $err= '', $p= Runtime::getInstance()->newInstance($startup, 'class', 'xp.runtime.Evaluate', [])); {
-      $p->in->write('uses("lang.Runtime");');
+      $p->in->write('use lang\Runtime;');
       $p->in->write($src);
       $p->in->close();
 

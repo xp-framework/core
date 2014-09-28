@@ -55,7 +55,7 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
    */
   public function loadUri($uri) {
     if (null === ($class= $this->classAtUri($uri))) {
-      throw new \ClassNotFoundException('URI:'.$uri);
+      throw new ClassNotFoundException('URI:'.$uri);
     }
     return $this->loadClass($class);
   }
@@ -133,11 +133,6 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
     } else {
       unset(\xp::$cl[$class]);
       raise('lang.ClassFormatException', 'Class "'.$class.'" not declared in loaded file');
-    }
-
-    if (0 === strncmp($class, 'lang.', 5)) {
-      class_alias($name, substr($class, $p + 1));
-      \xp::$cn[substr($class, $p + 1)]= $class;
     }
 
     method_exists($name, '__static') && \xp::$cli[]= [$name, '__static'];
