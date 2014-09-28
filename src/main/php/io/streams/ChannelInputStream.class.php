@@ -2,15 +2,13 @@
 
 use io\IOException;
 
-
 /**
  * Input stream that reads from one of the "stdin", "input" channels
  * provided as PHP input/output streams.
  *
- * @test     xp://net.xp_framework.unittest.io.streams.ChannelStreamTest
- * @see      php://wrappers
- * @see      xp://io.streams.ChannelOutputStream
- * @purpose  Inputstream implementation
+ * @test  xp://net.xp_framework.unittest.io.streams.ChannelStreamTest
+ * @see   php://wrappers
+ * @see   xp://io.streams.ChannelOutputStream
  */
 class ChannelInputStream extends \lang\Object implements InputStream {
   protected
@@ -20,15 +18,19 @@ class ChannelInputStream extends \lang\Object implements InputStream {
   /**
    * Constructor
    *
-   * @param   string name
+   * @param   string $arg Either a name or the file descriptor
    */
-  public function __construct($name) {
-    static $allowed= array('stdin', 'input');
-
-    if (!in_array($name, $allowed) || !($this->fd= fopen('php://'.$name, 'rb'))) {
-      throw new IOException('Could not open '.$name.' channel for reading');
+  public function __construct($arg) {
+    if ('stdin' === $arg || 'input' === $arg) {
+      if (!($this->fd= fopen('php://'.$arg, 'rb'))) {
+        throw new IOException('Could not open '.$arg.' channel for reading');
+      }
+    } else if (is_resource($arg)) {
+      $this->fd= $arg;
+      $this->name= '#'.(int)$arg;
+    } else {
+      throw new IOException('Expecting either stdin, input or a file descriptor '.typeof($arg).' given');
     }
-    $this->name= $name;
   }
 
   /**

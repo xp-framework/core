@@ -2,33 +2,35 @@
 
 use io\IOException;
 
-
 /**
  * Output stream that writes to one of the "stdout", "stderr", "output"
  * channels provided as PHP input/output streams.
  *
- * @test     xp://net.xp_framework.unittest.io.streams.ChannelStreamTest
- * @see      php://wrappers
- * @see      xp://io.streams.ChannelInputStream
- * @purpose  Outputstream implementation
+ * @test  xp://net.xp_framework.unittest.io.streams.ChannelStreamTest
+ * @see   php://wrappers
+ * @see   xp://io.streams.ChannelInputStream
  */
 class ChannelOutputStream extends \lang\Object implements OutputStream {
   protected
     $name = null,
     $fd   = null;
-  
+
   /**
    * Constructor
    *
-   * @param   string name
+   * @param   string $arg Either a name or the file descriptor
    */
-  public function __construct($name) {
-    static $allowed= array('stdout', 'stderr', 'output');
-
-    if (!in_array($name, $allowed) || !($this->fd= fopen('php://'.$name, 'wb'))) {
-      throw new IOException('Could not open '.$name.' channel for writing');
+  public function __construct($arg) {
+    if ('stdout' === $arg || 'stderr' === $arg || 'output' === $arg) {
+      if (!($this->fd= fopen('php://'.$arg, 'rb'))) {
+        throw new IOException('Could not open '.$arg.' channel for reading');
+      }
+    } else if (is_resource($arg)) {
+      $this->fd= $arg;
+      $this->name= '#'.(int)$arg;
+    } else {
+      throw new IOException('Expecting either stdout, stderr, output or a file descriptor '.typeof($arg).' given');
     }
-    $this->name= $name;
   }
 
   /**
