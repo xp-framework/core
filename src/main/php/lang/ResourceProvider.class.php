@@ -62,7 +62,7 @@ class ResourceProvider extends Object {
 
     // Shortcut
     if (1 === sscanf($path, 'res://%s', $file)) return $file;
-    throw new \IllegalArgumentException('Invalid resource expression: "'.$path.'"');
+    throw new IllegalArgumentException('Invalid resource expression: "'.$path.'"');
   }
   
   /**

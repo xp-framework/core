@@ -43,7 +43,7 @@ class HtpasswdAuthenticator extends \lang\Object implements Authenticator {
         }
         $this->_file->close();
       } catch (\io\IOException $e) {
-        throw new \AuthenticatorException(
+        throw new AuthenticatorException(
           'Failed rehashing from '.$this->_file->getURI(), 
           $e
         );

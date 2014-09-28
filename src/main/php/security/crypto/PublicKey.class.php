@@ -19,7 +19,7 @@ class PublicKey extends CryptoKey {
    */
   public static function fromString($string) {
     if (!is_resource($_hdl= openssl_pkey_get_public($string))) {
-      throw new \CryptoException(
+      throw new CryptoException(
         'Could not read public key', OpenSslUtil::getErrors()
       );
     }
@@ -41,7 +41,7 @@ class PublicKey extends CryptoKey {
    */
   public function verify($data, $signature) {
     if (-1 === ($res= openssl_verify($data, $signature, $this->_hdl))) {
-      throw new \CryptoException(
+      throw new CryptoException(
         'Error verifying signature', OpenSslUtil::getErrors()
       );
     }
@@ -64,7 +64,7 @@ class PublicKey extends CryptoKey {
    */
   public function encrypt($data) {
     if (false === openssl_public_encrypt($data, $out, $this->_hdl)) {
-      throw new \CryptoException(
+      throw new CryptoException(
         'Error encrypting data', OpenSslUtil::getErrors()
       );
     }
@@ -82,7 +82,7 @@ class PublicKey extends CryptoKey {
    */
   public function decrypt($data) {
     if (false === openssl_public_decrypt($data, $decrypted, $this->_hdl)) {
-      throw new \CryptoException(
+      throw new CryptoException(
         'Could not decrypt data', OpenSslUtil::getErrors()
       );
     }
@@ -100,12 +100,12 @@ class PublicKey extends CryptoKey {
    * @throws  security.crypto.CryptoException if the operation fails
    */
   public function seal($data) {
-    if (false === openssl_seal($data, $sealed, $keys, array($this->_hdl))) {
-      throw new \CryptoException(
+    if (false === openssl_seal($data, $sealed, $keys, [$this->_hdl])) {
+      throw new CryptoException(
         'Could not seal data', OpenSslUtil::getErrors()
       );
     }
     
-    return array($sealed, $keys[0]);
+    return [$sealed, $keys[0]];
   }
 }

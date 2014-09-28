@@ -5,7 +5,6 @@ use security\crypto\PublicKey;
 use security\OpenSslUtil;
 use util\Date;
 
-
 /**
  * X.509 certificate
  *
@@ -72,7 +71,7 @@ class X509Certificate extends Certificate {
 
     if (null === $_info) {
       if (!is_array($this->_info= openssl_x509_parse($_res, true))) {
-        throw new \CertificateException(
+        throw new CertificateException(
           'Cannot parse certificate information', OpenSslUtil::getErrors()
         );
       }
@@ -187,7 +186,7 @@ class X509Certificate extends Certificate {
    */
   public function export() {
     if (false === openssl_x509_export($this->_res, $out)) {
-      throw new \CertificateException(
+      throw new CertificateException(
         'Could not export certificate', OpenSslUtil::getErrors()
       );
     }
@@ -204,7 +203,7 @@ class X509Certificate extends Certificate {
    */
   public static function fromString($str) {
     if (!is_resource($_res= openssl_x509_read($str))) {
-      throw new \CertificateException(
+      throw new CertificateException(
         'Could not read certificate', OpenSslUtil::getErrors()
       );
     }
