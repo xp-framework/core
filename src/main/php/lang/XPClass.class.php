@@ -55,7 +55,9 @@ define('DETAIL_GENERIC',        7);
 class XPClass extends Type {
   protected $_class= null;
   public $_reflect= null;
-  
+
+  static function __static() { }
+
   /**
    * Constructor
    *

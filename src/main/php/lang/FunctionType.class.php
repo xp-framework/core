@@ -10,6 +10,8 @@ class FunctionType extends Type {
   protected $signature;
   protected $returns;
 
+  static function __static() { }
+
   /**
    * Creates a new array type instance
    *

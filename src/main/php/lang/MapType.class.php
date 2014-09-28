@@ -8,6 +8,8 @@
  */
 class MapType extends Type {
 
+  static function __static() { }
+
   /**
    * Creates a new array type instance
    *
