@@ -15,11 +15,10 @@ define('FILE_MODE_READAPPEND','ab+');         // Append (Read/Write)
  * Instances of the file class serve as an opaque handle to the underlying machine-
  * specific structure representing an open file.
  * 
- * @test     xp://net.xp_framework.unittest.io.FileTest
- * @test     xp://net.xp_framework.unittest.io.FileIntegrationTest
- * @purpose  Represent a file
+ * @test xp://net.xp_framework.unittest.io.FileTest
+ * @test xp://net.xp_framework.unittest.io.FileIntegrationTest
  */
-class File extends Stream {
+class File extends Stream implements Channel {
   public 
     $uri=         '', 
     $filename=    '',
@@ -65,21 +64,29 @@ class File extends Stream {
   /**
    * Retrieve input stream
    *
+   * @deprecated Use in() instead
    * @return  io.streams.InputStream
    */
   public function getInputStream() {
-    return new FileInputStream($this);
+    return $this->in();
   }
 
   /**
    * Retrieve output stream
    *
+   * @deprecated Use out() instead
    * @return  io.streams.OutputStream
    */
   public function getOutputStream() {
-    return new FileOutputStream($this);
+    return $this->out();
   }
-  
+
+  /** @return io.streams.InputStream */
+  public function in() { return new FileInputStream($this); }
+
+  /** @return io.streams.OutputStream */
+  public function out() { return new FileOutputStream($this); }
+
   /**
    * Retrieve internal file handle
    *
