@@ -194,7 +194,6 @@ class GenericTypes extends \lang\Object {
           }
         } else if (3 === $state[0]) {             // Method body
           if (';' === $tokens[$i][0]) {
-            // Abstract method
             if (isset($annotations[0]['generic']['return'])) {
               $meta[1][$m][DETAIL_RETURNS]= strtr($annotations[0]['generic']['return'], $placeholders);
             }
@@ -205,8 +204,10 @@ class GenericTypes extends \lang\Object {
                 }
               }
             }
+            if (!isset($annotations[0]['generic']['self'])) {
+              unset($meta[1][$m][DETAIL_ANNOTATIONS]['generic']);
+            }
             $annotations= [];
-            unset($meta[1][$m][DETAIL_ANNOTATIONS]['generic']);
             array_shift($state);
           } else if ('{' === $tokens[$i][0]) {
             $braces= 1;
@@ -249,8 +250,10 @@ class GenericTypes extends \lang\Object {
               }
             }
 
+            if (!isset($annotations[0]['generic']['self'])) {
+              unset($meta[1][$m][DETAIL_ANNOTATIONS]['generic']);
+            }
             $annotations= [];
-            unset($meta[1][$m][DETAIL_ANNOTATIONS]['generic']);
             continue;
           }
         } else if (4 === $state[0]) {             // Method body

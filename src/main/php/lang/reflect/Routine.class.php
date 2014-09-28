@@ -32,6 +32,11 @@ class Routine extends \lang\Object {
     $this->_class= $class;
     $this->_reflect= $reflect;
   }
+
+  /** @return var[] */
+  protected function generic() {
+    return [null, null];
+  }
   
   /**
    * Get routine's name.
@@ -78,7 +83,7 @@ class Routine extends \lang\Object {
     // ==
     return $this->_reflect->getModifiers() & ~0x1fb7f008;
   }
-  
+
   /**
    * Returns this method's parameters
    *
@@ -86,9 +91,10 @@ class Routine extends \lang\Object {
    */
   public function getParameters() {
     $r= [];
+    $g= sizeof($this->generic()[0]);
     $c= $this->_reflect->getDeclaringClass()->getName();
     foreach ($this->_reflect->getParameters() as $offset => $param) {
-      $r[]= new Parameter($param, [$c, $this->_reflect->getName(), $offset]);
+      $offset >= $g && $r[]= new Parameter($param, [$c, $this->_reflect->getName(), $offset - $g]);
     }
     return $r;
   }
@@ -101,12 +107,14 @@ class Routine extends \lang\Object {
    */
   public function getParameter($offset) {
     $list= $this->_reflect->getParameters();
+    $g= sizeof($this->generic()[0]);
+    $offset+= $g;
     return isset($list[$offset]) 
-      ? new Parameter($list[$offset], [$this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName(), $offset])
+      ? new Parameter($list[$offset], [$this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName(), $offset - $g])
       : null
     ;
   }
-  
+
   /**
    * Retrieve how many parameters this method declares (including optional 
    * ones)
@@ -114,7 +122,7 @@ class Routine extends \lang\Object {
    * @return  int
    */
   public function numParameters() {
-    return $this->_reflect->getNumberOfParameters();
+    return $this->_reflect->getNumberOfParameters() - sizeof($this->generic()[0]);
   }
 
   /**
@@ -162,7 +170,7 @@ class Routine extends \lang\Object {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
     return $details ? array_map(['lang\XPClass', 'forName'], $details[DETAIL_THROWS]) : [];
   }
-  
+
   /**
    * Returns the XPClass object representing the class or interface 
    * that declares the method represented by this Method object.
@@ -172,7 +180,7 @@ class Routine extends \lang\Object {
   public function getDeclaringClass() {
     return new \lang\XPClass($this->_reflect->getDeclaringClass());
   }
-  
+
   /**
    * Retrieves the api doc comment for this method. Returns NULL if
    * no documentation is present.
@@ -183,7 +191,7 @@ class Routine extends \lang\Object {
     if (!($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName()))) return null;
     return $details[DETAIL_COMMENT];
   }
-  
+
   /**
    * Check whether an annotation exists
    *
@@ -243,7 +251,7 @@ class Routine extends \lang\Object {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
     return $details ? $details[DETAIL_ANNOTATIONS] : [];
   }
-  
+
   /**
    * Sets whether this routine should be accessible from anywhere, 
    * regardless of its visibility level.
@@ -255,7 +263,7 @@ class Routine extends \lang\Object {
     $this->accessible= $flag;
     return $this;
   }
-  
+
   /**
    * Returns whether an object is equal to this routine
    *
@@ -278,7 +286,7 @@ class Routine extends \lang\Object {
   public function hashCode() {
     return 'R['.$this->_reflect->getDeclaringClass().$this->_reflect->getName();
   }
-  
+
   /**
    * Retrieve string representation. Examples:
    *
@@ -304,11 +312,13 @@ class Routine extends \lang\Object {
     } else {
       $throws= '';
     }
+    $generic= $this->generic()[0];
     return sprintf(
-      '%s %s %s(%s)%s',
+      '%s %s %s%s(%s)%s',
       Modifiers::stringOf($this->getModifiers()),
       $this->getReturnTypeName(),
       $this->getName(),
+      $generic ? '<'.implode(',', $generic).'>' : '',
       substr($signature, 2),
       $throws
     );
