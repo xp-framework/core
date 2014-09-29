@@ -18,7 +18,7 @@ define('FILE_MODE_READAPPEND','ab+');         // Append (Read/Write)
  * @test xp://net.xp_framework.unittest.io.FileTest
  * @test xp://net.xp_framework.unittest.io.FileIntegrationTest
  */
-class File extends Stream implements Channel {
+class File extends \lang\Object implements Channel {
   public 
     $uri=         '', 
     $filename=    '',

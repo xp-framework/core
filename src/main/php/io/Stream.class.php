@@ -14,6 +14,7 @@ define('STREAM_WRITE', 0x0002);
 /**
  * Stream
  * 
+ * @deprecated https://github.com/xp-framework/rfc/issues/289
  * @test     xp://net.xp_framework.unittest.io.StreamTest
  * @purpose  Represent a generic stream
  */
