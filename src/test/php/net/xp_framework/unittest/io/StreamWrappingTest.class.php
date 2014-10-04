@@ -14,12 +14,36 @@ use io\IOException;
 class StreamWrappingTest extends TestCase {
 
   #[@test]
-  public function reading() {
+  public function read_using_fread() {
     $buffer= 'Hello World';
     $m= new MemoryInputStream($buffer);
 
     $fd= Streams::readableFd($m);
     $read= fread($fd, strlen($buffer));
+    fclose($fd);
+
+    $this->assertEquals($buffer, $read);
+  }
+
+  #[@test]
+  public function read_using_fgets() {
+    $buffer= 'Hello World';
+    $m= new MemoryInputStream($buffer);
+
+    $fd= Streams::readableFd($m);
+    $read= fgets($fd, strlen($buffer) + 1);
+    fclose($fd);
+
+    $this->assertEquals($buffer, $read);
+  }
+
+  #[@test]
+  public function read_using_fgets_including_newline() {
+    $buffer= "Hello World\n";
+    $m= new MemoryInputStream($buffer);
+
+    $fd= Streams::readableFd($m);
+    $read= fgets($fd, strlen($buffer) + 1);
     fclose($fd);
     
     $this->assertEquals($buffer, $read);

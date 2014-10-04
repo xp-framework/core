@@ -37,24 +37,15 @@ class EncapsedStream extends Stream {
    * Prepares the stream for the next operation (eg. moves the
    * pointer to the correct position).
    *
+   * @return bool
    */
   protected function _prepare() {
-    $this->_super->seek($this->_offset + $this->offset);
-  }
-  
-  /**
-   * Keep track of moved stream pointers in the parent
-   * stream.
-   *
-   * Should be used internally to correctly calculate the offset
-   * for subsequent reads.
-   *
-   * @param   var arg
-   * @return  var arg
-   */
-  protected function _track($arg) {
-    $this->offset+= ($this->_super->tell()- ($this->_offset+ $this->offset));
-    return $arg;
+    if ($this->offset < $this->_size) {
+      $this->_super->seek($this->_offset + $this->offset);
+      return true;
+    } else {
+      return false;
+    }
   }
   
   /**
@@ -107,8 +98,13 @@ class EncapsedStream extends Stream {
    * @return  string Data read
    */
   public function readLine($bytes= 4096) {
-    $this->_prepare();
-    return $this->_track($this->_super->readLine(min($bytes, $this->_size- $this->offset)));
+    if ($this->_prepare()) {
+      $bytes= $this->_super->gets(min($bytes, $this->_size - $this->offset + 1));
+      $this->offset+= strlen($bytes);
+      return false === $bytes ?: chop($bytes);
+    } else {
+      return false;
+    }
   }
   
   /**
@@ -117,8 +113,13 @@ class EncapsedStream extends Stream {
    * @return  string the character read
    */
   public function readChar() {
-    $this->_prepare();
-    return $this->_track($this->_super->readChar());
+    if ($this->_prepare()) {
+      $c= $this->_super->readChar();
+      $this->offset+= strlen($c);
+      return $c;
+    } else {
+      return false;
+    }
   }
   
   /**
@@ -131,8 +132,13 @@ class EncapsedStream extends Stream {
    * @return  string Data read
    */
   public function gets($bytes= 4096) {
-    $this->_prepare();
-    return $this->_track($this->_super->gets(min($bytes, $this->_size- $this->offset)));
+    if ($this->_prepare()) {
+      $bytes= $this->_super->gets(min($bytes, $this->_size - $this->offset + 1));
+      $this->offset+= strlen($bytes);
+      return $bytes;
+    } else {
+      return false;
+    }
   }
   
   /**
@@ -142,8 +148,13 @@ class EncapsedStream extends Stream {
    * @return  string Data read
    */
   public function read($bytes= 4096) {
-    $this->_prepare();
-    return $this->_track($this->_super->read(min($bytes, $this->_size- $this->offset)));
+    if ($this->_prepare()) {
+      $bytes= $this->_super->read(min($bytes, $this->_size - $this->offset));
+      $this->offset+= strlen($bytes);
+      return $bytes;
+    } else {
+      return false;
+    }
   }
   
   /**
