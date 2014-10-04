@@ -2,6 +2,10 @@
 
 use unittest\TestCase;
 use io\FileUtil;
+use io\File;
+use io\streams\Streams;
+use io\streams\MemoryInputStream;
+use io\streams\MemoryOutputStream;
 
 /**
  * TestCase
@@ -13,14 +17,14 @@ class FileUtilTest extends TestCase {
 
   #[@test]
   public function get_contents() {
-    $this->assertEquals('Test', FileUtil::getContents(new Buffer('Test')));
+    $f= new File(Streams::readableFd(new MemoryInputStream('Test')));
+    $this->assertEquals('Test', FileUtil::getContents($f));
   }
 
   #[@test]
-  public function set_contents() {
-    $data= 'Test';
-    $f= new Buffer();
-    $this->assertEquals(strlen($data), FileUtil::setContents($f, $data));
+  public function set_contents_returns_number_of_written_bytes() {
+    $f= new File(Streams::writeableFd(new MemoryOutputStream()));
+    $this->assertEquals(4, FileUtil::setContents($f, 'Test'));
   }
 
   #[@test]
