@@ -49,6 +49,7 @@ class FileOutputStreamTest extends TestCase {
   public function writing() {
     with ($stream= new FileOutputStream($this->file), $buffer= 'Created by '.$this->name); {
       $stream->write($buffer);
+      $this->file->close();
       $this->assertEquals($buffer, FileUtil::getContents($this->file));
     }
   }
@@ -61,6 +62,7 @@ class FileOutputStreamTest extends TestCase {
   public function appending() {
     with ($stream= new FileOutputStream($this->file, true)); {
       $stream->write('!');
+      $this->file->close();
       $this->assertEquals('Created by FileOutputStreamTest!', FileUtil::getContents($this->file));
     }
   }
