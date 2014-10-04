@@ -1,61 +1,41 @@
 <?php namespace net\xp_framework\unittest\io;
 
 use unittest\TestCase;
-use io\Stream;
 use io\FileUtil;
-use io\streams\Streams;
-use io\streams\MemoryInputStream;
-
 
 /**
  * TestCase
  *
- * @see      xp://io.FileUtil
+ * @see   xp://io.FileUtil
+ * @see   https://github.com/xp-framework/xp-framework/pull/220
  */
 class FileUtilTest extends TestCase {
 
-  /**
-   * Test getContents() method
-   *
-   */
   #[@test]
   public function get_contents() {
-    $data= 'Test';
-    $f= new Stream();
-    $f->open(STREAM_MODE_WRITE);
-    $f->write($data);
-    $f->close();
-
-    $this->assertEquals($data, FileUtil::getContents($f));
+    $this->assertEquals('Test', FileUtil::getContents(new Buffer('Test')));
   }
 
-  /**
-   * Test setContents() method
-   *
-   */
   #[@test]
   public function set_contents() {
     $data= 'Test';
-    $f= new Stream();
-    $this->assertEquals(strlen($data), FileUtil::setContents($f, $data), 'bytes written equals');
+    $f= new Buffer();
+    $this->assertEquals(strlen($data), FileUtil::setContents($f, $data));
+  }
+
+  #[@test]
+  public function contents_roundtrip() {
+    $data= 'Test';
+    $f= new Buffer();
+    FileUtil::setContents($f, $data);
     $this->assertEquals($data, FileUtil::getContents($f));
   }
 
-  /**
-   * Test getContents() method
-   *
-   * @see   https://github.com/xp-framework/xp-framework/pull/220
-   */
   #[@test]
   public function get_contents_read_returns_less_than_size() {
-    $data= 'Test';
-    $f= newinstance('io.Stream', [], '{
+    $f= newinstance('net.xp_framework.unittest.io.Buffer', ['Test'], '{
       public function read($size= 4096) { return parent::read(min(1, $size)); }
     }');
-    $f->open(STREAM_MODE_WRITE);
-    $f->write($data);
-    $f->close();
-
-    $this->assertEquals($data, FileUtil::getContents($f));
+    $this->assertEquals('Test', FileUtil::getContents($f));
   }
 }

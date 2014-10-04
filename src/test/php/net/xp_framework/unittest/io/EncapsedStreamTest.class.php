@@ -2,110 +2,81 @@
 
 use unittest\TestCase;
 use io\EncapsedStream;
-use io\Stream;
-
 
 /**
  * TestCase
  *
- * @see      xp://io.EncapsedStream
- * @purpose  Testcase
+ * @see   xp://io.EncapsedStream
  */
 class EncapsedStreamTest extends TestCase {
-  public
-    $s      = null,
-    $stream = null;
     
   /**
-   * Sets up test case
-   *
+   * Returns a new buffer
    */
-  public function setUp() {
-    $this->stream= new Stream();
-    $this->stream->open(STREAM_MODE_WRITE);
-    $this->stream->write('1234567890');
-    $this->stream->close();
-    $this->stream->rewind();
-    $this->stream->open(STREAM_MODE_READ);
-    $this->s= new EncapsedStream($this->stream, 1, 8);
+  public function newBuffer($contents= '', $start= 0, $length= 0) {
+    $buffer= new Buffer($contents);
+    $buffer->open(FILE_MODE_READ);
+    return new EncapsedStream($buffer, $start, $length);
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test, @expect('lang.IllegalStateException')]
-  public function testInvalidConstruct() {
-    $s= new EncapsedStream(new Stream(), 0, 0);
+  public function cannot_create_with_non_open_buffer() {
+    new EncapsedStream(new Buffer(), 0, 0);
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
-  public function testOpen() {
-    $this->s->open(STREAM_MODE_READ);
+  public function open_for_reading() {
+    $this->newBuffer()->open(FILE_MODE_READ);
+  }
+
+  #[@test, @expect('lang.IllegalAccessException')]
+  public function cannot_open_for_writing() {
+    $this->newBuffer()->open(FILE_MODE_WRITE);
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
-  public function testRead() {
-    $this->assertEquals('23456789', $this->s->readLine());
+  public function read() {
+    $this->assertEquals('Test', $this->newBuffer('"Test"', 1, 4)->readLine());
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
-  public function testGets() {
-    $this->assertEquals('23456789', $this->s->gets());
+  public function gets() {
+    $this->assertEquals('Test', $this->newBuffer('"Test"', 1, 4)->gets());
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
-  public function testSeek() {
-    $this->s->seek(6);
-    $this->assertEquals('89', $this->s->read());
+  public function seek() {
+    $fixture= $this->newBuffer('1234567890', 1, 8);
+    $fixture->seek(6);
+    $this->assertEquals('89', $fixture->read());
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
-  public function testEof() {
-    $this->s->seek(6);
-    $this->assertFalse($this->s->eof());
-    $this->s->seek(8);
-    $this->assertTrue($this->s->eof());
+  public function eof_after_seeking() {
+    $fixture= $this->newBuffer('1234567890', 1, 8);
+    $fixture->seek(6);
+    $this->assertFalse($fixture->eof());
+  }
+
+  #[@test]
+  public function eof_after_seeking_until_end() {
+    $fixture= $this->newBuffer('1234567890', 1, 8);
+    $fixture->seek(8);
+    $this->assertTrue($fixture->eof());
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
-  public function testReadline() {
-    $stream= new Stream();
-    $stream->open(STREAM_MODE_WRITE);
-    $stream->writeLine('This is the first line.');
-    $stream->writeLine('This is the second line.');
-    $stream->writeLine('And there is a third one.');
-    $stream->close();
-    $stream->open(STREAM_MODE_READ);
+  public function reading_lines() {
+    $stream= new Buffer(
+      "This is the first line.\n".
+      "This is the second line.\n".
+      "And there is a third one.\n"
+    );
+    $stream->open(FILE_MODE_READ);
     
-    $this->s= new EncapsedStream($stream, 5, $stream->size()- 35);
-    $this->assertEquals('is the first line.', $this->s->readLine());
-    $this->assertEquals('This is the second li', $this->s->readLine());
-    $this->assertEquals('', $this->s->readLine());
-  }
-  
+    $fixture= new EncapsedStream($stream, 5, $stream->size()- 35);
+    $this->assertEquals('is the first line.', $fixture->readLine());
+    $this->assertEquals('This is the second li', $fixture->readLine());
+    $this->assertEquals('', $fixture->readLine());
+  }  
 }

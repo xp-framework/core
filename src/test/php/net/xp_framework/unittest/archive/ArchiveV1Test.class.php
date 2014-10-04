@@ -7,12 +7,6 @@
  */
 class ArchiveV1Test extends ArchiveTest {
 
-  /**
-   * Returns the xar version to test
-   *
-   * @return  int
-   */
-  protected function version() { 
-    return 1;
-  }
+  /** @return int */
+  protected function version() { return 1; }
 }
