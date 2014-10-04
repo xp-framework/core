@@ -26,27 +26,27 @@ class File extends \lang\Object implements Channel {
     $extension=   '',
     $mode=        FILE_MODE_READ;
   
-  public 
-    $_fd= null;
+  protected $_fd= null;
   
   /**
    * Constructor. Supports creation via one of the following ways:
-   * <code>
-   *   // via resource
-   *   $f= new File(fopen('lang/Type.class.php', FILE_MODE_READ));
    *
-   *   // via filename
-   *   $f= new File('lang/Type.class.php');
+   * ```php
+   * // via resource
+   * $f= new File(fopen('lang/Type.class.php', FILE_MODE_READ));
+   *
+   * // via filename
+   * $f= new File('lang/Type.class.php');
    *  
-   *   // via dir- and filename
-   *   $f->new File('lang', 'Type.class.php');
+   * // via dir- and filename
+   * $f= new File('lang', 'Type.class.php');
    *
-   *   // via folder and filename
-   *   $f->new File(new Folder('lang'), 'Type.class.php');
-   * </code>
+   * // via folder and filename
+   * $f= new File(new Folder('lang'), 'Type.class.php');
+   * ```
    *
-   * @param   var base either a resource or a filename
-   * @param   string uri
+   * @param   var $base either a resource or a filename
+   * @param   string $uri
    */
   public function __construct($base, $uri= null) {
     if (is_resource($base)) {
