@@ -3,6 +3,9 @@
 use unittest\TestCase;
 use lang\archive\Archive;
 use net\xp_framework\unittest\io\Buffer;
+use io\File;
+use io\streams\MemoryInputStream;
+use io\streams\Streams;
 
 /**
  * Base class for archive file tests
@@ -44,16 +47,17 @@ abstract class ArchiveTest extends TestCase {
    */
   protected function buffer($version) {
     static $header= [
+      0 => "not.an.archive",
       1 => "CCA\1\0\0\0\0",
       2 => "CCA\2\0\0\0\0",
     ];
 
-    return new Buffer($header[$version].str_repeat("\0", 248));
+    return new File(Streams::readableFd(new MemoryInputStream($header[$version].str_repeat("\0", 248))));
   }
 
   #[@test, @expect('lang.FormatException')]
   public function open_non_archive() {
-    $a= new Archive(new Buffer());
+    $a= new Archive($this->buffer(0));
     $a->open(ARCHIVE_READ);
   }
 
@@ -100,7 +104,7 @@ abstract class ArchiveTest extends TestCase {
   }
 
   #[@test]
-  public function entries_for_empty_archive_contain_file() {
+  public function entries_contain_file() {
     $a= new Archive($this->getClass()->getPackage()->getResourceAsStream('v'.$this->version().'.xar'));
     $a->open(ARCHIVE_READ);
     $this->assertEntries($a, ['contained.txt' => "This file is contained in an archive!\n"]);

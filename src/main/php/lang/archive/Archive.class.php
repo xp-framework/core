@@ -14,21 +14,21 @@ define('ARCHIVE_INDEX_ENTRY_SIZE', 0x0100);
  * Archives contain a collection of classes.
  *
  * Usage example (Creating):
- * <code>
- *   $a= new Archive(new File('soap.xar'));
- *   $a->open(ARCHIVE_CREATE);
- *   $a->addFile(
- *     'webservices/soap/SOAPMessage.class.php'
- *     new File($path, 'xml/soap/SOAPMessage.class.php')
- *   );
- *   $a->create();
- * </code>
+ * ```php
+ * $a= new Archive(new File('soap.xar'));
+ * $a->open(ARCHIVE_CREATE);
+ * $a->addFile(
+ *   'webservices/soap/SOAPMessage.class.php'
+ *   new File($path, 'xml/soap/SOAPMessage.class.php')
+ * );
+ * $a->create();
+ * ```
  *
  * Usage example (Extracting):
- * <code>
- *   $a= new Archive(new File('soap.xar'));
- *   $bytes= $a->extract('webservices/soap/SOAPMessage.class.php');
- * </code>
+ * ```php
+ * $a= new Archive(new File('soap.xar'));
+ * $bytes= $a->extract('webservices/soap/SOAPMessage.class.php');
+ * ```
  * 
  * @test  xp://net.xp_framework.unittest.archive.ArchiveV1Test
  * @test  xp://net.xp_framework.unittest.archive.ArchiveV2Test
@@ -224,7 +224,11 @@ class Archive extends \lang\Object {
     
     switch ($mode) {
       case ARCHIVE_READ:      // Load
-        $this->file->open(FILE_MODE_READ);
+        if ($this->file->isOpen()) {
+          $this->file->seek(0, SEEK_SET);
+        } else {
+          $this->file->open(FILE_MODE_READ);
+        }
 
         // Read header
         $header= $this->file->read(ARCHIVE_HEADER_SIZE);
@@ -248,8 +252,11 @@ class Archive extends \lang\Object {
         return true;
         
       case ARCHIVE_CREATE:    // Create
-        return $this->file->open(FILE_MODE_WRITE);
-        
+        if ($this->file->isOpen()) {
+          return $this->file->truncate();
+        } else {
+          return $this->file->open(FILE_MODE_WRITE);
+        }
     }
     
     throw new \lang\IllegalArgumentException('Mode '.$mode.' not recognized');
