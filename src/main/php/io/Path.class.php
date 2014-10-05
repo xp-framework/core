@@ -2,6 +2,7 @@
 
 use lang\IllegalStateException;
 use lang\IllegalArgumentException;
+use io\collections\IOElement;
 
 class Path extends \lang\Object {
   protected $path;
@@ -9,7 +10,7 @@ class Path extends \lang\Object {
   /**
    * Creates a path from a given input
    *
-   * @param  string[] $input
+   * @param  var[] $input
    * @return string
    */
   protected function pathFor($input) {
@@ -17,7 +18,7 @@ class Path extends \lang\Object {
       return '';
     } else if ($input[0] instanceof Folder) {
       $components= [substr(array_shift($input)->getURI(), 0, -1)];
-    } else if ($input[0] instanceof File) {
+    } else if ($input[0] instanceof File || $input[0] instanceof IOElement) {
       $components= [array_shift($input)->getURI()];
     } else {
       $components= [];
@@ -32,7 +33,7 @@ class Path extends \lang\Object {
   /**
    * Creates a new instance with a variable number of arguments
    *
-   * @param  var $base Either a string, a Path, a File or a Folder
+   * @param  var $base Either a string, a Path, a File, Folder or IOElement
    * @param  var... $args Further components to be concatenated, Paths or strings.
    */
   public function __construct($base) {
