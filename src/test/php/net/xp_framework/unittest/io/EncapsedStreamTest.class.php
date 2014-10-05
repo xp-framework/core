@@ -27,8 +27,8 @@ class EncapsedStreamTest extends TestCase {
   }
   
   #[@test, @expect('lang.IllegalStateException')]
-  public function cannot_create_with_non_open_buffer() {
-    new EncapsedStream(new Buffer(), 0, 0);
+  public function file_given_must_be_open() {
+    new EncapsedStream(new File('irrelevant.txt'), 0, 0);
   }
   
   #[@test]
