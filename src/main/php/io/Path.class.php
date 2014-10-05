@@ -8,25 +8,31 @@ class Path extends \lang\Object {
   /**
    * Creates a new instance with a variable number of arguments
    *
+   * @param  var $base
    * @param  var... $args
    */
-  public function __construct() {
-    $args= func_get_args();
-    if (1 === sizeof($args) && is_array($args[0])) {
-      $input= $args[0];
+  public function __construct($base) {
+    if (is_array($base)) {
+      $input= $base;
     } else {
       $input= func_get_args();
     }
 
-    $components= [];
+    if (empty($input)) {
+      $this->path= '';
+      return;
+    }
+
+    if ($input[0] instanceof Folder) {
+      $components= [substr(array_shift($input)->getURI(), 0, -1)];
+    } else if ($input[0] instanceof File) {
+      $components= [array_shift($input)->getURI()];
+    } else {
+      $components= [];
+    }
+
     foreach ($input as $i => $arg) {
-      if ($arg instanceof Folder) {
-        $components[]= $i ? $arg->dirname : $arg->uri;
-      } else if ($arg instanceof File) {
-        $components[]= $i ? $arg->filename : $arg->uri;
-      } else {
-        $components[]= strtr($arg, ['/' => DIRECTORY_SEPARATOR]);
-      }
+      $components[]= strtr((string)$arg, ['/' => DIRECTORY_SEPARATOR]);
     }
     $this->path= implode(DIRECTORY_SEPARATOR, $components);
   }

@@ -40,25 +40,43 @@ class PathTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function create_combining_files_and_folders() {
+  public function create_combining_strings_and_paths() {
     $this->assertEquals(
       '../folder/file.ext',
-      (new Path('..', new Folder('folder'), new File('file.ext')))->toString('/')
+      (new Path('..', new Path('folder', 'file.ext')))->toString('/')
+    );
+  }
+
+  #[@test]
+  public function compose_combining_strings_and_paths() {
+    $this->assertEquals(
+      '../folder/file.ext',
+      Path::compose(['..', new Path('folder', 'file.ext')])->toString('/')
+    );
+  }
+
+  #[@test]
+  public function create_combining_files_and_folders() {
+    $base= new Folder('folder', 'parent');
+    $this->assertEquals(
+      $base->getURI().'child'.DIRECTORY_SEPARATOR.'file.ext',
+      (new Path($base, 'child', 'file.ext'))->toString()
     );
   }
 
   #[@test]
   public function compose_combining_files_and_folders() {
+    $base= new Folder('folder', 'parent');
     $this->assertEquals(
-      '../folder/file.ext',
-      Path::compose(['..', new Folder('folder'), new File('file.ext')])->toString('/')
+      $base->getURI().'child'.DIRECTORY_SEPARATOR.'file.ext',
+      Path::compose([$base, 'child', 'file.ext'])->toString()
     );
   }
 
   #[@test]
   public function rooted_folder() {
     $rooted= new Folder('/rooted');
-    $this->assertEquals($rooted->getURI(), (new Path($rooted))->toString());
+    $this->assertEquals(substr($rooted->getURI(), 0, -1), (new Path($rooted))->toString());
   }
 
   #[@test]
