@@ -4,26 +4,18 @@ use lang\IllegalStateException;
 use lang\IllegalArgumentException;
 
 class Path extends \lang\Object {
+  protected $path;
 
   /**
-   * Creates a new instance with a variable number of arguments
+   * Creates a path from a given input
    *
-   * @param  var $base
-   * @param  var... $args
+   * @param  string[] $input
+   * @return string
    */
-  public function __construct($base) {
-    if (is_array($base)) {
-      $input= $base;
-    } else {
-      $input= func_get_args();
-    }
-
+  protected function pathFor($input) {
     if (empty($input)) {
-      $this->path= '';
-      return;
-    }
-
-    if ($input[0] instanceof Folder) {
+      return '';
+    } else if ($input[0] instanceof Folder) {
       $components= [substr(array_shift($input)->getURI(), 0, -1)];
     } else if ($input[0] instanceof File) {
       $components= [array_shift($input)->getURI()];
@@ -31,10 +23,24 @@ class Path extends \lang\Object {
       $components= [];
     }
 
-    foreach ($input as $i => $arg) {
+    foreach ($input as $arg) {
       $components[]= strtr((string)$arg, ['/' => DIRECTORY_SEPARATOR]);
     }
-    $this->path= implode(DIRECTORY_SEPARATOR, $components);
+    return implode(DIRECTORY_SEPARATOR, $components);
+  }
+
+  /**
+   * Creates a new instance with a variable number of arguments
+   *
+   * @param  var $base Either a string, a Path, a File or a Folder
+   * @param  var... $args Further components to be concatenated, Paths or strings.
+   */
+  public function __construct($base) {
+    if (is_array($base)) {
+      $this->path= $this->pathFor($base);
+    } else {
+      $this->path= $this->pathFor(func_get_args());
+    }
   }
 
   /**
