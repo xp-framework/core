@@ -28,11 +28,10 @@ class FileUtilTest extends TestCase {
   }
 
   #[@test]
-  public function contents_roundtrip() {
-    $data= 'Test';
-    $f= new Buffer();
-    FileUtil::setContents($f, $data);
-    $this->assertEquals($data, FileUtil::getContents($f));
+  public function set_contents_writes_bytes() {
+    $out= new MemoryOutputStream();
+    FileUtil::setContents(new File(Streams::writeableFd($out)), 'Test');
+    $this->assertEquals('Test', $out->getBytes());
   }
 
   #[@test]
