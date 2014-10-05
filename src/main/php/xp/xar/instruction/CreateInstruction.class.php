@@ -24,13 +24,14 @@ class CreateInstruction extends AbstractInstruction {
   /**
    * Add a single file to the archive, and print out the name if verbose option is set.
    *
-   * @param   string $name
-   * @param   io.Path $path
+   * @param   io.Path $target Zarh in archive
+   * @param   io.Path $source Path to source file
    * @return  void
    */
-  protected function add($name, $path) {
+  protected function add($target, $source) {
+    $name= $target->toString('/');
     $this->options & Options::VERBOSE && $this->out->writeLine($name);
-    $this->archive->addFile($name, $path->asFile());
+    $this->archive->addFile($name, $source->asFile());
   }
 
   /**
@@ -44,26 +45,22 @@ class CreateInstruction extends AbstractInstruction {
     foreach ($arguments as $arg) {
       if (false !== ($p= strrpos($arg, '='))) {
         $path= new Path(realpath(substr($arg, 0, $p)));
-        $named= substr($arg, $p+ 1);
+        $named= new Path(substr($arg, $p+ 1));
       } else {
         $path= new Path(realpath($arg));
         $named= null;
       }
 
       if ($path->isFile()) {
-        if (null === $named) {
-          $this->add($path->relativeTo($cwd)->toString('/'), $path);
-        } else {
-          $this->add($named, $path);
-        }
+        $this->add($named ?: $path->relativeTo($cwd), $path);
       } else if ($path->isFolder()) {
         $files= new FilteredIOCollectionIterator(new FileCollection($path), self::$filter, true);
         foreach ($files as $file) {
-          $target= new Path($file);
-          if (null === $named) {
-            $this->add($target->relativeTo($cwd)->toString('/'), $target);
+          $source= new Path($file);
+          if ($named) {
+            $this->add((new Path($named, $source->relativeTo($path)))->normalize(), $source);
           } else {
-            $this->add((new Path($named, $target->relativeTo($path)))->normalize()->toString('/'), $target);
+            $this->add($source->relativeTo($cwd), $source);
           }
         }
       }
