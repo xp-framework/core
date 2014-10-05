@@ -26,6 +26,7 @@ class CreateInstruction extends AbstractInstruction {
    *
    * @param   string $name
    * @param   io.Path $path
+   * @return  void
    */
   protected function add($name, $path) {
     $this->options & Options::VERBOSE && $this->out->writeLine($name);
@@ -35,11 +36,12 @@ class CreateInstruction extends AbstractInstruction {
   /**
    * Retrieve files from filesystem
    *
+   * @param   string[] $arguments
    * @param   io.Path $cwd
    * @return  void
    */
-  public function addAll($cwd) {
-    foreach ($this->getArguments() as $arg) {
+  public function addAll($arguments, $cwd) {
+    foreach ($arguments as $arg) {
       if (false !== ($p= strrpos($arg, '='))) {
         $path= new Path(realpath(substr($arg, 0, $p)));
         $named= substr($arg, $p+ 1);
@@ -71,11 +73,11 @@ class CreateInstruction extends AbstractInstruction {
   /**
    * Execute action
    *
-   * @return  int
+   * @return  void
    */
   public function perform() {
     $this->archive->open(ARCHIVE_CREATE);
-    $this->addAll(new Path(realpath(getcwd())));
+    $this->addAll($this->getArguments(), new Path(realpath(getcwd())));
     $this->archive->create();
   }
 }
