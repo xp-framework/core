@@ -88,7 +88,6 @@ class Archive extends \lang\Object {
    * @return  bool success
    */
   public function create() {
-    $this->file->truncate();
     $this->file->write(pack(
       'a3c1V1a248', 
       'CCA',
@@ -253,7 +252,7 @@ class Archive extends \lang\Object {
         
       case ARCHIVE_CREATE:    // Create
         if ($this->file->isOpen()) {
-          return $this->file->truncate();
+          return $this->file->tell() > 0 ? $this->file->truncate() : true;
         } else {
           return $this->file->open(FILE_MODE_WRITE);
         }

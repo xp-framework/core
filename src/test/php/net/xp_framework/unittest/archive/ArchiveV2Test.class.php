@@ -14,7 +14,7 @@ class ArchiveV2Test extends ArchiveTest {
 
   #[@test]
   public function read_empty_archive_with_version_1() {
-    $a= new Archive($this->buffer(1));
+    $a= new Archive($this->file(1));
     $a->open(ARCHIVE_READ);
     $this->assertEquals(1, $a->version);
     $this->assertEntries($a, []);
