@@ -330,7 +330,15 @@ function __error($code, $msg, $file, $line) {
   if (0 === error_reporting() || is_null($file)) return;
 
   if (E_RECOVERABLE_ERROR === $code) {
-    throw new \lang\IllegalArgumentException($msg.' @ '.$file.':'.$line);
+    if (0 === strncmp($msg, 'Call', 4)) {
+      throw new \lang\NullPointerException($msg.' @ '.$file.':'.$line);
+    } else if (0 === strncmp($msg, 'Argument', 8)) {
+      throw new \lang\IllegalArgumentException($msg.' @ '.$file.':'.$line);
+    } else if (0 === strncmp($msg, 'Object', 6)) {
+      throw new \lang\ClassCastException($msg.' @ '.$file.':'.$line);
+    } else {
+      throw new \lang\Error($msg.' @ '.$file.':'.$line);
+    }
   } else {
     $bt= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
     $class= (isset($bt[1]['class']) ? $bt[1]['class'] : null);

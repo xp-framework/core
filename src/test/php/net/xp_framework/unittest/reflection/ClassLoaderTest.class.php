@@ -262,7 +262,7 @@ class ClassLoaderTest extends TestCase {
    * ReflectionException surfacing
    *
    */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect('lang.ClassCastException')]
   public function newInstance__PHP_Incomplete_Class() {
     new \lang\XPClass(unserialize('O:12:"DoesNotExist":0:{}'));
   }
