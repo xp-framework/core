@@ -365,4 +365,30 @@ abstract class AbstractPropertiesTest extends TestCase {
   public function different_properties_not_equal_to_non_empty($source) {
     $this->assertNotEquals($this->newPropertiesFrom("[section]\ndifferent=value"), $this->newPropertiesFrom($source));
   }
+
+  #[@test, @expect('lang.FormatException')]
+  public function resolve_unsupported_type() {
+    $this->fixture('test=${not.supported}');
+  }
+
+  #[@test]
+  public function resolve_environment_variable() {
+    putenv('TEST=this');
+    $value= $this->fixture('test=${env.TEST}')->readString('section', 'test');
+    putenv('TEST');
+    $this->assertEquals('this', $value);
+  }
+
+  #[@test, @expect('lang.ElementNotFoundException')]
+  public function resolve_non_existant_senvironment_variable() {
+    putenv('TEST');
+    $this->fixture('test=${env.TEST}');
+  }
+
+  #[@test]
+  public function resolve_non_existant_senvironment_variable_with_default() {
+    putenv('TEST');
+    $value= $this->fixture('test=${env.TEST|this}')->readString('section', 'test');
+    $this->assertEquals('this', $value);
+  }
 }
