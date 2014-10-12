@@ -4,6 +4,7 @@ use io\Path;
 use io\File;
 use io\Folder;
 use lang\Runtime;
+use unittest\actions\IsPlatform;
 
 class PathTest extends \unittest\TestCase {
 
@@ -209,7 +210,6 @@ class PathTest extends \unittest\TestCase {
 
   #[@test, @values([
   #  ['/dev', '/'],
-  #  ['C:/Windows', 'C:/'],
   #  ['a/b', 'a'], ['a/b/c', 'a/b'],
   #  ['', '..'], ['..', '../..'], ['../a', '../../a'], ['../..', '../../..']
   #])]
@@ -217,8 +217,18 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals($parent, (new Path($child))->parent()->toString('/'));
   }
 
-  #[@test, @values(['/', 'C:', 'C:/'])]
-  public function parent_of_root($root) {
+  #[@test, @action(new IsPlatform('^Win'))]
+  public function parent_of_directory_in_root($child, $parent) {
+    $this->assertEquals('C:/', (new Path('C:/Windows'))->parent()->toString('/'));
+  }
+
+  #[@test]
+  public function parent_of_root() {
+    $this->assertNull((new Path('/'))->parent());
+  }
+
+  #[@test, @values(['C:', 'C:/']), @action(new IsPlatform('^Win'))]
+  public function parent_of_root_windows($root) {
     $this->assertNull((new Path($root))->parent());
   }
 
