@@ -13,12 +13,12 @@ class PathTest extends \unittest\TestCase {
   /** @return io.Folder */
   protected function existingFolder() { return new Folder($this->existingFile()->path); }
 
-  #[@test, @values(['.', '..', 'test', '/root/parent/child', 'C:\\Windows', 'C:'])]
+  #[@test, @values(['.', '..', 'test', '/root/parent/child', 'C:/Windows', 'C:'])]
   public function create_with_single_argument($arg) {
     new Path($arg);
   }
 
-  #[@test, @values(['.', '..', 'test', '/root/parent/child', 'C:\\Windows', 'C:'])]
+  #[@test, @values(['.', '..', 'test', '/root/parent/child', 'C:/Windows', 'C:'])]
   public function compose_with_single_argument($arg) {
     Path::compose([$arg]);
   }
@@ -202,14 +202,14 @@ class PathTest extends \unittest\TestCase {
     (new Path($this->existingFile()))->asFolder();
   }
 
-  #[@test, @values(['.', '..', 'test', '/root/parent/child', 'C:\\Windows'])]
+  #[@test, @values(['.', '..', 'test', '/root/parent/child', 'C:/Windows'])]
   public function name($arg) {
     $this->assertEquals(basename($arg), (new Path($arg))->name());
   }
 
   #[@test, @values([
   #  ['/dev', '/'],
-  #  ['C:\\Windows', 'C:/'],
+  #  ['C:/Windows', 'C:/'],
   #  ['a/b', 'a'], ['a/b/c', 'a/b'],
   #  ['', '..'], ['..', '../..'], ['../a', '../../a'], ['../..', '../../..']
   #])]
@@ -217,14 +217,14 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals($parent, (new Path($child))->parent()->toString('/'));
   }
 
-  #[@test, @values(['/', 'C:', 'C:\\'])]
+  #[@test, @values(['/', 'C:', 'C:/'])]
   public function parent_of_root($root) {
     $this->assertNull((new Path($root))->parent());
   }
 
   #[@test, @values([
   #  ['/dev', true], ['/', true],
-  #  ['C:\\Windows', true], ['C:\\', true], ['C:', true],
+  #  ['C:/Windows', true], ['C:/', true], ['C:', true],
   #  ['', false], ['.', false], ['..', false],
   #  ['a', false],
   #  ['a/b', false], ['a/b/c', false]
@@ -261,7 +261,7 @@ class PathTest extends \unittest\TestCase {
   #  ['a', 'b', 'a/b'],
   #  ['.', 'b', './b'], ['..', 'b', '../b'],
   #  ['/var', 'log', '/var/log'],
-  #  ['C:\\Windows', 'system32', 'C:/Windows/system32'],
+  #  ['C:/Windows', 'system32', 'C:/Windows/system32'],
   #  ['/usr/local', '/usr/bin', '../bin'],
   #  ['/usr/local/bin', '/usr', '../..'],
   #  ['/usr/local', '/usr/local', '']
@@ -272,7 +272,7 @@ class PathTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.IllegalArgumentException'), @values([
   #  ['relative', '/dev'],
-  #  ['relative', 'C:\\Windows']
+  #  ['relative', 'C:/Windows']
   #])]
   public function cannot_resolve_path_if_path_is_relative_and_arg_is_absolute($a, $b) {
     (new Path($a))->relativeTo($b);
@@ -288,7 +288,7 @@ class PathTest extends \unittest\TestCase {
   #  ['src', 'src/test/php', '../..'], ['src/main', 'src/main/php', '..'],
   #  ['/var', '/', 'var'],
   #  ['/var', '/var', ''], ['/usr/local', '/usr/bin', '../local'],
-  #  ['C:\\Windows', 'C:\\', 'Windows'], ['C:\Windows', 'C:', 'Windows']
+  #  ['C:/Windows', 'C:/', 'Windows'], ['C:\Windows', 'C:', 'Windows']
   #])]
   public function relativeTo($a, $b, $result) {
     $this->assertEquals($result, (new Path($a))->relativeTo($b)->toString('/'));
@@ -296,7 +296,7 @@ class PathTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.IllegalArgumentException'), @values([
   #  ['/dev', 'relative'], ['relative', '/dev'],
-  #  ['C:\\Windows', 'relative'], ['relative', 'C:\\Windows']
+  #  ['C:/Windows', 'relative'], ['relative', 'C:/Windows']
   #])]
   public function cannot_calculate_relative_path_if_one_component_is_absolute_and_the_other_isnt($a, $b) {
     (new Path($a))->relativeTo($b);

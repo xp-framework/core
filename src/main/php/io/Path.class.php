@@ -111,9 +111,11 @@ class Path extends \lang\Object {
   }
 
   /**
-   * Normalizes path sections. Note: This method does not access the filesystem,
-   * it only removes redundant elements.
+   * Realpath
    *
+   * @see    php://realpath
+   * @param  string $path
+   * @param  string $wd
    * @return string
    */
   protected static function real($path, $wd) {
