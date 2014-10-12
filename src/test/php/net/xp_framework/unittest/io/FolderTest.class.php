@@ -4,7 +4,6 @@ use unittest\TestCase;
 use io\Folder;
 use lang\System;
 
-
 /**
  * TestCase
  *
@@ -17,7 +16,7 @@ class FolderTest extends TestCase {
    * Normalizes path by adding a trailing slash to the end if not already
    * existant.
    *
-   * @param   string path
+   * @param   string $path
    * @return  string
    */
   protected function normalize($path) {
@@ -26,7 +25,6 @@ class FolderTest extends TestCase {
 
   /**
    * Sets up test case - initializes directory in %TEMP
-   *
    */
   public function setUp() {
     $this->temp= $this->normalize(realpath(System::tempDir())).md5(uniqid()).'.xp'.DIRECTORY_SEPARATOR;
@@ -37,62 +35,37 @@ class FolderTest extends TestCase {
   
   /**
    * Deletes directory in %TEMP if existant
-   *
    */
   public function tearDown() {
     is_dir($this->temp) && rmdir($this->temp);
   }
 
-  /**
-   * Test equals() method
-   *
-   */
   #[@test]
   public function sameInstanceIsEqual() {
     $f= new Folder($this->temp);
     $this->assertEquals($f, $f);
   }
 
-  /**
-   * Test equals() method
-   *
-   */
   #[@test]
   public function sameFolderIsEqual() {
     $this->assertEquals(new Folder($this->temp), new Folder($this->temp));
   }
 
-  /**
-   * Test equals() method
-   *
-   */
   #[@test]
   public function differentFoldersAreNotEqual() {
     $this->assertNotEquals(new Folder($this->temp), new Folder(__DIR__));
   }
 
-  /**
-   * Test isOpen()
-   *
-   */
   #[@test]
   public function initiallyNotOpen() {
     $this->assertFalse((new Folder($this->temp))->isOpen());
   }
 
-  /**
-   * Test exists()
-   *
-   */
   #[@test]
   public function exists() {
     $this->assertFalse((new Folder($this->temp))->exists());
   }
 
-  /**
-   * Test create()
-   *
-   */
   #[@test]
   public function create() {
     $f= new Folder($this->temp);
@@ -100,10 +73,6 @@ class FolderTest extends TestCase {
     $this->assertTrue($f->exists());
   }
 
-  /**
-   * Test unlink()
-   *
-   */
   #[@test]
   public function unlink() {
     $f= new Folder($this->temp);
@@ -112,19 +81,11 @@ class FolderTest extends TestCase {
     $this->assertFalse($f->exists());
   }
 
-  /**
-   * Test getURI()
-   *
-   */
   #[@test]
   public function uriOfNonExistantFolder() {
     $this->assertEquals($this->temp, (new Folder($this->temp))->getURI());
   }
   
-  /**
-   * Test getURI()
-   *
-   */
   #[@test]
   public function uriOfExistantFolder() {
     $f= new Folder($this->temp);
@@ -132,120 +93,72 @@ class FolderTest extends TestCase {
     $this->assertEquals($this->temp, $f->getURI());
   }
 
-  /**
-   * Test getURI()
-   *
-   */
   #[@test]
   public function uriOfDotFolder() {
     $f= new Folder($this->temp, '.');
     $this->assertEquals($this->temp, $f->getURI());
   }
 
-  /**
-   * Test getURI()
-   *
-   */
   #[@test]
   public function uriOfDotFolderTwoLevels() {
     $f= new Folder($this->temp, '.', '.');
     $this->assertEquals($this->temp, $f->getURI());
   }
 
-  /**
-   * Test getURI()
-   *
-   */
   #[@test]
   public function uriOfParentFolder() {
     $f= new Folder($this->temp, '..');
     $this->assertEquals($this->normalize(dirname($this->temp)), $f->getURI());
   }
 
-  /**
-   * Test getURI()
-   *
-   */
   #[@test]
   public function uriOfParentFolderOfSubFolder() {
     $f= new Folder($this->temp, 'sub', '..');
     $this->assertEquals($this->temp, $f->getURI());
   }
 
-  /**
-   * Test getURI()
-   *
-   */
   #[@test]
   public function uriOfParentFolderOfSubFolderTwoLevels() {
     $f= new Folder($this->temp, 'sub1', 'sub2', '..', '..');
     $this->assertEquals($this->temp, $f->getURI());
   }
 
-  /**
-   * Test getURI()
-   *
-   */
   #[@test]
   public function parentDirectoryOfRootIsRoot() {
     $f= new Folder(DIRECTORY_SEPARATOR, '..');
     $this->assertEquals($this->normalize(realpath(DIRECTORY_SEPARATOR)), $f->getURI());
   }
 
-  /**
-   * Test getURI()
-   *
-   */
   #[@test]
   public function parentDirectoryOfRootIsRootTwoLevels() {
     $f= new Folder(DIRECTORY_SEPARATOR, '..', '..');
     $this->assertEquals($this->normalize(realpath(DIRECTORY_SEPARATOR)), $f->getURI());
   }
 
-  /**
-   * Test getURI()
-   *
-   */
   #[@test]
   public function relativeDirectory() {
     $f= new Folder('tmp');
     $this->assertEquals($this->normalize($this->normalize(realpath('.')).'tmp'), $f->getURI());
   }
 
-  /**
-   * Test getURI()
-   *
-   */
   #[@test]
   public function relativeDotDirectory() {
     $f= new Folder('./tmp');
     $this->assertEquals($this->normalize($this->normalize(realpath('.')).'tmp'), $f->getURI());
   }
 
-  /**
-   * Test getURI()
-   *
-   */
   #[@test]
   public function relativeParentDirectory() {
     $f= new Folder('../tmp');
     $this->assertEquals($this->normalize($this->normalize(realpath('..')).'tmp'), $f->getURI());
   }
 
-  /**
-   * Test getURI()
-   *
-   */
   #[@test]
   public function dotDirectory() {
     $f= new Folder('.');
     $this->assertEquals($this->normalize(realpath('.')), $f->getURI());
   }
 
-  /**
-   * Test getURI()
-   *
-   */
   #[@test]
   public function parentDirectory() {
     $f= new Folder('..');
