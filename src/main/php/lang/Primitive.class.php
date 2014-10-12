@@ -23,15 +23,13 @@ class Primitive extends Type {
     $STRING  = null,
     $INT     = null,
     $DOUBLE  = null,
-    $BOOL    = null,
-    $ARRAY   = null;
+    $BOOL    = null;
   
   static function __static() {
     self::$STRING= new self('string', '');
     self::$INT= new self('int', 0);
     self::$DOUBLE= new self('double', 0.0);
     self::$BOOL= new self('bool', false);
-    self::$ARRAY= new self('array', \xp::null());
   }
   
   /**

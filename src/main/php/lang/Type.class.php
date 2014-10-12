@@ -10,12 +10,16 @@
 class Type extends Object {
   public static $VAR;
   public static $VOID;
+  public static $ARRAY;
+  public static $CALLABLE;
   public $name;
   public $default;
 
   static function __static() {
     self::$VAR= new self('var', null);
     self::$VOID= new self('void', null);
+    self::$ARRAY= new self('array', null);
+    self::$CALLABLE= new self('callable', null);
   }
 
   /**

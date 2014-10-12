@@ -203,7 +203,7 @@ class ProxyTest extends \unittest\TestCase {
   public function builtin_array_parameters_handled_correctly() {
     $proxy= $this->newProxyWith('{ public function fixture(array $param); }');
     $this->assertEquals(
-      \lang\Primitive::$ARRAY,
+      \lang\Type::$ARRAY,
       $proxy->getMethod('fixture')->getParameters()[0]->getTypeRestriction()
     );
   }

@@ -6,7 +6,7 @@
  * @see   xp://lang.reflect.Method#getParameter
  * @see   xp://lang.reflect.Method#getParameters
  * @see   xp://lang.reflect.Method#numParameters
- * @test  xp://net.xp_framework.unittest.reflection.ReflectionTest
+ * @test  xp://net.xp_framework.unittest.reflection.MethodParametersTest
  */
 class Parameter extends \lang\Object {
   protected
@@ -39,7 +39,17 @@ class Parameter extends \lang\Object {
    * @return  lang.Type
    */
   public function getType() {
-    if ($c= $this->_reflect->getClass()) return new \lang\XPClass($c);
+    try {
+      if ($c= $this->_reflect->getClass()) return new \lang\XPClass($c);
+    } catch (\ReflectionException $e) {
+      throw new \lang\ClassFormatException(sprintf(
+        'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',
+        strtr($this->_details[0], '\\', '.'),
+        $this->_details[1],
+        $this->_reflect->getName(),
+        $e->getMessage()
+      ));
+    }
 
     if (
       !($details= \lang\XPClass::detailsForMethod($this->_details[0], $this->_details[1])) ||  
@@ -78,7 +88,9 @@ class Parameter extends \lang\Object {
   public function getTypeRestriction() {
     try {
       if ($this->_reflect->isArray()) {
-        return \lang\Primitive::$ARRAY;
+        return \lang\Type::$ARRAY;
+      } else if ($this->_reflect->isCallable()) {
+        return \lang\Type::$CALLABLE;
       } else if ($c= $this->_reflect->getClass()) {
         return new \lang\XPClass($c);
       } else {
@@ -87,7 +99,7 @@ class Parameter extends \lang\Object {
     } catch (\ReflectionException $e) {
       throw new \lang\ClassFormatException(sprintf(
         'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',
-        $this->_details[0],
+        strtr($this->_details[0], '\\', '.'),
         $this->_details[1],
         $this->_reflect->getName(),
         $e->getMessage()

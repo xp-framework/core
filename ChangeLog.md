@@ -5,6 +5,10 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Added PHP 7.0 forward compatibility for the Catchable "Call to a member 
+  function" [functionality](https://github.com/php/php-src/pull/847)
+  and throw a `NullPointerException`.
+  (@thekid)
 * Made xp-framework available [via Composer](https://packagist.org/packages/xp-framework/core)
   (@thekid)
 * Refactor fatal error handling, see xp-framework/core#30 - (@thekid)
@@ -112,6 +116,7 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added support for `callable` typehint - (@thekid)
 * Changed util.profiling.Timer to be able to provide intermediate results
   with `elapsedTime()` without prior call to `stop()`, and added fluent
   interface to util.profiling.Timer's start() and stop() methods - (@thekid)
