@@ -144,7 +144,7 @@ class Path extends \lang\Object {
           $stat= @lstat($normalized);
           if (false === $stat) {
             $check= false;
-          } else if ($stat[2] & 0120000) {
+          } else if (0120000 === ($stat[2] & 0120000)) {
             $normalized= readlink($normalized);
           }
         }
