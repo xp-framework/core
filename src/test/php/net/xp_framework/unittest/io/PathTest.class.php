@@ -121,9 +121,63 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals(rtrim($folder->getURI(), DIRECTORY_SEPARATOR), (new Path($folder))->asURI());
   }
 
-  #[@test, @expect(class= 'lang.IllegalStateException', withMessage= '/Cannot resolve .+/')]
-  public function non_existant_as_uri() {
-    (new Path('@does-not-exist@'))->asURI();
+  #[@test]
+  public function non_existant_absolute_as_uri() {
+    $current= rtrim(getcwd(), DIRECTORY_SEPARATOR);
+    $this->assertEquals(
+      $current.DIRECTORY_SEPARATOR.'@does-not-exist@',
+      (new Path($current, '@does-not-exist@'))->asURI($current)
+    );
+  }
+
+  #[@test]
+  public function non_existant_relative_as_uri() {
+    $current= rtrim(getcwd(), DIRECTORY_SEPARATOR);
+    $this->assertEquals(
+      $current.DIRECTORY_SEPARATOR.'@does-not-exist@',
+      (new Path('@does-not-exist@'))->asURI($current)
+    );
+  }
+
+  #[@test]
+  public function folder_as_realpath() {
+    $folder= $this->existingFolder();
+    $this->assertEquals(
+      $folder->path,
+      (new Path($folder->path, '.', $folder->dirname, '..'))->asRealpath()->toString()
+    );
+  }
+
+  #[@test]
+  public function folder_as_realpath_with_non_existant_components() {
+    $folder= $this->existingFolder();
+    $this->assertEquals(
+      $folder->path,
+      (new Path($folder->path, '.', '@does-', 'not-exist@', '..', '..'))->asRealpath()->toString()
+    );
+  }
+
+  #[@test, @values([
+  #  [['@does-', 'not-exist@', '..', '..']],
+  #  [['.', '@does-', 'not-exist@', '..', '..']]
+  #])]
+  public function relative_as_realpath_with_non_existant_components($components) {
+    $current= getcwd();
+    $this->assertEquals($current, Path::compose($components)->asRealpath($current)->toString());
+  }
+
+  #[@test]
+  public function links_resolved_in_realpath() {
+    $temp= \lang\System::tempDir();
+    $link= new Path($temp, 'link-to-temp');
+    if (false === symlink($temp, $link)) {
+      $this->skip('Cannot create '.$link.' -> '.$temp);
+    }
+
+    $resolved= (new Path($link))->asRealpath()->toString();
+    unlink($link);
+
+    $this->assertEquals($temp, $resolved);
   }
 
   #[@test]

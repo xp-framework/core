@@ -111,15 +111,70 @@ class Path extends \lang\Object {
   }
 
   /**
-   * Returns a resolved URI for this path, resolving links if necessary.
+   * Normalizes path sections. Note: This method does not access the filesystem,
+   * it only removes redundant elements.
    *
    * @return string
    */
-  public function asURI() {
-    if (false === ($real= realpath($this->path))) {
-      throw new IllegalStateException('Cannot resolve '.$this->path);
+  protected static function real($path, $wd) {
+    if (DIRECTORY_SEPARATOR === $path{0}) {
+      $normalized= '';
+      $components= explode(DIRECTORY_SEPARATOR, substr($path, 1));
+    } else if (2 === sscanf($path, '%c%*[:]', $drive)) {
+      $normalized= $drive.':';
+      $components= explode(DIRECTORY_SEPARATOR, substr($path, 3));
+    } else if (null === $wd) {
+      throw new IllegalStateException('Cannot resolve '.$path);
+    } else {
+      return self::real($wd.DIRECTORY_SEPARATOR.$path, null);
     }
-    return $real;
+
+    $check= true;
+    foreach ($components as $component) {
+      if ('' === $component || '.' === $component) {
+        // Skip
+      } else if ('..' === $component) {
+        $normalized= substr($normalized, 0, strrpos($normalized, DIRECTORY_SEPARATOR));
+        $check= true;
+      } else {
+        $normalized.= DIRECTORY_SEPARATOR.$component;
+        if ($check) {
+          $stat= @lstat($normalized);
+          if (false === $stat) {
+            $check= false;
+          } else if ($stat[2] & 0120000) {
+            $normalized= readlink($normalized);
+          }
+        }
+      }
+    }
+    return $normalized;
+  }
+
+  /**
+   * Returns the real path for this path, resolving links if necessary.
+   * If no working directory is given, the current working directory is 
+   * used to resolve relative paths.
+   *
+   * @see    php://getcwd
+   * @param  string $wd Working directory
+   * @return string
+   */
+  public function asURI($wd= null) {
+    return self::real($this->path, $wd ?: getcwd());
+  }
+
+  /**
+   * Returns the real path for this path, resolving links if necessary.
+   * If no working directory is given, the current working directory is 
+   * used to resolve relative paths.
+   *
+   * @see    php://getcwd
+   * @param  string $wd Working directory
+   * @return self
+   */
+  public function asRealpath($wd= null) {
+    return new self(self::real($this->path, $wd ?: getcwd()));
   }
 
   /**
