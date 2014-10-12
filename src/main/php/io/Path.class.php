@@ -154,7 +154,7 @@ class Path extends \lang\Object {
   }
 
   /**
-   * Returns the real path for this path, resolving links if necessary.
+   * Returns the real URI for this path, resolving links if necessary.
    * If no working directory is given, the current working directory is 
    * used to resolve relative paths.
    *
