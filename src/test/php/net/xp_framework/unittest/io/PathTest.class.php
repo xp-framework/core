@@ -218,7 +218,7 @@ class PathTest extends \unittest\TestCase {
   }
 
   #[@test, @action(new IsPlatform('^Win'))]
-  public function parent_of_directory_in_root($child, $parent) {
+  public function parent_of_directory_in_root() {
     $this->assertEquals('C:/', (new Path('C:/Windows'))->parent()->toString('/'));
   }
 
