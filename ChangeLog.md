@@ -112,6 +112,7 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added support for `callable` typehint - (@thekid)
 * Changed util.profiling.Timer to be able to provide intermediate results
   with `elapsedTime()` without prior call to `stop()`, and added fluent
   interface to util.profiling.Timer's start() and stop() methods - (@thekid)

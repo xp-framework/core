@@ -59,7 +59,7 @@ class TypeOfTest extends \unittest\TestCase {
 
   #[@test]
   public function function_with_array_hint() {
-    $this->assertEquals(new FunctionType([Primitive::$ARRAY], Type::$VAR), typeof(function(array $a) { }));
+    $this->assertEquals(new FunctionType([Type::$ARRAY], Type::$VAR), typeof(function(array $a) { }));
   }
 
   #[@test]

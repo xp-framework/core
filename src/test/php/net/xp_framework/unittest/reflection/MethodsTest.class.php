@@ -259,27 +259,6 @@ class MethodsTest extends TestCase {
   }
 
   /**
-   * Tests the method Parameter reflection for the setDate() method
-   *
-   * @see     xp://lang.reflect.Routine#numParameters
-   * @see     xp://lang.reflect.Routine#getParameter
-   * @see     xp://lang.reflect.Parameter
-   */
-  #[@test]
-  public function setDateMethodParameters() {
-    with ($method= $this->fixture->getMethod('setDate')); {
-      $this->assertEquals(1, $method->numParameters());
-      if ($parameter= $method->getParameter(0)) {
-        $this->assertInstanceOf('lang.reflect.Parameter', $parameter);
-        $this->assertEquals('date', $parameter->getName());
-        $this->assertEquals('util.Date', $parameter->getTypeName());
-        $this->assertEquals(\lang\XPClass::forName('util.Date'), $parameter->getType());
-      }
-      $this->assertNull($method->getParameter(1));
-    }
-  }
-
-  /**
    * Tests invoking the setTrace() method which will always throw an 
    * IllegalStateException (which will be rewrapped as cause inside a
    * TargetInvocationException
@@ -613,48 +592,6 @@ class MethodsTest extends TestCase {
   }
 
   /**
-   * Test "self" in parameters
-   *
-   * @see     xp://lang.reflect.Parameter#getType
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#isDateBefore
-   */
-  #[@test]
-  public function selfParameterType() {
-    $this->assertEquals(
-      $this->fixture,
-      $this->fixture->getMethod('isDateBefore')->getParameter(0)->getType()
-    );
-  }
-
-  /**
-   * Test "self" in parameters
-   *
-   * @see     xp://lang.reflect.Parameter#getTypeName
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#isDateBefore
-   */
-  #[@test]
-  public function selfParameterTypeName() {
-    $this->assertEquals(
-      'self',
-      $this->fixture->getMethod('isDateBefore')->getParameter(0)->getTypeName()
-    );
-  }
-
-  /**
-   * Test "self" in parameters
-   *
-   * @see     xp://lang.reflect.Parameter#getTypeRestriction
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#isDateBefore
-   */
-  #[@test]
-  public function selfParameterTypeRestriction() {
-    $this->assertEquals(
-      $this->fixture,
-      $this->fixture->getMethod('isDateBefore')->getParameter(0)->getTypeRestriction()
-    );
-  }
-
-  /**
    * Tests non-documented return value
    *
    * @see     xp://lang.reflect.Method#getReturnTypeName
@@ -679,5 +616,4 @@ class MethodsTest extends TestCase {
     $this->assertEquals('var', $this->fixture->getMethod('notDocumented')->getParameter(0)->getTypeName());
     $this->assertEquals(\lang\Type::$VAR, $this->fixture->getMethod('notDocumented')->getParameter(0)->getType());
   }
-
 }
