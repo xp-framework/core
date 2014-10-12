@@ -2,6 +2,7 @@
 
 use unittest\TestCase;
 use io\Folder;
+use io\Path;
 use lang\System;
 
 /**
@@ -163,5 +164,17 @@ class FolderTest extends TestCase {
   public function parentDirectory() {
     $f= new Folder('..');
     $this->assertEquals($this->normalize(realpath('..')), $f->getURI());
+  }
+
+  #[@test]
+  public function pathClassCanBeUsedAsBase() {
+    $f= new Folder(new Path($this->temp), '.');
+    $this->assertEquals($this->temp, $f->getURI());
+  }
+
+  #[@test]
+  public function pathClassCanBeUsedAsArg() {
+    $f= new Folder(new Path($this->temp));
+    $this->assertEquals($this->temp, $f->getURI());
   }
 }

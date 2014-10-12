@@ -3,6 +3,7 @@
 use unittest\TestCase;
 use io\Folder;
 use io\File;
+use io\Path;
 use lang\Runtime;
 
 /**
@@ -215,5 +216,19 @@ class FileTest extends TestCase {
   #[@test]
   public function resSchemeExtension() {
     $this->assertEquals('txt', (new File('res://test.txt'))->getExtension());
+  }
+
+  #[@test]
+  public function pathClassCanBeUsedAsBase() {
+    $fn= $this->fileKnownToExist();
+    $f= new File(new Path(dirname($fn)), basename($fn));
+    $this->assertEquals($fn, $f->getURI());
+  }
+
+  #[@test]
+  public function pathClassCanBeUsedAsArg() {
+    $fn= $this->fileKnownToExist();
+    $f= new File(new Path($fn));
+    $this->assertEquals($fn, $f->getURI());
   }
 }
