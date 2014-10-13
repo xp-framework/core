@@ -2,110 +2,115 @@
 
 use unittest\TestCase;
 use io\EncapsedStream;
-use io\Stream;
-
+use io\File;
+use io\streams\Streams;
+use io\streams\MemoryInputStream;
 
 /**
  * TestCase
  *
- * @see      xp://io.EncapsedStream
- * @purpose  Testcase
+ * @see   xp://io.EncapsedStream
  */
 class EncapsedStreamTest extends TestCase {
-  public
-    $s      = null,
-    $stream = null;
     
   /**
-   * Sets up test case
+   * Returns a new EncapsedStream instance
    *
+   * @return  io.EncapsedStream
    */
-  public function setUp() {
-    $this->stream= new Stream();
-    $this->stream->open(STREAM_MODE_WRITE);
-    $this->stream->write('1234567890');
-    $this->stream->close();
-    $this->stream->rewind();
-    $this->stream->open(STREAM_MODE_READ);
-    $this->s= new EncapsedStream($this->stream, 1, 8);
+  public function newStream($contents= '', $start= 0, $length= 0) {
+    return new EncapsedStream(
+      new File(Streams::readableFd(new MemoryInputStream($contents))),
+      $start,
+      $length
+    );
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test, @expect('lang.IllegalStateException')]
-  public function testInvalidConstruct() {
-    $s= new EncapsedStream(new Stream(), 0, 0);
+  public function file_given_must_be_open() {
+    new EncapsedStream(new File('irrelevant.txt'), 0, 0);
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
-  public function testOpen() {
-    $this->s->open(STREAM_MODE_READ);
+  public function open_for_reading() {
+    $this->newStream()->open(FILE_MODE_READ);
+  }
+
+  #[@test, @expect('lang.IllegalAccessException')]
+  public function cannot_open_for_writing() {
+    $this->newStream()->open(FILE_MODE_WRITE);
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
-  public function testRead() {
-    $this->assertEquals('23456789', $this->s->readLine());
+  public function read() {
+    $this->assertEquals('Test', $this->newStream('"Test"', 1, 4)->read());
   }
-  
-  /**
-   * Test
-   *
-   */
+
   #[@test]
-  public function testGets() {
-    $this->assertEquals('23456789', $this->s->gets());
+  public function readChar() {
+    $this->assertEquals('T', $this->newStream('"Test"', 1, 4)->readChar());
   }
-  
-  /**
-   * Test
-   *
-   */
+
   #[@test]
-  public function testSeek() {
-    $this->s->seek(6);
-    $this->assertEquals('89', $this->s->read());
+  public function readLine_with_line_ending() {
+    $this->assertEquals('Test', $this->newStream("@Test\n", 1, 4)->readLine());
   }
-  
-  /**
-   * Test
-   *
-   */
+
   #[@test]
-  public function testEof() {
-    $this->s->seek(6);
-    $this->assertFalse($this->s->eof());
-    $this->s->seek(8);
-    $this->assertTrue($this->s->eof());
+  public function readLine_with_no_line_ending() {
+    $this->assertEquals('Test', $this->newStream('@Test!', 1, 4)->readLine());
   }
-  
-  /**
-   * Test
-   *
-   */
+
   #[@test]
-  public function testReadline() {
-    $stream= new Stream();
-    $stream->open(STREAM_MODE_WRITE);
-    $stream->writeLine('This is the first line.');
-    $stream->writeLine('This is the second line.');
-    $stream->writeLine('And there is a third one.');
-    $stream->close();
-    $stream->open(STREAM_MODE_READ);
-    
-    $this->s= new EncapsedStream($stream, 5, $stream->size()- 35);
-    $this->assertEquals('is the first line.', $this->s->readLine());
-    $this->assertEquals('This is the second li', $this->s->readLine());
-    $this->assertEquals('', $this->s->readLine());
+  public function gets_with_line_ending() {
+    $this->assertEquals('Test', $this->newStream("@Test\n", 1, 4)->gets());
+  }
+
+  #[@test]
+  public function gets_with_no_line_ending() {
+    $this->assertEquals('Test', $this->newStream('@Test!', 1, 4)->gets());
   }
   
+  #[@test]
+  public function seek() {
+    $fixture= $this->newStream('1234567890', 1, 8);
+    $fixture->seek(6);
+    $this->assertEquals('89', $fixture->read());
+  }
+  
+  #[@test]
+  public function eof_after_seeking() {
+    $fixture= $this->newStream('1234567890', 1, 8);
+    $fixture->seek(6);
+    $this->assertFalse($fixture->eof());
+  }
+
+  #[@test]
+  public function eof_after_seeking_until_end() {
+    $fixture= $this->newStream('1234567890', 1, 8);
+    $fixture->seek(8);
+    $this->assertTrue($fixture->eof());
+  }
+  
+  #[@test]
+  public function reading_lines_using_readLine() {
+    $lines= "Line 1\nLine 2\nLine 3\nLine 4\n";
+    $oneLine= strlen("Line *\n");
+
+    $fixture= $this->newStream($lines, $oneLine, $oneLine * 2);
+    $this->assertEquals('Line 2', $fixture->readLine());
+    $this->assertEquals('Line 3', $fixture->readLine());
+    $this->assertEquals(false, $fixture->readLine());
+  }  
+
+  #[@test]
+  public function reading_lines_using_gets() {
+    $lines= "Line 1\nLine 2\nLine 3\nLine 4\n";
+    $oneLine= strlen("Line *\n");
+
+    $fixture= $this->newStream($lines, $oneLine, $oneLine * 2);
+    $this->assertEquals("Line 2\n", $fixture->gets());
+    $this->assertEquals("Line 3\n", $fixture->gets());
+    $this->assertEquals(false, $fixture->gets());
+  }
 }

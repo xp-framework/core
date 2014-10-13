@@ -14,11 +14,10 @@ use io\File;
  *   var_dump($uptime);
  * </code>
  *
- * @test     xp://net.xp_framework.unittest.core.ProcessResolveTest
- * @test     xp://net.xp_framework.unittest.core.ProcessTest
- * @see      xp://lang.Runtime#getExecutable
- * @see      php://proc_open
- * @purpose  Execute external programs
+ * @test  xp://net.xp_framework.unittest.core.ProcessResolveTest
+ * @test  xp://net.xp_framework.unittest.core.ProcessTest
+ * @see   xp://lang.Runtime#getExecutable
+ * @see   php://proc_open
  */
 class Process extends Object {
   public

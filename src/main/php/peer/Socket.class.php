@@ -1,6 +1,4 @@
 <?php namespace peer;
- 
-
 
 /**
  * Socket class
@@ -9,7 +7,7 @@
  * @see      php://network
  * @purpose  Basic TCP/IP socket
  */
-class Socket extends \lang\Object {
+class Socket extends \lang\Object implements \io\Channel {
   public
     $_eof     = false,
     $host     = '',
@@ -371,20 +369,28 @@ class Socket extends \lang\Object {
   /**
    * Retrieve input stream
    *
+   * @deprecated Use in() instead
    * @return  io.streams.InputStream
    */
   public function getInputStream() {
-    return new SocketInputStream($this);
+    return $this->in();
   }
 
   /**
    * Retrieve output stream
    *
+   * @deprecated Use out() instead
    * @return  io.streams.OutputStream
    */
   public function getOutputStream() {
-    return new SocketOutputStream($this);
+    return $this->out();
   }
+
+  /** @return io.streams.InputStream */
+  public function in() { return new SocketInputStream($this); }
+
+  /** @return io.streams.OutputStream */
+  public function out() { return new SocketOutputStream($this); }
   
   /**
    * Destructor

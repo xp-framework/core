@@ -9,29 +9,35 @@ use lang\archive\Archive;
  */
 class ArchiveV2Test extends ArchiveTest {
 
-  /**
-   * Returns the xar version to test
-   *
-   * @return  int
-   */
-  protected function version() { 
-    return 2;
-  }
+  /** @return int */
+  protected function version() { return 2; }
 
   #[@test]
   public function read_empty_archive_with_version_1() {
-    $a= new Archive($this->archiveBytesAsStream(1));
+    $a= new Archive($this->file(1));
     $a->open(ARCHIVE_READ);
     $this->assertEquals(1, $a->version);
     $this->assertEntries($a, []);
   }
 
   #[@test]
-  public function read_archive_with_version_1() {
+  public function archive_with_version_1() {
     $a= new Archive($this->getClass()->getPackage()->getResourceAsStream('v1.xar'));
     $a->open(ARCHIVE_READ);
     $this->assertEquals(1, $a->version);
+  }
+
+  #[@test]
+  public function archive_version_1_contains_contained_text_file() {
+    $a= new Archive($this->getClass()->getPackage()->getResourceAsStream('v1.xar'));
+    $a->open(ARCHIVE_READ);
     $this->assertTrue($a->contains('contained.txt'));
-    $this->assertEntries($a, array('contained.txt' => "This file is contained in an archive!\n"));
+  }
+
+  #[@test]
+  public function archive_version_1_contents() {
+    $a= new Archive($this->getClass()->getPackage()->getResourceAsStream('v1.xar'));
+    $a->open(ARCHIVE_READ);
+    $this->assertEntries($a, ['contained.txt' => "This file is contained in an archive!\n"]);
   }
 }

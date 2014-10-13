@@ -1,61 +1,44 @@
 <?php namespace net\xp_framework\unittest\io;
 
 use unittest\TestCase;
-use io\Stream;
 use io\FileUtil;
+use io\File;
 use io\streams\Streams;
 use io\streams\MemoryInputStream;
-
+use io\streams\MemoryOutputStream;
 
 /**
  * TestCase
  *
- * @see      xp://io.FileUtil
+ * @see   xp://io.FileUtil
+ * @see   https://github.com/xp-framework/xp-framework/pull/220
  */
 class FileUtilTest extends TestCase {
 
-  /**
-   * Test getContents() method
-   *
-   */
   #[@test]
   public function get_contents() {
-    $data= 'Test';
-    $f= new Stream();
-    $f->open(STREAM_MODE_WRITE);
-    $f->write($data);
-    $f->close();
-
-    $this->assertEquals($data, FileUtil::getContents($f));
+    $f= new File(Streams::readableFd(new MemoryInputStream('Test')));
+    $this->assertEquals('Test', FileUtil::getContents($f));
   }
 
-  /**
-   * Test setContents() method
-   *
-   */
   #[@test]
-  public function set_contents() {
-    $data= 'Test';
-    $f= new Stream();
-    $this->assertEquals(strlen($data), FileUtil::setContents($f, $data), 'bytes written equals');
-    $this->assertEquals($data, FileUtil::getContents($f));
+  public function set_contents_returns_number_of_written_bytes() {
+    $f= new File(Streams::writeableFd(new MemoryOutputStream()));
+    $this->assertEquals(4, FileUtil::setContents($f, 'Test'));
   }
 
-  /**
-   * Test getContents() method
-   *
-   * @see   https://github.com/xp-framework/xp-framework/pull/220
-   */
+  #[@test]
+  public function set_contents_writes_bytes() {
+    $out= new MemoryOutputStream();
+    FileUtil::setContents(new File(Streams::writeableFd($out)), 'Test');
+    $this->assertEquals('Test', $out->getBytes());
+  }
+
   #[@test]
   public function get_contents_read_returns_less_than_size() {
-    $data= 'Test';
-    $f= newinstance('io.Stream', [], '{
-      public function read($size= 4096) { return parent::read(min(1, $size)); }
-    }');
-    $f->open(STREAM_MODE_WRITE);
-    $f->write($data);
-    $f->close();
-
-    $this->assertEquals($data, FileUtil::getContents($f));
+    $f= new File(Streams::readableFd(newinstance('io.streams.MemoryInputStream', ['Test'], [
+      'read' => function($size= 4096) { return parent::read(min(1, $size)); }
+    ])));
+    $this->assertEquals('Test', FileUtil::getContents($f));
   }
 }

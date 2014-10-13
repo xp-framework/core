@@ -15,11 +15,10 @@ define('FILE_MODE_READAPPEND','ab+');         // Append (Read/Write)
  * Instances of the file class serve as an opaque handle to the underlying machine-
  * specific structure representing an open file.
  * 
- * @test     xp://net.xp_framework.unittest.io.FileTest
- * @test     xp://net.xp_framework.unittest.io.FileIntegrationTest
- * @purpose  Represent a file
+ * @test xp://net.xp_framework.unittest.io.FileTest
+ * @test xp://net.xp_framework.unittest.io.FileIntegrationTest
  */
-class File extends Stream {
+class File extends \lang\Object implements Channel {
   public 
     $uri=         '', 
     $filename=    '',
@@ -27,27 +26,27 @@ class File extends Stream {
     $extension=   '',
     $mode=        FILE_MODE_READ;
   
-  public 
-    $_fd= null;
+  protected $_fd= null;
   
   /**
    * Constructor. Supports creation via one of the following ways:
-   * <code>
-   *   // via resource
-   *   $f= new File(fopen('lang/Type.class.php', FILE_MODE_READ));
    *
-   *   // via filename
-   *   $f= new File('lang/Type.class.php');
+   * ```php
+   * // via resource
+   * $f= new File(fopen('lang/Type.class.php', FILE_MODE_READ));
+   *
+   * // via filename
+   * $f= new File('lang/Type.class.php');
    *  
-   *   // via dir- and filename
-   *   $f->new File('lang', 'Type.class.php');
+   * // via dir- and filename
+   * $f= new File('lang', 'Type.class.php');
    *
-   *   // via folder and filename
-   *   $f->new File(new Folder('lang'), 'Type.class.php');
-   * </code>
+   * // via folder and filename
+   * $f= new File(new Folder('lang'), 'Type.class.php');
+   * ```
    *
-   * @param   var base either a resource or a filename
-   * @param   string uri
+   * @param   var $base either a resource or a filename
+   * @param   string $uri
    */
   public function __construct($base, $uri= null) {
     if (is_resource($base)) {
@@ -65,21 +64,29 @@ class File extends Stream {
   /**
    * Retrieve input stream
    *
+   * @deprecated Use in() instead
    * @return  io.streams.InputStream
    */
   public function getInputStream() {
-    return new FileInputStream($this);
+    return $this->in();
   }
 
   /**
    * Retrieve output stream
    *
+   * @deprecated Use out() instead
    * @return  io.streams.OutputStream
    */
   public function getOutputStream() {
-    return new FileOutputStream($this);
+    return $this->out();
   }
-  
+
+  /** @return io.streams.InputStream */
+  public function in() { return new FileInputStream($this); }
+
+  /** @return io.streams.OutputStream */
+  public function out() { return new FileOutputStream($this); }
+
   /**
    * Retrieve internal file handle
    *

@@ -12,12 +12,10 @@ use io\TempFile;
  * @see      xp://io.streams.FileOutputStream
  */
 class FileOutputStreamTest extends TestCase {
-  protected 
-    $file = null;
+  protected $file;
 
   /**
    * Sets up test case - creates temporary file
-   *
    */
   public function setUp() {
     try {
@@ -30,7 +28,6 @@ class FileOutputStreamTest extends TestCase {
   
   /**
    * Tear down this test case - removes temporary file
-   *
    */
   public function tearDown() {
     try {
@@ -40,35 +37,25 @@ class FileOutputStreamTest extends TestCase {
       // Can't really do anything about it...
     }
   }
-  
-  /**
-   * Test write() method
-   *
-   */
+
   #[@test]
   public function writing() {
     with ($stream= new FileOutputStream($this->file), $buffer= 'Created by '.$this->name); {
       $stream->write($buffer);
+      $this->file->close();
       $this->assertEquals($buffer, FileUtil::getContents($this->file));
     }
   }
 
-  /**
-   * Test write() method
-   *
-   */
   #[@test]
   public function appending() {
     with ($stream= new FileOutputStream($this->file, true)); {
       $stream->write('!');
+      $this->file->close();
       $this->assertEquals('Created by FileOutputStreamTest!', FileUtil::getContents($this->file));
     }
   }
 
-  /**
-   * Test file remains open when FileOutputStream instance is deleted
-   *
-   */
   #[@test]
   public function delete() {
     with ($stream= new FileOutputStream($this->file)); {
@@ -78,33 +65,21 @@ class FileOutputStreamTest extends TestCase {
     }
   }
 
-  /**
-   * Test opening a file output stream with an invalid file name
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
-  public function invalidFile() {
+  public function given_an_invalid_file_an_exception_is_raised() {
     new FileOutputStream('');
   }
 
-  /**
-   * Test writing after stream has been closed
-   *
-   */
   #[@test, @expect('io.IOException')]
-  public function writingAfterClose() {
+  public function cannot_write_after_closing() {
     with ($stream= new FileOutputStream($this->file)); {
       $stream->close();
       $stream->write('');
     }
   }
 
-  /**
-   * Test closig an already closed stream
-   *
-   */
   #[@test]
-  public function doubleClose() {
+  public function calling_close_twice_has_no_effect() {
     with ($stream= new FileOutputStream($this->file)); {
       $stream->close();
       $stream->close();
