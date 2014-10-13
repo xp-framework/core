@@ -54,6 +54,8 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented RFC #290: `Stream` class deprecation, introduce `Channel`
+  (@thekid)
 * Implemented RFC #290: New Path class (@thekid)
 * Implemented RFC #288: Deprecate LONG_MIN / LONG_MAX (@thekid)
 * Implemented RFC #287: Get rid of tools (@thekid)
