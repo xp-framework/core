@@ -1,12 +1,14 @@
 <?php namespace io\collections;
 
+use io\Folder;
+
 /**
  * File collection
  *
  * @see   xp://io.collections.IOCollection
  */
 class FileCollection extends \lang\Object implements IOCollection, RandomCollectionAccess {
-  public $uri = '';
+  public $uri;
   protected $origin = null;
   protected $_hd    = null;
     
@@ -16,8 +18,8 @@ class FileCollection extends \lang\Object implements IOCollection, RandomCollect
    * @param   var arg either a string or an io.Folder object
    */
   public function __construct($arg) {
-    if (is('io.Folder', $arg)) {
-      $this->uri= $arg->getUri();
+    if ($arg instanceof Folder) {
+      $this->uri= $arg->getURI();
     } else {
       $this->uri= rtrim(realpath($arg), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
     }

@@ -2,76 +2,79 @@
 
 use xp\xar\Options;
 use util\Filters;
+use io\Path;
 use io\collections\FileCollection;
 use io\collections\iterate\FilteredIOCollectionIterator;
 use io\collections\iterate\UriMatchesFilter;
 use io\collections\iterate\CollectionFilter;
 
 /**
- * Create Instruction
+ * Create Instruction. Always ignores well-known VCS control files!
  */
 class CreateInstruction extends AbstractInstruction {
+  protected static $filter;
+
+  static function __static() {
+    self::$filter= Filters::noneOf([
+      new UriMatchesFilter('#/(CVS|\.svn|\.git|\.arch|\.hg|_darcs|\.bzr)/#'),
+      new CollectionFilter()
+    ]);
+  }
 
   /**
-   * Add a single URI
+   * Add a single file to the archive, and print out the name if verbose option is set.
    *
-   * @param   string uri Absolute path to file
-   * @param   string cwd Absolute path to current working directory
-   * @param   string urn The name under which this file should be added in the archive
+   * @param   io.Path $target Zarh in archive
+   * @param   io.Path $source Path to source file
+   * @return  void
    */
-  protected function add($uri, $cwd, $urn= null) {
-    $urn || $urn= strtr(preg_replace('#^('.preg_quote($cwd, '#').'|/)#', '', $uri), DIRECTORY_SEPARATOR, '/');
-    $this->options & Options::VERBOSE && $this->out->writeLine($urn);
-    $this->archive->addFile($urn, new \io\File($uri));
+  protected function add($target, $source) {
+    $name= $target->toString('/');
+    $this->options & Options::VERBOSE && $this->out->writeLine($name);
+    $this->archive->addFile($name, $source->asFile());
   }
 
   /**
    * Retrieve files from filesystem
    *
-   * @param   string cwd
-   * @return  string[]
+   * @param   string[] $arguments
+   * @param   io.Path $cwd
+   * @return  void
    */
-  public function addAll($cwd) {
-    $list= [];
-    foreach ($this->getArguments() as $arg) {
+  public function addAll($arguments, $cwd) {
+    foreach ($arguments as $arg) {
       if (false !== ($p= strrpos($arg, '='))) {
-        $urn= substr($arg, $p+ 1);
-        $arg= substr($arg, 0, $p);
+        $path= new Path(realpath(substr($arg, 0, $p)));
+        $named= new Path(substr($arg, $p+ 1));
       } else {
-        $urn= null;
+        $path= new Path(realpath($arg));
+        $named= null;
       }
-    
-      if (is_file($arg)) {
-        $this->add(realpath($arg), $cwd, $urn);
-      } else if (is_dir($arg)) {
 
-        // Recursively retrieve all files from directory, ignoring well-known
-        // VCS control files.
-        $files= new FilteredIOCollectionIterator(
-          new FileCollection($arg),
-          Filters::noneOf([
-            new UriMatchesFilter('#/(CVS|\.svn|\.git|\.arch|\.hg|_darcs|\.bzr)/#'),
-            new CollectionFilter()
-          ]),
-          true
-        );
+      if ($path->isFile()) {
+        $this->add($named ?: $path->relativeTo($cwd), $path);
+      } else if ($path->isFolder()) {
+        $files= new FilteredIOCollectionIterator(new FileCollection($path), self::$filter, true);
         foreach ($files as $file) {
-          $this->add($file->getURI(), $cwd);
+          $source= new Path($file);
+          if ($named) {
+            $this->add((new Path($named, $source->relativeTo($path)))->normalize(), $source);
+          } else {
+            $this->add($source->relativeTo($cwd), $source);
+          }
         }
       }
     }
-    
-    return $list;
   }
   
   /**
    * Execute action
    *
-   * @return  int
+   * @return  void
    */
   public function perform() {
     $this->archive->open(ARCHIVE_CREATE);
-    $this->addAll(rtrim(realpath(getcwd()), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR);
+    $this->addAll($this->getArguments(), new Path(realpath(getcwd())));
     $this->archive->create();
   }
 }

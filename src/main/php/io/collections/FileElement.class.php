@@ -2,28 +2,28 @@
 
 use io\streams\FileInputStream;
 use io\streams\FileOutputStream;
-
+use io\File;
 
 /**
  * Represents a file element
  *
- * @see      xp://io.collections.FileCollection
- * @purpose  Interface
+ * @see   xp://io.collections.FileCollection
  */
 class FileElement extends \lang\Object implements IOElement {
-  public
-    $uri= '';
-
-  protected
-    $origin = null;
+  public $uri;
+  protected $origin = null;
 
   /**
    * Constructor
    *
-   * @param   string uri
+   * @param   var arg either a string or an io.File object
    */
   public function __construct($uri) {
-    $this->uri= $uri;
+    if ($arg instanceof File) {
+      $this->uri= $arg->getURI();
+    } else {
+      $this->uri= (string)$uri;
+    }
   }
 
   /**
