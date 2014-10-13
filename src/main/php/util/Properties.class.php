@@ -47,21 +47,23 @@ class Properties extends \lang\Object implements PropertyAccess {
   /**
    * Load from an input stream, e.g. a file
    *
-   * @param   io.streams.InputStream in
-   * @param   string charset the charset the stream is encoded in or NULL to trigger autodetection by BOM
+   * @param   io.streams.InputStream $in
+   * @param   string $charset the charset the stream is encoded in or NULL to trigger autodetection by BOM
+   * @param   util.PropertyExpansion $expansion
    * @throws  io.IOException
    * @throws  lang.FormatException
    */
-  public function load(InputStream $in, $charset= null) {
+  public function load(InputStream $in, $charset= null, $expansion= null) {
     $s= new TextTokenizer(new TextReader($in, $charset), "\r\n");
+    $expansion || $expansion= new PropertyExpansion();
     $this->_data= [];
     $section= null;
     while ($s->hasMoreTokens()) {
       $t= $s->nextToken();
       $trimmedToken= trim($t);
-      if ('' === $trimmedToken) continue;                // Empty lines
+      if ('' === $trimmedToken) continue;                   // Empty lines
       $c= $trimmedToken{0};
-      if (';' === $c || '#' === $c) {                            // One line comments
+      if (';' === $c || '#' === $c) {                       // One line comments
         continue;                    
       } else if ('[' === $c) {
         if (false === ($p= strrpos($trimmedToken, ']'))) {
@@ -72,17 +74,19 @@ class Properties extends \lang\Object implements PropertyAccess {
       } else if (false !== ($p= strpos($t, '='))) {
         $key= trim(substr($t, 0, $p));
         $value= ltrim(substr($t, $p+ 1));
-        if (strlen($value) && ('"' === ($q= $value{0}))) {       // Quoted strings
-          if (false === ($p= strrpos($value, $q, 1))) {
-            $value= substr($value, 1)."\n".$s->nextToken($q);
+        if ('' === $value) {
+          // OK
+        } else if ('"' === $value{0}) {                     // Quoted strings
+          if (false === ($p= strrpos($value, '"', 1))) {
+            $value= $expansion->in(substr($value, 1)."\n".$s->nextToken('"'));
           } else {
-            $value= substr($value, 1, $p- 1);
+            $value= $expansion->in(substr($value, 1, $p- 1));
           }
         } else {        // unquoted string
           if (false !== ($p= strpos($value, ';'))) {        // Comments at end of line
             $value= substr($value, 0, $p);
           }
-          $value= rtrim($value);
+          $value= $expansion->in(rtrim($value));
         }
 
         // Arrays and maps: key[], key[0], key[assoc]
