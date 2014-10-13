@@ -119,6 +119,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Implemented support for expanding environment variables in property files.
+  See PR #42 and xp-framework/xp-framework#365 (@thekid, @johannes85)
 * Added support for `callable` typehint - (@thekid)
 * Changed util.profiling.Timer to be able to provide intermediate results
   with `elapsedTime()` without prior call to `stop()`, and added fluent
