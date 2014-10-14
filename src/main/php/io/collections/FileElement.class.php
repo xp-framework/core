@@ -18,11 +18,11 @@ class FileElement extends \lang\Object implements IOElement {
    *
    * @param   var arg either a string or an io.File object
    */
-  public function __construct($uri) {
+  public function __construct($arg) {
     if ($arg instanceof File) {
       $this->uri= $arg->getURI();
     } else {
-      $this->uri= (string)$uri;
+      $this->uri= (string)$arg;
     }
   }
 
