@@ -160,7 +160,7 @@ class TypeTest extends TestCase {
   protected function types() {
     return [
       $this->getClass(),
-      Type::$VAR, Type::$VOID,
+      Type::$VAR,
       Primitive::$BOOL, Primitive::$STRING, Primitive::$INT, Primitive::$DOUBLE,
       new ArrayType('var'),
       new MapType('var')
@@ -172,9 +172,19 @@ class TypeTest extends TestCase {
     $this->assertTrue(Type::$VAR->isAssignableFrom($type));
   }
 
+  #[@test]
+  public function varIsNotAssignableFromVoid() {
+    $this->assertFalse(Type::$VAR->isAssignableFrom(Type::$VOID));
+  }
+
   #[@test, @values('types')]
   public function voidIsAssignableFromNothing($type) {
     $this->assertFalse(Type::$VOID->isAssignableFrom($type));
+  }
+
+  #[@test]
+  public function voidIsAlsoNotAssignableFromVoid() {
+    $this->assertFalse(Type::$VOID->isAssignableFrom(Type::$VOID));
   }
 
   #[@test, @values('instances')]

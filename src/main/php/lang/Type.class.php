@@ -18,6 +18,8 @@ class Type extends Object {
   static function __static() {
     self::$VAR= new self('var', null);
     self::$VOID= new self('void', null);
+
+    // Used for PHP type hints only
     self::$ARRAY= new self('array', null);
     self::$CALLABLE= new self('callable', null);
   }
@@ -227,7 +229,7 @@ class Type extends Object {
    * @return  bool
    */
   public function isAssignableFrom($type) {
-    return self::$VAR === $this;      // VAR is always assignable, VOID never
+    return self::$VAR === $this && self::$VOID !== $type;
   }
 
   /**
