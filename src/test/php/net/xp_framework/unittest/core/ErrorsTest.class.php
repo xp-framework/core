@@ -73,13 +73,13 @@ class ErrorsTest extends \unittest\TestCase {
     $a++;
   }
 
-  #[@test, @expect('lang.NullPointerException')]
+  #[@test, @expect('lang.IndexOutOfBoundsException')]
   public function undefined_array_offset_yields_npe() {
     $a= [];
     $a[0];
   }
 
-  #[@test, @expect('lang.NullPointerException')]
+  #[@test, @expect('lang.IndexOutOfBoundsException')]
   public function undefined_string_offset_yields_npe() {
     $a= '';
     $a[0];
