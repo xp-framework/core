@@ -39,7 +39,7 @@ class SimpleTestCase extends \unittest\TestCase {
     if ('skipped' === $this->name) {
       throw new \unittest\PrerequisitesNotMetError('SKIP', null, $this->name);
     } else if ('raisesAnErrorInSetup' === $this->name) {
-      $a.= '';
+      trigger_error('Test error');
       throw new \unittest\AssertionFailedError('WARN', $this->name);
     }
   }
@@ -61,7 +61,7 @@ class SimpleTestCase extends \unittest\TestCase {
 
   #[@test]
   public function raisesAnError() {
-    $a.= '';
+    trigger_error('Test error');
   }
 
   #[@test]
@@ -115,7 +115,7 @@ class SimpleTestCase extends \unittest\TestCase {
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function catchExpectedWithWarning() {
-    $a.= '';
+    trigger_error('Test error');
     throw new \lang\IllegalArgumentException('');
   }
 

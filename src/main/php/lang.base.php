@@ -327,18 +327,24 @@ final class null {
 // {{{ proto void __error(int code, string msg, string file, int line)
 //     Error callback
 function __error($code, $msg, $file, $line) {
-  if (0 === error_reporting() || is_null($file)) return;
+  if (0 === error_reporting() || null === $file) return;
 
   if (E_RECOVERABLE_ERROR === $code) {
     if (0 === strncmp($msg, 'Call', 4)) {
-      throw new \lang\NullPointerException($msg.' @ '.$file.':'.$line);
+      throw new \lang\NullPointerException($msg);
     } else if (0 === strncmp($msg, 'Argument', 8)) {
-      throw new \lang\IllegalArgumentException($msg.' @ '.$file.':'.$line);
+      throw new \lang\IllegalArgumentException($msg);
     } else if (0 === strncmp($msg, 'Object', 6)) {
-      throw new \lang\ClassCastException($msg.' @ '.$file.':'.$line);
+      throw new \lang\ClassCastException($msg);
     } else {
-      throw new \lang\Error($msg.' @ '.$file.':'.$line);
+      throw new \lang\Error($msg);
     }
+  } else if (0 === strncmp($msg, 'Undefined', 9) || 0 === strncmp($msg, 'Uninitialized', 13)) {
+    throw new \lang\NullPointerException($msg);
+  } else if (0 === strncmp($msg, 'Missing', 7)) {
+    throw new \lang\IllegalArgumentException($msg);
+  } else if ('string conversion' === substr($msg, -17)) {
+    throw new \lang\ClassCastException($msg);
   } else {
     $bt= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
     $class= (isset($bt[1]['class']) ? $bt[1]['class'] : null);
