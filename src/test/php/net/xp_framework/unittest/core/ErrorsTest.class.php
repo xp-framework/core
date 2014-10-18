@@ -74,15 +74,21 @@ class ErrorsTest extends \unittest\TestCase {
   }
 
   #[@test, @expect('lang.IndexOutOfBoundsException')]
-  public function undefined_array_offset_yields_npe() {
+  public function undefined_array_offset_yields_ioobe() {
     $a= [];
     $a[0];
   }
 
   #[@test, @expect('lang.IndexOutOfBoundsException')]
-  public function undefined_string_offset_yields_npe() {
+  public function undefined_map_key_yields_ioobe() {
+    $a= [];
+    $a['test'];
+  }
+
+  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  public function undefined_string_offset_yields_ioobe() {
     $a= '';
-    $a[0];
+    $a{0};
   }
 
   #[@test, @expect('lang.NullPointerException'), @action(new RuntimeVersion('>=7.0'))]

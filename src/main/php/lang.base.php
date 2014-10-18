@@ -341,10 +341,14 @@ function __error($code, $msg, $file, $line) {
     }
   } else if (0 === strncmp($msg, 'Undefined variable', 18)) {
     throw new \lang\NullPointerException($msg);
-  } else if (0 === strncmp($msg, 'Undefined offset', 16) || 0 === strncmp($msg, 'Uninitialized string', 20)) {
-    throw new \lang\IndexOutOfBoundsException($msg);
   } else if (0 === strncmp($msg, 'Missing argument', 16)) {
     throw new \lang\IllegalArgumentException($msg);
+  } else if ((
+    0 === strncmp($msg, 'Undefined offset', 16) ||
+    0 === strncmp($msg, 'Undefined index', 15) ||
+    0 === strncmp($msg, 'Uninitialized string', 20)
+  )) {
+    throw new \lang\IndexOutOfBoundsException($msg);
   } else if ('string conversion' === substr($msg, -17)) {
     throw new \lang\ClassCastException($msg);
   } else {
