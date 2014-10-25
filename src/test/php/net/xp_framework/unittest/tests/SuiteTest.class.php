@@ -246,7 +246,7 @@ class SuiteTest extends \unittest\TestCase {
   public function warningsMakeTestFail() {
     with ($test= new SimpleTestCase('raisesAnError')); {
       $this->assertEquals(
-        array('"Undefined variable: a" in net\xp_framework\unittest\tests\SimpleTestCase::raisesAnError() (SimpleTestCase.class.php, line 64, occured once)'), 
+        array('"Test error" in ::trigger_error() (SimpleTestCase.class.php, line 64, occured once)'), 
         $this->suite->runTest($test)->failed[$test->hashCode()]->reason
       );
     }
@@ -266,7 +266,7 @@ class SuiteTest extends \unittest\TestCase {
   public function expectedExceptionsWithWarningsMakeTestFail() {
     with ($test= new SimpleTestCase('catchExpectedWithWarning')); {
       $this->assertEquals(
-        array('"Undefined variable: a" in net\xp_framework\unittest\tests\SimpleTestCase::catchExpectedWithWarning() (SimpleTestCase.class.php, line 118, occured once)'), 
+        array('"Test error" in ::trigger_error() (SimpleTestCase.class.php, line 118, occured once)'), 
         $this->suite->runTest($test)->failed[$test->hashCode()]->reason
       );
     }

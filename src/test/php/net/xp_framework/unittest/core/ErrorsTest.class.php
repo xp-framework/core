@@ -1,5 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use lang\Object;
+use unittest\actions\RuntimeVersion;
+
 /**
  * Test the XP error handling semantics
  */
@@ -23,66 +26,96 @@ class ErrorsTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function errorsGetAppendedToRegistry() {
-    $a.= '';    // E_NOTICE: Undefined variable:  a
+  public function errors_get_appended_to_registry() {
+    trigger_error('Test error');
     $this->assertEquals(1, sizeof(\xp::$errors));
   }
 
   #[@test]
-  public function errorAtFile() {
-    $a.= '';    // E_NOTICE: Undefined variable:  a
+  public function errors_appear_in_stacktrace() {
+    trigger_error('Test error');
+      
+    try {
+      throw new \lang\XPException('');
+    } catch (\lang\XPException $e) {
+      $element= $e->getStackTrace()[0];
+      $this->assertEquals(
+        ['file' => __FILE__, 'message' => 'Test error'],
+        ['file' => $element->file, 'message' => $element->message]
+      );
+    }
+  }
+
+  #[@test]
+  public function errorAt_given_a_file_without_error() {
+    $this->assertFalse((bool)\xp::errorAt(__FILE__));
+  }
+
+  #[@test]
+  public function errorAt_given_a_file_with_error() {
+    trigger_error('Test error');
     $this->assertTrue((bool)\xp::errorAt(__FILE__));
   }
 
   #[@test]
-  public function errorAtFileAndLine() {
-    $a.= '';    // E_NOTICE: Undefined variable:  a
+  public function errorAt_given_a_file_and_line_without_error() {
+    $this->assertFalse((bool)\xp::errorAt(__FILE__, __LINE__ - 1));
+  }
+
+  #[@test]
+  public function errorAt_given_a_file_and_line_with_error() {
+    trigger_error('Test error');
     $this->assertTrue((bool)\xp::errorAt(__FILE__, __LINE__ - 1));
   }
-  
-  #[@test]
-  public function errorWithClassAndMethod() {
-    $a.= '';  // E_NOTICE: Undefined variable: a
-      
-    try {
-      throw new \lang\XPException('');
-    } catch (\lang\XPException $e) {
-      foreach ($e->getStackTrace() as $element) {
-        if ($element->file !== __FILE__) continue;
-        
-        $this->assertEquals(__CLASS__, $element->class);
-        $this->assertEquals(__FUNCTION__, $element->method);
-        
-        return;
-      }
-      
-      $this->fail('Error not in stacktrace', $e->getStackTrace(), 'lang.StackTraceElement');
-      return;
-    }
 
-    $this->fail('Exception not caught', NULL, 'lang.Exception');
+  #[@test, @expect('lang.NullPointerException')]
+  public function undefined_variable_yields_npe() {
+    $a++;
   }
 
-  #[@test]
-  public function errorsAppearInStackTrace() {
-    $a.= '';    // E_NOTICE: Undefined variable:  a
-    $line= __LINE__ - 1;
+  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  public function undefined_array_offset_yields_ioobe() {
+    $a= [];
+    $a[0];
+  }
 
-    try {
-      throw new \lang\XPException('');
-    } catch (\lang\XPException $e) {
-      foreach ($e->getStackTrace() as $element) {
-        if ($element->file !== __FILE__ || $element->line !== $line) continue;
-        
-        // We've found the stack trace element we're looking for
-        // TBI: Check more detailed if this really is the correct one?
-        return;
-      }
+  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  public function undefined_map_key_yields_ioobe() {
+    $a= [];
+    $a['test'];
+  }
 
-      $this->fail('Error not in stacktrace', $e->getStackTrace(), 'lang.StackTraceElement');
-      return;
-    }
+  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  public function undefined_string_offset_yields_ioobe() {
+    $a= '';
+    $a{0};
+  }
 
-    $this->fail('Exception not caught', NULL, 'lang.Exception');
+  #[@test, @expect('lang.NullPointerException'), @action(new RuntimeVersion('>=7.0'))]
+  public function call_to_member_on_non_object_yields_npe() {
+    $a= null;
+    $a->method();
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function argument_mismatch_yield_iae() {
+    $f= function(Object $arg) { };
+    $f('Primitive');
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException')]
+  public function missing_argument_mismatch_yield_iae() {
+    $f= function($arg) { };
+    $f();
+  }
+
+  #[@test, @expect('lang.ClassCastException')]
+  public function cannot_convert_object_to_string_yields_cce() {
+    (new Object()).'String';
+  }
+
+  #[@test, @expect('lang.ClassCastException')]
+  public function cannot_convert_array_to_string_yields_cce() {
+    [].'String';
   }
 }
