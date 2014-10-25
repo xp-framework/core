@@ -54,6 +54,7 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented RFC #291: Stricter error handling (@thekid)
 * Implemented RFC #289: `Stream` class deprecation, introduce `Channel`
   (@thekid)
 * Implemented RFC #290: New Path class (@thekid)
