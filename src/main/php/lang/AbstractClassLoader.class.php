@@ -92,7 +92,7 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
       // If class was declared, but loading threw an exception it means
       // a "soft" dependency, one that is only required at runtime, was
       // not loaded, the class itself has been declared.
-      if (class_exists($decl, false) || interface_exists($decl, false) || trait_exists($decl, false))) {
+      if (class_exists($decl, false) || interface_exists($decl, false) || trait_exists($decl, false)) {
         raise('lang.ClassDependencyException', $class, [$this], $e);
       }
 
