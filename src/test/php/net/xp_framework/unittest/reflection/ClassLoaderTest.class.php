@@ -57,11 +57,15 @@ class ClassLoaderTest extends \unittest\TestCase {
     ClassLoader::removeLoader($this->brokenLoader);
   }
 
-  #[@test]
-  public function sameClassLoader() {
+  #[@test, @values([
+  #  'net.xp_framework.unittest.reflection.classes.ClassOne',
+  #  'net.xp_framework.unittest.reflection.classes.InterfaceOne',
+  #  'net.xp_framework.unittest.reflection.classes.TraitOne'
+  #])]
+  public function classloader_for_types_alongside_this_class($type) {
     $this->assertEquals(
-      XPClass::forName('net.xp_framework.unittest.reflection.classes.ClassOne')->getClassLoader(),
-      $this->getClass()->getClassLoader()
+      $this->getClass()->getClassLoader(),
+      XPClass::forName($type)->getClassLoader()
     );
   }
 

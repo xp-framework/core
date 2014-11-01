@@ -92,7 +92,7 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
       // If class was declared, but loading threw an exception it means
       // a "soft" dependency, one that is only required at runtime, was
       // not loaded, the class itself has been declared.
-      if (class_exists($decl, false) || interface_exists($decl, false)) {
+      if (class_exists($decl, false) || interface_exists($decl, false) || trait_exists($decl, false))) {
         raise('lang.ClassDependencyException', $class, [$this], $e);
       }
 
@@ -124,9 +124,13 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
       $name= strtr($class, '.', '·');
       class_alias($name, strtr($class, '.', '\\'));
       \xp::$sn[$class]= $name;
-    } else if (($ns= strtr($class, '.', '\\')) && (class_exists($ns, false) || interface_exists($ns, false))) {
+    } else if (($ns= strtr($class, '.', '\\')) && (
+      class_exists($ns, false) || interface_exists($ns, false) || trait_exists($ns, false))
+    ) {
       $name= $ns;
-    } else if (($cl= substr($class, $p+ 1)) && (class_exists($cl, false) || interface_exists($cl, false))) {
+    } else if (($cl= substr($class, $p+ 1)) && (
+      class_exists($cl, false) || interface_exists($cl, false) || trait_exists($cl, false))
+    ) {
       $name= $cl;
       class_alias($name, strtr($class, '.', '\\'));
       \xp::$sn[$class]= $name;
