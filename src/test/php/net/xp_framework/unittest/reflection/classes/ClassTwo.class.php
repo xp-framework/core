@@ -1,11 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection\classes;
 
 /**
- * (Insert class' description here)
- *
- * @ext      extension
- * @see      reference
- * @purpose  purpose
+ * Fixture for `net.xp_framework.unittest.reflection.ClassLoaderTest`
  */
 class ClassTwo extends \lang\Object {
 
