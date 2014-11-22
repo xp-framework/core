@@ -309,6 +309,11 @@ class FunctionTypeTest extends \unittest\TestCase {
     (new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR))->newInstance('strlen');
   }
 
+  #[@test, @values([[Primitive::$STRING], [Type::$VAR]])]
+  public function array_referencing_instance_method_works_for_newinstance($return) {
+    (new FunctionType([], $return))->newInstance([$this, 'getName']);
+  }
+
   #[@test, @values([
   #  [['lang.XPClass', 'forName']], ['lang.XPClass::forName'],
   #  [['lang\XPClass', 'forName']]
@@ -326,7 +331,6 @@ class FunctionTypeTest extends \unittest\TestCase {
     $new= (new FunctionType([], XPClass::forName('lang.Object')))->newInstance($value);
     $this->assertInstanceOf('lang.Object', $new());
   }
-
 
   #[@test, @values([
   #  [['unittest.TestCase', 'new']], ['unittest.TestCase::new'],
