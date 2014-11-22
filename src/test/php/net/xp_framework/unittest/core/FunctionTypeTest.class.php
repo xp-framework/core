@@ -208,16 +208,14 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertFalse($type->isInstance(['lang.XPClass', 'non-existant']));
   }
 
-  #[@test]
-  public function array_referencing_instance_method_is_instance() {
-    $type= new FunctionType([], Primitive::$STRING);
-    $this->assertTrue($type->isInstance([$this, 'getName']));
+  #[@test, @values([[Primitive::$STRING], [Type::$VAR]])]
+  public function array_referencing_instance_method_is_instance($return) {
+    $this->assertTrue((new FunctionType([], $return))->isInstance([$this, 'getName']));
   }
 
   #[@test]
   public function return_type_verified_for_instance_methods() {
-    $type= new FunctionType([], Primitive::$INT);
-    $this->assertFalse($type->isInstance([$this, 'getName']));
+    $this->assertFalse((new FunctionType([], Primitive::$INT))->isInstance([$this, 'getName']));
   }
 
   #[@test, @values([
@@ -402,6 +400,18 @@ class FunctionTypeTest extends \unittest\TestCase {
   public function can_assign_to_itself() {
     $type= new FunctionType([Type::$VAR], Type::$VAR);
     $this->assertTrue($type->isAssignableFrom($type));
+  }
+
+  #[@test, @values(['var', 'string', 'function(): var', 'int[]', '[:bool]', 'lang.Generic', 'lang.Object'])]
+  public function var_return_type_is_assignable_from($return) {
+    $type= new FunctionType([], Type::$VAR);
+    $this->assertTrue($type->isAssignableFrom(new FunctionType([], Type::forName($return))));
+  }
+
+  #[@test]
+  public function var_return_type_not_assignable_from_void() {
+    $type= new FunctionType([], Type::$VAR);
+    $this->assertFalse($type->isAssignableFrom(new FunctionType([], Type::$VOID)));
   }
 
   #[@test, @values([
