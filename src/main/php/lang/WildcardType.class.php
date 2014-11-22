@@ -10,6 +10,8 @@ class WildcardType extends Type {
   protected $base;
   protected $components;
 
+  static function __static() { }
+
   /**
    * Creates a new array type instance
    *
