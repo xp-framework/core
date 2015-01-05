@@ -512,6 +512,17 @@ class FunctionTypeTest extends \unittest\TestCase {
   #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
   #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
   #])]
+  public function reference_to_instance_method_creating_new_instances($value) {
+    $type= new FunctionType([XPClass::forName('unittest.TestCase')], Primitive::$STRING);
+    $f= $type->newInstance($value);
+    $this->assertEquals($this->getName(), $f($this));
+    $this->assertEquals($this->getName(true), $f($this, true));
+  }
+
+  #[@test, @values([
+  #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
+  #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
+  #])]
   public function reference_to_instance_method_can_be_invoked($value) {
     $type= new FunctionType([XPClass::forName('unittest.TestCase')], Primitive::$STRING);
     $this->assertEquals($this->getName(), $type->invoke($value, [$this]));
