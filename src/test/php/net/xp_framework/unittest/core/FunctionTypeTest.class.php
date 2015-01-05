@@ -218,15 +218,6 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertFalse((new FunctionType([], Primitive::$INT))->isInstance([$this, 'getName']));
   }
 
-  #[@test, @values([
-  #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
-  #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
-  #])]
-  public function array_referencing_instance_method_via_string_is_not_instance($value) {
-    $type= new FunctionType([], Primitive::$STRING);
-    $this->assertFalse($type->isInstance($value));
-  }
-
   #[@test]
   public function array_referencing_non_existant_instance_method_is_not_instance() {
     $type= new FunctionType([], Primitive::$STRING);
@@ -264,9 +255,7 @@ class FunctionTypeTest extends \unittest\TestCase {
   #  0, -1, 0.5, true, false, '', 'Test',
   #  [[]], [['key' => 'value']],
   #  [['non-existant', 'method']], [['lang.XPClass', 'non-existant']],
-  #  [[null, 'method']], [[new \lang\Object(), 'non-existant']],
-  #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
-  #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
+  #  [[null, 'method']], [[new \lang\Object(), 'non-existant']]
   #])]
   public function cannot_cast_this($value) {
     (new FunctionType([Type::$VAR], Type::$VAR))->cast($value);
@@ -392,9 +381,7 @@ class FunctionTypeTest extends \unittest\TestCase {
   #  0, -1, 0.5, true, false, '', 'Test',
   #  [[]], [['key' => 'value']],
   #  [['non-existant', 'method']], [['lang.XPClass', 'non-existant']],
-  #  [[null, 'method']], [[new \lang\Object(), 'non-existant']],
-  #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
-  #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
+  #  [[null, 'method']], [[new \lang\Object(), 'non-existant']]
   #])]
   public function cannot_create_instances_from($value) {
     (new FunctionType([], Type::$VAR))->newInstance($value);
@@ -465,8 +452,6 @@ class FunctionTypeTest extends \unittest\TestCase {
   #  [[]], [['key' => 'value']],
   #  [['non-existant', 'method']], [['lang.XPClass', 'non-existant']],
   #  [[null, 'method']], [[new \lang\Object(), 'non-existant']],
-  #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
-  #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName'],
   #  function() { }
   #])]
   public function invoke_not_instance($value) {
@@ -501,5 +486,35 @@ class FunctionTypeTest extends \unittest\TestCase {
   public function cast_loads_class_if_necessary_with_method() {
     $t= new FunctionType([Type::$VAR], Primitive::$VOID);
     $t->cast('net.xp_framework.unittest.core.FunctionTypeMethodFixture::method');
+  }
+
+  #[@test, @values([
+  #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
+  #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
+  #])]
+  public function reference_to_instance_method_is_instance($value) {
+    $type= new FunctionType([XPClass::forName('unittest.TestCase')], Primitive::$STRING);
+    $this->assertTrue($type->isInstance($value));
+  }
+
+  #[@test, @values([
+  #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
+  #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
+  #])]
+  public function reference_to_instance_method_can_be_cast($value) {
+    $type= new FunctionType([XPClass::forName('unittest.TestCase')], Primitive::$STRING);
+    $f= $type->cast($value);
+    $this->assertEquals($this->getName(), $f($this));
+    $this->assertEquals($this->getName(true), $f($this, true));
+  }
+
+  #[@test, @values([
+  #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
+  #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
+  #])]
+  public function reference_to_instance_method_can_be_invoked($value) {
+    $type= new FunctionType([XPClass::forName('unittest.TestCase')], Primitive::$STRING);
+    $this->assertEquals($this->getName(), $type->invoke($value, [$this]));
+    $this->assertEquals($this->getName(true), $type->invoke($value, [$this, true]));
   }
 }

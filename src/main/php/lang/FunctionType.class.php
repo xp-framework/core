@@ -202,10 +202,22 @@ class FunctionType extends Type {
       $class= literal($arg);
       if (!method_exists($class, $method)) return $false('Method '.\xp::nameOf($class).'::'.$method.' does not exist');
       $r= new \ReflectionMethod($class, $method);
-      if (!$r->isStatic()) return $false('Method '.\xp::nameOf($class).'::'.$method.' referenced as static method but not static');
-      if ($this->verify($r, $false, $r->getDeclaringClass())) {
-        $result= $return ? $r->getClosure(null) : true;
+      if ($r->isStatic()) {
+        if ($this->verify($r, $false, $r->getDeclaringClass())) {
+          $result= $return ? $r->getClosure(null) : true;
+        }
+      } else {
+        $result= $return ? function() use($r) {
+          $args= func_get_args();
+          $self= array_shift($args);
+          try {
+            return $r->invokeArgs($self, $args);
+          } catch (\ReflectionException $e) {
+            throw new IllegalArgumentException($e->getMessage());
+          }
+        } : true;
       }
+      //return $false('Method '.\xp::nameOf($class).'::'.$method.' referenced as static method but not static');
     } else if (is_object($arg) && is_string($method)) {
       if (!method_exists($arg, $method)) return $false('Method '.\xp::nameOf(get_class($arg)).'::'.$method.' does not exist');
       $r= new \ReflectionMethod($arg, $method);
