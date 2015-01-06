@@ -65,7 +65,7 @@ interface IOElement {
    *
    * @param   io.collections.IOCollection
    */
-  public function setOrigin(\IOCollection $origin);
+  public function setOrigin(IOCollection $origin);
 
   /**
    * Gets input stream to read from this element
