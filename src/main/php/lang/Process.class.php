@@ -165,15 +165,15 @@ class Process extends Object {
     //   also check that /proc is not just an empty directory; this assumes 
     //   that process 1 always exists - which usually is `init`.
     //
-    // * Fall back to use the PHP_BINARY (#54514) constant and finally the "_" 
-    //   environment variable for the executable and /bin/ps to retrieve the 
-    //   command line (please note unfortunately any quote signs have been 
-    //   lost and it can thus be only used for display purposes)
+    // * Fall back to use "_" environment variable for the executable and
+    //   /bin/ps to retrieve the command line (please note unfortunately any
+    //   quote signs have been lost and it can thus be only used for display
+    //   purposes)
     if (strncasecmp(PHP_OS, 'Win', 3) === 0) {
       try {
         $c= new \com('winmgmts:');
         $p= $c->get('//./root/cimv2:Win32_Process.Handle="'.$pid.'"');
-        $self->status['exe']= $p->executablePath;
+        if (null === $exe) $self->status['exe']= $p->executablePath;
         $self->status['command']= $p->commandLine;
       } catch (\Exception $e) {
         throw new IllegalStateException('Cannot find executable: '.$e->getMessage());
@@ -182,7 +182,7 @@ class Process extends Object {
       if (!file_exists($proc= '/proc/'.$pid)) {
         throw new IllegalStateException('Cannot find executable in /proc');
       }
-      do {
+      if (null === $exe) do {
         foreach (['/exe', '/file'] as $alt) {
           if (!file_exists($proc.$alt)) continue;
           $self->status['exe']= readlink($proc.$alt);
@@ -193,8 +193,8 @@ class Process extends Object {
       $self->status['command']= strtr(file_get_contents($proc.'/cmdline'), "\0", ' ');
     } else {
       try {
-        if ($exe) {
-          $self->status['exe']= self::resolve($exe);
+        if (null !== $exe) {
+          // OK
         } else if ($_= getenv('_')) {
           $self->status['exe']= self::resolve($_);
         } else {
