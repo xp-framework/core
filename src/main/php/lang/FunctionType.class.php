@@ -210,7 +210,7 @@ class FunctionType extends Type {
         if (null === $this->signature) {
           $verify= null;
         } else {
-          if (empty($this->signature) || !$this->signature[0]->isAssignableFrom(new XPClass($r->getDeclaringClass()))) {
+          if (empty($this->signature) || !$this->signature[0]->isAssignableFrom(new XPClass($class))) {
             return $false('Method '.\xp::nameOf($class).'::'.$method.' requires instance of class as first parameter');
           }
           $verify= array_slice($this->signature, 1);

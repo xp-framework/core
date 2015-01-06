@@ -528,6 +528,15 @@ class FunctionTypeTest extends \unittest\TestCase {
   #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
   #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
   #])]
+  public function reference_to_instance_method_is_instance_with_exact_class($value) {
+    $type= new FunctionType([XPClass::forName('net.xp_framework.unittest.core.FunctionTypeTest')], Primitive::$STRING);
+    $this->assertTrue($type->isInstance($value));
+  }
+
+  #[@test, @values([
+  #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
+  #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
+  #])]
   public function reference_to_instance_method_is_instance_with_parent_class($value) {
     $type= new FunctionType([XPClass::forName('lang.Object')], Primitive::$STRING);
     $this->assertTrue($type->isInstance($value));
