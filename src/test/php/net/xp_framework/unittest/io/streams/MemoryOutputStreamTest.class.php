@@ -1,53 +1,90 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use unittest\TestCase;
 use io\streams\MemoryOutputStream;
-
 
 /**
  * Unit tests for streams API
  *
- * @see      xp://io.streams.OutputStream
- * @purpose  Unit test
+ * @see   xp://io.streams.OutputStream
+ * @see   xp://lang.Closeable#close
  */
-class MemoryOutputStreamTest extends TestCase {
-  protected $out= null;
+class MemoryOutputStreamTest extends \unittest\TestCase {
+  private $out;
 
   /**
    * Setup method. Creates the fixture.
-   *
    */
   public function setUp() {
     $this->out= new MemoryOutputStream();
   }
 
-  /**
-   * Test string writing
-   *
-   */
   #[@test]
-  public function writeString() {
+  public function writing_a_string() {
     $this->out->write('Hello');
     $this->assertEquals('Hello', $this->out->getBytes());
   }
 
-  /**
-   * Test number writing
-   *
-   */
   #[@test]
-  public function writeNumber() {
+  public function writing_a_number() {
     $this->out->write(5);
     $this->assertEquals('5', $this->out->getBytes());
   }
 
-  /**
-   * Test closing a stream twice has no effect.
-   *
-   * @see   xp://lang.Closeable#close
-   */
   #[@test]
-  public function closingTwice() {
+  public function tell() {
+    $this->out->write('Hello');
+    $this->assertEquals(5, $this->out->tell());
+  }
+
+  #[@test, @values([0, 1, 5])]
+  public function tell_after_seeking_to_beginning_plus($offset) {
+    $this->out->write('Hello');
+    $this->out->seek($offset, SEEK_SET);
+    $this->assertEquals($offset, $this->out->tell());
+  }
+
+  #[@test, @values([0, 1, 5])]
+  public function tell_after_seeking_to_end_minus($offset) {
+    $this->out->write('Hello');
+    $this->out->seek(-$offset, SEEK_END);
+    $this->assertEquals(5 - $offset, $this->out->tell());
+  }
+
+  #[@test]
+  public function replacing_character() {
+    $this->out->write('Hello');
+    $this->out->seek(0, SEEK_SET);
+    $this->out->write('h');
+    $this->assertEquals('hello', $this->out->getBytes());
+  }
+
+  #[@test]
+  public function seeking_to_end() {
+    $this->out->write('Hello');
+    $this->out->seek(0, SEEK_END);
+    $this->out->write('!');
+    $this->assertEquals('Hello!', $this->out->getBytes());
+  }
+
+  #[@test]
+  public function seeking_to_end_minus_one() {
+    $this->out->write('Hello');
+    $this->out->seek(-1, SEEK_END);
+    $this->out->write('_');
+    $this->assertEquals('Hell_', $this->out->getBytes());
+  }
+
+  #[@test]
+  public function overwriting() {
+    $this->out->write('Hello');
+    $this->out->seek(1, SEEK_SET);
+    $this->out->write('ai');
+    $this->out->write('fisch');
+    $this->assertEquals('Haifisch', $this->out->getBytes());
+  }
+
+  #[@test]
+  public function closing_twice_has_no_effect() {
     $this->out->close();
     $this->out->close();
   }
