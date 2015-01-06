@@ -84,7 +84,7 @@ class TextReaderTest extends TestCase {
   public function readingDoesNotContinueAfterBrokenCharacters() {
     $r= $this->newReader("Hello \334bercoder\n".str_repeat('*', 512), 'utf-8');
     try {
-      $r->read(1);
+      $r->read(10);
       $this->fail('No exception caught', null, 'lang.FormatException');
     } catch (\lang\FormatException $expected) {
       // OK

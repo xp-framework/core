@@ -45,8 +45,16 @@ abstract class Reader extends \lang\Object implements Closeable {
   /**
    * Closes this reader (and the underlying stream)
    *
+   * @return void
    */
   public function close() {
     $this->stream->close();
+  }
+
+  /**
+   * Destructor. Ensures output stream is closed.
+   */
+  public function __destruct() {
+    $this->close();
   }
 }

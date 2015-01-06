@@ -1,5 +1,7 @@
 <?php namespace io\streams;
 
+use io\IOException;
+
 /**
  * Reads text from an underlying input stream, converting it from the
  * given character set to our internal encoding (which is iso-8859-1).
@@ -8,7 +10,6 @@
  * @ext     iconv
  */
 class TextReader extends Reader {
-  protected $in = null;
   protected $buf = '';
   protected $bom = 0;
   protected $charset = null;
@@ -17,22 +18,12 @@ class TextReader extends Reader {
    * Constructor. Creates a new TextReader on an underlying input
    * stream with a given charset.
    *
-   * @param   io.streams.InputStream stream
-   * @param   string charset the charset the stream is encoded in or NULL to trigger autodetection by BOM
+   * @param   io.streams.InputStream $stream
+   * @param   string $charset the charset the stream is encoded in or NULL to trigger autodetection by BOM
    */
   public function __construct(InputStream $stream, $charset= null) {
     parent::__construct($stream);
-    $this->in= Streams::readableFd($stream);
-
-    if (null === $charset) {
-      $charset= $this->detectCharset();
-    }
-
-    if (!stream_filter_append($this->in, 'convert.iconv.'.$charset.'/'.\xp::ENCODING, STREAM_FILTER_READ)) {
-      throw new \io\IOException('Could not append stream filter');
-    }
-
-    $this->charset= $charset;
+    $this->charset= $charset ?: $this->detectCharset();
   }
 
   /**
@@ -45,13 +36,17 @@ class TextReader extends Reader {
   }
 
   /**
-   * Reset to bom. 
+   * Reset to BOM 
    *
    * @throws  io.IOException in case the underlying stream does not support seeking
    */
   public function reset() {
-    fseek($this->in, $this->bom, SEEK_SET);
-    $this->buf= '';
+    if ($this->stream instanceof Seekable) {
+      $this->stream->seek($this->bom, SEEK_SET);
+      $this->buf= '';
+    } else {
+      throw new IOException('Underlying stream does not support seeking');
+    }
   }
 
   /**
@@ -62,7 +57,7 @@ class TextReader extends Reader {
    * @return  string
    */
   protected function detectCharset() {
-    $c= fread($this->in, 2);
+    $c= $this->stream->read(2);
 
     // Check for UTF-16 (BE)
     if ("\376\377" === $c) {
@@ -77,15 +72,33 @@ class TextReader extends Reader {
     }
 
     // Check for UTF-8 BOM
-    if ("\357\273" === $c && "\357\273\277" === ($c.= fread($this->in, 1))) {
+    if ("\357\273" === $c && "\357\273\277" === ($c.= $this->stream->read(1))) {
       $this->bom= 3;
       return 'utf-8';
     }
 
     // Fall back to ISO-8859-1
-    $this->buf= iconv('iso-8859-1', \xp::ENCODING, (string)$c);
+    $this->buf= (string)$c;
     $this->bom= 0;
     return 'iso-8859-1';
+  }
+
+  /**
+   * Reads a given number of bytes
+   *
+   * @param  int $size
+   * @return string
+   */
+  private function read0($size) {
+    $len= $size - strlen($this->buf);
+    if ($len > 0) {
+      $bytes= $this->buf.$this->stream->read($len);
+      $this->buf= '';
+    } else {
+      $bytes= substr($this->buf, 0, $size);
+      $this->buf= substr($this->buf, $size);
+    }
+    return $bytes;
   }
 
   /**
@@ -101,24 +114,20 @@ class TextReader extends Reader {
     // an incomplete multi-byte sequence. In this case, iconv_strlen() will raise
     // a warning, and return FALSE (or 0, for the "less than" operator), causing
     // the loop to read more. Maybe there's a more elegant way to do this?
-    while (($l= @iconv_strlen($this->buf, \xp::ENCODING)) < $size) {
-      $c= fread($this->in, $size- $l);
-      if ('' === $c) {
-        if (\xp::errorAt(__FILE__, __LINE__ - 2)) {
-          $message= key(\xp::$errors[__FILE__][__LINE__ - 3]);
-          \xp::gc(__FILE__);
-          throw new \lang\FormatException($message);
-        }
-        break;
-      }
-      $this->buf.= $c;
+    $l= 0;
+    $bytes= '';
+    do {
+      if ('' === ($chunk= $this->read0($size - $l))) break;
+      $bytes.= $chunk;
+    } while (($l= @iconv_strlen($bytes, $this->charset)) < $size);
+
+    if (false === $l) {
+      $message= key(\xp::$errors[__FILE__][__LINE__ - 3]);
+      \xp::gc(__FILE__);
+      throw new \lang\FormatException($message);
     }
 
-    if ('' === $this->buf) return null;
-
-    $chunk= iconv_substr($this->buf, 0, $size, \xp::ENCODING);
-    $this->buf= (string)iconv_substr($this->buf, $size, strlen($this->buf), \xp::ENCODING);
-    return $chunk;
+    return '' === $bytes ? null : iconv($this->charset, \xp::ENCODING, $bytes);
   }
   
   /**
@@ -140,24 +149,5 @@ class TextReader extends Reader {
       $line.= $c;
     } while (null !== ($c= $this->read(1)));
     return $line;
-  }
-
-  /**
-   * Close this buffer.
-   *
-   */
-  public function close() {
-    if (!$this->in) return;
-    fclose($this->in);
-    $this->in= null;
-    // No call to parent::close() as fclose() will already close underlying stream
-  }
-
-  /**
-   * Destructor. Ensures output stream is closed.
-   *
-   */
-  public function __destruct() {
-    $this->close();
   }
 }
