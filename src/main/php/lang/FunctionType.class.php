@@ -89,13 +89,14 @@ class FunctionType extends Type {
    * Verifies a reflection function or method
    *
    * @param  php.ReflectionFunctionAbstract $value
+   * @param  [lang.Type] $signature
    * @param  function(string): var $value A function to invoke when verification fails
    * @param  php.ReflectionClass $class Class to get details from, optionally
    * @return var
    */
-  protected function verify($r, $false, $class= null) {
-    if (null !== $this->signature && sizeof($this->signature) < $r->getNumberOfRequiredParameters()) {
-      return $false('Required signature length mismatch, expecting '.sizeof($this->signature).', have '.$r->getNumberOfParameters());
+  protected function verify($r, $signature, $false, $class= null) {
+    if (null !== $signature && sizeof($signature) < $r->getNumberOfRequiredParameters()) {
+      return $false('Required signature length mismatch, expecting '.sizeof($signature).', have '.$r->getNumberOfParameters());
     }
 
     $details= $class ? XPClass::detailsForMethod($class->getName(), $r->getName()) : null;
@@ -106,9 +107,9 @@ class FunctionType extends Type {
       }
     }
 
-    if (null === $this->signature) return true;
+    if (null === $signature) return true;
     $params= $r->getParameters();
-    foreach ($this->signature as $i => $type) {
+    foreach ($signature as $i => $type) {
       if (!isset($params[$i])) return $false('No parameter #'.($i + 1));
       if (isset($details[DETAIL_ARGUMENTS][$i])) {
         $param= Type::forName($details[DETAIL_ARGUMENTS][$i]);
@@ -151,29 +152,29 @@ class FunctionType extends Type {
    * @return php.Closure
    */
   protected function verified($arg, $false, $return= true) {
-    $result= false;
     if ($arg instanceof \Closure) {
-      if ($this->verify(new \ReflectionFunction($arg), $false)) {
-        $result= $return ? $arg : true;
+      if ($this->verify(new \ReflectionFunction($arg), $this->signature, $false)) {
+        return $return ? $arg : true;
       }
     } else if (is_string($arg)) {
       $r= sscanf($arg, '%[^:]::%s', $class, $method);
       if (2 === $r) {
-        $result= $this->verifiedMethod($class, $method, $false, $return);
+        return $this->verifiedMethod($class, $method, $false, $return);
       } else if (function_exists($arg)) {
         $r= new \ReflectionFunction($arg);
-        if ($this->verify($r, $false)) {
-          $result= $return ? $r->getClosure() : true;
+        if ($this->verify($r, $this->signature, $false)) {
+          return $return ? $r->getClosure() : true;
         }
       } else {
         return $false('Function "'.$arg.'" does not exist');
       }
     } else if (is_array($arg) && 2 === sizeof($arg)) {
-      $result= $this->verifiedMethod($arg[0], $arg[1], $false, $return);
+      return $this->verifiedMethod($arg[0], $arg[1], $false, $return);
     } else {
       return $false('Unsupported type');
     }
-    return $result;
+
+    return $false('Verification failed');
   }
 
   /**
@@ -186,28 +187,27 @@ class FunctionType extends Type {
    * @return php.Closure
    */
   protected function verifiedMethod($arg, $method, $false, $return) {
-    $result= false;
     if ('new' === $method) {
       $class= literal($arg);
       if (method_exists($class, '__construct')) {
         $r= new \ReflectionMethod($class, '__construct');
-        if (!$this->verify($r, $false, $r->getDeclaringClass())) return false;
+        if (!$this->verify($r, $this->signature, $false, $r->getDeclaringClass())) return false;
       } else {
         if (!$this->returns->isAssignableFrom(Type::forName(\xp::nameOf($class)))) return $false('Class type mismatch');
       }
       $c= new \ReflectionClass($class);
       if (!$c->isInstantiable()) return $false(\xp::nameOf($class).' cannot be instantiated');
-      $result= $return ? function() use($c) { return $c->newInstanceArgs(func_get_args()); } : true;
+      return $return ? function() use($c) { return $c->newInstanceArgs(func_get_args()); } : true;
     } else if (is_string($arg) && is_string($method)) {
       $class= literal($arg);
       if (!method_exists($class, $method)) return $false('Method '.\xp::nameOf($class).'::'.$method.' does not exist');
       $r= new \ReflectionMethod($class, $method);
       if ($r->isStatic()) {
-        if ($this->verify($r, $false, $r->getDeclaringClass())) {
-          $result= $return ? $r->getClosure(null) : true;
+        if ($this->verify($r, $this->signature, $false, $r->getDeclaringClass())) {
+          return $return ? $r->getClosure(null) : true;
         }
       } else {
-        $result= $return ? function() use($r) {
+        return $return ? function() use($r) {
           $args= func_get_args();
           $self= array_shift($args);
           try {
@@ -221,13 +221,14 @@ class FunctionType extends Type {
     } else if (is_object($arg) && is_string($method)) {
       if (!method_exists($arg, $method)) return $false('Method '.\xp::nameOf(get_class($arg)).'::'.$method.' does not exist');
       $r= new \ReflectionMethod($arg, $method);
-      if ($this->verify($r, $false, $r->getDeclaringClass())) {
-        $result= $return ? $r->getClosure($arg) : true;
+      if ($this->verify($r, $this->signature, $false, $r->getDeclaringClass())) {
+        return $return ? $r->getClosure($arg) : true;
       }
     } else {
       return $false('Array argument must either be [string, string] or an [object, string]');
     }
-    return $result;
+
+    return $false('Verifying method failed');
   }
 
   /**
