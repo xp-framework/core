@@ -1,24 +1,18 @@
-<?php namespace io\streams;/* This file is part of the XP framework's experiments
- *
- * $Id$
- */
-
-
+<?php namespace io\streams;
 
 /**
  * InputStream that reads from a given string.
  *
- * @purpose  InputStream implementation
+ * @test  xp://net.xp_framework.unittest.io.streams.MemoryInputStreamTest
  */
 class MemoryInputStream extends \lang\Object implements InputStream, Seekable {
-  protected
-    $pos   = 0,
-    $bytes = '';
+  protected $pos= 0;
+  protected $bytes;
 
   /**
    * Constructor
    *
-   * @param   string bytes
+   * @param   string $bytes
    */
   public function __construct($bytes) {
     $this->bytes= $bytes;
@@ -27,7 +21,7 @@ class MemoryInputStream extends \lang\Object implements InputStream, Seekable {
   /**
    * Read a string
    *
-   * @param   int limit default 8192
+   * @param   int $limit default 8192
    * @return  string
    */
   public function read($limit= 8192) {
@@ -40,16 +34,16 @@ class MemoryInputStream extends \lang\Object implements InputStream, Seekable {
    * Returns the number of bytes that can be read from this stream 
    * without blocking.
    *
+   * @return int
    */
   public function available() {
     return strlen($this->bytes) - $this->pos;
   }
 
   /**
-   * Close this buffer
+   * Close this output stream.
    *
-   * Note: Closing a memory stream has no effect!
-   *
+   * @return void
    */
   public function close() {
   }
@@ -57,8 +51,8 @@ class MemoryInputStream extends \lang\Object implements InputStream, Seekable {
   /**
    * Seek to a given offset
    *
-   * @param   int offset
-   * @param   int whence default SEEK_SET (one of SEEK_[SET|CUR|END])
+   * @param   int $offset
+   * @param   int $whence default SEEK_SET (one of SEEK_[SET|CUR|END])
    * @throws  io.IOException in case of error
    */
   public function seek($offset, $whence= SEEK_SET) {
@@ -72,7 +66,7 @@ class MemoryInputStream extends \lang\Object implements InputStream, Seekable {
   /**
    * Return current offset
    *
-   * @return  int offset
+   * @return  int
    */
   public function tell() {
     return $this->pos;

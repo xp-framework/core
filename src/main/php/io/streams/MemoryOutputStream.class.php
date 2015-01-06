@@ -1,23 +1,17 @@
-<?php namespace io\streams;/* This file is part of the XP framework's experiments
- *
- * $Id$
- */
-
-
+<?php namespace io\streams;
 
 /**
- * OuputStream that writes to memory
+ * OuputStream writes to memory, which can be retrieved via `getBytes()`
  *
- * @purpose  OuputStream implementation
+ * @test  xp://net.xp_framework.unittest.io.streams.MemoryOutputStreamTest
  */
 class MemoryOutputStream extends \lang\Object implements OutputStream {
-  protected
-    $bytes= '';
+  protected $bytes= '';
   
   /**
    * Write a string
    *
-   * @param   var arg
+   * @param  var $arg
    */
   public function write($arg) { 
     $this->bytes.= $arg;
@@ -26,6 +20,7 @@ class MemoryOutputStream extends \lang\Object implements OutputStream {
   /**
    * Flush this buffer. A NOOP for this implementation.
    *
+   * @return void
    */
   public function flush() { 
   }
@@ -40,17 +35,15 @@ class MemoryOutputStream extends \lang\Object implements OutputStream {
   }
 
   /**
-   * Close this buffer.
+   * Close this output stream.
    *
-   * Note: Closing a memory stream has no effect!
-   *
+   * @return void
    */
   public function close() {
   }
 
   /**
    * Destructor.
-   *
    */
   public function __destruct() {
     unset($this->bytes);
