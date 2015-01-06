@@ -1,10 +1,12 @@
 <?php namespace util;
 
+use lang\IllegalArgumentException;
+
 /**
  * Composite class for util.Properties; can be used to group together
  * arbitrary many Properties objects
  *
- * @test    xp://net.xp_framework.unittest.util.CompositePropertiesTest
+ * @test   xp://net.xp_framework.unittest.util.CompositePropertiesTest
  */
 class CompositeProperties extends \lang\Object implements PropertyAccess {
   protected $props  = [];
@@ -13,20 +15,23 @@ class CompositeProperties extends \lang\Object implements PropertyAccess {
   /**
    * Constructor
    *
-   * @param   util.Properties p
-   * @param   util.Properties[] s default []
+   * @param   util.PropertyAccess[] $properties
+   * @throws  lang.IllegalArgumentException if an empty array was passed
    */
-  public function __construct(array $properties) {
-    if (empty($properties)) throw new \lang\IllegalArgumentException(__CLASS__.' requires at least 1 util.Properties child.');
+  public function __construct(array $properties= []) {
+    if (empty($properties)) {
+      throw new IllegalArgumentException(__CLASS__.' requires at least 1 util.PropertyAccess child.');
+    }
+
     foreach ($properties as $p) $this->add($p);
   }
 
   /**
-   * Add another Properties
+   * Add properties
    *
-   * @param   util.Properties a
+   * @param   util.PropertyAccess a
    */
-  public function add(Properties $a) {
+  public function add(PropertyAccess $a) {
     foreach ($this->props as $p) {
       if ($p === $a) return;
       if ($p->equals($a)) return;
@@ -56,10 +61,8 @@ class CompositeProperties extends \lang\Object implements PropertyAccess {
    */
   private function _read($method, $section, $key, $default) {
     foreach ($this->props as $p) {
-      $res= call_user_func_array(array($p, $method), array($section, $key, \xp::null()));
-      if (\xp::null() !== $res) {
-        return $res;
-      }
+      $value= call_user_func([$p, $method], $section, $key, \xp::null());
+      if (\xp::null() !== $value) return $value;
     }
 
     return $default;
