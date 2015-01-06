@@ -83,6 +83,12 @@ class TextReader extends Reader {
     return 'iso-8859-1';
   }
 
+  /**
+   * Reads a given number of bytes
+   *
+   * @param  int $size
+   * @return string
+   */
   private function read0($size) {
     $len= $size - strlen($this->buf);
     if ($len > 0) {
