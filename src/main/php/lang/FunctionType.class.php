@@ -207,17 +207,26 @@ class FunctionType extends Type {
           return $return ? $r->getClosure(null) : true;
         }
       } else {
-        return $return ? function() use($r) {
-          $args= func_get_args();
-          $self= array_shift($args);
-          try {
-            return $r->invokeArgs($self, $args);
-          } catch (\ReflectionException $e) {
-            throw new IllegalArgumentException($e->getMessage());
+        if (null === $this->signature) {
+          $verify= null;
+        } else {
+          if (empty($this->signature) || !$this->signature[0]->isAssignableFrom(new XPClass($r->getDeclaringClass()))) {
+            return $false('Method '.\xp::nameOf($class).'::'.$method.' requires instance of class as first parameter');
           }
-        } : true;
+          $verify= array_slice($this->signature, 1);
+        }
+        if ($this->verify($r, $verify, $false, $r->getDeclaringClass())) {
+          return $return ? function() use($r) {
+            $args= func_get_args();
+            $self= array_shift($args);
+            try {
+              return $r->invokeArgs($self, $args);
+            } catch (\ReflectionException $e) {
+              throw new IllegalArgumentException($e->getMessage());
+            }
+          } : true;
+        }
       }
-      //return $false('Method '.\xp::nameOf($class).'::'.$method.' referenced as static method but not static');
     } else if (is_object($arg) && is_string($method)) {
       if (!method_exists($arg, $method)) return $false('Method '.\xp::nameOf(get_class($arg)).'::'.$method.' does not exist');
       $r= new \ReflectionMethod($arg, $method);

@@ -501,6 +501,78 @@ class FunctionTypeTest extends \unittest\TestCase {
   #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
   #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
   #])]
+  public function reference_to_instance_method_is_instance_with_optional_arg($value) {
+    $type= new FunctionType([XPClass::forName('unittest.TestCase'), Primitive::$BOOL], Primitive::$STRING);
+    $this->assertTrue($type->isInstance($value));
+  }
+
+  #[@test, @values([
+  #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
+  #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
+  #])]
+  public function reference_to_instance_method_is_not_instance_with_optional_arg_mismatch($value) {
+    $type= new FunctionType([XPClass::forName('unittest.TestCase'), Primitive::$INT], Primitive::$STRING);
+    $this->assertFalse($type->isInstance($value));
+  }
+
+  #[@test, @values([
+  #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
+  #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
+  #])]
+  public function reference_to_instance_method_is_instance_with_null_signature($value) {
+    $type= new FunctionType(null, Primitive::$STRING);
+    $this->assertTrue($type->isInstance($value));
+  }
+
+  #[@test, @values([
+  #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
+  #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
+  #])]
+  public function reference_to_instance_method_is_instance_with_parent_class($value) {
+    $type= new FunctionType([XPClass::forName('lang.Object')], Primitive::$STRING);
+    $this->assertTrue($type->isInstance($value));
+  }
+
+  #[@test, @values([
+  #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
+  #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
+  #])]
+  public function reference_to_instance_method_is_instance_with_interface($value) {
+    $type= new FunctionType([XPClass::forName('lang.Generic')], Primitive::$STRING);
+    $this->assertTrue($type->isInstance($value));
+  }
+
+  #[@test, @values([
+  #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
+  #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
+  #])]
+  public function reference_to_instance_method_is_instance_with_var($value) {
+    $type= new FunctionType([Type::$VAR], Primitive::$STRING);
+    $this->assertTrue($type->isInstance($value));
+  }
+
+  #[@test, @values([
+  #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
+  #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
+  #])]
+  public function reference_to_instance_method_is_not_instance_with_class_mismatch($value) {
+    $type= new FunctionType([XPClass::forName('lang.XPClass')], Primitive::$STRING);
+    $this->assertFalse($type->isInstance($value));
+  }
+
+  #[@test, @values([
+  #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
+  #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
+  #])]
+  public function reference_to_instance_method_is_not_instance_without_class($value) {
+    $type= new FunctionType([], Primitive::$STRING);
+    $this->assertFalse($type->isInstance($value));
+  }
+
+  #[@test, @values([
+  #  [['net.xp_framework.unittest.core.FunctionTypeTest', 'getName']],
+  #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
+  #])]
   public function reference_to_instance_method_can_be_cast($value) {
     $type= new FunctionType([XPClass::forName('unittest.TestCase')], Primitive::$STRING);
     $f= $type->cast($value);
