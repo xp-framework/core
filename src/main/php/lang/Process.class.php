@@ -209,12 +209,6 @@ class Process extends Object {
       }
     }
 
-    // On HHVM, always use PHP_BINARY constant, as achieving PHP command line compatibility
-    // is determined whether the binary name is "php".
-    if (defined('HHVM_VERSION')) {
-      $self->status['exe']= PHP_BINARY;
-    }
-
     $self->in= \xp::null();
     $self->out= \xp::null();
     $self->err= \xp::null();
