@@ -193,7 +193,7 @@ class FunctionType extends Type {
         $r= new \ReflectionMethod($class, '__construct');
         if (!$this->verify($r, $this->signature, $false, $r->getDeclaringClass())) return false;
       } else {
-        if (!$this->returns->isAssignableFrom(Type::forName(\xp::nameOf($class)))) return $false('Class type mismatch');
+        if (!$this->returns->isAssignableFrom(new XPClass($class))) return $false('Class type mismatch');
       }
       $c= new \ReflectionClass($class);
       if (!$c->isInstantiable()) return $false(\xp::nameOf($class).' cannot be instantiated');
