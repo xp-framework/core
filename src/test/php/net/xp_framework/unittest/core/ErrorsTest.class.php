@@ -111,11 +111,13 @@ class ErrorsTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.ClassCastException')]
   public function cannot_convert_object_to_string_yields_cce() {
-    (new Object()).'String';
+    $object= new Object();
+    $object.'String';
   }
 
   #[@test, @expect('lang.ClassCastException')]
   public function cannot_convert_array_to_string_yields_cce() {
-    [].'String';
+    $array= [];
+    $array.'String';
   }
 }
