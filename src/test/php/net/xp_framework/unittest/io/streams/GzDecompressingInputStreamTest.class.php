@@ -10,14 +10,8 @@ use io\streams\GzDecompressingInputStream;
  */
 class GzDecompressingInputStreamTest extends AbstractDecompressingInputStreamTest {
 
-  /**
-   * Get extension we depend on
-   *
-   * @return  string
-   */
-  protected function extension() {
-    return 'zlib';
-  }
+  /** @return string */
+  protected function filter() { return 'zlib.*'; }
 
   /**
    * Get stream

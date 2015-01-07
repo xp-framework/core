@@ -1,7 +1,5 @@
 <?php namespace io\streams;
 
-
-
 /**
  * InputStream that inflates 
  *

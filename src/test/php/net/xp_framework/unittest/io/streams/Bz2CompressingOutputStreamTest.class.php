@@ -2,7 +2,6 @@
 
 use io\streams\Bz2CompressingOutputStream;
 
-
 /**
  * TestCase
  *
@@ -11,14 +10,8 @@ use io\streams\Bz2CompressingOutputStream;
  */
 class Bz2CompressingOutputStreamTest extends AbstractCompressingOutputStreamTest {
 
-  /**
-   * Get extension we depend on
-   *
-   * @return  string
-   */
-  protected function extension() {
-    return 'bz2';
-  }
+  /** @return string */
+  protected function filter() { return 'bzip2.*'; }
 
   /**
    * Get stream

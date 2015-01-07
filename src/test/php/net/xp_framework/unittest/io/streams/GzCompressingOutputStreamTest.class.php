@@ -2,7 +2,6 @@
 
 use io\streams\GzCompressingOutputStream;
 
-
 /**
  * TestCase
  *
@@ -11,14 +10,8 @@ use io\streams\GzCompressingOutputStream;
  */
 class GzCompressingOutputStreamTest extends AbstractCompressingOutputStreamTest {
 
-  /**
-   * Get extension we depend on
-   *
-   * @return  string
-   */
-  protected function extension() {
-    return 'zlib';
-  }
+  /** @return string */
+  protected function filter() { return 'zlib.*'; }
 
   /**
    * Get stream

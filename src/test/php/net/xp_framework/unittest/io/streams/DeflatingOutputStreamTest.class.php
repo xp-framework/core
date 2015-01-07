@@ -2,7 +2,6 @@
 
 use io\streams\DeflatingOutputStream;
 
-
 /**
  * TestCase
  *
@@ -11,14 +10,8 @@ use io\streams\DeflatingOutputStream;
  */
 class DeflatingOutputStreamTest extends AbstractCompressingOutputStreamTest {
 
-  /**
-   * Get extension we depend on
-   *
-   * @return  string
-   */
-  protected function extension() {
-    return 'zlib';
-  }
+  /** @return string */
+  protected function filter() { return 'zlib.*'; }
 
   /**
    * Get stream

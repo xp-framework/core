@@ -2,7 +2,6 @@
 
 use io\streams\Bz2DecompressingInputStream;
 
-
 /**
  * TestCase
  *
@@ -11,14 +10,8 @@ use io\streams\Bz2DecompressingInputStream;
  */
 class Bz2DecompressingInputStreamTest extends AbstractDecompressingInputStreamTest {
 
-  /**
-   * Get extension we depend on
-   *
-   * @return  string
-   */
-  protected function extension() {
-    return 'bz2';
-  }
+  /** @return string */
+  protected function filter() { return 'bzip2.*'; }
 
   /**
    * Get stream
@@ -41,5 +34,4 @@ class Bz2DecompressingInputStreamTest extends AbstractDecompressingInputStreamTe
   protected function compress($in, $level) {
     return bzcompress($in, $level);
   }
-
 }

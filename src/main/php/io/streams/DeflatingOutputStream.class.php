@@ -1,7 +1,5 @@
 <?php namespace io\streams;
 
-
-
 /**
  * OuputStream that deflates 
  *

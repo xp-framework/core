@@ -10,11 +10,11 @@ use io\streams\MemoryInputStream;
 abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
 
   /**
-   * Get extension we depend on
+   * Get filter we depend on
    *
    * @return  string
    */
-  protected abstract function extension();
+  protected abstract function filter();
 
   /**
    * Get stream
@@ -34,13 +34,12 @@ abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
   protected abstract function compress($in, $level);
 
   /**
-   * Setup method. Ensure extension we depend on is available
-   *
+   * Setup method. Ensure filter we depend on is available
    */
   public function setUp() {
-    $depend= $this->extension();
-    if (!\lang\Runtime::getInstance()->extensionAvailable($depend)) {
-      throw new \unittest\PrerequisitesNotMetError(ucfirst($depend).' support not available', null, array('ext/'.$depend));
+    $depend= $this->filter();
+    if (!in_array($depend, stream_get_filters())) {
+      throw new \unittest\PrerequisitesNotMetError(ucfirst($depend).' stream filter not available', null, [$depend]);
     }
   }
 
