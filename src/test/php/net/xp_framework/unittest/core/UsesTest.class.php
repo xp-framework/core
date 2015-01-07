@@ -208,7 +208,7 @@ class UsesTest extends TestCase {
       0,
       ['array(0) {', '}'],
       [''],
-      $this->run('uses("lang.reflect.Proxy", "lang.reflect.Proxy"); var_dump(xp::$errors);')
+      $this->run('xp::gc(); uses("lang.reflect.Proxy", "lang.reflect.Proxy"); var_dump(xp::$errors);')
     );
   }
 
@@ -218,7 +218,7 @@ class UsesTest extends TestCase {
       0,
       ['array(0) {', '}'],
       [''],
-      $this->run('uses("lang.reflect.InvocationHandler", "lang.reflect.InvocationHandler"); var_dump(xp::$errors);')
+      $this->run('xp::gc(); uses("lang.reflect.InvocationHandler", "lang.reflect.InvocationHandler"); var_dump(xp::$errors);')
     );
   }
 }
