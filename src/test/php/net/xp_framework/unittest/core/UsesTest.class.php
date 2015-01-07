@@ -21,6 +21,27 @@ class UsesTest extends TestCase {
   }
 
   /**
+   * Runs given code in a new runtime
+   *
+   * @param   string code
+   * @return  var[] an array with three elements: exitcode, stdout and stderr contents
+   */
+  protected function run($code) {
+    with ($out= $err= '', $p= Runtime::getInstance()->newInstance(NULL, 'class', 'xp.runtime.Evaluate', [])); {
+      $p->in->write($code);
+      $p->in->close();
+
+      // Read output
+      while ($b= $p->out->read()) { $out.= $b; }
+      while ($b= $p->err->read()) { $err.= $b; }
+
+      // Close child process
+      $exitv= $p->close();
+    }
+    return array($exitv, explode("\n", rtrim($out)), explode("\n", rtrim($err)));
+  }
+
+  /**
    * Issues a uses() command inside a new runtime for every class given
    * and returns a line indicating success or failure for each of them.
    *
@@ -29,31 +50,20 @@ class UsesTest extends TestCase {
    * @return  var[] an array with three elements: exitcode, stdout and stderr contents
    */
   protected function useAllOf($uses, $decl= '') {
-    with ($out= $err= '', $p= Runtime::getInstance()->newInstance(NULL, 'class', 'xp.runtime.Evaluate', [])); {
-      $p->in->write($decl.'
-        ClassLoader::registerPath(\''.strtr($this->getClass()->getClassLoader()->path, '\\', '/').'\');
-        $errors= 0;
-        foreach (array("'.implode('", "', $uses).'") as $class) {
-          try {
-            uses($class);
-            echo "+OK ", $class, "\n";
-          } catch (Throwable $e) {
-            echo "-ERR ", $class, ": ", $e->getClassName(), "\n";
-            $errors++;
-          }
+    return $this->run($decl.'
+      ClassLoader::registerPath(\''.strtr($this->getClass()->getClassLoader()->path, '\\', '/').'\');
+      $errors= 0;
+      foreach (array("'.implode('", "', $uses).'") as $class) {
+        try {
+          uses($class);
+          echo "+OK ", $class, "\n";
+        } catch (Throwable $e) {
+          echo "-ERR ", $class, ": ", $e->getClassName(), "\n";
+          $errors++;
         }
-        exit($errors);
-      ');
-      $p->in->close();
-
-      // Read output
-        while ($b= $p->out->read()) { $out.= $b; }
-      while ($b= $p->err->read()) { $err.= $b; }
-
-      // Close child process
-        $exitv= $p->close();
-    }
-    return array($exitv, explode("\n", rtrim($out)), explode("\n", rtrim($err)));
+      }
+      exit($errors);
+    ');
   }
 
   /**
