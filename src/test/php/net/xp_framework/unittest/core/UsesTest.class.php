@@ -161,4 +161,64 @@ class UsesTest extends TestCase {
       $this->useAllOf(array('net.xp_framework.unittest.bootstrap.A'), 'declare(ticks=1)')
     );
   }
+
+  #[@test]
+  public function uses_makes_classes_accessible_by_their_long_names() {
+    $this->assertResult(
+      0,
+      ['bool(true)'],
+      [''],
+      $this->run('uses("lang.reflect.Proxy"); var_dump(class_exists("lang\\\\reflect\\\\Proxy", false));')
+    );
+  }
+
+  #[@test]
+  public function uses_makes_interfaces_accessible_by_their_long_names() {
+    $this->assertResult(
+      0,
+      ['bool(true)'],
+      [''],
+      $this->run('uses("lang.reflect.InvocationHandler"); var_dump(interface_exists("lang\\\\reflect\\\\InvocationHandler", false));')
+    );
+  }
+
+  #[@test]
+  public function uses_makes_classes_accessible_by_their_short_names() {
+    $this->assertResult(
+      0,
+      ['bool(true)'],
+      [''],
+      $this->run('uses("lang.reflect.Proxy"); var_dump(class_exists("Proxy", false));')
+    );
+  }
+
+  #[@test]
+  public function uses_makes_interfaces_accessible_by_their_short_names() {
+    $this->assertResult(
+      0,
+      ['bool(true)'],
+      [''],
+      $this->run('uses("lang.reflect.InvocationHandler"); var_dump(interface_exists("InvocationHandler", false));')
+    );
+  }
+
+  #[@test]
+  public function uses_same_class_twice_does_not_create_problem() {
+    $this->assertResult(
+      0,
+      ['array(0) {', '}'],
+      [''],
+      $this->run('uses("lang.reflect.Proxy", "lang.reflect.Proxy"); var_dump(xp::$errors);')
+    );
+  }
+
+  #[@test]
+  public function uses_same_interface_twice_does_not_create_problem() {
+    $this->assertResult(
+      0,
+      ['array(0) {', '}'],
+      [''],
+      $this->run('uses("lang.reflect.InvocationHandler", "lang.reflect.InvocationHandler"); var_dump(xp::$errors);')
+    );
+  }
 }
