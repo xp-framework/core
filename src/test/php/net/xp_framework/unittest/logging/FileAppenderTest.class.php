@@ -80,13 +80,13 @@ class FileAppenderTest extends AppenderTest {
         return true;
       }
 
-      public static function stream_metadata($path, $option, $value) {
+      public function stream_metadata($path, $option, $value) {
         if (!isset(self::$buffer[$path])) return false;
         self::$buffer[$path][3][$option]= $value;
         return true;
       }
 
-      public static function url_stat($path) {
+      public function url_stat($path) {
         if (!isset(self::$buffer[$path])) return false;
         return array(
           "size" => strlen(self::$buffer[$path][2]),
