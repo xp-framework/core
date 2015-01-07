@@ -392,7 +392,7 @@ function uses() {
     }
 
     $short= substr($str, strrpos($str, '.') + 1);
-    if (!isset(\xp::$cn[$short])) {
+    if (!class_exists($short, false) && !interface_exists($short, false)) {
       \xp::$cn[$short]= $str;
       class_alias($class, $short);
     }

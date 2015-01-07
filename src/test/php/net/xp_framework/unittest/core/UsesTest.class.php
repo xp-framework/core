@@ -1,22 +1,23 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\TestCase;
 use lang\Runtime;
-
+use lang\Process;
+use unittest\PrerequisitesNotMetError;
 
 /**
- * TestCase for uses() statement
- *
+ * TestCase for `uses()` statement
  */
-class UsesTest extends TestCase {
+class UsesTest extends \unittest\TestCase {
 
   /**
    * Skips tests if process execution has been disabled.
+   *
+   * @return void
    */
   #[@beforeClass]
   public static function verifyProcessExecutionEnabled() {
-    if (\lang\Process::$DISABLED) {
-      throw new \unittest\PrerequisitesNotMetError('Process execution disabled', NULL, array('enabled'));
+    if (Process::$DISABLED) {
+      throw new PrerequisitesNotMetError('Process execution disabled', NULL, array('enabled'));
     }
   }
 
@@ -202,13 +203,13 @@ class UsesTest extends TestCase {
     );
   }
 
-  #[@test]
-  public function uses_same_class_twice_does_not_create_problem() {
+  #[@test, @values(['lang.reflect.Proxy', 'net.xp_framework.unittest.bootstrap.A'])]
+  public function uses_same_class_twice_does_not_create_problem($class) {
     $this->assertResult(
       0,
       ['array(0) {', '}'],
       [''],
-      $this->run('xp::gc(); uses("lang.reflect.Proxy", "lang.reflect.Proxy"); var_dump(xp::$errors);')
+      $this->run('xp::gc(); uses("'.$class.'", "'.$class.'"); var_dump(xp::$errors);')
     );
   }
 
