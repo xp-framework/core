@@ -9,12 +9,12 @@ class ExtensionAvailableTest extends \unittest\TestCase {
 
   #[@test]
   public function can_create() {
-    new ExtensionAvailable('core');
+    new ExtensionAvailable('standard');
   }
 
   #[@test]
-  public function verify_core_extension() {
-    $this->assertTrue((new ExtensionAvailable('core'))->verify());
+  public function verify_standard_extension() {
+    $this->assertTrue((new ExtensionAvailable('standard'))->verify());
   }
 
   #[@test]
