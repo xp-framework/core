@@ -1,22 +1,23 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\TestCase;
 use lang\Runtime;
-
+use lang\Process;
+use unittest\PrerequisitesNotMetError;
 
 /**
- * TestCase for uses() statement
- *
+ * TestCase for `uses()` statement
  */
-class UsesTest extends TestCase {
+class UsesTest extends \unittest\TestCase {
 
   /**
    * Skips tests if process execution has been disabled.
+   *
+   * @return void
    */
   #[@beforeClass]
   public static function verifyProcessExecutionEnabled() {
-    if (\lang\Process::$DISABLED) {
-      throw new \unittest\PrerequisitesNotMetError('Process execution disabled', NULL, array('enabled'));
+    if (Process::$DISABLED) {
+      throw new PrerequisitesNotMetError('Process execution disabled', NULL, array('enabled'));
     }
   }
 
@@ -159,6 +160,66 @@ class UsesTest extends TestCase {
       array('+OK net.xp_framework.unittest.bootstrap.A'),
       array(''),
       $this->useAllOf(array('net.xp_framework.unittest.bootstrap.A'), 'declare(ticks=1)')
+    );
+  }
+
+  #[@test]
+  public function uses_makes_classes_accessible_by_their_long_names() {
+    $this->assertResult(
+      0,
+      ['bool(true)'],
+      [''],
+      $this->run('uses("lang.reflect.Proxy"); var_dump(class_exists("lang\\\\reflect\\\\Proxy", false));')
+    );
+  }
+
+  #[@test]
+  public function uses_makes_interfaces_accessible_by_their_long_names() {
+    $this->assertResult(
+      0,
+      ['bool(true)'],
+      [''],
+      $this->run('uses("lang.reflect.InvocationHandler"); var_dump(interface_exists("lang\\\\reflect\\\\InvocationHandler", false));')
+    );
+  }
+
+  #[@test]
+  public function uses_makes_classes_accessible_by_their_short_names() {
+    $this->assertResult(
+      0,
+      ['bool(true)'],
+      [''],
+      $this->run('uses("lang.reflect.Proxy"); var_dump(class_exists("Proxy", false));')
+    );
+  }
+
+  #[@test]
+  public function uses_makes_interfaces_accessible_by_their_short_names() {
+    $this->assertResult(
+      0,
+      ['bool(true)'],
+      [''],
+      $this->run('uses("lang.reflect.InvocationHandler"); var_dump(interface_exists("InvocationHandler", false));')
+    );
+  }
+
+  #[@test, @values(['lang.reflect.Proxy', 'net.xp_framework.unittest.bootstrap.A'])]
+  public function uses_same_class_twice_does_not_create_problem($class) {
+    $this->assertResult(
+      0,
+      ['array(0) {', '}'],
+      [''],
+      $this->run('xp::gc(); uses("'.$class.'", "'.$class.'"); var_dump(xp::$errors);')
+    );
+  }
+
+  #[@test]
+  public function uses_same_interface_twice_does_not_create_problem() {
+    $this->assertResult(
+      0,
+      ['array(0) {', '}'],
+      [''],
+      $this->run('xp::gc(); uses("lang.reflect.InvocationHandler", "lang.reflect.InvocationHandler"); var_dump(xp::$errors);')
     );
   }
 }

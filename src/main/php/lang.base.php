@@ -390,6 +390,12 @@ function uses() {
       }
       call_user_func([$class, '__import'], $scope);
     }
+
+    $short= substr($str, strrpos($str, '.') + 1);
+    if (!class_exists($short, false) && !interface_exists($short, false)) {
+      \xp::$cn[$short]= $str;
+      class_alias($class, $short);
+    }
   }
 }
 // }}}
