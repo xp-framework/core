@@ -542,16 +542,25 @@ function newinstance($spec, $args, $def= null) {
     $annotations= '';
   }
 
-  // Check for an anonymous generic 
+  // Create unique name
+  $n= "\xb7".(++$u);
+  if (false === strrpos($spec, '.')) {
+    $spec= xp::nameOf($spec);
+  }
+
+  // Handle generics, PHP types and all others.
   if (strstr($spec, '<')) {
     $class= Type::forName($spec);
     $type= $class->literal();
     $p= strrpos(substr($type, 0, strpos($type, "\xb7\xb7")), "\xb7");
     $generic= xp::$meta[$class->getName()]['class'][DETAIL_GENERIC];
+  } else if (0 === strncmp($spec, 'php.', 4)) {
+    $type= $spec= substr($spec, 4);
+    $p= false;
+    $generic= null;
   } else {
-    false === strrpos($spec, '.') && $spec= xp::nameOf($spec);
     try {
-      $type= 0 === strncmp($spec, 'php.', 4) ? substr($spec, 4) : xp::$loader->loadClass0($spec);
+      $type= xp::$loader->loadClass0($spec);
     } catch (\lang\ClassLoadingException $e) {
       xp::error($e->getMessage());
     }
@@ -559,12 +568,10 @@ function newinstance($spec, $args, $def= null) {
     $generic= null;
   }
 
-  // Create unique name
-  $n= "\xb7".(++$u);
   if (false !== $p) {
-    $spec= strtr(substr($type, 0, $p), "\xb7", '.').'.'.substr($type, $p+ 1).$n;
+    $name= strtr(substr($type, 0, $p), "\xb7", '.').'.'.substr($type, $p+ 1).$n;
   } else {
-    $spec= strtr($type, '\\', '.').$n;
+    $name= strtr($type, '\\', '.').$n;
   }
 
   if (interface_exists($type)) {
@@ -572,17 +579,21 @@ function newinstance($spec, $args, $def= null) {
   } else {
     $decl= 'class %s extends \\'.$type;
   }
-  $type= \lang\ClassLoader::defineType($annotations.$spec, $decl, $def);
+  $defined= \lang\ClassLoader::defineType($annotations.$name, $decl, $def);
 
-  if ($generic) {
-    \lang\XPClass::detailsForClass($spec);
-    xp::$meta[$spec]['class'][DETAIL_GENERIC]= $generic;
+  if (false === strpos($type, '\\')) {
+    xp::$cn[$type.$n]= $spec.$n;
   }
 
-  if ($type->hasConstructor()) {
-    return $type->getConstructor()->newInstance($args);
+  if ($generic) {
+    \lang\XPClass::detailsForClass($name);
+    xp::$meta[$name]['class'][DETAIL_GENERIC]= $generic;
+  }
+
+  if ($defined->hasConstructor()) {
+    return $defined->getConstructor()->newInstance($args);
   } else {
-    return $type->newInstance();
+    return $defined->newInstance();
   }
 }
 // }}}

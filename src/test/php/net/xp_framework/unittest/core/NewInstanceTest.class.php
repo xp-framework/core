@@ -213,6 +213,24 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
+  #[@test, @values(['php.IteratorAggregate', 'IteratorAggregate'])]
+  public function packageOfNewInstancedPHPClass() {
+    $i= newinstance('php.IteratorAggregate', [], '{ public function getIterator() { /* Empty */ }}');
+    $this->assertEquals(
+      Package::forName(''),
+      $i->getClass()->getPackage()
+    );
+  }
+
+  #[@test, @values(['net.xp_framework.unittest.core.UnqualifiedClass', 'UnqualifiedClass'])]
+  public function packageOfNewInstancedUnqualifiedClass($class) {
+    $i= newinstance($class, [], '{}');
+    $this->assertEquals(
+      Package::forName('net.xp_framework.unittest.core'),
+      $i->getClass()->getPackage()
+    );
+  }
+
   #[@test]
   public function packageOfNewInstancedFullyQualifiedClass() {
     $i= newinstance('net.xp_framework.unittest.core.PackagedClass', [], '{}');
@@ -222,9 +240,9 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
-  public function packageOfNewInstancedNamespacedClass() {
-    $i= newinstance('net.xp_framework.unittest.core.NamespacedClass', [], '{}');
+  #[@test, @values(['net.xp_framework.unittest.core.NamespacedClass', 'net\\xp_framework\\unittest\\core\\NamespacedClass'])]
+  public function packageOfNewInstancedNamespacedClass($class) {
+    $i= newinstance($class, [], '{}');
     $this->assertEquals(
       Package::forName('net.xp_framework.unittest.core'),
       $i->getClass()->getPackage()

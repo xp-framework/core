@@ -1,4 +1,4 @@
-<?php $package= 'net.xp_framework.unittest.core';
+<?php
 
 uses('lang.Object');
 
@@ -7,6 +7,6 @@ uses('lang.Object');
  *
  * @see   xp://net.xp_framework.unittest.core.NewInstanceTest
  */
-class net·xp_framework·unittest·core·PackagedClass extends \lang\Object {
+class UnqualifiedClass extends \lang\Object {
   
 }
