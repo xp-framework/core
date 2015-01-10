@@ -6,6 +6,6 @@ if (version_compare(PHP_VERSION, '5.4.0', '<')) {
 }
 
 $p= max(strrpos(__FILE__, DIRECTORY_SEPARATOR), strrpos(__FILE__, '?'));
-require substr(__FILE__, 0, $p + 1).'lang.base.php';
+require_once substr(__FILE__, 0, $p + 1).'lang.base.php';
 
 \lang\ClassLoader::getDefault();
