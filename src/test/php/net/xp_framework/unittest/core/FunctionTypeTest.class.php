@@ -620,13 +620,13 @@ class FunctionTypeTest extends \unittest\TestCase {
   public function casting_invokeable() {
     $type= new FunctionType([Type::$VAR], Type::$VAR);
     $inv= new FunctionTypeInvokeable();
-    $this->assertEquals($inv, $type->cast($inv));
+    $this->assertInstanceOf('Closure', $type->cast($inv));
   }
 
   #[@test]
   public function new_instance_of_invokeable() {
     $type= new FunctionType([Type::$VAR], Type::$VAR);
     $inv= new FunctionTypeInvokeable();
-    $this->assertEquals($inv, $type->newInstance($inv));
+    $this->assertInstanceOf('Closure', $type->newInstance($inv));
   }
 }
