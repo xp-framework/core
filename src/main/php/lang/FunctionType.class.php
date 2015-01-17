@@ -165,7 +165,7 @@ class FunctionType extends Type {
         if ($this->verify($r, $this->signature, $false)) {
           return $return ? $r->getClosure() : true;
         }
-      } else {;
+      } else {
         return $false('Function "'.$arg.'" does not exist');
       }
     } else if (is_array($arg) && 2 === sizeof($arg)) {
