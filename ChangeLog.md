@@ -120,6 +120,7 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added support for `::class` in annotations - xp-framework/core#52 (@thekid)
 * Made io.streams.MemoryOutputStream implement io.streams.Seekable - (@thekid)
 * Implemented support for expanding environment variables in property files.
   See PR #42 and xp-framework/xp-framework#365 (@thekid, @johannes85)
