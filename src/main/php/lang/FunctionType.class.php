@@ -170,6 +170,11 @@ class FunctionType extends Type {
       }
     } else if (is_array($arg) && 2 === sizeof($arg)) {
       return $this->verifiedMethod($arg[0], $arg[1], $false, $return);
+    } else if (method_exists($arg, '__invoke')) {
+      $inv= new \ReflectionMethod($arg, '__invoke');
+      if ($this->verify($inv, $this->signature, $false)) {
+        return $return ? $inv->getClosure($arg) : true;
+      }
     } else {
       return $false('Unsupported type');
     }
