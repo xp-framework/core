@@ -732,7 +732,7 @@ class XPClass extends Type {
       $classloader= ClassLoader::getDefault();
     }
 
-    return $classloader->loadClass((string)$name);
+    return $classloader->loadClass(strtr($name, '\\', '.'));
   }
 
   /**
