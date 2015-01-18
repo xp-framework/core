@@ -67,6 +67,33 @@ class TypeTest extends TestCase {
   }
 
   #[@test]
+  public function objectTypeLiteral() {
+    $this->assertEquals(XPClass::forName('lang.Object'), Type::forName('lang\\Object'));
+  }
+
+  #[@test]
+  public function objectTypeLiteralLoadedIfNecessary() {
+    $literal= 'net\\xp_framework\\unittest\\reflection\\TypeRefByLiteralLoadedOnDemand';
+
+    Type::forName($literal);
+    $this->assertTrue(class_exists($literal, false));
+  }
+
+  #[@test]
+  public function objectTypeLoadedIfNecessary() {
+    $literal= 'net\\xp_framework\\unittest\\reflection\\TypeRefByNameLoadedOnDemand';
+    $name= 'net.xp_framework.unittest.reflection.TypeRefByNameLoadedOnDemand';
+
+    Type::forName($name);
+    $this->assertTrue(class_exists($literal, false));
+  }
+
+  #[@test]
+  public function closureType() {
+    $this->assertEquals(new XPClass('Closure'), Type::forName('Closure'));
+  }
+
+  #[@test]
   public function generic() {
     $this->assertEquals(
       XPClass::forName('util.collections.Vector')->newGenericType([Primitive::$STRING]),
