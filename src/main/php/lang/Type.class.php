@@ -118,7 +118,8 @@ class Type extends Object {
       'mixed'     => 'var',
       '*'         => 'var',
       'array'     => 'var[]',
-      'resource'  => 'var'
+      'resource'  => 'var',
+      ''          => '{null}'
     ];
     static $primitives= [
       'string'    => true,
@@ -142,7 +143,6 @@ class Type extends Object {
       return self::$VAR;
     } else if ('void' === $type) {
       return self::$VOID;
-      return $type;
     } else if (0 === substr_compare($type, '[]', -2)) {
       return new ArrayType(substr($type, 0, -2));
     } else if (0 === substr_compare($type, '[:', 0, 2)) {

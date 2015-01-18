@@ -141,6 +141,11 @@ class TypeTest extends TestCase {
     $this->assertEquals(Type::$VAR, Type::forName('resource'));
   }
 
+  #[@test, @expect('lang.IllegalStateException'), @values([null, ''])]
+  public function forNameAndEmptyString($value) {
+    Type::forName($value);
+  }
+
   /** @return var[] */
   protected function instances() {
     return [$this, null, false, true, '', 0, -1, 0.0, [[]], [['one' => 'two']], $this];
