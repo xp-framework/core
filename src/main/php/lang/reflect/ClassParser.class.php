@@ -42,7 +42,8 @@ class ClassParser extends \lang\Object {
   }
 
   /**
-   * Resolves a class member, which is either a field or a constant.
+   * Resolves a class member, which is either a field, a class constant
+   * or the `ClassName::class` syntax, which returns the class' literal.
    *
    * @param  lang.XPClass $class
    * @param  var[] $token A token as returned by `token_get_all()`
@@ -67,6 +68,8 @@ class ClassParser extends \lang\Object {
           $field->getName()
         ));
       }
+    } else if (T_CLASS === $token[0]) {
+      return $class->literal();
     } else {
       return $class->getConstant($token[1]);
     }

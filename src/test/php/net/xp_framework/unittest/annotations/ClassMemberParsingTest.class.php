@@ -2,6 +2,7 @@
 
 use net\xp_framework\unittest\annotations\fixture\Namespaced;
 use lang\types\String;
+use lang\XPClass;
 
 /**
  * Tests the XP Framework's annotation parsing implementation
@@ -60,5 +61,25 @@ class ClassMemberParsingTest extends \unittest\TestCase {
   #[@test, @values([\net\xp_framework\unittest\annotations\ClassMemberParsingTest::$value])]
   public function static_member_via_fully_qualified_current($value) {
     $this->assertEquals('static', $value);
+  }
+
+  #[@test, @values([
+  #  self::class,
+  #  ClassMemberParsingTest::class,
+  #  \net\xp_framework\unittest\annotations\ClassMemberParsingTest::class
+  #])]
+  public function class_constant_referencing_this_class($value) {
+    $this->assertEquals($this->getClass()->literal(), $value);
+  }
+
+  #[@test, @values([
+  #  Namespaced::class,
+  #  \net\xp_framework\unittest\annotations\fixture\Namespaced::class
+  #])]
+  public function class_constant_referencing_foreign_class($value) {
+    $this->assertEquals(
+      XPClass::forName('net.xp_framework.unittest.annotations.fixture.Namespaced')->literal(),
+      $value
+    );
   }
 }
