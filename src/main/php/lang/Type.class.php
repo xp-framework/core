@@ -19,9 +19,35 @@ class Type extends Object {
     self::$VAR= new self('var', null);
     self::$VOID= new self('void', null);
 
-    // Used for PHP type hints only
-    self::$ARRAY= new self('array', null);
-    self::$CALLABLE= new self('callable', null);
+    self::$ARRAY= eval('namespace lang; class NativeArrayType extends Type {
+      static function __static() { }
+      public function isInstance($value) { return is_array($value); }
+      public function newInstance($value= null) {
+        return null === $value ? [] : (array)$value;
+      }
+      public function cast($value) {
+        return null === $value ? null : (array)$value;
+      }
+      public function isAssignableFrom($type) {
+        return $type instanceof self || $type instanceof ArrayType || $type instanceof MapType;
+      }
+    } return new NativeArrayType("array", []);');
+
+    self::$CALLABLE= eval('namespace lang; class NativeCallableType extends Type {
+      static function __static() { }
+      public function isInstance($value) { return is_callable($value); }
+      public function newInstance($value= null) {
+        if (is_callable($value)) return $value;
+        throw new IllegalAccessException("Cannot instantiate callable type from ".\xp::typeOf($value));
+      }
+      public function cast($value) {
+        if (null === $value || is_callable($value)) return $value;
+        throw new ClassCastException("Cannot cast ".\xp::typeOf($value)." to the callable type");
+      }
+      public function isAssignableFrom($type) {
+        return $type instanceof self || $type instanceof FunctionType;
+      }
+    } return new NativeCallableType("callable", null);');
   }
 
   /**
