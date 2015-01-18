@@ -263,6 +263,14 @@ class XPClassTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function forName_supports_class_literals() {
+    $this->assertEquals(
+      $this->fixture,
+      XPClass::forName('net\\xp_framework\\unittest\\reflection\\TestClass')
+    );
+  }
+
+  #[@test]
   public function getClasses_returns_a_list_of_class_objects() {
     $this->assertInstanceOf('lang.XPClass[]', XPClass::getClasses());
   }
