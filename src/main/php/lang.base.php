@@ -25,10 +25,11 @@ trait __xp {
   // {{{ invocation handler
   public function __call($name, $args) {
     $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
-    $self= $t[1]['class'];
+    $c= defined('HHVM_VERSION');
+    $self= $t[1 - $c]['class'];
+    $scope= isset($t[2 - $c]['class']) ? $t[2 - $c]['class'] : $t[3 - $c]['class'];
 
     // Check scope for extension methods
-    $scope= isset($t[2]['class']) ? $t[2]['class'] : $t[3]['class'];
     if (null != $scope && isset(\xp::$ext[$scope])) {
       foreach (\xp::$ext[$scope] as $type => $class) {
         if (!$this instanceof $type || !method_exists($class, $name)) continue;
