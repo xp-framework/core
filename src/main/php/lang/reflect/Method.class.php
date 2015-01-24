@@ -1,7 +1,5 @@
 <?php namespace lang\reflect;
 
-
-
 /**
  * Represents a class method
  *
@@ -17,28 +15,25 @@ class Method extends Routine {
    * on the specified object with the specified parameters.
    *
    * Example:
-   * <code>
-   *   $method= XPClass::forName('lang.Object')->getMethod('toString');
-   *
-   *   var_dump($method->invoke(new Object()));
-   * </code>
+   * ```php
+   * $method= XPClass::forName('lang.Object')->getMethod('toString');
+   * $str= $method->invoke(new Object());
+   * ```
    *
    * Example (passing arguments)
-   * <code>
-   *   $method= XPClass::forName('lang.types.String')->getMethod('concat');
-   *
-   *   var_dump($method->invoke(new String('Hello'), ['World']));
-   * </code>
+   * ```php
+   * $method= XPClass::forName('lang.types.String')->getMethod('concat');
+   * $str= $method->invoke(new String('Hello'), ['World']);
+   * ```
    *
    * Example (static invokation):
-   * <code>
-   *   $method= XPClass::forName('util.log.Logger')->getMethod('getInstance');
+   * ```php
+   * $method= XPClass::forName('util.log.Logger')->getMethod('getInstance');
+   * $log= $method->invoke(null);
+   * ```
    *
-   *   var_dump($method->invoke(NULL));
-   * </code>
-   *
-   * @param   lang.Object obj
-   * @param   var[] args default []
+   * @param   lang.Object $obj
+   * @param   var[] $args default []
    * @return  var
    * @throws  lang.IllegalArgumentException in case the passed object is not an instance of the declaring class
    * @throws  lang.IllegalAccessException in case the method is not public or if it is abstract
