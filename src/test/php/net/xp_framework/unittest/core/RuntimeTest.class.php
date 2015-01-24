@@ -1,6 +1,5 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\TestCase;
 use lang\Runtime;
 
 /**
@@ -8,8 +7,21 @@ use lang\Runtime;
  *
  * @see   xp://lang.Runtime
  */
-class RuntimeTest extends TestCase {
-  
+class RuntimeTest extends \unittest\TestCase {
+
+  /**
+   * Assertion helper for `asArguments()` calls.
+   *
+   * @param  string[] $expected
+   * @param  lang.RuntimeOptions $actual
+   */
+  private function assertArguments($expected, $actual) {
+    if (defined('HHVM_VERSION')) {
+      array_unshift($expected, '--php');
+    }
+    $this->assertEquals($expected, $actual->asArguments());
+  }
+
   #[@test]
   public function getExecutable() {
     $exe= Runtime::getInstance()->getExecutable();
@@ -73,14 +85,14 @@ class RuntimeTest extends TestCase {
   #[@test]
   public function doubleDashEndsOptions() {
     $startup= Runtime::parseArguments(array('-q', '--', 'tools/xar.php'));
-    $this->assertEquals(array('-q'), $startup['options']->asArguments());
+    $this->assertArguments(array('-q'), $startup['options']);
     $this->assertEquals('tools/xar.php', $startup['bootstrap']);
   }
 
   #[@test]
   public function scriptEndsOptions() {
     $startup= Runtime::parseArguments(array('-q', 'tools/xar.php'));
-    $this->assertEquals(array('-q'), $startup['options']->asArguments());
+    $this->assertArguments(array('-q'), $startup['options']);
     $this->assertEquals('tools/xar.php', $startup['bootstrap']);
   }
 
