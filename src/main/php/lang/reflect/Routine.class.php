@@ -245,7 +245,13 @@ class Routine extends \lang\Object {
    */
   public function hasAnnotations() {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
-    return $details ? !empty($details[DETAIL_ANNOTATIONS]) : false;
+    if ($details && $details[DETAIL_ANNOTATIONS]) {
+      return true;
+    } else if (defined('HHVM_VERSION')) {
+      return !empty($this->_reflect->getAttributes());
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -255,7 +261,21 @@ class Routine extends \lang\Object {
    */
   public function getAnnotations() {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
-    return $details ? $details[DETAIL_ANNOTATIONS] : [];
+    if ($details && $details[DETAIL_ANNOTATIONS]) {
+      return $details[DETAIL_ANNOTATIONS];
+    } else if (defined('HHVM_VERSION')) {
+      $annotations= [];
+      foreach (array_reverse($this->_reflect->getAttributes()) as $attr => $value) {
+        if (empty($value)) {
+          $annotations[$attr]= null;
+        } else {
+          $annotations[$attr]= $value[0];
+        }
+      }
+      return $annotations;
+    } else {
+      return [];
+    }
   }
   
   /**

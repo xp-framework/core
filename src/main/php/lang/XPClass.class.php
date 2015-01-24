@@ -546,7 +546,13 @@ class XPClass extends Type {
    */
   public function hasAnnotations() {
     $details= self::detailsForClass($this->name);
-    return $details ? !empty($details['class'][DETAIL_ANNOTATIONS]) : false;
+    if ($details && $details['class'][DETAIL_ANNOTATIONS]) {
+      return true;
+    } else if (defined('HHVM_VERSION')) {
+      return !empty($this->_reflect->getAttributes());
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -556,7 +562,21 @@ class XPClass extends Type {
    */
   public function getAnnotations() {
     $details= self::detailsForClass($this->name);
-    return $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
+    if ($details && $details['class'][DETAIL_ANNOTATIONS]) {
+      return $details['class'][DETAIL_ANNOTATIONS];
+    } else if (defined('HHVM_VERSION')) {
+      $annotations= [];
+      foreach (array_reverse($this->_reflect->getAttributes()) as $attr => $value) {
+        if (empty($value)) {
+          $annotations[$attr]= null;
+        } else {
+          $annotations[$attr]= $value[0];
+        }
+      }
+      return $annotations;
+    } else {
+      return [];
+    }
   }
   
   /**

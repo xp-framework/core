@@ -93,4 +93,30 @@ class HackLanguageSupportTest extends \unittest\TestCase {
   public function method_int_param_type_name() {
     $this->assertEquals('int', $this->testClass()->getMethod('returnsNothing')->getParameter(0)->getTypeName());
   }
+
+  #[@test]
+  public function class_annotations() {
+    $this->assertEquals(
+      ['action' => 'Actionable'],
+      $this->testClass()->getAnnotations()
+    );
+  }
+
+  #[@test]
+  public function class_has_annotations() {
+    $this->assertTrue($this->testClass()->hasAnnotations());
+  }
+
+  #[@test]
+  public function method_annotations() {
+    $this->assertEquals(
+      ['test' => null, 'limit' => 1.0, 'expect' => ['class' => 'lang.IllegalArgumentExcepton', 'withMessage' => '/*Blam*/']],
+      $this->testClass()->getMethod('testAnnotations')->getAnnotations()
+    );
+  }
+
+  #[@test]
+  public function method_has_annotations() {
+    $this->assertTrue($this->testClass()->getMethod('testAnnotations')->hasAnnotations());
+  }
 }
