@@ -563,7 +563,7 @@ class XPClass extends Type {
     if ($details && $details['class'][DETAIL_ANNOTATIONS]) {
       return true;
     } else if (defined('HHVM_VERSION')) {
-      return !empty($this->_reflect->getAttributes());
+      return sizeof($this->_reflect->getAttributes()) > 0;
     } else {
       return false;
     }
