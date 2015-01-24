@@ -3,6 +3,7 @@
 use lang\Type;
 use lang\Primitive;
 use lang\ArrayType;
+use lang\XPClass;
 
 /**
  * TestCase for HACK language feature support
@@ -40,5 +41,10 @@ class HackLanguageSupportTest extends \unittest\TestCase {
   #[@test]
   public function array_of_string_type() {
     $this->assertEquals(new ArrayType('string'), Type::forName('array<HH\string>'));
+  }
+
+  #[@test]
+  public function nullable_type() {
+    $this->assertEquals(XPClass::forName('lang.Object'), Type::forName('?lang\Object'));
   }
 }
