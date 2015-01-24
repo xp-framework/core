@@ -74,8 +74,14 @@ class Parameter extends \lang\Object {
     if (!($details= \lang\XPClass::detailsForMethod($this->_details[0], $this->_details[1]))) return \lang\Type::$VAR;
     if (!isset($details[DETAIL_ARGUMENTS][$this->_details[2]])) {
       if (defined('HHVM_VERSION')) {
-        $t= $this->_reflect->getTypeText();
-        return $t ? \lang\Type::forName($t)->getName() : 'var';
+        if ($t= $this->_reflect->getTypeText()) {
+          try {
+            return \lang\Type::forName($t)->getName();
+          } catch (\lang\Throwable $e) {
+            // Fall through
+          }
+        }
+        return 'var';
       } else {
         return 'var';
       }
