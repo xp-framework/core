@@ -11,6 +11,7 @@ use util\log\layout\PatternLayout;
  * @see   xp://util.log.FileAppender
  */
 class FileAppenderTest extends AppenderTest {
+  private $tz;
 
   /**
    * Defines stream wrapper
@@ -96,6 +97,25 @@ class FileAppenderTest extends AppenderTest {
       }
     }');
     stream_wrapper_register('test', $sw->literal());
+  }
+
+  /**
+   * Sets up test case.
+   *
+   * @return void
+   */
+  public function setUp() {
+    $this->tz= date_default_timezone_get();
+    date_default_timezone_set('Europe/Berlin');
+  }
+
+  /**
+   * Tears down test
+   *
+   * @return void
+   */
+  public function tearDown() {
+    date_default_timezone_set($this->tz);
   }
 
   /**
