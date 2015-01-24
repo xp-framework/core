@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Added experimental support [HHVM](http://hhvm.com/) support. The version
+  tested successfully while writing this is 3.6.0-dev.
+  (@thekid)
 * Added PHP 7.0 forward compatibility for the Catchable "Call to a member 
   function" [functionality](https://github.com/php/php-src/pull/847)
   and throw a `NullPointerException`.
