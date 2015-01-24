@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\TestCase;
+use unittest\PrerequisitesNotMetError;
+use net\xp_framework\unittest\IgnoredOnHHVM;
 use lang\Runtime;
 use lang\Process;
 
@@ -9,7 +10,7 @@ use lang\Process;
  *
  * @see  xp://lang.Runtime
  */
-class RuntimeInstantiationTest extends TestCase {
+class RuntimeInstantiationTest extends \unittest\TestCase {
 
   /**
    * Skips tests if process execution has been disabled.
@@ -17,7 +18,7 @@ class RuntimeInstantiationTest extends TestCase {
   #[@beforeClass]
   public static function verifyProcessExecutionEnabled() {
     if (Process::$DISABLED) {
-      throw new \unittest\PrerequisitesNotMetError('Process execution disabled', NULL, array('enabled'));
+      throw new PrerequisitesNotMetError('Process execution disabled', null, ['enabled']);
     }
   }
 
@@ -55,7 +56,7 @@ class RuntimeInstantiationTest extends TestCase {
     return $out;
   }
 
-  #[@test]
+  #[@test, @action(new IgnoredOnHHVM())]
   public function loadLoadedLibrary() {
     $this->assertEquals(
       '+OK No exception thrown',
@@ -70,7 +71,7 @@ class RuntimeInstantiationTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[@test, @action(new IgnoredOnHHVM())]
   public function loadNonExistantLibrary() {
     $this->assertEquals(
       '+OK lang.ElementNotFoundException',
@@ -85,7 +86,7 @@ class RuntimeInstantiationTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[@test, @action(new IgnoredOnHHVM())]
   public function loadLibraryWithoutEnableDl() {
     $this->assertEquals(
       '+OK lang.IllegalAccessException',
