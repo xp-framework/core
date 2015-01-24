@@ -21,6 +21,7 @@ class FileAppenderTest extends AppenderTest {
       public static $buffer= [];
       private static $meta= array(STREAM_META_ACCESS => 0666);
       private $handle;
+      public $context;
 
       public function stream_open($path, $mode, $options, $opened_path) {
         if (strstr($mode, "r")) {
