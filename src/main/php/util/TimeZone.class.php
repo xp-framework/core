@@ -1,17 +1,16 @@
 <?php namespace util;
 
-
+use lang\IllegalArgumentException;
 
 /**
  * Time zone calculation
  *
- * <code>
- *   $tz= new TimeZone('Europe/Berlin');
- *   printf("Offset is %s\n", $tz->getOffset());  // -0600
- * </code>
+ * ```php
+ * $tz= new TimeZone('Europe/Berlin');
+ * printf("Offset is %s\n", $tz->getOffset());  // -0600
+ * ```
  *
  * @test    xp://net.xp_framework.unittest.util.TimeZoneTest
- * @ext     datetime
  * @see     php://datetime
  * @see     php://timezones
  */
@@ -25,26 +24,18 @@ class TimeZone extends \lang\Object {
    * @throws  lang.IllegalArgumentException if timezone is unknown
    */
   public function __construct($tz) {
-    switch (true) {
-      case is_string($tz): {
-        $this->tz= timezone_open($tz); 
-        break;
+    if (null === $tz) {
+      $this->tz= timezone_open(date_default_timezone_get());
+    } else if (is_string($tz)) {
+      try {
+        $this->tz= new \DateTimeZone($tz);
+      } catch (\Exception $e) {
+        throw new IllegalArgumentException('Invalid timezone identifier given: '.$e->getMessage());
       }
-      
-      case is_null($tz): {
-        $this->tz= timezone_open(date_default_timezone_get()); 
-        break;
-      }
-      
-      case $tz instanceof \DateTimeZone: {
-        $this->tz= $tz;
-      }
-    }
-    
-    if (!$this->tz instanceof \DateTimeZone) {
-      $e= new \lang\IllegalArgumentException('Invalid timezone identifier given: "'.$tz.'"');
-      \xp::gc(__FILE__);
-      throw $e;
+    } else if ($tz instanceof \DateTimeZone) {
+      $this->tz= $tz;
+    } else {
+      throw new IllegalArgumentException('Expecting NULL, a string or a DateTimeZone instance, have '.\xp::typeOf($tz));
     }
   }
   
