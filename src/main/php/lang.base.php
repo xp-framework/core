@@ -5,7 +5,8 @@ trait __xp {
 
   // {{{ static invocation handler
   public static function __callStatic($name, $args) {
-    $self= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'];
+    $c= defined('HHVM_VERSION');
+    $self= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1 - $c]['class'];
     throw new \lang\Error('Call to undefined static method '.\xp::nameOf($self).'::'.$name.'()');
   }
   // }}}
