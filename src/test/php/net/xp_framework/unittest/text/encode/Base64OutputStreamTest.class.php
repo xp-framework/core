@@ -1,6 +1,6 @@
 <?php namespace net\xp_framework\unittest\text\encode;
 
-use net\xp_framework\unittest\IgnoredOnHHVM;
+use unittest\actions\VerifyThat;
 use io\streams\MemoryOutputStream;
 use text\encode\Base64OutputStream;
 
@@ -9,7 +9,7 @@ use text\encode\Base64OutputStream;
  *
  * @see   xp://text.encode.Base64OutputStream
  */
-#[@action(new IgnoredOnHHVM())]
+#[@action(new VerifyThat(function() { return in_array("convert.*", stream_get_filters()); }))]
 class Base64OutputStreamTest extends \unittest\TestCase {
 
   /**
