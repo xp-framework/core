@@ -211,7 +211,7 @@ class Path extends \lang\Object {
   public function isAbsolute() {
     return '' !== $this->path && (
       DIRECTORY_SEPARATOR === $this->path{0} ||
-      2 === sscanf($this->path, '%c%*[:]', $drive)
+      2 === sscanf($this->path, '%c%[:]', $drive, $colon)
     );
   }
 
