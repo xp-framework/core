@@ -585,8 +585,14 @@ class MethodsTest extends TestCase {
    */
   #[@test]
   public function arrayAccessMethod() {
+    if (defined('HHVM_VERSION')) {
+      $expected= 'public abstract var offsetGet(var $index)';
+    } else {
+      $expected= 'public abstract var offsetGet(var $offset)';
+    }
+
     $this->assertEquals(
-      'public abstract var offsetGet(var $offset)', 
+      $expected,
       \lang\XPClass::forName('util.collections.Map')->getMethod('offsetGet')->toString()
     );
   }
