@@ -1,5 +1,7 @@
 <?php namespace util;
 
+use lang\IllegalArgumentException;
+
 /**
  * The class Date represents a specific instant in time.
  *
@@ -47,7 +49,7 @@ class Date extends \lang\Object {
       try {
         $this->date= $timezone ? new \DateTime($in, $timezone->getHandle()) : new \DateTime($in);
       } catch (\Exception $e) {
-        throw new \lang\IllegalArgumentException('Given argument is neither a timestamp nor a well-formed timestring: '.\xp::stringOf($in));
+        throw new IllegalArgumentException('Given argument is neither a timestamp nor a well-formed timestring: '.\xp::stringOf($in));
       }
     }
   }
@@ -125,7 +127,7 @@ class Date extends \lang\Object {
     if (false === @date_date_set($date, $year, $month, $day) || 
       false === @date_time_set($date, $hour, $minute, $second)
     ) {
-      throw new \lang\IllegalArgumentException(sprintf(
+      throw new IllegalArgumentException(sprintf(
         'One or more given arguments are not valid: $year=%s, $month=%s, $day= %s, $hour=%s, $minute=%s, $second=%s',
         $year,
         $month,
@@ -382,6 +384,6 @@ class Date extends \lang\Object {
     // a) hard to implement and never / seldom used in the framework
     // b) locale-dependent, this should not be supported in any
     //    way by the framework.
-    throw new \lang\IllegalArgumentException('Illegal date format token: "'.$matches[1].'"');
+    throw new IllegalArgumentException('Illegal date format token: "'.$matches[1].'"');
   }
 }
