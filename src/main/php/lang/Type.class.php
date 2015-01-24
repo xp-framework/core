@@ -150,7 +150,8 @@ class Type extends Object {
       'HH\string' => 'string',
       'HH\float'  => 'double',
       'HH\bool'   => 'bool',
-      'HH\void'   => 'void'
+      'HH\void'   => 'void',
+      'HH\mixed'  => 'var'
     ];
     static $primitives= [
       'string'    => true,

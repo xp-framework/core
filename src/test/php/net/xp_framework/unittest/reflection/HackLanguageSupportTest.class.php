@@ -12,7 +12,11 @@ use lang\ArrayType;
  */
 class HackLanguageSupportTest extends \unittest\TestCase {
 
-  
+  #[@test]
+  public function mixed_type() {
+    $this->assertEquals(Type::$VAR, Type::forName('HH\mixed'));
+  }
+
   #[@test]
   public function string_type() {
     $this->assertEquals(Primitive::$STRING, Type::forName('HH\string'));
