@@ -5,6 +5,7 @@ use lang\Primitive;
 use lang\ArrayType;
 use lang\MapType;
 use lang\XPClass;
+use unittest\PrerequisitesNotMetError;
 
 /**
  * TestCase for HACK language feature support
@@ -13,6 +14,20 @@ use lang\XPClass;
  * @see    xp://lang.Type
  */
 class HackLanguageSupportTest extends \unittest\TestCase {
+
+  /**
+   * Returns a fixture for integration tests
+   *
+   * @return lang.XPClass
+   * @throws unittest.PrerequisitesNotMetError
+   */
+  private function testClass() {
+    if (!defined('HHVM_VERSION')) {
+      throw new PrerequisitesNotMetError('Only runs inside HHVM', null, PHP_VERSION);
+    }
+
+    return XPClass::forName('net.xp_framework.unittest.reflection.HackLanguageSupport');
+  }
 
   #[@test]
   public function mixed_type() {
@@ -52,5 +67,30 @@ class HackLanguageSupportTest extends \unittest\TestCase {
   #[@test]
   public function nullable_type() {
     $this->assertEquals(XPClass::forName('lang.Object'), Type::forName('?lang\Object'));
+  }
+
+  #[@test]
+  public function method_string_return_type() {
+    $this->assertEquals(Primitive::$STRING, $this->testClass()->getMethod('returnsString')->getReturnType());
+  }
+
+  #[@test]
+  public function method_string_return_type_name() {
+    $this->assertEquals('string', $this->testClass()->getMethod('returnsString')->getReturnTypeName());
+  }
+
+  #[@test]
+  public function method_void_return_type() {
+    $this->assertEquals(Type::$VOID, $this->testClass()->getMethod('returnsNothing')->getReturnType());
+  }
+
+  #[@test]
+  public function method_int_param_type() {
+    $this->assertEquals(Primitive::$INT, $this->testClass()->getMethod('returnsNothing')->getParameter(0)->getType());
+  }
+
+  #[@test]
+  public function method_int_param_type_name() {
+    $this->assertEquals('int', $this->testClass()->getMethod('returnsNothing')->getParameter(0)->getTypeName());
   }
 }

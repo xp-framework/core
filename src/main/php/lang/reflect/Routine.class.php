@@ -144,7 +144,17 @@ class Routine extends \lang\Object {
    */
   public function getReturnTypeName() {
     if (!($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName()))) return 'var';
-    return null === $details[DETAIL_RETURNS] ? 'var' : ltrim($details[DETAIL_RETURNS], '&');
+
+    if (null === $details[DETAIL_RETURNS]) {
+      if (defined('HHVM_VERSION')) {
+        $t= $this->_reflect->getReturnTypeText();
+        return $t ? \lang\Type::forName($t)->getName() : 'var';
+      } else {
+        return 'var';
+      }
+    } else {
+      return ltrim($details[DETAIL_RETURNS], '&');
+    }
   }
 
   /**

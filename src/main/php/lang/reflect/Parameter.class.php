@@ -51,13 +51,14 @@ class Parameter extends \lang\Object {
       ));
     }
 
-    if (
-      !($details= \lang\XPClass::detailsForMethod($this->_details[0], $this->_details[1])) ||  
-      !isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
-    ) {   // Unknown or unparseable, return ANYTYPE
-      return \lang\Type::$VAR;
-    }
-    if ('self' === ($t= ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&'))) {
+    if (!($details= \lang\XPClass::detailsForMethod($this->_details[0], $this->_details[1]))) return \lang\Type::$VAR;
+    if (!isset($details[DETAIL_ARGUMENTS][$this->_details[2]])) {
+      if (defined('HHVM_VERSION')) {
+        return \lang\Type::forName($this->_reflect->getTypeText() ?: 'var');
+      } else {
+        return \lang\Type::$VAR;
+      }
+    } else if ('self' === ($t= ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&'))) {
       return new \lang\XPClass($this->_details[0]);
     } else {
       return \lang\Type::forName($t);
@@ -70,13 +71,17 @@ class Parameter extends \lang\Object {
    * @return  string
    */
   public function getTypeName() {
-    if (
-      !($details= \lang\XPClass::detailsForMethod($this->_details[0], $this->_details[1])) ||  
-      !isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
-    ) {   // Unknown or unparseable, return ANYTYPE
-      return 'var';
+    if (!($details= \lang\XPClass::detailsForMethod($this->_details[0], $this->_details[1]))) return \lang\Type::$VAR;
+    if (!isset($details[DETAIL_ARGUMENTS][$this->_details[2]])) {
+      if (defined('HHVM_VERSION')) {
+        $t= $this->_reflect->getTypeText();
+        return $t ? \lang\Type::forName($t)->getName() : 'var';
+      } else {
+        return 'var';
+      }
+    } else {
+      return ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&');
     }
-    return ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&');
   }
 
   /**
