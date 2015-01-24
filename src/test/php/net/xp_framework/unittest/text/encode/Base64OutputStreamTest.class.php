@@ -1,16 +1,16 @@
 <?php namespace net\xp_framework\unittest\text\encode;
 
-use unittest\TestCase;
+use net\xp_framework\unittest\IgnoredOnHHVM;
 use io\streams\MemoryOutputStream;
 use text\encode\Base64OutputStream;
-
 
 /**
  * Test base64 encoder
  *
  * @see   xp://text.encode.Base64OutputStream
  */
-class Base64OutputStreamTest extends TestCase {
+#[@action(new IgnoredOnHHVM())]
+class Base64OutputStreamTest extends \unittest\TestCase {
 
   /**
    * Test single write
