@@ -3,6 +3,7 @@
 use lang\Type;
 use lang\Primitive;
 use lang\ArrayType;
+use lang\MapType;
 use lang\XPClass;
 
 /**
@@ -41,6 +42,11 @@ class HackLanguageSupportTest extends \unittest\TestCase {
   #[@test]
   public function array_of_string_type() {
     $this->assertEquals(new ArrayType('string'), Type::forName('array<HH\string>'));
+  }
+
+  #[@test]
+  public function map_of_int_type() {
+    $this->assertEquals(new MapType('int'), Type::forName('array<string, int>'));
   }
 
   #[@test]
