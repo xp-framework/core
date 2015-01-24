@@ -119,7 +119,7 @@ class RuntimeOptionsTest extends TestCase {
   public function argumentsWithSetting() {
     $options= new RuntimeOptions(); 
     $options->withSetting('enable_dl', 0);
-    $this->assertEquals(array('-denable_dl=0'), $options->asArguments());
+    $this->assertEquals(array('-d', 'enable_dl=0'), $options->asArguments());
   }
 
   #[@test]
@@ -127,7 +127,7 @@ class RuntimeOptionsTest extends TestCase {
     $options= new RuntimeOptions(); 
     $options->withSetting('extension', array('php_xsl.dll', 'php_sybase_ct.dll'));
     $this->assertEquals(
-      array('-dextension=php_xsl.dll', '-dextension=php_sybase_ct.dll'), 
+      array('-d', 'extension=php_xsl.dll', '-d', 'extension=php_sybase_ct.dll'), 
       $options->asArguments()
     );
   }
@@ -148,7 +148,7 @@ class RuntimeOptionsTest extends TestCase {
       ->withSetting('extension', array('php_xsl.dll', 'php_sybase_ct.dll'))
     ;
     $this->assertEquals(
-      array('-q', '-n', '-denable_dl=1', '-dextension=php_xsl.dll', '-dextension=php_sybase_ct.dll'), 
+      array('-q', '-n', '-d', 'enable_dl=1', '-d', 'extension=php_xsl.dll', '-d', 'extension=php_sybase_ct.dll'), 
       $options->asArguments()
     );
   }
