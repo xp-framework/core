@@ -170,4 +170,24 @@ class HackLanguageSupportTest extends \unittest\TestCase {
       // OK
     }
   }
+
+  #[@test]
+  public function typed_field_type() {
+    $this->assertEquals(Primitive::$BOOL, $this->testClass()->getField('typed')->getType());
+  }
+
+  #[@test]
+  public function typed_field_type_name() {
+    $this->assertEquals('bool', $this->testClass()->getField('typed')->getTypeName());
+  }
+
+  #[@test]
+  public function untyped_field_type() {
+    $this->assertEquals(Type::$VAR, $this->testClass()->getField('untyped')->getType());
+  }
+
+  #[@test]
+  public function untyped_field_type_name() {
+    $this->assertEquals('var', $this->testClass()->getField('untyped')->getTypeName());
+  }
 }

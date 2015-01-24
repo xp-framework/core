@@ -41,10 +41,14 @@ class Field extends \lang\Object {
    * @return  lang.Type
    */
   public function getType() {
-    if ($details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName())) {
+    $details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
+    if ($details && isset($details[DETAIL_ANNOTATIONS]['type'])) {
       if (isset($details[DETAIL_ANNOTATIONS]['type'])) return \lang\Type::forName($details[DETAIL_ANNOTATIONS]['type']);
+    } else if (defined('HHVM_VERSION')) {
+      return \lang\Type::forName($this->_reflect->getTypeText() ?: 'var');
+    } else {
+      return \lang\Type::$VAR;
     }
-    return \lang\Type::$VAR;
   }
 
   /**
@@ -53,8 +57,17 @@ class Field extends \lang\Object {
    * @return  string
    */
   public function getTypeName() {
-    if ($details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName())) {
+    $details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
+    if ($details && isset($details[DETAIL_ANNOTATIONS]['type'])) {
       if (isset($details[DETAIL_ANNOTATIONS]['type'])) return $details[DETAIL_ANNOTATIONS]['type'];
+    } else if (defined('HHVM_VERSION')) {
+      if ($t= $this->_reflect->getTypeText()) {
+        try {
+          return \lang\Type::forName($t)->getName();
+        } catch (\lang\Throwable $e) {
+          // Fall through
+        }
+      }
     }
     return 'var';
   }
