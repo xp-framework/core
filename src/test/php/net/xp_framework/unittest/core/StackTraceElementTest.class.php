@@ -167,7 +167,7 @@ class StackTraceElementTest extends \unittest\TestCase {
   #[@test]
   public function to_string_with_function_arg() {
     $this->assertEquals(
-      self::NEW_FIXTURE_METHOD."(php.Closure{}) [line 1 of Test.class.php] Test\n",
+      self::NEW_FIXTURE_METHOD."(<function()>) [line 1 of Test.class.php] Test\n",
       $this->newFixtureWith(array(function() { }))->toString()
     );
   }

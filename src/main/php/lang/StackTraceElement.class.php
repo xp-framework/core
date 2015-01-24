@@ -57,6 +57,8 @@ class StackTraceElement extends Object {
       for ($j= 0, $a= sizeof($this->args); $j < $a; $j++) {
         if (is_array($this->args[$j])) {
           $args[]= 'array['.sizeof($this->args[$j]).']';
+        } else if ($this->args[$j] instanceof \Closure) {
+          $args[]= \xp::stringOf($this->args[$j]);
         } else if (is_object($this->args[$j])) {
           $args[]= $this->qualifiedClassName(get_class($this->args[$j])).'{}';
         } else if (is_string($this->args[$j])) {
