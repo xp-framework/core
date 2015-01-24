@@ -23,7 +23,7 @@ class MissingMethodsTest extends \unittest\TestCase {
     call_user_func(array($f->newInstance(), 'run'));
   }
 
-  #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method MissingMethodsTest_BaseFixture::run()/')]
+  #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method .+::run()/')]
   public function missingParentParentMethodInvocation() {
     $b= \lang\ClassLoader::defineClass('MissingMethodsTest_BaseFixture', 'lang.Object', [], '{}');
     $c= \lang\ClassLoader::defineClass('MissingMethodsTest_ChildFixture', $b->getName(), [], '{
@@ -59,7 +59,7 @@ class MissingMethodsTest extends \unittest\TestCase {
     call_user_func(array($f->literal(), 'run'));
   }
 
-  #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined static method MissingMethodsTest_StaticBaseFixture::run()/')]
+  #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined static method .+::run()/')]
   public function missingStaticParentParentMethodInvocation() {
     $b= \lang\ClassLoader::defineClass('MissingMethodsTest_StaticBaseFixture', 'lang.Object', [], '{}');
     $c= \lang\ClassLoader::defineClass('MissingMethodsTest_StaticChildFixture', $b->getName(), [], '{
