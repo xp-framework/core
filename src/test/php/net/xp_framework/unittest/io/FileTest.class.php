@@ -42,10 +42,9 @@ class FileTest extends TestCase {
   #[@test]
   public function hashCodesNotEqualForTwoFileHandles() {
     $fn= $this->fileKnownToExist();
-    $this->assertNotEquals(
-      (new File(fopen($fn, 'r')))->hashCode(),
-      (new File(fopen($fn, 'r')))->hashCode()
-    );
+    $a= new File(fopen($fn, 'r'));
+    $b= new File(fopen($fn, 'r'));
+    $this->assertNotEquals($a->hashCode(), $b->hashCode());
   }
 
   #[@test]
