@@ -3,6 +3,7 @@
 use lang\Type;
 use lang\Primitive;
 use lang\XPClass;
+use lang\ElementNotFoundException;
 
 /**
  * TestCase for instance reflection
@@ -11,6 +12,21 @@ use lang\XPClass;
  * @see   xp://net.xp_framework.unittest.core.generics.TypeLookup
  */
 class ImplementationTest extends \unittest\TestCase {
+
+  /**
+   * Locate interface by a given name
+   *
+   * @param  lang.XPClass $class
+   * @param  string $name
+   * @return lang.XPClass
+   * @throws lang.ElementNotFoundException
+   */
+  private function interfaceNamed($class, $name) {
+    foreach ($class->getInterfaces() as $iface) {
+      if (strstr($iface->getName(), $name)) return $iface;
+    }
+    throw new ElementNotFoundException('Class '.$class->getName().' does not implement '.$name);
+  }
 
   #[@test]
   public function typeDictionaryInstance() {
@@ -56,7 +72,7 @@ class ImplementationTest extends \unittest\TestCase {
     $fixture= create('new net.xp_framework.unittest.core.generics.TypeDictionary<string>');
     $this->assertEquals(
       array(XPClass::forName('lang.Type'), Primitive::$STRING), 
-      this($fixture->getClass()->getInterfaces(), 0)->genericArguments()
+      $this->interfaceNamed($fixture->getClass(), 'net.xp_framework.unittest.core.generics.IDictionary')->genericArguments()
     );
   }
 
@@ -83,7 +99,7 @@ class ImplementationTest extends \unittest\TestCase {
     $fixture= Type::forName('net.xp_framework.unittest.core.generics.AbstractTypeDictionary');
     $this->assertEquals(
       array('K', 'V'), 
-      this($fixture->getInterfaces(), 1)->genericComponents()
+      $this->interfaceNamed($fixture, 'net.xp_framework.unittest.core.generics.IDictionary')->genericComponents()
     );
   }
 
@@ -92,7 +108,7 @@ class ImplementationTest extends \unittest\TestCase {
     $fixture= Type::forName('net.xp_framework.unittest.core.generics.AbstractTypeDictionary<string>');
     $this->assertEquals(
       array(XPClass::forName('lang.Type'), Primitive::$STRING), 
-      this($fixture->getInterfaces(), 1)->genericArguments()
+      $this->interfaceNamed($fixture, 'net.xp_framework.unittest.core.generics.IDictionary')->genericArguments()
     );
   }
 
