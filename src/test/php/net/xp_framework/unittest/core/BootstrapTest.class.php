@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use net\xp_framework\unittest\IgnoredOnHHVM;
 use lang\Runtime;
 
 /**
@@ -52,12 +53,12 @@ class BootstrapTest extends \unittest\TestCase {
     $this->assertEquals(255, $r[0], 'exitcode');
   }    
   
-  #[@test]
+  #[@test, @action(new IgnoredOnHHVM())]
   public function fatalsForEmptyTimezone() {
     $this->runWithTz('');
   }
 
-  #[@test]
+  #[@test, @action(new IgnoredOnHHVM())]
   public function fatalsForInvalidTimezone() {
     $this->runWithTz('Foo/bar');
   }
