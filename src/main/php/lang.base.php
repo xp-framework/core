@@ -673,6 +673,8 @@ class import {
 // }}}
 
 // {{{ main
+error_reporting(E_ALL);
+set_error_handler('__error');
 date_default_timezone_set(ini_get('date.timezone')) || xp::error('[xp::core] date.timezone not configured properly.');
 
 define('MODIFIER_STATIC',       1);
@@ -681,9 +683,6 @@ define('MODIFIER_FINAL',        4);
 define('MODIFIER_PUBLIC',     256);
 define('MODIFIER_PROTECTED',  512);
 define('MODIFIER_PRIVATE',   1024);
-
-error_reporting(E_ALL);
-set_error_handler('__error');
 
 global $paths;
 if (!isset($paths)) $paths= array(__DIR__.DIRECTORY_SEPARATOR, '.'.DIRECTORY_SEPARATOR);
