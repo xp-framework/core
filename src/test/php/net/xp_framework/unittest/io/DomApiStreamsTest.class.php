@@ -1,20 +1,20 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use unittest\TestCase;
+use unittest\PrerequisitesNotMetError;
 use io\streams\MemoryInputStream;
 use io\streams\MemoryOutputStream;
 use io\streams\Streams;
 use lang\Runtime;
-
+use net\xp_framework\unittest\IgnoredOnHHVM;
 
 /**
  * TestCase
  *
- * @see      php://DOMDocument
- * @see      xp://io.streams.Streams
- * @purpose  Unittest
+ * @see   php://DOMDocument
+ * @see   xp://io.streams.Streams
  */
-class DomApiStreamsTest extends TestCase {
+#[@action(new IgnoredOnHHVM())]
+class DomApiStreamsTest extends \unittest\TestCase {
 
   /**
    * Sets up this unittest 
@@ -23,7 +23,7 @@ class DomApiStreamsTest extends TestCase {
    */
   public function setUp() {
     if (!Runtime::getInstance()->extensionAvailable('dom')) {
-      throw new \unittest\PrerequisitesNotMetError('DOM extension not loaded', null, array('ext/dom'));
+      throw new PrerequisitesNotMetError('DOM extension not loaded', null, array('ext/dom'));
     }
   }
  

@@ -89,8 +89,13 @@ class ChannelWrapper extends \lang\Object {
    * @return  int length
    */
   public function stream_write($data) {
-    self::$streams[$this->channel].= $data;
-    $this->offset+= strlen($data);
+    $l= strlen($data);
+    if ($this->offset < strlen($this->bytes)) {
+      self::$streams[$this->channel]= substr_replace(self::$streams[$this->channel], $data, $this->offset, $l);
+    } else {
+      self::$streams[$this->channel].= $data;
+    }
+    $this->offset+= $l;
   }
   
   /**
@@ -112,5 +117,29 @@ class ChannelWrapper extends \lang\Object {
    */
   public function stream_eof() {
     return $this->offset >= strlen(self::$streams[$this->channel])- 1;
+  }
+
+  /**
+   * Callback for fseek
+   *
+   * @param   int offset
+   * @param   int whence
+   * @return  bool
+   */
+  public function stream_seek($offset, $whence) {
+    switch ($whence) {
+      case SEEK_SET: $this->offset= $offset; break;
+      case SEEK_CUR: $this->offset+= $offset; break;
+      case SEEK_END: $this->offset= strlen(self::$streams[$this->channel]) + $offset; break;
+    }
+  }
+
+  /**
+   * Callback for ftell
+   *
+   * @return  int position
+   */
+  public function stream_tell() {
+    return $this->offset;
   }
 }

@@ -5,7 +5,8 @@ trait __xp {
 
   // {{{ static invocation handler
   public static function __callStatic($name, $args) {
-    $self= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'];
+    $c= defined('HHVM_VERSION');
+    $self= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1 - $c]['class'];
     throw new \lang\Error('Call to undefined static method '.\xp::nameOf($self).'::'.$name.'()');
   }
   // }}}
@@ -25,10 +26,11 @@ trait __xp {
   // {{{ invocation handler
   public function __call($name, $args) {
     $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
-    $self= $t[1]['class'];
+    $c= defined('HHVM_VERSION');
+    $self= $t[1 - $c]['class'];
+    $scope= isset($t[2 - $c]['class']) ? $t[2 - $c]['class'] : $t[3 - $c]['class'];
 
     // Check scope for extension methods
-    $scope= isset($t[2]['class']) ? $t[2]['class'] : $t[3]['class'];
     if (null != $scope && isset(\xp::$ext[$scope])) {
       foreach (\xp::$ext[$scope] as $type => $class) {
         if (!$this instanceof $type || !method_exists($class, $name)) continue;
@@ -671,6 +673,8 @@ class import {
 // }}}
 
 // {{{ main
+error_reporting(E_ALL);
+set_error_handler('__error');
 date_default_timezone_set(ini_get('date.timezone')) || xp::error('[xp::core] date.timezone not configured properly.');
 
 define('MODIFIER_STATIC',       1);
@@ -679,9 +683,6 @@ define('MODIFIER_FINAL',        4);
 define('MODIFIER_PUBLIC',     256);
 define('MODIFIER_PROTECTED',  512);
 define('MODIFIER_PRIVATE',   1024);
-
-error_reporting(E_ALL);
-set_error_handler('__error');
 
 global $paths;
 if (!isset($paths)) $paths= array(__DIR__.DIRECTORY_SEPARATOR, '.'.DIRECTORY_SEPARATOR);

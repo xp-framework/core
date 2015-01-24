@@ -1,13 +1,13 @@
 <?php namespace net\xp_framework\unittest\util;
  
-use unittest\TestCase;
 use util\Date;
 use util\TimeZone;
+use net\xp_framework\unittest\IgnoredOnHHVM;
 
 /**
  * Tests Date class
  */
-class DateTest extends TestCase {
+class DateTest extends \unittest\TestCase {
   public
     $nowTime  = 0,
     $nowDate  = null,
@@ -462,7 +462,7 @@ class DateTest extends TestCase {
    * Test Date::create function with empty string's as arguments
    *
    */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new IgnoredOnHHVM())]
   public function dateCreateWithAllInvalidArguments() {
     Date::create('', '', '', '', '', '');
   }
@@ -471,7 +471,7 @@ class DateTest extends TestCase {
    * Test Date::create function with empty string's as arguments
    *
    */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new IgnoredOnHHVM())]
   public function dateCreateWithInvalidArgumentsExceptTimeZone() {
     Date::create('', '', '', '', '', '', new TimeZone('UTC'));
   }

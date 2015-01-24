@@ -75,11 +75,6 @@ class StringOfTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function php_Directory_representation() {
-    $this->assertEquals("php.Directory {\n}", \xp::stringOf(new \Directory('.')));
-  }
-
-  #[@test]
   public function resource_representation() {
     $fd= fopen('php://stdin', 'r');
     $this->assertTrue((bool)preg_match('/resource\(type= stream, id= [0-9]+\)/', \xp::stringOf($fd)));

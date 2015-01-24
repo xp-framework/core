@@ -1,16 +1,16 @@
 <?php namespace net\xp_framework\unittest\text\encode;
 
-use unittest\TestCase;
+use unittest\actions\VerifyThat;
 use io\streams\MemoryInputStream;
 use text\encode\Base64InputStream;
-
 
 /**
  * Test base64 decoder
  *
  * @see   xp://text.encode.Base64InputStream
  */
-class Base64InputStreamTest extends TestCase {
+#[@action(new VerifyThat(function() { return in_array("convert.*", stream_get_filters()); }))]
+class Base64InputStreamTest extends \unittest\TestCase {
 
   /**
    * Test single read

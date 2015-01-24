@@ -2,6 +2,7 @@
 
 use lang\Runnable;
 use lang\Runtime;
+use lang\Process;
 use lang\reflect\Package;
 use lang\ClassLoader;
 use unittest\actions\VerifyThat;
@@ -14,7 +15,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   /** @return bool */
   protected function processExecutionEnabled() {
-    return !\lang\Process::$DISABLED;
+    return !Process::$DISABLED;
   }
 
   /**
@@ -171,7 +172,7 @@ class NewInstanceTest extends \unittest\TestCase {
     ');
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
-      (bool)strstr($r[1].$r[2], 'Parse error'),
+      (bool)strstr($r[1].$r[2], "error, unexpected '@'"),
       \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
   }

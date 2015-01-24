@@ -106,13 +106,14 @@ class RuntimeOptions extends Object {
    * @return  string[]
    */
   public function asArguments() {
-    $s= [];
+    $s= defined('HHVM_VERSION') ? ['--php'] : [];
     foreach ($this->backing as $key => $value) {
       if ("\1" === $key{0}) {
         $s[]= '-'.substr($key, 1);
       } else if ("\0" !== $key{0}) {
         foreach ($value as $v) {
-          $s[]= '-'.$key.'='.$v;
+          $s[]= '-'.$key{0};
+          $s[]= substr($key, 1).'='.$v;
         }
       }
     }

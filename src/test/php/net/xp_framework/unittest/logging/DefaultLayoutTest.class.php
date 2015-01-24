@@ -2,21 +2,36 @@
 
 use unittest\TestCase;
 use util\log\layout\DefaultLayout;
-
+use util\log\LoggingEvent;
+use util\log\LogCategory;
+use util\log\LogLevel;
 
 /**
  * TestCase for DefaultLayout
  *
  * @see   xp://util.log.layout.DefaultLayout
  */
-class DefaultLayoutTest extends TestCase {
+class DefaultLayoutTest extends \unittest\TestCase {
+  private $fixture, $tz;
 
   /**
-   * Sets up test case and backups Console::$err stream.
+   * Sets up test case.
    *
+   * @return void
    */
   public function setUp() {
     $this->fixture= new DefaultLayout();
+    $this->tz= date_default_timezone_get();
+    date_default_timezone_set('Europe/Berlin');
+  }
+
+  /**
+   * Tears down test
+   *
+   * @return void
+   */
+  public function tearDown() {
+    date_default_timezone_set($this->tz);
   }
 
   /**
@@ -27,7 +42,7 @@ class DefaultLayoutTest extends TestCase {
    * @return  util.log.LoggingEvent
    */
   public function newEvent($level, $args) {
-    return new \util\log\LoggingEvent(new \util\log\LogCategory('test'), 0, 0, $level, $args);
+    return new LoggingEvent(new LogCategory('test'), 0, 0, $level, $args);
   }
 
 
@@ -38,7 +53,7 @@ class DefaultLayoutTest extends TestCase {
   public function debug() {
     $this->assertEquals(
       "[01:00:00     0 debug] Test\n",
-      $this->fixture->format($this->newEvent(\util\log\LogLevel::DEBUG, array('Test')))
+      $this->fixture->format($this->newEvent(LogLevel::DEBUG, ['Test']))
     );
   }
 
@@ -49,7 +64,7 @@ class DefaultLayoutTest extends TestCase {
   public function info() {
     $this->assertEquals(
       "[01:00:00     0  info] Test\n",
-      $this->fixture->format($this->newEvent(\util\log\LogLevel::INFO, array('Test')))
+      $this->fixture->format($this->newEvent(LogLevel::INFO, ['Test']))
     );
   }
 
@@ -60,7 +75,7 @@ class DefaultLayoutTest extends TestCase {
   public function warn() {
     $this->assertEquals(
       "[01:00:00     0  warn] Test\n",
-      $this->fixture->format($this->newEvent(\util\log\LogLevel::WARN, array('Test')))
+      $this->fixture->format($this->newEvent(LogLevel::WARN, ['Test']))
     );
   }
 
@@ -71,7 +86,7 @@ class DefaultLayoutTest extends TestCase {
   public function error() {
     $this->assertEquals(
       "[01:00:00     0 error] Test\n",
-      $this->fixture->format($this->newEvent(\util\log\LogLevel::ERROR, array('Test')))
+      $this->fixture->format($this->newEvent(LogLevel::ERROR, ['Test']))
     );
   }
 }

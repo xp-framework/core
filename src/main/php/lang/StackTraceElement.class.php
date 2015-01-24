@@ -54,29 +54,27 @@ class StackTraceElement extends Object {
   public function toString() {
     $args= [];
     if (isset($this->args)) {
-      for ($j= 0, $a= sizeof($this->args); $j < $a; $j++) {
-        if (is_array($this->args[$j])) {
-          $args[]= 'array['.sizeof($this->args[$j]).']';
-        } else if (is_object($this->args[$j])) {
-          $args[]= $this->qualifiedClassName(get_class($this->args[$j])).'{}';
-        } else if (is_string($this->args[$j])) {
-          $display= str_replace('%', '%%', addcslashes(substr($this->args[$j], 0, min(
-            (false === $p= strpos($this->args[$j], "\n")) ? 0x40 : $p, 
+      foreach ($this->args as $arg) {
+        if (is_array($arg)) {
+          $args[]= 'array['.sizeof($arg).']';
+        } else if ($arg instanceof \Closure) {
+          $args[]= \xp::stringOf($arg);
+        } else if (is_object($arg)) {
+          $args[]= $this->qualifiedClassName(get_class($arg)).'{}';
+        } else if (is_string($arg)) {
+          $display= str_replace('%', '%%', addcslashes(substr($arg, 0, min(
+            (false === $p= strpos($arg, "\n")) ? 0x40 : $p,
             0x40
           )), "\0..\17"));
-          $args[]= (
-            '(0x'.dechex(strlen($this->args[$j])).")'".
-            $display.
-            "'"
-          );
-        } else if (is_null($this->args[$j])) {
+          $args[]= '(0x'.dechex(strlen($arg)).")'".$display."'";
+        } else if (null === $arg) {
           $args[]= 'NULL';
-        } else if (is_scalar($this->args[$j])) {
-          $args[]= (string)$this->args[$j];
-        } else if (is_resource($this->args[$j])) {
-          $args[]= (string)$this->args[$j];
+        } else if (is_scalar($arg)) {
+          $args[]= (string)$arg;
+        } else if (is_resource($arg)) {
+          $args[]= (string)$arg;
         } else {
-          $args[]= '<'.gettype($this->args[$j]).'>';
+          $args[]= '<'.gettype($arg).'>';
         }
       }
     }

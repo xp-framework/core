@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use net\xp_framework\unittest\IgnoredOnHHVM;
 use lang\Runtime;
 
 /**
@@ -45,19 +46,19 @@ class BootstrapTest extends \unittest\TestCase {
    */
   protected function runWithTz($tz) {
     $r= $this->runWith(Runtime::getInstance()->startupOptions()->withSetting('date.timezone', $tz));
-    $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
       (bool)strstr($r[1].$r[2], '[xp::core] date.timezone not configured properly.'),
       \xp::stringOf(array('out' => $r[1], 'err' => $r[2]))
     );
+    $this->assertEquals(255, $r[0], 'exitcode');
   }    
   
-  #[@test]
+  #[@test, @action(new IgnoredOnHHVM())]
   public function fatalsForEmptyTimezone() {
     $this->runWithTz('');
   }
 
-  #[@test]
+  #[@test, @action(new IgnoredOnHHVM())]
   public function fatalsForInvalidTimezone() {
     $this->runWithTz('Foo/bar');
   }
