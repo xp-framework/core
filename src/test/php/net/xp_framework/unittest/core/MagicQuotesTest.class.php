@@ -1,5 +1,10 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use net\xp_framework\unittest\IgnoredOnHHVM;
+use lang\Process;
+use lang\Runtime;
+use unittest\PrerequisitesNotMetError;
+
 /**
  * Testcase ensuring XP refuses to start when magic_quotes_gpc is enabled.
  *
@@ -16,14 +21,14 @@ class MagicQuotesTest extends \unittest\TestCase {
    */
   #[@beforeClass]
   public static function verifyProcessExecutionEnabled() {
-    if (\lang\Process::$DISABLED) {
-      throw new \unittest\PrerequisitesNotMetError('Process execution disabled', NULL, array('enabled'));
+    if (Process::$DISABLED) {
+      throw new PrerequisitesNotMetError('Process execution disabled', NULL, array('enabled'));
     }
   }
 
-  #[@test]
+  #[@test, @action(new IgnoredOnHHVM())]
   public function phpRefusesToStart() {
-    $runtime= \lang\Runtime::getInstance();
+    $runtime= Runtime::getInstance();
     $options= $runtime->startupOptions()->withSetting('magic_quotes_gpc', 1)->withSetting('error_reporting', 'E_ALL');
     $out= $err= '';
     with ($p= $runtime->newInstance($options, 'class', 'xp.runtime.Evaluate', array('return 1;'))); {
