@@ -499,6 +499,14 @@ class XPClass extends Type {
   }
 
   /**
+   * Convert a HACK attribute to an XP annotation
+   *
+   * @param  var[] $value
+   * @return var
+   */
+  private function attribute($value) { return empty($value) ? null : $value[0]; }
+
+  /**
    * Check whether an annotation exists
    *
    * @param   string name
@@ -507,11 +515,14 @@ class XPClass extends Type {
    */
   public function hasAnnotation($name, $key= null) {
     $details= self::detailsForClass($this->name);
-    
-    return $details && ($key 
-      ? @array_key_exists($key, @$details['class'][DETAIL_ANNOTATIONS][$name]) 
-      : @array_key_exists($name, @$details['class'][DETAIL_ANNOTATIONS])
-    );
+    if ($details && ($annotations= $details['class'][DETAIL_ANNOTATIONS])) {
+      return $key ? array_key_exists($key, @$annotations[$name]) : array_key_exists($name, $annotations);
+    } else if (defined('HHVM_VERSION')) {
+      $attr= $this->_reflect->getAttributes();
+      return $key ? isset($attr[$name][$key]) : isset($attr[$name]);
+    }
+
+    return false;
   }
 
   /**
@@ -524,19 +535,22 @@ class XPClass extends Type {
    */
   public function getAnnotation($name, $key= null) {
     $details= self::detailsForClass($this->name);
+    if ($details && ($annotations= $details['class'][DETAIL_ANNOTATIONS])) {
+      if ($key) {
+        if (array_key_exists($key, @$annotations[$name])) return $annotations[$name][$key];
+      } else {
+        if (array_key_exists($name, $annotations)) return $annotations[$name];
+      }
+    } else if (defined('HHVM_VERSION')) {
+      $attr= $this->_reflect->getAttributes();
+      if ($key) {
+        if (isset($attr[$name][$key])) return $this->attribute($attr[$name][$key]);
+      } else {
+        if (isset($attr[$name])) return $this->attribute($attr[$name]);
+      }
+    }
 
-    if (!$details || !($key 
-      ? @array_key_exists($key, @$details['class'][DETAIL_ANNOTATIONS][$name]) 
-      : @array_key_exists($name, @$details['class'][DETAIL_ANNOTATIONS])
-    )) return raise(
-      'lang.ElementNotFoundException', 
-      'Annotation "'.$name.($key ? '.'.$key : '').'" does not exist'
-    );
-
-    return ($key 
-      ? $details['class'][DETAIL_ANNOTATIONS][$name][$key] 
-      : $details['class'][DETAIL_ANNOTATIONS][$name]
-    );
+    raise('lang.ElementNotFoundException', 'Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
   }
 
   /**
@@ -565,15 +579,7 @@ class XPClass extends Type {
     if ($details && $details['class'][DETAIL_ANNOTATIONS]) {
       return $details['class'][DETAIL_ANNOTATIONS];
     } else if (defined('HHVM_VERSION')) {
-      $annotations= [];
-      foreach (array_reverse($this->_reflect->getAttributes()) as $attr => $value) {
-        if (empty($value)) {
-          $annotations[$attr]= null;
-        } else {
-          $annotations[$attr]= $value[0];
-        }
-      }
-      return $annotations;
+      return array_map([$this, 'attribute'], array_reverse($this->_reflect->getAttributes()));
     } else {
       return [];
     }

@@ -5,6 +5,7 @@ use lang\Primitive;
 use lang\ArrayType;
 use lang\MapType;
 use lang\XPClass;
+use lang\ElementNotFoundException;
 use unittest\PrerequisitesNotMetError;
 
 /**
@@ -108,6 +109,31 @@ class HackLanguageSupportTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function class_has_action_annotation() {
+    $this->assertTrue($this->testClass()->hasAnnotation('action'));
+  }
+
+  #[@test]
+  public function class_does_not_have_test_annotation() {
+    $this->assertFalse($this->testClass()->hasAnnotation('test'));
+  }
+
+  #[@test]
+  public function class_action_annotation() {
+    $this->assertEquals('Actionable', $this->testClass()->getAnnotation('action'));
+  }
+
+  #[@test]
+  public function class_test_annotation() {
+    try {
+      $this->testClass()->getAnnotation('test');
+      $this->fail('No exception raised', null, 'lang.ElementNotFoundException');
+    } catch (ElementNotFoundException $expected) {
+      // OK
+    }
+  }
+
+  #[@test]
   public function method_annotations() {
     $this->assertEquals(
       ['test' => null, 'limit' => 1.0, 'expect' => ['class' => 'lang.IllegalArgumentExcepton', 'withMessage' => '/*Blam*/']],
@@ -118,5 +144,30 @@ class HackLanguageSupportTest extends \unittest\TestCase {
   #[@test]
   public function method_has_annotations() {
     $this->assertTrue($this->testClass()->getMethod('testAnnotations')->hasAnnotations());
+  }
+
+  #[@test]
+  public function method_has_test_annotation() {
+    $this->assertTrue($this->testClass()->getMethod('testAnnotations')->hasAnnotation('test'));
+  }
+
+  #[@test]
+  public function method_does_not_have_action_annotation() {
+    $this->assertFalse($this->testClass()->getMethod('testAnnotations')->hasAnnotation('action'));
+  }
+
+  #[@test]
+  public function method_test_annotation() {
+    $this->assertEquals(null, $this->testClass()->getMethod('testAnnotations')->getAnnotation('test'));
+  }
+
+  #[@test]
+  public function method_action_annotation() {
+    try {
+      $this->testClass()->getMethod('testAnnotations')->getAnnotation('action');
+      $this->fail('No exception raised', null, 'lang.ElementNotFoundException');
+    } catch (ElementNotFoundException $expected) {
+      // OK
+    }
   }
 }
