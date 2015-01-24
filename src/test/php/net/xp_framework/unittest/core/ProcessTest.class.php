@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\TestCase;
+use unittest\PrerequisitesNotMetError;
+use unittest\AssertionFailedError;
 use lang\Runtime;
 use lang\System;
 use lang\Process;
@@ -12,7 +13,7 @@ use io\streams\MemoryOutputStream;
  *
  * @see   xp://lang.Process
  */
-class ProcessTest extends TestCase {
+class ProcessTest extends \unittest\TestCase {
 
   /**
    * Skips tests if process execution has been disabled.
@@ -20,7 +21,7 @@ class ProcessTest extends TestCase {
   #[@beforeClass]
   public static function verifyProcessExecutionEnabled() {
     if (Process::$DISABLED) {
-      throw new \unittest\PrerequisitesNotMetError('Process execution disabled', NULL, array('enabled'));
+      throw new PrerequisitesNotMetError('Process execution disabled', null, ['enabled']);
     }
   }
 
@@ -29,8 +30,22 @@ class ProcessTest extends TestCase {
    *
    * @return  string
    */
-  protected function executable() {
+  private function executable() {
     return Runtime::getInstance()->getExecutable()->getFilename();
+  }
+
+  /**
+   * Return executable arguments. Takes care of prepending `--php` for HHVM.
+   *
+   * @param   string... $args
+   * @return  string[]
+   */
+  private function arguments() {
+    $args= func_get_args();
+    if (defined('HHVM_VERSION')) {
+      array_unshift($args, '--php');
+    }
+    return $args;
   }
 
   /**
@@ -43,56 +58,56 @@ class ProcessTest extends TestCase {
    */
   #[@test]
   public function information() {
-    $p= new Process($this->executable(), array('-v'));
+    $p= new Process($this->executable(), $this->arguments('-v'));
     try {
       $this->assertEquals(-1, $p->exitValue(), 'Process should not have exited yet');
       $this->assertNotEquals(0, $p->getProcessId());
       $this->assertNotEquals('', $p->getFilename());
       $this->assertTrue((new \lang\types\String($p->getCommandLine()))->contains('-v'));
       $p->close();
-    } catch (\unittest\AssertionFailedError $e) {
+    } catch (AssertionFailedError $e) {
       $p->close();    // Ensure process is closed
-        throw $e;
+      throw $e;
     }
   }
 
   #[@test]
   public function newInstance() {
-    $p= Runtime::getInstance()->getExecutable()->newInstance(array('-v'));
-    $version= 'PHP '.phpversion();
+    $p= Runtime::getInstance()->getExecutable()->newInstance($this->arguments('-v'));
+    $version= defined('HHVM_VERSION') ? 'HipHop VM '.HHVM_VERSION : 'PHP '.PHP_VERSION;
     $this->assertEquals($version, $p->out->read(strlen($version)));
     $p->close();
   }
 
   #[@test]
   public function exitValueReturnedFromClose() {
-    $p= new Process($this->executable(), array('-r', 'exit(0);'));
+    $p= new Process($this->executable(), $this->arguments('-r', 'exit(0);'));
     $this->assertEquals(0, $p->close());
   }
 
   #[@test]
   public function nonZeroExitValueReturnedFromClose() {
-    $p= new Process($this->executable(), array('-r', 'exit(2);'));
+    $p= new Process($this->executable(), $this->arguments('-r', 'exit(2);'));
     $this->assertEquals(2, $p->close());
   }
 
   #[@test]
   public function exitValue() {
-    $p= new Process($this->executable(), array('-r', 'exit(0);'));
+    $p= new Process($this->executable(), $this->arguments('-r', 'exit(0);'));
     $p->close();
     $this->assertEquals(0, $p->exitValue());
   }
 
   #[@test]
   public function nonZeroExitValue() {
-    $p= new Process($this->executable(), array('-r', 'exit(2);'));
+    $p= new Process($this->executable(), $this->arguments('-r', 'exit(2);'));
     $p->close();
     $this->assertEquals(2, $p->exitValue());
   }
 
   #[@test]
   public function stdIn() {
-    $p= new Process($this->executable(), array('-r', 'fprintf(STDOUT, fread(STDIN, 0xFF));'));
+    $p= new Process($this->executable(), $this->arguments('-r', 'fprintf(STDOUT, fread(STDIN, 0xFF));'));
     $p->in->write('IN');
     $p->in->close();
     $out= $p->out->read();
@@ -102,7 +117,7 @@ class ProcessTest extends TestCase {
 
   #[@test]
   public function stdOut() {
-    $p= new Process($this->executable(), array('-r', 'fprintf(STDOUT, "OUT");'));
+    $p= new Process($this->executable(), $this->arguments('-r', 'fprintf(STDOUT, "OUT");'));
     $out= $p->out->read();
     $p->close();
     $this->assertEquals('OUT', $out);
@@ -110,7 +125,7 @@ class ProcessTest extends TestCase {
 
   #[@test]
   public function stdErr() {
-    $p= new Process($this->executable(), array('-r', 'fprintf(STDERR, "ERR");'));
+    $p= new Process($this->executable(), $this->arguments('-r', 'fprintf(STDERR, "ERR");'));
     $err= $p->err->read();
     $p->close();
     $this->assertEquals('ERR', $err);
@@ -146,7 +161,7 @@ class ProcessTest extends TestCase {
 
   #[@test]
   public function doubleClose() {
-    $p= new Process($this->executable(), array('-r', 'exit(222);'));
+    $p= new Process($this->executable(), $this->arguments('-r', 'exit(222);'));
     $this->assertEquals(222, $p->close());
     $this->assertEquals(222, $p->close());
   }
@@ -158,7 +173,7 @@ class ProcessTest extends TestCase {
 
   #[@test]
   public function hugeStdout() {
-    $p= new Process($this->executable(), array('-r', 'fputs(STDOUT, str_repeat("*", 65536));'));
+    $p= new Process($this->executable(), $this->arguments('-r', 'fputs(STDOUT, str_repeat("*", 65536));'));
     $out= '';
     while (!$p->out->eof()) {
       $out.= $p->out->read();
@@ -169,7 +184,7 @@ class ProcessTest extends TestCase {
 
   #[@test]
   public function hugeStderr() {
-    $p= new Process($this->executable(), array('-r', 'fputs(STDERR, str_repeat("*", 65536));'));
+    $p= new Process($this->executable(), $this->arguments('-r', 'fputs(STDERR, str_repeat("*", 65536));'));
     $err= '';
     while (!$p->err->eof()) {
       $err.= $p->err->read();
