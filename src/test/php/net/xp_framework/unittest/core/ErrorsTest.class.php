@@ -2,6 +2,7 @@
 
 use lang\Object;
 use unittest\actions\RuntimeVersion;
+use net\xp_framework\unittest\IgnoredOnHHVM;
 
 /**
  * Test the XP error handling semantics
@@ -85,7 +86,7 @@ class ErrorsTest extends \unittest\TestCase {
     $a['test'];
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect('lang.IndexOutOfBoundsException'), @action(new IgnoredOnHHVM())]
   public function undefined_string_offset_yields_ioobe() {
     $a= '';
     $a{0};
@@ -103,7 +104,7 @@ class ErrorsTest extends \unittest\TestCase {
     $f('Primitive');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new IgnoredOnHHVM())]
   public function missing_argument_mismatch_yield_iae() {
     $f= function($arg) { };
     $f();
