@@ -1,16 +1,26 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\TestCase;
 use lang\RuntimeOptions;
-
 
 /**
  * TestCase
  *
- * @see      xp://lang.RuntimeOptions
- * @purpose  Unittest
+ * @see    xp://lang.RuntimeOptions
  */
-class RuntimeOptionsTest extends TestCase {
+class RuntimeOptionsTest extends \unittest\TestCase {
+
+  /**
+   * Assertion helper for `asArguments()` calls.
+   *
+   * @param  string[] $expected
+   * @param  lang.RuntimeOptions $actual
+   */
+  private function assertArguments($expected, $actual) {
+    if (defined('HHVM_VERSION')) {
+      array_unshift($expected, '--php');
+    }
+    $this->assertEquals($expected, $actual->asArguments());
+  }
 
   #[@test]
   public function switchAccessors() {
@@ -105,30 +115,30 @@ class RuntimeOptionsTest extends TestCase {
   #[@test]
   public function argumentsOnEmptyOptions() {
     $options= new RuntimeOptions();
-    $this->assertEquals([], $options->asArguments());
+    $this->assertArguments([], $options);
   }
 
   #[@test]
   public function argumentsWithSwitch() {
     $options= new RuntimeOptions(); 
     $options->withSwitch('q');
-    $this->assertEquals(array('-q'), $options->asArguments());
+    $this->assertArguments(array('-q'), $options);
   }
 
   #[@test]
   public function argumentsWithSetting() {
     $options= new RuntimeOptions(); 
     $options->withSetting('enable_dl', 0);
-    $this->assertEquals(array('-d', 'enable_dl=0'), $options->asArguments());
+    $this->assertArguments(array('-d', 'enable_dl=0'), $options);
   }
 
   #[@test]
   public function argumentsWithMultiSetting() {
     $options= new RuntimeOptions(); 
     $options->withSetting('extension', array('php_xsl.dll', 'php_sybase_ct.dll'));
-    $this->assertEquals(
+    $this->assertArguments(
       array('-d', 'extension=php_xsl.dll', '-d', 'extension=php_sybase_ct.dll'), 
-      $options->asArguments()
+      $options
     );
   }
 
@@ -136,7 +146,7 @@ class RuntimeOptionsTest extends TestCase {
   public function argumentsWithEmptyMultiSetting() {
     $options= new RuntimeOptions(); 
     $options->withSetting('extension', []);
-    $this->assertEquals([], $options->asArguments());
+    $this->assertArguments([], $options);
   }
 
   #[@test]
@@ -147,9 +157,9 @@ class RuntimeOptionsTest extends TestCase {
       ->withSetting('enable_dl', 1)
       ->withSetting('extension', array('php_xsl.dll', 'php_sybase_ct.dll'))
     ;
-    $this->assertEquals(
+    $this->assertArguments(
       array('-q', '-n', '-d', 'enable_dl=1', '-d', 'extension=php_xsl.dll', '-d', 'extension=php_sybase_ct.dll'), 
-      $options->asArguments()
+      $options
     );
   }
 
@@ -157,6 +167,6 @@ class RuntimeOptionsTest extends TestCase {
   public function classPathDoesntAppearInArguments() {
     $options= new RuntimeOptions(); 
     $options->withClassPath('/opt/xp/lib/mysql-1.0.0.xar');
-    $this->assertEquals([], $options->asArguments());
+    $this->assertArguments([], $options);
   }
 }
