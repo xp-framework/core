@@ -44,11 +44,10 @@ class Date extends \lang\Object {
       $this->date= date_create('@'.$in, timezone_open('UTC'));
       date_timezone_set($this->date, $timezone ? $timezone->getHandle() : timezone_open(date_default_timezone_get()));
     } else {
-      $this->date= $timezone ? date_create($in, $timezone->getHandle()) : date_create($in);
-      if (false === $this->date || \xp::errorAt(__FILE__, __LINE__ - 1)) {
-        $e= new \lang\IllegalArgumentException('Given argument is neither a timestamp nor a well-formed timestring: '.\xp::stringOf($in));
-        \xp::gc(__FILE__);
-        throw $e;
+      try {
+        $this->date= $timezone ? new \DateTime($in, $timezone->getHandle()) : new \DateTime($in);
+      } catch (\Exception $e) {
+        throw new \lang\IllegalArgumentException('Given argument is neither a timestamp nor a well-formed timestring: '.\xp::stringOf($in));
       }
     }
   }
