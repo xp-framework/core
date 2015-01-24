@@ -2,6 +2,7 @@
 
 use lang\Runnable;
 use lang\Runtime;
+use lang\Process;
 use lang\reflect\Package;
 use lang\ClassLoader;
 use unittest\actions\VerifyThat;
@@ -14,7 +15,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   /** @return bool */
   protected function processExecutionEnabled() {
-    return !\lang\Process::$DISABLED;
+    return !Process::$DISABLED;
   }
 
   /**
