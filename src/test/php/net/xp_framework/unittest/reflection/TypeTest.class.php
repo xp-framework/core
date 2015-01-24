@@ -401,4 +401,29 @@ class TypeTest extends TestCase {
   public function callable_type_union_is_not_assignable_from_this() {
     $this->assertFalse(Type::$CALLABLE->isAssignableFrom($this->getClass()));
   }
+
+  #[@test]
+  public function hackStringType() {
+    $this->assertEquals(Primitive::$STRING, Type::forName('HH\string'));
+  }
+
+  #[@test]
+  public function hackSntType() {
+    $this->assertEquals(Primitive::$INT, Type::forName('HH\int'));
+  }
+
+  #[@test]
+  public function hackSoubleType() {
+    $this->assertEquals(Primitive::$DOUBLE, Type::forName('HH\float'));
+  }
+
+  #[@test]
+  public function hackSoolType() {
+    $this->assertEquals(Primitive::$BOOL, Type::forName('HH\bool'));
+  }
+
+  #[@test]
+  public function hackArrayOfStringType() {
+    $this->assertEquals(new ArrayType('string'), Type::forName('array<HH\string>'));
+  }
 }
