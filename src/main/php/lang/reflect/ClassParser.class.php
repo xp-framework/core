@@ -178,10 +178,13 @@ class ClassParser extends \lang\Object {
       }
       $func= eval('return '.$code.';');
       if (!($func instanceof \Closure)) {
-        $error= error_get_last();
-        set_error_handler('__error', 0);
-        trigger_error('clear_last_error');
-        restore_error_handler();
+        if ($error= error_get_last()) {
+          set_error_handler('__error', 0);
+          trigger_error('clear_last_error');
+          restore_error_handler();
+        } else {
+          $error= ['message' => 'Syntax error'];
+        }
         throw new IllegalStateException('In `'.$code.'`: '.ucfirst($error['message']));
       }
       return $func;
