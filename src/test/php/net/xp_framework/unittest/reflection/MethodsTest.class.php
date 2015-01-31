@@ -395,4 +395,12 @@ class MethodsTest extends \unittest\TestCase {
     }');
     $this->assertEquals(XPClass::forName('lang.Object'), $o->getClass()->getMethod('fixture')->getReturnType());
   }
+
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0'))]
+  public function violatingReturnType() {
+    $o= newinstance('lang.Object', [], '{
+      public function fixture(): Object { return "Test"; }
+    }');
+    $o->fixture();
+  }
 }
