@@ -4,6 +4,7 @@ use lang\XPClass;
 use lang\Type;
 use lang\MapType;
 use lang\Primitive;
+use unittest\actions\RuntimeVersion;
 
 /**
  * TestCase
@@ -377,5 +378,21 @@ class MethodsTest extends \unittest\TestCase {
   public function notDocumentedParameterType() {
     $this->assertEquals('var', $this->fixture->getMethod('notDocumented')->getParameter(0)->getTypeName());
     $this->assertEquals(Type::$VAR, $this->fixture->getMethod('notDocumented')->getParameter(0)->getType());
+  }
+
+  #[@test, @ignore('No reflection support yet'), @action(new RuntimeVersion('>=7.0'))]
+  public function nativeReturnTypeName() {
+    $o= newinstance('lang.Object', [], '{
+      public function fixture(): Object { }
+    }');
+    $this->assertEquals('lang.Object', $o->getClass()->getMethod('fixture')->getReturnTypeName());
+  }
+
+  #[@test, @ignore('No reflection support yet'), @action(new RuntimeVersion('>=7.0'))]
+  public function nativeReturnType() {
+    $o= newinstance('lang.Object', [], '{
+      public function fixture(): Object { }
+    }');
+    $this->assertEquals(XPClass::forName('lang.Object'), $o->getClass()->getMethod('fixture')->getReturnType());
   }
 }
