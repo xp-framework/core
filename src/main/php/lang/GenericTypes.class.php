@@ -163,6 +163,7 @@ class GenericTypes extends \lang\Object {
             array_unshift($state, 2);
             $m= $tokens[$i+ 2][1];
             $p= 0;
+            $default= [];
             $annotations= [$meta[1][$m][DETAIL_ANNOTATIONS], $meta[1][$m][DETAIL_TARGET_ANNO]];
           } else if ('}' === $tokens[$i][0]) {
             $src.= '}';
@@ -172,13 +173,19 @@ class GenericTypes extends \lang\Object {
           }
         } else if (2 === $state[0]) {             // Method declaration
           if ('(' === $tokens[$i][0]) {
+            if (0 === $braces) {
+              $src.= ' '.$m.'(';
+            } else {
+              $default[$p].= '(';
+            }
             $braces++;
-            $src.= ' '.$m.'(';
-            $p= 0;
-            $default= [];
           } else if (')' === $tokens[$i][0]) {
             $braces--;
-            $src.= (isset($default[$p]) ? '= '.$default[$p].')' : ')');
+            if (0 === $braces) {
+              $src.= isset($default[$p]) ? '= '.$default[$p].')' : ')';
+            } else {
+              $default[$p].= ')';
+            }
           } else if ('{' === $tokens[$i][0] || ';' === $tokens[$i][0]) {
             array_shift($state);
             array_unshift($state, 3);
@@ -299,7 +306,6 @@ class GenericTypes extends \lang\Object {
 
       // Create class
       // DEBUG fputs(STDERR, "@* ".substr($src, 0, strpos($src, '{'))." -> $qname\n");
-      //var_dump($src);
       eval($src);
       if ($initialize) {
         foreach ($components as $i => $component) {
