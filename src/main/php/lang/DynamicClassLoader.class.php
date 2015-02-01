@@ -36,11 +36,12 @@ class DynamicClassLoader extends AbstractClassLoader {
   /**
    * Register new class' bytes
    *
-   * @param   string fqcn
-   * @param   string bytes
+   * @param   string $fqcn
+   * @param   string $bytes
+   * @param   string $prefix Including opening tag
    */
-  public function setClassBytes($fqcn, $bytes) {
-    self::$bytes[$fqcn]= '<?php '.$bytes.' ?>';
+  public function setClassBytes($fqcn, $bytes, $prefix= '<?php') {
+    self::$bytes[$fqcn]= $prefix.' '.$bytes;
   }
 
   /**
