@@ -48,6 +48,41 @@ class HackLanguageSupportTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function mixed_type() {
+    $this->assertEquals(Type::$VAR, Type::forName('HH\mixed'));
+  }
+
+  #[@test]
+  public function string_type() {
+    $this->assertEquals(Primitive::$STRING, Type::forName('HH\string'));
+  }
+
+  #[@test]
+  public function int_type() {
+    $this->assertEquals(Primitive::$INT, Type::forName('HH\int'));
+  }
+
+  #[@test]
+  public function double_type() {
+    $this->assertEquals(Primitive::$DOUBLE, Type::forName('HH\float'));
+  }
+
+  #[@test]
+  public function bool_type() {
+    $this->assertEquals(Primitive::$BOOL, Type::forName('HH\bool'));
+  }
+
+  #[@test]
+  public function array_of_string_type() {
+    $this->assertEquals(new ArrayType('string'), Type::forName('array<HH\string>'));
+  }
+
+  #[@test]
+  public function map_of_int_type() {
+    $this->assertEquals(new MapType('int'), Type::forName('array<HH\string, HH\int>'));
+  }
+
+  #[@test]
   public function nullable_type() {
     $this->assertEquals(XPClass::forName('lang.Object'), Type::forName('?lang\Object'));
   }
