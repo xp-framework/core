@@ -6,7 +6,7 @@ use lang\ArrayType;
 use lang\MapType;
 use lang\XPClass;
 use lang\ElementNotFoundException;
-use unittest\PrerequisitesNotMetError;
+use lang\DynamicClassLoader;
 use unittest\actions\VerifyThat;
 
 /**
@@ -25,6 +25,26 @@ class HackLanguageSupportTest extends \unittest\TestCase {
    */
   private function testClass() {
     return XPClass::forName('net.xp_framework.unittest.reflection.HackLanguageSupport');
+  }
+
+  /**
+   * Returns a fixture for integration tests
+   *
+   * @param  string $decl
+   * @param  string $name
+   * @return lang.XPClass
+   */
+  private function genericClass($decl, $name= null) {
+    $name= $name ?: 'HackLanguageSupportTest_'.$this->name;
+    $class= 'net.xp_framework.unittest.reflection.'.$name;
+
+    $dyn= DynamicClassLoader::instanceFor(__METHOD__);
+    $dyn->setClassBytes(
+      $class,
+      sprintf($decl, $name),
+      '<?hh namespace net\xp_framework\unittest\reflection;'
+    );
+    return $dyn->loadClass($class);
   }
 
   #[@test]
@@ -176,5 +196,39 @@ class HackLanguageSupportTest extends \unittest\TestCase {
   #[@test]
   public function untyped_field_type_name() {
     $this->assertEquals('var', $this->testClass()->getField('untyped')->getTypeName());
+  }
+
+  #[@test]
+  public function is_generic_definition() {
+    $this->assertTrue($this->genericClass('class %s<K, V> extends \lang\Object { }')->isGenericDefinition());
+  }
+
+  #[@test]
+  public function generic_type_components() {
+    $this->assertEquals(['K', 'V'], $this->genericClass('class %s<K, V> extends \lang\Object { }')->genericComponents());
+  }
+
+  #[@test]
+  public function new_generic_type_generic() {
+    $generic= $this->genericClass('class %s<T> extends \lang\Object { }')->newGenericType([Primitive::$STRING]);
+    $this->assertTrue($generic->isGeneric());
+  }
+
+  #[@test]
+  public function new_generic_type_arguments() {
+    $generic= $this->genericClass('class %s<T> extends \lang\Object { }')->newGenericType([Primitive::$STRING]);
+    $this->assertEquals([Primitive::$STRING], $generic->genericArguments());
+  }
+
+  #[@test]
+  public function implementing_interface() {
+    $this->genericClass('interface %s<T> { }', 'HackLanguageSupportTest_Interface');
+    $this->assertTrue($this->genericClass('class %s<T> extends \lang\Object implements HackLanguageSupportTest_Interface<T>{ }')->isGenericDefinition());
+  }
+
+  #[@test]
+  public function extending_base() {
+    $this->genericClass('class %s<T> extends \lang\Object { }', 'HackLanguageSupportTest_Base');
+    $this->assertTrue($this->genericClass('class %s<T> extends HackLanguageSupportTest_Base<T>{ }')->isGenericDefinition());
   }
 }

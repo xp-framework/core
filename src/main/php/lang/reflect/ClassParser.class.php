@@ -341,6 +341,7 @@ class ClassParser extends \lang\Object {
     $imports= [];
     $comment= null;
     $parsed= '';
+    $base= true;
     $tokens= token_get_all($bytes);
     for ($i= 0, $s= sizeof($tokens); $i < $s; $i++) {
       switch ($tokens[$i][0]) {
@@ -444,6 +445,19 @@ class ClassParser extends \lang\Object {
               if (0 === --$b) break;
             } else if (0 === $b && ';' === $tokens[$i][0]) {
               break;    // Abstract or interface method
+            }
+          }
+          break;
+
+        case T_EXTENDS: case T_IMPLEMENTS:
+          $base= false;
+          break;
+
+        case 398:   // <K, V>
+          if ($base) {
+            $details['class'][DETAIL_ANNOTATIONS]['generic']['self']= '';
+            while (++$i < $s && 399 !== $tokens[$i][0]) {
+              $details['class'][DETAIL_ANNOTATIONS]['generic']['self'].= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
             }
           }
           break;
