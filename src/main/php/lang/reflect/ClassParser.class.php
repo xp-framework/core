@@ -335,9 +335,10 @@ class ClassParser extends \lang\Object {
    * @return string
    */
   protected function rewriteType($type) {
-    if (null === $type) {
-      return 'var';
-    } else if (0 === strncmp($type, 'array<', 6)) {
+    if (null === $type) return 'var';
+
+    $type= trim($type);
+    if (0 === strncmp($type, 'array<', 6)) {
       $types= [];
       for ($args= $type.',', $o= 6, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
         if (',' === $args{$i} && 0 === $brackets) {
@@ -357,7 +358,7 @@ class ClassParser extends \lang\Object {
         return 'var[]';
       }
     } else {
-      return trim($type);
+      return $type;
     }
   }
 
