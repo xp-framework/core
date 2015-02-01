@@ -251,7 +251,7 @@ class MethodParametersTest extends \unittest\TestCase {
   #[@test]
   public function nonexistant_typed_class_parameter_name() {
     $this->assertEquals(
-      'var',
+      'UnknownTypeRestriction',
       $this->method('fixturex')->getParameter(0)->getTypeName()
     );
   }
