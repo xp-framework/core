@@ -329,6 +329,39 @@ class ClassParser extends \lang\Object {
   }
 
   /**
+   * Rewrites native type
+   *
+   * @param  string $type
+   * @return string
+   */
+  protected function rewriteType($type) {
+    if (null === $type) {
+      return 'var';
+    } else if (0 === strncmp($type, 'array<', 6)) {
+      $types= [];
+      for ($args= $type.',', $o= 6, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
+        if (',' === $args{$i} && 0 === $brackets) {
+          $types[]= $this->rewriteType(trim(substr($args, $o, $i- $o), '> '));
+          $o= $i+ 1;
+        } else if ('<' === $args{$i}) {
+          $brackets++;
+        } else if ('>' === $args{$i}) {
+          $brackets--;
+        }
+      }
+      if (2 === sizeof($types)) {
+        return '[:'.$types[1].']';
+      } else if (1 === sizeof($types)) {
+        return $types[0].'[]';
+      } else {
+        return 'var[]';
+      }
+    } else {
+      return trim($type);
+    }
+  }
+
+  /**
    * Parse details from a given input string
    *
    * @param   string bytes
@@ -452,9 +485,9 @@ class ClassParser extends \lang\Object {
               if (';' === $tokens[$i][0]) {
                 break;    // Abstract or interface method
               } else if (T_VARIABLE === $tokens[$i][0]) {
-                $sig[]= null === $type ? 'var' : trim($type);
+                $sig[]= $this->rewriteType($type);
                 $type= null;
-              } else if (',' === $tokens[$i][0] || ':' === $tokens[$i][0]) {
+              } else if (',' === $tokens[$i][0] || ':' === $tokens[$i][0] || ')' === $tokens[$i][0]) {
                 $type= '';
               } else if (398 === $tokens[$i][0]) {
                 $type.= '<';
@@ -467,7 +500,7 @@ class ClassParser extends \lang\Object {
 
           if ([] === $matches) {
             $details[1][$m][DETAIL_ARGUMENTS]= $sig;
-            $details[1][$m][DETAIL_RETURNS]= null === $type ? 'var' : trim($type);
+            $details[1][$m][DETAIL_RETURNS]= $this->rewriteType($type);
           }
 
           if ($generic) {

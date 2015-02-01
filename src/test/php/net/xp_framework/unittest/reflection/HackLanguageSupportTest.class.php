@@ -231,4 +231,15 @@ class HackLanguageSupportTest extends \unittest\TestCase {
     $this->genericClass('class %s<T> extends \lang\Object { }', 'HackLanguageSupportTest_Base');
     $this->assertTrue($this->genericClass('class %s<T> extends HackLanguageSupportTest_Base<T>{ }')->isGenericDefinition());
   }
+
+  #[@test]
+  public function creating_instances_from_generics_via_reflection() {
+    $class= $this->genericClass('class %s<T> extends \lang\Object {
+      private $elements;
+      public function __construct(array<T> $initial= []) { $this->elements= $initial; }
+      public function elements(): array<T> { return $this->elements; }
+    }');
+
+    $this->assertEquals(['A', 'B', 'C'], $class->newGenericType([Primitive::$STRING])->newInstance(['A', 'B', 'C'])->elements());
+  }
 }
