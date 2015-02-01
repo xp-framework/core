@@ -145,13 +145,7 @@ class Type extends Object {
       '*'         => 'var',
       'array'     => 'var[]',
       'resource'  => 'var',
-      ''          => '{null}',
-      'HH\int'    => 'int',
-      'HH\string' => 'string',
-      'HH\float'  => 'double',
-      'HH\bool'   => 'bool',
-      'HH\void'   => 'void',
-      'HH\mixed'  => 'var'
+      ''          => '{null}'
     ];
     static $primitives= [
       'string'    => true,

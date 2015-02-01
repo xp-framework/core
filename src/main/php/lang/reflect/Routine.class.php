@@ -125,11 +125,7 @@ class Routine extends \lang\Object {
   public function getReturnType() {
     if (!($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName()))) return \lang\Type::$VAR;
     if (null === $details[DETAIL_RETURNS]) {
-      if (defined('HHVM_VERSION')) {
-        return \lang\Type::forName($this->_reflect->getReturnTypeText() ?: 'var');
-      } else {
-        return \lang\Type::$VAR;
-      }
+      return \lang\Type::$VAR;
     } else if ('self' === ($t= ltrim($details[DETAIL_RETURNS], '&'))) {
       return new \lang\XPClass($this->_reflect->getDeclaringClass());
     } else {
@@ -146,12 +142,7 @@ class Routine extends \lang\Object {
     if (!($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName()))) return 'var';
 
     if (null === $details[DETAIL_RETURNS]) {
-      if (defined('HHVM_VERSION')) {
-        $t= $this->_reflect->getReturnTypeText();
-        return $t ? \lang\Type::forName($t)->getName() : 'var';
-      } else {
-        return 'var';
-      }
+      return 'var';
     } else {
       return ltrim($details[DETAIL_RETURNS], '&');
     }

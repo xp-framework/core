@@ -53,11 +53,7 @@ class Parameter extends \lang\Object {
 
     if (!($details= \lang\XPClass::detailsForMethod($this->_details[0], $this->_details[1]))) return \lang\Type::$VAR;
     if (!isset($details[DETAIL_ARGUMENTS][$this->_details[2]])) {
-      if (defined('HHVM_VERSION')) {
-        return \lang\Type::forName($this->_reflect->getTypeText() ?: 'var');
-      } else {
-        return \lang\Type::$VAR;
-      }
+      return \lang\Type::$VAR;
     } else if ('self' === ($t= ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&'))) {
       return new \lang\XPClass($this->_details[0]);
     } else {
@@ -71,20 +67,9 @@ class Parameter extends \lang\Object {
    * @return  string
    */
   public function getTypeName() {
-    if (!($details= \lang\XPClass::detailsForMethod($this->_details[0], $this->_details[1]))) return \lang\Type::$VAR;
+    if (!($details= \lang\XPClass::detailsForMethod($this->_details[0], $this->_details[1]))) return 'var';
     if (!isset($details[DETAIL_ARGUMENTS][$this->_details[2]])) {
-      if (defined('HHVM_VERSION')) {
-        if ($t= $this->_reflect->getTypeText()) {
-          try {
-            return \lang\Type::forName($t)->getName();
-          } catch (\lang\Throwable $e) {
-            // Fall through
-          }
-        }
-        return 'var';
-      } else {
-        return 'var';
-      }
+      return 'var';
     } else {
       return ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&');
     }
