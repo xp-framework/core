@@ -7,6 +7,7 @@ use lang\MapType;
 use lang\XPClass;
 use lang\ElementNotFoundException;
 use unittest\PrerequisitesNotMetError;
+use unittest\actions\VerifyThat;
 
 /**
  * TestCase for HACK language feature support
@@ -14,19 +15,15 @@ use unittest\PrerequisitesNotMetError;
  * @see    http://docs.hhvm.com/manual/en/hack.annotations.types.php
  * @see    xp://lang.Type
  */
+#[@action(new VerifyThat(function() { return defined('HHVM_VERSION'); }))]
 class HackLanguageSupportTest extends \unittest\TestCase {
 
   /**
    * Returns a fixture for integration tests
    *
    * @return lang.XPClass
-   * @throws unittest.PrerequisitesNotMetError
    */
   private function testClass() {
-    if (!defined('HHVM_VERSION')) {
-      throw new PrerequisitesNotMetError('Only runs inside HHVM', null, PHP_VERSION);
-    }
-
     return XPClass::forName('net.xp_framework.unittest.reflection.HackLanguageSupport');
   }
 
@@ -123,14 +120,9 @@ class HackLanguageSupportTest extends \unittest\TestCase {
     $this->assertEquals('Actionable', $this->testClass()->getAnnotation('action'));
   }
 
-  #[@test]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function class_test_annotation() {
-    try {
-      $this->testClass()->getAnnotation('test');
-      $this->fail('No exception raised', null, 'lang.ElementNotFoundException');
-    } catch (ElementNotFoundException $expected) {
-      // OK
-    }
+    $this->testClass()->getAnnotation('test');
   }
 
   #[@test]
@@ -161,14 +153,9 @@ class HackLanguageSupportTest extends \unittest\TestCase {
     $this->assertEquals(null, $this->testClass()->getMethod('testAnnotations')->getAnnotation('test'));
   }
 
-  #[@test]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function method_action_annotation() {
-    try {
-      $this->testClass()->getMethod('testAnnotations')->getAnnotation('action');
-      $this->fail('No exception raised', null, 'lang.ElementNotFoundException');
-    } catch (ElementNotFoundException $expected) {
-      // OK
-    }
+    $this->testClass()->getMethod('testAnnotations')->getAnnotation('action');
   }
 
   #[@test]
