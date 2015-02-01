@@ -1,5 +1,9 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use lang\reflect\Modifiers;;
+use lang\XPClass;
+use lang\Enum;
+
 /**
  * TestCase for enumerations
  *
@@ -20,8 +24,8 @@ class EnumTest extends \unittest\TestCase {
    */
   protected function assertAbstract($modifiers) {
     $this->assertTrue(
-      \lang\reflect\Modifiers::isAbstract($modifiers), 
-      implode(' | ', \lang\reflect\Modifiers::namesOf($modifiers))
+      Modifiers::isAbstract($modifiers), 
+      implode(' | ', Modifiers::namesOf($modifiers))
     );
   }
 
@@ -33,19 +37,19 @@ class EnumTest extends \unittest\TestCase {
    */
   protected function assertNotAbstract($modifiers) {
     $this->assertFalse(
-      \lang\reflect\Modifiers::isAbstract($modifiers), 
-      implode(' | ', \lang\reflect\Modifiers::namesOf($modifiers))
+      Modifiers::isAbstract($modifiers), 
+      implode(' | ', Modifiers::namesOf($modifiers))
     );
   }
 
   #[@test]
   public function coinIsAnEnums() {
-    $this->assertTrue(\lang\XPClass::forName('net.xp_framework.unittest.core.Coin')->isEnum());
+    $this->assertTrue(XPClass::forName('net.xp_framework.unittest.core.Coin')->isEnum());
   }
   
   #[@test]
   public function operationIsAnEnums() {
-    $this->assertTrue(\lang\XPClass::forName('net.xp_framework.unittest.core.Operation')->isEnum());
+    $this->assertTrue(XPClass::forName('net.xp_framework.unittest.core.Operation')->isEnum());
   }
 
   #[@test]
@@ -55,17 +59,17 @@ class EnumTest extends \unittest\TestCase {
 
   #[@test]
   public function enumBaseClassIsAbstract() {
-    $this->assertAbstract(\lang\XPClass::forName('lang.Enum')->getModifiers());
+    $this->assertAbstract(XPClass::forName('lang.Enum')->getModifiers());
   }
 
   #[@test]
   public function operationEnumIsAbstract() {
-    $this->assertAbstract(\lang\XPClass::forName('net.xp_framework.unittest.core.Operation')->getModifiers());
+    $this->assertAbstract(XPClass::forName('net.xp_framework.unittest.core.Operation')->getModifiers());
   }
 
   #[@test]
   public function coinEnumIsNotAbstract() {
-    $this->assertNotAbstract(\lang\XPClass::forName('net.xp_framework.unittest.core.Coin')->getModifiers());
+    $this->assertNotAbstract(XPClass::forName('net.xp_framework.unittest.core.Coin')->getModifiers());
   }
 
   #[@test]
@@ -139,47 +143,47 @@ class EnumTest extends \unittest\TestCase {
   public function valueOf() {
     $this->assertEquals(
       Coin::$penny, 
-      \lang\Enum::valueOf(\lang\XPClass::forName('net.xp_framework.unittest.core.Coin'), 'penny')
+      Enum::valueOf(XPClass::forName('net.xp_framework.unittest.core.Coin'), 'penny')
     );
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function valueOfNonExistant() {
-    \lang\Enum::valueOf(\lang\XPClass::forName('net.xp_framework.unittest.core.Coin'), '@@DOES_NOT_EXIST@@');
+    Enum::valueOf(XPClass::forName('net.xp_framework.unittest.core.Coin'), '@@DOES_NOT_EXIST@@');
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function valueOfNonEnum() {
-    \lang\Enum::valueOf($this, 'irrelevant');
+    Enum::valueOf($this, 'irrelevant');
   }
 
   #[@test]
   public function valueOfAbstractEnum() {
     $this->assertEquals(
       Operation::$plus, 
-      \lang\Enum::valueOf(\lang\XPClass::forName('net.xp_framework.unittest.core.Operation'), 'plus')
+      Enum::valueOf(XPClass::forName('net.xp_framework.unittest.core.Operation'), 'plus')
     );
   }
 
   #[@test]
   public function valuesOf() {
     $this->assertEquals(
-      array(Coin::$penny, Coin::$nickel, Coin::$dime, Coin::$quarter),
-      \lang\Enum::valuesOf(\lang\XPClass::forName('net.xp_framework.unittest.core.Coin'))
+      [Coin::$penny, Coin::$nickel, Coin::$dime, Coin::$quarter],
+      Enum::valuesOf(XPClass::forName('net.xp_framework.unittest.core.Coin'))
     );
   }
 
   #[@test]
   public function valuesOfAbstractEnum() {
     $this->assertEquals(
-      array(Operation::$plus, Operation::$minus, Operation::$times, Operation::$divided_by),
-      \lang\Enum::valuesOf(\lang\XPClass::forName('net.xp_framework.unittest.core.Operation'))
+      [Operation::$plus, Operation::$minus, Operation::$times, Operation::$divided_by],
+      Enum::valuesOf(XPClass::forName('net.xp_framework.unittest.core.Operation'))
     );
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function valuesOfNonEnum() {
-    \lang\Enum::valuesOf($this);
+    Enum::valuesOf($this);
   }
 
   #[@test]
@@ -205,88 +209,88 @@ class EnumTest extends \unittest\TestCase {
   #[@test]
   public function staticMemberNotInEnumValuesOf() {
     $this->assertEquals(
-      array(Profiling::$INSTANCE, Profiling::$EXTENSION),
-      \lang\Enum::valuesOf(\lang\XPClass::forName('net.xp_framework.unittest.core.Profiling'))
+      [Profiling::$INSTANCE, Profiling::$EXTENSION],
+      Enum::valuesOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'))
     );
   }
 
   #[@test]
   public function staticMemberNotInValues() {
     $this->assertEquals(
-      array(Profiling::$INSTANCE, Profiling::$EXTENSION),
+      [Profiling::$INSTANCE, Profiling::$EXTENSION],
       Profiling::values()
     );
   }
   
   #[@test, @expect('lang.IllegalArgumentException')]
   public function staticMemberNotWithEnumValueOf() {
-    \lang\Enum::valueOf(\lang\XPClass::forName('net.xp_framework.unittest.core.Profiling'), 'fixture');
+    Enum::valueOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'), 'fixture');
   }
 
   #[@test]
   public function staticEnumMemberNotInEnumValuesOf() {
     Profiling::$fixture= Coin::$penny;
     $this->assertEquals(
-      array(Profiling::$INSTANCE, Profiling::$EXTENSION),
-      \lang\Enum::valuesOf(\lang\XPClass::forName('net.xp_framework.unittest.core.Profiling'))
+      [Profiling::$INSTANCE, Profiling::$EXTENSION],
+      Enum::valuesOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'))
     );
-    Profiling::$fixture= NULL;
+    Profiling::$fixture= null;
   }
 
   #[@test]
   public function staticEnumMemberNotInValues() {
     Profiling::$fixture= Coin::$penny;
     $this->assertEquals(
-      array(Profiling::$INSTANCE, Profiling::$EXTENSION),
+      [Profiling::$INSTANCE, Profiling::$EXTENSION],
       Profiling::values()
     );
-    Profiling::$fixture= NULL;
+    Profiling::$fixture= null;
   }
 
   #[@test]
   public function staticObjectMemberNotInEnumValuesOf() {
     Profiling::$fixture= $this;
     $this->assertEquals(
-      array(Profiling::$INSTANCE, Profiling::$EXTENSION),
-      \lang\Enum::valuesOf(\lang\XPClass::forName('net.xp_framework.unittest.core.Profiling'))
+      [Profiling::$INSTANCE, Profiling::$EXTENSION],
+      Enum::valuesOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'))
     );
-    Profiling::$fixture= NULL;
+    Profiling::$fixture= null;
   }
 
   #[@test]
   public function staticObjectMemberNotInValues() {
     Profiling::$fixture= $this;
     $this->assertEquals(
-      array(Profiling::$INSTANCE, Profiling::$EXTENSION),
+      [Profiling::$INSTANCE, Profiling::$EXTENSION],
       Profiling::values()
     );
-    Profiling::$fixture= NULL;
+    Profiling::$fixture= null;
   }
 
   #[@test]
   public function staticPrimitiveMemberNotInEnumValuesOf() {
     Profiling::$fixture= array($this, $this->name);
     $this->assertEquals(
-      array(Profiling::$INSTANCE, Profiling::$EXTENSION),
-      \lang\Enum::valuesOf(\lang\XPClass::forName('net.xp_framework.unittest.core.Profiling'))
+      [Profiling::$INSTANCE, Profiling::$EXTENSION],
+      Enum::valuesOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'))
     );
-    Profiling::$fixture= NULL;
+    Profiling::$fixture= null;
   }
 
   #[@test]
   public function staticPrimitiveMemberNotInValues() {
     Profiling::$fixture= array($this, $this->name);
     $this->assertEquals(
-      array(Profiling::$INSTANCE, Profiling::$EXTENSION),
+      [Profiling::$INSTANCE, Profiling::$EXTENSION],
       Profiling::values()
     );
-    Profiling::$fixture= NULL;
+    Profiling::$fixture= null;
   }
 
   #[@test]
   public function enumValuesMethodProvided() {
     $this->assertEquals(
-      array(Weekday::$MON, Weekday::$TUE, Weekday::$WED, Weekday::$THU, Weekday::$FRI, Weekday::$SAT, Weekday::$SUN),
+      [Weekday::$MON, Weekday::$TUE, Weekday::$WED, Weekday::$THU, Weekday::$FRI, Weekday::$SAT, Weekday::$SUN],
       Weekday::values()
     );
   }
