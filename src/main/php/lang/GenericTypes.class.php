@@ -160,7 +160,6 @@ class GenericTypes extends \lang\Object {
           if (T_FUNCTION === $tokens[$i][0]) {
             $braces= 0;
             $parameters= $default= [];
-            array_unshift($state, 3);
             array_unshift($state, 2);
             $m= $tokens[$i+ 2][1];
             $p= 0;
@@ -174,24 +173,28 @@ class GenericTypes extends \lang\Object {
         } else if (2 === $state[0]) {             // Method declaration
           if ('(' === $tokens[$i][0]) {
             $braces++;
+            $src.= ' '.$m.'(';
+            $p= 0;
+            $default= [];
           } else if (')' === $tokens[$i][0]) {
             $braces--;
-            if (0 === $braces) {
-              array_shift($state);
-              $src.= ')';
-              continue;
-            }
-          }
-          if (T_VARIABLE === $tokens[$i][0]) {
+            $src.= (isset($default[$p]) ? '= '.$default[$p].')' : ')');
+          } else if ('{' === $tokens[$i][0] || ';' === $tokens[$i][0]) {
+            array_shift($state);
+            array_unshift($state, 3);
+            $i--;
+          } else if (T_VARIABLE === $tokens[$i][0]) {
             $parameters[]= $tokens[$i][1];
+            $src.= $tokens[$i][1];
           } else if (',' === $tokens[$i][0]) {
-            // Skip
+            $src.= (isset($default[$p]) ? '= '.$default[$p].',' : ',');
+            $p++;
           } else if ('=' === $tokens[$i][0]) {
-            $p= sizeof($parameters)- 1;
             $default[$p]= '';
           } else if (T_WHITESPACE !== $tokens[$i][0] && isset($default[$p])) {
             $default[$p].= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
           }
+          continue;
         } else if (3 === $state[0]) {             // Method body
           if (';' === $tokens[$i][0]) {
             // Abstract method
@@ -296,6 +299,7 @@ class GenericTypes extends \lang\Object {
 
       // Create class
       // DEBUG fputs(STDERR, "@* ".substr($src, 0, strpos($src, '{'))." -> $qname\n");
+      //var_dump($src);
       eval($src);
       if ($initialize) {
         foreach ($components as $i => $component) {

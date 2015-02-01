@@ -437,15 +437,44 @@ class ClassParser extends \lang\Object {
                 break;
             }
           }
+
+          $i++;
           $b= 0;
+          $type= '';
+          $generic= false;
+          $sig= [];
           while (++$i < $s) {
             if ('{' === $tokens[$i][0]) {
               $b++;
             } else if ('}' === $tokens[$i][0]) {
               if (0 === --$b) break;
-            } else if (0 === $b && ';' === $tokens[$i][0]) {
-              break;    // Abstract or interface method
+            } else if (0 === $b) {
+              if (';' === $tokens[$i][0]) {
+                break;    // Abstract or interface method
+              } else if (T_VARIABLE === $tokens[$i][0]) {
+                $sig[]= null === $type ? 'var' : trim($type);
+                $type= null;
+              } else if (',' === $tokens[$i][0] || ':' === $tokens[$i][0]) {
+                $type= '';
+              } else if (398 === $tokens[$i][0]) {
+                $type.= '<';
+                $generic= true;
+              } else if (null !== $type) {
+                $type.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
+              }
             }
+          }
+
+          if ([] === $matches) {
+            $details[1][$m][DETAIL_ARGUMENTS]= $sig;
+            $details[1][$m][DETAIL_RETURNS]= null === $type ? 'var' : trim($type);
+          }
+
+          if ($generic) {
+            $details[1][$m][DETAIL_ANNOTATIONS]['generic']= [
+              'params'  => implode(',', $details[1][$m][DETAIL_ARGUMENTS]),
+              'return'  => $details[1][$m][DETAIL_RETURNS]
+            ];
           }
           break;
 
@@ -453,7 +482,7 @@ class ClassParser extends \lang\Object {
           $base= false;
           break;
 
-        case 398:   // <K, V>
+        case 398:   // HHVM does not define a constant for this!
           if ($base) {
             $details['class'][DETAIL_ANNOTATIONS]['generic']['self']= '';
             while (++$i < $s && 399 !== $tokens[$i][0]) {
