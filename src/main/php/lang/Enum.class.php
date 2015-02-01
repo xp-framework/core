@@ -17,9 +17,12 @@ abstract class Enum extends Object {
     // Automatically initialize this enum's public static members
     $i= 0;
     $c= new \ReflectionClass($class);
-    foreach ($c->getStaticProperties() as $name => $prop) {
-      if (null !== $prop) $i= $prop;
-      $c->setStaticPropertyValue($name, $c->newInstance($i++, $name));
+    foreach ($c->getProperties(\ReflectionProperty::IS_STATIC) as $prop) {
+      if ($prop->isPublic()) {
+        $value= $prop->getValue(null);
+        if (null !== $value) $i= $value;
+        $prop->setValue(null, $c->newInstance($i++, $prop->getName()));
+      }
     }
   }
 

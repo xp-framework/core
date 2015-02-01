@@ -1,24 +1,26 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\TestCase;
-
+use lang\XPClass;
+use lang\Type;
+use lang\MapType;
+use lang\Primitive;
+use unittest\actions\RuntimeVersion;
 
 /**
  * TestCase
  *
- * @see      xp://lang.reflect.Method
- * @purpose  Unittest
+ * @see    xp://lang.reflect.Method
  */
-class MethodsTest extends TestCase {
-  protected
-    $fixture  = null;
+class MethodsTest extends \unittest\TestCase {
+  protected $fixture;
 
   /**
    * Sets up test case
    *
+   * @return void
    */
   public function setUp() {
-    $this->fixture= \lang\XPClass::forName('net.xp_framework.unittest.reflection.TestClass');
+    $this->fixture= XPClass::forName('net.xp_framework.unittest.reflection.TestClass');
   }
   
   /**
@@ -49,30 +51,6 @@ class MethodsTest extends TestCase {
   }
 
   /**
-   * Tests the method reflection
-   *
-   * @see     xp://lang.XPClass#getMethods
-   */
-  #[@test]
-  public function methods() {
-    $methods= $this->fixture->getMethods();
-    $this->assertInstanceOf('lang.reflect.Method[]', $methods);
-    $this->assertContained($this->fixture->getMethod('equals'), $methods);
-  }
-
-  /**
-   * Tests the method reflection
-   *
-   * @see     xp://lang.XPClass#getDeclaredMethods
-   */
-  #[@test]
-  public function declaredMethods() {
-    $methods= $this->fixture->getDeclaredMethods();
-    $this->assertInstanceOf('lang.reflect.Method[]', $methods);
-    $this->assertNotContained($this->fixture->getMethod('hashCode'), $methods);
-  }
-  
-  /**
    * Helper method
    *
    * @param   int modifiers
@@ -83,11 +61,20 @@ class MethodsTest extends TestCase {
     $this->assertEquals($modifiers, $this->fixture->getMethod($method)->getModifiers());
   }
 
-  /**
-   * Tests method's declaring class
-   *
-   * @see     xp://lang.reflect.Method#getDeclaringClass
-   */
+  #[@test]
+  public function methods() {
+    $methods= $this->fixture->getMethods();
+    $this->assertInstanceOf('lang.reflect.Method[]', $methods);
+    $this->assertContained($this->fixture->getMethod('equals'), $methods);
+  }
+
+  #[@test]
+  public function declaredMethods() {
+    $methods= $this->fixture->getDeclaredMethods();
+    $this->assertInstanceOf('lang.reflect.Method[]', $methods);
+    $this->assertNotContained($this->fixture->getMethod('hashCode'), $methods);
+  }
+  
   #[@test]
   public function declaredMethod() {
     $this->assertEquals(
@@ -96,11 +83,6 @@ class MethodsTest extends TestCase {
     );
   }
 
-  /**
-   * Tests method's declaring class
-   *
-   * @see     xp://lang.reflect.Method#getDeclaringClass
-   */
   #[@test]
   public function inheritedMethod() {
     $this->assertEquals(
@@ -109,121 +91,61 @@ class MethodsTest extends TestCase {
     );
   }
 
-  /**
-   * Tests checking for a non-existant method
-   *
-   * @see     xp://lang.reflect.Method#hasMethod
-   */
   #[@test]
   public function nonExistantMethod() {
     $this->assertFalse($this->fixture->hasMethod('@@nonexistant@@'));
   }
 
-  /**
-   * Tests retrieving a non-existant method
-   *
-   * @see     xp://lang.reflect.Method#getMethod
-   */
   #[@test, @expect('lang.ElementNotFoundException')]
   public function getNonExistantMethod() {
     $this->fixture->getMethod('@@nonexistant@@');
   }
 
-  /**
-   * Tests constructor is not recognized as a method
-   *
-   * @see     xp://lang.reflect.Method#hasMethod
-   */
   #[@test]
   public function checkConstructorIsNotAMethod() {
     $this->assertFalse($this->fixture->hasMethod('__construct'));
   }
   
-  /**
-   * Tests retrieving a non-existant method
-   *
-   * @see     xp://lang.reflect.Method#getMethod
-   */
   #[@test, @expect('lang.ElementNotFoundException')]
   public function constructorIsNotAMethod() {
     $this->fixture->getMethod('__construct');
   }
 
-  /**
-   * Tests static initializer block is not recognized as a method
-   *
-   * @see     xp://lang.reflect.Method#hasMethod
-   */
   #[@test]
   public function checkStaticInitializerIsNotAMethod() {
     $this->assertFalse($this->fixture->hasMethod('__static'));
   }
   
-  /**
-   * Tests static initializer block is not recognized as a method
-   *
-   * @see     xp://lang.reflect.Method#getMethod
-   */
   #[@test, @expect('lang.ElementNotFoundException')]
   public function staticInitializerIsNotAMethod() {
     $this->fixture->getMethod('__static');
   }
 
-  /**
-   * Tests the method reflection
-   *
-   * @see     xp://lang.XPClass#getMethod
-   */
   #[@test]
   public function publicMethod() {
     $this->assertModifiers(MODIFIER_PUBLIC, 'getMap');
   }
 
-  /**
-   * Tests the method reflection
-   *
-   * @see     xp://lang.XPClass#getMethod
-   */
   #[@test]
   public function privateMethod() {
     $this->assertModifiers(MODIFIER_PRIVATE, 'defaultMap');
   }
 
-  /**
-   * Tests the method reflection
-   *
-   * @see     xp://lang.XPClass#getMethod
-   */
   #[@test]
   public function protectedMethod() {
     $this->assertModifiers(MODIFIER_PROTECTED, 'clearMap');
   }
 
-  /**
-   * Tests the method reflection
-   *
-   * @see     xp://lang.XPClass#getMethod
-   */
   #[@test]
   public function finalMethod() {
     $this->assertModifiers(MODIFIER_FINAL | MODIFIER_PUBLIC, 'setMap');
   }
 
-  /**
-   * Tests the method reflection
-   *
-   * @see     xp://lang.XPClass#getMethod
-   */
   #[@test]
   public function staticMethod() {
     $this->assertModifiers(MODIFIER_STATIC | MODIFIER_PUBLIC, 'fromMap');
   }
 
-  /**
-   * Tests the method reflection
-   *
-   * @see     xp://lang.XPClass#getMethod
-   */
   #[@test]
   public function abstractMethod() {
   
@@ -241,12 +163,6 @@ class MethodsTest extends TestCase {
     );
   }
   
-  /**
-   * Tests the method reflection for the getDate() method
-   *
-   * @see     xp://lang.XPClass#getMethod
-   * @see     xp://lang.XPClass#hasMethod
-   */
   #[@test]
   public function getDateMethod() {
     $this->assertTrue($this->fixture->hasMethod('getDate'));
@@ -258,77 +174,39 @@ class MethodsTest extends TestCase {
     }
   }
 
-  /**
-   * Tests invoking the setTrace() method which will always throw an 
-   * IllegalStateException (which will be rewrapped as cause inside a
-   * TargetInvocationException
-   *
-   * @see     xp://lang.reflect.TargetInvocationException
-   * @see     xp://lang.reflect.Method#invoke
-   */
   #[@test, @expect('lang.reflect.TargetInvocationException')]
   public function invokeSetTrace() {
     $this->fixture->getMethod('setTrace')->invoke($this->fixture->newInstance(), array(null));
   }
 
-  /**
-   * Tests invoking the setTrace() method on a wrong object
-   *
-   * @see     xp://lang.reflect.Method#invoke
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function invokeSetTraceOnWrongObject() {
     $this->fixture->getMethod('setTrace')->invoke(new \lang\Object(), array(null));
   }
 
-  /**
-   * Tests invoking static TestClass::initializerCalled
-   *
-   * @see     xp://lang.reflect.Method#invoke
-   */
   #[@test]
   public function invokeStaticMethod() {
     $this->assertTrue($this->fixture->getMethod('initializerCalled')->invoke(null));
   }
 
-  /**
-   * Tests invoking private TestClass::defaultMap
-   *
-   * @see     xp://lang.reflect.Method#invoke
-   */
   #[@test, @expect('lang.IllegalAccessException')]
   public function invokePrivateMethod() {
     $this->fixture->getMethod('defaultMap')->invoke($this->fixture->newInstance());
   }
 
-  /**
-   * Tests invoking protected TestClass::clearMap
-   *
-   * @see     xp://lang.reflect.Method#invoke
-   */
   #[@test, @expect('lang.IllegalAccessException')]
   public function invokeProtectedMethod() {
     $this->fixture->getMethod('clearMap')->invoke($this->fixture->newInstance());
   }
 
-  /**
-   * Tests invoking abstract method
-   *
-   * @see     xp://lang.reflect.Method#invoke
-   */
   #[@test, @expect('lang.IllegalAccessException')]
   public function invokeAbstractMethod() {
-    \lang\XPClass::forName('net.xp_framework.unittest.reflection.AbstractTestClass')
+    XPClass::forName('net.xp_framework.unittest.reflection.AbstractTestClass')
       ->getMethod('getDate')
       ->invoke($this->fixture->newInstance())
     ;
   }
 
-  /**
-   * Tests invoking TestClass::setDate() - returns nothing
-   *
-   * @see     xp://lang.reflect.Method#invoke
-   */
   #[@test]
   public function invokeMethodWithoutReturn() {
     $i= $this->fixture->newInstance();
@@ -337,64 +215,30 @@ class MethodsTest extends TestCase {
     $this->assertEquals($d, $i->getDate());
   }
 
-  /**
-   * Tests void return value
-   *
-   * @see     xp://lang.reflect.Method#getReturnTypeName
-   * @see     xp://lang.reflect.Method#getReturnType
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#setDate
-   */
   #[@test]
   public function voidReturnValue() {
     $this->assertEquals('void', $this->fixture->getMethod('setDate')->getReturnTypeName());
-    $this->assertEquals(\lang\Type::$VOID, $this->fixture->getMethod('setDate')->getReturnType());
+    $this->assertEquals(Type::$VOID, $this->fixture->getMethod('setDate')->getReturnType());
   }
 
-  /**
-   * Tests self return value
-   *
-   * @see     xp://lang.reflect.Method#getReturnTypeName
-   * @see     xp://lang.reflect.Method#getReturnType
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#withDate
-   */
   #[@test]
   public function selfReturnValue() {
     $this->assertEquals('self', $this->fixture->getMethod('withDate')->getReturnTypeName());
     $this->assertEquals($this->fixture, $this->fixture->getMethod('withDate')->getReturnType());
   }
 
-  /**
-   * Tests bool return value
-   *
-   * @see     xp://lang.reflect.Method#getReturnTypeName
-   * @see     xp://lang.reflect.Method#getReturnType
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#initializerCalled
-   */
   #[@test]
   public function boolReturnValue() {
     $this->assertEquals('bool', $this->fixture->getMethod('initializerCalled')->getReturnTypeName());
-    $this->assertEquals(\lang\Primitive::$BOOL, $this->fixture->getMethod('initializerCalled')->getReturnType());
+    $this->assertEquals(Primitive::$BOOL, $this->fixture->getMethod('initializerCalled')->getReturnType());
   }
   
-  /**
-   * Tests generic return value
-   *
-   * @see     xp://lang.reflect.Method#getReturnTypeName
-   * @see     xp://lang.reflect.Method#getReturnType
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#getMap
-   */
   #[@test]
   public function genericReturnValue() {
     $this->assertEquals('[:lang.Object]', $this->fixture->getMethod('getMap')->getReturnTypeName());
-    $this->assertEquals(\lang\MapType::forName('[:lang.Object]'), $this->fixture->getMethod('getMap')->getReturnType());
+    $this->assertEquals(MapType::forName('[:lang.Object]'), $this->fixture->getMethod('getMap')->getReturnType());
   }
 
-  /**
-   * Tests string representation of a method with generic return value
-   *
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#getMap
-   * @see     xp://lang.reflect.Method#toString
-   */
   #[@test]
   public function getMapString() {
     $this->assertEquals(
@@ -403,12 +247,6 @@ class MethodsTest extends TestCase {
     );
   }
 
-  /**
-   * Tests string representation of a method with generic return value
-   *
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#filterMap
-   * @see     xp://lang.reflect.Method#toString
-   */
   #[@test]
   public function filterMapString() {
     $this->assertEquals(
@@ -417,12 +255,6 @@ class MethodsTest extends TestCase {
     );
   }
 
-  /**
-   * Tests string representation of a method with a class return value
-   *
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#getDate
-   * @see     xp://lang.reflect.Method#toString
-   */
   #[@test]
   public function getDateString() {
     $this->assertEquals(
@@ -431,12 +263,6 @@ class MethodsTest extends TestCase {
     );
   }
 
-  /**
-   * Tests string representation of a protected method with void return value
-   *
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#clearMap
-   * @see     xp://lang.reflect.Method#toString
-   */
   #[@test]
   public function clearMapString() {
     $this->assertEquals(
@@ -445,12 +271,6 @@ class MethodsTest extends TestCase {
     );
   }
 
-  /**
-   * Tests string representation of a public static method
-   *
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#fromMap
-   * @see     xp://lang.reflect.Method#toString
-   */
   #[@test]
   public function fromMapString() {
     $this->assertEquals(
@@ -459,12 +279,6 @@ class MethodsTest extends TestCase {
     );
   }
 
-  /**
-   * Tests string representation of method with throws documentation
-   *
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#setTrace
-   * @see     xp://lang.reflect.Method#toString
-   */
   #[@test]
   public function setTraceString() {
     $this->assertEquals(
@@ -473,22 +287,15 @@ class MethodsTest extends TestCase {
     );
   }
 
-  /**
-   * Tests getExceptionNames method
-   *
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#setTrace
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#currentTimestamp
-   * @see     xp://lang.reflect.Method#getExceptionNames
-   */
   #[@test]
   public function thrownExceptionNames() {
     $this->assertEquals(
-      array('lang.IllegalArgumentException', 'lang.IllegalStateException'), 
+      ['lang.IllegalArgumentException', 'lang.IllegalStateException'],
       $this->fixture->getMethod('setDate')->getExceptionNames(),
       'with multiple throws'
     );
     $this->assertEquals(
-      array('lang.IllegalStateException'), 
+      ['lang.IllegalStateException'],
       $this->fixture->getMethod('setTrace')->getExceptionNames(),
       'with throws'
     );
@@ -499,20 +306,15 @@ class MethodsTest extends TestCase {
     );
   }
 
-  /**
-   * Tests getExceptionTypes method
-   *
-   * @see     xp://lang.reflect.Method#getExceptionTypes
-   */
   #[@test]
   public function thrownExceptionTypes() {
     $this->assertEquals(
-      array(\lang\XPClass::forName('lang.IllegalArgumentException'), \lang\XPClass::forName('lang.IllegalStateException')), 
+      [XPClass::forName('lang.IllegalArgumentException'), XPClass::forName('lang.IllegalStateException')],
       $this->fixture->getMethod('setDate')->getExceptionTypes(),
       'with multiple throws'
     );
     $this->assertEquals(
-      array(\lang\XPClass::forName('lang.IllegalStateException')), 
+      [XPClass::forName('lang.IllegalStateException')],
       $this->fixture->getMethod('setTrace')->getExceptionTypes(),
       'with throws'
     );
@@ -523,12 +325,6 @@ class MethodsTest extends TestCase {
     );
   }
 
-  /**
-   * Tests same methods are equal
-   *
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#setTrace
-   * @see     xp://lang.reflect.Routine#equals
-   */
   #[@test]
   public function equality() {
     $this->assertEquals(
@@ -537,23 +333,11 @@ class MethodsTest extends TestCase {
     );
   }
 
-  /**
-   * Tests equals() method does not choke on NULL
-   *
-   * @see     xp://lang.reflect.Routine#equals
-   */
   #[@test]
   public function notEqualToNull() {
     $this->assertFalse($this->fixture->getMethod('setTrace')->equals(null));
   }
 
-  /**
-   * Tests inherited methods are not equal
-   *
-   * @see     xp://net.xp_framework.unittest.reflection.AbstractTestClass#getDate
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#getDate
-   * @see     xp://lang.reflect.Routine#equals
-   */
   #[@test]
   public function inheritedMethodsAreNotEqual() {
     $this->assertNotEquals(
@@ -562,27 +346,14 @@ class MethodsTest extends TestCase {
     );
   }
 
-  /**
-   * Tests method details for inherited interface methods
-   *
-   * @see     xp://io.collections.IOCollection
-   * @see     xp://io.collections.IOElement#getOrigin
-   */
   #[@test]
   public function methodDetailsForInheritedInterfaceMethod() {
     $this->assertEquals(
       'io.collections.IOCollection', 
-      \lang\XPClass::forName('io.collections.IOCollection')->getMethod('getOrigin')->getReturnTypeName()
+      XPClass::forName('io.collections.IOCollection')->getMethod('getOrigin')->getReturnTypeName()
     );
   }
 
-  /**
-   * Tests util.collections.Map's method offsetGet() - which it
-   * inherites from PHP's ArrayAccess interface - correctly
-   * invokes its toString() method.
-   *
-   * @see     xp://util.collections.Map
-   */
   #[@test]
   public function arrayAccessMethod() {
     if (defined('HHVM_VERSION')) {
@@ -593,33 +364,43 @@ class MethodsTest extends TestCase {
 
     $this->assertEquals(
       $expected,
-      \lang\XPClass::forName('util.collections.Map')->getMethod('offsetGet')->toString()
+      XPClass::forName('util.collections.Map')->getMethod('offsetGet')->toString()
     );
   }
 
-  /**
-   * Tests non-documented return value
-   *
-   * @see     xp://lang.reflect.Method#getReturnTypeName
-   * @see     xp://lang.reflect.Method#getReturnType
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#notDocumented
-   */
   #[@test]
   public function notDocumentedReturnType() {
     $this->assertEquals('var', $this->fixture->getMethod('notDocumented')->getReturnTypeName());
-    $this->assertEquals(\lang\Type::$VAR, $this->fixture->getMethod('notDocumented')->getReturnType());
+    $this->assertEquals(Type::$VAR, $this->fixture->getMethod('notDocumented')->getReturnType());
   }
 
-  /**
-   * Tests non-documented param
-   *
-   * @see     xp://lang.reflect.Method#getReturnTypeName
-   * @see     xp://lang.reflect.Method#getReturnType
-   * @see     xp://net.xp_framework.unittest.reflection.TestClass#notDocumented
-   */
   #[@test]
   public function notDocumentedParameterType() {
     $this->assertEquals('var', $this->fixture->getMethod('notDocumented')->getParameter(0)->getTypeName());
-    $this->assertEquals(\lang\Type::$VAR, $this->fixture->getMethod('notDocumented')->getParameter(0)->getType());
+    $this->assertEquals(Type::$VAR, $this->fixture->getMethod('notDocumented')->getParameter(0)->getType());
+  }
+
+  #[@test, @ignore('No reflection support yet'), @action(new RuntimeVersion('>=7.0'))]
+  public function nativeReturnTypeName() {
+    $o= newinstance('lang.Object', [], '{
+      public function fixture(): Object { }
+    }');
+    $this->assertEquals('lang.Object', $o->getClass()->getMethod('fixture')->getReturnTypeName());
+  }
+
+  #[@test, @ignore('No reflection support yet'), @action(new RuntimeVersion('>=7.0'))]
+  public function nativeReturnType() {
+    $o= newinstance('lang.Object', [], '{
+      public function fixture(): Object { }
+    }');
+    $this->assertEquals(XPClass::forName('lang.Object'), $o->getClass()->getMethod('fixture')->getReturnType());
+  }
+
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0'))]
+  public function violatingReturnType() {
+    $o= newinstance('lang.Object', [], '{
+      public function fixture(): Object { return "Test"; }
+    }');
+    $o->fixture();
   }
 }
