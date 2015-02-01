@@ -107,6 +107,9 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed problem with enum member auto-initialization and non-public static
+  properties.
+  (@thekid)
 * Fixed xp-framework/core#38: Use of undefined constant STR_ENC- (@thekid)
 * Fixed xp-framework/core#37: var not assignable from var?! - (@thekid)
 * Fixed xp-framework/core#34: FunctionType doesn't load classes - (@thekid)
