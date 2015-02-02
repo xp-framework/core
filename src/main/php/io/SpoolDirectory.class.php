@@ -1,5 +1,6 @@
 <?php namespace io;
 
+use io\Folder;
 
 
 /**
@@ -31,7 +32,6 @@ class SpoolDirectory extends \lang\Object {
    * Opens all neccessary directorys and creates them if nonexistant
    *
    * @return  bool success
-   * @throws  io.IOException if there are permission problems
    */    
   public function open() {
     $this->_hNew=   new Folder ($this->root.DIRECTORY_SEPARATOR.'new');
@@ -55,7 +55,6 @@ class SpoolDirectory extends \lang\Object {
    *
    * @param   string abstract default NULL
    * @return  io.File opened spool file
-   * @throws  io.IOException if file could not be created
    */    
   public function createSpoolEntry($abstract= null) {
     if (null === $abstract)
@@ -63,13 +62,8 @@ class SpoolDirectory extends \lang\Object {
     else
       $abstract= date ('Y-m-d-H-i-s').'_'.$abstract;
     
-    try {
-      $f= new File ($this->_hNew->getURI().DIRECTORY_SEPARATOR.$abstract.'.spool');
-      $f->open (FILE_MODE_WRITE);
-    } catch (\IOException $e) {
-      throw ($e);
-    }
-    
+    $f= new File ($this->_hNew->getURI().DIRECTORY_SEPARATOR.$abstract.'.spool');
+    $f->open (FILE_MODE_WRITE);
     return $f;
   }
 
@@ -78,16 +72,10 @@ class SpoolDirectory extends \lang\Object {
    *
    * @param   io.File Spoolfile
    * @return  bool success
-   * @throws  io.IOException if file could not be closed and moved.
    */    
   public function enqueueSpoolEntry($f) {
-    try {
-      $f->close();
-      $f->move ($this->_hTodo->getURI().DIRECTORY_SEPARATOR.$f->getFileName());
-    } catch (\IOException $e) {
-      throw ($e);
-    }
-    
+    $f->close();
+    $f->move ($this->_hTodo->getURI().DIRECTORY_SEPARATOR.$f->getFileName());
     return true;
   }
 
@@ -95,16 +83,11 @@ class SpoolDirectory extends \lang\Object {
    * Retrieves the next spool entry.
    *
    * @return  io.File spoolfile next spoolfile. Its opened in read/write mode.
-   * @throws  io.IOException if an error occurs
    */    
   public function getNextSpoolEntry() {
-    try {
-      if (false !== ($entry= $this->_hTodo->getEntry())) {
-        $f= new File ($this->_hTodo->getURI().DIRECTORY_SEPARATOR.$entry);
-        $f->open (FILE_MODE_READWRITE);
-      }
-    } catch (\IOException $e) {
-      throw ($e);
+    if (false !== ($entry= $this->_hTodo->getEntry())) {
+      $f= new File ($this->_hTodo->getURI().DIRECTORY_SEPARATOR.$entry);
+      $f->open (FILE_MODE_READWRITE);
     }
     
     return $f;
@@ -115,15 +98,10 @@ class SpoolDirectory extends \lang\Object {
    *
    * @param   io.File spoolfile
    * @return  bool success
-   * @throws  io.IOException if file could not be closed and moved.
    */
   public function finishSpoolEntry($f) {
-    try {
-      $f->close();
-      $f->move ($this->_hDone->getURI().DIRECTORY_SEPARATOR.$f->getFileName());
-    } catch (\IOException $e) {
-      throw ($e);
-    }
+    $f->close();
+    $f->move ($this->_hDone->getURI().DIRECTORY_SEPARATOR.$f->getFileName());
     
     return true;
   }
@@ -133,15 +111,10 @@ class SpoolDirectory extends \lang\Object {
    *
    * @param   io.File spoolfile
    * @return  bool success
-   * @throws  io.IOException if file could not be closed and moved.
    */    
   public function failSpoolEntry($f) {
-    try {
-      $f->close();
-      $f->move ($this->_hError->getURI().DIRECTORY_SEPARATOR.$f->getFileName());
-    } catch (\IOException $e) {
-      throw ($e);
-    }
+    $f->close();
+    $f->move ($this->_hError->getURI().DIRECTORY_SEPARATOR.$f->getFileName());
     
     return true;
   }
