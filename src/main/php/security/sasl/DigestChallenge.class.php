@@ -3,12 +3,12 @@
 
 
 // Quality of protection constants
-  define('DC_QOP_AUTH',      'auth');
+define('DC_QOP_AUTH',      'auth');
 define('DC_QOP_AUTH_INT',  'auth-int');
 define('DC_QOP_AUTH_CONF', 'auth-conf');
 
 // Cipher constants
-  define('DC_CIPHER_DES',    'des');
+define('DC_CIPHER_DES',    'des');
 define('DC_CIPHER_3DES',   '3des');
 define('DC_CIPHER_RC4',    'rc4');
 define('DC_CIPHER_RC4_40', 'rc4-40');

@@ -1,6 +1,6 @@
 <?php namespace security;
 
-
+use security\crypto\PrivateKey;
 
 /**
  * Key pair
