@@ -7,6 +7,7 @@ use io\streams\StreamTransfer;
 use io\Folder;
 use io\File;
 use util\cmd\Console;
+use lang\IllegalStateException;
 
 /**
  * GitHub Archive - uses https://github.com/vendor/repo/zipball/branch 

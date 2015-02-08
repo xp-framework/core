@@ -63,6 +63,6 @@ class Arg extends \lang\Object {
    * @param   pattern string
    */
   public static function match($pattern) {
-    return new \text\regex\PatternMatcher($pattern);
+    return new PatternMatcher($pattern);
   }
 }
