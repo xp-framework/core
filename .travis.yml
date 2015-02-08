@@ -1,7 +1,6 @@
 # This provides an initial configuration to
 # test xp-framework on http://travis-ci.org/
 
-sudo: false
 language: php
 
 php:
