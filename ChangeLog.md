@@ -3,6 +3,7 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Added GzDecompressingInputStream::header() method - @thekid
 * Fixed GzDecompressingInputStream not supporting gzip data with embedded
   original filenames - @thekid
 

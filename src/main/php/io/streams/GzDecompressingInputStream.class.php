@@ -71,17 +71,17 @@ class GzDecompressingInputStream extends \lang\Object implements InputStream {
     // * MTIME    (Modification time, Un*x timestamp)
     // * XFL      (Extra flags)
     // * OS       (Operating system)
-    $header= unpack('a2id/Cmethod/Cflags/Vtime/Cextra/Cos', $in->read(10));
-    if ("\x1F\x8B" != $header['id']) {
-      throw new IOException('Invalid format, expected \037\213, have '.addcslashes($header['id'], "\0..\377"));
+    $this->header= unpack('a2id/Cmethod/Cflags/Vtime/Cextra/Cos', $in->read(10));
+    if ("\x1F\x8B" != $this->header['id']) {
+      throw new IOException('Invalid format, expected \037\213, have '.addcslashes($this->header['id'], "\0..\377"));
     }
-    if (8 !== $header['method']) {
-      throw new IOException('Unknown compression method #'.$header['method']);
+    if (8 !== $this->header['method']) {
+      throw new IOException('Unknown compression method #'.$this->header['method']);
     }
-    if (8 === ($header['flags'] & 8)) {
-      $header['filename']= '';
+    if (8 === ($this->header['flags'] & 8)) {
+      $this->header['filename']= '';
       while ("\x00" !== ($b= $in->read(1))) {
-        $header['filename'].= $b;
+        $this->header['filename'].= $b;
       }
     }
 
@@ -95,7 +95,7 @@ class GzDecompressingInputStream extends \lang\Object implements InputStream {
   }
 
   /** @return [:var] */
-  public function header() { return $this->header(); }
+  public function header() { return $this->header; }
 
   /**
    * Read a string
