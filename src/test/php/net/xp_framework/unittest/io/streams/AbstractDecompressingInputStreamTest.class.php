@@ -2,6 +2,8 @@
 
 use lang\types\Bytes;
 use io\streams\MemoryInputStream;
+use io\streams\InputStream;
+use unittest\PrerequisitesNotMetError;
 
 /**
  * Abstract base class for all compressing output stream tests
@@ -22,7 +24,7 @@ abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
    * @param   io.streams.InputStream wrapped
    * @return  io.streams.InputStream
    */
-  protected abstract function newStream(\io\streams\InputStream $wrapped);
+  protected abstract function newStream(InputStream $wrapped);
 
   /**
    * Compress data
@@ -39,16 +41,12 @@ abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
   public function setUp() {
     $depend= $this->filter();
     if (!in_array($depend, stream_get_filters())) {
-      throw new \unittest\PrerequisitesNotMetError(ucfirst($depend).' stream filter not available', null, [$depend]);
+      throw new PrerequisitesNotMetError(ucfirst($depend).' stream filter not available', null, [$depend]);
     }
   }
 
-  /**
-   * Test single read
-   *
-   */
   #[@test]
-  public function singleRead() {
+  public function single_read() {
     $in= new MemoryInputStream($this->compress('Hello', 6));
     $decompressor= $this->newStream($in);
     $chunk= $decompressor->read();
@@ -56,12 +54,8 @@ abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
     $this->assertEquals('Hello', $chunk);
   }
 
-  /**
-   * Test multiple consecutive reads
-   *
-   */
   #[@test]
-  public function multipleReads() {
+  public function multiple_reads() {
     $in= new MemoryInputStream($this->compress('Hello World', 6));
     $decompressor= $this->newStream($in);
     $chunk1= $decompressor->read(5);
@@ -73,12 +67,8 @@ abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
     $this->assertEquals('World', $chunk3);
   }
 
-  /**
-   * Test highest level of compression (9)
-   *
-   */
   #[@test]
-  public function highestLevel() {
+  public function highest_level() {
     $in= new MemoryInputStream($this->compress('Hello', 9));
     $decompressor= $this->newStream($in);
     $chunk= $decompressor->read();
@@ -86,12 +76,8 @@ abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
     $this->assertEquals('Hello', $chunk);
   }
 
-  /**
-   * Test highest level of compression (1)
-   *
-   */
   #[@test]
-  public function lowestLevel() {
+  public function lowest_level() {
     $in= new MemoryInputStream($this->compress('Hello', 1));
     $decompressor= $this->newStream($in);
     $chunk= $decompressor->read();
@@ -99,23 +85,14 @@ abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
     $this->assertEquals('Hello', $chunk);
   }
 
-  /**
-   * Test closing a stream right after creation
-   *
-   */
   #[@test]
-  public function closingRightAfterCreation() {
+  public function closing_right_after_creation() {
     $decompressor= $this->newStream(new MemoryInputStream($this->compress('Hello', 1)));
     $decompressor->close();
   }
 
-  /**
-   * Test closing a stream twice has no effect.
-   *
-   * @see   xp://lang.Closeable#close
-   */
   #[@test]
-  public function closingTwice() {
+  public function closing_twice_has_no_effect() {
     $decompressor= $this->newStream(new MemoryInputStream($this->compress('Hello', 1)));
     $decompressor->close();
     $decompressor->close();
