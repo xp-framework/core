@@ -1,30 +1,28 @@
 <?php namespace io\streams;
 
-
+use io\IOException;
 
 /**
  * InputStream that decompresses data compressed using GZIP encoding.
  *
- * @ext      zlib
- * @see      rfc://1952
- * @test     xp://net.xp_framework.unittest.io.streams.GzDecompressingInputStreamTest
- * @purpose  InputStream implementation
+ * @ext   zlib
+ * @see   rfc://1952
+ * @test  xp://net.xp_framework.unittest.io.streams.GzDecompressingInputStreamTest
  */
 class GzDecompressingInputStream extends \lang\Object implements InputStream {
-  protected $in= null;
+  private $in= null;
   public static $wrapped= [];
-  public $context = null;
 
   static function __static() {
     stream_wrapper_register('zlib.bounded', get_class(newinstance('lang.Object', [], '{
-      protected $id, $st= NULL;
+      protected $id, $st= null;
       protected $buffer= "";
-      public $context = NULL;
+      public $context = null;
       
       public function stream_open($path, $mode, $options, $opened_path) {
         $this->st= \io\streams\GzDecompressingInputStream::$wrapped[$path];
         $this->id= $path;
-        return TRUE;
+        return true;
       }
 
       public function stream_read($count) {
@@ -48,7 +46,7 @@ class GzDecompressingInputStream extends \lang\Object implements InputStream {
       }
 
       public function stream_flush() {
-        return TRUE;
+        return true;
       }
       
       public function stream_close() {
@@ -61,7 +59,8 @@ class GzDecompressingInputStream extends \lang\Object implements InputStream {
   /**
    * Constructor
    *
-   * @param   io.streams.InputStream in
+   * @param   io.streams.InputStream $in
+   * @throws  io.IOException
    */
   public function __construct(InputStream $in) {
     
@@ -74,10 +73,16 @@ class GzDecompressingInputStream extends \lang\Object implements InputStream {
     // * OS       (Operating system)
     $header= unpack('a2id/Cmethod/Cflags/Vtime/Cextra/Cos', $in->read(10));
     if ("\x1F\x8B" != $header['id']) {
-      throw new \io\IOException('Invalid format, expected \037\213, have '.addcslashes($header['id'], "\0..\377"));
+      throw new IOException('Invalid format, expected \037\213, have '.addcslashes($header['id'], "\0..\377"));
     }
-    if (8 != $header['method']) {
-      throw new \io\IOException('Unknown compression method #'.$header['method']);
+    if (8 !== $header['method']) {
+      throw new IOException('Unknown compression method #'.$header['method']);
+    }
+    if (8 === ($header['flags'] & 8)) {
+      $header['filename']= '';
+      while ("\x00" !== ($b= $in->read(1))) {
+        $header['filename'].= $b;
+      }
     }
 
     // Now, convert stream to file handle and append inflating filter
@@ -85,7 +90,7 @@ class GzDecompressingInputStream extends \lang\Object implements InputStream {
     self::$wrapped[$wri]= $in;
     $this->in= fopen($wri, 'r');
     if (!stream_filter_append($this->in, 'zlib.inflate', STREAM_FILTER_READ)) {
-      throw new \io\IOException('Could not append stream filter');
+      throw new IOException('Could not append stream filter');
     }
   }
 

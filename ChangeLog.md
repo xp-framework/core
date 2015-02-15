@@ -3,6 +3,9 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Fixed GzDecompressingInputStream not supporting gzip data with embedded
+  original filenames - @thekid
+
 ## 6.0.0 / ????-??-??
 
 ### Heads up!
