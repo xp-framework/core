@@ -10,7 +10,7 @@ use io\IOException;
  * @test  xp://net.xp_framework.unittest.io.streams.GzDecompressingInputStreamTest
  */
 class GzDecompressingInputStream extends \lang\Object implements InputStream {
-  private $in= null;
+  private $in, $header;
   public static $wrapped= [];
 
   static function __static() {
@@ -93,6 +93,9 @@ class GzDecompressingInputStream extends \lang\Object implements InputStream {
       throw new IOException('Could not append stream filter');
     }
   }
+
+  /** @return [:var] */
+  public function header() { return $this->header(); }
 
   /**
    * Read a string
