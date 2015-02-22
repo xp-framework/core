@@ -9,6 +9,10 @@ class OneOf extends Match {
     $this->cases= $cases;
   }
 
+  private function tokenName($token) {
+    return is_int($token) ? token_name($token) : '`'.$token.'`';
+  }
+
   public function consume($rules, $stream, $values) {
     $case= $stream->token();
     if (isset($this->cases[$case[0]])) {
@@ -20,7 +24,7 @@ class OneOf extends Match {
       sprintf(
         'Unexpected %s, expecting one of %s',
         is_array($case) ? token_name($case[0]) : $case,
-        implode(', ', array_map('token_name', array_keys($this->cases)))
+        implode(', ', array_map([$this, 'tokenName'], array_keys($this->cases)))
       ),
       $stream->line()
     );

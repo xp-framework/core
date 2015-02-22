@@ -2,7 +2,7 @@
 
 /**
  * Base class for syntaxes. Subclasses initialize the "parse" member
- * in their static initializer.
+ * in their static initializer with `self::$parse[__CLASS__]= ...`.
  *
  * @see   xp://lang.codedom.PhpSyntax
  */
@@ -17,6 +17,7 @@ abstract class Syntax extends \lang\Object {
    * @throws lang.FormatException
    */
   public function parse($input) {
-    return self::$parse[':start']->evaluate(self::$parse, new Stream($input));
+    $rules= self::$parse[get_class($this)];
+    return $rules[':start']->evaluate($rules, new Stream($input));
   }
 }

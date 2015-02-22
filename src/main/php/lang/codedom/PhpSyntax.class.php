@@ -6,7 +6,7 @@ class PhpSyntax extends Syntax {
     $type= new Tokens([T_STRING, T_NS_SEPARATOR]);
     $modifiers= new Tokens([T_PUBLIC, T_PRIVATE, T_PROTECTED, T_STATIC, T_FINAL, T_ABSTRACT, T_WHITESPACE]);
 
-    self::$parse= [
+    self::$parse[__CLASS__]= [
       ':start' => new Sequence([new Token(T_OPEN_TAG), new Rule(':namespace'), new Rule(':imports'), new Rule(':uses_opt'), new Rule(':declaration')], function($values) {
         $imports= $values[2];
         foreach ($values[3] as $uses) {
