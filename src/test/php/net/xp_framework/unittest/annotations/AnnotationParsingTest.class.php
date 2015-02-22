@@ -234,7 +234,7 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
       $this->parse("
         #[@interceptors(classes= array(
           'net.xp_framework.unittest.core.FirstInterceptor',
-          'net.xp_framework.unittest.core.SecondInterceptor',
+          'net.xp_framework.unittest.core.SecondInterceptor'
         ))]
       ")
     );
