@@ -291,46 +291,6 @@ class ClassParser extends \lang\Object {
   }
 
   /**
-   * Returns position of matching closing brace, or the string's length
-   * if no closing / opening brace is found.
-   *
-   * @param  string $text
-   * @param  string $open
-   * @param  string $close
-   * @param  int
-   */
-  protected function matching($text, $open, $close) {
-    for ($braces= $open.$close, $i= 0, $b= 0, $s= strlen($text); $i < $s; $i+= strcspn($text, $braces, $i)) {
-      if ($text{$i} === $open) {
-        $b++;
-      } else if ($text{$i} === $close) {
-        if (0 === --$b) return $i + 1;
-      }
-      $i++;
-    }
-    return $i;
-  }
-
-  /**
-   * Extracts type from a text
-   *
-   * @param  string $text
-   * @return string
-   */
-  protected function typeIn($text) {
-    if (0 === strncmp($text, 'function(', 9)) {
-      $p= $this->matching($text, '(', ')');
-      $p+= strspn($text, ': ', $p);
-      return substr($text, 0, $p).$this->typeIn(substr($text, $p));
-    } else if (strstr($text, '<')) {
-      $p= $this->matching($text, '<', '>');
-      return substr($text, 0, $p);
-    } else {
-      return substr($text, 0, strcspn($text, ' '));
-    }
-  }
-
-  /**
    * Parse details from a given input string
    *
    * @param   string bytes
