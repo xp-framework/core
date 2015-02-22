@@ -307,11 +307,7 @@ class ClassParser extends \lang\Object {
 
     $decl= $codeunit->declaration();
     $annotations= $this->parseAnnotations($decl->annotations(), $context, $imports, -1);
-    $details= [
-      0 => [],    // Fields
-      1 => [],    // Methods
-      'class' => [DETAIL_ANNOTATIONS  => $annotations[0]]
-    ];
+    $details= [0 => [], 1 => [], 'class' => [DETAIL_ANNOTATIONS  => $annotations[0]]];
 
     foreach ($decl->body()->members() as $member) {
       $annotations= $this->parseAnnotations($member->annotations(), $context, $imports, -1);

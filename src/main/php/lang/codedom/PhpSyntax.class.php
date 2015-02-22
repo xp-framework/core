@@ -1,9 +1,6 @@
 <?php namespace lang\codedom;
 
-use lang\FormatException;
-
-class PhpSyntax extends \lang\Object {
-  private static $parse;
+class PhpSyntax extends Syntax {
 
   static function __static() {
     $type= new Tokens([T_STRING, T_NS_SEPARATOR]);
@@ -225,16 +222,5 @@ class PhpSyntax extends \lang\Object {
       }
     }
     return $details;
-  }
-
-  /**
-   * Parses input
-   *
-   * @param  string $input
-   * @return lang.codedom.CodeUnit
-   * @throws lang.FormatException
-   */
-  public function parse($input) {
-    return self::$parse[':start']->evaluate(self::$parse, new Stream($input));
   }
 }
