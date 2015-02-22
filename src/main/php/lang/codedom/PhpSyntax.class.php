@@ -25,15 +25,15 @@ class PhpSyntax extends \lang\Object {
           return strtr(implode('', $values[1]), '\\', '.');
         })
       ])),
-      ':imports' => new AnyOf([
+      ':imports' => new Repeated(new OneOf([
         T_USE => new Sequence([$type, new Token(';')], function($values) {
           return strtr(implode('', $values[1]), '\\', '.');
         }),
         T_NEW => new Sequence([new Token(T_STRING), new Token('('), new Token(T_CONSTANT_ENCAPSED_STRING), new Token(')'), new Token(';')], function($values) {
           return trim($values[3], '\'"');
         })
-      ]),
-      ':uses_opt' => new AnyOf([
+      ])),
+      ':uses_opt' => new Repeated(new OneOf([
         T_STRING => new Sequence([new Token('('), new SkipOver('(', ')'), new Token(';')], function($values) {
           if ('uses' === $values[0]) {
             return array_map(function($class) { return trim($class, "'\" "); }, explode(',', $values[2]));
@@ -41,7 +41,7 @@ class PhpSyntax extends \lang\Object {
             return null;
           }
         })
-      ]),
+      ])),
       ':declaration' => new Sequence(
         [
           new Rule(':annotations'),
