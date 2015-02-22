@@ -6,6 +6,7 @@ use lang\codedom\ClassDeclaration;
 use lang\codedom\InterfaceDeclaration;
 use lang\codedom\TraitDeclaration;
 use lang\codedom\MethodDeclaration;
+use lang\codedom\ConstructorDeclaration;
 use lang\codedom\FieldDeclaration;
 use lang\codedom\ConstantDeclaration;
 use lang\codedom\TraitUsage;
@@ -146,9 +147,19 @@ class PhpSyntaxTest extends \unittest\TestCase {
   public function class_with_method() {
     $this->assertEquals(
       new CodeUnit(null, [], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody([
-        new MethodDeclaration(0, null, 'test', '', null, '')
+        new MethodDeclaration(0, null, 'test', [], 'var', [], '')
       ]))),
       (new PhpSyntax())->parse('<?php class Test extends Object { function test() { } }')
+    );
+  }
+
+  #[@test]
+  public function class_with_constructor() {
+    $this->assertEquals(
+      new CodeUnit(null, [], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody([
+        new ConstructorDeclaration(0, null, '__construct', [], [], '')
+      ]))),
+      (new PhpSyntax())->parse('<?php class Test extends Object { function __construct() { } }')
     );
   }
 
@@ -156,7 +167,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
   public function class_with_method_with_code() {
     $this->assertEquals(
       new CodeUnit(null, [], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody([
-        new MethodDeclaration(0, null, 'test', '', null, 'return true;')
+        new MethodDeclaration(0, null, 'test', [], 'var', [], 'return true;')
       ]))),
       (new PhpSyntax())->parse('<?php class Test extends Object { function test() { return true; } }')
     );
@@ -166,9 +177,28 @@ class PhpSyntaxTest extends \unittest\TestCase {
   public function class_with_method_with_arguments() {
     $this->assertEquals(
       new CodeUnit(null, [], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody([
-        new MethodDeclaration(0, null, 'test', '$a= 1, Generic $b, $c= array(1)', null, 'return true;')
+        new MethodDeclaration(0, null, 'test', [], 'var', [], 'return true;')
       ]))),
       (new PhpSyntax())->parse('<?php class Test extends Object { function test($a= 1, Generic $b, $c= array(1)) { return true; } }')
+    );
+  }
+
+  #[@test]
+  public function class_with_method_with_apidoc_tags() {
+    $this->assertEquals(
+      new CodeUnit(null, [], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody([
+        new MethodDeclaration(0, null, 'test', ['string'], 'bool', ['lang.Throwable'], 'return true;')
+      ]))),
+      (new PhpSyntax())->parse('<?php class Test extends Object {
+        /**
+         * Tests a name
+         *
+         * @param  string $name
+         * @return bool
+         * @throws lang.Throwable
+         */
+        function test($name) { return true; }
+      }')
     );
   }
 
@@ -302,9 +332,9 @@ class PhpSyntaxTest extends \unittest\TestCase {
   public function class_with_methods_with_modifiers() {
     $this->assertEquals(
       new CodeUnit(null, [], new ClassDeclaration(0, null, 'Test', null, [], new TypeBody([
-        new MethodDeclaration(MODIFIER_PUBLIC | MODIFIER_STATIC, null, 'newInstance', '', null, 'return new self();'),
-        new MethodDeclaration(MODIFIER_PRIVATE | MODIFIER_FINAL, null, 'create', '', null, ''),
-        new MethodDeclaration(MODIFIER_PROTECTED | MODIFIER_ABSTRACT, null, 'arguments', '', null, null)
+        new MethodDeclaration(MODIFIER_PUBLIC | MODIFIER_STATIC, null, 'newInstance', [], 'var', [], 'return new self();'),
+        new MethodDeclaration(MODIFIER_PRIVATE | MODIFIER_FINAL, null, 'create', [], 'var', [], ''),
+        new MethodDeclaration(MODIFIER_PROTECTED | MODIFIER_ABSTRACT, null, 'arguments', [], 'var', [], null)
       ]))),
       (new PhpSyntax())->parse('<?php class Test {
         public static function newInstance() { return new self(); }
@@ -318,7 +348,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
   public function class_with_annotated_method() {
     $this->assertEquals(
       new CodeUnit(null, [], new ClassDeclaration(0, null, 'Test', null, [], new TypeBody([
-        new MethodDeclaration(MODIFIER_PUBLIC, '[@test]', 'verify', '', null, ''),
+        new MethodDeclaration(MODIFIER_PUBLIC, '[@test]', 'verify', [], 'var', [], ''),
       ]))),
       (new PhpSyntax())->parse('<?php class Test {
         #[@test]
@@ -355,7 +385,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
   public function interface_with_method() {
     $this->assertEquals(
       new CodeUnit(null, [], new InterfaceDeclaration(0, null, 'Test', [], new TypeBody([
-        new MethodDeclaration(0, null, 'test', '', null, null)
+        new MethodDeclaration(0, null, 'test', [], 'var', [], null)
       ]))),
       (new PhpSyntax())->parse('<?php interface Test { function test(); }')
     );
@@ -365,8 +395,8 @@ class PhpSyntaxTest extends \unittest\TestCase {
   public function interface_with_methods() {
     $this->assertEquals(
       new CodeUnit(null, [], new InterfaceDeclaration(0, null, 'Test', [], new TypeBody([
-        new MethodDeclaration(0, null, 'a', '', null, null),
-        new MethodDeclaration(0, null, 'b', '', null, null)
+        new MethodDeclaration(0, null, 'a', [], 'var', [], null),
+        new MethodDeclaration(0, null, 'b', [], 'var', [], null)
       ]))),
       (new PhpSyntax())->parse('<?php interface Test { function a(); function b(); }')
     );
@@ -376,7 +406,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
   public function interface_with_method_with_modifiers() {
     $this->assertEquals(
       new CodeUnit(null, [], new InterfaceDeclaration(0, null, 'Test', [], new TypeBody([
-        new MethodDeclaration(MODIFIER_PUBLIC, null, 'test', '', null, null)
+        new MethodDeclaration(MODIFIER_PUBLIC, null, 'test', [], 'var', [], null)
       ]))),
       (new PhpSyntax())->parse('<?php interface Test { public function test(); }')
     );
@@ -394,7 +424,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
   public function trait_with_method() {
     $this->assertEquals(
       new CodeUnit(null, [], new TraitDeclaration(0, null, 'Test', new TypeBody([
-        new MethodDeclaration(MODIFIER_PUBLIC, null, 'test', '', null, '')
+        new MethodDeclaration(MODIFIER_PUBLIC, null, 'test', [], 'var', [], '')
       ]))),
       (new PhpSyntax())->parse('<?php trait Test { public function test() { } }')
     );

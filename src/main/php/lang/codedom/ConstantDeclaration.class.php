@@ -3,6 +3,12 @@
 class ConstantDeclaration extends MemberDeclaration {
   private $initial;
 
+  /**
+   * Creates a new constant declaration
+   *
+   * @param  string $name
+   * @param  string $initial
+   */
   public function __construct($name, $initial) {
     parent::__construct(0, null, $name);
     $this->initial= $initial;

@@ -100,8 +100,13 @@ class PhpSyntax extends \lang\Object {
             $modifiers,
             new Rule(':annotations'),   // Old way of annotating fields, in combination with grouped syntax
             new OneOf([
-              T_FUNCTION => new Sequence([new Token(T_STRING), new Token('('), new SkipOver('(', ')'), new Rule(':method')], function($values) {
-                return new MethodDeclaration(0, null, $values[1], $values[3], null, $values[4]);
+              T_FUNCTION => new Sequence([new Token(T_STRING), new Token('('), new SkipOver('(', ')'), new Rule(':method')], function($values, $stream) {
+                $details= self::details($stream->comment());
+                if ('__construct' === $values[1]) {
+                  return new ConstructorDeclaration(0, null, $values[1], $details['args'], $details['throws'], $values[4]);
+                } else {
+                  return new MethodDeclaration(0, null, $values[1], $details['args'], $details['returns'], $details['throws'], $values[4]);
+                }
               }),
               T_VARIABLE => new Sequence([new Rule(':field')], function($values) {
                 return new FieldDeclaration(0, null, substr($values[0], 1), $values[1]);
@@ -139,7 +144,7 @@ class PhpSyntax extends \lang\Object {
    * @param  string[] $names
    * @return int
    */
-  protected static function modifiers($names) {
+  private static function modifiers($names) {
     static $modifiers= [
       'public'    => MODIFIER_PUBLIC,
       'private'   => MODIFIER_PRIVATE,
@@ -154,6 +159,70 @@ class PhpSyntax extends \lang\Object {
       isset($modifiers[$name]) && $m |= $modifiers[$name];
     }
     return $m;
+  }
+
+  /**
+   * Returns position of matching closing brace, or the string's length
+   * if no closing / opening brace is found.
+   *
+   * @param  string $text
+   * @param  string $open
+   * @param  string $close
+   * @param  int
+   */
+  private static function matching($text, $open, $close) {
+    for ($braces= $open.$close, $i= 0, $b= 0, $s= strlen($text); $i < $s; $i+= strcspn($text, $braces, $i)) {
+      if ($text{$i} === $open) {
+        $b++;
+      } else if ($text{$i} === $close) {
+        if (0 === --$b) return $i + 1;
+      }
+      $i++;
+    }
+    return $i;
+  }
+
+  /**
+   * Extracts type from a text
+   *
+   * @param  string $text
+   * @return string
+   */
+  private static function typeIn($text) {
+    if (0 === strncmp($text, 'function(', 9)) {
+      $p= self::matching($text, '(', ')');
+      $p+= strspn($text, ': ', $p);
+      return substr($text, 0, $p).self::typeIn(substr($text, $p));
+    } else if (strstr($text, '<')) {
+      $p= self::matching($text, '<', '>');
+      return substr($text, 0, $p);
+    } else {
+      return substr($text, 0, strcspn($text, ' '));
+    }
+  }
+
+  /**
+   * Parses methods' api doc comments
+   *
+   * @param  string $comment
+   * @return [:var]
+   */
+  private static function details($comment) {
+    $matches= null;
+    preg_match_all('/@([a-z]+)\s*([^\r\n]+)?/', $comment, $matches, PREG_SET_ORDER);
+
+    $arg= 0;
+    $details= ['args' => [], 'returns' => 'var', 'throws' => []];
+    foreach ($matches as $match) {
+      if ('param' === $match[1]) {
+        $details['args'][$arg++]= self::typeIn($match[2]);
+      } else if ('return' === $match[1]) {
+        $details['returns']= self::typeIn($match[2]);
+      } else if ('throws' === $match[1]) {
+        $details['throws'][]= self::typeIn($match[2]);
+      }
+    }
+    return $details;
   }
 
   /**

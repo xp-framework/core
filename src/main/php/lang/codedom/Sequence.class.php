@@ -22,9 +22,14 @@ class Sequence extends Match {
     }
 
     $f= $this->func;
-    return new Values($f($values));
+    return new Values($f($values, $stream));
   }
 
+  /**
+   * Creates a string representation
+   *
+   * @return string
+   */
   public function toString() {
     return $this->getClassName().'@'.\xp::stringOf($this->rules);
   }

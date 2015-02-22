@@ -3,13 +3,13 @@
 define('T_ANNOTATION', 600);
 
 class Stream extends \lang\Object {
-  private $stream, $offset, $length, $comments, $token, $line;
+  private $stream, $offset, $length, $comment, $token, $line;
 
   public function __construct($input) {
     $this->stream= token_get_all($input);
     $this->offset= 0;
     $this->length= sizeof($this->stream);
-    $this->comments= [];
+    $this->comment= null;
     $this->token= null;
     $this->line= 1;
   }
@@ -40,7 +40,7 @@ class Stream extends \lang\Object {
       do {
         $next= $this->stream[$this->offset];
         if (T_DOC_COMMENT === $next[0]) {
-          $this->comments[]= $next[1];
+          $this->comment= $next[1];
           $this->line= $next[2];
         } else if (T_COMMENT === $next[0]) {
           if ('#' === $next[1]{0}) {
@@ -49,7 +49,6 @@ class Stream extends \lang\Object {
             $continue= false;
           } else {
             $this->line= $next[2];
-            $this->comments[]= $next[1];
           }
         } else if (T_WHITESPACE === $next[0]) {
           $this->line= $next[2];
@@ -67,6 +66,23 @@ class Stream extends \lang\Object {
   }
 
   /**
+   * Gets last comment
+   *
+   * @return string
+   */
+  public function comment() {
+    $comment= $this->comment;
+    $this->comment= null;
+    return $comment;
+  }
+
+  /** @return int */
+  public function line() { return $this->line; }
+
+  /** @return int */
+  public function position() { return $this->offset; }
+
+  /**
    * Forwards stream
    *
    * @return bool
@@ -77,22 +93,16 @@ class Stream extends \lang\Object {
     return $this->offset < $this->length;
   }
 
-  public function position() {
-    return $this->offset;
-  }
-
-  public function line() {
-    return $this->line;
-  }
-
+  /**
+   * Resets stream position to a given offset, which e.g. was previously
+   * retrieved via position()
+   *
+   * @param  int $position
+   */
   public function reset($position) {
     if ($position !== $this->offset) {
       $this->offset= $position;
       $this->token= null;
     }
-  }
-
-  public function comment() {
-    return array_pop($this->comments);
   }
 }
