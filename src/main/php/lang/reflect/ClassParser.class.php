@@ -213,8 +213,10 @@ class ClassParser extends \lang\Object {
       'multi-value'
     ];
 
-    $tokens= token_get_all('<?php '.trim($bytes, "[# \t\n\r"));
     $annotations= [0 => [], 1 => []];
+    if (null === $bytes) return $annotations;
+
+    $tokens= token_get_all('<?php '.trim($bytes, "[# \t\n\r"));
     $place= $context.(-1 === $line ? '' : ', line '.$line);
 
     // Parse tokens
@@ -336,122 +338,42 @@ class ClassParser extends \lang\Object {
    * @return  [:var] details
    */
   public function parseDetails($bytes, $context= '') {
-    $details= [[], []];
-    $annotations= [0 => [], 1 => []];
+    $codeunit= (new \lang\codedom\PhpSyntax())->parse(ltrim($bytes));
+
     $imports= [];
-    $comment= null;
-    $parsed= '';
-    $tokens= token_get_all($bytes);
-    for ($i= 0, $s= sizeof($tokens); $i < $s; $i++) {
-      switch ($tokens[$i][0]) {
-        case T_USE:
-          if (isset($details['class'])) break;  // Inside class, e.g. function() use(...) {}
-          $type= '';
-          while (';' !== $tokens[++$i] && $i < $s) {
-            T_WHITESPACE === $tokens[$i][0] || $type.= $tokens[$i][1];
-          }
-          $imports[substr($type, strrpos($type, '\\')+ 1)]= strtr($type, '\\', '.');
-          break;
+    foreach ($codeunit->imports() as $type) {
+      $imports[substr($type, strrpos($type, '\\')+ 1)]= strtr($type, '\\', '.');
+    }
 
-        case T_DOC_COMMENT:
-          $comment= $tokens[$i][1];
-          break;
+    $decl= $codeunit->declaration();
+    $annotations= $this->parseAnnotations($decl->annotations(), $context, $imports, -1);
+    $details= [
+      0 => [],    // Fields
+      1 => [],    // Methods
+      'class' => [
+        DETAIL_COMMENT      => null,
+        DETAIL_ANNOTATIONS  => $annotations[0]
+      ]
+    ];
 
-        case T_COMMENT:
-          if ('#' === $tokens[$i][1]{0}) {      // Annotations, #[@test]
-            if ('[' === $tokens[$i][1]{1}) {
-              $parsed= substr($tokens[$i][1], 2);
-            } else {
-              $parsed.= substr($tokens[$i][1], 1);
-            }
-          }
-          break;
-
-        case T_CLASS:
-        case T_INTERFACE:
-          if ($parsed) {
-            $annotations= $this->parseAnnotations($parsed, $context, $imports, isset($tokens[$i][2]) ? $tokens[$i][2] : -1);
-            $parsed= '';
-          }
-          $details['class']= [
-            DETAIL_COMMENT      => trim(preg_replace('/\n\s+\* ?/', "\n", "\n".substr(
-              $comment, 
-              4,                              // "/**\n"
-              strpos($comment, '* @')- 2      // position of first details token
-            ))),
-            DETAIL_ANNOTATIONS  => $annotations[0]
-          ];
-          $annotations= [0 => [], 1 => []];
-          $comment= null;
-          break;
-
-        case T_VARIABLE:                      // Have a member variable
-          if ($parsed) {
-            $annotations= $this->parseAnnotations($parsed, $context, $imports, isset($tokens[$i][2]) ? $tokens[$i][2] : -1);
-            $parsed= '';
-          }
-          $name= substr($tokens[$i][1], 1);
-          $details[0][$name]= [
-            DETAIL_ANNOTATIONS => $annotations[0]
-          ];
-          $annotations= [0 => [], 1 => []];
-          break;
-
-        case T_FUNCTION:
-          if ($parsed) {
-            $annotations= $this->parseAnnotations($parsed, $context, $imports, isset($tokens[$i][2]) ? $tokens[$i][2] : -1);
-            $parsed= '';
-          }
-          $i+= 2;
-          $m= $tokens[$i][1];
-          $details[1][$m]= [
-            DETAIL_ARGUMENTS    => [],
-            DETAIL_RETURNS      => null,
-            DETAIL_THROWS       => [],
-            DETAIL_COMMENT      => trim(preg_replace('/\n\s+\* ?/', "\n", "\n".substr(
-              $comment, 
-              4,                              // "/**\n"
-              strpos($comment, '* @')- 2      // position of first details token
-            ))),
-            DETAIL_ANNOTATIONS  => $annotations[0],
-            DETAIL_TARGET_ANNO  => $annotations[1]
-          ];
-          $annotations= [0 => [], 1 => []];
-          $matches= null;
-          preg_match_all('/@([a-z]+)\s*([^\r\n]+)?/', $comment, $matches, PREG_SET_ORDER);
-          $comment= null;
-          $arg= 0;
-          foreach ($matches as $match) {
-            switch ($match[1]) {
-              case 'param':
-                $details[1][$m][DETAIL_ARGUMENTS][$arg++]= $this->typeIn($match[2]);
-                break;
-
-              case 'return':
-                $details[1][$m][DETAIL_RETURNS]= $this->typeIn($match[2]);
-                break;
-
-              case 'throws': 
-                $details[1][$m][DETAIL_THROWS][]= $this->typeIn($match[2]);
-                break;
-            }
-          }
-          $b= 0;
-          while (++$i < $s) {
-            if ('{' === $tokens[$i][0]) {
-              $b++;
-            } else if ('}' === $tokens[$i][0]) {
-              if (0 === --$b) break;
-            } else if (0 === $b && ';' === $tokens[$i][0]) {
-              break;    // Abstract or interface method
-            }
-          }
-          break;
-
-        default:
-          // Empty
+    foreach ($decl->body()->members() as $member) {
+      $annotations= $this->parseAnnotations($member->annotations(), $context, $imports, -1);
+      if ($member->isField()) {
+        $details[0][$member->name()]= [
+          DETAIL_ANNOTATIONS => $annotations[0]
+        ];
+      } else if ($member->isMethod()) {
+        $details[1][$member->name()]= [
+          DETAIL_ARGUMENTS    => $member->arguments(),
+          DETAIL_RETURNS      => $member->returns(),
+          DETAIL_THROWS       => $member->throws(),
+          DETAIL_COMMENT      => null,
+          DETAIL_ANNOTATIONS  => $annotations[0],
+          DETAIL_TARGET_ANNO  => $annotations[1]
+        ];
       }
     }
+
     return $details;
   }
 }
