@@ -350,24 +350,18 @@ class ClassParser extends \lang\Object {
     $details= [
       0 => [],    // Fields
       1 => [],    // Methods
-      'class' => [
-        DETAIL_COMMENT      => null,
-        DETAIL_ANNOTATIONS  => $annotations[0]
-      ]
+      'class' => [DETAIL_ANNOTATIONS  => $annotations[0]]
     ];
 
     foreach ($decl->body()->members() as $member) {
       $annotations= $this->parseAnnotations($member->annotations(), $context, $imports, -1);
       if ($member->isField()) {
-        $details[0][$member->name()]= [
-          DETAIL_ANNOTATIONS => $annotations[0]
-        ];
+        $details[0][$member->name()]= [DETAIL_ANNOTATIONS => $annotations[0]];
       } else if ($member->isMethod()) {
         $details[1][$member->name()]= [
           DETAIL_ARGUMENTS    => $member->arguments(),
           DETAIL_RETURNS      => $member->returns(),
           DETAIL_THROWS       => $member->throws(),
-          DETAIL_COMMENT      => null,
           DETAIL_ANNOTATIONS  => $annotations[0],
           DETAIL_TARGET_ANNO  => $annotations[1]
         ];
