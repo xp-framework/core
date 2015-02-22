@@ -44,7 +44,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
   #[@test]
   public function class_with_import() {
     $this->assertEquals(
-      new CodeUnit('lang', ['util\Date'], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody())),
+      new CodeUnit('lang', ['util.Date'], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody())),
       (new PhpSyntax())->parse('<?php namespace lang; use util\Date; class Test extends Object { }')
     );
   }
@@ -52,7 +52,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
   #[@test]
   public function class_with_imports() {
     $this->assertEquals(
-      new CodeUnit('lang', ['util\Date', 'util\Objects'], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody())),
+      new CodeUnit('lang', ['util.Date', 'util.Objects'], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody())),
       (new PhpSyntax())->parse('<?php namespace lang; use util\Date; use util\Objects; class Test extends Object { }')
     );
   }
@@ -60,7 +60,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
   #[@test]
   public function class_with_extension_import() {
     $this->assertEquals(
-      new CodeUnit('lang', ['xp\ArrayListExtensions'], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody())),
+      new CodeUnit('lang', ['xp.ArrayListExtensions'], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody())),
       (new PhpSyntax())->parse('<?php namespace lang; new import("xp.ArrayListExtensions"); class Test extends Object { }')
     );
   }
@@ -449,7 +449,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
   #[@test]
   public function legacy_defines_after_namespace_and_imports() {
     $this->assertEquals(
-      new CodeUnit('test', ['lang\Object', 'util\Date'], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody())),
+      new CodeUnit('test', ['lang.Object', 'util.Date'], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody())),
       (new PhpSyntax())->parse('<?php namespace test;
         use lang\Object;
         use util\Date;
@@ -465,7 +465,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
   #[@test]
   public function legacy_uses() {
     $this->assertEquals(
-      new CodeUnit(null, ['lang\Object'], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody())),
+      new CodeUnit(null, ['lang.Object'], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody())),
       (new PhpSyntax())->parse('<?php uses("lang.Object"); class Test extends Object { }')
     );
   }
