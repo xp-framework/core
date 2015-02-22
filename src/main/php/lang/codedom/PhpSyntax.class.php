@@ -64,19 +64,15 @@ class PhpSyntax extends Syntax {
       ':annotations' => new Optional(new Sequence([new Token(600)], function($values) {
         return $values[0];
       })),
-      ':class_parent' => new Optional(
-        new Sequence([new Token(T_EXTENDS), $type], function($values) { return implode('', $values[1]); })
-      ),
-      ':class_implements' => new Optional(
-        new Sequence([new Token(T_IMPLEMENTS), new ListOf($type)], function($values) {
-          return array_map(function($v) { return implode('', $v); }, $values[1]);
-        })
-      ),
-      ':interface_parents' => new Optional(
-        new Sequence([new Token(T_EXTENDS), new ListOf($type)], function($values) {
-          return array_map(function($v) { return implode('', $v); }, $values[1]);
-        })
-      ),
+      ':class_parent' => new Optional(new Sequence([new Token(T_EXTENDS), $type], function($values) {
+        return implode('', $values[1]);
+      })),
+      ':class_implements' => new Optional(new Sequence([new Token(T_IMPLEMENTS), new ListOf($type)], function($values) {
+        return array_map(function($v) { return implode('', $v); }, $values[1]);
+      })),
+      ':interface_parents' => new Optional(new Sequence([new Token(T_EXTENDS), new ListOf($type)], function($values) {
+        return array_map(function($v) { return implode('', $v); }, $values[1]);
+      })),
       ':type_body' => new Sequence([new Token('{'), new Repeated(new Rule(':member')), new Token('}')], function($values) {
         $body= ['member' => [], 'trait' => []];
         foreach ($values[1] as $decl) {
@@ -86,13 +82,14 @@ class PhpSyntax extends Syntax {
         }
         return new TypeBody($body['member'], $body['trait']);
       }),
-      ':member' => new AnyOf([], [
-        new Sequence([new Token(T_USE), $type, new Token(';')], function($values) {
+      ':member' => new AnyOf([
+        T_USE => new Sequence([$type, new Token(';')], function($values) {
           return [new TraitUsage(implode('', $values[1]))];
         }),
-        new Sequence([new Token(T_CONST), new ListOf(new Rule(':const')), new Token(';')], function($values) {
+        T_CONST => new Sequence([new ListOf(new Rule(':const')), new Token(';')], function($values) {
           return $values[1];
         }),
+        ], [
         new Sequence(
           [
             new Rule(':annotations'),
