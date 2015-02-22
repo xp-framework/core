@@ -1,6 +1,6 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\reflect\Modifiers;;
+use lang\reflect\Modifiers;
 use lang\XPClass;
 use lang\Enum;
 
