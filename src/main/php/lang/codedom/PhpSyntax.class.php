@@ -19,10 +19,10 @@ class PhpSyntax extends \lang\Object {
       }),
       ':namespace' => new Optional(new OneOf([
         T_VARIABLE  => new Sequence([new Token('='), new Token(T_CONSTANT_ENCAPSED_STRING), new Token(';')], function($values) {
-          return strtr(substr($values[2], 1, -1), '.', '\\');
+          return substr($values[2], 1, -1);
         }),
         T_NAMESPACE => new Sequence([$type, new Token(';')], function($values) {
-          return implode('', $values[1]);
+          return strtr(implode('', $values[1]), '\\', '.');
         })
       ])),
       ':imports' => new AnyOf([

@@ -34,6 +34,14 @@ class PhpSyntaxTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function class_in_sub_namespace() {
+    $this->assertEquals(
+      new CodeUnit('lang.codedom', [], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody())),
+      (new PhpSyntax())->parse('<?php namespace lang\codedom; class Test extends Object { }')
+    );
+  }
+
+  #[@test]
   public function class_with_import() {
     $this->assertEquals(
       new CodeUnit('lang', ['util\Date'], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody())),
@@ -465,7 +473,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
   #[@test]
   public function legacy_package() {
     $this->assertEquals(
-      new CodeUnit('net\xp_framework', [], new ClassDeclaration(0, null, 'net·xp_framework·Test', 'Object', [], new TypeBody())),
+      new CodeUnit('net.xp_framework', [], new ClassDeclaration(0, null, 'net·xp_framework·Test', 'Object', [], new TypeBody())),
       (new PhpSyntax())->parse('<?php $package= "net.xp_framework"; class net·xp_framework·Test extends Object { }')
     );
   }
