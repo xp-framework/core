@@ -302,7 +302,7 @@ class ClassParser extends \lang\Object {
 
     $imports= [];
     foreach ($codeunit->imports() as $type) {
-      $imports[substr($type, strrpos($type, '\\')+ 1)]= strtr($type, '\\', '.');
+      $imports[substr($type, strrpos($type, '.')+ 1)]= $type;
     }
 
     $decl= $codeunit->declaration();
