@@ -231,7 +231,7 @@ class ClassDetailsTest extends TestCase {
 
   #[@test]
   public function use_statements_evaluated() {
-    $actual= (new ClassParser())->parseDetails('<?php namespace test\\use;
+    $actual= (new ClassParser())->parseDetails('<?php namespace test;
       use lang\\Object;
 
       #[@value(new Object())]
