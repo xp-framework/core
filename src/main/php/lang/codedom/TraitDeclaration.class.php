@@ -3,24 +3,17 @@
 use util\Objects;
 use lang\reflect\Modifiers;
 
-class TraitDeclaration extends \lang\Object {
-  private $modifiers, $annotations, $name, $body;
+class TraitDeclaration extends TypeDeclaration {
 
   public function __construct($modifiers, $annotations, $name, $body) {
-    $this->modifiers= $modifiers;
-    $this->annotations= $annotations;
-    $this->name= $name;
-    $this->body= $body;
+    parent::__construct($modifiers, $annotations, $name, $body);
   }
 
-  public function access($modifiers) {
-    $this->modifiers= $modifiers;
-  }
-
-  public function annotate($annotations) {
-    $this->annotations= $annotations;
-  }
-
+  /**
+   * Creates a string representation
+   *
+   * @return string
+   */
   public function toString() {
     return sprintf(
       "%s@(%s%s %s){\n%s}",
@@ -28,10 +21,16 @@ class TraitDeclaration extends \lang\Object {
       $this->annotations ? $this->annotations.' ' : '',
       implode(' ', Modifiers::namesOf($this->modifiers)),
       $this->name,
-      implode('', array_map(function($decl) { return '  '.str_replace("\n", "\n  ", $decl->toString())."\n"; }, $this->body))
+      $this->body->toString('  ')
     );
   }
 
+  /**
+   * Returns whether a given value is equal to this code unit
+   *
+   * @param  var $cmp
+   * @return bool
+   */
   public function equals($cmp) {
     return $cmp instanceof self && (
       $this->modifiers === $cmp->modifiers &&

@@ -3,25 +3,19 @@
 use util\Objects;
 use lang\reflect\Modifiers;
 
-class InterfaceDeclaration extends \lang\Object {
-  private $modifiers, $annotations, $name, $extends, $body;
+class InterfaceDeclaration extends TypeDeclaration {
+  private $parents;
 
-  public function __construct($modifiers, $annotations, $name, $extends, $body) {
-    $this->modifiers= $modifiers;
-    $this->annotations= $annotations;
-    $this->name= $name;
-    $this->extends= $extends;
-    $this->body= $body;
+  public function __construct($modifiers, $annotations, $name, $parents, $body) {
+    parent::__construct($modifiers, $annotations, $name, $body);
+    $this->parents= $parents;
   }
 
-  public function access($modifiers) {
-    $this->modifiers= $modifiers;
-  }
-
-  public function annotate($annotations) {
-    $this->annotations= $annotations;
-  }
-
+  /**
+   * Creates a string representation
+   *
+   * @return string
+   */
   public function toString() {
     return sprintf(
       "%s@(%s%s %s%s){\n%s}",
@@ -29,17 +23,23 @@ class InterfaceDeclaration extends \lang\Object {
       $this->annotations ? $this->annotations.' ' : '',
       implode(' ', Modifiers::namesOf($this->modifiers)),
       $this->name,
-      $this->extends ? ' extends '.$this->extends : '',
-      implode('', array_map(function($decl) { return '  '.str_replace("\n", "\n  ", $decl->toString())."\n"; }, $this->body))
+      $this->parents ? ' extends '.$this->parents : '',
+      $this->body->toString('  ')
     );
   }
 
+  /**
+   * Returns whether a given value is equal to this code unit
+   *
+   * @param  var $cmp
+   * @return bool
+   */
   public function equals($cmp) {
     return $cmp instanceof self && (
       $this->modifiers === $cmp->modifiers &&
       $this->annotations === $cmp->annotations &&
       $this->name === $cmp->name &&
-      Objects::equal($this->extends, $cmp->extends) &&
+      Objects::equal($this->parents, $cmp->parents) &&
       Objects::equal($this->body, $cmp->body)
     );
   }

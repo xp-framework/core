@@ -1,8 +1,6 @@
 <?php namespace lang\codedom;
 
 use lang\FormatException;
-use lang\ClassFormatException;
-use lang\codedom\parse\StartingWith;
 
 class PhpSyntax extends \lang\Object {
   private static $parse;
@@ -81,13 +79,13 @@ class PhpSyntax extends \lang\Object {
         })
       ),
       ':type_body' => new Sequence([new Token('{'), new Repeated(new Rule(':member')), new Token('}')], function($values) {
-        $declared= [];
+        $body= ['member' => [], 'trait' => []];
         foreach ($values[1] as $decl) {
-          foreach ($decl as $member) {
-            $declared[]= $member;
+          foreach ($decl as $part) {
+            $body[$part->type()][]= $part;
           }
         }
-        return $declared;
+        return new TypeBody($body['member'], $body['trait']);
       }),
       ':member' => new EitherOf([
         new Sequence([new Token(T_USE), $type, new Token(';')], function($values) {
@@ -135,6 +133,12 @@ class PhpSyntax extends \lang\Object {
     ];
   }
 
+  /**
+   * Parses modifier names into flags
+   *
+   * @param  string[] $names
+   * @return int
+   */
   protected static function modifiers($names) {
     static $modifiers= [
       'public'    => MODIFIER_PUBLIC,
@@ -152,6 +156,13 @@ class PhpSyntax extends \lang\Object {
     return $m;
   }
 
+  /**
+   * Parses input
+   *
+   * @param  string $input
+   * @return lang.codedom.CodeUnit
+   * @throws lang.FormatException
+   */
   public function parse($input) {
     return self::$parse[':start']->evaluate(self::$parse, new Stream($input));
   }

@@ -2,35 +2,39 @@
 
 use lang\reflect\Modifiers;
 
-class FieldDeclaration extends \lang\Object {
-  private $modifiers, $name, $initial;
+class FieldDeclaration extends MemberDeclaration {
+  private $initial;
 
   public function __construct($modifiers, $annotations, $name, $initial) {
-    $this->modifiers= $modifiers;
-    $this->annotations= $annotations;
-    $this->name= $name;
+    parent::__construct($modifiers, $annotations, $name);
     $this->initial= $initial;
   }
 
-  public function access($modifiers) {
-    $this->modifiers= $modifiers;
-  }
+  /** @return bool */
+  public function isField() { return true; }
 
-  public function annotate($annotations) {
-    $this->annotations= $annotations;
-  }
-
+  /**
+   * Creates a string representation
+   *
+   * @return string
+   */
   public function toString() {
     return sprintf(
-      '%s@<%s $%s%s>',
+      '%s@<%s%s $%s%s>',
       $this->getClassName(),
       $this->annotations ? $this->annotations.' ' : '',
       implode(' ', Modifiers::namesOf($this->modifiers)),
       $this->name,
-      $this->initial ? ' = '.$this->initial.';' : ''
+      $this->initial ? ' = '.$this->initial : ''
     );
   }
 
+  /**
+   * Returns whether a given value is equal to this code unit
+   *
+   * @param  var $cmp
+   * @return bool
+   */
   public function equals($cmp) {
     return $cmp instanceof self && (
       $this->modifiers === $cmp->modifiers &&

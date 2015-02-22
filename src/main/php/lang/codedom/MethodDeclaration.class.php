@@ -3,26 +3,24 @@
 use util\Objects;
 use lang\reflect\Modifiers;
 
-class MethodDeclaration extends \lang\Object {
-  private $modifiers, $annotations, $name, $arguments, $returns, $body;
+class MethodDeclaration extends MemberDeclaration {
+  private $arguments, $returns, $body;
 
   public function __construct($modifiers, $annotations, $name, $arguments, $returns, $body) {
-    $this->modifiers= $modifiers;
-    $this->annotations= $annotations;
-    $this->name= $name;
+    parent::__construct($modifiers, $annotations, $name);
     $this->arguments= $arguments;
     $this->returns= $returns;
     $this->body= $body;
   }
 
-  public function access($modifiers) {
-    $this->modifiers= $modifiers;
-  }
+  /** @return bool */
+  public function isMethod() { return true; }
 
-  public function annotate($annotations) {
-    $this->annotations= $annotations;
-  }
-
+  /**
+   * Creates a string representation
+   *
+   * @return string
+   */
   public function toString() {
     return sprintf(
       '%s@<%s%s %s(%s)>%s',
@@ -31,10 +29,16 @@ class MethodDeclaration extends \lang\Object {
       implode(' ', Modifiers::namesOf($this->modifiers)),
       $this->name,
       $this->arguments,
-      $this->body ? ' {'.strlen($this->body).' bytes}' : ''
+      $this->body ? ' { '.strlen($this->body).' bytes }' : ''
     );
   }
 
+  /**
+   * Returns whether a given value is equal to this code unit
+   *
+   * @param  var $cmp
+   * @return bool
+   */
   public function equals($cmp) {
     return $cmp instanceof self && (
       $this->modifiers === $cmp->modifiers &&

@@ -3,26 +3,20 @@
 use util\Objects;
 use lang\reflect\Modifiers;
 
-class ClassDeclaration extends \lang\Object {
-  private $modifiers, $annotations, $name, $extends, $implements, $body;
+class ClassDeclaration extends TypeDeclaration {
+  private $extends, $implements;
 
   public function __construct($modifiers, $annotations, $name, $extends, $implements, $body) {
-    $this->modifiers= $modifiers;
-    $this->annotations= $annotations;
-    $this->name= $name;
+    parent::__construct($modifiers, $annotations, $name, $body);
     $this->extends= $extends;
     $this->implements= $implements;
-    $this->body= $body;
   }
 
-  public function access($modifiers) {
-    $this->modifiers= $modifiers;
-  }
-
-  public function annotate($annotations) {
-    $this->annotations= $annotations;
-  }
-
+  /**
+   * Creates a string representation
+   *
+   * @return string
+   */
   public function toString() {
     return sprintf(
       "%s@(%s%s %s%s%s){\n%s}",
@@ -32,10 +26,16 @@ class ClassDeclaration extends \lang\Object {
       $this->name,
       $this->extends ? ' extends '.$this->extends : '',
       $this->implements ? ' implements '.implode(', ', $this->implements) : '',
-      implode('', array_map(function($decl) { return '  '.str_replace("\n", "\n  ", $decl->toString())."\n"; }, $this->body))
+      $this->body->toString('  ')
     );
   }
 
+  /**
+   * Returns whether a given value is equal to this code unit
+   *
+   * @param  var $cmp
+   * @return bool
+   */
   public function equals($cmp) {
     return $cmp instanceof self && (
       $this->modifiers === $cmp->modifiers &&
