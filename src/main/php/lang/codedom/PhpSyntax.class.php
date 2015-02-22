@@ -14,7 +14,7 @@ class PhpSyntax extends Syntax {
         }
         return new CodeUnit($values[1], $imports, $values[4]);
       }),
-      ':namespace' => new Optional(new OneOf([
+      ':namespace' => new Optional(new AnyOf([
         T_VARIABLE  => new Sequence([new Token('='), new Token(T_CONSTANT_ENCAPSED_STRING), new Token(';')], function($values) {
           return substr($values[2], 1, -1);
         }),
@@ -22,7 +22,7 @@ class PhpSyntax extends Syntax {
           return strtr(implode('', $values[1]), '\\', '.');
         })
       ])),
-      ':imports' => new Repeated(new OneOf([
+      ':imports' => new Repeated(new AnyOf([
         T_USE => new Sequence([$type, new Token(';')], function($values) {
           return strtr(implode('', $values[1]), '\\', '.');
         }),
@@ -30,7 +30,7 @@ class PhpSyntax extends Syntax {
           return trim($values[3], '\'"');
         })
       ])),
-      ':uses_opt' => new Repeated(new OneOf([
+      ':uses_opt' => new Repeated(new AnyOf([
         T_STRING => new Sequence([new Token('('), new SkipOver('(', ')'), new Token(';')], function($values) {
           if ('uses' === $values[0]) {
             return array_map(function($class) { return trim($class, "'\" "); }, explode(',', $values[2]));
@@ -43,7 +43,7 @@ class PhpSyntax extends Syntax {
         [
           new Rule(':annotations'),
           $modifiers,
-          new OneOf([
+          new AnyOf([
             T_CLASS     => new Sequence([new Token(T_STRING), new Rule(':class_parent'), new Rule(':class_implements'), new Rule(':type_body')], function($values) {
               return new ClassDeclaration(0, null, $values[1], $values[2], (array)$values[3], $values[4]);
             }),
@@ -86,7 +86,7 @@ class PhpSyntax extends Syntax {
         }
         return new TypeBody($body['member'], $body['trait']);
       }),
-      ':member' => new EitherOf([
+      ':member' => new AnyOf([], [
         new Sequence([new Token(T_USE), $type, new Token(';')], function($values) {
           return [new TraitUsage(implode('', $values[1]))];
         }),
@@ -98,7 +98,7 @@ class PhpSyntax extends Syntax {
             new Rule(':annotations'),
             $modifiers,
             new Rule(':annotations'),   // Old way of annotating fields, in combination with grouped syntax
-            new OneOf([
+            new AnyOf([
               T_FUNCTION => new Sequence([new Token(T_STRING), new Token('('), new SkipOver('(', ')'), new Rule(':method')], function($values, $stream) {
                 $details= self::details($stream->comment());
                 if ('__construct' === $values[1]) {
@@ -126,11 +126,11 @@ class PhpSyntax extends Syntax {
       ':field' => new Sequence(
         [
           new Optional(new Sequence([new Token('='), new Expr()], function($values) { return $values[1]; })),
-          new OneOf([';' => new Returns(null), ',' => new Returns(null)])
+          new AnyOf([';' => new Returns(null), ',' => new Returns(null)])
         ],
         function($values) { return $values[0]; }
       ),
-      ':method' => new OneOf([
+      ':method' => new AnyOf([
         ';' => new Returns(null),
         '{' => new Sequence([new SkipOver('{', '}')], function($values) { return $values[1]; })
       ])

@@ -3,11 +3,11 @@
 class AnnotationSyntax extends Syntax {
 
   static function __static() {
-    $number= new OneOf([
+    $number= new AnyOf([
       T_DNUMBER => new Sequence([], function($values) { return (double)$values[0]; }),
       T_LNUMBER => new Sequence([], function($values) { return (int)$values[0]; })
     ]);
-    $key= new OneOf([
+    $key= new AnyOf([
       T_STRING      => new Sequence([], function($values) { return $values[0]; }),
       T_RETURN      => new Returns('return'),
       T_CLASS       => new Returns('class'),
@@ -31,31 +31,35 @@ class AnnotationSyntax extends Syntax {
         [new Token('('), new Rule(':expr'), new Token(')')],
         function($values) { return $values[1]; }
       )),
-      ':expr' => new EitherOf([
-        new Sequence([$number], function($values) {
-          return new AnnotationValue($values[0]);
-        }),
-        new Sequence([new Token('-'), $number], function($values) {
+      ':expr' => new AnyOf([
+        '-' => new Sequence([$number], function($values) {
           return new AnnotationValue(-1 * $values[1]);
         }),
-        new Sequence([new Token('+'), $number], function($values) {
+        '+' => new Sequence([$number], function($values) {
           return new AnnotationValue($values[1]);
         }),
-        new Sequence([new Token(T_CONSTANT_ENCAPSED_STRING)], function($values) {
-          return new AnnotationValue(eval('return '.$values[0].';'));
-        }),
-        new Sequence([new Token('['), new Optional(new ListOf(new Rule(':element'))), new Token(']')], function($values) {
+        '[' => new Sequence([new Optional(new ListOf(new Rule(':element'))), new Token(']')], function($values) {
            return new AnnotationArray((array)$values[1]);
         }),
-        new Sequence([new Token(T_ARRAY), new Token('('), new Optional(new ListOf(new Rule(':element'))), new Token(')')], function($values) {
+        T_ARRAY => new Sequence([new Token('('), new Optional(new ListOf(new Rule(':element'))), new Token(')')], function($values) {
            return new AnnotationArray((array)$values[2]);
         }),
-        new Sequence([new Token(T_NEW), $type, new Token('('), new Optional(new ListOf(new Rule(':expr'))), new Token(')')], function($values) {
+        T_DNUMBER => new Sequence([], function($values) {
+          return new AnnotationValue((double)$values[0]);
+        }),
+        T_LNUMBER => new Sequence([], function($values) {
+          return new AnnotationValue((int)$values[0]);
+        }),
+        T_CONSTANT_ENCAPSED_STRING => new Sequence([], function($values) {
+          return new AnnotationValue(eval('return '.$values[0].';'));
+        }),
+        T_NEW => new Sequence([$type, new Token('('), new Optional(new ListOf(new Rule(':expr'))), new Token(')')], function($values) {
           return new AnnotationInstance(implode('', $values[1]), (array)$values[3]);
         }),
-        new Sequence([new Token(T_FUNCTION), new Token('('), new SkipOver('(', ')'), new Token('{'), new SkipOver('{', '}')], function($values) {
+        T_FUNCTION => new Sequence([new Token('('), new SkipOver('(', ')'), new Token('{'), new SkipOver('{', '}')], function($values) {
           return new AnnotationClosure($values[2], $values[4]);
         }),
+        ], [
         new Sequence([$type, new Token(T_DOUBLE_COLON), new Rule(':member')], function($values) {
           return new AnnotationMember(implode('', $values[0]), $values[2]);
         }),
@@ -69,7 +73,7 @@ class AnnotationSyntax extends Syntax {
       ':pair'  => new Sequence([$key, new Token('='), new Rule(':expr')], function($values) {
         return [$values[0] => $values[2]];
       }),
-      ':element' => new EitherOf([
+      ':element' => new AnyOf([], [
         new Sequence([new Token(T_CONSTANT_ENCAPSED_STRING), new Token(T_DOUBLE_ARROW), new Rule(':expr')], function($values) {
           return [trim($values[0], '"\'') => $values[2]];
         }),
@@ -78,7 +82,7 @@ class AnnotationSyntax extends Syntax {
         })
       ]),
       ':member' => new Sequence(
-        [new OneOf([
+        [new AnyOf([
           T_STRING   => new Sequence([], function($values) { return $values[0]; }),
           T_CLASS    => new Sequence([], function($values) { return $values[0]; }),
           T_VARIABLE => new Sequence([], function($values) { return $values[0]; }),
