@@ -34,6 +34,9 @@ class ConstructorDeclaration extends MemberDeclaration {
   /** @return string[] */
   public function throws() { return $this->throws; }
 
+  /** @return string */
+  public function body() { return $this->body; }
+
   /**
    * Creates a string representation
    *
