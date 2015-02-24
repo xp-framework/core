@@ -15,6 +15,12 @@ class ClassDeclaration extends TypeDeclaration {
   /** @return bool */
   public function isClass() { return true; }
 
+  /** @return string */
+  public function parent() { return $this->extends; }
+
+  /** @return string[] */
+  public function interfaces() { return $this->implements; }
+
   /**
    * Creates a string representation
    *

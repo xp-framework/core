@@ -4,7 +4,7 @@ use util\Objects;
 use lang\reflect\Modifiers;
 
 class MethodDeclaration extends MemberDeclaration {
-  private $arguments, $returns, $throws, $body;
+  private $parameters, $returns, $throws, $body;
 
   /**
    * Creates a new method declaration
@@ -12,14 +12,14 @@ class MethodDeclaration extends MemberDeclaration {
    * @param  int $modifiers
    * @param  string $annotations
    * @param  string $name
-   * @param  string[] $arguments Argument types
+   * @param  string[] $parameters Argument types
    * @param  string $returns Return type
    * @param  string[] $throws Exception types
    * @param  string $body Code in body as string
    */
-  public function __construct($modifiers, $annotations, $name, $arguments, $returns, $throws, $body) {
+  public function __construct($modifiers, $annotations, $name, $parameters, $returns, $throws, $body) {
     parent::__construct($modifiers, $annotations, $name);
-    $this->arguments= $arguments;
+    $this->parameters= $parameters;
     $this->returns= $returns;
     $this->throws= $throws;
     $this->body= $body;
@@ -29,7 +29,7 @@ class MethodDeclaration extends MemberDeclaration {
   public function isMethod() { return true; }
 
   /** @return string[] */
-  public function arguments() { return $this->arguments; }
+  public function parameters() { return $this->parameters; }
 
   /** @return string */
   public function returns() { return $this->returns; }
@@ -52,7 +52,7 @@ class MethodDeclaration extends MemberDeclaration {
       $this->annotations ? $this->annotations.' ' : '',
       implode(' ', Modifiers::namesOf($this->modifiers)),
       $this->name,
-      implode(', ', $this->arguments),
+      implode(', ', $this->parameters),
       $this->returns,
       $this->throws ? ' throws '.implode(' ', $this->throws) : '',
       $this->body ? ' { '.strlen($this->body).' bytes }' : ''
@@ -71,7 +71,7 @@ class MethodDeclaration extends MemberDeclaration {
       $this->annotations === $cmp->annotations &&
       $this->name === $cmp->name &&
       $this->returns === $cmp->returns &&
-      Objects::equal($this->arguments, $cmp->arguments) &&
+      Objects::equal($this->parameters, $cmp->parameters) &&
       Objects::equal($this->throws, $cmp->throws) &&
       Objects::equal($this->body, $cmp->body)
     );
