@@ -9,6 +9,9 @@ class TraitDeclaration extends TypeDeclaration {
     parent::__construct($modifiers, $annotations, $name, $body);
   }
 
+  /** @return bool */
+  public function isTrait() { return true; }
+
   /**
    * Creates a string representation
    *

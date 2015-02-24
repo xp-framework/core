@@ -23,4 +23,14 @@ abstract class TypeDeclaration extends \lang\Object { use Decorations;
 
   /** @return lang.codedom.TypeBody */
   public function body() { return $this->body; }
+
+  /** @return bool */
+  public function isClass() { return false; }
+
+  /** @return bool */
+  public function isInterface() { return false; }
+
+  /** @return bool */
+  public function isTrait() { return false; }
+
 }

@@ -12,6 +12,9 @@ class ClassDeclaration extends TypeDeclaration {
     $this->implements= $implements;
   }
 
+  /** @return bool */
+  public function isClass() { return true; }
+
   /**
    * Creates a string representation
    *

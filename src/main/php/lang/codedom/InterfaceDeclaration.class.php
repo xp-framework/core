@@ -11,6 +11,9 @@ class InterfaceDeclaration extends TypeDeclaration {
     $this->parents= $parents;
   }
 
+  /** @return bool */
+  public function isInterface() { return true; }
+
   /**
    * Creates a string representation
    *
