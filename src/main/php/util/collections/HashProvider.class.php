@@ -35,7 +35,7 @@ class HashProvider extends \lang\Object {
     // class apidoc for an explanation. Earlier versions returned LONG_MAX for
     // hex numbers larger than LONG_MAX. Use 2^64 + 1 as hex literal and see if
     // it's "truncated", using the slower hexdec(md5()) implementation then.
-    if (PHP_INT_MAX === @0x20c49ba5e35423) {
+    if (PHP_INT_MAX === @0x20c49ba5e35423 || 0 === "0x1" + 0) {
       $impl= \lang\XPClass::forName('util.collections.MD5HexHashImplementation')->newInstance();
     } else {
       $impl= new MD5HashImplementation();
