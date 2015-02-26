@@ -44,7 +44,7 @@ class UnixCrypt extends \lang\Object {
       
       // On systems >= 5.3.2, check for usage of libc crypt() which also  
       // allows salts which are too short and unsafe characters \n and : 
-      if (':' === substr(crypt('', ':'), 0, 1)) {
+      if (':' === substr(@crypt('', ':'), 0, 1)) {
         self::$STANDARD= newinstance('security.crypto.NativeCryptImpl', [], '{
           public function crypt($plain, $salt) {
             if (strlen($salt) < 1 || strcspn($salt, "\n:") < 2) {

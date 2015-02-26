@@ -18,8 +18,11 @@ class NativeCryptImpl extends CryptImpl {
   public function crypt($plain, $salt) {
     $crypted= crypt($plain, $salt);
     if (strlen($crypted) < 13) {      // Crypted contains error
-      throw new CryptoException('Failed to crypt: '.$crypted);
+      $message= key(@\xp::$errors[__FILE__][__LINE__ - 3]);
+      \xp::gc(__FILE__);
+      throw new CryptoException('Failed to crypt: '.$message);
     }
+    \xp::gc(__FILE__);
     return $crypted;
   }
 
