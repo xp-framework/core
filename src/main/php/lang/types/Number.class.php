@@ -15,7 +15,11 @@ abstract class Number extends \lang\Object {
    * @param   string value
    */
   public function __construct($value) {
-    $this->value= (string)$value;
+    if (0 === strncmp('0x', $value, 2)) {
+      $this->value= (string)hexdec($value);
+    } else {
+      $this->value= (string)$value;
+    }
   }
 
   /**
