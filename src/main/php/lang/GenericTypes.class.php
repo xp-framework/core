@@ -153,6 +153,13 @@ class GenericTypes extends \lang\Object {
     return $name;
   }
 
+  /**
+   * Resolve generic annotation
+   *
+   * @param  string $annotations
+   * @param  lang.XPClass $base
+   * @param  [:string] $imports
+   */
   private function genericAnnotation($annotations, $base, $imports) {
     if (null === $annotations) {
       return [];
@@ -162,6 +169,13 @@ class GenericTypes extends \lang\Object {
     }
   }
 
+  /**
+   * Returns type arguments
+   *
+   * @param  string $annotation
+   * @param  [:string] $placeholders
+   * @return lang.Type[]
+   */
   private function typeArgs($annotation, $placeholders) {
     $args= [];
     foreach (explode(',', $annotation) as $j => $placeholder) {
@@ -172,6 +186,13 @@ class GenericTypes extends \lang\Object {
 
   /**
    * Returns class declaration
+   *
+   * @param  string $name
+   * @param  lang.XPClass $base
+   * @param  lang.codedom.ClassDeclaration $declaration
+   * @param  [:string] $generic Generic class annotation
+   * @param  [:string] $placeholders
+   * @return string
    */
   private function classDeclaration($name, $base, $declaration, $generic, $placeholders) {
     if (isset($generic['parent'])) {
@@ -207,6 +228,13 @@ class GenericTypes extends \lang\Object {
 
   /**
    * Returns interface declaration
+   *
+   * @param  string $name
+   * @param  lang.XPClass $base
+   * @param  lang.codedom.ClassDeclaration $declaration
+   * @param  [:string] $generic Generic class annotation
+   * @param  [:string] $placeholders
+   * @return string
    */
   private function interfaceDeclaration($name, $base, $declaration, $generic, $placeholders) {
     $extends= [];
@@ -229,6 +257,11 @@ class GenericTypes extends \lang\Object {
 
   /**
    * Returns method declaration
+   *
+   * @param  lang.codedom.MethodDeclaration $declaration
+   * @param  string[] $generic Generic parameter types
+   * @param  [:string] $placeholders
+   * @return string
    */
   private function methodDeclaration($declaration, $generic, $placeholders) {
     $parameters= $declaration->parameters();
@@ -288,6 +321,9 @@ class GenericTypes extends \lang\Object {
 
   /**
    * Returns field declaration
+   *
+   * @param  lang.codedom.FieldDeclaration $declaration
+   * @return string
    */
   private function fieldDeclaration($declaration) {
     $initial= $declaration->initial();
@@ -301,6 +337,9 @@ class GenericTypes extends \lang\Object {
 
   /**
    * Returns constant declaration
+   *
+   * @param  lang.codedom.ConstantDeclaration $declaration
+   * @return string
    */
   private function constantDeclaration($declaration) {
     return sprintf(
