@@ -122,7 +122,7 @@ class TextReader extends Reader {
     } while (($l= @iconv_strlen($bytes, $this->charset)) < $size);
 
     if (false === $l) {
-      $message= key(\xp::$errors[__FILE__][__LINE__ - 3]);
+      $message= key(@\xp::$errors[__FILE__][__LINE__ - 3]);
       \xp::gc(__FILE__);
       throw new \lang\FormatException($message);
     }
