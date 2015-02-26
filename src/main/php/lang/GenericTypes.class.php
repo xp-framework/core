@@ -273,7 +273,7 @@ class GenericTypes extends \lang\Object {
 
     $tv= '';
     foreach ($placeholders as $key => $val) {
-      $tv.= '    $'.$key."= \lang\Type::forName('".$val."');\n";
+      $tv.= '    $'.$key."= self::\$__generic['".$key."'];\n";
     }
 
     $body= $declaration->body();
