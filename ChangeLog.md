@@ -3,6 +3,7 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Added code compensating for [removed hex support in strings](https://wiki.php.net/rfc/remove_hex_support_in_numeric_strings) in PHP7  - @thekid
 * Added GzDecompressingInputStream::header() method - @thekid
 * Fixed GzDecompressingInputStream not supporting gzip data with embedded
   original filenames - @thekid
