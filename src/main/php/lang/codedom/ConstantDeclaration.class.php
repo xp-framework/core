@@ -1,21 +1,24 @@
 <?php namespace lang\codedom;
 
 class ConstantDeclaration extends MemberDeclaration {
-  private $initial;
+  private $value;
 
   /**
    * Creates a new constant declaration
    *
    * @param  string $name
-   * @param  string $initial
+   * @param  string $value
    */
-  public function __construct($name, $initial) {
+  public function __construct($name, $value) {
     parent::__construct(0, null, $name);
-    $this->initial= $initial;
+    $this->value= $value;
   }
 
   /** @return bool */
   public function isConstant() { return true; }
+
+  /** @return string */
+  public function value() { return $this->value; }
 
   /**
    * Creates a string representation
@@ -23,7 +26,7 @@ class ConstantDeclaration extends MemberDeclaration {
    * @return string
    */
   public function toString() {
-    return sprintf('%s@<%s = %s>', $this->getClassName(), $this->name, $this->initial);
+    return sprintf('%s@<%s = %s>', $this->getClassName(), $this->name, $this->value);
   }
 
   /**
@@ -35,7 +38,7 @@ class ConstantDeclaration extends MemberDeclaration {
   public function equals($cmp) {
     return $cmp instanceof self && (
       $this->name === $cmp->name &&
-      $this->initial === $cmp->initial
+      $this->value === $cmp->value
     );
   }
 }

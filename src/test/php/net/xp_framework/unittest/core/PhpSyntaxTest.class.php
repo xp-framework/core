@@ -11,6 +11,7 @@ use lang\codedom\FieldDeclaration;
 use lang\codedom\ConstantDeclaration;
 use lang\codedom\TraitUsage;
 use lang\codedom\TypeBody;
+use lang\codedom\Parameter;
 
 /**
  * Integration test for lang.codedom package
@@ -182,12 +183,17 @@ class PhpSyntaxTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function class_with_method_with_arguments() {
+  public function class_with_method_with_parameters() {
+    $parameters= [
+      new Parameter('a', null, '1'),
+      new Parameter('b', 'Generic'),
+      new Parameter('c', 'array', 'array(1)')
+    ];
     $this->assertEquals(
       new CodeUnit(null, [], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody([
-        new MethodDeclaration(0, null, 'test', [], 'var', [], 'return true;')
+        new MethodDeclaration(0, null, 'test', $parameters, 'var', [], 'return true;')
       ]))),
-      (new PhpSyntax())->parse('<?php class Test extends Object { function test($a= 1, Generic $b, $c= array(1)) { return true; } }')
+      (new PhpSyntax())->parse('<?php class Test extends Object { function test($a= 1, Generic $b, array $c= array(1)) { return true; } }')
     );
   }
 
@@ -195,7 +201,7 @@ class PhpSyntaxTest extends \unittest\TestCase {
   public function class_with_method_with_apidoc_tags() {
     $this->assertEquals(
       new CodeUnit(null, [], new ClassDeclaration(0, null, 'Test', 'Object', [], new TypeBody([
-        new MethodDeclaration(0, null, 'test', ['string'], 'bool', ['lang.Throwable'], 'return true;')
+        new MethodDeclaration(0, null, 'test', [new Parameter('name', null, null, 'string')], 'bool', ['lang.Throwable'], 'return true;')
       ]))),
       (new PhpSyntax())->parse('<?php class Test extends Object {
         /**

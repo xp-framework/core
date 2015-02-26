@@ -66,7 +66,7 @@ class ClassParser extends \lang\Object {
         $details[0][$member->name()]= [DETAIL_ANNOTATIONS => $annotations[0]];
       } else if ($member->isMethod()) {
         $details[1][$member->name()]= [
-          DETAIL_ARGUMENTS    => $member->parameters(),
+          DETAIL_ARGUMENTS    => array_map(function($p) { return $p->type(); }, $member->parameters()),
           DETAIL_RETURNS      => $member->returns(),
           DETAIL_THROWS       => $member->throws(),
           DETAIL_ANNOTATIONS  => $annotations[0],

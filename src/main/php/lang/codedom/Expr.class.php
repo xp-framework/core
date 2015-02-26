@@ -19,7 +19,7 @@ class Expr extends Match {
         $braces--;
         $expr.= ']';
       } else if (')' === $t) {
-        $array--;
+        if (--$array < 0) return new Values(trim($expr));
         $expr.= ')';
       } else if ((',' === $t || ';' === $t) && (0 === $braces && 0 === $array)) {
         return new Values(trim($expr));

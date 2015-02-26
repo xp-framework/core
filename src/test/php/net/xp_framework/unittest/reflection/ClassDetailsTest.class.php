@@ -27,7 +27,7 @@ class ClassDetailsTest extends TestCase {
       <?php
         class Test extends Object {
           '.$comment.'
-          public function test() { }
+          public function test($param1) { }
         }
       ?>',
       $this->name

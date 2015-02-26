@@ -38,7 +38,7 @@ class Stream extends \lang\Object {
       $continue= true;
 
       do {
-        $next= $this->stream[$this->offset];
+        $next= @$this->stream[$this->offset];
         if (T_DOC_COMMENT === $next[0]) {
           $this->comment= $next[1];
           $this->line= $next[2];

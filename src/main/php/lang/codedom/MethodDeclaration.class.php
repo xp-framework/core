@@ -12,7 +12,7 @@ class MethodDeclaration extends MemberDeclaration {
    * @param  int $modifiers
    * @param  string $annotations
    * @param  string $name
-   * @param  string[] $parameters Argument types
+   * @param  string[] $parameters Parameter types
    * @param  string $returns Return type
    * @param  string[] $throws Exception types
    * @param  string $body Code in body as string
@@ -52,7 +52,7 @@ class MethodDeclaration extends MemberDeclaration {
       $this->annotations ? $this->annotations.' ' : '',
       implode(' ', Modifiers::namesOf($this->modifiers)),
       $this->name,
-      implode(', ', $this->parameters),
+      implode(', ', array_map(function($p) { return $p->toString(); }, $this->parameters)),
       $this->returns,
       $this->throws ? ' throws '.implode(' ', $this->throws) : '',
       $this->body ? ' { '.strlen($this->body).' bytes }' : ''

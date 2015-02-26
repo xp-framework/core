@@ -96,12 +96,16 @@ class PhpSyntax extends Syntax {
             $modifiers,
             new Rule(':annotations'),   // Old way of annotating fields, in combination with grouped syntax
             new AnyOf([
-              T_FUNCTION => new Sequence([new Token(T_STRING), new Token('('), new SkipOver('(', ')'), new Rule(':method')], function($values, $stream) {
+              T_FUNCTION => new Sequence([new Token(T_STRING), new Token('('), new Optional(new ListOf(new Rule(':param'))), new Token(')'), new Rule(':method')], function($values, $stream) {
                 $details= self::details($stream->comment());
+                $params= (array)$values[3];
+                foreach ($params as $i => $param) {
+                  isset($details['params'][$i]) && $param->typed($details['params'][$i]);
+                }
                 if ('__construct' === $values[1]) {
-                  return new ConstructorDeclaration(0, null, $values[1], $details['args'], $details['throws'], $values[4]);
+                  return new ConstructorDeclaration(0, null, $values[1], $params, $details['throws'], $values[5]);
                 } else {
-                  return new MethodDeclaration(0, null, $values[1], $details['args'], $details['returns'], $details['throws'], $values[4]);
+                  return new MethodDeclaration(0, null, $values[1], $params, $details['returns'], $details['throws'], $values[5]);
                 }
               }),
               T_VARIABLE => new Sequence([new Rule(':field')], function($values) {
@@ -117,6 +121,18 @@ class PhpSyntax extends Syntax {
           }
         ),
       ]),
+      ':param' => new Sequence([
+          new AnyOf([
+            T_VARIABLE => new Sequence([], function($values) { return new Parameter(substr($values[0], 1), null); }),
+            T_ARRAY    => new Sequence([new Token(T_VARIABLE)], function($values) { return new Parameter(substr($values[1], 1), 'array'); }),
+            T_CALLABLE => new Sequence([new Token(T_VARIABLE)], function($values) { return new Parameter(substr($values[1], 1), 'callable'); }),
+            ], [
+            new Sequence([$type, new Token(T_VARIABLE)], function($values) { return new Parameter(substr($values[1], 1), implode('', $values[0])); })
+          ]),
+          new Optional(new Sequence([new Token('='), new Expr()], function($values) { return $values[1]; }))
+        ],
+        function($values) { $values[0]->orElse($values[1]); return $values[0]; }
+      ),
       ':const' => new Sequence([new Token(T_STRING), new Token('='), new Expr()], function($values) {
         return new ConstantDeclaration($values[0], $values[2]);
       }),
@@ -208,10 +224,10 @@ class PhpSyntax extends Syntax {
     preg_match_all('/@([a-z]+)\s*([^\r\n]+)?/', $comment, $matches, PREG_SET_ORDER);
 
     $arg= 0;
-    $details= ['args' => [], 'returns' => 'var', 'throws' => []];
+    $details= ['params' => [], 'returns' => 'var', 'throws' => []];
     foreach ($matches as $match) {
       if ('param' === $match[1]) {
-        $details['args'][$arg++]= self::typeIn($match[2]);
+        $details['params'][$arg++]= self::typeIn($match[2]);
       } else if ('return' === $match[1]) {
         $details['returns']= self::typeIn($match[2]);
       } else if ('throws' === $match[1]) {

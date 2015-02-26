@@ -13,6 +13,9 @@ class FieldDeclaration extends MemberDeclaration {
   /** @return bool */
   public function isField() { return true; }
 
+  /** @return string */
+  public function initial() { return $this->initial; }
+
   /**
    * Creates a string representation
    *
