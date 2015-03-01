@@ -684,12 +684,19 @@ define('MODIFIER_PUBLIC',     256);
 define('MODIFIER_PROTECTED',  512);
 define('MODIFIER_PRIVATE',   1024);
 
-global $paths;
-if (!isset($paths)) $paths= array(__DIR__.DIRECTORY_SEPARATOR, '.'.DIRECTORY_SEPARATOR);
 xp::$null= new null();
 xp::$loader= new xp();
-xp::$classpath= $paths;
-set_include_path(rtrim(implode(PATH_SEPARATOR, $paths), PATH_SEPARATOR));
+
+// Paths are passed via class loader API from *-main.php. Retaining BC:
+// Paths are constructed inside an array before including this file.
+if (isset($GLOBALS['paths'])) {
+  xp::$classpath= $GLOBALS['paths'];
+} else if (0 === strpos(__FILE__, 'xar://')) {
+  xp::$classpath= [substr(__FILE__, 6, -14)];
+} else {
+  xp::$classpath= [__DIR__.DIRECTORY_SEPARATOR];
+}
+set_include_path(rtrim(implode(PATH_SEPARATOR, xp::$classpath), PATH_SEPARATOR));
 
 spl_autoload_register(function($class) {
   $name= strtr($class, '\\', '.');
