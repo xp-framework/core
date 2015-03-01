@@ -77,13 +77,31 @@ class ModuleLoadingTest extends \unittest\TestCase {
   #[@test]
   public function modules_initializer_is_invoked() {
     $this->register(new LoaderProviding(['module.xp' => 'module xp-framework/initialized {
-      public $initialized= 0;
+      public $initialized= false;
 
       public function initialize() {
-        $this->initialized++;
+        $this->initialized= true;
       }
     }']));
-    $this->assertEquals(1, Module::forName('xp-framework/initialized')->initialized);
+    $this->assertEquals(true, Module::forName('xp-framework/initialized')->initialized);
+  }
+
+  #[@test]
+  public function modules_initializer_is_invoked_once_when_registered_multiple_times() {
+    $tracksInit= new LoaderProviding(['module.xp' => 'module xp-framework/tracks-init {
+      public static $initialized= 0;
+
+      public function initialize() {
+        self::$initialized++;
+      }
+
+      public function initialized() {
+        return self::$initialized;
+      }
+    }']);
+    $this->register($tracksInit);
+    $this->register($tracksInit);
+    $this->assertEquals(1, Module::forName('xp-framework/tracks-init')->initialized());
   }
 
   #[@test]

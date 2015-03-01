@@ -92,6 +92,7 @@ final class ClassLoader extends Object implements IClassLoader {
     } else {
       $before= (bool)$before;
     }
+
     if (is_dir($element)) {
       return self::registerLoader(FileSystemClassLoader::instanceFor($element), $before);
     } else if (is_file($element)) {
@@ -109,18 +110,17 @@ final class ClassLoader extends Object implements IClassLoader {
    */
   public static function registerLoader(IClassLoader $l, $before= false) {
     $id= $l->instanceId();
-    $set= isset(self::$delegates[$id]);
     if ($before) {
       self::$delegates= array_merge([$id => $l], self::$delegates);
     } else {
       self::$delegates[$id]= $l;
     }
 
-    if (!$set && $l->providesResource('module.xp')) {
+    if (!isset(self::$modules[$id]) && $l->providesResource('module.xp')) {
       try {
         self::$modules[$id]= Module::register(self::declareModule($l));
       } catch (Throwable $e) {
-        unset(self::$delegates[$l->instanceId()]);
+        unset(self::$delegates[$id]);
         throw $e;
       }
     }

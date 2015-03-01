@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Ensured modules are only initialized once - @thekid
+
 ## 6.0.1 / 2015-02-27
 
 ### Bugfixes
