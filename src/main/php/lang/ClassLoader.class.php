@@ -109,13 +109,14 @@ final class ClassLoader extends Object implements IClassLoader {
    */
   public static function registerLoader(IClassLoader $l, $before= false) {
     $id= $l->instanceId();
+    $set= isset(self::$delegates[$id]);
     if ($before) {
       self::$delegates= array_merge([$id => $l], self::$delegates);
     } else {
       self::$delegates[$id]= $l;
     }
 
-    if ($l->providesResource('module.xp')) {
+    if (!$set && $l->providesResource('module.xp')) {
       try {
         self::$modules[$id]= Module::register(self::declareModule($l));
       } catch (Throwable $e) {
