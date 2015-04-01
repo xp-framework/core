@@ -261,12 +261,18 @@ final class ClassLoader extends Object implements IClassLoader {
 
     if (isset(\xp::$cl[$spec])) return new XPClass(literal($spec));
 
+    // Backwards compatibility, deprecated usage via declaration inside string.
     if (!is_array($declaration)) {
       preg_match('/(class|interface|trait)\s+([^ ]+)(\s+extends\s+([^ ]+))?(\s+implements\s+([^\{]+))?/', $declaration, $parsed);
-      $declaration= ['kind' => $parsed[1], 'use' => [], 'extends' => isset($parsed[4]) ? $parsed[4] : null, 'implements' => []];
+      $declaration= ['kind' => $parsed[1], 'use' => [], 'extends' => [], 'implements' => []];
+      if (isset($parsed[4])) {
+        foreach (explode(',', $parsed[4]) as $type) {
+          $declaration['extends'][]= trim($type, ' ');
+        }
+      }
       if (isset($parsed[6])) {
-        foreach (explode(',', $parsed[6]) as $interface) {
-          $declaration['implements'][]= trim($interface, ' ');
+        foreach (explode(',', $parsed[6]) as $type) {
+          $declaration['implements'][]= trim($type, ' ');
         }
       }
     }
@@ -296,10 +302,12 @@ final class ClassLoader extends Object implements IClassLoader {
         }
       }
 
-      if (isset($functions['__construct'])) {
+      if ($iface) {
+        // Don't handle constructors
+      } else if (isset($functions['__construct'])) {
         $bytes= 'static $__func= []; '.$bytes;
       } else {
-        if ($declaration['extends'] && ($ctor= (new \ReflectionClass(self::classLiteral($declaration['extends'])))->getConstructor())) {
+        if ($declaration['extends'] && ($ctor= (new \ReflectionClass(self::classLiteral($declaration['extends'][0])))->getConstructor())) {
           $constructor= self::defineForward('__construct', $ctor->getParameters(), 'parent::__construct(%s);');
         } else {
           $constructor= self::defineForward('__construct', [], '');
@@ -326,7 +334,7 @@ final class ClassLoader extends Object implements IClassLoader {
       $typeAnnotations,
       $declaration['kind'],
       $name,
-      $declaration['extends'] ? ' extends '.self::classLiteral($declaration['extends']) : '',
+      $declaration['extends'] ? ' extends '.implode(', ', array_map('self::classLiteral', $declaration['extends'])) : '',
       $declaration['implements'] ? ' implements '.implode(', ', array_map('self::classLiteral', $declaration['implements'])) : '',
       $declaration['use'] ? ' use '.implode(', ', array_map('self::classLiteral', $declaration['use'])).';' : '',
       $bytes
@@ -347,12 +355,13 @@ final class ClassLoader extends Object implements IClassLoader {
    * @throws  lang.FormatException in case the class cannot be defined
    */
   public static function defineClass($spec, $parent, $interfaces, $def= null) {
-    $declaration= sprintf(
-      'class %%s extends %s%s',
-      self::classLiteral($parent),
-      $interfaces ? ' implements '.implode(', ', array_map('self::classLiteral', (array)$interfaces)) : ''
-    );
-    return self::defineType($spec, $declaration, $def);
+    $decl= [
+      'kind'       => 'class',
+      'extends'    => [$parent],
+      'implements' => (array)$interfaces,
+      'use'        => []
+    ];
+    return self::defineType($spec, $decl, $def);
   }
   
   /**
@@ -365,11 +374,13 @@ final class ClassLoader extends Object implements IClassLoader {
    * @throws  lang.FormatException in case the class cannot be defined
    */
   public static function defineInterface($spec, $parents, $def= null) {
-    $declaration= sprintf(
-      'interface %%s %s',
-      $parents ? ' extends '.implode(', ', array_map('self::classLiteral', (array)$parents)) : ''
-    );
-    return self::defineType($spec, $declaration, $def);
+    $decl= [
+      'kind'       => 'interface',
+      'extends'    => (array)$parents,
+      'implements' => [],
+      'use'        => []
+    ];
+    return self::defineType($spec, $decl, $def);
   }
 
   /**

@@ -577,11 +577,11 @@ function newinstance($spec, $args, $def= null) {
   }
 
   if (interface_exists($type)) {
-    $decl= 'class %s extends \\lang\\Object implements \\'.$type;
+    $decl= ['kind' => 'class', 'extends' => ['lang.Object'], 'implements' => ['\\'.$type], 'use' => []];
   } else if (trait_exists($type)) {
-    $decl= ['kind' => 'class', 'extends' => 'lang.Object', 'implements' => [], 'use' => [$type]];
+    $decl= ['kind' => 'class', 'extends' => ['lang.Object'], 'implements' => [], 'use' => ['\\'.$type]];
   } else {
-    $decl= 'class %s extends \\'.$type;
+    $decl= ['kind' => 'class', 'extends' => ['\\'.$type], 'implements' => [], 'use' => []];
   }
   $defined= \lang\ClassLoader::defineType($annotations.$name, $decl, $def);
 
