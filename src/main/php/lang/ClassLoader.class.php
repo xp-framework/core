@@ -317,6 +317,11 @@ final class ClassLoader extends Object implements IClassLoader {
           $constructor= self::defineForward('__construct', $ctor->getParameters(), 'parent::__construct(%s);');
         } else {
           $constructor= self::defineForward('__construct', [], '');
+          foreach ($declaration['use'] as $use) {
+            if ($ctor= (new \ReflectionClass(self::classLiteral($use)))->getConstructor()) {
+              $constructor= self::defineForward('__construct', $ctor->getParameters(), 'parent:__construct(%s);');
+            }
+          }
         }
         $bytes= 'static $__func= []; '.$constructor.$bytes;
       }
