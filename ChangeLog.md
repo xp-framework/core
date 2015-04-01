@@ -3,6 +3,20 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Heads up!
+
+* Deprecated `lang.ClassLoader::defineType(string, string, var)` usage.
+  Its second parameter now expects a map containing "kind" (either "class",
+  "trait" or "interface"), "extends", "implements" and "use" (arrays of
+  type references - either XPClass instances or strings).
+  (@thekid)
+
+### Features
+
+* Implemented xp-framework/core#60: Create anonymous instances from traits
+  with `newinstance()`.
+  (@thekid)
+
 ### Bugfixes
 
 * Ensured modules are only initialized once - @thekid
