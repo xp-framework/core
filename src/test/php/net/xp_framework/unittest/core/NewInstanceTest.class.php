@@ -146,6 +146,12 @@ class NewInstanceTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function new_trait_with_constructor() {
+    $o= newinstance('net.xp_framework.unittest.core.ListOf', [[1, 2, 3]], []);
+    $this->assertEquals([1, 2, 3], $o->elements());
+  }
+
+  #[@test]
   public function arguments_are_passed_to_constructor() {
     $instance= newinstance('lang.Object', [$this], '{
       public $test= null;
