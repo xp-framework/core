@@ -10,7 +10,8 @@ php:
 
 matrix:
   allow_failures:
-    - php: nightly hhvm
+    - php: nightly
+    - php: hhvm-nightly
 
 before_script:
   - wget 'https://github.com/xp-framework/xp-runners/releases/download/v5.2.2/setup' -O - | php

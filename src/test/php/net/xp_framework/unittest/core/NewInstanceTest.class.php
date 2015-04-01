@@ -6,6 +6,7 @@ use lang\Process;
 use lang\reflect\Package;
 use lang\ClassLoader;
 use unittest\actions\VerifyThat;
+use unittest\actions\RuntimeVersion;
 
 /**
  * TestCase for newinstance() functionality. Some tests are skipped if
@@ -121,6 +122,36 @@ class NewInstanceTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function new_trait_with_body_as_string() {
+    $o= newinstance('net.xp_framework.unittest.core.Named', ['Test'], '{
+      public function __construct($name) { $this->name= $name; }
+    }');
+    $this->assertEquals('Test', $o->name());
+  }
+
+  #[@test]
+  public function new_trait_with_body_as_closuremap() {
+    $o= newinstance('net.xp_framework.unittest.core.Named', ['Test'], [
+      '__construct' => function($name) { $this->name= $name; }
+    ]);
+    $this->assertEquals('Test', $o->name());
+  }
+
+  #[@test]
+  public function new_trait_with_annotations() {
+    $o= newinstance('#[@test] net.xp_framework.unittest.core.Named', [], [
+      'run' => function() { }
+    ]);
+    $this->assertTrue($o->getClass()->hasAnnotation('test'));
+  }
+
+  #[@test]
+  public function new_trait_with_constructor() {
+    $o= newinstance('net.xp_framework.unittest.core.ListOf', [[1, 2, 3]], []);
+    $this->assertEquals([1, 2, 3], $o->elements());
+  }
+
+  #[@test]
   public function arguments_are_passed_to_constructor() {
     $instance= newinstance('lang.Object', [$this], '{
       public $test= null;
@@ -151,6 +182,27 @@ class NewInstanceTest extends \unittest\TestCase {
       }
     ]);
     $this->assertEquals($this, newinstance($base->getName(), [$this], [])->test);
+  }
+
+  #[@test, @action([new RuntimeVersion('>=5.6'), new VerifyThat('processExecutionEnabled')])]
+  public function variadic_argument_passing() {
+    $r= $this->runInNewRuntime([], '
+      class Test {
+        public function verify() {
+          $r= newinstance("lang.Object", [1, 2, 3], [
+            "elements" => [],
+            "__construct" => function(...$initial) { $this->elements= $initial; }
+          ]);
+          echo "OK: ", implode(", ", $r->elements);
+        }
+      }
+      (new Test())->verify();
+    ');
+    $this->assertEquals(0, $r[0], 'exitcode');
+    $this->assertTrue(
+      (bool)strstr($r[1].$r[2], 'OK: 1, 2, 3'),
+      \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
+    );
   }
 
   #[@test, @action(new VerifyThat('processExecutionEnabled'))]
