@@ -6,6 +6,7 @@ use lang\Process;
 use lang\reflect\Package;
 use lang\ClassLoader;
 use unittest\actions\VerifyThat;
+use unittest\actions\RuntimeVersion;
 
 /**
  * TestCase for newinstance() functionality. Some tests are skipped if
@@ -175,6 +176,27 @@ class NewInstanceTest extends \unittest\TestCase {
       }
     ]);
     $this->assertEquals($this, newinstance($base->getName(), [$this], [])->test);
+  }
+
+  #[@test, @action([new RuntimeVersion('>=5.6'), new VerifyThat('processExecutionEnabled')])]
+  public function variadic_argument_passing() {
+    $r= $this->runInNewRuntime([], '
+      class Test {
+        public function verify() {
+          $r= newinstance("lang.Object", [1, 2, 3], [
+            "elements" => [],
+            "__construct" => function(...$initial) { $this->elements= $initial; }
+          ]);
+          echo "OK: ", implode(", ", $r->elements);
+        }
+      }
+      (new Test())->verify();
+    ');
+    $this->assertEquals(0, $r[0], 'exitcode');
+    $this->assertTrue(
+      (bool)strstr($r[1].$r[2], 'OK: 1, 2, 3'),
+      \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
+    );
   }
 
   #[@test, @action(new VerifyThat('processExecutionEnabled'))]
