@@ -578,6 +578,8 @@ function newinstance($spec, $args, $def= null) {
 
   if (interface_exists($type)) {
     $decl= 'class %s extends \\lang\\Object implements \\'.$type;
+  } else if (trait_exists($type)) {
+    $decl= ['kind' => 'class', 'extends' => 'lang.Object', 'implements' => [], 'use' => [$type]];
   } else {
     $decl= 'class %s extends \\'.$type;
   }

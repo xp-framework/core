@@ -198,6 +198,8 @@ final class ClassLoader extends Object implements IClassLoader {
   protected static function classLiteral($class) {
     if ($class instanceof XPClass) {
       return '\\'.$class->literal();
+    } else if ('\\' === $class{0}) {
+      return $class;
     } else {
       return '\\'.XPClass::forName(strstr($class, '.') ? $class : \xp::nameOf($class))->literal();
     }
@@ -244,7 +246,7 @@ final class ClassLoader extends Object implements IClassLoader {
    * Helper method for defineClass() and defineInterface().
    *
    * @param  string $spec
-   * @param  string $declaration
+   * @param  [:var] $declaration
    * @param  var $def
    * @return lang.XPClass
    */
@@ -259,11 +261,19 @@ final class ClassLoader extends Object implements IClassLoader {
 
     if (isset(\xp::$cl[$spec])) return new XPClass(literal($spec));
 
+    if (!is_array($declaration)) {
+      preg_match('/(class|interface|trait)\s+([^ ]+)(\s+extends\s+([^ ]+))?(\s+implements\s+([^\{]+))?/', $declaration, $parsed);
+      $declaration= ['kind' => $parsed[1], 'use' => [], 'extends' => isset($parsed[4]) ? $parsed[4] : null, 'implements' => []];
+      if (isset($parsed[6])) {
+        foreach (explode(',', $parsed[6]) as $interface) {
+          $declaration['implements'][]= trim($interface, ' ');
+        }
+      }
+    }
+
     $functions= [];
-    if (null === $def) {
-      $bytes= '{}';
-    } else if (is_array($def)) {
-      $iface= 0 === strncmp($declaration, 'interface', 9);
+    if (is_array($def)) {
+      $iface= 'interface' === $declaration['kind'];
       $bytes= '';
       foreach ($def as $name => $member) {
         if ('#' === $name{0}) {
@@ -286,21 +296,18 @@ final class ClassLoader extends Object implements IClassLoader {
         }
       }
 
-      if ($iface) {
-        $bytes= '{ '.$bytes.'}';
-      } else if (isset($functions['__construct'])) {
-        $bytes= '{ static $__func= []; '.$bytes.'}';
+      if (isset($functions['__construct'])) {
+        $bytes= 'static $__func= []; '.$bytes;
       } else {
-        if (preg_match('/extends ([^ \{]+)/', $declaration, $p) && method_exists($p[1], '__construct')) {
-          $params= (new \ReflectionMethod($p[1], '__construct'))->getParameters();
-          $constructor= self::defineForward('__construct', $params, 'parent::__construct(%s);');
+        if ($declaration['extends'] && ($ctor= (new \ReflectionClass(self::classLiteral($declaration['extends'])))->getConstructor())) {
+          $constructor= self::defineForward('__construct', $ctor->getParameters(), 'parent::__construct(%s);');
         } else {
           $constructor= self::defineForward('__construct', [], '');
         }
-        $bytes= '{ static $__func= []; '.$constructor.$bytes.'}';
+        $bytes= 'static $__func= []; '.$constructor.$bytes;
       }
     } else {
-      $bytes= (string)$def;
+      $bytes= substr(trim($def), 1, -1);
     }
 
     if (false !== ($p= strrpos($spec, '.'))) {
@@ -313,7 +320,17 @@ final class ClassLoader extends Object implements IClassLoader {
     }
 
     $dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__));
-    $dyn->setClassBytes($spec, $header.$typeAnnotations.sprintf($declaration, $name).$bytes);
+    $dyn->setClassBytes($spec, sprintf(
+      '%s%s%s %s%s%s {%s%s}',
+      $header,
+      $typeAnnotations,
+      $declaration['kind'],
+      $name,
+      $declaration['extends'] ? ' extends '.self::classLiteral($declaration['extends']) : '',
+      $declaration['implements'] ? ' implements '.implode(', ', array_map('self::classLiteral', $declaration['implements'])) : '',
+      $declaration['use'] ? ' use '.implode(', ', array_map('self::classLiteral', $declaration['use'])).';' : '',
+      $bytes
+    ));
     $cl= $dyn->loadClass($spec);
     $functions && $cl->_reflect->setStaticPropertyValue('__func', $functions);
     return $cl;

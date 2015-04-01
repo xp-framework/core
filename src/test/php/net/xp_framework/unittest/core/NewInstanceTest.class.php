@@ -121,6 +121,30 @@ class NewInstanceTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function new_trait_with_body_as_string() {
+    $o= newinstance('net.xp_framework.unittest.core.Named', ['Test'], '{
+      public function __construct($name) { $this->name= $name; }
+    }');
+    $this->assertEquals('Test', $o->name());
+  }
+
+  #[@test]
+  public function new_trait_with_body_as_closuremap() {
+    $o= newinstance('net.xp_framework.unittest.core.Named', ['Test'], [
+      '__construct' => function($name) { $this->name= $name; }
+    ]);
+    $this->assertEquals('Test', $o->name());
+  }
+
+  #[@test]
+  public function new_trait_with_annotations() {
+    $o= newinstance('#[@test] net.xp_framework.unittest.core.Named', [], [
+      'run' => function() { }
+    ]);
+    $this->assertTrue($o->getClass()->hasAnnotation('test'));
+  }
+
+  #[@test]
   public function arguments_are_passed_to_constructor() {
     $instance= newinstance('lang.Object', [$this], '{
       public $test= null;
