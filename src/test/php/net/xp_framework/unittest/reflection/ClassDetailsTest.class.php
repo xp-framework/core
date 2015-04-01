@@ -27,39 +27,12 @@ class ClassDetailsTest extends TestCase {
       <?php
         class Test extends Object {
           '.$comment.'
-          public function test() { }
+          public function test($param1) { }
         }
       ?>',
       $this->name
     );
     return $details[1]['test'];
-  }
-  
-  #[@test]
-  public function commentString() {
-    $details= $this->parseComment('
-      /**
-       * A protected method
-       *
-       * Note: Not compatible with PHP 4.1.2!
-       *
-       * @param   string param1
-       */
-    ');
-    $this->assertEquals(
-      "A protected method\n\nNote: Not compatible with PHP 4.1.2!",
-      $details[DETAIL_COMMENT]
-    );
-  }
-
-  #[@test]
-  public function noCommentString() {
-    $details= $this->parseComment('
-      /**
-       * @see   php://comment
-       */
-    ');
-    $this->assertEquals('', $details[DETAIL_COMMENT]);
   }
   
   #[@test]
@@ -152,51 +125,6 @@ class ClassDetailsTest extends TestCase {
   public function int_return_type() {
     $details= $this->parseComment('/** @return int */');
     $this->assertEquals('int', $details[DETAIL_RETURNS]);
-  }
-
-  #[@test]
-  public function withClosure() {
-    $details= (new ClassParser())->parseDetails('<?php
-      class WithClosure_1 extends Object {
-
-        /**
-         * Creates a new answer
-         *
-         * @return  php.Closure
-         */
-        public function newAnswer() {
-          return function() { return 42; };
-        }
-      }
-    ?>');
-    $this->assertEquals('Creates a new answer', $details[1]['newAnswer'][DETAIL_COMMENT]);
-  }
-
-  #[@test]
-  public function withClosures() {
-    $details= (new ClassParser())->parseDetails('<?php
-      class WithClosure_2 extends Object {
-
-        /**
-         * Creates a new answer
-         *
-         * @return  php.Closure
-         */
-        public function newAnswer() {
-          return function() { return 42; };
-        }
-
-        /**
-         * Creates a new question
-         *
-         * @return  php.Closure
-         */
-        public function newQuestion() {
-          return function() { return NULL; };   /* TODO: Remember question */
-        }
-      }
-    ?>');
-    $this->assertEquals('Creates a new question', $details[1]['newQuestion'][DETAIL_COMMENT]);
   }
 
   /** @return [:var] */

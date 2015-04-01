@@ -1,5 +1,7 @@
 <?php namespace lang;
 
+use lang\reflect\Modifiers;
+
 /**
  * Generate generic runtime types.
  *
@@ -59,6 +61,7 @@ class GenericTypes extends \lang\Object {
     // Create class if it doesn't exist yet
     if (!class_exists($name, false) && !interface_exists($name, false)) {
       $meta= \xp::$meta[$base->name];
+      $meta['class'][DETAIL_GENERIC]= [$base->name, $arguments];
 
       // Parse placeholders into a lookup map
       $placeholders= [];
@@ -72,232 +75,66 @@ class GenericTypes extends \lang\Object {
         throw new IllegalStateException($base->name);
       }
 
-      // Namespaced class
+      $codeunit= (new \lang\codedom\PhpSyntax())->parse($bytes);
+
       if (false !== ($ns= strrpos($name, '\\'))) {
         $decl= substr($name, $ns + 1);
         $namespace= substr($name, 0, $ns);
-        $src= 'namespace '.$namespace.';';
+        $source= 'namespace '.$namespace.';';
       } else {
         $decl= $name;
         $namespace= null;
-        $src= '';
+        $source= '';
       }
 
-      // Replace source
-      $annotation= null;
       $imports= [];
-      $matches= [];
-      $state= [0];
-      $counter= 0;
-      $initialize= false;
-      $tokens= token_get_all($bytes);
-      for ($i= 0, $s= sizeof($tokens); $i < $s; $i++) {
-        if (T_COMMENT === $tokens[$i][0]) {
-          continue;
-        } else if (0 === $state[0]) {
-          if (T_ABSTRACT === $tokens[$i][0] || T_FINAL === $tokens[$i][0]) {
-            $src.= $tokens[$i][1].' ';
-          } else if (T_CLASS === $tokens[$i][0] || T_INTERFACE === $tokens[$i][0]) {
-            $meta['class'][DETAIL_GENERIC]= [$base->name, $arguments];
-            $src.= $tokens[$i][1].' '.$decl;
-            array_unshift($state, $tokens[$i][0]);
-          } else if (T_USE === $tokens[$i][0]) {
-            $i+= 2;
-            $use= '';
-            while ((T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0]) && $i < $s) {
-              $use.= $tokens[$i][1];
-              $i++;
-            }
-            $imports[substr($use, strrpos($use, '\\')+ 1)]= $use;
-            $src.= 'use '.$use.';';
-          }
-          continue;
-        } else if (T_CLASS === $state[0]) {
-          if (T_EXTENDS === $tokens[$i][0]) {
-            $i+= 2;
-            $parent= '';
-            while ((T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0]) && $i < $s) {
-              $parent.= $tokens[$i][1];
-              $i++;
-            }
-            $i--;
-            if (isset($annotations['generic']['parent'])) {
-              $xargs= [];
-              foreach (explode(',', $annotations['generic']['parent']) as $j => $placeholder) {
-                $xargs[]= Type::forName(strtr(ltrim($placeholder), $placeholders));
-              }
-              $src.= ' extends \\'.$this->newType0($base->getParentClass(), $xargs);
-            } else {
-              $src.= ' extends '.$parent;
-            }
-          } else if (T_IMPLEMENTS === $tokens[$i][0]) {
-            $src.= ' implements';
-            $counter= 0;
-            $annotation= @$annotations['generic']['implements'];
-            array_unshift($state, T_CLASS);
-            array_unshift($state, 5);
-          } else if ('{' === $tokens[$i][0]) {
-            array_shift($state);
-            array_unshift($state, 1);
-            $src.= ' { public static $__generic= [];';
-            $initialize= true;
-          }
-          continue;
-        } else if (T_INTERFACE === $state[0]) {
-          if (T_EXTENDS === $tokens[$i][0]) {
-            $src.= ' extends';
-            $counter= 0;
-            $annotation= @$annotations['generic']['extends'];
-            array_unshift($state, T_INTERFACE);
-            array_unshift($state, 5);
-          } else if ('{' === $tokens[$i][0]) {
-            array_shift($state);
-            array_unshift($state, 1);
-            $src.= ' {';
-          }
-          continue;
-        } else if (1 === $state[0]) {             // Class body
-          if (T_FUNCTION === $tokens[$i][0]) {
-            $braces= 0;
-            $parameters= $default= [];
-            array_unshift($state, 3);
-            array_unshift($state, 2);
-            $m= $tokens[$i+ 2][1];
-            $p= 0;
-            $annotations= [$meta[1][$m][DETAIL_ANNOTATIONS], $meta[1][$m][DETAIL_TARGET_ANNO]];
-          } else if ('}' === $tokens[$i][0]) {
-            $src.= '}';
-            break;
-          } else if (T_CLOSE_TAG === $tokens[$i][0]) {
-            break;
-          }
-        } else if (2 === $state[0]) {             // Method declaration
-          if ('(' === $tokens[$i][0]) {
-            $braces++;
-          } else if (')' === $tokens[$i][0]) {
-            $braces--;
-            if (0 === $braces) {
-              array_shift($state);
-              $src.= ')';
-              continue;
-            }
-          }
-          if (T_VARIABLE === $tokens[$i][0]) {
-            $parameters[]= $tokens[$i][1];
-          } else if (',' === $tokens[$i][0]) {
-            // Skip
-          } else if ('=' === $tokens[$i][0]) {
-            $p= sizeof($parameters)- 1;
-            $default[$p]= '';
-          } else if (T_WHITESPACE !== $tokens[$i][0] && isset($default[$p])) {
-            $default[$p].= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
-          }
-        } else if (3 === $state[0]) {             // Method body
-          if (';' === $tokens[$i][0]) {
-            // Abstract method
-            if (isset($annotations[0]['generic']['return'])) {
-              $meta[1][$m][DETAIL_RETURNS]= strtr($annotations[0]['generic']['return'], $placeholders);
-            }
-            if (isset($annotations[0]['generic']['params'])) {
-              foreach (explode(',', $annotations[0]['generic']['params']) as $j => $placeholder) {
-                if ('' !== ($replaced= strtr(ltrim($placeholder), $placeholders))) {
-                  $meta[1][$m][DETAIL_ARGUMENTS][$j]= $replaced;
-                }
-              }
-            }
-            $annotations= [];
-            unset($meta[1][$m][DETAIL_ANNOTATIONS]['generic']);
-            array_shift($state);
-          } else if ('{' === $tokens[$i][0]) {
-            $braces= 1;
-            array_shift($state);
-            array_unshift($state, 4);
-            $src.= '{';
-            if (isset($annotations[0]['generic']['return'])) {
-              $meta[1][$m][DETAIL_RETURNS]= strtr($annotations[0]['generic']['return'], $placeholders);
-            }
-            if (isset($annotations[0]['generic']['params'])) {
-              $generic= [];
-              foreach (explode(',', $annotations[0]['generic']['params']) as $j => $placeholder) {
-                if ('' === ($replaced= strtr(ltrim($placeholder), $placeholders))) {
-                  $generic[$j]= null;
-                } else {
-                  $meta[1][$m][DETAIL_ARGUMENTS][$j]= $replaced;
-                  $generic[$j]= $replaced;
-                }
-              }
-              foreach ($generic as $j => $type) {
-                if (null === $type) {
-                  continue;
-                } else if ('...' === substr($type, -3)) {
-                  $src.= $j ? '$·args= array_slice(func_get_args(), '.$j.');' : '$·args= func_get_args();';
-                  $src.= (
-                    ' if (!is(\''.substr($generic[$j], 0, -3).'[]\', $·args)) throw new \lang\IllegalArgumentException('.
-                    '"Vararg '.($j + 1).' passed to ".__METHOD__."'.
-                    ' must be of '.$type.', ".\xp::stringOf($·args)." given"'.
-                    ');'
-                  );
-                } else {
-                  $src.= (
-                    ' if ('.(isset($default[$j]) ? '('.$default[$j].' !== '.$parameters[$j].') && ' : '').
-                    '!is(\''.$generic[$j].'\', '.$parameters[$j].')) throw new \lang\IllegalArgumentException('.
-                    '"Argument '.($j + 1).' passed to ".__METHOD__."'.
-                    ' must be of '.$type.', ".\xp::typeOf('.$parameters[$j].')." given"'.
-                    ');'
-                  );
-                }
-              }
-            }
-
-            $annotations= [];
-            unset($meta[1][$m][DETAIL_ANNOTATIONS]['generic']);
-            continue;
-          }
-        } else if (4 === $state[0]) {             // Method body
-          if ('{' === $tokens[$i][0]) {
-            $braces++;
-          } else if ('}' === $tokens[$i][0]) {
-            $braces--;
-            if (0 === $braces) array_shift($state);
-          } else if (T_VARIABLE === $tokens[$i][0] && isset($placeholders[$v= substr($tokens[$i][1], 1)])) {
-            $src.= 'self::$__generic["'.$v.'"]';
-            continue;
-          }
-        } else if (5 === $state[0]) {             // Implements (class), Extends (interface)
-          if (T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0]) {
-            $rel= '';
-            while ((T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0]) && $i < $s) {
-              $rel.= $tokens[$i][1];
-              $i++;
-            }
-            $i--;
-            '\\' === $rel{0} || $rel= isset($imports[$rel]) ? $imports[$rel] : $namespace.'\\'.$rel;
-            if (isset($annotation[$counter])) {
-              $iargs= [];
-              foreach (explode(',', $annotation[$counter]) as $j => $placeholder) {
-                $iargs[]= Type::forName(strtr(ltrim($placeholder), $placeholders));
-              }
-              $src.= '\\'.$this->newType0(new XPClass(new \ReflectionClass($rel)), $iargs);
-            } else {
-              $src.= $rel;
-            }
-            $counter++;
-            continue;
-          } else if ('{' === $tokens[$i][0]) {
-            array_shift($state);
-            array_shift($state);
-            $i--;
-            continue;
-          }
-        }
-                  
-        $src.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
+      foreach ($codeunit->imports() as $type) {
+        $imports[substr($type, strrpos($type, '.')+ 1)]= $type;
+        $source.= 'use '.strtr($type, '.', '\\').";\n";
       }
+
+      $declaration= $codeunit->declaration();
+      $generic= $this->genericAnnotation($declaration->annotations(), $base, $imports);
+      if ($declaration->isInterface()) {
+        $source.= $this->interfaceDeclaration($decl, $base, $declaration, $generic, $placeholders);
+      } else if ($declaration->isClass()) {
+        $source.= $this->classDeclaration($decl, $base, $declaration, $generic, $placeholders);
+      } else {
+        throw new IllegalStateException('Unsupported generic type '.$declaration->toString());
+      }
+
+      foreach ($declaration->body()->members() as $member) {
+        if ($member->isMethod()) {
+          $annotation= $this->genericAnnotation($member->annotations(), $base, $imports);
+
+          $generic= [];
+          if (isset($annotation['params'])) {
+            foreach (explode(',', $annotation['params']) as $i => $placeholder) {
+              if ('' === ($replaced= strtr(ltrim($placeholder), $placeholders))) {
+                $generic[$i]= null;
+              } else {
+                $meta[1][$member->name()][DETAIL_ARGUMENTS][$i]= $replaced;
+                $generic[$i]= $replaced;
+              }
+            }
+          }
+          if (isset($annotation['return'])) {
+            $meta[1][$member->name()][DETAIL_RETURNS]= strtr($annotation['return'], $placeholders);
+          }
+
+          $source.= $this->methodDeclaration($member, $generic, $placeholders);
+        } else if ($member->isField()) {
+          $source.= $this->fieldDeclaration($member);
+        } else if ($member->isConstant()) {
+          $source.= $this->constantDeclaration($member);
+        }
+      }
+      $source.= '}';
 
       // Create class
       // DEBUG fputs(STDERR, "@* ".substr($src, 0, strpos($src, '{'))." -> $qname\n");
-      eval($src);
-      if ($initialize) {
+      eval($source);
+      if ($declaration->isClass()) {
         foreach ($components as $i => $component) {
           $name::$__generic[$component]= $arguments[$i];
         }
@@ -314,5 +151,201 @@ class GenericTypes extends \lang\Object {
     }
     
     return $name;
+  }
+
+  /**
+   * Resolve generic annotation
+   *
+   * @param  string $annotations
+   * @param  lang.XPClass $base
+   * @param  [:string] $imports
+   */
+  private function genericAnnotation($annotations, $base, $imports) {
+    if (null === $annotations) {
+      return [];
+    } else {
+      $parsed= (new \lang\codedom\AnnotationSyntax())->parse($annotations)->resolve($base->getName(), $imports);
+      return isset($parsed[null]['generic']) ? $parsed[null]['generic'] : [];
+    }
+  }
+
+  /**
+   * Returns type arguments
+   *
+   * @param  string $annotation
+   * @param  [:string] $placeholders
+   * @return lang.Type[]
+   */
+  private function typeArgs($annotation, $placeholders) {
+    $args= [];
+    foreach (explode(',', $annotation) as $j => $placeholder) {
+      $args[]= Type::forName(strtr(ltrim($placeholder), $placeholders));
+    }
+    return $args;
+  }
+
+  /**
+   * Returns class declaration
+   *
+   * @param  string $name
+   * @param  lang.XPClass $base
+   * @param  lang.codedom.ClassDeclaration $declaration
+   * @param  [:string] $generic Generic class annotation
+   * @param  [:string] $placeholders
+   * @return string
+   */
+  private function classDeclaration($name, $base, $declaration, $generic, $placeholders) {
+    if (isset($generic['parent'])) {
+      $parent= $this->newType0($base->getParentClass(), $this->typeArgs($generic['parent'], $placeholders));
+    } else {
+      $parent= $base->getParentClass()->literal();
+    }
+
+    $implements= [];
+    $annotation= isset($generic['implements']) ? $generic['implements'] : [];
+    foreach ($base->getDeclaredInterfaces() as $num => $interface) {
+      if (isset($annotation[$num])) {
+        $implements[]= $this->newType0($interface, $this->typeArgs($annotation[$num], $placeholders));
+      } else {
+        $implements[]= $interface->literal();
+      }
+    }
+
+    if (Modifiers::isAbstract($declaration->modifiers())) {
+      $modifiers= 'abstract ';
+    } else {
+      $modifiers= '';
+    }
+
+    return sprintf(
+      "%sclass %s extends \\%s%s {\n  public static \$__generic= [];\n",
+      $modifiers,
+      $name,
+      $parent,
+      $implements ? ' implements \\'.implode(', \\', $implements) : ''
+    );
+  }
+
+  /**
+   * Returns interface declaration
+   *
+   * @param  string $name
+   * @param  lang.XPClass $base
+   * @param  lang.codedom.ClassDeclaration $declaration
+   * @param  [:string] $generic Generic class annotation
+   * @param  [:string] $placeholders
+   * @return string
+   */
+  private function interfaceDeclaration($name, $base, $declaration, $generic, $placeholders) {
+    $extends= [];
+    $annotation= isset($generic['extends']) ? $generic['extends'] : [];
+
+    foreach ($base->getDeclaredInterfaces() as $num => $parent) {
+      if (isset($annotation[$num])) {
+        $extends[]= $this->newType0($parent, $this->typeArgs($annotation[$num], $placeholders));
+      } else {
+        $extends[]= $parent->literal();
+      }
+    }
+
+    return sprintf(
+      "interface %s%s{\n",
+      $name,
+      $extends ? ' extends \\'.implode(', \\', $extends) : ''
+    );
+  }
+
+  /**
+   * Returns method declaration
+   *
+   * @param  lang.codedom.MethodDeclaration $declaration
+   * @param  string[] $generic Generic parameter types
+   * @param  [:string] $placeholders
+   * @return string
+   */
+  private function methodDeclaration($declaration, $generic, $placeholders) {
+    $parameters= $declaration->parameters();
+
+    $signature= '';
+    foreach ($declaration->parameters() as $i => $param) {
+      $signature.= sprintf(
+        ', %s $%s%s',
+        $param->restriction(),
+        $param->name(),
+        $param->hasDefault() ? '= '.$param->defaultValue() : ''
+      );
+    }
+
+    $checks= '';
+    foreach ($generic as $i => $type) {
+      if (null === $type) {
+        continue;
+      } else if ('...' === substr($type, -3)) {
+        $checks= $i ? '    $·args= array_slice(func_get_args(), '.$j.');' : '    $·args= func_get_args();';
+        $checks.= sprintf(
+          "    is('%s[]', \$·args) || raise('lang.IllegalArgumentException', 'Vararg #%d passed to %s must be of %1\$s, '.\xp::typeOf(\$·args).' given');\n",
+          substr($type, 0, -3),
+          $i + 1,
+          $declaration->name() 
+        );
+      } else if (isset($parameters[$i])) {
+        if ($parameters[$i]->hasDefault()) {
+          $checks.= '    if ('.$parameters[$i]->defaultValue().' !== $'.$parameters[$i]->name().') ';
+        } else {
+          $checks.= '    ';
+        }
+        $checks.= sprintf(
+          "is('%s', $%s) || raise('lang.IllegalArgumentException', 'Argument #%d passed to %s must be of %1\$s, '.\xp::typeOf(\$%2\$s).' given');\n",
+          $type,
+          $parameters[$i]->name(),
+          $i + 1,
+          $declaration->name() 
+        );
+      }
+    }
+
+    $tv= '';
+    foreach ($placeholders as $key => $val) {
+      $tv.= '    $'.$key."= self::\$__generic['".$key."'];\n";
+    }
+
+    $body= $declaration->body();
+    return sprintf(
+      "  %s function %s(%s)%s\n",
+      implode(' ', Modifiers::namesOf($declaration->modifiers())),
+      $declaration->name(),
+      substr($signature, 2),
+      $body ? " {\n".$checks.$tv.'    '.$body."\n  }" : ';'
+    );
+  }
+
+  /**
+   * Returns field declaration
+   *
+   * @param  lang.codedom.FieldDeclaration $declaration
+   * @return string
+   */
+  private function fieldDeclaration($declaration) {
+    $initial= $declaration->initial();
+    return sprintf(
+      "  %s $%s%s;\n",
+      implode(' ', Modifiers::namesOf($declaration->modifiers())),
+      $declaration->name(),
+      $initial ? '= '.$initial : ''
+    );
+  }
+
+  /**
+   * Returns constant declaration
+   *
+   * @param  lang.codedom.ConstantDeclaration $declaration
+   * @return string
+   */
+  private function constantDeclaration($declaration) {
+    return sprintf(
+      "  const %s = %s\n",
+      $declaration->name(),
+      $declaration->value()
+    );
   }
 }

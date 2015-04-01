@@ -467,7 +467,6 @@ class XPClass extends Type {
     }
     return $r;
   }
-  
 
   /**
    * Retrieves the api doc comment for this class. Returns NULL if
@@ -476,8 +475,17 @@ class XPClass extends Type {
    * @return  string
    */
   public function getComment() {
-    if (!($details= self::detailsForClass($this->name))) return null;
-    return $details['class'][DETAIL_COMMENT];
+    $comment= $this->_reflect->getDocComment();
+    if (false === $comment) {
+      $class= $this->_reflect->getName();
+      return isset(\xp::$meta[$class]['class'][DETAIL_COMMENT]) ? \xp::$meta[$class]['class'][DETAIL_COMMENT]: null;
+    } else {
+      return trim(preg_replace('/\n\s+\* ?/', "\n", "\n".substr(
+        $comment,
+        4,                              // "/**\n"
+        strpos($comment, '* @')- 2      // position of first details token
+      )));
+    }
   }
 
   /**

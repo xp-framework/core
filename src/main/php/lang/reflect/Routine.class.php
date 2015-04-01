@@ -180,8 +180,18 @@ class Routine extends \lang\Object {
    * @return  string
    */
   public function getComment() {
-    if (!($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName()))) return null;
-    return $details[DETAIL_COMMENT];
+    $comment= $this->_reflect->getDocComment();
+    if (false === $comment) {
+      $class= $this->_reflect->getDeclaringClass()->getName();
+      $name= $this->_reflect->getName();
+      return isset(\xp::$meta[$class][1][$name][DETAIL_COMMENT]) ? \xp::$meta[$class][1][$name][DETAIL_COMMENT]: null;
+    } else {
+      return trim(preg_replace('/\n\s+\* ?/', "\n", "\n".substr(
+        $comment,
+        4,                              // "/**\n"
+        strpos($comment, '* @')- 2      // position of first details token
+      )));
+    }
   }
   
   /**

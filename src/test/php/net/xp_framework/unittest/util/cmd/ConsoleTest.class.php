@@ -46,7 +46,7 @@ class ConsoleTest extends TestCase {
   #[@test, @values([
   #  "Hello\nHallo",
   #  "Hello\rHallo",
-  #  "Hello\r\nHallo",
+  #  "Hello\r\nHallo"
   #])]
   public function readLine($variation) {
     Console::$in->setStream(new MemoryInputStream($variation));
