@@ -145,7 +145,13 @@ class Type extends Object {
       '*'         => 'var',
       'array'     => 'var[]',
       'resource'  => 'var',
-      ''          => '{null}'
+      ''          => '{null}',
+      'HH\int'    => 'int',
+      'HH\string' => 'string',
+      'HH\float'  => 'double',
+      'HH\bool'   => 'bool',
+      'HH\void'   => 'void',
+      'HH\mixed'  => 'var'
     ];
     static $primitives= [
       'string'    => true,
@@ -177,6 +183,8 @@ class Type extends Object {
       return FunctionType::forName($type);
     } else if (0 === substr_compare($type, '*', -1)) {
       return new ArrayType(substr($type, 0, -1));
+    } else if ('?' === $type{0}) {
+      return self::forName(substr($type, 1));
     } else if (false === ($p= strpos($type, '<'))) {
       return strstr($type, '.') ? XPClass::forName($type) : new XPClass($type);
     }

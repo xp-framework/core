@@ -329,6 +329,40 @@ class ClassParser extends \lang\Object {
   }
 
   /**
+   * Rewrites native type
+   *
+   * @param  string $type
+   * @return string
+   */
+  protected function rewriteType($type) {
+    $type= trim($type);
+    if ('' === $type) {
+      return 'var';
+    } else if (0 === strncmp($type, 'array<', 6)) {
+      $types= [];
+      for ($args= $type.',', $o= 6, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
+        if (',' === $args{$i} && 0 === $brackets) {
+          $types[]= $this->rewriteType(trim(substr($args, $o, $i- $o), '> '));
+          $o= $i+ 1;
+        } else if ('<' === $args{$i}) {
+          $brackets++;
+        } else if ('>' === $args{$i}) {
+          $brackets--;
+        }
+      }
+      if (2 === sizeof($types)) {
+        return '[:'.$types[1].']';
+      } else if (1 === sizeof($types)) {
+        return $types[0].'[]';
+      } else {
+        return 'var[]';
+      }
+    } else {
+      return $type;
+    }
+  }
+
+  /**
    * Parse details from a given input string
    *
    * @param   string bytes
@@ -341,6 +375,7 @@ class ClassParser extends \lang\Object {
     $imports= [];
     $comment= null;
     $parsed= '';
+    $base= true;
     $tokens= token_get_all($bytes);
     for ($i= 0, $s= sizeof($tokens); $i < $s; $i++) {
       switch ($tokens[$i][0]) {
@@ -436,14 +471,57 @@ class ClassParser extends \lang\Object {
                 break;
             }
           }
+
+          $i++;
           $b= 0;
+          $type= '';
+          $generic= false;
+          $sig= [];
           while (++$i < $s) {
             if ('{' === $tokens[$i][0]) {
               $b++;
             } else if ('}' === $tokens[$i][0]) {
               if (0 === --$b) break;
-            } else if (0 === $b && ';' === $tokens[$i][0]) {
-              break;    // Abstract or interface method
+            } else if (0 === $b) {
+              if (';' === $tokens[$i][0]) {
+                break;    // Abstract or interface method
+              } else if (T_VARIABLE === $tokens[$i][0]) {
+                $sig[]= $this->rewriteType($type);
+                $type= null;
+              } else if (',' === $tokens[$i][0] || ':' === $tokens[$i][0] || ')' === $tokens[$i][0]) {
+                $type= '';
+              } else if (398 === $tokens[$i][0]) {
+                $type.= '<';
+                $generic= true;
+              } else if (null !== $type) {
+                $type.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
+              }
+            }
+          }
+
+          if ([] === $matches) {
+            $details[1][$m][DETAIL_ARGUMENTS]= $sig;
+            $details[1][$m][DETAIL_RETURNS]= $this->rewriteType($type);
+            //echo "$context::$m => "; var_dump($details[1][$m][DETAIL_ARGUMENTS], $type);
+          }
+
+          if ($generic) {
+            $details[1][$m][DETAIL_ANNOTATIONS]['generic']= [
+              'params'  => implode(',', $details[1][$m][DETAIL_ARGUMENTS]),
+              'return'  => $details[1][$m][DETAIL_RETURNS]
+            ];
+          }
+          break;
+
+        case T_EXTENDS: case T_IMPLEMENTS:
+          $base= false;
+          break;
+
+        case 398:   // HHVM does not define a constant for this!
+          if ($base) {
+            $details['class'][DETAIL_ANNOTATIONS]['generic']['self']= '';
+            while (++$i < $s && 399 !== $tokens[$i][0]) {
+              $details['class'][DETAIL_ANNOTATIONS]['generic']['self'].= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
             }
           }
           break;

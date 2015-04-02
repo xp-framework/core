@@ -140,7 +140,12 @@ class Routine extends \lang\Object {
    */
   public function getReturnTypeName() {
     if (!($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName()))) return 'var';
-    return null === $details[DETAIL_RETURNS] ? 'var' : ltrim($details[DETAIL_RETURNS], '&');
+
+    if (null === $details[DETAIL_RETURNS]) {
+      return 'var';
+    } else {
+      return ltrim($details[DETAIL_RETURNS], '&');
+    }
   }
 
   /**
@@ -183,7 +188,15 @@ class Routine extends \lang\Object {
     if (!($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName()))) return null;
     return $details[DETAIL_COMMENT];
   }
-  
+
+  /**
+   * Convert a HACK attribute to an XP annotation
+   *
+   * @param  var[] $value
+   * @return var
+   */
+  private function attribute($value) { return empty($value) ? null : $value[0]; }
+
   /**
    * Check whether an annotation exists
    *
@@ -193,11 +206,14 @@ class Routine extends \lang\Object {
    */
   public function hasAnnotation($name, $key= null) {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
+    if ($details && ($annotations= $details[DETAIL_ANNOTATIONS])) {
+      return $key ? array_key_exists($key, @$annotations[$name]) : array_key_exists($name, $annotations);
+    } else if (defined('HHVM_VERSION')) {
+      $attr= $this->_reflect->getAttributes();
+      return $key ? isset($attr[$name][$key]) : isset($attr[$name]);
+    }
 
-    return $details && ($key 
-      ? array_key_exists($key, (array)@$details[DETAIL_ANNOTATIONS][$name]) 
-      : array_key_exists($name, (array)@$details[DETAIL_ANNOTATIONS])
-    );
+    return false;
   }
 
   /**
@@ -210,18 +226,22 @@ class Routine extends \lang\Object {
    */
   public function getAnnotation($name, $key= null) {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
-    if (!$details || !($key 
-      ? array_key_exists($key, @$details[DETAIL_ANNOTATIONS][$name]) 
-      : array_key_exists($name, @$details[DETAIL_ANNOTATIONS])
-    )) return raise(
-      'lang.ElementNotFoundException', 
-      'Annotation "'.$name.($key ? '.'.$key : '').'" does not exist'
-    );
+    if ($details && ($annotations= $details[DETAIL_ANNOTATIONS])) {
+      if ($key) {
+        if (array_key_exists($key, @$annotations[$name])) return $annotations[$name][$key];
+      } else {
+        if (array_key_exists($name, $annotations)) return $annotations[$name];
+      }
+    } else if (defined('HHVM_VERSION')) {
+      $attr= $this->_reflect->getAttributes();
+      if ($key) {
+        if (isset($attr[$name][$key])) return $this->attribute($attr[$name][$key]);
+      } else {
+        if (isset($attr[$name])) return $this->attribute($attr[$name]);
+      }
+    }
 
-    return ($key 
-      ? $details[DETAIL_ANNOTATIONS][$name][$key] 
-      : $details[DETAIL_ANNOTATIONS][$name]
-    );
+    raise('lang.ElementNotFoundException', 'Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
   }
 
   /**
@@ -231,7 +251,13 @@ class Routine extends \lang\Object {
    */
   public function hasAnnotations() {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
-    return $details ? !empty($details[DETAIL_ANNOTATIONS]) : false;
+    if ($details && $details[DETAIL_ANNOTATIONS]) {
+      return true;
+    } else if (defined('HHVM_VERSION')) {
+      return sizeof($this->_reflect->getAttributes()) > 0;
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -241,7 +267,13 @@ class Routine extends \lang\Object {
    */
   public function getAnnotations() {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
-    return $details ? $details[DETAIL_ANNOTATIONS] : [];
+    if ($details && $details[DETAIL_ANNOTATIONS]) {
+      return $details[DETAIL_ANNOTATIONS];
+    } else if (defined('HHVM_VERSION')) {
+      return array_map([$this, 'attribute'], array_reverse($this->_reflect->getAttributes()));
+    } else {
+      return [];
+    }
   }
   
   /**
