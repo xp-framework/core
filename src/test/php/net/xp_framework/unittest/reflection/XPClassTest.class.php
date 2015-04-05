@@ -146,16 +146,27 @@ class XPClassTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function getTraits_returns_array_of_class() {
-    $this->assertInstanceOf('lang.XPClass[]', $this->fixture->getTraits());
+  public function traits_of_fixture() {
+    $this->assertEquals(
+      [],
+      $this->fixture->getTraits()
+    );
   }
 
   #[@test]
-  public function getTraits_contains_declared_interface() {
-    $this->assertTrue(in_array(
-      XPClass::forName('net.xp_framework.unittest.reflection.classes.TraitOne'),
+  public function traits_of_UsingOne() {
+    $this->assertEquals(
+      [XPClass::forName('net.xp_framework.unittest.reflection.classes.TraitOne')],
       XPClass::forName('net.xp_framework.unittest.reflection.classes.UsingOne')->getTraits()
-    ));
+    );
+  }
+
+  #[@test]
+  public function traits_of_TraitOne() {
+    $this->assertEquals(
+      [],
+      XPClass::forName('net.xp_framework.unittest.reflection.classes.TraitOne')->getTraits()
+    );
   }
 
   #[@test]
