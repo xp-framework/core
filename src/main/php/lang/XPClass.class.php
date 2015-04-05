@@ -402,7 +402,7 @@ class XPClass extends Type {
   public function isInstance($obj) {
     return is($this->name, $obj);
   }
-  
+
   /**
    * Determines if this XPClass object represents an interface type.
    *
@@ -413,6 +413,15 @@ class XPClass extends Type {
   }
 
   /**
+   * Determines if this XPClass object represents a trait type.
+   *
+   * @return  bool
+   */
+  public function isTrait() {
+    return $this->_reflect->isTrait();
+  }
+
+  /**
    * Determines if this XPClass object represents an interface type.
    *
    * @return  bool
@@ -420,7 +429,22 @@ class XPClass extends Type {
   public function isEnum() {
     return class_exists('lang\Enum', false) && $this->_reflect->isSubclassOf('lang\Enum');
   }
-  
+
+  /**
+   * Retrieve traits this class uses
+   *
+   * @return  lang.XPClass[]
+   */
+  public function getTraits() {
+    $r= [];
+    foreach ($this->_reflect->getTraits() as $used) {
+      if (0 !== strncmp($used->getName(), '__', 2)) {
+        $r[]= new self($used);
+      }
+    }
+    return $r;
+  }
+
   /**
    * Retrieve interfaces this class implements
    *
@@ -429,7 +453,7 @@ class XPClass extends Type {
   public function getInterfaces() {
     $r= [];
     foreach ($this->_reflect->getInterfaces() as $iface) {
-      $r[]= new self($iface->getName());
+      $r[]= new self($iface);
     }
     return $r;
   }

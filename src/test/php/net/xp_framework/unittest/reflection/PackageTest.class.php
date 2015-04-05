@@ -14,8 +14,8 @@ use lang\XPClass;
 class PackageTest extends \unittest\TestCase {
   protected static
     $testClasses= [
-      'ClassOne', 'ClassTwo', 'RecursionOne', 'RecursionTwo',
-      'InterfaceOne', 'TraitOne', 'StaticRecursionOne', 'StaticRecursionTwo', 
+      'ClassOne', 'ClassTwo', 'RecursionOne', 'RecursionTwo', 'InterfaceOne',
+      'TraitOne', 'UsingOne', 'StaticRecursionOne', 'StaticRecursionTwo',
       'ClassThree', 'ClassFour'
     ],
     $testPackages= ['classes', 'lib'];
