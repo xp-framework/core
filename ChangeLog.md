@@ -13,6 +13,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added `lang.XPClass::isTrait()` and `lang.XPClass::getTraits()` methods.
+  (@thekid)
 * Implemented xp-framework/core#60: Create anonymous instances from traits
   with `newinstance()`.
   (@thekid)

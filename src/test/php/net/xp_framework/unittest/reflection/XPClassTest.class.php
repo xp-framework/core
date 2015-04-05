@@ -131,6 +131,45 @@ class XPClassTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function fixture_class_is_not_a_trait() {
+    $this->assertFalse($this->fixture->isTrait());
+  }
+
+  #[@test]
+  public function lang_Generic_class_is_not_a_trait() {
+    $this->assertFalse(XPClass::forName('lang.Generic')->isTrait());
+  }
+
+  #[@test]
+  public function trait_class_is_trait() {
+    $this->assertTrue(XPClass::forName('net.xp_framework.unittest.reflection.classes.TraitOne')->isTrait());
+  }
+
+  #[@test]
+  public function traits_of_fixture() {
+    $this->assertEquals(
+      [],
+      $this->fixture->getTraits()
+    );
+  }
+
+  #[@test]
+  public function traits_of_UsingOne() {
+    $this->assertEquals(
+      [XPClass::forName('net.xp_framework.unittest.reflection.classes.TraitOne')],
+      XPClass::forName('net.xp_framework.unittest.reflection.classes.UsingOne')->getTraits()
+    );
+  }
+
+  #[@test]
+  public function traits_of_TraitOne() {
+    $this->assertEquals(
+      [],
+      XPClass::forName('net.xp_framework.unittest.reflection.classes.TraitOne')->getTraits()
+    );
+  }
+
+  #[@test]
   public function getInterfaces_returns_array_of_class() {
     $this->assertInstanceOf('lang.XPClass[]', $this->fixture->getInterfaces());
   }
@@ -203,6 +242,11 @@ class XPClassTest extends \unittest\TestCase {
   #[@test, @expect('lang.IllegalAccessException')]
   public function newInstance_raises_exception_if_class_is_an_interface() {
     XPClass::forName('util.log.Traceable')->newInstance();
+  }
+
+  #[@test, @expect('lang.IllegalAccessException')]
+  public function newInstance_raises_exception_if_class_is_a_trait() {
+    XPClass::forName('net.xp_framework.unittest.reflection.classes.TraitOne')->newInstance();
   }
 
   #[@test, @expect('lang.IllegalAccessException')]
