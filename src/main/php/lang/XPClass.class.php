@@ -134,6 +134,8 @@ class XPClass extends Type {
   public function newInstance($value= null) {
     if ($this->_reflect->isInterface()) {
       throw new IllegalAccessException('Cannot instantiate interfaces ('.$this->name.')');
+    } else if ($this->_reflect->isTrait()) {
+      throw new IllegalAccessException('Cannot instantiate traits ('.$this->name.')');
     } else if ($this->_reflect->isAbstract()) {
       throw new IllegalAccessException('Cannot instantiate abstract classes ('.$this->name.')');
     }

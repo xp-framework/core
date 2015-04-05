@@ -234,6 +234,11 @@ class XPClassTest extends \unittest\TestCase {
   }
 
   #[@test, @expect('lang.IllegalAccessException')]
+  public function newInstance_raises_exception_if_class_is_a_trait() {
+    XPClass::forName('net.xp_framework.unittest.reflection.classes.TraitOne')->newInstance();
+  }
+
+  #[@test, @expect('lang.IllegalAccessException')]
   public function newInstance_raises_exception_if_class_is_abstract() {
     XPClass::forName('net.xp_framework.unittest.reflection.AbstractTestClass')->newInstance();
   }
