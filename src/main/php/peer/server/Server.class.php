@@ -5,20 +5,15 @@ use peer\ServerSocket;
 /**
  * Basic TCP/IP Server
  *
- * <code>
- *   uses('peer.server.Server');
+ * ```php
+ * use peer\server\Server;
  *   
- *   $server= new Server('127.0.0.1', 6100);
- *   $server->setProtocol(new MyProtocol());
- *   try {
- *     $server->init();
- *     $server->service();
- *     $server->shutdown();
- *   } catch(XPException $e) {
- *     $e->printStackTrace();
- *     exit(-1);
- *   }
- * </code>
+ * $server= new Server('127.0.0.1', 6100);
+ * $server->setProtocol(new MyProtocol());
+ * $server->init();
+ * $server->service();
+ * $server->shutdown();
+ * ```
  *
  * @ext   sockets
  * @see   xp://peer.ServerSocket
