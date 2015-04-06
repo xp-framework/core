@@ -13,6 +13,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added support for `/** @var [type] */` for fields.
+  http://www.phpdoc.org/docs/latest/references/phpdoc/tags/var.html
+  (@thekid)
 * Added `lang.XPClass::isTrait()` and `lang.XPClass::getTraits()` methods.
   (@thekid)
 * Implemented xp-framework/core#60: Create anonymous instances from traits

@@ -364,7 +364,7 @@ class FieldsTest extends TestCase {
   }
 
   /**
-   * Tests retrieving the "date" field's is defined
+   * Tests retrieving the "date" field's is defined by `[@type]`
    *
    * @see     xp://lang.reflect.Field#getType
    */
@@ -374,13 +374,33 @@ class FieldsTest extends TestCase {
   }
 
   /**
-   * Tests retrieving the "date" field's is defined
+   * Tests retrieving the "date" field's is defined by `[@type]`
    *
    * @see     xp://lang.reflect.Field#getTypeName
    */
   #[@test]
   public function dateFieldTypeName() {
     $this->assertEquals('util.Date', $this->fixture->getField('date')->getTypeName());
+  }
+
+  /**
+   * Tests retrieving the "map" field's type is defined by `@var`
+   *
+   * @see     xp://lang.reflect.Field#getType
+   */
+  #[@test]
+  public function mapFieldType() {
+    $this->assertEquals(\lang\MapType::forName('[:lang.Object]'), $this->fixture->getField('map')->getType());
+  }
+
+  /**
+   * Tests retrieving the "map" field's type is defined by `@var`
+   *
+   * @see     xp://lang.reflect.Field#getTypeName
+   */
+  #[@test]
+  public function mapFieldTypeName() {
+    $this->assertEquals('[:lang.Object]', $this->fixture->getField('map')->getTypeName());
   }
 
   /**
