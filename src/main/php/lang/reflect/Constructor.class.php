@@ -1,7 +1,5 @@
 <?php namespace lang\reflect;
 
-
-
 /**
  * Represents a class' constructor
  *
@@ -84,7 +82,7 @@ class Constructor extends Routine {
    * @return  lang.Type
    */
   public function getReturnType() {
-    return \lang\XPClass::forName(\xp::nameOf($this->_class));
+    return new \lang\XPClass($this->_class);
   }
 
   /**
