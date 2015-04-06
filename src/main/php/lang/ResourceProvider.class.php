@@ -91,7 +91,7 @@ class ResourceProvider extends Object {
    * @return  int
    */
   public function stream_write($data) {
-    raise('lang.MethodNotImplementedException', 'Not writeable.', __METHOD__);
+    throw new MethodNotImplementedException('Not writeable.', __METHOD__);
   }
   
   /**

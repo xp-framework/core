@@ -86,12 +86,12 @@ class ArrayType extends Type {
       $self= [];
       $c= $this->componentType();
       foreach ($value as $i => $element) {
-        if (!is_int($i)) raise('lang.IllegalArgumentException', 'Cannot create instances of the '.$this->getName().' type from [:var]');
+        if (!is_int($i)) throw new IllegalArgumentException('Cannot create instances of the '.$this->getName().' type from [:var]');
         $self[]= $c->cast($element);
       }
       return $self;
     } else {
-      raise('lang.IllegalArgumentException', 'Cannot create instances of the '.$this->getName().' type from '.\xp::typeOf($value));
+      throw new IllegalArgumentException('Cannot create instances of the '.$this->getName().' type from '.\xp::typeOf($value));
     }
   }
 
@@ -108,12 +108,12 @@ class ArrayType extends Type {
     } else if (is_array($value)) {
       $c= $this->componentType();
       foreach ($value as $i => $element) {
-        if (!is_int($i)) raise('lang.ClassCastException', 'Cannot cast to the '.$this->getName().' type from [:var]');
+        if (!is_int($i)) throw new ClassCastException('Cannot cast to the '.$this->getName().' type from [:var]');
         $value[$i]= $c->cast($element);
       }
       return $value;
     } else {
-      raise('lang.ClassCastException', 'Cannot cast to the '.$this->getName().' type from '.\xp::typeOf($value));
+      throw new ClassCastException('Cannot cast to the '.$this->getName().' type from '.\xp::typeOf($value));
     }
   }
 

@@ -129,7 +129,7 @@ class WildcardType extends Type {
     if ($value instanceof Generic && $this->assignableFromClass($value->getClass())) {
       return $value;
     }
-    raise('lang.ClassCastException', 'Cannot cast '.\xp::typeOf($value).' to the '.$this->getName().' type');
+    throw new ClassCastException('Cannot cast '.\xp::typeOf($value).' to the '.$this->getName().' type');
   }
 
   /**

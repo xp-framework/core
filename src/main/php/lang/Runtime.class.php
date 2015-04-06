@@ -135,7 +135,7 @@ class Runtime extends Object {
    * @param   string message default NULL
    */
   public static function halt($code= 0, $message= null) {
-    raise('lang.SystemExit', $code, $message);
+    throw new SystemExit($code, $message);
   }
 
   /**

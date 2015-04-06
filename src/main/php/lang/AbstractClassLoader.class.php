@@ -93,13 +93,13 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
       // a "soft" dependency, one that is only required at runtime, was
       // not loaded, the class itself has been declared.
       if (class_exists($decl, false) || interface_exists($decl, false) || trait_exists($decl, false)) {
-        raise('lang.ClassDependencyException', $class, [$this], $e);
+        throw new ClassDependencyException($class, [$this], $e);
       }
 
       // If otherwise, a "hard" dependency could not be loaded, eg. the
       // base class or a required interface and thus the class could not
       // be declared.
-      raise('lang.ClassLinkageException', $class, [$this], $e);
+      throw new ClassLinkageException($class, [$this], $e);
     }
     \xp::$cll--;
     if (false === $r) {
@@ -136,7 +136,7 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
       \xp::$sn[$class]= $name;
     } else {
       unset(\xp::$cl[$class]);
-      raise('lang.ClassFormatException', 'Class "'.$class.'" not declared in loaded file');
+      throw new ClassFormatException('Class "'.$class.'" not declared in loaded file');
     }
 
     method_exists($name, '__static') && \xp::$cli[]= [$name, '__static'];

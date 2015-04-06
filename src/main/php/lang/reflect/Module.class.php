@@ -1,6 +1,7 @@
 <?php namespace lang\reflect;
 
 use lang\IClassLoader;
+use lang\ElementNotFoundException;
 
 /**
  * Represents a module
@@ -101,7 +102,7 @@ class Module extends \lang\Object {
    */
   public static function forName($name) {
     if (!isset(self::$registered[$name])) {
-      raise('lang.ElementNotFoundException', 'No module "'.$name.'" declared');
+      throw new ElementNotFoundException('No module "'.$name.'" declared');
     }
     return self::$registered[$name];
   }

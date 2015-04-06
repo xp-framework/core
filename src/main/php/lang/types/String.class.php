@@ -1,5 +1,8 @@
 <?php namespace lang\types;
 
+use lang\IndexOutOfBoundsException;
+use lang\IllegalArgumentException;
+
 if (extension_loaded('mbstring')) {
   mb_internal_encoding(\xp::ENCODING);
   class __str {
@@ -101,12 +104,12 @@ class String extends \lang\Object implements \ArrayAccess {
     }
     
     if ($offset >= $this->length || $offset < 0) {
-      raise('lang.IndexOutOfBoundsException', 'Offset '.$offset.' out of bounds');
+      throw new IndexOutOfBoundsException('Offset '.$offset.' out of bounds');
     }
     
     $char= $this->asIntern($value);
     if (1 != __str::len($char)) {
-      throw new \lang\IllegalArgumentException('Set only allows to set one character!');
+      throw new IllegalArgumentException('Set only allows to set one character!');
     }
     
     $this->buffer= (
@@ -133,7 +136,7 @@ class String extends \lang\Object implements \ArrayAccess {
    */
   public function offsetUnset($offset) {
     if ($offset >= $this->length || $offset < 0) {
-      raise('lang.IndexOutOfBoundsException', 'Offset '.$offset.' out of bounds');
+      throw new IndexOutOfBoundsException('Offset '.$offset.' out of bounds');
     }
     $this->buffer= (
       __str::substr($this->buffer, 0, $offset).
@@ -161,7 +164,7 @@ class String extends \lang\Object implements \ArrayAccess {
    */
   public function charAt($offset) {
     if ($offset >= $this->length || $offset < 0) {
-      raise('lang.IndexOutOfBoundsException', 'Offset '.$offset.' out of bounds');
+      throw new IndexOutOfBoundsException('Offset '.$offset.' out of bounds');
     }
     return new Character(__str::substr($this->buffer, $offset, 1), \xp::ENCODING);
   }

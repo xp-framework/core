@@ -98,7 +98,7 @@ abstract class Enum extends Object {
    * @throws  lang.CloneNotSupportedException
    */
   public final function __clone() {
-    raise('lang.CloneNotSupportedException', 'Enums cannot be cloned');
+    throw new CloneNotSupportedException('Enums cannot be cloned');
   }
 
   /**

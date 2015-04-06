@@ -226,7 +226,7 @@ class Type extends Object {
    */
   public function cast($value) {
     if (self::$VAR === $this) return $value;
-    raise('lang.ClassCastException', 'Cannot cast '.\xp::typeOf($value).' to the void type');
+    throw new ClassCastException('Cannot cast '.\xp::typeOf($value).' to the void type');
   }
 
   /**
