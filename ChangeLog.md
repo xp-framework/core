@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.1.0 / 2015-04-06
+
 ### Heads up!
 
 * Deprecated uses() core functionality - use the `use` statement and PHP's
