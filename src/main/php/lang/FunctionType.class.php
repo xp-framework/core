@@ -201,11 +201,11 @@ class FunctionType extends Type {
         if (!$this->returns->isAssignableFrom(new XPClass($class))) return $false('Class type mismatch');
       }
       $c= new \ReflectionClass($class);
-      if (!$c->isInstantiable()) return $false(\xp::nameOf($class).' cannot be instantiated');
+      if (!$c->isInstantiable()) return $false($arg.' cannot be instantiated');
       return $return ? function() use($c) { return $c->newInstanceArgs(func_get_args()); } : true;
     } else if (is_string($arg) && is_string($method)) {
       $class= literal($arg);
-      if (!method_exists($class, $method)) return $false('Method '.\xp::nameOf($class).'::'.$method.' does not exist');
+      if (!method_exists($class, $method)) return $false('Method '.$arg.'::'.$method.' does not exist');
       $r= new \ReflectionMethod($class, $method);
       if ($r->isStatic()) {
         if ($this->verify($r, $this->signature, $false, $r->getDeclaringClass())) {
@@ -216,7 +216,7 @@ class FunctionType extends Type {
           $verify= null;
         } else {
           if (empty($this->signature) || !$this->signature[0]->isAssignableFrom(new XPClass($class))) {
-            return $false('Method '.\xp::nameOf($class).'::'.$method.' requires instance of class as first parameter');
+            return $false('Method '.$arg.'::'.$method.' requires instance of class as first parameter');
           }
           $verify= array_slice($this->signature, 1);
         }
@@ -233,7 +233,7 @@ class FunctionType extends Type {
         }
       }
     } else if (is_object($arg) && is_string($method)) {
-      if (!method_exists($arg, $method)) return $false('Method '.\xp::nameOf(get_class($arg)).'::'.$method.' does not exist');
+      if (!method_exists($arg, $method)) return $false('Method '.nameof($arg).'::'.$method.' does not exist');
       $r= new \ReflectionMethod($arg, $method);
       if ($this->verify($r, $this->signature, $false, $r->getDeclaringClass())) {
         return $return ? $r->getClosure($arg) : true;
