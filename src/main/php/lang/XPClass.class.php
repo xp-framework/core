@@ -4,6 +4,7 @@ use lang\reflect\Method;
 use lang\reflect\Field;
 use lang\reflect\Constructor;
 use lang\reflect\Package;
+use lang\ElementNotFoundException;
 
 define('DETAIL_ARGUMENTS',      1);
 define('DETAIL_RETURNS',        2);
@@ -189,7 +190,7 @@ class XPClass extends Type {
     if ($this->hasMethod($name)) {
       return new Method($this->_class, $this->_reflect->getMethod($name));
     }
-    raise('lang.ElementNotFoundException', 'No such method "'.$name.'" in class '.$this->name);
+    throw new ElementNotFoundException('No such method "'.$name.'" in class '.$this->name);
   }
   
   /**
@@ -230,7 +231,7 @@ class XPClass extends Type {
     if ($this->hasConstructor()) {
       return new Constructor($this->_class, $this->_reflect->getMethod('__construct')); 
     }
-    raise('lang.ElementNotFoundException', 'No constructor in class '.$this->name);
+    throw new ElementNotFoundException('No constructor in class '.$this->name);
   }
   
   /**
@@ -279,7 +280,7 @@ class XPClass extends Type {
     if ($this->hasField($name)) {
       return new Field($this->_class, $this->_reflect->getProperty($name));
     }
-    raise('lang.ElementNotFoundException', 'No such field "'.$name.'" in class '.$this->name);
+    throw new ElementNotFoundException('No such field "'.$name.'" in class '.$this->name);
   }
   
   /**
@@ -323,8 +324,7 @@ class XPClass extends Type {
     if ($this->hasConstant($constant)) {
       return $this->_reflect->getConstant($constant);
     }
-    
-    raise('lang.ElementNotFoundException', 'No such constant "'.$constant.'" in class '.$this->name);
+    throw new ElementNotFoundException('No such constant "'.$constant.'" in class '.$this->name);
   }
 
   /**
@@ -349,7 +349,7 @@ class XPClass extends Type {
     } else if (is($this->name, $value)) {
       return $value;
     }
-    raise('lang.ClassCastException', 'Cannot cast '.\xp::typeOf($value).' to '.$this->name);
+    throw new ClassCastException('Cannot cast '.\xp::typeOf($value).' to '.$this->name);
   }
   
   /**
@@ -554,10 +554,9 @@ class XPClass extends Type {
     if (!$details || !($key 
       ? @array_key_exists($key, @$details['class'][DETAIL_ANNOTATIONS][$name]) 
       : @array_key_exists($name, @$details['class'][DETAIL_ANNOTATIONS])
-    )) return raise(
-      'lang.ElementNotFoundException', 
-      'Annotation "'.$name.($key ? '.'.$key : '').'" does not exist'
-    );
+    )) {
+      throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
+    }
 
     return ($key 
       ? $details['class'][DETAIL_ANNOTATIONS][$name][$key] 

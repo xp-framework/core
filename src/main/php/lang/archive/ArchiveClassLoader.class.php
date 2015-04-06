@@ -1,7 +1,7 @@
 <?php namespace lang\archive;
 
 use lang\AbstractClassLoader;
-
+use lang\ElementNotFoundException;
 
 /** 
  * Loads XP classes from a XAR (XP Archive)
@@ -111,7 +111,7 @@ class ArchiveClassLoader extends AbstractClassLoader {
   public function getResource($string) {
     if (false !== ($r= file_get_contents($this->archive.$string))) return $r;
     \xp::gc(__FILE__);
-    raise('lang.ElementNotFoundException', 'Could not load resource '.$string);
+    throw new ElementNotFoundException('Could not load resource '.$string);
   }
   
   /**
@@ -123,7 +123,7 @@ class ArchiveClassLoader extends AbstractClassLoader {
    */
   public function getResourceAsStream($string) {
     if (!file_exists($fn= $this->archive.$string)) {
-      return raise('lang.ElementNotFoundException', 'Could not load resource '.$string);
+      throw new ElementNotFoundException('Could not load resource '.$string);
     }
     return new \io\File($fn);
   }

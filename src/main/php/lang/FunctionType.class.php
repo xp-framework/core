@@ -263,7 +263,7 @@ class FunctionType extends Type {
    * @return  var
    */
   public function newInstance($value= null) {
-    return $this->verified($value, function($m) use($value) { raise('lang.IllegalArgumentException', sprintf(
+    return $this->verified($value, function($m) use($value) { throw new IllegalArgumentException(sprintf(
       'Cannot create instances of the %s type from %s: %s',
       $this->getName(),
       \xp::typeOf($value),
@@ -279,7 +279,7 @@ class FunctionType extends Type {
    * @throws  lang.ClassCastException
    */
   public function cast($value) {
-    return null === $value ? null : $this->verified($value, function($m) use($value) { raise('lang.ClassCastException', sprintf(
+    return null === $value ? null : $this->verified($value, function($m) use($value) { throw new ClassCastException(sprintf(
       'Cannot cast %s to the %s type: %s',
       \xp::typeOf($value),
       $this->getName(),

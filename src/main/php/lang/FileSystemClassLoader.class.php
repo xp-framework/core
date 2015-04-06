@@ -108,7 +108,7 @@ class FileSystemClassLoader extends AbstractClassLoader {
    */
   public function getResource($filename) {
     if (!is_file($fn= $this->path.strtr($filename, '/', DIRECTORY_SEPARATOR))) {
-      return raise('lang.ElementNotFoundException', 'Could not load resource '.$filename);
+      throw new ElementNotFoundException('Could not load resource '.$filename);
     }
     return file_get_contents($fn);
   }
@@ -122,7 +122,7 @@ class FileSystemClassLoader extends AbstractClassLoader {
    */
   public function getResourceAsStream($filename) {
     if (!is_file($fn= $this->path.strtr($filename, '/', DIRECTORY_SEPARATOR))) {
-      return raise('lang.ElementNotFoundException', 'Could not load resource '.$filename);
+      throw new ElementNotFoundException('Could not load resource '.$filename);
     }
     return new \io\File($fn);   // Trigger autoloading!
   }

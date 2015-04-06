@@ -112,27 +112,6 @@ class ExceptionsTest extends TestCase {
     $this->assertEquals($e->toString(), $out->getBytes());
   }
   
-  #[@test]
-  public function raiseWithOneArgument() {
-    try {
-      raise('lang.IllegalArgumentException', 'This is the message');
-      $this->fail('Exception has not been thrown', NULL, NULL);
-    } catch (\lang\IllegalArgumentException $e) {
-      $this->assertEquals('This is the message', $e->getMessage());
-    }
-  }
-  
-  #[@test]
-  public function raiseWithMoreArguments() {
-    try {
-      raise('lang.MethodNotImplementedException', 'This is the message', __FUNCTION__);
-      $this->fail('Exception has not been thrown', NULL, NULL);
-    } catch (\lang\MethodNotImplementedException $e) {
-      $this->assertEquals('This is the message', $e->getMessage());
-      $this->assertEquals(__FUNCTION__, $e->method);
-    }
-  }
-
   #[@test, @expect('lang.IllegalArgumentException')]
   public function withCause_must_be_a_throwable() {
     new \lang\XPException('Message', 'Anything...');

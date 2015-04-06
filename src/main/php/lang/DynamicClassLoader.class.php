@@ -143,7 +143,7 @@ class DynamicClassLoader extends AbstractClassLoader {
    * @throws  lang.ElementNotFoundException in case the resource cannot be found
    */
   public function getResource($filename) {
-    raise('lang.ElementNotFoundException', 'Could not load resource '.$filename);
+    throw new ElementNotFoundException('Could not load resource '.$filename);
   }
   
   /**
@@ -154,7 +154,7 @@ class DynamicClassLoader extends AbstractClassLoader {
    * @throws  lang.ElementNotFoundException in case the resource cannot be found
    */
   public function getResourceAsStream($filename) {
-    raise('lang.ElementNotFoundException', 'Could not load resource '.$filename);
+    throw new ElementNotFoundException('Could not load resource '.$filename);
   }
   
   /**
@@ -169,7 +169,7 @@ class DynamicClassLoader extends AbstractClassLoader {
   public function stream_open($path, $mode, $options, $opened_path) {
     sscanf($path, 'dyn://%[^$]', $this->current);
     if (!isset(self::$bytes[$this->current])) {
-      raise('lang.ElementNotFoundException', 'Could not load '.$this->current);
+      throw new ElementNotFoundException('Could not load '.$this->current);
     }
     return true;
   }
