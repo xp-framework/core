@@ -127,7 +127,7 @@ final class xp {
   }
   // }}}
 
-  // {{{ proto string nameOf(string name)
+  // {{{ proto deprecated string nameOf(string name)
   //     Returns the fully qualified name
   static function nameOf($name) {
     if (isset(xp::$cn[$name])) {
@@ -546,18 +546,20 @@ function newinstance($spec, $args, $def= null) {
 
   // Create unique name
   $n= "\xb7".(++$u);
-  if (false === strrpos($spec, '.')) {
-    $spec= xp::nameOf($spec);
+  if (0 === strncmp($spec, 'php.', 4)) {
+    $spec= substr($spec, 4);
+  } else if (false === strpos($spec, '.')) {
+    $spec= XPClass::nameOf($spec);
   }
 
   // Handle generics, PHP types and all others.
-  if (strstr($spec, '<')) {
+  if (false !== strpos($spec, '<')) {
     $class= Type::forName($spec);
     $type= $class->literal();
     $p= strrpos(substr($type, 0, strpos($type, "\xb7\xb7")), "\xb7");
     $generic= xp::$meta[$class->getName()]['class'][DETAIL_GENERIC];
-  } else if (0 === strncmp($spec, 'php.', 4)) {
-    $type= $spec= substr($spec, 4);
+  } else if (false === strpos($spec, '.')) {
+    $type= $spec;
     $p= false;
     $generic= null;
   } else {
