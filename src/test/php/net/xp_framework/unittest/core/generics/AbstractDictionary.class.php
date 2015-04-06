@@ -1,29 +1,20 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace net\xp_framework\unittest\core\generics;
+
+/**
+ * Lookup map
  *
- * $Id$ 
  */
-
-  $package= 'net.xp_framework.unittest.core.generics';
-
-  uses('net.xp_framework.unittest.core.generics.IDictionary');
-
+#[@generic(self= 'K, V', implements= array('K, V'))]
+abstract class AbstractDictionary extends \lang\Object implements IDictionary {
+  
   /**
-   * Lookup map
+   * Constructor
    *
+   * @param   [:var] initial
    */
-  #[@generic(self= 'K, V', implements= array('K, V'))]
-  abstract class net·xp_framework·unittest·core·generics·AbstractDictionary extends Object implements net·xp_framework·unittest·core·generics·IDictionary {
-    
-    /**
-     * Constructor
-     *
-     * @param   array<string, var> initial
-     */
-    public function __construct($initial= []) {
-      foreach ($initial as $key => $value) {
-        $this->put($key, $value);
-      }
+  public function __construct($initial= []) {
+    foreach ($initial as $key => $value) {
+      $this->put($key, $value);
     }
   }
-?>
+}

@@ -5,6 +5,10 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Deprecated uses() core functionality - use the `use` statement and PHP's
+  namespaces instead. This also deprecates classes in the global namespace
+  and the "package"-classes introduced in xp-framework/rfc#37.
+  (@thekid)
 * Deprecated raise() core functionality - use the `throw` statement
   instead, it also uses lazy classloading for namespaced classes.
   (@thekid)

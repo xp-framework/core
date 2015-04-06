@@ -1,19 +1,10 @@
-<?php
-/* This class is part of the XP framework
+<?php namespace net\xp_framework\unittest\core\generics;
+
+/**
+ * Lookup map
  *
- * $Id$
  */
+#[@generic(self= 'V', implements= array('lang.Type, V'))]
+abstract class AbstractTypeDictionary extends \lang\Object implements IDictionary {
 
-  $package= 'net.xp_framework.unittest.core.generics';
-
-  uses('net.xp_framework.unittest.core.generics.IDictionary');
-
-  /**
-   * Lookup map
-   *
-   */
-  #[@generic(self= 'V', implements= array('lang.Type, V'))]
-  abstract class net·xp_framework·unittest·core·generics·AbstractTypeDictionary extends Object implements net·xp_framework·unittest·core·generics·IDictionary {
-
-  }
-?>
+}

@@ -21,8 +21,7 @@ class BootstrapTest extends \unittest\TestCase {
   /**
    * Create a new runtime
    *
-   * @param   string[] uses
-   * @param   string decl
+   * @param   lang.RuntimeOptions $options
    * @return  var[] an array with three elements: exitcode, stdout and stderr contents
    */
   protected function runWith(\lang\RuntimeOptions $options) {
@@ -36,7 +35,7 @@ class BootstrapTest extends \unittest\TestCase {
       // Close child process
       $exitv= $p->close();
     }
-    return array($exitv, $out, $err);
+    return [$exitv, $out, $err];
   }
 
   /**

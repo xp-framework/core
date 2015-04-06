@@ -121,26 +121,10 @@ class ImplementationTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function closedNS() {
-    $this->assertEquals(
-      XPClass::forName('lang.Object'),
-      Type::forName('net.xp_framework.unittest.core.generics.NSListOf<string>')->getParentclass()
-    );
-  }
-
-  #[@test]
   public function partiallyClosed() {
     $this->assertEquals(
       Type::forName('net.xp_framework.unittest.core.generics.Lookup<lang.Type, string>'),
       Type::forName('net.xp_framework.unittest.core.generics.TypeLookup<string>')->getParentclass()
-    );
-  }
-
-  #[@test]
-  public function partiallyClosedNS() {
-    $this->assertEquals(
-      Type::forName('net.xp_framework.unittest.core.generics.NSLookup<lang.Type, string>'),
-      Type::forName('net.xp_framework.unittest.core.generics.NSTypeLookup<string>')->getParentclass()
     );
   }
 
