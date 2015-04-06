@@ -123,52 +123,50 @@ class Type extends Object {
    * Gets a type for a given name
    *
    * Checks for:
-   * <ul>
-   *   <li>Primitive types (string, integer, double, boolean, array)</li>
-   *   <li>Array notations (string[] or string*)</li>
-   *   <li>Resources</li>
-   *   <li>Any type (var or *)</li>
-   *   <li>Generic notations (util.collections.HashTable<lang.types.String, lang.Generic>)</li>
-   *   <li>Anything else will be passed to XPClass::forName()</li>
-   * </ul>
+   * - Primitive types (string, int, double, boolean, resource)
+   * - Array and map notations (array, string[], string*, [:string])
+   * - Any type (var)
+   * - Void type (void)
+   * - Function types
+   * - Generic notations (util.collections.HashTable<lang.types.String, lang.Generic>)
+   * - Anything else will be passed to XPClass::forName()
    *
-   * @param   string name
+   * @param   string $type
    * @return  lang.Type
+   * @throws  lang.IllegalStateException if type is empty
    */
-  public static function forName($name) {
-    static $deprecated= [
-      'char'      => 'string',
-      'integer'   => 'int',
-      'boolean'   => 'bool',
-      'float'     => 'double',
-      'mixed'     => 'var',
-      '*'         => 'var',
-      'array'     => 'var[]',
-      'resource'  => 'var',
-      ''          => '{null}'
-    ];
+  public static function forName($type) {
     static $primitives= [
-      'string'    => true,
-      'int'       => true,
-      'double'    => true,
-      'bool'      => true
+      'string'    => 'string',
+      'int'       => 'int',
+      'integer'   => 'int',
+      'double'    => 'double',
+      'float'     => 'double',
+      'bool'      => 'bool',
+      'boolean'   => 'bool'
     ];
-    
-    // Map deprecated type names
-    $type= isset($deprecated[$name]) ? $deprecated[$name] : $name;
+
+    if (0 === strlen($type)) {
+      throw new IllegalStateException('Empty type');
+    }
     
     // Map well-known primitives, var and void, handle rest syntactically:
     // * T[] is an array
     // * [:T] is a map 
     // * T* is a vararg
     // * T<K, V> is a generic
+    // * D<K, V> is a generic type definition D with K and V components
+    //   except if any of K, V contains a ?, in which case it's a wild 
+    //   card type.
     // * Anything else is a qualified or unqualified class name
     if (isset($primitives[$type])) {
-      return Primitive::forName($type);
-    } else if ('var' === $type) {
+      return Primitive::forName($primitives[$type]);
+    } else if ('var' === $type || 'resource' === $type) {
       return self::$VAR;
     } else if ('void' === $type) {
       return self::$VOID;
+    } else if ('array' === $type) {
+      return Type::$ARRAY;
     } else if (0 === substr_compare($type, '[]', -2)) {
       return new ArrayType(substr($type, 0, -2));
     } else if (0 === substr_compare($type, '[:', 0, 2)) {
@@ -179,30 +177,13 @@ class Type extends Object {
       return new ArrayType(substr($type, 0, -1));
     } else if (false === ($p= strpos($type, '<'))) {
       return strstr($type, '.') ? XPClass::forName($type) : new XPClass($type);
-    }
-    
-    // Generics
-    // * D<K, V> is a generic type definition D with K and V components
-    //   except if any of K, V contains a ?, in which case it's a wild 
-    //   card type.
-    // * Deprecated: array<T> is T[], array<K, V> is [:T]
-    if (strstr($type, '?')) {
+    } else if (strstr($type, '?')) {
       return WildcardType::forName($type);
-    } else if (0 === substr_compare($type, 'array', 0, $p)) {
-      $components= self::forNames(substr($type, $p+ 1, -1));
-      $s= sizeof($components);
-      if (2 === $s) {
-        return new MapType($components[1]);
-      } else if (1 === $s) {
-        return new ArrayType($components[0]);
-      }
     } else {
       $base= substr($type, 0, $p);
       $components= self::forNames(substr($type, $p+ 1, -1));
       return cast(self::forName($base), 'lang.XPClass')->newGenericType($components);
     }
-
-    throw new IllegalArgumentException('Unparseable name '.$name);
   }
   
   /**
