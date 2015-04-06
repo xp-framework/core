@@ -19,6 +19,9 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented relevant part of xp-framework/rfc#298: The `getClassName()`
+  method is now deprecated. Rewrite code to use `nameof($this)`.
+  (@thekid)
 * Implemented xp-framework/rfc#292: Create anonymous instances from traits
   with `newinstance()`. See pull request xp-framework/core#60
   (@thekid)
