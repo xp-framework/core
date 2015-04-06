@@ -42,7 +42,8 @@ class Object implements Generic { use \__xp;
   /** 
    * Returns the fully qualified class name for this class 
    * (e.g. "io.File")
-   * 
+   *
+   * @deprecated Use nameof($this) instead.
    * @return  string fully qualified class name
    */
   public function getClassName() {
