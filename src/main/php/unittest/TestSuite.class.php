@@ -193,7 +193,7 @@ class TestSuite extends \lang\Object {
     } else if (strstr($ref, '.')) {
       $class= XPClass::forName($ref);
     } else {
-      $class= XPClass::forName(\xp::nameOf($ref));
+      $class= new XPClass($ref);
     }
     return $class->getMethod(substr($source, $p+ 2))->invoke(null, $args);
   }
