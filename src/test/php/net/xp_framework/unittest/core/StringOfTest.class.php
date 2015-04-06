@@ -71,7 +71,7 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function php_stdClass_representation() {
-    $this->assertEquals("php.stdClass {\n}", \xp::stringOf(new \stdClass()));
+    $this->assertEquals("stdClass {\n}", \xp::stringOf(new \stdClass()));
   }
 
   #[@test]
@@ -96,8 +96,8 @@ class StringOfTest extends \unittest\TestCase {
     $o= new \stdClass();
     $o->child= new \stdClass();
     $o->child->parent= $o;
-    $this->assertEquals('php.stdClass {
-  child => php.stdClass {
+    $this->assertEquals('stdClass {
+  child => stdClass {
     parent => ->{:recursion:}
   }
 }',

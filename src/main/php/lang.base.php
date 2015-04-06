@@ -199,7 +199,7 @@ final class xp {
       $ser= spl_object_hash($arg);
       if (isset($protect[$ser])) return '->{:recursion:}';
       $protect[$ser]= true;
-      $r= xp::nameOf(get_class($arg))." {\n";
+      $r= nameof($arg)." {\n";
       $vars= (array)$arg;
       foreach (array_keys($vars) as $key) {
         $r.= $indent.'  '.$key.' => '.xp::stringOf($vars[$key], $indent.'  ')."\n";
