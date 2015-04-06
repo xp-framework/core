@@ -18,7 +18,7 @@ class FullyQualifiedTest extends TestCase {
 
   static function __static() {
     ClassLoader::registerLoader(new ArchiveClassLoader(
-      new Archive(XPClass::forName(\xp::nameOf(__CLASS__))->getPackage()->getPackage('lib')->getResourceAsStream('fqcns.xar'))
+      new Archive((new XPClass(__CLASS__))->getPackage()->getPackage('lib')->getResourceAsStream('fqcns.xar'))
     ));
     XPClass::forName('info.binford6100.Date');
     XPClass::forName('de.thekid.util.ObjectComparator');
