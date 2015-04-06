@@ -5,6 +5,12 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Removed deprecated support for "mixed", "char", "*", "array<T>" and
+  "array<string, string>"' in Type::forName(), see xp-framework/core#64
+  (@thekid)
+* Removed peer.server.Server::addListener() and related classes which had
+  been deprecated since August 2006. See pull request xp-framework/core#63
+  (@thekid)
 * Deprecated `lang.ClassLoader::defineType(string, string, var)` usage.
   Its second parameter now expects a map containing "kind" (either "class",
   "trait" or "interface"), "extends", "implements" and "use" (arrays of
