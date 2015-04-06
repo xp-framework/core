@@ -15,6 +15,7 @@ class TestClass extends AbstractTestClass implements Traceable {
   public
     #[@type('util.Date')]
     $date   = null,
+    /** @var [:lang.Object] */
     $map    = [];
   
   protected

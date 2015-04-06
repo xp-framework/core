@@ -41,9 +41,17 @@ class Field extends \lang\Object {
    * @return  lang.Type
    */
   public function getType() {
-    if ($details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName())) {
-      if (isset($details[DETAIL_ANNOTATIONS]['type'])) return \lang\Type::forName($details[DETAIL_ANNOTATIONS]['type']);
+    $raw= $this->_reflect->getDocComment();
+    if (false === $raw) {
+      if ($details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName())) {
+        if (isset($details[DETAIL_ANNOTATIONS]['type'])) return \lang\Type::forName($details[DETAIL_ANNOTATIONS]['type']);
+      }
+    } else {
+      if (preg_match('/@var (.+) \*\//', $raw, $matches)) {
+        return \lang\Type::forName($matches[1]);
+      }
     }
+
     return \lang\Type::$VAR;
   }
 
@@ -53,9 +61,17 @@ class Field extends \lang\Object {
    * @return  string
    */
   public function getTypeName() {
-    if ($details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName())) {
-      if (isset($details[DETAIL_ANNOTATIONS]['type'])) return $details[DETAIL_ANNOTATIONS]['type'];
+    $raw= $this->_reflect->getDocComment();
+    if (false === $raw) {
+      if ($details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName())) {
+        if (isset($details[DETAIL_ANNOTATIONS]['type'])) return $details[DETAIL_ANNOTATIONS]['type'];
+      }
+    } else {
+      if (preg_match('/@var (.+) \*\//', $raw, $matches)) {
+        return $matches[1];
+      }
     }
+
     return 'var';
   }
 
