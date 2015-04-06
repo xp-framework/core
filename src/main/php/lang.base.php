@@ -402,7 +402,7 @@ function uses() {
 }
 // }}}
 
-// {{{ proto void raise (string classname, var* args)
+// {{{ proto deprecated void raise (string classname, var* args)
 //     throws an exception by a given class name
 function raise($classname) {
   try {
