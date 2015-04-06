@@ -197,7 +197,7 @@ class PrimitiveTest extends TestCase {
     $this->assertTrue(Primitive::$BOOL->isInstance($value));
   }
 
-  #[@test, @values(source= 'instances', args= array(array(FALSE, TRUE)))]
+  #[@test, @values(source= 'instances', args= array(array(false, true)))]
   public function notInstanceOfBooleanPrimitive($value) {
     $this->assertFalse(Primitive::$BOOL->isInstance($value));
   }

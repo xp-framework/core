@@ -218,8 +218,8 @@ class AssertionsTest extends \unittest\TestCase {
     $this->assertInstanceOf('array', [1, 2, 3]);
   }
 
-  #[@test, @expect('unittest.AssertionFailedError')]
-  public function hashIsNotInstanceOfArray() {
+  #[@test]
+  public function hashIsInstanceOfArray() {
     $this->assertInstanceOf('array', ['color' => 'green']);
   }
 

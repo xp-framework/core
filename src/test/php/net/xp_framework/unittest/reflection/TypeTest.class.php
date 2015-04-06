@@ -22,19 +22,19 @@ class TypeTest extends TestCase {
     $this->assertEquals(Primitive::$STRING, Type::forName('string'));
   }
 
-  #[@test]
-  public function intType() {
-    $this->assertEquals(Primitive::$INT, Type::forName('int'));
+  #[@test, @values(['int', 'integer'])]
+  public function intType($named) {
+    $this->assertEquals(Primitive::$INT, Type::forName($named));
   }
 
-  #[@test]
-  public function doubleType() {
-    $this->assertEquals(Primitive::$DOUBLE, Type::forName('double'));
+  #[@test, @values(['double', 'float'])]
+  public function doubleType($named) {
+    $this->assertEquals(Primitive::$DOUBLE, Type::forName($named));
   }
 
-  #[@test]
-  public function boolType() {
-    $this->assertEquals(Primitive::$BOOL, Type::forName('bool'));
+  #[@test, @values(['bool', 'boolean'])]
+  public function boolType($named) {
+    $this->assertEquals(Primitive::$BOOL, Type::forName($named));
   }
 
   #[@test]
@@ -122,46 +122,6 @@ class TypeTest extends TestCase {
         $t->genericArguments()
       );
     }
-  }
-
-  #[@test]
-  public function deprecated_arrayKeyword() {
-    $this->assertEquals(ArrayType::forName('var[]'), Type::forName('array'));
-  }
-
-  #[@test]
-  public function deprecated_stringTypeVariant() {
-    $this->assertEquals(Primitive::$STRING, Type::forName('char'));
-  }
-
-  #[@test]
-  public function deprecated_intTypeVariant() {
-    $this->assertEquals(Primitive::$INT, Type::forName('integer'));
-  }
-
-  #[@test]
-  public function deprecated_mapOfStringDeprecatedSyntax() {
-    $this->assertEquals(MapType::forName('[:string]'), Type::forName('array<string, string>'));
-  }
-
-  #[@test]
-  public function deprecated_stringArrayDeprecatedSyntax() {
-    $this->assertEquals(ArrayType::forName('string[]'), Type::forName('array<string>'));
-  }
-
-  #[@test]
-  public function deprecated_doubleTypeVariant() {
-    $this->assertEquals(Primitive::$DOUBLE, Type::forName('float'));
-  }
-
-  #[@test]
-  public function deprecated_booleanTypeVariant() {
-    $this->assertEquals(Primitive::$BOOL, Type::forName('boolean'));
-  }
-
-  #[@test, @values(['mixed', '*'])]
-  public function deprecated_varTypeVariant($name) {
-    $this->assertEquals(Type::$VAR, Type::forName($name));
   }
 
   #[@test]
