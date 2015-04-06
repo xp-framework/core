@@ -63,24 +63,6 @@ class Server extends \lang\Object {
   }
   
   /**
-   * Add a connection listener. Provided for BC reasons.
-   *
-   * @deprecated Use setProtocol() instead!
-   * @param   peer.server.ConnectionListener listener
-   * @return  peer.server.ConnectionListener the added listener
-   */
-  public function addListener($listener) {
-    if (!$this->protocol) {
-      $c= \lang\XPClass::forName('peer.server.protocol.ListenerWrapperProtocol');
-      $this->protocol= $c->newInstance();
-    }
-
-    $listener->server= $this;
-    $this->protocol->addListener($listener);
-    return $listener;
-  }
-
-  /**
    * Sets this server's protocol
    *
    * @param   peer.server.ServerProtocol protocol
