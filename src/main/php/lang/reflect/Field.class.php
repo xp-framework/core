@@ -47,8 +47,8 @@ class Field extends \lang\Object {
         if (isset($details[DETAIL_ANNOTATIONS]['type'])) return \lang\Type::forName($details[DETAIL_ANNOTATIONS]['type']);
       }
     } else {
-      if (preg_match('/@var (.+) \*\//', $raw, $matches)) {
-        return \lang\Type::forName($matches[1]);
+      if (preg_match('/@var\s*([^\r\n]+)/', $raw, $matches)) {
+        return \lang\Type::forName(ClassParser::typeIn($matches[1]));
       }
     }
 
@@ -67,8 +67,8 @@ class Field extends \lang\Object {
         if (isset($details[DETAIL_ANNOTATIONS]['type'])) return $details[DETAIL_ANNOTATIONS]['type'];
       }
     } else {
-      if (preg_match('/@var (.+) \*\//', $raw, $matches)) {
-        return $matches[1];
+      if (preg_match('/@var\s*([^\r\n]+)/', $raw, $matches)) {
+        return ClassParser::typeIn($matches[1]);
       }
     }
 

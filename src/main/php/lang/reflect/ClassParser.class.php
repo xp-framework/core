@@ -297,7 +297,7 @@ class ClassParser extends \lang\Object {
    * @param  string $close
    * @param  int
    */
-  protected function matching($text, $open, $close) {
+  protected static function matching($text, $open, $close) {
     for ($braces= $open.$close, $i= 0, $b= 0, $s= strlen($text); $i < $s; $i+= strcspn($text, $braces, $i)) {
       if ($text{$i} === $open) {
         $b++;
@@ -315,13 +315,13 @@ class ClassParser extends \lang\Object {
    * @param  string $text
    * @return string
    */
-  protected function typeIn($text) {
+  public static function typeIn($text) {
     if (0 === strncmp($text, 'function(', 9)) {
-      $p= $this->matching($text, '(', ')');
+      $p= self::matching($text, '(', ')');
       $p+= strspn($text, ': ', $p);
-      return substr($text, 0, $p).$this->typeIn(substr($text, $p));
+      return substr($text, 0, $p).self::typeIn(substr($text, $p));
     } else if (strstr($text, '<')) {
-      $p= $this->matching($text, '<', '>');
+      $p= self::matching($text, '<', '>');
       return substr($text, 0, $p);
     } else {
       return substr($text, 0, strcspn($text, ' '));
@@ -424,15 +424,15 @@ class ClassParser extends \lang\Object {
           foreach ($matches as $match) {
             switch ($match[1]) {
               case 'param':
-                $details[1][$m][DETAIL_ARGUMENTS][$arg++]= $this->typeIn($match[2]);
+                $details[1][$m][DETAIL_ARGUMENTS][$arg++]= self::typeIn($match[2]);
                 break;
 
               case 'return':
-                $details[1][$m][DETAIL_RETURNS]= $this->typeIn($match[2]);
+                $details[1][$m][DETAIL_RETURNS]= self::typeIn($match[2]);
                 break;
 
               case 'throws': 
-                $details[1][$m][DETAIL_THROWS][]= $this->typeIn($match[2]);
+                $details[1][$m][DETAIL_THROWS][]= self::typeIn($match[2]);
                 break;
             }
           }
