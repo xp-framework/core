@@ -215,7 +215,7 @@ class Currency extends \lang\Enum {
    * Gets the currency instance for a given currency code
    *
    * @param   string code ISO 4217 code
-   * @return  util.Currency
+   * @return  self
    * @throws  lang.IllegalArgumentException
    */
   public static function getInstance($code) {

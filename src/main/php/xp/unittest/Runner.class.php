@@ -111,7 +111,7 @@ class Runner extends \lang\Object {
    * @return  int exitcode
    */
   protected function usage() {
-    $this->err->writeLine($this->textOf(XPClass::forName(\xp::nameOf(__CLASS__))->getComment()));
+    $this->err->writeLine($this->textOf((new XPClass(__CLASS__))->getComment()));
     return 1;
   }
 

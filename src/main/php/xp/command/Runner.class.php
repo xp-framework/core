@@ -148,12 +148,12 @@ class Runner extends \lang\Object {
   }
 
   /**
-   * Show usage
+   * Displays usage
    *
-   * @return  int
+   * @return  int exitcode
    */
-  public static function usage() {
-    self::$err->writeLine(self::textOf(\lang\XPClass::forName(\xp::nameOf(__CLASS__))->getComment()));
+  protected function usage() {
+    $this->err->writeLine($this->textOf((new XPClass(__CLASS__))->getComment()));
     return 1;
   }
 
