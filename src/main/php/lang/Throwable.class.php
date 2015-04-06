@@ -262,7 +262,7 @@ class Throwable extends \Exception implements Generic { use \__xp;
    * @return  string fully qualified class name
    */
   public function getClassName() {
-    return \xp::nameOf(get_class($this));
+    return nameof($this);
   }
 
   /**
