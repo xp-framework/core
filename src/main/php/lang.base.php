@@ -633,6 +633,19 @@ function create($spec) {
 }
 // }}}
 
+// {{{ proto string nameof(lang.Generic arg)
+//     Returns name of an instance / a class.
+function nameof($arg) {
+  $class= is_object($arg) ? get_class($arg) : $arg;
+  if (strstr($class, '\\')) {
+    return strtr($class, '\\', '.');
+  } else {
+    $name= array_search($class, xp::$sn);
+    return false === $name ? $class : $name;
+  }
+}
+// }}}
+
 // {{{ proto lang.Type typeof(mixed arg)
 //     Returns type
 function typeof($arg) {
