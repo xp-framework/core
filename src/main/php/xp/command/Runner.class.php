@@ -11,6 +11,7 @@ use util\PropertyManager;
 use util\FilesystemPropertySource;
 use util\ResourcePropertySource;
 use rdbms\ConnectionManager;
+use lang\XPClass;
 
 /**
  * Runs util.cmd.Command subclasses on the command line.
@@ -153,7 +154,7 @@ class Runner extends \lang\Object {
    * @return  int exitcode
    */
   protected function usage() {
-    $this->err->writeLine($this->textOf((new XPClass(__CLASS__))->getComment()));
+    self::$err->writeLine($this->textOf((new XPClass(__CLASS__))->getComment()));
     return 1;
   }
 
