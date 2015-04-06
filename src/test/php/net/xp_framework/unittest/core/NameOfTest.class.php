@@ -14,11 +14,6 @@ class NameOfTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function of_class() {
-    $this->assertEquals('net.xp_framework.unittest.core.NameOfTest', nameof(__CLASS__));
-  }
-
-  #[@test]
   public function of_short_class() {
     $this->assertEquals('net.xp_framework.unittest.core.ShortClass', nameof(new ShortClass()));
   }
@@ -29,11 +24,6 @@ class NameOfTest extends \unittest\TestCase {
       'net.xp_framework.unittest.core.PackagedClass',
       nameof(XPClass::forName('net.xp_framework.unittest.core.PackagedClass')->newInstance())
     );
-  }
-
-  #[@test]
-  public function of_php_class() {
-    $this->assertEquals('Exception', nameof('Exception'));
   }
 
   #[@test]

@@ -634,9 +634,9 @@ function create($spec) {
 // }}}
 
 // {{{ proto string nameof(lang.Generic arg)
-//     Returns name of an instance / a class.
+//     Returns name of an instance.
 function nameof($arg) {
-  $class= is_object($arg) ? get_class($arg) : $arg;
+  $class= get_class($arg);
   if (isset(xp::$cn[$class])) {
     return xp::$cn[$class];
   } else if (strstr($class, '\\')) {
