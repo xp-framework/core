@@ -1,5 +1,8 @@
 <?php namespace lang\reflect;
 
+use lang\XPClass;
+use lang\IllegalAccessException;
+
 /**
  * Represents a class' constructor
  *
@@ -32,7 +35,7 @@ class Constructor extends Routine {
     // Check whether class is abstract
     $class= new \ReflectionClass($this->_class);
     if ($class->isAbstract()) {
-      throw new \lang\IllegalAccessException('Cannot instantiate abstract class '.$this->_class);
+      throw new IllegalAccessException('Cannot instantiate abstract class '.XPClass::nameOf($this->_class));
     }
 
     // Check modifiers. If caller is an instance of this class, allow private and
@@ -48,10 +51,10 @@ class Constructor extends Routine {
         $allow= $t[1]['class'] === $decl;
       }
       if (!$allow) {
-        throw new \lang\IllegalAccessException(sprintf(
+        throw new IllegalAccessException(sprintf(
           'Cannot invoke %s constructor of class %s from scope %s',
           Modifiers::stringOf($this->getModifiers()),
-          $this->_class,
+          XPClass::nameOf($this->_class),
           $t[1]['class']
         ));
       }
@@ -70,9 +73,9 @@ class Constructor extends Routine {
     } catch (\lang\SystemExit $e) {
       throw $e;
     } catch (\lang\Throwable $e) {
-      throw new TargetInvocationException($this->_class.'::<init>', $e);
+      throw new TargetInvocationException(XPClass::nameOf($this->_class).'::<init>', $e);
     } catch (\Exception $e) {
-      throw new TargetInvocationException($this->_class.'::<init>', new \lang\XPException($e->getMessage()));
+      throw new TargetInvocationException(XPClass::nameOf($this->_class).'::<init>', new \lang\XPException($e->getMessage()));
     }
   }
 
@@ -82,7 +85,7 @@ class Constructor extends Routine {
    * @return  lang.Type
    */
   public function getReturnType() {
-    return new \lang\XPClass($this->_class);
+    return new XPClass($this->_class);
   }
 
   /**
@@ -91,6 +94,6 @@ class Constructor extends Routine {
    * @return  string
    */
   public function getReturnTypeName() {
-    return \xp::nameOf($this->_class);
+    return XPClass::nameOf($this->_class);
   }
 }

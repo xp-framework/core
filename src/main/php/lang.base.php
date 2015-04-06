@@ -7,7 +7,7 @@ trait __xp {
   public static function __callStatic($name, $args) {
     $c= defined('HHVM_VERSION');
     $self= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1 - $c]['class'];
-    throw new \lang\Error('Call to undefined static method '.\xp::nameOf($self).'::'.$name.'()');
+    throw new \lang\Error('Call to undefined static method '.\lang\XPClass::nameOf($self).'::'.$name.'()');
   }
   // }}}
 
@@ -39,7 +39,7 @@ trait __xp {
       }
     }
 
-    throw new \lang\Error('Call to undefined method '.\xp::nameOf($self).'::'.$name.'() from scope '.\xp::nameOf($scope));
+    throw new \lang\Error('Call to undefined method '.\lang\XPClass::nameOf($self).'::'.$name.'() from scope '.\lang\XPClass::nameOf($scope));
   }
   // }}}
 
@@ -616,7 +616,7 @@ function create($spec) {
   
   // Instantiate, passing the rest of any arguments passed to create()
   // BC: Wrap IllegalStateExceptions into IllegalArgumentExceptions
-  $class= \lang\XPClass::forName(strstr($base, '.') ? $base : xp::nameOf($base));
+  $class= \lang\XPClass::forName(strstr($base, '.') ? $base : \lang\XPClass::nameOf($base));
   try {
     $reflect= $class->newGenericType($typeargs)->_reflect;
     if ($reflect->hasMethod('__construct')) {
@@ -636,7 +636,7 @@ function create($spec) {
 // {{{ proto string nameof(lang.Generic arg)
 //     Returns name of an instance.
 function nameof($arg) {
-  $class= get_class($arg) ?: $arg;
+  $class= get_class($arg);
   if (isset(xp::$cn[$class])) {
     return xp::$cn[$class];
   } else if (strstr($class, '\\')) {

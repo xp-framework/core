@@ -70,7 +70,7 @@ class StackTraceElement extends Object {
     }
     return sprintf(
       "  at %s::%s(%s) [line %d of %s] %s\n",
-      isset($this->class) ? \xp::nameOf($this->class) : '<main>',
+      isset($this->class) ? XPClass::nameOf($this->class) : '<main>',
       isset($this->method) ? $this->method : '<main>',
       implode(', ', $args),
       $this->line,
