@@ -3,13 +3,11 @@
 use lang\RuntimeError;
 use util\log\Traceable;
 
-
 /**
  * Pre-Forking TCP/IP Server
  *
- * @ext      pcntl
- * @see      xp://peer.server.Server
- * @purpose  TCP/IP Server
+ * @ext   pcntl
+ * @see   xp://peer.server.Server
  */
 class PreforkingServer extends Server implements Traceable {
   public
@@ -157,7 +155,7 @@ class PreforkingServer extends Server implements Traceable {
         'requests=', $requests, 'max= ', $this->maxrequests
       );
       
-      delete($m);
+      unset($m);
     }
   }
 
