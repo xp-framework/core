@@ -80,7 +80,18 @@ class Console extends \lang\Object {
     $a= func_get_args();
     call_user_func_array(array(self::$out, 'writeLine'), $a);
   }
-  
+
+  /**
+   * Writes lines to standard output
+   *
+   * @param   var* args
+   */
+  public static function writeLines() {
+    foreach (func_get_args() as $line) {
+      call_user_func_array(array(self::$out, 'writeLine'), (array)$line);
+    }
+  }
+
   /**
    * Write a formatted string to standard output
    *
