@@ -493,7 +493,7 @@ function literal($type) {
 }
 // }}}
 
-// {{{ proto void delete(&var object)
+// {{{ proto deprecated void delete(&var object)
 //     Destroys an object
 function delete(&$object) {
   $object= null;
