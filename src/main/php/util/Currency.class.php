@@ -1,7 +1,6 @@
 <?php namespace util;
 
-use lang\Enum;
-
+use lang\XPClass;
 
 /**
  * Currency enumeration. Currencies are identified by their ISO 4217 
@@ -10,7 +9,7 @@ use lang\Enum;
  * @test  xp://net.xp_framework.unittest.util.CurrencyTest
  * @see   http://www.xe.com/iso4217.php ISO 4217 Currency Code List
  */
-class Currency extends Enum {
+class Currency extends \lang\Enum {
   public static
     $AED, $AFN, $ALL, $AMD, $ANG, $AOA, $ARS, $AUD, $AWG, $AZN,
     $BAM, $BBD, $BDT, $BGN, $BHD, $BIF, $BMD, $BND, $BOB, $BRL, $BSD, $BTN, $BWP, $BYR, $BZD,
@@ -220,6 +219,6 @@ class Currency extends Enum {
    * @throws  lang.IllegalArgumentException
    */
   public static function getInstance($code) {
-    return Enum::valueOf(\lang\XPClass::forName(\xp::nameOf(__CLASS__)), $code);
+    return parent::valueOf(new XPClass(__CLASS__), $code);
   }
 }
