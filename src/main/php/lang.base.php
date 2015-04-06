@@ -371,7 +371,7 @@ function __error($code, $msg, $file, $line) {
 }
 // }}}
 
-// {{{ proto void uses (string* args)
+// {{{ proto deprecated void uses (string* args)
 //     Uses one or more classes
 function uses() {
   $scope= null;
