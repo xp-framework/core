@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Deprecated raise() core functionality - use the `throw` statement
+  instead, it also uses lazy classloading for namespaced classes.
+  (@thekid)
 * Removed deprecated support for "mixed", "char", "*", "array<T>" and
   "array<string, string>"' in Type::forName(), see xp-framework/core#64
   (@thekid)
