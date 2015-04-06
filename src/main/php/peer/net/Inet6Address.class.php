@@ -187,7 +187,7 @@ class Inet6Address extends \lang\Object implements InetAddress {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'('.$this->asString().')';
+    return nameof($this).'('.$this->asString().')';
   }
 
   /**

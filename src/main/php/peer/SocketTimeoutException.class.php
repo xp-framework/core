@@ -40,7 +40,7 @@ class SocketTimeoutException extends SocketException {
   public function compoundMessage() {
     return sprintf(
       'Exception %s (%s after %.3f seconds)',
-      $this->getClassName(),
+      nameof($this),
       $this->message,
       $this->timeout
     );

@@ -96,7 +96,7 @@ class Form extends \lang\Object {
   public function toString() {
     return sprintf(
       '%s(action= %s, method= %s)@%s',
-      $this->getClassName(),
+      nameof($this),
       $this->getAction(),
       $this->getMethod(),
       \xp::stringOf($this->getFields())

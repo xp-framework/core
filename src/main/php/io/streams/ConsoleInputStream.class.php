@@ -31,7 +31,7 @@ class ConsoleInputStream extends \lang\Object implements InputStream {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'<'.$this->descriptor.'>';
+    return nameof($this).'<'.$this->descriptor.'>';
   }
 
   /**

@@ -57,7 +57,7 @@ class Module extends \lang\Object {
    * @return string
    */
   public function toString() {
-    return $this->getClassName().'<'.$this->name.'@'.$this->classLoader->toString().'>';
+    return nameof($this).'<'.$this->name.'@'.$this->classLoader->toString().'>';
   }
 
   /**

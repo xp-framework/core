@@ -65,7 +65,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
           Runtime::getInstance()->loadLibrary("standard");
           echo "+OK No exception thrown";
         } catch (\lang\Throwable $e) {
-          echo "-ERR ".$e->getClassName();
+          echo "-ERR ".nameof($e);
         }
       ')
     );
@@ -80,7 +80,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
           Runtime::getInstance()->loadLibrary(":DOES-NOT-EXIST");
           echo "-ERR No exception thrown";
         } catch (\lang\ElementNotFoundException $e) {
-          echo "+OK ".$e->getClassName();
+          echo "+OK ".nameof($e);
         }
       ')
     );
@@ -95,7 +95,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
           Runtime::getInstance()->loadLibrary("irrelevant");
           echo "-ERR No exception thrown";
         } catch (\lang\IllegalAccessException $e) {
-          echo "+OK ".$e->getClassName();
+          echo "+OK ".nameof($e);
         }
       ')
     );

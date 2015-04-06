@@ -182,7 +182,7 @@ class ArrayList extends \lang\Object implements \ArrayAccess, \IteratorAggregate
    */
   public function toString() {
     return (
-      $this->getClassName().'['.sizeof($this->values)."]@{".
+      nameof($this).'['.sizeof($this->values)."]@{".
       implode(', ', array_map(['xp', 'stringOf'], $this->values)).
       '}'
     );

@@ -34,7 +34,7 @@ class AbstractSizeComparisonFilter extends \lang\Object implements IterationFilt
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'('.$this->size.')';
+    return nameof($this).'('.$this->size.')';
   }
 
 } 

@@ -55,7 +55,7 @@ class Pattern extends \lang\Object implements Matcher {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'<'.$this->regex.'>';
+    return nameof($this).'<'.$this->regex.'>';
   }
 
   /**

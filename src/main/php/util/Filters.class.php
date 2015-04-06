@@ -102,7 +102,7 @@ class Filters extends \lang\Object implements Filter {
    * @return  string
    */
   public function toString() {
-    $s= $this->getClassName().'('.sizeof($this->list).")@{\n";
+    $s= nameof($this).'('.sizeof($this->list).")@{\n";
     foreach ($this->list as $filter) {
       $s.= '  '.\xp::stringOf($filter, '  ')."\n";
     }

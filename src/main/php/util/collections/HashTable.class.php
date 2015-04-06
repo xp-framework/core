@@ -259,7 +259,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    * @return  string
    */
   public function toString() {
-    $s= $this->getClassName().'['.sizeof($this->_buckets).'] {';
+    $s= nameof($this).'['.sizeof($this->_buckets).'] {';
     if (empty($this->_buckets)) return $s.' }';
 
     $s.= "\n";

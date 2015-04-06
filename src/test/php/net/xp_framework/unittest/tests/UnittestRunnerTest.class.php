@@ -102,7 +102,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
   public function runEmptyTest() {
     $command= newinstance('unittest.TestCase', array($this->name), '{
     }');
-    $return= $this->runner->run(array($command->getClassName()));
+    $return= $this->runner->run(array(nameof($command)));
     $this->assertEquals(3, $return);
     $this->assertOnStream($this->err, '*** Warning: No tests found in');
     $this->assertEquals('', $this->out->getBytes());
@@ -124,7 +124,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
         $this->assertTrue(TRUE);
       }
     }');
-    $return= $this->runner->run(array($command->getClassName()));
+    $return= $this->runner->run(array(nameof($command)));
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertOnStream($this->out, 'OK: 1/1 run (0 skipped), 1 succeeded, 0 failed');
@@ -138,7 +138,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
         $this->assertTrue(TRUE);
       }
     }');
-    $return= $this->runner->run(array($setting, $command->getClassName()));
+    $return= $this->runner->run(array($setting, nameof($command)));
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertOnStream($this->out, 'OK: 1/1 run (0 skipped), 1 succeeded, 0 failed');
@@ -168,7 +168,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
         $this->assertTrue(TRUE);
       }
     }');
-    $return= $this->runner->run(array('--color=anything', $command->getClassName()));
+    $return= $this->runner->run(array('--color=anything', nameof($command)));
     $this->assertEquals(1, $return);
     $this->assertOnStream($this->err, '*** Unsupported argument for --color');
   }
@@ -181,7 +181,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
         $this->assertTrue(FALSE);
       }
     }');
-    $return= $this->runner->run(array($command->getClassName()));
+    $return= $this->runner->run(array(nameof($command)));
     $this->assertEquals(1, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertOnStream($this->out, 'FAIL: 1/1 run (0 skipped), 0 succeeded, 1 failed');
@@ -219,7 +219,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
         $this->assertTrue(TRUE);
       }
     }');
-    $return= $this->runner->run(array($command->getClassName().'::succeeds'));
+    $return= $this->runner->run(array(nameof($command).'::succeeds'));
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
   }
@@ -232,7 +232,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
         $this->assertTrue(TRUE);
       }
     }');
-    $return= $this->runner->run(array($command->getClassName().'::succeed'));
+    $return= $this->runner->run(array(nameof($command).'::succeed'));
     $this->assertEquals(1, $return);
     $this->assertOnStream($this->err, '*** Error: Test method does not exist: succeed()');
   }

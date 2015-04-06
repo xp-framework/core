@@ -212,7 +212,7 @@ class HashSet extends \lang\Object implements Set {
    * @return  string
    */
   public function toString() {
-    $s= $this->getClassName().'['.sizeof($this->_elements).'] {';
+    $s= nameof($this).'['.sizeof($this->_elements).'] {';
     if (empty($this->_elements)) return $s.' }';
 
     $s.= "\n";

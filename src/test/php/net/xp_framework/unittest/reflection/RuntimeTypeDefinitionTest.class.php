@@ -22,7 +22,7 @@ abstract class RuntimeTypeDefinitionTest extends TestCase {
    * @throws unittest.AssertionFailedError
    */
   protected function defineType($annotations, $name, $define) {
-    $t= $name ?: $this->getClassName().'__'.$this->name;
+    $t= $name ?: nameof($this).'__'.$this->name;
     $spec= trim($annotations.' '.$t);
     if (interface_exists(literal($t), false) || class_exists(literal($t), false)) {
       $this->fail('Type may not exist!', $t, null);

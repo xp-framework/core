@@ -602,7 +602,7 @@ final class ClassLoader extends Object implements IClassLoader {
    * @return string
    */
   public function toString() {
-    return $this->getClassName();
+    return nameof($this);
   }
 
   /**

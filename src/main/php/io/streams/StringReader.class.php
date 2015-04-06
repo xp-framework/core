@@ -45,7 +45,7 @@ class StringReader extends \lang\Object implements InputStreamReader {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName()."@{\n  ".$this->in->toString()."\n}";
+    return nameof($this)."@{\n  ".$this->in->toString()."\n}";
   }
   
   /**

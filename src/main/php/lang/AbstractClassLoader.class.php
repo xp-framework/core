@@ -74,7 +74,7 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
 
     // Load class
     $package= null;
-    \xp::$cl[$class]= $this->getClassName().'://'.$this->path;
+    \xp::$cl[$class]= nameof($this).'://'.$this->path;
     \xp::$cll++;
     try {
       $r= include($this->classUri($class));

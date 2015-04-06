@@ -199,7 +199,7 @@ class Expectation extends \lang\Object {
       "  [isInPropertyBehavior] %s\n".
       "  [actualCalls         ] %d\n".
       "}",
-      $this->getClassName(),
+      nameof($this),
       $this->methodName,
       sizeof($this->args),
       $this->repeat === -1 ? '**' : '* '.$this->repeat,

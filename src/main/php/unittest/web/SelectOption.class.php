@@ -66,6 +66,6 @@ class SelectOption extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'{'.$this->form->getTest()->getDom()->saveXML($this->node).'}';
+    return nameof($this).'{'.$this->form->getTest()->getDom()->saveXML($this->node).'}';
   }
 }

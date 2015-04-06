@@ -254,7 +254,7 @@ class Runner extends \lang\Object {
           } else {
             $name= $this->arg($args, ++$i, 'o');
             if (!isset($options[$name])) {
-              $this->err->writeLine('*** Unknown listener argument '.$name.' to '.$instance->getClassName());
+              $this->err->writeLine('*** Unknown listener argument '.$name.' to '.nameof($instance));
               return 2;
             }
             $method= $options[$name];
@@ -268,7 +268,7 @@ class Runner extends \lang\Object {
           try {
             $method->invoke($instance, $pass);
           } catch (\lang\reflect\TargetInvocationException $e) {
-            $this->err->writeLine('*** Error for argument '.$name.' to '.$instance->getClassName().': '.$e->getCause()->toString());
+            $this->err->writeLine('*** Error for argument '.$name.' to '.nameof($instance).': '.$e->getCause()->toString());
             return 2;
           }
         } else if ('-?' == $args[$i] || '--help' == $args[$i]) {

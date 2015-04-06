@@ -86,10 +86,10 @@ class Thread extends Object {
   public function __construct($arg= null) {
     if ($arg instanceof Runnable) {
       $this->target= $arg;
-      $this->name= $arg->getClassName();
+      $this->name= nameof($arg);
     } else {
       $this->target= null;
-      $this->name= $arg ? $arg : $this->getClassName();
+      $this->name= $arg ? $arg : nameof($this);
     }
   }
   
@@ -230,7 +230,7 @@ class Thread extends Object {
    * @return  string
    */
   public function toString() {
-    return sprintf('%s[%s%d]@%s', $this->getClassName(), $this->isRunning() ? 'R' : 'S', $this->_id, \xp::stringOf($this));
+    return sprintf('%s[%s%d]@%s', nameof($this), $this->isRunning() ? 'R' : 'S', $this->_id, \xp::stringOf($this));
   }
   
   /**

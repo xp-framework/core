@@ -60,7 +60,7 @@ class FileInputStream extends \lang\Object implements InputStream, Seekable {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'<'.$this->file->toString().'>';
+    return nameof($this).'<'.$this->file->toString().'>';
   }
 
   /**

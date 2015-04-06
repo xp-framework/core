@@ -47,6 +47,6 @@ class PropertySource extends AbstractSource {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'['.$this->descr.' @ '.$this->prop->getFilename().']';
+    return nameof($this).'['.$this->descr.' @ '.$this->prop->getFilename().']';
   }
 }

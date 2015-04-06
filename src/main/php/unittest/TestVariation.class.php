@@ -1,7 +1,5 @@
 <?php namespace unittest;
 
-
-
 /**
  * Test case variation
  *
@@ -32,7 +30,7 @@ class TestVariation extends TestCase {
    * @return  string
    */
   public function getName($compound= false) {
-    return $compound ? $this->base->getClassName().'::'.$this->name : $this->name;
+    return $compound ? nameof($this->base).'::'.$this->name : $this->name;
   }
 
   /**
@@ -41,6 +39,6 @@ class TestVariation extends TestCase {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'<'.$this->base->getClassName().'::'.$this->name.'>';
+    return nameof($this).'<'.nameof($this->base).'::'.$this->name.'>';
   }
 }

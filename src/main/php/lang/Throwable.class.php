@@ -175,7 +175,7 @@ class Throwable extends \Exception implements Generic { use \__xp;
   public function compoundMessage() {
     return sprintf(
       'Exception %s (%s)',
-      $this->getClassName(),
+      nameof($this),
       $this->message
     );
   }

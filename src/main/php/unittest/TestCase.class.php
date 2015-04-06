@@ -26,7 +26,7 @@ class TestCase extends \lang\Object {
    * @return  string
    */
   public function getName($compound= false) {
-    return $compound ? $this->getClassName().'::'.$this->name : $this->name;
+    return $compound ? nameof($this).'::'.$this->name : $this->name;
   }
 
   /**
@@ -158,7 +158,7 @@ class TestCase extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'<'.$this->name.'>';
+    return nameof($this).'<'.$this->name.'>';
   }
 
   /**

@@ -36,6 +36,6 @@ class EvaluationSource extends AbstractSource {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'['.$this->testClass->toString().']';
+    return nameof($this).'['.$this->testClass->toString().']';
   }
 }

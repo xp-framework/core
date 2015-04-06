@@ -164,7 +164,7 @@ class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'('.$this->size.')@{'.addcslashes($this->buffer, "\0..\37\177..\377").'}';
+    return nameof($this).'('.$this->size.')@{'.addcslashes($this->buffer, "\0..\37\177..\377").'}';
   }
 
   /**

@@ -64,6 +64,6 @@ class PackageSource extends AbstractSource {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'['.$this->package->getName().($this->recursive ? '.**' : '.*').']';
+    return nameof($this).'['.$this->package->getName().($this->recursive ? '.**' : '.*').']';
   }
 }

@@ -34,7 +34,7 @@ class AbstractDateComparisonFilter extends \lang\Object implements IterationFilt
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'('.$this->date->toString().')';
+    return nameof($this).'('.$this->date->toString().')';
   }
 
 } 

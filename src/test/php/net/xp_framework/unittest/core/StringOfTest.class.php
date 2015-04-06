@@ -133,7 +133,7 @@ class StringOfTest extends \unittest\TestCase {
       'toString' => function() { return \xp::stringOf($this); }
     ));
     $this->assertEquals(
-      $test->getClassName()." {\n  __id => \"".$test->hashCode()."\"\n}",
+      nameof($test)." {\n  __id => \"".$test->hashCode()."\"\n}",
       \xp::stringOf($test)
     );
   }

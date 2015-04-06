@@ -79,7 +79,7 @@ class Boolean extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'('.($this->value ? 'true' : 'false').')';
+    return nameof($this).'('.($this->value ? 'true' : 'false').')';
   }
   
   /**

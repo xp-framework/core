@@ -219,7 +219,7 @@ class Parameter extends \lang\Object {
   public function toString() {
     return sprintf(
       '%s<%s %s%s>',
-      $this->getClassName(),
+      nameof($this),
       $this->getType()->toString(),
       $this->_reflect->getName(),
       $this->_reflect->isOptional() ? '= '.\xp::stringOf($this->_reflect->getDefaultValue()) : ''

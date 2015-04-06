@@ -74,6 +74,6 @@ class NestedLogContext extends \lang\Object implements Context {
    * @return string
    */
   public function toString() {
-    return $this->getClassName().'{'.implode(' > ', $this->queue).'}';
+    return nameof($this).'{'.implode(' > ', $this->queue).'}';
   }
 }

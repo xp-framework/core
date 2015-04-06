@@ -52,7 +52,7 @@ class Binford extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'('.$this->poweredBy.')';
+    return nameof($this).'('.$this->poweredBy.')';
   }
 
   /**

@@ -39,7 +39,7 @@ class XmlTestListener extends \lang\Object implements TestListener {
       $Urimethod->setAccessible(true);
       return $Urimethod->invoke($class->getClassLoader(), $class->getName());
     } catch (\Exception $ignored) {
-      return $class->getClassName();
+      return nameof($class);
     }
   }
 

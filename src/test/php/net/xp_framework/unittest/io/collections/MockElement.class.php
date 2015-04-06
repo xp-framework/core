@@ -96,7 +96,7 @@ class MockElement extends \lang\Object implements IOElement {
    * @return  string
    */
   public function toString() { 
-    return $this->getClassName().'('.$this->uri.')';
+    return nameof($this).'('.$this->uri.')';
   }
 
   /**

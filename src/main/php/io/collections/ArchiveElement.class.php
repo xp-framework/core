@@ -85,7 +85,7 @@ class ArchiveElement extends \lang\Object implements IOElement {
    * @return  string
    */
   public function toString() { 
-    return $this->getClassName().'('.$this->archive->toString().'?'.$this->name.')';
+    return nameof($this).'('.$this->archive->toString().'?'.$this->name.')';
   }
 
   /**

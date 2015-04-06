@@ -37,7 +37,7 @@ class XTermTitleListener extends \lang\Object implements TestListener {
 
     $this->out->writef("\033]2;Running: [%s%s] %s::%s()\007",
       str_repeat('*', $perc), str_repeat('-', self::PROGRESS_WIDTH- $perc),
-      $case->getClassName(),
+      nameof($case),
       $case->getName()
     );
   }

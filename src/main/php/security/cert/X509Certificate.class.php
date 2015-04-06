@@ -246,7 +246,7 @@ class X509Certificate extends Certificate {
    * @return  string
    */
   public function toString() {
-    $s= $this->getClassName().'@(hash= '.$this->getHash().'; version= '.$this->getVersion().") {\n";
+    $s= nameof($this).'@(hash= '.$this->getHash().'; version= '.$this->getVersion().") {\n";
     $s.= '  [     Serial ] '.$this->getSerialNumber()."\n";
     $s.= '  [    Subject ] '.\xp::stringOf($this->getSubjectDN())."\n";
     $s.= '  [     Issuer ] '.\xp::stringOf($this->getIssuerDN())."\n";

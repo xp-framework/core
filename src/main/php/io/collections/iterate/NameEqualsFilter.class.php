@@ -31,6 +31,6 @@ class NameEqualsFilter extends \lang\Object implements IterationFilter {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'("'.$this->compare.'")';
+    return nameof($this).'("'.$this->compare.'")';
   }
 } 

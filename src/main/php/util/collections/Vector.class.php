@@ -271,7 +271,7 @@ class Vector extends \lang\Object implements IList {
    * @return  string
    */
   public function toString() {
-    $r= $this->getClassName().'['.$this->size."]@{\n";
+    $r= nameof($this).'['.$this->size."]@{\n";
     foreach ($this->elements as $i => $e) {
       $r.= '  '.$i.': '.\xp::stringOf($e, '  ')."\n";
     } 

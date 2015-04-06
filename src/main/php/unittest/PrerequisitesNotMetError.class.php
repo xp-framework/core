@@ -31,7 +31,7 @@ class PrerequisitesNotMetError extends \lang\XPException {
   public function compoundMessage() {
     return sprintf(
       '%s (%s) { prerequisites: [%s] }',
-      $this->getClassName(),
+      nameof($this),
       $this->message,
       implode(', ', array_map(array('xp', 'stringOf'), $this->prerequisites))
     );

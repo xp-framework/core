@@ -29,8 +29,8 @@ class FullyQualifiedTest extends TestCase {
     $bd= new \info·binford6100·Date();
     $ud= new Date();
 
-    $this->assertEquals('info.binford6100.Date', $bd->getClassName());
-    $this->assertEquals('util.Date', $ud->getClassName());
+    $this->assertEquals('info.binford6100.Date', nameof($bd));
+    $this->assertEquals('util.Date', nameof($ud));
   }
 
   #[@test]

@@ -637,10 +637,12 @@ function create($spec) {
 //     Returns name of an instance / a class.
 function nameof($arg) {
   $class= is_object($arg) ? get_class($arg) : $arg;
-  if (strstr($class, '\\')) {
+  if (isset(xp::$cn[$class])) {
+    return xp::$cn[$class];
+  } else if (strstr($class, '\\')) {
     return strtr($class, '\\', '.');
   } else {
-    $name= array_search($class, xp::$sn);
+    $name= array_search($class, xp::$sn, true);
     return false === $name ? $class : $name;
   }
 }

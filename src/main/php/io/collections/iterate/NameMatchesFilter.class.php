@@ -33,6 +33,6 @@ class NameMatchesFilter extends \lang\Object implements IterationFilter {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'('.$this->pattern.')';
+    return nameof($this).'('.$this->pattern.')';
   }
 }

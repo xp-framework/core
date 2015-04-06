@@ -132,7 +132,7 @@ class IOCollectionIterator extends \lang\Object implements XPIterator, \Iterator
   public function toString() {
     return sprintf(
       '%s<%s%s>',
-      $this->getClassName(),
+      nameof($this),
       \xp::stringOf($this->collections[0]),
       $this->recursive ? '(R)' : ''
     );

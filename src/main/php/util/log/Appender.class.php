@@ -57,6 +57,6 @@ abstract class Appender extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'(layout= '.\xp::stringOf($this->layout).')';
+    return nameof($this).'(layout= '.\xp::stringOf($this->layout).')';
   }
 }

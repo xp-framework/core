@@ -291,7 +291,7 @@ class Runner extends \lang\Object {
     foreach (Logger::getInstance()->getCategories() as $category) {
       if (null === ($context= $category->getContext()) || !($context instanceof EnvironmentAware)) continue;
       $context->setHostname(\lang\System::getProperty('host.name'));
-      $context->setRunner($this->getClassName());
+      $context->setRunner(nameof($this));
       $context->setInstance($class->getName());
       $context->setResource(null);
       $context->setParams($params->string);

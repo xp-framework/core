@@ -49,7 +49,7 @@ class FileOutputStream extends \lang\Object implements OutputStream {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'<'.$this->file->toString().'>';
+    return nameof($this).'<'.$this->file->toString().'>';
   }
 
   /**

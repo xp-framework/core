@@ -36,7 +36,7 @@ class ExtensionEqualsFilter extends \lang\Object implements IterationFilter {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'("'.$this->extension.'")';
+    return nameof($this).'("'.$this->extension.'")';
   }
 
 } 

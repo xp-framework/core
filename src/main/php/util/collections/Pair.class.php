@@ -57,6 +57,6 @@ class Pair extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'<key= '.\xp::stringOf($this->key).', value= '.\xp::stringOf($this->value).'>';
+    return nameof($this).'<key= '.\xp::stringOf($this->key).', value= '.\xp::stringOf($this->value).'>';
   }
 }

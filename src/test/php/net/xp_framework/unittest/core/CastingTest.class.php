@@ -31,7 +31,7 @@ class CastingTest extends TestCase implements Runnable {
 
   #[@test]
   public function thisClass() {
-    $this->assertTrue($this === cast($this, $this->getClassName()));
+    $this->assertTrue($this === cast($this, nameof($this)));
   }
 
   #[@test]
