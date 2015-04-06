@@ -145,7 +145,7 @@ final class xp {
   // {{{ proto string typeOf(var arg)
   //     Returns the fully qualified type name
   static function typeOf($arg) {
-    return is_object($arg) ? xp::nameOf(get_class($arg)) : gettype($arg);
+    return is_object($arg) ? nameof($arg) : gettype($arg);
   }
   // }}}
 
@@ -636,7 +636,7 @@ function create($spec) {
 // {{{ proto string nameof(lang.Generic arg)
 //     Returns name of an instance.
 function nameof($arg) {
-  $class= get_class($arg);
+  $class= get_class($arg) ?: $arg;
   if (isset(xp::$cn[$class])) {
     return xp::$cn[$class];
   } else if (strstr($class, '\\')) {
