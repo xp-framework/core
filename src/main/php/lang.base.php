@@ -650,7 +650,7 @@ function nameof($arg) {
 //     Returns type
 function typeof($arg) {
   if ($arg instanceof \lang\Generic) {
-    return $arg->getClass();
+    return new \lang\XPClass($arg);
   } else if (null === $arg) {
     return \lang\Type::$VOID;
   } else if ($arg instanceof \Closure) {
