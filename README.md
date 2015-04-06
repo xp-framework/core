@@ -40,7 +40,7 @@ Finally, start `xp -v` to see it working:
 
 ```sh
 $ xp -v
-XP 6.1.0-dev { PHP 5.6.7 & ZE 2.6.0 } @ Windows NT SLATE 6.2 build 9200 (Windows 8) i586
+XP 6.1.1-dev { PHP 5.6.7 & ZE 2.6.0 } @ Windows NT SLATE 6.2 build 9200 (Windows 8) i586
 Copyright (c) 2001-2015 the XP group
 FileSystemCL<...\xp\core\src\main\php\>
 FileSystemCL<...\xp\core\src\test\php\>
