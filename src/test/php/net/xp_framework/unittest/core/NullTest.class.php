@@ -2,6 +2,8 @@
 
 /**
  * Tests the "NULL-safe" xp::null.
+ *
+ * @deprecated
  */
 class NullTest extends \unittest\TestCase {
 

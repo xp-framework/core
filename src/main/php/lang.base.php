@@ -237,7 +237,7 @@ final class xp {
   }
   // }}}
 
-  // {{{ proto <null> null()
+  // {{{ proto deprecated <null> null()
   //     Runs a fatal-error safe version of null
   static function null() {
     return xp::$null;
@@ -285,7 +285,7 @@ final class xp {
 }
 // }}}
 
-// {{{ final class null
+// {{{ final deprecated class null
 final class null {
 
   // {{{ proto __construct(void)

@@ -10,6 +10,7 @@ use lang\CloneNotSupportedException;
  */
 class CloningTest extends TestCase {
 
+  /** @deprecated */
   #[@test, @expect('lang.NullPointerException')]
   public function cloningOfNulls() {
     clone(\xp::null());

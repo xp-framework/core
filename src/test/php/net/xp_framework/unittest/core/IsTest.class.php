@@ -9,10 +9,10 @@ use util\collections\Vector;
  */
 class IsTest extends \unittest\TestCase {
 
+  /** @deprecated */
   #[@test]
   public function xpNullIsNull() {
     $this->assertTrue(is(NULL, \xp::null()));
-    $this->assertFalse(is(NULL, 1));
   }
 
   #[@test]
