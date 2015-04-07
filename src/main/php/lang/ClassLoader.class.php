@@ -479,7 +479,7 @@ final class ClassLoader extends Object implements IClassLoader {
     foreach (self::$delegates as $delegate) {
       if ($delegate->providesClass($class)) return $delegate;
     }
-    return \xp::null();
+    return null;
   }
 
   /**
@@ -492,7 +492,7 @@ final class ClassLoader extends Object implements IClassLoader {
     foreach (self::$delegates as $delegate) {
       if ($delegate->providesUri($uri)) return $delegate;
     }
-    return \xp::null();
+    return null;
   }
 
   /**
@@ -505,7 +505,7 @@ final class ClassLoader extends Object implements IClassLoader {
     foreach (self::$delegates as $delegate) {
       if ($delegate->providesPackage($package)) return $delegate;
     }
-    return \xp::null();
+    return null;
   }    
   
   /**
@@ -529,7 +529,7 @@ final class ClassLoader extends Object implements IClassLoader {
     foreach (self::$delegates as $delegate) {
       if ($delegate->providesResource($name)) return $delegate;
     }
-    return \xp::null();
+    return null;
   }    
 
   /**

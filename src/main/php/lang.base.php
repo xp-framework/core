@@ -703,7 +703,7 @@ set_include_path(rtrim(implode(PATH_SEPARATOR, xp::$classpath), PATH_SEPARATOR))
 spl_autoload_register(function($class) {
   $name= strtr($class, '\\', '.');
   $cl= xp::$loader->findClass($name);
-  if ($cl instanceof null) return false;
+  if (null === $cl) return false;
   $cl->loadClass0($name);
   return true;
 });
