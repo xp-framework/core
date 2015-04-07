@@ -423,17 +423,18 @@ function ensure(&$t) {
 }
 // }}}
 
-// {{{ proto Generic cast (Generic expression, string type)
-//     Casts an expression.
-function cast(Generic $expression= null, $type) {
-  if (null === $expression) {
-    return xp::null();
-  } else if (\lang\XPClass::forName($type)->isInstance($expression)) {
-    return $expression;
+// {{{ proto Generic cast (var expression, var type[, bool nullsafe= true])
+//     Casts an expression NULL-safe
+function cast($expression, $type, $nullsafe= true) {
+  if (null === $expression && $nullsafe) {
+    raise('lang.ClassCastException', 'Cannot cast NULL to '.$type);
+  } else if ($type instanceof \lang\Type) {
+    return $type->cast($expression);
+  } else {
+    return Type::forName($type)->cast($expression);
   }
-
-  raise('lang.ClassCastException', 'Cannot cast '.xp::typeOf($expression).' to '.$type);
 }
+// }}}
 
 // {{{ proto bool is(string type, var object)
 //     Checks whether a given object is an instance of the type given
