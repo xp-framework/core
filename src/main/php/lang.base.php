@@ -423,15 +423,15 @@ function ensure(&$t) {
 }
 // }}}
 
-// {{{ proto Generic cast (var expression, var type[, bool nullsafe= true])
-//     Casts an expression NULL-safe
-function cast($expression, $type, $nullsafe= true) {
-  if (null === $expression && $nullsafe) {
+// {{{ proto Generic cast (var arg, var type[, bool nullsafe= true])
+//     Casts an arg NULL-safe
+function cast($arg, $type, $nullsafe= true) {
+  if (null === $arg && $nullsafe) {
     raise('lang.ClassCastException', 'Cannot cast NULL to '.$type);
   } else if ($type instanceof \lang\Type) {
-    return $type->cast($expression);
+    return $type->cast($arg);
   } else {
-    return Type::forName($type)->cast($expression);
+    return Type::forName($type)->cast($arg);
   }
 }
 // }}}
