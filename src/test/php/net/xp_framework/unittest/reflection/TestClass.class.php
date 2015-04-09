@@ -19,6 +19,7 @@ class TestClass extends AbstractTestClass implements Traceable {
     $map    = [];
   
   protected
+    /** @type int */
     $size   = 0;
   
   private

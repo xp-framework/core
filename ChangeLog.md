@@ -3,6 +3,11 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Added support for `/** @type [type] */` for fields.
+  (@thekid)
+
 ## 6.1.0 / 2015-04-06
 
 ### Heads up!
