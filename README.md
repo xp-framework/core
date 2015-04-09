@@ -25,7 +25,7 @@ the following one-liner:
 
 ```sh
 $ cd ~/bin
-$ wget 'https://github.com/xp-framework/xp-runners/releases/download/v5.2.2/setup' -O - | php
+$ wget 'https://github.com/xp-framework/xp-runners/releases/download/v5.2.3/setup' -O - | php
 ```
 
 ### Using it
