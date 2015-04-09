@@ -14,7 +14,7 @@ matrix:
     - php: hhvm-nightly
 
 before_script:
-  - wget 'https://github.com/xp-framework/xp-runners/releases/download/v5.2.2/setup' -O - | php
+  - wget 'https://github.com/xp-framework/xp-runners/releases/download/v5.2.3/setup' -O - | php
   - echo "use=." > xp.ini
   - echo "[runtime]" >> xp.ini
   - echo "date.timezone=Europe/Berlin" >> xp.ini
