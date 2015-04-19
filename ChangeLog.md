@@ -3,6 +3,11 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed thrown exceptions not appearing in `xp -r` output for interface
+  (@thekid)
+
 ### Features
 
 * Added support for `/** @type [type] */` for fields.

@@ -155,6 +155,9 @@ class Reflect extends \lang\Object {
         }
       }
       Console::write(')');
+      if ($exceptions= $method->getExceptionNames()) {
+        Console::write(' throws '.implode(', ', $exceptions));
+      }
       Console::writeLine();
     }
 
