@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Deprecated `null()` core functionality and rewrote codebase to do
+  without it. See pull request xp-framework/core#70
+  (@thekid)
 * Deprecated `delete()` core functionality - use the `unset` language
   construct instead. See pull request xp-framework/core#69
   (@thekid)
