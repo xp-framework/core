@@ -18,7 +18,7 @@ class ExtensionInvocationTest extends TestCase {
   public function mapMethod() {
     $this->assertEquals(
       new ArrayList(2, 4, 6),
-      (new ArrayList(1, 2, 3))->map(create_function('$e', 'return $e * 2;'))
+      (new ArrayList(1, 2, 3))->map(function($e) { return $e * 2; })
     );
   }
 

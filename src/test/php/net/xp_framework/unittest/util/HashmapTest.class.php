@@ -184,7 +184,7 @@ class HashmapTest extends TestCase {
     $this->map->put('two', 2);
     $this->map->put('three', 3);
     $this->map->put('four', 4);
-    $this->map->filter(create_function('$v', 'return 1 == $v % 2;'));
+    $this->map->filter(function($v) { return 1 == $v % 2; });
     $this->assertEquals(array('one' => 1, 'three' => 3), $this->map->toArray());
   }
 

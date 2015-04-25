@@ -147,7 +147,7 @@ class MockProxyBuilder extends \lang\Object {
    */
   private function buildCacheId($baseClass, $interfaces) {
     $key= $this->classLoader->hashCode().':'.$baseClass->getName().';';
-    $key.= implode(';', array_map(create_function('$i', 'return $i->getName();'), $interfaces));
+    $key.= implode(';', array_map(function($i) { return $i->getName(); }, $interfaces));
     $key.= $this->overwriteExisting?'override':'';
 
     return $key;
@@ -213,7 +213,7 @@ class MockProxyBuilder extends \lang\Object {
     $bytes= '';
 
     $reservedMethods= \lang\XPClass::forName('lang.Generic')->getMethods();
-    $reservedMethodNames= array_map(create_function('$i', 'return $i->getName();'), $reservedMethods);
+    $reservedMethodNames= array_map(function($i) { return $i->getName(); }, $reservedMethods);
     
     foreach ($baseClass->getMethods() as $m) {
 
