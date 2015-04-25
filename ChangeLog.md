@@ -10,6 +10,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Replaced all occurrences of `create_function()` with real closures
+  (@thekid)
 * Added support for `/** @type [type] */` for fields.
   (@thekid)
 
