@@ -116,7 +116,7 @@ class ClassLoaderTest extends \unittest\TestCase {
 
   #[@test]
   public function findNullClass() {
-    $this->assertEquals(\xp::null(), ClassLoader::getDefault()->findClass(null));
+    $this->assertNull(ClassLoader::getDefault()->findClass(null));
   }
 
   #[@test]
@@ -234,10 +234,7 @@ class ClassLoaderTest extends \unittest\TestCase {
 
   #[@test]
   public function cannotFindNontExistantUri() {
-    $this->assertEquals(
-      \xp::null(),
-      ClassLoader::getDefault()->findUri('non/existant/Class.class.php')
-    );
+    $this->assertNull(ClassLoader::getDefault()->findUri('non/existant/Class.class.php'));
   }
 
   #[@test]

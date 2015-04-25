@@ -1,13 +1,13 @@
 <?php namespace net\xp_framework\unittest\util;
  
-use unittest\TestCase;
 use util\Filters;
 use util\Filter;
+use lang\IllegalStateException;
 
 /**
  * Test Filters class
  */
-class FiltersTest extends TestCase {
+class FiltersTest extends \unittest\TestCase {
 
   /**
    * Helper method
@@ -78,7 +78,7 @@ class FiltersTest extends TestCase {
     );
   }
 
-  #[@test, @expect('lang.NullPointerException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function accept_called_without_accepting_function_set() {
     create('new util.Filters<int>')
       ->add(newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }]))

@@ -344,12 +344,14 @@ class XPClass extends Type {
    * @throws  lang.ClassCastException
    */
   public function cast($value) {
-    if (null === $value) {
-      return \xp::null();
-    } else if (is($this->name, $value)) {
+    if (null === $value) return null;
+
+    $literal= literal($this->name);
+    if ($value instanceof $literal) {
       return $value;
+    } else {
+      throw new ClassCastException('Cannot cast '.\xp::typeOf($value).' to '.$this->name);
     }
-    throw new ClassCastException('Cannot cast '.\xp::typeOf($value).' to '.$this->name);
   }
   
   /**

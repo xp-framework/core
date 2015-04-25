@@ -9,8 +9,16 @@ use lang\IllegalArgumentException;
  * @test   xp://net.xp_framework.unittest.util.CompositePropertiesTest
  */
 class CompositeProperties extends \lang\Object implements PropertyAccess {
+  private static $NONEXISTANT;
   protected $props  = [];
   private $sections = null;
+
+  static function __static() {
+
+    // This is never returned from any read*() method and can help us
+    // distinguish whether we read a value or not.
+    self::$NONEXISTANT= function() { };
+  }
 
   /**
    * Constructor
@@ -33,8 +41,7 @@ class CompositeProperties extends \lang\Object implements PropertyAccess {
    */
   public function add(PropertyAccess $a) {
     foreach ($this->props as $p) {
-      if ($p === $a) return;
-      if ($p->equals($a)) return;
+      if ($p === $a || $p->equals($a)) return;
     }
 
     $this->props[]= $a;
@@ -61,8 +68,8 @@ class CompositeProperties extends \lang\Object implements PropertyAccess {
    */
   private function _read($method, $section, $key, $default) {
     foreach ($this->props as $p) {
-      $value= call_user_func([$p, $method], $section, $key, \xp::null());
-      if (\xp::null() !== $value) return $value;
+      $value= $p->{$method}($section, $key, self::$NONEXISTANT);
+      if (self::$NONEXISTANT !== $value) return $value;
     }
 
     return $default;

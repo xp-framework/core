@@ -237,7 +237,7 @@ final class xp {
   }
   // }}}
 
-  // {{{ proto <null> null()
+  // {{{ proto deprecated <null> null()
   //     Runs a fatal-error safe version of null
   static function null() {
     return xp::$null;
@@ -285,7 +285,7 @@ final class xp {
 }
 // }}}
 
-// {{{ final class null
+// {{{ final deprecated class null
 final class null {
 
   // {{{ proto __construct(void)
@@ -423,17 +423,18 @@ function ensure(&$t) {
 }
 // }}}
 
-// {{{ proto Generic cast (Generic expression, string type)
-//     Casts an expression.
-function cast(Generic $expression= null, $type) {
-  if (null === $expression) {
-    return xp::null();
-  } else if (\lang\XPClass::forName($type)->isInstance($expression)) {
-    return $expression;
+// {{{ proto Generic cast (var arg, var type[, bool nullsafe= true])
+//     Casts an arg NULL-safe
+function cast($arg, $type, $nullsafe= true) {
+  if (null === $arg && $nullsafe) {
+    raise('lang.ClassCastException', 'Cannot cast NULL to '.$type);
+  } else if ($type instanceof \lang\Type) {
+    return $type->cast($arg);
+  } else {
+    return Type::forName($type)->cast($arg);
   }
-
-  raise('lang.ClassCastException', 'Cannot cast '.xp::typeOf($expression).' to '.$type);
 }
+// }}}
 
 // {{{ proto bool is(string type, var object)
 //     Checks whether a given object is an instance of the type given
@@ -703,7 +704,7 @@ set_include_path(rtrim(implode(PATH_SEPARATOR, xp::$classpath), PATH_SEPARATOR))
 spl_autoload_register(function($class) {
   $name= strtr($class, '\\', '.');
   $cl= xp::$loader->findClass($name);
-  if ($cl instanceof null) return false;
+  if (null === $cl) return false;
   $cl->loadClass0($name);
   return true;
 });

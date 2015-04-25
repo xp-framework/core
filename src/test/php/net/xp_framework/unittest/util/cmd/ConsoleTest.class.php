@@ -243,9 +243,9 @@ class ConsoleTest extends TestCase {
   #[@test]
   public function initialize_without_console() {
     $this->initialize(false, function() {
-      $this->assertEquals(\xp::null(), Console::$in);
-      $this->assertEquals(\xp::null(), Console::$out);
-      $this->assertEquals(\xp::null(), Console::$err);
+      $this->assertEquals(null, Console::$in->getStream());
+      $this->assertEquals(null, Console::$out->getStream());
+      $this->assertEquals(null, Console::$err->getStream());
     });
   }
 }
