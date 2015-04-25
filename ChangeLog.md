@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Heads up!
+
+* Deprecated `delete()` core functionality - use the `unset` language
+  construct instead. See pull request xp-framework/core#69
+  (@thekid)
+
 ## 6.1.1 / 2015-04-25
 
 ### Bugfixes
