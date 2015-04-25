@@ -154,25 +154,21 @@ class IsTest extends \unittest\TestCase {
   #[@test]
   public function interfaces() {
     \lang\ClassLoader::defineClass(
-      'net.xp_framework.unittest.core.DestructionCallbackImpl', 
+      'net.xp_framework.unittest.core.RunnableImpl', 
       'lang.Object',
-      array('net.xp_framework.unittest.core.DestructionCallback'),
-      '{
-      public function onDestruction($object) { 
-          // ... Implementation here
-        }
-      }'
+      ['lang.Runnable'],
+      ['run' => function() { }]
     );
     \lang\ClassLoader::defineClass(
-      'net.xp_framework.unittest.core.DestructionCallbackImplEx', 
-      'net.xp_framework.unittest.core.DestructionCallbackImpl',
-      NULL,
-      '{}'
+      'net.xp_framework.unittest.core.RunnableImplEx', 
+      'net.xp_framework.unittest.core.RunnableImpl',
+      [],
+      []
     );
     
-    $this->assertTrue(is('net.xp_framework.unittest.core.DestructionCallback', new DestructionCallbackImpl()));
-    $this->assertTrue(is('net.xp_framework.unittest.core.DestructionCallback', new DestructionCallbackImplEx()));
-    $this->assertFalse(is('net.xp_framework.unittest.core.DestructionCallback', new \lang\Object()));
+    $this->assertTrue(is('lang.Runnable', new RunnableImpl()));
+    $this->assertTrue(is('lang.Runnable', new RunnableImplEx()));
+    $this->assertFalse(is('lang.Runnable', new \lang\Object()));
   }
 
   #[@test]

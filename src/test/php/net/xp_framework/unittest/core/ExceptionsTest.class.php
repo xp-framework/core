@@ -27,7 +27,7 @@ class ExceptionsTest extends TestCase {
       throw new Throwable('Test');
     } catch (Throwable $caught) {
       $this->assertInstanceOf('lang.Throwable', $caught);
-      delete($caught);
+      unset($caught);
       return true;
     }
 
