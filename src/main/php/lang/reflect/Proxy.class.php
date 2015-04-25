@@ -1,5 +1,10 @@
 <?php namespace lang\reflect;
 
+use lang\DynamicClassLoader;
+use lang\IClassLoader;
+use lang\IllegalArgumentException;
+use lang\FormatException;
+
 define('PROXY_PREFIX',    'Proxy·');
 
 /**
@@ -37,18 +42,18 @@ class Proxy extends \lang\Object {
    * @return  lang.XPClass
    * @throws  lang.IllegalArgumentException
    */
-  public static function getProxyClass(\lang\IClassLoader $classloader, array $interfaces) {
+  public static function getProxyClass(IClassLoader $classloader, array $interfaces) {
     static $num= 0;
     static $cache= [];
     
     $t= sizeof($interfaces);
     if (0 === $t) {
-      throw new \lang\IllegalArgumentException('Interfaces may not be empty');
+      throw new IllegalArgumentException('Interfaces may not be empty');
     }
     
     // Calculate cache key (composed of the names of all interfaces)
     $key= $classloader->hashCode().':'.implode(';', array_map(
-      create_function('$i', 'return $i->getName();'), 
+      function($i) { return $i->getName(); }, 
       $interfaces
     ));
     if (isset($cache[$key])) return $cache[$key];
@@ -69,7 +74,7 @@ class Proxy extends \lang\Object {
       
       // Verify that the Class object actually represents an interface
       if (!$if->isInterface()) {
-        throw new \lang\IllegalArgumentException($if->getName().' is not an interface');
+        throw new IllegalArgumentException($if->getName().' is not an interface');
       }
       
       // Implement all the interface's methods
@@ -128,12 +133,12 @@ class Proxy extends \lang\Object {
     // Define the generated class
     \xp::$cn[$decl]= $name;
     try {
-      $dyn= \lang\DynamicClassLoader::instanceFor(__METHOD__);
+      $dyn= DynamicClassLoader::instanceFor(__METHOD__);
       $dyn->setClassBytes($decl, $bytes);
       $class= $dyn->loadClass($decl);
-    } catch (\lang\FormatException $e) {
+    } catch (FormatException $e) {
       unset(\xp::$cn[$decl]);
-      throw new \lang\IllegalArgumentException($e->getMessage());
+      throw new IllegalArgumentException($e->getMessage());
     }
 
     // Update cache and return XPClass object
