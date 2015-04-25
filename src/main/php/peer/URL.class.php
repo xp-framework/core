@@ -564,7 +564,7 @@ class URL extends \lang\Object {
 
     return preg_replace_callback( 
       array_map(function($str) { return '/%'.strtoupper($str).'/x'; }, $unreserved), 
-      create_function('$matches', 'return chr(hexdec($matches[0]));'),
+      function($matches) { return chr(hexdec($matches[0])); },
       $string
     );
   }
