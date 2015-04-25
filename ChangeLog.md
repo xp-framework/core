@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.1.1 / 2015-04-25
+
 ### Bugfixes
 
 * Fixed thrown exceptions not appearing in `xp -r` output for interface
