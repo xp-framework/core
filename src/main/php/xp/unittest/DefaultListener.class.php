@@ -161,9 +161,11 @@ class DefaultListener extends \lang\Object implements TestListener, ColorizingLi
     }
 
     $this->out->writeLinef(
-      "\n%s%s: %d/%d run (%d skipped), %d succeeded, %d failed%s",
-      $this->colored ? ($fail ? "\033[41;1;37m" : "\033[42;1;37m") : '',
-      $fail ? 'FAIL' : 'OK',
+      "\n%s: %d/%d run (%d skipped), %d succeeded, %d failed%s",
+      ($this->colored
+        ? ($fail ? "\033[41;1;37m✗" : "\033[42;1;37m✓")
+        : ($fail ? 'FAIL' : 'OK')
+      ),
       $result->runCount(),
       $result->count(),
       $result->skipCount(),
