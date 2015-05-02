@@ -169,7 +169,7 @@ class ClassLoaderTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.IllegalStateException')]
   public function newInstance() {
-    new XPClass('DoesNotExist');
+    (new XPClass('DoesNotExist'))->reflect();
   }
 
   #[@test, @expect('lang.ClassCastException')]

@@ -54,8 +54,8 @@ define('DETAIL_GENERIC',        7);
  * @test  xp://net.xp_framework.unittest.reflection.ClassCastingTest
  */
 class XPClass extends Type {
-  protected $_class= null;
-  public $_reflect= null;
+  private $_class;
+  private $_reflect= null;
 
   static function __static() { }
 
@@ -63,24 +63,33 @@ class XPClass extends Type {
    * Constructor
    *
    * @param   var ref either a class name, a ReflectionClass instance or an object
-   * @throws  lang.IllegalStateException
    */
   public function __construct($ref) {
     if ($ref instanceof \ReflectionClass) {
-      $this->_reflect= $ref;
       $this->_class= $ref->getName();
     } else if (is_object($ref)) {
-      $this->_reflect= new \ReflectionClass($ref);
       $this->_class= get_class($ref);
     } else {
+      $this->_class= (string)$ref;
+    }
+    parent::__construct(\xp::nameOf($this->_class), null);
+  }
+
+  /**
+   * Returns the reflection object lazily initialized
+   *
+   * @return php.ReflectionClass
+   * @throws  lang.IllegalStateException
+   */
+  public function reflect() {
+    if (null === $this->_reflect) {
       try {
-        $this->_reflect= new \ReflectionClass((string)$ref);
+        $this->_reflect= new \ReflectionClass($this->_class);
       } catch (\ReflectionException $e) {
         throw new IllegalStateException($e->getMessage());
       }
-      $this->_class= $ref;
     }
-    parent::__construct(\xp::nameOf($this->_class), null);
+    return $this->_reflect;
   }
   
   /**
@@ -133,18 +142,18 @@ class XPClass extends Type {
    * @throws  lang.IllegalAccessException in case this class cannot be instantiated
    */
   public function newInstance($value= null) {
-    if ($this->_reflect->isInterface()) {
+    if ($this->reflect()->isInterface()) {
       throw new IllegalAccessException('Cannot instantiate interfaces ('.$this->name.')');
-    } else if ($this->_reflect->isTrait()) {
+    } else if ($this->reflect()->isTrait()) {
       throw new IllegalAccessException('Cannot instantiate traits ('.$this->name.')');
-    } else if ($this->_reflect->isAbstract()) {
+    } else if ($this->reflect()->isAbstract()) {
       throw new IllegalAccessException('Cannot instantiate abstract classes ('.$this->name.')');
     }
     
     try {
-      if (!$this->hasConstructor()) return $this->_reflect->newInstance();
+      if (!$this->hasConstructor()) return $this->reflect()->newInstance();
       $args= func_get_args();
-      return $this->_reflect->newInstanceArgs($args);
+      return $this->reflect()->newInstanceArgs($args);
     } catch (\ReflectionException $e) {
       throw new IllegalAccessException($e->getMessage());
     }
@@ -157,7 +166,7 @@ class XPClass extends Type {
    */
   public function getMethods() {
     $list= [];
-    foreach ($this->_reflect->getMethods() as $m) {
+    foreach ($this->reflect()->getMethods() as $m) {
       if (0 == strncmp('__', $m->getName(), 2)) continue;
       $list[]= new Method($this->_class, $m);
     }
@@ -171,8 +180,8 @@ class XPClass extends Type {
    */
   public function getDeclaredMethods() {
     $list= [];
-    foreach ($this->_reflect->getMethods() as $m) {
-      if (0 == strncmp('__', $m->getName(), 2) || $m->class !== $this->_reflect->name) continue;
+    foreach ($this->reflect()->getMethods() as $m) {
+      if (0 == strncmp('__', $m->getName(), 2) || $m->class !== $this->reflect()->name) continue;
       $list[]= new Method($this->_class, $m);
     }
     return $list;
@@ -188,7 +197,7 @@ class XPClass extends Type {
    */
   public function getMethod($name) {
     if ($this->hasMethod($name)) {
-      return new Method($this->_class, $this->_reflect->getMethod($name));
+      return new Method($this->_class, $this->reflect()->getMethod($name));
     }
     throw new ElementNotFoundException('No such method "'.$name.'" in class '.$this->name);
   }
@@ -207,7 +216,7 @@ class XPClass extends Type {
   public function hasMethod($method) {
     return ((0 === strncmp('__', $method, 2))
       ? false
-      : $this->_reflect->hasMethod($method)
+      : $this->reflect()->hasMethod($method)
     );
   }
   
@@ -217,7 +226,7 @@ class XPClass extends Type {
    * @return  bool
    */
   public function hasConstructor() {
-    return $this->_reflect->hasMethod('__construct');
+    return $this->reflect()->hasMethod('__construct');
   }
   
   /**
@@ -229,7 +238,7 @@ class XPClass extends Type {
    */
   public function getConstructor() {
     if ($this->hasConstructor()) {
-      return new Constructor($this->_class, $this->_reflect->getMethod('__construct')); 
+      return new Constructor($this->_class, $this->reflect()->getMethod('__construct')); 
     }
     throw new ElementNotFoundException('No constructor in class '.$this->name);
   }
@@ -241,7 +250,7 @@ class XPClass extends Type {
    */
   public function getFields() {
     $f= [];
-    foreach ($this->_reflect->getProperties() as $p) {
+    foreach ($this->reflect()->getProperties() as $p) {
       if ('__id' === $p->name) continue;
       $f[]= new Field($this->_class, $p);
     }
@@ -256,13 +265,13 @@ class XPClass extends Type {
   public function getDeclaredFields() {
     $list= [];
     if (defined('HHVM_VERSION')) {
-      foreach ($this->_reflect->getProperties() as $p) {
-        if ('__id' === $p->name || $p->info['class'] !== $this->_reflect->name) continue;
+      foreach ($this->reflect()->getProperties() as $p) {
+        if ('__id' === $p->name || $p->info['class'] !== $this->reflect()->name) continue;
         $list[]= new Field($this->_class, $p);
       }
     } else {
-      foreach ($this->_reflect->getProperties() as $p) {
-        if ('__id' === $p->name || $p->class !== $this->_reflect->name) continue;
+      foreach ($this->reflect()->getProperties() as $p) {
+        if ('__id' === $p->name || $p->class !== $this->reflect()->name) continue;
         $list[]= new Field($this->_class, $p);
       }
     }
@@ -278,7 +287,7 @@ class XPClass extends Type {
    */
   public function getField($name) {
     if ($this->hasField($name)) {
-      return new Field($this->_class, $this->_reflect->getProperty($name));
+      return new Field($this->_class, $this->reflect()->getProperty($name));
     }
     throw new ElementNotFoundException('No such field "'.$name.'" in class '.$this->name);
   }
@@ -290,7 +299,7 @@ class XPClass extends Type {
    * @return  bool TRUE if field exists
    */
   public function hasField($field) {
-    return '__id' == $field ? false : $this->_reflect->hasProperty($field);
+    return '__id' == $field ? false : $this->reflect()->hasProperty($field);
   }
 
   /**
@@ -300,7 +309,7 @@ class XPClass extends Type {
    * @return  lang.XPClass class object
    */
   public function getParentclass() {
-    return ($parent= $this->_reflect->getParentClass()) ? new self($parent) : null;
+    return ($parent= $this->reflect()->getParentClass()) ? new self($parent) : null;
   }
   
   /**
@@ -310,7 +319,7 @@ class XPClass extends Type {
    * @return  bool
    */
   public function hasConstant($constant) {
-    return $this->_reflect->hasConstant($constant);
+    return $this->reflect()->hasConstant($constant);
   }
   
   /**
@@ -322,7 +331,7 @@ class XPClass extends Type {
    */
   public function getConstant($constant) {
     if ($this->hasConstant($constant)) {
-      return $this->_reflect->getConstant($constant);
+      return $this->reflect()->getConstant($constant);
     }
     throw new ElementNotFoundException('No such constant "'.$constant.'" in class '.$this->name);
   }
@@ -333,7 +342,7 @@ class XPClass extends Type {
    * @return  [:var]
    */
   public function getConstants() {
-    return $this->_reflect->getConstants();
+    return $this->reflect()->getConstants();
   }
 
   /**
@@ -363,7 +372,7 @@ class XPClass extends Type {
   public function isSubclassOf($class) {
     if (!($class instanceof self)) $class= XPClass::forName($class);
     if ($class->name == $this->name) return false;   // Catch bordercase (ZE bug?)
-    return $this->_reflect->isSubclassOf($class->_reflect);
+    return $this->reflect()->isSubclassOf($class->reflect());
   }
 
   /**
@@ -380,7 +389,7 @@ class XPClass extends Type {
   public function isAssignableFrom($type) {
     $t= $type instanceof Type ? $type : Type::forName($type);
     return $t instanceof self
-      ? $t->name === $this->name || $t->_reflect->isSubclassOf($this->_reflect)
+      ? $t->name === $this->name || $t->reflect()->isSubclassOf($this->reflect())
       : false
     ;
   }
@@ -413,7 +422,7 @@ class XPClass extends Type {
    * @return  bool
    */
   public function isInterface() {
-    return $this->_reflect->isInterface();
+    return $this->reflect()->isInterface();
   }
 
   /**
@@ -422,7 +431,7 @@ class XPClass extends Type {
    * @return  bool
    */
   public function isTrait() {
-    return $this->_reflect->isTrait();
+    return $this->reflect()->isTrait();
   }
 
   /**
@@ -431,7 +440,7 @@ class XPClass extends Type {
    * @return  bool
    */
   public function isEnum() {
-    return class_exists('lang\Enum', false) && $this->_reflect->isSubclassOf('lang\Enum');
+    return class_exists('lang\Enum', false) && $this->reflect()->isSubclassOf('lang\Enum');
   }
 
   /**
@@ -441,7 +450,7 @@ class XPClass extends Type {
    */
   public function getTraits() {
     $r= [];
-    foreach ($this->_reflect->getTraits() as $used) {
+    foreach ($this->reflect()->getTraits() as $used) {
       if (0 !== strncmp($used->getName(), '__', 2)) {
         $r[]= new self($used);
       }
@@ -456,7 +465,7 @@ class XPClass extends Type {
    */
   public function getInterfaces() {
     $r= [];
-    foreach ($this->_reflect->getInterfaces() as $iface) {
+    foreach ($this->reflect()->getInterfaces() as $iface) {
       $r[]= new self($iface);
     }
     return $r;
@@ -468,8 +477,8 @@ class XPClass extends Type {
    * @return  lang.XPClass[]
    */
   public function getDeclaredInterfaces() {
-    $is= $this->_reflect->getInterfaces();
-    if ($parent= $this->_reflect->getParentclass()) {
+    $is= $this->reflect()->getInterfaces();
+    if ($parent= $this->reflect()->getParentclass()) {
       $ip= $parent->getInterfaces();
     } else {
       $ip= [];
@@ -518,7 +527,7 @@ class XPClass extends Type {
     $r= MODIFIER_PUBLIC;
 
     // Map PHP reflection modifiers to generic form
-    $m= $this->_reflect->getModifiers();
+    $m= $this->reflect()->getModifiers();
     $m & \ReflectionClass::IS_EXPLICIT_ABSTRACT && $r |= MODIFIER_ABSTRACT;
     $m & \ReflectionClass::IS_IMPLICIT_ABSTRACT && $r |= MODIFIER_ABSTRACT;
     $m & \ReflectionClass::IS_FINAL && $r |= MODIFIER_FINAL;

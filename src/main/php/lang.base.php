@@ -619,7 +619,7 @@ function create($spec) {
   // BC: Wrap IllegalStateExceptions into IllegalArgumentExceptions
   $class= \lang\XPClass::forName(strstr($base, '.') ? $base : xp::nameOf($base));
   try {
-    $reflect= $class->newGenericType($typeargs)->_reflect;
+    $reflect= $class->newGenericType($typeargs)->reflect();
     if ($reflect->hasMethod('__construct')) {
       $a= func_get_args();
       return $reflect->newInstanceArgs(array_slice($a, 1));
