@@ -5,6 +5,11 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Changed `lang.XPClass` to load the reflection instance lazily. This way,
+  we can defer class loading until we actually access a details requiring
+  the reflection instance; and thus speed up iterating a packages' classes,
+  for instance.
+  (@thekid)
 * Deprecated `null()` core functionality and rewrote codebase to do
   without it. See pull request xp-framework/core#70
   (@thekid)
