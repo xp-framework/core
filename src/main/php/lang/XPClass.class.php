@@ -142,18 +142,21 @@ class XPClass extends Type {
    * @throws  lang.IllegalAccessException in case this class cannot be instantiated
    */
   public function newInstance($value= null) {
-    if ($this->reflect()->isInterface()) {
+    $reflect= $this->reflect();
+    if ($reflect->isInterface()) {
       throw new IllegalAccessException('Cannot instantiate interfaces ('.$this->name.')');
-    } else if ($this->reflect()->isTrait()) {
+    } else if ($reflect->isTrait()) {
       throw new IllegalAccessException('Cannot instantiate traits ('.$this->name.')');
-    } else if ($this->reflect()->isAbstract()) {
+    } else if ($reflect->isAbstract()) {
       throw new IllegalAccessException('Cannot instantiate abstract classes ('.$this->name.')');
     }
     
     try {
-      if (!$this->hasConstructor()) return $this->reflect()->newInstance();
-      $args= func_get_args();
-      return $this->reflect()->newInstanceArgs($args);
+      if ($this->hasConstructor()) {
+        return $reflect->newInstanceArgs(func_get_args());
+      } else {
+        return $reflect->newInstance();
+      }
     } catch (\ReflectionException $e) {
       throw new IllegalAccessException($e->getMessage());
     }
@@ -180,8 +183,9 @@ class XPClass extends Type {
    */
   public function getDeclaredMethods() {
     $list= [];
-    foreach ($this->reflect()->getMethods() as $m) {
-      if (0 == strncmp('__', $m->getName(), 2) || $m->class !== $this->reflect()->name) continue;
+    $reflect= $this->reflect();
+    foreach ($reflect->getMethods() as $m) {
+      if (0 == strncmp('__', $m->getName(), 2) || $m->class !== $reflect->name) continue;
       $list[]= new Method($this->_class, $m);
     }
     return $list;
@@ -264,14 +268,15 @@ class XPClass extends Type {
    */
   public function getDeclaredFields() {
     $list= [];
+    $reflect= $this->reflect();
     if (defined('HHVM_VERSION')) {
-      foreach ($this->reflect()->getProperties() as $p) {
-        if ('__id' === $p->name || $p->info['class'] !== $this->reflect()->name) continue;
+      foreach ($reflect->getProperties() as $p) {
+        if ('__id' === $p->name || $p->info['class'] !== $reflect->name) continue;
         $list[]= new Field($this->_class, $p);
       }
     } else {
-      foreach ($this->reflect()->getProperties() as $p) {
-        if ('__id' === $p->name || $p->class !== $this->reflect()->name) continue;
+      foreach ($reflect->getProperties() as $p) {
+        if ('__id' === $p->name || $p->class !== $reflect->name) continue;
         $list[]= new Field($this->_class, $p);
       }
     }
@@ -477,8 +482,9 @@ class XPClass extends Type {
    * @return  lang.XPClass[]
    */
   public function getDeclaredInterfaces() {
-    $is= $this->reflect()->getInterfaces();
-    if ($parent= $this->reflect()->getParentclass()) {
+    $reflect= $this->reflect();
+    $is= $reflect->getInterfaces();
+    if ($parent= $reflect->getParentclass()) {
       $ip= $parent->getInterfaces();
     } else {
       $ip= [];
