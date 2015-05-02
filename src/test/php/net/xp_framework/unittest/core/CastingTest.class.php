@@ -79,7 +79,7 @@ class CastingTest extends TestCase implements Runnable {
     cast(new \lang\Object(), 'lang.types.String');
   }
 
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect('lang.ClassCastException')]
   public function nonExistant() {
     cast($this, '@@NON_EXISTANT_CLASS@@');
   }

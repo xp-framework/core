@@ -176,7 +176,8 @@ class Type extends Object {
     } else if (0 === substr_compare($type, '*', -1)) {
       return new ArrayType(substr($type, 0, -1));
     } else if (false === ($p= strpos($type, '<'))) {
-      return strstr($type, '.') ? XPClass::forName($type) : new XPClass($type);
+      $normalized= strtr($type, '\\', '.');
+      return strstr($normalized, '.') ? XPClass::forName($normalized) : new XPClass($normalized);
     } else if (strstr($type, '?')) {
       return WildcardType::forName($type);
     } else {

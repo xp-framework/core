@@ -356,7 +356,7 @@ final class ClassLoader extends Object implements IClassLoader {
       $bytes
     ));
     $cl= $dyn->loadClass($spec);
-    $functions && $cl->_reflect->setStaticPropertyValue('__func', $functions);
+    $functions && $cl->reflect()->setStaticPropertyValue('__func', $functions);
     return $cl;
   }
 
