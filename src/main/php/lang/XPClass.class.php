@@ -76,6 +76,20 @@ class XPClass extends Type {
   }
 
   /**
+   * Overload member access, retaining BC for public _reflect member.
+   *
+   * @param  string $name
+   * @return var
+   */
+  public function __get($name) {
+    if ('_reflect' === $name) {
+      return $this->reflect();
+    } else {
+      return parent::__get($name);
+    }
+  }
+
+  /**
    * Returns the reflection object lazily initialized
    *
    * @return php.ReflectionClass
