@@ -17,6 +17,10 @@ XP Framework Core ChangeLog
   construct instead. See pull request xp-framework/core#69
   (@thekid)
 
+### Features
+
+* Merged xp-framework/core#71: Unicode unittest icons - @thekid
+
 ## 6.1.1 / 2015-04-25
 
 ### Bugfixes
