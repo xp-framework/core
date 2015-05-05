@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.2.0 / 2015-05-05
+
 ### Heads up!
 
 * Changed `lang.XPClass` to load the reflection instance lazily. This way,
