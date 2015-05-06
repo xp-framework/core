@@ -40,12 +40,43 @@ Finally, start `xp -v` to see it working:
 
 ```sh
 $ xp -v
-XP 6.2.0-dev { PHP 5.6.8 & ZE 2.6.0 } @ Windows NT SLATE 6.2 build 9200 (Windows 8) i586
+XP 6.2.1-dev { PHP 5.6.8 & ZE 2.6.0 } @ Windows NT SLATE 6.2 build 9200 (Windows 8) i586
 Copyright (c) 2001-2015 the XP group
 FileSystemCL<...\xp\core\src\main\php\>
 FileSystemCL<...\xp\core\src\test\php\>
 FileSystemCL<...\xp\core\src\test\resources\>
 FileSystemCL<...\home\Timm\devel\xp\core\>
+```
+
+Basic usage
+-----------
+The XP Framework runs classes with a public static `main()` method. To run a class, supply the fully qualified classname as command line argument: `$ xp {class.Name}`.
+
+Any argument after the classname will be passed to the class' main method.
+
+### Hello World
+Save the following sourcecode to a file called  AgeInDays.class.php :
+
+```php
+<?php
+use util\Date;
+use util\DateUtil;
+use util\cmd\Console;
+
+class AgeInDays extends \lang\Object {
+
+  public static function main(array $args) {
+    $span= DateUtil::timespanBetween(new Date($args[0]), Date::now());
+    Console::writeLine('Hey, you are ', $span->getDays(), ' days old');
+  }
+}
+```
+
+Now run it:
+
+```sh
+$ xp AgeInDays 1977-12-14
+Hey, you are 13657 days old
 ```
 
 **Enjoy!**
