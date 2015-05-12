@@ -117,7 +117,7 @@ final class xp {
       if (0 === xp::$cll) {
         $invocations= xp::$cli;
         xp::$cli= [];
-        foreach ($invocations as $inv) call_user_func($inv, $name);
+        foreach ($invocations as $inv) $inv($name);
       }
 
       return $name;
@@ -390,7 +390,7 @@ function uses() {
         $trace= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
         $scope= literal($trace[2]['args'][0]);
       }
-      call_user_func([$class, '__import'], $scope);
+      $class::__import($scope);
     }
 
     $short= substr($str, strrpos($str, '.') + 1);
