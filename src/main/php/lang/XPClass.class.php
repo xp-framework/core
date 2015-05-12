@@ -57,7 +57,24 @@ class XPClass extends Type {
   private $_class;
   private $_reflect= null;
 
-  static function __static() { }
+  static function __static() {
+
+    // Workaround for missing detail information about return types in
+    // builtin classes.
+    \xp::$meta['php.Exception']= [
+      'class' => [4 => null, []],
+      0 => [],
+      1 => [
+        'getMessage'       => [1 => [], 'string', [], null, []],
+        'getCode'          => [1 => [], 'int', [], null, []],
+        'getFile'          => [1 => [], 'string', [], null, []],
+        'getLine'          => [1 => [], 'int', [], null, []],
+        'getTrace'         => [1 => [], 'var[]', [], null, []],
+        'getPrevious'      => [1 => [], 'lang.Throwable', [], null, []],
+        'getTraceAsString' => [1 => [], 'string', [], null, []]
+      ]
+    ];
+  }
 
   /**
    * Constructor
