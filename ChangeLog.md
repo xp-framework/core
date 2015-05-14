@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.2.1 / 2015-05-14
+
+### Features
+
+* Merged xp-framework/core#73: Optimized reflection details for exception
+  class being initialized multiple times.
+  (@thekid, @kiesel)
+
 ## 6.2.0 / 2015-05-05
 
 ### Heads up!
