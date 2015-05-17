@@ -182,8 +182,8 @@ final class xp {
         return '['.substr($r, 2).']';
       } else {
         $r= "[\n";
-        foreach (array_keys($arg) as $key) {
-          $r.= $indent.'  '.$key.' => '.xp::stringOf($arg[$key], $indent.'  ')."\n";
+        foreach ($arg as $key => $val) {
+          $r.= $indent.'  '.$key.' => '.xp::stringOf($val, $indent.'  ')."\n";
         }
         unset($protect[$ser]);
         return $r.$indent.']';
@@ -200,9 +200,8 @@ final class xp {
       if (isset($protect[$ser])) return '->{:recursion:}';
       $protect[$ser]= true;
       $r= xp::nameOf(get_class($arg))." {\n";
-      $vars= (array)$arg;
-      foreach (array_keys($vars) as $key) {
-        $r.= $indent.'  '.$key.' => '.xp::stringOf($vars[$key], $indent.'  ')."\n";
+      foreach ((array)$arg as $key => $val) {
+        $r.= $indent.'  '.$key.' => '.xp::stringOf($val, $indent.'  ')."\n";
       }
       unset($protect[$ser]);
       return $r.$indent.'}';
