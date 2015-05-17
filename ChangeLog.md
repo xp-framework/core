@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Fixed `xp::stringOf()` producing incorrect indentation for values nested
+  inside arrays
+  (@thekid)
+
 ## 6.2.2 / 2015-05-17
 
 ### Bugfixes

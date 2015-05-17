@@ -59,7 +59,7 @@ class StringOfTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function hashmap_representation() {
+  public function map_representation() {
     $this->assertEquals(
       "[\n  foo => \"bar\"\n  bar => 2\n  baz => TestString(6) { String }\n]", 
       \xp::stringOf(array(
@@ -67,6 +67,22 @@ class StringOfTest extends \unittest\TestCase {
         'bar' => 2, 
         'baz' => $this->testStringInstance()
       ))
+    );
+  }
+
+  #[@test]
+  public function array_of_maps_representation() {
+    $this->assertEquals(
+      "[[\n  one => 1\n], [\n  two => 2\n]]",
+      \xp::stringOf([['one' => 1], ['two' => 2]])
+    );
+  }
+
+  #[@test]
+  public function nested_arrays_and_maps() {
+    $this->assertEquals(
+      "[[\n  one => [[\n    one => 1\n  ]]\n], [\n  two => [[\n    two => 2\n  ]]\n]]",
+      \xp::stringOf([['one' => [['one' => 1]]], ['two' => [['two' => 2]]]])
     );
   }
 

@@ -176,7 +176,7 @@ final class xp {
       if (0 === key($arg)) {
         $r= '';
         foreach ($arg as $val) {
-          $r.= ', '.xp::stringOf($val);
+          $r.= ', '.xp::stringOf($val, $indent);
         }
         unset($protect[$ser]);
         return '['.substr($r, 2).']';
