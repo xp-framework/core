@@ -75,7 +75,7 @@ class LogCategoryTest extends \unittest\TestCase {
 
   #[@test]
   public function can_create_with_identifier_level_and_context() {
-    new LogCategory('identifier', LogLevel::ALL, newinstance(Context::class, [], [
+    new LogCategory('identifier', LogLevel::ALL, newinstance('util.log.Context', [], [
       'format' => function() { return ''; }
     ]));
   }
