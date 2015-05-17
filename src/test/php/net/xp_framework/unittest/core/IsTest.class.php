@@ -11,13 +11,13 @@ class IsTest extends \unittest\TestCase {
 
   /** @deprecated */
   #[@test]
-  public function xpNullIsNull() {
-    $this->assertTrue(is(NULL, \xp::null()));
+  public function xpnullIsnull() {
+    $this->assertTrue(is(null, \xp::null()));
   }
 
   #[@test]
-  public function intIsNotIsNull() {
-    $this->assertFalse(is(NULL, 1));
+  public function intIsNotIsnull() {
+    $this->assertFalse(is(null, 1));
   }
 
   #[@test]
@@ -27,7 +27,7 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function var_array() {
-    $this->assertFalse(is('string[]', array('Hello', 1, TRUE)));
+    $this->assertFalse(is('string[]', array('Hello', 1, true)));
   }
 
   #[@test]
@@ -61,8 +61,8 @@ class IsTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function objectArrayWithNull() {
-    $this->assertFalse(is('lang.Object[]', array(new \lang\Object(), new \lang\Object(), NULL)));
+  public function objectArrayWithnull() {
+    $this->assertFalse(is('lang.Object[]', array(new \lang\Object(), new \lang\Object(), null)));
   }
 
   #[@test]
@@ -102,17 +102,17 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function nullNotAStringPrimitive() {
-    $this->assertFalse(is('string', NULL));
+    $this->assertFalse(is('string', null));
   }
 
   #[@test]
   public function boolPrimitive() {
-    $this->assertTrue(is('bool', TRUE));
+    $this->assertTrue(is('bool', true));
   }
 
   #[@test]
   public function nullNotABoolPrimitive() {
-    $this->assertFalse(is('bool', NULL));
+    $this->assertFalse(is('bool', null));
   }
 
   #[@test]
@@ -122,7 +122,7 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function nullNotADoublePrimitive() {
-    $this->assertFalse(is('double', NULL));
+    $this->assertFalse(is('double', null));
   }
 
   #[@test]
@@ -132,7 +132,7 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function nullNotAnIntPrimitive() {
-    $this->assertFalse(is('int', NULL));
+    $this->assertFalse(is('int', null));
   }
 
   #[@test]
@@ -142,7 +142,7 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function undefinedClassName() {
-    $this->assertFalse(class_exists('Undefined_Class', FALSE));
+    $this->assertFalse(class_exists('Undefined_Class', false));
     $this->assertFalse(is('Undefined_Class', new \lang\Object()));
   }
 
