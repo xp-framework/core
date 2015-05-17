@@ -1,7 +1,5 @@
 <?php namespace lang\reflect;
 
-
-
 /**
  * Represents a class' constructor
  *

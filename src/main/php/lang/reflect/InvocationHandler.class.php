@@ -9,8 +9,7 @@
  * invocation is encoded and dispatched to the invoke
  * method of its invocation handler.
  *
- * @see      xp://lang.reflect.Proxy
- * @purpose  Interface
+ * @see   xp://lang.reflect.Proxy
  */
 interface InvocationHandler {
 
@@ -18,10 +17,10 @@ interface InvocationHandler {
    * Processes a method invocation on a proxy instance and returns
    * the result.
    *
-   * @param   lang.reflect.Proxy proxy
-   * @param   string method the method name
-   * @param   var[] args an array of arguments
-   * @return  var
+   * @param  lang.reflect.Proxy $proxy
+   * @param  string $method the method name
+   * @param  var[] $args an array of arguments
+   * @return var
    */
   public function invoke($proxy, $method, $args);
 
