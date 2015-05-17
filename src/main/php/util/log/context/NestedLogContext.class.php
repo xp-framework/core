@@ -2,7 +2,6 @@
 
 use util\log\Context;
 
-
 /**
  * Nested Log Context
  *

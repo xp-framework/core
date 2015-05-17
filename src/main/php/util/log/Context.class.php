@@ -1,10 +1,7 @@
 <?php namespace util\log;
 
-
-
 /**
  * Interface to be implemented by all log contexts
- *
  */
 interface Context {
 
