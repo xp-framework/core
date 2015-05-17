@@ -2,12 +2,11 @@
 
 use io\File;
 
-
 /**
- * Standard I/O streams
+ * Wrap standard I/O streams with File objects
  *
- * @see      http://www.opengroup.org/onlinepubs/007908799/xsh/stdin.html
- * @purpose  Wrap standard I/O streams with File objects
+ * @deprecated Use io.streams APIs instead
+ * @see   http://www.opengroup.org/onlinepubs/007908799/xsh/stdin.html
  */
 class StdStream extends \lang\Object {
 
@@ -30,5 +29,4 @@ class StdStream extends \lang\Object {
     }
     return $f[$handle];
   }
-
 }

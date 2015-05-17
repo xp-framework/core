@@ -1,7 +1,6 @@
 <?php namespace io\sys;
 
 use io\IOException;
-
  
 /**
  * Shared memory segment
@@ -13,11 +12,10 @@ use io\IOException;
  *
  * Note: This extension is not available on Windows platforms. 
  *
- * @purpose   Provide a wrapper around shared memory segments
- * @ext       sem
- * @see       http://www.cs.cf.ac.uk/Dave/C/node27.html#SECTION002700000000000000000
- * @see       http://www.cs.cf.ac.uk/Dave/C/node26.html#SECTION002600000000000000000
- * @see       xp://io.sys.Semaphore
+ * @ext   sem
+ * @see   http://www.cs.cf.ac.uk/Dave/C/node27.html#SECTION002700000000000000000
+ * @see   http://www.cs.cf.ac.uk/Dave/C/node26.html#SECTION002600000000000000000
+ * @see   xp://io.sys.Semaphore
  */
 class ShmSegment extends \lang\Object {
   public 

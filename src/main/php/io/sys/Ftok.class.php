@@ -20,7 +20,6 @@
  * </quote>
  * 
  * @ext      sem
- * @purpose  Provide a static class for getting System V IPC keys
  */
 class Ftok extends \lang\Object {
   

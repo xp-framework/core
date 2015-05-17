@@ -2,7 +2,6 @@
 
 use io\IOException;
 
-
 define('IPC_QUEUE_PERM',  0666);
 define('IPC_MSG_MAXSIZE', 16384);
 

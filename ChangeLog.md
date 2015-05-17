@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Deprecated io.sys.StdStream class, superseded by io.streams API
+  (@thekid)
 * Deprecated `text.format` and `text.parser` APIs.
   (@thekid)
 * Deprecated io.SearchableStream class, superseded by text.Tokenizer API

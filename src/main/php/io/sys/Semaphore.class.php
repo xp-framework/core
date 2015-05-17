@@ -11,10 +11,9 @@
  *   $s->remove();
  * </code>
  *
- * @purpose   Provide a wrapper around semaphores
- * @ext       sem
- * @see       http://www.cs.cf.ac.uk/Dave/C/node27.html#SECTION002700000000000000000
- * @see       http://www.cs.cf.ac.uk/Dave/C/node26.html#SECTION002600000000000000000
+ * @ext   sem
+ * @see   http://www.cs.cf.ac.uk/Dave/C/node27.html#SECTION002700000000000000000
+ * @see   http://www.cs.cf.ac.uk/Dave/C/node26.html#SECTION002600000000000000000
  */
 class Semaphore extends \lang\Object {
   public
