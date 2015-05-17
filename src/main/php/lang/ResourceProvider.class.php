@@ -16,6 +16,10 @@ class ResourceProvider extends Object {
     self::$instance= new self();
   }
 
+  static function __import($scope) {
+    // NOOP
+  }
+
   /**
    * Retrieve instance
    *

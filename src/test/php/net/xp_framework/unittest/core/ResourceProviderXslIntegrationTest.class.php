@@ -4,7 +4,7 @@ use io\File;
 use io\FileUtil;
 use unittest\TestCase;
 use xml\DomXSLProcessor;
-use lang\ResourceProvider;
+new import('lang.ResourceProvider');
 
 /**
  * Test resource provider functionality

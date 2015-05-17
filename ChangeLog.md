@@ -5,6 +5,10 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Made ResourceProvider useable via `new import("lang.ResourceProvider")`.
+  This way, you don't need to force its loading by adding e.g. a call to
+  XPClass::forName() to the static initializer / constructor / etcetera.
+  (@thekid)
 * Made typeof() behave consistent with reflection on callable type hint.
   (@thekid)
 * Made util.log.LogCategory's first parameter optional, using "default"
