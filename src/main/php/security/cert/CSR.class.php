@@ -6,35 +6,29 @@ use security\KeyPair;
  * Certificate signing requests
  *
  * Example [Creating a self-signed-certificate]:
- * <code>
- *   uses('security.cert.CSR');
- * 
- *   try {
- *     if ($keypair= KeyPair::generate('md5', OPENSSL_KEYTYPE_RSA)) {
- *       $csr= new CSR(new Principal(array(
- *         'C'     => 'DE',
- *         'ST'    => 'Baden-Württemberg',
- *         'L'     => 'Karlsruhe',
- *         'O'     => 'XP',
- *         'OU'    => 'XP Team',
- *         'CN'    => 'Timm Friebe',
- *         'EMAIL' => 'xp@php3.de'
- *       )), $keypair);
- *       $cert= $csr->sign($keypair);
- *     }
- *   } catch(XPException $e) {
- *     $e->printStackTrace();
- *     exit();
- *   }
- *   
- *   var_dump(
- *     $keypair,
- *     $keypair->export('password'),
- *     $csr,
- *     $csr->export(),
- *     $cert,
- *     $cert->export()
- *   );
+ * ```php
+ * $keypair= KeyPair::generate('md5', OPENSSL_KEYTYPE_RSA);
+ * $principial= new Principal([
+ *   'C'     => 'DE',
+ *   'ST'    => 'Baden-Württemberg',
+ *   'L'     => 'Karlsruhe',
+ *   'O'     => 'XP',
+ *   'OU'    => 'XP Team',
+ *   'CN'    => 'Timm Friebe',
+ *   'EMAIL' => 'xp@php3.de'
+ * ]);
+ *
+ * $csr= new CSR($principal, $keypair);
+ * $cert= $csr->sign($keypair);
+ *
+ * var_dump(
+ *   $keypair,
+ *   $keypair->export('password'),
+ *   $csr,
+ *   $csr->export(),
+ *   $cert,
+ *   $cert->export()
+ * );
  * </code>
  *
  * @ext      openssl
