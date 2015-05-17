@@ -1,15 +1,10 @@
 <?php namespace security\auth;
 
-
-
 /**
- * Autenticates users against a property
- *
- * @purpose  Authenticator
+ * Authenticates users against a property
  */
 class PropertyAuthenticator extends \lang\Object implements Authenticator {
-  public
-    $users = null;
+  public $users = null;
 
   /**
    * Constructor
@@ -18,7 +13,6 @@ class PropertyAuthenticator extends \lang\Object implements Authenticator {
    */    
   public function __construct($prop) {
     $this->users= $prop;
-
   }
   
   /**
@@ -32,5 +26,4 @@ class PropertyAuthenticator extends \lang\Object implements Authenticator {
     $user= $this->users->readSection(sprintf('user::%s', $user), null);
     return ($pass === $user['password']) ? true : false;
   }
-
 } 

@@ -3,11 +3,8 @@
 use io\File;
 use security\crypto\UnixCrypt;
 
-
 /**
- * Autenticates users against a .htpasswd file
- *
- * @purpose  Authenticator
+ * Authenticates users against a .htpasswd file
  */
 class HtpasswdAuthenticator extends \lang\Object implements Authenticator {
   public

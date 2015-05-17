@@ -7,7 +7,6 @@
  *
  * @see      xp://security.auth.Authenticator
  * @see      xp://lang.ChainedException
- * @purpose  Exception
  */
 class AuthenticatorException extends \lang\XPException {
 

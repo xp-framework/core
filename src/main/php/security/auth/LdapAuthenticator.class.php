@@ -1,13 +1,12 @@
 <?php namespace security\auth;
 
 use peer\ldap\LDAPClient;
+use peer\ldap\LDAPException;
+use peer\ConnectException;
 use security\crypto\UnixCrypt;
 
-
 /**
- * Autenticates users against LDAP
- *
- * @purpose  Authenticator
+ * Authenticates users against LDAP
  */
 class LdapAuthenticator extends \lang\Object implements Authenticator {
   public
@@ -35,13 +34,13 @@ class LdapAuthenticator extends \lang\Object implements Authenticator {
   public function authenticate($user, $pass) {
     try {
       $r= $this->lc->search($this->basedn, '(uid='.$user.')');
-    } catch (\peer\ldap\LDAPException $e) {
+    } catch (LDAPException $e) {
       throw new AuthenticatorException(sprintf(
         'Authentication failed (#%d: "%s")', 
         $e->getErrorCode(),
         $e->getMessage()
       ), $e);
-    } catch (\peer\ConnectException $e) {
+    } catch (ConnectException $e) {
       throw new AuthenticatorException(sprintf(
         'Authentication failed (<connect>: "%s")', 
         $e->getMessage()
