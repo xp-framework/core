@@ -6,8 +6,7 @@
  *
  * It supports short and long options, e.g. -h or --help
  *
- * @test     xp://net.xp_framework.unittest.util.cmd.ParamStringTest
- * @purpose  Easy access to commandline arguments
+ * @test   xp://net.xp_framework.unittest.util.cmd.ParamStringTest
  */
 class ParamString extends \lang\Object {
   public 

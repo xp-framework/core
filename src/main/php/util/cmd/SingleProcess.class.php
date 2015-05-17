@@ -2,28 +2,24 @@
  
 use io\File;
 
-
 /**
  * SingleProcess provides a way to insure a process is only running
  * once at a time.
  * 
  * Usage:
- * <code>
- *   $sp= new SingleProcess();
- *   if (!$sp->lock()) {
- *     exit(-1);
- *   }
+ * ```php
+ * $sp= new SingleProcess();
+ * if (!$sp->lock()) {
+ *   exit(-1);
+ * }
  *
- *   // [...operation which should only take part once at a time...]
+ * // [...operation which should only take part once at a time...]
  *
- *   $sp->unlock();
- * </code>
- *
- * @purpose  Lock process so it can only be run once
+ * $sp->unlock();
+ * ```
  */  
 class SingleProcess extends \lang\Object {
-  public 
-    $lockfile     = null;
+  public $lockfile;
 
   /**
    * Constructor
