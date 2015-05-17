@@ -56,7 +56,7 @@ class Type extends Object {
    * @param   string $name
    * @param   var $default
    */
-  public function __construct($name, $default) {
+  protected function __construct($name, $default) {
     $this->name= $name;
     $this->default= $default;
   }
