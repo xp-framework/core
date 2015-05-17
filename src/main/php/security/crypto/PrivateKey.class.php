@@ -2,11 +2,8 @@
 
 use security\OpenSslUtil;
 
-
 /**
  * Private key
- *
- * @purpose  Private key
  */
 class PrivateKey extends CryptoKey {
 

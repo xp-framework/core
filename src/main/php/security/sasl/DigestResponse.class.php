@@ -2,12 +2,10 @@
 
 use security\checksum\HMAC_MD5;
 
-
 /**
  * Digest challenge response
  *
  * @see      rfc://2831
- * @purpose  Challenge Response wrapper
  */
 class DigestResponse extends \lang\Object {
   public
