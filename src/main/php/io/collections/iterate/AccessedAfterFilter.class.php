@@ -1,11 +1,7 @@
 <?php namespace io\collections\iterate;
 
-
-
 /**
  * Date comparison filter
- *
- * @purpose  Iteration Filter
  */
 class AccessedAfterFilter extends AbstractDateComparisonFilter {
 

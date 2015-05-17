@@ -23,7 +23,6 @@
  *   $s->close();
  * </code>
  *
- * @purpose  Provide an interface to the BSD sockets                    
  * @see      xp://peer.BSDSocket
  * @ext      sockets                                                    
  */

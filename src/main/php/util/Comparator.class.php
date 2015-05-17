@@ -5,7 +5,6 @@
  *
  * @see      xp://util.Hashmap#usort
  * @see      php://usort
- * @purpose  A comparison function
  */
 interface Comparator {
 

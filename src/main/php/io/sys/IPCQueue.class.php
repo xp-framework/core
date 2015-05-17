@@ -86,8 +86,6 @@ define('IPC_MSG_MAXSIZE', 16384);
  *   $t[1]->start();
  *   var_dump($t[0]->join(), $t[1]->join());
  * </code>
- *
- * @purpose  Send and receive System V IPC messages
  */
 class IPCQueue extends \lang\Object {
   public

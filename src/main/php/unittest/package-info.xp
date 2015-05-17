@@ -44,7 +44,6 @@
  *
  * @see      http://news.xp-framework.net/category/13/Unittests/
  * @see      http://c2.com/cgi/wiki?TestDrivenDevelopment
- * @purpose  Test-driven development
  */
 package unittest {
 }

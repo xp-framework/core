@@ -4,7 +4,6 @@
  * Choice formatter
  *
  * @deprecated
- * @purpose  Provide a Format wrapper for values depending on choices
  * @see      xp://text.format.IFormat
  */
 class ChoiceFormat extends IFormat {

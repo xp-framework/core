@@ -66,7 +66,6 @@
  * @see      xp://lang.ClassLoader#loadClass
  * @see      xp://lang.ClassLoader#defineClass
  * @see      xp://lang.reflect.Proxy
- * @purpose  Reflection
  */
 package lang.reflect {
 }

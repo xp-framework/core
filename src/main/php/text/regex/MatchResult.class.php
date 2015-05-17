@@ -2,12 +2,10 @@
 
 use lang\IndexOutOfBoundsException;
 
-
 /**
  * Represents a match result
  *
- * @see      xp://text.regex.Pattern#matches
- * @purpose  Result
+ * @see   xp://text.regex.Pattern#matches
  */
 class MatchResult extends \lang\Object {
   protected $length  = 0;

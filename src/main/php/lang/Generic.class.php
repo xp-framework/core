@@ -3,8 +3,6 @@
 /**
  * Class Object is the root of the class hierarchy. Every class has 
  * Object as a superclass. 
- *
- * @purpose  Base class for all others
  */
 interface Generic {
   

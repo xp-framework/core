@@ -24,7 +24,6 @@ use util\NoSuchElementException;
  *   }
  * </code>
  *
- * @purpose  LIFO
  * @see      xp://util.collections.Queue
  * @test     xp://net.xp_framework.unittest.util.collections.GenericsTest
  * @test     xp://net.xp_framework.unittest.util.collections.StackTest

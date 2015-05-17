@@ -8,10 +8,9 @@ define('CAL_DST_EU',      0x0000);
 define('CAL_DST_US',      0x0001);
 
 /**
- * Calendar class
+ * Utility functions for date calculations
  *
  * @test     xp://net.xp_framework.unittest.util.CalendarTest
- * @purpose  Utility functions for date calculations
  */
 class Calendar extends \lang\Object {
 

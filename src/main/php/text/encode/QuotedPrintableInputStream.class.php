@@ -2,7 +2,6 @@
 
 use io\streams\InputStream;
 
-
 /**
  * InputStream that decodes from a QuotedPrintable-encoded source 
  *
@@ -13,7 +12,6 @@ use io\streams\InputStream;
  * @see      http://bugs.horde.org/ticket/8747
  * @see      rfc://2045 section 6.7
  * @test     xp://net.xp_framework.unittest.text.encode.QuotedPrintableInputStreamTest
- * @purpose  InputStream implementation
  */
 class QuotedPrintableInputStream extends \lang\Object implements InputStream {
   protected $in = null;

@@ -1,13 +1,10 @@
 <?php namespace util;
 
-
-
 /**
  * DateUtil is a helper class to handle Date objects and 
  * calculate date- and timestamps.
  *
  * @test    xp://net.xp_framework.unittest.util.DateUtilTest
- * @purpose Utils to calculate with Date objects
  */
 class DateUtil extends \lang\Object {
 

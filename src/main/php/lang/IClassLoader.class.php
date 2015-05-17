@@ -2,8 +2,6 @@
 
 /**
  * Classloader interface
- *
- * @purpose  Interface
  */
 interface IClassLoader {
 

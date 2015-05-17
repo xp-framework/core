@@ -17,7 +17,6 @@ use util\log\Traceable;
  * </ol>
  *
  * @see      http://passwordmeter.com/
- * @purpose  Algorithm implementation
  */
 class StandardAlgorithm extends \lang\Object implements Algorithm, Traceable {
   protected

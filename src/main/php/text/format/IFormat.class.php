@@ -4,7 +4,6 @@
  * Format base class
  *
  * @deprecated
- * @purpose  Provide a base class to all format classes
  * @see      xp://text.format.MessageFormat#setFormatter
  */
 class IFormat extends \lang\Object {

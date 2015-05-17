@@ -9,7 +9,6 @@
  * </code>
  *
  * @see      rfc://2045#6.8
- * @purpose  Base 64 encoder/decoder
  */
 class Base64 extends \lang\Object {
 

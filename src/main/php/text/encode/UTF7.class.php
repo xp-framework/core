@@ -11,7 +11,6 @@
  * @ext      imap
  * @see      rfc://2060
  * @see      rfc://1642
- * @purpose  UTF encoder / decoder
  */
 class UTF7 extends \lang\Object {
 

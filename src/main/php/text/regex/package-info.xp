@@ -1,8 +1,4 @@
 <?php
-/* This file is part of the XP framework
- *
- * $Id$
- */
 
 /**
  * Perl-compatible regular expressions API.
@@ -91,7 +87,6 @@
  * 
  * @see      xp://text.regex.Pattern
  * @see      php://pcre
- * @purpose  Regular expressions
  */
 package text.regex {
 }

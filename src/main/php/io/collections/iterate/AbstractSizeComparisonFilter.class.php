@@ -1,11 +1,7 @@
 <?php namespace io\collections\iterate;
 
-
-
 /**
  * Size comparison filter
- *
- * @purpose  Iteration Filter
  */
 class AbstractSizeComparisonFilter extends \lang\Object implements IterationFilter {
   public

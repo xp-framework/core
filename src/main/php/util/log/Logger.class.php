@@ -73,7 +73,6 @@ use util\Configurable;
  * </pre>
  *
  * @test     xp://net.xp_framework.unittest.logging.LoggerTest
- * @purpose  Singleton logger
  */
 class Logger extends \lang\Object implements Configurable {
   const DFLT= "default";

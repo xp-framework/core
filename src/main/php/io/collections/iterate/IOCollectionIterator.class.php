@@ -3,7 +3,6 @@
 use io\collections\IOCollection;
 use util\XPIterator;
 
-
 /**
  * Iterates over elements of a collection.
  *
@@ -21,7 +20,6 @@ use util\XPIterator;
  *
  * @test     xp://net.xp_framework.unittest.io.collections.IOCollectionIteratorTest
  * @see      xp://io.collections.iterate.FilteredIOCollectionIterator
- * @purpose  Iterator
  */
 class IOCollectionIterator extends \lang\Object implements XPIterator, \IteratorAggregate {
   public

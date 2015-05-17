@@ -28,7 +28,6 @@
  *
  * @see      http://developer.xp-framework.net/xml/rfc/view?0088
  * @see      http://developer.xp-framework.net/xml/rfc/view?0142
- * @purpose  I/O
  */
 package io.streams {
 }

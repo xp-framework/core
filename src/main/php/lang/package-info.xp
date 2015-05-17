@@ -1,8 +1,4 @@
 <?php
-/* This file is part of the XP framework
- *
- * $Id$
- */
 
 /**
  * The lang package contains the core classes of the XP framework.
@@ -102,7 +98,6 @@
  * @see      xp://lang.Generic
  * @see      xp://lang.XPClass
  * @see      xp://lang.Process
- * @purpose  Core
  */
 package lang {
 }

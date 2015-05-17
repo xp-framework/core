@@ -1,11 +1,7 @@
 <?php namespace io\collections\iterate;
 
-
-
 /**
  * Extension filter
- *
- * @purpose  Iteration Filter
  */
 class ExtensionEqualsFilter extends \lang\Object implements IterationFilter {
   public

@@ -30,7 +30,6 @@ use lang\System;
  *
  * @see      xp://io.File
  * @see      xp://lang.System#tempDir
- * @purpose  Temporary file
  */
 class TempFile extends File {
 

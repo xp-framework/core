@@ -6,7 +6,6 @@ use lang\IndexOutOfBoundsException;
  * Represents a list of bytes
  *
  * @test     xp://net.xp_framework.unittest.core.types.BytesTest
- * @purpose  Wrapper type
  */
 class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
   protected

@@ -4,7 +4,6 @@
  * Component is an interface for classes implementing the composite pattern.
  *
  * @see       xp://util.Visitor
- * @purpose   Interface
  */
 interface Component {
 

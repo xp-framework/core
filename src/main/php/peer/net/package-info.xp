@@ -39,7 +39,6 @@
  * @see      php://ip2long
  * @see      php://network
  * @see      php://dns_check_record
- * @purpose  Networking / IPv6 / DNS
  */
 package peer.net {
 }

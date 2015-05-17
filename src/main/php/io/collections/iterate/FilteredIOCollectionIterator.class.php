@@ -1,8 +1,5 @@
 <?php namespace io\collections\iterate;
 
-
-
-
 /**
  * Iterates over elements of a folder, only returning those elements that
  * are accepted by the specified filter.
@@ -25,7 +22,6 @@
  *
  * @test     xp://net.xp_framework.unittest.io.collections.IOCollectionIteratorTest
  * @see      xp://io.collections.iterate.IOCollectionIterator
- * @purpose  Iterator
  */
 class FilteredIOCollectionIterator extends IOCollectionIterator {
   public

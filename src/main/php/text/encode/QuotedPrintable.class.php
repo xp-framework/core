@@ -8,8 +8,7 @@
  *   $str= QuotedPrintable::decode($b);
  * </code>
  *
- * @see      rfc://2045#6.7
- * @purpose  Quoted Printable encoder / decoder
+ * @see  rfc://2045#6.7
  */
 class QuotedPrintable extends \lang\Object {
 

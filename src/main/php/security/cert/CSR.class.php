@@ -32,7 +32,6 @@ use security\KeyPair;
  * </code>
  *
  * @ext      openssl
- * @purpose  Represent a CSR
  */
 class CSR extends \lang\Object {
   public $_res;

@@ -44,8 +44,6 @@
  *     $t->close();
  *   }
  * </code>
- *
- * @purpose  I/O
  */
 package io {
 }

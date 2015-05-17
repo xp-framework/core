@@ -1,16 +1,12 @@
 <?php namespace util;
 
-use lang\Enum;
-
-
 /**
  * Interval enumeration
  *
  * @test     xp://net.xp_framework.unittest.util.DateMathTest
  * @see      xp://util.DateMath
- * @purpose  Intervals
  */
-class TimeInterval extends Enum {
+class TimeInterval extends \lang\Enum {
   public static
     $YEAR,
     $MONTH,

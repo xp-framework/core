@@ -2,7 +2,6 @@
 
 use io\streams\OutputStream;
 
-
 /**
  * OuputStream that encodes data to QuotedPrintable encoding.
  *
@@ -12,7 +11,6 @@ use io\streams\OutputStream;
  * @see      http://en.wikipedia.org/wiki/Quoted-printable
  * @see      rfc://2045 section 6.7
  * @test     xp://net.xp_framework.unittest.text.encode.QuotedPrintableOutputStreamTest
- * @purpose  OuputStream implementation
  */
 class QuotedPrintableOutputStream extends \lang\Object implements OutputStream {
   protected $out= null;
