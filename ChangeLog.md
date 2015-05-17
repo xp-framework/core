@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Made util.log.LogCategory's first parameter optional, using "default"
+  as identifier if omitted.
+  (@thekid)
+
 ### Bugfixes
 
 * Fixed `is()` to support function types correctly

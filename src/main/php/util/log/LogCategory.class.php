@@ -47,7 +47,7 @@ class LogCategory extends \lang\Object {
    * @param   int flags (defaults to all)
    * @param   util.log.Context context
    */
-  public function __construct($identifier, $flags= LogLevel::ALL, $context= null) {
+  public function __construct($identifier= 'default', $flags= LogLevel::ALL, $context= null) {
     $this->flags= $flags;
     $this->identifier= $identifier;
     $this->context= $context;
@@ -148,15 +148,7 @@ class LogCategory extends \lang\Object {
    * @param   int flag default LogLevel::ALL
    * @return  util.log.Appender the appender added
    */
-  public function addAppender($appender, $flag= LogLevel::ALL) {
-    if ($appender instanceof Appender) {
-      // NOOP
-    } else if ($appender instanceof \LogAppender) {
-      $appender= \lang\XPClass::forName('util.log.LogAppenderAdapter')->newInstance($appender);
-    } else {
-      throw new \lang\IllegalArgumentException('Expected an util.log.Appender, have '.\xp::typeOf($appender));
-    }
-    
+  public function addAppender(Appender $appender, $flag= LogLevel::ALL) {
     $appender->getLayout() || $appender->setLayout(self::$DEFAULT_LAYOUT);
     $this->_appenders[$flag][$appender->hashCode()]= $appender;
     return $appender;
