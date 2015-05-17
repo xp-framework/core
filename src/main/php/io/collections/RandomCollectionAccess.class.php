@@ -2,7 +2,6 @@
 
 use util\NoSuchElementException;
 
-
 /**
  * Random access to an I/O collection
  *

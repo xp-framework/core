@@ -6,9 +6,8 @@
  * The last recently used (that is, the longest time unchanged) 
  * element will be deleted when calling add().
  *
- * @test     xp://net.xp_framework.unittest.util.collections.LRUBufferTest
- * @test     xp://net.xp_framework.unittest.util.collections.GenericsTest
- * @purpose  Abstract data type
+ * @test  xp://net.xp_framework.unittest.util.collections.LRUBufferTest
+ * @test  xp://net.xp_framework.unittest.util.collections.GenericsTest
  */
 #[@generic(self= 'T')]
 class LRUBuffer extends \lang\Object {

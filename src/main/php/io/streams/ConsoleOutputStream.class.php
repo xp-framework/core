@@ -1,17 +1,13 @@
 <?php namespace io\streams;
 
-
-
 /**
  * OuputStream that writes to the console
  *
  * Usage:
- * <code>
- *   $out= new ConsoleOutputStream(STDOUT);
- *   $err= new ConsoleOutputStream(STDERR);
- * </code>
- *
- * @purpose  OuputStream implementation
+ * ```php
+ * $out= new ConsoleOutputStream(STDOUT);
+ * $err= new ConsoleOutputStream(STDERR);
+ * ```
  */
 class ConsoleOutputStream extends \lang\Object implements OutputStream {
   protected

@@ -1,20 +1,14 @@
-<?php namespace io\streams;/* This file is part of the XP framework's experiments
- *
- * $Id$
- */
+<?php namespace io\streams;
 
 use io\File;
-
 
 /**
  * OuputStream that writes to files
  *
- * @test     xp://net.xp_framework.unittest.io.streams.FileOutputStreamTest
- * @purpose  OuputStream implementation
+ * @test  xp://net.xp_framework.unittest.io.streams.FileOutputStreamTest
  */
 class FileOutputStream extends \lang\Object implements OutputStream {
-  protected
-    $file= null;
+  protected $file;
   
   /**
    * Constructor

@@ -1,11 +1,7 @@
 <?php namespace io\collections;
 
-
-
 /**
  * IO Collection interface
- *
- * @purpose  Interface
  */
 interface IOCollection extends IOElement {
 

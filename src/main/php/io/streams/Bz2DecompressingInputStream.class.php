@@ -1,13 +1,10 @@
 <?php namespace io\streams;
 
-
-
 /**
  * InputStream that decompresses 
  *
- * @ext      bz2
- * @test     xp://net.xp_framework.unittest.io.streams.Bz2DecompressingInputStreamTest
- * @purpose  InputStream implementation
+ * @ext   bz2
+ * @test  xp://net.xp_framework.unittest.io.streams.Bz2DecompressingInputStreamTest
  */
 class Bz2DecompressingInputStream extends \lang\Object implements InputStream {
   protected $in = null;

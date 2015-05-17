@@ -2,7 +2,6 @@
 
 use lang\Closeable;
 
-
 /**
  * A stream transfer copies from an input stream to an output stream
  *

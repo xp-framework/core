@@ -2,8 +2,6 @@
 
 /**
  * Writes data to an OutputStream
- *
- * @purpose  Interface
  */
 interface OutputStreamWriter {
 

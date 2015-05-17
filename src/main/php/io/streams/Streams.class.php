@@ -3,13 +3,11 @@
 use io\IOException;
 use io\FileNotFoundException;
 
-
 /**
  * Wraps I/O streams into PHP streams
  *
- * @test     xp://net.xp_framework.unittest.io.StreamWrappingTest
- * @see      php://streams
- * @purpose  Utility
+ * @test  xp://net.xp_framework.unittest.io.StreamWrappingTest
+ * @see   php://streams
  */
 abstract class Streams extends \lang\Object {
   protected static 

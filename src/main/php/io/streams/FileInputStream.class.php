@@ -1,20 +1,14 @@
-<?php namespace io\streams;/* This file is part of the XP framework's experiments
- *
- * $Id$
- */
+<?php namespace io\streams;
 
 use io\File;
-
 
 /**
  * InputStream that reads from a file
  *
  * @test     xp://net.xp_framework.unittest.io.streams.FileInputStreamTest
- * @purpose  InputStream implementation
  */
 class FileInputStream extends \lang\Object implements InputStream, Seekable {
-  protected
-    $file= null;
+  protected $file;
   
   /**
    * Constructor

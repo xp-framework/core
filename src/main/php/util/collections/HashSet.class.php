@@ -3,10 +3,9 @@
 /**
  * A set of objects
  *
- * @test     xp://net.xp_framework.unittest.util.collections.HashSetTest
- * @test     xp://net.xp_framework.unittest.util.collections.GenericsTest
- * @test     xp://net.xp_framework.unittest.util.collections.ArrayAccessTest
- * @purpose  Set implemenentation
+ * @test  xp://net.xp_framework.unittest.util.collections.HashSetTest
+ * @test  xp://net.xp_framework.unittest.util.collections.GenericsTest
+ * @test  xp://net.xp_framework.unittest.util.collections.ArrayAccessTest
  */
 #[@generic(self= 'T', implements= array('T'))]
 class HashSet extends \lang\Object implements Set {

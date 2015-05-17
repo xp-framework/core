@@ -3,9 +3,8 @@
 /**
  * OuputStream that deflates 
  *
- * @ext      zlib
- * @test     xp://net.xp_framework.unittest.io.streams.DeflatingOutputStreamTest
- * @purpose  OuputStream implementation
+ * @ext   zlib
+ * @test  xp://net.xp_framework.unittest.io.streams.DeflatingOutputStreamTest
  */
 class DeflatingOutputStream extends \lang\Object implements OutputStream {
   protected $out= null;

@@ -3,9 +3,8 @@
 /**
  * InputStream that inflates 
  *
- * @ext      zlib
- * @test     xp://net.xp_framework.unittest.io.streams.InflatingInputStreamTest
- * @purpose  InputStream implementation
+ * @ext   zlib
+ * @test  xp://net.xp_framework.unittest.io.streams.InflatingInputStreamTest
  */
 class InflatingInputStream extends \lang\Object implements InputStream {
   protected $in = null;

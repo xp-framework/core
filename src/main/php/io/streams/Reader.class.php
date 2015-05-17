@@ -2,7 +2,6 @@
 
 use lang\Closeable;
 
-
 /**
  * Serves as an abstract base class for all other readers. A reader
  * returns characters it reads from the underlying InputStream

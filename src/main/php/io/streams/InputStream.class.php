@@ -2,7 +2,6 @@
 
 /**
  * An InputStream can be read from
- *
  */
 interface InputStream extends \lang\Closeable {
 

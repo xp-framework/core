@@ -3,9 +3,8 @@
 /**
  * Archive collection
  *
- * @test     xp://net.xp_framework.unittest.io.collections.ArchiveCollectionTest
- * @see      xp://io.collections.IOCollection
- * @purpose  IOCollection implementation
+ * @test  xp://net.xp_framework.unittest.io.collections.ArchiveCollectionTest
+ * @see   xp://io.collections.IOCollection
  */
 class ArchiveCollection extends \lang\Object implements IOCollection {
   protected

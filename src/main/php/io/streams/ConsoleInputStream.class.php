@@ -1,16 +1,12 @@
 <?php namespace io\streams;
 
-
-
 /**
  * InputStream that reads from the console
  *
  * Usage:
- * <code>
- *   $in= new ConsoleInputStream(STDIN);
- * </code>
- *
- * @purpose  InputStream implementation
+ * ```php
+ * $in= new ConsoleInputStream(STDIN);
+ * ```
  */
 class ConsoleInputStream extends \lang\Object implements InputStream {
   protected
