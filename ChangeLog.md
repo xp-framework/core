@@ -3,6 +3,11 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed issue #74: Ambiguity in function types
+  (@thekid)
+
 ## 6.2.1 / 2015-05-14
 
 ### Features

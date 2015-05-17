@@ -1,6 +1,10 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\ArrayType;
+use lang\IllegalArgumentException;
+use lang\Primitive;
+use lang\Type;
+use lang\XPClass;
 
 /**
  * TestCase
@@ -11,10 +15,10 @@ class ArrayTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function typeForName() {
-    $this->assertInstanceOf('lang.ArrayType', \lang\Type::forName('string[]'));
+    $this->assertInstanceOf('lang.ArrayType', Type::forName('string[]'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function arrayTypeForName() {
     ArrayType::forName('string');
   }
@@ -26,22 +30,22 @@ class ArrayTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function newArrayTypeWithTypeInstance() {
-    $this->assertEquals(ArrayType::forName('int[]'), new ArrayType(\lang\Primitive::$INT));
+    $this->assertEquals(ArrayType::forName('int[]'), new ArrayType(Primitive::$INT));
   }
 
   #[@test]
   public function stringComponentType() {
-    $this->assertEquals(\lang\Primitive::$STRING, ArrayType::forName('string[]')->componentType());
+    $this->assertEquals(Primitive::$STRING, ArrayType::forName('string[]')->componentType());
   }
 
   #[@test]
   public function objectComponentType() {
-    $this->assertEquals(\lang\XPClass::forName('lang.Object'), ArrayType::forName('lang.Object[]')->componentType());
+    $this->assertEquals(XPClass::forName('lang.Object'), ArrayType::forName('lang.Object[]')->componentType());
   }
 
   #[@test]
   public function varComponentType() {
-    $this->assertEquals(\lang\Type::$VAR, ArrayType::forName('var[]')->componentType());
+    $this->assertEquals(Type::$VAR, ArrayType::forName('var[]')->componentType());
   }
 
   #[@test]
@@ -76,7 +80,7 @@ class ArrayTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function stringArrayNotAssignableFromIntType() {
-    $this->assertFalse(ArrayType::forName('string[]')->isAssignableFrom(\lang\Primitive::$INT));
+    $this->assertFalse(ArrayType::forName('string[]')->isAssignableFrom(Primitive::$INT));
   }
 
   #[@test]
@@ -119,7 +123,7 @@ class ArrayTypeTest extends \unittest\TestCase {
     $this->assertEquals($expected, ArrayType::forName('string[]')->newInstance($value));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values([
+  #[@test, @expect(IllegalArgumentException::class), @values([
   #  0, -1, 0.5, '', 'Test', new String('a'), true, false,
   #  [['key' => 'color', 'value' => 'price']]
   #])]
@@ -143,5 +147,10 @@ class ArrayTypeTest extends \unittest\TestCase {
   #])]
   public function cast_raises_exceptions_for_non_arrays($value) {
     ArrayType::forName('var[]')->cast($value);
+  }
+
+  #[@test]
+  public function instances_created_with_strings_and_instances_are_equal() {
+    $this->assertEquals(new ArrayType('string'), new ArrayType(Primitive::$STRING));
   }
 }

@@ -7,6 +7,7 @@
  * @test  xp://net.xp_framework.unittest.core.MapTypeTest
  */
 class MapType extends Type {
+  private $component;
 
   static function __static() { }
 
@@ -17,19 +18,21 @@ class MapType extends Type {
    */
   public function __construct($component) {
     if ($component instanceof Type) {
+      $this->component= $component;
       parent::__construct('[:'.$component->getName().']', []);
     } else {
+      $this->component= Type::forName($component);
       parent::__construct('[:'.$component.']', []);
     }
   }
 
   /**
-   * Gets this array's component type
+   * Gets this map's component type
    *
    * @return  lang.Type
    */
   public function componentType() {
-    return Type::forName(substr($this->name, 2, -1));
+    return $this->component;
   }
 
   /**
@@ -53,7 +56,7 @@ class MapType extends Type {
    * @return  string
    */
   public function literal() {
-    return '»'.$this->componentType()->literal();
+    return '»'.$this->component->literal();
   }
 
   /**
@@ -66,9 +69,8 @@ class MapType extends Type {
   public function isInstance($obj) {
     if (!is_array($obj)) return false;
 
-    $c= $this->componentType();
     foreach ($obj as $k => $element) {
-      if (is_int($k) || !$c->isInstance($element)) return false;
+      if (is_int($k) || !$this->component->isInstance($element)) return false;
     }
     return true;
   }
@@ -84,10 +86,9 @@ class MapType extends Type {
       return [];
     } else if (is_array($value)) {
       $self= [];
-      $c= $this->componentType();
       foreach ($value as $k => $element) {
         if (is_int($k)) throw new IllegalArgumentException('Cannot create instances of the '.$this->getName().' type from var[]');
-        $self[$k]= $c->cast($element);
+        $self[$k]= $this->component->cast($element);
       }
       return $self;
     } else {
@@ -106,10 +107,9 @@ class MapType extends Type {
     if (null === $value) {
       return null;
     } else if (is_array($value)) {
-      $c= $this->componentType();
       foreach ($value as $k => $element) {
         if (is_int($k)) throw new ClassCastException('Cannot cast to the '.$this->getName().' type from var[]');
-        $value[$k]= $c->cast($element);
+        $value[$k]= $this->component->cast($element);
       }
       return $value;
     } else {
@@ -125,9 +125,6 @@ class MapType extends Type {
    */
   public function isAssignableFrom($type) {
     $t= $type instanceof Type ? $type : Type::forName($type);
-    return $t instanceof self 
-      ? $t->componentType()->isAssignableFrom($this->componentType())
-      : false
-    ;
+    return $t instanceof self && $t->component->isAssignableFrom($this->component);
   }
 }

@@ -64,7 +64,7 @@ class MethodParametersTest extends \unittest\TestCase {
       'lang.reflect.Parameter<lang.XPClass<lang.Generic> c>',
       'lang.reflect.Parameter<lang.XPClass<lang.Generic> d>',
       'lang.reflect.Parameter<lang.ArrayType<var[]> e>',
-      'lang.reflect.Parameter<lang.FunctionType<function(string): int> f>',
+      'lang.reflect.Parameter<lang.FunctionType<(function(string): int)> f>',
       'lang.reflect.Parameter<lang.Primitive<bool> g= true>'
     ];
 

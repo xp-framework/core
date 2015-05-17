@@ -125,12 +125,52 @@ class TypeTest extends TestCase {
   }
 
   #[@test]
-  public function resourceType() {
+  public function resource_type() {
     $this->assertEquals(Type::$VAR, Type::forName('resource'));
   }
 
+  #[@test, @values([
+  #  'function(): var',
+  #  '(function(): var)'
+  #])]
+  public function function_type($decl) {
+    $this->assertEquals(new FunctionType([], Type::$VAR), Type::forName($decl));
+  }
+
+  #[@test, @values([
+  #  'function(): int[]',
+  #  '(function(): int[])'
+  #])]
+  public function a_function_returning_array_of_int($decl) {
+    $this->assertEquals(new FunctionType([], new ArrayType(Primitive::$INT)), Type::forName($decl));
+  }
+
+  #[@test, @values([
+  #  '[:function(): int]',
+  #  '[:(function(): int)]'
+  #])]
+  public function a_map_of_functions_returning_int($decl) {
+    $this->assertEquals(new MapType(new FunctionType([], Primitive::$INT)), Type::forName($decl));
+  }
+
+  #[@test]
+  public function an_array_of_functions_returning_int() {
+    $this->assertEquals(
+      new ArrayType(new FunctionType([], Primitive::$INT)),
+      Type::forName('(function(): int)[]')
+    );
+  }
+
+  #[@test]
+  public function an_array_of_arrays_of_functions_returning_int() {
+    $this->assertEquals(
+      new ArrayType(new ArrayType(new FunctionType([], Primitive::$INT))),
+      Type::forName('(function(): int)[][]')
+    );
+  }
+
   #[@test, @expect('lang.IllegalStateException'), @values([null, ''])]
-  public function forNameAndEmptyString($value) {
+  public function forName_raises_exception_when_given_empty($value) {
     Type::forName($value);
   }
 

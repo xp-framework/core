@@ -1,26 +1,31 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\TestCase;
+use lang\ArrayType;
+use lang\IllegalArgumentException;
 use lang\MapType;
+use lang\Primitive;
+use lang\Type;
+use lang\XPClass;
+use lang\types\Integer;
 
 /**
  * TestCase
  *
  * @see      xp://lang.MapType
  */
-class MapTypeTest extends TestCase {
+class MapTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function typeForName() {
-    $this->assertInstanceOf('lang.MapType', \lang\Type::forName('[:string]'));
+    $this->assertInstanceOf('lang.MapType', Type::forName('[:string]'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function mapTypeForPrimitive() {
     MapType::forName('string');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function mapTypeForArray() {
     MapType::forName('string[]');
   }
@@ -32,17 +37,17 @@ class MapTypeTest extends TestCase {
 
   #[@test]
   public function newMapTypeWithTypeInstance() {
-    $this->assertEquals(MapType::forName('[:int]'), new MapType(\lang\Primitive::$INT));
+    $this->assertEquals(MapType::forName('[:int]'), new MapType(Primitive::$INT));
   }
 
   #[@test]
   public function stringComponentType() {
-    $this->assertEquals(\lang\Primitive::$STRING, MapType::forName('[:string]')->componentType());
+    $this->assertEquals(Primitive::$STRING, MapType::forName('[:string]')->componentType());
   }
 
   #[@test]
   public function arrayComponentType() {
-    $this->assertEquals(\lang\ArrayType::forName('int[]'), MapType::forName('[:int[]]')->componentType());
+    $this->assertEquals(ArrayType::forName('int[]'), MapType::forName('[:int[]]')->componentType());
   }
 
   #[@test]
@@ -52,37 +57,37 @@ class MapTypeTest extends TestCase {
 
   #[@test]
   public function objectComponentType() {
-    $this->assertEquals(\lang\XPClass::forName('lang.Object'), MapType::forName('[:lang.Object]')->componentType());
+    $this->assertEquals(XPClass::forName('lang.Object'), MapType::forName('[:lang.Object]')->componentType());
   }
 
   #[@test]
   public function varComponentType() {
-    $this->assertEquals(\lang\Type::$VAR, MapType::forName('[:var]')->componentType());
+    $this->assertEquals(Type::$VAR, MapType::forName('[:var]')->componentType());
   }
 
   #[@test]
   public function isInstance() {
-    $this->assertInstanceOf(MapType::forName('[:string]'), array('greet' => 'Hello', 'whom' => 'World'));
+    $this->assertInstanceOf(MapType::forName('[:string]'), ['greet' => 'Hello', 'whom' => 'World']);
   }
 
   #[@test]
   public function isInstanceOfName() {
-    $this->assertInstanceOf('[:string]', array('greet' => 'Hello', 'whom' => 'World'));
+    $this->assertInstanceOf('[:string]', ['greet' => 'Hello', 'whom' => 'World']);
   }
 
   #[@test]
   public function intMapIsNotAnInstanceOfStringMap() {
-    $this->assertFalse(MapType::forName('[:string]')->isInstance(array('one' => 1, 'two' => 2)));
+    $this->assertFalse(MapType::forName('[:string]')->isInstance(['one' => 1, 'two' => 2]));
   }
 
   #[@test]
   public function varMap() {
-    $this->assertTrue(MapType::forName('[:var]')->isInstance(array('one' => 1, 'two' => 'Zwei', 'three' => new \lang\types\Integer(3))));
+    $this->assertTrue(MapType::forName('[:var]')->isInstance(['one' => 1, 'two' => 'Zwei', 'three' => new Integer(3)]));
   }
 
   #[@test]
   public function arrayIsNotAnInstanceOfVarMap() {
-    $this->assertFalse(MapType::forName('[:var]')->isInstance(array(1, 2, 3)));
+    $this->assertFalse(MapType::forName('[:var]')->isInstance([1, 2, 3]));
   }
 
   #[@test]
@@ -97,7 +102,7 @@ class MapTypeTest extends TestCase {
 
   #[@test]
   public function stringMapNotAssignableFromIntType() {
-    $this->assertFalse(MapType::forName('[:string]')->isAssignableFrom(\lang\Primitive::$INT));
+    $this->assertFalse(MapType::forName('[:string]')->isAssignableFrom(Primitive::$INT));
   }
 
   #[@test]
@@ -139,7 +144,7 @@ class MapTypeTest extends TestCase {
     $this->assertEquals($expected, MapType::forName('[:string]')->newInstance($value));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values([
+  #[@test, @expect(IllegalArgumentException::class), @values([
   #  0, -1, 0.5, '', 'Test', new String('a'), true, false,
   #  [[0, 1, 2]]
   #])]
@@ -162,5 +167,10 @@ class MapTypeTest extends TestCase {
   #])]
   public function cast_raises_exceptions_for_non_arrays($value) {
     MapType::forName('[:var]')->cast($value);
+  }
+
+  #[@test]
+  public function instances_created_with_strings_and_instances_are_equal() {
+    $this->assertEquals(new MapType('string'), new MapType(Primitive::$STRING));
   }
 }

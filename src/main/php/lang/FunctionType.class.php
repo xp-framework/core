@@ -22,7 +22,7 @@ class FunctionType extends Type {
     $this->signature= $signature;
     $this->returns= $returns;
     parent::__construct(sprintf(
-      'function(%s): %s',
+      '(function(%s): %s)',
       null === $signature ? '?' : implode(',', array_map(function($e) { return $e->getName(); }, $signature)),
       $this->returns->getName()
     ), null);
@@ -46,7 +46,7 @@ class FunctionType extends Type {
    * @throws  lang.IllegalArgumentException if the given name does not correspond to a function type
    */
   public static function forName($name) {
-    if (0 !== strncmp($name, 'function(', 9)) {
+      if (0 !== strncmp($name, 'function(', 9)) {
       throw new IllegalArgumentException('Not a function type: '.$name);
     }
 
