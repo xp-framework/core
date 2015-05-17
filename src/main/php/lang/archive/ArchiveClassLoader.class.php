@@ -6,17 +6,16 @@ use lang\ElementNotFoundException;
 /** 
  * Loads XP classes from a XAR (XP Archive)
  * 
- * Usage:
- * <code>
- *   $l= new ArchiveClassLoader(new Archive(new File('soap.xar')));
- *   try {
- *     $class= $l->loadClass($argv[1]);
- *   } catch (ClassNotFoundException $e) {
- *     $e->printStackTrace();
- *     exit(-1);
- *   }
+ * ```php
+ * $l= new ArchiveClassLoader(new Archive(new File('classes.xar')));
+ * try {
+ *   $class= $l->loadClass($argv[1]);
+ * } catch (ClassNotFoundException $e) {
+ *   $e->printStackTrace();
+ *   exit(-1);
+ * }
  * 
- *   $obj= $class->newInstance();
+ * $obj= $class->newInstance();
  * </code>
  *
  * @test  xp://net.xp_framework.unittest.core.ArchiveClassLoaderTest

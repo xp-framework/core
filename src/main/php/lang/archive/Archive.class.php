@@ -4,7 +4,6 @@ use lang\ElementNotFoundException;
 use io\EncapsedStream;
 use io\FileUtil;
 
-
 define('ARCHIVE_READ',             0x0000);
 define('ARCHIVE_CREATE',           0x0001);
 define('ARCHIVE_HEADER_SIZE',      0x0100);
