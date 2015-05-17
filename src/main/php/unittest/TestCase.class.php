@@ -5,7 +5,7 @@ use util\Objects;
 /**
  * Test case is the base class for all unittests
  *
- * @see  php://assert
+ * @see   php://assert
  */
 class TestCase extends \lang\Object {
   public $name= '';

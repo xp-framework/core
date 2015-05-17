@@ -1,7 +1,5 @@
 <?php namespace unittest;
 
-
-
 /**
  * Test case variation
  *

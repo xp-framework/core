@@ -1,11 +1,9 @@
 <?php namespace unittest;
 
-
-
 /**
  * Indicates a test failed
  *
- * @see      xp://unittest.TestFailure
+ * @see   xp://unittest.TestFailure
  */
 class TestAssertionFailed extends \lang\Object implements TestFailure {
   public

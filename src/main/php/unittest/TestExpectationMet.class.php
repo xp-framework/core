@@ -1,11 +1,9 @@
 <?php namespace unittest;
 
-
-
 /**
  * Indicates a test was successful
  *
- * @see      xp://unittest.TestSuccess
+ * @see   xp://unittest.TestSuccess
  */
 class TestExpectationMet extends \lang\Object implements TestSuccess {
   public

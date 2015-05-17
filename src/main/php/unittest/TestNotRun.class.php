@@ -1,11 +1,9 @@
 <?php namespace unittest;
 
-
-
 /**
  * Indicates a test was ignored
  *
- * @see      xp://unittest.TestSkipped
+ * @see   xp://unittest.TestSkipped
  */
 class TestNotRun extends \lang\Object implements TestSkipped {
   public
