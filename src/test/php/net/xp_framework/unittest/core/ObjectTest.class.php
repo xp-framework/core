@@ -60,7 +60,8 @@ class ObjectTest extends \unittest\TestCase {
   public function an_object_is_not_equal_to_a_primitive() {
     $this->assertFalse((new Object())->equals(0));
   }
-  
+
+  /** @deprecated */
   #[@test]
   public function getClassName_returns_fully_qualified_class_name() {
     $this->assertEquals('lang.Object', (new Object())->getClassName());

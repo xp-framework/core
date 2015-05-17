@@ -7,8 +7,6 @@ use lang\Throwable;
 
 /**
  * Test the XP exception mechanism
- *
- * @purpose  Testcase
  */
 class ExceptionsTest extends TestCase {
 
@@ -91,6 +89,7 @@ class ExceptionsTest extends TestCase {
     $this->assertEquals(\lang\XPClass::forName('lang.Throwable'), (new Throwable('Test'))->getClass());
   }
 
+  /** @deprecated */
   #[@test]
   public function classNameMethod() {
     $this->assertEquals('lang.Throwable', (new Throwable('Test'))->getClassName());

@@ -4,7 +4,6 @@ use lang\XPClass;
 
 /**
  * Tests nameof() functionality
- *
  */
 class NameOfTest extends \unittest\TestCase {
 
