@@ -167,6 +167,8 @@ class Type extends Object {
       return self::$VOID;
     } else if ('array' === $type) {
       return self::$ARRAY;
+    } else if ('callable' === $type) {
+      return self::$CALLABLE;
     } else if (0 === substr_compare($type, 'function(', 0, 9)) {
       return FunctionType::forName($type);
     } else if (0 === substr_compare($type, '[]', -2)) {

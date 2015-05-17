@@ -48,6 +48,16 @@ class TypeTest extends TestCase {
   }
 
   #[@test]
+  public function arrayTypeUnion() {
+    $this->assertEquals(Type::$ARRAY, Type::forName('array'));
+  }
+
+  #[@test]
+  public function callableTypeUnion() {
+    $this->assertEquals(Type::$CALLABLE, Type::forName('callable'));
+  }
+
+  #[@test]
   public function arrayOfString() {
     $this->assertEquals(ArrayType::forName('string[]'), Type::forName('string[]'));
   }
