@@ -5,7 +5,7 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
-* Fixed `is()` to support function typs
+* Fixed `is()` to support function types correctly
   (@thekid)
 * Fixed `Objects::hashOf()` raising an exception when invoked w/ functions
   (@thekid)

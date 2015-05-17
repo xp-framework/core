@@ -268,4 +268,19 @@ class IsTest extends \unittest\TestCase {
   public function function_type() {
     $this->assertTrue(is('function(): var', function() { }));
   }
+
+  #[@test]
+  public function function_type_returning_array() {
+    $this->assertTrue(is('function(): var[]', function() { }));
+  }
+
+  #[@test]
+  public function braced_function_type() {
+    $this->assertTrue(is('(function(): var)', function() { }));
+  }
+
+  #[@test]
+  public function array_of_function_type() {
+    $this->assertTrue(is('(function(): var)[]', [function() { }]));
+  }
 }
