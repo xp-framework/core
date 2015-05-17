@@ -3,8 +3,7 @@
 /**
  * Server Protocol
  *
- * @see      xp://peer.server.Server#setProtocol
- * @purpose  Interface
+ * @see   xp://peer.server.Server#setProtocol
  */
 interface ServerProtocol {
 
