@@ -1,5 +1,8 @@
 <?php namespace lang\types;
 
+use lang\IndexOutOfBoundsException;
+use lang\IllegalArgumentException;
+
 /**
  * Represents a "numeric" array
  *
@@ -67,7 +70,7 @@ class ArrayList extends \lang\Object implements \ArrayAccess, \IteratorAggregate
    */
   public function offsetGet($offset) {
     if ($offset >= $this->length || $offset < 0) {
-      raise('lang.IndexOutOfBoundsException', 'Offset '.$offset.' out of bounds');
+      throw new IndexOutOfBoundsException('Offset '.$offset.' out of bounds');
     }
     return $this->values[$offset];
   }
@@ -81,11 +84,11 @@ class ArrayList extends \lang\Object implements \ArrayAccess, \IteratorAggregate
    */
   public function offsetSet($offset, $value) {
     if (!is_int($offset)) {
-      throw new \lang\IllegalArgumentException('Incorrect type '.gettype($offset).' for index');
+      throw new IllegalArgumentException('Incorrect type '.gettype($offset).' for index');
     }
     
     if ($offset >= $this->length || $offset < 0) {
-      raise('lang.IndexOutOfBoundsException', 'Offset '.$offset.' out of bounds');
+      throw new IndexOutOfBoundsException('Offset '.$offset.' out of bounds');
     }
     $this->values[$offset]= $value;
   }
@@ -106,7 +109,7 @@ class ArrayList extends \lang\Object implements \ArrayAccess, \IteratorAggregate
    * @param   int offset
    */
   public function offsetUnset($offset) {
-    throw new \lang\IllegalArgumentException('Cannot remove from immutable list');
+    throw new IllegalArgumentException('Cannot remove from immutable list');
   }
 
   /**

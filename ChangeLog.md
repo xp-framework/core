@@ -3,8 +3,70 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.2.2 / 2015-05-17
+
+### Bugfixes
+
+* Fixed class detail parsing for function types
+  (@thekid)
+* Fixed Type::forName() to also work for the `callable` type union.
+  (@thekid)
+* Fixed issue #74: Ambiguity in function types
+  (@thekid)
+
+## 6.2.1 / 2015-05-14
+
+### Features
+
+* Merged xp-framework/core#73: Optimized reflection details for exception
+  class being initialized multiple times.
+  (@thekid, @kiesel)
+
+## 6.2.0 / 2015-05-05
+
 ### Heads up!
 
+* Changed `lang.XPClass` to load the reflection instance lazily. This way,
+  we can defer class loading until we actually access a details requiring
+  the reflection instance; and thus speed up iterating a packages' classes,
+  for instance.
+  (@thekid)
+* Deprecated `null()` core functionality and rewrote codebase to do
+  without it. See pull request xp-framework/core#70
+  (@thekid)
+* Deprecated `delete()` core functionality - use the `unset` language
+  construct instead. See pull request xp-framework/core#69
+  (@thekid)
+
+### Features
+
+* Merged xp-framework/core#71: Unicode unittest icons - @thekid
+
+## 6.1.1 / 2015-04-25
+
+### Bugfixes
+
+* Fixed thrown exceptions not appearing in `xp -r` output for interface
+  (@thekid)
+
+### Features
+
+* Replaced all occurrences of `create_function()` with real closures
+  (@thekid)
+* Added support for `/** @type [type] */` for fields.
+  (@thekid)
+
+## 6.1.0 / 2015-04-06
+
+### Heads up!
+
+* Deprecated uses() core functionality - use the `use` statement and PHP's
+  namespaces instead. This also deprecates classes in the global namespace
+  and the "package"-classes introduced in xp-framework/rfc#37.
+  (@thekid)
+* Deprecated raise() core functionality - use the `throw` statement
+  instead, it also uses lazy classloading for namespaced classes.
+  (@thekid)
 * Removed deprecated support for "mixed", "char", "*", "array<T>" and
   "array<string, string>"' in Type::forName(), see xp-framework/core#64
   (@thekid)

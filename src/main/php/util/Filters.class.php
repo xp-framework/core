@@ -1,6 +1,7 @@
 <?php namespace util;
 
 use lang\IllegalArgumentException;
+use lang\IllegalStateException;
 
 /**
  * Instances of this class act on a list of given filters, accepting
@@ -51,10 +52,10 @@ class Filters extends \lang\Object implements Filter {
    * @throws  lang.IllegalArgumentException if accept is neither a closure nor NULL
    */
   #[@generic(params= 'util.Filter<T>[]')]
-  public function __construct(array $list= array(), $accept= null) {
+  public function __construct(array $list= [], $accept= null) {
     $this->list= $list;
     if (null === $accept) {
-      $this->accept= \xp::null();
+      $this->accept= function($list, $e) { throw new IllegalStateException('No accepting closure set'); };
     } else if ($accept instanceof \Closure) {
       $this->accept= $accept;
     } else {

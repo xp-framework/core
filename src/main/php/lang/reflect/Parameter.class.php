@@ -1,5 +1,7 @@
 <?php namespace lang\reflect;
 
+use lang\ElementNotFoundException;
+
 /**
  * Represents a method's parameter
  *
@@ -167,11 +169,10 @@ class Parameter extends \lang\Object {
       !isset($details[DETAIL_TARGET_ANNO][$n]) || !($key 
         ? array_key_exists($key, (array)@$details[DETAIL_TARGET_ANNO][$n][$name]) 
         : array_key_exists($name, (array)@$details[DETAIL_TARGET_ANNO][$n])
-      ) 
-    ) return raise(
-      'lang.ElementNotFoundException', 
-      'Annotation "'.$name.($key ? '.'.$key : '').'" does not exist'
-    );
+      )
+    ) {
+      throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
+    }
 
     return ($key 
       ? $details[DETAIL_TARGET_ANNO][$n][$name][$key] 

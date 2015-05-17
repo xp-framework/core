@@ -1,5 +1,7 @@
 <?php namespace util;
 
+use lang\ElementNotFoundException;
+
 /**
  * Expands variables inside property files.
  *
@@ -15,7 +17,7 @@ class PropertyExpansion extends \lang\Enum {
     $this->impl['env']= function($name, $default= null) {
       if (false === ($value= getenv($name))) {
         if (null === ($value= $default)) {
-          raise("lang.ElementNotFoundException", "Environment variable ".$name." doesn\'t exist");
+          throw new ElementNotFoundException('Environment variable "'.$name.'" doesn\'t exist');
         }
       }
       return $value;

@@ -18,19 +18,34 @@ class CastingTest extends TestCase implements Runnable {
 
   #[@test]
   public function newinstance() {
-    $runnable= newinstance('lang.Runnable', [], array(
+    $runnable= newinstance('lang.Runnable', [], [
       'run' => function() { return 'Test'; }
-    ));
+    ]);
     $this->assertEquals('Test', cast($runnable, 'lang.Runnable')->run());
   }
 
-  #[@test]
+  #[@test, @expect('lang.ClassCastException')]
   public function null() {
-    $this->assertEquals(\xp::null(), cast(NULL, 'lang.Object'));
+    cast(null, 'lang.Object');
+  }
+
+  #[@test, @expect('lang.ClassCastException')]
+  public function is_nullsafe_per_default() {
+    cast(null, 'lang.Runnable')->run();
+  }
+
+  #[@test]
+  public function passig_null_allowed_when_nullsafe_set_to_false() {
+    $this->assertNull(cast(null, 'lang.Object', false));
   }
 
   #[@test]
   public function thisClass() {
+    $this->assertTrue($this === cast($this, $this->getClass()));
+  }
+
+  #[@test]
+  public function thisClassName() {
     $this->assertTrue($this === cast($this, nameof($this)));
   }
 
@@ -64,17 +79,12 @@ class CastingTest extends TestCase implements Runnable {
     cast(new \lang\Object(), 'lang.types.String');
   }
 
-  #[@test, @expect('lang.ClassNotFoundException')]
+  #[@test, @expect('lang.ClassCastException')]
   public function nonExistant() {
     cast($this, '@@NON_EXISTANT_CLASS@@');
   }
 
-  #[@test, @expect('lang.NullPointerException')]
-  public function npe() {
-    cast(NULL, 'lang.Runnable')->run();
-  }
-
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect('lang.ClassCastException')]
   public function primitive() {
     cast('primitive', 'lang.Object');
   }

@@ -100,7 +100,7 @@ final class ClassLoader extends Object implements IClassLoader {
     } else if (is_file($element)) {
       return self::registerLoader(ArchiveClassLoader::instanceFor($element), $before);
     }
-    raise('lang.ElementNotFoundException', 'Element "'.$element.'" not found');
+    throw new ElementNotFoundException('Element "'.$element.'" not found');
   }
   
   /**
@@ -138,7 +138,7 @@ final class ClassLoader extends Object implements IClassLoader {
   public static function declareModule($l) {
     $moduleInfo= $l->getResource('module.xp');
     if (!preg_match('/module ([a-z_\/\.-]+)(.*){/', $moduleInfo, $m)) {
-      raise('lang.ElementNotFoundException', 'Missing or malformed module-info in '.$l->toString());
+      throw new ElementNotFoundException('Missing or malformed module-info in '.$l->toString());
     }
 
     $decl= strtr($m[1], '.-/', '___').'Module';
@@ -356,7 +356,7 @@ final class ClassLoader extends Object implements IClassLoader {
       $bytes
     ));
     $cl= $dyn->loadClass($spec);
-    $functions && $cl->_reflect->setStaticPropertyValue('__func', $functions);
+    $functions && $cl->reflect()->setStaticPropertyValue('__func', $functions);
     return $cl;
   }
 
@@ -479,7 +479,7 @@ final class ClassLoader extends Object implements IClassLoader {
     foreach (self::$delegates as $delegate) {
       if ($delegate->providesClass($class)) return $delegate;
     }
-    return \xp::null();
+    return null;
   }
 
   /**
@@ -492,7 +492,7 @@ final class ClassLoader extends Object implements IClassLoader {
     foreach (self::$delegates as $delegate) {
       if ($delegate->providesUri($uri)) return $delegate;
     }
-    return \xp::null();
+    return null;
   }
 
   /**
@@ -505,7 +505,7 @@ final class ClassLoader extends Object implements IClassLoader {
     foreach (self::$delegates as $delegate) {
       if ($delegate->providesPackage($package)) return $delegate;
     }
-    return \xp::null();
+    return null;
   }    
   
   /**
@@ -529,7 +529,7 @@ final class ClassLoader extends Object implements IClassLoader {
     foreach (self::$delegates as $delegate) {
       if ($delegate->providesResource($name)) return $delegate;
     }
-    return \xp::null();
+    return null;
   }    
 
   /**
@@ -543,7 +543,7 @@ final class ClassLoader extends Object implements IClassLoader {
     foreach (self::$delegates as $delegate) {
       if ($delegate->providesResource($string)) return $delegate->getResource($string);
     }
-    raise('lang.ElementNotFoundException', sprintf(
+    throw new ElementNotFoundException(sprintf(
       'No classloader provides resource "%s" {%s}',
       $string,
       \xp::stringOf(self::getLoaders())
@@ -561,7 +561,7 @@ final class ClassLoader extends Object implements IClassLoader {
     foreach (self::$delegates as $delegate) {
       if ($delegate->providesResource($string)) return $delegate->getResourceAsStream($string);
     }
-    raise('lang.ElementNotFoundException', sprintf(
+    throw new ElementNotFoundException(sprintf(
       'No classloader provides resource "%s" {%s}',
       $string,
       \xp::stringOf(self::getLoaders())

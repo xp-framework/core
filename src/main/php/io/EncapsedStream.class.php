@@ -1,6 +1,6 @@
 <?php namespace io;
 
-
+use lang\MethodNotImplementedException;
 
 /**
  * Encapsulated / embedded stream
@@ -84,7 +84,7 @@ class EncapsedStream extends Stream {
    * @return  bool
    */
   public function truncate($size= 0) {
-    raise('lang.MethodNotImplementedException', 'Truncation not supported');
+    throw new MethodNotImplementedException('Truncation not supported');
   }
   
   /**

@@ -166,17 +166,22 @@ class Type extends Object {
     } else if ('void' === $type) {
       return self::$VOID;
     } else if ('array' === $type) {
-      return Type::$ARRAY;
-    } else if (0 === substr_compare($type, '[]', -2)) {
-      return new ArrayType(substr($type, 0, -2));
-    } else if (0 === substr_compare($type, '[:', 0, 2)) {
-      return new MapType(substr($type, 2, -1));
+      return self::$ARRAY;
+    } else if ('callable' === $type) {
+      return self::$CALLABLE;
     } else if (0 === substr_compare($type, 'function(', 0, 9)) {
       return FunctionType::forName($type);
+    } else if (0 === substr_compare($type, '[]', -2)) {
+      return new ArrayType(self::forName(substr($type, 0, -2)));
+    } else if (0 === substr_compare($type, '[:', 0, 2)) {
+      return new MapType(self::forName(substr($type, 2, -1)));
+    } else if (0 === substr_compare($type, '(function(', 0, 10)) {
+      return FunctionType::forName(substr($type, 1, -1));
     } else if (0 === substr_compare($type, '*', -1)) {
-      return new ArrayType(substr($type, 0, -1));
+      return new ArrayType(self::forName(substr($type, 0, -1)));
     } else if (false === ($p= strpos($type, '<'))) {
-      return strstr($type, '.') ? XPClass::forName($type) : new XPClass($type);
+      $normalized= strtr($type, '\\', '.');
+      return strstr($normalized, '.') ? XPClass::forName($normalized) : new XPClass($normalized);
     } else if (strstr($type, '?')) {
       return WildcardType::forName($type);
     } else {
@@ -226,7 +231,7 @@ class Type extends Object {
    */
   public function cast($value) {
     if (self::$VAR === $this) return $value;
-    raise('lang.ClassCastException', 'Cannot cast '.\xp::typeOf($value).' to the void type');
+    throw new ClassCastException('Cannot cast '.\xp::typeOf($value).' to the void type');
   }
 
   /**

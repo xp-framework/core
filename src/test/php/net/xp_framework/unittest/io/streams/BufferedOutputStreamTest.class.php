@@ -57,7 +57,7 @@ class BufferedOutputStreamTest extends \unittest\TestCase {
   #[@test]
   public function flushedOnDestruction() {
     $this->out->write('Hello');
-    delete($this->out);
+    unset($this->out);
     $this->assertEquals('Hello', $this->mem->getBytes());
   }
 }

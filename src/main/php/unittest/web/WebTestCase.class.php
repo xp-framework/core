@@ -140,7 +140,7 @@ abstract class WebTestCase extends TestCase {
         $this->cookies[$this->conn->getUrl()->getHost()][$cookie->getName()]= $cookie;
       }
     } catch (\lang\XPException $e) {
-      $this->response= \xp::null();
+      $this->response= null;
       $this->fail($relative, $e, null);
     }
   }

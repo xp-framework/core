@@ -1,5 +1,7 @@
 <?php namespace lang\types;
 
+use lang\MethodNotImplementedException;
+
 /**
  * The abstract class Number is the superclass of classes representing
  * numbers
@@ -30,7 +32,7 @@ abstract class Number extends \lang\Object {
    * @throws  lang.IllegalArgumentException
    */
   public static function valueOf($value) {
-    raise('lang.MethodNotImplementedException', 'Abstract base class', __METHOD__);
+    throw new MethodNotImplementedException('Abstract base class', __METHOD__);
   }
 
   /**

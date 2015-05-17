@@ -52,7 +52,7 @@ class XmlTestListener extends \lang\Object implements TestListener {
    */
   private function lineFor(\lang\XPClass $class, $methodname) {
     try {
-      return $class->_reflect->getMethod($methodname)->getStartLine();
+      return $class->reflect()->getMethod($methodname)->getStartLine();
     } catch (\Exception $ignored) {
       return 0;
     }

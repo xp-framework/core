@@ -48,7 +48,23 @@ class Console extends \lang\Object {
       self::$out= new StringWriter(new ConsoleOutputStream(STDOUT));
       self::$err= new StringWriter(new ConsoleOutputStream(STDERR));
     } else {
-      self::$in= self::$out= self::$err= \xp::null();
+      self::$in= newinstance('io.streams.InputStreamReader', [null], '{
+        public function __construct($in) { }
+        public function getStream() { return null; }
+        public function raise() { throw new \lang\IllegalStateException("There is no console present"); }
+        public function read($count= 8192) { $this->raise(); }
+        public function readLine() { $this->raise(); }
+      }');
+      self::$out= self::$err= newinstance('io.streams.OutputStreamWriter', [null], '{
+        public function __construct($out) { }
+        public function getStream() { return null; }
+        public function flush() { $this->raise(); }
+        public function raise() { throw new \lang\IllegalStateException("There is no console present"); }
+        public function write() { $this->raise(); }
+        public function writeLine() { $this->raise(); }
+        public function writef() { $this->raise(); }
+        public function writeLinef() { $this->raise(); }
+      }');
     }
   }
 

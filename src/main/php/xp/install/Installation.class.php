@@ -1,6 +1,7 @@
 <?php namespace xp\install;
 
 use io\Folder;
+use lang\ElementNotFoundException;
 
 /**
  * Installation
@@ -39,7 +40,7 @@ class Installation extends \lang\Object {
     foreach ($this->cl as $loader) {
       if ($loader->providesResource($name)) return $loader->getResource($name);
     }
-    raise('lang.ElementNotFoundException', $name);
+    throw new ElementNotFoundException($name);
   }
   
   /**

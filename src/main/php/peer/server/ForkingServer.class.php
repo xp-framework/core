@@ -5,9 +5,8 @@ use lang\SystemException;
 /**
  * Forking TCP/IP Server
  *
- * @ext      pcntl
- * @see      xp://peer.server.Server
- * @purpose  TCP/IP Server
+ * @ext   pcntl
+ * @see   xp://peer.server.Server
  */
 class ForkingServer extends Server {
   
@@ -56,7 +55,7 @@ class ForkingServer extends Server {
 
         // Close own copy of message socket
         $m->close();
-        delete($m);
+        unset($m);
         
         // Use waitpid w/ NOHANG to avoid zombies hanging around
         while (pcntl_waitpid(-1, $status, WNOHANG)) { }

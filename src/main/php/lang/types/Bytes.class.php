@@ -1,5 +1,7 @@
 <?php namespace lang\types;
 
+use lang\IndexOutOfBoundsException;
+
 /**
  * Represents a list of bytes
  *
@@ -74,7 +76,7 @@ class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
    */
   public function offsetGet($offset) {
     if ($offset >= $this->size || $offset < 0) {
-      raise('lang.IndexOutOfBoundsException', 'Offset '.$offset.' out of bounds');
+      throw new IndexOutOfBoundsException('Offset '.$offset.' out of bounds');
     }
     $n= ord($this->buffer{$offset});
     return new Byte($n < 128 ? $n : $n - 256);
@@ -93,7 +95,7 @@ class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
       $this->buffer.= $this->asByte($value);
       $this->size++;
     } else if ($offset >= $this->size || $offset < 0) {
-      raise('lang.IndexOutOfBoundsException', 'Offset '.$offset.' out of bounds');
+      throw new IndexOutOfBoundsException('Offset '.$offset.' out of bounds');
     } else {
       $this->buffer{$offset}= $this->asByte($value);
     }
@@ -117,7 +119,7 @@ class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
    */
   public function offsetUnset($offset) {
     if ($offset >= $this->size || $offset < 0) {
-      raise('lang.IndexOutOfBoundsException', 'Offset '.$offset.' out of bounds');
+      throw new IndexOutOfBoundsException('Offset '.$offset.' out of bounds');
     }
     $this->buffer= (
       substr($this->buffer, 0, $offset).

@@ -530,7 +530,7 @@ class URL extends \lang\Object {
    */
   protected function capitalizeLettersInEscapeSequence($string) {
     return preg_replace_callback('/%[\w]{2}/',
-      create_function('$matches','return strtoupper($matches[0]);'),
+      function($matches) { return strtoupper($matches[0]); },
       $string
     );
   }
@@ -563,8 +563,8 @@ class URL extends \lang\Object {
     $unreserved[]= dechex(ord( '~' ));
 
     return preg_replace_callback( 
-      array_map(create_function('$str', 'return "/%".strtoupper($str)."/x";'), $unreserved), 
-      create_function('$matches', 'return chr(hexdec($matches[0]));'),
+      array_map(function($str) { return '/%'.strtoupper($str).'/x'; }, $unreserved), 
+      function($matches) { return chr(hexdec($matches[0])); },
       $string
     );
   }

@@ -1,7 +1,5 @@
 <?php namespace math;
 
-
-
 /**
  * A big integer
  *

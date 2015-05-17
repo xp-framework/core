@@ -73,10 +73,10 @@ class TestResult extends \lang\Object {
    */
   public function outcomeOf(TestCase $test) {
     $key= $test->hashCode();
-    foreach (array($this->succeeded, $this->failed, $this->skipped) as $lookup) {
+    foreach ([$this->succeeded, $this->failed, $this->skipped] as $lookup) {
       if (isset($lookup[$key])) return $lookup[$key];
     }
-    return \xp::null();
+    return null;
   }
 
   /**

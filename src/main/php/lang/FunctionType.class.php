@@ -22,7 +22,7 @@ class FunctionType extends Type {
     $this->signature= $signature;
     $this->returns= $returns;
     parent::__construct(sprintf(
-      'function(%s): %s',
+      '(function(%s): %s)',
       null === $signature ? '?' : implode(',', array_map(function($e) { return $e->getName(); }, $signature)),
       $this->returns->getName()
     ), null);
@@ -46,7 +46,7 @@ class FunctionType extends Type {
    * @throws  lang.IllegalArgumentException if the given name does not correspond to a function type
    */
   public static function forName($name) {
-    if (0 !== strncmp($name, 'function(', 9)) {
+      if (0 !== strncmp($name, 'function(', 9)) {
       throw new IllegalArgumentException('Not a function type: '.$name);
     }
 
@@ -263,7 +263,7 @@ class FunctionType extends Type {
    * @return  var
    */
   public function newInstance($value= null) {
-    return $this->verified($value, function($m) use($value) { raise('lang.IllegalArgumentException', sprintf(
+    return $this->verified($value, function($m) use($value) { throw new IllegalArgumentException(sprintf(
       'Cannot create instances of the %s type from %s: %s',
       $this->getName(),
       \xp::typeOf($value),
@@ -279,7 +279,7 @@ class FunctionType extends Type {
    * @throws  lang.ClassCastException
    */
   public function cast($value) {
-    return null === $value ? null : $this->verified($value, function($m) use($value) { raise('lang.ClassCastException', sprintf(
+    return null === $value ? null : $this->verified($value, function($m) use($value) { throw new ClassCastException(sprintf(
       'Cannot cast %s to the %s type: %s',
       \xp::typeOf($value),
       $this->getName(),

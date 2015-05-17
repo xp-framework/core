@@ -17,25 +17,6 @@ class Throwable extends \Exception implements Generic { use \__xp;
     $cause    = null,
     $message  = '',
     $trace    = [];
-  
-  static function __static() {
-  
-    // Workaround for missing detail information about return types in
-    // builtin classes.
-    \xp::$meta['php.Exception']= [
-      'class' => [4 => null, []],
-      0 => [],
-      1 => [
-        'getMessage'       => [1 => [], 'string', [], null, []],
-        'getCode'          => [1 => [], 'int', [], null, []],
-        'getFile'          => [1 => [], 'string', [], null, []],
-        'getLine'          => [1 => [], 'int', [], null, []],
-        'getTrace'         => [1 => [], 'var[]', [], null, []],
-        'getPrevious'      => [1 => [], 'lang.Throwable', [], null, []],
-        'getTraceAsString' => [1 => [], 'string', [], null, []]
-      ]
-    ];
-  }
 
   /**
    * Constructor

@@ -50,7 +50,7 @@ abstract class Enum extends Object {
       throw new IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
     }
     try {
-      $prop= $class->_reflect->getStaticPropertyValue($name);
+      $prop= $class->reflect()->getStaticPropertyValue($name);
       if ($class->isInstance($prop)) return $prop;
     } catch (\ReflectionException $e) {
       throw new IllegalArgumentException($e->getMessage());
@@ -70,7 +70,7 @@ abstract class Enum extends Object {
       throw new IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
     }
     $r= [];
-    foreach ($class->_reflect->getStaticProperties() as $prop) {
+    foreach ($class->reflect()->getStaticProperties() as $prop) {
       $class->isInstance($prop) && $r[]= $prop;
     }
     return $r;
@@ -98,7 +98,7 @@ abstract class Enum extends Object {
    * @throws  lang.CloneNotSupportedException
    */
   public final function __clone() {
-    raise('lang.CloneNotSupportedException', 'Enums cannot be cloned');
+    throw new CloneNotSupportedException('Enums cannot be cloned');
   }
 
   /**

@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use unittest\TestCase;
-
+use lang\MethodNotImplementedException;
 
 /**
  * TestCase for resolving classes from URIs using the `loadUri()` method.
@@ -18,7 +18,7 @@ abstract class ClassFromUriTest extends TestCase {
    * @return  net.xp_framework.unittest.reflection.ClassFromUriBase
    */
   protected static function baseImpl() {
-    raise('lang.MethodNotImplementedException', 'Implement in subclass!', __FUNCTION__);
+    throw new MethodNotImplementedException('Implement in subclass!', __FUNCTION__);
   }
 
   /**

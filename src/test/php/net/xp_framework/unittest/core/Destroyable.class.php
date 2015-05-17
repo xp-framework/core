@@ -6,14 +6,14 @@
  * @see      xp://net.xp_framework.unittest.core.DestructorTest
  */
 class Destroyable extends \lang\Object {
-  public $callback= NULL;
+  protected $callback;
 
   /**
-   * Set Callback
+   * Creates an instance which calls the given callback when destroyed.
    *
-   * @param   net.xp_framework.unittest.core.DestructionCallback callback
+   * @param  function(lang.Generic): void $callback
    */
-  public function setCallback($callback) {
+  public function __construct($callback) {
     $this->callback= $callback;
   }
 
@@ -21,6 +21,7 @@ class Destroyable extends \lang\Object {
    * Destructor
    */
   public function __destruct() {
-    $this->callback->onDestruction($this);
+    $f= $this->callback;
+    $f($this);
   }
 }

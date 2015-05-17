@@ -3,6 +3,7 @@
 use lang\IClassLoader;
 use lang\Object;
 use lang\ElementNotFoundException;
+use lang\MethodNotImplementedException;
 
 /**
  * A class loader dummy providing elements supplied to its constructor.
@@ -53,6 +54,6 @@ class LoaderProviding extends Object implements IClassLoader {
 
   /** @return io.Stream */
   public function getResourceAsStream($name) {
-    raise('lang.MethodNotImplementedException', __METHOD__);
+    throw new MethodNotImplementedException(__METHOD__);
   }
 }

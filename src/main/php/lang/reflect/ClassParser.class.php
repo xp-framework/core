@@ -3,6 +3,8 @@
 use lang\XPClass;
 use lang\IllegalStateException;
 use lang\IllegalAccessException;
+use lang\ElementNotFoundException;
+use lang\ClassFormatException;
 
 /**
  * Parses classes for class meta information (apidoc, return and 
@@ -111,7 +113,7 @@ class ClassParser extends \lang\Object {
         } else if ('(' === $tokens[$i]) {
           // Skip
         } else if (',' === $tokens[$i]) {
-          $element || raise('lang.IllegalStateException', 'Parse error: Malformed array - no value before comma');
+          if (!$element) throw new IllegalStateException('Parse error: Malformed array - no value before comma');
           $value[$key]= $element[0];
           $element= null;
           $key= sizeof($value);
@@ -121,7 +123,7 @@ class ClassParser extends \lang\Object {
         } else if (T_WHITESPACE === $tokens[$i][0]) {
           continue;
         } else {
-          $element && raise('lang.IllegalStateException', 'Parse error: Malformed array - missing comma');
+          if ($element) throw new IllegalStateException('Parse error: Malformed array - missing comma');
           $element= [$this->valueOf($tokens, $i, $context, $imports)];
         }
       }
@@ -141,7 +143,7 @@ class ClassParser extends \lang\Object {
       } else if (defined($tokens[$i][1])) {
         return constant($tokens[$i][1]);
       } else {
-        raise('lang.ElementNotFoundException', 'Undefined constant "'.$tokens[$i][1].'"');
+        throw new ElementNotFoundException('Undefined constant "'.$tokens[$i][1].'"');
       }
     } else if (T_NEW === $tokens[$i][0]) {
       $type= '';
@@ -283,9 +285,9 @@ class ClassParser extends \lang\Object {
         }
       }
     } catch (\lang\XPException $e) {
-      raise('lang.ClassFormatException', $e->getMessage().' in '.$place, $e);
+      throw new ClassFormatException($e->getMessage().' in '.$place, $e);
     }
-    raise('lang.ClassFormatException', 'Parse error: Unterminated '.$states[$state].' in '.$place);
+    throw new ClassFormatException('Parse error: Unterminated '.$states[$state].' in '.$place);
   }
 
   /**
@@ -320,6 +322,12 @@ class ClassParser extends \lang\Object {
       $p= self::matching($text, '(', ')');
       $p+= strspn($text, ': ', $p);
       return substr($text, 0, $p).self::typeIn(substr($text, $p));
+    } else if (0 === strncmp($text, '(function(', 10)) {
+      $p= self::matching($text, '(', ')');
+      return substr($text, 0, $p).self::typeIn(substr($text, $p));
+    } else if ('[' === $text{0}) {
+      $p= self::matching($text, '[', ']');
+      return substr($text, 0, $p);
     } else if (strstr($text, '<')) {
       $p= self::matching($text, '<', '>');
       return substr($text, 0, $p);

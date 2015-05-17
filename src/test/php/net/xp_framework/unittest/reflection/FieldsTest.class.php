@@ -404,6 +404,26 @@ class FieldsTest extends TestCase {
   }
 
   /**
+   * Tests retrieving the "size" field's type is defined by `@type`
+   *
+   * @see     xp://lang.reflect.Field#getType
+   */
+  #[@test]
+  public function sizeFieldType() {
+    $this->assertEquals(\lang\Primitive::$INT, $this->fixture->getField('size')->getType());
+  }
+
+  /**
+   * Tests retrieving the "size" field's type is defined by `@type`
+   *
+   * @see     xp://lang.reflect.Field#getType
+   */
+  #[@test]
+  public function sizeFieldTypeName() {
+    $this->assertEquals('int', $this->fixture->getField('size')->getTypeName());
+  }
+
+  /**
    * Tests retrieving the "cache" field's type is unknown
    *
    * @see     xp://lang.reflect.Field#getType

@@ -180,7 +180,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
       }"));
 
       echo "+OK exiting";
-      xp::null()->error();
+      throw new \lang\Error("Uncaught");
     ', 255);
     $this->assertEquals('+OK exiting', substr($out, 0, 11), $out);
     $this->assertEquals('+OK Shutdown hook run', substr($out, -21), $out);

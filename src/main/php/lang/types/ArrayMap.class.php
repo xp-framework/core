@@ -1,5 +1,7 @@
 <?php namespace lang\types;
 
+use lang\IndexOutOfBoundsException;
+
 /**
  * Represents a mapped array
  *
@@ -48,7 +50,7 @@ class ArrayMap extends \lang\Object implements \ArrayAccess, \IteratorAggregate 
    */
   public function offsetGet($key) {
     if (!isset($this->values[$key])) {
-      raise('lang.IndexOutOfBoundsException', 'No element for key "'.$key.'"');
+      throw new IndexOutOfBoundsException('No element for key "'.$key.'"');
     }
     return $this->values[$key];
   }

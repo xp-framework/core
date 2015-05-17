@@ -1,94 +1,56 @@
-<?php
-/* This class is part of the XP framework
- *
- * $Id$
+<?php namespace net\xp_framework\unittest;
+
+use lang\IllegalArgumentException;
+use unittest\PrerequisitesNotMetError;
+
+/**
+ * Shows different test scenarios
  */
- 
-  uses('unittest.TestCase');
+class DemoTest extends \unittest\TestCase {
 
   /**
-   * Shows different test scenarios
+   * Setup method
    *
-   * @purpose  Unit Test
+   * @return void
    */
-  class DemoTest extends TestCase {
-      
-    /**
-     * A test that always succeeds
-     *
-     */
-    #[@test]
-    public function alwaysSucceeds() {
-      $this->assertTrue(TRUE);
-    }
-
-    /**
-     * A test that is ignored
-     *
-     */
-    #[@test, @ignore('Ignored')]
-    public function ignored() {
-      $this->fail('Ignored test executed', 'executed', 'ignored');
-    }
-
-    /**
-     * Setup method
-     *
-     */
-    public function setUp() {
-      if (0 == strcasecmp('alwaysSkipped', $this->name)) {
-        throw new PrerequisitesNotMetError('Skipping', null, $this->name);
-      }
-    }
-
-    /**
-     * A test that is skipped due to not met prerequisites.
-     *
-     */
-    #[@test]
-    public function alwaysSkipped() {
-      $this->fail('Skipped test executed', 'executed', 'skipped');
-    }
-
-    /**
-     * A test that always fails because of a failed assertion
-     *
-     */
-    #[@test]
-    public function alwaysFails() {
-      $this->assertTrue(FALSE);
-    }
-
-    /**
-     * A test that always fails because the expected exception was not
-     * thrown.
-     *
-     */
-    #[@test, @expect('lang.IllegalArgumentException')]
-    public function expectedExceptionNotThrown() {
-      TRUE;
-    }
-
-    /**
-     * A test that always fails because an exception is thrown.
-     *
-     */
-    #[@test]
-    public function throwsAnException() {
-      throw new IllegalArgumentException('');
-    }
-
-    /**
-     * A test that timeouts
-     *
-     */
-    #[@test, @limit(time= 0.1)]
-    public function timeouts() {
-      $start= gettimeofday();
-      $end= (1000000 * $start['sec']) + $start['usec'] + 1000 * 200;    // 0.2 seconds
-      do {
-        $now= gettimeofday();
-      } while ((1000000 * $now['sec']) + $now['usec'] < $end);
+  public function setUp() {
+    if ('alwaysSkipped' === $this->name) {
+      throw new PrerequisitesNotMetError('Skipping', null, $this->name);
     }
   }
-?>
+
+  #[@test]
+  public function alwaysSucceeds() {
+    $this->assertTrue(true);
+  }
+
+  #[@test, @ignore('Ignored')]
+  public function ignored() {
+    $this->fail('Ignored test executed', 'executed', 'ignored');
+  }
+
+  #[@test]
+  public function alwaysSkipped() {
+    $this->fail('Skipped test executed', 'executed', 'skipped');
+  }
+
+  #[@test]
+  public function alwaysFails() {
+    $this->assertTrue(false);
+  }
+
+  #[@test, @expect(IllegalArgumentException::class)]
+  public function expectedExceptionNotThrown() {
+    // Intentionally empty
+  }
+
+  #[@test]
+  public function throwsAnException() {
+    throw new IllegalArgumentException('');
+  }
+
+  #[@test, @limit(time= 0.1)]
+  public function timeouts() {
+    usleep(200000);
+  }
+}

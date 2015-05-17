@@ -5,6 +5,7 @@ use io\File;
 use io\Folder;
 use lang\XPClass;
 use lang\reflect\Modifiers;
+use lang\ElementNotFoundException;
 
 /**
  * Dumps reflection information about a class
@@ -154,6 +155,9 @@ class Reflect extends \lang\Object {
         }
       }
       Console::write(')');
+      if ($exceptions= $method->getExceptionNames()) {
+        Console::write(' throws '.implode(', ', $exceptions));
+      }
       Console::writeLine();
     }
 
@@ -274,7 +278,7 @@ class Reflect extends \lang\Object {
         return $package;
       }
     }
-    raise('lang.ElementNotFoundException', 'Cannot derive package name from '.$q);
+    throw new ElementNotFoundException('Cannot derive package name from '.$q);
   }
 
   /**

@@ -39,7 +39,7 @@ class ClassCastingTest extends TestCase {
 
   #[@test]
   public function thisClassCastingNull() {
-    $this->assertEquals(\xp::null(), $this->getClass()->cast(null));
+    $this->assertNull($this->getClass()->cast(null));
   }
 
   #[@test, @expect('lang.ClassCastException')]

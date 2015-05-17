@@ -6,6 +6,8 @@ use unittest\PrerequisitesNotMetError;
 
 /**
  * TestCase for `uses()` statement
+ *
+ * @deprecated Use the `use` statement and namespaces instead
  */
 class UsesTest extends \unittest\TestCase {
 

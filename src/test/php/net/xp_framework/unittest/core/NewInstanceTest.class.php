@@ -20,16 +20,13 @@ class NewInstanceTest extends \unittest\TestCase {
   }
 
   /**
-   * Issues a uses() command inside a new runtime for every class given
-   * and returns a line indicating success or failure for each of them.
+   * Runs sourcecode inside a new runtime
    *
-   * @param   string[] uses
-   * @param   string src
+   * @param   string $src
    * @return  var[] an array with three elements: exitcode, stdout and stderr contents
    */
-  protected function runInNewRuntime($uses, $src) {
+  protected function runInNewRuntime($src) {
     with ($out= $err= '', $p= Runtime::getInstance()->newInstance(null, 'class', 'xp.runtime.Evaluate', [])); {
-      $uses && $p->in->write('uses("'.implode('", "', $uses).'");');
       $p->in->write($src);
       $p->in->close();
 
@@ -186,7 +183,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test, @action([new RuntimeVersion('>=5.6'), new VerifyThat('processExecutionEnabled')])]
   public function variadic_argument_passing() {
-    $r= $this->runInNewRuntime([], '
+    $r= $this->runInNewRuntime('
       class Test {
         public function verify() {
           $r= newinstance("lang.Object", [1, 2, 3], [
@@ -207,7 +204,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function missingMethodImplementationFatals() {
-    $r= $this->runInNewRuntime(['lang.Runnable'], '
+    $r= $this->runInNewRuntime('
       newinstance("lang.Runnable", [], "{}");
     ');
     $this->assertEquals(255, $r[0], 'exitcode');
@@ -219,7 +216,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function syntaxErrorFatals() {
-    $r= $this->runInNewRuntime(['lang.Runnable'], '
+    $r= $this->runInNewRuntime('
       newinstance("lang.Runnable", [], "{ @__SYNTAX ERROR__@ }");
     ');
     $this->assertEquals(255, $r[0], 'exitcode');
@@ -231,7 +228,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function missingClassFatals() {
-    $r= $this->runInNewRuntime([], '
+    $r= $this->runInNewRuntime('
       newinstance("lang.NonExistantClass", [], "{}");
     ');
     $this->assertEquals(255, $r[0], 'exitcode');
@@ -243,7 +240,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function notPreviouslyDefinedClassIsLoaded() {
-    $r= $this->runInNewRuntime([], '
+    $r= $this->runInNewRuntime('
       if (isset(xp::$cl["lang.Runnable"])) {
         xp::error("Class lang.Runnable may not have been previously loaded");
       }
@@ -377,7 +374,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function declaration_with_array_typehint() {
-    $r= $this->runInNewRuntime([], '
+    $r= $this->runInNewRuntime('
       abstract class Base extends \lang\Object {
         public abstract function fixture(array $args);
       }
@@ -392,7 +389,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function declaration_with_callable_typehint() {
-    $r= $this->runInNewRuntime([], '
+    $r= $this->runInNewRuntime('
       abstract class Base extends \lang\Object {
         public abstract function fixture(callable $args);
       }
@@ -407,7 +404,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function declaration_with_class_typehint() {
-    $r= $this->runInNewRuntime([], '
+    $r= $this->runInNewRuntime('
       abstract class Base extends \lang\Object {
         public abstract function fixture(\lang\Generic $args);
       }
@@ -422,7 +419,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function declaration_with_self_typehint() {
-    $r= $this->runInNewRuntime([], '
+    $r= $this->runInNewRuntime('
       abstract class Base extends \lang\Object {
         public abstract function fixture(self $args);
       }

@@ -117,7 +117,7 @@ final class xp {
       if (0 === xp::$cll) {
         $invocations= xp::$cli;
         xp::$cli= [];
-        foreach ($invocations as $inv) call_user_func($inv, $name);
+        foreach ($invocations as $inv) $inv($name);
       }
 
       return $name;
@@ -237,7 +237,7 @@ final class xp {
   }
   // }}}
 
-  // {{{ proto <null> null()
+  // {{{ proto deprecated <null> null()
   //     Runs a fatal-error safe version of null
   static function null() {
     return xp::$null;
@@ -285,7 +285,7 @@ final class xp {
 }
 // }}}
 
-// {{{ final class null
+// {{{ final deprecated class null
 final class null {
 
   // {{{ proto __construct(void)
@@ -371,7 +371,7 @@ function __error($code, $msg, $file, $line) {
 }
 // }}}
 
-// {{{ proto void uses (string* args)
+// {{{ proto deprecated void uses (string* args)
 //     Uses one or more classes
 function uses() {
   $scope= null;
@@ -390,7 +390,7 @@ function uses() {
         $trace= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
         $scope= literal($trace[2]['args'][0]);
       }
-      call_user_func([$class, '__import'], $scope);
+      $class::__import($scope);
     }
 
     $short= substr($str, strrpos($str, '.') + 1);
@@ -402,7 +402,7 @@ function uses() {
 }
 // }}}
 
-// {{{ proto void raise (string classname, var* args)
+// {{{ proto deprecated void raise (string classname, var* args)
 //     throws an exception by a given class name
 function raise($classname) {
   try {
@@ -423,17 +423,18 @@ function ensure(&$t) {
 }
 // }}}
 
-// {{{ proto Generic cast (Generic expression, string type)
-//     Casts an expression.
-function cast(Generic $expression= null, $type) {
-  if (null === $expression) {
-    return xp::null();
-  } else if (\lang\XPClass::forName($type)->isInstance($expression)) {
-    return $expression;
+// {{{ proto Generic cast (var arg, var type[, bool nullsafe= true])
+//     Casts an arg NULL-safe
+function cast($arg, $type, $nullsafe= true) {
+  if (null === $arg && $nullsafe) {
+    raise('lang.ClassCastException', 'Cannot cast NULL to '.$type);
+  } else if ($type instanceof \lang\Type) {
+    return $type->cast($arg);
+  } else {
+    return Type::forName($type)->cast($arg);
   }
-
-  raise('lang.ClassCastException', 'Cannot cast '.xp::typeOf($expression).' to '.$type);
 }
+// }}}
 
 // {{{ proto bool is(string type, var object)
 //     Checks whether a given object is an instance of the type given
@@ -493,7 +494,7 @@ function literal($type) {
 }
 // }}}
 
-// {{{ proto void delete(&var object)
+// {{{ proto deprecated void delete(&var object)
 //     Destroys an object
 function delete(&$object) {
   $object= null;
@@ -620,7 +621,7 @@ function create($spec) {
   // BC: Wrap IllegalStateExceptions into IllegalArgumentExceptions
   $class= \lang\XPClass::forName(strstr($base, '.') ? $base : \lang\XPClass::nameOf($base));
   try {
-    $reflect= $class->newGenericType($typeargs)->_reflect;
+    $reflect= $class->newGenericType($typeargs)->reflect();
     if ($reflect->hasMethod('__construct')) {
       $a= func_get_args();
       return $reflect->newInstanceArgs(array_slice($a, 1));
@@ -720,7 +721,7 @@ set_include_path(rtrim(implode(PATH_SEPARATOR, xp::$classpath), PATH_SEPARATOR))
 spl_autoload_register(function($class) {
   $name= strtr($class, '\\', '.');
   $cl= xp::$loader->findClass($name);
-  if ($cl instanceof null) return false;
+  if (null === $cl) return false;
   $cl->loadClass0($name);
   return true;
 });

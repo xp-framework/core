@@ -1,5 +1,7 @@
 <?php namespace lang\reflect;
 
+use lang\ElementNotFoundException;
+
 /**
  * Represents a package
  *
@@ -172,7 +174,7 @@ class Package extends \lang\Object {
     $p->name= rtrim($name, '.');   // Normalize
 
     if (!\lang\ClassLoader::getDefault()->providesPackage($p->name)) {
-      raise('lang.ElementNotFoundException', 'No classloaders provide '.$name);
+      throw new ElementNotFoundException('No classloaders provide '.$name);
     }
     return $p;
   }

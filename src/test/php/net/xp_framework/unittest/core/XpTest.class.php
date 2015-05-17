@@ -47,6 +47,7 @@ class XpTest extends \unittest\TestCase {
     $this->assertEquals([], \xp::$errors);
   }
 
+  /** @deprecated */
   #[@test]
   public function null() {
     $this->assertEquals('null', get_class(\xp::null()));

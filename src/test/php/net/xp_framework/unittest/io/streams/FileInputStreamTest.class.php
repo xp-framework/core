@@ -89,7 +89,7 @@ class FileInputStreamTest extends TestCase {
   public function delete() {
     with ($stream= new FileInputStream($this->file)); {
       $this->assertTrue($this->file->isOpen());
-      delete($stream);
+      unset($stream);
       $this->assertTrue($this->file->isOpen());
     }
   }

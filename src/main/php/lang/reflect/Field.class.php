@@ -51,8 +51,8 @@ class Field extends \lang\Object {
         if (isset($details[DETAIL_ANNOTATIONS]['type'])) return \lang\Type::forName($details[DETAIL_ANNOTATIONS]['type']);
       }
     } else {
-      if (preg_match('/@var\s*([^\r\n]+)/', $raw, $matches)) {
-        return \lang\Type::forName(ClassParser::typeIn($matches[1]));
+      if (preg_match('/@(var|type)\s*([^\r\n]+)/', $raw, $matches)) {
+        return \lang\Type::forName(ClassParser::typeIn($matches[2]));
       }
     }
 
@@ -71,8 +71,8 @@ class Field extends \lang\Object {
         if (isset($details[DETAIL_ANNOTATIONS]['type'])) return $details[DETAIL_ANNOTATIONS]['type'];
       }
     } else {
-      if (preg_match('/@var\s*([^\r\n]+)/', $raw, $matches)) {
-        return ClassParser::typeIn($matches[1]);
+      if (preg_match('/@(var|type)\s*([^\r\n]+)/', $raw, $matches)) {
+        return ClassParser::typeIn($matches[2]);
       }
     }
 
@@ -109,10 +109,9 @@ class Field extends \lang\Object {
     if (!$details || !($key 
       ? array_key_exists($key, @$details[DETAIL_ANNOTATIONS][$name]) 
       : array_key_exists($name, @$details[DETAIL_ANNOTATIONS])
-    )) return raise(
-      'lang.ElementNotFoundException', 
-      'Annotation "'.$name.($key ? '.'.$key : '').'" does not exist'
-    );
+    )) {
+      throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
+    }
 
     return ($key 
       ? $details[DETAIL_ANNOTATIONS][$name][$key] 

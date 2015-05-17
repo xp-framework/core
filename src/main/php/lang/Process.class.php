@@ -209,9 +209,7 @@ class Process extends Object {
       }
     }
 
-    $self->in= \xp::null();
-    $self->out= \xp::null();
-    $self->err= \xp::null();
+    $self->in= $self->out= $self->err= null;
     return $self;
   }
   
