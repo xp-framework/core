@@ -34,6 +34,8 @@ use io\File;
  *   ]
  * ]
  * ```
+ *
+ * @deprecated Use composer or glue instead
  */
 class XarRelease extends \lang\Object implements Origin {
   private $client;

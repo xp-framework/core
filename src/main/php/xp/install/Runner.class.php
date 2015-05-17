@@ -31,6 +31,7 @@ use webservices\rest\RestClient;
  * -------
  * All commands support "-?" to show their usage.
  *
+ * @deprecated Use composer or glue instead
  * @see  https://github.com/xp-framework/xp-framework/pull/287
  */
 class Runner extends \lang\Object {

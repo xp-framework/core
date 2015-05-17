@@ -2,6 +2,8 @@
 
 /**
  * Abstract base class for all actions
+ *
+ * @deprecated Use composer or glue instead
  */
 abstract class Action extends \lang\Object implements \util\log\Traceable {
   protected $api;

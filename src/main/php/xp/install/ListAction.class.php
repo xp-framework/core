@@ -18,6 +18,8 @@ use webservices\json\JsonFactory;
  *
  * # This will list all installed modules from a given vendor
  * $ xpi list vendor
+ *
+ * @deprecated Use composer or glue instead
  */
 class ListAction extends Action {
   protected static $json;

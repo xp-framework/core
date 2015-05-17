@@ -20,6 +20,8 @@ use util\cmd\Console;
  *
  * This will remove the module in all installed versions
  * $ xpi remove vendor/module
+ *
+ * @deprecated Use composer or glue instead
  */
 class RemoveAction extends Action {
 

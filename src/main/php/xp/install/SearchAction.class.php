@@ -11,6 +11,8 @@ use webservices\rest\RestRequest;
  * -----------
  * This will search for modules
  * $ xpi search vendor
+ *
+ * @deprecated Use composer or glue instead
  */
 class SearchAction extends Action {
 
