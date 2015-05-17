@@ -4,8 +4,6 @@
  * Classes implementing the traceable interface define they can
  * be debugged by passing an util.log.LogCategory object to their
  * setTrace() method.
- *
- * @purpose  Interface
  */
 interface Traceable {
 

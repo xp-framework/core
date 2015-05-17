@@ -1,12 +1,9 @@
 <?php namespace util\log;
 
-
-
 /**
  * Observer interface
  *
- * @see      xp://util.Observable
- * @purpose  Interface
+ * @see   xp://util.Observable
  */
 class LogObserver extends \lang\Object implements BoundLogObserver {
   public $cat= null;
