@@ -7,6 +7,8 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed class detail parsing for function types
+  (@thekid)
 * Fixed Type::forName() to also work for the `callable` type union.
   (@thekid)
 * Fixed issue #74: Ambiguity in function types

@@ -322,6 +322,12 @@ class ClassParser extends \lang\Object {
       $p= self::matching($text, '(', ')');
       $p+= strspn($text, ': ', $p);
       return substr($text, 0, $p).self::typeIn(substr($text, $p));
+    } else if (0 === strncmp($text, '(function(', 10)) {
+      $p= self::matching($text, '(', ')');
+      return substr($text, 0, $p).self::typeIn(substr($text, $p));
+    } else if ('[' === $text{0}) {
+      $p= self::matching($text, '[', ']');
+      return substr($text, 0, $p);
     } else if (strstr($text, '<')) {
       $p= self::matching($text, '<', '>');
       return substr($text, 0, $p);

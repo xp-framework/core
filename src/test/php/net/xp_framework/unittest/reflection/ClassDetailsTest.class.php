@@ -135,6 +135,30 @@ class ClassDetailsTest extends TestCase {
   }
 
   #[@test]
+  public function function_returning_array() {
+    $details= $this->parseComment('/** @param  function(): int[] param1 */');
+    $this->assertEquals('function(): int[]', $details[DETAIL_ARGUMENTS][0]);
+  }
+
+  #[@test]
+  public function array_of_functions() {
+    $details= $this->parseComment('/** @param  (function(): int)[] param1 */');
+    $this->assertEquals('(function(): int)[]', $details[DETAIL_ARGUMENTS][0]);
+  }
+
+  #[@test]
+  public function map_of_functions() {
+    $details= $this->parseComment('/** @param  [:function(): int] param1 */');
+    $this->assertEquals('[:function(): int]', $details[DETAIL_ARGUMENTS][0]);
+  }
+
+  #[@test]
+  public function map_of_functions_with_braces() {
+    $details= $this->parseComment('/** @param  [:(function(): int)] param1 */');
+    $this->assertEquals('[:(function(): int)]', $details[DETAIL_ARGUMENTS][0]);
+  }
+
+  #[@test]
   public function throwsList() {
     $details= $this->parseComment('
       /**
