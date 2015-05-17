@@ -1,7 +1,7 @@
 <?php namespace util;
 
 use lang\types\Bytes;
-
+use lang\FormatException;
 
 /**
  * Encapsulates UUIDs (Universally Unique IDentifiers), also known as
@@ -17,38 +17,38 @@ use lang\types\Bytes;
  *
  * Creating UUIDs
  * --------------
- * <code>
- *   UUID::timeUUID();     // Creates a new v1, time based, UUID
- *   UUID::randomUUID();   // Creates a new v4, pseudo randomly generated, UUID
- * </code>
+ * ```php
+ * UUID::timeUUID();     // Creates a new v1, time based, UUID
+ * UUID::randomUUID();   // Creates a new v4, pseudo randomly generated, UUID
+ * ```
  *
  * Creating name-based UUIDs
  * -------------------------
- * <code>
- *   UUID::md5UUID(UUID::$NS_DNS, 'example.com');
- *   UUID::sha1UUID(UUID::$NS_DNS, 'example.com');
- * </code>
+ * ```php
+ * UUID::md5UUID(UUID::$NS_DNS, 'example.com');
+ * UUID::sha1UUID(UUID::$NS_DNS, 'example.com');
+ * ```
  *
  * Instanciation
  * -------------
  * UUIDs can be created from various input sources. The following are
  * all equivalent:
  *
- * <code>
- *   new UUID('6ba7b811-9dad-11d1-80b4-00c04fd430c8');
- *   new UUID('{6ba7b811-9dad-11d1-80b4-00c04fd430c8}');
- *   new UUID('urn:uuid:6ba7b811-9dad-11d1-80b4-00c04fd430c8');
- *   new UUID(new Bytes("k\xa7\xb8\x11\x9d\xad\x11\xd1\x80\xb4\x00\xc0O\xd40\xc8"));
- * </code>
+ * ```php
+ * new UUID('6ba7b811-9dad-11d1-80b4-00c04fd430c8');
+ * new UUID('{6ba7b811-9dad-11d1-80b4-00c04fd430c8}');
+ * new UUID('urn:uuid:6ba7b811-9dad-11d1-80b4-00c04fd430c8');
+ * new UUID(new Bytes("k\xa7\xb8\x11\x9d\xad\x11\xd1\x80\xb4\x00\xc0O\xd40\xc8"));
+ * ```
  *
  * Output
  * -----
- * <code>
- *   $uuid->hashCode(); // '6ba7b811-9dad-11d1-80b4-00c04fd430c8'
- *   $uuid->toString(); // '{6ba7b811-9dad-11d1-80b4-00c04fd430c8}'
- *   $uuid->getUrn();   // 'urn:uuid:6ba7b811-9dad-11d1-80b4-00c04fd430c8'
- *   $uuid->getBytes(); // new Bytes("k\xa7\xb8\x11\x9d\xad\x11\xd1\x80\xb4\x00\xc0O\xd40\xc8")
- * </code>
+ * ```php
+ * $uuid->hashCode(); // '6ba7b811-9dad-11d1-80b4-00c04fd430c8'
+ * $uuid->toString(); // '{6ba7b811-9dad-11d1-80b4-00c04fd430c8}'
+ * $uuid->getUrn();   // 'urn:uuid:6ba7b811-9dad-11d1-80b4-00c04fd430c8'
+ * $uuid->getBytes(); // new Bytes("k\xa7\xb8\x11\x9d\xad\x11\xd1\x80\xb4\x00\xc0O\xd40\xc8")
+ * ```
  *
  * @test  xp://net.xp_framework.unittest.util.UUIDTest
  * @see   rfc://4122
@@ -84,7 +84,7 @@ class UUID extends \lang\Object {
   /**
    * Create a UUID
    *
-   * @param   var arg
+   * @param   var $arg
    * @throws  lang.FormatException in case str is not a valid UUID string
    */
   public function __construct($arg) {
@@ -129,7 +129,7 @@ class UUID extends \lang\Object {
       $this->node[4],
       $this->node[5]
     )) {
-      throw new \lang\FormatException($str.' is not a valid UUID string');
+      throw new FormatException($str.' is not a valid UUID string');
     }
     $this->time_low= $l[0] * 0x10000 + $l[1];
 
@@ -146,26 +146,26 @@ class UUID extends \lang\Object {
   public static function timeUUID() {
 
     // Get timestamp and convert it to UTC (based Oct 15, 1582).
-    list($usec, $sec) = explode(' ', microtime());
+    sscanf(microtime(), '%f %d', $usec, $sec);
     $t= ($sec * 10000000) + ($usec * 10) + 122192928000000000;
     $clock_seq= mt_rand();
     $h= md5(php_uname());
 
-    return new self(array(
+    return new self([
       1,
       ($t & 0xFFFFFFFF),
       (($t >> 32) & 0xFFFF),
       (($t >> 48) & 0x0FFF),
       $clock_seq,
-      array(
+      [
         hexdec(substr($h, 0x0, 2)),
         hexdec(substr($h, 0x2, 2)),
         hexdec(substr($h, 0x4, 2)),
         hexdec(substr($h, 0x6, 2)),
         hexdec(substr($h, 0x8, 2)),
         hexdec(substr($h, 0xB, 2))
-      )
-    ));
+      ]
+    ]);
   }
 
   /**
@@ -178,14 +178,14 @@ class UUID extends \lang\Object {
   public static function md5UUID(self $namespace, $name) {
     $bytes= md5($namespace->getBytes().iconv(\xp::ENCODING, 'utf-8', $name));
     
-    return new self(array(
+    return new self([
       3,
       hexdec(substr($bytes, 0, 8)),
       hexdec(substr($bytes, 8, 4)),
       hexdec(substr($bytes, 12, 4)) & 0x0fff,
       hexdec(substr($bytes, 16, 4)) & 0x3fff | 0x8000,
       array_map('hexdec', str_split(substr($bytes, 20, 12), 2))
-    ));
+    ]);
   }
 
   /**
@@ -198,14 +198,14 @@ class UUID extends \lang\Object {
   public static function sha1UUID(self $namespace, $name) {
     $bytes= sha1($namespace->getBytes().iconv(\xp::ENCODING, 'utf-8', $name));
 
-    return new self(array(
+    return new self([
       5,
       hexdec(substr($bytes, 0, 8)),
       hexdec(substr($bytes, 8, 4)),
       hexdec(substr($bytes, 12, 4)) & 0x0fff,
       hexdec(substr($bytes, 16, 4)) & 0x3fff | 0x8000,
       array_map('hexdec', str_split(substr($bytes, 20, 12), 2))
-    ));
+    ]);
   }
 
   /**
@@ -214,7 +214,7 @@ class UUID extends \lang\Object {
    * @return  util.UUID
    */
   public static function randomUUID() {
-    return new self(array(
+    return new self([
       4,
       mt_rand(0, 0xffff) * 0x10000 + mt_rand(0, 0xffff),
       mt_rand(0, 0xffff),
@@ -224,7 +224,7 @@ class UUID extends \lang\Object {
         sprintf('%04x%04x%04x', mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)),
         '%02x%02x%02x%02x%02x%02x'
       )
-    ));
+    ]);
   }
 
   /**
@@ -257,7 +257,7 @@ class UUID extends \lang\Object {
   /**
    * Creates a string representation. 
    *
-   * Example: <tt>{f81d4fae-7dec-11d0-a765-00a0c91e6bf6}</tt>
+   * Example: `{f81d4fae-7dec-11d0-a765-00a0c91e6bf6}`
    *
    * @return  string
    */
@@ -268,7 +268,7 @@ class UUID extends \lang\Object {
   /**
    * Returns a hashcode
    *
-   * Example: <tt>f81d4fae-7dec-11d0-a765-00a0c91e6bf6</tt>
+   * Example: `f81d4fae-7dec-11d0-a765-00a0c91e6bf6`
    *
    * @return  string
    */
@@ -303,16 +303,17 @@ class UUID extends \lang\Object {
   /**
    * Serialization callback
    *
-   * @return    string[]
+   * @return  string[]
    */
   public function __sleep() {
     $this->value= $this->hashCode();    // Invent "value" member
-    return array('value');
+    return ['value'];
   }
 
   /**
    * Deserialization callback
    *
+   * @return void
    */
   public function __wakeup() {
     $this->populate($this->value);
