@@ -3,16 +3,17 @@
 /**
  * The Timer class provides a simple timer
  *
- * <code>
- *   $p= new Timer();
- *   $p->start();
- *   // ... code you want profiled
- *   $p->stop();
- *   var_dump($p->elapsedTime());
- * </code>
+ * ```php
+ * $p= new Timer();
+ * $p->start();
  *
- * @test     xp://net.xp_framework.unittest.util.TimerTest
- * @purpose  Provide a simple profiling timer
+ * // ... code you want profiled
+ *
+ * $p->stop();
+ * printf("Took %.3f seconds\n", $p->elapsedTime());
+ * ```
+ *
+ * @test  xp://net.xp_framework.unittest.util.TimerTest
  */
 class Timer extends \lang\Object {
   protected $start= null;
@@ -42,15 +43,11 @@ class Timer extends \lang\Object {
    * Measure a closure
    *
    * @see    http://php.net/manual/en/language.types.callable.php
-   * @param  var block a callable
+   * @param  function(): void $block a callable
    * @return self
    * @throws lang.IllegalArgumentException when block is not callable
    */
-  public static function measure($block) {
-    if (!is_callable($block)) {
-      throw new \lang\IllegalArgumentException('Cannot call '.\xp::stringOf($block));
-    }
-
+  public static function measure(callable $block) {
     $self= new self();
     $self->start= microtime(true);
     $block();
