@@ -5,7 +5,6 @@
  *
  * @see     xp://io.File
  * @see     php://zlib
- * @purpose Provide the ability to work with zip-compressed files
  * @ext     zlib
  */
 class ZipFile extends File {

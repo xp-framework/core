@@ -1,7 +1,6 @@
 <?php namespace io;
 
 use lang\System;
-
   
 /**
  * Represents a temporary file

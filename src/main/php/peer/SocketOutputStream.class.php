@@ -1,19 +1,10 @@
-<?php namespace peer;/* This file is part of the XP framework's experiments
- *
- * $Id$
- */
-
-use io\streams\OutputStream;
-
+<?php namespace peer;
 
 /**
  * OutputStream that reads from a socket
- *
- * @purpose  OutputStream implementation
  */
-class SocketOutputStream extends \lang\Object implements OutputStream {
-  protected
-    $socket= null;
+class SocketOutputStream extends \lang\Object implements \io\streams\SocketOutputStream {
+  protected $socket= null;
   
   /**
    * Constructor

@@ -2,7 +2,6 @@
 
 use io\Folder;
 
-
 /**
  * This class handles all neccessary file and directory operations
  * for doing reliable spool operations.

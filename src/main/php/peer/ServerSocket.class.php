@@ -1,7 +1,5 @@
 <?php namespace peer;
 
-
-
 /**
  * BSDSocket server implementation
  *

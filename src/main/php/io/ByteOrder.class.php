@@ -1,5 +1,7 @@
 <?php namespace io;
 
+use lang\FormatException;
+
 define('BIG_ENDIAN',      0x0000);
 define('LITTLE_ENDIAN',   0x0001);
 
@@ -11,10 +13,11 @@ define('LITTLE_ENDIAN',   0x0001);
  * SPARC, Motorola's 68K, and the PowerPC families are all big endian. 
  * </quote>
  *
- * @see      http://www.netrino.com/Publications/Glossary/Endianness.html
- * @purpose  Utility class
+ * @see   http://www.netrino.com/Publications/Glossary/Endianness.html
  */
 class ByteOrder extends \lang\Object {
+  const BIG_ENDIAN =    0x0000;
+  const LITTLE_ENDIAN = 0x0001;
 
   /**
    * Retrieves the name of a byteorder
@@ -31,8 +34,8 @@ class ByteOrder extends \lang\Object {
    */
   public static function nameOf($order) {
     switch ($order) {
-      case BIG_ENDIAN: return 'BIG_ENDIAN';
-      case LITTLE_ENDIAN: return 'LITTLE_ENDIAN';
+      case self::BIG_ENDIAN: return 'BIG_ENDIAN';
+      case self::LITTLE_ENDIAN: return 'LITTLE_ENDIAN';
     }
     return '(unknown)';
   }
@@ -45,11 +48,11 @@ class ByteOrder extends \lang\Object {
    */
   public static function nativeOrder() {
     switch (pack('d', 1)) {
-      case "\0\0\0\0\0\0\360\77": return LITTLE_ENDIAN;
-      case "\77\360\0\0\0\0\0\0": return BIG_ENDIAN;
+      case "\0\0\0\0\0\0\360\77": return self::LITTLE_ENDIAN;
+      case "\77\360\0\0\0\0\0\0": return self::BIG_ENDIAN;
     }
 
-    throw new \lang\FormatException('Unexpected result: '.addcslashes(pack('d', 1), "\0..\17"));
+    throw new FormatException('Unexpected result: '.addcslashes(pack('d', 1), "\0..\17"));
   }
   
   /**
@@ -59,6 +62,6 @@ class ByteOrder extends \lang\Object {
    * @see     http://www.hyperdictionary.com/computing/network+byte+order
    */
   public static function networkOrder() {
-    return BIG_ENDIAN;
+    return self::BIG_ENDIAN;
   }
 }

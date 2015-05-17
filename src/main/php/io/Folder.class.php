@@ -1,22 +1,16 @@
 <?php namespace io;
-
-
   
 /**
  * Represents a Folder
  *
  * Usage:
- * <code>
- *   try {
- *     $d= new Folder('/etc/');
- *     while (FALSE !== ($entry= $d->getEntry())) {
- *       printf("%s/%s\n", $d->uri, $entry);
- *     }
- *     $d->close();
- *   } catch (IOException $e) {
- *     $e->printStackTrace();
- *   }
- * </code>
+ * ```
+ * $d= new Folder('/etc/');
+ * while (false !== ($entry= $d->getEntry())) {
+ *   printf("%s/%s\n", $d->uri, $entry);
+ * }
+ * $d->close();
+ * ```
  *
  * @test  xp://net.xp_framework.unittest.io.FolderTest
  */

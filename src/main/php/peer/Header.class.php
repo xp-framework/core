@@ -2,8 +2,6 @@
 
 /**
  * Represents a header
- *
- * @purpose  Base class for Cookie, Authorization, etc.
  */
 class Header extends \lang\Object {
   public 

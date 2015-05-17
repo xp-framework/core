@@ -1,7 +1,5 @@
 <?php namespace peer;
 
-
-
 /**
  * Indicate an error occured during authentication
  *

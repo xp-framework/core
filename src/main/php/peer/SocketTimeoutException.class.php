@@ -1,7 +1,5 @@
 <?php namespace peer;
 
-
-
 /**
  * Indicate a timeout occurred on a socket read
  *

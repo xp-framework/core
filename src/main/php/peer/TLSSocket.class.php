@@ -1,12 +1,9 @@
 <?php namespace peer;
 
-
-
 /**
  * TLS socket
  *
  * @ext      openssl
- * @purpose  Specialized socket
  */
 class TLSSocket extends CryptoSocket {
 

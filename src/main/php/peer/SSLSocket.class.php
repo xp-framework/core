@@ -1,7 +1,5 @@
 <?php namespace peer;
 
-
-
 /**
  * SSL (Secure socket layer) socket
  *

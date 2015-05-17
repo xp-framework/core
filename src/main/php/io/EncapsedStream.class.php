@@ -5,9 +5,8 @@ use lang\MethodNotImplementedException;
 /**
  * Encapsulated / embedded stream
  *
- * @test      xp://net.xp_framework.unittest.io.EncapsedStreamTest
- * @see       xp://io.Stream
- * @purpose   Encapsulated stream
+ * @test  xp://net.xp_framework.unittest.io.EncapsedStreamTest
+ * @see   xp://io.Stream
  */
 class EncapsedStream extends Stream {
   public
