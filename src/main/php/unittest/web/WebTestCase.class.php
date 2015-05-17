@@ -8,13 +8,11 @@ use io\streams\Streams;
 use xml\XPath;
 use scriptlet\Cookie;
 
-
 /**
  * TestCase for web sites
  *
  * @see      xp://unittest.TestCase
  * @test     xp://net.xp_framework.unittest.tests.WebTestCaseTest
- * @purpose  Integration tests
  */
 abstract class WebTestCase extends TestCase {
   protected

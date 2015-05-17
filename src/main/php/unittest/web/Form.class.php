@@ -1,15 +1,11 @@
 <?php namespace unittest\web;
 
-
-
 use peer\http\HttpConstants;
-
 
 /**
  * Represents a HTML form
  *
- * @see      xp://unittest.web.WebTestCase#getForm
- * @purpose  Value object
+ * @see   xp://unittest.web.WebTestCase#getForm
  */
 class Form extends \lang\Object {
   protected

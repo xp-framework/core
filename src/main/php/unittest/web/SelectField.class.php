@@ -1,15 +1,10 @@
 <?php namespace unittest\web;
 
-
-
-
-
 /**
  * Represents a HTML Select field
  *
- * @see      http://www.w3schools.com/TAGS/tag_Select.asp
- * @see      xp://unittest.web.Field
- * @purpose  Value object
+ * @see   http://www.w3schools.com/TAGS/tag_Select.asp
+ * @see   xp://unittest.web.Field
  */
 class SelectField extends Field {
 

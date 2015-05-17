@@ -1,15 +1,10 @@
 <?php namespace unittest\web;
 
-
-
-
-
 /**
  * Represents a HTML input field
  *
- * @see      http://www.w3schools.com/TAGS/tag_input.asp
- * @see      xp://unittest.web.Field
- * @purpose  Value object
+ * @see   http://www.w3schools.com/TAGS/tag_input.asp
+ * @see   xp://unittest.web.Field
  */
 class InputField extends Field {
 

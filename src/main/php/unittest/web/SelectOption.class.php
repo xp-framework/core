@@ -1,12 +1,10 @@
 <?php namespace unittest\web;
 
-
-
 /**
  * Represents an option inside a select field
  *
- * @see      http://www.w3schools.com/TAGS/tag_option.asp
- * @see      xp://unittest.web.SelectField#getOptions
+ * @see   http://www.w3schools.com/TAGS/tag_option.asp
+ * @see   xp://unittest.web.SelectField#getOptions
  */
 class SelectOption extends \lang\Object {
   protected

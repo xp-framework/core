@@ -1,12 +1,9 @@
 <?php namespace unittest\web;
 
-
-
 /**
  * Represents a HTML field
  *
- * @see      xp://unittest.web.Form#getFields
- * @purpose  Base class
+ * @see   xp://unittest.web.Form#getFields
  */
 abstract class Field extends \lang\Object {
   protected
@@ -19,7 +16,7 @@ abstract class Field extends \lang\Object {
    * @param   unittest.web.Form form owner form
    * @param   php.DOMNode node
    */
-  public function __construct(\Form $form, \DOMNode $node) {
+  public function __construct(Form $form, \DOMNode $node) {
     $this->form= $form;
     $this->node= $node;
   }
