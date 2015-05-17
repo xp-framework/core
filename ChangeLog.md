@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.2.2 / 2015-05-17
+
 ### Bugfixes
 
 * Fixed Type::forName() to also work for the `callable` type union.
