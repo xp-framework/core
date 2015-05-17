@@ -58,6 +58,8 @@ abstract class Objects extends \lang\Object {
       return 'N;';
     } else if ($val instanceof Generic) {
       return $val->hashCode();
+    } else if ($val instanceof \Closure) {
+      return spl_object_hash($val);
     } else {
       return serialize($val);
     }

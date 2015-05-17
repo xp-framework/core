@@ -192,4 +192,10 @@ class ObjectsTest extends TestCase {
   public function hashOf_calls_hashCode_on_objects($val) {
     $this->assertEquals($val->hashCode(), Objects::hashOf($val));
   }
+
+  #[@test]
+  public function function_hash() {
+    $closure= function($a, $b) { };
+    $this->assertEquals(spl_object_hash($closure), Objects::hashOf($closure));
+  }
 }

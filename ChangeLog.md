@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Fixed `Objects::hashOf()` raising an exception when invoked w/ functions
+  (@thekid)
 * Fixed `xp::stringOf()` producing incorrect indentation for values nested
   inside arrays
   (@thekid)
