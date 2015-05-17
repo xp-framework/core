@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Deprecated text.format API.
+  (@thekid)
 * Deprecated io.SearchableStream class, superseded by text.Tokenizer API
   (@thekid)
 * Deprecated security.Policy class and API

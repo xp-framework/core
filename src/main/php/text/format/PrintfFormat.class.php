@@ -1,11 +1,9 @@
 <?php namespace text\format;
 
-
-
 /**
  * Printf formatter
  *
- * @purpose  Provide a Format wrapper for sprintf
+ * @deprecated
  * @see      php://sprintf
  * @see      xp://text.format.IFormat
  */

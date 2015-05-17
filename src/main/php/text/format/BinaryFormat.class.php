@@ -1,11 +1,9 @@
 <?php namespace text\format;
 
-
-
 /**
  * Binary data formatter
  *
- * @purpose  Provide a Format wrapper for binary strings
+ * @deprecated
  * @see      php://addcslashes
  * @see      xp://text.format.IFormat
  */

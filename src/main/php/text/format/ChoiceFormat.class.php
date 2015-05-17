@@ -1,10 +1,9 @@
 <?php namespace text\format;
 
-
-
 /**
  * Choice formatter
  *
+ * @deprecated
  * @purpose  Provide a Format wrapper for values depending on choices
  * @see      xp://text.format.IFormat
  */

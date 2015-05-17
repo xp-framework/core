@@ -1,11 +1,9 @@
 <?php namespace text\format;
 
-
-
 /**
  * Money formatter
  *
- * @purpose  Provide a Format wrapper for money_format
+ * @deprecated
  * @see      php://money_format
  * @see      xp://text.format.IFormat
  */

@@ -1,7 +1,5 @@
 <?php namespace text\format;
 
-
-
 /**
  * Message formatter
  *
@@ -27,7 +25,7 @@
  *   Console::writeLine($message);
  * </code>
  *
- * @purpose  Format strings
+ * @deprecated
  */
 class MessageFormat extends IFormat {
   public
