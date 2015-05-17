@@ -22,22 +22,22 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function string_array() {
-    $this->assertTrue(is('string[]', array('Hello')));
+    $this->assertTrue(is('string[]', ['Hello']));
   }
 
   #[@test]
   public function var_array() {
-    $this->assertFalse(is('string[]', array('Hello', 1, true)));
+    $this->assertFalse(is('string[]', ['Hello', 1, true]));
   }
 
   #[@test]
   public function int_array() {
-    $this->assertTrue(is('int[]', array(1, 2, 3)));
+    $this->assertTrue(is('int[]', [1, 2, 3]));
   }
 
   #[@test]
   public function mapIsNotAnInt_array() {
-    $this->assertFalse(is('int[]', array('one' => 1, 'two' => 2)));
+    $this->assertFalse(is('int[]', ['one' => 1, 'two' => 2]));
   }
 
   #[@test]
@@ -57,27 +57,27 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function object_array() {
-    $this->assertTrue(is('lang.Object[]', array(new \lang\Object(), new \lang\Object(), new \lang\Object())));
+    $this->assertTrue(is('lang.Object[]', [new \lang\Object(), new \lang\Object(), new \lang\Object()]));
   }
 
   #[@test]
   public function objectArrayWithnull() {
-    $this->assertFalse(is('lang.Object[]', array(new \lang\Object(), new \lang\Object(), null)));
+    $this->assertFalse(is('lang.Object[]', [new \lang\Object(), new \lang\Object(), null]));
   }
 
   #[@test]
   public function stringMap() {
-    $this->assertTrue(is('[:string]', array('greet' => 'Hello', 'whom' => 'World')));
+    $this->assertTrue(is('[:string]', ['greet' => 'Hello', 'whom' => 'World']));
   }
 
   #[@test]
   public function intMap() {
-    $this->assertTrue(is('[:int]', array('greet' => 1, 'whom' => 2)));
+    $this->assertTrue(is('[:int]', ['greet' => 1, 'whom' => 2]));
   }
 
   #[@test]
   public function intArrayIsNotAnIntMap() {
-    $this->assertFalse(is('[:int]', array(1, 2)));
+    $this->assertFalse(is('[:int]', [1, 2, 3]));
   }
 
   #[@test]
@@ -262,5 +262,10 @@ class IsTest extends \unittest\TestCase {
     $this->assertTrue(is('util.Filter<?>', newinstance('util.Filter<string>', [], [
       'accept' => function($e) { return true; }
     ])));
+  }
+
+  #[@test]
+  public function function_type() {
+    $this->assertTrue(is('function(): var', function() { }));
   }
 }

@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed `is()` to support function typs
+  (@thekid)
 * Fixed `Objects::hashOf()` raising an exception when invoked w/ functions
   (@thekid)
 * Fixed `xp::stringOf()` producing incorrect indentation for values nested

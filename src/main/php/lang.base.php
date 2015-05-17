@@ -454,6 +454,8 @@ function is($type, $object) {
     return (new \lang\ArrayType(substr($type, 0, -2)))->isInstance($object);
   } else if (0 === substr_compare($type, '[:', 0, 2)) {
     return (new \lang\MapType(substr($type, 2, -1)))->isInstance($object);
+  } else if (0 === strncmp($type, 'function(', 9)) {
+    return \lang\FunctionType::forName($type)->isInstance($object);
   } else if (strstr($type, '?')) {
     return \lang\WildcardType::forName($type)->isInstance($object);
   } else {
