@@ -1,14 +1,10 @@
 <?php namespace lang;
- 
- 
-
 
 /**
  * An Error is a subclass of Throwable that indicates serious problems 
  * that a reasonable application should not try to catch. Most such 
  * errors are abnormal conditions.
  *
- * @purpose  Base class for all other errors
  * @see      http://java.sun.com/docs/books/tutorial/essential/exceptions/definition.html
  * @see      http://jinx.swiki.net/352
  * @see      http://www.artima.com/designtechniques/exceptions.html
