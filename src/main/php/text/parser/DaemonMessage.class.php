@@ -2,7 +2,6 @@
  
 use peer\mail\Message;
 
-
 define('DAEMON_UNKNOWN',       'unknownfailure');
 define('DAEMON_GENERIC',       'genericfailure');
 define('DAEMON_LOCALPART',     'localpartunknown');
@@ -23,7 +22,7 @@ define('DAEMON_TYPE_MULTIPART','multipart/delivery');
 /**
  * DaemonMessage
  *
- * @purpose  Mailer daemom message
+ * @deprecated
  */
 class DaemonMessage extends Message {
   public 
