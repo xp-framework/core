@@ -651,7 +651,7 @@ function typeof($arg) {
       if ($param->isArray()) {
         $signature[]= \lang\Primitive::$ARRAY;
       } else if ($param->isCallable()) {
-        $signature[]= new \lang\FunctionType(null, \lang\Type::$VAR); 
+        $signature[]= \lang\Primitive::$CALLABLE;
       } else if (null === ($class= $param->getClass())) {
         $signature[]= \lang\Type::$VAR;
       } else {

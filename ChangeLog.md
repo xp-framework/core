@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Made typeof() behave consistent with reflection on callable type hint.
+  (@thekid)
 * Made util.log.LogCategory's first parameter optional, using "default"
   as identifier if omitted.
   (@thekid)
