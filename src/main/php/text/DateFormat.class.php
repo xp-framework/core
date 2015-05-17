@@ -2,7 +2,6 @@
 
 use util\Date;
 
-
 /**
  * Represents a date format and allows converting dates to it as well 
  * as parsing them from it.

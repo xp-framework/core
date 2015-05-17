@@ -1,22 +1,22 @@
 <?php namespace text;
  
 use io\streams\Reader;
-
+use io\IOException;
+use lang\IllegalStateException;
  
 /**
- * A stream tokenizer is a tokenizer that works on streams.
+ * A text tokenizer is a tokenizer that works readers.
  * 
  * Example:
- * <code>
- *   $st= new TextTokenizer(new TextReader(new FileInputStream(new File('test.txt')), 'utf-8'), " \n");
- *   while ($st->hasMoreTokens()) {
- *     printf("- %s\n", $st->nextToken());
- *   }
- * </code>
+ * ```php
+ * $st= new TextTokenizer(new TextReader(new FileInputStream(new File('test.txt')), 'utf-8'), " \n");
+ * while ($st->hasMoreTokens()) {
+ *   printf("- %s\n", $st->nextToken());
+ * }
+ * ```
  *
- * @test     xp://net.xp_framework.unittest.text.TextTokenizerTest
- * @see      xp://text.Tokenizer
- * @purpose  Tokenizer implementation
+ * @test  xp://net.xp_framework.unittest.text.TextTokenizerTest
+ * @see   xp://text.Tokenizer
  */
 class TextTokenizer extends Tokenizer {
   protected
@@ -31,8 +31,8 @@ class TextTokenizer extends Tokenizer {
     if ('' !== $this->_buf) {
       try {
         $this->source->reset();
-      } catch (\io\IOException $e) {
-        throw new \lang\IllegalStateException('Cannot reset', $e);
+      } catch (IOException $e) {
+        throw new IllegalStateException('Cannot reset', $e);
       }
     } 
 

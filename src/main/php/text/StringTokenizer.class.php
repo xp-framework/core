@@ -1,32 +1,29 @@
 <?php namespace text;
-
-
  
 /**
  * A string tokenizer allows you to break a string into tokens,
  * these being delimited by any character in the delimiter.
  * 
  * Example:
- * <code>
- *   $st= new StringTokenizer("Hello World!\nThis is an example", " \n");
- *   while ($st->hasMoreTokens()) {
- *     printf("- %s\n", $st->nextToken());
- *   }
- * </code>
+ * ```php
+ * $st= new StringTokenizer("Hello World!\nThis is an example", " \n");
+ * while ($st->hasMoreTokens()) {
+ *   printf("- %s\n", $st->nextToken());
+ * }
+ * ```
  *
  * This would output:
- * <pre>
- *   - Hello
- *   - World!
- *   - This
- *   - is
- *   - an
- *   - example
- * </pre>
+ * ```
+ * - Hello
+ * - World!
+ * - This
+ * - is
+ * - an
+ * - example
+ * ```
  *
- * @test     xp://net.xp_framework.unittest.text.StringTokenizerTest
- * @see      xp://text.Tokenizer
- * @purpose  Tokenizer implementation
+ * @test  xp://net.xp_framework.unittest.text.StringTokenizerTest
+ * @see   xp://text.Tokenizer
  */
 class StringTokenizer extends Tokenizer {
   protected
