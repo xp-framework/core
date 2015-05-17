@@ -1,14 +1,10 @@
 <?php namespace security\password;
 
-use text\StringUtil;
-
-
 /**
  * Generates random password
  *
  * TODO: allow generation of customer-friendly passwords (no S/5, 1/l, ...)
- *
- * @purpose   Generator
+ * @deprecated
  */
 class RandomPasswordGenerator extends \lang\Object {
   public
@@ -62,7 +58,7 @@ class RandomPasswordGenerator extends \lang\Object {
    * @return  string
    */
   public function generate() {
-    $pass= "";
+    $pass= '';
     for ($i= 0; $i< $this->length; $i++) {
       // $temp= str_shuffle($this->chars);
       // $pass.= $temp[0];
@@ -70,5 +66,4 @@ class RandomPasswordGenerator extends \lang\Object {
     }
     return $pass;
   }
-
 }

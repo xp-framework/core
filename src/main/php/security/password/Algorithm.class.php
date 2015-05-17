@@ -1,11 +1,8 @@
 <?php namespace security\password;
- 
 
 
 /**
  * Defines an algorithm that calculates the strength of a password
- *
- * @purpose  Interface
  */
 interface Algorithm {
   

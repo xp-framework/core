@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Deprecated RandomCodeGenerator and RandomPasswordGenerator classes from
+  the security.password package
+  (@thekid)
 * Deprecated io.sys.StdStream class, superseded by io.streams API
   (@thekid)
 * Deprecated `text.format` and `text.parser` APIs.
