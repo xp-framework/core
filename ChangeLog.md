@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.2.3 / 2015-05-18
+
 ### Heads up!
 
 * Deprecated RandomCodeGenerator and RandomPasswordGenerator classes from
