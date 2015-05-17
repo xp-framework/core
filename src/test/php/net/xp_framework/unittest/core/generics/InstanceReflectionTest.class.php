@@ -10,18 +10,27 @@ use lang\types\String;
 class InstanceReflectionTest extends \unittest\TestCase {
   
   /**
-   * Creates fixture, a Lookup with String and TestCase as component
-   * types.
+   * Creates fixture, a Lookup with String and TestCase as component types.
    *
+   * @return void
    */  
   public function setUp() {
     $this->fixture= create('new net.xp_framework.unittest.core.generics.Lookup<String, unittest.TestCase>()');
   }
 
   #[@test]
+  public function nameof() {
+    $this->assertEquals(
+      'net.xp_framework.unittest.core.generics.Lookup<lang.types.String,unittest.TestCase>',
+      nameof($this->fixture)
+    );
+  }
+
+  /** @deprecated */
+  #[@test]
   public function getClassNameMethod() {
     $this->assertEquals(
-      'net.xp_framework.unittest.core.generics.Lookup<lang.types.String,unittest.TestCase>', 
+      'net.xp_framework.unittest.core.generics.Lookup<lang.types.String,unittest.TestCase>',
       $this->fixture->getClassName()
     );
   }
@@ -29,7 +38,7 @@ class InstanceReflectionTest extends \unittest\TestCase {
   #[@test]
   public function nameOfClass() {
     $this->assertEquals(
-      'net.xp_framework.unittest.core.generics.Lookup<lang.types.String,unittest.TestCase>', 
+      'net.xp_framework.unittest.core.generics.Lookup<lang.types.String,unittest.TestCase>',
       $this->fixture->getClass()->getName()
     );
   }
