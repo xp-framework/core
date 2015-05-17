@@ -1,6 +1,8 @@
 <?php namespace xp\command;
 
 use util\cmd\ParamString;
+use io\streams\InputStream;
+use io\streams\OutputStream;
 use io\streams\StringReader;
 use io\streams\StringWriter;
 use io\streams\ConsoleInputStream;
@@ -11,6 +13,7 @@ use util\PropertyManager;
 use util\FilesystemPropertySource;
 use util\ResourcePropertySource;
 use rdbms\ConnectionManager;
+use lang\XPClass;
 
 /**
  * Runs util.cmd.Command subclasses on the command line.
@@ -72,11 +75,11 @@ class Runner extends \lang\Object {
    */
   protected static function textOf($markup) {
     $line= str_repeat('=', 72);
-    return strip_tags(preg_replace(array(
-      '#```([a-z]*)#', '#```#', '#^\- #',
-    ), array(
-      $line, $line, '* ',
-    ), trim($markup)));
+    return strip_tags(preg_replace(
+      ['#```([a-z]*)#', '#```#', '#^\- #'],
+      [$line, $line, '* '],
+      trim($markup)
+    ));
   }
   
   /**
@@ -84,7 +87,7 @@ class Runner extends \lang\Object {
    *
    * @param   lang.XPClass class
    */
-  public static function showUsage(\lang\XPClass $class) {
+  public static function showUsage(XPClass $class) {
 
     // Description
     if (null !== ($comment= $class->getComment())) {
@@ -163,7 +166,7 @@ class Runner extends \lang\Object {
    * @param   io.streams.InputStream in
    * @return  io.streams.InputStream the given output stream
    */
-  public function setIn(\io\streams\InputStream $in) {
+  public function setIn(InputStream $in) {
     self::$in= new StringReader($in);
     return $in;
   }
@@ -174,7 +177,7 @@ class Runner extends \lang\Object {
    * @param   io.streams.OutputStream out
    * @return  io.streams.OutputStream the given output stream
    */
-  public function setOut(\io\streams\OutputStream $out) {
+  public function setOut(OutputStream $out) {
     self::$out= new StringWriter($out);
     return $out;
   }
@@ -185,7 +188,7 @@ class Runner extends \lang\Object {
    * @param   io.streams.OutputStream error
    * @return  io.streams.OutputStream the given output stream
    */
-  public function setErr(\io\streams\OutputStream $err) {
+  public function setErr(OutputStream $err) {
     self::$err= new StringWriter($err);
     return $err;
   }
