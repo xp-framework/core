@@ -1,14 +1,11 @@
 <?php namespace util;
 
-
-
 /**
  * Date math functions
  *
- * @ext       ext/date
- * @test      xp://net.xp_framework.unittest.util.DateMathTest
- * @see       xp://util.Date
- * @purpose   Date calculations
+ * @ext   ext/date
+ * @test  xp://net.xp_framework.unittest.util.DateMathTest
+ * @see   xp://util.Date
  */
 class DateMath extends \lang\Object {
 
