@@ -1,7 +1,5 @@
 <?php namespace io;
 
-
-
 /**
  * This class provides functions for searching, seeking and replacing
  * strings and tokens in a stream.
@@ -9,7 +7,7 @@
  * that aren't numerically known but must be searched. Mostly those
  * are streams that completely reside in memory.
  *
- * @purpose Search operations on stream
+ * @deprecated Superseded by text.Tokenizer API
  */
 class SearchableStream extends Stream {
 
