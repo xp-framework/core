@@ -2,8 +2,6 @@
 
 /**
  * A set of objects
- *
- * @purpose  Interface
  */
 #[@generic(self= 'T')]
 interface Set extends \ArrayAccess, \IteratorAggregate {

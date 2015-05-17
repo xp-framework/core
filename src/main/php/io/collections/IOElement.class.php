@@ -6,8 +6,6 @@ use io\streams\OutputStream;
 
 /**
  * IO Element
- *
- * @purpose  Interface
  */
 interface IOElement {
 
