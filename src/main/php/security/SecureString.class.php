@@ -2,7 +2,6 @@
 
 use lang\Runtime;
 
-
 /**
  * SecureString provides a reasonable secure storage for security-sensistive
  * lists of characters, such as passwords.

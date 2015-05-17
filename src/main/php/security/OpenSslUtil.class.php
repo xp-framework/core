@@ -3,8 +3,7 @@
 /**
  * OpenSSL utility functions
  *
- * @ext      openssl
- * @purpose  Utiltiy functions
+ * @ext   openssl
  */
 class OpenSslUtil extends \lang\Object {
 

@@ -1,26 +1,24 @@
 <?php namespace security;
 
-
-
 // Parser states: General
-  define('PF_ST_INITIAL',  0x0000);
+define('PF_ST_INITIAL',  0x0000);
 define('PF_ST_GRANT',    0x0001);
 define('PF_ST_BREAK',    0x0999);
 
 // Parser states: Errors
-  define('PF_ST_EPARSE',   0x1000);
+define('PF_ST_EPARSE',   0x1000);
 define('PF_ST_EGRANT',   0x1001);
 define('PF_ST_EPERM',    0x1002);
 define('PF_ST_ESTATE',   0x1003);
 define('PF_ST_EREFLECT', 0x1004);
 
 // Parser states: Done
-  define('PF_ST_DONE',     0xFFFF);
+define('PF_ST_DONE',     0xFFFF);
  
 /**
- * Policy
+ * Categorizes grants
  *
- * @purpose  Categorizes grants
+ * @deprecated
  * @see      http://java.sun.com/security/jaas/apidoc/javax/security/auth/Policy.html
  * @see      http://java.sun.com/j2se/1.4.1/docs/api/java/security/package-summary.html
  * @see      xp://security.Permission

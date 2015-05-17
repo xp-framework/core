@@ -3,6 +3,11 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Heads up!
+
+* Deprecated security.Policy class and API
+  (@thekid)
+
 ### Features
 
 * Made ResourceProvider useable via `new import("lang.ResourceProvider")`.
