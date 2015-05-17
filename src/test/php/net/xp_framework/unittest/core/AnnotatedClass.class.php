@@ -4,7 +4,6 @@
  * Helper class for AnnotationTest
  *
  * @see      xp://net.xp_framework.unittest.core.AnnotationTest
- * @purpose  Helper
  */
 class AnnotatedClass extends \lang\Object {
 

@@ -1,51 +1,31 @@
 <?php namespace net\xp_framework\unittest\util\collections;
  
-use unittest\TestCase;
 use util\collections\Stack;
 use lang\types\String;
 
-
-/**
- * Test Stack class
- *
- * @see      xp://util.collections.Stack
- * @purpose  Unit Test
- */
-class StackTest extends TestCase {
-  public
-    $stack= null;
+class StackTest extends \unittest\TestCase {
+  private $stack;
   
   /**
    * Setup method. Creates the Stack member
    *
+   * @return void
    */
   public function setUp() {
     $this->stack= new Stack();
   }
-      
-  /**
-   * Tests the Stack is initially empty
-   *
-   */
+
   #[@test]
   public function initiallyEmpty() {
     $this->assertTrue($this->stack->isEmpty());
   }
 
-  /**
-   * Tests Stack equals its clone
-   *
-   */
   #[@test]
   public function equalsClone() {
     $this->stack->push(new String('green'));
     $this->assertTrue($this->stack->equals(clone($this->stack)));
   }
 
-  /**
-   * Tests push()
-   *
-   */
   #[@test]
   public function push() {
     $this->stack->push(new String('green'));
@@ -53,10 +33,6 @@ class StackTest extends TestCase {
     $this->assertEquals(1, $this->stack->size());
   }
 
-  /**
-   * Tests pop()
-   *
-   */
   #[@test]
   public function pop() {
     $color= new String('green');
@@ -65,10 +41,6 @@ class StackTest extends TestCase {
     $this->assertTrue($this->stack->isEmpty());
   }
 
-  /**
-   * Tests peek()
-   *
-   */
   #[@test]
   public function peek() {
     $color= new String('green');
@@ -77,10 +49,6 @@ class StackTest extends TestCase {
     $this->assertFalse($this->stack->isEmpty());
   }
 
-  /**
-   * Tests search()
-   *
-   */
   #[@test]
   public function search() {
     $color= new String('green');
@@ -89,10 +57,6 @@ class StackTest extends TestCase {
     $this->assertEquals(-1, $this->stack->search(new String('non-existant')));
   }
 
-  /**
-   * Tests elementAt()
-   *
-   */
   #[@test]
   public function elementAt() {
     $this->stack->push(new String('red'));
@@ -104,10 +68,6 @@ class StackTest extends TestCase {
     $this->assertEquals(new String('red'), $this->stack->elementAt(2));
   }
 
-  /**
-   * Tests elementAt() when given an illegal offset
-   *
-   */
   #[@test, @expect('lang.IndexOutOfBoundsException')]
   public function elementAtIllegalOffset() {
     $this->stack->elementAt(-1);

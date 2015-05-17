@@ -4,9 +4,7 @@ use unittest\TestCase;
 use lang\CloneNotSupportedException;
 
 /**
- * Tests destructor functionality
- *
- * @purpose  Testcase
+ * Tests cloning functionality
  */
 class CloningTest extends TestCase {
 

@@ -4,13 +4,6 @@ use io\streams\TextReader;
 use io\streams\MemoryInputStream;
 use text\TextTokenizer;
 
-
-/**
- * Test string tokenizing.
- *
- * @see      xp://text.TextTokenizer
- * @purpose  TestCase
- */
 class TextTokenizerTest extends AbstractTokenizerTest {
 
   /**

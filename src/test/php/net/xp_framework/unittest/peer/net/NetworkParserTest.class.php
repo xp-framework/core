@@ -3,12 +3,6 @@
 use unittest\TestCase;
 use peer\net\NetworkParser;
 
-
-/**
- * Test network parser
- *
- * @purpose Testcase
- */
 class NetworkParserTest extends TestCase {
   protected
     $cut  = null;

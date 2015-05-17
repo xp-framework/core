@@ -7,8 +7,6 @@ use lang\Throwable;
 
 /**
  * Test the XP exception mechanism
- *
- * @purpose  Testcase
  */
 class ExceptionsTest extends TestCase {
 

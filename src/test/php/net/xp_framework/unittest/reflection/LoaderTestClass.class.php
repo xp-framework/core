@@ -4,11 +4,9 @@
  * Test class
  *
  * @see      xp://net.xp_framework.unittest.reflection.ClassLoaderTest
- * @purpose  Test class
  */
 class LoaderTestClass extends \lang\Object {
-  protected static
-    $initializerCalled= false;
+  protected static $initializerCalled= false;
 
   /**
    * Static initializer

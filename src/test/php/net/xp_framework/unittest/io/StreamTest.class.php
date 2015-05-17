@@ -1,16 +1,8 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use unittest\TestCase;
 use io\Stream;
 
-
-/**
- * Unit tests for io.Stream class
- *
- * @see      xp://io.Stream
- * @purpose  Unit test
- */
-class StreamTest extends TestCase {
+class StreamTest extends \unittest\TestCase {
 
   /**
    * Test basic write operations.

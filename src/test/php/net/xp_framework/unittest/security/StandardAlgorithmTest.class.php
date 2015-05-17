@@ -5,19 +5,9 @@ use security\password\PasswordStrength;
 use util\log\Logger;
 use util\log\ConsoleAppender;
 
-
-/**
- * TestCase
- *
- * @see      xp://security.password.PasswordStrength
- * @purpose  purpose
- */
 class StandardAlgorithmTest extends TestCase {
-  protected
-    $fixture= null;
-  
-  protected static
-    $cat= null;
+  protected $fixture= null;
+  protected static $cat= null;
   
   static function __static() {
     // self::$cat= Logger::getInstance()->getCategory()->withAppender(new ConsoleAppender());

@@ -2,13 +2,6 @@
 
 use text\StringTokenizer;
 
-
-/**
- * Test string tokenizing.
- *
- * @see      xp://text.StringTokenizer
- * @purpose  TestCase
- */
 class StringTokenizerTest extends AbstractTokenizerTest {
 
   /**

@@ -3,13 +3,6 @@
 use io\streams\MemoryInputStream;
 use text\StreamTokenizer;
 
-
-/**
- * Test string tokenizing.
- *
- * @see      xp://text.StringTokenizer
- * @purpose  TestCase
- */
 class StreamTokenizerTest extends AbstractTokenizerTest {
 
   /**

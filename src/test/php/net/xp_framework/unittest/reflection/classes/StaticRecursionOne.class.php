@@ -1,12 +1,9 @@
 <?php namespace net\xp_framework\unittest\reflection\classes;
 
-
-
 /**
  * Class that loads a class inside its static initializer
  *
  * @see      xp://net.xp_framework.unittest.reflection.ClassLoaderTest#loadClassFileWithRecusionInStaticBlock
- * @purpose  Fixture
  */
 class StaticRecursionOne extends \lang\Object {
   public static $two= null;

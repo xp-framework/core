@@ -3,8 +3,7 @@
 /**
  * Interface with overloaded methods
  *
- * @see      xp://lang.reflect.Proxy
- * @purpose  Test interface
+ * @see   xp://lang.reflect.Proxy
  */
 interface OverloadedInterface {
   

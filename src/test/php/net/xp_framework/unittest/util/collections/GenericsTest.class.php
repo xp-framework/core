@@ -18,7 +18,6 @@ use lang\types\String;
  * @see      xp://util.collections.Stack
  * @see      xp://util.collections.Queue
  * @see      xp://util.collections.LRUBuffer
- * @purpose  Unittest
  */
 class GenericsTest extends \unittest\TestCase {
 

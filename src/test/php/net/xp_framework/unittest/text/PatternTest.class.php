@@ -1,16 +1,9 @@
 <?php namespace net\xp_framework\unittest\text;
 
-use unittest\TestCase;
 use text\regex\Pattern;
 use lang\types\String;
 
-
-/**
- * TestCase for pattern class
- *
- * @purpose  Unit test
- */
-class PatternTest extends TestCase {
+class PatternTest extends \unittest\TestCase {
 
   /**
    * Tests the MatchResult::length() method

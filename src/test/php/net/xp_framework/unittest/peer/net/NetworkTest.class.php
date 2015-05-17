@@ -5,13 +5,6 @@ use peer\net\Network;
 use peer\net\Inet4Address;
 use peer\net\Inet6Address;
 
-
-/**
- * Test for Network
- *
- * @see      xp://peer.Network
- * @purpose  Testcase
- */
 class NetworkTest extends TestCase {
 
   /**

@@ -3,13 +3,6 @@
 use unittest\TestCase;
 use util\log\LogLevel;
 
-
-/**
- * TestCase
- *
- * @see      xp://util.log.LogLevel
- * @purpose  Unittest
- */
 class LogLevelTest extends TestCase {
 
   /**

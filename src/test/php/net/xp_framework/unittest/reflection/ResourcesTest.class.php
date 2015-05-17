@@ -4,13 +4,6 @@ use unittest\TestCase;
 use lang\archive\Archive;
 use io\File;
 
-
-/**
- * TestCase for resource loading
- *
- * @see      xp://lang.ClassLoader
- * @purpose  Unittest
- */
 class ResourcesTest extends TestCase {
   private $cl= null;
 

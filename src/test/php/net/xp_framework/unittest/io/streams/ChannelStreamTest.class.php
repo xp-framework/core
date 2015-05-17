@@ -4,13 +4,11 @@ use unittest\TestCase;
 use io\streams\ChannelOutputStream;
 use io\streams\ChannelInputStream;
 
-
 /**
  * TestCase
  *
  * @see      xp://io.streams.ChannelOutputStream
  * @see      xp://io.streams.ChannelInputStream
- * @purpose  purpose
  */
 class ChannelStreamTest extends TestCase {
 
