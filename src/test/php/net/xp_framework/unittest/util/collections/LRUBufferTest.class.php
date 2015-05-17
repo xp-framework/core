@@ -1,17 +1,9 @@
 <?php namespace net\xp_framework\unittest\util\collections;
- 
-use unittest\TestCase;
+
 use util\collections\LRUBuffer;
 use lang\types\String;
 
-
-/**
- * Test LRUBuffer class
- *
- * @see      xp://util.collections.LRUBuffer
- * @purpose  Unit Test
- */
-class LRUBufferTest extends TestCase {
+class LRUBufferTest extends \unittest\TestCase {
   const DEFAULT_SIZE = 3;
 
   protected $buffer= null;
@@ -19,43 +11,28 @@ class LRUBufferTest extends TestCase {
   /**
    * Setup method. Creates the buffer member
    *
+   * @return void
    */
   public function setUp() {
     $this->buffer= new LRUBuffer(self::DEFAULT_SIZE);
   }
-  
-  /**
-   * Tests the buffer is initially empty
-   *
-   */
+
   #[@test]
   public function initiallyEmpty() {
     $this->assertEquals(0, $this->buffer->numElements());
   }
-  
-  /**
-   * Tests the getSize() method
-   *
-   */
+
   #[@test]
   public function getSize() {
     $this->assertEquals(self::DEFAULT_SIZE, $this->buffer->getSize());
   }
 
-  /**
-   * Tests the add() method
-   *
-   */
   #[@test]
   public function add() {
     $this->buffer->add(new String('one'));
     $this->assertEquals(1, $this->buffer->numElements());
   }
 
-  /**
-   * Tests the add() method returns the victim
-   *
-   */
   #[@test]
   public function addReturnsVictim() {
 
@@ -91,20 +68,12 @@ class LRUBufferTest extends TestCase {
     }
   }
   
-  /**
-   * Tests the buffer does not grow beyond the set limit
-   *
-   */
   #[@test]
   public function bufferDoesNotGrowBeyondSize() {
     $this->addElements($this->buffer->getSize()+ 1);
     $this->assertEquals($this->buffer->getSize(), $this->buffer->numElements());
   }
  
-  /**
-   * Tests the update() method
-   *
-   */
   #[@test]
   public function update() {
   
@@ -122,47 +91,27 @@ class LRUBufferTest extends TestCase {
     );
   }
 
-  /**
-   * Tests the setSize() method
-   *
-   */
   #[@test]
   public function setSize() {
     $this->buffer->setSize(10);
     $this->assertEquals(10, $this->buffer->getSize());
   }
 
-  /**
-   * Tests the setSize() method when passed an argument <= zero
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function illegalSize() {
     $this->buffer->setSize(0);
   }
 
-  /**
-   * Tests equals()
-   *
-   */
   #[@test]
   public function equalsClone() {
     $this->assertTrue($this->buffer->equals(clone $this->buffer));
   }
 
-  /**
-   * Tests equals()
-   *
-   */
   #[@test]
   public function doesNotEqualWithDifferentSize() {
     $this->assertFalse($this->buffer->equals(new LRUBuffer(self::DEFAULT_SIZE - 1)));
   }
  
-  /**
-   * Tests equals()
-   *
-   */
   #[@test]
   public function doesNotEqualWithSameElements() {
     $other= new LRUBuffer(self::DEFAULT_SIZE);
