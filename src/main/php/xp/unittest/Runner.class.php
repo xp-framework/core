@@ -68,7 +68,14 @@ use xp\unittest\sources\PropertySource;
 class Runner extends \lang\Object {
   protected $out= null;
   protected $err= null;
-  
+
+  private static $cmap= [
+    ''      => null,
+    '=on'   => true,
+    '=off'  => false,
+    '=auto' => null
+  ];
+
   /**
    * Constructor. Initializes out and err members to console
    *
@@ -213,12 +220,6 @@ class Runner extends \lang\Object {
     $listener= TestListeners::$DEFAULT;
     $arguments= [];
     $colors= null;
-    $cmap= array(
-      ''      => null,
-      '=on'   => true,
-      '=off'  => false,
-      '=auto' => null
-    );
 
     try {
       for ($i= 0, $s= sizeof($args); $i < $s; $i++) {
@@ -287,10 +288,10 @@ class Runner extends \lang\Object {
           $arguments[]= $this->arg($args, ++$i, 'a');
         } else if ('--color' == substr($args[$i], 0, 7)) {
           $remainder= (string)substr($args[$i], 7);
-          if (!array_key_exists($remainder, $cmap)) {
+          if (!array_key_exists($remainder, self::$cmap)) {
             throw new IllegalArgumentException('Unsupported argument for --color (must be <empty>, "on", "off", "auto" (default))');
           }
-          $colors= $cmap[$remainder];
+          $colors= self::$cmap[$remainder];
         } else if (strstr($args[$i], '.ini')) {
           $sources->add(new PropertySource(new Properties($args[$i])));
         } else if (strstr($args[$i], \xp::CLASS_FILE_EXT)) {
