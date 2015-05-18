@@ -1,11 +1,21 @@
 <?php namespace xp\unittest;
 
 use lang\XPClass;
-use io\streams\FileOutputStream;
+use lang\Throwable;
+use lang\ClassLoader;
+use lang\IllegalArgumentException;
+use lang\MethodNotImplementedException;
+use lang\reflect\Package;
+use lang\reflect\TargetInvocationException;
 use io\File;
 use io\Folder;
+use io\streams\OutputStream;
+use io\streams\FileOutputStream;
+use io\streams\StringWriter;
 use unittest\TestSuite;
+use unittest\ColorizingListener;
 use util\Properties;
+use util\NoSuchElementException;
 use util\collections\Vector;
 use util\cmd\Console;
 use xp\unittest\sources\ClassFileSource;
@@ -74,8 +84,8 @@ class Runner extends \lang\Object {
    * @param   io.streams.OutputStream out
    * @return  io.streams.OutputStream the given output stream
    */
-  public function setOut(\io\streams\OutputStream $out) {
-    $this->out= new \io\streams\StringWriter($out);
+  public function setOut(OutputStream $out) {
+    $this->out= new StringWriter($out);
     return $out;
   }
 
@@ -85,8 +95,8 @@ class Runner extends \lang\Object {
    * @param   io.streams.OutputStream error
    * @return  io.streams.OutputStream the given output stream
    */
-  public function setErr(\io\streams\OutputStream $err) {
-    $this->err= new \io\streams\StringWriter($err);
+  public function setErr(OutputStream $err) {
+    $this->err= new StringWriter($err);
     return $err;
   }
 
@@ -167,7 +177,7 @@ class Runner extends \lang\Object {
    */
   protected function arg($args, $offset, $option) {
     if (!isset($args[$offset])) {
-      throw new \lang\IllegalArgumentException('Option -'.$option.' requires an argument');
+      throw new IllegalArgumentException('Option -'.$option.' requires an argument');
     }
     return $args[$offset];
   }
@@ -182,7 +192,7 @@ class Runner extends \lang\Object {
     if ('-' == $in) {
       return Console::$out;
     } else {
-      return new \io\streams\StringWriter(new FileOutputStream($in));
+      return new StringWriter(new FileOutputStream($in));
     }
   }
   
@@ -218,7 +228,7 @@ class Runner extends \lang\Object {
           $listener= TestListeners::$QUIET;
         } else if ('-cp' == $args[$i]) {
           foreach (explode(PATH_SEPARATOR, $this->arg($args, ++$i, 'cp')) as $element) {
-            \lang\ClassLoader::registerPath($element, null);
+            ClassLoader::registerPath($element, null);
           }
         } else if ('-e' == $args[$i]) {
           $sources->add(new EvaluationSource($this->arg($args, ++$i, 'e')));
@@ -267,7 +277,7 @@ class Runner extends \lang\Object {
           }
           try {
             $method->invoke($instance, $pass);
-          } catch (\lang\reflect\TargetInvocationException $e) {
+          } catch (TargetInvocationException $e) {
             $this->err->writeLine('*** Error for argument '.$name.' to '.$instance->getClassName().': '.$e->getCause()->toString());
             return 2;
           }
@@ -278,7 +288,7 @@ class Runner extends \lang\Object {
         } else if ('--color' == substr($args[$i], 0, 7)) {
           $remainder= (string)substr($args[$i], 7);
           if (!array_key_exists($remainder, $cmap)) {
-            throw new \lang\IllegalArgumentException('Unsupported argument for --color (must be <empty>, "on", "off", "auto" (default))');
+            throw new IllegalArgumentException('Unsupported argument for --color (must be <empty>, "on", "off", "auto" (default))');
           }
           $colors= $cmap[$remainder];
         } else if (strstr($args[$i], '.ini')) {
@@ -286,9 +296,9 @@ class Runner extends \lang\Object {
         } else if (strstr($args[$i], \xp::CLASS_FILE_EXT)) {
           $sources->add(new ClassFileSource(new File($args[$i])));
         } else if (strstr($args[$i], '.**')) {
-          $sources->add(new PackageSource(\lang\reflect\Package::forName(substr($args[$i], 0, -3)), true));
+          $sources->add(new PackageSource(Package::forName(substr($args[$i], 0, -3)), true));
         } else if (strstr($args[$i], '.*')) {
-          $sources->add(new PackageSource(\lang\reflect\Package::forName(substr($args[$i], 0, -2))));
+          $sources->add(new PackageSource(Package::forName(substr($args[$i], 0, -2))));
         } else if (false !== ($p= strpos($args[$i], '::'))) {
           $sources->add(new ClassSource(XPClass::forName(substr($args[$i], 0, $p)), substr($args[$i], $p+ 2)));
         } else if (is_dir($args[$i])) {
@@ -297,7 +307,7 @@ class Runner extends \lang\Object {
           $sources->add(new ClassSource(XPClass::forName($args[$i])));
         }
       }
-    } catch (\lang\Throwable $e) {
+    } catch (Throwable $e) {
       $this->err->writeLine('*** ', $e->getMessage());
       \xp::gc();
       return 1;
@@ -310,7 +320,7 @@ class Runner extends \lang\Object {
     
     // Set up suite
     $l= $suite->addListener($listener->newInstance($this->out));
-    if ($l instanceof \unittest\ColorizingListener) {
+    if ($l instanceof ColorizingListener) {
       $l->setColor($colors);
     }
 
@@ -320,13 +330,13 @@ class Runner extends \lang\Object {
         foreach ($tests as $test) {
           $suite->addTest($test);
         }
-      } catch (\util\NoSuchElementException $e) {
+      } catch (NoSuchElementException $e) {
         $this->err->writeLine('*** Warning: ', $e->getMessage());
         continue;
-      } catch (\lang\IllegalArgumentException $e) {
+      } catch (IllegalArgumentException $e) {
         $this->err->writeLine('*** Error: ', $e->getMessage());
         return 1;
-      } catch (\lang\MethodNotImplementedException $e) {
+      } catch (MethodNotImplementedException $e) {
         $this->err->writeLine('*** Error: ', $e->getMessage(), ': ', $e->method, '()');
         return 1;
       }
