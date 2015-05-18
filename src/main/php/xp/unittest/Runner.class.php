@@ -33,38 +33,37 @@ use xp\unittest\sources\PropertySource;
  * ~~~~~~~~~~~~~~~~
  *
  * Usage:
- * <pre>
- *   unittest [options] test [test [test...]]
- * </pre>
+ * ```sh
+ * $ unittest [options] test [test [test...]]
+ * ```
  *
  * Options is one of:
- * <ul>
- *   <li>-v : Be verbose</li>
- *   <li>-q : Be quiet (no output)</li>
- *   <li>-cp: Add classpath elements</li>
- *   <li>-a {argument}: Define argument to pass to tests (may be used
- *     multiple times)</li>
- *   <li>-l {listener.class.Name} {output} [-o option value [-o ...]]
+ *
+ *   -v : Be verbose
+ *   -q : Be quiet (no output)
+ *   -cp: Add classpath elements
+ *   -a {argument}: Define argument to pass to tests (may be used
+ *     multiple times)
+ *   -l {listener.class.Name} {output} [-o option value [-o ...]]
  *     where output is either "-" for console output or a file name. 
- *     Options with "-o" are listener-dependant arguments.</li>
- *   <li>--color={mode} : Enable / disable color; mode can be one of
+ *     Options with "-o" are listener-dependant arguments.
+ *   --color={mode} : Enable / disable color; mode can be one of
  *     . "on" - activate color mode
  *     . "off" - disable color mode
  *     . "auto" - try to determine whether colors are supported and enable
  *       accordingly.
- *   </li>
- * </ul>
+ *   -w {dir}: Watch given directory for changes
+ *
  * Tests can be one or more of:
- * <ul>
- *   <li>{tests}.ini: A configuration file</li>
- *   <li>{package.name}.*: All classes inside a given package</li>
- *   <li>{package.name}.**: All classes inside a given package and all subpackages</li>
- *   <li>{Test}.class.php: A class file</li>
- *   <li>{test.class.Name}: A fully qualified class name</li>
- *   <li>{test.class.Name}::{testName}: A fully qualified class name and a test name</li>
- *   <li>path/with/tests: All classes inside a given directory and all subdirectories</li>
- *   <li>-e {test method sourcecode}: Evaluate source</li>
- * </ul>
+ *
+ *   {tests}.ini: A configuration file
+ *   {package.name}.*: All classes inside a given package
+ *   {package.name}.**: All classes inside a given package and all subpackages
+ *   {Test}.class.php: A class file
+ *   {test.class.Name}: A fully qualified class name
+ *   {test.class.Name}::{testName}: A fully qualified class name and a test name
+ *   path/with/tests: All classes inside a given directory and all subdirectories
+ *   -e {test method sourcecode}: Evaluate source
  *
  * @test  xp://net.xp_framework.unittest.tests.UnittestRunnerTest
  */
@@ -128,11 +127,11 @@ class Runner extends \lang\Object {
    */
   protected function textOf($markup) {
     $line= str_repeat('=', 72);
-    return strip_tags(preg_replace(array(
-      '#<pre>#', '#</pre>#', '#<li>#',
-    ), array(
-      $line, $line, '* ',
-    ), trim($markup)));
+    return strip_tags(preg_replace(
+      ['#```([a-z]*)#', '#```#', '#^\- #'],
+      [$line, $line, '* '],
+      trim($markup)
+    ));
   }
 
   /**
@@ -142,7 +141,7 @@ class Runner extends \lang\Object {
    */
   protected function usage() {
     $this->err->writeLine($this->textOf(XPClass::forName(\xp::nameOf(__CLASS__))->getComment()));
-    return 1;
+    return 2;
   }
 
   /**
@@ -183,7 +182,7 @@ class Runner extends \lang\Object {
     } else {
       $this->err->writeLine();
     }
-    return 1;
+    return 2;
   }
 
   /**
@@ -304,6 +303,8 @@ class Runner extends \lang\Object {
           return $this->usage();
         } else if ('-a' == $args[$i]) {
           $arguments[]= $this->arg($args, ++$i, 'a');
+        } else if ('-w' == $args[$i]) {
+          $this->arg($args, ++$i, 'w');
         } else if ('--color' == substr($args[$i], 0, 7)) {
           $remainder= (string)substr($args[$i], 7);
           if (!array_key_exists($remainder, self::$cmap)) {
@@ -329,12 +330,12 @@ class Runner extends \lang\Object {
     } catch (Throwable $e) {
       $this->err->writeLine('*** ', $e->getMessage());
       \xp::gc();
-      return 1;
+      return 2;
     }
     
     if ($sources->isEmpty()) {
       $this->err->writeLine('*** No tests specified');
-      return 1;
+      return 2;
     }
     
     // Set up suite
@@ -354,10 +355,10 @@ class Runner extends \lang\Object {
         continue;
       } catch (IllegalArgumentException $e) {
         $this->err->writeLine('*** Error: ', $e->getMessage());
-        return 1;
+        return 2;
       } catch (MethodNotImplementedException $e) {
         $this->err->writeLine('*** Error: ', $e->getMessage(), ': ', $e->method, '()');
-        return 1;
+        return 2;
       }
     }
     
