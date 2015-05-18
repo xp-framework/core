@@ -52,7 +52,7 @@ use xp\unittest\sources\PropertySource;
  *     . "off" - disable color mode
  *     . "auto" - try to determine whether colors are supported and enable
  *       accordingly.
- *   -w {dir}: Watch given directory for changes
+ *   -w {dir}: Run indefinitely, watch given directory for changes
  *
  * Tests can be one or more of:
  *
