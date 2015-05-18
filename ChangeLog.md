@@ -8,6 +8,12 @@ XP Framework Core ChangeLog
 * Deprecated XPI (XP Installer). Use Composer or Glue instead.
   (@thekid)
 
+### Features
+
+* Made `unittest -e` consistent with `xp -e`: Add ability to omit trailing
+  semicolon, support leading opening PHP tag, code piped via stdin.
+  (@thekid)
+
 ## 6.2.3 / 2015-05-18
 
 ### Heads up!

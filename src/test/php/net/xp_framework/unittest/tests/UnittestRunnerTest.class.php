@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\tests;
 
 use xp\unittest\Runner;
+use io\streams\MemoryInputStream;
 use io\streams\MemoryOutputStream;
 use lang\ClassLoader;
 
@@ -173,15 +174,20 @@ class UnittestRunnerTest extends \unittest\TestCase {
     $this->assertOnStream($this->out, '1/1 run (0 skipped), 0 succeeded, 1 failed');
   }
 
-  #[@test]
-  public function evaluateWithoutSource() {
-    $return= $this->runner->run(['-e']);
-    $this->assertEquals(1, $return);
-    $this->assertOnStream($this->err, '*** Option -e requires an argument');
-    $this->assertEquals('', $this->out->getBytes());
+  #[@test, @values([[['-e']], [['-e', '-']]])]
+  public function evaluateReadsCodeFromStdIn($args) {
+    $this->runner->setIn(new MemoryInputStream('$this->assertTrue(true);'));
+    $return= $this->runner->run($args);
+    $this->assertEquals(0, $return);
+    $this->assertEquals('', $this->err->getBytes());
+    $this->assertOnStream($this->out, '1/1 run (0 skipped), 1 succeeded, 0 failed');
   }
 
-  #[@test]
+  #[@test, @values([
+  #  '$this->assertTrue(true)',
+  #  '$this->assertTrue(true);',
+  #  '<?php $this->assertTrue(true);'
+  #])]
   public function evaluateSucceedingTest() {
     $return= $this->runner->run(['-e', '$this->assertTrue(true);']);
     $this->assertEquals(0, $return);

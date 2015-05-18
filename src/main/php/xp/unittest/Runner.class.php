@@ -9,9 +9,12 @@ use lang\reflect\Package;
 use lang\reflect\TargetInvocationException;
 use io\File;
 use io\Folder;
+use io\streams\Streams;
+use io\streams\InputStream;
 use io\streams\OutputStream;
 use io\streams\FileOutputStream;
 use io\streams\StringWriter;
+use io\streams\StringReader;
 use unittest\TestSuite;
 use unittest\ColorizingListener;
 use util\Properties;
@@ -66,8 +69,7 @@ use xp\unittest\sources\PropertySource;
  * @test  xp://net.xp_framework.unittest.tests.UnittestRunnerTest
  */
 class Runner extends \lang\Object {
-  protected $out= null;
-  protected $err= null;
+  protected $in, $out, $err;
 
   private static $cmap= [
     ''      => null,
@@ -77,12 +79,23 @@ class Runner extends \lang\Object {
   ];
 
   /**
-   * Constructor. Initializes out and err members to console
-   *
+   * Constructor. Initializes in, out and err members to console
    */
   public function __construct() {
+    $this->in= Console::$in;
     $this->out= Console::$out;
     $this->err= Console::$err;
+  }
+
+  /**
+   * Reassigns standard input stream
+   *
+   * @param   io.streams.InputStream out
+   * @return  io.streams.InputStream the given output stream
+   */
+  public function setIn(InputStream $in) {
+    $this->in= new StringReader($in);
+    return $in;
   }
 
   /**
@@ -232,7 +245,12 @@ class Runner extends \lang\Object {
             ClassLoader::registerPath($element, null);
           }
         } else if ('-e' == $args[$i]) {
-          $sources->add(new EvaluationSource($this->arg($args, ++$i, 'e')));
+          $arg= ++$i < $s ? $args[$i] : '-';
+          if ('-' === $arg) {
+            $sources->add(new EvaluationSource(Streams::readAll($this->in->getStream())));
+          } else {
+            $sources->add(new EvaluationSource($this->arg($args, $i, 'e')));
+          }
         } else if ('-l' == $args[$i]) {
           $arg= $this->arg($args, ++$i, 'l');
           $class= XPClass::forName(strstr($arg, '.') ? $arg : 'xp.unittest.'.ucfirst($arg).'Listener');

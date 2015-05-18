@@ -1,22 +1,31 @@
 <?php namespace xp\unittest\sources;
 
+use lang\ClassLoader;
+
 /**
  * Source that dynamically creates testcases
  */
 class EvaluationSource extends AbstractSource {
-  protected static $uniqId= 0;
-  protected $testClass= null;
+  private static $uniqId= 0;
+  private $testClass= null;
   
   /**
    * Constructor
    *
-   * @param   string bytes method sourcecode
+   * @param   string $src method sourcecode
    */
-  public function __construct($bytes) {
+  public function __construct($src) {
+
+    // Support <?php
+    $src= trim($src, ' ;').';';
+    if (0 === strncmp($src, '<?php', 5)) {
+      $src= substr($src, 6);
+    }
+
     $name= 'xp.unittest.DynamicallyGeneratedTestCase·'.(self::$uniqId++);
-    $this->testClass= \lang\ClassLoader::defineClass($name, 'unittest.TestCase', [], '{
+    $this->testClass= ClassLoader::defineClass($name, 'unittest.TestCase', [], '{
       #[@test] 
-      public function run() { '.$bytes.' }
+      public function run() { '.$src.' }
     }');
   }
 
@@ -27,7 +36,7 @@ class EvaluationSource extends AbstractSource {
    * @return  unittest.TestCase[]
    */
   public function testCasesWith($arguments) {
-    return array($this->testClass->newInstance('run'));
+    return [$this->testClass->newInstance('run')];
   }
 
   /**
