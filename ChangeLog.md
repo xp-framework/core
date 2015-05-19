@@ -10,6 +10,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged xp-framework/core#75: Support for new `unittest -w` command line.
+  See https://github.com/xp-framework/xp-runners/releases/tag/v5.3.0
+  (@thekid)
 * Made `unittest -e` consistent with `xp -e`: Add ability to omit trailing
   semicolon, support leading opening PHP tag, code piped via stdin.
   (@thekid)
