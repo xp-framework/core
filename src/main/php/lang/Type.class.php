@@ -176,8 +176,8 @@ class Type extends Object {
       return new ArrayType(self::forName(substr($type, 0, -2)));
     } else if (0 === substr_compare($type, '[:', 0, 2)) {
       return new MapType(self::forName(substr($type, 2, -1)));
-    } else if (0 === substr_compare($type, '(function(', 0, 10)) {
-      return FunctionType::forName(substr($type, 1, -1));
+    } else if ('(' === $type{0}) {
+      return self::forName(substr($type, 1, -1));
     } else if (0 === substr_compare($type, '*', -1)) {
       return new ArrayType(self::forName(substr($type, 0, -1)));
     } else if (strstr($type, '|')) {

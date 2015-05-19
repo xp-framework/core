@@ -151,4 +151,20 @@ class TypeUnionTest extends \unittest\TestCase {
     $union= new TypeUnion([Primitive::$STRING, Primitive::$INT, $this->getClass()]);
     $this->assertFalse($union->isAssignableFrom($type));
   }
+
+  #[@test]
+  public function string_or_int_array() {
+    $this->assertEquals(
+      new TypeUnion([Primitive::$STRING, new ArrayType(Primitive::$INT)]),
+      Type::forName('string|int[]')
+    );
+  }
+
+  #[@test]
+  public function array_of_type_unions() {
+    $this->assertEquals(
+      new ArrayType(new TypeUnion([Primitive::$STRING, Primitive::$INT])),
+      Type::forName('(string|int)[]')
+    );
+  }
 }
