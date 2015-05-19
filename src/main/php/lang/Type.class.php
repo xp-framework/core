@@ -158,6 +158,7 @@ class Type extends Object {
     // * D<K, V> is a generic type definition D with K and V components
     //   except if any of K, V contains a ?, in which case it's a wild 
     //   card type.
+    // * T1|T2 is a type union
     // * Anything else is a qualified or unqualified class name
     if (isset($primitives[$type])) {
       return Primitive::forName($primitives[$type]);
@@ -179,6 +180,8 @@ class Type extends Object {
       return FunctionType::forName(substr($type, 1, -1));
     } else if (0 === substr_compare($type, '*', -1)) {
       return new ArrayType(self::forName(substr($type, 0, -1)));
+    } else if (strstr($type, '|')) {
+      return TypeUnion::forName($type);
     } else if (false === ($p= strpos($type, '<'))) {
       $normalized= strtr($type, '\\', '.');
       return strstr($normalized, '.') ? XPClass::forName($normalized) : new XPClass($normalized);
