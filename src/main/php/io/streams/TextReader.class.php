@@ -1,7 +1,9 @@
 <?php namespace io\streams;
 
 use io\IOException;
+use io\Channel;
 use lang\FormatException;
+use lang\IllegalArgumentException;
 
 /**
  * Reads text from an underlying input stream, converting it from the
@@ -20,11 +22,20 @@ class TextReader extends Reader {
    * Constructor. Creates a new TextReader on an underlying input
    * stream with a given charset.
    *
-   * @param   io.streams.InputStream $stream
+   * @param   var $arg Either an input stream, a string or an I/O channel
    * @param   string $charset the charset the stream is encoded in or NULL to trigger autodetection by BOM
+   * @throws  lang.IllegalArgumentException
    */
-  public function __construct(InputStream $stream, $charset= null) {
-    parent::__construct($stream);
+  public function __construct($arg, $charset= null) {
+    if ($arg instanceof InputStream) {
+      parent::__construct($arg);
+    } else if ($arg instanceof Channel) {
+      parent::__construct($arg->in());
+    } else if (is_string($arg)) {
+      parent::__construct(new MemoryInputStream($arg));
+    } else {
+      throw new IllegalArgumentException('Given argument is neither an input stream, a channel nor a string: '.\xp::typeOf($arg));
+    }
     $this->charset= $charset ?: $this->detectCharset();
     $this->beginning= true;
   }

@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
+use io\File;
 use io\streams\TextReader;
 use io\streams\LinesIn;
 use io\streams\MemoryInputStream;
@@ -16,6 +17,11 @@ class LinesInTest extends \unittest\TestCase {
   #[@test]
   public function can_create_with_stream() {
     new LinesIn(new MemoryInputStream(''));
+  }
+
+  #[@test]
+  public function can_create_with_channel() {
+    new LinesIn(new File(__FILE__));
   }
 
   #[@test]

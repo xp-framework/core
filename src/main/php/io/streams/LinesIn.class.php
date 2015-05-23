@@ -16,19 +16,15 @@ class LinesIn extends \lang\Object implements \Iterator {
   /**
    * Creates a new lines instance
    *
-   * @param  var $arg Either a string, a TextReader or an InputStream
-   * @param  string $charset Only taken into account when passing strings or streams
+   * @param  var $arg Either TextReader, a channel, a string or an input stream
+   * @param  string $charset Not taken into account when created by a TextReader
    * @throws lang.IllegalArgumentException
    */
   public function __construct($arg, $charset= \xp::ENCODING) {
     if ($arg instanceof TextReader) {
       $this->reader= $arg;
-    } else if ($arg instanceof InputStream) {
-      $this->reader= new TextReader($arg, $charset);
-    } else if (is_string($arg)) {
-      $this->reader= new TextReader(new MemoryInputStream($arg), $charset);
     } else {
-      throw new IllegalArgumentException('Given argument is neither a TextReader nor an InputStream: '.\xp::typeOf($arg));
+      $this->reader= new TextReader($arg, $charset);
     }
   }
 

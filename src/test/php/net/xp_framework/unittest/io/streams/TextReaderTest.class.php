@@ -1,9 +1,10 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use unittest\TestCase;
+use io\File;
 use io\streams\TextReader;
 use io\streams\InputStream;
 use io\streams\MemoryInputStream;
+use lang\IllegalArgumentException;
 
 /**
  * TestCase
@@ -11,7 +12,27 @@ use io\streams\MemoryInputStream;
  * @see  http://de.wikipedia.org/wiki/China
  * @see  xp://io.streams.TextReader
  */
-class TextReaderTest extends TestCase {
+class TextReaderTest extends \unittest\TestCase {
+
+  #[@test]
+  public function can_create_with_string() {
+    new TextReader('');
+  }
+
+  #[@test]
+  public function can_create_with_stream() {
+    new TextReader(new MemoryInputStream(''));
+  }
+
+  #[@test]
+  public function can_create_with_channel() {
+    new TextReader(new File(__FILE__));
+  }
+
+  #[@test, @expect(IllegalArgumentException::class)]
+  public function raises_exception_for_incorrect_constructor_argument() {
+    new TextReader(null);
+  }
 
   /**
    * Returns a text reader for a given input string.
