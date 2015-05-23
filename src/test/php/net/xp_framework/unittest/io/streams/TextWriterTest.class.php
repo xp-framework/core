@@ -1,8 +1,8 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use io\File;
 use lang\types\Character;
 use io\streams\TextWriter;
+use io\streams\MemoryInputStream;
 use io\streams\MemoryOutputStream;
 use lang\IllegalArgumentException;
 
@@ -16,12 +16,15 @@ class TextWriterTest extends \unittest\TestCase {
 
   #[@test]
   public function can_create_with_stream() {
-    new TextWriter(new MemoryOutputStream(''));
+    new TextWriter(new MemoryOutputStream());
   }
 
   #[@test]
   public function can_create_with_channel() {
-    new TextWriter(new File(__FILE__));
+    new TextWriter(newinstance('io.Channel', [], [
+      'in'  => function() { return new MemoryInputStream(''); },
+      'out' => function() { return new MemoryOutputStream(); }
+    ]));
   }
 
   #[@test, @expect(IllegalArgumentException::class)]

@@ -12,8 +12,8 @@ use io\Channel;
  * @ext     iconv
  */
 class TextWriter extends Writer {
-  protected $charset= '';
-  protected $newLine= "\n";
+  private $charset= '';
+  private $newLine= "\n";
 
   /**
    * Constructor. Creates a new TextWriter on an underlying output

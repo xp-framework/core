@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use io\File;
 use io\streams\TextReader;
 use io\streams\InputStream;
 use io\streams\MemoryInputStream;
+use io\streams\MemoryOutputStream;
 use lang\IllegalArgumentException;
 
 /**
@@ -26,7 +26,10 @@ class TextReaderTest extends \unittest\TestCase {
 
   #[@test]
   public function can_create_with_channel() {
-    new TextReader(new File(__FILE__));
+    new TextReader(newinstance('io.Channel', [], [
+      'in'  => function() { return new MemoryInputStream(''); },
+      'out' => function() { return new MemoryOutputStream(); }
+    ]));
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
