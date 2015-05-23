@@ -11,21 +11,23 @@ use lang\IllegalArgumentException;
  */
 class LinesIn extends \lang\Object implements \Iterator {
   const EOF = -1;
-  private $reader, $line, $number;
+  private $reader, $line, $number, $reset;
 
   /**
    * Creates a new lines instance
    *
    * @param  var $arg Either TextReader, a channel, a string or an input stream
    * @param  string $charset Not taken into account when created by a TextReader
+   * @param  bool $reset Whether to start from the beginning (default: true)
    * @throws lang.IllegalArgumentException
    */
-  public function __construct($arg, $charset= \xp::ENCODING) {
+  public function __construct($arg, $charset= \xp::ENCODING, $reset= true) {
     if ($arg instanceof TextReader) {
       $this->reader= $arg;
     } else {
       $this->reader= new TextReader($arg, $charset);
     }
+    $this->reset= $reset;
   }
 
   /** @return string */
@@ -50,7 +52,9 @@ class LinesIn extends \lang\Object implements \Iterator {
 
   /** @return void */
   public function rewind() {
-    $this->reader->atBeginning() || $this->reader->reset();
+    if ($this->reset && !$this->reader->atBeginning()) {
+      $this->reader->reset();
+    }
     $this->number= 0;
     $this->next();
   }

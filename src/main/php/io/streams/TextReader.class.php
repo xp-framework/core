@@ -174,6 +174,17 @@ class TextReader extends Reader {
     return $line;
   }
 
-  /** @return io.streams.LinesIn */
-  public function lines() { return new LinesIn($this); }
+  /**
+   * Reads all lines in this reader
+   *
+   * @return io.streams.LinesIn
+   */
+  public function lines() { return new LinesIn($this, $this->charset, true); }
+
+  /**
+   * Reads the lines starting at the current position
+   *
+   * @return io.streams.LinesIn
+   */
+  public function readLines() { return new LinesIn($this, $this->charset, false); }
 }
