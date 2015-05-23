@@ -1,18 +1,20 @@
 <?php namespace io\streams;
 
 use io\IOException;
+use lang\FormatException;
 
 /**
  * Reads text from an underlying input stream, converting it from the
  * given character set to our internal encoding (which is iso-8859-1).
  *
- * @test    xp://net.xp_framework.unittest.io.streams.TextReaderTest
- * @ext     iconv
+ * @test  xp://net.xp_framework.unittest.io.streams.TextReaderTest
+ * @ext   iconv
  */
 class TextReader extends Reader {
-  protected $buf = '';
-  protected $bom = 0;
-  protected $charset = null;
+  private $buf= '';
+  private $bom;
+  private $charset;
+  private $beginning;
 
   /**
    * Constructor. Creates a new TextReader on an underlying input
@@ -24,6 +26,7 @@ class TextReader extends Reader {
   public function __construct(InputStream $stream, $charset= null) {
     parent::__construct($stream);
     $this->charset= $charset ?: $this->detectCharset();
+    $this->beginning= true;
   }
 
   /**
@@ -31,9 +34,14 @@ class TextReader extends Reader {
    *
    * @return  string
    */
-  public function charset() {
-    return $this->charset;
-  }
+  public function charset() { return $this->charset; }
+
+  /**
+   * Returns whether we're at the beginning of the stream
+   *
+   * @return  bool
+   */
+  public function atBeginning() { return $this->beginning; }
 
   /**
    * Reset to BOM 
@@ -43,6 +51,7 @@ class TextReader extends Reader {
   public function reset() {
     if ($this->stream instanceof Seekable) {
       $this->stream->seek($this->bom, SEEK_SET);
+      $this->beginning= true;
       $this->buf= '';
     } else {
       throw new IOException('Underlying stream does not support seeking');
@@ -109,6 +118,7 @@ class TextReader extends Reader {
    */
   public function read($size= 8192) {
     if (0 === $size) return '';
+    $this->beginning= false;
 
     // fread() will always work with bytes, so reading may actually read part of
     // an incomplete multi-byte sequence. In this case, iconv_strlen() will raise
@@ -124,10 +134,12 @@ class TextReader extends Reader {
     if (false === $l) {
       $message= key(@\xp::$errors[__FILE__][__LINE__ - 3]);
       \xp::gc(__FILE__);
-      throw new \lang\FormatException($message);
+      throw new FormatException($message);
+    } else if ('' === $bytes) {
+      return null;
+    } else {
+      return iconv($this->charset, \xp::ENCODING, $bytes);
     }
-
-    return '' === $bytes ? null : iconv($this->charset, \xp::ENCODING, $bytes);
   }
   
   /**
@@ -150,4 +162,7 @@ class TextReader extends Reader {
     } while (null !== ($c= $this->read(1)));
     return $line;
   }
+
+  /** @return io.streams.LinesIn */
+  public function lines() { return new LinesIn($this); }
 }
