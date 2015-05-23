@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.2.4 / 2015-05-23
+
 ### Heads up!
 
 * Deprecated XPI (XP Installer). Use Composer or Glue instead.
