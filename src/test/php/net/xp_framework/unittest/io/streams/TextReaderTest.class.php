@@ -2,6 +2,7 @@
 
 use unittest\TestCase;
 use io\streams\TextReader;
+use io\streams\InputStream;
 use io\streams\MemoryInputStream;
 
 /**
@@ -21,6 +22,27 @@ class TextReaderTest extends TestCase {
    */
   protected function newReader($str, $charset= \xp::ENCODING) {
     return new TextReader(new MemoryInputStream($str), $charset);
+  }
+
+  /**
+   * Returns a stream that does not support seeking
+   *
+   * @return  io.streams.InputStream
+   */
+  protected function unseekableStream() {
+    return newinstance('io.streams.InputStream', [], [
+      'bytes' => "A\nB\n",
+      'offset' => 0,
+      'read' => function($length= 8192) {
+        $chunk= substr($this->bytes, $this->offset, $length);
+        $this->offset+= strlen($chunk);
+        return $chunk;
+      },
+      'available' => function() {
+        return strlen($this->bytes) - $this->offset;
+      },
+      'close' => function() { }
+    ]);
   }
 
   #[@test]
@@ -298,11 +320,7 @@ class TextReaderTest extends TestCase {
 
   #[@test, @expect(class= 'io.IOException', withMessage= 'Underlying stream does not support seeking')]
   public function resetUnseekable() {
-    $r= new TextReader(newinstance('io.streams.InputStream', [], '{
-      public function read($size= 8192) { return NULL; }
-      public function available() { return 0; }
-      public function close() { }
-    }'));
+    $r= new TextReader($this->unseekableStream());
     $r->reset();
   }
 
@@ -359,5 +377,45 @@ class TextReaderTest extends TestCase {
   #[@test, @values(array(["\377", 'ÿ'], ["\377\377", 'ÿÿ'], ["\377\377\377", 'ÿÿÿ']))]
   public function readLineNonBOMInputWithAutoDetectedIso88591Charset($bytes, $characters) {
     $this->assertEquals($characters, $this->newReader($bytes, null)->readLine(0xFF));
+  }
+
+  #[@test]
+  public function lines() {
+    $this->assertInstanceOf('io.streams.LinesIn', $this->newReader('')->lines());
+  }
+
+  #[@test]
+  public function can_iterate_twice_on_seekable() {
+    $reader= $this->newReader("A\nB");
+    $this->assertEquals(
+      [[1 => 'A', 2 => 'B'], [1 => 'A', 2 => 'B']],
+      [iterator_to_array($reader->lines()), iterator_to_array($reader->lines())]
+    );
+  }
+
+  #[@test]
+  public function iteration_after_reading() {
+    $reader= $this->newReader("A\nB");
+    $reader->read();
+    $this->assertEquals([1 => 'A', 2 => 'B'], iterator_to_array($reader->lines()));
+  }
+
+  #[@test]
+  public function iteration_after_reading_a_line() {
+    $reader= $this->newReader("A\nB");
+    $reader->readLine();
+    $this->assertEquals([1 => 'A', 2 => 'B'], iterator_to_array($reader->lines()));
+  }
+
+  #[@test]
+  public function can_only_iterate_unseekable_once() {
+    $reader= new TextReader($this->unseekableStream());
+    $this->assertEquals([1 => 'A', 2 => 'B'], iterator_to_array($reader->lines()));
+    try {
+      iterator_to_array($reader->lines());
+      $this->fail('No exception raised', null, 'io.IOException');
+    } catch (\io\IOException $expected) {
+      // OK
+    }
   }
 }
