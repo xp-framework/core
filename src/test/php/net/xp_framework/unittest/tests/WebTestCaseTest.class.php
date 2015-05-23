@@ -3,6 +3,9 @@
 use unittest\TestCase;
 use unittest\web\WebTestCase;
 use io\streams\MemoryInputStream;
+use peer\http\HttpConnection;
+use peer\http\HttpResponse;
+use peer\http\HttpConstants;
 
 /**
  * WebTestCase tests
@@ -16,25 +19,23 @@ class WebTestCaseTest extends TestCase {
    * Sets up test case
    */
   public function setUp() {
-    $this->fixture= newinstance('unittest.web.WebTestCase', array($this->name), '{
-      protected function getConnection($url= NULL) {
-        return new \peer\http\HttpConnection("http://localhost/");
-      }
-      
-      protected function doRequest($method, $params) {
+    $this->fixture= newinstance('unittest.web.WebTestCase', [$this->name], [
+      'getConnection' => function($url= null) {
+        return new HttpConnection('http://localhost/');
+      },
+      'doRequest' => function($method, $params) {
         return $this->response;
-      }
-      
-      public function respondWith($status, $headers= [], $body= "") {
-        $headers[]= "Content-Length: ".strlen($body);
-        $this->response= new \peer\http\HttpResponse(new \io\streams\MemoryInputStream(sprintf(
+      },
+      'respondWith' => function($status, $headers= [], $body= '') {
+        $headers[]= 'Content-Length: '.strlen($body);
+        $this->response= new HttpResponse(new MemoryInputStream(sprintf(
           "HTTP/1.0 %d Message\r\n%s\r\n\r\n%s",
           $status,
           implode("\r\n", $headers),
           $body
         )));
       }
-    }');
+    ]);
   }
 
   /**
@@ -97,16 +98,16 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function emptyDocument() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK);
+    $this->fixture->respondWith(HttpConstants::STATUS_OK);
 
     $this->fixture->beginAt('/');
-    $this->fixture->assertStatus(\peer\http\HttpConstants::STATUS_OK);
+    $this->fixture->assertStatus(HttpConstants::STATUS_OK);
     $this->fixture->assertHeader('Content-Length', '0');
   }
 
   #[@test]
   public function contentType() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, array('Content-Type: text/html'));
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, array('Content-Type: text/html'));
 
     $this->fixture->beginAt('/');
     $this->fixture->assertContentType('text/html');
@@ -114,7 +115,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function contentTypeWithCharset() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, array('Content-Type: text/xml; charset=utf-8'));
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, array('Content-Type: text/xml; charset=utf-8'));
 
     $this->fixture->beginAt('/');
     $this->fixture->assertContentType('text/xml; charset=utf-8');
@@ -122,7 +123,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function errorDocument() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_NOT_FOUND, [], trim('
+    $this->fixture->respondWith(HttpConstants::STATUS_NOT_FOUND, [], trim('
       <html>
         <head>
           <title>Not found</title>
@@ -134,7 +135,7 @@ class WebTestCaseTest extends TestCase {
     '));
 
     $this->fixture->beginAt('/');
-    $this->fixture->assertStatus(\peer\http\HttpConstants::STATUS_NOT_FOUND);
+    $this->fixture->assertStatus(HttpConstants::STATUS_NOT_FOUND);
     $this->fixture->assertTitleEquals('Not found');
     $this->fixture->assertTextPresent('404: The file you requested was not found');
     $this->fixture->assertTextNotPresent('I found it');
@@ -142,7 +143,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function elements() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], trim('
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], trim('
       <html>
         <head>
           <title>Elements</title>
@@ -164,7 +165,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function images() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], trim('
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], trim('
       <html>
         <head>
           <title>Images</title>
@@ -186,7 +187,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function links() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], trim('
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], trim('
       <html>
         <head>
           <title>Links</title>
@@ -208,7 +209,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function linksWithText() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], trim('
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], trim('
       <html>
         <head>
           <title>Links</title>
@@ -230,7 +231,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function unnamedForm() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], trim('
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], trim('
       <html>
         <head>
           <title>Enter your name</title>
@@ -247,7 +248,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function noForm() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], trim('
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], trim('
       <html>
         <head>
           <title>Enter your name</title>
@@ -264,7 +265,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function namedForms() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], trim('
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], trim('
       <html>
         <head>
           <title>Blue or red pill?</title>
@@ -284,7 +285,7 @@ class WebTestCaseTest extends TestCase {
   
   #[@test]
   public function getForm() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], trim('
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], trim('
       <html>
         <head>
           <title>Form-Mania!</title>
@@ -299,14 +300,14 @@ class WebTestCaseTest extends TestCase {
 
     $this->fixture->beginAt('/');
 
-    $this->assertForm('http://example.com/one', \peer\http\HttpConstants::GET, $this->fixture->getForm('one'));
-    $this->assertForm('http://example.com/two', \peer\http\HttpConstants::POST, $this->fixture->getForm('two'));
-    $this->assertForm('/', \peer\http\HttpConstants::GET, $this->fixture->getForm('three'));
+    $this->assertForm('http://example.com/one', HttpConstants::GET, $this->fixture->getForm('one'));
+    $this->assertForm('http://example.com/two', HttpConstants::POST, $this->fixture->getForm('two'));
+    $this->assertForm('/', HttpConstants::GET, $this->fixture->getForm('three'));
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function nonExistantField() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], $this->formFixture());
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], $this->formFixture());
     $this->fixture->beginAt('/');
 
     $this->fixture->getForm()->getField('does-not-exist');
@@ -314,7 +315,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function textFieldWithoutValue() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], $this->formFixture());
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], $this->formFixture());
     $this->fixture->beginAt('/');
 
     with ($f= $this->fixture->getForm()->getField('first')); {
@@ -326,7 +327,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function textFieldWithEmptyValue() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], $this->formFixture());
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], $this->formFixture());
     $this->fixture->beginAt('/');
 
     with ($f= $this->fixture->getForm()->getField('initial')); {
@@ -338,7 +339,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function textFieldWithValue() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], $this->formFixture());
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], $this->formFixture());
     $this->fixture->beginAt('/');
 
     with ($f= $this->fixture->getForm()->getField('last')); {
@@ -350,7 +351,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function textFieldWithUmlautInValue() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], $this->formFixture());
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], $this->formFixture());
     $this->fixture->beginAt('/');
 
     with ($f= $this->fixture->getForm()->getField('uber')); {
@@ -362,7 +363,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function selectFieldWithoutSelected() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], $this->formFixture());
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], $this->formFixture());
     $this->fixture->beginAt('/');
 
     with ($f= $this->fixture->getForm()->getField('gender')); {
@@ -374,7 +375,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function selectFieldWithSelected() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], $this->formFixture());
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], $this->formFixture());
     $this->fixture->beginAt('/');
 
     with ($f= $this->fixture->getForm()->getField('payment')); {
@@ -386,7 +387,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function selectFieldOptions() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], $this->formFixture());
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], $this->formFixture());
     $this->fixture->beginAt('/');
 
     with ($options= $this->fixture->getForm()->getField('gender')->getOptions()); {
@@ -412,7 +413,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function selectFieldNoSelectedOptions() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], $this->formFixture());
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], $this->formFixture());
     $this->fixture->beginAt('/');
 
     $this->assertEquals([], $this->fixture->getForm()->getField('gender')->getSelectedOptions());
@@ -420,7 +421,7 @@ class WebTestCaseTest extends TestCase {
   
   #[@test]
   public function selectFieldSelectedOptions() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], $this->formFixture());
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], $this->formFixture());
     $this->fixture->beginAt('/');
 
     with ($options= $this->fixture->getForm()->getField('payment')->getSelectedOptions()); {
@@ -434,7 +435,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function textArea() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], $this->formFixture());
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], $this->formFixture());
     $this->fixture->beginAt('/');
 
     with ($f= $this->fixture->getForm()->getField('comments')); {
@@ -446,7 +447,7 @@ class WebTestCaseTest extends TestCase {
   }
   #[@test]
   public function textAreaWithUmlautInValue() {
-    $this->fixture->respondWith(\peer\http\HttpConstants::STATUS_OK, [], $this->formFixture());
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, [], $this->formFixture());
     $this->fixture->beginAt('/');
 
     with ($f= $this->fixture->getForm()->getField('umlauts')); {

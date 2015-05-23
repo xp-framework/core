@@ -1,10 +1,12 @@
 <?php namespace net\xp_framework\unittest\tests;
 
 use unittest\TestSuite;
+use unittest\PrerequisitesNotMetError;
 use unittest\XmlTestListener;
 use io\streams\MemoryOutputStream;
 use io\streams\StringWriter;
 use xml\Tree;
+use xml\XMLFormatException;
 
 /**
  * TestCase for the XML test listener implementation
@@ -21,7 +23,7 @@ class XmlListenerTest extends \unittest\TestCase {
   #[@beforeClass]
   public static function onlyWithXmlModule() {
     if (!class_exists('xml\Tree')) {
-      throw new \unittest\PrerequisitesNotMetError('XML Module not available', NULL, array('loaded'));
+      throw new PrerequisitesNotMetError('XML Module not available', null, array('loaded'));
     }
   }
 
@@ -49,7 +51,7 @@ class XmlListenerTest extends \unittest\TestCase {
     
     try {
       return Tree::fromString($this->out->getBytes());
-    } catch (\xml\XMLFormatException $e) {
+    } catch (XMLFormatException $e) {
       $this->fail('XML generated is not well-formed: '.$e->getMessage(), $this->out->getBytes(), null);
     }
   }

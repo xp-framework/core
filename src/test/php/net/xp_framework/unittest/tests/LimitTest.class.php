@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\tests;
- 
+
+use unittest\TestSuite;
+
 /**
  * Test TestSuite class methods
  *
@@ -12,7 +14,7 @@ class LimitTest extends \unittest\TestCase {
    * Setup method. Creates a new test suite.
    */
   public function setUp() {
-    $this->suite= new \unittest\TestSuite();
+    $this->suite= new TestSuite();
   }
 
   #[@test]

@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\tests;
- 
+
+use unittest\TestSuite;
+
 /**
  * Test TestCase class special methods cannot be overwritten as test methods
  *
@@ -12,7 +14,7 @@ class SpecialMethodsTest extends \unittest\TestCase {
    * Setup method. Creates a new test suite.
    */
   public function setUp() {
-    $this->suite= new \unittest\TestSuite();
+    $this->suite= new TestSuite();
   }
   
   /**
