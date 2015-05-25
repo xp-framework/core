@@ -89,10 +89,8 @@ class DiffInstruction extends AbstractInstruction {
    */
   protected function diff($left, $right) {
     with (
-      $templ= new TempFile(),
-      $tempr= new TempFile(),
-      $templ->open(File::WRITE),
-      $tempr->open(File::WRITE)
+      $templ= (new TempFile())->open(File::WRITE),
+      $tempr= (new TempFile())->open(File::WRITE)
     ); {
       $templ->write($left);
       $tempr->write($right);

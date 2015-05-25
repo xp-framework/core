@@ -20,8 +20,7 @@
  * An io.File object represents a file. To sequentially read a file,
  * one could use the following sourcecode:
  * <code>
- *   $f= new File(new Folder('c:'), 'autoexec.bat');
- *   $f->open(File::READ);
+ *   $f= (new File(new Folder('c:'), 'autoexec.bat'))->open(File::READ);
  *   while ($chunk= $f->read()) {
  *     Console::writeLine($chunk);
  *   }
