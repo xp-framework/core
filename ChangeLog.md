@@ -3,6 +3,11 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Merged xp-framework/core#77: Text reader iteration
+  (@thekid)
+
 ## 6.2.4 / 2015-05-23
 
 ### Heads up!
