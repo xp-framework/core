@@ -130,6 +130,11 @@ class FileIntegrationTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function open_returns_file() {
+    $this->assertEquals($this->file, $this->file->open(File::WRITE));
+  }
+
+  #[@test]
   public function noLongerExistsAfterDeleting() {
     $this->writeData($this->file, null);
     $this->file->unlink();

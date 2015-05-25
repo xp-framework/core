@@ -181,7 +181,7 @@ class File extends \lang\Object implements Channel {
    * Open the file
    *
    * @param   string mode one of the File::* constants
-   * @return  bool TRUE if file could be opened
+   * @return  self
    * @throws  io.FileNotFoundException in case the file is not found
    * @throws  io.IOException in case the file cannot be opened (e.g., lacking permissions)
    */
@@ -200,7 +200,7 @@ class File extends \lang\Object implements Channel {
       throw $e;
     }
           
-    return true;
+    return $this;
   }
   
   /**
