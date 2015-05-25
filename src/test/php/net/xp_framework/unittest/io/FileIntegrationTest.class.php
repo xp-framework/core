@@ -18,6 +18,7 @@ class FileIntegrationTest extends \unittest\TestCase {
   /**
    * Verifies TEMP directory is usable and there is enough space
    *
+   * @return void
    */
   #[@beforeClass]
   public static function verifyTempDir() {
@@ -39,6 +40,7 @@ class FileIntegrationTest extends \unittest\TestCase {
    * running, then creates folder fixture, ensuring it exists and is
    * empty.
    *
+   * @return void
    */
   public function setUp() {
     $unid= getmypid();
@@ -61,6 +63,7 @@ class FileIntegrationTest extends \unittest\TestCase {
   /**
    * Deletes file and folder fixtures.
    *
+   * @return void
    */
   public function tearDown() {
     $this->file->isOpen() && $this->file->close();
@@ -115,29 +118,17 @@ class FileIntegrationTest extends \unittest\TestCase {
     return $data;
   }
 
-  /**
-   * Test exists() method
-   *
-   */
   #[@test]
   public function doesNotExistYet() {
     $this->assertFalse($this->file->exists());
   }
 
-  /**
-   * Test exists() method
-   *
-   */
   #[@test]
   public function existsAfterCreating() {
     $this->writeData($this->file, null);
     $this->assertTrue($this->file->exists());
   }
 
-  /**
-   * Test exists() and unlink() methods
-   *
-   */
   #[@test]
   public function noLongerExistsAfterDeleting() {
     $this->writeData($this->file, null);
@@ -145,47 +136,27 @@ class FileIntegrationTest extends \unittest\TestCase {
     $this->assertFalse($this->file->exists());
   }
   
-  /**
-   * Test unlink() method
-   *
-   */
   #[@test, @expect('io.IOException')]
   public function cannotDeleteNonExistant() {
     $this->file->unlink();
   }
 
-  /**
-   * Test unlink() method
-   *
-   */
   #[@test, @expect('lang.IllegalStateException')]
   public function cannotDeleteOpenFile() {
     $this->file->open(File::WRITE);
     $this->file->unlink();
   }
 
-  /**
-   * Test close() method
-   *
-   */
   #[@test, @expect('io.IOException')]
   public function cannotCloseUnopenedFile() {
     $this->file->close();
   }
 
-  /**
-   * Test writing to a file
-   *
-   */
   #[@test]
   public function write() {
     $this->assertEquals(5, $this->writeData($this->file, 'Hello'));
   }
 
-  /**
-   * Test writing to a file, then reading back the data
-   *
-   */
   #[@test]
   public function read() {
     with ($data= 'Hello'); {
@@ -197,10 +168,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data
-   *
-   */
   #[@test]
   public function read0() {
     with ($data= 'Hello'); {
@@ -212,10 +179,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data
-   *
-   */
   #[@test]
   public function readAfterEnd() {
     with ($data= 'Hello'); {
@@ -228,10 +191,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using gets()
-   *
-   */
   #[@test]
   public function gets() {
     with ($data= 'Hello'); {
@@ -243,10 +202,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using gets()
-   *
-   */
   #[@test]
   public function gets0() {
     with ($data= 'Hello'); {
@@ -258,10 +213,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using gets()
-   *
-   */
   #[@test]
   public function getsTwoLines() {
     with ($data= "Hello\nWorld\n"); {
@@ -274,10 +225,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using gets()
-   *
-   */
   #[@test]
   public function getsAfterEnd() {
     with ($data= 'Hello'); {
@@ -290,10 +237,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using readLine()
-   *
-   */
   #[@test]
   public function readLine() {
     with ($data= 'Hello'); {
@@ -305,10 +248,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using readLine()
-   *
-   */
   #[@test]
   public function readLine0() {
     with ($data= 'Hello'); {
@@ -320,10 +259,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using readLine()
-   *
-   */
   #[@test]
   public function readLines() {
     with ($data= "Hello\nWorld\n"); {
@@ -336,10 +271,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using readLine()
-   *
-   */
   #[@test]
   public function readLinesAfterEnd() {
     with ($data= 'Hello'); {
@@ -352,10 +283,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using readChar()
-   *
-   */
   #[@test]
   public function readChar() {
     with ($data= 'Hello'); {
@@ -367,10 +294,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using readChar()
-   *
-   */
   #[@test]
   public function readChars() {
     with ($data= 'Hello'); {
@@ -383,10 +306,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using readChar()
-   *
-   */
   #[@test]
   public function readCharsAfterEnd() {
     with ($data= 'H'); {
@@ -399,10 +318,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data
-   *
-   */
   #[@test]
   public function overwritingExistant() {
     with ($data= 'Hello World', $appear= 'This should not appear'); {
@@ -415,10 +330,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data
-   *
-   */
   #[@test]
   public function appendingToExistant() {
     with ($data= 'Hello World', $appear= 'This should appear'); {
@@ -429,19 +340,11 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test a non-existant file cannot bee opened for reading
-   *
-   */
   #[@test, @expect('io.FileNotFoundException')]
   public function cannotOpenNonExistantForReading() {
     $this->file->open(File::READ);
   }
 
-  /**
-   * Test copy() method
-   *
-   */
   #[@test]
   public function copying() {
     with ($data= 'Hello World'); {
@@ -457,10 +360,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test copy() method
-   *
-   */
   #[@test]
   public function copyingOver() {
     with ($data= 'Hello World'); {
@@ -477,20 +376,12 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test copy() method
-   *
-   */
   #[@test, @expect('lang.IllegalStateException')]
   public function cannotCopyOpenFile() {
     $this->file->open(File::WRITE);
     $this->file->copy('irrelevant');
   }
 
-  /**
-   * Test move() method
-   *
-   */
   #[@test]
   public function moving() {
     with ($data= 'Hello World'); {
@@ -510,10 +401,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test move() method
-   *
-   */
   #[@test, @ignore('Breaks on Win2008 server, need special handling')]
   public function movingOver() {
     with ($data= 'Hello World'); {
@@ -534,20 +421,12 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test move() method
-   *
-   */
   #[@test, @expect('lang.IllegalStateException')]
   public function cannotMoveOpenFile() {
     $this->file->open(File::WRITE);
     $this->file->move('irrelevant');
   }
 
-  /**
-   * Test copy() method
-   *
-   */
   #[@test]
   public function copyingToAnotherFile() {
     $this->writeData($this->file, null);
@@ -558,10 +437,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     $this->assertTrue($exists);
   }
 
-  /**
-   * Test copy() method
-   *
-   */
   #[@test]
   public function copyingToAnotherFolder() {
     $this->writeData($this->file, null);
@@ -572,10 +447,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     $this->assertTrue($exists);
   }
 
-  /**
-   * Test move() method
-   *
-   */
   #[@test]
   public function movingToAnotherFile() {
     $this->writeData($this->file, null);
@@ -586,10 +457,6 @@ class FileIntegrationTest extends \unittest\TestCase {
     $this->assertTrue($exists);
   }
 
-  /**
-   * Test move() method
-   *
-   */
   #[@test]
   public function movingToAnotherFolder() {
     $this->writeData($this->file, null);
