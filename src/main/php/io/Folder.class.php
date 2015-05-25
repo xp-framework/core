@@ -1,5 +1,7 @@
 <?php namespace io;
-  
+
+use lang\IllegalStateException;
+
 /**
  * Represents a Folder
  *
@@ -53,6 +55,7 @@ class Folder extends \lang\Object {
   /**
    * Close directory
    *
+   * @return void
    */
   public function close() {
     if (false != $this->_hdir) $this->_hdir->close();
@@ -186,7 +189,7 @@ class Folder extends \lang\Object {
    */
   public function move($target) {
     if (is_resource($this->_hdir)) {
-      throw new \lang\IllegalStateException('Directory still open');
+      throw new IllegalStateException('Directory still open');
     }
     if (false === rename($this->uri, $target)) {
       throw new IOException('Cannot move directory '.$this->uri.' to '.$target);
@@ -231,10 +234,10 @@ class Folder extends \lang\Object {
    * @throws  io.IOException in case an error occurs
    */
   public function rewind() {
-    if (false === $this->_hdir)
-      throw new IOException ('Cannot rewind non-open folder.');
-    
-    rewinddir ($this->_hdir->handle);
+    if (false === $this->_hdir) {
+      throw new IOException('Cannot rewind non-open folder.');
+    }
+    rewinddir($this->_hdir->handle);
   }
 
   /**
