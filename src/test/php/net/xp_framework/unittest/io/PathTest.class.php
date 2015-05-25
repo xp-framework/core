@@ -146,10 +146,19 @@ class PathTest extends \unittest\TestCase {
   #[@test]
   public function real() {
     $folder= $this->existingFolder();
-    $this->assertEquals(
-      $folder->path,
-      Path::real($folder->path, '.', $folder->dirname, '..')->toString()
-    );
+    $this->assertEquals(rtrim($folder->getURI(), DIRECTORY_SEPARATOR), Path::real($folder)->toString());
+  }
+
+  #[@test]
+  public function real_with_working_directory() {
+    $folder= $this->existingFolder();
+    $this->assertEquals($folder->path, Path::real('..', $folder)->toString());
+  }
+
+  #[@test]
+  public function real_with_array() {
+    $folder= $this->existingFolder();
+    $this->assertEquals($folder->path, Path::real([$folder->path, '.', $folder->dirname, '..'])->toString());
   }
 
   #[@test]

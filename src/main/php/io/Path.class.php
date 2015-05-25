@@ -59,17 +59,17 @@ class Path extends \lang\Object {
    * Creates a new instance with a variable number of arguments
    *
    * @see    php://realpath
-   * @param  var $base Either a string, a Path, a File, Folder or IOElement
-   * @param  var... $args Further components to be concatenated, Paths or strings.
+   * @param  var $arg Either a string, a Path, a File, Folder or IOElement or an array thereof
+   * @param  var $wd Working directory A string, a Path, Folder or IOElement
    * @return self
    */
-  public static function real($base) {
-    if (is_array($base)) {
-      $path= self::pathFor($base);
+  public static function real($arg, $wd= null) {
+    if (is_array($arg)) {
+      $path= self::pathFor($arg);
     } else {
-      $path= self::pathFor(func_get_args());
+      $path= self::pathFor([$arg]);
     }
-    return new self(self::real0($path, getcwd()));
+    return new self(self::real0($path, $wd ?: getcwd()));
   }
 
   /**
@@ -142,7 +142,7 @@ class Path extends \lang\Object {
    *
    * @see    php://realpath
    * @param  string $path
-   * @param  string $wd
+   * @param  var $wd
    * @return string
    */
   private static function real0($path, $wd) {
@@ -155,7 +155,7 @@ class Path extends \lang\Object {
     } else if (null === $wd) {
       throw new IllegalStateException('Cannot resolve '.$path);
     } else {
-      return self::real0($wd.DIRECTORY_SEPARATOR.$path, null);
+      return self::real0(self::pathFor([$wd]).DIRECTORY_SEPARATOR.$path, null);
     }
 
     $check= true;
@@ -186,7 +186,7 @@ class Path extends \lang\Object {
    * used to resolve relative paths.
    *
    * @see    php://getcwd
-   * @param  string $wd Working directory
+   * @param  var $wd Working directory A string, a Path, Folder or IOElement
    * @return string
    */
   public function asURI($wd= null) {
@@ -199,7 +199,7 @@ class Path extends \lang\Object {
    * used to resolve relative paths.
    *
    * @see    php://getcwd
-   * @param  string $wd Working directory
+   * @param  var $wd Working directory A string, a Path, Folder or IOElement
    * @return self
    */
   public function asRealpath($wd= null) {
