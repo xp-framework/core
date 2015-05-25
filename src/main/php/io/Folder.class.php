@@ -22,8 +22,7 @@ class Folder extends \lang\Object {
     $dirname  = '',
     $path     = '';
   
-  public
-    $_hdir= false;
+  private $_hdir = false;
     
   /**
    * Constructor
@@ -46,7 +45,6 @@ class Folder extends \lang\Object {
   
   /**
    * Destructor
-   *
    */
   public function __destruct() {
     $this->close();
@@ -205,10 +203,14 @@ class Folder extends \lang\Object {
   public function exists() {
     return is_dir($this->uri);
   }
-  
+
+  /** @return io.FolderEntries */
+  public function entries() { return new FolderEntries($this); }
+
   /**
    * Read through the contents of the directory, ommitting the entries "." and ".."
    *
+   * @deprecated Use entries() instead
    * @return  string entry directory entry (w/o path!), FALSE, if no more entries are left
    * @throws  io.IOException in case an error occurs
    */
@@ -231,6 +233,7 @@ class Folder extends \lang\Object {
   /**
    * Rewinds the directory to the beginning.
    *
+   * @deprecated Use entries() instead
    * @throws  io.IOException in case an error occurs
    */
   public function rewind() {
@@ -322,6 +325,7 @@ class Folder extends \lang\Object {
   /**
    * Return if the folder was already opened
    *
+   * @deprecated Use entries() instead
    * @return  bool
    */
   public function isOpen() {
