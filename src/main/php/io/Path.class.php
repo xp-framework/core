@@ -111,6 +111,15 @@ class Path extends \lang\Object {
   }
 
   /**
+   * Tests whether this path references an empty string
+   *
+   * @return bool
+   */
+  public function isEmpty() {
+    return '' === $this->path;
+  }
+
+  /**
    * Realpath
    *
    * @see    php://realpath
