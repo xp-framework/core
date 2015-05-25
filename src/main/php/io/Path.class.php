@@ -59,7 +59,7 @@ class Path extends \lang\Object {
    * Creates a new instance with a variable number of arguments
    *
    * @see    php://realpath
-   * @param  var $arg Either a string, a Path, a File, Folder or IOElement or an array thereof
+   * @param  var $arg Either a string, a Path, a File, Folder or IOElement or an array
    * @param  var $wd Working directory A string, a Path, Folder or IOElement
    * @return self
    */
