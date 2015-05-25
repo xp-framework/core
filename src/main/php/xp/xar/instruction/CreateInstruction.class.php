@@ -44,10 +44,10 @@ class CreateInstruction extends AbstractInstruction {
   public function addAll($arguments, $cwd) {
     foreach ($arguments as $arg) {
       if (false !== ($p= strrpos($arg, '='))) {
-        $path= new Path(realpath(substr($arg, 0, $p)));
+        $path= Path::real(substr($arg, 0, $p));
         $named= new Path(substr($arg, $p+ 1));
       } else {
-        $path= new Path(realpath($arg));
+        $path= Path::real($arg);
         $named= null;
       }
 
@@ -74,7 +74,7 @@ class CreateInstruction extends AbstractInstruction {
    */
   public function perform() {
     $this->archive->open(Archive::CREATE);
-    $this->addAll($this->getArguments(), new Path(realpath(getcwd())));
+    $this->addAll($this->getArguments(), Path::real(getcwd())));
     $this->archive->create();
   }
 }
