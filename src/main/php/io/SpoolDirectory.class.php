@@ -5,6 +5,8 @@ use io\Folder;
 /**
  * This class handles all neccessary file and directory operations
  * for doing reliable spool operations.
+ *
+ * @deprecated Extract to own library if necessary
  */    
 class SpoolDirectory extends \lang\Object {
   public

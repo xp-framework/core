@@ -3,6 +3,11 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Heads up!
+
+* Deprecated io.SpoolDirectory class
+  (@thekid)
+
 ### Features
 
 * Changed io.streams.TextWriter to accept output streams or I/O channels
