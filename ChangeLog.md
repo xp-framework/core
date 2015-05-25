@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Deprecated io.ZipFile class - use GzDecompressingInputStream instead!
+  See xp-framework/core#78
+  (@thekid)
 * Deprecated io.SpoolDirectory class
   (@thekid)
 
