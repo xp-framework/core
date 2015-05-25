@@ -19,6 +19,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged xp-framework/core#83: New io.Path::real() shorthand
+  (@thekid)
 * Merged xp-framework/core#82: Path::asFile() and asFolder() prevent
   conditionals
   (@thekid)
