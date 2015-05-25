@@ -19,6 +19,11 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged xp-framework/core#82: Path::asFile() and asFolder() prevent
+  conditionals
+  (@thekid)
+* Merged xp-framework/core#81: Feature: Folder entries
+  (@thekid)
 * Changed io.Path::equals() to perform normalization before comparing
   (@thekid)
 * Changed io.File::open() to return the file itself, enabling fluent API
