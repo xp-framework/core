@@ -103,4 +103,9 @@ class FolderEntriesTest extends \unittest\TestCase {
   public function named() {
     $this->assertEquals(new Path($this->folder, 'test'), (new FolderEntries($this->folder))->named('test'));
   }
+
+  #[@test]
+  public function named_dot() {
+    $this->assertEquals(new Path($this->folder), (new FolderEntries($this->folder))->named('.'));
+  }
 }
