@@ -5,7 +5,7 @@ use io\streams\FileOutputStream;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
 
-// Mode constants for open() method
+// Deprecated mode constants for open() method (use class constants!)
 define('FILE_MODE_READ',      'rb');          // Read
 define('FILE_MODE_READWRITE', 'rb+');         // Read/Write
 define('FILE_MODE_WRITE',     'wb');          // Write
