@@ -47,7 +47,7 @@ class ArchiveCollection extends \lang\Object implements IOCollection {
    *
    */
   public function open() { 
-    $this->archive->isOpen() || $this->archive->open(ARCHIVE_READ);
+    $this->archive->isOpen() || $this->archive->open(Archive::READ);
     reset($this->archive->_index);
     $this->_dirs= [];
   }

@@ -15,12 +15,12 @@ class MergeInstruction extends AbstractInstruction {
    * @return  int
    */
   public function perform() {
-    $this->archive->open(ARCHIVE_CREATE);
+    $this->archive->open(Archive::CREATE);
 
     $args= $this->getArguments();
     foreach ($args as $arg) {
       $archive= new Archive(new File($arg));
-      $archive->open(ARCHIVE_READ);
+      $archive->open(Archive::READ);
 
       while ($entry= $archive->getEntry()) {
 
