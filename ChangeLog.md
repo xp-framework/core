@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Added class constants for File::open() and deprecated `FILE_MODE_*`.
+  See xp-framework/core#79
+  (@thekid)
 * Deprecated io.ZipFile class - use GzDecompressingInputStream instead!
   See xp-framework/core#78
   (@thekid)
