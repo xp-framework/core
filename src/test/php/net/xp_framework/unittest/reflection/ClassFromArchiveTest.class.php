@@ -36,7 +36,7 @@ class ClassFromArchiveTest extends ClassFromUriTest {
 
       public function create() {
         $this->t= new \lang\archive\Archive(new \io\TempFile("arcl"));
-        $this->t->open(Archive::CREATE);
+        $this->t->open(\lang\archive\Archive::CREATE);
       }
 
       public function delete() {
