@@ -1,29 +1,43 @@
 <?php namespace io\streams;
 
 use io\IOException;
+use io\Channel;
+use lang\FormatException;
+use lang\IllegalArgumentException;
 
 /**
  * Reads text from an underlying input stream, converting it from the
  * given character set to our internal encoding (which is iso-8859-1).
  *
- * @test    xp://net.xp_framework.unittest.io.streams.TextReaderTest
- * @ext     iconv
+ * @test  xp://net.xp_framework.unittest.io.streams.TextReaderTest
+ * @ext   iconv
  */
 class TextReader extends Reader {
-  protected $buf = '';
-  protected $bom = 0;
-  protected $charset = null;
+  private $buf= '';
+  private $bom;
+  private $charset;
+  private $beginning;
 
   /**
    * Constructor. Creates a new TextReader on an underlying input
    * stream with a given charset.
    *
-   * @param   io.streams.InputStream $stream
+   * @param   var $arg Either an input stream, a string or an I/O channel
    * @param   string $charset the charset the stream is encoded in or NULL to trigger autodetection by BOM
+   * @throws  lang.IllegalArgumentException
    */
-  public function __construct(InputStream $stream, $charset= null) {
-    parent::__construct($stream);
+  public function __construct($arg, $charset= null) {
+    if ($arg instanceof InputStream) {
+      parent::__construct($arg);
+    } else if ($arg instanceof Channel) {
+      parent::__construct($arg->in());
+    } else if (is_string($arg)) {
+      parent::__construct(new MemoryInputStream($arg));
+    } else {
+      throw new IllegalArgumentException('Given argument is neither an input stream, a channel nor a string: '.\xp::typeOf($arg));
+    }
     $this->charset= $charset ?: $this->detectCharset();
+    $this->beginning= true;
   }
 
   /**
@@ -31,9 +45,14 @@ class TextReader extends Reader {
    *
    * @return  string
    */
-  public function charset() {
-    return $this->charset;
-  }
+  public function charset() { return $this->charset; }
+
+  /**
+   * Returns whether we're at the beginning of the stream
+   *
+   * @return  bool
+   */
+  public function atBeginning() { return $this->beginning; }
 
   /**
    * Reset to BOM 
@@ -43,6 +62,7 @@ class TextReader extends Reader {
   public function reset() {
     if ($this->stream instanceof Seekable) {
       $this->stream->seek($this->bom, SEEK_SET);
+      $this->beginning= true;
       $this->buf= '';
     } else {
       throw new IOException('Underlying stream does not support seeking');
@@ -109,6 +129,7 @@ class TextReader extends Reader {
    */
   public function read($size= 8192) {
     if (0 === $size) return '';
+    $this->beginning= false;
 
     // fread() will always work with bytes, so reading may actually read part of
     // an incomplete multi-byte sequence. In this case, iconv_strlen() will raise
@@ -124,10 +145,12 @@ class TextReader extends Reader {
     if (false === $l) {
       $message= key(@\xp::$errors[__FILE__][__LINE__ - 3]);
       \xp::gc(__FILE__);
-      throw new \lang\FormatException($message);
+      throw new FormatException($message);
+    } else if ('' === $bytes) {
+      return null;
+    } else {
+      return iconv($this->charset, \xp::ENCODING, $bytes);
     }
-
-    return '' === $bytes ? null : iconv($this->charset, \xp::ENCODING, $bytes);
   }
   
   /**
@@ -150,4 +173,18 @@ class TextReader extends Reader {
     } while (null !== ($c= $this->read(1)));
     return $line;
   }
+
+  /**
+   * Reads all lines in this reader
+   *
+   * @return io.streams.LinesIn
+   */
+  public function lines() { return new LinesIn($this, $this->charset, true); }
+
+  /**
+   * Reads the lines starting at the current position
+   *
+   * @return io.streams.LinesIn
+   */
+  public function readLines() { return new LinesIn($this, $this->charset, false); }
 }
