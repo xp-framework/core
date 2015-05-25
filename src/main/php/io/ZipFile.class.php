@@ -3,6 +3,7 @@
 /**
  * Represents a zip file
  *
+ * @deprecated See https://github.com/xp-framework/core/pull/78
  * @see     xp://io.File
  * @see     php://zlib
  * @ext     zlib
