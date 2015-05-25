@@ -17,7 +17,7 @@ class FileInputStream extends \lang\Object implements InputStream, Seekable {
    */
   public function __construct($file) {
     $this->file= $file instanceof File ? $file : new File($file);
-    $this->file->isOpen() || $this->file->open(FILE_MODE_READ);
+    $this->file->isOpen() || $this->file->open(File::READ);
   }
 
   /**

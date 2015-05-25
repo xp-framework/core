@@ -3,6 +3,7 @@
 use lang\ElementNotFoundException;
 use io\EncapsedStream;
 use io\FileUtil;
+use io\File;
 
 define('ARCHIVE_READ',             0x0000);
 define('ARCHIVE_CREATE',           0x0001);
@@ -174,7 +175,7 @@ class Archive extends \lang\Object {
     );
     
     try {
-      $this->file->isOpen() || $this->file->open(FILE_MODE_READ);
+      $this->file->isOpen() || $this->file->open(File::READ);
       $this->file->seek($pos, SEEK_SET);
       $data= $this->file->read($this->_index[$id][0]);
     } catch (\lang\XPException $e) {
@@ -225,7 +226,7 @@ class Archive extends \lang\Object {
         if ($this->file->isOpen()) {
           $this->file->seek(0, SEEK_SET);
         } else {
-          $this->file->open(FILE_MODE_READ);
+          $this->file->open(File::READ);
         }
 
         // Read header
@@ -253,7 +254,7 @@ class Archive extends \lang\Object {
         if ($this->file->isOpen()) {
           return $this->file->tell() > 0 ? $this->file->truncate() : true;
         } else {
-          return $this->file->open(FILE_MODE_WRITE);
+          return $this->file->open(File::WRITE);
         }
     }
     

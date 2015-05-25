@@ -1,5 +1,7 @@
 <?php namespace lang;
 
+use io\File;
+
 /**
  * Provides a resource through a scheme.
  *
@@ -42,7 +44,7 @@ class ResourceProvider extends Object {
     if ($mode !== 'r' && $mode !== 'rb') return false;
 
     $this->resource= $this->getLoader()->getResourceAsStream(self::$instance->translatePath($path));
-    $this->resource->open(FILE_MODE_READ);
+    $this->resource->open(File::READ);
 
     return true;
   }

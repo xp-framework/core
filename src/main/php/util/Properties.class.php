@@ -8,6 +8,8 @@ use io\streams\MemoryOutputStream;
 use io\streams\FileInputStream;
 use io\streams\TextReader;
 use text\TextTokenizer;
+use lang\FormatException;
+use lang\IllegalStateException;
 
 /**
  * An interface to property-files (aka "ini-files")
@@ -67,7 +69,7 @@ class Properties extends \lang\Object implements PropertyAccess {
         continue;                    
       } else if ('[' === $c) {
         if (false === ($p= strrpos($trimmedToken, ']'))) {
-          throw new \lang\FormatException('Unclosed section "'.$trimmedToken.'"');
+          throw new FormatException('Unclosed section "'.$trimmedToken.'"');
         }
         $section= substr($trimmedToken, 1, $p- 1);
         $this->_data[$section]= [];
@@ -92,7 +94,7 @@ class Properties extends \lang\Object implements PropertyAccess {
         // Arrays and maps: key[], key[0], key[assoc]
         if (']' === substr($key, -1)) {
           if (false === ($p= strpos($key, '['))) {
-            throw new \lang\FormatException('Invalid key "'.$key.'"');
+            throw new FormatException('Invalid key "'.$key.'"');
           }
           $offset= substr($key, $p+ 1, -1);
           $key= substr($key, 0, $p);
@@ -108,7 +110,7 @@ class Properties extends \lang\Object implements PropertyAccess {
           $this->_data[$section][$key]= $value;
         }
       } else if ('' !== trim($t)) {
-        throw new \lang\FormatException('Invalid line "'.$t.'"');
+        throw new FormatException('Invalid line "'.$t.'"');
       }
     }
   }
@@ -195,7 +197,7 @@ class Properties extends \lang\Object implements PropertyAccess {
   public function create() {
     if (null !== $this->_file) {
       $fd= new File($this->_file);
-      $fd->open(FILE_MODE_WRITE);
+      $fd->open(File::WRITE);
       $fd->close();
     }
     $this->_data= [];
@@ -583,7 +585,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    */
   public function removeSection($section) {
     $this->_load();
-    if (!isset($this->_data[$section])) throw new \lang\IllegalStateException('Cannot remove nonexistant section "'.$section.'"');
+    if (!isset($this->_data[$section])) throw new IllegalStateException('Cannot remove nonexistant section "'.$section.'"');
     unset($this->_data[$section]);
   }
 
@@ -596,7 +598,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    */
   public function removeKey($section, $key) {
     $this->_load();
-    if (!isset($this->_data[$section][$key])) throw new \lang\IllegalStateException('Cannot remove nonexistant key "'.$key.'" in "'.$section.'"');
+    if (!isset($this->_data[$section][$key])) throw new IllegalStateException('Cannot remove nonexistant key "'.$key.'" in "'.$section.'"');
     unset($this->_data[$section][$key]);
   }
 
