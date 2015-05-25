@@ -5,6 +5,10 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Changed io.streams.TextWriter to accept output streams or I/O channels
+  as its constructor argument, and io.streams.TextReader to accept input
+  streams, strings or I/O channels as their constructor arguments.
+  (@thekid)
 * Merged xp-framework/core#77: Text reader iteration
   (@thekid)
 
