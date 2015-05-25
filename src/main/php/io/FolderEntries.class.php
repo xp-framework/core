@@ -3,7 +3,7 @@
 use lang\IllegalArgumentException;
 
 /**
- * Folder entries provi
+ * Folder entries provides an iterable view of the files inside a given folder
  *
  * @test  xp://net.xp_framework.unittest.io.FolderEntriesTest
  * @see   xp://io.Folder#entries
