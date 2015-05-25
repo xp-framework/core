@@ -193,6 +193,16 @@ class PathTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function as_file_works_with_nonexistant_paths() {
+    $this->assertEquals(new File('test.txt'), (new Path('test.txt'))->asFile());
+  }
+
+  #[@test, @expect(class= 'lang.IllegalStateException', withMessage= '/.+ does not exist/')]
+  public function as_file_throws_exception_when_existing_flag_defined_an_nonexistant_path_given() {
+    (new Path('test.txt'))->asFile(Path::EXISTING);
+  }
+
+  #[@test]
   public function as_folder() {
     $folder= $this->existingFolder();
     $this->assertEquals($folder, (new Path($folder))->asFolder());
@@ -201,6 +211,16 @@ class PathTest extends \unittest\TestCase {
   #[@test, @expect(class= 'lang.IllegalStateException', withMessage= '/.+ is not a folder/')]
   public function as_folder_throws_exception_when_invoked_on_a_folder() {
     (new Path($this->existingFile()))->asFolder();
+  }
+
+  #[@test]
+  public function as_folder_works_with_nonexistant_paths() {
+    $this->assertEquals(new Folder('test'), (new Path('test'))->asFolder());
+  }
+
+  #[@test, @expect(class= 'lang.IllegalStateException', withMessage= '/.+ does not exist/')]
+  public function as_folder_throws_exception_when_existing_flag_defined_an_nonexistant_path_given() {
+    (new Path('test'))->asFolder(Path::EXISTING);
   }
 
   #[@test, @values(['.', '..', 'test', '/root/parent/child', 'C:/Windows'])]
