@@ -14,7 +14,7 @@ class Path extends \lang\Object {
    * @param  var[] $input
    * @return string
    */
-  protected function pathFor($input) {
+  private static function pathFor($input) {
     if (empty($input)) {
       return '';
     } else if ($input[0] instanceof Folder) {
@@ -39,9 +39,9 @@ class Path extends \lang\Object {
    */
   public function __construct($base) {
     if (is_array($base)) {
-      $this->path= $this->pathFor($base);
+      $this->path= self::pathFor($base);
     } else {
-      $this->path= $this->pathFor(func_get_args());
+      $this->path= self::pathFor(func_get_args());
     }
   }
 
@@ -53,6 +53,23 @@ class Path extends \lang\Object {
    */
   public static function compose(array $args) {
     return new self($args);
+  }
+
+  /**
+   * Creates a new instance with a variable number of arguments
+   *
+   * @see    php://realpath
+   * @param  var $base Either a string, a Path, a File, Folder or IOElement
+   * @param  var... $args Further components to be concatenated, Paths or strings.
+   * @return self
+   */
+  public static function real($base) {
+    if (is_array($base)) {
+      $path= self::pathFor($base);
+    } else {
+      $path= self::pathFor(func_get_args());
+    }
+    return new self(self::real0($path, getcwd()));
   }
 
   /**
@@ -128,7 +145,7 @@ class Path extends \lang\Object {
    * @param  string $wd
    * @return string
    */
-  protected static function real($path, $wd) {
+  private static function real0($path, $wd) {
     if (DIRECTORY_SEPARATOR === $path{0}) {
       $normalized= '';
       $components= explode(DIRECTORY_SEPARATOR, substr($path, 1));
@@ -138,7 +155,7 @@ class Path extends \lang\Object {
     } else if (null === $wd) {
       throw new IllegalStateException('Cannot resolve '.$path);
     } else {
-      return self::real($wd.DIRECTORY_SEPARATOR.$path, null);
+      return self::real0($wd.DIRECTORY_SEPARATOR.$path, null);
     }
 
     $check= true;
@@ -173,7 +190,7 @@ class Path extends \lang\Object {
    * @return string
    */
   public function asURI($wd= null) {
-    return self::real($this->path, $wd ?: getcwd());
+    return self::real0($this->path, $wd ?: getcwd());
   }
 
   /**
@@ -186,7 +203,7 @@ class Path extends \lang\Object {
    * @return self
    */
   public function asRealpath($wd= null) {
-    return new self(self::real($this->path, $wd ?: getcwd()));
+    return new self(self::real0($this->path, $wd ?: getcwd()));
   }
 
   /**
