@@ -69,7 +69,7 @@ class Policy extends \lang\Object {
     
     $policy= new Policy();
     
-    $stream->open(FILE_MODE_READ);
+    $stream->open(File::READ);
     $state= PF_ST_INITIAL;
     $num= 0;
     do {

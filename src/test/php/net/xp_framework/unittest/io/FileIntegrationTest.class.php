@@ -1,17 +1,16 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use unittest\TestCase;
 use io\File;
 use io\Folder;
 use lang\System;
-
+use unittest\PrerequisitesNotMetError;
 
 /**
  * TestCase
  *
  * @see      xp://io.File
  */
-class FileIntegrationTest extends TestCase {
+class FileIntegrationTest extends \unittest\TestCase {
   protected static $temp= null;
   protected $file= null;
   protected $folder= null;
@@ -24,10 +23,10 @@ class FileIntegrationTest extends TestCase {
   public static function verifyTempDir() {
     self::$temp= System::tempDir();
     if (!is_writeable(self::$temp)) {
-      throw new \unittest\PrerequisitesNotMetError('$TEMP is not writeable', null, array(self::$temp.' +w'));
+      throw new PrerequisitesNotMetError('$TEMP is not writeable', null, array(self::$temp.' +w'));
     }
     if (($df= disk_free_space(self::$temp)) < 10240) {
-      throw new \unittest\PrerequisitesNotMetError('Not enough space available in $TEMP', null, array(sprintf(
+      throw new PrerequisitesNotMetError('Not enough space available in $TEMP', null, array(sprintf(
         'df %s = %.0fk > 10k',
         self::$temp,
         $df / 1024
@@ -90,7 +89,7 @@ class FileIntegrationTest extends TestCase {
    * @throws  io.IOException
    */
   protected function writeData($file, $data= null, $append= false) {
-    $file->open($append ? FILE_MODE_APPEND : FILE_MODE_WRITE);
+    $file->open($append ? File::APPEND : File::WRITE);
     if (null === $data) {
       $written= 0;
     } else {
@@ -110,7 +109,7 @@ class FileIntegrationTest extends TestCase {
    * @return  string
    */
   protected function readData($file, $length= -1) {
-    $file->open(FILE_MODE_READ);
+    $file->open(File::READ);
     $data= $file->read($length < 0 ? $file->size() : $length);
     $file->close();
     return $data;
@@ -161,7 +160,7 @@ class FileIntegrationTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalStateException')]
   public function cannotDeleteOpenFile() {
-    $this->file->open(FILE_MODE_WRITE);
+    $this->file->open(File::WRITE);
     $this->file->unlink();
   }
 
@@ -192,7 +191,7 @@ class FileIntegrationTest extends TestCase {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals($data, $this->file->read(strlen($data)));
       $this->file->close();
     }
@@ -207,7 +206,7 @@ class FileIntegrationTest extends TestCase {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals('', $this->file->read(0));
       $this->file->close();
     }
@@ -222,7 +221,7 @@ class FileIntegrationTest extends TestCase {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals($data, $this->file->read(strlen($data)));
       $this->assertFalse($this->file->read(1));
       $this->file->close();
@@ -238,7 +237,7 @@ class FileIntegrationTest extends TestCase {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals($data, $this->file->gets());
       $this->file->close();
     }
@@ -253,7 +252,7 @@ class FileIntegrationTest extends TestCase {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals('', $this->file->gets(0));
       $this->file->close();
     }
@@ -268,7 +267,7 @@ class FileIntegrationTest extends TestCase {
     with ($data= "Hello\nWorld\n"); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals("Hello\n", $this->file->gets());
       $this->assertEquals("World\n", $this->file->gets());
       $this->file->close();
@@ -284,7 +283,7 @@ class FileIntegrationTest extends TestCase {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals('Hello', $this->file->gets());
       $this->assertFalse($this->file->gets());
       $this->file->close();
@@ -300,7 +299,7 @@ class FileIntegrationTest extends TestCase {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals($data, $this->file->readLine());
       $this->file->close();
     }
@@ -315,7 +314,7 @@ class FileIntegrationTest extends TestCase {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals('', $this->file->readLine(0));
       $this->file->close();
     }
@@ -330,7 +329,7 @@ class FileIntegrationTest extends TestCase {
     with ($data= "Hello\nWorld\n"); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals('Hello', $this->file->readLine());
       $this->assertEquals('World', $this->file->readLine());
       $this->file->close();
@@ -346,7 +345,7 @@ class FileIntegrationTest extends TestCase {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals('Hello', $this->file->readLine());
       $this->assertFalse($this->file->readLine());
       $this->file->close();
@@ -362,7 +361,7 @@ class FileIntegrationTest extends TestCase {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals($data{0}, $this->file->readChar());
       $this->file->close();
     }
@@ -377,7 +376,7 @@ class FileIntegrationTest extends TestCase {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals($data{0}, $this->file->readChar());
       $this->assertEquals($data{1}, $this->file->readChar());
       $this->file->close();
@@ -393,7 +392,7 @@ class FileIntegrationTest extends TestCase {
     with ($data= 'H'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals('H', $this->file->readChar());
       $this->assertFalse($this->file->readChar());
       $this->file->close();
@@ -410,7 +409,7 @@ class FileIntegrationTest extends TestCase {
       $this->writeData($this->file, $appear);
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals($data, $this->file->read(strlen($data)));
       $this->file->close();
     }
@@ -436,7 +435,7 @@ class FileIntegrationTest extends TestCase {
    */
   #[@test, @expect('io.FileNotFoundException')]
   public function cannotOpenNonExistantForReading() {
-    $this->file->open(FILE_MODE_READ);
+    $this->file->open(File::READ);
   }
 
   /**
@@ -484,7 +483,7 @@ class FileIntegrationTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalStateException')]
   public function cannotCopyOpenFile() {
-    $this->file->open(FILE_MODE_WRITE);
+    $this->file->open(File::WRITE);
     $this->file->copy('irrelevant');
   }
 
@@ -541,7 +540,7 @@ class FileIntegrationTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalStateException')]
   public function cannotMoveOpenFile() {
-    $this->file->open(FILE_MODE_WRITE);
+    $this->file->open(File::WRITE);
     $this->file->move('irrelevant');
   }
 

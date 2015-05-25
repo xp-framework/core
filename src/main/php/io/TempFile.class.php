@@ -10,7 +10,7 @@ use lang\System;
  *   uses('io.TempFile');
  *
  *   $f= new TempFile();
- *   $f->open(FILE_MODE_WRITE);
+ *   $f->open(File::WRITE);
  *   $f->write('Hello');
  *   $f->close();
  *
