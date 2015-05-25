@@ -4,6 +4,7 @@ use io\Path;
 use io\File;
 use io\Folder;
 use lang\Runtime;
+use lang\System;
 use unittest\actions\IsPlatform;
 
 class PathTest extends \unittest\TestCase {
@@ -169,7 +170,7 @@ class PathTest extends \unittest\TestCase {
 
   #[@test]
   public function links_resolved_in_realpath() {
-    $temp= \lang\System::tempDir();
+    $temp= System::tempDir();
     $link= new Path($temp, 'link-to-temp');
     if (false === symlink($temp, $link)) {
       $this->skip('Cannot create '.$link.' -> '.$temp);
