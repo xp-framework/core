@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.2.5 / 2015-05-25
+
 ### Heads up!
 
 * Added class constants for Archive::open() and deprecated `ARCHIVE_*`.
