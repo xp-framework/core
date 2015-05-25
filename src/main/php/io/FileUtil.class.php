@@ -29,7 +29,7 @@ class FileUtil extends \lang\Object {
       } while (!$file->eof());
     } else {
       clearstatcache();
-      $file->open(FILE_MODE_READ);
+      $file->open(File::READ);
       $size= $file->size();
 
       // Read until EOF. Best case scenario is that this will run exactly once.
@@ -60,7 +60,7 @@ class FileUtil extends \lang\Object {
     if ($file->isOpen()) {
       return $file->write($data);
     } else {
-      $file->open(FILE_MODE_WRITE);
+      $file->open(File::WRITE);
       $written= $file->write($data);
       $file->close();
       return $written;

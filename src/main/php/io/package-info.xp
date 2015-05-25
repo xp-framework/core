@@ -21,7 +21,7 @@
  * one could use the following sourcecode:
  * <code>
  *   $f= new File(new Folder('c:'), 'autoexec.bat');
- *   $f->open(FILE_MODE_READ);
+ *   $f->open(File::READ);
  *   while ($chunk= $f->read()) {
  *     Console::writeLine($chunk);
  *   }
@@ -39,7 +39,7 @@
  * io.TempFile class:
  * <code>
  *   with ($t= new TempFile()); {
- *     $t->open(FILE_MODE_WRITE);
+ *     $t->open(File::WRITE);
  *     $t->write('Hello');
  *     $t->close();
  *   }

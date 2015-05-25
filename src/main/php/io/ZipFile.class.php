@@ -12,16 +12,16 @@ class ZipFile extends File {
   /**
    * Open the file
    *
-   * @param   string mode one of the FILE_MODE_* constants
+   * @param   string mode one of the File::* constants
    * @param   string compression default ''
    * @throws  io.FileNotFoundException in case the file is not found
    * @throws  io.IOException in case the file cannot be opened (e.g., lacking permissions)
    */
-  public function open($mode= FILE_MODE_READ, $compression= '') {
+  public function open($mode= File::READ, $compression= '') {
     $this->mode= $mode;
     if (
       ('php://' != substr($this->uri, 0, 6)) &&
-      (FILE_MODE_READ == $mode) && 
+      (File::READ == $mode) && 
       (!$this->exists())
     ) throw new FileNotFoundException('File "'.$this->uri.'" not found');
     

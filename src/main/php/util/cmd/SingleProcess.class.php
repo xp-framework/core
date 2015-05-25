@@ -39,7 +39,7 @@ class SingleProcess extends \lang\Object {
    */
   public function lock() {
     try {
-      $this->lockfile->open(FILE_MODE_WRITE);
+      $this->lockfile->open(File::WRITE);
       $this->lockfile->lockExclusive();
     } catch (\io\IOException $e) {
       $this->lockfile->close();

@@ -55,7 +55,7 @@ class ResourcesTest extends TestCase {
   public function getResourceAsStream() {
     $stream= \lang\ClassLoader::getDefault()->getResourceAsStream('META-INF/manifest.ini');
     $this->assertInstanceOf('io.File', $stream);
-    $stream->open(FILE_MODE_READ);
+    $stream->open(File::READ);
     $this->assertManifestFile($stream->read($stream->size()));
     $stream->close();
   }

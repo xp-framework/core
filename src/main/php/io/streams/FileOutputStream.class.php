@@ -18,7 +18,7 @@ class FileOutputStream extends \lang\Object implements OutputStream {
    */
   public function __construct($file, $append= false) {
     $this->file= $file instanceof File ? $file : new File($file);
-    $this->file->isOpen() || $this->file->open($append ? FILE_MODE_APPEND : FILE_MODE_WRITE);
+    $this->file->isOpen() || $this->file->open($append ? File::APPEND : File::WRITE);
   }
 
   /**
