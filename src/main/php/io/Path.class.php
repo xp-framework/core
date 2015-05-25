@@ -14,7 +14,7 @@ class Path extends \lang\Object {
    * @param  var[] $input
    * @return string
    */
-  protected function pathFor($input) {
+  private static function pathFor($input) {
     if (empty($input)) {
       return '';
     } else if ($input[0] instanceof Folder) {
@@ -39,9 +39,9 @@ class Path extends \lang\Object {
    */
   public function __construct($base) {
     if (is_array($base)) {
-      $this->path= $this->pathFor($base);
+      $this->path= self::pathFor($base);
     } else {
-      $this->path= $this->pathFor(func_get_args());
+      $this->path= self::pathFor(func_get_args());
     }
   }
 
@@ -53,6 +53,23 @@ class Path extends \lang\Object {
    */
   public static function compose(array $args) {
     return new self($args);
+  }
+
+  /**
+   * Creates a new instance with a variable number of arguments
+   *
+   * @see    php://realpath
+   * @param  var $arg Either a string, a Path, a File, Folder or IOElement or an array
+   * @param  var $wd Working directory A string, a Path, Folder or IOElement
+   * @return self
+   */
+  public static function real($arg, $wd= null) {
+    if (is_array($arg)) {
+      $path= self::pathFor($arg);
+    } else {
+      $path= self::pathFor([$arg]);
+    }
+    return new self(self::real0($path, $wd ?: getcwd()));
   }
 
   /**
@@ -125,10 +142,10 @@ class Path extends \lang\Object {
    *
    * @see    php://realpath
    * @param  string $path
-   * @param  string $wd
+   * @param  var $wd
    * @return string
    */
-  protected static function real($path, $wd) {
+  private static function real0($path, $wd) {
     if (DIRECTORY_SEPARATOR === $path{0}) {
       $normalized= '';
       $components= explode(DIRECTORY_SEPARATOR, substr($path, 1));
@@ -138,7 +155,7 @@ class Path extends \lang\Object {
     } else if (null === $wd) {
       throw new IllegalStateException('Cannot resolve '.$path);
     } else {
-      return self::real($wd.DIRECTORY_SEPARATOR.$path, null);
+      return self::real0(self::pathFor([$wd]).DIRECTORY_SEPARATOR.$path, null);
     }
 
     $check= true;
@@ -169,11 +186,11 @@ class Path extends \lang\Object {
    * used to resolve relative paths.
    *
    * @see    php://getcwd
-   * @param  string $wd Working directory
+   * @param  var $wd Working directory A string, a Path, Folder or IOElement
    * @return string
    */
   public function asURI($wd= null) {
-    return self::real($this->path, $wd ?: getcwd());
+    return self::real0($this->path, $wd ?: getcwd());
   }
 
   /**
@@ -182,11 +199,11 @@ class Path extends \lang\Object {
    * used to resolve relative paths.
    *
    * @see    php://getcwd
-   * @param  string $wd Working directory
+   * @param  var $wd Working directory A string, a Path, Folder or IOElement
    * @return self
    */
   public function asRealpath($wd= null) {
-    return new self(self::real($this->path, $wd ?: getcwd()));
+    return new self(self::real0($this->path, $wd ?: getcwd()));
   }
 
   /**
