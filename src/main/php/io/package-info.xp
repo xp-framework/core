@@ -11,10 +11,9 @@
  * omitting the "." and ".." entries:
  * <code>
  *   $usr= new Folder('/usr');
- *   foreach ($usr->getEntry() as $name) {
+ *   foreach ($usr->entries() as $name => $path) {
  *     Console::writeLine('- ', $name);
  *   }
- *   $usr->close();
  * </code>
  *
  * An io.File object represents a file. To sequentially read a file,
