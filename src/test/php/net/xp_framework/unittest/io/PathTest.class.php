@@ -144,9 +144,15 @@ class PathTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function real() {
+  public function real_with_folder() {
     $folder= $this->existingFolder();
     $this->assertEquals(rtrim($folder->getURI(), DIRECTORY_SEPARATOR), Path::real($folder)->toString());
+  }
+
+  #[@test]
+  public function real_with_uri() {
+    $folder= $this->existingFolder();
+    $this->assertEquals(rtrim($folder->getURI(), DIRECTORY_SEPARATOR), Path::real($folder->getURI())->toString());
   }
 
   #[@test]
