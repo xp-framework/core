@@ -186,9 +186,8 @@ class Path extends \lang\Object {
    * @throws lang.IllegalStateException if the path is not a file
    */
   public function asFile() {
-    $path= $this->path;
-    if (is_file($path)) return new File($path); 
-    throw new IllegalStateException($path.' is not a file');
+    if (is_file($this->path)) return new File($this->path);
+    throw new IllegalStateException($this->path.' is not a file');
   }
 
   /**
@@ -198,9 +197,8 @@ class Path extends \lang\Object {
    * @throws lang.IllegalStateException if the path is not a folder
    */
   public function asFolder() {
-    $path= $this->path;
-    if (is_dir($path)) return new Folder($path); 
-    throw new IllegalStateException($path.' is not a folder');
+    if (is_dir($this->path)) return new Folder($this->path);
+    throw new IllegalStateException($this->path.' is not a folder');
   }
 
   /**
