@@ -2,8 +2,8 @@
 
 use io\Folder;
 use io\Path;
+use io\IOException;
 use lang\System;
-use lang\IllegalStateException;
 use unittest\PrerequisitesNotMetError;
 
 /**
@@ -188,7 +188,7 @@ class FolderTest extends \unittest\TestCase {
     $this->assertInstanceOf('io.FolderEntries', (new Folder($this->temp))->entries());
   }
 
-  #[@test, @expect(IllegalStateException::class)]
+  #[@test, @expect(IOException::class)]
   public function entries_iteration_raises_exception_if_path_does_not_exist() {
     iterator_to_array((new Folder($this->temp))->entries());
   }
