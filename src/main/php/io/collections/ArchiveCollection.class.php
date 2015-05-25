@@ -1,5 +1,7 @@
 <?php namespace io\collections;
 
+use lang\archive\Archive;
+
 /**
  * Archive collection
  *
