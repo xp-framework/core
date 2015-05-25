@@ -6,6 +6,8 @@ use io\Folder;
 use lang\Runtime;
 use lang\System;
 use unittest\actions\IsPlatform;
+use lang\IllegalStateException;
+use lang\IllegalArgumentException;
 
 class PathTest extends \unittest\TestCase {
 
@@ -188,7 +190,7 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals($file, (new Path($file))->asFile());
   }
 
-  #[@test, @expect(class= 'lang.IllegalStateException', withMessage= '/.+ is not a file/')]
+  #[@test, @expect(class= IllegalStateException::class, withMessage= '/.+ is not a file/')]
   public function as_file_throws_exception_when_invoked_on_a_folder() {
     (new Path($this->existingFolder()))->asFile();
   }
@@ -198,7 +200,7 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals(new File('test.txt'), (new Path('test.txt'))->asFile());
   }
 
-  #[@test, @expect(class= 'lang.IllegalStateException', withMessage= '/.+ does not exist/')]
+  #[@test, @expect(class= IllegalStateException::class, withMessage= '/.+ does not exist/')]
   public function as_file_throws_exception_when_existing_flag_defined_an_nonexistant_path_given() {
     (new Path('test.txt'))->asFile(Path::EXISTING);
   }
@@ -209,7 +211,7 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals($folder, (new Path($folder))->asFolder());
   }
 
-  #[@test, @expect(class= 'lang.IllegalStateException', withMessage= '/.+ is not a folder/')]
+  #[@test, @expect(class= IllegalStateException::class, withMessage= '/.+ is not a folder/')]
   public function as_folder_throws_exception_when_invoked_on_a_folder() {
     (new Path($this->existingFile()))->asFolder();
   }
@@ -219,7 +221,7 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals(new Folder('test'), (new Path('test'))->asFolder());
   }
 
-  #[@test, @expect(class= 'lang.IllegalStateException', withMessage= '/.+ does not exist/')]
+  #[@test, @expect(class= IllegalStateException::class, withMessage= '/.+ does not exist/')]
   public function as_folder_throws_exception_when_existing_flag_defined_an_nonexistant_path_given() {
     (new Path('test'))->asFolder(Path::EXISTING);
   }
@@ -301,7 +303,7 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals($result, (new Path($a))->resolve($b)->toString('/'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values([
+  #[@test, @expect(IllegalArgumentException::class), @values([
   #  ['relative', '/dev'],
   #  ['relative', 'C:/Windows']
   #])]
@@ -325,7 +327,7 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals($result, (new Path($a))->relativeTo($b)->toString('/'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values([
+  #[@test, @expect(IllegalArgumentException::class), @values([
   #  ['/dev', 'relative'], ['relative', '/dev'],
   #  ['C:/Windows', 'relative'], ['relative', 'C:/Windows']
   #])]
