@@ -9,7 +9,6 @@ use lang\IllegalArgumentException;
  * @see   xp://io.Folder#entries
  */
 class FolderEntries extends \lang\Object implements \Iterator {
-  const EOF = -1;
   private $base, $entry;
   private $handle= null;
 
