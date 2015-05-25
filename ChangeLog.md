@@ -16,6 +16,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Changed io.File::open() to return the file itself, enabling fluent API
+  usage: `$f= (new File('test'))->open(File::READ);`.
+  (@thekid)
 * Changed io.streams.TextWriter to accept output streams or I/O channels
   as its constructor argument, and io.streams.TextReader to accept input
   streams, strings or I/O channels as their constructor arguments.
