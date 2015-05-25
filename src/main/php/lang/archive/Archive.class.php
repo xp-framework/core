@@ -3,6 +3,7 @@
 use lang\ElementNotFoundException;
 use io\EncapsedStream;
 use io\FileUtil;
+use io\File;
 
 define('ARCHIVE_READ',             0x0000);
 define('ARCHIVE_CREATE',           0x0001);
