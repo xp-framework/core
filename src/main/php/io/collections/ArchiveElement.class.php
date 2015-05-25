@@ -20,7 +20,7 @@ class ArchiveElement extends \lang\Object implements IOElement {
    * @param   string name
    */
   public function __construct(Archive $archive, $name) {
-    $archive->isOpen() || $archive->open(ARCHIVE_READ);
+    $archive->isOpen() || $archive->open(Archive::READ);
     $this->archive= $archive;
     $this->name= $name;
   }

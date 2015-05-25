@@ -5,6 +5,7 @@ use io\EncapsedStream;
 use io\FileUtil;
 use io\File;
 
+// Deprecated
 define('ARCHIVE_READ',             0x0000);
 define('ARCHIVE_CREATE',           0x0001);
 define('ARCHIVE_HEADER_SIZE',      0x0100);
@@ -16,7 +17,7 @@ define('ARCHIVE_INDEX_ENTRY_SIZE', 0x0100);
  * Usage example (Creating):
  * ```php
  * $a= new Archive(new File('soap.xar'));
- * $a->open(ARCHIVE_CREATE);
+ * $a->open(self::CREATE);
  * $a->addFile(
  *   'webservices/soap/SOAPMessage.class.php'
  *   new File($path, 'xml/soap/SOAPMessage.class.php')
@@ -36,6 +37,11 @@ define('ARCHIVE_INDEX_ENTRY_SIZE', 0x0100);
  * @see   http://java.sun.com/javase/6/docs/api/java/util/jar/package-summary.html
  */
 class Archive extends \lang\Object {
+  const READ =              0x0000;
+  const CREATE =            0x0001;
+  const HEADER_SIZE =       0x0100;
+  const INDEX_ENTRY_SIZE =  0x0100;
+
   public
     $file     = null,
     $version  = 2;
@@ -132,7 +138,7 @@ class Archive extends \lang\Object {
    * Get entry (iterative use)
    * <code>
    *   $a= new Archive(new File('port.xar'));
-   *   $a->open(ARCHIVE_READ);
+   *   $a->open(self::READ);
    *   while ($id= $a->getEntry()) {
    *     var_dump($id);
    *   }
@@ -169,8 +175,8 @@ class Archive extends \lang\Object {
 
     // Calculate starting position      
     $pos= (
-      ARCHIVE_HEADER_SIZE + 
-      sizeof(array_keys($this->_index)) * ARCHIVE_INDEX_ENTRY_SIZE +
+      self::HEADER_SIZE + 
+      sizeof(array_keys($this->_index)) * self::INDEX_ENTRY_SIZE +
       $this->_index[$id][1]
     );
     
@@ -199,8 +205,8 @@ class Archive extends \lang\Object {
 
     // Calculate starting position      
     $pos= (
-      ARCHIVE_HEADER_SIZE + 
-      sizeof(array_keys($this->_index)) * ARCHIVE_INDEX_ENTRY_SIZE +
+      self::HEADER_SIZE + 
+      sizeof(array_keys($this->_index)) * self::INDEX_ENTRY_SIZE +
       $this->_index[$id][1]
     );
     
@@ -210,7 +216,7 @@ class Archive extends \lang\Object {
   /**
    * Open this archive
    *
-   * @param   int mode default ARCHIVE_READ one of ARCHIVE_READ | ARCHIVE_CREATE
+   * @param   int mode default self::READ one of self::READ | self::CREATE
    * @return  bool success
    * @throws  lang.IllegalArgumentException in case an illegal mode was specified
    * @throws  lang.FormatException in case the header is malformed
@@ -222,7 +228,7 @@ class Archive extends \lang\Object {
     ];
     
     switch ($mode) {
-      case ARCHIVE_READ:      // Load
+      case self::READ:      // Load
         if ($this->file->isOpen()) {
           $this->file->seek(0, SEEK_SET);
         } else {
@@ -230,7 +236,7 @@ class Archive extends \lang\Object {
         }
 
         // Read header
-        $header= $this->file->read(ARCHIVE_HEADER_SIZE);
+        $header= $this->file->read(self::HEADER_SIZE);
         $data= unpack('a3id/c1version/V1indexsize/a*reserved', $header);
 
         // Check header integrity
@@ -245,12 +251,12 @@ class Archive extends \lang\Object {
         
         // Read index
         for ($i= 0; $i < $data['indexsize']; $i++) {
-          $entry= unpack($unpack[$this->version], $this->file->read(ARCHIVE_INDEX_ENTRY_SIZE));
+          $entry= unpack($unpack[$this->version], $this->file->read(self::INDEX_ENTRY_SIZE));
           $this->_index[rtrim($entry['id'], "\0")]= [$entry['size'], $entry['offset'], null];
         }
         return true;
         
-      case ARCHIVE_CREATE:    // Create
+      case self::CREATE:    // Create
         if ($this->file->isOpen()) {
           return $this->file->tell() > 0 ? $this->file->truncate() : true;
         } else {
