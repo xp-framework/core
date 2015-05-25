@@ -311,4 +311,15 @@ class PathTest extends \unittest\TestCase {
   public function cannot_calculate_relative_path_if_one_component_is_absolute_and_the_other_isnt($a, $b) {
     (new Path($a))->relativeTo($b);
   }
+
+  #[@test]
+  public function equals_itself() {
+    $fixture= new Path('.');
+    $this->assertEquals($fixture, $fixture);
+  }
+
+  #[@test]
+  public function equals_performs_normalization() {
+    $this->assertEquals(new Path('.'), new Path('dir/..'));
+  }
 }

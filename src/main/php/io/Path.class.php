@@ -319,6 +319,16 @@ class Path extends \lang\Object {
     return strtr($this->path, [DIRECTORY_SEPARATOR => $separator]);
   }
 
+  /**
+   * Returns whether this path instance is equal to a given object.
+   *
+   * @param  var $cmp
+   * @return bool
+   */
+  public function equals($cmp) {
+    return $cmp instanceof self && $this->normalize()->path === $cmp->normalize()->path;
+  }
+
   /** @return string */
   public function __toString() { return $this->path; }
 }

@@ -19,6 +19,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Changed io.Path::equals() to perform normalization before comparing
+  (@thekid)
 * Changed io.File::open() to return the file itself, enabling fluent API
   usage: `$f= (new File('test'))->open(File::READ);`.
   (@thekid)
