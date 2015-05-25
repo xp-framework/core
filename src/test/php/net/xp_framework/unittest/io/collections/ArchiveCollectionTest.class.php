@@ -20,7 +20,7 @@ class ArchiveCollectionTest extends TestCase {
   public function setUp() {
     $this->file= new TempFile();
     $this->archive= new Archive($this->file);
-    $this->archive->open(ARCHIVE_CREATE);
+    $this->archive->open(Archive::CREATE);
     $this->archive->addBytes('lang/Object.xp', 'class Object { }');
     $this->archive->addBytes('lang/Type.xp', 'class Type extends Object { }');
     $this->archive->addBytes('lang/reflect/Method.xp', 'class Method extends Object { }');

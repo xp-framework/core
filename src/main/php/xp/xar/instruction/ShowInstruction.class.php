@@ -37,7 +37,7 @@ class ShowInstruction extends AbstractInstruction {
    * @return  int
    */
   public function perform() {
-    $this->archive->open(ARCHIVE_READ);
+    $this->archive->open(Archive::READ);
     
     $args= $this->getArguments();
     while ($entry= $this->archive->getEntry()) {
