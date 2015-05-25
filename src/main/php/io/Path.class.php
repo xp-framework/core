@@ -5,6 +5,7 @@ use lang\IllegalArgumentException;
 use io\collections\IOElement;
 
 class Path extends \lang\Object {
+  const EXISTING = true;
   protected $path;
 
   /**
@@ -191,23 +192,39 @@ class Path extends \lang\Object {
   /**
    * Returns a file instance for this path
    *
+   * @param  bool $existing Whether only to return existing files
    * @return io.File
    * @throws lang.IllegalStateException if the path is not a file
    */
-  public function asFile() {
-    if (is_file($this->path)) return new File($this->path);
-    throw new IllegalStateException($this->path.' is not a file');
+  public function asFile($existing= false) {
+    if (is_file($this->path)) {
+      return new File($this->path);
+    } else if (file_exists($this->path)) {
+      throw new IllegalStateException($this->path.' exists but is not a file');
+    } else if ($existing) {
+      throw new IllegalStateException($this->path.' does not exist');
+    } else {
+      return new File($this->path);
+    }
   }
 
   /**
    * Returns a folder instance for this path
    *
+   * @param  bool $existing Whether only to return existing folder
    * @return io.File
    * @throws lang.IllegalStateException if the path is not a folder
    */
-  public function asFolder() {
-    if (is_dir($this->path)) return new Folder($this->path);
-    throw new IllegalStateException($this->path.' is not a folder');
+  public function asFolder($existing= false) {
+    if (is_dir($this->path)) {
+      return new Folder($this->path);
+    } else if (file_exists($this->path)) {
+      throw new IllegalStateException($this->path.' exists but is not a folder');
+    } else if ($existing) {
+      throw new IllegalStateException($this->path.' does not exist');
+    } else {
+      return new Folder($this->path);
+    }
   }
 
   /**
