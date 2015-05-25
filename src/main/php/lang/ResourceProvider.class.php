@@ -1,5 +1,7 @@
 <?php namespace lang;
 
+use io\File;
+
 /**
  * Provides a resource through a scheme.
  *
