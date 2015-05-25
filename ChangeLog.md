@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Added class constants for Archive::open() and deprecated `ARCHIVE_*`.
+  See xp-framework/core#80
+  (@thekid)
 * Added class constants for File::open() and deprecated `FILE_MODE_*`.
   See xp-framework/core#79
   (@thekid)
