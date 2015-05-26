@@ -430,7 +430,7 @@ function cast($arg, $type, $nullsafe= true) {
   } else if ($type instanceof \lang\Type) {
     return $type->cast($arg);
   } else {
-    return Type::forName($type)->cast($arg);
+    return \lang\Type::forName($type)->cast($arg);
   }
 }
 // }}}
@@ -556,7 +556,7 @@ function newinstance($spec, $args, $def= null) {
 
   // Handle generics, PHP types and all others.
   if (strstr($spec, '<')) {
-    $class= Type::forName($spec);
+    $class= \lang\Type::forName($spec);
     $type= $class->literal();
     $p= strrpos(substr($type, 0, strpos($type, "\xb7\xb7")), "\xb7");
     $generic= xp::$meta[$class->getName()]['class'][DETAIL_GENERIC];
