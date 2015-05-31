@@ -2,6 +2,8 @@
 
 use lang\IndexOutOfBoundsException;
 use lang\IllegalArgumentException;
+use lang\Generic;
+use lang\Value;
 
 /**
  * Represents a "numeric" array
@@ -131,10 +133,18 @@ class ArrayList extends \lang\Object implements \ArrayAccess, \IteratorAggregate
    * @return  bool
    */
   public function contains($value) {
-    if (!$value instanceof \lang\Generic) {
+    if ($value instanceof Generic) {
+      foreach ($this->values as $v) {
+        if ($value->equals($v)) return true;
+      }
+      return false;
+    } else if ($value instanceof Value) {
+      foreach ($this->values as $v) {
+        if (0 === $value->compareTo($v)) return true;
+      }
+      return false;
+    } else {
       return in_array($value, $this->values, true);
-    } else foreach ($this->values as $v) {
-      if ($value->equals($v)) return true;
     }
     return false;
   }
