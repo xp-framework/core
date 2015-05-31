@@ -6,7 +6,7 @@ XP Framework Core ChangeLog
 ### Heads up!
 
 * Deprecated wrapper types in `lang.types`, primitive boxing and unboxing.
-  See xp-framework/rfc#298
+  See xp-framework/core#84
   (@thekid)
 
 ### Features
