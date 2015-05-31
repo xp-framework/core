@@ -72,7 +72,7 @@ class TypeUnionTest extends \unittest\TestCase {
   public function forName_from_Type_class($literal) {
     $this->assertEquals(
       new TypeUnion([Primitive::$STRING, Primitive::$INT]),
-      TypeUnion::forName($literal)
+      Type::forName($literal)
     );
   }
 
