@@ -1,5 +1,9 @@
 <?php namespace util\collections;
 
+use lang\Generic;
+use lang\IllegalArgumentException;
+use lang\IndexOutOfBoundsException;
+
 /**
  * Resizable array list
  *
@@ -8,7 +12,7 @@
  * @test  xp://net.xp_framework.unittest.util.collections.ArrayAccessTest
  * @see   xp://lang.types.ArrayList
  */
-#[@generic(self= 'T', implements= array('T'))]
+#[@generic(self= 'T', implements= ['T'])]
 class Vector extends \lang\Object implements IList {
   protected static
     $iterate   = null;
@@ -75,7 +79,7 @@ class Vector extends \lang\Object implements IList {
     } else if (null === $offset) {
       $this->add($value);
     } else {
-      throw new \lang\IllegalArgumentException('Incorrect type '.gettype($offset).' for index');
+      throw new IllegalArgumentException('Incorrect type '.gettype($offset).' for index');
     }
   }
 
@@ -159,7 +163,7 @@ class Vector extends \lang\Object implements IList {
   #[@generic(params= ', T', return= 'T')]
   public function set($index, $element) {
     if ($index < 0 || $index >= $this->size) {
-      throw new \lang\IndexOutOfBoundsException('Offset '.$index.' out of bounds');
+      throw new IndexOutOfBoundsException('Offset '.$index.' out of bounds');
     }
 
     $orig= $this->elements[$index];
@@ -177,7 +181,7 @@ class Vector extends \lang\Object implements IList {
   #[@generic(return= 'T')]
   public function get($index) {
     if ($index < 0 || $index >= $this->size) {
-      throw new \lang\IndexOutOfBoundsException('Offset '.$index.' out of bounds');
+      throw new IndexOutOfBoundsException('Offset '.$index.' out of bounds');
     }
     return $this->elements[$index];
   }
@@ -193,7 +197,7 @@ class Vector extends \lang\Object implements IList {
   #[@generic(return= 'T')]
   public function remove($index) {
     if ($index < 0 || $index >= $this->size) {
-      throw new \lang\IndexOutOfBoundsException('Offset '.$index.' out of bounds');
+      throw new IndexOutOfBoundsException('Offset '.$index.' out of bounds');
     }
 
     $orig= $this->elements[$index];
@@ -231,8 +235,14 @@ class Vector extends \lang\Object implements IList {
    */
   #[@generic(params= 'T')]
   public function contains($element) {
-    for ($i= 0; $i < $this->size; $i++) {
-      if ($this->elements[$i]->equals($element)) return true;
+    if ($element instanceof Generic) {
+      foreach ($this->elements as $i => $compare) {
+        if ($element->equals($compare)) return true;
+      }
+    } else {
+      foreach ($this->elements as $i => $compare) {
+        if ($element === $compare) return true;
+      }
     }
     return false;
   }
@@ -245,8 +255,14 @@ class Vector extends \lang\Object implements IList {
    */
   #[@generic(params= 'T')]
   public function indexOf($element) {
-    for ($i= 0; $i < $this->size; $i++) {
-      if ($this->elements[$i]->equals($element)) return $i;
+    if ($element instanceof Generic) {
+      foreach ($this->elements as $i => $compare) {
+        if ($element->equals($compare)) return $i;
+      }
+    } else {
+      foreach ($this->elements as $i => $compare) {
+        if ($element === $compare) return $i;
+      }
     }
     return false;
   }
@@ -258,9 +274,15 @@ class Vector extends \lang\Object implements IList {
    * @return  int offset where the element was found or FALSE
    */
   #[@generic(params= 'T')]
-  public function lastIndexOf(\lang\Generic $element) {
-    for ($i= $this->size- 1; $i > -1; $i--) {
-      if ($this->elements[$i]->equals($element)) return $i;
+  public function lastIndexOf($element) {
+    if ($element instanceof Generic) {
+      for ($i= $this->size- 1; $i > -1; $i--) {
+        if ($element->equals($this->elements[$i])) return $i;
+      }
+    } else {
+      for ($i= $this->size- 1; $i > -1; $i--) {
+        if ($element === $this->elements[$i]) return $i;
+      }
     }
     return false;
   }
@@ -272,8 +294,8 @@ class Vector extends \lang\Object implements IList {
    */
   public function toString() {
     $r= nameof($this).'['.$this->size."]@{\n";
-    foreach ($this->elements as $i => $e) {
-      $r.= '  '.$i.': '.\xp::stringOf($e, '  ')."\n";
+    foreach ($this->elements as $i => $element) {
+      $r.= '  '.$i.': '.\xp::stringOf($element, '  ')."\n";
     } 
     return $r.'}';
   }
@@ -288,12 +310,9 @@ class Vector extends \lang\Object implements IList {
     if (!($cmp instanceof self) || $this->size !== $cmp->size) return false;
     
     // Compare element by element
-    for ($i= 0; $i < $this->size; $i++) {
-      if ($this->elements[$i] instanceof \lang\Generic 
-        ? $this->elements[$i]->equals($cmp->elements[$i])
-        : $this->elements[$i] === $cmp->elements[$i]
-      ) continue;
-      return false;
+    foreach ($this->elements as $i => $element) {
+      if ($element instanceof Generic && !$element->equals($cmp->elements[$i])) return false;
+      if ($element !== $this->elements[$i]) return false;
     }
     return true;
   }
