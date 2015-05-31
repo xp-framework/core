@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use util\Objects;
+use lang\Object;
 use net\xp_framework\unittest\Name;
 
 /**
@@ -41,9 +42,9 @@ class ObjectsTest extends \unittest\TestCase {
   public function objects() {
     return [
       [$this],
-      [new \lang\Object()],
-      [new \lang\types\String('')],
-      [new \lang\types\String('Test')],
+      [new Object()],
+      [new ValueObject('')],
+      [new ValueObject('Test')],
       [new Name('')]
     ];
   }
@@ -123,7 +124,12 @@ class ObjectsTest extends \unittest\TestCase {
 
   #[@test, @values(source= 'values')]
   public function string_instance_not_equal_to_other_values($val) {
-    $this->assertFalse(Objects::equal(new \lang\types\String('Binford 6100: More Power!'), $val));
+    $this->assertFalse(Objects::equal(new ValueObject('Binford 6100: More Power!'), $val));
+  }
+
+  #[@test, @values(source= 'values')]
+  public function value_not_equal_to_other_values($val) {
+    $this->assertFalse(Objects::equal(new Name('Binford 6100: More Power!'), $val));
   }
 
   #[@test]
@@ -137,6 +143,35 @@ class ObjectsTest extends \unittest\TestCase {
       ['price' => 12.99, 'color' => 'blue'],
       ['color' => 'blue', 'price' => 12.99]
     ));
+  }
+
+  #[@test, @values([
+  #  [1, 1, 0], [0, 1, -1], [1, 0, 1],
+  #  [1.0, 1.0, 0], [0.0, 1.0, -1], [1.0, 0.0, 1],
+  #  ['a', 'a', 0], ['a', 'b', -1], ['b', 'a', 1],
+  #  [true, true, 0], [false, false, 0], [false, true, -1], [true, false, 1],
+  #  [[], [], 0], [[1, 2, 3], [1, 2, 3, 4], -1], [[1, 2, 3], [1, 2], 1]
+  #])]
+  public function compare_two_of($a, $b, $expected) {
+    $this->assertEquals($expected, Objects::compare($a, $b));
+  }
+
+  #[@test, @values([
+  #  ['a', 'a', 0],
+  #  ['a', 'b', -1],
+  #  ['b', 'a', 1],
+  #])]
+  public function compare_values($a, $b, $expected) {
+    $this->assertEquals($expected, Objects::compare(new Name($a), new Name($b)));
+  }
+
+  #[@test, @values([
+  #  ['a', 'a', 0],
+  #  ['a', 'b', -1],
+  #  ['b', 'a', 1],
+  #])]
+  public function compare_objects($a, $b, $expected) {
+    $this->assertEquals($expected, Objects::compare(new ValueObject($a), new ValueObject($b)));
   }
 
   #[@test]

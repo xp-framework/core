@@ -13,8 +13,8 @@ abstract class Objects extends \lang\Object {
   /**
    * Returns whether to objects are equal
    *
-   * @param   var a
-   * @param   var b
+   * @param   var $a
+   * @param   var $b
    * @return  bool
    */
   public static function equal($a, $b) {
@@ -34,17 +34,32 @@ abstract class Objects extends \lang\Object {
   }
 
   /**
+   * Compares two objects
+   *
+   * @param   var $a
+   * @param   var $b
+   * @return  bool
+   */
+  public static function compare($a, $b) {
+    if ($a instanceof Value) {
+      return $a->compareTo($b);
+    } else if ($a instanceof Generic) {
+      return $a->equals($b) ? 0 : ($a < $b ? -1 : 1);
+    } else {
+      return $a === $b ? 0 : ($a < $b ? -1 : 1);
+    }
+  }
+
+  /**
    * Returns a string representation
    *
-   * @param  var val
-   * @param  string default the value to use for NULL
+   * @param  var $val
+   * @param  string $default the value to use for NULL
    * @return string
    */
   public static function stringOf($val, $default= '') {
     if (null === $val) {
       return $default;
-    } else if ($val instanceof Generic || $val instanceof Value) {
-      return $val->toString();
     } else {
       return \xp::stringOf($val);
     }
@@ -53,7 +68,7 @@ abstract class Objects extends \lang\Object {
   /**
    * Returns a hash code
    *
-   * @param  var val
+   * @param  var $val
    * @return string
    */
   public static function hashOf($val) {

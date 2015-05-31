@@ -21,6 +21,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added util.Objects::compare() method which mimics PHP7's `<=>` operator
+  including support for lang.Value::compareTo().
+  (@thekid)
 * Merged xp-framework/core#76: Implement type unions. Instead of using
   the `var` type on methods following the *be liberal in what you accept*
   rule and documenting what is accepted in the apidocs, the type system
