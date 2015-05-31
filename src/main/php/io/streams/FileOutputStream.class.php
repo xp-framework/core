@@ -13,7 +13,7 @@ class FileOutputStream extends \lang\Object implements OutputStream {
   /**
    * Constructor
    *
-   * @param   var file either an io.File object or a string
+   * @param   io.File|string $file Either a file instance or a file name
    * @param   bool append default FALSE whether to append
    */
   public function __construct($file, $append= false) {

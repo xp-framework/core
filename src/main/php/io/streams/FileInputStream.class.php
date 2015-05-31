@@ -13,7 +13,7 @@ class FileInputStream extends \lang\Object implements InputStream, Seekable {
   /**
    * Constructor
    *
-   * @param   var file either an io.File object or a string
+   * @param   io.File|string $file Either a file instance or a file name
    */
   public function __construct($file) {
     $this->file= $file instanceof File ? $file : new File($file);
