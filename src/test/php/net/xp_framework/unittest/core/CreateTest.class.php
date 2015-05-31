@@ -2,7 +2,6 @@
 
 use lang\XPClass;
 use lang\Object;
-use lang\types\String;
 use util\collections\Vector;
 use util\collections\HashTable;
 
@@ -12,7 +11,7 @@ use util\collections\HashTable;
  * 1) Create generics
  *
  * ```php
- * $v= create('new util.collections.Vector<lang.types.String>');
+ * $v= create('new util.collections.Vector<lang.Object>');
  * ```
  *
  * 2) For BC with PHP 5.3 - PHP 5.4 has added constructor dereferencing! Returning
@@ -32,40 +31,41 @@ class CreateTest extends \unittest\TestCase {
     $this->assertEquals($fixture, create($fixture));
   }
 
-  #[@test, @ignore('No short aliases at the moment')]
+  #[@test]
   public function create_with_all_short_names_for_components() {
-    $h= create('new util.collections.HashTable<String, String>');
+    $h= create('new util.collections.HashTable<Object, Object>');
     $this->assertEquals(
-      [XPClass::forName('lang.types.String'), XPClass::forName('lang.types.String')], 
+      [XPClass::forName('lang.Object'), XPClass::forName('lang.Object')], 
       $h->getClass()->genericArguments()
     );
   }
 
   #[@test]
   public function create_with_all_qualified_names() {
-    $h= create('new util.collections.HashTable<lang.types.String, lang.types.String>');
+    $h= create('new util.collections.HashTable<lang.Object, lang.Object>');
     $this->assertEquals(
-      [XPClass::forName('lang.types.String'), XPClass::forName('lang.types.String')], 
+      [XPClass::forName('lang.Object'), XPClass::forName('lang.Object')], 
       $h->getClass()->genericArguments()
     );
   }
 
   #[@test]
   public function create_can_be_used_with_type_variables() {
-    $T= XPClass::forName('lang.types.String');
+    $T= XPClass::forName('lang.Object');
     $this->assertEquals([$T], create("new util.collections.Vector<$T>")->getClass()->genericArguments());
   }
 
   #[@test]
   public function create_invokes_constructor() {
+    $fixture= new Object();
     $this->assertEquals(
-      new String('Hello'),
-      create('new util.collections.Vector<lang.types.String>', [new String('Hello')])->get(0)
+      $fixture,
+      create('new util.collections.Vector<lang.Object>', [$fixture])->get(0)
     );
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function create_raises_exception_when_non_generic_given() {
-    create('new lang.Object<lang.types.String>');
+    create('new lang.Object<lang.Object>');
   }
 }

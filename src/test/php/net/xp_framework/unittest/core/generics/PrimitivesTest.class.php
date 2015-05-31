@@ -1,14 +1,14 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
-use unittest\TestCase;
-use lang\types\String;
+use lang\XPClass;
+use lang\Primitive;
 
 /**
  * TestCase for generic behaviour at runtime.
  *
  * @see   xp://net.xp_framework.unittest.core.generics.Lookup
  */
-class PrimitivesTest extends TestCase {
+class PrimitivesTest extends \unittest\TestCase {
 
   #[@test]
   public function primitiveStringKey() {
@@ -34,22 +34,22 @@ class PrimitivesTest extends TestCase {
   #[@test, @expect('lang.IllegalArgumentException')]
   public function instanceVerification() {
     $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, unittest.TestCase>()');
-    $l->put(new String('Hello'), $this);
+    $l->put($this, $this);
   }
 
   #[@test]
   public function nameOfClass() {
-    $type= \lang\XPClass::forName('net.xp_framework.unittest.core.generics.Lookup')->newGenericType(array(
-      \lang\Primitive::$STRING,
-      \lang\XPClass::forName('unittest.TestCase')
-    ));
+    $type= XPClass::forName('net.xp_framework.unittest.core.generics.Lookup')->newGenericType([
+      Primitive::$STRING,
+      XPClass::forName('unittest.TestCase')
+    ]);
     $this->assertEquals('net.xp_framework.unittest.core.generics.Lookup<string,unittest.TestCase>', $type->getName());
   }
 
   #[@test]
   public function typeArguments() {
     $this->assertEquals(
-      array(\lang\Primitive::$STRING, \lang\XPClass::forName('unittest.TestCase')),
+      [Primitive::$STRING, XPClass::forName('unittest.TestCase')],
       create('new net.xp_framework.unittest.core.generics.Lookup<string, unittest.TestCase>()')->getClass()->genericArguments()
     );
   }

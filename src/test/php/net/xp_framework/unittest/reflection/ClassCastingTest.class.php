@@ -3,7 +3,7 @@
 use unittest\TestCase;
 use lang\XPClass;
 use lang\Object;
-use lang\types\String;
+use lang\Type;
 
 /**
  * TestCase
@@ -34,7 +34,7 @@ class ClassCastingTest extends TestCase {
 
   #[@test, @expect('lang.ClassCastException')]
   public function thisClassCastingAnUnrelatedClass() {
-    $this->getClass()->cast(new String('Hello'));
+    $this->getClass()->cast(Type::$VOID);
   }
 
   #[@test]

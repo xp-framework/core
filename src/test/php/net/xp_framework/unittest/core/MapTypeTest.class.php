@@ -6,8 +6,7 @@ use lang\MapType;
 use lang\Primitive;
 use lang\Type;
 use lang\XPClass;
-use lang\types\Integer;
-use lang\types\String;
+use lang\Object;
 
 /**
  * TestCase
@@ -83,7 +82,7 @@ class MapTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function varMap() {
-    $this->assertTrue(MapType::forName('[:var]')->isInstance(['one' => 1, 'two' => 'Zwei', 'three' => new Integer(3)]));
+    $this->assertTrue(MapType::forName('[:var]')->isInstance(['one' => 1, 'two' => 'Zwei', 'three' => new Object()]));
   }
 
   #[@test]
@@ -146,7 +145,7 @@ class MapTypeTest extends \unittest\TestCase {
   }
 
   #[@test, @expect(IllegalArgumentException::class), @values([
-  #  0, -1, 0.5, '', 'Test', new String('a'), true, false,
+  #  0, -1, 0.5, '', 'Test', new Object(), true, false,
   #  [[0, 1, 2]]
   #])]
   public function newInstance_raises_exceptions_for_non_arrays($value) {
@@ -163,7 +162,7 @@ class MapTypeTest extends \unittest\TestCase {
   }
 
   #[@test, @expect('lang.ClassCastException'), @values([
-  #  0, -1, 0.5, '', 'Test', new String('a'), true, false,
+  #  0, -1, 0.5, '', 'Test', new Object(), true, false,
   #  [[0, 1, 2]]
   #])]
   public function cast_raises_exceptions_for_non_arrays($value) {
