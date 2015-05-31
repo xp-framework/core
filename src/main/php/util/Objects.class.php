@@ -43,7 +43,7 @@ abstract class Objects extends \lang\Object {
   public static function stringOf($val, $default= '') {
     if (null === $val) {
       return $default;
-    } else if ($val instanceof Generic) {
+    } else if ($val instanceof Generic || $val instanceof Value) {
       return $val->toString();
     } else {
       return \xp::stringOf($val);
@@ -59,7 +59,7 @@ abstract class Objects extends \lang\Object {
   public static function hashOf($val) {
     if (null === $val) {
       return 'N;';
-    } else if ($val instanceof Generic) {
+    } else if ($val instanceof Generic || $val instanceof Value) {
       return $val->hashCode();
     } else if ($val instanceof \Closure) {
       return spl_object_hash($val);

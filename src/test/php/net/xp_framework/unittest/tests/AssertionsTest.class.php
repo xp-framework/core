@@ -2,6 +2,7 @@
  
 use lang\types\String;
 use lang\types\ArrayList;
+use net\xp_framework\unittest\Name;
 
 /**
  * Test assertion methods

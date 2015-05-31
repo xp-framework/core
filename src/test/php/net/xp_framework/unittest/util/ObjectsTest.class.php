@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use util\Objects;
-use lang\Value;
+use net\xp_framework\unittest\Name;
 
 /**
  * TestCase for Objects class
@@ -44,11 +44,7 @@ class ObjectsTest extends \unittest\TestCase {
       [new \lang\Object()],
       [new \lang\types\String('')],
       [new \lang\types\String('Test')],
-      [newinstance('lang.Value', [], [
-        'compareTo' => function($cmp) { return $cmp instanceof Value ? 0 : -1; },
-        'hashCode'  => function() { /* Not implemented */ },
-        'toString'  => function() { return 'value'; }
-      ])]
+      [new Name('')]
     ];
   }
 

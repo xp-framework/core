@@ -1,6 +1,6 @@
-<?php namespace net\xp_framework\unittest\tests;
+<?php namespace net\xp_framework\unittest;
 
-class Name extends \lang\Object implements \lang\Value {
+class Name implements \lang\Value {
   private $value;
 
   /** @param string $value */
