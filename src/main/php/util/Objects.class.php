@@ -1,6 +1,7 @@
 <?php namespace util;
 
 use lang\Generic;
+use lang\Value;
 
 /**
  * Objects utility methods
@@ -17,7 +18,9 @@ abstract class Objects extends \lang\Object {
    * @return  bool
    */
   public static function equal($a, $b) {
-    if ($a instanceof Generic) {
+    if ($a instanceof Value) {
+      return 0 === $a->compareTo($b);
+    } else if ($a instanceof Generic) {
       return $a->equals($b);
     } else if (is_array($a)) {
       if (!is_array($b) || sizeof($a) !== sizeof($b)) return false;
