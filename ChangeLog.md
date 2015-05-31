@@ -19,6 +19,11 @@ XP Framework Core ChangeLog
   compatibility measure. See xp-framework/core#85
   (@thekid)
 
+#### Bugfixes
+
+* Fixed `unittest.actions.VerifyThat` not running static methods correctly
+  (@thekid)
+
 ### Features
 
 * Added util.Objects::compare() method which mimics PHP7's `<=>` operator

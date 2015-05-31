@@ -28,7 +28,8 @@ class VerifyThat extends \lang\Object implements TestAction, TestClassAction {
       $this->verify= function() use($method) { return call_user_func(['self', $method]); };
       $this->prerequisite= $callable;
     } else if (false !== ($p= strpos($callable, '::'))) {
-      $method= substr(literal(substr($callable, 0, $p)), $p+ 2);
+      $class= literal(substr($callable, 0, $p));
+      $method= substr($callable, $p+ 2);
       $this->verify= function() use($class, $method) { return call_user_func([$class, $method]); };
       $this->prerequisite= $callable;
     } else {
