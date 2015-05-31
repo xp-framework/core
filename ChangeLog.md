@@ -3,6 +3,16 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Merged xp-framework/core#76: Implement type unions. Instead of using
+  the `var` type on methods following the *be liberal in what you accept*
+  rule and documenting what is accepted in the apidocs, the type system
+  now allows for types such as `int|string`. This is widely used in PHP
+  pseudo code, and may even end up in syntax if the union types RFC gets
+  accepted: https://wiki.php.net/rfc/union_types
+  (@thekid)
+
 ## 6.2.5 / 2015-05-25
 
 ### Heads up!
