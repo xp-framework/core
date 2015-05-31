@@ -387,16 +387,16 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
   #[@test]
   public function class_instance_value() {
     $this->assertEquals(
-      array(0 => array('value' => new \lang\types\String('hello')), 1 => []),
-      $this->parse('#[@value(new String("hello"))]', array('String' => 'lang.types.String'))
+      array(0 => array('value' => new Name('hello')), 1 => []),
+      $this->parse('#[@value(new Name("hello"))]', array('Name' => 'net.xp_framework.unittest.annotations.Name'))
     );
   }
 
   #[@test]
   public function ns_class_instance_value() {
     $this->assertEquals(
-      array(0 => array('value' => new \lang\types\String('hello')), 1 => []),
-      $this->parse('#[@value(new \lang\types\String("hello"))]')
+      array(0 => array('value' => new Name('hello')), 1 => []),
+      $this->parse('#[@value(new Name("hello"))]')
     );
   }
 

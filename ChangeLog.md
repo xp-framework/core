@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Heads up!
+
+* Deprecated wrapper types in `lang.types`, primitive boxing and unboxing.
+  See xp-framework/core#84
+  (@thekid)
+
 ### Features
 
 * Merged xp-framework/core#76: Implement type unions. Instead of using

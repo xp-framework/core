@@ -7,6 +7,7 @@ use lang\IndexOutOfBoundsException;
 /**
  * Tests the ArrayMap class
  *
+ * @deprecated Wrapper types will move to their own library
  * @see  xp://lang.types.ArrayMap
  */
 class ArrayMapTest extends TestCase {

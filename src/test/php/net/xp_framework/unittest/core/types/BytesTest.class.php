@@ -8,6 +8,7 @@ use lang\types\Byte;
 /**
  * TestCase for Bytes class
  *
+ * @deprecated Wrapper types will move to their own library
  * @see      xp://lang.types.Bytes
  */
 class BytesTest extends \unittest\TestCase {
