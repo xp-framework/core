@@ -17,7 +17,7 @@ class FullyQualifiedTest extends TestCase {
 
   static function __static() {
     ClassLoader::registerLoader(new ArchiveClassLoader(
-      new Archive(XPClass::forName(\xp::nameOf(__CLASS__))->getPackage()->getPackage('lib')->getResourceAsStream('fqcns.xar'))
+      new Archive((new XPClass(__CLASS__))->getPackage()->getPackage('lib')->getResourceAsStream('fqcns.xar'))
     ));
     XPClass::forName('info.binford6100.Date');
     XPClass::forName('de.thekid.util.ObjectComparator');
@@ -28,8 +28,8 @@ class FullyQualifiedTest extends TestCase {
     $bd= new \info·binford6100·Date();
     $ud= new Date();
 
-    $this->assertEquals('info.binford6100.Date', $bd->getClassName());
-    $this->assertEquals('util.Date', $ud->getClassName());
+    $this->assertEquals('info.binford6100.Date', nameof($bd));
+    $this->assertEquals('util.Date', nameof($ud));
   }
 
   #[@test]

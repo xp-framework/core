@@ -1,5 +1,9 @@
 <?php namespace lang\reflect;
 
+use lang\XPClass;
+use lang\IllegalArgumentException;
+use lang\IllegalAccessException;
+
 /**
  * Represents a class field
  *
@@ -157,7 +161,7 @@ class Field extends \lang\Object {
     if (null !== $instance && !($instance instanceof $this->_class)) {
       throw new \lang\IllegalArgumentException(sprintf(
         'Passed argument is not a %s class (%s)',
-        \xp::nameOf($this->_class),
+        \lang\XPClass::nameOf($this->_class),
         \xp::typeOf($instance)
       ));
     }
@@ -207,9 +211,9 @@ class Field extends \lang\Object {
    */
   public function set($instance, $value) {
     if (null !== $instance && !($instance instanceof $this->_class)) {
-      throw new \lang\IllegalArgumentException(sprintf(
+      throw new IllegalArgumentException(sprintf(
         'Passed argument is not a %s class (%s)',
-        \xp::nameOf($this->_class),
+        XPClass::nameOf($this->_class),
         \xp::typeOf($instance)
       ));
     }
@@ -228,10 +232,10 @@ class Field extends \lang\Object {
         $allow= $t[1]['class'] === $decl;
       }
       if (!$allow) {
-        throw new \lang\IllegalAccessException(sprintf(
+        throw new IllegalAccessException(sprintf(
           'Cannot write %s %s::$%s from scope %s',
           Modifiers::stringOf($this->getModifiers()),
-          \xp::nameOf($this->_class),
+          XPClass::nameOf($this->_class),
           $this->_reflect->getName(),
           $t[1]['class']
         ));

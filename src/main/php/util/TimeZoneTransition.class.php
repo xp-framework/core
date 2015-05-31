@@ -143,7 +143,7 @@ class TimeZoneTransition extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    $s= $this->getClassName().'('.$this->hashCode().")@{\n";
+    $s= nameof($this).'('.$this->hashCode().")@{\n";
     $s.= '  transition at: '.$this->date->toString()."\n";
     $s.= sprintf('  transition to: %s (%s), %s',
       $this->offset,

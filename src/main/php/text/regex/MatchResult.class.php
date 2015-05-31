@@ -52,7 +52,7 @@ class MatchResult extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'('.$this->length.') '.($this->matches ? \xp::stringOf($this->matches) : '<EMPTY>');
+    return nameof($this).'('.$this->length.') '.($this->matches ? \xp::stringOf($this->matches) : '<EMPTY>');
   }
 
   /**

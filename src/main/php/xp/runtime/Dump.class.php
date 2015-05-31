@@ -1,6 +1,7 @@
 <?php namespace xp\runtime;
 
 use util\cmd\Console;
+use lang\XPClass;
 
 /**
  * Evaluates code and dumps its output.
@@ -38,7 +39,7 @@ class Dump extends \lang\Object {
     strstr($src, 'return ') || strstr($src, 'return;') || $src= 'return '.$src;
 
     // Rewrite argc, argv
-    $argv= array(\xp::nameOf(__CLASS__)) + $args;
+    $argv= array(XPClass::nameOf(__CLASS__)) + $args;
     $argc= sizeof($argv);
 
     // Perform

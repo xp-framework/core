@@ -39,7 +39,7 @@ abstract class AbstractCombinedFilter extends \lang\Object implements IterationF
    * @return  string
    */
   public function toString() {
-    $s= $this->getClassName().'('.$this->_size.")@{\n";
+    $s= nameof($this).'('.$this->_size.")@{\n";
     for ($i= 0; $i < $this->_size; $i++) {
       $s.= '  '.\xp::stringOf($this->list[$i], '  ')."\n";
     }

@@ -123,6 +123,6 @@ class ExpectationList extends \lang\Object {
    * @return string
    */
   public function toString() {
-    return $this->getClassName().'@'.\xp::stringOf($this->list->elements());
+    return nameof($this).'@'.\xp::stringOf($this->list->elements());
   }
 }

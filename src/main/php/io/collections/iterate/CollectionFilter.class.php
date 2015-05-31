@@ -21,7 +21,7 @@ class CollectionFilter extends \lang\Object implements IterationFilter {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName();
+    return nameof($this);
   }
 
 } 

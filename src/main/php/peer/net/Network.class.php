@@ -83,6 +83,6 @@ class Network extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'('.$this->address->asString().'/'.$this->netmask.')';
+    return nameof($this).'('.$this->address->asString().'/'.$this->netmask.')';
   }
 }

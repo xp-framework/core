@@ -353,7 +353,7 @@ class LogCategory extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    $s= $this->getClassName().'(name='.$this->identifier.' flags='.$this->flags.")@{\n";
+    $s= nameof($this).'(name='.$this->identifier.' flags='.$this->flags.")@{\n";
     foreach ($this->_appenders as $flags => $appenders) {
       $s.= '  '.$flags.": [\n";
       foreach ($appenders as $appender) {

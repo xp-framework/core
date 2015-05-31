@@ -97,6 +97,6 @@ class MD5CryptImpl extends CryptImpl {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName();
+    return nameof($this);
   }
 }

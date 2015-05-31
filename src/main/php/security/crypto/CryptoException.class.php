@@ -38,7 +38,7 @@ class CryptoException extends \lang\XPException {
       "Exception %s (%s) {\n".
       "  %s\n".
       "}\n",
-      $this->getClassName(),
+      nameof($this),
       $this->message,
       implode("\n  @", $this->errors)
     );

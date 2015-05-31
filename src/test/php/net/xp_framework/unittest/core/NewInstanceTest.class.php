@@ -172,7 +172,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function arguments_are_passed_to_base_constructor_in_closuremap() {
-    $base= ClassLoader::defineClass($this->getClassName().'_BaseFixture', 'lang.Object', [], [
+    $base= ClassLoader::defineClass(nameof($this).'_BaseFixture', 'lang.Object', [], [
       'test' => null,
       '__construct' => function($test) {
         $this->test= $test;
@@ -311,7 +311,7 @@ class NewInstanceTest extends \unittest\TestCase {
   #[@test]
   public function className() {
     $instance= newinstance('Object', [], '{ }');
-    $n= $instance->getClassName();
+    $n= nameof($instance);
     $this->assertEquals(
       'lang.Object',
       substr($n, 0, strrpos($n, '·')),
@@ -322,7 +322,7 @@ class NewInstanceTest extends \unittest\TestCase {
   #[@test]
   public function classNameWithFullyQualifiedClassName() {
     $instance= newinstance('lang.Object', [], '{ }');
-    $n= $instance->getClassName();
+    $n= nameof($instance);
     $this->assertEquals(
       'lang.Object',
       substr($n, 0, strrpos($n, '·')),

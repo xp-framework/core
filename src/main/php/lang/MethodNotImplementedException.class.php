@@ -29,7 +29,7 @@ class MethodNotImplementedException extends XPException {
   public function compoundMessage() {
     return sprintf(
       'Exception %s (method %s(): %s)',
-      $this->getClassName(),
+      nameof($this),
       $this->method,
       $this->message
     );

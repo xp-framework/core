@@ -317,7 +317,7 @@ class Folder extends \lang\Object {
   public function toString() {
     return sprintf(
       '%s(uri= %s)',
-      $this->getClassName(),
+      nameof($this),
       $this->uri
     );
   }

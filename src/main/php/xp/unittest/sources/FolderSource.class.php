@@ -86,6 +86,6 @@ class FolderSource extends AbstractSource {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'['.$this->folder->toString().']';
+    return nameof($this).'['.$this->folder->toString().']';
   }
 }

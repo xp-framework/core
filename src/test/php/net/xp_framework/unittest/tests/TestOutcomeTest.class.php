@@ -40,7 +40,7 @@ class TestOutcomeTest extends \unittest\TestCase {
    */
   protected function assertStringRepresentation($expected, $outcome, $variant) {
     $this->assertEquals(
-      sprintf($expected, $this->getClassName().'::'.$this->getName().$variant),
+      sprintf($expected, nameof($this).'::'.$this->getName().$variant),
       $outcome->toString()
     );
   }

@@ -32,6 +32,6 @@ class NativeCryptImpl extends CryptImpl {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName();
+    return nameof($this);
   }
 }

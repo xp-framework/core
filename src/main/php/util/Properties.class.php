@@ -625,6 +625,6 @@ class Properties extends \lang\Object implements PropertyAccess {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'('.$this->_file.')@{'.\xp::stringOf($this->_data).'}';
+    return nameof($this).'('.$this->_file.')@{'.\xp::stringOf($this->_data).'}';
   }
 }

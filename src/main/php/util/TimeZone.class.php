@@ -173,6 +173,6 @@ class TimeZone extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().' ("'.$this->getName().'" / '.$this->getOffset().')';
+    return nameof($this).' ("'.$this->getName().'" / '.$this->getOffset().')';
   }    
 }

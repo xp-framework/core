@@ -38,7 +38,7 @@ class TestExpectationMet extends \lang\Object implements TestSuccess {
   public function toString() {
     return sprintf(
       '%s(test= %s, time= %.3f seconds)',
-      $this->getClassName(),
+      nameof($this),
       $this->test->getName(true),
       $this->elapsed
     );

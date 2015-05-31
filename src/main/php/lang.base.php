@@ -7,7 +7,7 @@ trait __xp {
   public static function __callStatic($name, $args) {
     $c= defined('HHVM_VERSION');
     $self= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1 - $c]['class'];
-    throw new \lang\Error('Call to undefined static method '.\xp::nameOf($self).'::'.$name.'()');
+    throw new \lang\Error('Call to undefined static method '.\lang\XPClass::nameOf($self).'::'.$name.'()');
   }
   // }}}
 
@@ -39,7 +39,7 @@ trait __xp {
       }
     }
 
-    throw new \lang\Error('Call to undefined method '.\xp::nameOf($self).'::'.$name.'() from scope '.\xp::nameOf($scope));
+    throw new \lang\Error('Call to undefined method '.\lang\XPClass::nameOf($self).'::'.$name.'() from scope '.\lang\XPClass::nameOf($scope));
   }
   // }}}
 
@@ -127,7 +127,7 @@ final class xp {
   }
   // }}}
 
-  // {{{ proto string nameOf(string name)
+  // {{{ proto deprecated string nameOf(string name)
   //     Returns the fully qualified name
   static function nameOf($name) {
     if (isset(xp::$cn[$name])) {
@@ -145,7 +145,7 @@ final class xp {
   // {{{ proto string typeOf(var arg)
   //     Returns the fully qualified type name
   static function typeOf($arg) {
-    return is_object($arg) ? xp::nameOf(get_class($arg)) : gettype($arg);
+    return is_object($arg) ? nameof($arg) : gettype($arg);
   }
   // }}}
 
@@ -199,7 +199,7 @@ final class xp {
       $ser= spl_object_hash($arg);
       if (isset($protect[$ser])) return '->{:recursion:}';
       $protect[$ser]= true;
-      $r= xp::nameOf(get_class($arg))." {\n";
+      $r= nameof($arg)." {\n";
       foreach ((array)$arg as $key => $val) {
         $r.= $indent.'  '.$key.' => '.xp::stringOf($val, $indent.'  ')."\n";
       }
@@ -552,8 +552,10 @@ function newinstance($spec, $args, $def= null) {
 
   // Create unique name
   $n= "\xb7".(++$u);
-  if (false === strrpos($spec, '.')) {
-    $spec= xp::nameOf($spec);
+  if (0 === strncmp($spec, 'php.', 4)) {
+    $spec= substr($spec, 4);
+  } else if (false === strpos($spec, '.')) {
+    $spec= XPClass::nameOf($spec);
   }
 
   // Handle generics, PHP types and all others.
@@ -562,8 +564,8 @@ function newinstance($spec, $args, $def= null) {
     $type= $class->literal();
     $p= strrpos(substr($type, 0, strpos($type, "\xb7\xb7")), "\xb7");
     $generic= xp::$meta[$class->getName()]['class'][DETAIL_GENERIC];
-  } else if (0 === strncmp($spec, 'php.', 4)) {
-    $type= $spec= substr($spec, 4);
+  } else if (false === strpos($spec, '.')) {
+    $type= $spec;
     $p= false;
     $generic= null;
   } else {
@@ -622,7 +624,7 @@ function create($spec) {
   
   // Instantiate, passing the rest of any arguments passed to create()
   // BC: Wrap IllegalStateExceptions into IllegalArgumentExceptions
-  $class= \lang\XPClass::forName(strstr($base, '.') ? $base : xp::nameOf($base));
+  $class= \lang\XPClass::forName(strstr($base, '.') ? $base : \lang\XPClass::nameOf($base));
   try {
     $reflect= $class->newGenericType($typeargs)->reflect();
     if ($reflect->hasMethod('__construct')) {
@@ -639,11 +641,26 @@ function create($spec) {
 }
 // }}}
 
+// {{{ proto string nameof(lang.Generic arg)
+//     Returns name of an instance.
+function nameof($arg) {
+  $class= get_class($arg);
+  if (isset(xp::$cn[$class])) {
+    return xp::$cn[$class];
+  } else if (strstr($class, '\\')) {
+    return strtr($class, '\\', '.');
+  } else {
+    $name= array_search($class, xp::$sn, true);
+    return false === $name ? $class : $name;
+  }
+}
+// }}}
+
 // {{{ proto lang.Type typeof(mixed arg)
 //     Returns type
 function typeof($arg) {
   if ($arg instanceof \lang\Generic) {
-    return $arg->getClass();
+    return new \lang\XPClass($arg);
   } else if (null === $arg) {
     return \lang\Type::$VOID;
   } else if ($arg instanceof \Closure) {

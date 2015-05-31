@@ -142,7 +142,7 @@ class ArchiveCollection extends \lang\Object implements IOCollection {
    * @return  string
    */
   public function toString() { 
-    return $this->getClassName().'('.$this->archive->toString().'?'.$this->base.')';
+    return nameof($this).'('.$this->archive->toString().'?'.$this->base.')';
   }
 
   /**

@@ -1,5 +1,9 @@
 <?php namespace lang\reflect;
 
+use lang\XPClass;
+use lang\IllegalArgumentException;
+use lang\IllegalAccessException;
+
 /**
  * Represents a class method
  *
@@ -41,9 +45,9 @@ class Method extends Routine {
    */
   public function invoke($obj, $args= []) {
     if (null !== $obj && !($obj instanceof $this->_class)) {
-      throw new \lang\IllegalArgumentException(sprintf(
+      throw new IllegalArgumentException(sprintf(
         'Passed argument is not a %s class (%s)',
-        \xp::nameOf($this->_class),
+        XPClass::nameOf($this->_class),
         \xp::typeOf($obj)
       ));
     }
@@ -53,9 +57,9 @@ class Method extends Routine {
     // not).
     $m= $this->_reflect->getModifiers();
     if ($m & MODIFIER_ABSTRACT) {
-      throw new \lang\IllegalAccessException(sprintf(
+      throw new IllegalAccessException(sprintf(
         'Cannot invoke abstract %s::%s',
-        $this->_class,
+        XPClass::nameOf($this->_class),
         $this->_reflect->getName()
       ));
     }
@@ -69,18 +73,16 @@ class Method extends Routine {
         $allow= $t[1]['class'] === $decl;
       }
       if (!$allow) {
-        throw new \lang\IllegalAccessException(sprintf(
+        throw new IllegalAccessException(sprintf(
           'Cannot invoke %s %s::%s from scope %s',
           Modifiers::stringOf($this->getModifiers()),
-          $this->_class,
+          XPClass::nameOf($this->_class),
           $this->_reflect->getName(),
           $t[1]['class']
         ));
       }
     }
 
-    // For non-public methods: Use setAccessible() / invokeArgs() combination 
-    // if possible, resort to __call() workaround.
     try {
       if (!$public) {
         $this->_reflect->setAccessible(true);
@@ -89,9 +91,9 @@ class Method extends Routine {
     } catch (\lang\SystemExit $e) {
       throw $e;
     } catch (\lang\Throwable $e) {
-      throw new TargetInvocationException($this->_class.'::'.$this->_reflect->getName(), $e);
+      throw new TargetInvocationException(XPClass::nameOf($this->_class).'::'.$this->_reflect->getName(), $e);
     } catch (\Exception $e) {
-      throw new TargetInvocationException($this->_class.'::'.$this->_reflect->getName(), new \lang\XPException($e->getMessage()));
+      throw new TargetInvocationException(XPClass::nameOf($this->_class).'::'.$this->_reflect->getName(), new \lang\XPException($e->getMessage()));
     }
   }
 }

@@ -34,6 +34,6 @@ class CryptNotImplemented extends CryptImpl {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'<'.$this->method.'>';
+    return nameof($this).'<'.$this->method.'>';
   }
 }

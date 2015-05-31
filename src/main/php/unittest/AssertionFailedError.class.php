@@ -32,6 +32,6 @@ class AssertionFailedError extends \lang\XPException {
    * @return  string
    */
   public function compoundMessage() {
-    return $this->getClassName().'{ '.$this->message.' }';
+    return nameof($this).'{ '.$this->message.' }';
   }
 }

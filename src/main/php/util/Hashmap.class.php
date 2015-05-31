@@ -335,6 +335,6 @@ class Hashmap extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'('.$this->size().')@'.\xp::stringOf($this->_hash);
+    return nameof($this).'('.$this->size().')@'.\xp::stringOf($this->_hash);
   }
 }

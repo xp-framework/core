@@ -31,7 +31,7 @@ class AnonymousInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function class_name_contains_argument() {
-    $name= newinstance('util.collections.Vector<Object>', [])->getClassName();
+    $name= nameof(newinstance('util.collections.Vector<Object>', []));
     $this->assertEquals('util.collections.Vector··lang¦Object', substr($name, 0, strrpos($name, '·')), $name);
   }
 
@@ -40,7 +40,7 @@ class AnonymousInstanceTest extends \unittest\TestCase {
     $instance= newinstance('net.xp_framework.unittest.core.generics.ArrayFilter<Object>', [], '{
       protected function accept($e) { return true; }
     }');
-    $n= $instance->getClassName();
+    $n= nameof($instance);
     $this->assertEquals(
       'net.xp_framework.unittest.core.generics.ArrayFilter··lang¦Object',
       substr($n, 0, strrpos($n, '·')),

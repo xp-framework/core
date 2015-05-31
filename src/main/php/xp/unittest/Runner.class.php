@@ -282,7 +282,7 @@ class Runner extends \lang\Object {
           } else {
             $name= $this->arg($args, ++$i, 'o');
             if (!isset($options[$name])) {
-              $this->err->writeLine('*** Unknown listener argument '.$name.' to '.$instance->getClassName());
+              $this->err->writeLine('*** Unknown listener argument '.$name.' to '.nameof($instance));
               return 2;
             }
             $method= $options[$name];
