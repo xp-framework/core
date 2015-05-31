@@ -2,6 +2,8 @@
 
 use lang\IndexOutOfBoundsException;
 use util\NoSuchElementException;
+use lang\Generic;
+use lang\Value;
 
 /**
  * A First-In-First-Out (FIFO) queue of objects.
@@ -43,7 +45,7 @@ class Queue extends \lang\Object {
    */
   #[@generic(params= 'T', return= 'T')]
   public function put($element) {
-    $h= $element instanceof \lang\Generic ? $element->hashCode() : serialize($element);
+    $h= ($element instanceof Generic || $element instanceof Value) ? $element->hashCode() : serialize($element);
     $this->_elements[]= $element;
     $this->_hash+= HashProvider::hashOf($h);
     return $element;
@@ -62,7 +64,7 @@ class Queue extends \lang\Object {
     }
 
     $element= $this->_elements[0];
-    $h= $element instanceof \lang\Generic ? $element->hashCode() : serialize($element);
+    $h= ($element instanceof Generic || $element instanceof Value)? $element->hashCode() : serialize($element);
     $this->_hash-= HashProvider::hashOf($h);
     $this->_elements= array_slice($this->_elements, 1);
     return $element;
@@ -124,7 +126,7 @@ class Queue extends \lang\Object {
     if (-1 == ($pos= $this->search($element))) return false;
     
     $element= $this->_elements[$pos];
-    $h= $element instanceof \lang\Generic ? $element->hashCode() : serialize($element);
+    $h= ($element instanceof Generic || $element instanceof Value)? $element->hashCode() : serialize($element);
     $this->_hash-= HashProvider::hashOf($h);
     unset($this->_elements[$pos]);
     $this->_elements= array_values($this->_elements);   // Re-index

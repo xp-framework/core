@@ -44,7 +44,7 @@ class LRUBuffer extends \lang\Object {
    */
   #[@generic(params= 'T', return= 'T')]
   public function add($element) {
-    $h= $this->prefix.($element instanceof \lang\Generic ? $element->hashCode() : serialize($element));
+    $h= $this->prefix.(($element instanceof Generic || $element instanceof Value) ? $element->hashCode() : serialize($element));
     $this->_elements[$h]= $element;
 
     // Check if this buffer's size has been exceeded
@@ -65,7 +65,7 @@ class LRUBuffer extends \lang\Object {
    */
   #[@generic(params= 'T')]
   public function update($element) {
-    $h= $this->prefix.($element instanceof \lang\Generic ? $element->hashCode() : serialize($element));
+    $h= $this->prefix.(($element instanceof Generic || $element instanceof Value) ? $element->hashCode() : serialize($element));
     unset($this->_elements[$h]);
     $this->_elements= $this->_elements + array($h => $element);
   }
