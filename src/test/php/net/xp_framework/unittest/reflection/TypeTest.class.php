@@ -123,12 +123,12 @@ class TypeTest extends TestCase {
 
   #[@test]
   public function genericObjectType() {
-    with ($t= Type::forName('util.collections.HashTable<String, Object>')); {
+    with ($t= Type::forName('util.collections.HashTable<string, Object>')); {
       $this->assertInstanceOf('lang.XPClass', $t);
       $this->assertTrue($t->isGeneric());
       $this->assertEquals(XPClass::forName('util.collections.HashTable'), $t->genericDefinition());
       $this->assertEquals(
-        [XPClass::forName('lang.types.String'), XPClass::forName('lang.Object')],
+        [Primitive::$STRING, XPClass::forName('lang.Object')],
         $t->genericArguments()
       );
     }

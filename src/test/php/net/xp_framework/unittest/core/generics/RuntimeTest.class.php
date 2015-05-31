@@ -1,52 +1,58 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
-use unittest\TestCase;
-use lang\types\String;
-use lang\types\Integer;
+use lang\IllegalArgumentException;
 
 /**
  * TestCase for generic behaviour at runtime.
  *
  * @see   xp://collections.Lookup
  */
-class RuntimeTest extends TestCase {
-  protected $fixture= null;
+class RuntimeTest extends \unittest\TestCase {
+  private $fixture;
   
   /**
-   * Creates fixture, a Lookup with String and TestCase as component
-   * types.
+   * Creates fixture, a Lookup with string and TestCase as component types.
+   *
+   * @return void
    */  
   public function setUp() {
-    $this->fixture= create('new net.xp_framework.unittest.core.generics.Lookup<String, unittest.TestCase>()');
+    $this->fixture= create('new net.xp_framework.unittest.core.generics.Lookup<string, unittest.TestCase>()');
   }
 
   #[@test]
   public function name() {
     $this->assertEquals(
-      'net\\xp_framework\\unittest\\core\\generics\\Lookup··lang¦types¦String¸unittest¦TestCase',
+      'net.xp_framework.unittest.core.generics.Lookup<string,unittest.TestCase>',
+      $this->fixture->getClass()->getName()
+    );
+  }
+
+  #[@test]
+  public function literal() {
+    $this->assertEquals(
+      'net\\xp_framework\\unittest\\core\\generics\\Lookup··þstring¸unittest¦TestCase',
       $this->fixture->getClass()->literal()
     );
   }
 
   #[@test]
   public function putStringAndThis() {
-    $this->fixture->put(new String($this->name), $this);
+    $this->fixture->put('Test', $this);
   }
 
   #[@test]
   public function putAndGetRoundTrip() {
-    $key= new String($this->name);
-    $this->fixture->put($key, $this);
-    $this->assertEquals($this, $this->fixture->get($key));
+    $this->fixture->put('Test', $this);
+    $this->assertEquals($this, $this->fixture->get('Test'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function keyTypeIncorrect() {
-    $this->fixture->put(new Integer(1), $this);
+    $this->fixture->put(1, $this);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function valueTypeIncorrect() {
-    $this->fixture->put(new String($this->name), new \lang\Object());
+    $this->fixture->put('Test', new \lang\Object());
   }
 }
