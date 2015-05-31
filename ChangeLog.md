@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Added a new `nameof()` core function aimed at replacing the getClassName()
+  method and deprecated the \xp::nameOf() method.
+  (@thekid)
 * Deprecated wrapper types in `lang.types`, primitive boxing and unboxing.
   See xp-framework/core#84
   (@thekid)
