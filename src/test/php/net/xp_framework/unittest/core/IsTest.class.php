@@ -283,4 +283,9 @@ class IsTest extends \unittest\TestCase {
   public function array_of_function_type() {
     $this->assertTrue(is('(function(): var)[]', [function() { }]));
   }
+
+  #[@test, @values([1, 'Test'])]
+  public function type_union($val) {
+    $this->assertTrue(is('int|string', $val));
+  }
 }

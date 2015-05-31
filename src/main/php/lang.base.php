@@ -458,6 +458,8 @@ function is($type, $object) {
     return (new \lang\MapType(substr($type, 2, -1)))->isInstance($object);
   } else if (0 === strncmp($type, '(function(', 10)) {
     return \lang\FunctionType::forName(substr($type, 1, -1))->isInstance($object);
+  } else if (strstr($type, '|')) {
+    return \lang\TypeUnion::forName($type)->isInstance($object);
   } else if (strstr($type, '?')) {
     return \lang\WildcardType::forName($type)->isInstance($object);
   } else {
