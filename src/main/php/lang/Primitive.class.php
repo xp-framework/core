@@ -130,31 +130,31 @@ class Primitive extends Type {
   protected function coerce($value, $default) {
     if (!is_array($value)) switch ($this) {
       case self::$STRING:
-        if ($value instanceof String) return $value->toString();
-        if ($value instanceof Number) return (string)$value->value;
-        if ($value instanceof Boolean) return (string)$value->value;
-        if ($value instanceof Generic) return $value->toString();
+        if ($value instanceof \lang\types\String) return $value->toString();
+        if ($value instanceof \lang\types\Number) return (string)$value->value;
+        if ($value instanceof \lang\types\Boolean) return (string)$value->value;
+        if ($value instanceof \lang\types\Generic) return $value->toString();
         return (string)$value;
 
       case self::$INT:
-        if ($value instanceof String) return (int)$value->toString();
-        if ($value instanceof Number) return $value->intValue();
-        if ($value instanceof Boolean) return (int)$value->value;
-        if ($value instanceof Generic) return (int)$value->toString();
+        if ($value instanceof \lang\types\String) return (int)$value->toString();
+        if ($value instanceof \lang\types\Number) return $value->intValue();
+        if ($value instanceof \lang\types\Boolean) return (int)$value->value;
+        if ($value instanceof \lang\types\Generic) return (int)$value->toString();
         return (int)$value;
 
       case self::$DOUBLE:
-        if ($value instanceof String) return (double)$value->toString();
-        if ($value instanceof Number) return $value->doubleValue();
-        if ($value instanceof Boolean) return (double)$value->value;
-        if ($value instanceof Generic) return (double)$value->toString();
+        if ($value instanceof \lang\types\String) return (double)$value->toString();
+        if ($value instanceof \lang\types\Number) return $value->doubleValue();
+        if ($value instanceof \lang\types\Boolean) return (double)$value->value;
+        if ($value instanceof \lang\types\Generic) return (double)$value->toString();
         return (double)$value;
 
       case self::$BOOL:
-        if ($value instanceof String) return (bool)$value->toString();
-        if ($value instanceof Number) return (bool)$value->value;
-        if ($value instanceof Boolean) return $value->value;
-        if ($value instanceof Generic) return (bool)$value->toString();
+        if ($value instanceof \lang\types\String) return (bool)$value->toString();
+        if ($value instanceof \lang\types\Number) return (bool)$value->value;
+        if ($value instanceof \lang\types\Boolean) return $value->value;
+        if ($value instanceof \lang\types\Generic) return (bool)$value->toString();
         return (bool)$value;
     }
 
