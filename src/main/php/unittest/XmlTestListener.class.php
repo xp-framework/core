@@ -3,13 +3,13 @@
 use io\streams\OutputStreamWriter;
 use xml\Tree;
 use util\collections\HashTable;
+use lang\XPClass;
 
 /**
  * Creates an XML file suitable for importing into continuous integration
  * systems like Hudson.
  *
- * @test     xp://net.xp_framework.unittests.tests.XmlListenerTest
- * @purpose  TestListener
+ * @test  xp://net.xp_framework.unittests.tests.XmlListenerTest
  */
 class XmlTestListener extends \lang\Object implements TestListener {
   public $out= null;
@@ -23,24 +23,18 @@ class XmlTestListener extends \lang\Object implements TestListener {
    */
   public function __construct(OutputStreamWriter $out) {
     $this->out= $out;
-    $this->tree= new \xml\Tree('testsuites');
+    $this->tree= new Tree('testsuites');
     $this->classes= create('new util.collections.HashTable<lang.XPClass, xml.Node>()');
   }
 
   /**
    * Tries to get class uri via reflection
    *
-   * @param lang.XPClass class The class to return the URI for
+   * @param  lang.XPClass class The class to return the URI for
    * @return string
    */
-  private function uriFor(\lang\XPClass $class) {
-    try {
-      $Urimethod= $class->getClassLoader()->getClass()->getMethod('classURI');
-      $Urimethod->setAccessible(true);
-      return $Urimethod->invoke($class->getClassLoader(), $class->getName());
-    } catch (\Exception $ignored) {
-      return nameof($class);
-    }
+  private function uriFor(XPClass $class) {
+    return $class->getClassLoader()->classUri($class->getName());
   }
 
   /**
@@ -50,7 +44,7 @@ class XmlTestListener extends \lang\Object implements TestListener {
    * @param string $methodname
    * @return int
    */
-  private function lineFor(\lang\XPClass $class, $methodname) {
+  private function lineFor(XPClass $class, $methodname) {
     try {
       return $class->reflect()->getMethod($methodname)->getStartLine();
     } catch (\Exception $ignored) {

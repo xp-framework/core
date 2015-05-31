@@ -3,13 +3,11 @@
 use io\streams\InputStream;
 use io\streams\Streams;
 
-
 /**
  * InputStream that decodes from a base64-encoded source 
  *
  * @see      rfc://2045 section 6.8 
  * @test     xp://net.xp_framework.unittest.text.encode.Base64InputStreamTest
- * @purpose  InputStream implementation
  */
 class Base64InputStream extends \lang\Object implements InputStream {
   protected $in = null;

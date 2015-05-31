@@ -5,7 +5,6 @@
  *
  * @test     xp://net.xp_framework.unittest.peer.sockets.SocketTest
  * @see      php://network
- * @purpose  Basic TCP/IP socket
  */
 class Socket extends \lang\Object implements \io\Channel {
   public

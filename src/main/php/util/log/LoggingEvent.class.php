@@ -1,7 +1,5 @@
 <?php namespace util\log;
 
-
-
 /**
  * A single log event
  *

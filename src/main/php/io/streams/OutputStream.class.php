@@ -1,16 +1,9 @@
-<?php namespace io\streams;/* This file is part of the XP framework's experiments
- *
- * $Id$
- */
-
-use lang\Closeable;
-
+<?php namespace io\streams;
 
 /**
  * An OuputStream can be written to
- *
  */
-interface OutputStream extends Closeable {
+interface OutputStream extends \lang\Closeable {
 
   /**
    * Write a string

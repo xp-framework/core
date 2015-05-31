@@ -29,6 +29,8 @@ use webservices\rest\RestException;
  * --------------------------
  * # This will install the master branch of the specified module from GitHub
  * $ xpi add vendor/module :master
+ *
+ * @deprecated Use composer or glue instead
  */
 class AddAction extends Action {
   protected static $json;

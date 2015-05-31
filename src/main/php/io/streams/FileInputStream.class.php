@@ -1,29 +1,23 @@
-<?php namespace io\streams;/* This file is part of the XP framework's experiments
- *
- * $Id$
- */
+<?php namespace io\streams;
 
 use io\File;
-
 
 /**
  * InputStream that reads from a file
  *
  * @test     xp://net.xp_framework.unittest.io.streams.FileInputStreamTest
- * @purpose  InputStream implementation
  */
 class FileInputStream extends \lang\Object implements InputStream, Seekable {
-  protected
-    $file= null;
+  protected $file;
   
   /**
    * Constructor
    *
-   * @param   var file either an io.File object or a string
+   * @param   io.File|string $file Either a file instance or a file name
    */
   public function __construct($file) {
     $this->file= $file instanceof File ? $file : new File($file);
-    $this->file->isOpen() || $this->file->open(FILE_MODE_READ);
+    $this->file->isOpen() || $this->file->open(File::READ);
   }
 
   /**

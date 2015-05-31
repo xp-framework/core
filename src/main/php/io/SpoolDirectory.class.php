@@ -1,13 +1,10 @@
 <?php namespace io;
 
-use io\Folder;
-
-
 /**
  * This class handles all neccessary file and directory operations
  * for doing reliable spool operations.
  *
- * @purpose   Reliable spool directory class
+ * @deprecated Extract to own library if necessary
  */    
 class SpoolDirectory extends \lang\Object {
   public
@@ -63,7 +60,7 @@ class SpoolDirectory extends \lang\Object {
       $abstract= date ('Y-m-d-H-i-s').'_'.$abstract;
     
     $f= new File ($this->_hNew->getURI().DIRECTORY_SEPARATOR.$abstract.'.spool');
-    $f->open (FILE_MODE_WRITE);
+    $f->open (File::WRITE);
     return $f;
   }
 
@@ -87,7 +84,7 @@ class SpoolDirectory extends \lang\Object {
   public function getNextSpoolEntry() {
     if (false !== ($entry= $this->_hTodo->getEntry())) {
       $f= new File ($this->_hTodo->getURI().DIRECTORY_SEPARATOR.$entry);
-      $f->open (FILE_MODE_READWRITE);
+      $f->open (File::READWRITE);
     }
     
     return $f;

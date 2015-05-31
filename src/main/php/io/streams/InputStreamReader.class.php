@@ -2,8 +2,6 @@
 
 /**
  * Reads data from an InputStream
- *
- * @purpose  Interface
  */
 interface InputStreamReader {
 

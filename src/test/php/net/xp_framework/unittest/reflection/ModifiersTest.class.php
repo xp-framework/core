@@ -1,15 +1,11 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\TestCase;
-
-
 /**
  * Test the XP reflection API's Modifiers utility class
  *
- * @see      xp://lang.reflect.Modifiers
- * @purpose  Testcase
+ * @see   xp://lang.reflect.Modifiers
  */
-class ModifiersTest extends TestCase {
+class ModifiersTest extends \unittest\TestCase {
 
   /**
    * Tests the public modifier should be the default

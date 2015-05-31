@@ -2,13 +2,11 @@
 
 use lang\Closeable;
 
-
 /**
- * Serves as an bstract base class for all other writers. A writer
+ * Serves as an abstract base class for all other writers. A writer
  * writes characters to an underlying output stream implementation
  * (which works with bytes - for single-byte character sets, there is 
  * no difference, obviously).
- *
  */
 abstract class Writer extends \lang\Object {
   protected $stream= null;

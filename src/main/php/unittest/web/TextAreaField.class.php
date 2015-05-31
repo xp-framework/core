@@ -1,15 +1,10 @@
 <?php namespace unittest\web;
 
-
-
-
-
 /**
  * Represents a HTML textarea field
  *
- * @see      http://www.w3schools.com/TAGS/tag_textarea.asp
- * @see      xp://unittest.web.Field
- * @purpose  Value object
+ * @see   http://www.w3schools.com/TAGS/tag_textarea.asp
+ * @see   xp://unittest.web.Field
  */
 class TextAreaField extends Field {
 

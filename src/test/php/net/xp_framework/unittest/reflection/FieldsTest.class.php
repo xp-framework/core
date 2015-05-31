@@ -1,21 +1,12 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\TestCase;
-
-
-/**
- * TestCase
- *
- * @see      xp://lang.reflect.Field
- * @purpose  Unittest
- */
-class FieldsTest extends TestCase {
-  protected
-    $fixture  = null;
+class FieldsTest extends \unittest\TestCase {
+  private $fixture;
 
   /**
    * Sets up test case
    *
+   * @return void
    */
   public function setUp() {
     $this->fixture= \lang\XPClass::forName('net.xp_framework.unittest.reflection.TestClass');

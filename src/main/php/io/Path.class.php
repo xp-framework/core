@@ -5,6 +5,7 @@ use lang\IllegalArgumentException;
 use io\collections\IOElement;
 
 class Path extends \lang\Object {
+  const EXISTING = true;
   protected $path;
 
   /**
@@ -13,7 +14,7 @@ class Path extends \lang\Object {
    * @param  var[] $input
    * @return string
    */
-  protected function pathFor($input) {
+  private static function pathFor($input) {
     if (empty($input)) {
       return '';
     } else if ($input[0] instanceof Folder) {
@@ -38,9 +39,9 @@ class Path extends \lang\Object {
    */
   public function __construct($base) {
     if (is_array($base)) {
-      $this->path= $this->pathFor($base);
+      $this->path= self::pathFor($base);
     } else {
-      $this->path= $this->pathFor(func_get_args());
+      $this->path= self::pathFor(func_get_args());
     }
   }
 
@@ -52,6 +53,23 @@ class Path extends \lang\Object {
    */
   public static function compose(array $args) {
     return new self($args);
+  }
+
+  /**
+   * Creates a new instance with a variable number of arguments
+   *
+   * @see    php://realpath
+   * @param  var $arg Either a string, a Path, a File, Folder or IOElement or an array
+   * @param  var $wd Working directory A string, a Path, Folder or IOElement
+   * @return self
+   */
+  public static function real($arg, $wd= null) {
+    if (is_array($arg)) {
+      $path= self::pathFor($arg);
+    } else {
+      $path= self::pathFor([$arg]);
+    }
+    return new self(self::real0($path, $wd ?: getcwd()));
   }
 
   /**
@@ -111,14 +129,23 @@ class Path extends \lang\Object {
   }
 
   /**
+   * Tests whether this path references an empty string
+   *
+   * @return bool
+   */
+  public function isEmpty() {
+    return '' === $this->path;
+  }
+
+  /**
    * Realpath
    *
    * @see    php://realpath
    * @param  string $path
-   * @param  string $wd
+   * @param  var $wd
    * @return string
    */
-  protected static function real($path, $wd) {
+  private static function real0($path, $wd) {
     if (DIRECTORY_SEPARATOR === $path{0}) {
       $normalized= '';
       $components= explode(DIRECTORY_SEPARATOR, substr($path, 1));
@@ -128,7 +155,7 @@ class Path extends \lang\Object {
     } else if (null === $wd) {
       throw new IllegalStateException('Cannot resolve '.$path);
     } else {
-      return self::real($wd.DIRECTORY_SEPARATOR.$path, null);
+      return self::real0(self::pathFor([$wd]).DIRECTORY_SEPARATOR.$path, null);
     }
 
     $check= true;
@@ -159,11 +186,11 @@ class Path extends \lang\Object {
    * used to resolve relative paths.
    *
    * @see    php://getcwd
-   * @param  string $wd Working directory
+   * @param  var $wd Working directory A string, a Path, Folder or IOElement
    * @return string
    */
   public function asURI($wd= null) {
-    return self::real($this->path, $wd ?: getcwd());
+    return self::real0($this->path, $wd ?: getcwd());
   }
 
   /**
@@ -172,35 +199,49 @@ class Path extends \lang\Object {
    * used to resolve relative paths.
    *
    * @see    php://getcwd
-   * @param  string $wd Working directory
+   * @param  var $wd Working directory A string, a Path, Folder or IOElement
    * @return self
    */
   public function asRealpath($wd= null) {
-    return new self(self::real($this->path, $wd ?: getcwd()));
+    return new self(self::real0($this->path, $wd ?: getcwd()));
   }
 
   /**
    * Returns a file instance for this path
    *
+   * @param  bool $existing Whether only to return existing files
    * @return io.File
    * @throws lang.IllegalStateException if the path is not a file
    */
-  public function asFile() {
-    $path= $this->path;
-    if (is_file($path)) return new File($path); 
-    throw new IllegalStateException($path.' is not a file');
+  public function asFile($existing= false) {
+    if (is_file($this->path)) {
+      return new File($this->path);
+    } else if (file_exists($this->path)) {
+      throw new IllegalStateException($this->path.' exists but is not a file');
+    } else if ($existing) {
+      throw new IllegalStateException($this->path.' does not exist');
+    } else {
+      return new File($this->path);
+    }
   }
 
   /**
    * Returns a folder instance for this path
    *
+   * @param  bool $existing Whether only to return existing folder
    * @return io.File
    * @throws lang.IllegalStateException if the path is not a folder
    */
-  public function asFolder() {
-    $path= $this->path;
-    if (is_dir($path)) return new Folder($path); 
-    throw new IllegalStateException($path.' is not a folder');
+  public function asFolder($existing= false) {
+    if (is_dir($this->path)) {
+      return new Folder($this->path);
+    } else if (file_exists($this->path)) {
+      throw new IllegalStateException($this->path.' exists but is not a folder');
+    } else if ($existing) {
+      throw new IllegalStateException($this->path.' does not exist');
+    } else {
+      return new Folder($this->path);
+    }
   }
 
   /**
@@ -317,6 +358,16 @@ class Path extends \lang\Object {
    */
   public function toString($separator= DIRECTORY_SEPARATOR) {
     return strtr($this->path, [DIRECTORY_SEPARATOR => $separator]);
+  }
+
+  /**
+   * Returns whether this path instance is equal to a given object.
+   *
+   * @param  var $cmp
+   * @return bool
+   */
+  public function equals($cmp) {
+    return $cmp instanceof self && $this->normalize()->path === $cmp->normalize()->path;
   }
 
   /** @return string */

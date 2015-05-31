@@ -4,13 +4,6 @@ use unittest\TestCase;
 use lang\archive\Archive;
 use io\File;
 
-
-/**
- * TestCase for resource loading
- *
- * @see      xp://lang.ClassLoader
- * @purpose  Unittest
- */
 class ResourcesTest extends TestCase {
   private $cl= null;
 
@@ -62,7 +55,7 @@ class ResourcesTest extends TestCase {
   public function getResourceAsStream() {
     $stream= \lang\ClassLoader::getDefault()->getResourceAsStream('META-INF/manifest.ini');
     $this->assertInstanceOf('io.File', $stream);
-    $stream->open(FILE_MODE_READ);
+    $stream->open(File::READ);
     $this->assertManifestFile($stream->read($stream->size()));
     $stream->close();
   }

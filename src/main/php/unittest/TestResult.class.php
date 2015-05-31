@@ -1,12 +1,9 @@
 <?php namespace unittest;
 
-
-
 /**
  * Test result
  *
- * @see      xp://unittest.TestSuite
- * @purpose  Wrapper class
+ * @see   xp://unittest.TestSuite
  */
 class TestResult extends \lang\Object {
   public

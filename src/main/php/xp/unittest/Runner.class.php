@@ -1,11 +1,24 @@
 <?php namespace xp\unittest;
 
 use lang\XPClass;
-use io\streams\FileOutputStream;
+use lang\Throwable;
+use lang\ClassLoader;
+use lang\IllegalArgumentException;
+use lang\MethodNotImplementedException;
+use lang\reflect\Package;
+use lang\reflect\TargetInvocationException;
 use io\File;
 use io\Folder;
+use io\streams\Streams;
+use io\streams\InputStream;
+use io\streams\OutputStream;
+use io\streams\FileOutputStream;
+use io\streams\StringWriter;
+use io\streams\StringReader;
 use unittest\TestSuite;
+use unittest\ColorizingListener;
 use util\Properties;
+use util\NoSuchElementException;
 use util\collections\Vector;
 use util\cmd\Console;
 use xp\unittest\sources\ClassFileSource;
@@ -20,52 +33,68 @@ use xp\unittest\sources\PropertySource;
  * ~~~~~~~~~~~~~~~~
  *
  * Usage:
- * <pre>
- *   unittest [options] test [test [test...]]
- * </pre>
+ * ```sh
+ * $ unittest [options] test [test [test...]]
+ * ```
  *
  * Options is one of:
- * <ul>
- *   <li>-v : Be verbose</li>
- *   <li>-q : Be quiet (no output)</li>
- *   <li>-cp: Add classpath elements</li>
- *   <li>-a {argument}: Define argument to pass to tests (may be used
- *     multiple times)</li>
- *   <li>-l {listener.class.Name} {output} [-o option value [-o ...]]
+ *
+ *   -v : Be verbose
+ *   -q : Be quiet (no output)
+ *   -cp: Add classpath elements
+ *   -a {argument}: Define argument to pass to tests (may be used
+ *     multiple times)
+ *   -l {listener.class.Name} {output} [-o option value [-o ...]]
  *     where output is either "-" for console output or a file name. 
- *     Options with "-o" are listener-dependant arguments.</li>
- *   <li>--color={mode} : Enable / disable color; mode can be one of
+ *     Options with "-o" are listener-dependant arguments.
+ *   --color={mode} : Enable / disable color; mode can be one of
  *     . "on" - activate color mode
  *     . "off" - disable color mode
  *     . "auto" - try to determine whether colors are supported and enable
  *       accordingly.
- *   </li>
- * </ul>
+ *   -w {dir}: Run indefinitely, watch given directory for changes
+ *
  * Tests can be one or more of:
- * <ul>
- *   <li>{tests}.ini: A configuration file</li>
- *   <li>{package.name}.*: All classes inside a given package</li>
- *   <li>{package.name}.**: All classes inside a given package and all subpackages</li>
- *   <li>{Test}.class.php: A class file</li>
- *   <li>{test.class.Name}: A fully qualified class name</li>
- *   <li>{test.class.Name}::{testName}: A fully qualified class name and a test name</li>
- *   <li>path/with/tests: All classes inside a given directory and all subdirectories</li>
- *   <li>-e {test method sourcecode}: Evaluate source</li>
- * </ul>
+ *
+ *   {tests}.ini: A configuration file
+ *   {package.name}.*: All classes inside a given package
+ *   {package.name}.**: All classes inside a given package and all subpackages
+ *   {Test}.class.php: A class file
+ *   {test.class.Name}: A fully qualified class name
+ *   {test.class.Name}::{testName}: A fully qualified class name and a test name
+ *   path/with/tests: All classes inside a given directory and all subdirectories
+ *   -e {test method sourcecode}: Evaluate source
  *
  * @test  xp://net.xp_framework.unittest.tests.UnittestRunnerTest
  */
 class Runner extends \lang\Object {
-  protected $out= null;
-  protected $err= null;
-  
+  protected $in, $out, $err;
+
+  private static $cmap= [
+    ''      => null,
+    '=on'   => true,
+    '=off'  => false,
+    '=auto' => null
+  ];
+
   /**
-   * Constructor. Initializes out and err members to console
-   *
+   * Constructor. Initializes in, out and err members to console
    */
   public function __construct() {
+    $this->in= Console::$in;
     $this->out= Console::$out;
     $this->err= Console::$err;
+  }
+
+  /**
+   * Reassigns standard input stream
+   *
+   * @param   io.streams.InputStream out
+   * @return  io.streams.InputStream the given output stream
+   */
+  public function setIn(InputStream $in) {
+    $this->in= new StringReader($in);
+    return $in;
   }
 
   /**
@@ -74,8 +103,8 @@ class Runner extends \lang\Object {
    * @param   io.streams.OutputStream out
    * @return  io.streams.OutputStream the given output stream
    */
-  public function setOut(\io\streams\OutputStream $out) {
-    $this->out= new \io\streams\StringWriter($out);
+  public function setOut(OutputStream $out) {
+    $this->out= new StringWriter($out);
     return $out;
   }
 
@@ -85,8 +114,8 @@ class Runner extends \lang\Object {
    * @param   io.streams.OutputStream error
    * @return  io.streams.OutputStream the given output stream
    */
-  public function setErr(\io\streams\OutputStream $err) {
-    $this->err= new \io\streams\StringWriter($err);
+  public function setErr(OutputStream $err) {
+    $this->err= new StringWriter($err);
     return $err;
   }
 
@@ -98,11 +127,11 @@ class Runner extends \lang\Object {
    */
   protected function textOf($markup) {
     $line= str_repeat('=', 72);
-    return strip_tags(preg_replace(array(
-      '#<pre>#', '#</pre>#', '#<li>#',
-    ), array(
-      $line, $line, '* ',
-    ), trim($markup)));
+    return strip_tags(preg_replace(
+      ['#```([a-z]*)#', '#```#', '#^\- #'],
+      [$line, $line, '* '],
+      trim($markup)
+    ));
   }
 
   /**
@@ -111,8 +140,8 @@ class Runner extends \lang\Object {
    * @return  int exitcode
    */
   protected function usage() {
-    $this->err->writeLine($this->textOf((new XPClass(__CLASS__))->getComment()));
-    return 1;
+    $this->err->writeLine($this->textOf(XPClass::forName(\xp::nameOf(__CLASS__))->getComment()));
+    return 2;
   }
 
   /**
@@ -153,7 +182,7 @@ class Runner extends \lang\Object {
     } else {
       $this->err->writeLine();
     }
-    return 1;
+    return 2;
   }
 
   /**
@@ -167,7 +196,7 @@ class Runner extends \lang\Object {
    */
   protected function arg($args, $offset, $option) {
     if (!isset($args[$offset])) {
-      throw new \lang\IllegalArgumentException('Option -'.$option.' requires an argument');
+      throw new IllegalArgumentException('Option -'.$option.' requires an argument');
     }
     return $args[$offset];
   }
@@ -182,7 +211,7 @@ class Runner extends \lang\Object {
     if ('-' == $in) {
       return Console::$out;
     } else {
-      return new \io\streams\StringWriter(new FileOutputStream($in));
+      return new StringWriter(new FileOutputStream($in));
     }
   }
   
@@ -203,12 +232,6 @@ class Runner extends \lang\Object {
     $listener= TestListeners::$DEFAULT;
     $arguments= [];
     $colors= null;
-    $cmap= array(
-      ''      => null,
-      '=on'   => true,
-      '=off'  => false,
-      '=auto' => null
-    );
 
     try {
       for ($i= 0, $s= sizeof($args); $i < $s; $i++) {
@@ -218,10 +241,15 @@ class Runner extends \lang\Object {
           $listener= TestListeners::$QUIET;
         } else if ('-cp' == $args[$i]) {
           foreach (explode(PATH_SEPARATOR, $this->arg($args, ++$i, 'cp')) as $element) {
-            \lang\ClassLoader::registerPath($element, null);
+            ClassLoader::registerPath($element, null);
           }
         } else if ('-e' == $args[$i]) {
-          $sources->add(new EvaluationSource($this->arg($args, ++$i, 'e')));
+          $arg= ++$i < $s ? $args[$i] : '-';
+          if ('-' === $arg) {
+            $sources->add(new EvaluationSource(Streams::readAll($this->in->getStream())));
+          } else {
+            $sources->add(new EvaluationSource($this->arg($args, $i, 'e')));
+          }
         } else if ('-l' == $args[$i]) {
           $arg= $this->arg($args, ++$i, 'l');
           $class= XPClass::forName(strstr($arg, '.') ? $arg : 'xp.unittest.'.ucfirst($arg).'Listener');
@@ -267,28 +295,30 @@ class Runner extends \lang\Object {
           }
           try {
             $method->invoke($instance, $pass);
-          } catch (\lang\reflect\TargetInvocationException $e) {
-            $this->err->writeLine('*** Error for argument '.$name.' to '.nameof($instance).': '.$e->getCause()->toString());
+          } catch (TargetInvocationException $e) {
+            $this->err->writeLine('*** Error for argument '.$name.' to '.$instance->getClassName().': '.$e->getCause()->toString());
             return 2;
           }
         } else if ('-?' == $args[$i] || '--help' == $args[$i]) {
           return $this->usage();
         } else if ('-a' == $args[$i]) {
           $arguments[]= $this->arg($args, ++$i, 'a');
+        } else if ('-w' == $args[$i]) {
+          $this->arg($args, ++$i, 'w');
         } else if ('--color' == substr($args[$i], 0, 7)) {
           $remainder= (string)substr($args[$i], 7);
-          if (!array_key_exists($remainder, $cmap)) {
-            throw new \lang\IllegalArgumentException('Unsupported argument for --color (must be <empty>, "on", "off", "auto" (default))');
+          if (!array_key_exists($remainder, self::$cmap)) {
+            throw new IllegalArgumentException('Unsupported argument for --color (must be <empty>, "on", "off", "auto" (default))');
           }
-          $colors= $cmap[$remainder];
+          $colors= self::$cmap[$remainder];
         } else if (strstr($args[$i], '.ini')) {
           $sources->add(new PropertySource(new Properties($args[$i])));
         } else if (strstr($args[$i], \xp::CLASS_FILE_EXT)) {
           $sources->add(new ClassFileSource(new File($args[$i])));
         } else if (strstr($args[$i], '.**')) {
-          $sources->add(new PackageSource(\lang\reflect\Package::forName(substr($args[$i], 0, -3)), true));
+          $sources->add(new PackageSource(Package::forName(substr($args[$i], 0, -3)), true));
         } else if (strstr($args[$i], '.*')) {
-          $sources->add(new PackageSource(\lang\reflect\Package::forName(substr($args[$i], 0, -2))));
+          $sources->add(new PackageSource(Package::forName(substr($args[$i], 0, -2))));
         } else if (false !== ($p= strpos($args[$i], '::'))) {
           $sources->add(new ClassSource(XPClass::forName(substr($args[$i], 0, $p)), substr($args[$i], $p+ 2)));
         } else if (is_dir($args[$i])) {
@@ -297,20 +327,20 @@ class Runner extends \lang\Object {
           $sources->add(new ClassSource(XPClass::forName($args[$i])));
         }
       }
-    } catch (\lang\Throwable $e) {
+    } catch (Throwable $e) {
       $this->err->writeLine('*** ', $e->getMessage());
       \xp::gc();
-      return 1;
+      return 2;
     }
     
     if ($sources->isEmpty()) {
       $this->err->writeLine('*** No tests specified');
-      return 1;
+      return 2;
     }
     
     // Set up suite
     $l= $suite->addListener($listener->newInstance($this->out));
-    if ($l instanceof \unittest\ColorizingListener) {
+    if ($l instanceof ColorizingListener) {
       $l->setColor($colors);
     }
 
@@ -320,15 +350,15 @@ class Runner extends \lang\Object {
         foreach ($tests as $test) {
           $suite->addTest($test);
         }
-      } catch (\util\NoSuchElementException $e) {
+      } catch (NoSuchElementException $e) {
         $this->err->writeLine('*** Warning: ', $e->getMessage());
         continue;
-      } catch (\lang\IllegalArgumentException $e) {
+      } catch (IllegalArgumentException $e) {
         $this->err->writeLine('*** Error: ', $e->getMessage());
-        return 1;
-      } catch (\lang\MethodNotImplementedException $e) {
+        return 2;
+      } catch (MethodNotImplementedException $e) {
         $this->err->writeLine('*** Error: ', $e->getMessage(), ': ', $e->method, '()');
-        return 1;
+        return 2;
       }
     }
     

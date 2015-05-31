@@ -4,7 +4,6 @@
  * Encodes/decodes CVS passwords
  *
  * @see      http://www.loria.fr/~molli/cvs/doc/cvsclient_4.html#SEC4
- * @purpose  CVS password encoder/decoder
  */
 class CvsPassword extends \lang\Object {
 

@@ -1,8 +1,4 @@
 <?php
-/* This file is part of the XP framework
- *
- * $Id$
- */
 
 /**
  * The types package contains type wrappers for types that exist in other
@@ -37,7 +33,6 @@
  * @see      http://developer.xp-framework.net/xml/rfc/view?0038
  * @see      xp://lang.types.Number
  * @see      xp://lang.types.ArrayList
- * @purpose  Type wrappers
  */
 package lang.types {
 }

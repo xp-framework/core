@@ -1,12 +1,8 @@
 <?php namespace unittest;
 
-define('PREREQUISITE_LIBRARYMISSING', 'library.missing');
-define('PREREQUISITE_INITFAILED',     'initialization.failed');
-
 /**
  * Indicates prerequisites have not been met
  *
- * @purpose  Exception
  */
 class PrerequisitesNotMetError extends \lang\XPException {
   public $prerequisites= [];
@@ -16,7 +12,7 @@ class PrerequisitesNotMetError extends \lang\XPException {
    *
    * @param   string message
    * @param   lang.Throwable cause 
-   * @param   array prerequisites default []
+   * @param   var[] prerequisites default []
    */
   public function __construct($message, \lang\Throwable $cause= null, $prerequisites= []) {
     parent::__construct($message, $cause);

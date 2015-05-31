@@ -3,7 +3,7 @@
 /**
  * Format base class
  *
- * @purpose  Provide a base class to all format classes
+ * @deprecated
  * @see      xp://text.format.MessageFormat#setFormatter
  */
 class IFormat extends \lang\Object {

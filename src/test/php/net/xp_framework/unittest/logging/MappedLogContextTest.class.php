@@ -1,28 +1,22 @@
 <?php namespace net\xp_framework\unittest\logging;
 
-use unittest\TestCase;
 use util\log\context\MappedLogContext;
-
 
 /**
  * Tests MappedLogContext class
- *
  */
-class MappedLogContextTest extends TestCase {
-  protected $context= null;
+class MappedLogContextTest extends \unittest\TestCase {
+  private $context;
 
   /**
    * Sets up test case
    *
+   * @return void
    */
   public function setUp() {
     $this->context= new MappedLogContext();
   }
 
-  /**
-   * Tests MappedLogContext::hasKey()
-   *
-   */
   #[@test]
   public function hasKey() {
     $this->assertFalse($this->context->hasKey('key1'));
@@ -34,10 +28,6 @@ class MappedLogContextTest extends TestCase {
     $this->assertTrue($this->context->hasKey('key2'));
   }
 
-  /**
-   * Tests MappedLogContext::get()
-   *
-   */
   #[@test]
   public function get() {
     $this->assertNull($this->context->get('key1'));
@@ -49,10 +39,6 @@ class MappedLogContextTest extends TestCase {
     $this->assertEquals('val2', $this->context->get('key2'));
   }
 
-  /**
-   * Tests MappedLogContext::remove()
-   *
-   */
   #[@test]
   public function remove() {
     $this->context->put('key1', 'val1');
@@ -61,19 +47,11 @@ class MappedLogContextTest extends TestCase {
     $this->assertNull($this->context->get('key1'));
   }
 
-  /**
-   * Tests MappedLogContext::remove()
-   *
-   */
   #[@test]
   public function removeUnexistingKey() {
     $this->context->remove('unexistingKey');
   }
 
-  /**
-   * Tests MappedLogContext::clear()
-   *
-   */
   #[@test]
   public function clear() {
     $this->context->put('key1', 'val1');
@@ -83,10 +61,6 @@ class MappedLogContextTest extends TestCase {
     $this->assertFalse($this->context->hasKey('key2'));
   }
 
-  /**
-   * Tests MappedLogContext::format()
-   *
-   */
   #[@test]
   public function format() {
     $this->assertEquals('', $this->context->format());
@@ -95,10 +69,6 @@ class MappedLogContextTest extends TestCase {
     $this->assertEquals('key1=val1 key2=val2', $this->context->format());
   }
 
-  /**
-   * Tests MappedLogContext::toString()
-   *
-   */
   #[@test]
   public function toStringTest() {
     $this->assertEquals('util.log.context.MappedLogContext{}', $this->context->toString());

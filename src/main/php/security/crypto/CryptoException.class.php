@@ -1,14 +1,12 @@
 <?php namespace security\crypto;
 
 /**
- * CryptoException
+ * This exception indicates one of a variety of public/private key problems.
  *
- * @see      xp://security.crypto.CryptoKey
- * @purpose  This exception indicates one of a variety of public/private key problems.
+ * @see   xp://security.crypto.CryptoKey
  */
 class CryptoException extends \lang\XPException {
-  public
-    $errors = [];
+  public $errors= [];
     
   /**
    * Constructor

@@ -1,11 +1,7 @@
 <?php namespace peer;
 
-
-
 /**
  * UDP (Universal Datagram Protocol) socket
- *
- * @purpose  Specialized socket
  */
 class UDPSocket extends Socket {
 

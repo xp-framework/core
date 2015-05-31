@@ -2,7 +2,6 @@
 
 use util\NoSuchElementException;
 
-
 /**
  * Calculates password strength
  *
@@ -23,8 +22,7 @@ use util\NoSuchElementException;
  *   <li>80..100 - very strong</li>
  * </ul>
  *
- * @see      xp://security.password.StandardAlgorithm
- * @purpose  Entry point class
+ * @see   xp://security.password.StandardAlgorithm
  */
 class PasswordStrength extends \lang\Object {
   protected static

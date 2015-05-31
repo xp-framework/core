@@ -3,7 +3,7 @@
 /**
  * String utility functions
  *
- * @purpose  purpose
+ * @deprecated
  */
 class StringUtil extends \lang\Object {
 

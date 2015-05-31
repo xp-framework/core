@@ -1,21 +1,47 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use unittest\TestCase;
 use io\streams\TextReader;
+use io\streams\InputStream;
 use io\streams\MemoryInputStream;
+use io\streams\MemoryOutputStream;
+use lang\IllegalArgumentException;
 
 /**
  * TestCase
  *
- * @see      xp://io.streams.TextReader
+ * @see  http://de.wikipedia.org/wiki/China
+ * @see  xp://io.streams.TextReader
  */
-class TextReaderTest extends TestCase {
+class TextReaderTest extends \unittest\TestCase {
+
+  #[@test]
+  public function can_create_with_string() {
+    new TextReader('');
+  }
+
+  #[@test]
+  public function can_create_with_stream() {
+    new TextReader(new MemoryInputStream(''));
+  }
+
+  #[@test]
+  public function can_create_with_channel() {
+    new TextReader(newinstance('io.Channel', [], [
+      'in'  => function() { return new MemoryInputStream(''); },
+      'out' => function() { return new MemoryOutputStream(); }
+    ]));
+  }
+
+  #[@test, @expect(IllegalArgumentException::class)]
+  public function raises_exception_for_incorrect_constructor_argument() {
+    new TextReader(null);
+  }
 
   /**
    * Returns a text reader for a given input string.
    *
-   * @param   string str
-   * @param   string charset
+   * @param   string $str
+   * @param   string $charset
    * @return  io.streams.TextReader
    */
   protected function newReader($str, $charset= \xp::ENCODING) {
@@ -23,63 +49,56 @@ class TextReaderTest extends TestCase {
   }
 
   /**
-   * Test reading
+   * Returns a stream that does not support seeking
    *
+   * @return  io.streams.InputStream
    */
+  protected function unseekableStream() {
+    return newinstance('io.streams.InputStream', [], [
+      'bytes' => "A\nB\n",
+      'offset' => 0,
+      'read' => function($length= 8192) {
+        $chunk= substr($this->bytes, $this->offset, $length);
+        $this->offset+= strlen($chunk);
+        return $chunk;
+      },
+      'available' => function() {
+        return strlen($this->bytes) - $this->offset;
+      },
+      'close' => function() { }
+    ]);
+  }
+
   #[@test]
   public function readOne() {
     $this->assertEquals('H', $this->newReader('Hello', 'iso-8859-1')->read(1));
   }
 
-  /**
-   * Test reading
-   *
-   */
   #[@test]
   public function readOneUtf8() {
     $this->assertEquals('Ü', $this->newReader('Übercoder', 'utf-8')->read(1));
   }
 
-  /**
-   * Test reading
-   *
-   */
   #[@test]
   public function readLength() {
     $this->assertEquals('Hello', $this->newReader('Hello')->read(5));
   }
 
-  /**
-   * Test reading
-   *
-   */
   #[@test]
   public function readLengthUtf8() {
     $this->assertEquals('Übercoder', $this->newReader('Übercoder', 'utf-8')->read(9));
   }
 
-  /**
-   * Test reading
-   *
-   */
   #[@test, @expect('lang.FormatException')]
   public function readBrokenUtf8() {
     $this->newReader("Hello \334|", 'utf-8')->read(0x1000);
   }
 
-  /**
-   * Test reading
-   *
-   */
   #[@test, @expect('lang.FormatException')]
   public function readMalformedUtf8() {
     $this->newReader("Hello \334bercoder", 'utf-8')->read(0x1000);
   }
 
-  /**
-   * Test reading
-   *
-   */
   #[@test]
   public function readingDoesNotContinueAfterBrokenCharacters() {
     $r= $this->newReader("Hello \334bercoder\n".str_repeat('*', 512), 'utf-8');
@@ -92,30 +111,16 @@ class TextReaderTest extends TestCase {
     $this->assertNull($r->read(512));
   }
 
-  /**
-   * Test reading Unicode which contains two characters not convertible
-   * to iso-8859-1, now works.
-   *
-   * @see     http://de.wikipedia.org/wiki/China
-   */
   #[@test, @values(['ˈçiːna', 'ˈkiːna', '中國 / 中国', 'Zhōngguó'])]
   public function readPreviouslyUnconvertible($value) {
     $this->assertEquals($value, $this->newReader($value, 'utf-8')->read());
   }
 
-  /**
-   * Test reading
-   *
-   */
   #[@test]
   public function read() {
     $this->assertEquals('Hello', $this->newReader('Hello')->read());
   }
 
-  /**
-   * Test reading a source returning encoded bytes only (no US-ASCII inbetween!)
-   *
-   */
   #[@test]
   public function encodedBytesOnly() {
     $this->assertEquals(
@@ -124,10 +129,6 @@ class TextReaderTest extends TestCase {
     );
   }
 
-  /**
-   * Test reading after EOF
-   *
-   */
   #[@test]
   public function readAfterEnd() {
     $r= $this->newReader('Hello');
@@ -135,10 +136,6 @@ class TextReaderTest extends TestCase {
     $this->assertNull($r->read());
   }
 
-  /**
-   * Test reading after EOF
-   *
-   */
   #[@test]
   public function readMultipleAfterEnd() {
     $r= $this->newReader('Hello');
@@ -147,10 +144,6 @@ class TextReaderTest extends TestCase {
     $this->assertNull($r->read());
   }
 
-  /**
-   * Test reading after EOF
-   *
-   */
   #[@test]
   public function readLineAfterEnd() {
     $r= $this->newReader('Hello');
@@ -158,10 +151,6 @@ class TextReaderTest extends TestCase {
     $this->assertNull($r->readLine());
   }
 
-  /**
-   * Test reading after EOF
-   *
-   */
   #[@test]
   public function readLineMultipleAfterEnd() {
     $r= $this->newReader('Hello');
@@ -170,28 +159,16 @@ class TextReaderTest extends TestCase {
     $this->assertNull($r->readLine());
   }
 
-  /**
-   * Test reading
-   *
-   */
   #[@test]
   public function readZero() {
     $this->assertEquals('', $this->newReader('Hello')->read(0));
   }
 
-  /**
-   * Test reading
-   *
-   */
   #[@test]
   public function readLineEmptyInput() {
     $this->assertNull($this->newReader('')->readLine());
   }
 
-  /**
-   * Test reading lines separated by "\n", "\r" and "\r\n"
-   *
-   */
   #[@test, @values(array(
   #  "Hello\nWorld\n", "Hello\rWorld\r", "Hello\r\nWorld\r\n",
   #  "Hello\nWorld", "Hello\rWorld", "Hello\r\nWorld"
@@ -203,10 +180,6 @@ class TextReaderTest extends TestCase {
     $this->assertNull($r->readLine());
   }
 
-  /**
-   * Test reading lines with one character separated by "\n", "\r" and "\r\n"
-   *
-   */
   #[@test, @values(array(
   #  "1\n2\n", "1\r2\r", "1\r\n2\r\n",
   #  "1\n2", "1\r2", "1\r\n2\r\n"
@@ -218,10 +191,6 @@ class TextReaderTest extends TestCase {
     $this->assertNull($r->readLine());
   }
 
-  /**
-   * Test reading an empty line
-   *
-   */
   #[@test]
   public function readEmptyLine() {
     $r= $this->newReader("Hello\n\nWorld");
@@ -231,10 +200,6 @@ class TextReaderTest extends TestCase {
     $this->assertNull($r->readLine());
   }
 
-  /**
-   * Test reading lines
-   *
-   */
   #[@test]
   public function readLinesUtf8() {
     $r= $this->newReader("\303\234ber\nCoder", 'utf-8');
@@ -243,102 +208,60 @@ class TextReaderTest extends TestCase {
     $this->assertNull($r->readLine());
   }
   
-  /**
-   * Test reading lines w/ autodetected encoding at iso-8859-1
-   *
-   */
   #[@test]
   public function readLinesAutodetectIso88591() {
     $r= $this->newReader("\334bercoder", null);
     $this->assertEquals('Übercoder', $r->readLine());
   }
   
-  /**
-   * Test reading from an encoding-autodetected stream when length of
-   * data does is insufficient for autodetection.
-   *
-   */
   #[@test]
   public function readShortLinesAutodetectIso88591() {
     $r= $this->newReader("\334", null);
     $this->assertEquals('Ü', $r->readLine());
   }
-  
-  
-  /**
-   * Test reading lines w/ autodetected encoding at utf-8
-   *
-   */
+
   #[@test]
   public function readLinesAutodetectUtf8() {
     $r= $this->newReader("\357\273\277\303\234bercoder", null);
     $this->assertEquals('Übercoder', $r->readLine());
   }
 
-  /**
-   * Test reading lines w/ autodetected encoding at utf-8
-   *
-   */
   #[@test]
   public function autodetectUtf8() {
     $r= $this->newReader("\357\273\277\303\234bercoder", null);
     $this->assertEquals('utf-8', $r->charset());
   }
 
-  /**
-   * Test reading lines w/ autodetected encoding at utf-16be
-   *
-   */
   #[@test]
   public function readLinesAutodetectUtf16BE() {
     $r= $this->newReader("\376\377\000\334\000b\000e\000r\000c\000o\000d\000e\000r", null);
     $this->assertEquals('Übercoder', $r->readLine());
   }
 
-  /**
-   * Test reading lines w/ autodetected encoding at utf-16be
-   *
-   */
   #[@test]
   public function autodetectUtf16Be() {
     $r= $this->newReader("\376\377\000\334\000b\000e\000r\000c\000o\000d\000e\000r", null);
     $this->assertEquals('utf-16be', $r->charset());
   }
   
-  /**
-   * Test reading lines w/ autodetected encoding at utf-16le
-   *
-   */
   #[@test]
   public function readLinesAutodetectUtf16Le() {
     $r= $this->newReader("\377\376\334\000b\000e\000r\000c\000o\000d\000e\000r\000", null);
     $this->assertEquals('Übercoder', $r->readLine());
   }
 
-  /**
-   * Test reading lines w/ autodetected encoding at utf-16le
-   *
-   */
   #[@test]
   public function autodetectUtf16Le() {
     $r= $this->newReader("\377\376\334\000b\000e\000r\000c\000o\000d\000e\000r\000", null);
     $this->assertEquals('utf-16le', $r->charset());
   }
 
-  /**
-   * Test reading lines w/ autodetected encoding at iso-8859-1
-   *
-   */
   #[@test]
   public function defaultCharsetIsIso88591() {
     $r= $this->newReader('Übercoder', null);
     $this->assertEquals('iso-8859-1', $r->charset());
   }
 
-  /**
-   * Test reading
-   *
-   */
   #[@test]
   public function bufferProblem() {
     $r= $this->newReader("Hello\rX");
@@ -347,11 +270,6 @@ class TextReaderTest extends TestCase {
     $this->assertNull($r->readLine());
   }
 
-  /**
-   * Test closing a reader twice has no effect.
-   *
-   * @see   xp://lang.Closeable#close
-   */
   #[@test]
   public function closingTwice() {
     $r= $this->newReader('');
@@ -359,10 +277,6 @@ class TextReaderTest extends TestCase {
     $r->close();
   }
 
-  /**
-   * Test resetting a reader
-   *
-   */
   #[@test]
   public function reset() {
     $r= $this->newReader('ABC');
@@ -371,10 +285,6 @@ class TextReaderTest extends TestCase {
     $this->assertEquals('ABC', $r->read(3));
 
   }
-  /**
-   * Test resetting a reader
-   *
-   */
   #[@test]
   public function resetWithBuffer() {
     $r= $this->newReader("Line 1\rLine 2");
@@ -384,10 +294,6 @@ class TextReaderTest extends TestCase {
     $this->assertEquals('Line 2', $r->readLine());
   }
 
-  /**
-   * Test resetting a reader
-   *
-   */
   #[@test]
   public function resetUtf8() {
     $r= $this->newReader("\357\273\277ABC", null);
@@ -396,10 +302,6 @@ class TextReaderTest extends TestCase {
     $this->assertEquals('ABC', $r->read(3));
   }
 
-  /**
-   * Test resetting a reader
-   *
-   */
   #[@test]
   public function resetUtf8WithoutBOM() {
     $r= $this->newReader('ABC', 'utf-8');
@@ -408,10 +310,6 @@ class TextReaderTest extends TestCase {
     $this->assertEquals('ABC', $r->read(3));
   }
 
-  /**
-   * Test resetting a reader
-   *
-   */
   #[@test]
   public function resetUtf16Le() {
     $r= $this->newReader("\377\376A\000B\000C\000", null);
@@ -420,10 +318,6 @@ class TextReaderTest extends TestCase {
     $this->assertEquals('ABC', $r->read(3));
   }
 
-  /**
-   * Test resetting a reader
-   *
-   */
   #[@test]
   public function resetUtf16LeWithoutBOM() {
     $r= $this->newReader("A\000B\000C\000", 'utf-16le');
@@ -432,10 +326,6 @@ class TextReaderTest extends TestCase {
     $this->assertEquals('ABC', $r->read(3));
   }
 
-  /**
-   * Test resetting a reader
-   *
-   */
   #[@test]
   public function resetUtf16Be() {
     $r= $this->newReader("\376\377\000A\000B\000C", null);
@@ -444,10 +334,6 @@ class TextReaderTest extends TestCase {
     $this->assertEquals('ABC', $r->read(3));
   }
 
-  /**
-   * Test resetting a reader
-   *
-   */
   #[@test]
   public function resetUtf16BeWithoutBOM() {
     $r= $this->newReader("\000A\000B\000C", 'utf-16be');
@@ -456,105 +342,104 @@ class TextReaderTest extends TestCase {
     $this->assertEquals('ABC', $r->read(3));
   }
 
-  /**
-   * Test resetting a reader
-   *
-   */
   #[@test, @expect(class= 'io.IOException', withMessage= 'Underlying stream does not support seeking')]
   public function resetUnseekable() {
-    $r= new TextReader(newinstance('io.streams.InputStream', [], '{
-      public function read($size= 8192) { return NULL; }
-      public function available() { return 0; }
-      public function close() { }
-    }'));
+    $r= new TextReader($this->unseekableStream());
     $r->reset();
   }
 
-  /**
-   * Test reading after character set auto-detection
-   */
   #[@test]
   public function readOneWithAutoDetectedIso88591Charset() {
     $this->assertEquals('H', $this->newReader('Hello', null)->read(1));
   }
 
-  /**
-   * Test reading after character set auto-detection
-   */
   #[@test]
   public function readOneWithAutoDetectedUtf16BECharset() {
     $this->assertEquals('H', $this->newReader("\376\377\0H\0e\0l\0l\0o", null)->read(1));
   }
 
-  /**
-   * Test reading after character set auto-detection
-   */
   #[@test]
   public function readOneWithAutoDetectedUtf16LECharset() {
     $this->assertEquals('H', $this->newReader("\377\376H\0e\0l\0l\0o\0", null)->read(1));
   }
 
-  /**
-   * Test reading after character set auto-detection
-   */
   #[@test]
   public function readOneWithAutoDetectedUtf8Charset() {
     $this->assertEquals('H', $this->newReader("\357\273\277Hello", null)->read(1));
   }
 
-  /**
-   * Test reading after character set auto-detection
-   */
   #[@test]
   public function readLineWithAutoDetectedIso88591Charset() {
     $this->assertEquals('H', $this->newReader("H\r\n", null)->readLine());
   }
 
-  /**
-   * Test reading after character set auto-detection
-   */
   #[@test]
   public function readLineWithAutoDetectedUtf16BECharset() {
     $this->assertEquals('H', $this->newReader("\376\377\0H\0\r\0\n", null)->readLine());
   }
 
-  /**
-   * Test reading after character set auto-detection
-   */
   #[@test]
   public function readLineWithAutoDetectedUtf16LECharset() {
     $this->assertEquals('H', $this->newReader("\377\376H\0\r\0\n\0", null)->readLine());
   }
 
-  /**
-   * Test reading after character set auto-detection
-   */
   #[@test]
   public function readLineWithAutoDetectedUtf8Charset() {
     $this->assertEquals('H', $this->newReader("\357\273\277H\r\n", null)->readLine());
   }
 
-  /**
-   * Test reading
-   */
   #[@test]
   public function readLineEmptyInputWithAutoDetectedIso88591Charset() {
     $this->assertNull($this->newReader('', null)->readLine());
   }
 
-  /**
-   * Test reading
-   */
   #[@test, @values(array(["\377", 'ÿ'], ["\377\377", 'ÿÿ'], ["\377\377\377", 'ÿÿÿ']))]
   public function readNonBOMInputWithAutoDetectedIso88591Charset($bytes, $characters) {
     $this->assertEquals($characters, $this->newReader($bytes, null)->read(0xFF));
   }
 
-  /**
-   * Test reading
-   */
   #[@test, @values(array(["\377", 'ÿ'], ["\377\377", 'ÿÿ'], ["\377\377\377", 'ÿÿÿ']))]
   public function readLineNonBOMInputWithAutoDetectedIso88591Charset($bytes, $characters) {
     $this->assertEquals($characters, $this->newReader($bytes, null)->readLine(0xFF));
+  }
+
+  #[@test]
+  public function lines() {
+    $this->assertInstanceOf('io.streams.LinesIn', $this->newReader('')->lines());
+  }
+
+  #[@test]
+  public function can_iterate_twice_on_seekable() {
+    $reader= $this->newReader("A\nB");
+    $this->assertEquals(
+      [[1 => 'A', 2 => 'B'], [1 => 'A', 2 => 'B']],
+      [iterator_to_array($reader->lines()), iterator_to_array($reader->lines())]
+    );
+  }
+
+  #[@test]
+  public function iteration_after_reading() {
+    $reader= $this->newReader("A\nB");
+    $reader->read();
+    $this->assertEquals([1 => 'A', 2 => 'B'], iterator_to_array($reader->lines()));
+  }
+
+  #[@test]
+  public function iteration_after_reading_a_line() {
+    $reader= $this->newReader("A\nB");
+    $reader->readLine();
+    $this->assertEquals([1 => 'A', 2 => 'B'], iterator_to_array($reader->lines()));
+  }
+
+  #[@test]
+  public function can_only_iterate_unseekable_once() {
+    $reader= new TextReader($this->unseekableStream());
+    $this->assertEquals([1 => 'A', 2 => 'B'], iterator_to_array($reader->lines()));
+    try {
+      iterator_to_array($reader->lines());
+      $this->fail('No exception raised', null, 'io.IOException');
+    } catch (\io\IOException $expected) {
+      // OK
+    }
   }
 }

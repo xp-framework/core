@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\tests;
 
+use unittest\TestSuite;
+
 /**
  * Test VerifyThat class
  */
@@ -10,7 +12,7 @@ class VerifyThatTest extends \unittest\TestCase {
    * Setup method. Creates a new test suite.
    */
   public function setUp() {
-    $this->suite= new \unittest\TestSuite();
+    $this->suite= new TestSuite();
   }
 
   /**

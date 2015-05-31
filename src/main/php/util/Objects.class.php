@@ -1,5 +1,7 @@
 <?php namespace util;
 
+use lang\Generic;
+
 /**
  * Objects utility methods
  *
@@ -15,7 +17,7 @@ abstract class Objects extends \lang\Object {
    * @return  bool
    */
   public static function equal($a, $b) {
-    if ($a instanceof \lang\Generic) {
+    if ($a instanceof Generic) {
       return $a->equals($b);
     } else if (is_array($a)) {
       if (!is_array($b) || sizeof($a) !== sizeof($b)) return false;
@@ -36,10 +38,13 @@ abstract class Objects extends \lang\Object {
    * @return string
    */
   public static function stringOf($val, $default= '') {
-    return null === $val ?
-      $default :
-      ($val instanceof \lang\Generic ? $val->toString() : \xp::stringOf($val))
-    ;
+    if (null === $val) {
+      return $default;
+    } else if ($val instanceof Generic) {
+      return $val->toString();
+    } else {
+      return \xp::stringOf($val);
+    }
   }
 
   /**
@@ -49,9 +54,14 @@ abstract class Objects extends \lang\Object {
    * @return string
    */
   public static function hashOf($val) {
-    return null === $val ?
-      'N;' :
-      ($val instanceof \lang\Generic ? $val->hashCode() : serialize($val))
-    ;
+    if (null === $val) {
+      return 'N;';
+    } else if ($val instanceof Generic) {
+      return $val->hashCode();
+    } else if ($val instanceof \Closure) {
+      return spl_object_hash($val);
+    } else {
+      return serialize($val);
+    }
   }
 }

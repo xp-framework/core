@@ -1,12 +1,9 @@
 <?php namespace peer;
 
-
-
 /**
  * Indicate an error occured during authentication
  *
  * @see      xp://peer.SocketException
- * @purpose  Exception
  */
 class AuthenticationException extends SocketException {
   public

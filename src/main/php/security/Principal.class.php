@@ -4,12 +4,10 @@
  * This class represents the abstract notion of a principal, which can be used 
  * to represent any entity, such as an individual, a corporation, and a login id. 
  *
- * @see      xp://security.cert.X509Certificate
- * @purpose  Principal
+ * @see   xp://security.cert.X509Certificate
  */
 class Principal extends \lang\Object {
-  public
-    $dn= [];
+  public $dn;
     
   /**
    * Constructor

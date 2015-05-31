@@ -1,7 +1,6 @@
 <?php namespace io;
 
 use lang\System;
-
   
 /**
  * Represents a temporary file
@@ -11,7 +10,7 @@ use lang\System;
  *   uses('io.TempFile');
  *
  *   $f= new TempFile();
- *   $f->open(FILE_MODE_WRITE);
+ *   $f->open(File::WRITE);
  *   $f->write('Hello');
  *   $f->close();
  *
@@ -31,7 +30,6 @@ use lang\System;
  *
  * @see      xp://io.File
  * @see      xp://lang.System#tempDir
- * @purpose  Temporary file
  */
 class TempFile extends File {
 

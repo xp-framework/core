@@ -3,6 +3,107 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Merged xp-framework/core#76: Implement type unions. Instead of using
+  the `var` type on methods following the *be liberal in what you accept*
+  rule and documenting what is accepted in the apidocs, the type system
+  now allows for types such as `int|string`. This is widely used in PHP
+  pseudo code, and may even end up in syntax if the union types RFC gets
+  accepted: https://wiki.php.net/rfc/union_types
+  (@thekid)
+
+## 6.2.5 / 2015-05-25
+
+### Heads up!
+
+* Added class constants for Archive::open() and deprecated `ARCHIVE_*`.
+  See xp-framework/core#80
+  (@thekid)
+* Added class constants for File::open() and deprecated `FILE_MODE_*`.
+  See xp-framework/core#79
+  (@thekid)
+* Deprecated io.ZipFile class - use GzDecompressingInputStream instead!
+  See xp-framework/core#78
+  (@thekid)
+* Deprecated io.SpoolDirectory class
+  (@thekid)
+
+### Features
+
+* Merged xp-framework/core#83: New io.Path::real() shorthand
+  (@thekid)
+* Merged xp-framework/core#82: Path::asFile() and asFolder() prevent
+  conditionals
+  (@thekid)
+* Merged xp-framework/core#81: Feature: Folder entries
+  (@thekid)
+* Changed io.Path::equals() to perform normalization before comparing
+  (@thekid)
+* Changed io.File::open() to return the file itself, enabling fluent API
+  usage: `$f= (new File('test'))->open(File::READ);`.
+  (@thekid)
+* Changed io.streams.TextWriter to accept output streams or I/O channels
+  as its constructor argument, and io.streams.TextReader to accept input
+  streams, strings or I/O channels as their constructor arguments.
+  (@thekid)
+* Merged xp-framework/core#77: Text reader iteration
+  (@thekid)
+
+## 6.2.4 / 2015-05-23
+
+### Heads up!
+
+* Deprecated XPI (XP Installer). Use Composer or Glue instead.
+  (@thekid)
+
+### Features
+
+* Merged xp-framework/core#75: Support for new `unittest -w` command line.
+  See https://github.com/xp-framework/xp-runners/releases/tag/v5.3.0
+  (@thekid)
+* Made `unittest -e` consistent with `xp -e`: Add ability to omit trailing
+  semicolon, support leading opening PHP tag, code piped via stdin.
+  (@thekid)
+
+## 6.2.3 / 2015-05-18
+
+### Heads up!
+
+* Deprecated RandomCodeGenerator and RandomPasswordGenerator classes from
+  the security.password package
+  (@thekid)
+* Deprecated io.sys.StdStream class, superseded by io.streams API
+  (@thekid)
+* Deprecated `text.format` and `text.parser` APIs.
+  (@thekid)
+* Deprecated io.SearchableStream class, superseded by text.Tokenizer API
+  (@thekid)
+* Deprecated security.Policy class and API
+  (@thekid)
+
+### Features
+
+* Made ResourceProvider useable via `new import("lang.ResourceProvider")`.
+  This way, you don't need to force its loading by adding e.g. a call to
+  XPClass::forName() to the static initializer / constructor / etcetera.
+  (@thekid)
+* Made typeof() behave consistent with reflection on callable type hint.
+  (@thekid)
+* Made util.log.LogCategory's first parameter optional, using "default"
+  as identifier if omitted.
+  (@thekid)
+
+### Bugfixes
+
+* Fixed `is()` to support function types correctly
+  (@thekid)
+* Fixed `Objects::hashOf()` raising an exception when invoked w/ functions
+  (@thekid)
+* Fixed `xp::stringOf()` producing incorrect indentation for values nested
+  inside arrays
+  (@thekid)
+
 ## 6.2.2 / 2015-05-17
 
 ### Bugfixes

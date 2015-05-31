@@ -7,6 +7,10 @@ use unittest\TestError;
 use unittest\TestPrerequisitesNotMet;
 use unittest\TestNotRun;
 use unittest\TestWarning;
+use unittest\TestVariation;
+use unittest\PrerequisitesNotMetError;
+use unittest\AssertionFailedError;
+use lang\Error;
 
 /**
  * Test TestOutcome implementations
@@ -23,7 +27,7 @@ class TestOutcomeTest extends \unittest\TestCase {
   public function fixtures() {
     return [
       [$this, ''],
-      [new \unittest\TestVariation($this, ['v']), '("v")']
+      [new TestVariation($this, ['v']), '("v")']
     ];
   }
 
@@ -51,7 +55,7 @@ class TestOutcomeTest extends \unittest\TestCase {
 
   #[@test, @values('fixtures')]
   public function string_representation_of_TestAssertionFailed($test, $variant) {
-    $assert= new \unittest\AssertionFailedError('Not equal', 1, 2);
+    $assert= new AssertionFailedError('Not equal', 1, 2);
     $this->assertStringRepresentation(
       "unittest.TestAssertionFailed(test= %s, time= 0.000 seconds) {\n  ".\xp::stringOf($assert, '  ')."\n }",
       new TestAssertionFailed($test, $assert, 0.0), $variant
@@ -60,7 +64,7 @@ class TestOutcomeTest extends \unittest\TestCase {
 
   #[@test, @values('fixtures')]
   public function string_representation_of_TestError($test, $variant) {
-    $error= new \lang\Error('Out of memory');
+    $error= new Error('Out of memory');
     $this->assertStringRepresentation(
       "unittest.TestError(test= %s, time= 0.000 seconds) {\n  ".\xp::stringOf($error, '  ')."\n }",
       new TestError($test, $error, 0.0), $variant
@@ -69,7 +73,7 @@ class TestOutcomeTest extends \unittest\TestCase {
 
   #[@test, @values('fixtures')]
   public function string_representation_of_TestPrerequisitesNotMet($test, $variant) {
-    $prerequisites= new \unittest\PrerequisitesNotMetError('Initialization failed');
+    $prerequisites= new PrerequisitesNotMetError('Initialization failed');
     $this->assertStringRepresentation(
       "unittest.TestPrerequisitesNotMet(test= %s, time= 0.000 seconds) {\n  ".\xp::stringOf($prerequisites, '  ')."\n }",
       new TestPrerequisitesNotMet($test, $prerequisites, 0.0), $variant

@@ -1,21 +1,9 @@
 <?php namespace net\xp_framework\unittest\peer\sockets;
 
-use unittest\TestCase;
 use peer\SocketTimeoutException;
 
+class SocketTimeoutExceptionTest extends \unittest\TestCase {
 
-/**
- * TestCase
- *
- * @see      xop://peer.SocketTimeoutException
- * @purpose  purpose
- */
-class SocketTimeoutExceptionTest extends TestCase {
-
-  /**
-   * Test getTimeout() method
-   *
-   */
   #[@test]
   public function getTimeout() {
     $this->assertEquals(
@@ -24,10 +12,6 @@ class SocketTimeoutExceptionTest extends TestCase {
     );
   }
 
-  /**
-   * Test compoundMessage() method
-   *
-   */
   #[@test]
   public function compoundMessage() {
     $this->assertEquals(

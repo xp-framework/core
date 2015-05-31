@@ -5,9 +5,8 @@ use lang\MethodNotImplementedException;
 /**
  * Encapsulated / embedded stream
  *
- * @test      xp://net.xp_framework.unittest.io.EncapsedStreamTest
- * @see       xp://io.Stream
- * @purpose   Encapsulated stream
+ * @test  xp://net.xp_framework.unittest.io.EncapsedStreamTest
+ * @see   xp://io.Stream
  */
 class EncapsedStream extends Stream {
   public
@@ -51,10 +50,10 @@ class EncapsedStream extends Stream {
   /**
    * Open the stream. For EncapsedStream only reading is supported
    *
-   * @param   string mode default FILE_MODE_READ one of the FILE_MODE_* constants
+   * @param   string mode default File::READ one of the File::* constants
    */
-  public function open($mode= FILE_MODE_READ) {
-    if (FILE_MODE_READ !== $mode) throw new \lang\IllegalAccessException(
+  public function open($mode= File::READ) {
+    if (File::READ !== $mode) throw new \lang\IllegalAccessException(
       'EncapsedStream only supports reading but writing operation requested.'
     );
   }

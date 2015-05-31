@@ -2,16 +2,14 @@
 
 use security\checksum\CRC32;
 
-
 /**
  * OuputStream that compresses content using GZIP encoding. Data
  * produced with this stream can be read with the "gunzip" command
  * line utility and its "zcat", "zgrep", ... list of friends.
  *
- * @ext      zlib
- * @see      rfc://1952
- * @test     xp://net.xp_framework.unittest.io.streams.GzCompressingOutputStreamTest
- * @purpose  OuputStream implementation
+ * @ext   zlib
+ * @see   rfc://1952
+ * @test  xp://net.xp_framework.unittest.io.streams.GzCompressingOutputStreamTest
  */
 class GzCompressingOutputStream extends \lang\Object implements OutputStream {
   protected $out= null;

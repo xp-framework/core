@@ -4,8 +4,6 @@ use util\cmd\Console;
 
 /**
  * Displays XP version and runtime information
- *
- * @purpose  Tool
  */
 class Version extends \lang\Object {
   

@@ -1,16 +1,8 @@
 <?php namespace net\xp_framework\unittest\text;
 
-use unittest\TestCase;
 use text\regex\CharacterClass;
 
-
-/**
- * TestCase
- *
- * @see      xp://text.regex.Scanner
- * @purpose  purpose
- */
-class ScannerTest extends TestCase {
+class ScannerTest extends \unittest\TestCase {
 
   /**
    * Test %d

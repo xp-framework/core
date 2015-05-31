@@ -1,7 +1,5 @@
 <?php namespace peer;
 
-
-
 /**
  * BSDSocket server implementation
  *
@@ -25,7 +23,6 @@
  *   $s->close();
  * </code>
  *
- * @purpose  Provide an interface to the BSD sockets                    
  * @see      xp://peer.BSDSocket
  * @ext      sockets                                                    
  */

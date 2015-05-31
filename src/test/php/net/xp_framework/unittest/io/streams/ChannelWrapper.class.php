@@ -2,13 +2,11 @@
 
 use lang\Runnable;
 
-
 /**
  * Channel wrapper for php:// I/O streams stdin, stdout, stderr,
  * input and output.
  *
  * @see      xp://net.xp_framework.unittest.io.streams.ChannelStreamTest
- * @purpose  Stream wrapper
  */
 class ChannelWrapper extends \lang\Object {
   protected static 

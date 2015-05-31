@@ -3,11 +3,8 @@
 use io\File;
 use security\crypto\UnixCrypt;
 
-
 /**
- * Autenticates users against a .htpasswd file
- *
- * @purpose  Authenticator
+ * Authenticates users against a .htpasswd file
  */
 class HtpasswdAuthenticator extends \lang\Object implements Authenticator {
   public
@@ -36,7 +33,7 @@ class HtpasswdAuthenticator extends \lang\Object implements Authenticator {
     if ($this->_file->lastModified() != $this->_modified) {
       $hash= [];
       try {
-        $this->_file->open(FILE_MODE_READ);
+        $this->_file->open(File::READ);
         while ($line= $this->_file->readLine()) {
           list($username, $crypt)= explode(':', $line, 2);
           $hash[$username]= $crypt;

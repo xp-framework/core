@@ -35,6 +35,8 @@ use webservices\rest\RestException;
  *
  * The following will downgrade the installed module to 0.9.1:
  * $ xpi upgrade vendor/module 0.9.1
+ *
+ * @deprecated Use composer or glue instead
  */
 class UpgradeAction extends Action {
   protected static $json;

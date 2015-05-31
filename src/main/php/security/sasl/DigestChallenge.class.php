@@ -1,7 +1,5 @@
 <?php namespace security\sasl;
 
-
-
 // Quality of protection constants
 define('DC_QOP_AUTH',      'auth');
 define('DC_QOP_AUTH_INT',  'auth-int');
@@ -17,8 +15,7 @@ define('DC_CIPHER_RC4_56', 'rc4-56');
 /**
  * Digest challenge
  *
- * @see      rfc://2831
- * @purpose  Digest challenge wrapper
+ * @see   rfc://2831
  */
 class DigestChallenge extends \lang\Object {
   public

@@ -1,8 +1,4 @@
 <?php
-/* This file is part of the XP framework
- *
- * $Id$
- */
 
 /**
  * Provides for input and output through data streams.
@@ -11,28 +7,27 @@
  * =====
  * Data can be read from input streams.
  *
- * <code>
- *   $in= new FileInputStream(new File('blob'));
- *   while ($in->available()) {
- *     $chunk= $in->read();
- *     // ...
- *   }
- *   $in->close();
- * </code>
+ * ```php
+ * $in= new FileInputStream(new File('blob'));
+ * while ($in->available()) {
+ *   $chunk= $in->read();
+ *   // ...
+ * }
+ * $in->close();
+ * ```
  *
  * Output
  * ======
  * Data can be written to output streams.
  *
- * <code>
- *   $out= new FileOutputStream(new File('blob'));
- *   $out->write($chunk);
- *   $out->close();
- * </code>
+ * ```php
+ * $out= new FileOutputStream(new File('blob'));
+ * $out->write($chunk);
+ * $out->close();
+ * ```
  *
  * @see      http://developer.xp-framework.net/xml/rfc/view?0088
  * @see      http://developer.xp-framework.net/xml/rfc/view?0142
- * @purpose  I/O
  */
 package io.streams {
 }

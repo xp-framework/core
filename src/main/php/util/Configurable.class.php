@@ -5,7 +5,6 @@
  * can be passed to its instance.
  *
  * @see      xp://util.Properties
- * @purpose  Interface
  */
 interface Configurable {
 

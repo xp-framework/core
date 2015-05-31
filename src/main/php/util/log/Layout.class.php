@@ -2,7 +2,6 @@
 
 /**
  * Takes care of formatting log entries
- *
  */
 abstract class Layout extends \lang\Object {
 

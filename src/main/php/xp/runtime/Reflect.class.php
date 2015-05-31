@@ -9,8 +9,6 @@ use lang\ElementNotFoundException;
 
 /**
  * Dumps reflection information about a class
- *
- * @purpose  Tool
  */
 class Reflect extends \lang\Object {
 

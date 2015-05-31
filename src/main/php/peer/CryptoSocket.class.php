@@ -2,7 +2,6 @@
 
 use security\cert\X509Certificate;
 
-
 /**
  * Intermediate common class for all cryptographic socket classes such
  * as SSLSocket and TLSSocket.

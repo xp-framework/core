@@ -1,9 +1,6 @@
 <?php namespace security\password;
- 
-
 
 use util\log\Traceable;
-
 
 /**
  * A password strength algorithm inspired by "The Password Meter".
@@ -20,7 +17,6 @@ use util\log\Traceable;
  * </ol>
  *
  * @see      http://passwordmeter.com/
- * @purpose  Algorithm implementation
  */
 class StandardAlgorithm extends \lang\Object implements Algorithm, Traceable {
   protected

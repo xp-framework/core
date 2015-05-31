@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\tests;
 
+use unittest\TestCase;
+
 /**
  * This class is used in the TestActionTest 
  */
@@ -20,7 +22,7 @@ class RecordActionInvocation extends \lang\Object implements \unittest\TestActio
    *
    * @param  unittest.TestCase $t
    */
-  public function beforeTest(\unittest\TestCase $t) {
+  public function beforeTest(TestCase $t) {
     $f= $t->getClass()->getField($this->field);
     $f->set($t, array_merge($f->get($t), array('before')));
   }
@@ -30,7 +32,7 @@ class RecordActionInvocation extends \lang\Object implements \unittest\TestActio
    *
    * @param  unittest.TestCase $t
    */
-  public function afterTest(\unittest\TestCase $t) {
+  public function afterTest(TestCase $t) {
     $f= $t->getClass()->getField($this->field);
     $f->set($t, array_merge($f->get($t), array('after')));
   }

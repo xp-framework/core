@@ -10,6 +10,8 @@ class EventServer extends Server {
   
   /**
    * Service
+   *
+   * @return void
    */
   public function service() {
     if (!$this->socket->isConnected()) return false;

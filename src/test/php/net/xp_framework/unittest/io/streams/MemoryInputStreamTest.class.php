@@ -3,13 +3,6 @@
 use unittest\TestCase;
 use io\streams\MemoryInputStream;
 
-
-/**
- * Unit tests for streams API
- *
- * @see      xp://io.streams.InputStream
- * @purpose  Unit test
- */
 class MemoryInputStreamTest extends TestCase {
   const BUFFER= 'Hello World, how are you doing?';
 

@@ -1,7 +1,7 @@
 <?php namespace io\streams;
 
 use lang\Closeable;
-
+use io\IOException;
 
 /**
  * Serves as an abstract base class for all other readers. A reader
@@ -37,7 +37,7 @@ abstract class Reader extends \lang\Object implements Closeable {
    */
   public function reset() {
     if (!$this->stream instanceof \Seekable) {
-      throw new \io\IOException('Underlying stream does not support seeking');
+      throw new IOException('Underlying stream does not support seeking');
     }
     $this->stream->seek(0, SEEK_SET);
   }

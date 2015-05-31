@@ -1,11 +1,9 @@
 <?php namespace text\format;
 
-
-
 /**
  * Date formatter
  *
- * @purpose  Provide a Format wrapper for date/time
+ * @deprecated
  * @see      php://strftime
  * @see      xp://text.format.IFormat
  */

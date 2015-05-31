@@ -1,13 +1,10 @@
 <?php namespace io\streams;
 
-
-
 /**
  * OuputStream that compresses content using bzip2
  *
- * @ext      bz2
- * @test     xp://net.xp_framework.unittest.io.streams.Bz2CompressingOutputStreamTest
- * @purpose  OuputStream implementation
+ * @ext   bz2
+ * @test  xp://net.xp_framework.unittest.io.streams.Bz2CompressingOutputStreamTest
  */
 class Bz2CompressingOutputStream extends \lang\Object implements OutputStream {
   protected $out= null;

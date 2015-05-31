@@ -1,7 +1,5 @@
 <?php namespace lang;
 
-
-
 /**
  * Handles command line quoting
  *

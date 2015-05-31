@@ -8,23 +8,22 @@
  * in parsing it.
  *
  * Usage example:
- * <code>
- *   $u= new URL('http://user:pass@foo.bar:8081/news/1,2,6100.html?a=a#frag');
- *   echo $u->toString();
- * </code>
+ * ```php
+ * $u= new URL('http://user:pass@foo.bar:8081/news/1,2,6100.html?a=a#frag');
+ * echo $u->toString();
+ * ```
  *
  * @test   xp://net.xp_framework.unittest.peer.URLTest
  * @see    php://parse_url
  */
 class URL extends \lang\Object {
-  protected static
-    $defaultPorts= array(
-      'http' => 80,
-      'https'=> 443
-    );
+  protected static $defaultPorts= [
+    'http' => 80,
+    'https'=> 443
+  ];
 
-  public $_info= [];
-    
+  private $_info= [];
+
   /**
    * Constructor
    *

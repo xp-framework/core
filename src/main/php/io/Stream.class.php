@@ -1,12 +1,12 @@
 <?php namespace io;
 
 // Mode constants for open() method
-  define('STREAM_MODE_READ',      'r');          // Read
-  define('STREAM_MODE_READWRITE', 'r+');         // Read/Write
-  define('STREAM_MODE_WRITE',     'w');          // Write
-  define('STREAM_MODE_REWRITE',   'w+');         // Read/Write, truncate on open
-  define('STREAM_MODE_APPEND',    'a');          // Append (Read-only)
-  define('STREAM_MODE_READAPPEND','a+');         // Append (Read/Write)
+define('STREAM_MODE_READ',      'r');          // Read
+define('STREAM_MODE_READWRITE', 'r+');         // Read/Write
+define('STREAM_MODE_WRITE',     'w');          // Write
+define('STREAM_MODE_REWRITE',   'w+');         // Read/Write, truncate on open
+define('STREAM_MODE_APPEND',    'a');          // Append (Read-only)
+define('STREAM_MODE_READAPPEND','a+');         // Append (Read/Write)
   
 define('STREAM_READ',  0x0001);
 define('STREAM_WRITE', 0x0002);
@@ -16,7 +16,6 @@ define('STREAM_WRITE', 0x0002);
  * 
  * @deprecated https://github.com/xp-framework/rfc/issues/289
  * @test     xp://net.xp_framework.unittest.io.StreamTest
- * @purpose  Represent a generic stream
  */
 class Stream extends \lang\Object {
   public

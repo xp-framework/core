@@ -4,13 +4,6 @@ use unittest\TestCase;
 use peer\net\Inet4Address;
 use peer\net\Network;
 
-
-/**
- * Test for Inet4Address
- *
- * @see      xp://peer.Inet4Address
- * @purpose  TestCase
- */
 class Inet4AddressTest extends TestCase {
 
   /**

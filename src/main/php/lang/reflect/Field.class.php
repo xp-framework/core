@@ -7,9 +7,8 @@ use lang\IllegalAccessException;
 /**
  * Represents a class field
  *
- * @test     xp://net.xp_framework.unittest.reflection.FieldsTest
- * @see      xp://lang.XPClass
- * @purpose  Reflection
+ * @test  xp://net.xp_framework.unittest.reflection.FieldsTest
+ * @see   xp://lang.XPClass
  */
 class Field extends \lang\Object {
   protected

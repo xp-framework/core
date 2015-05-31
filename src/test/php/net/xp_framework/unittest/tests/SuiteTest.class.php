@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\tests;
- 
+
+use unittest\TestSuite;
+
 /**
  * Test TestSuite class methods
  *
@@ -12,7 +14,7 @@ class SuiteTest extends \unittest\TestCase {
    * Setup method. Creates a new test suite.
    */
   public function setUp() {
-    $this->suite= new \unittest\TestSuite();
+    $this->suite= new TestSuite();
   }
 
   #[@test]
@@ -246,7 +248,7 @@ class SuiteTest extends \unittest\TestCase {
   public function warningsMakeTestFail() {
     with ($test= new SimpleTestCase('raisesAnError')); {
       $this->assertEquals(
-        array('"Test error" in ::trigger_error() (SimpleTestCase.class.php, line 64, occured once)'), 
+        array('"Test error" in ::trigger_error() (SimpleTestCase.class.php, line 67, occured once)'), 
         $this->suite->runTest($test)->failed[$test->hashCode()]->reason
       );
     }
@@ -266,7 +268,7 @@ class SuiteTest extends \unittest\TestCase {
   public function expectedExceptionsWithWarningsMakeTestFail() {
     with ($test= new SimpleTestCase('catchExpectedWithWarning')); {
       $this->assertEquals(
-        array('"Test error" in ::trigger_error() (SimpleTestCase.class.php, line 118, occured once)'), 
+        array('"Test error" in ::trigger_error() (SimpleTestCase.class.php, line 121, occured once)'), 
         $this->suite->runTest($test)->failed[$test->hashCode()]->reason
       );
     }

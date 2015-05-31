@@ -4,8 +4,6 @@ use io\collections\iterate\IterationFilter;
 
 /**
  * Accept-all filter
- *
- * @purpose  Iteration Filter
  */
 class NullFilter extends \lang\Object implements IterationFilter {
 

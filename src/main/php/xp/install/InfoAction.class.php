@@ -26,6 +26,8 @@ use webservices\json\JsonFactory;
  *
  * This will show info about a remote module
  * $ xpi info -r vendor/module
+ *
+ * @deprecated Use composer or glue instead
  */
 class InfoAction extends Action {
   protected static $json;

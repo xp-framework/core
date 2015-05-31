@@ -12,6 +12,8 @@ use lang\IllegalStateException;
 /**
  * GitHub Archive - uses https://github.com/vendor/repo/zipball/branch 
  * for downloading. This URL redirects (possibly multiple times).
+ *
+ * @deprecated Use composer or glue instead
  */
 class GitHubArchive extends \lang\Object implements Origin {
   private $url;

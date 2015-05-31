@@ -2,6 +2,8 @@
 
 /**
  * The origin of a module
+ *
+ * @deprecated Use composer or glue instead
  */
 interface Origin {
 

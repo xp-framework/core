@@ -3,8 +3,7 @@
 /**
  * Represent an IPC message
  *
- * @ext      http://de3.php.net/manual/en/ref.sem.php
- * @purpose  create an ipc message
+ * @see   http://de3.php.net/manual/en/ref.sem.php
  */
 class IPCMessage extends \lang\Object {
   public

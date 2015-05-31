@@ -2,8 +2,6 @@
 
 /**
  * Coin enumeration
- * 
- * @purpose  Demo
  */
 class Coin extends \lang\Enum {
   public static

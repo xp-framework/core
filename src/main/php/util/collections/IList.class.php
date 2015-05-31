@@ -4,8 +4,6 @@ use lang\IndexOutOfBoundsException;
 
 /**
  * Interface for lists
- *
- * @purpose  Interface
  */
 #[@generic(self= 'T')]
 interface IList extends \ArrayAccess, \IteratorAggregate {

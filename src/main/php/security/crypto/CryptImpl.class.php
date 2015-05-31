@@ -1,8 +1,4 @@
 <?php namespace security\crypto;
-
-
-
-
  
 /**
  * Crypt implementation

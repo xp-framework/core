@@ -1,57 +1,34 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use unittest\TestCase;
 use util\TimeZone;
 
-
-/**
- * TestCase
- *
- * @see      xp://util.TimeZone
- * @purpose  Testcase
- */
-class TimeZoneTest extends TestCase {
-  protected $fixture = null;  
+class TimeZoneTest extends \unittest\TestCase {
+  private $fixture;
 
   /**
    * Setup fixture
    *
+   * @return void
    */
   public function setUp() {
     $this->fixture= new TimeZone('Europe/Berlin');
   }    
 
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function name() {
     $this->assertEquals('Europe/Berlin', $this->fixture->getName());
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function offsetDST() {
     $this->assertEquals('+0200', $this->fixture->getOffset(new \util\Date('2007-08-21')));
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function offsetNoDST() {
     $this->assertEquals('+0100', $this->fixture->getOffset(new \util\Date('2007-01-21')));
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function offsetWithHalfHourDST() {
     // Australia/Adelaide is +10:30 in DST
@@ -59,10 +36,6 @@ class TimeZoneTest extends TestCase {
     $this->assertEquals('+1030', $this->fixture->getOffset(new \util\Date('2007-01-21')));
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function offsetWithHalfHourNoDST() {
     // Australia/Adelaide is +09:30 in non-DST
@@ -70,28 +43,16 @@ class TimeZoneTest extends TestCase {
     $this->assertEquals('+0930', $this->fixture->getOffset(new \util\Date('2007-08-21')));
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function offsetInSecondsDST() {
     $this->assertEquals(7200, $this->fixture->getOffsetInSeconds(new \util\Date('2007-08-21')));
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function offsetInSecondsNoDST() {
     $this->assertEquals(3600, $this->fixture->getOffsetInSeconds(new \util\Date('2007-01-21')));
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function convert() {
     $date= new \util\Date('2007-01-01 00:00 Australia/Sydney');
@@ -101,10 +62,6 @@ class TimeZoneTest extends TestCase {
     );
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function previousTransition() {
     $transition= $this->fixture->previousTransition(new \util\Date('2007-08-23'));
@@ -113,10 +70,6 @@ class TimeZoneTest extends TestCase {
     $this->assertEquals(new \util\Date('2007-03-25 02:00:00 Europe/Berlin'), $transition->getDate());
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function previousPreviousTransition() {
     $transition= $this->fixture->previousTransition(new \util\Date('2007-08-23'));
@@ -126,10 +79,6 @@ class TimeZoneTest extends TestCase {
     $this->assertEquals(new \util\Date('2006-10-29 02:00:00 Europe/Berlin'), $transition->getDate());
   }
 
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function nextTransition() {
     $transition= $this->fixture->nextTransition(new \util\Date('2007-08-23'));
@@ -138,10 +87,6 @@ class TimeZoneTest extends TestCase {
     $this->assertEquals(new \util\Date('2007-10-28 02:00:00 Europe/Berlin'), $transition->getDate());
   }
 
-  /**
-   * Test an unknown timezone name
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function unknownTimeZone() {
     new TimeZone('UNKNOWN');

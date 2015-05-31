@@ -33,12 +33,12 @@ class EncapsedStreamTest extends TestCase {
   
   #[@test]
   public function open_for_reading() {
-    $this->newStream()->open(FILE_MODE_READ);
+    $this->newStream()->open(File::READ);
   }
 
   #[@test, @expect('lang.IllegalAccessException')]
   public function cannot_open_for_writing() {
-    $this->newStream()->open(FILE_MODE_WRITE);
+    $this->newStream()->open(File::WRITE);
   }
   
   #[@test]

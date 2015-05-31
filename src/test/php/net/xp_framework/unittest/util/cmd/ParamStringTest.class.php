@@ -3,13 +3,6 @@
 use unittest\TestCase;
 use util\cmd\ParamString;
 
-
-/**
- * Test framework code
- *
- * @see      xp://util.cmd.ParamString
- * @purpose  Unit Test
- */
 class ParamStringTest extends TestCase {
   
   /**

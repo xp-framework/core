@@ -44,7 +44,6 @@
  * @ext      posix
  * @see      http://news.xp-framework.net/article/168/2007/04/05/
  * @see      xp://lang.Runnable
- * @purpose  Base class
  */
 class Thread extends Object {
   public

@@ -31,8 +31,6 @@ class Constructor extends Routine {
    * @throws  lang.reflect.TargetInvocationException in case the constructor throws an exception
    */
   public function newInstance(array $args= []) {
-
-    // Check whether class is abstract
     $class= new \ReflectionClass($this->_class);
     if ($class->isAbstract()) {
       throw new IllegalAccessException('Cannot instantiate abstract class '.XPClass::nameOf($this->_class));

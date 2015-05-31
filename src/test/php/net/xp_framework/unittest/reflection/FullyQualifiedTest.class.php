@@ -4,7 +4,6 @@ use unittest\TestCase;
 use lang\archive\Archive;
 use io\File;
 use util\Date;
-use lang\ResourceProvider;
 use lang\ClassLoader;
 use lang\archive\ArchiveClassLoader;
 use lang\XPClass;

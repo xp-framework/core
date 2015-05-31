@@ -3,7 +3,6 @@
 use util\Date;
 use lang\FormatException;
 
-
 /**
  * Parses dates
  *
@@ -23,7 +22,7 @@ use lang\FormatException;
  *
  * @see      http://www.gnu.org/software/tar/manual/html_chapter/tar_7.html
  * @see      http://ldap.akbkhome.com/syntax/1%2E3%2E6%2E1%2E4%2E1%2E1466%2E115%2E121%2E1%2E24.html
- * @purpose  Parser
+ * @deprecated
  */
 class DateParser extends \lang\Object {
 

@@ -1,21 +1,18 @@
 <?php namespace text;
  
-
- 
 /**
  * A stream tokenizer is a tokenizer that works on streams.
  * 
  * Example:
- * <code>
- *   $st= new StreamTokenizer(new FileInputStream(new File('test.txt')), " \n");
- *   while ($st->hasMoreTokens()) {
- *     printf("- %s\n", $st->nextToken());
- *   }
- * </code>
+ * ```php
+ * $st= new StreamTokenizer(new FileInputStream(new File('test.txt')), " \n");
+ * while ($st->hasMoreTokens()) {
+ *   printf("- %s\n", $st->nextToken());
+ * }
+ * ```
  *
  * @test     xp://net.xp_framework.unittest.text.StreamTokenizerTest
  * @see      xp://text.Tokenizer
- * @purpose  Tokenizer implementation
  */
 class StreamTokenizer extends Tokenizer {
   protected

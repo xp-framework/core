@@ -1,13 +1,10 @@
 <?php namespace security\crypto;
 
-
-
 /**
  * Cryptographic Key base class.
  *
  * @ext      openssl
  * @see      http://openssl.org
- * @purpose  Crypto key base
  */
 class CryptoKey extends \lang\Object {
   public

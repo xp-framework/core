@@ -2,6 +2,8 @@
 
 /**
  * Represents a module
+ *
+ * @deprecated Use composer or glue instead
  */
 class Module extends \lang\Object {
   public $vendor;

@@ -1,11 +1,9 @@
 <?php namespace text\format;
 
-
-
 /**
  * Printf formatter
  *
- * @purpose  Provide a Format wrapper for numbers
+ * @deprecated
  * @see      php://number_format
  * @see      php://localeconv
  * @see      xp://text.format.IFormat

@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\tests;
- 
+
+use unittest\TestSuite;
+
 /**
  * Tests @beforeClass and @afterClass methods
  *
@@ -12,7 +14,7 @@ abstract class BeforeAndAfterClassTest extends \unittest\TestCase {
    * Setup method. Creates a new test suite.
    */
   public function setUp() {
-    $this->suite= new \unittest\TestSuite();
+    $this->suite= new TestSuite();
   }
 
   /**
@@ -26,11 +28,11 @@ abstract class BeforeAndAfterClassTest extends \unittest\TestCase {
   #[@test]
   public function beforeClassMethodIsExecuted() {
     $t= newinstance('unittest.TestCase', array('fixture'), '{
-      public static $initialized= FALSE;
+      public static $initialized= false;
 
       #[@beforeClass]
       public static function prepareTestData() {
-        self::$initialized= TRUE;
+        self::$initialized= true;
       }
 
       #[@test]

@@ -1,11 +1,7 @@
 <?php namespace lang;
 
-
-
 /**
  * Classloader interface
- *
- * @purpose  Interface
  */
 interface IClassLoader {
 

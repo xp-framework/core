@@ -4,13 +4,6 @@ use unittest\TestCase;
 use io\streams\StringReader;
 use io\streams\MemoryInputStream;
 
-
-/**
- * Test StringReader
- *
- * @see      xp://io.streams.StringReader
- * @purpose  Test case
- */
 class StringReaderTest extends TestCase {
 
   /**

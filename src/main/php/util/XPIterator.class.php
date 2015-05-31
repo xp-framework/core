@@ -1,11 +1,7 @@
 <?php namespace util;
 
-
-
 /**
  * Iterates over elements of a collection.
- *
- * @purpose  Interface
  */
 interface XPIterator {
 

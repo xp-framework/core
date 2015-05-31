@@ -3,13 +3,11 @@
 use io\streams\OutputStream;
 use io\streams\Streams;
 
-
 /**
  * OuputStream that encodes data to base64 encoding
  *
  * @see      rfc://2045 section 6.8 
  * @test     xp://net.xp_framework.unittest.text.encode.Base64OutputStreamTest
- * @purpose  OuputStream implementation
  */
 class Base64OutputStream extends \lang\Object implements OutputStream {
   protected $out= null;

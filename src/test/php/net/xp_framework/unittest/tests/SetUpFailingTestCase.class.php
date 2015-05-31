@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\tests;
 
+use lang\IllegalArgumentException;
+
 /**
  * TestCase for which setUp() method fails.
  */
@@ -10,9 +12,10 @@ class SetUpFailingTestCase extends \unittest\TestCase {
    * unittest.PrerequisitesNotMetError or unittest.AssertionFailedError
    * which are expected.
    *
+   * @return void
    */
   public function setUp() {
-    throw new \lang\IllegalArgumentException('Something went wrong in setup.');
+    throw new IllegalArgumentException('Something went wrong in setup.');
   }
 
   #[@test]

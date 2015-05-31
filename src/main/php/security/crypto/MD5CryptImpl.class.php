@@ -1,7 +1,5 @@
 <?php namespace security\crypto;
 
-
-
 /**
  * MD5 Crypt implementation
  *

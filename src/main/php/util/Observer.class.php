@@ -4,7 +4,6 @@
  * Observer interface
  *
  * @see      xp://util.Observable
- * @purpose  Interface
  */
 interface Observer {
 

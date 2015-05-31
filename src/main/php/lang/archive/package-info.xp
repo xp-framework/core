@@ -1,8 +1,4 @@
 <?php
-/* This file is part of the XP framework
- *
- * $Id$
- */
 
 /**
  * The archive package adds support for loading classes from archives,
@@ -13,7 +9,6 @@
  * @see      http://news.xp-framework.net/article/119/2006/10/14/
  * @see      http://news.xp-framework.net/article/122/2006/10/15/
  * @see      http://developer.xp-framework.net/xml/rfc/view?0074
- * @purpose  Class archive
  */
 package lang.archive {
 }

@@ -2,7 +2,6 @@
 
 use text\StringUtil;
 
-
 /**
  * Generates random codes that can be used for coupons etc.
  * The codes are not guaranteed to be unique although they usually
@@ -10,7 +9,7 @@ use text\StringUtil;
  *
  * @see      php://uniqid
  * @see      php://microtime
- * @purpose  Generator
+ * @deprecated
  */
 class RandomCodeGenerator extends \lang\Object {
   public

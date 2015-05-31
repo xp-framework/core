@@ -176,14 +176,14 @@ final class xp {
       if (0 === key($arg)) {
         $r= '';
         foreach ($arg as $val) {
-          $r.= ', '.xp::stringOf($val);
+          $r.= ', '.xp::stringOf($val, $indent);
         }
         unset($protect[$ser]);
         return '['.substr($r, 2).']';
       } else {
         $r= "[\n";
-        foreach (array_keys($arg) as $key) {
-          $r.= $indent.'  '.$key.' => '.xp::stringOf($arg[$key], $indent.'  ')."\n";
+        foreach ($arg as $key => $val) {
+          $r.= $indent.'  '.$key.' => '.xp::stringOf($val, $indent.'  ')."\n";
         }
         unset($protect[$ser]);
         return $r.$indent.']';
@@ -200,9 +200,8 @@ final class xp {
       if (isset($protect[$ser])) return '->{:recursion:}';
       $protect[$ser]= true;
       $r= nameof($arg)." {\n";
-      $vars= (array)$arg;
-      foreach (array_keys($vars) as $key) {
-        $r.= $indent.'  '.$key.' => '.xp::stringOf($vars[$key], $indent.'  ')."\n";
+      foreach ((array)$arg as $key => $val) {
+        $r.= $indent.'  '.$key.' => '.xp::stringOf($val, $indent.'  ')."\n";
       }
       unset($protect[$ser]);
       return $r.$indent.'}';
@@ -431,7 +430,7 @@ function cast($arg, $type, $nullsafe= true) {
   } else if ($type instanceof \lang\Type) {
     return $type->cast($arg);
   } else {
-    return Type::forName($type)->cast($arg);
+    return \lang\Type::forName($type)->cast($arg);
   }
 }
 // }}}
@@ -451,10 +450,16 @@ function is($type, $object) {
     return is_bool($object);
   } else if ('var' === $type) {
     return true;
+  } else if (0 === strncmp($type, 'function(', 9)) {
+    return \lang\FunctionType::forName($type)->isInstance($object);
   } else if (0 === substr_compare($type, '[]', -2)) {
     return (new \lang\ArrayType(substr($type, 0, -2)))->isInstance($object);
   } else if (0 === substr_compare($type, '[:', 0, 2)) {
     return (new \lang\MapType(substr($type, 2, -1)))->isInstance($object);
+  } else if (0 === strncmp($type, '(function(', 10)) {
+    return \lang\FunctionType::forName(substr($type, 1, -1))->isInstance($object);
+  } else if (strstr($type, '|')) {
+    return \lang\TypeUnion::forName($type)->isInstance($object);
   } else if (strstr($type, '?')) {
     return \lang\WildcardType::forName($type)->isInstance($object);
   } else {
@@ -554,8 +559,8 @@ function newinstance($spec, $args, $def= null) {
   }
 
   // Handle generics, PHP types and all others.
-  if (false !== strpos($spec, '<')) {
-    $class= Type::forName($spec);
+  if (strstr($spec, '<')) {
+    $class= \lang\Type::forName($spec);
     $type= $class->literal();
     $p= strrpos(substr($type, 0, strpos($type, "\xb7\xb7")), "\xb7");
     $generic= xp::$meta[$class->getName()]['class'][DETAIL_GENERIC];
@@ -665,7 +670,7 @@ function typeof($arg) {
       if ($param->isArray()) {
         $signature[]= \lang\Primitive::$ARRAY;
       } else if ($param->isCallable()) {
-        $signature[]= new \lang\FunctionType(null, \lang\Type::$VAR); 
+        $signature[]= \lang\Primitive::$CALLABLE;
       } else if (null === ($class= $param->getClass())) {
         $signature[]= \lang\Type::$VAR;
       } else {

@@ -1,10 +1,9 @@
 <?php namespace security\cert;
 
 /**
- * CertificateException
+ * This exception indicates one of a variety of certificate problems.
  *
- * @see      xp://security.cert.Certificate
- * @purpose  This exception indicates one of a variety of certificate problems.
+ * @see   xp://security.cert.Certificate
  */
 class CertificateException extends \lang\XPException {
   public

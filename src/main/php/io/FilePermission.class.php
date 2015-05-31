@@ -1,13 +1,10 @@
 <?php namespace io;
 
-use security\Permission;
-
-
 /**
  * File permission
  *
- * @purpose  Permission
+ * @deprecated
  */
-class FilePermission extends Permission {
+class FilePermission extends \security\Permission {
 
 }

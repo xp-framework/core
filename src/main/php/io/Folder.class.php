@@ -1,22 +1,18 @@
 <?php namespace io;
 
+use lang\IllegalStateException;
 
-  
 /**
  * Represents a Folder
  *
  * Usage:
- * <code>
- *   try {
- *     $d= new Folder('/etc/');
- *     while (FALSE !== ($entry= $d->getEntry())) {
- *       printf("%s/%s\n", $d->uri, $entry);
- *     }
- *     $d->close();
- *   } catch (IOException $e) {
- *     $e->printStackTrace();
- *   }
- * </code>
+ * ```
+ * $d= new Folder('/etc/');
+ * while (false !== ($entry= $d->getEntry())) {
+ *   printf("%s/%s\n", $d->uri, $entry);
+ * }
+ * $d->close();
+ * ```
  *
  * @test  xp://net.xp_framework.unittest.io.FolderTest
  */
@@ -26,8 +22,7 @@ class Folder extends \lang\Object {
     $dirname  = '',
     $path     = '';
   
-  public
-    $_hdir= false;
+  private $_hdir = false;
     
   /**
    * Constructor
@@ -50,7 +45,6 @@ class Folder extends \lang\Object {
   
   /**
    * Destructor
-   *
    */
   public function __destruct() {
     $this->close();
@@ -59,6 +53,7 @@ class Folder extends \lang\Object {
   /**
    * Close directory
    *
+   * @return void
    */
   public function close() {
     if (false != $this->_hdir) $this->_hdir->close();
@@ -192,7 +187,7 @@ class Folder extends \lang\Object {
    */
   public function move($target) {
     if (is_resource($this->_hdir)) {
-      throw new \lang\IllegalStateException('Directory still open');
+      throw new IllegalStateException('Directory still open');
     }
     if (false === rename($this->uri, $target)) {
       throw new IOException('Cannot move directory '.$this->uri.' to '.$target);
@@ -208,10 +203,14 @@ class Folder extends \lang\Object {
   public function exists() {
     return is_dir($this->uri);
   }
-  
+
+  /** @return io.FolderEntries */
+  public function entries() { return new FolderEntries($this); }
+
   /**
    * Read through the contents of the directory, ommitting the entries "." and ".."
    *
+   * @deprecated Use entries() instead
    * @return  string entry directory entry (w/o path!), FALSE, if no more entries are left
    * @throws  io.IOException in case an error occurs
    */
@@ -234,13 +233,14 @@ class Folder extends \lang\Object {
   /**
    * Rewinds the directory to the beginning.
    *
+   * @deprecated Use entries() instead
    * @throws  io.IOException in case an error occurs
    */
   public function rewind() {
-    if (false === $this->_hdir)
-      throw new IOException ('Cannot rewind non-open folder.');
-    
-    rewinddir ($this->_hdir->handle);
+    if (false === $this->_hdir) {
+      throw new IOException('Cannot rewind non-open folder.');
+    }
+    rewinddir($this->_hdir->handle);
   }
 
   /**
@@ -325,6 +325,7 @@ class Folder extends \lang\Object {
   /**
    * Return if the folder was already opened
    *
+   * @deprecated Use entries() instead
    * @return  bool
    */
   public function isOpen() {

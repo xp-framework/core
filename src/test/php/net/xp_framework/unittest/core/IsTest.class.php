@@ -11,33 +11,33 @@ class IsTest extends \unittest\TestCase {
 
   /** @deprecated */
   #[@test]
-  public function xpNullIsNull() {
-    $this->assertTrue(is(NULL, \xp::null()));
+  public function xpnullIsnull() {
+    $this->assertTrue(is(null, \xp::null()));
   }
 
   #[@test]
-  public function intIsNotIsNull() {
-    $this->assertFalse(is(NULL, 1));
+  public function intIsNotIsnull() {
+    $this->assertFalse(is(null, 1));
   }
 
   #[@test]
   public function string_array() {
-    $this->assertTrue(is('string[]', array('Hello')));
+    $this->assertTrue(is('string[]', ['Hello']));
   }
 
   #[@test]
   public function var_array() {
-    $this->assertFalse(is('string[]', array('Hello', 1, TRUE)));
+    $this->assertFalse(is('string[]', ['Hello', 1, true]));
   }
 
   #[@test]
   public function int_array() {
-    $this->assertTrue(is('int[]', array(1, 2, 3)));
+    $this->assertTrue(is('int[]', [1, 2, 3]));
   }
 
   #[@test]
   public function mapIsNotAnInt_array() {
-    $this->assertFalse(is('int[]', array('one' => 1, 'two' => 2)));
+    $this->assertFalse(is('int[]', ['one' => 1, 'two' => 2]));
   }
 
   #[@test]
@@ -57,27 +57,27 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function object_array() {
-    $this->assertTrue(is('lang.Object[]', array(new \lang\Object(), new \lang\Object(), new \lang\Object())));
+    $this->assertTrue(is('lang.Object[]', [new \lang\Object(), new \lang\Object(), new \lang\Object()]));
   }
 
   #[@test]
-  public function objectArrayWithNull() {
-    $this->assertFalse(is('lang.Object[]', array(new \lang\Object(), new \lang\Object(), NULL)));
+  public function objectArrayWithnull() {
+    $this->assertFalse(is('lang.Object[]', [new \lang\Object(), new \lang\Object(), null]));
   }
 
   #[@test]
   public function stringMap() {
-    $this->assertTrue(is('[:string]', array('greet' => 'Hello', 'whom' => 'World')));
+    $this->assertTrue(is('[:string]', ['greet' => 'Hello', 'whom' => 'World']));
   }
 
   #[@test]
   public function intMap() {
-    $this->assertTrue(is('[:int]', array('greet' => 1, 'whom' => 2)));
+    $this->assertTrue(is('[:int]', ['greet' => 1, 'whom' => 2]));
   }
 
   #[@test]
   public function intArrayIsNotAnIntMap() {
-    $this->assertFalse(is('[:int]', array(1, 2)));
+    $this->assertFalse(is('[:int]', [1, 2, 3]));
   }
 
   #[@test]
@@ -102,17 +102,17 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function nullNotAStringPrimitive() {
-    $this->assertFalse(is('string', NULL));
+    $this->assertFalse(is('string', null));
   }
 
   #[@test]
   public function boolPrimitive() {
-    $this->assertTrue(is('bool', TRUE));
+    $this->assertTrue(is('bool', true));
   }
 
   #[@test]
   public function nullNotABoolPrimitive() {
-    $this->assertFalse(is('bool', NULL));
+    $this->assertFalse(is('bool', null));
   }
 
   #[@test]
@@ -122,7 +122,7 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function nullNotADoublePrimitive() {
-    $this->assertFalse(is('double', NULL));
+    $this->assertFalse(is('double', null));
   }
 
   #[@test]
@@ -132,7 +132,7 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function nullNotAnIntPrimitive() {
-    $this->assertFalse(is('int', NULL));
+    $this->assertFalse(is('int', null));
   }
 
   #[@test]
@@ -142,7 +142,7 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function undefinedClassName() {
-    $this->assertFalse(class_exists('Undefined_Class', FALSE));
+    $this->assertFalse(class_exists('Undefined_Class', false));
     $this->assertFalse(is('Undefined_Class', new \lang\Object()));
   }
 
@@ -262,5 +262,30 @@ class IsTest extends \unittest\TestCase {
     $this->assertTrue(is('util.Filter<?>', newinstance('util.Filter<string>', [], [
       'accept' => function($e) { return true; }
     ])));
+  }
+
+  #[@test]
+  public function function_type() {
+    $this->assertTrue(is('function(): var', function() { }));
+  }
+
+  #[@test]
+  public function function_type_returning_array() {
+    $this->assertTrue(is('function(): var[]', function() { }));
+  }
+
+  #[@test]
+  public function braced_function_type() {
+    $this->assertTrue(is('(function(): var)', function() { }));
+  }
+
+  #[@test]
+  public function array_of_function_type() {
+    $this->assertTrue(is('(function(): var)[]', [function() { }]));
+  }
+
+  #[@test, @values([1, 'Test'])]
+  public function type_union($val) {
+    $this->assertTrue(is('int|string', $val));
   }
 }

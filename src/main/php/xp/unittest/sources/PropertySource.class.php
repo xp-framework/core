@@ -5,8 +5,6 @@ use lang\XPClass;
 
 /**
  * Source that load tests from a .ini file
- *
- * @purpose  Source implementation
  */
 class PropertySource extends AbstractSource {
   protected $prop= null;

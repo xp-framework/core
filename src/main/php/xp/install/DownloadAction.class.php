@@ -11,6 +11,8 @@ use util\Properties;
 
 /**
  * Downloads a file
+ *
+ * @deprecated Use composer or glue instead
  */
 class DownloadAction extends \lang\Object {
   const BASE_URL = 'http://releases.xp-framework.net/download/';

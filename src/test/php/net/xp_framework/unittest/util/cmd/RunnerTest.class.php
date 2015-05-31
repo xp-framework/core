@@ -6,6 +6,7 @@ use xp\command\Runner;
 use util\log\Logger;
 use io\streams\MemoryInputStream;
 use io\streams\MemoryOutputStream;
+new import('lang.ResourceProvider');
 
 /**
  * TestCase for XPCLI runner
@@ -17,13 +18,10 @@ class RunnerTest extends TestCase {
     $out    = null,
     $err    = null;
 
-  static function __static() {
-    \lang\XPClass::forName('lang.ResourceProvider');
-  }
-
   /**
    * Sets up test case
    *
+   * @return void
    */
   public function setUp() {
     $this->runner= new Runner();

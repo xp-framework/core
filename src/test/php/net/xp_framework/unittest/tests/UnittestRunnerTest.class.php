@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\tests;
 
 use xp\unittest\Runner;
+use io\streams\MemoryInputStream;
 use io\streams\MemoryOutputStream;
 use lang\ClassLoader;
 
@@ -36,7 +37,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
   #[@test]
   public function selfUsage() {
     $return= $this->runner->run([]);
-    $this->assertEquals(1, $return);
+    $this->assertEquals(2, $return);
     $this->assertOnStream($this->err, 'Usage:');
     $this->assertEquals('', $this->out->getBytes());
   }
@@ -44,7 +45,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
   #[@test]
   public function helpParameter() {
     $return= $this->runner->run(['-?']);
-    $this->assertEquals(1, $return);
+    $this->assertEquals(2, $return);
     $this->assertOnStream($this->err, 'Usage:');
     $this->assertEquals('', $this->out->getBytes());
   }
@@ -52,7 +53,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
   #[@test]
   public function noTests() {
     $return= $this->runner->run(['-v']);
-    $this->assertEquals(1, $return);
+    $this->assertEquals(2, $return);
     $this->assertOnStream($this->err, '*** No tests specified');
     $this->assertEquals('', $this->out->getBytes());
   }
@@ -60,7 +61,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
   #[@test]
   public function nonExistantClass() {
     $return= $this->runner->run(['@@NON-EXISTANT@@']);
-    $this->assertEquals(1, $return);
+    $this->assertEquals(2, $return);
     $this->assertOnStream($this->err, '*** Class "@@NON-EXISTANT@@" could not be found');
     $this->assertEquals('', $this->out->getBytes());
   }
@@ -68,7 +69,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
   #[@test]
   public function nonExistantFile() {
     $return= $this->runner->run(['@@NON-EXISTANT@@'.\xp::CLASS_FILE_EXT]);
-    $this->assertEquals(1, $return);
+    $this->assertEquals(2, $return);
     $this->assertOnStream($this->err, '@@NON-EXISTANT@@.class.php" does not exist!');
     $this->assertEquals('', $this->out->getBytes());
   }
@@ -76,7 +77,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
   #[@test]
   public function nonExistantPackage() {
     $return= $this->runner->run(['@@NON-EXISTANT@@.*']);
-    $this->assertEquals(1, $return);
+    $this->assertEquals(2, $return);
     $this->assertOnStream($this->err, '*** No classloaders provide @@NON-EXISTANT@@');
     $this->assertEquals('', $this->out->getBytes());
   }
@@ -84,7 +85,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
   #[@test]
   public function nonExistantPackageRecursive() {
     $return= $this->runner->run(['@@NON-EXISTANT@@.**']);
-    $this->assertEquals(1, $return);
+    $this->assertEquals(2, $return);
     $this->assertOnStream($this->err, '*** No classloaders provide @@NON-EXISTANT@@');
     $this->assertEquals('', $this->out->getBytes());
   }
@@ -92,7 +93,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
   #[@test]
   public function nonExistantProperties() {
     $return= $this->runner->run(['@@NON-EXISTANT@@.ini']);
-    $this->assertEquals(1, $return);
+    $this->assertEquals(2, $return);
     $this->assertOnStream($this->err, '*** File "@@NON-EXISTANT@@.ini" not found');
     $this->assertEquals('', $this->out->getBytes());
   }
@@ -109,7 +110,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
   #[@test]
   public function runNonTest() {
     $return= $this->runner->run(['lang.Object']);
-    $this->assertEquals(1, $return);
+    $this->assertEquals(2, $return);
     $this->assertOnStream($this->err, '*** Error: Given argument is not a TestCase class (lang.XPClass<lang.Object>)');
     $this->assertEquals('', $this->out->getBytes());
   }
@@ -158,7 +159,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
       '#[@test] succeeds' => function() { $this->assertTrue(true); }
     ]);
     $return= $this->runner->run(['--color=anything', nameof($command)]);
-    $this->assertEquals(1, $return);
+    $this->assertEquals(2, $return);
     $this->assertOnStream($this->err, '*** Unsupported argument for --color');
   }
 
@@ -173,17 +174,22 @@ class UnittestRunnerTest extends \unittest\TestCase {
     $this->assertOnStream($this->out, '1/1 run (0 skipped), 0 succeeded, 1 failed');
   }
 
-  #[@test]
-  public function evaluateWithoutSource() {
-    $return= $this->runner->run(['-e']);
-    $this->assertEquals(1, $return);
-    $this->assertOnStream($this->err, '*** Option -e requires an argument');
-    $this->assertEquals('', $this->out->getBytes());
+  #[@test, @values([[['-e']], [['-e', '-']]])]
+  public function evaluateReadsCodeFromStdIn($args) {
+    $this->runner->setIn(new MemoryInputStream('$this->assertTrue(true);'));
+    $return= $this->runner->run($args);
+    $this->assertEquals(0, $return);
+    $this->assertEquals('', $this->err->getBytes());
+    $this->assertOnStream($this->out, '1/1 run (0 skipped), 1 succeeded, 0 failed');
   }
 
-  #[@test]
-  public function evaluateSucceedingTest() {
-    $return= $this->runner->run(['-e', '$this->assertTrue(true);']);
+  #[@test, @values([
+  #  '$this->assertTrue(true)',
+  #  '$this->assertTrue(true);',
+  #  '<?php $this->assertTrue(true);'
+  #])]
+  public function evaluateSucceedingTest($code) {
+    $return= $this->runner->run(['-e', $code]);
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertOnStream($this->out, '1/1 run (0 skipped), 1 succeeded, 0 failed');
@@ -213,7 +219,7 @@ class UnittestRunnerTest extends \unittest\TestCase {
       '#[@test] succeeds' => function() { $this->assertTrue(true); }
     ]);
     $return= $this->runner->run([nameof($command).'::succeed']);
-    $this->assertEquals(1, $return);
+    $this->assertEquals(2, $return);
     $this->assertOnStream($this->err, '*** Error: Test method does not exist: succeed()');
   }
 

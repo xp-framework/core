@@ -1,11 +1,9 @@
 <?php namespace text\format;
 
-
-
 /**
  * Array formatter
  *
- * @purpose  Provide a Format wrapper for arrays
+ * @deprecated
  * @see      xp://text.format.IFormat
  */
 class ArrayFormat extends IFormat {

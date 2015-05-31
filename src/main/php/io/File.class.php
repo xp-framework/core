@@ -2,8 +2,10 @@
 
 use io\streams\FileInputStream;
 use io\streams\FileOutputStream;
+use lang\IllegalArgumentException;
+use lang\IllegalStateException;
 
-// Mode constants for open() method
+// Deprecated mode constants for open() method (use class constants!)
 define('FILE_MODE_READ',      'rb');          // Read
 define('FILE_MODE_READWRITE', 'rb+');         // Read/Write
 define('FILE_MODE_WRITE',     'wb');          // Write
@@ -19,12 +21,19 @@ define('FILE_MODE_READAPPEND','ab+');         // Append (Read/Write)
  * @test xp://net.xp_framework.unittest.io.FileIntegrationTest
  */
 class File extends \lang\Object implements Channel {
+  const READ =      'rb';          // Read
+  const READWRITE = 'rb+';         // Read/Write
+  const WRITE =     'wb';          // Write
+  const REWRITE =   'wb+';         // Read/Write, truncate on open
+  const APPEND =    'ab';          // Append (Read-only)
+  const READAPPEND ='ab+';         // Append (Read/Write)
+
   public 
     $uri=         '', 
     $filename=    '',
     $path=        '',
     $extension=   '',
-    $mode=        FILE_MODE_READ;
+    $mode=        self::READ;
   
   protected $_fd= null;
   
@@ -33,7 +42,7 @@ class File extends \lang\Object implements Channel {
    *
    * ```php
    * // via resource
-   * $f= new File(fopen('lang/Type.class.php', FILE_MODE_READ));
+   * $f= new File(fopen('lang/Type.class.php', File::READ));
    *
    * // via filename
    * $f= new File('lang/Type.class.php');
@@ -139,15 +148,15 @@ class File extends \lang\Object implements Channel {
    * @throws  lang.IllegalArgumentException in case an invalid file name was given
    */
   public function setURI($uri) {
-    static $allowed= array('xar://*', 'php://stderr', 'php://stdout', 'php://stdin', 'res://*');
+    static $allowed= ['xar://*', 'php://stderr', 'php://stdout', 'php://stdin', 'res://*'];
 
     // Check validity, handle scheme and non-scheme URIs
     $uri= (string)$uri;
     if (0 === strlen($uri) || false !== strpos($uri, "\0")) {
-      throw new \lang\IllegalArgumentException('Invalid filename "'.addcslashes($uri, "\0..\17").'"');
+      throw new IllegalArgumentException('Invalid filename "'.addcslashes($uri, "\0..\17").'"');
     } else if (false !== ($s= strpos($uri, '://'))) {
       if (!in_array($uri, $allowed) && !in_array(substr($uri, 0, 6).'*', $allowed)) {
-        throw new \lang\IllegalArgumentException('Invalid scheme URI "'.$uri.'"');
+        throw new IllegalArgumentException('Invalid scheme URI "'.$uri.'"');
       }
       $this->uri= $uri;
       $p= max($s+ 3, false === ($pq= strpos($uri, '?', $s)) ? -1 : $pq+ 1);
@@ -171,17 +180,17 @@ class File extends \lang\Object implements Channel {
   /**
    * Open the file
    *
-   * @param   string mode one of the FILE_MODE_* constants
-   * @return  bool TRUE if file could be opened
+   * @param   string mode one of the File::* constants
+   * @return  self
    * @throws  io.FileNotFoundException in case the file is not found
    * @throws  io.IOException in case the file cannot be opened (e.g., lacking permissions)
    */
-  public function open($mode= FILE_MODE_READ) {
+  public function open($mode= self::READ) {
     $this->mode= $mode;
     if (
-      0 != strncmp('php://', $this->uri, 6) &&
-      (FILE_MODE_READ == $mode) && 
-      (!$this->exists())
+      self::READ === $mode && 
+      0 !== strncmp('php://', $this->uri, 6) &&
+      !$this->exists()
     ) throw new FileNotFoundException('File "'.$this->uri.'" not found');
     
     $this->_fd= fopen($this->uri, $this->mode);
@@ -191,7 +200,7 @@ class File extends \lang\Object implements Channel {
       throw $e;
     }
           
-    return true;
+    return $this;
   }
   
   /**
@@ -590,7 +599,7 @@ class File extends \lang\Object implements Channel {
    */
   public function unlink() {
     if (is_resource($this->_fd)) {
-      throw new \lang\IllegalStateException('File still open');
+      throw new IllegalStateException('File still open');
     }
     if (false === unlink($this->uri)) {
       $e= new IOException('Cannot delete file '.$this->uri);
@@ -613,7 +622,7 @@ class File extends \lang\Object implements Channel {
    */
   public function move($target) {
     if (is_resource($this->_fd)) {
-      throw new \lang\IllegalStateException('File still open');
+      throw new IllegalStateException('File still open');
     }
     
     if ($target instanceof self) {
@@ -647,7 +656,7 @@ class File extends \lang\Object implements Channel {
    */
   public function copy($target) {
     if (is_resource($this->_fd)) {
-      throw new \lang\IllegalStateException('File still open');
+      throw new IllegalStateException('File still open');
     }
 
     if ($target instanceof self) {

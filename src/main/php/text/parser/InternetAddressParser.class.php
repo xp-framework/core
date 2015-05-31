@@ -3,12 +3,11 @@
 use peer\mail\InternetAddress;
 use text\StringTokenizer;
 
-
 /**
  * Parser for InternetAddresses.
  *
  * @see      xp://peer.mail.InternetAddress
- * @purpose  Parse internet addresses
+ * @deprecated
  */
 class InternetAddressParser extends \lang\Object {
   public

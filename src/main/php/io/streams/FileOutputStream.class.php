@@ -1,30 +1,24 @@
-<?php namespace io\streams;/* This file is part of the XP framework's experiments
- *
- * $Id$
- */
+<?php namespace io\streams;
 
 use io\File;
-
 
 /**
  * OuputStream that writes to files
  *
- * @test     xp://net.xp_framework.unittest.io.streams.FileOutputStreamTest
- * @purpose  OuputStream implementation
+ * @test  xp://net.xp_framework.unittest.io.streams.FileOutputStreamTest
  */
 class FileOutputStream extends \lang\Object implements OutputStream {
-  protected
-    $file= null;
+  protected $file;
   
   /**
    * Constructor
    *
-   * @param   var file either an io.File object or a string
+   * @param   io.File|string $file Either a file instance or a file name
    * @param   bool append default FALSE whether to append
    */
   public function __construct($file, $append= false) {
     $this->file= $file instanceof File ? $file : new File($file);
-    $this->file->isOpen() || $this->file->open($append ? FILE_MODE_APPEND : FILE_MODE_WRITE);
+    $this->file->isOpen() || $this->file->open($append ? File::APPEND : File::WRITE);
   }
 
   /**

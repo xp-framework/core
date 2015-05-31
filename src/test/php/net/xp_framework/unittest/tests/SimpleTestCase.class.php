@@ -1,5 +1,8 @@
 <?php namespace net\xp_framework\unittest\tests;
- 
+
+use unittest\PrerequisitesNotMetError;
+use unittest\AssertionFailedError;
+
 /**
  * This class is used in the SuiteTest class' running* methods and
  * by the LimitTest methods
@@ -19,7 +22,7 @@ class SimpleTestCase extends \unittest\TestCase {
   public static function init() {
     self::$init++;
     if (0 === self::$init) {
-      throw new \unittest\PrerequisitesNotMetError('BeforeClass failed', self::$init);
+      throw new PrerequisitesNotMetError('BeforeClass failed', self::$init);
     }
   }
   
@@ -37,10 +40,10 @@ class SimpleTestCase extends \unittest\TestCase {
    */
   public function setUp() {
     if ('skipped' === $this->name) {
-      throw new \unittest\PrerequisitesNotMetError('SKIP', null, $this->name);
+      throw new PrerequisitesNotMetError('SKIP', null, $this->name);
     } else if ('raisesAnErrorInSetup' === $this->name) {
       trigger_error('Test error');
-      throw new \unittest\AssertionFailedError('WARN', $this->name);
+      throw new AssertionFailedError('WARN', $this->name);
     }
   }
 

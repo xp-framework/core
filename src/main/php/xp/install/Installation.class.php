@@ -5,6 +5,8 @@ use lang\ElementNotFoundException;
 
 /**
  * Installation
+ *
+ * @deprecated Use composer or glue instead
  */
 class Installation extends \lang\Object {
   protected $base;

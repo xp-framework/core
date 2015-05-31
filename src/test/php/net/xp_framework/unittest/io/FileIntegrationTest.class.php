@@ -1,17 +1,16 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use unittest\TestCase;
 use io\File;
 use io\Folder;
 use lang\System;
-
+use unittest\PrerequisitesNotMetError;
 
 /**
  * TestCase
  *
  * @see      xp://io.File
  */
-class FileIntegrationTest extends TestCase {
+class FileIntegrationTest extends \unittest\TestCase {
   protected static $temp= null;
   protected $file= null;
   protected $folder= null;
@@ -19,15 +18,16 @@ class FileIntegrationTest extends TestCase {
   /**
    * Verifies TEMP directory is usable and there is enough space
    *
+   * @return void
    */
   #[@beforeClass]
   public static function verifyTempDir() {
     self::$temp= System::tempDir();
     if (!is_writeable(self::$temp)) {
-      throw new \unittest\PrerequisitesNotMetError('$TEMP is not writeable', null, array(self::$temp.' +w'));
+      throw new PrerequisitesNotMetError('$TEMP is not writeable', null, array(self::$temp.' +w'));
     }
     if (($df= disk_free_space(self::$temp)) < 10240) {
-      throw new \unittest\PrerequisitesNotMetError('Not enough space available in $TEMP', null, array(sprintf(
+      throw new PrerequisitesNotMetError('Not enough space available in $TEMP', null, array(sprintf(
         'df %s = %.0fk > 10k',
         self::$temp,
         $df / 1024
@@ -40,6 +40,7 @@ class FileIntegrationTest extends TestCase {
    * running, then creates folder fixture, ensuring it exists and is
    * empty.
    *
+   * @return void
    */
   public function setUp() {
     $unid= getmypid();
@@ -62,6 +63,7 @@ class FileIntegrationTest extends TestCase {
   /**
    * Deletes file and folder fixtures.
    *
+   * @return void
    */
   public function tearDown() {
     $this->file->isOpen() && $this->file->close();
@@ -90,7 +92,7 @@ class FileIntegrationTest extends TestCase {
    * @throws  io.IOException
    */
   protected function writeData($file, $data= null, $append= false) {
-    $file->open($append ? FILE_MODE_APPEND : FILE_MODE_WRITE);
+    $file->open($append ? File::APPEND : File::WRITE);
     if (null === $data) {
       $written= 0;
     } else {
@@ -110,35 +112,28 @@ class FileIntegrationTest extends TestCase {
    * @return  string
    */
   protected function readData($file, $length= -1) {
-    $file->open(FILE_MODE_READ);
+    $file->open(File::READ);
     $data= $file->read($length < 0 ? $file->size() : $length);
     $file->close();
     return $data;
   }
 
-  /**
-   * Test exists() method
-   *
-   */
   #[@test]
   public function doesNotExistYet() {
     $this->assertFalse($this->file->exists());
   }
 
-  /**
-   * Test exists() method
-   *
-   */
   #[@test]
   public function existsAfterCreating() {
     $this->writeData($this->file, null);
     $this->assertTrue($this->file->exists());
   }
 
-  /**
-   * Test exists() and unlink() methods
-   *
-   */
+  #[@test]
+  public function open_returns_file() {
+    $this->assertEquals($this->file, $this->file->open(File::WRITE));
+  }
+
   #[@test]
   public function noLongerExistsAfterDeleting() {
     $this->writeData($this->file, null);
@@ -146,280 +141,200 @@ class FileIntegrationTest extends TestCase {
     $this->assertFalse($this->file->exists());
   }
   
-  /**
-   * Test unlink() method
-   *
-   */
   #[@test, @expect('io.IOException')]
   public function cannotDeleteNonExistant() {
     $this->file->unlink();
   }
 
-  /**
-   * Test unlink() method
-   *
-   */
   #[@test, @expect('lang.IllegalStateException')]
   public function cannotDeleteOpenFile() {
-    $this->file->open(FILE_MODE_WRITE);
+    $this->file->open(File::WRITE);
     $this->file->unlink();
   }
 
-  /**
-   * Test close() method
-   *
-   */
   #[@test, @expect('io.IOException')]
   public function cannotCloseUnopenedFile() {
     $this->file->close();
   }
 
-  /**
-   * Test writing to a file
-   *
-   */
   #[@test]
   public function write() {
     $this->assertEquals(5, $this->writeData($this->file, 'Hello'));
   }
 
-  /**
-   * Test writing to a file, then reading back the data
-   *
-   */
   #[@test]
   public function read() {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals($data, $this->file->read(strlen($data)));
       $this->file->close();
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data
-   *
-   */
   #[@test]
   public function read0() {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals('', $this->file->read(0));
       $this->file->close();
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data
-   *
-   */
   #[@test]
   public function readAfterEnd() {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals($data, $this->file->read(strlen($data)));
       $this->assertFalse($this->file->read(1));
       $this->file->close();
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using gets()
-   *
-   */
   #[@test]
   public function gets() {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals($data, $this->file->gets());
       $this->file->close();
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using gets()
-   *
-   */
   #[@test]
   public function gets0() {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals('', $this->file->gets(0));
       $this->file->close();
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using gets()
-   *
-   */
   #[@test]
   public function getsTwoLines() {
     with ($data= "Hello\nWorld\n"); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals("Hello\n", $this->file->gets());
       $this->assertEquals("World\n", $this->file->gets());
       $this->file->close();
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using gets()
-   *
-   */
   #[@test]
   public function getsAfterEnd() {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals('Hello', $this->file->gets());
       $this->assertFalse($this->file->gets());
       $this->file->close();
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using readLine()
-   *
-   */
   #[@test]
   public function readLine() {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals($data, $this->file->readLine());
       $this->file->close();
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using readLine()
-   *
-   */
   #[@test]
   public function readLine0() {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals('', $this->file->readLine(0));
       $this->file->close();
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using readLine()
-   *
-   */
   #[@test]
   public function readLines() {
     with ($data= "Hello\nWorld\n"); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals('Hello', $this->file->readLine());
       $this->assertEquals('World', $this->file->readLine());
       $this->file->close();
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using readLine()
-   *
-   */
   #[@test]
   public function readLinesAfterEnd() {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals('Hello', $this->file->readLine());
       $this->assertFalse($this->file->readLine());
       $this->file->close();
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using readChar()
-   *
-   */
   #[@test]
   public function readChar() {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals($data{0}, $this->file->readChar());
       $this->file->close();
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using readChar()
-   *
-   */
   #[@test]
   public function readChars() {
     with ($data= 'Hello'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals($data{0}, $this->file->readChar());
       $this->assertEquals($data{1}, $this->file->readChar());
       $this->file->close();
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data using readChar()
-   *
-   */
   #[@test]
   public function readCharsAfterEnd() {
     with ($data= 'H'); {
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals('H', $this->file->readChar());
       $this->assertFalse($this->file->readChar());
       $this->file->close();
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data
-   *
-   */
   #[@test]
   public function overwritingExistant() {
     with ($data= 'Hello World', $appear= 'This should not appear'); {
       $this->writeData($this->file, $appear);
       $this->writeData($this->file, $data);
 
-      $this->file->open(FILE_MODE_READ);
+      $this->file->open(File::READ);
       $this->assertEquals($data, $this->file->read(strlen($data)));
       $this->file->close();
     }
   }
 
-  /**
-   * Test writing to a file, then reading back the data
-   *
-   */
   #[@test]
   public function appendingToExistant() {
     with ($data= 'Hello World', $appear= 'This should appear'); {
@@ -430,19 +345,11 @@ class FileIntegrationTest extends TestCase {
     }
   }
 
-  /**
-   * Test a non-existant file cannot bee opened for reading
-   *
-   */
   #[@test, @expect('io.FileNotFoundException')]
   public function cannotOpenNonExistantForReading() {
-    $this->file->open(FILE_MODE_READ);
+    $this->file->open(File::READ);
   }
 
-  /**
-   * Test copy() method
-   *
-   */
   #[@test]
   public function copying() {
     with ($data= 'Hello World'); {
@@ -458,10 +365,6 @@ class FileIntegrationTest extends TestCase {
     }
   }
 
-  /**
-   * Test copy() method
-   *
-   */
   #[@test]
   public function copyingOver() {
     with ($data= 'Hello World'); {
@@ -478,20 +381,12 @@ class FileIntegrationTest extends TestCase {
     }
   }
 
-  /**
-   * Test copy() method
-   *
-   */
   #[@test, @expect('lang.IllegalStateException')]
   public function cannotCopyOpenFile() {
-    $this->file->open(FILE_MODE_WRITE);
+    $this->file->open(File::WRITE);
     $this->file->copy('irrelevant');
   }
 
-  /**
-   * Test move() method
-   *
-   */
   #[@test]
   public function moving() {
     with ($data= 'Hello World'); {
@@ -511,10 +406,6 @@ class FileIntegrationTest extends TestCase {
     }
   }
 
-  /**
-   * Test move() method
-   *
-   */
   #[@test, @ignore('Breaks on Win2008 server, need special handling')]
   public function movingOver() {
     with ($data= 'Hello World'); {
@@ -535,20 +426,12 @@ class FileIntegrationTest extends TestCase {
     }
   }
 
-  /**
-   * Test move() method
-   *
-   */
   #[@test, @expect('lang.IllegalStateException')]
   public function cannotMoveOpenFile() {
-    $this->file->open(FILE_MODE_WRITE);
+    $this->file->open(File::WRITE);
     $this->file->move('irrelevant');
   }
 
-  /**
-   * Test copy() method
-   *
-   */
   #[@test]
   public function copyingToAnotherFile() {
     $this->writeData($this->file, null);
@@ -559,10 +442,6 @@ class FileIntegrationTest extends TestCase {
     $this->assertTrue($exists);
   }
 
-  /**
-   * Test copy() method
-   *
-   */
   #[@test]
   public function copyingToAnotherFolder() {
     $this->writeData($this->file, null);
@@ -573,10 +452,6 @@ class FileIntegrationTest extends TestCase {
     $this->assertTrue($exists);
   }
 
-  /**
-   * Test move() method
-   *
-   */
   #[@test]
   public function movingToAnotherFile() {
     $this->writeData($this->file, null);
@@ -587,10 +462,6 @@ class FileIntegrationTest extends TestCase {
     $this->assertTrue($exists);
   }
 
-  /**
-   * Test move() method
-   *
-   */
   #[@test]
   public function movingToAnotherFolder() {
     $this->writeData($this->file, null);

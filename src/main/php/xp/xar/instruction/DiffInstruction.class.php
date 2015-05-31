@@ -15,14 +15,14 @@ class DiffInstruction extends AbstractInstruction {
    * @return  int
    */
   public function perform() {
-    $this->archive->open(ARCHIVE_READ);
+    $this->archive->open(Archive::READ);
     
     $args= $this->getArguments();
     if (!isset($args[0]) || !file_exists(current($args)))
       throw new \lang\IllegalArgumentException('No archive to compare given or not found.');
 
     $cmp= new \lang\archive\Archive(new \io\File(current($args)));
-    $cmp->open(ARCHIVE_READ);
+    $cmp->open(Archive::READ);
     
     return $this->compare($this->archive, $cmp);
   }
@@ -89,10 +89,8 @@ class DiffInstruction extends AbstractInstruction {
    */
   protected function diff($left, $right) {
     with (
-      $templ= new TempFile(),
-      $tempr= new TempFile(),
-      $templ->open(FILE_MODE_WRITE),
-      $tempr->open(FILE_MODE_WRITE)
+      $templ= (new TempFile())->open(File::WRITE),
+      $tempr= (new TempFile())->open(File::WRITE)
     ); {
       $templ->write($left);
       $tempr->write($right);

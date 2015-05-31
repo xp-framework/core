@@ -1,16 +1,17 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use unittest\TestCase;
 use io\Folder;
 use io\Path;
+use io\IOException;
 use lang\System;
+use unittest\PrerequisitesNotMetError;
 
 /**
  * TestCase
  *
  * @see      xp://io.Folder
  */
-class FolderTest extends TestCase {
+class FolderTest extends \unittest\TestCase {
   protected $temp= '';
   
   /**
@@ -25,17 +26,21 @@ class FolderTest extends TestCase {
   }
 
   /**
-   * Sets up test case - initializes directory in %TEMP
+   * Sets up test case - initializes directory in %TEMP%
+   *
+   * @return void
    */
   public function setUp() {
     $this->temp= $this->normalize(realpath(System::tempDir())).md5(uniqid()).'.xp'.DIRECTORY_SEPARATOR;
     if (is_dir($this->temp) && !rmdir($this->temp)) {
-      throw new \unittest\PrerequisitesNotMetError('Fixture directory exists, but cannot remove', null, $this->temp);
+      throw new PrerequisitesNotMetError('Fixture directory exists, but cannot remove', null, $this->temp);
     }
   }
   
   /**
-   * Deletes directory in %TEMP if existant
+   * Deletes directory in %TEMP% (including any files inside) if existant
+   *
+   * @return void
    */
   public function tearDown() {
     is_dir($this->temp) && rmdir($this->temp);
@@ -176,5 +181,15 @@ class FolderTest extends TestCase {
   public function pathClassCanBeUsedAsArg() {
     $f= new Folder(new Path($this->temp));
     $this->assertEquals($this->temp, $f->getURI());
+  }
+
+  #[@test]
+  public function entries() {
+    $this->assertInstanceOf('io.FolderEntries', (new Folder($this->temp))->entries());
+  }
+
+  #[@test, @expect(IOException::class)]
+  public function entries_iteration_raises_exception_if_path_does_not_exist() {
+    iterator_to_array((new Folder($this->temp))->entries());
   }
 }

@@ -4,7 +4,6 @@
  * Abstract base class
  *
  * @see      xp://net.xp_framework.unittest.reflection.ReflectionTest
- * @purpose  Test class
  */
 abstract class AbstractTestClass extends \lang\Object {
   protected

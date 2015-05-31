@@ -1,10 +1,7 @@
 <?php namespace security;
  
 /**
- * SecurityException
- *
- * @purpose  Indicate a security violation has occured
- * @see      xp://lang.XPException
+ * Indicate a security violation has occured
  */
 class SecurityException extends \lang\XPException {
 

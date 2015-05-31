@@ -1,11 +1,9 @@
 <?php namespace text\format;
 
-
-
 /**
  * Hash formatter
  *
- * @purpose  Provide a Format wrapper for Hashs
+ * @deprecated
  * @see      xp://text.format.IFormat
  */
 class HashFormat extends IFormat {

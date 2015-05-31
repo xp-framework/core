@@ -1,11 +1,7 @@
 <?php namespace io\collections\iterate;
 
-
-
 /**
  * Filter that accepts only IOCollections (e.g. directories)
- *
- * @purpose  Iteration Filter
  */
 class CollectionFilter extends \lang\Object implements IterationFilter {
     

@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\tests;
 
+use lang\XPClass;
+
 /**
  * This class is used in the TestClassActionTest 
  */
@@ -20,7 +22,7 @@ class RecordClassActionInvocation extends \lang\Object implements \unittest\Test
    *
    * @param  lang.XPClass $c
    */
-  public function beforeTestClass(\lang\XPClass $c) {
+  public function beforeTestClass(XPClass $c) {
     $f= $c->getField($this->field);
     $f->set(null, array_merge($f->get(null), array('before')));
   }
@@ -30,7 +32,7 @@ class RecordClassActionInvocation extends \lang\Object implements \unittest\Test
    *
    * @param  lang.XPClass $c
    */
-  public function afterTestClass(\lang\XPClass $c) {
+  public function afterTestClass(XPClass $c) {
     $f= $c->getField('run');
     $f->set(null, array_merge($f->get(null), array('after')));
   }

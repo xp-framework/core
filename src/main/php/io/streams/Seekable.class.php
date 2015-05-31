@@ -3,8 +3,7 @@
 /**
  * Defines a stream as being seekable
  *
- * @see      php://fseek
- * @purpose  Interface
+ * @see   php://fseek
  */
 interface Seekable {
 

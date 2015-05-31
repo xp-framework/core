@@ -1,19 +1,10 @@
-<?php namespace peer;/* This file is part of the XP framework
- *
- * $Id$
- */
-
-use io\streams\InputStream;
-
+<?php namespace peer;
 
 /**
  * InputStream that reads from a socket
- *
- * @purpose  InputStream implementation
  */
-class SocketInputStream extends \lang\Object implements InputStream {
-  protected
-    $socket= null;
+class SocketInputStream extends \lang\Object implements \io\streams\InputStream {
+  protected $socket= null;
   
   /**
    * Constructor

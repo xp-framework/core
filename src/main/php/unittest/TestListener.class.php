@@ -1,13 +1,11 @@
 <?php namespace unittest;
 
-
-
 /**
  * To intercept certain events during a test run, add a listener to
  * the test suite before calling its run() or runTest() methods.
  *
- * @test     xp://net.xp_framework.unittest.tests.ListenerTest
- * @see      xp://unittest.TestSuite#addListener
+ * @test  xp://net.xp_framework.unittest.tests.ListenerTest
+ * @see   xp://unittest.TestSuite#addListener
  */
 interface TestListener {
 

@@ -3,7 +3,6 @@
 use io\Stream;
 use lang\MethodNotImplementedException;
 
-
 /**
  * VFormat Parser (VCalendar, VCard, ...)
  *
@@ -27,7 +26,7 @@ use lang\MethodNotImplementedException;
  *   }
  * </code> 
  *
- * @purpose  Parser
+ * @deprecated
  */
 class VFormatParser extends \lang\Object {
   public

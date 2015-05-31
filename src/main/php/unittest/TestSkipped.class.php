@@ -1,7 +1,5 @@
 <?php namespace unittest;
 
-
-
 /**
  * Indicates a test was skipped
  *

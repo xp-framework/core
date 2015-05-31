@@ -1,13 +1,9 @@
 <?php namespace util\log;
 
-use util\Observer;
-
-
 /**
  * Generic DB observer interface.
- *
  */
-interface BoundLogObserver extends Observer {
+interface BoundLogObserver extends \util\Observer {
 
   /**
    * Retrieves an instance.

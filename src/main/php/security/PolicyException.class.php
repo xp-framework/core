@@ -1,10 +1,10 @@
 <?php namespace security;
 
 /**
- * PolicyException
+ * Indicate errors in policy
  *
- * @see      xp://security.PolicyFile
- * @purpose  Indicate errors in policy
+ * @deprecated
+ * @see   xp://security.PolicyFile
  */
 class PolicyException extends \lang\XPException {
 

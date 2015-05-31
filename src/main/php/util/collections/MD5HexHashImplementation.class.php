@@ -5,12 +5,12 @@
  * numeric value instead of relying on addition taking care of this.
  *
  * Bug this works around:
- * <pre>
- *   $ php -r '$o= 0; $o+= "0x12195d4e54299a3cc1bde564c5de04b6"; var_dump($o);'
+ * ```sh
+ * $ php -r '$o= 0; $o+= "0x12195d4e54299a3cc1bde564c5de04b6"; var_dump($o);'
  *
- *   // 5.2.0 : int(0)
- *   // 5.2.10: float(2.4057803815529E+37)
- * </pre>
+ * // 5.2.0 : int(0)
+ * // 5.2.10: float(2.4057803815529E+37)
+ * ```
  *
  * @see   php://md5
  * @see   php://hexdec

@@ -4,7 +4,10 @@ use io\Path;
 use io\File;
 use io\Folder;
 use lang\Runtime;
+use lang\System;
 use unittest\actions\IsPlatform;
+use lang\IllegalStateException;
+use lang\IllegalArgumentException;
 
 class PathTest extends \unittest\TestCase {
 
@@ -141,6 +144,30 @@ class PathTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function real_with_folder() {
+    $folder= $this->existingFolder();
+    $this->assertEquals(rtrim($folder->getURI(), DIRECTORY_SEPARATOR), Path::real($folder)->toString());
+  }
+
+  #[@test]
+  public function real_with_uri() {
+    $folder= $this->existingFolder();
+    $this->assertEquals(rtrim($folder->getURI(), DIRECTORY_SEPARATOR), Path::real($folder->getURI())->toString());
+  }
+
+  #[@test]
+  public function real_with_working_directory() {
+    $folder= $this->existingFolder();
+    $this->assertEquals($folder->path, Path::real('..', $folder)->toString());
+  }
+
+  #[@test]
+  public function real_with_array() {
+    $folder= $this->existingFolder();
+    $this->assertEquals($folder->path, Path::real([$folder->path, '.', $folder->dirname, '..'])->toString());
+  }
+
+  #[@test]
   public function folder_as_realpath() {
     $folder= $this->existingFolder();
     $this->assertEquals(
@@ -169,7 +196,7 @@ class PathTest extends \unittest\TestCase {
 
   #[@test]
   public function links_resolved_in_realpath() {
-    $temp= \lang\System::tempDir();
+    $temp= System::tempDir();
     $link= new Path($temp, 'link-to-temp');
     if (false === symlink($temp, $link)) {
       $this->skip('Cannot create '.$link.' -> '.$temp);
@@ -187,9 +214,19 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals($file, (new Path($file))->asFile());
   }
 
-  #[@test, @expect(class= 'lang.IllegalStateException', withMessage= '/.+ is not a file/')]
+  #[@test, @expect(class= IllegalStateException::class, withMessage= '/.+ is not a file/')]
   public function as_file_throws_exception_when_invoked_on_a_folder() {
     (new Path($this->existingFolder()))->asFile();
+  }
+
+  #[@test]
+  public function as_file_works_with_nonexistant_paths() {
+    $this->assertEquals(new File('test.txt'), (new Path('test.txt'))->asFile());
+  }
+
+  #[@test, @expect(class= IllegalStateException::class, withMessage= '/.+ does not exist/')]
+  public function as_file_throws_exception_when_existing_flag_defined_an_nonexistant_path_given() {
+    (new Path('test.txt'))->asFile(Path::EXISTING);
   }
 
   #[@test]
@@ -198,9 +235,19 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals($folder, (new Path($folder))->asFolder());
   }
 
-  #[@test, @expect(class= 'lang.IllegalStateException', withMessage= '/.+ is not a folder/')]
+  #[@test, @expect(class= IllegalStateException::class, withMessage= '/.+ is not a folder/')]
   public function as_folder_throws_exception_when_invoked_on_a_folder() {
     (new Path($this->existingFile()))->asFolder();
+  }
+
+  #[@test]
+  public function as_folder_works_with_nonexistant_paths() {
+    $this->assertEquals(new Folder('test'), (new Path('test'))->asFolder());
+  }
+
+  #[@test, @expect(class= IllegalStateException::class, withMessage= '/.+ does not exist/')]
+  public function as_folder_throws_exception_when_existing_flag_defined_an_nonexistant_path_given() {
+    (new Path('test'))->asFolder(Path::EXISTING);
   }
 
   #[@test, @values(['.', '..', 'test', '/root/parent/child', 'C:/Windows'])]
@@ -280,7 +327,7 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals($result, (new Path($a))->resolve($b)->toString('/'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values([
+  #[@test, @expect(IllegalArgumentException::class), @values([
   #  ['relative', '/dev'],
   #  ['relative', 'C:/Windows']
   #])]
@@ -304,11 +351,22 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals($result, (new Path($a))->relativeTo($b)->toString('/'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values([
+  #[@test, @expect(IllegalArgumentException::class), @values([
   #  ['/dev', 'relative'], ['relative', '/dev'],
   #  ['C:/Windows', 'relative'], ['relative', 'C:/Windows']
   #])]
   public function cannot_calculate_relative_path_if_one_component_is_absolute_and_the_other_isnt($a, $b) {
     (new Path($a))->relativeTo($b);
+  }
+
+  #[@test]
+  public function equals_itself() {
+    $fixture= new Path('.');
+    $this->assertEquals($fixture, $fixture);
+  }
+
+  #[@test]
+  public function equals_performs_normalization() {
+    $this->assertEquals(new Path('.'), new Path('dir/..'));
   }
 }
