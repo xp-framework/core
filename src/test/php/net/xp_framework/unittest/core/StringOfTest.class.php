@@ -15,9 +15,22 @@ class StringOfTest extends \unittest\TestCase {
    * @return lang.Object
    */
   protected function testStringInstance() {
-    return newinstance('lang.Object', [], array(
+    return newinstance('lang.Object', [], [
       'toString' => function() { return 'TestString(6) { String }'; }
-    ));
+    ]);
+  }
+
+  /**
+   * Returns a value also returning the string `TestValue(6) { String }`.
+   *
+   * @return lang.Value
+   */
+  protected function valueInstance() {
+    return newinstance('lang.Value', [], [
+      'compareTo' => function($cmp) { /* Not implemented */ },
+      'hashCode'  => function() { /* Not implemented */ },
+      'toString'  => function() { return 'TestValue(6) { String }'; }
+    ]);
   }
 
   #[@test, @values([
@@ -40,6 +53,11 @@ class StringOfTest extends \unittest\TestCase {
   #[@test]
   public function testString_representation() {
     $this->assertEquals('TestString(6) { String }', \xp::stringOf($this->testStringInstance()));
+  }
+
+  #[@test]
+  public function value_representation() {
+    $this->assertEquals('TestValue(6) { String }', \xp::stringOf($this->valueInstance()));
   }
 
   #[@test]

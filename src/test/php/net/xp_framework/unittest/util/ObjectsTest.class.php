@@ -1,14 +1,14 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use unittest\TestCase;
 use util\Objects;
+use lang\Value;
 
 /**
  * TestCase for Objects class
  *
  * @see  xp://util.Objects
  */
-class ObjectsTest extends TestCase {
+class ObjectsTest extends \unittest\TestCase {
 
   /** @return  var[][] */
   public function primitives() {
@@ -43,7 +43,12 @@ class ObjectsTest extends TestCase {
       [$this],
       [new \lang\Object()],
       [new \lang\types\String('')],
-      [new \lang\types\String('Test')]
+      [new \lang\types\String('Test')],
+      [newinstance('lang.Value', [], [
+        'compareTo' => function($cmp) { return $cmp instanceof Value ? 0 : -1; },
+        'hashCode'  => function() { /* Not implemented */ },
+        'toString'  => function() { return 'value'; }
+      ])]
     ];
   }
 
