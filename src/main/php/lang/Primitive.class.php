@@ -1,12 +1,5 @@
 <?php namespace lang;
 
-use lang\types\String;
-use lang\types\Double;
-use lang\types\Integer;
-use lang\types\Boolean;
-use lang\types\Number;
-use lang\types\ArrayList;
-
 /**
  * Represents primitive types:
  * 
@@ -35,6 +28,7 @@ class Primitive extends Type {
   /**
    * Returns the wrapper class for this primitive
    *
+   * @deprecated Wrapper types will move to their own library
    * @see     http://en.wikipedia.org/wiki/Wrapper_class
    * @return  lang.XPClass
    */
@@ -50,16 +44,17 @@ class Primitive extends Type {
   /**
    * Boxes a type - that is, turns Generics into primitives
    *
+   * @deprecated Wrapper types will move to their own library
    * @param   var in
    * @return  var the primitive if not already primitive
    * @throws  lang.IllegalArgumentException in case in cannot be unboxed.
    */
   public static function unboxed($in) {
-    if ($in instanceof String) return $in->toString();
-    if ($in instanceof Double) return $in->doubleValue();
-    if ($in instanceof Integer) return $in->intValue();
-    if ($in instanceof Boolean) return $in->value;
-    if ($in instanceof ArrayList) return $in->values;   // deprecated
+    if ($in instanceof \lang\types\String) return $in->toString();
+    if ($in instanceof \lang\types\Double) return $in->doubleValue();
+    if ($in instanceof \lang\types\Integer) return $in->intValue();
+    if ($in instanceof \lang\types\Boolean) return $in->value;
+    if ($in instanceof \lang\types\ArrayList) return $in->values;   // deprecated
     if ($in instanceof Generic) {
       throw new IllegalArgumentException('Cannot unbox '.\xp::typeOf($in));
     }
@@ -69,6 +64,7 @@ class Primitive extends Type {
   /**
    * Boxes a type - that is, turns primitives into Generics
    *
+   * @deprecated Wrapper types will move to their own library
    * @param   var in
    * @return  lang.Generic the Generic if not already generic
    * @throws  lang.IllegalArgumentException in case in cannot be boxed.
@@ -76,11 +72,11 @@ class Primitive extends Type {
   public static function boxed($in) {
     if (null === $in || $in instanceof Generic) return $in;
     $t= gettype($in);
-    if ('string' === $t) return new String($in);
-    if ('integer' === $t) return new Integer($in);
-    if ('double' === $t) return new Double($in);
-    if ('boolean' === $t) return new Boolean($in);
-    if ('array' === $t) return ArrayList::newInstance($in);   // deprecated
+    if ('string' === $t) return new \lang\types\String($in);
+    if ('integer' === $t) return new \lang\types\Integer($in);
+    if ('double' === $t) return new \lang\types\Double($in);
+    if ('boolean' === $t) return new \lang\types\Boolean($in);
+    if ('array' === $t) return \lang\types\ArrayList::newInstance($in);   // deprecated
     throw new IllegalArgumentException('Cannot box '.\xp::typeOf($in));
   }
   
@@ -134,31 +130,31 @@ class Primitive extends Type {
   protected function coerce($value, $default) {
     if (!is_array($value)) switch ($this) {
       case self::$STRING:
-        if ($value instanceof String) return $value->toString();
-        if ($value instanceof Number) return (string)$value->value;
-        if ($value instanceof Boolean) return (string)$value->value;
-        if ($value instanceof Generic) return $value->toString();
+        if ($value instanceof \lang\types\String) return $value->toString();
+        if ($value instanceof \lang\types\Number) return (string)$value->value;
+        if ($value instanceof \lang\types\Boolean) return (string)$value->value;
+        if ($value instanceof \lang\types\Generic) return $value->toString();
         return (string)$value;
 
       case self::$INT:
-        if ($value instanceof String) return (int)$value->toString();
-        if ($value instanceof Number) return $value->intValue();
-        if ($value instanceof Boolean) return (int)$value->value;
-        if ($value instanceof Generic) return (int)$value->toString();
+        if ($value instanceof \lang\types\String) return (int)$value->toString();
+        if ($value instanceof \lang\types\Number) return $value->intValue();
+        if ($value instanceof \lang\types\Boolean) return (int)$value->value;
+        if ($value instanceof \lang\types\Generic) return (int)$value->toString();
         return (int)$value;
 
       case self::$DOUBLE:
-        if ($value instanceof String) return (double)$value->toString();
-        if ($value instanceof Number) return $value->doubleValue();
-        if ($value instanceof Boolean) return (double)$value->value;
-        if ($value instanceof Generic) return (double)$value->toString();
+        if ($value instanceof \lang\types\String) return (double)$value->toString();
+        if ($value instanceof \lang\types\Number) return $value->doubleValue();
+        if ($value instanceof \lang\types\Boolean) return (double)$value->value;
+        if ($value instanceof \lang\types\Generic) return (double)$value->toString();
         return (double)$value;
 
       case self::$BOOL:
-        if ($value instanceof String) return (bool)$value->toString();
-        if ($value instanceof Number) return (bool)$value->value;
-        if ($value instanceof Boolean) return $value->value;
-        if ($value instanceof Generic) return (bool)$value->toString();
+        if ($value instanceof \lang\types\String) return (bool)$value->toString();
+        if ($value instanceof \lang\types\Number) return (bool)$value->value;
+        if ($value instanceof \lang\types\Boolean) return $value->value;
+        if ($value instanceof \lang\types\Generic) return (bool)$value->toString();
         return (bool)$value;
     }
 

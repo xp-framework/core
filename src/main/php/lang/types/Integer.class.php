@@ -4,6 +4,8 @@
  * The Integer class wraps a value of the type int 
  * 
  * Range: -2^31 - (2^31)- 1
+ *
+ * @deprecated Wrapper types will move to their own library
  */
 class Integer extends Number {
 

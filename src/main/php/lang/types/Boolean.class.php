@@ -4,6 +4,7 @@
  * The boolean wrapper class
  *
  * @test    xp://net.xp_framework.unittest.core.types.BooleanTest
+ * @deprecated Wrapper types will move to their own library
  */
 class Boolean extends \lang\Object {
   public static $TRUE, $FALSE;

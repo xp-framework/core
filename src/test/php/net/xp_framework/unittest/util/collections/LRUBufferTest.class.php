@@ -1,7 +1,6 @@
 <?php namespace net\xp_framework\unittest\util\collections;
 
 use util\collections\LRUBuffer;
-use lang\types\String;
 
 class LRUBufferTest extends \unittest\TestCase {
   const DEFAULT_SIZE = 3;
@@ -29,7 +28,7 @@ class LRUBufferTest extends \unittest\TestCase {
 
   #[@test]
   public function add() {
-    $this->buffer->add(new String('one'));
+    $this->buffer->add(new Name('one'));
     $this->assertEquals(1, $this->buffer->numElements());
   }
 
@@ -40,7 +39,7 @@ class LRUBufferTest extends \unittest\TestCase {
     // elements to the LRUBuffer. Nothing should be deleted from it
     // during this loop.
     for ($i= 0, $s= $this->buffer->getSize(); $i < $s; $i++) {
-      if (null === ($victim= $this->buffer->add(new String('item #'.$i)))) continue;
+      if (null === ($victim= $this->buffer->add(new Name('item #'.$i)))) continue;
       
       return $this->fail(
         'Victim '.\xp::stringOf($victim).' when inserting item #'.($i + 1).'/'.$s, 
@@ -52,8 +51,8 @@ class LRUBufferTest extends \unittest\TestCase {
     // The LRUBuffer is now "full". Next time we add something, the
     // element last recently used should be returned.
     $this->assertEquals(
-      new String('item #0'), 
-      $this->buffer->add(new String('last item'))
+      new Name('item #0'), 
+      $this->buffer->add(new Name('last item'))
     );
   }
   
@@ -64,7 +63,7 @@ class LRUBufferTest extends \unittest\TestCase {
    */
   protected function addElements($num) {
     for ($i= 0; $i < $num; $i++) {
-      $this->buffer->add(new String('item #'.$i));
+      $this->buffer->add(new Name('item #'.$i));
     }
   }
   
@@ -81,13 +80,13 @@ class LRUBufferTest extends \unittest\TestCase {
     $this->addElements($this->buffer->getSize());
     
     // Update the first item
-    $this->buffer->update(new String('item #0'));
+    $this->buffer->update(new Name('item #0'));
     
     // Now the second item should be chosen the victim when adding 
     // another element
     $this->assertEquals(
-      new String('item #1'), 
-      $this->buffer->add(new String('last item'))
+      new Name('item #1'), 
+      $this->buffer->add(new Name('last item'))
     );
   }
 
@@ -115,7 +114,7 @@ class LRUBufferTest extends \unittest\TestCase {
   #[@test]
   public function doesNotEqualWithSameElements() {
     $other= new LRUBuffer(self::DEFAULT_SIZE);
-    with ($string= new String('Hello')); {
+    with ($string= new Name('Hello')); {
       $other->add($string);
       $this->buffer->add($string);
     }

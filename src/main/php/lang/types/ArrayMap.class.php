@@ -6,6 +6,7 @@ use lang\IndexOutOfBoundsException;
  * Represents a mapped array
  *
  * @test   xp://net.xp_framework.unittest.core.types.ArrayMapTest
+ * @deprecated Wrapper types will move to their own library
  */
 class ArrayMap extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
   public

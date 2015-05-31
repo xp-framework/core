@@ -1,7 +1,6 @@
 <?php namespace net\xp_framework\unittest\annotations;
 
 use net\xp_framework\unittest\annotations\fixture\Namespaced;
-use lang\types\String;
 use lang\XPClass;
 
 /**
@@ -18,9 +17,9 @@ class ClassMemberParsingTest extends \unittest\TestCase {
     $this->assertEquals('local', $value);
   }
 
-  #[@test, @values([new String(self::CONSTANT)])]
+  #[@test, @values([new Name(self::CONSTANT)])]
   public function class_constant_via_self_inside_new($value) {
-    $this->assertEquals(new String('local'), $value);
+    $this->assertEquals(new Name('local'), $value);
   }
 
   #[@test, @values([ClassMemberParsingTest::CONSTANT])]
@@ -48,9 +47,9 @@ class ClassMemberParsingTest extends \unittest\TestCase {
     $this->assertEquals('static', $value);
   }
 
-  #[@test, @values([new String(self::$value)])]
+  #[@test, @values([new Name(self::$value)])]
   public function static_member_via_self_inside_new($value) {
-    $this->assertEquals(new String('static'), $value);
+    $this->assertEquals(new Name('static'), $value);
   }
 
   #[@test, @values([ClassMemberParsingTest::$value])]

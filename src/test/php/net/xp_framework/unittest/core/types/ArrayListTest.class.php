@@ -7,6 +7,7 @@ use lang\IndexOutOfBoundsException;
 /**
  * Tests the ArrayList class
  *
+ * @deprecated Wrapper types will move to their own library
  * @see  xp://lang.types.ArrayList
  */
 class ArrayListTest extends TestCase {

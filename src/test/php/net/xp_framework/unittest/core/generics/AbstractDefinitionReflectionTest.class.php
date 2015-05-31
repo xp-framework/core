@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
-use lang\types\String;
 use lang\XPClass;
+use lang\Primitive;
 
 /**
  * TestCase for definition reflection
@@ -49,17 +49,17 @@ abstract class AbstractDefinitionReflectionTest extends \unittest\TestCase {
 
   #[@test]
   public function newGenericTypeIsGeneric() {
-    $t= $this->fixture->newGenericType(array(
-      XPClass::forName('lang.types.String'), 
+    $t= $this->fixture->newGenericType([
+      Primitive::$STRING, 
       XPClass::forName('unittest.TestCase')
-    ));
+    ]);
     $this->assertTrue($t->isGeneric());
   }
 
   #[@test]
   public function newLookupWithStringAndTestCase() {
     $arguments= array(
-      XPClass::forName('lang.types.String'), 
+      Primitive::$STRING, 
       XPClass::forName('unittest.TestCase')
     );
     $this->assertEquals(
@@ -71,19 +71,7 @@ abstract class AbstractDefinitionReflectionTest extends \unittest\TestCase {
   #[@test]
   public function newLookupWithStringAndObject() {
     $arguments= array(
-      XPClass::forName('lang.types.String'), 
-      XPClass::forName('lang.Object')
-    );
-    $this->assertEquals(
-      $arguments, 
-      $this->fixture->newGenericType($arguments)->genericArguments()
-    );
-  }
-
-  #[@test]
-  public function newLookupWithPrimitiveStringAndObject() {
-    $arguments= array(
-      \lang\Primitive::$STRING,
+      Primitive::$STRING, 
       XPClass::forName('lang.Object')
     );
     $this->assertEquals(
@@ -97,7 +85,7 @@ abstract class AbstractDefinitionReflectionTest extends \unittest\TestCase {
     $this->assertEquals(
       $this->fixtureInstance()->getClass(),
       $this->fixture->newGenericType(array(
-        XPClass::forName('lang.types.String'), 
+        Primitive::$STRING, 
         XPClass::forName('unittest.TestCase')
       ))
     );
@@ -107,11 +95,11 @@ abstract class AbstractDefinitionReflectionTest extends \unittest\TestCase {
   public function classesCreatedWithDifferentTypesAreNotEqual() {
     $this->assertNotEquals(
       $this->fixture->newGenericType(array(
-        XPClass::forName('lang.types.String'), 
+        Primitive::$STRING, 
         XPClass::forName('lang.Object')
       )),
       $this->fixture->newGenericType(array(
-        XPClass::forName('lang.types.String'), 
+        Primitive::$STRING, 
         XPClass::forName('unittest.TestCase')
       ))
     );

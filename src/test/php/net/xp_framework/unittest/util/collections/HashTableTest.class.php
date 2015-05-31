@@ -1,9 +1,7 @@
 <?php namespace net\xp_framework\unittest\util\collections;
  
-use unittest\TestCase;
 use util\collections\HashTable;
 use util\collections\Pair;
-use lang\types\String;
 use lang\types\Integer;
 use lang\types\Double;
 
@@ -12,7 +10,7 @@ use lang\types\Double;
  *
  * @see   xp://util.collections.HashTable
  */
-class HashTableTest extends TestCase {
+class HashTableTest extends \unittest\TestCase {
 
   /** @return var[] */
   protected function fixtures() {
@@ -22,12 +20,12 @@ class HashTableTest extends TestCase {
         new Pair('price', null)
       ]],
       [new HashTable(), [
-        new Pair(new String('color'), new String('green')),
-        new Pair(new String('price'), new Double(12.99))
+        new Pair(new Name('color'), new Name('green')),
+        new Pair(new Name('price'), new Double(12.99))
       ]],
-      [create('new util.collections.HashTable<string, lang.types.String>'), [
-        new Pair('hello', new String('World')),
-        new Pair('hallo', new String('Welt'))
+      [create('new util.collections.HashTable<string, net.xp_framework.unittest.util.collections.Name>'), [
+        new Pair('hello', new Name('World')),
+        new Pair('hallo', new Name('Welt'))
       ]],
       [create('new util.collections.HashTable<lang.types.Integer, string[]>'), [
         new Pair(new Integer(1), ['one', 'eins']),
@@ -115,17 +113,17 @@ class HashTableTest extends TestCase {
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function put_illegal_type_in_key() {
-    create('new util.collections.HashTable<string, lang.types.String>')->put(5, new String('hello'));
+    create('new util.collections.HashTable<string, net.xp_framework.unittest.util.collections.Name>')->put(5, new Name('hello'));
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function put_illegal_type_in_value() {
-    create('new util.collections.HashTable<string, lang.types.String>')->put('hello', new Integer(1));
+    create('new util.collections.HashTable<string, net.xp_framework.unittest.util.collections.Name>')->put('hello', new Integer(1));
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function put_raises_when_using_null_for_string_instance() {
-    create('new util.collections.HashTable<string, lang.types.String>')->put('test', null);
+    create('new util.collections.HashTable<string, net.xp_framework.unittest.util.collections.Name>')->put('test', null);
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
@@ -157,7 +155,7 @@ class HashTableTest extends TestCase {
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function get_illegal_type_in_argument() {
-    create('new util.collections.HashTable<lang.types.String, lang.types.String>')->get(new Integer(1));
+    create('new util.collections.HashTable<net.xp_framework.unittest.util.collections.Name, net.xp_framework.unittest.util.collections.Name>')->get(new Integer(1));
   }
 
   #[@test, @values('fixtures')]
@@ -184,7 +182,7 @@ class HashTableTest extends TestCase {
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function containsKey_illegal_type_in_argument() {
-    create('new util.collections.HashTable<lang.types.String, lang.types.String>')->containsKey(new Integer(1));
+    create('new util.collections.HashTable<net.xp_framework.unittest.util.collections.Name, net.xp_framework.unittest.util.collections.Name>')->containsKey(new Integer(1));
   }
 
   #[@test, @values('fixtures')]
@@ -200,7 +198,7 @@ class HashTableTest extends TestCase {
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function containsValue_illegal_type_in_argument() {
-    create('new util.collections.HashTable<lang.types.String, lang.types.String>')->containsValue(new Integer(1));
+    create('new util.collections.HashTable<net.xp_framework.unittest.util.collections.Name, net.xp_framework.unittest.util.collections.Name>')->containsValue(new Integer(1));
   }
 
   #[@test, @values('fixtures')]
@@ -237,7 +235,7 @@ class HashTableTest extends TestCase {
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function remove_illegal_type_in_argument() {
-    create('new util.collections.HashTable<lang.types.String, lang.types.String>')->remove(new Integer(1));
+    create('new util.collections.HashTable<net.xp_framework.unittest.util.collections.Name, net.xp_framework.unittest.util.collections.Name>')->remove(new Integer(1));
   }
 
   #[@test, @values('fixtures')]
@@ -370,8 +368,8 @@ class HashTableTest extends TestCase {
   #[@test]
   public function string_representation_of_generic_map() {
     $this->assertEquals(
-      'util.collections.HashTable<string,lang.types.String>[0] { }',
-      create('new util.collections.HashTable<string, lang.types.String>')->toString()
+      'util.collections.HashTable<string,net.xp_framework.unittest.util.collections.Name>[0] { }',
+      create('new util.collections.HashTable<string, net.xp_framework.unittest.util.collections.Name>')->toString()
     );
   }
 }

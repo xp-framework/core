@@ -4,6 +4,8 @@
  * The Short class wraps a value of the type short 
  * 
  * Range: -2^15 - (2^15)- 1
+ *
+ * @deprecated Wrapper types will move to their own library
  */
 class Short extends Number {
 

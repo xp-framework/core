@@ -17,6 +17,7 @@
  *   $c= $s[1];                             // "b"
  * </code>
  *
+ * @deprecated Wrapper types will move to their own library
  * @ext   iconv
  * @test  xp://net.xp_framework.unittest.core.types.CharacterTest
  */

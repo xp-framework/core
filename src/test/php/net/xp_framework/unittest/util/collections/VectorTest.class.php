@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\util\collections;
 
-use unittest\TestCase;
-use lang\types\String;
+use lang\Object;
+use lang\IllegalArgumentException;
 use lang\types\ArrayList;
 use util\collections\Vector;
 
@@ -10,7 +10,7 @@ use util\collections\Vector;
  *
  * @see  xp://util.collections.Vector
  */
-class VectorTest extends TestCase {
+class VectorTest extends \unittest\TestCase {
 
   #[@test]
   public function initiallyEmpty() {
@@ -24,7 +24,7 @@ class VectorTest extends TestCase {
   
   #[@test]
   public function nonEmptyVector() {
-    $v= new Vector([new \lang\Object()]);
+    $v= new Vector([new Object()]);
     $this->assertEquals(1, $v->size());
     $this->assertFalse($v->isEmpty());
   }
@@ -32,14 +32,14 @@ class VectorTest extends TestCase {
   #[@test]
   public function adding() {
     $v= new Vector();
-    $v->add(new \lang\Object());
+    $v->add(new Object());
     $this->assertEquals(1, $v->size());
   }
 
   #[@test]
   public function addAllArray() {
     $v= new Vector();
-    $this->assertTrue($v->addAll([new \lang\Object(), new \lang\Object()]));
+    $this->assertTrue($v->addAll([new Object(), new Object()]));
     $this->assertEquals(2, $v->size());
   }
 
@@ -47,8 +47,8 @@ class VectorTest extends TestCase {
   public function addAllVector() {
     $v1= new Vector();
     $v2= new Vector();
-    $v2->add(new \lang\Object());
-    $v2->add(new \lang\Object());
+    $v2->add(new Object());
+    $v2->add(new Object());
     $this->assertTrue($v1->addAll($v2));
     $this->assertEquals(2, $v1->size());
   }
@@ -56,7 +56,7 @@ class VectorTest extends TestCase {
   #[@test]
   public function addAllArrayList() {
     $v= new Vector();
-    $this->assertTrue($v->addAll(new ArrayList(new \lang\Object(), new \lang\Object())));
+    $this->assertTrue($v->addAll(new ArrayList(new Object(), new Object())));
     $this->assertEquals(2, $v->size());
   }
 
@@ -79,9 +79,9 @@ class VectorTest extends TestCase {
   public function unchangedAfterNullInAddAll() {
     $v= create('new util.collections.Vector<Object>()');
     try {
-      $v->addAll([new \lang\Object(), null]);
+      $v->addAll([new Object(), null]);
       $this->fail('addAll() did not throw an exception', null, 'lang.IllegalArgumentException');
-    } catch (\lang\IllegalArgumentException $expected) {
+    } catch (IllegalArgumentException $expected) {
     }
     $this->assertTrue($v->isEmpty());
   }
@@ -92,7 +92,7 @@ class VectorTest extends TestCase {
     try {
       $v->addAll(['hello', 5]);
       $this->fail('addAll() did not throw an exception', null, 'lang.IllegalArgumentException');
-    } catch (\lang\IllegalArgumentException $expected) {
+    } catch (IllegalArgumentException $expected) {
     }
     $this->assertTrue($v->isEmpty());
   }
@@ -105,32 +105,32 @@ class VectorTest extends TestCase {
   #[@test]
   public function replacing() {
     $v= new Vector();
-    $o= new String('one');
+    $o= new Name('one');
     $v->add($o);
-    $r= $v->set(0, new String('two'));
+    $r= $v->set(0, new Name('two'));
     $this->assertEquals(1, $v->size());
     $this->assertEquals($o, $r);
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function replacingWithNull() {
-    create('new util.collections.Vector<Object>', [new \lang\Object()])->set(0, null);
+    create('new util.collections.Vector<Object>', [new Object()])->set(0, null);
   }
 
   #[@test, @expect('lang.IndexOutOfBoundsException')]
   public function settingPastEnd() {
-    (new Vector())->set(0, new \lang\Object());
+    (new Vector())->set(0, new Object());
   }
 
   #[@test, @expect('lang.IndexOutOfBoundsException')]
   public function settingNegative() {
-    (new Vector())->set(-1, new \lang\Object());
+    (new Vector())->set(-1, new Object());
   }
 
   #[@test]
   public function reading() {
     $v= new Vector();
-    $o= new String('one');
+    $o= new Name('one');
     $v->add($o);
     $r= $v->get(0);
     $this->assertEquals($o, $r);
@@ -149,7 +149,7 @@ class VectorTest extends TestCase {
   #[@test]
   public function removing() {
     $v= new Vector();
-    $o= new String('one');
+    $o= new Name('one');
     $v->add($o);
     $r= $v->remove(0);
     $this->assertEquals(0, $v->size());
@@ -168,7 +168,7 @@ class VectorTest extends TestCase {
 
   #[@test]
   public function clearing() {
-    $v= new Vector([new String('Goodbye cruel world')]);
+    $v= new Vector([new Name('Goodbye cruel world')]);
     $this->assertFalse($v->isEmpty());
     $v->clear();
     $this->assertTrue($v->isEmpty());
@@ -181,55 +181,55 @@ class VectorTest extends TestCase {
 
   #[@test]
   public function elementsOf() {
-    $el= [new String('a'), new \lang\Object()];
+    $el= [new Name('a'), new Object()];
     $this->assertEquals($el, (new Vector($el))->elements());
   }
 
   #[@test]
-  public function addedStringIsContained() {
+  public function addedNameIsContained() {
     $v= new Vector();
-    $o= new String('one');
+    $o= new Name('one');
     $v->add($o);
     $this->assertTrue($v->contains($o));
   }
 
   #[@test]
-  public function emptyVectorDoesNotContainString() {
-    $this->assertFalse((new Vector())->contains(new \lang\Object()));
+  public function emptyVectorDoesNotContainName() {
+    $this->assertFalse((new Vector())->contains(new Object()));
   }
 
   #[@test]
   public function indexOfOnEmptyVector() {
-    $this->assertFalse((new Vector())->indexOf(new \lang\Object()));
+    $this->assertFalse((new Vector())->indexOf(new Object()));
   }
 
   #[@test]
   public function indexOf() {
-    $a= new String('A');
+    $a= new Name('A');
     $this->assertEquals(0, (new Vector([$a]))->indexOf($a));
   }
 
   #[@test]
   public function indexOfElementContainedTwice() {
-    $a= new String('A');
-    $this->assertEquals(0, (new Vector([$a, new \lang\Object(), $a]))->indexOf($a));
+    $a= new Name('A');
+    $this->assertEquals(0, (new Vector([$a, new Object(), $a]))->indexOf($a));
   }
 
   #[@test]
   public function lastIndexOfOnEmptyVector() {
-    $this->assertFalse((new Vector())->lastIndexOf(new \lang\Object()));
+    $this->assertFalse((new Vector())->lastIndexOf(new Object()));
   }
 
   #[@test]
   public function lastIndexOf() {
-    $a= new String('A');
+    $a= new Name('A');
     $this->assertEquals(0, (new Vector([$a]))->lastIndexOf($a));
   }
 
   #[@test]
   public function lastIndexOfElementContainedTwice() {
-    $a= new String('A');
-    $this->assertEquals(2, (new Vector([$a, new \lang\Object(), $a]))->lastIndexOf($a));
+    $a= new Name('A');
+    $this->assertEquals(2, (new Vector([$a, new Object(), $a]))->lastIndexOf($a));
   }
 
   #[@test]
@@ -244,7 +244,7 @@ class VectorTest extends TestCase {
   public function stringOf() {
     $this->assertEquals(
       "util.collections.Vector[2]@{\n  0: One\n  1: Two\n}",
-      (new Vector([new String('One'), new String('Two')]))->toString()
+      (new Vector([new Name('One'), new Name('Two')]))->toString()
     );
   }
 
@@ -252,13 +252,13 @@ class VectorTest extends TestCase {
   public function iteration() {
     $v= new Vector();
     for ($i= 0; $i < 5; $i++) {
-      $v->add(new String('#'.$i));
+      $v->add(new Name('#'.$i));
     }
     
     $i= 0;
     foreach ($v as $offset => $string) {
       $this->assertEquals($offset, $i);
-      $this->assertEquals(new String('#'.$i), $string);
+      $this->assertEquals(new Name('#'.$i), $string);
       $i++;
     }
   }
@@ -270,14 +270,14 @@ class VectorTest extends TestCase {
 
   #[@test]
   public function sameVectorsAreEqual() {
-    $a= new Vector([new String('One'), new String('Two')]);
+    $a= new Vector([new Name('One'), new Name('Two')]);
     $this->assertTrue($a->equals($a));
   }
 
   #[@test]
   public function vectorsWithSameContentsAreEqual() {
-    $a= new Vector([new String('One'), new String('Two')]);
-    $b= new Vector([new String('One'), new String('Two')]);
+    $a= new Vector([new Name('One'), new Name('Two')]);
+    $b= new Vector([new Name('One'), new Name('Two')]);
     $this->assertTrue($a->equals($b));
   }
 
@@ -288,13 +288,13 @@ class VectorTest extends TestCase {
 
   #[@test]
   public function twoVectorsOfDifferentSizeAreNotEqual() {
-    $this->assertFalse((new Vector([new \lang\Object()]))->equals(new Vector()));
+    $this->assertFalse((new Vector([new Object()]))->equals(new Vector()));
   }
 
   #[@test]
   public function orderMattersForEquality() {
-    $a= [new String('a'), new String('b')];
-    $b= [new String('b'), new String('a')];
+    $a= [new Name('a'), new Name('b')];
+    $b= [new Name('b'), new Name('a')];
     $this->assertFalse((new Vector($a))->equals(new Vector($b)));
   }
 }

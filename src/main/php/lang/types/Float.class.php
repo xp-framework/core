@@ -2,6 +2,8 @@
 
 /**
  * The Float class wraps a value of the type float
+ *
+ * @deprecated Wrapper types will move to their own library
  */
 class Float extends Number {
 
