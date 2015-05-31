@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use net\xp_framework\unittest\Name;
+
 /**
  * Tests the xp::stringOf() core utility
  *
@@ -15,9 +17,9 @@ class StringOfTest extends \unittest\TestCase {
    * @return lang.Object
    */
   protected function testStringInstance() {
-    return newinstance('lang.Object', [], array(
+    return newinstance('lang.Object', [], [
       'toString' => function() { return 'TestString(6) { String }'; }
-    ));
+    ]);
   }
 
   #[@test, @values([
@@ -40,6 +42,11 @@ class StringOfTest extends \unittest\TestCase {
   #[@test]
   public function testString_representation() {
     $this->assertEquals('TestString(6) { String }', \xp::stringOf($this->testStringInstance()));
+  }
+
+  #[@test]
+  public function value_representation() {
+    $this->assertEquals('value_representation', \xp::stringOf(new Name($this->name)));
   }
 
   #[@test]

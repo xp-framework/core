@@ -1,8 +1,8 @@
 <?php namespace net\xp_framework\unittest\core\types;
 
-use unittest\TestCase;
 use lang\types\ArrayList;
 use lang\IndexOutOfBoundsException;
+use net\xp_framework\unittest\Name;
 
 /**
  * Tests the ArrayList class
@@ -10,7 +10,7 @@ use lang\IndexOutOfBoundsException;
  * @deprecated Wrapper types will move to their own library
  * @see  xp://lang.types.ArrayList
  */
-class ArrayListTest extends TestCase {
+class ArrayListTest extends \unittest\TestCase {
 
   #[@test]
   public function a_newly_created_arraylist_has_zero_length() {
@@ -192,6 +192,12 @@ class ArrayListTest extends TestCase {
   #[@test]
   public function a_list_of_an_object_contains_the_given_object() {
     $o= new \lang\Object();
+    $this->assertTrue((new ArrayList($o))->contains($o));
+  }
+
+  #[@test]
+  public function a_list_of_an_value_contains_the_given_value() {
+    $o= new Name('Test');
     $this->assertTrue((new ArrayList($o))->contains($o));
   }
 

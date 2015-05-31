@@ -1,14 +1,14 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use unittest\TestCase;
 use util\Objects;
+use net\xp_framework\unittest\Name;
 
 /**
  * TestCase for Objects class
  *
  * @see  xp://util.Objects
  */
-class ObjectsTest extends TestCase {
+class ObjectsTest extends \unittest\TestCase {
 
   /** @return  var[][] */
   public function primitives() {
@@ -43,7 +43,8 @@ class ObjectsTest extends TestCase {
       [$this],
       [new \lang\Object()],
       [new \lang\types\String('')],
-      [new \lang\types\String('Test')]
+      [new \lang\types\String('Test')],
+      [new Name('')]
     ];
   }
 

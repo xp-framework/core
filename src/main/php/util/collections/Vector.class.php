@@ -239,6 +239,10 @@ class Vector extends \lang\Object implements IList {
       foreach ($this->elements as $i => $compare) {
         if ($element->equals($compare)) return true;
       }
+    } else if ($element instanceof Value) {
+      foreach ($this->elements as $i => $compare) {
+        if (0 === $element->compareTo($compare)) return true;
+      }
     } else {
       foreach ($this->elements as $i => $compare) {
         if ($element === $compare) return true;
@@ -259,6 +263,10 @@ class Vector extends \lang\Object implements IList {
       foreach ($this->elements as $i => $compare) {
         if ($element->equals($compare)) return $i;
       }
+    } else if ($element instanceof Value) {
+      foreach ($this->elements as $i => $compare) {
+        if (0 === $element->compareTo($compare)) return $i;
+      }
     } else {
       foreach ($this->elements as $i => $compare) {
         if ($element === $compare) return $i;
@@ -278,6 +286,10 @@ class Vector extends \lang\Object implements IList {
     if ($element instanceof Generic) {
       for ($i= $this->size- 1; $i > -1; $i--) {
         if ($element->equals($this->elements[$i])) return $i;
+      }
+    } else if ($element instanceof Value) {
+      for ($i= $this->size- 1; $i > -1; $i--) {
+        if (0 === $element->compareTo($this->elements[$i])) return $i;
       }
     } else {
       for ($i= $this->size- 1; $i > -1; $i--) {
@@ -312,6 +324,7 @@ class Vector extends \lang\Object implements IList {
     // Compare element by element
     foreach ($this->elements as $i => $element) {
       if ($element instanceof Generic && !$element->equals($cmp->elements[$i])) return false;
+      if ($element instanceof Value && 0 !== $element->compareTo($cmp->elements[$i])) return false;
       if ($element !== $this->elements[$i]) return false;
     }
     return true;

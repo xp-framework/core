@@ -1,6 +1,7 @@
 <?php namespace unittest;
 
 use lang\Generic;
+use lang\Value;
 
 /**
  * The message for an assertion failure
@@ -78,6 +79,9 @@ class ComparisonFailedMessage extends \lang\Object implements AssertionFailedMes
     } else if ($this->expect instanceof Generic && $this->actual instanceof Generic) {
       $expect= $this->stringOf($this->expect, null);
       $actual= $this->stringOf($this->actual, null);
+    } else if ($this->expect instanceof Value && $this->actual instanceof Value) {
+      $expect= $this->expect->toString();
+      $actual= $this->actual->toString();
     } else {
       $te= \xp::typeOf($this->expect);
       $ta= \xp::typeOf($this->actual);

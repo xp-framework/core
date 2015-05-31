@@ -2,6 +2,7 @@
  
 use lang\types\String;
 use lang\types\ArrayList;
+use net\xp_framework\unittest\Name;
 
 /**
  * Test assertion methods
@@ -103,9 +104,14 @@ class AssertionsTest extends \unittest\TestCase {
     $this->assertEquals($hash, array_reverse($hash, true), \xp::stringOf($hash));
   }    
 
-  #[@test, @values([new String(''), new String('Hello'), new String('äöüß')])]
+  #[@test, @values(['', 'Hello','äöüß'])]
   public function stringObjectsAreEqual($str) {
-    $this->assertEquals($str, $str);
+    $this->assertEquals(new String($str), new String($str));
+  }
+
+  #[@test, @values(['', 'Hello','äöüß'])]
+  public function valuesAreEqual($str) {
+    $this->assertEquals(new Name($str), new Name($str));
   }
 
   #[@test, @expect('unittest.AssertionFailedError')]

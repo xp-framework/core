@@ -1,8 +1,8 @@
 <?php namespace net\xp_framework\unittest\core\types;
 
-use unittest\TestCase;
 use lang\types\ArrayMap;
 use lang\IndexOutOfBoundsException;
+use net\xp_framework\unittest\Name;
 
 /**
  * Tests the ArrayMap class
@@ -10,7 +10,7 @@ use lang\IndexOutOfBoundsException;
  * @deprecated Wrapper types will move to their own library
  * @see  xp://lang.types.ArrayMap
  */
-class ArrayMapTest extends TestCase {
+class ArrayMapTest extends \unittest\TestCase {
 
   /** @return  var[][] */
   protected function fixtures() {
@@ -134,6 +134,12 @@ class ArrayMapTest extends TestCase {
   #[@test]
   public function a_map_of_an_object_contains_the_given_object() {
     $o= new \lang\Object();
+    $this->assertTrue((new ArrayMap(['key' => $o]))->contains($o));
+  }
+
+  #[@test]
+  public function a_map_of_an_object_contains_the_given_value() {
+    $o= new Name('Test');
     $this->assertTrue((new ArrayMap(['key' => $o]))->contains($o));
   }
 
