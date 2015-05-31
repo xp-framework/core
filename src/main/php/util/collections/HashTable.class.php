@@ -2,6 +2,7 @@
 
 use lang\Primitive;
 use lang\Generic;
+use lang\Value;
 
 /**
  * Hash table consisting of non-null objects as keys and values
@@ -100,7 +101,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    */
   #[@generic(params= 'K, V', return= 'V')]
   public function put($key, $value) {
-    $h= $key instanceof Generic ? $key->hashCode() : serialize($key);
+    $h= $key instanceof Generic || $key instanceof Value ? $key->hashCode() : serialize($key);
     if (!isset($this->_buckets[$h])) {
       $previous= null;
     } else {
@@ -108,7 +109,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
     }
 
     $this->_buckets[$h]= array($key, $value);
-    $this->_hash+= HashProvider::hashOf($h.($value instanceof Generic ? $value->hashCode() : serialize($value)));
+    $this->_hash+= HashProvider::hashOf($h.($value instanceof Generic || $value instanceof Value ? $value->hashCode() : serialize($value)));
     return $previous;
   }
 
@@ -121,7 +122,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    */
   #[@generic(params= 'K', return= 'V')]
   public function get($key) {
-    $h= $key instanceof Generic ? $key->hashCode() : serialize($key);
+    $h= $key instanceof Generic || $key instanceof Value ? $key->hashCode() : serialize($key);
     return isset($this->_buckets[$h]) ? $this->_buckets[$h][1] : null; 
   }
   
@@ -135,12 +136,12 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    */
   #[@generic(params= 'K', return= 'V')]
   public function remove($key) {
-    $h= $key instanceof Generic ? $key->hashCode() : serialize($key);
+    $h= $key instanceof Generic || $key instanceof Value ? $key->hashCode() : serialize($key);
     if (!isset($this->_buckets[$h])) {
       $prev= null;
     } else {
       $prev= $this->_buckets[$h][1];
-      $this->_hash-= HashProvider::hashOf($h.($prev instanceof Generic ? $prev->hashCode() : serialize($prev)));
+      $this->_hash-= HashProvider::hashOf($h.($prev instanceof Generic || $prev instanceof Value ? $prev->hashCode() : serialize($prev)));
       unset($this->_buckets[$h]);
     }
 
@@ -182,7 +183,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    */
   #[@generic(params= 'K')]
   public function containsKey($key) {
-    $h= $key instanceof Generic ? $key->hashCode() : serialize($key);
+    $h= $key instanceof Generic || $key instanceof Value ? $key->hashCode() : serialize($key);
     return isset($this->_buckets[$h]);
   }
 
@@ -194,7 +195,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
    */
   #[@generic(params= 'V')]
   public function containsValue($value) {
-    if ($value instanceof Generic) {
+    if ($value instanceof Generic || $value instanceof Value) {
       foreach (array_keys($this->_buckets) as $key) {
         if ($value->equals($this->_buckets[$key][1])) return true;
       }
