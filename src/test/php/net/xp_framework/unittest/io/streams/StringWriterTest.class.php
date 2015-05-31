@@ -34,16 +34,16 @@ class StringWriterTest extends TestCase {
    * @return var[] args
    */
   protected function values() {
-    return array(
-      array('1', 1), array('0', 0), array('-1', -1),
-      array('1', 1.0), array('0', 0.0), array('-1', -1.0), array('0.5', 0.5),
-      array('true', true), array('false', false),
-      array('Test', 'Test'), array('', ''),
-      array("[\n]", []), array("[1, 2, 3]", [1, 2, 3]),
-      array("[\n  a => \"b\"\n  c => \"d\"\n]", array('a' => 'b', 'c' => 'd')),
-      array('Test', new String('Test')),
-      array('Test', newinstance('lang.Object', [], array('toString' => function() { return 'Test'; } )))
-    );
+    return [
+      ['1', 1], ['0', 0], ['-1', -1],
+      ['1', 1.0], ['0', 0.0], ['-1', -1.0], ['0.5', 0.5],
+      ['true', true], ['false', false],
+      ['Test', 'Test'], ['', ''],
+      ["[\n]", []], ["[1, 2, 3]", [1, 2, 3]],
+      ["[\n  a => \"b\"\n  c => \"d\"\n]", ['a' => 'b', 'c' => 'd']],
+      ['Test', new String('Test')],
+      ['Test', newinstance('lang.Object', [], ['toString' => function() { return 'Test'; } ])]
+    ];
   }
 
   #[@test, @values('values')]
