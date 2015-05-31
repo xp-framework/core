@@ -1,5 +1,7 @@
 <?php namespace util\collections;
 
+use util\Objects;
+
 /**
  * Provides key and value for iteration
  *
@@ -32,11 +34,7 @@ class Pair extends \lang\Object {
    * @return bool
    */
   public function equals($cmp) {
-    return (
-      $cmp instanceof self &&
-      ($cmp->key instanceof \lang\Generic ? $cmp->key->equals($this->key) : $cmp->key === $this->key) &&
-      ($cmp->value instanceof \lang\Generic ? $cmp->value->equals($this->value) : $cmp->value === $this->value)
-    );
+    return $cmp instanceof self && Objects::equal($cmp->key, $this->key);
   }
 
   /**
@@ -46,8 +44,8 @@ class Pair extends \lang\Object {
    */
   public function hashCode() {
     return (
-      HashProvider::hashOf($this->key instanceof \lang\Generic ? $this->key->hashCode() : serialize($this->key)) +
-      HashProvider::hashOf($this->value instanceof \lang\Generic ? $this->value->hashCode() : serialize($this->value))
+      HashProvider::hashOf(Objects::hashOf($this->key)) +
+      HashProvider::hashOf(Objects::hashOf($this->value))
     );
   }
 
@@ -57,6 +55,6 @@ class Pair extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return nameof($this).'<key= '.\xp::stringOf($this->key).', value= '.\xp::stringOf($this->value).'>';
+    return nameof($this).'<key= '.Objects::stringOf($this->key).', value= '.Objects::stringOf($this->value).'>';
   }
 }
