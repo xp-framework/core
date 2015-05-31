@@ -19,7 +19,7 @@ class TextWriter extends Writer {
    * Constructor. Creates a new TextWriter on an underlying output
    * stream with a given charset.
    *
-   * @param   var $arg Either an output stream or an I/O channel
+   * @param   io.streams.OutputStream|io.Channel $arg The target
    * @param   string $charset the charset the stream is encoded in.
    * @throws  lang.IllegalArgumentException
    */

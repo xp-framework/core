@@ -22,7 +22,7 @@ class TextReader extends Reader {
    * Constructor. Creates a new TextReader on an underlying input
    * stream with a given charset.
    *
-   * @param   var $arg Either an input stream, a string or an I/O channel
+   * @param   io.streams.InputStream|io.Channel|string $arg The input source
    * @param   string $charset the charset the stream is encoded in or NULL to trigger autodetection by BOM
    * @throws  lang.IllegalArgumentException
    */

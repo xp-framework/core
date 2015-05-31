@@ -16,7 +16,7 @@ class LinesIn extends \lang\Object implements \Iterator {
   /**
    * Creates a new lines instance
    *
-   * @param  var $arg Either TextReader, a channel, a string or an input stream
+   * @param  io.streams.TextReader|io.streams.InputStrean|io.Channel|string $arg Input
    * @param  string $charset Not taken into account when created by a TextReader
    * @param  bool $reset Whether to start from the beginning (default: true)
    * @throws lang.IllegalArgumentException
