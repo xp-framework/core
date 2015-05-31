@@ -7,6 +7,7 @@ use lang\Primitive;
 use lang\Type;
 use lang\XPClass;
 use lang\types\Integer;
+use lang\types\String;
 
 /**
  * TestCase
