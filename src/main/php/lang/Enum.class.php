@@ -85,7 +85,7 @@ abstract class Enum extends Object {
     $r= [];
     $c= new \ReflectionClass(get_called_class());
     foreach ($c->getStaticProperties() as $prop) {
-      if ($prop instanceof Generic && $c->isInstance($prop)) {
+      if ($prop instanceof self && $c->isInstance($prop)) {
         $r[]= $prop;
       }
     }
