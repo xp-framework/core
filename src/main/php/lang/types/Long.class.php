@@ -4,6 +4,8 @@
  * The Long class wraps a value of the type long 
  * 
  * Range: -2^63 - (2^63)- 1
+ *
+ * @deprecated Wrapper types will move to their own library
  */
 class Long extends Number {
 

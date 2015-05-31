@@ -8,6 +8,7 @@ use lang\types\Bytes;
 /**
  * TestCase
  *
+ * @deprecated Wrapper types will move to their own library
  * @see  xp://lang.types.Character
  */
 class CharacterTest extends TestCase {

@@ -5,6 +5,7 @@ use lang\types\String;
 /**
  * TestCase for String class
  *
+ * @deprecated Wrapper types will move to their own library
  * @see   xp://lang.types.String
  */
 class StringTest extends \unittest\TestCase {

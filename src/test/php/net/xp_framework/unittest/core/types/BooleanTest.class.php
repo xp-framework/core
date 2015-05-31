@@ -7,6 +7,7 @@ use lang\types\Boolean;
 /**
  * Tests the boolean wrapper type
  *
+ * @deprecated Wrapper types will move to their own library
  * @see      xp://lang.types.Boolean
  */
 class BooleanTest extends TestCase {

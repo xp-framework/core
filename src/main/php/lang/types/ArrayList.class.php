@@ -7,6 +7,7 @@ use lang\IllegalArgumentException;
  * Represents a "numeric" array
  *
  * @test   xp://net.xp_framework.unittest.core.types.ArrayListTest
+ * @deprecated Wrapper types will move to their own library
  */
 class ArrayList extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
   public

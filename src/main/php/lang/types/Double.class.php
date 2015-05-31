@@ -2,6 +2,8 @@
 
 /**
  * The Double class wraps a value of the type double
+ *
+ * @deprecated Wrapper types will move to their own library
  */
 class Double extends Number {
 

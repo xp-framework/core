@@ -10,6 +10,7 @@ use lang\types\Double;
 /**
  * Tests the number wrapper typess
  *
+ * @deprecated Wrapper types will move to their own library
  * @see   xp://lang.types.Number
  * @see   xp://lang.types.Byte
  * @see   xp://lang.types.Short

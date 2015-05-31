@@ -7,6 +7,7 @@ use lang\MethodNotImplementedException;
  * numbers
  *
  * @test  xp://net.xp_framework.unittest.core.types.NumberTest
+ * @deprecated Wrapper types will move to their own library
  */
 abstract class Number extends \lang\Object {
   public $value = '';
