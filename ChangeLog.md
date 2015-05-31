@@ -12,6 +12,13 @@ XP Framework Core ChangeLog
   See xp-framework/core#84
   (@thekid)
 
+### RFCs
+
+* Implemented first part of xp-framework/rfc#297: Added new `lang.Value`
+  interface and support for it throughout the framnework as a forward-
+  compatibility measure. See xp-framework/core#85
+  (@thekid)
+
 ### Features
 
 * Merged xp-framework/core#76: Implement type unions. Instead of using
