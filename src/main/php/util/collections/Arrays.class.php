@@ -2,6 +2,8 @@
 
 use lang\types\ArrayList;
 use util\Comparator;
+use lang\Generic;
+use lang\Value;
 
 /**
  * Various methods for working with arrays.
@@ -70,9 +72,13 @@ abstract class Arrays extends \lang\Object {
    * @return  bool
    */
   public static function contains(ArrayList $array, $search) {
-    if ($search instanceof \lang\Generic) {
+    if ($search instanceof eneric) {
       foreach ($array->values as $value) {
         if ($search->equals($value)) return true;
+      }
+    } else if ($search instanceof Value) {
+      foreach ($array->values as $value) {
+        if (0 === $search->compareTo($value)) return true;
       }
     } else {
       foreach ($array->values as $value) {
