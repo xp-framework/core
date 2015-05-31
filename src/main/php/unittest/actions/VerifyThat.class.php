@@ -1,23 +1,22 @@
 <?php namespace unittest\actions;
 
-use unittest\TestAction;
-use unittest\TestClassAction;
 use unittest\TestCase;
 use unittest\PrerequisitesNotMetError;
+use lang\Throwable;
 
 /**
  * Verifies a certain callable works
  *
  * @test  xp://net.xp_framework.unittest.tests.VerifyThatTest
  */
-class VerifyThat extends \lang\Object implements TestAction, TestClassAction {
+class VerifyThat extends \lang\Object implements \unittest\TestAction, \unittest\TestClassAction {
   protected $verify;
   protected $prerequisite;
 
   /**
    * Create a new verification
    *
-   * @param  var callable
+   * @param  (function(): var)|string $callable
    */
   public function __construct($callable) {
     if ($callable instanceof \Closure) {
@@ -48,7 +47,7 @@ class VerifyThat extends \lang\Object implements TestAction, TestClassAction {
   public function beforeTest(TestCase $t) {
     try {
       $verified= $this->verify->bindTo($t, $t)->__invoke();
-    } catch (\lang\Throwable $e) {
+    } catch (Throwable $e) {
       throw new PrerequisitesNotMetError('Verification raised '.$e->compoundMessage(), null, [$this->prerequisite]);
     }
 
