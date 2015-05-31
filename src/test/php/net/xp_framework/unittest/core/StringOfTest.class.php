@@ -22,16 +22,6 @@ class StringOfTest extends \unittest\TestCase {
     ]);
   }
 
-  /**
-   * Returns a value also returning the string `TestValue(6) { String }`.
-   *
-   * @return lang.Value
-   */
-  protected function valueInstance() {
-    return new Name($this->name);
-
-  }
-
   #[@test, @values([
   #  ['""', ''], ['"Hello"', 'Hello'],
   #  ['true', true], ['false', false],
@@ -56,7 +46,7 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function value_representation() {
-    $this->assertEquals('value_representation', \xp::stringOf($this->valueInstance()));
+    $this->assertEquals('value_representation', \xp::stringOf(new Name($this->name)));
   }
 
   #[@test]
