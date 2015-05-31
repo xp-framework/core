@@ -35,6 +35,7 @@ class Primitive extends Type {
   /**
    * Returns the wrapper class for this primitive
    *
+   * @deprecated Wrapper types will move to their own library
    * @see     http://en.wikipedia.org/wiki/Wrapper_class
    * @return  lang.XPClass
    */
@@ -50,6 +51,7 @@ class Primitive extends Type {
   /**
    * Boxes a type - that is, turns Generics into primitives
    *
+   * @deprecated Wrapper types will move to their own library
    * @param   var in
    * @return  var the primitive if not already primitive
    * @throws  lang.IllegalArgumentException in case in cannot be unboxed.
@@ -69,6 +71,7 @@ class Primitive extends Type {
   /**
    * Boxes a type - that is, turns primitives into Generics
    *
+   * @deprecated Wrapper types will move to their own library
    * @param   var in
    * @return  lang.Generic the Generic if not already generic
    * @throws  lang.IllegalArgumentException in case in cannot be boxed.

@@ -49,43 +49,51 @@ class PrimitiveTest extends TestCase {
     Primitive::forName('lang.Object');
   }
 
+  /** @deprecated Wrapper types will move to their own library */
   #[@test]
   public function boxString() {
     $this->assertEquals(new String('Hello'), Primitive::boxed('Hello'));
   }
 
+  /** @deprecated Wrapper types will move to their own library */
   #[@test]
   public function boxInteger() {
     $this->assertEquals(new Integer(1), Primitive::boxed(1));
   }
 
+  /** @deprecated Wrapper types will move to their own library */
   #[@test]
   public function boxDouble() {
     $this->assertEquals(new Double(1.0), Primitive::boxed(1.0));
   }
 
+  /** @deprecated Wrapper types will move to their own library */
   #[@test]
   public function boxBoolean() {
     $this->assertEquals(Boolean::$TRUE, Primitive::boxed(true), 'true');
     $this->assertEquals(Boolean::$FALSE, Primitive::boxed(false), 'false');
   }
 
+  /** @deprecated Wrapper types will move to their own library */
   #[@test]
   public function boxArray() {
     $this->assertEquals(new ArrayList(1, 2, 3), Primitive::boxed([1, 2, 3]));
   }
 
+  /** @deprecated Wrapper types will move to their own library */
   #[@test]
   public function boxObject() {
     $o= new \lang\Object();
     $this->assertEquals($o, Primitive::boxed($o));
   }
 
+  /** @deprecated Wrapper types will move to their own library */
   #[@test]
   public function boxNull() {
     $this->assertEquals(null, Primitive::boxed(null));
   }
 
+  /** @deprecated Wrapper types will move to their own library */
   #[@test]
   public function boxResource() {
     $fd= Streams::readableFd(new MemoryInputStream('test'));
@@ -100,42 +108,50 @@ class PrimitiveTest extends TestCase {
     $this->fail('Expected exception not caught', null, 'lang.IllegalArgumentException');
   }
 
+  /** @deprecated Wrapper types will move to their own library */
   #[@test]
   public function unboxString() {
     $this->assertEquals('Hello', Primitive::unboxed(new String('Hello')));
   }
 
+  /** @deprecated Wrapper types will move to their own library */
   #[@test]
   public function unboxInteger() {
     $this->assertEquals(1, Primitive::unboxed(new Integer(1)));
   }
 
+  /** @deprecated Wrapper types will move to their own library */
   #[@test]
   public function unboxDouble() {
     $this->assertEquals(1.0, Primitive::unboxed(new Double(1.0)));
   }
 
+  /** @deprecated Wrapper types will move to their own library */
   #[@test]
   public function unboxBoolean() {
     $this->assertEquals(true, Primitive::unboxed(Boolean::$TRUE), 'true');
     $this->assertEquals(false, Primitive::unboxed(Boolean::$FALSE), 'false');
   }
 
+  /** @deprecated Wrapper types will move to their own library */
   #[@test]
   public function unboxArray() {
     $this->assertEquals([1, 2, 3], Primitive::unboxed(new ArrayList(1, 2, 3)));
   }
 
+  /** @deprecated Wrapper types will move to their own library */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function unboxObject() {
     Primitive::unboxed(new \lang\Object());
   }
 
+  /** @deprecated Wrapper types will move to their own library */
   #[@test]
   public function unboxNull() {
     $this->assertEquals(null, Primitive::unboxed(null));
   }
 
+  /** @deprecated Wrapper types will move to their own library */
   #[@test]
   public function unboxPrimitive() {
     $this->assertEquals(1, Primitive::unboxed(1));
