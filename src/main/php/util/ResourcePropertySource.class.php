@@ -83,6 +83,6 @@ class ResourcePropertySource extends \lang\Object implements PropertySource {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'<'.$this->root.'>';
+    return nameof($this).'<'.$this->root.'>';
   }
 }

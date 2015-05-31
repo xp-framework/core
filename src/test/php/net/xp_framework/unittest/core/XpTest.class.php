@@ -100,6 +100,6 @@ class XpTest extends \unittest\TestCase {
 
   #[@test]
   public function literal_of_this() {
-    $this->assertEquals(__CLASS__, literal($this->getClassName()));
+    $this->assertEquals(__CLASS__, literal(nameof($this)));
   }
 }

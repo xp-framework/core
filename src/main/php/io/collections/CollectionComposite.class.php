@@ -95,6 +95,6 @@ class CollectionComposite extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'(->@'.$this->_current.') '.\xp::stringOf($this->collections);
+    return nameof($this).'(->@'.$this->_current.') '.\xp::stringOf($this->collections);
   }    
 }

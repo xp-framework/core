@@ -109,6 +109,6 @@ class Checksum extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'('.$this->value.')';
+    return nameof($this).'('.$this->value.')';
   }
 }

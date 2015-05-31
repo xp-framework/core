@@ -37,16 +37,6 @@ class StackTraceElement extends Object {
   }
   
   /**
-   * Returns qualified class name
-   *
-   * @param   string class unqualified name
-   * @return  string
-   */
-  protected function qualifiedClassName($class) {
-    return \xp::nameOf($class);
-  }
-  
-  /**
    * Create string representation
    *
    * @return  string
@@ -60,7 +50,7 @@ class StackTraceElement extends Object {
         } else if ($arg instanceof \Closure) {
           $args[]= \xp::stringOf($arg);
         } else if (is_object($arg)) {
-          $args[]= $this->qualifiedClassName(get_class($arg)).'{}';
+          $args[]= nameof($arg).'{}';
         } else if (is_string($arg)) {
           $display= str_replace('%', '%%', addcslashes(substr($arg, 0, min(
             (false === $p= strpos($arg, "\n")) ? 0x40 : $p,
@@ -80,7 +70,7 @@ class StackTraceElement extends Object {
     }
     return sprintf(
       "  at %s::%s(%s) [line %d of %s] %s\n",
-      isset($this->class) ? $this->qualifiedClassName($this->class) : '<main>',
+      isset($this->class) ? XPClass::nameOf($this->class) : '<main>',
       isset($this->method) ? $this->method : '<main>',
       implode(', ', $args),
       $this->line,
@@ -96,6 +86,6 @@ class StackTraceElement extends Object {
    * @return  bool
    */
   public function equals($cmp) {
-    return $cmp instanceof self && $this->toString() == $cmp->toString();
+    return $cmp instanceof self && $this->toString() === $cmp->toString();
   }
 }

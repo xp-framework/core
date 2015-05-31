@@ -293,7 +293,7 @@ class Archive extends \lang\Object {
   public function toString() {
     return sprintf(
       '%s(version= %s, index size= %d) { %s }',
-      $this->getClassName(),
+      nameof($this),
       $this->version,
       sizeof($this->_index),
       \xp::stringOf($this->file)

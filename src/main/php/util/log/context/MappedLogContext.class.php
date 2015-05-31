@@ -82,7 +82,7 @@ class MappedLogContext extends \lang\Object implements Context {
    * @return string
    */
   public function toString() {
-    $s= $this->getClassName().'{';
+    $s= nameof($this).'{';
     $s.= 0 === count($this->queue) ? '' : "\n";
     foreach ($this->queue as $key => $info) {
       $s.= '  '.$key.'='.$info."\n";

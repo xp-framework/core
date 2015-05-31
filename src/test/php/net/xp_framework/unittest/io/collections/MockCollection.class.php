@@ -134,7 +134,7 @@ class MockCollection extends \lang\Object implements IOCollection {
    * @return  string
    */
   public function toString() { 
-    return $this->getClassName().'('.$this->uri.')';
+    return nameof($this).'('.$this->uri.')';
   }
 
   /**

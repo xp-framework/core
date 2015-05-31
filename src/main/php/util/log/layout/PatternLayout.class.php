@@ -87,6 +87,6 @@ class PatternLayout extends \util\log\Layout {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'("'.implode('', $this->format).'")';
+    return nameof($this).'("'.implode('', $this->format).'")';
   }
 }

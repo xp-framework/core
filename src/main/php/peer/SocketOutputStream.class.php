@@ -48,6 +48,6 @@ class SocketOutputStream extends \lang\Object implements \io\streams\SocketOutpu
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'<'.$this->socket->toString().'>';
+    return nameof($this).'<'.$this->socket->toString().'>';
   }
 }

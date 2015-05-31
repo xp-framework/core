@@ -89,7 +89,7 @@ class XPClass extends Type {
     } else {
       $this->_class= (string)$ref;
     }
-    parent::__construct(\xp::nameOf($this->_class), null);
+    parent::__construct(self::nameOf($this->_class), null);
   }
 
   /**
@@ -122,7 +122,24 @@ class XPClass extends Type {
     }
     return $this->_reflect;
   }
-  
+
+  /**
+   * Returns XP name of a given PHP name.
+   *
+   * @param  string $class
+   * @return string
+   */
+  public static function nameOf($class) {
+    if (isset(\xp::$cn[$class])) {
+      return \xp::$cn[$class];
+    } else if (strstr($class, '\\')) {
+      return strtr($class, '\\', '.');
+    } else {
+      $name= array_search($class, \xp::$sn, true);
+      return false === $name ? $class : $name;
+    }
+  }
+
   /**
    * Returns simple name
    *
@@ -693,7 +710,7 @@ class XPClass extends Type {
    * @return  array or NULL if not available
    */
   public static function detailsForMethod($class, $method) {
-    $details= self::detailsForClass(\xp::nameOf($class));
+    $details= self::detailsForClass(self::nameOf($class));
     return $details ? (isset($details[1][$method]) ? $details[1][$method] : null) : null;
   }
 
@@ -706,7 +723,7 @@ class XPClass extends Type {
    * @return  array or NULL if not available
    */
   public static function detailsForField($class, $field) {
-    $details= self::detailsForClass(\xp::nameOf($class));
+    $details= self::detailsForClass(self::nameOf($class));
     return $details ? (isset($details[0][$field]) ? $details[0][$field] : null) : null;
   }
 

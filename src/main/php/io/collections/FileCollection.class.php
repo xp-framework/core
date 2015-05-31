@@ -140,7 +140,7 @@ class FileCollection extends \lang\Object implements IOCollection, RandomCollect
    * @return  string
    */
   public function toString() { 
-    return $this->getClassName().'('.$this->uri.')';
+    return nameof($this).'('.$this->uri.')';
   }
 
   /**

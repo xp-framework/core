@@ -18,7 +18,7 @@ abstract class AbstractAnnotationParsingTest extends \unittest\TestCase {
    * @return  [:var]
    */
   protected function parse($input) {
-    return (new ClassParser())->parseAnnotations($input, $this->getClassName(), array(
+    return (new ClassParser())->parseAnnotations($input, nameof($this), array(
       'Namespaced' => 'net.xp_framework.unittest.annotations.fixture.Namespaced'
     ));
   }

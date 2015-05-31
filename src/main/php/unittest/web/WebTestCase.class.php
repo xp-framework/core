@@ -33,7 +33,7 @@ abstract class WebTestCase extends TestCase {
    */
   protected function getConnection($url= null) {
     if (null === $url) {
-      throw new \lang\IllegalArgumentException($this->getClassName().' requires a URL as its argument');
+      throw new \lang\IllegalArgumentException(nameof($this).' requires a URL as its argument');
     }
     return new HttpConnection($url);
   }

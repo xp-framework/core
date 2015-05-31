@@ -165,6 +165,6 @@ class ArrayMap extends \lang\Object implements \ArrayAccess, \IteratorAggregate 
     foreach ($this->values as $key => $value) {
       $r.= ', '.$key.' = '.\xp::stringOf($value);
     }
-    return $this->getClassName().'['.sizeof($this->values).']@{'.substr($r, 2).'}';
+    return nameof($this).'['.sizeof($this->values).']@{'.substr($r, 2).'}';
   }
 }

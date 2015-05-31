@@ -43,7 +43,7 @@ class StringWriter extends \lang\Object implements OutputStreamWriter {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName()."@{\n  ".$this->out->toString()."\n}";
+    return nameof($this)."@{\n  ".$this->out->toString()."\n}";
   }
 
   /**

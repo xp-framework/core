@@ -92,7 +92,7 @@ class LoggingEvent extends \lang\Object {
   public function toString() {
     return sprintf(
       '%s(%s @ %s, PID %d) {%s}%s',
-      $this->getClassName(),
+      nameof($this),
       LogLevel::nameOf($this->level),
       date('r', $this->timestamp),
       $this->processId,

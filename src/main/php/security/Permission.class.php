@@ -55,7 +55,7 @@ class Permission extends \lang\Object {
   public function toString() {
     return sprintf(
       'permission %s: "%s", "%s";',
-      $this->getClassName(),
+      nameof($this),
       $this->name,
       implode(',', $this->actions)
     );

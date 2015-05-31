@@ -27,7 +27,7 @@ class PackageTest extends \unittest\TestCase {
    * afforementioned XARs
    */
   public function setUp() {
-    $this->libraryLoader= ClassLoader::registerLoader(new ArchiveClassLoader(new Archive(XPClass::forName(\xp::nameOf(__CLASS__))
+    $this->libraryLoader= ClassLoader::registerLoader(new ArchiveClassLoader(new Archive((new XPClass(__CLASS__))
       ->getPackage()
       ->getPackage('lib')
       ->getResourceAsStream('three-and-four.xar')

@@ -203,7 +203,7 @@ final class ClassLoader extends Object implements IClassLoader {
     } else if ('\\' === $class{0}) {
       return $class;
     } else {
-      return '\\'.XPClass::forName(strstr($class, '.') ? $class : \xp::nameOf($class))->literal();
+      return '\\'.XPClass::forName($class)->literal();
     }
   }
 
@@ -602,7 +602,7 @@ final class ClassLoader extends Object implements IClassLoader {
    * @return string
    */
   public function toString() {
-    return $this->getClassName();
+    return nameof($this);
   }
 
   /**

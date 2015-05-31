@@ -1,6 +1,7 @@
 <?php namespace xp\runtime;
 
 use util\cmd\Console;
+use lang\XPClass;
 
 /**
  * Evaluates sourcecode
@@ -32,7 +33,7 @@ class Evaluate extends \lang\Object {
     }
 
     // Perform
-    $argv= array(\xp::nameOf(__CLASS__)) + $args;
+    $argv= array(XPClass::nameOf(__CLASS__)) + $args;
     $argc= sizeof($argv);
     return eval($src);
   }

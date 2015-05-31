@@ -226,6 +226,6 @@ class DateFormat extends \lang\Object {
         $str.= $token;
       }
     }
-    return $this->getClassName().'<"'.$str.'">';
+    return nameof($this).'<"'.$str.'">';
   }
 }

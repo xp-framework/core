@@ -724,7 +724,7 @@ class File extends \lang\Object implements Channel {
   public function toString() {
     return sprintf(
       '%s(uri= %s, mode= %s)',
-      $this->getClassName(),
+      nameof($this),
       $this->uri,
       $this->mode
     );

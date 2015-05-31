@@ -68,6 +68,6 @@ class ChannelOutputStream extends \lang\Object implements OutputStream {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'(channel='.$this->name.')';
+    return nameof($this).'(channel='.$this->name.')';
   }
 }

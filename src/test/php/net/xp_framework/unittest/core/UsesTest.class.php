@@ -61,7 +61,7 @@ class UsesTest extends \unittest\TestCase {
           uses($class);
           echo "+OK ", $class, "\n";
         } catch (Throwable $e) {
-          echo "-ERR ", $class, ": ", $e->getClassName(), "\n";
+          echo "-ERR ", $class, ": ", nameof($e), "\n";
           $errors++;
         }
       }
@@ -88,9 +88,9 @@ class UsesTest extends \unittest\TestCase {
   public function useExistingClass() {
     $this->assertResult(
       0, 
-      array('+OK '.$this->getClassName()),
+      array('+OK '.nameof($this)),
       array(''),
-      $this->useAllOf(array($this->getClassName()))
+      $this->useAllOf(array(nameof($this)))
     );
   }
 
@@ -108,9 +108,9 @@ class UsesTest extends \unittest\TestCase {
   public function useClasses() {
     $this->assertResult(
       1, 
-      array('+OK '.$this->getClassName(), '-ERR does.not.exist: lang.ClassNotFoundException'),
+      array('+OK '.nameof($this), '-ERR does.not.exist: lang.ClassNotFoundException'),
       array(''),
-      $this->useAllOf(array($this->getClassName(), 'does.not.exist'))
+      $this->useAllOf(array(nameof($this), 'does.not.exist'))
     );
   }
 

@@ -35,7 +35,7 @@ class TestSuite extends \lang\Object {
     if (!$test->getClass()->hasMethod($test->name)) {
       throw new MethodNotImplementedException('Test method does not exist', $test->name);
     }
-    $className= $test->getClassName();
+    $className= nameof($test);
     
     // Verify no special method, e.g. setUp() or tearDown() is overwritten.
     $base= XPClass::forName('unittest.TestCase');
@@ -193,7 +193,7 @@ class TestSuite extends \lang\Object {
     } else if (strstr($ref, '.')) {
       $class= XPClass::forName($ref);
     } else {
-      $class= XPClass::forName(\xp::nameOf($ref));
+      $class= new XPClass($ref);
     }
     return $class->getMethod(substr($source, $p+ 2))->invoke(null, $args);
   }
@@ -360,7 +360,7 @@ class TestSuite extends \lang\Object {
                 $t,
                 new AssertionFailedError(new FormattedMessage(
                   'Expected %s\'s message "%s" differs from expected %s',
-                  [$e->getClassName(), $e->getMessage(), $expected[1]]
+                  [nameof($e), $e->getMessage(), $expected[1]]
                 )),
                 $timer->elapsedTime()
               )
@@ -577,7 +577,7 @@ class TestSuite extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    $s= $this->getClassName().'['.sizeof($this->tests)."]@{\n";
+    $s= nameof($this).'['.sizeof($this->tests)."]@{\n";
     foreach ($this->tests as $test) {
       $s.= '  '.$test->toString()."\n";
     }

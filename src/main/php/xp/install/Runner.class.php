@@ -79,7 +79,7 @@ class Runner extends \lang\Object {
     }
 
     if (null === $action) {
-      Console::$err->writeLine(self::textOf(\lang\XPClass::forName(\xp::nameOf(__CLASS__))->getComment()));
+      Console::$err->writeLine(self::textOf((new \lang\XPClass(__CLASS__))->getComment()));
       return 1;
     }
 

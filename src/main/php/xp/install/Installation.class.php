@@ -69,6 +69,6 @@ class Installation extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'@<'.\xp::stringOf($this->base).'>';
+    return nameof($this).'@<'.\xp::stringOf($this->base).'>';
   }
 }

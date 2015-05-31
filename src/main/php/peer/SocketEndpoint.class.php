@@ -106,6 +106,6 @@ class SocketEndpoint extends \lang\Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'('.$this->host.':'.$this->port.')';
+    return nameof($this).'('.$this->host.':'.$this->port.')';
   }
 }

@@ -12,14 +12,23 @@ class InstanceReflectionTest extends \unittest\TestCase {
   private $fixture;
   
   /**
-   * Creates fixture, a Lookup with String and TestCase as component
-   * types.
+   * Creates fixture, a Lookup with String and TestCase as component types.
    *
+   * @return void
    */  
   public function setUp() {
     $this->fixture= create('new net.xp_framework.unittest.core.generics.Lookup<string, unittest.TestCase>()');
   }
 
+  #[@test]
+  public function nameof() {
+    $this->assertEquals(
+      'net.xp_framework.unittest.core.generics.Lookup<string,unittest.TestCase>',
+      nameof($this->fixture)
+    );
+  }
+
+  /** @deprecated */
   #[@test]
   public function getClassNameMethod() {
     $this->assertEquals(

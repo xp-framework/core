@@ -28,7 +28,7 @@ class ConsoleOutputStream extends \lang\Object implements OutputStream {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'<'.$this->descriptor.'>';
+    return nameof($this).'<'.$this->descriptor.'>';
   }
 
   /**

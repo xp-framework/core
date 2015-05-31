@@ -407,7 +407,7 @@ class Socket extends \lang\Object implements \io\Channel {
   public function toString() {
     return sprintf(
       '%s(%s -> %s%s:%d)',
-      $this->getClassName(),
+      nameof($this),
       null === $this->_sock ? '(closed)' : \xp::stringOf($this->_sock),
       $this->_prefix,
       $this->host,

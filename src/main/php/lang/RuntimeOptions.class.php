@@ -126,7 +126,7 @@ class RuntimeOptions extends Object {
    * @return  string
    */
   public function toString() {
-    return $this->getClassName().'@'.\xp::stringOf($this->asArguments());
+    return nameof($this).'@'.\xp::stringOf($this->asArguments());
   }
 
   /**
