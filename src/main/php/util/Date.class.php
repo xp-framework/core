@@ -7,7 +7,7 @@ use lang\IllegalArgumentException;
  *
  * @test  xp://net.xp_framework.unittest.util.DateTest
  */
-class Date extends \lang\Object {
+class Date extends \lang\Object implements \lang\Value {
   protected
     $date     = null;
   
@@ -164,11 +164,11 @@ class Date extends \lang\Object {
   /**
    * Compare this date to another date
    *
-   * @param   util.Date date A date object
+   * @param   var $cmp
    * @return  int equal: 0, date before $this: less than 0, date after $this: greater than zero
    */
-  public function compareTo(Date $date) {
-    return $date->getTime()- $this->getTime();
+  public function compareTo($cmp) {
+    return $cmp instanceof self ? $cmp->getTime() - $this->getTime() : -1;
   }
   
   /**
