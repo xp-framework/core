@@ -1,11 +1,8 @@
 <?php namespace net\xp_framework\unittest\util\collections;
 
-use unittest\TestCase;
-use lang\types\String;
 use util\collections\HashTable;
 use util\collections\HashSet;
 use util\collections\Vector;
-
 
 /**
  * TestCase
@@ -14,7 +11,7 @@ use util\collections\Vector;
  * @see   xp://util.collections.HashSet
  * @see   xp://util.collections.Vector
  */
-class ArrayAccessTest extends TestCase {
+class ArrayAccessTest extends \unittest\TestCase {
 
   /**
    * Tests array access operator is overloaded for reading
@@ -23,9 +20,9 @@ class ArrayAccessTest extends TestCase {
   #[@test]
   public function hashTableReadElement() {
     $c= new HashTable();
-    $world= new String('world');
-    $c->put(new String('hello'), $world);
-    $this->assertEquals($world, $c[new String('hello')]);
+    $world= new Name('world');
+    $c->put(new Name('hello'), $world);
+    $this->assertEquals($world, $c[new Name('hello')]);
   }
 
   /**
@@ -35,7 +32,7 @@ class ArrayAccessTest extends TestCase {
   #[@test]
   public function hashTableReadNonExistantElement() {
     $c= new HashTable();
-    $this->assertEquals(null, $c[new String('hello')]);
+    $this->assertEquals(null, $c[new Name('hello')]);
   }
 
   /**
@@ -55,9 +52,9 @@ class ArrayAccessTest extends TestCase {
   #[@test]
   public function hashTableWriteElement() {
     $c= new HashTable();
-    $world= new String('world');
-    $c[new String('hello')]= $world;
-    $this->assertEquals($world, $c->get(new String('hello')));
+    $world= new Name('world');
+    $c[new Name('hello')]= $world;
+    $this->assertEquals($world, $c->get(new Name('hello')));
   }
 
   /**
@@ -67,7 +64,7 @@ class ArrayAccessTest extends TestCase {
   #[@test, @expect('lang.IllegalArgumentException')]
   public function hashTableWriteIllegalKey() {
     $c= create('new util.collections.HashTable<string, Object>()');
-    $c[STDIN]= new String('Hello');
+    $c[STDIN]= new Name('Hello');
   }
 
   /**
@@ -87,9 +84,9 @@ class ArrayAccessTest extends TestCase {
   #[@test]
   public function hashTableTestElement() {
     $c= new HashTable();
-    $c->put(new String('hello'), new String('world'));
-    $this->assertTrue(isset($c[new String('hello')]));
-    $this->assertFalse(isset($c[new String('world')]));
+    $c->put(new Name('hello'), new Name('world'));
+    $this->assertTrue(isset($c[new Name('hello')]));
+    $this->assertFalse(isset($c[new Name('world')]));
   }
 
   /**
@@ -99,10 +96,10 @@ class ArrayAccessTest extends TestCase {
   #[@test]
   public function hashTableRemoveElement() {
     $c= new HashTable();
-    $c->put(new String('hello'), new String('world'));
-    $this->assertTrue(isset($c[new String('hello')]));
-    unset($c[new String('hello')]);
-    $this->assertFalse(isset($c[new String('hello')]));
+    $c->put(new Name('hello'), new Name('world'));
+    $this->assertTrue(isset($c[new Name('hello')]));
+    unset($c[new Name('hello')]);
+    $this->assertFalse(isset($c[new Name('hello')]));
   }
 
   /**
@@ -112,7 +109,7 @@ class ArrayAccessTest extends TestCase {
   #[@test]
   public function vectorReadElement() {
     $v= new Vector();
-    $world= new String('world');
+    $world= new Name('world');
     $v->add($world);
     $this->assertEquals($world, $v[0]);
   }
@@ -134,7 +131,7 @@ class ArrayAccessTest extends TestCase {
   #[@test]
   public function vectorAddElement() {
     $v= new Vector();
-    $world= new String('world');
+    $world= new Name('world');
     $v[]= $world;
     $this->assertEquals($world, $v[0]);
   }
@@ -145,8 +142,8 @@ class ArrayAccessTest extends TestCase {
    */
   #[@test]
   public function vectorWriteElement() {
-    $v= new Vector(array(new String('hello')));
-    $world= new String('world');
+    $v= new Vector(array(new Name('hello')));
+    $world= new Name('world');
     $v[0]= $world;
     $this->assertEquals($world, $v[0]);
   }
@@ -158,7 +155,7 @@ class ArrayAccessTest extends TestCase {
   #[@test, @expect('lang.IndexOutOfBoundsException')]
   public function vectorWriteElementBeyondBoundsKey() {
     $v= new Vector();
-    $v[0]= new String('world');
+    $v[0]= new Name('world');
   }
 
   /**
@@ -168,7 +165,7 @@ class ArrayAccessTest extends TestCase {
   #[@test, @expect('lang.IndexOutOfBoundsException')]
   public function vectorWriteElementNegativeKey() {
     $v= new Vector();
-    $v[-1]= new String('world');
+    $v[-1]= new Name('world');
   }
 
   /**
@@ -178,7 +175,7 @@ class ArrayAccessTest extends TestCase {
   #[@test]
   public function vectorTestElement() {
     $v= new Vector();
-    $v[]= new String('world');
+    $v[]= new Name('world');
     $this->assertTrue(isset($v[0]));
     $this->assertFalse(isset($v[1]));
     $this->assertFalse(isset($v[-1]));
@@ -191,7 +188,7 @@ class ArrayAccessTest extends TestCase {
   #[@test]
   public function vectorRemoveElement() {
     $v= new Vector();
-    $v[]= new String('world');
+    $v[]= new Name('world');
     unset($v[0]);
     $this->assertFalse(isset($v[0]));
   }
@@ -202,141 +199,11 @@ class ArrayAccessTest extends TestCase {
    */
   #[@test]
   public function vectorIsUsableInForeach() {
-    $values= array(new String('hello'), new String('world'));
+    $values= array(new Name('hello'), new Name('world'));
     foreach (new Vector($values) as $i => $value) {
       $this->assertEquals($values[$i], $value);
     }
     $this->assertEquals(sizeof($values)- 1, $i);
-  }
-
-  /**
-   * Tests string class array access operator overloading
-   *
-   */
-  #[@test]
-  public function stringReadChar() {
-    $s= new String('Hello');
-    $this->assertEquals(new \lang\types\Character('H'), $s[0]);
-    $this->assertEquals(new \lang\types\Character('e'), $s[1]);
-    $this->assertEquals(new \lang\types\Character('l'), $s[2]);
-    $this->assertEquals(new \lang\types\Character('l'), $s[3]);
-    $this->assertEquals(new \lang\types\Character('o'), $s[4]);
-  }
-
-  /**
-   * Tests string class array access operator overloading
-   *
-   */
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
-  public function stringReadBeyondOffset() {
-    $s= new String('Hello');
-    $s[5];
-  }
-
-  /**
-   * Tests string class array access operator overloading
-   *
-   */
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
-  public function stringReadNegativeOffset() {
-    $s= new String('Hello');
-    $s[-1];
-  }
-
-  /**
-   * Tests string class array access operator overloading
-   *
-   */
-  #[@test]
-  public function stringReadUtfChar() {
-    $s= new String('Übercoder', 'iso-8859-1');
-    $this->assertEquals(new \lang\types\Character('Ü', 'iso-8859-1'), $s[0]);
-  }
-
-  /**
-   * Tests string class array access operator overloading
-   *
-   */
-  #[@test]
-  public function stringWriteChar() {
-    $s= new String('Übercoder', 'iso-8859-1');
-    $s[0]= 'U';
-    $this->assertEquals(new String('Ubercoder'), $s);
-  }
-
-  /**
-   * Tests string class array access operator overloading
-   *
-   */
-  #[@test]
-  public function stringWriteUtfChar() {
-    $s= new String('Ubercoder');
-    $s[0]= new \lang\types\Character('Ü', 'iso-8859-1');
-    $this->assertEquals(new String('Übercoder', 'iso-8859-1'), $s);
-  }
-
-  /**
-   * Tests string class array access operator overloading
-   *
-   */
-  #[@test, @expect('lang.IllegalArgumentException')]
-  public function stringWriteMoreThanOneChar() {
-    $s= new String('Hallo');
-    $s[0]= 'Halli H';   // Hoping somehow this would become "Halli Hallo":)
-  }
-
-  /**
-   * Tests string class array access operator overloading
-   *
-   */
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
-  public function stringWriteBeyondOffset() {
-    $s= new String('Hello');
-    $s[5]= 's';
-  }
-
-  /**
-   * Tests string class array access operator overloading
-   *
-   */
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
-  public function stringWriteNegativeOffset() {
-    $s= new String('Hello');
-    $s[-1]= "\x00";
-  }
-
-  /**
-   * Tests string class array access operator overloading
-   *
-   */
-  #[@test, @expect('lang.IllegalArgumentException')]
-  public function stringAppend() {
-    $s= new String('Hello');
-    $s[]= ' ';   // use concat() instead
-  }
-
-  /**
-   * Tests string class array access operator overloading
-   *
-   */
-  #[@test]
-  public function stringTestChar() {
-    $s= new String('Übercoder', 'iso-8859-1');
-    $this->assertTrue(isset($s[0]));
-    $this->assertTrue(isset($s[$s->length()- 1]));
-    $this->assertFalse(isset($s[$s->length()]));
-    $this->assertFalse(isset($s[-1]));
-  }
-
-  /**
-   * Tests string class array access operator overloading
-   *
-   */
-  #[@test]
-  public function stringRemoveChar() {
-    $s= new String('Übercoder', 'iso-8859-1');
-    unset($s[0]);
-    $this->assertEquals(new String('bercoder'), $s);
   }
 
   /**
@@ -346,8 +213,8 @@ class ArrayAccessTest extends TestCase {
   #[@test]
   public function hashSetAddElement() {
     $s= new HashSet();
-    $s[]= new String('X');
-    $this->assertTrue($s->contains(new String('X')));
+    $s[]= new Name('X');
+    $this->assertTrue($s->contains(new Name('X')));
   }
 
   /**
@@ -357,7 +224,7 @@ class ArrayAccessTest extends TestCase {
   #[@test, @expect('lang.IllegalArgumentException')]
   public function hashSetWriteElement() {
     $s= new HashSet();
-    $s[0]= new String('X');
+    $s[0]= new Name('X');
   }
 
   /**
@@ -367,7 +234,7 @@ class ArrayAccessTest extends TestCase {
   #[@test, @expect('lang.IllegalArgumentException')]
   public function hashSetReadElement() {
     $s= new HashSet();
-    $s[]= new String('X');
+    $s[]= new Name('X');
     $x= $s[0];
   }
 
@@ -378,9 +245,9 @@ class ArrayAccessTest extends TestCase {
   #[@test]
   public function hashSetTestElement() {
     $s= new HashSet();
-    $this->assertFalse(isset($s[new String('X')]));
-    $s[]= new String('X');
-    $this->assertTrue(isset($s[new String('X')]));
+    $this->assertFalse(isset($s[new Name('X')]));
+    $s[]= new Name('X');
+    $this->assertTrue(isset($s[new Name('X')]));
   }
 
   /**
@@ -390,9 +257,9 @@ class ArrayAccessTest extends TestCase {
   #[@test]
   public function hashSetRemoveElement() {
     $s= new HashSet();
-    $s[]= new String('X');
-    unset($s[new String('X')]);
-    $this->assertFalse(isset($s[new String('X')]));
+    $s[]= new Name('X');
+    unset($s[new Name('X')]);
+    $this->assertFalse(isset($s[new Name('X')]));
   }
 
   /**
@@ -402,9 +269,9 @@ class ArrayAccessTest extends TestCase {
   #[@test]
   public function hashSetUsableInForeach() {
     $s= new HashSet();
-    $s->addAll(array(new String('0'), new String('1'), new String('2')));
+    $s->addAll(array(new Name('0'), new Name('1'), new Name('2')));
     foreach ($s as $i => $element) {
-      $this->assertEquals(new String($i), $element);
+      $this->assertEquals(new Name($i), $element);
     }
   }
 }
