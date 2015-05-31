@@ -72,7 +72,7 @@ abstract class Arrays extends \lang\Object {
    * @return  bool
    */
   public static function contains(ArrayList $array, $search) {
-    if ($search instanceof eneric) {
+    if ($search instanceof Generic) {
       foreach ($array->values as $value) {
         if ($search->equals($value)) return true;
       }
