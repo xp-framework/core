@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.3.0 / 2015-06-02
+
 ### Heads up!
 
 * Added a new `nameof()` core function aimed at replacing the getClassName()
