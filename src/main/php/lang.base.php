@@ -56,12 +56,12 @@ final class xp {
   public static $cll= 0;
   public static $cl= [];
   public static $cn= [
-    'xp'    => '<xp>',
-    'null'  => '<null>'
+    'xp'     => '<xp>',
+    '__null' => '<null>'
   ];
   public static $sn= [
     'xp'     => 'xp',
-    'null'   => 'null',
+    'null'   => '__null',
     'string' => "\xfestring",
     'int'    => "\xfeint",
     'double' => "\xfedouble",
@@ -160,7 +160,7 @@ final class xp {
       return $arg ? 'true' : 'false';
     } else if (is_null($arg)) {
       return 'null';
-    } else if ($arg instanceof null) {
+    } else if ($arg instanceof __null) {
       return '<null>';
     } else if (is_int($arg) || is_float($arg)) {
       return (string)$arg;
@@ -285,7 +285,7 @@ final class xp {
 // }}}
 
 // {{{ final deprecated class null
-final class null {
+final class __null {
 
   // {{{ proto __construct(void)
   //     Constructor to avoid magic __call invokation
@@ -439,7 +439,7 @@ function cast($arg, $type, $nullsafe= true) {
 //     Checks whether a given object is an instance of the type given
 function is($type, $object) {
   if (null === $type) {
-    return $object instanceof null;
+    return $object instanceof __null;
   } else if ('int' === $type) {
     return is_int($object);
   } else if ('double' === $type) {
@@ -709,7 +709,7 @@ define('MODIFIER_PUBLIC',     256);
 define('MODIFIER_PROTECTED',  512);
 define('MODIFIER_PRIVATE',   1024);
 
-xp::$null= new null();
+xp::$null= new __null();
 xp::$loader= new xp();
 
 // Paths are passed via class loader API from *-main.php. Retaining BC:

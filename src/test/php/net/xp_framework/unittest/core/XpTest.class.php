@@ -50,7 +50,7 @@ class XpTest extends \unittest\TestCase {
   /** @deprecated */
   #[@test]
   public function null() {
-    $this->assertEquals('null', get_class(\xp::null()));
+    $this->assertEquals('__null', get_class(\xp::null()));
   }
 
   #[@test]
