@@ -285,7 +285,7 @@ final class xp {
 // }}}
 
 // {{{ final deprecated class null
-final class null {
+final class __null {
 
   // {{{ proto __construct(void)
   //     Constructor to avoid magic __call invokation
@@ -709,7 +709,7 @@ define('MODIFIER_PUBLIC',     256);
 define('MODIFIER_PROTECTED',  512);
 define('MODIFIER_PRIVATE',   1024);
 
-xp::$null= new null();
+xp::$null= new __null();
 xp::$loader= new xp();
 
 // Paths are passed via class loader API from *-main.php. Retaining BC:
