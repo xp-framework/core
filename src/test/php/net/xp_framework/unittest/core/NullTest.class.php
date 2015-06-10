@@ -29,7 +29,7 @@ class NullTest extends \unittest\TestCase {
   
   #[@test, @expect('lang.IllegalAccessException')]
   public function newInstance() {
-    new \null();
+    new \__null();
   }
 
   #[@test, @expect('lang.NullPointerException')]
