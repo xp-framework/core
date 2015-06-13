@@ -98,8 +98,14 @@ class ErrorsTest extends \unittest\TestCase {
     $a->method();
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]
   public function argument_mismatch_yield_iae() {
+    $f= function(Object $arg) { };
+    $f('Primitive');
+  }
+
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  public function argument_mismatch_yield_type_exception() {
     $f= function(Object $arg) { };
     $f('Primitive');
   }
