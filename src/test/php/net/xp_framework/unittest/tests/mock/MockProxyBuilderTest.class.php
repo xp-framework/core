@@ -4,6 +4,7 @@ use unittest\TestCase;
 use unittest\mock\MockProxyBuilder;
 use util\XPIterator;
 use lang\reflect\InvocationHandler;
+use unittest\actions\RuntimeVersion;
 
 /**
  * Tests the Proxy class
@@ -62,13 +63,23 @@ class MockProxyBuilderTest extends TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]
   public function nullClassLoader() {
     (new MockProxyBuilder())->createProxyClass(null, array($this->iteratorClass));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]
   public function nullInterfaces() {
+    (new MockProxyBuilder())->createProxyClass(\lang\ClassLoader::getDefault(), null);
+  }
+
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  public function nullClassLoader7() {
+    (new MockProxyBuilder())->createProxyClass(null, array($this->iteratorClass));
+  }
+
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  public function nullInterfaces7() {
     (new MockProxyBuilder())->createProxyClass(\lang\ClassLoader::getDefault(), null);
   }
 
