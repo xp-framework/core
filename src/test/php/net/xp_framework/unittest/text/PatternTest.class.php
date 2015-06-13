@@ -3,12 +3,13 @@
 use text\regex\Pattern;
 use lang\types\String;
 
+/**
+ * Patter test 
+ *
+ * @see   http://www.regular-expressions.info/unicode.html
+ */
 class PatternTest extends \unittest\TestCase {
 
-  /**
-   * Tests the MatchResult::length() method
-   *
-   */
   #[@test]
   public function length() {
     $this->assertEquals(
@@ -17,28 +18,16 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests the MatchResult::matches() method
-   *
-   */
   #[@test]
   public function isMatched() {
     $this->assertTrue(Pattern::compile('a+')->matches('aaa'));
   }
 
-  /**
-   * Tests the MatchResult::matches() method
-   *
-   */
   #[@test]
   public function isNotMatched() {
     $this->assertFalse(Pattern::compile('a+')->matches('bbb'));
   }
 
-  /**
-   * Tests "." as a pattern with string primitive
-   *
-   */
   #[@test]
   public function stringPrimitiveInput() {
     $this->assertEquals(0, Pattern::compile('.')->match('')->length());
@@ -46,10 +35,6 @@ class PatternTest extends \unittest\TestCase {
     $this->assertEquals(2, Pattern::compile('.')->match('ab')->length());
   }
 
-  /**
-   * Tests "." as a pattern with lang.types.String instances
-   *
-   */
   #[@test]
   public function stringObjectInput() {
     $this->assertEquals(0, Pattern::compile('.')->match(new String(''))->length());
@@ -57,10 +42,6 @@ class PatternTest extends \unittest\TestCase {
     $this->assertEquals(2, Pattern::compile('.')->match(new String('ab'))->length());
   }
 
-  /**
-   * Tests unicode pattern
-   *
-   */
   #[@test]
   public function unicodePattern() {
     $this->assertEquals(
@@ -69,10 +50,6 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests non-unicode pattern
-   *
-   */
   #[@test]
   public function nonUnicodePattern() {
     $this->assertEquals(
@@ -81,10 +58,6 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests the CASE_INSENSITIVE flag
-   *
-   */
   #[@test]
   public function caseInsensitive() {
     $this->assertEquals(
@@ -93,10 +66,6 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests the MatchResult::groups() method
-   *
-   */
   #[@test]
   public function groups() {
     $this->assertEquals(
@@ -105,10 +74,6 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests the MatchResult::groups() method
-   *
-   */
   #[@test]
   public function groupsWithOneMatch() {
     $this->assertEquals(
@@ -117,10 +82,6 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests the MatchResult::groups() method
-   *
-   */
   #[@test]
   public function groupsWithMultipleMatches() {
     $this->assertEquals(
@@ -132,10 +93,6 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests the MatchResult::group() method
-   *
-   */
   #[@test]
   public function group() {
     $this->assertEquals(
@@ -144,10 +101,6 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests the MatchResult::group() method
-   *
-   */
   #[@test]
   public function groupWithOneMatch() {
     $this->assertEquals(
@@ -156,10 +109,6 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests the MatchResult::group() method
-   *
-   */
   #[@test]
   public function groupWithMultipleMatches() {
     $match= Pattern::compile('(([w]{3})\.)?example\.(com|net|org)')->match('www.example.com and example.org');
@@ -173,28 +122,16 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests the MatchResult::group() method
-   *
-   */
   #[@test, @expect('lang.IndexOutOfBoundsException')]
   public function nonExistantGroup() {
     Pattern::compile('H[ea]llo')->match('Hello')->group(1);
   }
 
-  /**
-   * Tests the MatchResult::groups() method
-   *
-   */
   #[@test]
   public function matchEmptyString() {
     $this->assertEquals([], Pattern::compile('.')->match('')->groups());
   }
 
-  /**
-   * Tests the Pattern::equals() method
-   *
-   */
   #[@test]
   public function equality() {
     $this->assertEquals(
@@ -203,10 +140,6 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests the Pattern::equals() method
-   *
-   */
   #[@test]
   public function unequality() {
     $this->assertNotEquals(
@@ -215,10 +148,6 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests the Pattern::toString() method
-   *
-   */
   #[@test]
   public function stringRepresentation() {
     $this->assertEquals(
@@ -227,20 +156,11 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Test a pattern with a missing ")" at the end throws a FormatException
-   *
-   */
   #[@test, @expect('lang.FormatException')]
   public function illegalPattern() {
     Pattern::compile('(');
   }
 
-  /**
-   * Test a pattern with a missing ")" at the end does not throws a 
-   * FormatException when the object is constructed (but later on).
-   *
-   */
   #[@test]
   public function lazyCompilation() {
     $p= new Pattern('(');
@@ -252,10 +172,6 @@ class PatternTest extends \unittest\TestCase {
     }
   }
 
-  /**
-   * Test Pattern::MULTILINE | Pattern::DOTALL example
-   *
-   */
   #[@test]
   public function multilineDotAll() {
     $m= Pattern::compile('BEGIN {(.+)}', Pattern::MULTILINE | Pattern::DOTALL)->match('BEGIN {
@@ -266,10 +182,6 @@ class PatternTest extends \unittest\TestCase {
     $this->assertEquals('print "Hello World";', trim($group[1]));
   }
 
-  /**
-   * Tests the Pattern::replaceWith() method
-   *
-   */
   #[@test]
   public function replaceWhitespace() {
     $pattern= Pattern::compile('\s+');
@@ -279,11 +191,6 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests the Pattern::replaceWith() method
-   *
-   * @see   http://www.regular-expressions.info/unicode.html
-   */
   #[@test]
   public function unicodeReplacement() {
     $pattern= Pattern::compile('<[\p{L}]>', Pattern::UTF8);
@@ -293,10 +200,6 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests the Pattern::replaceWith() method
-   *
-   */
   #[@test]
   public function replaceWithDollarBackReference() {
     $pattern= Pattern::compile('H[ae]ll[oO0]');
@@ -306,10 +209,6 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests the Pattern::replaceWith() method
-   *
-   */
   #[@test]
   public function replaceWithDollarBackReferences() {
     $quoter= Pattern::compile('([^=]+)=([^ >]+)([ >]*)');
@@ -319,28 +218,16 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  /**
-   * Tests __toString()
-   *
-   */
   #[@test]
   public function stringCast() {
     $this->assertEquals('/^begin/', (string)new Pattern('^begin'));
   }
 
-  /**
-   * Tests __toString()
-   *
-   */
   #[@test]
   public function stringCastWithFlag() {
     $this->assertEquals('/end$/i', (string)new Pattern('end$', Pattern::CASE_INSENSITIVE));
   }
 
-  /**
-   * Tests __toString()
-   *
-   */
   #[@test]
   public function stringCastWithFlags() {
     $this->assertEquals('/end$/iU', (string)new Pattern('end$', Pattern::CASE_INSENSITIVE | Pattern::UNGREEDY));
