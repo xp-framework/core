@@ -75,7 +75,7 @@ class CreateInstruction extends AbstractInstruction {
    */
   public function perform() {
     $this->archive->open(Archive::CREATE);
-    $this->addAll($this->getArguments(), Path::real(getcwd())));
+    $this->addAll($this->getArguments(), Path::real(getcwd()));
     $this->archive->create();
   }
 }
