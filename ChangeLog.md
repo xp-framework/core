@@ -12,7 +12,7 @@ XP Framework Core ChangeLog
   which clashes with our root class `lang.Object`.
 
   However, [PHP7 alpha 1](http://php.net/archive/2015.php#id2015-01-11-6)
-  does [not yet raise an error](https://github.com/php/php-src/blob/php-7.0.0-dev/UPGRADING#L392)
+  does [not yet raise an error](https://github.com/php/php-src/blob/php-7.0.0alpha1/UPGRADING#L392)
   if this class name is used.
 
   Parts of the XP test suite do not pass on PHP7, as we still use other
