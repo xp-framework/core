@@ -4,6 +4,7 @@ use unittest\TestCase;
 use util\PropertyManager;
 use util\ResourcePropertySource;
 use lang\ClassLoader;
+use unittest\actions\RuntimeVersion;
 new import('lang.ResourceProvider');
 
 /**
@@ -98,30 +99,18 @@ class PropertyManagerTest extends TestCase {
     $this->assertEquals('value', $prop->readString('section', 'key'));
   }
 
-  /**
-   * Test prependSource()
-   *
-   */
   #[@test]
   public function prependSource() {
     $path= new \util\FilesystemPropertySource('.');
     $this->assertEquals($path, $this->fixture()->prependSource($path));
   }
 
-  /**
-   * Test appendSource()
-   *
-   */
   #[@test]
   public function appendSource() {
     $path= new \util\FilesystemPropertySource('.');
     $this->assertEquals($path, $this->fixture()->appendSource($path));
   }
 
-  /**
-   * Test hasSource()
-   *
-   */
   #[@test]
   public function hasSource() {
     $path= new \util\FilesystemPropertySource(__DIR__.'/..');
@@ -129,10 +118,6 @@ class PropertyManagerTest extends TestCase {
     $this->assertFalse($fixture->hasSource($path));
   }
 
-  /**
-   * Test hasSource()
-   *
-   */
   #[@test]
   public function hasAppendedSource() {
     $path= new \util\FilesystemPropertySource(__DIR__.'/..');
@@ -141,10 +126,6 @@ class PropertyManagerTest extends TestCase {
     $this->assertTrue($fixture->hasSource($path));
   }
 
-  /**
-   * Test removeSource()
-   *
-   */
   #[@test]
   public function removeSource() {
     $path= new \util\FilesystemPropertySource(__DIR__.'/..');
@@ -152,10 +133,6 @@ class PropertyManagerTest extends TestCase {
     $this->assertFalse($fixture->removeSource($path));
   }
 
-  /**
-   * Test removeSource()
-   *
-   */
   #[@test]
   public function removeAppendedSource() {
     $path= new \util\FilesystemPropertySource(__DIR__.'/..');
@@ -173,19 +150,11 @@ class PropertyManagerTest extends TestCase {
     $this->assertEquals('value', $fixture->getProperties('example')->readString('section', 'key'));
   }
 
-  /**
-   * Test getSources()
-   *
-   */
   #[@test]
   public function getSourcesInitiallyEmpty() {
     $this->assertEquals([],  $this->fixture()->getSources());
   }
 
-  /**
-   * Test getSources()
-   *
-   */
   #[@test]
   public function getSourcesAfterAppendingOne() {
     $path= new \util\FilesystemPropertySource('.');
@@ -194,10 +163,6 @@ class PropertyManagerTest extends TestCase {
     $this->assertEquals(array($path), $fixture->getSources());
   }
 
-  /**
-   * Test getSources()
-   *
-   */
   #[@test]
   public function getSourcesAfterPrependingOne() {
     $path= new \util\FilesystemPropertySource('.');
@@ -245,10 +210,6 @@ key="overwritten value"'));
     $this->assertInstanceOf('util.Properties', $fixture->getProperties('example'));
   }
 
-  /**
-   * Test getProperties()
-   *
-   */
   #[@test]
   public function getExistantProperties() {
     $p= $this->preconfigured()->getProperties('example');
@@ -257,10 +218,6 @@ key="overwritten value"'));
 
   }
 
-  /**
-   * Test getProperties()
-   *
-   */
   #[@test, @expect('lang.ElementNotFoundException')]
   public function getNonExistantProperties() {
     $this->preconfigured()->getProperties('does-not-exist');
@@ -294,7 +251,7 @@ key="overwritten value"'));
     $this->assertEquals(array($one, $two), $fixture->getSources());
   }
 
-  #[@test]
+  #[@test, @action(new RuntimeVersion('<7.0.0alpha1'))]
   public function setIllegalSourceKeepsPreviousStateAndThrowsException() {
     $one= new \util\FilesystemPropertySource('.');
 
@@ -303,6 +260,20 @@ key="overwritten value"'));
       $fixture->setSources(array($one, null));
       $this->fail('No exception thrown', null, 'lang.IllegalArgumentException');
     } catch (\lang\IllegalArgumentException $expected) {
+    }
+
+    $this->assertEquals([], $fixture->getSources());
+  }
+
+  #[@test, @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  public function setIllegalSourceKeepsPreviousStateAndThrowsException7() {
+    $one= new \util\FilesystemPropertySource('.');
+
+    $fixture= $this->fixture();
+    try {
+      $fixture->setSources(array($one, null));
+      $this->fail('No exception thrown', null, 'TypeException');
+    } catch (\TypeException $expected) {
     }
 
     $this->assertEquals([], $fixture->getSources());
