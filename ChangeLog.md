@@ -14,6 +14,10 @@ XP Framework Core ChangeLog
 * Fixed parity for PHP7 when handling undefined methods in PHP7, which
   now behaves like HHVM (!). See xp-framework/core#87
   (@thekid)
+* Wrapped PHP7's `BaseException` inside a TargetInvocationException in
+  method and constructor invocations
+  (@thekid)
+
 
 ## 6.3.0 / 2015-06-02
 
