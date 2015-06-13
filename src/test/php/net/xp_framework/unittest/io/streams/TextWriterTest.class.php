@@ -5,6 +5,7 @@ use io\streams\TextWriter;
 use io\streams\MemoryInputStream;
 use io\streams\MemoryOutputStream;
 use lang\IllegalArgumentException;
+use unittest\actions\RuntimeVersion;
 
 /**
  * TestCase
@@ -121,13 +122,13 @@ class TextWriterTest extends \unittest\TestCase {
     $this->assertEquals("\303\234bercoder\n", $this->out->getBytes());
   }
 
-  #[@test]
+  #[@test, @action(new RuntimeVersion('<7.0.0alpha1'))]
   public function writeUtf8StringInstance() {
     $this->newWriter('utf-8')->write(new \lang\types\String('Übercoder'));
     $this->assertEquals("\303\234bercoder", $this->out->getBytes());
   }
 
-  #[@test]
+  #[@test, @action(new RuntimeVersion('<7.0.0alpha1'))]
   public function writeLineUtf8StringInstance() {
     $this->newWriter('utf-8')->writeLine(new \lang\types\String('Übercoder'));
     $this->assertEquals("\303\234bercoder\n", $this->out->getBytes());

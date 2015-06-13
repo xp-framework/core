@@ -3,7 +3,8 @@
 use unittest\TestCase;
 use io\streams\StringWriter;
 use io\streams\MemoryOutputStream;
-use lang\types\String;
+use net\xp_framework\unittest\Name;
+use unittest\actions\RuntimeVersion;
 
 /**
  * Test StringWriter
@@ -41,7 +42,7 @@ class StringWriterTest extends TestCase {
       ['Test', 'Test'], ['', ''],
       ["[\n]", []], ["[1, 2, 3]", [1, 2, 3]],
       ["[\n  a => \"b\"\n  c => \"d\"\n]", ['a' => 'b', 'c' => 'd']],
-      ['Test', new String('Test')],
+      ['Test', new Name('Test')],
       ['Test', newinstance('lang.Object', [], ['toString' => function() { return 'Test'; } ])]
     ];
   }
@@ -56,7 +57,7 @@ class StringWriterTest extends TestCase {
   #[@test]
   public function write_supports_var_args() {
     $this->assertWritten('1two3four', function($fixture) {
-      $fixture->write(1, 'two', 3.0, new String('four'));
+      $fixture->write(1, 'two', 3.0, new Name('four'));
     });
   }
 
@@ -77,7 +78,7 @@ class StringWriterTest extends TestCase {
   #[@test]
   public function writeLine_supports_var_args() {
     $this->assertWritten("1two3four\n", function($fixture) {
-      $fixture->writeLine(1, 'two', 3.0, new String('four'));
+      $fixture->writeLine(1, 'two', 3.0, new Name('four'));
     });
   }
 
