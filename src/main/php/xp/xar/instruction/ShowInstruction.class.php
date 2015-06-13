@@ -1,5 +1,7 @@
 <?php namespace xp\xar\instruction;
 
+use lang\archive\Archive;
+
 /**
  * Show Instruction
  */

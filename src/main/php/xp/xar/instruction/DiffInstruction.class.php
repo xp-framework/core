@@ -2,7 +2,11 @@
 
 use xp\xar\Options;
 use io\TempFile;
+use io\File;
+use io\IOException;
 use lang\Process;
+use lang\archive\Archive;
+use lang\IllegalArgumentException;
 
 /**
  * Shows a diff between two XARs
@@ -19,9 +23,9 @@ class DiffInstruction extends AbstractInstruction {
     
     $args= $this->getArguments();
     if (!isset($args[0]) || !file_exists(current($args)))
-      throw new \lang\IllegalArgumentException('No archive to compare given or not found.');
+      throw new IllegalArgumentException('No archive to compare given or not found.');
 
-    $cmp= new \lang\archive\Archive(new \io\File(current($args)));
+    $cmp= new Archive(new File(current($args)));
     $cmp->open(Archive::READ);
     
     return $this->compare($this->archive, $cmp);
@@ -108,7 +112,7 @@ class DiffInstruction extends AbstractInstruction {
         }
         
         $p->close();
-      } catch (\io\IOException $e) {
+      } catch (IOException $e) {
         $this->err->writeLine('!=> Invocation of `diff` program failed.');
         $templ->unlink();
         $tempr->unlink();
