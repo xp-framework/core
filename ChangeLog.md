@@ -5,9 +5,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
-* This release aims at creating forward compatibility with PHP7. Please
-  note the XP6 series will not support PHP7 officially: It reserves the
-  name `object`, which clashes with our root class `lang.Object`.
+* This release creates forward compatibility with PHP7. Please note the
+  XP6 series will not support PHP7 officially: It reserves the name `object`,
+  which clashes with our root class `lang.Object`.
 
   However, [PHP7 alpha 1](http://php.net/archive/2015.php#id2015-01-11-6)
   does [not yet raise an error](https://github.com/php/php-src/blob/php-7.0.0-dev/UPGRADING#L392)
@@ -15,8 +15,8 @@ XP Framework Core ChangeLog
 
   Parts of the XP test suite do not pass on PHP7, as we still use other
   features incompatible with this new version. These are now in an extra
-  unittest configuration file, *not-php7.ini*. All other tests are expected
-  to pass, and we're working on reducing the incompatible ones.
+  unittest configuration file, *not-on-php-nightly.ini*. All other tests
+  are expected to pass, and we're working on reducing the incompatible ones.
   (@thekid)
 
 ### Features
