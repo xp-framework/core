@@ -51,7 +51,7 @@ class SuiteTest extends \unittest\TestCase {
     $this->suite->runTest(new \lang\Object());
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('<7.0.0alpha1'))]
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
   public function runNonTest7() {
     $this->suite->runTest(new \lang\Object());
   }
