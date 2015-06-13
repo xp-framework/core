@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
-  
-use lang\types\String;
 
+use lang\Object;
+  
 /**
  * Fixture for namespaces tests
  *
@@ -10,11 +10,11 @@ use lang\types\String;
 class NamespacedClassUsingUnqualified extends \lang\Object {
   
   /**
-   * Returns an empty string
+   * Returns a new object
    *
-   * @return  lang.types.String
+   * @return  lang.Object
    */
-  public function getEmptyString() {
-    return String::$EMPTY;
+  public function newObject() {
+    return new Object();
   }
 }

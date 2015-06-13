@@ -1,7 +1,6 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use unittest\TestCase;
-use lang\types\String;
 use lang\reflect\Package;
 use util\collections\Vector;
 
@@ -42,9 +41,9 @@ class NamespacedClassesTest extends TestCase {
 
   #[@test]
   public function namespacedClassUsingUnqualified() {
-    $this->assertEquals(
-      String::$EMPTY, 
-      self::$package->loadClass('NamespacedClassUsingUnqualified')->newInstance()->getEmptyString()
+    $this->assertInstanceOf(
+      'lang.Object',
+      self::$package->loadClass('NamespacedClassUsingUnqualified')->newInstance()->newObject()
     );
   }
 
