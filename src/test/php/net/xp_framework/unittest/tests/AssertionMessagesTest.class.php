@@ -1,8 +1,9 @@
 <?php namespace net\xp_framework\unittest\tests;
 
 use unittest\TestCase;
+use unittest\actions\RuntimeVersion;
 use unittest\ComparisonFailedMessage;
-use lang\types\String;
+use lang\types\Integer;
 
 /**
  * TestCase
@@ -47,18 +48,22 @@ class AssertionMessagesTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[@test, @action(new RuntimeVersion('<7.0.0alpha1'))]
   public function differentStrings() {
     $this->assertFormatted(
       'expected [abc] but was [] using: \'equals\'',
-      new ComparisonFailedMessage('equals', new String('abc'), new String(''))
+      new ComparisonFailedMessage('equals', new \lang\types\String('abc'), new \lang\types\String(''))
     );
   }
 
-  /**
-   * Test two strings
-   *
-   */
+  #[@test, @action(new RuntimeVersion('<7.0.0alpha1'))]
+  public function stringAndStringPrimitive() {
+    $this->assertFormatted(
+      'expected [lang.types.String:] but was [string:""] using: \'equals\'',
+      new ComparisonFailedMessage('equals', new \lang\types\String(''), '')
+    );
+  }
+
   #[@test]
   public function differentStringPrimitives() {
     $this->assertFormatted(
@@ -68,18 +73,10 @@ class AssertionMessagesTest extends TestCase {
   }
 
   #[@test]
-  public function stringAndStringPrimitive() {
-    $this->assertFormatted(
-      'expected [lang.types.String:] but was [string:""] using: \'equals\'',
-      new ComparisonFailedMessage('equals', new String(''), '')
-    );
-  }
-
-  #[@test]
   public function differentTypes() {
     $this->assertFormatted(
-      'expected [] but was [net.xp_framework.unittest.tests.AssertionMessagesTest<differentTypes>] using: \'equals\'',
-      new ComparisonFailedMessage('equals', new String(''), $this)
+      'expected [lang.types.Integer(1)] but was [net.xp_framework.unittest.tests.AssertionMessagesTest<differentTypes>] using: \'equals\'',
+      new ComparisonFailedMessage('equals', new Integer(1), $this)
     );
   }
 

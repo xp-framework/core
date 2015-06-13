@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\tests;
 
 use unittest\TestSuite;
+use unittest\actions\RuntimeVersion;
 
 /**
  * Test TestSuite class methods
@@ -35,13 +36,23 @@ class SuiteTest extends \unittest\TestCase {
     $this->assertEquals(2, $this->suite->numTests());
   }    
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]
   public function addNonTest() {
     $this->suite->addTest(new \lang\Object());
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  public function addNonTest7() {
+    $this->suite->addTest(new \lang\Object());
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]
   public function runNonTest() {
+    $this->suite->runTest(new \lang\Object());
+  }
+
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('<7.0.0alpha1'))]
+  public function runNonTest7() {
     $this->suite->runTest(new \lang\Object());
   }
 
