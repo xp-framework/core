@@ -63,7 +63,7 @@ class ProcessTest extends \unittest\TestCase {
       $this->assertEquals(-1, $p->exitValue(), 'Process should not have exited yet');
       $this->assertNotEquals(0, $p->getProcessId());
       $this->assertNotEquals('', $p->getFilename());
-      $this->assertTrue((new \lang\types\String($p->getCommandLine()))->contains('-v'));
+      $this->assertNotEquals(false, strpos($p->getCommandLine(), '-v'));
       $p->close();
     } catch (AssertionFailedError $e) {
       $p->close();    // Ensure process is closed
