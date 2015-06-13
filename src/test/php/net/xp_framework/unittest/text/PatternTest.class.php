@@ -35,14 +35,14 @@ class PatternTest extends \unittest\TestCase {
     $this->assertEquals(2, Pattern::compile('.')->match('ab')->length());
   }
 
-  #[@test, @action(new RuntimeVersion('<7.0.0alpha1'))]
+  #[@test, @action(new RuntimeVersion('<7.0.0-dev'))]
   public function stringObjectInput() {
     $this->assertEquals(0, Pattern::compile('.')->match(new \lang\types\String(''))->length());
     $this->assertEquals(1, Pattern::compile('.')->match(new \lang\types\String('a'))->length());
     $this->assertEquals(2, Pattern::compile('.')->match(new \lang\types\String('ab'))->length());
   }
 
-  #[@test, @action(new RuntimeVersion('<7.0.0alpha1'))]
+  #[@test, @action(new RuntimeVersion('<7.0.0-dev'))]
   public function unicodePattern() {
     $this->assertEquals(
       array('GÃ¼n'), 
@@ -50,7 +50,7 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action(new RuntimeVersion('<7.0.0alpha1'))]
+  #[@test, @action(new RuntimeVersion('<7.0.0-dev'))]
   public function nonUnicodePattern() {
     $this->assertEquals(
       array('Gün'), 
@@ -191,7 +191,7 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action(new RuntimeVersion('<7.0.0alpha1'))]
+  #[@test, @action(new RuntimeVersion('<7.0.0-dev'))]
   public function unicodeReplacement() {
     $pattern= Pattern::compile('<[\p{L}]>', Pattern::UTF8);
     $this->assertEquals(

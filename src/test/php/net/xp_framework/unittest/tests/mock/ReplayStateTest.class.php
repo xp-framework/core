@@ -26,22 +26,22 @@ class ReplayStateTest extends \unittest\TestCase {
     $this->sut= new ReplayState($this->expectationMap, $this->properties);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function expectationMapRequiredOnCreate() {
     new ReplayState(null, null);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function propertiesRequiredOnCreate() {
     new ReplayState(new HashTable(), null);
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function expectationMapRequiredOnCreate7() {
     new ReplayState(null, null);
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function propertiesRequiredOnCreate7() {
     new ReplayState(new HashTable(), null);
   }

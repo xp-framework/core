@@ -71,12 +71,12 @@ class ProxyTest extends \unittest\TestCase {
     )));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function nullClassLoader() {
     Proxy::getProxyClass(null, [$this->iteratorClass]);
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function nullClassLoader7() {
     Proxy::getProxyClass(null, [$this->iteratorClass]);
   }
@@ -86,12 +86,12 @@ class ProxyTest extends \unittest\TestCase {
     Proxy::getProxyClass(ClassLoader::getDefault(), []);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function nullInterfaces() {
     Proxy::getProxyClass(ClassLoader::getDefault(), null);
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function nullInterfaces7() {
     Proxy::getProxyClass(ClassLoader::getDefault(), null);
   }

@@ -35,12 +35,12 @@ class CompositePropertiesTest extends TestCase {
     new CompositeProperties([]);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]]
   public function createCompositeThrowsExceptionWhenSomethingElseThenPropertiesGiven() {
     new CompositeProperties(array(new Properties(null), 1, new Properties(null)));
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]]
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]]
   public function createCompositeThrowsExceptionWhenSomethingElseThenPropertiesGiven7() {
     new CompositeProperties(array(new Properties(null), 1, new Properties(null)));
   }

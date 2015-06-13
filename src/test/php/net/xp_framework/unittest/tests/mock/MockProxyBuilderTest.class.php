@@ -63,22 +63,22 @@ class MockProxyBuilderTest extends TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function nullClassLoader() {
     (new MockProxyBuilder())->createProxyClass(null, array($this->iteratorClass));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function nullInterfaces() {
     (new MockProxyBuilder())->createProxyClass(\lang\ClassLoader::getDefault(), null);
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function nullClassLoader7() {
     (new MockProxyBuilder())->createProxyClass(null, array($this->iteratorClass));
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function nullInterfaces7() {
     (new MockProxyBuilder())->createProxyClass(\lang\ClassLoader::getDefault(), null);
   }

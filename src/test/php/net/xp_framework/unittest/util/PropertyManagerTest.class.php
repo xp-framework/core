@@ -251,7 +251,7 @@ key="overwritten value"'));
     $this->assertEquals(array($one, $two), $fixture->getSources());
   }
 
-  #[@test, @action(new RuntimeVersion('<7.0.0alpha1'))]
+  #[@test, @action(new RuntimeVersion('<7.0.0-dev'))]
   public function setIllegalSourceKeepsPreviousStateAndThrowsException() {
     $one= new \util\FilesystemPropertySource('.');
 
@@ -265,7 +265,7 @@ key="overwritten value"'));
     $this->assertEquals([], $fixture->getSources());
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  #[@test, @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function setIllegalSourceKeepsPreviousStateAndThrowsException7() {
     $one= new \util\FilesystemPropertySource('.');
 

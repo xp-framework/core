@@ -92,19 +92,19 @@ class ErrorsTest extends \unittest\TestCase {
     $a{0};
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function call_to_member_on_non_object_yields_npe() {
     $a= null;
     $a->method();
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function argument_mismatch_yield_iae() {
     $f= function(Object $arg) { };
     $f('Primitive');
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function argument_mismatch_yield_type_exception() {
     $f= function(Object $arg) { };
     $f('Primitive');

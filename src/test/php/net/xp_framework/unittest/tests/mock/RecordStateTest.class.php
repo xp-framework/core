@@ -22,12 +22,12 @@ class RecordStateTest extends \unittest\TestCase {
     $this->sut= new RecordState($this->expectationMap);
   }
     
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function expectationMapRequiredOnCreate() {
     new RecordState(null);
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function expectationMapRequiredOnCreate7() {
     new RecordState(null);
   }

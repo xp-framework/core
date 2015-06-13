@@ -112,12 +112,12 @@ class ExceptionsTest extends TestCase {
     $this->assertEquals($e->toString(), $out->getBytes());
   }
   
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function withCause_must_be_a_throwable() {
     new \lang\XPException('Message', 'Anything...');
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function withCause_must_be_a_throwable7() {
     new \lang\XPException('Message', 'Anything...');
   }
