@@ -12,24 +12,21 @@ use util\collections\Vector;
  */
 #[@test('Annotation')]
 class TestClass extends AbstractTestClass implements Traceable {
-  public
-    #[@type('util.Date')]
-    $date   = null,
-    /** @var [:lang.Object] */
-    $map    = [];
+
+  #[@type('util.Date')]
+  public $date   = null;
+
+  /** @var [:lang.Object] */
+  public $map    = [];
   
-  protected
-    /** @type int */
-    $size   = 0;
+  /** @type int */
+  protected $size= 0;
   
-  private
-    $factor = 5;
+  private $factor= 5;
   
-  public static
-    $initializerCalled= false;
+  public static $initializerCalled= false;
   
-  private static
-    $cache  = [];
+  private static $cache= [];
 
   static function __static() {
     self::$initializerCalled= true;
