@@ -4,6 +4,7 @@ use unittest\TestCase;
 use io\streams\Streams;
 use io\streams\MemoryOutputStream;
 use lang\Throwable;
+use unittest\actions\RuntimeVersion;
 
 /**
  * Test the XP exception mechanism
@@ -111,8 +112,13 @@ class ExceptionsTest extends TestCase {
     $this->assertEquals($e->toString(), $out->getBytes());
   }
   
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]
   public function withCause_must_be_a_throwable() {
+    new \lang\XPException('Message', 'Anything...');
+  }
+
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  public function withCause_must_be_a_throwable7() {
     new \lang\XPException('Message', 'Anything...');
   }
 }
