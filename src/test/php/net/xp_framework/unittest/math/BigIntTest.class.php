@@ -372,4 +372,14 @@ class BigIntTest extends TestCase {
       (new BigInt(512))->shiftRight(new BigInt(8))
     );
   }
+
+  #[@test]
+  public function positive_string_representation() {
+    $this->assertEquals('math.BigInt(4)', (new BigInt(4))->toString());
+  }
+
+  #[@test]
+  public function negative_string_representation() {
+    $this->assertEquals('math.BigInt(-4)', (new BigInt(-4))->toString());
+  }
 }

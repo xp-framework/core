@@ -81,4 +81,13 @@ abstract class BigNum extends \lang\Object {
   public function doubleValue() {
     return (double)$this->num;
   }
+
+  /**
+   * Returns a string representation
+   *
+   * @return  string
+   */
+  public function toString() {
+    return typeof($this).'('.(string)$this.')';
+  }
 }

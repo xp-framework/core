@@ -8,6 +8,11 @@ XP Framework Core ChangeLog
 * Fixed `math.BigNum` division on HHVM cutting off below default precision
   (@thekid)
 
+### Features
+
+* Added `toString()` method to *BigNum* class (and thus BigInt and BigFloat)
+  (@thekid)
+
 ## 6.3.1 / 2015-06-13
 
 ### Heads up!

@@ -322,4 +322,14 @@ class BigFloatTest extends TestCase {
   public function roundLotsOfZeros() {
     $this->assertEquals(new BigFloat(4.0), (new BigFloat('4.00000000000000000'))->round());
   }
+
+  #[@test]
+  public function positive_string_representation() {
+    $this->assertEquals('math.BigFloat(4)', (new BigFloat(4.0))->toString());
+  }
+
+  #[@test]
+  public function negative_string_representation() {
+    $this->assertEquals('math.BigFloat(-4)', (new BigFloat(-4.0))->toString());
+  }
 }
