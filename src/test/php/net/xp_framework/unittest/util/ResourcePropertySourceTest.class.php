@@ -3,7 +3,7 @@
 use unittest\TestCase;
 use util\Properties;
 use util\ResourcePropertySource;
-
+new import('lang.ResourceProvider');
 
 /**
  * Test for ResourcePropertySource
