@@ -196,7 +196,7 @@ class PatternTest extends \unittest\TestCase {
     $pattern= Pattern::compile('<[\p{L}]>', Pattern::UTF8);
     $this->assertEquals(
       'G.nter',
-      $pattern->replaceWith('.', new String('G<ü>nter', 'iso-8859-1'))
+      $pattern->replaceWith('.', new \lang\types\String('G<ü>nter', 'iso-8859-1'))
     );
   }
 
