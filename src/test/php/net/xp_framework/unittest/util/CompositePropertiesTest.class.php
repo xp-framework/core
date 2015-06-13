@@ -4,6 +4,7 @@ use unittest\TestCase;
 use util\Properties;
 use util\Hashmap;
 use util\CompositeProperties;
+use unittest\actions\RuntimeVersion;
 
 /**
  * Test CompositeProperties
@@ -34,8 +35,13 @@ class CompositePropertiesTest extends TestCase {
     new CompositeProperties([]);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]]
   public function createCompositeThrowsExceptionWhenSomethingElseThenPropertiesGiven() {
+    new CompositeProperties(array(new Properties(null), 1, new Properties(null)));
+  }
+
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]]
+  public function createCompositeThrowsExceptionWhenSomethingElseThenPropertiesGiven7() {
     new CompositeProperties(array(new Properties(null), 1, new Properties(null)));
   }
 
