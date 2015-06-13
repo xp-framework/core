@@ -6,6 +6,7 @@ use lang\ClassLoader;
 use lang\reflect\InvocationHandler;
 use util\XPIterator;
 use util\Observer;
+use unittest\actions\RuntimeVersion;
 
 /**
  * Tests the Proxy class
@@ -70,8 +71,13 @@ class ProxyTest extends \unittest\TestCase {
     )));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]
   public function nullClassLoader() {
+    Proxy::getProxyClass(null, [$this->iteratorClass]);
+  }
+
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  public function nullClassLoader7() {
     Proxy::getProxyClass(null, [$this->iteratorClass]);
   }
 
@@ -80,8 +86,13 @@ class ProxyTest extends \unittest\TestCase {
     Proxy::getProxyClass(ClassLoader::getDefault(), []);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]
   public function nullInterfaces() {
+    Proxy::getProxyClass(ClassLoader::getDefault(), null);
+  }
+
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  public function nullInterfaces7() {
     Proxy::getProxyClass(ClassLoader::getDefault(), null);
   }
 
