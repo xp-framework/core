@@ -4,6 +4,7 @@ use xp\xar\Options;
 use io\File;
 use io\FileUtil;
 use io\Folder;
+use lang\archive\Archive;
 
 /**
  * Extract Instruction
