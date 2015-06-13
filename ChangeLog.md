@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.3.1 / 2015-06-13
+
 ### Heads up!
 
 * This release creates forward compatibility with PHP7. Please note the
