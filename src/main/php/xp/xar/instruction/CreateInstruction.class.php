@@ -7,6 +7,7 @@ use io\collections\FileCollection;
 use io\collections\iterate\FilteredIOCollectionIterator;
 use io\collections\iterate\UriMatchesFilter;
 use io\collections\iterate\CollectionFilter;
+use lang\archive\Archive;
 
 /**
  * Create Instruction. Always ignores well-known VCS control files!
