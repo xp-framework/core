@@ -71,4 +71,13 @@ class BigIntAndFloatTest extends TestCase {
   public function powerOneHalf() {
     (new BigInt(2))->power(new BigFloat(0.5));
   }
+
+  #[@test, @values([
+  #  [new BigInt(1), new BigFloat(2.0)],
+  #  [new BigFloat(1.0), new BigFloat(2.0)],
+  #  [new BigFloat(1.0), new BigInt(2)]
+  #])]
+  public function precision_does_not_cut_off($a, $b) {
+    $this->assertEquals(0.5, $a->divide($b)->doubleValue());
+  }
 }

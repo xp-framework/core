@@ -10,9 +10,10 @@
  * @ext      bcmath
  */
 abstract class BigNum extends \lang\Object {
+  protected $num;
 
   static function __static() {
-    bcscale(ini_get('precision'));
+    bcscale(ini_get('precision') ?: 14);
   }
   
   /**
