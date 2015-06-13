@@ -71,12 +71,12 @@ class CastingTest extends TestCase implements Runnable {
 
   #[@test, @expect('lang.ClassCastException')]
   public function unrelated() {
-    cast($this, 'lang.types.String');
+    cast($this, 'lang.CommandLine');
   }
 
   #[@test, @expect('lang.ClassCastException')]
   public function subClass() {
-    cast(new \lang\Object(), 'lang.types.String');
+    cast(new \lang\Object(), 'lang.CommandLine');
   }
 
   #[@test, @expect('lang.ClassCastException')]
