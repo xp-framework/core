@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\text;
 
 use text\regex\Pattern;
-use lang\types\String;
+use unittest\actions\RuntimeVersion;
 
 /**
  * Patter test 
@@ -35,26 +35,26 @@ class PatternTest extends \unittest\TestCase {
     $this->assertEquals(2, Pattern::compile('.')->match('ab')->length());
   }
 
-  #[@test]
+  #[@test, @action(new RuntimeVersion('<7.0.0alpha1'))]
   public function stringObjectInput() {
-    $this->assertEquals(0, Pattern::compile('.')->match(new String(''))->length());
-    $this->assertEquals(1, Pattern::compile('.')->match(new String('a'))->length());
-    $this->assertEquals(2, Pattern::compile('.')->match(new String('ab'))->length());
+    $this->assertEquals(0, Pattern::compile('.')->match(new \lang\types\String(''))->length());
+    $this->assertEquals(1, Pattern::compile('.')->match(new \lang\types\String('a'))->length());
+    $this->assertEquals(2, Pattern::compile('.')->match(new \lang\types\String('ab'))->length());
   }
 
-  #[@test]
+  #[@test, @action(new RuntimeVersion('<7.0.0alpha1'))]
   public function unicodePattern() {
     $this->assertEquals(
       array('GÃ¼n'), 
-      Pattern::compile('.Ã¼.', Pattern::UTF8)->match(new String('Günter', 'iso-8859-1'))->group(0)
+      Pattern::compile('.Ã¼.', Pattern::UTF8)->match(new \lang\types\String('Günter', 'iso-8859-1'))->group(0)
     );
   }
 
-  #[@test]
+  #[@test, @action(new RuntimeVersion('<7.0.0alpha1'))]
   public function nonUnicodePattern() {
     $this->assertEquals(
       array('Gün'), 
-      Pattern::compile('.ü.')->match(new String('Günter', 'iso-8859-1'))->group(0)
+      Pattern::compile('.ü.')->match(new \lang\types\String('Günter', 'iso-8859-1'))->group(0)
     );
   }
 
@@ -191,7 +191,7 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[@test, @action(new RuntimeVersion('<7.0.0alpha1'))]
   public function unicodeReplacement() {
     $pattern= Pattern::compile('<[\p{L}]>', Pattern::UTF8);
     $this->assertEquals(
