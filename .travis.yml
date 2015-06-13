@@ -18,4 +18,5 @@ before_script:
   - echo "date.timezone=Europe/Berlin" >> xp.ini
 
 script:
+  - echo "PHP = $TRAVIS_PHP_VERSION"
   - (EXCD=0; for i in src/test/config/unittest/*.ini; do echo "---> $i"; ./unittest $i; RES=$?; if [ $RES -ne 0 ]; then EXCD=$RES; fi; done; exit $EXCD;)
