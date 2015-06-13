@@ -92,7 +92,7 @@ class ErrorsTest extends \unittest\TestCase {
     $a{0};
   }
 
-  #[@test, @expect('lang.NullPointerException'), @action(new RuntimeVersion('>=7.0'))]
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
   public function call_to_member_on_non_object_yields_npe() {
     $a= null;
     $a->method();

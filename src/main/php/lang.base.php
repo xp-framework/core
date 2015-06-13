@@ -331,9 +331,7 @@ function __error($code, $msg, $file, $line) {
   if (0 === error_reporting() || null === $file) return;
 
   if (E_RECOVERABLE_ERROR === $code) {
-    if (0 === strncmp($msg, 'Call', 4)) {
-      throw new \lang\NullPointerException($msg);
-    } else if (0 === strncmp($msg, 'Argument', 8)) {
+    if (0 === strncmp($msg, 'Argument', 8)) {
       throw new \lang\IllegalArgumentException($msg);
     } else if (0 === strncmp($msg, 'Object', 6)) {
       throw new \lang\ClassCastException($msg);
