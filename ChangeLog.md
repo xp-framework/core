@@ -9,6 +9,12 @@ XP Framework Core ChangeLog
   to `__null`. See pull request xp-framework/core#86
   (@thekid)
 
+### Bugfixes
+
+* Fixed parity for PHP7 when handling undefined methods in PHP7, which
+  now behaves like HHVM (!). See xp-framework/core#87
+  (@thekid)
+
 ## 6.3.0 / 2015-06-02
 
 ### Heads up!
@@ -27,7 +33,7 @@ XP Framework Core ChangeLog
   compatibility measure. See xp-framework/core#85
   (@thekid)
 
-#### Bugfixes
+### Bugfixes
 
 * Fixed `unittest.actions.VerifyThat` not running static methods correctly
   (@thekid)

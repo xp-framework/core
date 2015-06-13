@@ -5,7 +5,7 @@ trait __xp {
 
   // {{{ static invocation handler
   public static function __callStatic($name, $args) {
-    $c= defined('HHVM_VERSION');
+    $c= PHP_VERSION >= '7.0.0' || defined('HHVM_VERSION');
     $self= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1 - $c]['class'];
     throw new \lang\Error('Call to undefined static method '.\lang\XPClass::nameOf($self).'::'.$name.'()');
   }
@@ -26,7 +26,7 @@ trait __xp {
   // {{{ invocation handler
   public function __call($name, $args) {
     $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
-    $c= defined('HHVM_VERSION');
+    $c= PHP_VERSION >= '7.0.0' || defined('HHVM_VERSION');
     $self= $t[1 - $c]['class'];
     $scope= isset($t[2 - $c]['class']) ? $t[2 - $c]['class'] : $t[3 - $c]['class'];
 
