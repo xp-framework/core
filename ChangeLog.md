@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Restored PHP7 forward compatibility by renaming internal *null* class
+  to `__null`. See pull request xp-framework/core#86
+  (@thekid)
+
 ## 6.3.0 / 2015-06-02
 
 ### Heads up!
