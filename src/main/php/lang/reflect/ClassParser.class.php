@@ -178,7 +178,11 @@ class ClassParser extends \lang\Object {
           $code.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
         }
       }
-      $func= eval('return '.$code.';');
+      try {
+        $func= eval('return '.$code.';');
+      } catch (\ParseException $e) {
+        throw new IllegalStateException('In `'.$code.'`: '.$e->getMessage());
+      }
       if (!($func instanceof \Closure)) {
         if ($error= error_get_last()) {
           set_error_handler('__error', 0);
