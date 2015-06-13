@@ -1,6 +1,5 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
-use lang\types\String;
 use lang\types\Integer;
 use lang\Primitive;
 
