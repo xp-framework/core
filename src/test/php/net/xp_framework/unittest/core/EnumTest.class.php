@@ -3,6 +3,7 @@
 use lang\reflect\Modifiers;
 use lang\XPClass;
 use lang\Enum;
+use unittest\actions\RuntimeVersion;
 
 /**
  * TestCase for enumerations
@@ -152,8 +153,13 @@ class EnumTest extends \unittest\TestCase {
     Enum::valueOf(XPClass::forName('net.xp_framework.unittest.core.Coin'), '@@DOES_NOT_EXIST@@');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]]
   public function valueOfNonEnum() {
+    Enum::valueOf($this, 'irrelevant');
+  }
+
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]]
+  public function valueOfNonEnum7() {
     Enum::valueOf($this, 'irrelevant');
   }
 
@@ -181,8 +187,13 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0alpha1'))]
   public function valuesOfNonEnum() {
+    Enum::valuesOf($this);
+  }
+
+  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0alpha1'))]
+  public function valuesOfNonEnum7() {
     Enum::valuesOf($this);
   }
 
