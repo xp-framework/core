@@ -27,8 +27,8 @@ class PreforkingServer extends Server implements Traceable {
    */
   public function __construct($addr, $port, $count= 10, $maxrequests= 1000) {
     parent::__construct($addr, $port);
-    $this->count= $count;
-    $this->maxrequests= $maxrequests;
+    $this->count= (int)$count;
+    $this->maxrequests= (int)$maxrequests;
   }
 
   /**
@@ -244,5 +244,14 @@ class PreforkingServer extends Server implements Traceable {
     // Shut down ourselves.
     $this->shutdown();
     $this->cat && $this->cat->infof('Server #%d: Shutdown complete', getmypid());
+  }
+
+  /**
+   * Creates a string representation
+   *
+   * @return  string
+   */
+  public function toString() {
+    return nameof($this).'<@'.$this->socket->toString().', children= '.$this->count.', maxrequests= '.$this->maxrequests.'>';
   }
 } 

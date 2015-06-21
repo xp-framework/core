@@ -198,4 +198,13 @@ class Server extends \lang\Object {
       }
     }
   }
+
+  /**
+   * Creates a string representation
+   *
+   * @return  string
+   */
+  public function toString() {
+    return nameof($this).'<@'.$this->socket->toString().'>';
+  }
 }
