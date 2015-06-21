@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed race condition inside `peer.server.PreforkingServer` which would
+  prevent a clean shutdown
+  (@thekid)
 * Fixed `math.BigNum` division on HHVM cutting off below default precision
   (@thekid)
 
