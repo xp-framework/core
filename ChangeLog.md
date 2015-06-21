@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed forking server to handle *SIGTERM* correctly, which is what xpws
+  sends when the user presses Enter.
+  (@thekid)
 * Fixed race condition inside `peer.server.PreforkingServer` which would
   prevent a clean shutdown
   (@thekid)

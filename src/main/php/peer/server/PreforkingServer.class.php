@@ -196,6 +196,7 @@ class PreforkingServer extends Server implements Traceable {
         $this->terminate= true;
       };
       pcntl_signal(SIGINT, $terminate);
+      pcntl_signal(SIGTERM, $terminate);
 
       $restart= function($sig) {
         $this->cat && $this->cat->debugf('Received restart signal %d in server #%d', $sig, getmypid());
