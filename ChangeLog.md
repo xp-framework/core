@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.3.2 / 2015-06-23
+
 ### Bugfixes
 
 * Fixed forking server to handle *SIGTERM* correctly, which is what xpws
