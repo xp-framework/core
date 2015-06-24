@@ -107,7 +107,7 @@ class UsesTest extends \unittest\TestCase {
   #[@test]
   public function useClasses() {
     $this->assertResult(
-      1, 
+      1,
       array('+OK '.nameof($this), '-ERR does.not.exist: lang.ClassNotFoundException'),
       array(''),
       $this->useAllOf(array(nameof($this), 'does.not.exist'))
@@ -222,6 +222,16 @@ class UsesTest extends \unittest\TestCase {
       ['array(0) {', '}'],
       [''],
       $this->run('xp::gc(); uses("lang.reflect.InvocationHandler", "lang.reflect.InvocationHandler"); var_dump(xp::$errors);')
+    );
+  }
+
+  #[@test]
+  public function uses_class_with_import_Function() {
+    $this->assertResult(
+      0,
+      array('+OK lang.ResourceProvider'),
+      array(''),
+      $this->useAllOf(array('lang.ResourceProvider'))
     );
   }
 }
