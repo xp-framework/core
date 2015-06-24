@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.3.3 / 2015-06-24
+
 * Fixed bug when using `uses()` with classes that have an __import method.
   (@johannes85)
 
