@@ -6,10 +6,6 @@ use io\streams\MemoryInputStream;
 
 class StringReaderTest extends TestCase {
 
-  /**
-   * Test readLine()
-   *
-   */
   #[@test]
   public function readLine() {
     $line1= 'This is a test';
@@ -21,10 +17,6 @@ class StringReaderTest extends TestCase {
     $this->assertEquals($line2, $stream->readLine());
   }
   
-  /**
-   * Test readLine() with empty string
-   *
-   */
   #[@test]
   public function readLineWithEmptyLine() {
     $stream= new StringReader(new MemoryInputStream("\n"));
@@ -32,10 +24,6 @@ class StringReaderTest extends TestCase {
     $this->assertEquals('', $stream->readLine());
   }
 
-  /**
-   * Test readLine() with empty string
-   *
-   */
   #[@test]
   public function readLineWithEmptyLines() {
     $stream= new StringReader(new MemoryInputStream("\n\n\nHello\n\n"));
@@ -47,10 +35,6 @@ class StringReaderTest extends TestCase {
     $this->assertEquals('', $stream->readLine());
   }
   
-  /**
-   * Test readLine() with single line
-   *
-   */
   #[@test]
   public function readLineWithSingleLine() {
     $stream= new StringReader(new MemoryInputStream($line= 'This is a test'));
@@ -58,11 +42,6 @@ class StringReaderTest extends TestCase {
     $this->assertEquals($line, $stream->readLine());
   }
   
-  /**
-   * Test readLine() to not break when characters occur which
-   * evaluates to FALSE
-   *
-   */
   #[@test]
   public function readLineWithZeros() {
     $stream= new StringReader(new MemoryInputStream($line= 'Line containing 0 characters'));
@@ -70,10 +49,6 @@ class StringReaderTest extends TestCase {
     $this->assertEquals($line, $stream->readLine());
   }
 
-  /**
-   * Test read()
-   *
-   */
   #[@test]
   public function read() {
     $stream= new StringReader(new MemoryInputStream($line= 'Hello World'));
@@ -83,10 +58,6 @@ class StringReaderTest extends TestCase {
     $this->assertEquals('World', $stream->read(5));
   }
 
-  /**
-   * Test read()
-   *
-   */
   #[@test]
   public function readAll() {
     $stream= new StringReader(new MemoryInputStream($line= 'Hello World'));
@@ -94,10 +65,6 @@ class StringReaderTest extends TestCase {
     $this->assertEquals('Hello World', $stream->read());
   }
 
-  /**
-   * Test read()
-   *
-   */
   #[@test]
   public function readAfterReadingAll() {
     $stream= new StringReader(new MemoryInputStream($line= 'Hello World'));
@@ -106,10 +73,6 @@ class StringReaderTest extends TestCase {
     $this->assertEquals(null, $stream->read());
   }
 
-  /**
-   * Test readLine()
-   *
-   */
   #[@test]
   public function readLineAfterReadingAllLines() {
     $stream= new StringReader(new MemoryInputStream($line= 'Hello World'."\n"));
@@ -118,10 +81,6 @@ class StringReaderTest extends TestCase {
     $this->assertEquals(null, $stream->readLine());
   }
 
-  /**
-   * Test readLine()
-   *
-   */
   #[@test]
   public function readAfterReadingAllLines() {
     $stream= new StringReader(new MemoryInputStream($line= 'Hello World'."\n"));
