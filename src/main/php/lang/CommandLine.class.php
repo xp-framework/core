@@ -84,7 +84,9 @@ abstract class CommandLine extends Enum {
       public function parse($cmd) {
         $parts= [];
         $o= 0;
-        while (FALSE !== ($p= strcspn($cmd, " ", $o))) {
+        $l= strlen($cmd);
+        while ($o < $l) {
+          $p= strcspn($cmd, " ", $o);
           $option= substr($cmd, $o, $p);
           if (1 === substr_count($option, \'"\')) {
             $l= $o+ $p;
