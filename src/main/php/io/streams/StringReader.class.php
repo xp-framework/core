@@ -59,7 +59,7 @@ class StringReader extends \lang\Object implements InputStreamReader {
       if (null === ($read= $this->in->read($size))) break;
       $this->buf.= $read;
     }
-    if (false === ($chunk= substr($this->buf, 0, $size))) return null;
+    if (false === $this->buf || false === ($chunk= substr($this->buf, 0, $size))) return null;
     $this->buf= substr($this->buf, $size);
     return $chunk;
   }

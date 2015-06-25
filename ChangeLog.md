@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ## 6.3.4 / 2015-06-25
 
+* Fixed bug with PHP7 when reading lines from the console
+  (@thekid)
 * Fixed bug with importing into global scope on HHVM
   (@thekid)
 
