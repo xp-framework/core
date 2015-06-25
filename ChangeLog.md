@@ -5,8 +5,9 @@ XP Framework Core ChangeLog
 
 ## 6.3.4 / 2015-06-25
 
-* Changed `lang.CommandLine` and `text.TextTokenizer` to cope with a 
-  behaviour change to substr. See https://bugs.php.net/bug.php?id=69931
+* Changed `lang.CommandLine`, `text.TextTokenizer`, `text.StreamTokenizer`
+  and `io.streams.StringReader` to cope with a behaviour change to substr.
+  See https://bugs.php.net/bug.php?id=69931
   (@thekid)
 * Fixed bug with PHP7 when reading lines from the console
   (@thekid)
