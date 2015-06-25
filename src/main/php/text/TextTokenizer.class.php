@@ -80,10 +80,12 @@ class TextTokenizer extends Tokenizer {
       } while (true);
 
       if (!$this->returnDelims || $offset > 0) $this->_stack[]= substr($this->_buf, 0, $offset);
-      if ($this->returnDelims && $offset < strlen($this->_buf)) {
+      $l= strlen($this->_buf);
+      if ($this->returnDelims && $offset < $l) {
         $this->_stack[]= $this->_buf{$offset};
       }
-      $this->_buf= substr($this->_buf, $offset+ 1);
+      $offset++;
+      $this->_buf= $offset < $l ? substr($this->_buf, $offset) : false;
     }
     
     return array_shift($this->_stack);
