@@ -385,7 +385,7 @@ function uses() {
     if (class_exists($class, false) && method_exists($class, '__import')) {
       if (null === $scope) {
         $trace= debug_backtrace(0, 3);
-        $scope= literal($trace[2]['args'][0]);
+        $scope= isset($trace[2]['args'][0]) ? literal($trace[2]['args'][0]) : null;
       }
       $class::__import($scope);
     }

@@ -3,6 +3,11 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.3.4 / 2015-06-25
+
+* Fixed bug with importing into global scope on HHVM
+  (@thekid)
+
 ## 6.3.3 / 2015-06-24
 
 * Fixed bug when using `uses()` with classes that have an __import method.
