@@ -2,7 +2,6 @@
 
 use peer\Header;
 
-
 /**
  * This class adds power to an application
  *
@@ -10,8 +9,7 @@ use peer\Header;
  * @see   http://www.binford.de/
  */
 class Binford extends \lang\Object { 
-  public 
-    $poweredBy= 0;
+  public $poweredBy= 0;
 
   /**
    * Constructor
