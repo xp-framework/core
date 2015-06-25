@@ -7,8 +7,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
-* **This release requires PHP 7 alpha2!** This second alpha includes the
-  "Throwable" RFC which changes the builtin exception hierarchy.
+* **Dropped support for PHP7 alpha1, now requires alpha2!** This second
+  alpha includes the "Throwable" RFC which changes the builtin exception
+  hierarchy.
   (@thekid)
 
 ### Bugfixes
