@@ -89,14 +89,14 @@ abstract class CommandLine extends Enum {
           $p= strcspn($cmd, " ", $o);
           $option= substr($cmd, $o, $p);
           if (1 === substr_count($option, \'"\')) {
-            $l= $o+ $p;
-            $qp= strpos($cmd, \'"\', $l)+ 1;
-            $option.= substr($cmd, $l, $qp- $l);
+            $ql= $o+ $p;
+            $qp= strpos($cmd, \'"\', $ql)+ 1;
+            $option.= substr($cmd, $ql, $qp- $ql);
             $o= $qp+ 1;
           } else if (1 === substr_count($option, "\'")) {
-            $l= $o+ $p;
-            $qp= strpos($cmd, "\'", $l)+ 1;
-            $option.= substr($cmd, $l, $qp- $l);
+            $ql= $o+ $p;
+            $qp= strpos($cmd, "\'", $ql)+ 1;
+            $option.= substr($cmd, $ql, $qp- $ql);
             $o= $qp+ 1;
           } else {
             $o+= $p+ 1;
