@@ -272,9 +272,8 @@ key="overwritten value"'));
     $fixture= $this->fixture();
     try {
       $fixture->setSources(array($one, null));
-      $this->fail('No exception thrown', null, 'TypeException or TypeError');
-    } catch (\TypeException $expected) {   // PHP 7 alpha1
-    } catch (\TypeError  $expected) {      // PHP 7-dev w/ Throwable -> https://github.com/php/php-src/pull/1284
+      $this->fail('No exception thrown', null, 'TypeError');
+    } catch (\TypeError  $expected) {
     }
 
     $this->assertEquals([], $fixture->getSources());

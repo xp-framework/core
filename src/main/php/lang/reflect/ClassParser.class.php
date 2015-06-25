@@ -182,8 +182,6 @@ class ClassParser extends \lang\Object {
         $func= eval('return '.$code.';');
       } catch (\ParseError $e) {
         throw new IllegalStateException('In `'.$code.'`: '.$e->getMessage());
-      } catch (\ParseException $e) {
-        throw new IllegalStateException('In `'.$code.'`: '.$e->getMessage());
       }
       if (!($func instanceof \Closure)) {
         if ($error= error_get_last()) {

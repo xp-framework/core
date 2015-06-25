@@ -89,9 +89,6 @@ class PropertyManager extends \lang\Object {
     } catch (\Throwable $e) {
       $this->provider= $provider;
       throw $e;
-    } catch (\BaseException $e) {
-      $this->provider= $provider;
-      throw $e;
     }
   }
 
