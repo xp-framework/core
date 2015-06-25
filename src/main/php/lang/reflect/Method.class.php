@@ -94,6 +94,8 @@ class Method extends Routine {
       throw new TargetInvocationException(XPClass::nameOf($this->_class).'::'.$this->_reflect->getName(), $e);
     } catch (\Exception $e) {
       throw new TargetInvocationException(XPClass::nameOf($this->_class).'::'.$this->_reflect->getName(), new \lang\XPException($e->getMessage()));
+    } catch (\Throwable $e) {
+      throw new TargetInvocationException(XPClass::nameOf($this->_class).'::'.$this->_reflect->getName(), new \lang\Error($e->getMessage()));
     } catch (\BaseException $e) {
       throw new TargetInvocationException(XPClass::nameOf($this->_class).'::'.$this->_reflect->getName(), new \lang\Error($e->getMessage()));
     }

@@ -86,6 +86,9 @@ class PropertyManager extends \lang\Object {
     } catch (\lang\IllegalArgumentException $e) {
       $this->provider= $provider;
       throw $e;
+    } catch (\Throwable $e) {
+      $this->provider= $provider;
+      throw $e;
     } catch (\BaseException $e) {
       $this->provider= $provider;
       throw $e;
