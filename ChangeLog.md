@@ -5,9 +5,12 @@ XP Framework Core ChangeLog
 
 ## 6.3.4 / 2015-06-25
 
+* Adopted to changes in PHP7's exception hierarchy. See php/php-src#1284
+  and https://wiki.php.net/rfc/throwable-interface
+  (@thekid)
 * Changed `lang.CommandLine`, `text.TextTokenizer`, `text.StreamTokenizer`
   and `io.streams.StringReader` to cope with a behaviour change to substr.
-  See https://bugs.php.net/bug.php?id=69931
+  See https://bugs.php.net/69931.
   (@thekid)
 * Fixed bug with PHP7 when reading lines from the console
   (@thekid)
