@@ -4,7 +4,6 @@ use unittest\TestCase;
 use peer\Socket;
 use lang\Runtime;
 
-
 /**
  * TestCase
  *
@@ -14,7 +13,7 @@ use lang\Runtime;
 abstract class AbstractServerTest extends TestCase {
   protected static
     $serverProcess = null,
-    $bindAddress   = array(null, -1);
+    $bindAddress   = [null, -1];
 
   protected $conn= null;
   protected $client= null;
@@ -59,8 +58,8 @@ abstract class AbstractServerTest extends TestCase {
     with ($rt= Runtime::getInstance()); {
       self::$serverProcess= $rt->getExecutable()->newInstance(array_merge(
         $rt->startupOptions()->asArguments(),
-        array($rt->bootstrapScript('class')),
-        array('net.xp_framework.unittest.peer.server.TestingServer', $protocol)
+        [$rt->bootstrapScript('class')],
+        ['net.xp_framework.unittest.peer.server.TestingServer', $protocol]
       ));
     }
     self::$serverProcess->in->close();

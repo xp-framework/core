@@ -104,16 +104,16 @@ class GenericsTest extends \unittest\TestCase {
   #[@test]
   public function differingGenericLRUBuffersNotEquals() {
     $this->assertNotEquals(
-      create('new util.collections.LRUBuffer<lang.Object>', array(10)),
-      create('new util.collections.LRUBuffer<lang.types.String>', array(10))
+      create('new util.collections.LRUBuffer<lang.Object>', [10]),
+      create('new util.collections.LRUBuffer<lang.types.String>', [10])
     );
   }
 
   #[@test]
   public function sameGenericLRUBuffersAreEqual() {
     $this->assertEquals(
-      create('new util.collections.LRUBuffer<lang.types.String>', array(10)),
-      create('new util.collections.LRUBuffer<lang.types.String>', array(10))
+      create('new util.collections.LRUBuffer<lang.types.String>', [10]),
+      create('new util.collections.LRUBuffer<lang.types.String>', [10])
     );
   }
 
@@ -131,7 +131,7 @@ class GenericsTest extends \unittest\TestCase {
   public function createStringVector() {
     $this->assertEquals(
       new \lang\types\String('one'), 
-      create('new util.collections.Vector<lang.types.String>', array(new \lang\types\String('one')))->get(0)
+      create('new util.collections.Vector<lang.types.String>', [new \lang\types\String('one')])->get(0)
     );
   }
 
@@ -142,7 +142,7 @@ class GenericsTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function stringVectorSetIllegalValue() {
-    create('new util.collections.Vector<lang.types.String>', array(new \lang\types\String('')))->set(0, new \lang\types\Integer(1));
+    create('new util.collections.Vector<lang.types.String>', [new \lang\types\String('')])->set(0, new \lang\types\Integer(1));
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
@@ -152,7 +152,7 @@ class GenericsTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function createStringVectorWithIllegalValue() {
-    create('new util.collections.Vector<lang.types.String>', array(new \lang\types\Integer(1)));
+    create('new util.collections.Vector<lang.types.String>', [new \lang\types\Integer(1)]);
   }
 
   #[@test]
@@ -227,17 +227,17 @@ class GenericsTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function stringHashSetAddAllIllegalValue() {
-    create('new util.collections.HashSet<lang.types.String>')->addAll(array(
+    create('new util.collections.HashSet<lang.types.String>')->addAll([
       new \lang\types\String('HELLO'),    // Still OK
       new \lang\types\Integer(2),         // Blam
-    ));
+    ]);
   }
 
   #[@test]
   public function stringHashSetUnchangedAferAddAllIllegalValue() {
     $h= create('new util.collections.HashSet<lang.types.String>');
     try {
-      $h->addAll(array(new \lang\types\String('HELLO'), new \lang\types\Integer(2)));
+      $h->addAll([new \lang\types\String('HELLO'), new \lang\types\Integer(2)]);
     } catch (\lang\IllegalArgumentException $expected) {
     }
     $this->assertTrue($h->isEmpty());
@@ -246,22 +246,22 @@ class GenericsTest extends \unittest\TestCase {
   #[@test]
   public function arrayAsKeyLookupWithMatchingKey() {
     with ($h= create('new util.collections.HashTable<string[], lang.types.String>')); {
-      $h->put(array('hello'), new \lang\types\String('World'));
-      $this->assertEquals(new \lang\types\String('World'), $h->get(array('hello')));
+      $h->put(['hello'], new \lang\types\String('World'));
+      $this->assertEquals(new \lang\types\String('World'), $h->get(['hello']));
     }
   }
 
   #[@test]
   public function arrayAsKeyLookupWithMismatchingKey() {
     with ($h= create('new util.collections.HashTable<string[], lang.types.String>')); {
-      $h->put(array('hello'), new \lang\types\String('World'));
-      $this->assertNull($h->get(array('world')));
+      $h->put(['hello'], new \lang\types\String('World'));
+      $this->assertNull($h->get(['world']));
     }
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function arrayAsKeyArrayComponentTypeMismatch() {
-    create('new util.collections.HashTable<string[], lang.types.String>')->put(array(1), new \lang\types\String('World'));
+    create('new util.collections.HashTable<string[], lang.types.String>')->put([1], new \lang\types\String('World'));
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
@@ -293,7 +293,7 @@ class GenericsTest extends \unittest\TestCase {
     $c= create('new util.collections.HashSet<float>');
     $c->add(0.1);
     $c->add(0.2);
-    $this->assertEquals(array(0.1, 0.2), $c->toArray());
+    $this->assertEquals([0.1, 0.2], $c->toArray());
   }
 
   /**

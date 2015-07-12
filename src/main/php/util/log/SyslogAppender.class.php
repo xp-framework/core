@@ -28,6 +28,14 @@ class SyslogAppender extends Appender {
    * @param   util.log.LoggingEvent event
    */ 
   public function append(LoggingEvent $event) {
+    static $map= [
+      LogLevel::INFO    => LOG_INFO,
+      LogLevel::WARN    => LOG_WARNING,
+      LogLevel::ERROR   => LOG_ERR,
+      LogLevel::DEBUG   => LOG_DEBUG,
+      LogLevel::NONE    => LOG_NOTICE
+    ];
+
     if ($this->identifier != $this->lastIdentifier) {
       closelog();
       openlog(
@@ -37,15 +45,7 @@ class SyslogAppender extends Appender {
       );
       $this->lastIdentifier= $this->identifier;
     }
-  
-    static $map= array(
-      LogLevel::INFO    => LOG_INFO,
-      LogLevel::WARN    => LOG_WARNING,
-      LogLevel::ERROR   => LOG_ERR,
-      LogLevel::DEBUG   => LOG_DEBUG,
-      LogLevel::NONE    => LOG_NOTICE
-    );
-    
+
     $l= $event->getLevel();
     syslog($map[isset($map[$l]) ? $l : LogLevel::NONE], $this->layout->format($event));
   }

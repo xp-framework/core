@@ -25,14 +25,14 @@ abstract class LogLevel extends \lang\Object {
    * @throws  lang.IllegalArgumentException
    */
   public static function named($name) {
-    static $map= array(
+    static $map= [
       'INFO'  => self::INFO,
       'WARN'  => self::WARN,
       'ERROR' => self::ERROR,
       'DEBUG' => self::DEBUG,
       'ALL'   => self::ALL,
       'NONE'  => self::NONE,
-    );
+    ];
   
     $key= strtoupper($name);
     if (!isset($map[$key])) {
@@ -49,12 +49,12 @@ abstract class LogLevel extends \lang\Object {
    * @throws  lang.IllegalArgumentException
    */
   public static function nameOf($level) {
-    static $map= array(
+    static $map= [
       self::INFO  => 'INFO',
       self::WARN  => 'WARN',
       self::ERROR => 'ERROR',
       self::DEBUG => 'DEBUG',
-    );
+    ];
   
     if (!isset($map[$level])) {
       throw new \lang\IllegalArgumentException('No such loglevel '.$level);

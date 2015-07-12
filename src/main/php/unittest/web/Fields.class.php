@@ -9,25 +9,25 @@ abstract class Fields extends \lang\Enum {
   public static $INPUT, $SELECT, $TEXTAREA;
 
   static function __static() {
-    self::$INPUT= newinstance(__CLASS__, array(0, 'INPUT'), '{
+    self::$INPUT= newinstance(__CLASS__, [0, 'INPUT'], '{
       static function __static() { }
       
       public function newInstance($form, $node) {
-        return new unittest·web·InputField($form, $node);
+        return new InputField($form, $node);
       }
     }');
-    self::$SELECT= newinstance(__CLASS__, array(1, 'SELECT'), '{
+    self::$SELECT= newinstance(__CLASS__, [1, 'SELECT'], '{
       static function __static() { }
       
       public function newInstance($form, $node) {
-        return new unittest·web·SelectField($form, $node);
+        return new SelectField($form, $node);
       }
     }');
-    self::$TEXTAREA= newinstance(__CLASS__, array(2, 'TEXTAREA'), '{
+    self::$TEXTAREA= newinstance(__CLASS__, [2, 'TEXTAREA'], '{
       static function __static() { }
       
       public function newInstance($form, $node) {
-        return new unittest·web·TextAreaField($form, $node);
+        return new TextAreaField($form, $node);
       }
     }');
   }

@@ -132,7 +132,7 @@ class QuotedPrintableInputStreamTest extends TestCase {
   #[@test]
   public function chunkedRead() {
     $expected= 'Hello Übercoder & World';
-    $stream= new QuotedPrintableInputStream(newinstance('io.streams.InputStream', array(array('Hello =', 'DCbercoder=', "\n", ' & World')), '{
+    $stream= new QuotedPrintableInputStream(newinstance('io.streams.InputStream', [['Hello =', 'DCbercoder=', "\n", ' & World']], '{
       protected $chunks;
       
       public function __construct(array $chunks) {

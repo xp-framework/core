@@ -321,7 +321,7 @@ class Runner extends \lang\Object {
       try {
         switch ($type) {
           case 'rdbms.DBConnection': {
-            $args= array($cm->getByHost($inject['name'], 0));
+            $args= [$cm->getByHost($inject['name'], 0)];
             break;
           }
 
@@ -344,15 +344,15 @@ class Runner extends \lang\Object {
                 $section= $p->getNextSection();
               }
 
-              $args= array($convert);
+              $args= [$convert];
             } else {
-              $args= array($p);
+              $args= [$p];
             }
             break;
           }
 
           case 'util.log.LogCategory': {
-            $args= array($l->getCategory($inject['name']));
+            $args= [$l->getCategory($inject['name'])];
             break;
           }
 
@@ -396,7 +396,7 @@ class Runner extends \lang\Object {
           }
         }
         try {
-          $method->invoke($instance, array($pass));
+          $method->invoke($instance, [$pass]);
         } catch (\lang\Throwable $e) {
           self::$err->writeLine('*** Error for arguments '.$begin.'..'.$end.': ', $this->verbose ? $e : $e->getMessage());
           return 2;
@@ -427,7 +427,7 @@ class Runner extends \lang\Object {
 
           $args= [];
         } else {
-          $args= array($classparams->value($select, $short));
+          $args= [$classparams->value($select, $short)];
         }
 
         try {

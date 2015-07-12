@@ -125,7 +125,7 @@ class X509Certificate extends Certificate {
    * @return  security.Principal
    */
   public function getIssuerDN() {
-    return new Principal(array_map(array('self', 'decode'), $this->_info['issuer']));
+    return new Principal(array_map(['self', 'decode'], $this->_info['issuer']));
   }
   
   /**
@@ -134,7 +134,7 @@ class X509Certificate extends Certificate {
    * @return  security.Principal
    */
   public function getSubjectDN() {
-    return new Principal(array_map(array('self', 'decode'), $this->_info['subject']));
+    return new Principal(array_map(['self', 'decode'], $this->_info['subject']));
   }
   
   /**

@@ -58,7 +58,7 @@ class AnnotationTest extends \unittest\TestCase {
     $this->assertFalse($this->class->getMethod('simple')->hasAnnotation('doesnotexist'));
   }
 
-  #[@test, @values(array('one', 'two', 'three'))]
+  #[@test, @values(['one', 'two', 'three'])]
   public function multipleAnnotationsExist($annotation) {
     $this->assertTrue($this->class->getMethod('multiple')->hasAnnotation($annotation));
   }
@@ -66,7 +66,7 @@ class AnnotationTest extends \unittest\TestCase {
   #[@test]
   public function multipleAnnotationsReturnedAsList() {
     $this->assertEquals(
-      array('one' => NULL, 'two' => NULL, 'three' => NULL),
+      ['one' => null, 'two' => null, 'three' => null],
       $this->class->getMethod('multiple')->getAnnotations()
     );
   }
@@ -82,7 +82,7 @@ class AnnotationTest extends \unittest\TestCase {
   #[@test]
   public function keyValuePairAnnotationValue() {
     $this->assertEquals(
-      array('key' => 'value'),
+      ['key' => 'value'],
       $this->class->getMethod('keyValuePair')->getAnnotation('config')
     );
   }
@@ -100,7 +100,7 @@ class AnnotationTest extends \unittest\TestCase {
   #[@test]
   public function testMethodsLimitAnnotation() {
     $this->assertEquals(
-      array('time' => 0.1, 'memory' => 100),
+      ['time' => 0.1, 'memory' => 100],
       $this->class->getMethod('testMethod')->getAnnotation('limit')
     );
   }

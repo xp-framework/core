@@ -24,14 +24,14 @@ class FileIntegrationTest extends \unittest\TestCase {
   public static function verifyTempDir() {
     self::$temp= System::tempDir();
     if (!is_writeable(self::$temp)) {
-      throw new PrerequisitesNotMetError('$TEMP is not writeable', null, array(self::$temp.' +w'));
+      throw new PrerequisitesNotMetError('$TEMP is not writeable', null, [self::$temp.' +w']);
     }
     if (($df= disk_free_space(self::$temp)) < 10240) {
-      throw new PrerequisitesNotMetError('Not enough space available in $TEMP', null, array(sprintf(
+      throw new PrerequisitesNotMetError('Not enough space available in $TEMP', null, [sprintf(
         'df %s = %.0fk > 10k',
         self::$temp,
         $df / 1024
-      )));
+      )]);
     }
   }
 

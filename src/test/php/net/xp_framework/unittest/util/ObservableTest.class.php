@@ -3,7 +3,6 @@
 use unittest\TestCase;
 use util\Observable;
 
-
 /**
  * Test Observable class
  *
@@ -32,18 +31,12 @@ class ObservableTest extends TestCase {
     }');
   }
 
-  /**
-   * Tests hasChanged() method
-   */
   #[@test]
   public function originally_unchanged() {
     $o= self::$observable->newInstance();
     $this->assertFalse($o->hasChanged());
   }
 
-  /**
-   * Tests setChanged() method
-   */
   #[@test]
   public function changed() {
     $o= self::$observable->newInstance();
@@ -51,9 +44,6 @@ class ObservableTest extends TestCase {
     $this->assertTrue($o->hasChanged());
   }
 
-  /**
-   * Tests clearChanged() method
-   */
   #[@test]
   public function change_cleared() {
     $o= self::$observable->newInstance();
@@ -62,34 +52,28 @@ class ObservableTest extends TestCase {
     $this->assertFalse($o->hasChanged());
   }
 
-  /**
-   * Tests addObserver() method
-   */
   #[@test]
   public function add_observer_returns_added_observer() {
-    $observer= newinstance('util.Observer', [], array(
+    $observer= newinstance('util.Observer', [], [
       'update' => function($obs, $arg= null) {
         /* Intentionally empty */
       }
-    ));
+    ]);
     $o= self::$observable->newInstance();
     $this->assertEquals($observer, $o->addObserver($observer));
   }
 
-  /**
-   * Tests notifyObservers() method
-   */
   #[@test]
   public function observer_gets_called_with_observable() {
-    $observer= newinstance('util.Observer', [], array(
+    $observer= newinstance('util.Observer', [], [
       'calls' => [],
       'update' => function($obs, $arg= null) {
-        $this->calls[]= array($obs, $arg);
+        $this->calls[]= [$obs, $arg];
       }
-    ));
+    ]);
     $o= self::$observable->newInstance();
     $o->addObserver($observer);
     $o->setValue(5);
-    $this->assertEquals(array(array($o, null)), $observer->calls);
+    $this->assertEquals([[$o, null]], $observer->calls);
   }
 }

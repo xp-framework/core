@@ -23,7 +23,7 @@ class XmlListenerTest extends \unittest\TestCase {
   #[@beforeClass]
   public static function onlyWithXmlModule() {
     if (!class_exists('xml\Tree')) {
-      throw new PrerequisitesNotMetError('XML Module not available', null, array('loaded'));
+      throw new PrerequisitesNotMetError('XML Module not available', null, ['loaded']);
     }
   }
 
@@ -103,12 +103,12 @@ class XmlListenerTest extends \unittest\TestCase {
     with ($suite= @$t->root()->nodeAt(0)); {
       $this->assertSuiteNode(
         'net.xp_framework.unittest.tests.SimpleTestCase',
-        array('tests' => '1', 'errors' => '0', 'failures' => '0', 'skipped' => '0'),
+        ['tests' => '1', 'errors' => '0', 'failures' => '0', 'skipped' => '0'],
         $suite
       );
       
       with ($case= @$suite->nodeAt(0)); {
-        $this->assertCaseNode(array('name' => 'succeeds'), $case);
+        $this->assertCaseNode(['name' => 'succeeds'], $case);
         $this->assertNotEquals(null, $case->getAttribute('time'));
       }
     }
@@ -122,12 +122,12 @@ class XmlListenerTest extends \unittest\TestCase {
     with ($suite= @$t->root()->nodeAt(0)); {
       $this->assertSuiteNode(
         'net.xp_framework.unittest.tests.SimpleTestCase',
-        array('tests' => '1', 'errors' => '0', 'failures' => '0', 'skipped' => '1'),
+        ['tests' => '1', 'errors' => '0', 'failures' => '0', 'skipped' => '1'],
         $suite
       );
       
       with ($case= @$suite->nodeAt(0)); {
-        $this->assertCaseNode(array('name' => 'skipped'), $case);
+        $this->assertCaseNode(['name' => 'skipped'], $case);
         $this->assertNotEquals(null, $case->getAttribute('time'));
       }
     }
@@ -141,12 +141,12 @@ class XmlListenerTest extends \unittest\TestCase {
     with ($suite= @$t->root()->nodeAt(0)); {
       $this->assertSuiteNode(
         'net.xp_framework.unittest.tests.SimpleTestCase',
-        array('tests' => '1', 'errors' => '0', 'failures' => '1', 'skipped' => '0'),
+        ['tests' => '1', 'errors' => '0', 'failures' => '1', 'skipped' => '0'],
         $suite
       );
 
       with ($case= @$suite->nodeAt(0)); {
-        $this->assertCaseNode(array('name' => 'fails'), $case);
+        $this->assertCaseNode(['name' => 'fails'], $case);
         $this->assertNotEquals(null, $case->getAttribute('time'));
 
         with ($failure= @$case->nodeAt(0)); {
@@ -167,12 +167,12 @@ class XmlListenerTest extends \unittest\TestCase {
     with ($suite= @$t->root()->nodeAt(0)); {
       $this->assertSuiteNode(
         'net.xp_framework.unittest.tests.SimpleTestCase',
-        array('tests' => '1', 'errors' => '1', 'failures' => '0', 'skipped' => '0'),
+        ['tests' => '1', 'errors' => '1', 'failures' => '0', 'skipped' => '0'],
         $suite
       );
 
       with ($case= @$suite->nodeAt(0)); {
-        $this->assertCaseNode(array('name' => 'throws'), $case);
+        $this->assertCaseNode(['name' => 'throws'], $case);
         $this->assertNotEquals(null, $case->getAttribute('time'));
 
         with ($failure= @$case->nodeAt(0)); {
@@ -193,12 +193,12 @@ class XmlListenerTest extends \unittest\TestCase {
     with ($suite= @$t->root()->nodeAt(0)); {
       $this->assertSuiteNode(
         'net.xp_framework.unittest.tests.SimpleTestCase',
-        array('tests' => '1', 'errors' => '1', 'failures' => '0', 'skipped' => '0'),
+        ['tests' => '1', 'errors' => '1', 'failures' => '0', 'skipped' => '0'],
         $suite
       );
 
       with ($case= @$suite->nodeAt(0)); {
-        $this->assertCaseNode(array('name' => 'raisesAnError'), $case);
+        $this->assertCaseNode(['name' => 'raisesAnError'], $case);
         $this->assertNotEquals(null, $case->getAttribute('time'));
 
         with ($failure= @$case->nodeAt(0)); {
@@ -219,12 +219,12 @@ class XmlListenerTest extends \unittest\TestCase {
     with ($suite= @$t->root()->nodeAt(0)); {
       $this->assertSuiteNode(
         'net.xp_framework.unittest.tests.SimpleTestCase',
-        array('tests' => '2', 'errors' => '0', 'failures' => '1', 'skipped' => '0'),
+        ['tests' => '2', 'errors' => '0', 'failures' => '1', 'skipped' => '0'],
         $suite
       );
       $this->assertEquals(2, sizeof($suite->getChildren()));
-      $this->assertCaseNode(array('name' => 'succeeds'), $suite->nodeAt(0));
-      $this->assertCaseNode(array('name' => 'fails'), $suite->nodeAt(1));
+      $this->assertCaseNode(['name' => 'succeeds'], $suite->nodeAt(0));
+      $this->assertCaseNode(['name' => 'fails'], $suite->nodeAt(1));
     }
   }
 }

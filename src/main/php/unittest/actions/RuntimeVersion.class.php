@@ -1,5 +1,8 @@
 <?php namespace unittest\actions;
 
+use unittest\PrerequisitesNotMetError;
+use unittest\TestCase;
+
 /**
  * Only runs this testcase on a given runtime version, e.g. PHP 5.4.0
  *
@@ -85,7 +88,7 @@ class RuntimeVersion extends \lang\Object implements \unittest\TestAction {
    * @param  unittest.TestCase $t
    * @throws unittest.PrerequisitesNotMetError
    */
-  public function beforeTest(\unittest\TestCase $t) { 
+  public function beforeTest(TestCase $t) { 
     if (!$this->verify()) {
       $compare= '';
       foreach ($this->compare as $f) {
@@ -96,7 +99,7 @@ class RuntimeVersion extends \lang\Object implements \unittest\TestAction {
         }
         $compare.= ' && ('.substr($test, 2).')';
       }
-      throw new \unittest\PrerequisitesNotMetError('Test not intended for this version ('.PHP_VERSION.')', null, array(substr($compare, 4)));
+      throw new PrerequisitesNotMetError('Test not intended for this version ('.PHP_VERSION.')', null, [substr($compare, 4)]);
     }
   }
 
@@ -106,7 +109,7 @@ class RuntimeVersion extends \lang\Object implements \unittest\TestAction {
    *
    * @param  unittest.TestCase $t
    */
-  public function afterTest(\unittest\TestCase $t) {
+  public function afterTest(TestCase $t) {
     // Empty
   }
 }

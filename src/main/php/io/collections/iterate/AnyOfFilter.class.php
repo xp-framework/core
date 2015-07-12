@@ -5,12 +5,12 @@
  * accept the element.
  *
  * This filter:
- * <code>
- *   $filter= new AnyOfFilter(array(
- *     new SizeSmallerThanFilter(500),
- *     new ExtensionEqualsFilter('txt')
- *   ));
- * </code>
+ * ```php
+ * $filter= new AnyOfFilter([
+ *   new SizeSmallerThanFilter(500),
+ *   new ExtensionEqualsFilter('txt')
+ * ]);
+ * ```
  * will accept any elements smaller than 500 bytes or with a
  * ".txt"-extension.
  *

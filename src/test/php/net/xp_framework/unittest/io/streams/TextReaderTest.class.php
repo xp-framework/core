@@ -169,10 +169,10 @@ class TextReaderTest extends \unittest\TestCase {
     $this->assertNull($this->newReader('')->readLine());
   }
 
-  #[@test, @values(array(
+  #[@test, @values([
   #  "Hello\nWorld\n", "Hello\rWorld\r", "Hello\r\nWorld\r\n",
   #  "Hello\nWorld", "Hello\rWorld", "Hello\r\nWorld"
-  #))]
+  #])]
   public function readLines($value) {
     $r= $this->newReader($value);
     $this->assertEquals('Hello', $r->readLine());
@@ -180,10 +180,10 @@ class TextReaderTest extends \unittest\TestCase {
     $this->assertNull($r->readLine());
   }
 
-  #[@test, @values(array(
+  #[@test, @values([
   #  "1\n2\n", "1\r2\r", "1\r\n2\r\n",
   #  "1\n2", "1\r2", "1\r\n2\r\n"
-  #))]
+  #])]
   public function readLinesWithSingleCharacter($value) {
     $r= $this->newReader($value);
     $this->assertEquals('1', $r->readLine());
@@ -393,12 +393,12 @@ class TextReaderTest extends \unittest\TestCase {
     $this->assertNull($this->newReader('', null)->readLine());
   }
 
-  #[@test, @values(array(["\377", 'ÿ'], ["\377\377", 'ÿÿ'], ["\377\377\377", 'ÿÿÿ']))]
+  #[@test, @values([["\377", 'ÿ'], ["\377\377", 'ÿÿ'], ["\377\377\377", 'ÿÿÿ']])]
   public function readNonBOMInputWithAutoDetectedIso88591Charset($bytes, $characters) {
     $this->assertEquals($characters, $this->newReader($bytes, null)->read(0xFF));
   }
 
-  #[@test, @values(array(["\377", 'ÿ'], ["\377\377", 'ÿÿ'], ["\377\377\377", 'ÿÿÿ']))]
+  #[@test, @values([["\377", 'ÿ'], ["\377\377", 'ÿÿ'], ["\377\377\377", 'ÿÿÿ']])]
   public function readLineNonBOMInputWithAutoDetectedIso88591Charset($bytes, $characters) {
     $this->assertEquals($characters, $this->newReader($bytes, null)->readLine(0xFF));
   }

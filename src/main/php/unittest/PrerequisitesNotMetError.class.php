@@ -1,5 +1,7 @@
 <?php namespace unittest;
 
+use lang\Throwable;
+
 /**
  * Indicates prerequisites have not been met
  *
@@ -14,7 +16,7 @@ class PrerequisitesNotMetError extends \lang\XPException {
    * @param   lang.Throwable cause 
    * @param   var[] prerequisites default []
    */
-  public function __construct($message, \lang\Throwable $cause= null, $prerequisites= []) {
+  public function __construct($message, Throwable $cause= null, $prerequisites= []) {
     parent::__construct($message, $cause);
     $this->prerequisites= (array)$prerequisites;
   }
@@ -29,7 +31,7 @@ class PrerequisitesNotMetError extends \lang\XPException {
       '%s (%s) { prerequisites: [%s] }',
       nameof($this),
       $this->message,
-      implode(', ', array_map(array('xp', 'stringOf'), $this->prerequisites))
+      implode(', ', array_map(['xp', 'stringOf'], $this->prerequisites))
     );
   }
 }

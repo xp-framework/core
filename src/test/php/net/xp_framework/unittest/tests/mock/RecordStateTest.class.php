@@ -72,7 +72,7 @@ class RecordStateTest extends \unittest\TestCase {
 
   #[@test]
   public function method_call_should_set_arguments() {
-    $args= array('1', 2, 3.0);
+    $args= ['1', 2, 3.0];
     $this->sut->handleInvocation('foo', $args);
 
     $expectationList= $this->expectationMap->get('foo');

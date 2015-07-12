@@ -75,11 +75,11 @@ class Date extends \lang\Object implements \lang\Value {
   /**
    * Sleep method.
    *
-   * @return  array
+   * @return  string[]
    */
   public function __sleep() {
     $this->value= date_format($this->date, self::SERIALIZE_FORMAT);
-    return array('value', '__id');
+    return ['value', '__id'];
   }
   
   /**
@@ -328,7 +328,7 @@ class Date extends \lang\Object implements \lang\Value {
   public function format($format, TimeZone $outtz= null) {
     return preg_replace_callback(
       '#%([a-zA-Z%])#', 
-      array(($outtz === null ? $this : $outtz->translate($this)), 'formatCallback'), $format
+      [($outtz === null ? $this : $outtz->translate($this)), 'formatCallback'], $format
     );
   }
   
@@ -340,7 +340,8 @@ class Date extends \lang\Object implements \lang\Value {
    * @throws  lang.IllegalArgumentException if unsupported token has been given
    */
   protected function formatCallback($matches) {
-    static $map= array(
+    static $rep= ['t' => "\t", 'n' => "\n", '%' => '%'];
+    static $map= [
       'd' => 'd',
       'm' => 'm',
       'Y' => 'Y',
@@ -369,12 +370,7 @@ class Date extends \lang\Object implements \lang\Value {
       'w' => 'w',
       'y' => 'y',
       'Z' => 'O'
-    );
-    static $rep= array(
-      't' => "\t",
-      'n' => "\n",
-      '%' => '%'
-    );
+    ];
     
     if (isset($map[$matches[1]])) return date_format($this->date, $map[$matches[1]]);
     if (isset($rep[$matches[1]])) return $rep[$matches[1]];

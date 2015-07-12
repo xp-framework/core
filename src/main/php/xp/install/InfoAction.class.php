@@ -50,7 +50,7 @@ class InfoAction extends Action {
     foreach (new FilteredIOCollectionIterator($vendor, $find) as $installed) {
       sscanf(basename($installed->getURI()), '%[^@]@%[^/\\]', $name, $version);
       if (!($parts= sscanf($version, '%d.%d.%d%s'))) {
-        $release= array('dev' => $version);
+        $release= ['dev' => $version];
         $version= ':'.$version;
       } else {
         $rc= null;
@@ -64,7 +64,7 @@ class InfoAction extends Action {
           // Release candidate, e.g. 5.8.0RC5
           sscanf($parts[3], 'RC%d', $rc);
         }
-        $release= array('series' => $parts[0].'.'.$parts[1], 'rc' => $rc > 0);
+        $release= ['series' => $parts[0].'.'.$parts[1], 'rc' => $rc > 0];
       }
 
       $release['installed']= $installed->lastModified();

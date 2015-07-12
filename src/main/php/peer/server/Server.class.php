@@ -108,7 +108,7 @@ class Server extends \lang\Object {
       // Build array of sockets that we want to check for data. If one of them
       // has disconnected in the meantime, notify the listeners (socket will be
       // already invalid at that time) and remove it from the clients list.
-      $read= array($this->socket->getHandle());
+      $read= [$this->socket->getHandle()];
       $currentTime= time();
       foreach ($handles as $h => $handle) {
         if (!$handle->isConnected()) {

@@ -5,7 +5,6 @@ use io\streams\FileInputStream;
 use io\FileUtil;
 use io\TempFile;
 
-
 /**
  * TestCase
  *
@@ -24,7 +23,7 @@ class FileInputStreamTest extends TestCase {
       $this->file= new TempFile();
       FileUtil::setContents($this->file, 'Created by FileInputStreamTest');
     } catch (\io\IOException $e) {
-      throw new \unittest\PrerequisitesNotMetError('Cannot write temporary file', $e, array($this->file));
+      throw new \unittest\PrerequisitesNotMetError('Cannot write temporary file', $e, [$this->file]);
     }
   }
   

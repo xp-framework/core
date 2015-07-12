@@ -20,7 +20,7 @@ class MissingMethodsTest extends \unittest\TestCase {
         parent::run();
       }
     }');
-    call_user_func(array($f->newInstance(), 'run'));
+    call_user_func([$f->newInstance(), 'run']);
   }
 
   #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method .+::run()/')]
@@ -31,7 +31,7 @@ class MissingMethodsTest extends \unittest\TestCase {
         parent::run();
       }
     }');
-    call_user_func(array($c->newInstance(), 'run'));
+    call_user_func([$c->newInstance(), 'run']);
   }
 
   #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method lang.Object::run()/')]
@@ -46,7 +46,7 @@ class MissingMethodsTest extends \unittest\TestCase {
         parent::run();
       }
     }');
-    call_user_func(array($c->newInstance(), 'run'));
+    call_user_func([$c->newInstance(), 'run']);
   }
 
   #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined static method lang.Object::run()/')]
@@ -56,7 +56,7 @@ class MissingMethodsTest extends \unittest\TestCase {
         parent::run();
       }
     }');
-    call_user_func(array($f->literal(), 'run'));
+    call_user_func([$f->literal(), 'run']);
   }
 
   #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined static method .+::run()/')]
@@ -67,7 +67,7 @@ class MissingMethodsTest extends \unittest\TestCase {
         parent::run();
       }
     }');
-    call_user_func(array($c->literal(), 'run'));
+    call_user_func([$c->literal(), 'run']);
   }
 
   #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined static method lang.Object::run()/')]
@@ -82,6 +82,6 @@ class MissingMethodsTest extends \unittest\TestCase {
         parent::run();
       }
     }');
-    call_user_func(array($c->literal(), 'run'));
+    call_user_func([$c->literal(), 'run']);
   }
 }

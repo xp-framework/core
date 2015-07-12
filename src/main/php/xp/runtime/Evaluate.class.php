@@ -33,7 +33,7 @@ class Evaluate extends \lang\Object {
     }
 
     // Perform
-    $argv= array(XPClass::nameOf(__CLASS__)) + $args;
+    $argv= [XPClass::nameOf(__CLASS__)] + $args;
     $argc= sizeof($argv);
     return eval($src);
   }

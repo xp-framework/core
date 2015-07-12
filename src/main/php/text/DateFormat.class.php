@@ -77,7 +77,7 @@ class DateFormat extends \lang\Object {
             $end= strpos($format, ']', $i);
             list($var, $values)= explode('=', substr($format, $i+ 1, $end- $i- 1), 2);
             $i= $end;
-            $this->format[]= array($var, explode(',', $values));
+            $this->format[]= [$var, explode(',', $values)];
             break;
           }
           default: {    // Any other character - verify it's supported
@@ -113,7 +113,7 @@ class DateFormat extends \lang\Object {
         case '%I': $out.= str_pad($d->getHours() % 12, 2, '0', STR_PAD_LEFT); break;
         case '%z': $out.= $d->getTimeZone()->getName(); break;
         case '%Z': $out.= $d->getOffset(); break;
-        case is_array($token): $out.= $token[1][call_user_func(array($d, 'get'.$token[0]))- 1]; break;
+        case is_array($token): $out.= $token[1][call_user_func([$d, 'get'.$token[0]])- 1]; break;
         default: $out.= $token;
       }
     }
@@ -146,7 +146,7 @@ class DateFormat extends \lang\Object {
   public function parse($in) {
     $o= 0;
     $m= $tz= $go= null; $il= strlen($in);
-    $parsed= array('year' => 0, 'month' => 0, 'day' => 0, 'hour' => 0, 'minute' => 0, 'second' => 0);
+    $parsed= ['year' => 0, 'month' => 0, 'day' => 0, 'hour' => 0, 'minute' => 0, 'second' => 0];
     foreach ($this->format as $token) {
       switch ($token) {
         case '%Y': $parsed['year']= $this->parseNumber($in, 4, $o); $o+= 4; break;
@@ -161,7 +161,7 @@ class DateFormat extends \lang\Object {
         case '%Z': {
           sscanf(substr($in, $o, 5), '%c%02d%02d', $sign, $hours, $minutes); 
           $fa= '-' === $sign ? 1 : -1;    // -0800 means 8 hours ahead of time
-          $go= array('hour' => $fa * $hours, 'minute'  => $fa * $minutes);
+          $go= ['hour' => $fa * $hours, 'minute'  => $fa * $minutes];
           $tz= new \util\TimeZone('GMT');
           $o+= 5; 
           break;

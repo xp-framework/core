@@ -11,7 +11,7 @@ class ParamStringTest extends TestCase {
    */
   #[@test]
   public function shortFlag() {
-    $p= new ParamString(array('-k'));
+    $p= new ParamString(['-k']);
 
     $this->assertTrue($p->exists('k'));
     $this->assertNull($p->value('k'));
@@ -23,7 +23,7 @@ class ParamStringTest extends TestCase {
    */
   #[@test]
   public function shortValue() {
-    $p= new ParamString(array('-d', 'sql'));
+    $p= new ParamString(['-d', 'sql']);
 
     $this->assertTrue($p->exists('d'));
     $this->assertEquals('sql', $p->value('d'));
@@ -35,7 +35,7 @@ class ParamStringTest extends TestCase {
    */
   #[@test]
   public function longFlag() {
-    $p= new ParamString(array('--verbose'));
+    $p= new ParamString(['--verbose']);
 
     $this->assertTrue($p->exists('verbose'));
     $this->assertNull($p->value('verbose'));
@@ -47,7 +47,7 @@ class ParamStringTest extends TestCase {
    */
   #[@test]
   public function longValue() {
-    $p= new ParamString(array('--level=3'));
+    $p= new ParamString(['--level=3']);
 
     $this->assertTrue($p->exists('level'));
     $this->assertEquals('3', $p->value('level'));
@@ -59,7 +59,7 @@ class ParamStringTest extends TestCase {
    */
   #[@test]
   public function longValueShortGivenDefault() {
-    $p= new ParamString(array('-l', '3'));
+    $p= new ParamString(['-l', '3']);
 
     $this->assertTrue($p->exists('level'));
     $this->assertEquals('3', $p->value('level'));
@@ -71,7 +71,7 @@ class ParamStringTest extends TestCase {
    */
   #[@test]
   public function longValueShortGiven() {
-    $p= new ParamString(array('-L', '3', '-l', 'FAIL'));
+    $p= new ParamString(['-L', '3', '-l', 'FAIL']);
 
     $this->assertTrue($p->exists('level', 'L'));
     $this->assertEquals('3', $p->value('level', 'L'));
@@ -83,7 +83,7 @@ class ParamStringTest extends TestCase {
    */
   #[@test]
   public function positional() {
-    $p= new ParamString(array('That is a realm'));
+    $p= new ParamString(['That is a realm']);
     
     $this->assertTrue($p->exists(0));
     $this->assertEquals('That is a realm', $p->value(0));
@@ -95,7 +95,7 @@ class ParamStringTest extends TestCase {
    */
   #[@test]
   public function existance() {
-    $p= new ParamString(array('a', 'b'));
+    $p= new ParamString(['a', 'b']);
     
     $this->assertTrue($p->exists(0));
     $this->assertTrue($p->exists(1));
@@ -108,7 +108,7 @@ class ParamStringTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function nonExistantPositional() {
-    (new ParamString(array('a')))->value(1);
+    (new ParamString(['a']))->value(1);
   }
 
   /**
@@ -119,7 +119,7 @@ class ParamStringTest extends TestCase {
   public function nonExistantPositionalWithDefault() {
     $this->assertEquals(
       'Default', 
-      (new ParamString(array('--verbose')))->value(1, null, 'Default')
+      (new ParamString(['--verbose']))->value(1, null, 'Default')
     );
   }
 
@@ -129,7 +129,7 @@ class ParamStringTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function nonExistantNamed() {
-    (new ParamString(array('--verbose')))->value('name');
+    (new ParamString(['--verbose']))->value('name');
   }
 
   /**
@@ -140,7 +140,7 @@ class ParamStringTest extends TestCase {
   public function nonExistantNamedWithDefault() {
     $this->assertEquals(
       'Default', 
-      (new ParamString(array('--verbose')))->value('name', 'n', 'Default')
+      (new ParamString(['--verbose']))->value('name', 'n', 'Default')
     );
   }
   
@@ -150,7 +150,7 @@ class ParamStringTest extends TestCase {
    */
   #[@test]
   public function whitespaceInParameter() {
-    $p= new ParamString(array('--realm=That is a realm'));
+    $p= new ParamString(['--realm=That is a realm']);
     
     $this->assertTrue($p->exists('realm'));
     $this->assertEquals('That is a realm', $p->value('realm'));

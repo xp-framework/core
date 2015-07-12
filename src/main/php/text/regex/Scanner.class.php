@@ -1,6 +1,7 @@
 <?php namespace text\regex;
 
-
+use lang\IllegalArgumentException;
+use lang\FormatException;
 
 /**
  * Scanner
@@ -22,7 +23,7 @@ class Scanner extends \lang\Object implements Matcher {
     for ($i= 0, $s= strlen($pattern); $i < $s; $i++) {
       if ('%' === $pattern{$i}) {
         if (++$i >= $s) {
-          throw new \lang\IllegalArgumentException('Not enough input at position '.($i - 1));
+          throw new IllegalArgumentException('Not enough input at position '.($i - 1));
         }
         switch ($pattern{$i}) {
           case '%': $this->pattern[]= '20%'; break; 
@@ -32,7 +33,7 @@ class Scanner extends \lang\Object implements Matcher {
           case 's': $this->pattern[]= "01\1\2\3\4\5\6\7\10\11\12\13\14\15\16\17\20\21\22\23\24\25\26\27\30\31\32\33\34\35\36\37\40"; break;
           case '[': {   // [^a-z]: everything except a-z, [a-z]: only a-z, []01]: only "[", "0" and "1"
             if ($i+ 1 >= $s) {
-              throw new \lang\FormatException('Unmatched "]" in format string');
+              throw new FormatException('Unmatched "]" in format string');
             } else if ('^' === $pattern{$i+ 1}) {
               $match= '01';
               $i++;
@@ -40,7 +41,7 @@ class Scanner extends \lang\Object implements Matcher {
               $match= '11';
             }
             if (false === ($p= strpos($pattern, ']', $i + (']' === $pattern{$i+ 1} ? 2 : 0)))) {
-              throw new \lang\FormatException('Unmatched "]" in format string');
+              throw new FormatException('Unmatched "]" in format string');
             }
             $seq= substr($pattern, $i+ 1, $p- $i- 1);
             for ($j= 0, $t= strlen($seq); $j < $t; $j++) {
@@ -56,7 +57,7 @@ class Scanner extends \lang\Object implements Matcher {
             break;
           }
           default: {
-            throw new \lang\FormatException('Bad scan character "'.$pattern{$i}.'"');
+            throw new FormatException('Bad scan character "'.$pattern{$i}.'"');
           }
         }
       } else {
@@ -96,7 +97,7 @@ class Scanner extends \lang\Object implements Matcher {
    * @return  text.regex.MatchResult
    */
   public function match($input) {
-    $matches= array(0 => '');
+    $matches= [0 => ''];
     $o= 0;
     foreach ($this->pattern as $match) {
       switch ($match[0]) {
@@ -112,6 +113,6 @@ class Scanner extends \lang\Object implements Matcher {
     }
     
     if ('' === $matches[0]) return MatchResult::$EMPTY;
-    return new MatchResult(sizeof($matches)- 1, array($matches));
+    return new MatchResult(sizeof($matches)- 1, [$matches]);
   }
 }

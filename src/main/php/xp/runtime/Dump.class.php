@@ -29,7 +29,7 @@ class Dump extends \lang\Object {
     strstr($src, 'return ') || strstr($src, 'return;') || $src= 'return '.$src;
 
     // Rewrite argc, argv
-    $argv= array(XPClass::nameOf(__CLASS__)) + $args;
+    $argv= [XPClass::nameOf(__CLASS__)] + $args;
     $argc= sizeof($argv);
 
     // Perform

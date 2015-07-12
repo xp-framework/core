@@ -37,7 +37,7 @@ class QuotedPrintable extends \lang\Object {
     
     if (!isset($characters)) {
       $characters= array_merge(
-        array(44, 46, 58, 61, 63, 64, 95),
+        [44, 46, 58, 61, 63, 64, 95],
         range(0, 31),
         range(127, 255)
       );
@@ -54,7 +54,7 @@ class QuotedPrintable extends \lang\Object {
    * @return  string
    */
   public static function encode($str, $charset= \xp::ENCODING) { 
-    $r= array(' ' => '_');
+    $r= [' ' => '_'];
     foreach (QuotedPrintable::getCharsToEncode() as $i) {
       $r[chr($i)]= '='.strtoupper(dechex($i));
     }

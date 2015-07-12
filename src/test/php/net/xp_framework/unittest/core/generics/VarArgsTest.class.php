@@ -10,7 +10,7 @@ class VarArgsTest extends \unittest\TestCase {
   #[@test]
   public function withArguments() {
     $this->assertEquals(
-      array('Hello', 'World'),
+      ['Hello', 'World'],
       create('new net.xp_framework.unittest.core.generics.ListOf<string>', 'Hello', 'World')->elements()
     );
   }
@@ -31,7 +31,7 @@ class VarArgsTest extends \unittest\TestCase {
   #[@test]
   public function withAllOf() {
     $this->assertEquals(
-      array('Hello', 'World'),
+      ['Hello', 'World'],
       create('new net.xp_framework.unittest.core.generics.ListOf<string>')->withAll('Hello', 'World')->elements()
     );
   }

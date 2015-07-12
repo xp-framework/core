@@ -22,7 +22,7 @@ class Installation extends \lang\Object {
     
     // Scan base path. FIXME: Refactor this to use lang.ClassLoader
     // instead of duplication its sourcecode here
-    foreach (array_filter(explode(PATH_SEPARATOR, scanpath(array($base->getURI()), getenv('HOME')))) as $element) {
+    foreach (array_filter(explode(PATH_SEPARATOR, scanpath([$base->getURI()], getenv('HOME')))) as $element) {
       $resolved= realpath($element);
       if (is_dir($resolved)) {
         $this->cl[]= \lang\FileSystemClassLoader::instanceFor($resolved, false);

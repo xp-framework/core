@@ -29,13 +29,13 @@ class ColoredConsoleAppender extends ConsoleAppender {
     $cdebug   = '00;34',
     $cdefault = '07;37'
   ) {
-    $this->colors= array(
+    $this->colors= [
       LogLevel::INFO    => $cinfo,
       LogLevel::WARN    => $cwarn,
       LogLevel::ERROR   => $cerror,
       LogLevel::DEBUG   => $cdebug,
       LogLevel::NONE    => $cdefault
-    );
+    ];
   }
   
   /**

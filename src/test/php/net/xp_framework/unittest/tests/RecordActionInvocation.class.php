@@ -24,7 +24,7 @@ class RecordActionInvocation extends \lang\Object implements \unittest\TestActio
    */
   public function beforeTest(TestCase $t) {
     $f= $t->getClass()->getField($this->field);
-    $f->set($t, array_merge($f->get($t), array('before')));
+    $f->set($t, array_merge($f->get($t), ['before']));
   }
 
   /**
@@ -34,6 +34,6 @@ class RecordActionInvocation extends \lang\Object implements \unittest\TestActio
    */
   public function afterTest(TestCase $t) {
     $f= $t->getClass()->getField($this->field);
-    $f->set($t, array_merge($f->get($t), array('after')));
+    $f->set($t, array_merge($f->get($t), ['after']));
   }
 }

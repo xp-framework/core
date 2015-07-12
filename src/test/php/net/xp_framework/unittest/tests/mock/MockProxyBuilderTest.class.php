@@ -65,7 +65,7 @@ class MockProxyBuilderTest extends TestCase {
 
   #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function nullClassLoader() {
-    (new MockProxyBuilder())->createProxyClass(null, array($this->iteratorClass));
+    (new MockProxyBuilder())->createProxyClass(null, [$this->iteratorClass]);
   }
 
   #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
@@ -75,7 +75,7 @@ class MockProxyBuilderTest extends TestCase {
 
   #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function nullClassLoader7() {
-    (new MockProxyBuilder())->createProxyClass(null, array($this->iteratorClass));
+    (new MockProxyBuilder())->createProxyClass(null, [$this->iteratorClass]);
   }
 
   #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
@@ -85,15 +85,15 @@ class MockProxyBuilderTest extends TestCase {
 
   #[@test]
   public function proxyClassNamesGetPrefixed() {
-    $class= $this->proxyClassFor(array($this->iteratorClass));
+    $class= $this->proxyClassFor([$this->iteratorClass]);
     $this->assertEquals(MockProxyBuilder::PREFIX, substr($class->getName(), 0, strlen(MockProxyBuilder::PREFIX)));
   }
 
   #[@test]
   public function classesEqualForSameInterfaceList() {
-    $c1= $this->proxyClassFor(array($this->iteratorClass));
-    $c2= $this->proxyClassFor(array($this->iteratorClass));
-    $c3= $this->proxyClassFor(array($this->iteratorClass, $this->observerClass));
+    $c1= $this->proxyClassFor([$this->iteratorClass]);
+    $c2= $this->proxyClassFor([$this->iteratorClass]);
+    $c3= $this->proxyClassFor([$this->iteratorClass, $this->observerClass]);
 
     $this->assertEquals($c1, $c2);
     $this->assertNotEquals($c1, $c3);
@@ -101,7 +101,7 @@ class MockProxyBuilderTest extends TestCase {
 
   #[@test]
   public function iteratorInterfaceIsImplemented() {
-    $class= $this->proxyClassFor(array($this->iteratorClass));
+    $class= $this->proxyClassFor([$this->iteratorClass]);
     $interfaces= $class->getInterfaces();
     $this->assertEquals(3, sizeof($interfaces)); //lang.Generic, lang.reflect.IProxy, util.XPIterator
     $this->assertTrue(in_array($this->iteratorClass, $interfaces));
@@ -109,7 +109,7 @@ class MockProxyBuilderTest extends TestCase {
 
   #[@test]
   public function allInterfacesAreImplemented() {
-    $class= $this->proxyClassFor(array($this->iteratorClass, $this->observerClass));
+    $class= $this->proxyClassFor([$this->iteratorClass, $this->observerClass]);
     $interfaces= $class->getInterfaces();
     $this->assertEquals(4, sizeof($interfaces));
     $this->assertTrue(in_array($this->iteratorClass, $interfaces));
@@ -118,12 +118,12 @@ class MockProxyBuilderTest extends TestCase {
 
   #[@test]
   public function iteratorMethods() {
-    $expected= array(
+    $expected= [
       'hashcode', 'equals', 'getclassname', 'getclass', 'tostring', // lang.Object
       'hasnext', 'next'                                             // util.XPIterator
-    );
+    ];
     
-    $class= $this->proxyClassFor(array($this->iteratorClass));
+    $class= $this->proxyClassFor([$this->iteratorClass]);
     $methods= $class->getMethods();
 
     $this->assertEquals(sizeof($expected), sizeof($methods));
@@ -137,37 +137,34 @@ class MockProxyBuilderTest extends TestCase {
 
   #[@test]
   public function iteratorNextInvoked() {
-    $proxy= $this->proxyInstanceFor(array($this->iteratorClass));
+    $proxy= $this->proxyInstanceFor([$this->iteratorClass]);
     $proxy->next();
     $this->assertEquals([], $this->handler->invocations['next_0']);
   }
   
   #[@test, @expect('lang.IllegalArgumentException')]
   public function cannotCreateProxiesForClasses() {
-    $this->proxyInstanceFor(array(\lang\XPClass::forName('lang.Object')));
+    $this->proxyInstanceFor([\lang\XPClass::forName('lang.Object')]);
   }
   
   #[@test]
   public function allowDoubledInterfaceMethod() {
     $newIteratorClass= \lang\ClassLoader::defineInterface('util.NewIterator', 'util.XPIterator');
-    $this->proxyInstanceFor(array(
-      \lang\XPClass::forName('util.XPIterator'),
-      $newIteratorClass
-    ));
+    $this->proxyInstanceFor([\lang\XPClass::forName('util.XPIterator'), $newIteratorClass]);
   }
   
   #[@test]
   public function overloadedMethod() {
-    $proxy= $this->proxyInstanceFor(array(\lang\XPClass::forName('net.xp_framework.unittest.reflection.OverloadedInterface')));
+    $proxy= $this->proxyInstanceFor([\lang\XPClass::forName('net.xp_framework.unittest.reflection.OverloadedInterface')]);
     $proxy->overloaded('foo');
     $proxy->overloaded('foo', 'bar');
-    $this->assertEquals(array('foo'), $this->handler->invocations['overloaded_1']);
-    $this->assertEquals(array('foo', 'bar'), $this->handler->invocations['overloaded_2']);
+    $this->assertEquals(['foo'], $this->handler->invocations['overloaded_1']);
+    $this->assertEquals(['foo', 'bar'], $this->handler->invocations['overloaded_2']);
   }
 
   #[@test]
   public function proxyClass_implements_IMockProxy() {
-    $proxy= $this->proxyClassFor(array($this->iteratorClass));
+    $proxy= $this->proxyClassFor([$this->iteratorClass]);
     $interfaces= $proxy->getInterfaces();
     $this->assertTrue(in_array(\lang\XPClass::forName('unittest.mock.IMockProxy'), $interfaces));
   }

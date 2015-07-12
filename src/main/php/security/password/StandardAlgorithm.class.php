@@ -56,7 +56,7 @@ class StandardAlgorithm extends \lang\Object implements Algorithm, Traceable {
     $length= strlen($password);
     $this->cat && $this->cat->info('Password: ', $password);
     
-    $count= array(
+    $count= [
       'lcalpha'  => 0,
       'ucalpha'  => 0,
       'num'      => 0,
@@ -76,7 +76,7 @@ class StandardAlgorithm extends \lang\Object implements Algorithm, Traceable {
       
       // Repeat
       'repeat'   => 0,
-    );
+    ];
     
     // Characterize string
     $last= '';

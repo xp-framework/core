@@ -84,7 +84,7 @@ class Console extends \lang\Object {
    */
   public static function write() {
     $a= func_get_args();
-    call_user_func_array(array(self::$out, 'write'), $a);
+    call_user_func_array([self::$out, 'write'], $a);
   }
   
   /**
@@ -94,7 +94,7 @@ class Console extends \lang\Object {
    */
   public static function writeLine() {
     $a= func_get_args();
-    call_user_func_array(array(self::$out, 'writeLine'), $a);
+    call_user_func_array([self::$out, 'writeLine'], $a);
   }
   
   /**
@@ -106,7 +106,7 @@ class Console extends \lang\Object {
    */
   public static function writef() {
     $a= func_get_args();
-    call_user_func_array(array(self::$out, 'writef'), $a);
+    call_user_func_array([self::$out, 'writef'], $a);
   }
 
   /**
@@ -117,7 +117,7 @@ class Console extends \lang\Object {
    */
   public static function writeLinef() {
     $a= func_get_args();
-    call_user_func_array(array(self::$out, 'writeLinef'), $a);
+    call_user_func_array([self::$out, 'writeLinef'], $a);
   }
   
   /**

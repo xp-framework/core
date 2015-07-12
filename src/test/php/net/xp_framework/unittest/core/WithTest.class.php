@@ -12,11 +12,11 @@ class WithTest extends \unittest\TestCase {
 
   #[@beforeClass]
   public static function defineCloseableSubclasses() {
-    self::$closes= ClassLoader::defineClass('_WithTest_C0', 'lang.Object', array('lang.Closeable'), '{
+    self::$closes= ClassLoader::defineClass('_WithTest_C0', 'lang.Object', ['lang.Closeable'], '{
       public $closed= false;
       public function close() { $this->closed= true; }
     }');
-    self::$raises= ClassLoader::defineClass('_WithTest_C1', 'lang.Object', array('lang.Closeable'), '{
+    self::$raises= ClassLoader::defineClass('_WithTest_C1', 'lang.Object', ['lang.Closeable'], '{
       public function close() { throw new \lang\IllegalArgumentException("Cannot close"); }
     }');
   }
@@ -58,7 +58,7 @@ class WithTest extends \unittest\TestCase {
     with ($a, $b, function() {
       // NOOP
     });
-    $this->assertEquals(array(true, true), array($a->closed, $b->closed));
+    $this->assertEquals([true, true], [$a->closed, $b->closed]);
   }
 
   #[@test]
@@ -71,7 +71,7 @@ class WithTest extends \unittest\TestCase {
       });
       $this->fail('No exception thrown', null, 'lang.IllegalStateException');
     } catch (\lang\IllegalStateException $expected) {
-      $this->assertEquals(array(true, true), array($a->closed, $b->closed));
+      $this->assertEquals([true, true], [$a->closed, $b->closed]);
     }
   }
 

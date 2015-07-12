@@ -1,20 +1,21 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use unittest\TestCase;
 use util\Properties;
 use util\Hashmap;
+use io\streams\MemoryOutputStream;
 
 /**
  * Testcase for util.Properties class.
  *
  * @see      xp://util.Properties
  */
-class PropertyWritingTest extends TestCase {
+class PropertyWritingTest extends \unittest\TestCase {
   protected $fixture= null;
   
   /**
    * Creates a new, empty properties file as fixture
    *
+   * @return void
    */
   public function setUp() {
     $this->fixture= new Properties(null);
@@ -28,15 +29,11 @@ class PropertyWritingTest extends TestCase {
    * @throws  unittest.AssertionFailedError
    */
   protected function assertSavedFixtureEquals($expected) {
-    $out= new \io\streams\MemoryOutputStream();
+    $out= new MemoryOutputStream();
     $this->fixture->store($out);
     $this->assertEquals(preg_replace('/^ +/m', '', trim($expected)), trim($out->getBytes())); 
   }
 
-  /**
-   * Test writing a string
-   *
-   */
   #[@test]
   public function string() {
     $this->fixture->writeString('section', 'key', 'value');
@@ -46,10 +43,6 @@ class PropertyWritingTest extends TestCase {
     ');
   }
 
-  /**
-   * Test writing a string
-   *
-   */
   #[@test]
   public function emptyString() {
     $this->fixture->writeString('section', 'key', '');
@@ -59,10 +52,6 @@ class PropertyWritingTest extends TestCase {
     ');
   }
 
-  /**
-   * Test writing an integer
-   *
-   */
   #[@test]
   public function integer() {
     $this->fixture->writeInteger('section', 'key', 1);
@@ -72,10 +61,6 @@ class PropertyWritingTest extends TestCase {
     ');
   }
 
-  /**
-   * Test writing a float
-   *
-   */
   #[@test]
   public function float() {
     $this->fixture->writeFloat('section', 'key', 1.5);
@@ -85,10 +70,6 @@ class PropertyWritingTest extends TestCase {
     ');
   }
 
-  /**
-   * Test writing a bool
-   *
-   */
   #[@test]
   public function boolTrue() {
     $this->fixture->writeFloat('section', 'key', true);
@@ -98,10 +79,6 @@ class PropertyWritingTest extends TestCase {
     ');
   }
 
-  /**
-   * Test writing a bool
-   *
-   */
   #[@test]
   public function boolFalse() {
     $this->fixture->writeFloat('section', 'key', false);
@@ -111,13 +88,9 @@ class PropertyWritingTest extends TestCase {
     ');
   }
 
-  /**
-   * Test writing an array
-   *
-   */
   #[@test]
   public function intArray() {
-    $this->fixture->writeArray('section', 'key', array(1, 2, 3));
+    $this->fixture->writeArray('section', 'key', [1, 2, 3]);
     $this->assertSavedFixtureEquals('
       [section]
       key[]=1
@@ -126,10 +99,6 @@ class PropertyWritingTest extends TestCase {
     ');
   }
 
-  /**
-   * Test writing an array
-   *
-   */
   #[@test]
   public function emptyArray() {
     $this->fixture->writeArray('section', 'key', []);
@@ -139,10 +108,6 @@ class PropertyWritingTest extends TestCase {
     ');
   }
 
-  /**
-   * Test writing a hashmap
-   *
-   */
   #[@test]
   public function hashmapOneElement() {
     $h= new Hashmap();
@@ -154,10 +119,6 @@ class PropertyWritingTest extends TestCase {
     ');
   }
 
-  /**
-   * Test writing a hashmap
-   *
-   */
   #[@test]
   public function hashmapTwoElements() {
     $h= new Hashmap();
@@ -171,10 +132,6 @@ class PropertyWritingTest extends TestCase {
     ');
   }
 
-  /**
-   * Test writing a hashmap
-   *
-   */
   #[@test]
   public function emptyHashmap() {
     $this->fixture->writeHash('section', 'key', new Hashmap());
@@ -184,10 +141,6 @@ class PropertyWritingTest extends TestCase {
     ');
   }
 
-  /**
-   * Test writing a map
-   *
-   */
   #[@test]
   public function mapOneElement() {
     $this->fixture->writeMap('section', 'key', ['color' => 'green']);
@@ -197,10 +150,6 @@ class PropertyWritingTest extends TestCase {
     ');
   }
 
-  /**
-   * Test writing a map
-   *
-   */
   #[@test]
   public function mapTwoElements() {
     $this->fixture->writeMap('section', 'key', ['color' => 'green', 'size' => 'L']);
@@ -211,10 +160,6 @@ class PropertyWritingTest extends TestCase {
     ');
   }
 
-  /**
-   * Test writing a map
-   *
-   */
   #[@test]
   public function emptyMap() {
     $this->fixture->writeMap('section', 'key', []);
@@ -224,10 +169,6 @@ class PropertyWritingTest extends TestCase {
     ');
   }
 
-  /**
-   * Test writing a comment
-   *
-   */
   #[@test]
   public function comment() {
     $this->fixture->writeComment('section', 'Hello');
@@ -238,10 +179,6 @@ class PropertyWritingTest extends TestCase {
     ');
   }
 
-  /**
-   * Test writing a comment
-   *
-   */
   #[@test]
   public function comments() {
     $this->fixture->writeComment('section', 'Hello');

@@ -9,9 +9,6 @@ use util\AbstractDeferredInvokationHandler;
  */
 class DeferredInvokationHandlerTest extends TestCase {
 
-  /**
-   * Test
-   */
   #[@test]
   public function echo_runnable_invokation() {
     $handler= newinstance('util.AbstractDeferredInvokationHandler', [], '{
@@ -23,13 +20,10 @@ class DeferredInvokationHandlerTest extends TestCase {
         }");
       }
     }');
-    $args= array(1, 2, 'Test');
+    $args= [1, 2, 'Test'];
     $this->assertEquals($args, $handler->invoke($this, 'run', $args));
   }
 
-  /**
-   * Test
-   */
   #[@test, @expect(class = 'lang.XPException', withMessage= 'Test')]
   public function throwing_runnable_invokation() {
     $handler= newinstance('util.AbstractDeferredInvokationHandler', [], '{
@@ -41,12 +35,9 @@ class DeferredInvokationHandlerTest extends TestCase {
         }");
       }
     }');
-    $handler->invoke($this, 'run', array('Test'));
+    $handler->invoke($this, 'run', ['Test']);
   }
 
-  /**
-   * Test
-   */
   #[@test, @expect(class = 'util.DeferredInitializationException', withMessage= 'run')]
   public function initialize_returns_null() {
     $handler= newinstance('util.AbstractDeferredInvokationHandler', [], '{
@@ -57,9 +48,6 @@ class DeferredInvokationHandlerTest extends TestCase {
     $handler->invoke($this, 'run', []);
   }
 
-  /**
-   * Test
-   */
   #[@test, @expect(class = 'util.DeferredInitializationException', withMessage= 'run')]
   public function initialize_throws_exception() {
     $handler= newinstance('util.AbstractDeferredInvokationHandler', [], '{
@@ -70,20 +58,17 @@ class DeferredInvokationHandlerTest extends TestCase {
     $handler->invoke($this, 'run', []);
   }
 
-  /**
-   * Test
-   */
   #[@test]
   public function initialize_not_called_again_after_success() {
     $handler= newinstance('util.AbstractDeferredInvokationHandler', [], '{
       private $actions;
       public function __construct() {
-        $this->actions= array(
+        $this->actions= [
           function() { return newinstance("lang.Runnable", [], "{
             public function run() { return TRUE; }
           }"); },
           function() { throw new \lang\IllegalStateException("Initialization called again"); },
-        );
+        ];
       }
       public function initialize() {
         return call_user_func(array_shift($this->actions));
@@ -93,20 +78,17 @@ class DeferredInvokationHandlerTest extends TestCase {
     $this->assertEquals(true, $handler->invoke($this, 'run', []));
   }  
 
-  /**
-   * Test
-   */
   #[@test]
   public function initialize_called_again_after_failure() {
     $handler= newinstance('util.AbstractDeferredInvokationHandler', [], '{
       private $actions;
       public function __construct() {
-        $this->actions= array(
+        $this->actions= [
           function() { throw new \lang\IllegalStateException("Error initializing"); },
           function() { return newinstance("lang.Runnable", [], "{
             public function run() { return TRUE; }
           }"); }
-        );
+        ];
       }
       public function initialize() {
         return call_user_func(array_shift($this->actions));

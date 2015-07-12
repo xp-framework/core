@@ -31,7 +31,7 @@ class CryptoKeyTest extends TestCase {
     $keypair= KeyPair::generate();
     $privatekey= $keypair->getPrivateKey();
     
-    $csr= new CSR(new \security\Principal(array(
+    $csr= new CSR(new \security\Principal([
       'C'     => 'DE',
       'ST'    => 'Baden-Württemberg',
       'L'     => 'Karlsruhe',
@@ -39,7 +39,7 @@ class CryptoKeyTest extends TestCase {
       'OU'    => 'XP Team',
       'CN'    => 'XP Unittest',
       'EMAIL' => 'unittest@xp-framework.net'
-    )), $keypair);
+    ]), $keypair);
     
     $cert= $csr->sign($keypair);
     $publickey= $cert->getPublicKey();

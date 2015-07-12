@@ -195,13 +195,13 @@ class ColoredBarListener extends \lang\Object implements \unittest\TestListener 
   public function testRunStarted(\unittest\TestSuite $suite) {
     $this->sum= $suite->numTests();
     $this->cur= 0;
-    $this->stats= array(
+    $this->stats= [
       'failed'  => 0,
       'errored' => 0,
       'warned'  => 0,
       'skipped' => 0,
       'notrun'  => 0
-    );
+    ];
     $this->status= true;
   }
 

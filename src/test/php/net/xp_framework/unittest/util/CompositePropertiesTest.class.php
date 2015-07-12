@@ -9,19 +9,20 @@ use unittest\actions\RuntimeVersion;
 /**
  * Test CompositeProperties
  *
+ * @see   https://github.com/xp-framework/xp-framework/issues/302
  * @see    xp://util.CompositeProperies
  */
 class CompositePropertiesTest extends TestCase {
 
   #[@test]
   public function createCompositeSingle() {
-    $c= new CompositeProperties(array(new Properties('')));
+    $c= new CompositeProperties([new Properties('')]);
     $this->assertEquals(1, $c->length());
   }
 
   #[@test]
   public function createCompositeDual() {
-    $c= new CompositeProperties(array(new Properties('a.ini'), new Properties('b.ini')));
+    $c= new CompositeProperties([new Properties('a.ini'), new Properties('b.ini')]);
     $this->assertEquals(2, $c->length());
   }
 
@@ -37,17 +38,17 @@ class CompositePropertiesTest extends TestCase {
 
   #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]]
   public function createCompositeThrowsExceptionWhenSomethingElseThenPropertiesGiven() {
-    new CompositeProperties(array(new Properties(null), 1, new Properties(null)));
+    new CompositeProperties([new Properties(null), 1, new Properties(null)]);
   }
 
   #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]]
   public function createCompositeThrowsExceptionWhenSomethingElseThenPropertiesGiven7() {
-    new CompositeProperties(array(new Properties(null), 1, new Properties(null)));
+    new CompositeProperties([new Properties(null), 1, new Properties(null)]);
   }
 
   #[@test]
   public function addOtherProperties() {
-    $c= new CompositeProperties(array(new Properties(null)));
+    $c= new CompositeProperties([new Properties(null)]);
     $this->assertEquals(1, $c->length());
 
     $c->add(Properties::fromString('[section]'));
@@ -57,7 +58,7 @@ class CompositePropertiesTest extends TestCase {
   #[@test]
   public function addingIdenticalPropertiesIsIdempotent() {
     $p= new Properties('');
-    $c= new CompositeProperties(array($p));
+    $c= new CompositeProperties([$p]);
     $this->assertEquals(1, $c->length());
 
     $c->add($p);
@@ -66,9 +67,9 @@ class CompositePropertiesTest extends TestCase {
 
   #[@test]
   public function addingEqualPropertiesIsIdempotent() {
-    $c= new CompositeProperties(array(Properties::fromString('[section]
+    $c= new CompositeProperties([Properties::fromString('[section]
 a=b
-b=c')));
+b=c')]);
     $this->assertEquals(1, $c->length());
 
     $c->add(Properties::fromString('[section]
@@ -78,7 +79,7 @@ b=c'));
   }
 
   protected function fixture() {
-    return new CompositeProperties(array(Properties::fromString('[section]
+    return new CompositeProperties([Properties::fromString('[section]
 str="string..."
 b1=true
 arr1="foo|bar"
@@ -115,7 +116,7 @@ key="This must not appear, as first has precedence"
 anotherkey="is there, too"
 
 [empty]
-')));
+')]);
 
     return $c;
   }
@@ -135,11 +136,6 @@ anotherkey="is there, too"
     $this->assertEquals('Hello World', $this->fixture()->readString('section', 'non-existant-key', 'Hello World'));
   }
 
-  /**
-   * Test
-   *
-   * @see   https://github.com/xp-framework/xp-framework/issues/302
-   */
   #[@test]
   public function readStringDefaultForDefault() {
     $this->assertEquals('', $this->fixture()->readString('section', 'non-existant-key'));
@@ -167,17 +163,17 @@ anotherkey="is there, too"
 
   #[@test]
   public function readArrayUsesFirst() {
-    $this->assertEquals(array('foo', 'bar'), $this->fixture()->readArray('section', 'arr1'));
+    $this->assertEquals(['foo', 'bar'], $this->fixture()->readArray('section', 'arr1'));
   }
 
   #[@test]
   public function readArrayUsesSecondIfFirstUnset() {
-    $this->assertEquals(array('foo', 'bar', 'baz'), $this->fixture()->readArray('section', 'arr2'));
+    $this->assertEquals(['foo', 'bar', 'baz'], $this->fixture()->readArray('section', 'arr2'));
   }
 
   #[@test]
   public function readArrayUsesDefaultOnNoOccurrance() {
-    $this->assertEquals(array(1, 2, 3), $this->fixture()->readArray('section', 'non-existant-key', array(1, 2, 3)));
+    $this->assertEquals([1, 2, 3], $this->fixture()->readArray('section', 'non-existant-key', [1, 2, 3]));
   }
 
   #[@test]
@@ -187,17 +183,17 @@ anotherkey="is there, too"
 
   #[@test]
   public function readArrayDoesNotAddArrayElements() {
-    $this->assertEquals(array('foo'), $this->fixture()->readArray('section', 'arr3'));
+    $this->assertEquals(['foo'], $this->fixture()->readArray('section', 'arr3'));
   }
 
   #[@test]
   public function readHashUsesFirst() {
-    $this->assertEquals(new Hashmap(array('a' => 'b', 'b' => 'c')), $this->fixture()->readHash('section', 'hash1'));
+    $this->assertEquals(new Hashmap(['a' => 'b', 'b' => 'c']), $this->fixture()->readHash('section', 'hash1'));
   }
 
   #[@test]
   public function readHashUsesSecondIfFirstUnset() {
-    $this->assertEquals(new Hashmap(array('b' => 'null')), $this->fixture()->readHash('section', 'hash2'));
+    $this->assertEquals(new Hashmap(['b' => 'null']), $this->fixture()->readHash('section', 'hash2'));
   }
 
   #[@test]
@@ -252,17 +248,17 @@ anotherkey="is there, too"
 
   #[@test]
   public function readRangeUsesFirst() {
-    $this->assertEquals(array(1, 2, 3), $this->fixture()->readRange('section', 'range1'));
+    $this->assertEquals([1, 2, 3], $this->fixture()->readRange('section', 'range1'));
   }
 
   #[@test]
   public function readRangeUsesSecondIfFirstUnset() {
-    $this->assertEquals(array(99, 100), $this->fixture()->readRange('section', 'range2'));
+    $this->assertEquals([99, 100], $this->fixture()->readRange('section', 'range2'));
   }
 
   #[@test]
   public function readRangeUsesDefaultOnNoOccurrance() {
-    $this->assertEquals(array(1, 2, 3), $this->fixture()->readRange('section', 'non-existant-key', array(1, 2, 3)));
+    $this->assertEquals([1, 2, 3], $this->fixture()->readRange('section', 'non-existant-key', [1, 2, 3]));
   }
 
   #[@test]
@@ -273,14 +269,14 @@ anotherkey="is there, too"
   #[@test]
   public function readSection() {
     $this->assertEquals(
-      array('key' => 'value', 'anotherkey' => 'is there, too'),
+      ['key' => 'value', 'anotherkey' => 'is there, too'],
       $this->fixture()->readSection('read')
     );
   }
 
   #[@test]
   public function readSectionThatDoesNotExistReturnsDefault() {
-    $this->assertEquals(array('default' => 'value'), $this->fixture()->readSection('doesnotexist', array('default' => 'value')));
+    $this->assertEquals(['default' => 'value'], $this->fixture()->readSection('doesnotexist', ['default' => 'value']));
   }
 
   #[@test]
@@ -290,7 +286,7 @@ anotherkey="is there, too"
 
   #[@test]
   public function readEmptySectionOverridesDefault() {
-    $this->assertEquals([], $this->fixture()->readSection('empty', array('default' => 'value')));
+    $this->assertEquals([], $this->fixture()->readSection('empty', ['default' => 'value']));
   }
 
   #[@test]

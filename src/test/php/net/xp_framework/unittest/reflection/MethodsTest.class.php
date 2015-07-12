@@ -176,12 +176,12 @@ class MethodsTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.reflect.TargetInvocationException')]
   public function invokeSetTrace() {
-    $this->fixture->getMethod('setTrace')->invoke($this->fixture->newInstance(), array(null));
+    $this->fixture->getMethod('setTrace')->invoke($this->fixture->newInstance(), [null]);
   }
 
   #[@test, @expect('lang.IllegalArgumentException')]
   public function invokeSetTraceOnWrongObject() {
-    $this->fixture->getMethod('setTrace')->invoke(new \lang\Object(), array(null));
+    $this->fixture->getMethod('setTrace')->invoke(new \lang\Object(), [null]);
   }
 
   #[@test]
@@ -211,7 +211,7 @@ class MethodsTest extends \unittest\TestCase {
   public function invokeMethodWithoutReturn() {
     $i= $this->fixture->newInstance();
     $d= new \util\Date();
-    $this->assertNull($this->fixture->getMethod('setDate')->invoke($i, array($d)));
+    $this->assertNull($this->fixture->getMethod('setDate')->invoke($i, [$d]));
     $this->assertEquals($d, $i->getDate());
   }
 

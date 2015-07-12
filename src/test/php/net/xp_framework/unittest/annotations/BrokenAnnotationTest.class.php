@@ -67,29 +67,59 @@ class BrokenAnnotationTest extends \unittest\TestCase {
     $this->parse("#[@ignore('Test)]");
   }
 
+  /** @deprecated */
   #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Malformed array/')]
   public function unterminated_array() {
     $this->parse('#[@ignore(array(1]');
   }
 
+  /** @deprecated */
   #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Malformed array/')]
   public function unterminated_array_key() {
     $this->parse('#[@ignore(name = array(1]');
   }
 
+  /** @deprecated */
   #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Malformed array/')]
   public function malformed_array() {
     $this->parse('#[@ignore(array(1 ,, 2))]');
   }
 
+  /** @deprecated */
   #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Malformed array/')]
   public function malformed_array_inside_key_value_pairs() {
     $this->parse('#[@ignore(name= array(1 ,, 2))]');
   }
 
+  /** @deprecated */
   #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Malformed array/')]
   public function malformed_array_no_commas() {
     $this->parse('#[@ignore(array(1 2))]');
+  }
+
+  #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Unterminated array/')]
+  public function unterminated_short_array() {
+    $this->parse('#[@ignore([1');
+  }
+
+  #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Unterminated array/')]
+  public function unterminated_short_array_key() {
+    $this->parse('#[@ignore(name = [1');
+  }
+
+  #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Malformed array/')]
+  public function malformed_short_array() {
+    $this->parse('#[@ignore([1 ,, 2])]');
+  }
+
+  #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Malformed array/')]
+  public function malformed_short_array_inside_key_value_pairs() {
+    $this->parse('#[@ignore(name= [1 ,, 2])]');
+  }
+
+  #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Malformed array/')]
+  public function malformed_short_array_no_commas() {
+    $this->parse('#[@ignore([1 2])]');
   }
 
   #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Parse error: Expecting either "\(", "," or "\]"/')]

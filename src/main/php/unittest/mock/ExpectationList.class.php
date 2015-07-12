@@ -96,7 +96,7 @@ class ExpectationList extends \lang\Object {
    * @param   var[] args
    */
   public function fileUnexpected($method, $args) {
-    $this->unexpected->add(array($method, $args));
+    $this->unexpected->add([$method, $args]);
   }
 
   /**

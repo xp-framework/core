@@ -1,10 +1,7 @@
 <?php namespace unittest\mock\arguments;
 
-
-
 /**
  * Argument matcher that uses a user function for matching.
- *
  */
 class DynamicMatcher extends \lang\Object implements IArgumentMatcher {
   private
@@ -29,6 +26,6 @@ class DynamicMatcher extends \lang\Object implements IArgumentMatcher {
    * @return  bool
    */
   public function matches($value) {
-    return call_user_func(array($this->classOrObject, $this->function), $value);
+    return call_user_func([$this->classOrObject, $this->function], $value);
   }
 }

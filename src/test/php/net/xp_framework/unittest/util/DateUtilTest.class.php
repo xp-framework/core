@@ -138,11 +138,11 @@ class DateUtilTest extends \unittest\TestCase {
 
   #[@test]
   public function sorting() {
-    $list= array(
+    $list= [
       new Date('1977-12-14'),
       new Date('2002-02-21'),
       new Date('1980-05-28'),
-    );
+    ];
     
     usort($list, ['util\DateUtil', 'compare']);
     $this->assertEquals(new Date('1977-12-14'), $list[0], 'offset 0') &&
