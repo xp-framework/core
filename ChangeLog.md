@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* **Deprecated long array syntax** (for annotations and in code)
+  See xp-framework/core#93
+  (@thekid)
 * **Deprecated this() core functionality**.
   See xp-framework/core#92
   (@thekid)
