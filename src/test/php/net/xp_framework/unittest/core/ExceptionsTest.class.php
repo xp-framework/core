@@ -108,7 +108,7 @@ class ExceptionsTest extends TestCase {
   public function printStackTrace() {
     $out= new MemoryOutputStream();
     $e= new Throwable('Test');
-    $e->printStackTrace(Streams::writeableFd($out));
+    create($e)->printStackTrace(Streams::writeableFd($out));
     $this->assertEquals($e->toString(), $out->getBytes());
   }
   

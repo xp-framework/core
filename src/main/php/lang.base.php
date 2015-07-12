@@ -554,12 +554,10 @@ function newinstance($spec, $args, $def= null) {
 }
 // }}}
 
-// {{{ proto lang.Generic create(string spec)
+// {{{ proto lang.Generic create(var spec)
 //     Creates a generic object
 function create($spec) {
-  if (!is_string($spec)) {
-    throw new \lang\IllegalArgumentException('Create expects its first argument to be a string');
-  }
+  if ($spec instanceof \lang\Generic) return $spec;
 
   // Parse type specification: "new " TYPE "()"?
   // TYPE:= B "<" ARGS ">"
