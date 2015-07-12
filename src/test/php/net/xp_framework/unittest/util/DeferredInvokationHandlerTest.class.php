@@ -71,7 +71,8 @@ class DeferredInvokationHandlerTest extends TestCase {
         ];
       }
       public function initialize() {
-        return call_user_func(array_shift($this->actions));
+        $f= array_shift($this->actions);
+        return $f();
       }
     }');
     $this->assertEquals(true, $handler->invoke($this, 'run', []));
@@ -91,7 +92,8 @@ class DeferredInvokationHandlerTest extends TestCase {
         ];
       }
       public function initialize() {
-        return call_user_func(array_shift($this->actions));
+        $f= array_shift($this->actions);
+        return $f();
       }
     }');
     try {
