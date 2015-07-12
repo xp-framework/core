@@ -25,6 +25,11 @@ XP Framework Core ChangeLog
   See xp-framework/core#88
   (@thekid)
 
+### Features
+
+* Merged xp-framework/core#94: Use "use" statements in commandline
+  (@thekid)
+
 ## 6.3.4 / 2015-06-25
 
 ### Heads up!
