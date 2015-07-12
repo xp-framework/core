@@ -368,38 +368,6 @@ function __error($code, $msg, $file, $line) {
 }
 // }}}
 
-// {{{ proto deprecated void uses (string* args)
-//     Uses one or more classes
-function uses() {
-  xp::error(new \Exception('Uses has been deprecated'));
-  $scope= null;
-  foreach (func_get_args() as $str) {
-    $class= xp::$loader->loadClass0($str);
-
-    // Tricky: We can arrive at this point without the class actually existing:
-    // A : uses("B")
-    // `-- B : uses("A")
-    //     `--> A : We are here, class A not complete!
-    // "Wait" until we unwind the stack until the first position so A is
-    // "complete" before calling __import.
-    // Check with class_exists(), because method_exists() triggers autoloading.
-    if (class_exists($class, false) && method_exists($class, '__import')) {
-      if (null === $scope) {
-        $trace= debug_backtrace(0, 3);
-        $scope= isset($trace[2]['args'][0]) ? literal($trace[2]['args'][0]) : null;
-      }
-      $class::__import($scope);
-    }
-
-    $short= substr($str, strrpos($str, '.') + 1);
-    if (!class_exists($short, false) && !interface_exists($short, false)) {
-      \xp::$cn[$short]= $str;
-      class_alias($class, $short);
-    }
-  }
-}
-// }}}
-
 // {{{ proto deprecated void raise (string classname, var* args)
 //     throws an exception by a given class name
 function raise($classname) {
