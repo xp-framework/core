@@ -482,7 +482,7 @@ function with() {
 }
 // }}}
 
-// {{{ proto var this(var expr, var offset)
+// {{{ proto deprecated var this(var expr, var offset)
 //     Indexer access for a given expression
 function this($expr, $offset) {
   return $expr[$offset];
