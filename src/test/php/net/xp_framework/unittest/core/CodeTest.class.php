@@ -25,10 +25,10 @@ class CodeTest extends \unittest\TestCase {
   }
 
   #[@test, @values([
-  #  '<?php var_dump("Test")',
-  #  '<? var_dump("Test")',
-  #  '<?=var_dump("Test")',
-  #  '<?hh var_dump("Test")'
+  #  '<?php var_dump("Test")', '<?php    var_dump("Test")',
+  #  '<? var_dump("Test")', '<?          var_dump("Test")',
+  #  '<?=var_dump("Test")', '<?=         var_dump("Test")',
+  #  '<?hh var_dump("Test")', '<?hh      var_dump("Test")'
   #])]
   public function fragment_with_php_tag($input) {
     $this->assertEquals('var_dump("Test");', (new Code($input))->fragment());
