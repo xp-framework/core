@@ -73,7 +73,7 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
     if (isset(\xp::$cl[$class])) return literal($class);
 
     // Load class
-    $package= null;
+    $name= strtr($class, '.', '\\');
     \xp::$cl[$class]= nameof($this).'://'.$this->path;
     \xp::$cll++;
     try {
@@ -82,12 +82,10 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
       unset(\xp::$cl[$class]);
       \xp::$cll--;
 
-      $decl= strtr($class, '.', '\\');
-
       // If class was declared, but loading threw an exception it means
       // a "soft" dependency, one that is only required at runtime, was
       // not loaded, the class itself has been declared.
-      if (class_exists($decl, false) || interface_exists($decl, false) || trait_exists($decl, false)) {
+      if (class_exists($name, false) || interface_exists($name, false) || trait_exists($name, false)) {
         throw new ClassDependencyException($class, [$this], $e);
       }
 
@@ -97,15 +95,13 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
       throw new ClassLinkageException($class, [$this], $e);
     }
     \xp::$cll--;
+
     if (false === $r) {
       unset(\xp::$cl[$class]);
       $e= new ClassNotFoundException($class, [$this]);
       \xp::gc(__FILE__);
       throw $e;
-    }
-
-    $name= strtr($class, '.', '\\');
-    if (!class_exists($name, false) && !interface_exists($name, false) && !trait_exists($name, false)) {
+    } else if (!class_exists($name, false) && !interface_exists($name, false) && !trait_exists($name, false)) {
       unset(\xp::$cl[$class]);
       throw new ClassFormatException('Class "'.$class.'" not declared in loaded file');
     }
@@ -114,7 +110,7 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
     if (0 === \xp::$cll) {
       $invocations= \xp::$cli;
       \xp::$cli= [];
-      foreach ($invocations as $inv) call_user_func($inv, $name);
+      foreach ($invocations as $inv) $inv($name);
     }
     return $name;
   }
