@@ -8,17 +8,17 @@ use util\Date;
 /**
  * X.509 certificate
  *
- * <code>
- *   uses('security.cert.X509Certificate');
+ * ```php
+ * use security\cert\X509Certificate;
  *   
- *   $x509= X509Certificate::fromString(<<<EOC
+ * $x509= X509Certificate::fromString(<<<EOC
  * -----BEGIN CERTIFICATE-----
  * [...]
  * -----END CERTIFICATE-----
  * EOC
- *  );
+ * );
  *   
- *   printf(<<<EOP
+ * printf(<<<EOP
  * Certificate information
  * ------------------------------------------------------------------------
  * Subject     %s
@@ -36,18 +36,18 @@ use util\Date;
  * ------------------------------------------------------------------------
  * 
  * EOP
- *     ,
- *     $x509->getSubjectDN()->getName(),
- *     $x509->getIssuerDN()->getName(),
- *     $x509->getSerialNumber(),
- *     $x509->getVersion(),
- *     $x509->getHash(),
- *     $x509->getNotBefore()->toString(),
- *     $x509->getNotAfter()->toString(),
- *     $x509->checkValidity() ? 'yes' : 'no',
- *     var_export($x509->getKeyUsage(), 1)
- *   );
- * </code>
+ *   ,
+ *   $x509->getSubjectDN()->getName(),
+ *   $x509->getIssuerDN()->getName(),
+ *   $x509->getSerialNumber(),
+ *   $x509->getVersion(),
+ *   $x509->getHash(),
+ *   $x509->getNotBefore()->toString(),
+ *   $x509->getNotAfter()->toString(),
+ *   $x509->checkValidity() ? 'yes' : 'no',
+ *   var_export($x509->getKeyUsage(), 1)
+ * );
+ * ```
  *
  * @ext      openssl
  * @see      rfc://2459 Internet X.509 Public Key Infrastructure Certificate and CRL Profile

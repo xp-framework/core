@@ -6,17 +6,16 @@ use util\XPIterator;
 /**
  * Iterates over elements of a collection.
  *
- * <code>
- *   uses(
- *     'io.collections.FileCollection',
- *     'io.collections.iterate.IOCollectionIterator'
- *   );
+ * ```php
+ * use io\collections\FileCollection;
+ * use io\collections\iterate\FilteredIOCollectionIterator;
+ * use io\collections\iterate\NameMatchesFilter;
  *
- *   $origin= new FileCollection('/etc');
- *   for ($i= new IOCollectionIterator($origin); $i->hasNext(); ) {
- *     Console::writeLine('Element ', xp::stringOf($i->next()));
- *   }
- * </code>
+ * $origin= new FileCollection('/etc');
+ * foreach (new IOCollectionIterator($origin) as $file) {
+ *   Console::writeLine('Element ', $file);
+ * }
+ * ```
  *
  * @test     xp://net.xp_framework.unittest.io.collections.IOCollectionIteratorTest
  * @see      xp://io.collections.iterate.FilteredIOCollectionIterator

@@ -4,21 +4,16 @@
  * Iterates over elements of a folder, only returning those elements that
  * are accepted by the specified filter.
  *
- * <code>
- *   uses(
- *     'io.collections.FileCollection',
- *     'io.collections.iterate.FilteredIOCollectionIterator',
- *     'io.collections.iterate.NameMatchesFilter'
- *   );
+ * ```php
+ * use io\collections\FileCollection;
+ * use io\collections\iterate\FilteredIOCollectionIterator;
+ * use io\collections\iterate\NameMatchesFilter;
  *
- *   $origin= new FileCollection('/etc');
- *   for (
- *     $i= new FilteredIOCollectionIterator($origin, new NameMatchesFilter('/\.jpe?g$/i')); 
- *     $i->hasNext(); 
- *   ) {
- *     Console::writeLine('Element ', xp::stringOf($i->next()));
- *   }
- * </code>
+ * $origin= new FileCollection('/etc');
+ * foreach (new FilteredIOCollectionIterator($origin, new NameMatchesFilter('/\.jpe?g$/i')) as $file) {
+ *   Console::writeLine('Element ', $file);
+ * }
+ * ```
  *
  * @test     xp://net.xp_framework.unittest.io.collections.IOCollectionIteratorTest
  * @see      xp://io.collections.iterate.IOCollectionIterator

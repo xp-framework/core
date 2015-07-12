@@ -3,42 +3,42 @@
 /**
  * Thread
  *
- * <code>
- *   uses('lang.Thread');
- *   
- *   class TimerThread extends Thread {
- *     public
- *       $ticks    = 0,
- *       $timeout  = 0;
- *       
- *     public function __construct($timeout) {
- *       $this->timeout= $timeout;
- *       parent::__construct('timer.'.$timeout);
- *     }
- *       
- *     public function run() {
- *       while ($this->ticks < $this->timeout) {
- *         Thread::sleep(1000);
- *         $this->ticks++;
- *         printf("<%s> tick\n", $this->name);
- *       }
- *       printf("<%s> time's up!\n", $this->name);
- *     }
+ * ```php
+ * use lang\Thread;
+ * 
+ * class TimerThread extends Thread {
+ *   public
+ *     $ticks    = 0,
+ *     $timeout  = 0;
+ *     
+ *   public function __construct($timeout) {
+ *     $this->timeout= $timeout;
+ *     parent::__construct('timer.'.$timeout);
  *   }
- *   
- *   $t[0]= new TimerThread(5);
- *   $t[0]->start();
- *   $t[1]= new TimerThread(2);
- *   $t[1]->start();
- *   
- *   for ($i= 0; $i < 3; $i++) {
- *     echo "<main> Waiting...\n";
- *     sleep(1);
+ *     
+ *   public function run() {
+ *     while ($this->ticks < $this->timeout) {
+ *       Thread::sleep(1000);
+ *       $this->ticks++;
+ *       printf("<%s> tick\n", $this->name);
+ *     }
+ *     printf("<%s> time's up!\n", $this->name);
  *   }
- *   
- *   $t[0]->join();
- *   $t[1]->join();
- * </code>
+ * }
+ * 
+ * $t[0]= new TimerThread(5);
+ * $t[0]->start();
+ * $t[1]= new TimerThread(2);
+ * $t[1]->start();
+ * 
+ * for ($i= 0; $i < 3; $i++) {
+ *   echo "<main> Waiting...\n";
+ *   sleep(1);
+ * }
+ * 
+ * $t[0]->join();
+ * $t[1]->join();
+ * ```
  *
  * @ext      pcntl
  * @ext      posix
@@ -59,26 +59,26 @@ class Thread extends Object {
    * Constructor
    *
    * Implementation by subclassing:
-   * <code>
-   *   class ComputeThread extends Thread {
-   *     public function run() {
-   *       // ...
-   *     }
+   * ```php
+   * class ComputeThread extends Thread {
+   *   public function run() {
+   *     // ...
    *   }
+   * }
    *
-   *   $thread= new ComputeThread('computr1');
-   *   $thread->start();
-   * </code>
+   * $thread= new ComputeThread('computr1');
+   * $thread->start();
+   * ```
    * 
    * Implementation by passing a Runnable: 
-   * <code>
-   *   $thread= new Thread(newinstance('lang.Runnable', [], '{
-   *     public function run() {
-   *       // ...
-   *     }
-   *   }'));
-   *   $thread->start();
-   * </code>
+   * ```php
+   * $thread= new Thread(newinstance('lang.Runnable', [], '{
+   *   public function run() {
+   *     // ...
+   *   }
+   * }'));
+   * $thread->start();
+   * ```
    *
    * @param   var arg default NULL
    */

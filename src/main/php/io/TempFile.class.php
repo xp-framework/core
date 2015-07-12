@@ -5,17 +5,16 @@ use lang\System;
 /**
  * Represents a temporary file
  *
- * Example:
- * <code>
- *   uses('io.TempFile');
+ * ```php
+ * use io\TempFile;
  *
- *   $f= new TempFile();
- *   $f->open(File::WRITE);
- *   $f->write('Hello');
- *   $f->close();
+ * $f= new TempFile();
+ * $f->open(File::WRITE);
+ * $f->write('Hello');
+ * $f->close();
  *
- *   printf('Created temporary file "%s"', $f->getURI());
- * </code>
+ * printf('Created temporary file "%s"', $f->getURI());
+ * ```
  *
  * Note: The temporary file is not deleted when the file
  * handle is closed (e.g., a call to close()), this will have
@@ -36,7 +35,7 @@ class TempFile extends File {
   /**
    * Constructor
    *
-   * @param   string prefix default "tmp"
+   * @param   string $prefix default "tmp"
    */
   public function __construct($prefix= 'tmp') {
     parent::__construct(tempnam(System::tempDir(), $prefix.uniqid((double)microtime())));

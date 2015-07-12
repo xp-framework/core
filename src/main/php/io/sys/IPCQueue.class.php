@@ -14,78 +14,71 @@ define('IPC_MSG_MAXSIZE', 16384);
  * </quote>
  *
  * Usage example [with threads]
- * <code>
- *   uses(
- *     'io.sys.IPCQueue',
- *     'io.sys.Ftok', 
- *     'lang.Thread'
- *   );
  *
- *   class senderThread extends Thread {
- *     protected 
- *       $queue= NULL,
- *       $num  = 0;
+ * ```php
+ * use io\sys\IPCQueue;
+ * use io\sys\Ftok;
+ * use lang\Thread;
  *
- *     public function __construct($num) {
- *       $this->num= $num;
- *       $this->queue= new IPCQueue(8925638);
- *       parent::__construct('sender.'.$this->num);
- *     }
+ * class SenderThread extends Thread {
+ *   private $queue, $num;
  *
- *     public function run() {
- *       while ($this->sent < $this->num) {
- *         Thread::sleep(1000);
- *         $this->queue->putMessage(new IPCMessage('hello world'));
- *         $this->sent++;     
- *
- *       }
- *       Console::writeLinef(
- *         "<%s> sent %d messages\n",
- *         $this->name, $this->num
- *       );
- *     }
+ *   public function __construct($num) {
+ *     $this->num= $num;
+ *     $this->queue= new IPCQueue(8925638);
+ *     parent::__construct('sender.'.$this->num);
  *   }
  *
- *   class ReceiverThread extends Thread {
- *     protected 
- *       $queue= NULL;
- *
- *     public function __construct($name) {
- *       $this->queue= new IPCQueue(8925638);
- *       parent::__construct('receiver');
- *     }
- *
- *     public function run() {
- *
- *       while (0 == $this->queue->getQuantity()) {
- *         Console::writeLinef('<%s> Sleeping...', $this->name);
- *         Thread::sleep(1000);
- *       }
- *
- *       while ($message= $this->queue->getMessage()) {
- *
- *         Console::writeLinef(
- *           "<%s> receiving message:\n -> %s\n",
- *           $this->name, $message->getMessage()->toString()
- *         );
- *         Thread::sleep(1000);
- *       }
- *       Console::writeLinef(
- *         'There are %d messages in queue',
- *         $this->queue->getQuantity()
- *       );
- *       $this->queue->removeQueue();
- *       Console::writeLine("All messages received, queue removed.");
+ *   public function run() {
+ *     while ($this->sent < $this->num) {
+ *       Thread::sleep(1000);
+ *       $this->queue->putMessage(new IPCMessage('hello world'));
+ *       $this->sent++;     
  *
  *     }
+ *     Console::writeLinef(
+ *       "<%s> sent %d messages\n",
+ *       $this->name, $this->num
+ *     );
+ *   }
+ * }
+ *
+ * class ReceiverThread extends Thread {
+ *   private $queue;
+ *
+ *   public function __construct($name) {
+ *     $this->queue= new IPCQueue(8925638);
+ *     parent::__construct('receiver');
  *   }
  *
- *   $t[0]= new senderThread(2);
- *   $t[0]->start();
- *   $t[1]= new receiverThread();
- *   $t[1]->start();
- *   var_dump($t[0]->join(), $t[1]->join());
- * </code>
+ *   public function run() {
+ *     while (0 == $this->queue->getQuantity()) {
+ *       Console::writeLinef('<%s> Sleeping...', $this->name);
+ *       Thread::sleep(1000);
+ *     }
+ *
+ *     while ($message= $this->queue->getMessage()) {
+ *       Console::writeLinef(
+ *         "<%s> receiving message:\n -> %s\n",
+ *         $this->name, $message->getMessage()->toString()
+ *       );
+ *       Thread::sleep(1000);
+ *     }
+ *     Console::writeLinef(
+ *       'There are %d messages in queue',
+ *       $this->queue->getQuantity()
+ *     );
+ *     $this->queue->removeQueue();
+ *     Console::writeLine("All messages received, queue removed.");
+ *   }
+ * }
+ *
+ * $t[0]= new SenderThread(2);
+ * $t[0]->start();
+ * $t[1]= new ReceiverThread();
+ * $t[1]->start();
+ * var_dump($t[0]->join(), $t[1]->join());
+ * ```
  */
 class IPCQueue extends \lang\Object {
   public

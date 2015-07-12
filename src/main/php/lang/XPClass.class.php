@@ -453,14 +453,13 @@ class XPClass extends Type {
    *
    * Examples
    * ========
-   * <code>
-   *   uses('io.File', 'io.TempFile');
-   *   $class= XPClass::forName('io.File');
+   * ```php
+   * $class= XPClass::forName('io.File');
    * 
-   *   var_dump($class->isInstance(new TempFile()));  // TRUE
-   *   var_dump($class->isInstance(new File()));      // TRUE
-   *   var_dump($class->isInstance(new Object()));    // FALSE
-   * </code>
+   * var_dump($class->isInstance(new TempFile()));  // TRUE
+   * var_dump($class->isInstance(new File()));      // TRUE
+   * var_dump($class->isInstance(new Object()));    // FALSE
+   * ```
    *
    * @param   var obj
    * @return  bool

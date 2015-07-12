@@ -22,13 +22,6 @@ class ByteOrder extends \lang\Object {
   /**
    * Retrieves the name of a byteorder
    *
-   * Example:
-   * <code>
-   *   uses('io.ByteOrder'); 
-   *
-   *   var_dump(ByteOrder::nameOf(ByteOrder::nativeOrder()));
-   * </code>
-   *
    * @param   int order
    * @return  string name
    */

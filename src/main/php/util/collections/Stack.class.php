@@ -10,21 +10,21 @@ use lang\Value;
  *
  * Example:
  * <code>
- *   uses('util.collections.Stack');
- *   
- *   // Fill stack
- *   with ($s= new Stack()); {
- *     $s->push(new String('One'));
- *     $s->push(new String('Two'));
- *     $s->push(new String('Three'));
- *     $s->push(new String('Four'));
- *   }
- *   
- *   // Empty stack
- *   while (!$s->isEmpty()) {
- *     var_dump($s->pop());
- *   }
- * </code>
+ * use util\collections\Stack;
+ * 
+ * // Fill stack
+ * with ($s= new Stack()); {
+ *   $s->push(new String('One'));
+ *   $s->push(new String('Two'));
+ *   $s->push(new String('Three'));
+ *   $s->push(new String('Four'));
+ * }
+ * 
+ * // Empty stack
+ * while (!$s->isEmpty()) {
+ *   var_dump($s->pop());
+ * }
+ * ```
  *
  * @see      xp://util.collections.Queue
  * @test     xp://net.xp_framework.unittest.util.collections.GenericsTest

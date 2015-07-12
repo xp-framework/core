@@ -4,16 +4,19 @@
  * Encodes/decodes uuencode 
  *
  * Usage example (encoding a file):
- * <code>
- *   uses('io.File', 'io.FileUtil', 'text.encode.UUCode');
+ *
+ * ```php
+ * use io\File;
+ * use io\FileUtil;
+ * use text\encode\UUCode;
  * 
- *   $encoded= UUCode::encode(FileUtil::getContents(new File($argv[1])));  
- *   printf(
- *     "begin 644 %s\n%s\nend\n",
- *     $argv[1],
- *     $encoded
- *   );
- * </code>
+ * $encoded= UUCode::encode(FileUtil::getContents(new File($argv[1])));  
+ * printf(
+ *   "begin 644 %s\n%s\nend\n",
+ *   $argv[1],
+ *   $encoded
+ * );
+ * ```
  *
  * @see      http://foldoc.hld.c64.org/foldoc.cgi?uuencode
  * @see      http://www.opengroup.org/onlinepubs/007908799/xcu/uuencode.html 

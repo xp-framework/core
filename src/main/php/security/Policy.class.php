@@ -41,19 +41,6 @@ class Policy extends \lang\Object {
   /**
    * Create a policy from a file
    *
-   * <code>
-   *   uses('security.Policy', 'io.File');
-   *
-   *   try {
-   *     $policy= Policy::fromFile(new File('my.policy'));
-   *   } catch(PolicyException $e) {
-   *     $e->printStackTrace();
-   *     exit();
-   *   }
-   *
-   *   echo $policy->toString();
-   * </code>
-   *
    * @see     http://java.sun.com/j2se/1.4.1/docs/guide/security/PolicyFiles.html
    * @param   io.Stream stream
    * @return  security.Policy policy
