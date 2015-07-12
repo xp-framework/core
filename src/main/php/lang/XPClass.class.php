@@ -666,7 +666,8 @@ class XPClass extends Type {
   protected static function _classLoaderFor($name) {
     if (isset(\xp::$cl[$name])) {
       sscanf(\xp::$cl[$name], '%[^:]://%[^$]', $cl, $argument);
-      return call_user_func([literal($cl), 'instanceFor'], $argument);
+      $instanceFor= [literal($cl), 'instanceFor'];
+      return $instanceFor($argument);
     }
     return null;    // Internal class, e.g.
   }
