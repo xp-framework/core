@@ -3,6 +3,7 @@
 /**
  * TestCase for this() core functionality.
  *
+ * @deprecated
  */
 class ThisTest extends \unittest\TestCase {
 
