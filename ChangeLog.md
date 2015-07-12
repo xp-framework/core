@@ -5,6 +5,12 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* **Remove variant of create() which returns object given**.
+  See xp-framework/core#90
+  (@thekid)
+* **Removed deprecated raise() core functionality**.
+  See xp-framework/core#89
+  (@thekid)
 * **Removed pre-namespace class loading**:
   - The deprecated `uses()` core functionality has been removed.
   - It is no longer possible to use package-qualified classes.

@@ -367,20 +367,6 @@ function __error($code, $msg, $file, $line) {
 }
 // }}}
 
-// {{{ proto deprecated void raise (string classname, var* args)
-//     throws an exception by a given class name
-function raise($classname) {
-  try {
-    $class= \lang\XPClass::forName($classname);
-  } catch (ClassNotFoundException $e) {
-    xp::error($e->getMessage());
-  }
-  
-  $a= func_get_args();
-  throw call_user_func_array([$class, 'newInstance'], array_slice($a, 1));
-}
-// }}}
-
 // {{{ proto void ensure ($t)
 //     Replacement for finally() which clashes with PHP 5.5.0's finally
 function ensure(&$t) {
@@ -392,7 +378,7 @@ function ensure(&$t) {
 //     Casts an arg NULL-safe
 function cast($arg, $type, $nullsafe= true) {
   if (null === $arg && $nullsafe) {
-    raise('lang.ClassCastException', 'Cannot cast NULL to '.$type);
+    throw new \lang\ClassCastException('Cannot cast NULL to '.$type);
   } else if ($type instanceof \lang\Type) {
     return $type->cast($arg);
   } else {
@@ -568,10 +554,12 @@ function newinstance($spec, $args, $def= null) {
 }
 // }}}
 
-// {{{ proto lang.Generic create(var spec)
+// {{{ proto lang.Generic create(string spec)
 //     Creates a generic object
 function create($spec) {
-  if ($spec instanceof \lang\Generic) return $spec;
+  if (!is_string($spec)) {
+    throw new \lang\IllegalArgumentException('Create expects its first argument to be a string');
+  }
 
   // Parse type specification: "new " TYPE "()"?
   // TYPE:= B "<" ARGS ">"

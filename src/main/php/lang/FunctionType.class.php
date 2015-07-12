@@ -314,7 +314,7 @@ class FunctionType extends Type {
    * @throws  lang.reflect.TargetInvocationException for any exception raised from the invoked function
    */
   public function invoke($func, $args= []) {
-    $closure= $this->verified($func, function($m) use($func) { raise('lang.IllegalArgumentException', sprintf(
+    $closure= $this->verified($func, function($m) use($func) { throw new IllegalArgumentException(sprintf(
       'Passed argument is not of a %s type (%s): %s',
       $this->getName(),
       \xp::typeOf($func),
