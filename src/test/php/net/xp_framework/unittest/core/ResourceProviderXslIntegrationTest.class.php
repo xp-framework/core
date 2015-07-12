@@ -20,7 +20,7 @@ class ResourceProviderXslIntegrationTest extends TestCase {
   #[@beforeClass]
   public static function verifyXSLExtensionLoaded() {
     if (!class_exists('xml\DomXSLProcessor')) {
-      throw new \unittest\PrerequisitesNotMetError('XML Module not available', NULL, array('loaded'));
+      throw new \unittest\PrerequisitesNotMetError('XML Module not available', NULL, ['loaded']);
     }
   }
 

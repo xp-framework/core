@@ -2,7 +2,6 @@
 
 use lang\reflect\InvocationHandler;
 
-
 /**
  * Lazy initializable InvokationHandler 
  *
@@ -45,6 +44,6 @@ abstract class AbstractDeferredInvokationHandler extends \lang\Object implements
         );
       }
     }
-    return call_user_func_array(array($this->_instance, $method), $args);
+    return call_user_func_array([$this->_instance, $method], $args);
   }
 } 

@@ -1,7 +1,8 @@
 <?php namespace unittest\mock\arguments;
 
 use unittest\mock\MockProxyBuilder;
-
+use lang\XPClass;
+use lang\ClassLoader;
 
 /**
  * Convenience class providing common argument matchers.
@@ -42,17 +43,17 @@ class Arg extends \lang\Object {
     $builder= new MockProxyBuilder();
     $builder->setOverwriteExisting(false);
     
-    $interfaces= array(\lang\XPClass::forName('unittest.mock.arguments.IArgumentMatcher'));
+    $interfaces= [XPClass::forName('unittest.mock.arguments.IArgumentMatcher')];
     $parentClass= null;
     
-    $type= \lang\XPClass::forName($typeName);
+    $type= XPClass::forName($typeName);
     if ($type->isInterface()) {
       $interfaces[]= $type;
     } else {
       $parentClass= $type;
     }
     
-    $proxyClass= $builder->createProxyClass(\lang\ClassLoader::getDefault(), $interfaces, $parentClass);
+    $proxyClass= $builder->createProxyClass(ClassLoader::getDefault(), $interfaces, $parentClass);
     return $proxyClass->newInstance(new TypeMatcher($typeName));
   }
 

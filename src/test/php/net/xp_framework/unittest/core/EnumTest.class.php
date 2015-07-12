@@ -92,7 +92,7 @@ class EnumTest extends \unittest\TestCase {
   #[@test]
   public function coinValues() {
     $this->assertEquals(
-      array(Coin::$penny, Coin::$nickel, Coin::$dime, Coin::$quarter),
+      [Coin::$penny, Coin::$nickel, Coin::$dime, Coin::$quarter],
       Coin::values()
     );
   }
@@ -100,7 +100,7 @@ class EnumTest extends \unittest\TestCase {
   #[@test]
   public function operationValues() {
     $this->assertEquals(
-      array(Operation::$plus, Operation::$minus, Operation::$times, Operation::$divided_by),
+      [Operation::$plus, Operation::$minus, Operation::$times, Operation::$divided_by],
       Operation::values()
     );
   }
@@ -280,7 +280,7 @@ class EnumTest extends \unittest\TestCase {
 
   #[@test]
   public function staticPrimitiveMemberNotInEnumValuesOf() {
-    Profiling::$fixture= array($this, $this->name);
+    Profiling::$fixture= [$this, $this->name];
     $this->assertEquals(
       [Profiling::$INSTANCE, Profiling::$EXTENSION],
       Enum::valuesOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'))
@@ -290,7 +290,7 @@ class EnumTest extends \unittest\TestCase {
 
   #[@test]
   public function staticPrimitiveMemberNotInValues() {
-    Profiling::$fixture= array($this, $this->name);
+    Profiling::$fixture= [$this, $this->name];
     $this->assertEquals(
       [Profiling::$INSTANCE, Profiling::$EXTENSION],
       Profiling::values()

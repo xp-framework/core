@@ -23,7 +23,7 @@ class DomApiStreamsTest extends \unittest\TestCase {
    */
   public function setUp() {
     if (!Runtime::getInstance()->extensionAvailable('dom')) {
-      throw new PrerequisitesNotMetError('DOM extension not loaded', null, array('ext/dom'));
+      throw new PrerequisitesNotMetError('DOM extension not loaded', null, ['ext/dom']);
     }
   }
  

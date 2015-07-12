@@ -5,7 +5,6 @@ use util\Hashmap;
 use util\HashmapIterator;
 use util\Comparator;
 
-
 /**
  * Test HashmapIterator class
  *
@@ -18,60 +17,34 @@ class HashmapIteratorTest extends TestCase {
    *
    */
   public function setUp() {
-    $this->map= new Hashmap(
-      array(
-        'k1' => 'v1',
-        'k2' => 'v2',
-        'k3' => 'v3',
-      )
-    );
+    $this->map= new Hashmap(['k1' => 'v1', 'k2' => 'v2', 'k3' => 'v3']);
   }
       
-  /**
-   * Tests next with empty Hashmap
-   *
-   */
   #[@test, @expect('util.NoSuchElementException')]
   public function nextOnEmpty() {
     (new HashmapIterator([]))->next();
   }
 
-  /**
-   * Tests hasNext with empty Hashmap
-   *
-   */
   #[@test]
   public function hasNextOnEmpty() {
     $this->assertFalse((new HashmapIterator([]))->hasNext());
   }
 
-  /**
-   * Tests next with empty Hashmap
-   *
-   */
   #[@test]
   public function nextOnArray() {
     $this->assertEquals(
       'v1',
-      (new HashmapIterator(array('k1' => 'v1')))->next()
+      (new HashmapIterator(['k1' => 'v1']))->next()
     );
   }
 
-  /**
-   * Tests hasNext with empty Hashmap
-   *
-   */
   #[@test]
   public function hasNextOnArray() {
     $this->assertTrue(
-      (new HashmapIterator(array('k1' => 'v1')))->hasNext()
+      (new HashmapIterator(['k1' => 'v1']))->hasNext()
     );
   }
 
-  /**
-   * Tests next with empty Hashmap
-   *
-   */
   #[@test]
   public function nextFromHashmap() {
     $this->assertEquals(
@@ -80,10 +53,6 @@ class HashmapIteratorTest extends TestCase {
     );
   }
 
-  /**
-   * Tests next with empty Hashmap
-   *
-   */
   #[@test]
   public function nextFromHashmapKeys() {
     $this->assertEquals(
@@ -92,10 +61,6 @@ class HashmapIteratorTest extends TestCase {
     );
   }
 
-  /**
-   * Tests next with empty Hashmap
-   *
-   */
   #[@test, @expect('util.NoSuchElementException')]
   public function nextOnEnd() {
     $i= $this->map->iterator();
@@ -105,10 +70,6 @@ class HashmapIteratorTest extends TestCase {
     $i->next();
   }
 
-  /**
-   * Tests next with empty Hashmap
-   *
-   */
   #[@test]
   public function hasNextOnEnd() {
     $i= $this->map->iterator();

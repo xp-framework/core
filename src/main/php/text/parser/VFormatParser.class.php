@@ -74,11 +74,11 @@ class VFormatParser extends \lang\Object {
    * @return  string
    */
   public static function decodeString($str) {
-    return strtr(iconv('utf-8', \xp::ENCODING, $str), array(
+    return strtr(iconv('utf-8', \xp::ENCODING, $str), [
       '\,'    => ',',
       '\N'    => "\n",
       '\n'    => "\n"
-    ));
+    ]);
   }
          
   /**
@@ -174,7 +174,7 @@ class VFormatParser extends \lang\Object {
     // Property params
     if (false !== ($i= strpos($key, ';'))) {
       $props= explode(';', $key);
-      $kargs= array (strtoupper (array_shift ($props)));
+      $kargs= [strtoupper(array_shift($props))];
 
       $val= new \stdClass();
       $val->_value= $value;
@@ -184,7 +184,7 @@ class VFormatParser extends \lang\Object {
       
       $value= $val;
     } else {
-      $kargs= array(strtoupper($key));
+      $kargs= [strtoupper($key)];
     }
     
     // Charsets and encodings

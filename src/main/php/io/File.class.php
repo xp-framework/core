@@ -516,12 +516,12 @@ class File extends \lang\Object implements Channel {
   protected function _lock($mode) {
     if (false === flock($this->_fd, $mode)) {
       $os= '';
-      foreach (array(
+      foreach ([
         LOCK_NB   => 'LOCK_NB',
         LOCK_UN   => 'LOCK_UN', 
         LOCK_EX   => 'LOCK_EX', 
         LOCK_SH   => 'LOCK_SH' 
-      ) as $o => $s) {
+      ] as $o => $s) {
         if ($mode >= $o) { 
           $os.= ' | '.$s;
           $mode-= $o;

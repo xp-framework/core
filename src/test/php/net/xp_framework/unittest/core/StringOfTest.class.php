@@ -69,11 +69,11 @@ class StringOfTest extends \unittest\TestCase {
   public function map_representation() {
     $this->assertEquals(
       "[\n  foo => \"bar\"\n  bar => 2\n  baz => TestString(6) { String }\n]", 
-      \xp::stringOf(array(
+      \xp::stringOf([
         'foo' => 'bar', 
         'bar' => 2, 
         'baz' => $this->testStringInstance()
-      ))
+      ])
     );
   }
 
@@ -130,32 +130,32 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function twice_the_same_object_inside_array_not_recursion() {
-    $test= newinstance('lang.Object', [], array(
+    $test= newinstance('lang.Object', [], [
       'toString' => function() { return 'Test'; }
-    ));
+    ]);
     $this->assertEquals(
       "[\n  a => Test\n  b => Test\n]", 
-      \xp::stringOf(array('a' => $test, 'b' => $test))
+      \xp::stringOf(['a' => $test, 'b' => $test])
     );
   }
   
   #[@test]
   public function twice_the_same_object_with_huge_hashcode_inside_array_not_recursion() {
-    $test= newinstance('lang.Object', [], array(
+    $test= newinstance('lang.Object', [], [
       'hashCode' => function() { return 9E100; },
       'toString' => function() { return 'Test'; }
-    ));
+    ]);
     $this->assertEquals(
       "[\n  a => Test\n  b => Test\n]", 
-      \xp::stringOf(array('a' => $test, 'b' => $test))
+      \xp::stringOf(['a' => $test, 'b' => $test])
     );
   }
 
   #[@test]
   public function toString_calling_xp_stringOf_does_not_loop_forever() {
-    $test= newinstance('lang.Object', [], array(
+    $test= newinstance('lang.Object', [], [
       'toString' => function() { return \xp::stringOf($this); }
-    ));
+    ]);
     $this->assertEquals(
       nameof($test)." {\n  __id => \"".$test->hashCode()."\"\n}",
       \xp::stringOf($test)
@@ -167,8 +167,8 @@ class StringOfTest extends \unittest\TestCase {
     $object= new \lang\Object();
     $stringRep= $object->toString();
     $this->assertEquals(
-      array($stringRep, $stringRep),
-      array(\xp::stringOf($object), \xp::stringOf($object))
+      [$stringRep, $stringRep],
+      [\xp::stringOf($object), \xp::stringOf($object)]
     );
   }
 
@@ -206,15 +206,15 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function closure_inside_object_does_not_raise_serialization_exception() {
-    $instance= newinstance('lang.Object', array(function($a, $b) { }), array(
+    $instance= newinstance('lang.Object', [function($a, $b) { }], [
       'closure'     => null,
       '__construct' => function($closure) { $this->closure= $closure; },
-    ));
+    ]);
     \xp::stringOf($instance);
   }
 
   #[@test]
   public function closure_inside_array_does_not_raise_serialization_exception() {
-    \xp::stringOf(array(function($a, $b) { }));
+    \xp::stringOf([function($a, $b) { }]);
   }
 }

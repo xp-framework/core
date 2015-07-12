@@ -175,7 +175,7 @@ class ClassLoaderTest extends \unittest\TestCase {
   #[@test]
   public function packageContents() {
     $this->assertEquals(
-      array('net/', 'META-INF/', 'contained.xar'),
+      ['net/', 'META-INF/', 'contained.xar'],
       $this->libraryLoader->packageContents('')
     );
   }

@@ -1,7 +1,7 @@
 <?php namespace util;
 
 // Definitions of well-known MIME types
-  define('MIME_APPLICATION_ANDREW_INSET',       'application/andrew-inset');
+define('MIME_APPLICATION_ANDREW_INSET',       'application/andrew-inset');
 define('MIME_APPLICATION_EXCEL',              'application/excel');
 define('MIME_APPLICATION_MSWORD',             'application/msword');
 define('MIME_APPLICATION_OCTET_STREAM',       'application/octet-stream');
@@ -101,7 +101,7 @@ class MimeType extends \lang\Object {
    * @return  string type
    */
   public static function getByFilename($name, $default= MIME_APPLICATION_OCTET_STREAM) {
-    static $map= array(
+    static $map= [
       '.ez'      => MIME_APPLICATION_ANDREW_INSET,
       '.xls'     => MIME_APPLICATION_EXCEL,
       '.doc'     => MIME_APPLICATION_MSWORD,
@@ -216,7 +216,7 @@ class MimeType extends \lang\Object {
       '.vrm'     => MIME_X_WORLD_X_VRML,      
       '.vrml'    => MIME_X_WORLD_X_VRML,      
       '.wrl'     => MIME_X_WORLD_X_VRML,
-    );
+    ];
     
     $parts= explode('.', strtolower($name));
     $i= sizeof($parts)- 1;

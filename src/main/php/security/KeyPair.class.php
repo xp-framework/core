@@ -38,11 +38,11 @@ class KeyPair extends \lang\Object {
    * @return  security.KeyPair
    */
   public static function generate($algorithm= 'md5', $type= OPENSSL_KEYTYPE_RSA, $bits= 1024) {
-    if (false === ($res= openssl_pkey_new(array(
+    if (false === ($res= openssl_pkey_new([
       'digest_alg'        => $algorithm,
       'private_key_type'  => $type,
       'private_key_bits'  => $bits
-    )))) {
+    ]))) {
       trigger_error(implode("\n  @", OpenSslUtil::getErrors()), E_USER_NOTICE);
       throw new \lang\XPException('Could not generate keypair');
     }

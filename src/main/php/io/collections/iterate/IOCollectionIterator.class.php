@@ -36,7 +36,7 @@ class IOCollectionIterator extends \lang\Object implements XPIterator, \Iterator
    * @param   bool recursive default FALSE whether to recurse into subdirectories
    */
   public function __construct($collection, $recursive= false) {
-    $this->collections= array($collection);
+    $this->collections= [$collection];
     $this->collections[0]->open();
     $this->recursive= $recursive;
   }
@@ -59,7 +59,7 @@ class IOCollectionIterator extends \lang\Object implements XPIterator, \Iterator
    * @return  php.Iterator
    */
   public function getIterator() {
-    if (!$this->iterator) $this->iterator= newinstance('Iterator', array($this), '{
+    if (!$this->iterator) $this->iterator= newinstance('Iterator', [$this], '{
       private $i, $t, $r;
       public function __construct($r) { $this->r= $r; }
       public function current() { return $this->r->next(); }

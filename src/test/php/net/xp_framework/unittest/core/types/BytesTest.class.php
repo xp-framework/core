@@ -40,7 +40,7 @@ class BytesTest extends \unittest\TestCase {
 
   #[@test]
   public function fromIntegerArray() {
-    $b= new Bytes(array(97, 98, 99, 100));
+    $b= new Bytes([97, 98, 99, 100]);
     $this->assertEquals(4, $b->size());
     $this->assertEquals(new Byte(97), $b[0]);
     $this->assertEquals(new Byte(98), $b[1]);
@@ -50,7 +50,7 @@ class BytesTest extends \unittest\TestCase {
  
   #[@test]
   public function fromCharArray() {
-    $b= new Bytes(array('a', 'b', 'c', 'd'));
+    $b= new Bytes(['a', 'b', 'c', 'd']);
     $this->assertEquals(4, $b->size());
     $this->assertEquals(new Byte(97), $b[0]);
     $this->assertEquals(new Byte(98), $b[1]);
@@ -60,7 +60,7 @@ class BytesTest extends \unittest\TestCase {
 
   #[@test]
   public function fromByteArray() {
-    $b= new Bytes(array(new Byte(97), new Byte(98), new Byte(99), new Byte(100)));
+    $b= new Bytes([new Byte(97), new Byte(98), new Byte(99), new Byte(100)]);
     $this->assertEquals(4, $b->size());
     $this->assertEquals(new Byte(97), $b[0]);
     $this->assertEquals(new Byte(98), $b[1]);
@@ -207,7 +207,7 @@ class BytesTest extends \unittest\TestCase {
 
   #[@test]
   public function binarySafeBeginning() {
-    $b= new Bytes(array("\0", 'A', 'B'));
+    $b= new Bytes(["\0", 'A', 'B']);
     $this->assertEquals(new Byte(0), $b[0]);
     $this->assertEquals(new Byte(65), $b[1]);
     $this->assertEquals(new Byte(66), $b[2]);
@@ -215,7 +215,7 @@ class BytesTest extends \unittest\TestCase {
 
   #[@test]
   public function binarySafeInBetween() {
-    $b= new Bytes(array('A', "\0", 'B'));
+    $b= new Bytes(['A', "\0", 'B']);
     $this->assertEquals(new Byte(65), $b[0]);
     $this->assertEquals(new Byte(0), $b[1]);
     $this->assertEquals(new Byte(66), $b[2]);
@@ -223,7 +223,7 @@ class BytesTest extends \unittest\TestCase {
 
   #[@test]
   public function binarySafeInEnd() {
-    $b= new Bytes(array('A', 'B', "\0"));
+    $b= new Bytes(['A', 'B', "\0"]);
     $this->assertEquals(new Byte(65), $b[0]);
     $this->assertEquals(new Byte(66), $b[1]);
     $this->assertEquals(new Byte(0), $b[2]);
@@ -364,7 +364,7 @@ class BytesTest extends \unittest\TestCase {
 
   #[@test]
   public function integerArrayToBytes() {
-    $b= new Bytes(array(228, 246, 252));
+    $b= new Bytes([228, 246, 252]);
     $this->assertEquals(new Byte(-28), $b[0]);
     $this->assertEquals(new Byte(-10), $b[1]);
     $this->assertEquals(new Byte(-4), $b[2]);
@@ -372,13 +372,13 @@ class BytesTest extends \unittest\TestCase {
 
   #[@test]
   public function byteArrayToBytes() {
-    $b= new Bytes(array(new Byte(-28)));
+    $b= new Bytes([new Byte(-28)]);
     $this->assertEquals(new Byte(-28), $b[0]);
   }
 
   #[@test]
   public function iteration() {
-    $c= array('H', "\303", "\244", 'l', 'l', 'o');
+    $c= ['H', "\303", "\244", 'l', 'l', 'o'];
     $b= new Bytes($c);
     foreach ($b as $i => $byte) {
       $this->assertEquals($c[$i], chr($byte->intValue()));

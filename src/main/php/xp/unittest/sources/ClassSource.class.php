@@ -29,10 +29,10 @@ class ClassSource extends AbstractSource {
       return $this->testCasesInClass($this->testClass, $arguments);
     }
     
-    return array($this->testClass->getConstructor()->newInstance(array_merge(
+    return [$this->testClass->getConstructor()->newInstance(array_merge(
       (array)$this->method, 
       (array)$arguments
-    )));
+    ))];
   }
 
   /**

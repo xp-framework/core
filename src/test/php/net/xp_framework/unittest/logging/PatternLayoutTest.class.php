@@ -1,16 +1,17 @@
 <?php namespace net\xp_framework\unittest\logging;
 
-use unittest\TestCase;
 use util\log\layout\PatternLayout;
 use util\log\context\MappedLogContext;
-
+use util\log\LoggingEvent;
+use util\log\LogLevel;
+use util\log\LogCategory;
 
 /**
  * TestCase
  *
  * @see      xp://util.log.layout.PatternLayout
  */
-class PatternLayoutTest extends TestCase {
+class PatternLayoutTest extends \unittest\TestCase {
 
   /**
    * Test illegal format token %Q
@@ -36,12 +37,12 @@ class PatternLayoutTest extends TestCase {
    * @return  util.log.LoggingEvent
    */
   protected function newLoggingEvent() {
-    return new \util\log\LoggingEvent(
-      new \util\log\LogCategory('default'), 
+    return new LoggingEvent(
+      new LogCategory('default'), 
       1258733284, 
       1214, 
-      \util\log\LogLevel::WARN, 
-      array('Hello')
+      LogLevel::WARN, 
+      ['Hello']
     );   
   }
 
@@ -94,12 +95,12 @@ class PatternLayoutTest extends TestCase {
     $context= new MappedLogContext();
     $context->put('key1', 'val1');
 
-    $event= new \util\log\LoggingEvent(
-      new \util\log\LogCategory('default', \util\log\LogLevel::ALL, $context),
+    $event= new LoggingEvent(
+      new LogCategory('default', LogLevel::ALL, $context),
       1258733284,
       1,
-      \util\log\LogLevel::INFO,
-      array('Hello')
+      LogLevel::INFO,
+      ['Hello']
     );
 
     $this->assertEquals(

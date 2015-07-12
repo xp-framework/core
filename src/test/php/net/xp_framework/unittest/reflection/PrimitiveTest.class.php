@@ -50,56 +50,57 @@ class PrimitiveTest extends TestCase {
    * @return  var[]
    */
   public function instances($except) {
-    $values= array(
-      array($this), array(null), array(new \lang\Object()),
-      array(false), array(true),
-      array(''), array('Hello'),
-      array(0), array(-1),
-      array(0.0), array(-1.5),
-      array([]),
-      array(array('one' => 'two'))
-    );
+    $values= [
+      [$this], [null], [new \lang\Object()],
+      [false], [true],
+      [''], ['Hello'],
+      [0], [-1],
+      [0.0], [-1.5],
+      [[]],
+      [['one' => 'two']]
+    ];
+
     return array_filter($values, function($value) use ($except) {
       return !in_array($value[0], $except, true);
     });
   }
 
-  #[@test, @values(array('', 'Hello'))]
+  #[@test, @values(['', 'Hello'])]
   public function isAnInstanceOfStringPrimitive($value) {
     $this->assertTrue(Primitive::$STRING->isInstance($value));
   }
   
-  #[@test, @values(source= 'instances', args= array(array('', 'Hello')))]
+  #[@test, @values(source= 'instances', args= [['', 'Hello']])]
   public function notInstanceOfStringPrimitive($value) {
     $this->assertFalse(Primitive::$STRING->isInstance($value));
   }
 
-  #[@test, @values(array(0, -1))]
+  #[@test, @values([0, -1])]
   public function isAnInstanceOfIntegerPrimitive($value) {
     $this->assertTrue(Primitive::$INT->isInstance($value));
   }
 
-  #[@test, @values(source= 'instances', args= array(array(0, -1)))]
+  #[@test, @values(source= 'instances', args= [[0, -1]])]
   public function notInstanceOfIntegerPrimitive($value) {
     $this->assertFalse(Primitive::$INT->isInstance($value));
   }
 
-  #[@test, @values(array(0.0, -1.5))]
+  #[@test, @values([0.0, -1.5])]
   public function isAnInstanceOfDoublePrimitive($value) {
     $this->assertTrue(Primitive::$DOUBLE->isInstance($value));
   }
 
-  #[@test, @values(source= 'instances', args= array(array(0.0, -1.5)))]
+  #[@test, @values(source= 'instances', args= [[0.0, -1.5]])]
   public function notInstanceOfDoublePrimitive($value) {
     $this->assertFalse(Primitive::$DOUBLE->isInstance($value));
   }
 
-  #[@test, @values(array(FALSE, TRUE))]
+  #[@test, @values([FALSE, TRUE])]
   public function isAnInstanceOfBooleanPrimitive($value) {
     $this->assertTrue(Primitive::$BOOL->isInstance($value));
   }
 
-  #[@test, @values(source= 'instances', args= array(array(false, true)))]
+  #[@test, @values(source= 'instances', args= [[false, true]])]
   public function notInstanceOfBooleanPrimitive($value) {
     $this->assertFalse(Primitive::$BOOL->isInstance($value));
   }

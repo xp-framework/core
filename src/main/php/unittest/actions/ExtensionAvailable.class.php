@@ -1,8 +1,8 @@
 <?php namespace unittest\actions;
 
-use unittest\TestAction;
 use lang\Runtime;
-
+use unittest\PrerequisitesNotMetError;
+use unittest\TestCase;
 
 /**
  * Only runs this testcase if a given PHP extension is available
@@ -10,7 +10,7 @@ use lang\Runtime;
  * @test  xp://net.xp_framework.unittest.tests.ExtensionAvailableTest
  * @see   xp://lang.Runtime#extensionAvailable
  */
-class ExtensionAvailable extends \lang\Object implements TestAction {
+class ExtensionAvailable extends \lang\Object implements \unittest\TestAction {
   protected $extension= '';
 
   /**
@@ -38,9 +38,9 @@ class ExtensionAvailable extends \lang\Object implements TestAction {
    * @param  unittest.TestCase $t
    * @throws unittest.PrerequisitesNotMetError
    */
-  public function beforeTest(\unittest\TestCase $t) { 
+  public function beforeTest(TestCase $t) { 
     if (!$this->verify()) {
-      throw new \unittest\PrerequisitesNotMetError('PHP Extension not available', null, array($this->extension));
+      throw new PrerequisitesNotMetError('PHP Extension not available', null, [$this->extension]);
     }
   }
 
@@ -50,7 +50,7 @@ class ExtensionAvailable extends \lang\Object implements TestAction {
    *
    * @param  unittest.TestCase $t
    */
-  public function afterTest(\unittest\TestCase $t) {
+  public function afterTest(TestCase $t) {
     // Empty
   }
 }

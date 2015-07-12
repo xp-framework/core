@@ -239,7 +239,7 @@ class LogCategory extends \lang\Object {
    */
   public function infof() {
     $args= func_get_args();
-    $this->log(LogLevel::INFO, array(vsprintf($args[0], array_slice($args, 1))));
+    $this->log(LogLevel::INFO, [vsprintf($args[0], array_slice($args, 1))]);
   }
 
   /**
@@ -260,7 +260,7 @@ class LogCategory extends \lang\Object {
    */
   public function warnf() {
     $args= func_get_args();
-    $this->log(LogLevel::WARN, array(vsprintf($args[0], array_slice($args, 1))));
+    $this->log(LogLevel::WARN, [vsprintf($args[0], array_slice($args, 1))]);
   }
 
   /**
@@ -281,7 +281,7 @@ class LogCategory extends \lang\Object {
    */
   public function errorf() {
     $args= func_get_args();
-    $this->log(LogLevel::ERROR, array(vsprintf($args[0], array_slice($args, 1))));
+    $this->log(LogLevel::ERROR, [vsprintf($args[0], array_slice($args, 1))]);
   }
 
   /**
@@ -302,7 +302,7 @@ class LogCategory extends \lang\Object {
    */
   public function debugf() {
     $args= func_get_args();
-    $this->log(LogLevel::DEBUG, array(vsprintf($args[0], array_slice($args, 1))));
+    $this->log(LogLevel::DEBUG, [vsprintf($args[0], array_slice($args, 1))]);
   }
  
   /**
@@ -310,7 +310,7 @@ class LogCategory extends \lang\Object {
    *
    */
   public function mark() {
-    $this->log(LogLevel::INFO, array(str_repeat('-', 72)));
+    $this->log(LogLevel::INFO, [str_repeat('-', 72)]);
   }
   
   /**

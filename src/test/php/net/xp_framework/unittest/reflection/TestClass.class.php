@@ -112,7 +112,7 @@ class TestClass extends AbstractTestClass implements Traceable {
    *
    * @return  int
    */
-  #[@webmethod, @security(roles= array('admin', 'god'))]
+  #[@webmethod, @security(roles= ['admin', 'god'])]
   public function currentTimestamp() {
     return time();
   }
@@ -150,9 +150,7 @@ class TestClass extends AbstractTestClass implements Traceable {
    *
    */
   private function defaultMap() {
-    $this->map= array(
-      'binford' => 61
-    );
+    $this->map= ['binford' => 61];
   }
 
   /**

@@ -524,7 +524,7 @@ class TestSuite extends \lang\Object {
     if (!$class->hasMethod($test->name)) {
       throw new MethodNotImplementedException('Test method does not exist', $test->name);
     }
-    $this->notifyListeners('testRunStarted', array($this));
+    $this->notifyListeners('testRunStarted', [$this]);
 
     // Run the single test
     $result= new TestResult();
@@ -533,10 +533,10 @@ class TestSuite extends \lang\Object {
       $this->runInternal($test, $result);
       $this->afterClass($class);
     } catch (PrerequisitesNotMetError $e) {
-      $this->notifyListeners('testSkipped', array($result->setSkipped($test, $e, 0.0)));
+      $this->notifyListeners('testSkipped', [$result->setSkipped($test, $e, 0.0)]);
     }
 
-    $this->notifyListeners('testRunFinished', array($this, $result));
+    $this->notifyListeners('testRunFinished', [$this, $result]);
     return $result;
   }
   
@@ -546,7 +546,7 @@ class TestSuite extends \lang\Object {
    * @return  unittest.TestResult
    */
   public function run() {
-    $this->notifyListeners('testRunStarted', array($this));
+    $this->notifyListeners('testRunStarted', [$this]);
 
     $result= new TestResult();
     foreach ($this->order as $classname => $tests) {
@@ -557,7 +557,7 @@ class TestSuite extends \lang\Object {
         $this->beforeClass($class);
       } catch (PrerequisitesNotMetError $e) {
         foreach ($tests as $i) {
-          $this->notifyListeners('testSkipped', array($result->setSkipped($this->tests[$i], $e, 0.0)));
+          $this->notifyListeners('testSkipped', [$result->setSkipped($this->tests[$i], $e, 0.0)]);
         }
         continue;
       }
@@ -567,7 +567,7 @@ class TestSuite extends \lang\Object {
       $this->afterClass($class);
     }
 
-    $this->notifyListeners('testRunFinished', array($this, $result));
+    $this->notifyListeners('testRunFinished', [$this, $result]);
     return $result;
   }
   

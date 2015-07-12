@@ -99,7 +99,7 @@ class PropertyManager extends \lang\Object {
    * @return  util.PropertySource the added path
    */
   public function prependSource(PropertySource $source) {
-    if (!$this->hasSource($source)) $this->provider= array_merge(array($source->hashCode() => $source), $this->provider);
+    if (!$this->hasSource($source)) $this->provider= array_merge([$source->hashCode() => $source], $this->provider);
     return $source;
   }
 

@@ -24,7 +24,7 @@ class RecordClassActionInvocation extends \lang\Object implements \unittest\Test
    */
   public function beforeTestClass(XPClass $c) {
     $f= $c->getField($this->field);
-    $f->set(null, array_merge($f->get(null), array('before')));
+    $f->set(null, array_merge($f->get(null), ['before']));
   }
 
   /**
@@ -34,6 +34,6 @@ class RecordClassActionInvocation extends \lang\Object implements \unittest\Test
    */
   public function afterTestClass(XPClass $c) {
     $f= $c->getField('run');
-    $f->set(null, array_merge($f->get(null), array('after')));
+    $f->set(null, array_merge($f->get(null), ['after']));
   }
 }

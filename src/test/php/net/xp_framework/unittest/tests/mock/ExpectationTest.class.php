@@ -137,7 +137,7 @@ class ExpectationTest extends \unittest\TestCase {
    */
   #[@test]
   public function setArguments_should_set_arguments() {
-    $expected= array('foo', 'bar', 5);
+    $expected= ['foo', 'bar', 5];
     $this->sut->setArguments($expected);
     $actual= $this->sut->getArguments();
     $this->assertEquals($expected, $actual);   
@@ -158,11 +158,11 @@ class ExpectationTest extends \unittest\TestCase {
    */
   #[@test]
   public function argument_count_should_be_considered_when_matching_args() {
-    $this->sut->setArguments(array(1, 2));
-    $this->assertTrue($this->sut->doesMatchArgs(array(1, 2)));
+    $this->sut->setArguments([1, 2]);
+    $this->assertTrue($this->sut->doesMatchArgs([1, 2]));
     $this->assertFalse($this->sut->doesMatchArgs([]));
-    $this->assertFalse($this->sut->doesMatchArgs(array(1)));
-    $this->assertFalse($this->sut->doesMatchArgs(array(1, 2, 3)));
+    $this->assertFalse($this->sut->doesMatchArgs([1]));
+    $this->assertFalse($this->sut->doesMatchArgs([1, 2, 3]));
   }
 
   /**
@@ -171,9 +171,9 @@ class ExpectationTest extends \unittest\TestCase {
    */
   #[@test]
   public function doesMatch_should_return_false_on_differentTypes() {
-    $this->sut->setArguments(array('1'));
+    $this->sut->setArguments(['1']);
 
-    $this->assertFalse($this->sut->doesMatchArgs(array(1)));
+    $this->assertFalse($this->sut->doesMatchArgs([1]));
   }
 
   /**
@@ -182,9 +182,9 @@ class ExpectationTest extends \unittest\TestCase {
    */
   #[@test]
   public function doesMatch_should_return_true_if_args_are_equal() {
-    $this->sut->setArguments(array('1', 2, 3.0, '4'));
+    $this->sut->setArguments(['1', 2, 3.0, '4']);
 
-    $this->assertTrue($this->sut->doesMatchArgs(array('1', 2, 3.0, '4')));
+    $this->assertTrue($this->sut->doesMatchArgs(['1', 2, 3.0, '4']));
   }
 
   /**
@@ -193,9 +193,9 @@ class ExpectationTest extends \unittest\TestCase {
    */
   #[@test]
   public function doesMatch_should_return_false_if_args_are_unequal() {
-    $this->sut->setArguments(array('1', 2, 3.0, '4'));
+    $this->sut->setArguments(['1', 2, 3.0, '4']);
 
-    $this->assertFalse($this->sut->doesMatchArgs(array('x', 2, 3.0, '4')));
+    $this->assertFalse($this->sut->doesMatchArgs(['x', 2, 3.0, '4']));
   }
 
   /**
@@ -204,9 +204,9 @@ class ExpectationTest extends \unittest\TestCase {
    */
   #[@test]
   public function doesMatch_should_work_with_null() {
-    $this->sut->setArguments(array(null, null));
+    $this->sut->setArguments([null, null]);
 
-    $this->assertTrue($this->sut->doesMatchArgs(array(null, null)));
+    $this->assertTrue($this->sut->doesMatchArgs([null, null]));
   }
 
   /**
@@ -215,12 +215,12 @@ class ExpectationTest extends \unittest\TestCase {
    */
   #[@test]
   public function doesMatch_should_work_with_generic_AnyMatcher() {
-    $this->sut->setArguments(array(Arg::any()));
+    $this->sut->setArguments([Arg::any()]);
 
-    $this->assertTrue($this->sut->doesMatchArgs(array(null)));
-    $this->assertTrue($this->sut->doesMatchArgs(array('test')));
-    $this->assertTrue($this->sut->doesMatchArgs(array(42)));
-    $this->assertTrue($this->sut->doesMatchArgs(array(new \lang\Object())));
+    $this->assertTrue($this->sut->doesMatchArgs([null]));
+    $this->assertTrue($this->sut->doesMatchArgs(['test']));
+    $this->assertTrue($this->sut->doesMatchArgs([42]));
+    $this->assertTrue($this->sut->doesMatchArgs([new \lang\Object()]));
   }
 
   /**

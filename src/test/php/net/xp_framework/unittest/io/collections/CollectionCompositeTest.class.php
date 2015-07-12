@@ -39,7 +39,7 @@ class CollectionCompositeTest extends AbstractCollectionTest {
 
   #[@test]
   public function nextReturnsNullForOneEmptyCollection() {
-    $empty= new CollectionComposite(array($this->emptyCollection('empty-dir')));
+    $empty= new CollectionComposite([$this->emptyCollection('empty-dir')]);
     $empty->open();
     $this->assertNull($empty->next());
     $empty->close();
@@ -47,10 +47,10 @@ class CollectionCompositeTest extends AbstractCollectionTest {
 
   #[@test]
   public function nextReturnsNullForTwoEmptyCollections() {
-    $empty= new CollectionComposite(array(
+    $empty= new CollectionComposite([
       $this->emptyCollection('empty-dir'),
       $this->emptyCollection('lost+found')
-    ));
+    ]);
     $empty->open();
     $this->assertNull($empty->next());
     $empty->close();
@@ -58,10 +58,10 @@ class CollectionCompositeTest extends AbstractCollectionTest {
 
   #[@test]
   public function elementsFromAllCollections() {
-    $composite= new CollectionComposite(array(
-      $this->newCollection('/home', array(new MockElement('.nedit'))),
-      $this->newCollection('/usr/local/etc', array(new MockElement('php.ini'))),
-    ));
+    $composite= new CollectionComposite([
+      $this->newCollection('/home', [new MockElement('.nedit')]),
+      $this->newCollection('/usr/local/etc', [new MockElement('php.ini')]),
+    ]);
     $composite->open();
     $this->assertElement('.nedit', $composite->next());
     $this->assertElement('php.ini', $composite->next());

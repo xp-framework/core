@@ -22,7 +22,7 @@ class MagicQuotesTest extends \unittest\TestCase {
   #[@beforeClass]
   public static function verifyProcessExecutionEnabled() {
     if (Process::$DISABLED) {
-      throw new PrerequisitesNotMetError('Process execution disabled', NULL, array('enabled'));
+      throw new PrerequisitesNotMetError('Process execution disabled', NULL, ['enabled']);
     }
   }
 
@@ -31,7 +31,7 @@ class MagicQuotesTest extends \unittest\TestCase {
     $runtime= Runtime::getInstance();
     $options= $runtime->startupOptions()->withSetting('magic_quotes_gpc', 1)->withSetting('error_reporting', 'E_ALL');
     $out= $err= '';
-    with ($p= $runtime->newInstance($options, 'class', 'xp.runtime.Evaluate', array('return 1;'))); {
+    with ($p= $runtime->newInstance($options, 'class', 'xp.runtime.Evaluate', ['return 1;'])); {
       $p->in->close();
 
       // Read output

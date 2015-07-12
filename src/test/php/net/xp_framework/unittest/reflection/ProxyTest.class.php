@@ -64,11 +64,11 @@ class ProxyTest extends \unittest\TestCase {
    * @return  lang.XPClass
    */
   protected function newProxyWith($body) {
-    return $this->proxyClassFor(array(ClassLoader::defineInterface(
+    return $this->proxyClassFor([ClassLoader::defineInterface(
       'net.xp_framework.unittest.reflection.__NP_'.$this->name,
-      array(),
+      [],
       $body
-    )));
+    )]);
   }
 
   #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]

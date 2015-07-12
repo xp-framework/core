@@ -98,8 +98,8 @@ class HashmapTest extends TestCase {
   public function merge() {
     $this->testMerge(
       false,
-      array('color' => 'green', 'key' => 'value'),
-      array('color' => 'red', 'key' => 'value', 'count' => 5)
+      ['color' => 'green', 'key' => 'value'],
+      ['color' => 'red', 'key' => 'value', 'count' => 5]
     );
   }
 
@@ -107,8 +107,8 @@ class HashmapTest extends TestCase {
   public function mergeRecursive() {
     $this->testMerge(
       true,
-      array('color' => 'green', 'key' => 'value'),
-      array('color' => array('green', 'red'), 'key' => 'value', 'count' => 5)
+      ['color' => 'green', 'key' => 'value'],
+      ['color' => ['green', 'red'], 'key' => 'value', 'count' => 5]
     );
   }
   
@@ -124,7 +124,7 @@ class HashmapTest extends TestCase {
 
     $this->assertTrue($this->map->swap('color', 'price'));
     $this->assertEquals(
-      array('color' => 15, 'price' => 'purple'), 
+      ['color' => 15, 'price' => 'purple'],
       $this->map->toArray()
     );
   }
@@ -145,7 +145,7 @@ class HashmapTest extends TestCase {
 
     $this->assertTrue($this->map->flip());
     $this->assertEquals(
-      array('purple' => 'color', 15 => 'price'), 
+      ['purple' => 'color', 15 => 'price'],
       $this->map->toArray()
     );
   }
@@ -168,14 +168,14 @@ class HashmapTest extends TestCase {
   public function keys() {
     $this->map->put('one', 1);
     $this->map->put('two', 2);
-    $this->assertEquals(array('one', 'two'), $this->map->keys());
+    $this->assertEquals(['one', 'two'], $this->map->keys());
   }
 
   #[@test]
   public function values() {
     $this->map->put('one', 1);
     $this->map->put('two', 2);
-    $this->assertEquals(array(1, 2), $this->map->values());
+    $this->assertEquals([1, 2], $this->map->values());
   }
 
   #[@test]
@@ -184,8 +184,8 @@ class HashmapTest extends TestCase {
     $this->map->put('two', 2);
     $this->map->put('three', 3);
     $this->map->put('four', 4);
-    $this->map->filter(function($v) { return 1 == $v % 2; });
-    $this->assertEquals(array('one' => 1, 'three' => 3), $this->map->toArray());
+    $this->map->filter(function($v) { return 1 === $v % 2; });
+    $this->assertEquals(['one' => 1, 'three' => 3], $this->map->toArray());
   }
 
   #[@test]
@@ -195,7 +195,7 @@ class HashmapTest extends TestCase {
     $this->map->sort(SORT_NUMERIC);
 
     $this->assertEquals(
-      array('one' => 1, 'two' => 2), 
+      ['one' => 1, 'two' => 2],
       $this->map->toArray()
     );
   }
@@ -207,7 +207,7 @@ class HashmapTest extends TestCase {
     $this->map->rsort(SORT_NUMERIC);
 
     $this->assertEquals(
-      array('two' => 2, 'one' => 1), 
+      ['two' => 2, 'one' => 1],
       $this->map->toArray()
     );
   }
@@ -218,13 +218,13 @@ class HashmapTest extends TestCase {
     $this->map->put('two', 'two');
     $this->map->put('eins', 'one');
 
-    $this->map->usort(newinstance('util.Comparator', [], '{
-      function compare($a, $b) { 
+    $this->map->usort(newinstance('util.Comparator', [], [
+      'compare' => function($a, $b) { 
         return strcasecmp($a, $b); 
       }
-    }'));
+    ]));
     $this->assertEquals(
-      array('one' => 'One', 'eins' => 'one', 'two' => 'two'), 
+      ['one' => 'One', 'eins' => 'one', 'two' => 'two'],
       $this->map->toArray()
     );
   }

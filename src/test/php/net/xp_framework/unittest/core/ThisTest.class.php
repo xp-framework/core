@@ -9,12 +9,12 @@ class ThisTest extends \unittest\TestCase {
 
   #[@test]
   public function arrayOffset() {
-    $this->assertEquals(1, this(array(1, 2, 3), 0));
+    $this->assertEquals(1, this([1, 2, 3], 0));
   }
 
   #[@test]
   public function mapOffset() {
-    $this->assertEquals('World', this(array('Hello' => 'World'), 'Hello'));
+    $this->assertEquals('World', this(['Hello' => 'World'], 'Hello'));
   }
 
   #[@test]

@@ -357,7 +357,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function getArrayParameter() {
-    $this->assertEquals(array('b'), (new URL('http://localhost?a[]=b'))->getParam('a'));
+    $this->assertEquals(['b'], (new URL('http://localhost?a[]=b'))->getParam('a'));
   }
 
   /**
@@ -366,7 +366,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function getEncodedArrayParameter() {
-    $this->assertEquals(array('='), (new URL('http://localhost?a[]=%3D'))->getParam('a'));
+    $this->assertEquals(['='], (new URL('http://localhost?a[]=%3D'))->getParam('a'));
   }
 
   /**
@@ -375,7 +375,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function getArrayParameters() {
-    $this->assertEquals(array('b', 'c'), (new URL('http://localhost?a[]=b&a[]=c'))->getParam('a'));
+    $this->assertEquals(['b', 'c'], (new URL('http://localhost?a[]=b&a[]=c'))->getParam('a'));
   }
 
   /**
@@ -385,7 +385,7 @@ class URLTest extends TestCase {
   #[@test]
   public function getArrayParametersAsHash() {
     $this->assertEquals(
-      array('name' => 'b', 'color' => 'c'), 
+      ['name' => 'b', 'color' => 'c'],
       (new URL('http://localhost?a[name]=b&a[color]=c'))->getParam('a')
     );
   }
@@ -397,7 +397,7 @@ class URLTest extends TestCase {
   #[@test]
   public function getArrayParametersAsHashWithEncodedNames() {
     $this->assertEquals(
-      array('=name=' => 'b', '=color=' => 'c'), 
+      ['=name=' => 'b', '=color=' => 'c'],
       (new URL('http://localhost?a[%3Dname%3D]=b&a[%3Dcolor%3D]=c'))->getParam('a')
     );
   }
@@ -409,7 +409,7 @@ class URLTest extends TestCase {
   #[@test]
   public function arrayOffsetsInDifferentArrays() {
     $this->assertEquals(
-      array('a' => array('c'), 'b' => array('d')), 
+      ['a' => ['c'], 'b' => ['d']],
       (new URL('http://localhost/?a[]=c&b[]=d'))->getParams()
     );
   }
@@ -421,7 +421,7 @@ class URLTest extends TestCase {
   #[@test]
   public function duplicateOffsetsOverwriteEachother() {
     $this->assertEquals(
-      array('c'), 
+      ['c'], 
       (new URL('http://localhost/?a[0]=b&a[0]=c'))->getParam('a')
     );
   }
@@ -433,7 +433,7 @@ class URLTest extends TestCase {
   #[@test]
   public function duplicateNamesOverwriteEachother() {
     $this->assertEquals(
-      array('name' => 'c'), 
+      ['name' => 'c'],
       (new URL('http://localhost/?a[name]=b&a[name]=c'))->getParam('a')
     );
   }
@@ -445,7 +445,7 @@ class URLTest extends TestCase {
   #[@test]
   public function twoDimensionalArray() {
     $this->assertEquals(
-      array(array('b')), 
+      [['b']], 
       (new URL('http://localhost/?a[][]=b'))->getParam('a')
     );
   }
@@ -457,7 +457,7 @@ class URLTest extends TestCase {
   #[@test]
   public function threeDimensionalArray() {
     $this->assertEquals(
-      array(array(array('b'))), 
+      [[['b']]],
       (new URL('http://localhost/?a[][][]=b'))->getParam('a')
     );
   }
@@ -469,7 +469,7 @@ class URLTest extends TestCase {
   #[@test]
   public function arrayOfHash() {
     $this->assertEquals(
-      array(array(array('name' => 'b'))), 
+      [[['name' => 'b']]],
       (new URL('http://localhost/?a[][][name]=b'))->getParam('a')
     );
   }
@@ -481,7 +481,7 @@ class URLTest extends TestCase {
   #[@test]
   public function hashOfArray() {
     $this->assertEquals(
-      array('name' => array(array('b'))), 
+      ['name' => [['b']]],
       (new URL('http://localhost/?a[name][][]=b'))->getParam('a')
     );
   }
@@ -493,7 +493,7 @@ class URLTest extends TestCase {
   #[@test]
   public function hashOfArrayOfHash() {
     $this->assertEquals(
-      array('name' => array(array('key' => 'b'))), 
+      ['name' => [['key' => 'b']]],
       (new URL('http://localhost/?a[name][][key]=b'))->getParam('a')
     );
   }
@@ -505,7 +505,7 @@ class URLTest extends TestCase {
   #[@test]
   public function hashNotationWithoutValues() {
     $this->assertEquals(
-      array('name' => '', 'color' => ''), 
+      ['name' => '', 'color' => ''],
       (new URL('http://localhost/?a[name]&a[color]'))->getParam('a')
     );
   }
@@ -517,7 +517,7 @@ class URLTest extends TestCase {
   #[@test]
   public function arrayNotationWithoutValues() {
     $this->assertEquals(
-      array('', ''), 
+      ['', ''],
       (new URL('http://localhost/?a[]&a[]'))->getParam('a')
     );
   }
@@ -529,7 +529,7 @@ class URLTest extends TestCase {
   #[@test]
   public function getArrayParams() {
     $this->assertEquals(
-      array('a' => array('b', 'c')), 
+      ['a' => ['b', 'c']],
       (new URL('http://localhost?a[]=b&a[]=c'))->getParams()
     );
   }
@@ -541,7 +541,7 @@ class URLTest extends TestCase {
   #[@test]
   public function mixedOffsetsAndKeys() {
     $this->assertEquals(
-      array(0 => 'b', 'name' => 'c', 1 => 'd'), 
+      [0 => 'b', 'name' => 'c', 1 => 'd'],
       (new URL('http://localhost/?a[]=b&a[name]=c&a[]=d'))->getParam('a')
     );
   }
@@ -553,7 +553,7 @@ class URLTest extends TestCase {
   #[@test]
   public function nestedBraces() {
     $this->assertEquals(
-      array('a' => array('nested[]' => 'b')), 
+      ['a' => ['nested[]' => 'b']],
       (new URL('http://localhost/?a[nested[]]=b'))->getParams()
     );
   }
@@ -565,7 +565,7 @@ class URLTest extends TestCase {
   #[@test]
   public function nestedBracesTwice() {
     $this->assertEquals(
-      array('a' => array('nested[a]' => 'b', 'nested[b]' => 'c')), 
+      ['a' => ['nested[a]' => 'b', 'nested[b]' => 'c']],
       (new URL('http://localhost/?a[nested[a]]=b&a[nested[b]]=c'))->getParams()
     );
   }
@@ -577,7 +577,7 @@ class URLTest extends TestCase {
   #[@test]
   public function nestedBracesChained() {
     $this->assertEquals(
-      array('a' => array('nested[a]' => array('c'))), 
+      ['a' => ['nested[a]' => ['c']]],
       (new URL('http://localhost/?a[nested[a]][]=c'))->getParams()
     );
   }
@@ -589,7 +589,7 @@ class URLTest extends TestCase {
   #[@test]
   public function unnamedArrayParameterDoesNotArray() {
     $this->assertEquals(
-      array('[]' => 'c'), 
+      ['[]' => 'c'],
       (new URL('http://localhost/?[]=c'))->getParams()
     );
   }
@@ -712,7 +712,7 @@ class URLTest extends TestCase {
    */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function addExistingParams() {
-    (new URL('http://localhost?a=b'))->addParams(array('a' => 'b'));
+    (new URL('http://localhost?a=b'))->addParams(['a' => 'b']);
   }
 
   /**
@@ -724,7 +724,7 @@ class URLTest extends TestCase {
     $original= 'http://localhost?a=b';
     $u= new URL($original);
     try {
-      $u->addParams(array('c' => 'd', 'a' => 'b'));
+      $u->addParams(['c' => 'd', 'a' => 'b']);
       $this->fail('Existing parameter "a" not detected', null, 'lang.IllegalArgumentException');
     } catch (\lang\IllegalArgumentException $expected) { }
     $this->assertEquals($original, $u->getURL());
@@ -738,7 +738,7 @@ class URLTest extends TestCase {
   public function setExistingParams() {
     $this->assertEquals(
       'http://localhost?a=c', 
-      (new URL('http://localhost?a=b'))->setParams(array('a' => 'c'))->getURL()
+      (new URL('http://localhost?a=b'))->setParams(['a' => 'c'])->getURL()
     );
   }
 
@@ -750,7 +750,7 @@ class URLTest extends TestCase {
   public function addNewParams() {
     $this->assertEquals(
       'http://localhost?a=b&c=d', 
-      (new URL('http://localhost'))->addParams(array('a' => 'b', 'c' => 'd'))->getURL()
+      (new URL('http://localhost'))->addParams(['a' => 'b', 'c' => 'd'])->getURL()
     );
   }
 
@@ -762,7 +762,7 @@ class URLTest extends TestCase {
   public function setNewParams() {
     $this->assertEquals(
       'http://localhost?a=b&c=d', 
-      (new URL('http://localhost'))->setParams(array('a' => 'b', 'c' => 'd'))->getURL()
+      (new URL('http://localhost'))->setParams(['a' => 'b', 'c' => 'd'])->getURL()
     );
   }
 
@@ -774,7 +774,7 @@ class URLTest extends TestCase {
   public function addAdditionalParams() {
     $this->assertEquals(
       'http://localhost?z=x&a=b&c=d', 
-      (new URL('http://localhost?z=x'))->addParams(array('a' => 'b', 'c' => 'd'))->getURL()
+      (new URL('http://localhost?z=x'))->addParams(['a' => 'b', 'c' => 'd'])->getURL()
     );
   }
 
@@ -786,7 +786,7 @@ class URLTest extends TestCase {
   public function setAdditionalParams() {
     $this->assertEquals(
       'http://localhost?z=x&a=b&c=d', 
-      (new URL('http://localhost?z=x'))->setParams(array('a' => 'b', 'c' => 'd'))->getURL()
+      (new URL('http://localhost?z=x'))->setParams(['a' => 'b', 'c' => 'd'])->getURL()
     );
   }
 
@@ -797,7 +797,7 @@ class URLTest extends TestCase {
   #[@test]
   public function addArrayParam() {
     $u= new URL('http://localhost/');
-    $u->addParam('x', array('y', 'z'));
+    $u->addParam('x', ['y', 'z']);
     $this->assertEquals('http://localhost/?x[]=y&x[]=z', $u->getURL());
   }
 
@@ -808,7 +808,7 @@ class URLTest extends TestCase {
   #[@test]
   public function setArrayParam() {
     $u= new URL('http://localhost/');
-    $u->setParam('x', array('y', 'z'));
+    $u->setParam('x', ['y', 'z']);
     $this->assertEquals('http://localhost/?x[]=y&x[]=z', $u->getURL());
   }
 
@@ -818,7 +818,7 @@ class URLTest extends TestCase {
    */
   #[@test]
   public function params() {
-    $this->assertEquals(array('a' => 'b', 'c' => 'd'), (new URL('http://localhost?a=b&c=d'))->getParams());
+    $this->assertEquals(['a' => 'b', 'c' => 'd'], (new URL('http://localhost?a=b&c=d'))->getParams());
   }
 
   #[@test]
@@ -868,7 +868,7 @@ class URLTest extends TestCase {
 
   #[@test]
   public function getDotParams() {
-    $this->assertEquals(array('a.b' => 'c'), (new URL('http://localhost/?a.b=c'))->getParams());
+    $this->assertEquals(['a.b' => 'c'], (new URL('http://localhost/?a.b=c'))->getParams());
   }
 
   #[@test]
@@ -1174,7 +1174,7 @@ class URLTest extends TestCase {
   public function parseEncodedAssociativeArray() {
     $u= new URL('http://example.com/ajax?load=getXML&data%5BprojectName%5D=project&data%5BlangCode%5D=en');
     $this->assertEquals(
-      array('projectName' => 'project', 'langCode' => 'en'),
+      ['projectName' => 'project', 'langCode' => 'en'],
       $u->getParam('data')
     );
   }
@@ -1183,7 +1183,7 @@ class URLTest extends TestCase {
   public function parseUnencodedAssociativeArray() {
     $u= new URL('http://example.com/ajax?load=getXML&data[projectName]=project&data[langCode]=en');
     $this->assertEquals(
-      array('projectName' => 'project', 'langCode' => 'en'),
+      ['projectName' => 'project', 'langCode' => 'en'],
       $u->getParam('data')
     );
   }
@@ -1191,7 +1191,7 @@ class URLTest extends TestCase {
   #[@test]
   public function addParamAssociativeAray() {
     $u= new URL('http://example.com/ajax?load=getXML');
-    $u->addParam('data', array('projectName' => 'project', 'langCode' => 'en'));
+    $u->addParam('data', ['projectName' => 'project', 'langCode' => 'en']);
     $this->assertEquals(
       'load=getXML&data[projectName]=project&data[langCode]=en',
       $u->getQuery()
@@ -1201,7 +1201,7 @@ class URLTest extends TestCase {
   #[@test]
   public function addParamsAssociativeAray() {
     $u= new URL('http://example.com/ajax?load=getXML');
-    $u->addParams(array('data' => array('projectName' => 'project', 'langCode' => 'en')));
+    $u->addParams(['data' => ['projectName' => 'project', 'langCode' => 'en']]);
     $this->assertEquals(
       'load=getXML&data[projectName]=project&data[langCode]=en',
       $u->getQuery()

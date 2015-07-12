@@ -5,12 +5,12 @@
  * accept the element.
  *
  * This filter:
- * <code>
- *   $filter= new AllOfFilter(array(
- *     new ModifiedBeforeFilter(new Date('Dec 14  2004')),
- *     new ExtensionEqualsFilter('jpg')
- *   ));
- * </code>
+ * ```php
+ * $filter= new AllOfFilter([
+ *   new ModifiedBeforeFilter(new Date('Dec 14  2004')),
+ *   new ExtensionEqualsFilter('jpg')
+ * ]);
+ * ```
  * will accept all elements modified before Dec 14  2004 AND whose
  * extension is ".jpg"
  *

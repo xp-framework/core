@@ -45,7 +45,7 @@ class PatternTest extends \unittest\TestCase {
   #[@test, @action(new RuntimeVersion('<7.0.0-dev'))]
   public function unicodePattern() {
     $this->assertEquals(
-      array('GÃ¼n'), 
+      ['GÃ¼n'],
       Pattern::compile('.Ã¼.', Pattern::UTF8)->match(new \lang\types\String('Günter', 'iso-8859-1'))->group(0)
     );
   }
@@ -53,7 +53,7 @@ class PatternTest extends \unittest\TestCase {
   #[@test, @action(new RuntimeVersion('<7.0.0-dev'))]
   public function nonUnicodePattern() {
     $this->assertEquals(
-      array('Gün'), 
+      ['Gün'],
       Pattern::compile('.ü.')->match(new \lang\types\String('Günter', 'iso-8859-1'))->group(0)
     );
   }
@@ -69,7 +69,7 @@ class PatternTest extends \unittest\TestCase {
   #[@test]
   public function groups() {
     $this->assertEquals(
-      array(array('Hello')), 
+      [['Hello']],
       Pattern::compile('H[ea]llo')->match('Hello')->groups()
     );
   }
@@ -77,7 +77,7 @@ class PatternTest extends \unittest\TestCase {
   #[@test]
   public function groupsWithOneMatch() {
     $this->assertEquals(
-      array(array('www.example.com', 'www.', 'www', 'com')), 
+      [['www.example.com', 'www.', 'www', 'com']],
       Pattern::compile('(([w]{3})\.)?example\.(com|net|org)')->match('www.example.com')->groups()
     );
   }
@@ -85,10 +85,10 @@ class PatternTest extends \unittest\TestCase {
   #[@test]
   public function groupsWithMultipleMatches() {
     $this->assertEquals(
-      array(
-        array('www.example.com', 'www.', 'www', 'com'),
-        array('example.org', '', '', 'org'),
-      ), 
+      [
+        ['www.example.com', 'www.', 'www', 'com'],
+        ['example.org', '', '', 'org']
+      ],
       Pattern::compile('(([w]{3})\.)?example\.(com|net|org)')->match('www.example.com and example.org')->groups()
     );
   }
@@ -96,7 +96,7 @@ class PatternTest extends \unittest\TestCase {
   #[@test]
   public function group() {
     $this->assertEquals(
-      array('Hello'), 
+      ['Hello'],
       Pattern::compile('H[ea]llo')->match('Hello')->group(0)
     );
   }
@@ -104,7 +104,7 @@ class PatternTest extends \unittest\TestCase {
   #[@test]
   public function groupWithOneMatch() {
     $this->assertEquals(
-      array('www.example.com', 'www.', 'www', 'com'), 
+      ['www.example.com', 'www.', 'www', 'com'],
       Pattern::compile('(([w]{3})\.)?example\.(com|net|org)')->match('www.example.com')->group(0)
     );
   }
@@ -113,11 +113,11 @@ class PatternTest extends \unittest\TestCase {
   public function groupWithMultipleMatches() {
     $match= Pattern::compile('(([w]{3})\.)?example\.(com|net|org)')->match('www.example.com and example.org');
     $this->assertEquals(
-      array('www.example.com', 'www.', 'www', 'com'), 
+      ['www.example.com', 'www.', 'www', 'com'],
       $match->group(0)
     );
     $this->assertEquals(
-      array('example.org', '', '', 'org'), 
+      ['example.org', '', '', 'org'],
       $match->group(1)
     );
   }

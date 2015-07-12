@@ -13,7 +13,7 @@ use lang\Value;
  * @test  xp://net.xp_framework.unittest.util.collections.BoxingTest
  * @see   xp://util.collections.Map
  */
-#[@generic(self= 'K, V', implements= array('K, V'))]
+#[@generic(self= 'K, V', implements= ['K, V'])]
 class HashTable extends \lang\Object implements Map, \IteratorAggregate {
   protected static
     $iterate   = null;
@@ -108,7 +108,7 @@ class HashTable extends \lang\Object implements Map, \IteratorAggregate {
       $previous= $this->_buckets[$h][1];
     }
 
-    $this->_buckets[$h]= array($key, $value);
+    $this->_buckets[$h]= [$key, $value];
     $this->_hash+= HashProvider::hashOf($h.(($value instanceof Generic || $value instanceof Value) ? $value->hashCode() : serialize($value)));
     return $previous;
   }

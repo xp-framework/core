@@ -32,7 +32,7 @@ class ImplementationTest extends \unittest\TestCase {
   public function typeDictionaryInstance() {
     $fixture= create('new net.xp_framework.unittest.core.generics.TypeDictionary<string>');
     $this->assertEquals(
-      array(Primitive::$STRING), 
+      [Primitive::$STRING],
       $fixture->getClass()->genericArguments()
     );
   }
@@ -71,7 +71,7 @@ class ImplementationTest extends \unittest\TestCase {
   public function typeDictionaryInstanceInterface() {
     $fixture= create('new net.xp_framework.unittest.core.generics.TypeDictionary<string>');
     $this->assertEquals(
-      array(XPClass::forName('lang.Type'), Primitive::$STRING), 
+      [XPClass::forName('lang.Type'), Primitive::$STRING], 
       $this->interfaceNamed($fixture->getClass(), 'net.xp_framework.unittest.core.generics.IDictionary')->genericArguments()
     );
   }
@@ -80,7 +80,7 @@ class ImplementationTest extends \unittest\TestCase {
   public function typeDictionaryClass() {
     $fixture= Type::forName('net.xp_framework.unittest.core.generics.TypeDictionary');
     $this->assertEquals(
-      array('V'), 
+      ['V'], 
       $fixture->genericComponents()
     );
   }
@@ -89,7 +89,7 @@ class ImplementationTest extends \unittest\TestCase {
   public function abstractTypeDictionaryClass() {
     $fixture= Type::forName('net.xp_framework.unittest.core.generics.AbstractTypeDictionary');
     $this->assertEquals(
-      array('V'), 
+      ['V'], 
       $fixture->genericComponents()
     );
   }
@@ -98,7 +98,7 @@ class ImplementationTest extends \unittest\TestCase {
   public function dictionaryInterfaceDefinition() {
     $fixture= Type::forName('net.xp_framework.unittest.core.generics.AbstractTypeDictionary');
     $this->assertEquals(
-      array('K', 'V'), 
+      ['K', 'V'], 
       $this->interfaceNamed($fixture, 'net.xp_framework.unittest.core.generics.IDictionary')->genericComponents()
     );
   }
@@ -107,7 +107,7 @@ class ImplementationTest extends \unittest\TestCase {
   public function dictionaryInterface() {
     $fixture= Type::forName('net.xp_framework.unittest.core.generics.AbstractTypeDictionary<string>');
     $this->assertEquals(
-      array(XPClass::forName('lang.Type'), Primitive::$STRING), 
+      [XPClass::forName('lang.Type'), Primitive::$STRING],
       $this->interfaceNamed($fixture, 'net.xp_framework.unittest.core.generics.IDictionary')->genericArguments()
     );
   }

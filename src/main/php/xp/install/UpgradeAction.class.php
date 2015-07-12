@@ -156,11 +156,11 @@ class UpgradeAction extends Action {
     }
 
     // Remove old one first, then add newer version
-    $args= array($module->vendor.'/'.$module->name.'@'.$version);
+    $args= [$module->vendor.'/'.$module->name.'@'.$version];
     $r= $this->spawn(new RemoveAction())->perform($args);
     if (0 !== $r) return $r;
 
-    $args= array($module->vendor.'/'.$module->name.'@'.$target);
+    $args= [$module->vendor.'/'.$module->name.'@'.$target];
     $r= $this->spawn(new AddAction())->perform($args);
     if (0 !== $r) return $r;
     return 0;

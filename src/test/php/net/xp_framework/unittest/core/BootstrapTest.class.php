@@ -17,7 +17,7 @@ class BootstrapTest extends \unittest\TestCase {
   #[@beforeClass]
   public static function verifyProcessExecutionEnabled() {
     if (Process::$DISABLED) {
-      throw new PrerequisitesNotMetError('Process execution disabled', NULL, array('enabled'));
+      throw new PrerequisitesNotMetError('Process execution disabled', null, ['enabled']);
     }
   }
 
@@ -28,7 +28,7 @@ class BootstrapTest extends \unittest\TestCase {
    * @return  var[] an array with three elements: exitcode, stdout and stderr contents
    */
   protected function runWith(RuntimeOptions $options) {
-    with ($out= $err= '', $p= Runtime::getInstance()->newInstance($options, 'class', 'xp.runtime.Evaluate', array('return 1;'))); {
+    with ($out= $err= '', $p= Runtime::getInstance()->newInstance($options, 'class', 'xp.runtime.Evaluate', ['return 1;'])); {
       $p->in->close();
 
       // Read output
@@ -50,7 +50,7 @@ class BootstrapTest extends \unittest\TestCase {
     $r= $this->runWith(Runtime::getInstance()->startupOptions()->withSetting('date.timezone', $tz));
     $this->assertTrue(
       (bool)strstr($r[1].$r[2], '[xp::core] date.timezone not configured properly.'),
-      \xp::stringOf(array('out' => $r[1], 'err' => $r[2]))
+      \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
     $this->assertEquals(255, $r[0], 'exitcode');
   }    
@@ -71,7 +71,7 @@ class BootstrapTest extends \unittest\TestCase {
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
       (bool)strstr($r[1].$r[2], '[bootstrap] Classpath element [/does-not-exist] not found'),
-      \xp::stringOf(array('out' => $r[1], 'err' => $r[2]))
+      \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
   }
 
@@ -81,7 +81,7 @@ class BootstrapTest extends \unittest\TestCase {
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
       (bool)strstr($r[1].$r[2], '[bootstrap] Classpath element [/does-not-exist.xar] not found'),
-      \xp::stringOf(array('out' => $r[1], 'err' => $r[2]))
+      \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
   }
 }

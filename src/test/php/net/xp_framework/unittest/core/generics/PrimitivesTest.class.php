@@ -12,9 +12,9 @@ class PrimitivesTest extends \unittest\TestCase {
 
   #[@test]
   public function primitiveStringKey() {
-    $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, unittest.TestCase>', array(
+    $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, unittest.TestCase>', [
       'this' => $this
-    ));
+    ]);
     $this->assertEquals($this, $l->get('this'));
   }
 

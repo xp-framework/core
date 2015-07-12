@@ -10,7 +10,7 @@ use lang\Value;
  * @test  xp://net.xp_framework.unittest.util.collections.GenericsTest
  * @test  xp://net.xp_framework.unittest.util.collections.ArrayAccessTest
  */
-#[@generic(self= 'T', implements= array('T'))]
+#[@generic(self= 'T', implements= ['T'])]
 class HashSet extends \lang\Object implements Set {
   protected static
     $iterate   = null;

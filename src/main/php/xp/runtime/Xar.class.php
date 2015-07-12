@@ -49,7 +49,7 @@ class Xar extends \lang\Object {
 
     // Run main()
     try {
-      return \lang\XPClass::forName($class, $cl)->getMethod('main')->invoke(null, array($args));
+      return \lang\XPClass::forName($class, $cl)->getMethod('main')->invoke(null, [$args]);
     } catch (\lang\reflect\TargetInvocationException $e) {
       throw $e->getCause();
     }

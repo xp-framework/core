@@ -96,24 +96,18 @@ class ArchiveClassLoaderTest extends TestCase {
   #[@test]
   public function test_package_contents() {
     $this->assertEquals(
-      array('ClassLoadedFromArchive.class.php', 'package-info.xp'),
+      ['ClassLoadedFromArchive.class.php', 'package-info.xp'],
       $this->fixture->packageContents('test')
     );
   }
 
   #[@test]
   public function non_existant_package_contents() {
-    $this->assertEquals(
-      [],
-      $this->fixture->packageContents('non.existant')
-    );
+    $this->assertEquals([], $this->fixture->packageContents('non.existant'));
   }
 
   #[@test]
   public function root_package_contents() {
-    $this->assertEquals(
-      array('test/'),
-      $this->fixture->packageContents(NULL)
-    );
+    $this->assertEquals(['test/'], $this->fixture->packageContents(null));
   }
 }

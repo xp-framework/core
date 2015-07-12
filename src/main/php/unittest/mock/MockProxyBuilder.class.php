@@ -253,14 +253,14 @@ class MockProxyBuilder extends \lang\Object {
         
         $cases[$args]= (
           'case '.$args.': '.
-          'return $this->'.$this->getHandlerName().'->invoke($this, \''.$method->getName(true).'\', array('.
-          ($args ? '$_'.implode(', $_', range(0, $args- 1)) : '').'));'
+          'return $this->'.$this->getHandlerName().'->invoke($this, \''.$method->getName(true).'\', ['.
+          ($args ? '$_'.implode(', $_', range(0, $args- 1)) : '').']);'
         );
       }
 
       // Create method
       $bytes.= (
-        'public function '.$method->getName().'($_'.implode('= NULL, $_', range(0, $methodax)).'= NULL) { '.
+        'public function '.$method->getName().'($_'.implode('= null, $_', range(0, $methodax)).'= null) { '.
         'switch (func_num_args()) {'.implode("\n", $cases).
         ' default: throw new \lang\IllegalArgumentException(\'Illegal number of arguments\'); }'.
         '}'."\n"

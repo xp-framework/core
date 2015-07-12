@@ -227,11 +227,11 @@ class Reflect extends \lang\Object {
     }
     
     // Classes
-    $order= array(
+    $order= [
       'interface' => [],
       'enum'      => [],
       'class'     => []
-    );
+    ];
     foreach ($package->getClasses() as $class) {
       $mod= $class->getModifiers();
       if ($class->isInterface()) {

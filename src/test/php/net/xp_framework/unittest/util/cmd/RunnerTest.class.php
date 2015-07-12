@@ -98,7 +98,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function nonExistantClass() {
-    $return= $this->runWith(array('@@NON-EXISTANT@@'));
+    $return= $this->runWith(['@@NON-EXISTANT@@']);
     $this->assertEquals(1, $return);
     $this->assertOnStream($this->err, '*** Class "@@NON-EXISTANT@@" could not be found');
     $this->assertEquals('', $this->out->getBytes());
@@ -110,7 +110,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function nonExistantFile() {
-    $return= $this->runWith(array('@@NON-EXISTANT@@.'.\xp::CLASS_FILE_EXT));
+    $return= $this->runWith(['@@NON-EXISTANT@@.'.\xp::CLASS_FILE_EXT]);
     $this->assertEquals(1, $return);
     $this->assertOnStream($this->err, '*** Cannot load class from non-existant file');
     $this->assertEquals('', $this->out->getBytes());
@@ -123,7 +123,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function notRunnableClass() {
-    $return= $this->runWith(array(nameof($this)));
+    $return= $this->runWith([nameof($this)]);
     $this->assertEquals(1, $return);
     $this->assertOnStream($this->err, '*** '.nameof($this).' is not runnable');
     $this->assertEquals('', $this->out->getBytes());
@@ -137,7 +137,7 @@ class RunnerTest extends \unittest\TestCase {
   #[@test]
   public function shortClassUsage() {
     $command= $this->newCommand();
-    $return= $this->runWith(array(nameof($command), '-?'));
+    $return= $this->runWith([nameof($command), '-?']);
     $this->assertEquals(0, $return);
     $this->assertOnStream($this->err, 'Usage: $ xpcli '.nameof($command));
     $this->assertEquals('', $this->out->getBytes());
@@ -152,7 +152,7 @@ class RunnerTest extends \unittest\TestCase {
   #[@test]
   public function longClassUsage() {
     $command= $this->newCommand();
-    $return= $this->runWith(array(nameof($command), '--help'));
+    $return= $this->runWith([nameof($command), '--help']);
     $this->assertEquals(0, $return);
     $this->assertOnStream($this->err, 'Usage: $ xpcli '.nameof($command));
     $this->assertEquals('', $this->out->getBytes());
@@ -166,7 +166,7 @@ class RunnerTest extends \unittest\TestCase {
   #[@test]
   public function runCommand() {
     $command= $this->newCommand();
-    $return= $this->runWith(array(nameof($command)));
+    $return= $this->runWith([nameof($command)]);
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals('', $this->out->getBytes());
@@ -179,11 +179,11 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function runWritingToStandardOutput() {
-    $command= newinstance('util.cmd.Command', [], array(
+    $command= newinstance('util.cmd.Command', [], [
       'run' => function() { $this->out->write('UNITTEST'); }
-    ));
+    ]);
 
-    $return= $this->runWith(array(nameof($command)));
+    $return= $this->runWith([nameof($command)]);
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals('UNITTEST', $this->out->getBytes());
@@ -195,11 +195,11 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function runWritingToStandardError() {
-    $command= newinstance('util.cmd.Command', [], array(
+    $command= newinstance('util.cmd.Command', [], [
       'run' => function() { $this->err->write('UNITTEST'); }
-    ));
+    ]);
 
-    $return= $this->runWith(array(nameof($command)));
+    $return= $this->runWith([nameof($command)]);
     $this->assertEquals(0, $return);
     $this->assertEquals('UNITTEST', $this->err->getBytes());
     $this->assertEquals('', $this->out->getBytes());
@@ -211,15 +211,15 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function runEchoInput() {
-    $command= newinstance('util.cmd.Command', [], array(
+    $command= newinstance('util.cmd.Command', [], [
       'run' => function() {
         while ($chunk= $this->in->read()) {
           $this->out->write($chunk);
         }
       }
-    ));
+    ]);
 
-    $return= $this->runWith(array(nameof($command)), 'UNITTEST');
+    $return= $this->runWith([nameof($command)], 'UNITTEST');
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals('UNITTEST', $this->out->getBytes());
@@ -239,7 +239,7 @@ class RunnerTest extends \unittest\TestCase {
       public function run() { $this->out->write($this->arg); }
     }');
 
-    $return= $this->runWith(array(nameof($command), 'UNITTEST'));
+    $return= $this->runWith([nameof($command), 'UNITTEST']);
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals('UNITTEST', $this->out->getBytes());
@@ -260,7 +260,7 @@ class RunnerTest extends \unittest\TestCase {
       public function run() { throw new \unittest\AssertionFailedError("Should not be executed"); }
     }');
 
-    $return= $this->runWith(array(nameof($command)));
+    $return= $this->runWith([nameof($command)]);
     $this->assertEquals(2, $return);
     $this->assertOnStream($this->err, '*** Argument #1 does not exist');
     $this->assertEquals('', $this->out->getBytes());
@@ -280,7 +280,7 @@ class RunnerTest extends \unittest\TestCase {
       public function run() { $this->out->write($this->arg); }
     }');
 
-    $return= $this->runWith(array(nameof($command), '-a', 'UNITTEST'));
+    $return= $this->runWith([nameof($command), '-a', 'UNITTEST']);
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals('UNITTEST', $this->out->getBytes());
@@ -300,7 +300,7 @@ class RunnerTest extends \unittest\TestCase {
       public function run() { $this->out->write($this->arg); }
     }');
 
-    $return= $this->runWith(array(nameof($command), '--arg=UNITTEST'));
+    $return= $this->runWith([nameof($command), '--arg=UNITTEST']);
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals('UNITTEST', $this->out->getBytes());
@@ -321,7 +321,7 @@ class RunnerTest extends \unittest\TestCase {
       public function run() { $this->out->write($this->arg); }
     }');
 
-    $return= $this->runWith(array(nameof($command), '-p', 'UNITTEST'));
+    $return= $this->runWith([nameof($command), '-p', 'UNITTEST']);
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals('UNITTEST', $this->out->getBytes());
@@ -341,7 +341,7 @@ class RunnerTest extends \unittest\TestCase {
       public function run() { $this->out->write($this->arg); }
     }');
 
-    $return= $this->runWith(array(nameof($command), '--pass=UNITTEST'));
+    $return= $this->runWith([nameof($command), '--pass=UNITTEST']);
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals('UNITTEST', $this->out->getBytes());
@@ -362,7 +362,7 @@ class RunnerTest extends \unittest\TestCase {
       public function run() { throw new \unittest\AssertionFailedError("Should not be executed"); }
     }');
 
-    $return= $this->runWith(array(nameof($command)));
+    $return= $this->runWith([nameof($command)]);
     $this->assertEquals(2, $return);
     $this->assertOnStream($this->err, '*** Argument arg does not exist');
     $this->assertEquals('', $this->out->getBytes());
@@ -382,7 +382,7 @@ class RunnerTest extends \unittest\TestCase {
       public function run() { $this->out->write($this->verbose ? "true" : "false"); }
     }');
 
-    $return= $this->runWith(array(nameof($command)));
+    $return= $this->runWith([nameof($command)]);
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals('false', $this->out->getBytes());
@@ -403,7 +403,7 @@ class RunnerTest extends \unittest\TestCase {
       public function run() { $this->out->write($this->name); }
     }');
 
-    $return= $this->runWith(array(nameof($command), '-n', 'UNITTEST'));
+    $return= $this->runWith([nameof($command), '-n', 'UNITTEST']);
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals('UNITTEST', $this->out->getBytes());
@@ -424,7 +424,7 @@ class RunnerTest extends \unittest\TestCase {
       public function run() { $this->out->write($this->name); }
     }');
 
-    $return= $this->runWith(array(nameof($command)));
+    $return= $this->runWith([nameof($command)]);
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals('unknown', $this->out->getBytes());
@@ -445,7 +445,7 @@ class RunnerTest extends \unittest\TestCase {
       public function run() { $this->out->write($this->verbose ? "true" : "false"); }
     }');
 
-    $return= $this->runWith(array(nameof($command), '-v'));
+    $return= $this->runWith([nameof($command), '-v']);
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals('true', $this->out->getBytes());
@@ -466,7 +466,7 @@ class RunnerTest extends \unittest\TestCase {
       public function run() { $this->out->write($this->verbose ? "true" : "false"); }
     }');
 
-    $return= $this->runWith(array(nameof($command), '--verbose'));
+    $return= $this->runWith([nameof($command), '--verbose']);
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals('true', $this->out->getBytes());
@@ -489,7 +489,7 @@ class RunnerTest extends \unittest\TestCase {
         // Not reached
       }
     }');
-    $this->runWith(array(nameof($command), 'insecure.example.com'));
+    $this->runWith([nameof($command), 'insecure.example.com']);
     $this->assertOnStream($this->err, '*** Error for argument #1');
     $this->assertOnStream($this->err, 'Connecting to insecure.example.com disallowed by policy');
   }
@@ -511,7 +511,7 @@ class RunnerTest extends \unittest\TestCase {
         // Not reached
       }
     }');
-    $this->runWith(array(nameof($command), '--host=insecure.example.com'));
+    $this->runWith([nameof($command), '--host=insecure.example.com']);
     $this->assertOnStream($this->err, '*** Error for argument host');
     $this->assertOnStream($this->err, 'Connecting to insecure.example.com disallowed by policy');
   }
@@ -523,7 +523,7 @@ class RunnerTest extends \unittest\TestCase {
    * @param   util.cmd.Command command
    */
   protected function assertAllArgs($args, Command $command) {
-    $return= $this->runWith(array(nameof($command), 'a', 'b', 'c', 'd', 'e', 'f', 'g'));
+    $return= $this->runWith([nameof($command), 'a', 'b', 'c', 'd', 'e', 'f', 'g']);
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals($args, $this->out->getBytes());
@@ -666,7 +666,7 @@ class RunnerTest extends \unittest\TestCase {
         $this->out->write($this->choke ? "true" : "false"); 
       }
     }');
-    $return= $this->runWith(array('-c', 'etc', nameof($command), '-c'));
+    $return= $this->runWith(['-c', 'etc', nameof($command), '-c']);
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals('true', $this->out->getBytes());
@@ -690,11 +690,11 @@ class RunnerTest extends \unittest\TestCase {
         $this->out->write($this->copy); 
       }
     }');
-    $return= $this->runWith(array(
+    $return= $this->runWith([
       '-cp', $this->getClass()->getPackage()->getResourceAsStream('instructions.xar')->getURI(), 
       nameof($command),
       '-cp', 'Copy'
-    ));
+    ]);
     $this->assertEquals(0, $return);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals('lang.XPClass<net.xp_forge.instructions.Copy>', $this->out->getBytes());
@@ -714,7 +714,7 @@ class RunnerTest extends \unittest\TestCase {
       public function run() { 
       }
     }');
-    $return= $this->runWith(array(nameof($command)));
+    $return= $this->runWith([nameof($command)]);
     $this->assertEquals(2, $return);
     $this->assertEquals('', $this->out->getBytes());
     $this->assertOnStream($this->err, '*** Unknown injection type "io.Folder" at method "setOutput"');
@@ -734,7 +734,7 @@ class RunnerTest extends \unittest\TestCase {
       public function run() { 
       }
     }');
-    $return= $this->runWith(array(nameof($command)));
+    $return= $this->runWith([nameof($command)]);
     $this->assertEquals(2, $return);
     $this->assertEquals('', $this->out->getBytes());
     $this->assertOnStream($this->err, '*** Unknown injection type "var" at method "setOutput"');
@@ -758,7 +758,7 @@ class RunnerTest extends \unittest\TestCase {
         $this->out->write($this->cat ? $this->cat->getClass() : NULL); 
       }
     }');
-    $this->runWith(array(nameof($command)));
+    $this->runWith([nameof($command)]);
     $this->assertEquals('lang.XPClass<util.log.LogCategory>', $this->out->getBytes());
   }
 
@@ -780,7 +780,7 @@ class RunnerTest extends \unittest\TestCase {
         $this->out->write($this->cat ? $this->cat->getClass() : NULL); 
       }
     }');
-    $this->runWith(array(nameof($command)));
+    $this->runWith([nameof($command)]);
     $this->assertEquals('lang.XPClass<util.log.LogCategory>', $this->out->getBytes());
   }
 
@@ -805,7 +805,7 @@ class RunnerTest extends \unittest\TestCase {
         $this->out->write($this->cat ? $this->cat->getClass() : NULL); 
       }
     }');
-    $this->runWith(array(nameof($command)));
+    $this->runWith([nameof($command)]);
     $this->assertEquals('lang.XPClass<util.log.LogCategory>', $this->out->getBytes());
   }
  
@@ -837,7 +837,7 @@ class RunnerTest extends \unittest\TestCase {
       public function run() { 
       }
     }');
-    $this->runWith(array(nameof($command), 'Test'));
+    $this->runWith([nameof($command), 'Test']);
     $this->assertEquals('lang.XPClass<util.log.LogCategory>', $this->out->getBytes());
   }
 
@@ -858,7 +858,7 @@ class RunnerTest extends \unittest\TestCase {
         // Not reached
       }
     }');
-    $this->runWith(array(nameof($command)));
+    $this->runWith([nameof($command)]);
     $this->assertOnStream($this->err, '*** Error injecting util.log.LogCategory debug');
     $this->assertOnStream($this->err, 'Logging disabled by policy');
   }
@@ -880,7 +880,7 @@ class RunnerTest extends \unittest\TestCase {
         // Not reached
       }
     }');
-    $this->runWith(array('-c', 'res://net/xp_framework/unittest/util/cmd/', nameof($command)));
+    $this->runWith(['-c', 'res://net/xp_framework/unittest/util/cmd/', nameof($command)]);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals('Have value', $this->out->getBytes());
   }
@@ -902,11 +902,11 @@ class RunnerTest extends \unittest\TestCase {
         // Intentionally empty
       }
     }');
-    $this->runWith(array(nameof($command)), '', array(new \util\RegisteredPropertySource('debug', \util\Properties::fromString('[section]
+    $this->runWith([nameof($command)], '', [new \util\RegisteredPropertySource('debug', \util\Properties::fromString('[section]
 key=overwritten_value'
       )),
       new \util\FilesystemPropertySource(__DIR__)
-    ));
+    ]);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals('Have overwritten_value', $this->out->getBytes());
   }
@@ -928,7 +928,7 @@ key=overwritten_value'
         // Not reached
       }
     }');
-    $this->runWith(array('-c', 'res://net/xp_framework/unittest/util/cmd/add_etc', '-c', 'res://net/xp_framework/unittest/util/cmd/', nameof($command)));
+    $this->runWith(['-c', 'res://net/xp_framework/unittest/util/cmd/add_etc', '-c', 'res://net/xp_framework/unittest/util/cmd/', nameof($command)]);
     $this->assertEquals('', $this->err->getBytes());
     $this->assertEquals('Have overwritten_value', $this->out->getBytes());
   }

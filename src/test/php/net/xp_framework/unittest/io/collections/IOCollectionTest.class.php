@@ -126,7 +126,7 @@ class IOCollectionTest extends AbstractCollectionTest {
 
   #[@test, @expect('io.IOException')]
   public function get_collections_input_stream() {
-    $this->firstElement($this->newCollection('/', array($this->newCollection('/root'))))->getInputStream();
+    $this->firstElement($this->newCollection('/', [$this->newCollection('/root')]))->getInputStream();
   }
 
   #[@test]
@@ -139,7 +139,7 @@ class IOCollectionTest extends AbstractCollectionTest {
 
   #[@test, @expect('io.IOException')]
   public function get_collections_output_stream() {
-    $this->firstElement($this->newCollection('/', array($this->newCollection('/root'))))->getOutputStream();
+    $this->firstElement($this->newCollection('/', [$this->newCollection('/root')]))->getOutputStream();
   }
  
   #[@test]

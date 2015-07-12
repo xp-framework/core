@@ -220,7 +220,7 @@ class Socket extends \lang\Object implements \io\Channel {
       $tv_sec= intval(floor($timeout));
       $tv_usec= intval(($timeout - floor($timeout)) * 1000000);
     }
-    $r= array($this->_sock); $w= null; $e= null;
+    $r= [$this->_sock]; $w= null; $e= null;
     $n= stream_select($r, $w, $e, $tv_sec, $tv_usec);
     $l= __LINE__ -1;
     

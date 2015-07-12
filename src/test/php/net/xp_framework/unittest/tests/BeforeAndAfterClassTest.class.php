@@ -27,7 +27,7 @@ abstract class BeforeAndAfterClassTest extends \unittest\TestCase {
 
   #[@test]
   public function beforeClassMethodIsExecuted() {
-    $t= newinstance('unittest.TestCase', array('fixture'), '{
+    $t= newinstance('unittest.TestCase', ['fixture'], '{
       public static $initialized= false;
 
       #[@beforeClass]
@@ -44,7 +44,7 @@ abstract class BeforeAndAfterClassTest extends \unittest\TestCase {
 
   #[@test]
   public function exceptionInBeforeClassSkipsTest() {
-    $t= newinstance('unittest.TestCase', array('fixture'), '{
+    $t= newinstance('unittest.TestCase', ['fixture'], '{
 
       #[@beforeClass]
       public static function prepareTestData() {
@@ -64,11 +64,11 @@ abstract class BeforeAndAfterClassTest extends \unittest\TestCase {
 
   #[@test]
   public function failedPrerequisiteInBeforeClassSkipsTest() {
-    $t= newinstance('unittest.TestCase', array('fixture'), '{
+    $t= newinstance('unittest.TestCase', ['fixture'], '{
 
       #[@beforeClass]
       public static function prepareTestData() {
-        throw new \unittest\PrerequisitesNotMetError("Test data not available", NULL, array("data"));
+        throw new \unittest\PrerequisitesNotMetError("Test data not available", null, ["data"]);
       }
 
       #[@test]
@@ -84,7 +84,7 @@ abstract class BeforeAndAfterClassTest extends \unittest\TestCase {
 
   #[@test]
   public function afterClassMethodIsExecuted() {
-    $t= newinstance('unittest.TestCase', array('fixture'), '{
+    $t= newinstance('unittest.TestCase', ['fixture'], '{
       public static $finalized= FALSE;
 
       #[@afterClass]
@@ -101,7 +101,7 @@ abstract class BeforeAndAfterClassTest extends \unittest\TestCase {
 
   #[@test]
   public function allBeforeClassMethodsAreExecuted() {
-    $t= newinstance('unittest.TestCase', array('fixture'), '{
+    $t= newinstance('unittest.TestCase', ['fixture'], '{
       public static $initialized= [];
 
       #[@beforeClass]
@@ -118,12 +118,12 @@ abstract class BeforeAndAfterClassTest extends \unittest\TestCase {
       public function fixture() { }
     }');
     $this->suite->runTest($t);
-    $this->assertEquals(array('data', 'conn'), $t->getClass()->getField('initialized')->get(null));
+    $this->assertEquals(['data', 'conn'], $t->getClass()->getField('initialized')->get(null));
   }
 
   #[@test]
   public function allAfterClassMethodsAreExecuted() {
-    $t= newinstance('unittest.TestCase', array('fixture'), '{
+    $t= newinstance('unittest.TestCase', ['fixture'], '{
       public static $finalized= [];
 
       #[@beforeClass]
@@ -140,17 +140,17 @@ abstract class BeforeAndAfterClassTest extends \unittest\TestCase {
       public function fixture() { }
     }');
     $this->suite->runTest($t);
-    $this->assertEquals(array('conn', 'data'), $t->getClass()->getField('finalized')->get(null));
+    $this->assertEquals(['conn', 'data'], $t->getClass()->getField('finalized')->get(null));
   }
 
   #[@test]
   public function afterClassMethodIsNotExecutedWhenPrerequisitesFail() {
-    $t= newinstance('unittest.TestCase', array('fixture'), '{
+    $t= newinstance('unittest.TestCase', ['fixture'], '{
       public static $finalized= FALSE;
 
       #[@beforeClass]
       public static function prepareTestData() {
-        throw new \unittest\PrerequisitesNotMetError("Test data not available", NULL, array("data"));
+        throw new \unittest\PrerequisitesNotMetError("Test data not available", null, ["data"]);
       }
 
       #[@afterClass]

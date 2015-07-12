@@ -107,7 +107,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function contentType() {
-    $this->fixture->respondWith(HttpConstants::STATUS_OK, array('Content-Type: text/html'));
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, ['Content-Type: text/html']);
 
     $this->fixture->beginAt('/');
     $this->fixture->assertContentType('text/html');
@@ -115,7 +115,7 @@ class WebTestCaseTest extends TestCase {
 
   #[@test]
   public function contentTypeWithCharset() {
-    $this->fixture->respondWith(HttpConstants::STATUS_OK, array('Content-Type: text/xml; charset=utf-8'));
+    $this->fixture->respondWith(HttpConstants::STATUS_OK, ['Content-Type: text/xml; charset=utf-8']);
 
     $this->fixture->beginAt('/');
     $this->fixture->assertContentType('text/xml; charset=utf-8');

@@ -18,7 +18,7 @@ class MemberTest extends \unittest\TestCase {
 
   #[@test]
   public function readAccess() {
-    $this->assertEquals(array('Hello', 'World'), $this->fixture->elements);
+    $this->assertEquals(['Hello', 'World'], $this->fixture->elements);
   }
 
   #[@test, @ignore('Behaviour not defined')]
@@ -28,8 +28,8 @@ class MemberTest extends \unittest\TestCase {
 
   #[@test]
   public function writeAccess() {
-    $this->fixture->elements= array('Hallo', 'Welt');
-    $this->assertEquals(array('Hallo', 'Welt'), $this->fixture->elements);
+    $this->fixture->elements= ['Hello', 'Wörld'];
+    $this->assertEquals(['Hello', 'Wörld'], $this->fixture->elements);
   }
 
   #[@test, @ignore('Behaviour not defined')]

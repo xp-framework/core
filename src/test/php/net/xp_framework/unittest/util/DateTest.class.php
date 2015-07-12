@@ -6,6 +6,8 @@ use net\xp_framework\unittest\IgnoredOnHHVM;
 
 /**
  * Tests Date class
+ *
+ * @see http://www.php.net/manual/en/datetime.formats.time.php
  */
 class DateTest extends \unittest\TestCase {
   public
@@ -18,6 +20,7 @@ class DateTest extends \unittest\TestCase {
   /**
    * Set up this test
    *
+   * @return void
    */
   public function setUp() {
     $this->tz= date_default_timezone_get();
@@ -31,6 +34,7 @@ class DateTest extends \unittest\TestCase {
   /**
    * Tear down test.
    *
+   * @return void
    */
   public function tearDown() {
     date_default_timezone_set($this->tz);
@@ -52,37 +56,21 @@ class DateTest extends \unittest\TestCase {
     );
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function constructorParseWithoutTz() {
     $this->assertEquals(true, new Date('2007-01-01 01:00:00 Europe/Berlin') instanceof Date);
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function constructorUnixtimestampWithoutTz() {
     $this->assertDateEquals('2007-08-23T12:35:47+00:00', new Date(1187872547));
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function constructorUnixtimestampWithTz() {
     $this->assertDateEquals('2007-08-23T14:35:47+02:00', new Date(1187872547, new TimeZone('Europe/Berlin')));
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function constructorParseTz() {
     $date= new Date('2007-01-01 01:00:00 Europe/Berlin');
@@ -98,11 +86,6 @@ class DateTest extends \unittest\TestCase {
     $this->assertDateEquals('2007-01-01T01:00:00+02:00', $date);
   }
   
-  /**
-   * Check that a timezone is not reported erroneously if it actually
-   * could not be parsed out of a string.
-   *
-   */
   #[@test]
   public function noDiscreteTimeZone() {
     $date= new Date('2007-11-04 14:32:00+1000');
@@ -110,10 +93,6 @@ class DateTest extends \unittest\TestCase {
     $this->assertEquals(36000, $date->getOffsetInSeconds());
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function constructorParseNoTz() {
     $date= new Date('2007-01-01 01:00:00', new TimeZone('Europe/Athens'));
@@ -123,11 +102,6 @@ class DateTest extends \unittest\TestCase {
     $this->assertEquals('GMT', $date->getTimeZone()->getName());
   }
   
-  /**
-   * Test date class
-   *
-   * @see     xp://util.Date
-   */
   #[@test]
   public function testDate() {
     $this->assertEquals($this->nowDate->getTime(), $this->nowTime);
@@ -136,9 +110,6 @@ class DateTest extends \unittest\TestCase {
     $this->assertTrue($this->nowDate->isBefore(new Date('tomorrow')));
   }
   
-  /**
-   * Test dates before beginning of Unix epoch.
-   */
   #[@test]
   public function preUnixEpoch() {
     $this->assertDateEquals('1969-12-31T00:00:00+00:00', new Date('31.12.1969 00:00 GMT'));
@@ -179,11 +150,6 @@ class DateTest extends \unittest\TestCase {
     $this->assertDateEquals('1751-12-21T00:00:00+00:00', new Date('01.01.1752 00:00 GMT'));
   }
 
-  /**
-   * Test setting of correct hours when date was given trough
-   * the AM/PM format.
-   *
-   */
   #[@test]
   public function anteAndPostMeridiem() {
     $this->assertEquals(1, (new Date('May 28 1980 1:00AM'))->getHours(), '1:00AM != 1h');
@@ -192,10 +158,6 @@ class DateTest extends \unittest\TestCase {
     $this->assertEquals(12, (new Date('May 28 1980 12:00PM'))->getHours(), '12:00PM != 12h');
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function anteAndPostMeridiemInMidage() {
     $this->assertEquals(1, (new Date('May 28 1580 1:00AM'))->getHours(), '1:00AM != 1h');
@@ -204,10 +166,6 @@ class DateTest extends \unittest\TestCase {
     $this->assertEquals(12, (new Date('May 28 1580 12:00PM'))->getHours(), '12:00PM != 12h');
   }
   
-  /**
-   * Test mktime function
-   *
-   */    
   #[@test]
   public function dateCreate() {
     
@@ -215,11 +173,6 @@ class DateTest extends \unittest\TestCase {
     $this->assertEquals(-44668800, Date::create(1968, 8, 2, 0, 0, 0)->getTime());
   }
   
-  /**
-   * Test date parsing in different formats in pre 1970 epoch.
-   *
-   * @see     bug://13
-   */    
   #[@test]
   public function pre1970() {
     $this->assertDateEquals('1969-02-01T00:00:00+00:00', new Date('01.02.1969'));
@@ -227,10 +180,6 @@ class DateTest extends \unittest\TestCase {
     $this->assertDateEquals('1969-02-01T00:00:00+00:00', new Date('1969-02-01 12:00AM'));
   }
   
-  /**
-   * Test serialization of util.Date
-   *
-   */
   #[@test]
   public function serialization() {
     $original= new Date('2007-07-18T09:42:08 Europe/Athens');
@@ -238,10 +187,6 @@ class DateTest extends \unittest\TestCase {
     $this->assertEquals($original, $copy);
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function timeZoneSerialization() {
     date_default_timezone_set('Europe/Athens');
@@ -253,12 +198,6 @@ class DateTest extends \unittest\TestCase {
     $this->assertEquals('+0100', $copy->getOffset());
   }
   
-
-  /**
-   * Test serialization of util.Date from old - or legacy -
-   * date string representation.
-   *
-   */
   #[@test]
   public function serializationOfLegacyDates() {
     $serialized= 'O:9:"util\Date":12:{s:6:"_utime";i:1185310311;s:7:"seconds";i:51;s:7:"minutes";i:51;s:5:"hours";i:22;s:4:"mday";i:24;s:4:"wday";i:2;s:3:"mon";i:7;s:4:"year";i:2007;s:4:"yday";i:204;s:7:"weekday";s:7:"Tuesday";s:5:"month";s:4:"July";s:4:"__id";N;}';
@@ -268,13 +207,9 @@ class DateTest extends \unittest\TestCase {
 
     // Only __id may be set, all the other "old" public members 
     // should have been removed here
-    $this->assertEquals(array('__id' => null), get_object_vars($date));
+    $this->assertEquals(['__id' => null], get_object_vars($date));
   }
 
-  /**
-   * Test timezone functionality
-   *
-   */
   #[@test]
   public function handlingOfTimezone() {
     $date= new Date('2007-07-18T09:42:08 Europe/Athens');
@@ -289,58 +224,44 @@ class DateTest extends \unittest\TestCase {
    * @return var[]
    */
   public function formatTokens() {
-    return array(
+    return [
       //    input   , expect
-      array('%Y'    , '1977'),
-      array('%D %T' , '12/14/1977 11:55:00'),
-      array('%C'    , '77'),
-      array('%e'    , '14'),
-      array('%G'    , '1977'),
-      array('%H'    , '11'),
-      array('%I'    , '11'),
-      array('%j'    , '347'),
-      array('%m'    , '12'),
-      array('%M'    , '55'),
-      array('%n'    , "\n"),
-      array('%r'    , '11:55:00am'),
-      array('%R'    , '11:55:00'),
-      array('%S'    , '00'),
-      array('%t'    , "\t"),
-      array('%u'    , '3'),
-      array('%V'    , '50'),
-      array('%W'    , '50'),
-      array('%w'    , '3'),
-      array('%y'    , '77'),
-      array('%Z'    , '+0000'),
-      array('%z'    , '+0000'),
-      array('%%'    , '%')
-    );
+      ['%Y'    , '1977'],
+      ['%D %T' , '12/14/1977 11:55:00'],
+      ['%C'    , '77'],
+      ['%e'    , '14'],
+      ['%G'    , '1977'],
+      ['%H'    , '11'],
+      ['%I'    , '11'],
+      ['%j'    , '347'],
+      ['%m'    , '12'],
+      ['%M'    , '55'],
+      ['%n'    , "\n"],
+      ['%r'    , '11:55:00am'],
+      ['%R'    , '11:55:00'],
+      ['%S'    , '00'],
+      ['%t'    , "\t"],
+      ['%u'    , '3'],
+      ['%V'    , '50'],
+      ['%W'    , '50'],
+      ['%w'    , '3'],
+      ['%y'    , '77'],
+      ['%Z'    , '+0000'],
+      ['%z'    , '+0000'],
+      ['%%'    , '%']
+    ];
   }
 
-  /**
-   * Test format() tokens
-   */
   #[@test, @values('formatTokens')]
   public function supportedFormatTokens($input, $expect) {
     $this->assertEquals($expect, $this->refDate->format($input));
   }
   
-  /**
-   * Test
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function unsupportedFormatToken() {
     $this->refDate->format('%b');
   }
   
-  /**
-   * Test representation of string is working deterministicly.
-   *
-   * There currently is a strange problem related to deserialization
-   * from timestamp.
-   *
-   */
   #[@test]
   public function testTimestamp() {
     date_default_timezone_set('Europe/Berlin');
@@ -352,11 +273,6 @@ class DateTest extends \unittest\TestCase {
     $this->assertEquals($d2, new Date($d2->toString()));
   }
   
-  /**
-   * Test dates created with a timestamp are in correct timezone if
-   * a timezone has been passed.
-   *
-   */
   #[@test]
   public function testTimestampWithTZ() {
     $d= new Date(328336200, new TimeZone('Australia/Sydney'));
@@ -366,8 +282,6 @@ class DateTest extends \unittest\TestCase {
   /**
    * Test PHP Bug #42910 - timezone should not fallback to default
    * timezone if it actually is unknown.
-   *
-   * Ignored, until bug fixed in upstream
    */
   #[@test, @ignore, @expect('lang.IllegalStateException')]
   public function emptyTimeZoneNameIfUnknown() {
@@ -377,10 +291,6 @@ class DateTest extends \unittest\TestCase {
     $this->assertNotEquals('GMT', $date->getTimeZone()->getName());
   }
   
-  /**
-   * Test toString() behaviour
-   *
-   */
   #[@test]
   public function toStringOutput() {
     $date= new Date('2007-11-10 20:15+0100');
@@ -388,10 +298,6 @@ class DateTest extends \unittest\TestCase {
     $this->assertEquals('2007-11-10 19:15:00+0000', $date->toString(Date::DEFAULT_FORMAT, new TimeZone(null)));
   }
   
-  /**
-   * Test toString() preserves same timezone after serialization
-   *
-   */
   #[@test]
   public function toStringOutputPreserved() {
     $date= unserialize(serialize(new Date('2007-11-10 20:15+0100')));
@@ -399,55 +305,31 @@ class DateTest extends \unittest\TestCase {
     $this->assertEquals('2007-11-10 19:15:00+0000', $date->toString(Date::DEFAULT_FORMAT, new TimeZone(null)));
   }
 
-  /**
-   * Test malformed input string
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function malformedInputString() {
     new Date('@@not-a-date@@');
   }
 
-  /**
-   * Test 30.99.2010
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function monthExceeded() {
     new Date('30.99.2010');
   }
 
-  /**
-   * Test 30.99.2010
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function dayExceeded() {
     new Date('99.30.2010');
   }
 
-  /**
-   * Test unknown timezone within string
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function unknownTimeZoneNameInString() {
     new Date('14.12.2010 11:55:00 Europe/Karlsruhe');
   }
 
-  /**
-   * Test unknown timezone within string
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function unknownTimeZoneOffsetInString() {
     new Date('14.12.2010 11:55:00+9999');
   }
 
-  /**
-   * Test unknown timezone within string
-   *
-   */
   #[@test]
   public function constructorBrokenAfterException() {
     Date::now();
@@ -458,62 +340,35 @@ class DateTest extends \unittest\TestCase {
     Date::now();
   }
   
-  /**
-   * Test Date::create function with empty string's as arguments
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException'), @action(new IgnoredOnHHVM())]
   public function dateCreateWithAllInvalidArguments() {
     Date::create('', '', '', '', '', '');
   }
   
-  /**
-   * Test Date::create function with empty string's as arguments
-   *
-   */
   #[@test, @expect('lang.IllegalArgumentException'), @action(new IgnoredOnHHVM())]
   public function dateCreateWithInvalidArgumentsExceptTimeZone() {
     Date::create('', '', '', '', '', '', new TimeZone('UTC'));
   }
   
-  /**
-   * Create new date from static Date::now() without TimeZone param
-   *
-   */
   #[@test]
   public function createDateFromStaticNowFunctionWithoutParam() {
     $this->assertEquals(true, Date::now() instanceof Date);
   }
   
-  /**
-   * Create new date from static Date::now() with TimeZone param
-   *
-   */
   #[@test]
   public function createDateFromStaticNowFunctionWithZimeZone() {
     $d= Date::now(new TimeZone('Australia/Sydney'));
     $this->assertEquals('Australia/Sydney', $d->getTimeZone()->getName());
   }
 
- /**
-  * Test time input string
-  *
-  * @see http://www.php.net/manual/en/datetime.formats.time.php
-  */
   #[@test]
   public function createDateFromTime() {
     $date= new Date('19.19');
     $this->assertEquals(strtotime('19.19'), $date->getTime());
   }
 
- /**
-  * Test unix timestamp string
-  *
-  * @see http://www.php.net/manual/en/datetime.formats.time.php
-  */
   #[@test]
   public function testValidUnixTimestamp() {
-
     $this->assertDateEquals('1970-01-01T00:00:00+00:00', new Date(0));
     $this->assertDateEquals('1970-01-01T00:00:00+00:00', new Date('0'));
 
@@ -530,10 +385,6 @@ class DateTest extends \unittest\TestCase {
     $this->assertDateEquals('1970-01-12T13:46:40+00:00', new Date('1000000'));
   }
 
- /**
-  * Test invalid time
-  *
-  */
   #[@test, @expect('lang.IllegalArgumentException')]
   public function testInvalidUnixTimestamp() {
     new Date('+1000000');

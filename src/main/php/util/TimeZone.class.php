@@ -138,7 +138,7 @@ class TimeZone extends \lang\Object {
     // Include util.TimeZoneTransition as a `lightweight` dependency
     return \lang\XPClass::forName('util.TimeZoneTransition')
       ->getMethod('previousTransition')
-      ->invoke(null, array($this, $date))
+      ->invoke(null, [$this, $date])
     ;
   }
   
@@ -153,7 +153,7 @@ class TimeZone extends \lang\Object {
     // Include util.TimeZoneTransition as a `lightweight` dependency
     return \lang\XPClass::forName('util.TimeZoneTransition')
       ->getMethod('nextTransition')
-      ->invoke(null, array($this, $date))
+      ->invoke(null, [$this, $date])
     ;
   }
   

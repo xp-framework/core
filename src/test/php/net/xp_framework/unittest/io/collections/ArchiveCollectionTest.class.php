@@ -78,13 +78,13 @@ class ArchiveCollectionTest extends TestCase {
     
     try {
       $c->open();
-      $expect= array(
+      $expect= [
         'lang/Object.xp'    => 'io.collections.IOElement', 
         'lang/Type.xp'      => 'io.collections.IOElement',
         'lang/reflect/'     => 'io.collections.IOCollection',
         'lang/types/'       => 'io.collections.IOCollection',
         'lang/Runnable.xp'  => 'io.collections.IOElement',
-      );
+      ];
       for (reset($expect); $element= $c->next(), $name= key($expect); next($expect)) {
         $this->assertInstanceOf($expect[$name], $element);
         $this->assertXarUri($name, $element->getURI());

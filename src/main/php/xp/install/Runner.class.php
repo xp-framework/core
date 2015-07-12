@@ -44,11 +44,11 @@ class Runner extends \lang\Object {
    */
   protected static function textOf($markup) {
     $line= str_repeat('=', 72);
-    return strip_tags(preg_replace(array(
-      '#<pre>#', '#</pre>#', '#<li>#',
-    ), array(
-      $line, $line, '* ',
-    ), trim($markup)));
+    return strip_tags(preg_replace(
+      ['#<pre>#', '#</pre>#', '#<li>#'],
+      [$line, $line, '* '],
+      trim($markup)
+    ));
   }
 
   /**

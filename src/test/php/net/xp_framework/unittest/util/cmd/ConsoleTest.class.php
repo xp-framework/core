@@ -3,27 +3,20 @@
 use util\cmd\Console;
 use io\streams\MemoryInputStream;
 use io\streams\MemoryOutputStream;
-use unittest\TestCase;
 
 /**
  * TestCase for the Console class
  */
-class ConsoleTest extends TestCase {
-  protected
-    $original = [],
-    $streams  = [];
+class ConsoleTest extends \unittest\TestCase {
+  protected $original, $streams;
 
   /**
    * Sets up test case. Redirects console standard output/error streams
    * to memory streams
    */
   public function setUp() {
-    $this->original= array(
-      Console::$in->getStream(), 
-      Console::$out->getStream(), 
-      Console::$err->getStream()
-    );
-    $this->streams= array(null, new MemoryOutputStream(), new MemoryOutputStream());
+    $this->original= [Console::$in->getStream(), Console::$out->getStream(), Console::$err->getStream()];
+    $this->streams= [null, new MemoryOutputStream(), new MemoryOutputStream()];
     Console::$out->setStream($this->streams[1]);
     Console::$err->setStream($this->streams[2]);
   }
