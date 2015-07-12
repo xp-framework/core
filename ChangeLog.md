@@ -5,7 +5,8 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
-* **Removed deprecated raise() core functionality**
+* **Removed deprecated raise() core functionality**.
+  See xp-framework/core#89
   (@thekid)
 * **Removed pre-namespace class loading**:
   - The deprecated `uses()` core functionality has been removed.
