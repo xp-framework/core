@@ -67,7 +67,7 @@ class LRUBuffer extends \lang\Object {
   public function update($element) {
     $h= $this->prefix.(($element instanceof Generic || $element instanceof Value) ? $element->hashCode() : serialize($element));
     unset($this->_elements[$h]);
-    $this->_elements= $this->_elements + array($h => $element);
+    $this->_elements= $this->_elements + [$h => $element];
   }
   
   /**

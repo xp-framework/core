@@ -40,7 +40,7 @@ abstract class Arrays extends \lang\Object {
    */
   public static function sort(ArrayList $array, $method= SORT_REGULAR) {
     if ($method instanceof Comparator) {
-      usort($array->values, array($method, 'compare'));
+      usort($array->values, [$method, 'compare']);
     } else {
       sort($array->values, $method);
     }
@@ -57,7 +57,7 @@ abstract class Arrays extends \lang\Object {
   public static function sorted(ArrayList $array, $method= SORT_REGULAR) {
     $copy= clone $array;
     if ($method instanceof Comparator) {
-      usort($copy->values, array($method, 'compare'));
+      usort($copy->values, [$method, 'compare']);
     } else {
       sort($copy->values, $method);
     }

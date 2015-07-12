@@ -83,7 +83,7 @@ class PreforkingServer extends Server implements Traceable {
     
     $requests= 0;
     while (!$this->terminate && $requests < $this->maxrequests) {
-      $read= array($this->socket->getHandle());
+      $read= [$this->socket->getHandle()];
       $null= null;
       $timeout= null;
 

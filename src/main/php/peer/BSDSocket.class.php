@@ -139,18 +139,18 @@ class BSDSocket extends Socket {
    * @throws  peer.ConnectException
    */
   public function connect($timeout= 2.0) {
-    static $domains= array(
+    static $domains= [
       AF_INET   => 'AF_INET',
       AF_INET6  => 'AF_INET6',
       AF_UNIX   => 'AF_UNIX'
-    );
-    static $types= array(
+    ];
+    static $types= [
       SOCK_STREAM     => 'SOCK_STREAM',
       SOCK_DGRAM      => 'SOCK_DGRAM',
       SOCK_RAW        => 'SOCK_RAW',
       SOCK_SEQPACKET  => 'SOCK_SEQPACKET',
       SOCK_RDM        => 'SOCK_RDM'
-    );
+    ];
     
     if ($this->isConnected()) return true;    // Short-cuircuit this
     
@@ -241,8 +241,8 @@ class BSDSocket extends Socket {
     // Apply changes to already opened connection
     $sec= floor($this->_timeout);
     $usec= ($this->_timeout- $sec) * 1000;
-    $this->setOption(SOL_SOCKET, SO_RCVTIMEO, array('sec' => $sec, 'usec' => $usec));
-    $this->setOption(SOL_SOCKET, SO_SNDTIMEO, array('sec' => $sec, 'usec' => $usec));
+    $this->setOption(SOL_SOCKET, SO_RCVTIMEO, ['sec' => $sec, 'usec' => $usec]);
+    $this->setOption(SOL_SOCKET, SO_SNDTIMEO, ['sec' => $sec, 'usec' => $usec]);
   }
 
   /**
@@ -305,7 +305,7 @@ class BSDSocket extends Socket {
    * @throws  peer.SocketException in case of failure
    */
   public function canRead($timeout= null) {
-    return $this->_select(array($this->_sock), null, null, $timeout) > 0;
+    return $this->_select([$this->_sock], null, null, $timeout) > 0;
   }
   
   /**
@@ -328,7 +328,7 @@ class BSDSocket extends Socket {
   protected function _read($maxLen, $type, $chop= false) {
     $res= '';
     if (!$this->_eof && 0 === strlen($this->rq)) {
-      if (!$this->_select(array($this->_sock), null, null, $this->_timeout)) {
+      if (!$this->_select([$this->_sock], null, null, $this->_timeout)) {
         $e= new SocketTimeoutException('Read of '.$maxLen.' bytes failed', $this->_timeout);
         \xp::gc(__FILE__);
         throw $e;

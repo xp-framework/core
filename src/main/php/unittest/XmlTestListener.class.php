@@ -89,7 +89,7 @@ class XmlTestListener extends \lang\Object implements TestListener {
   protected function testNode(TestCase $case) {
     $class= $case->getClass();
     if (!$this->classes->containsKey($class)) {
-      $this->classes[$class]= $this->tree->addChild(new \xml\Node('testsuite', null, array(
+      $this->classes[$class]= $this->tree->addChild(new \xml\Node('testsuite', null, [
         'name'       => $class->getName(),
         'file'       => $this->uriFor($class),
         'tests'      => 0,
@@ -97,7 +97,7 @@ class XmlTestListener extends \lang\Object implements TestListener {
         'errors'     => 0,
         'skipped'    => 0,
         'time'       => 0
-      )));
+      ]));
     }
 
     return $this->classes[$class];
@@ -120,13 +120,13 @@ class XmlTestListener extends \lang\Object implements TestListener {
     $inc && $n->setAttribute($inc, $n->getAttribute($inc)+ 1);
     
     // Add testcase information
-    return $n->addChild(new \xml\Node('testcase', null, array(
+    return $n->addChild(new \xml\Node('testcase', null, [
       'name'       => $outcome->test->getName(),
       'class'      => $testClass->getName(),
       'file'       => $this->uriFor($testClass),
       'line'       => $this->lineFor($testClass, $outcome->test->getName()),
       'time'       => sprintf('%.6f', $outcome->elapsed)
-    )));
+    ]));
   }
 
   /**
@@ -136,10 +136,10 @@ class XmlTestListener extends \lang\Object implements TestListener {
    */
   public function testFailed(TestFailure $failure) {
     $t= $this->addTestCase($failure, 'failures');
-    $t->addChild(new \xml\Node('failure', $this->messageFor($failure), array(
+    $t->addChild(new \xml\Node('failure', $this->messageFor($failure), [
       'message' => trim($failure->reason->compoundMessage()),
       'type'    => \xp::typeOf($failure->reason)
-    )));
+    ]));
   }
 
   /**
@@ -149,10 +149,10 @@ class XmlTestListener extends \lang\Object implements TestListener {
    */
   public function testError(TestError $error) {
     $t= $this->addTestCase($error, 'errors');
-    $t->addChild(new \xml\Node('error', $this->messageFor($error), array(
+    $t->addChild(new \xml\Node('error', $this->messageFor($error), [
       'message' => trim($error->reason->compoundMessage()),
       'type'    => \xp::typeOf($error->reason)
-    )));
+    ]));
   }
 
   /**
@@ -162,10 +162,10 @@ class XmlTestListener extends \lang\Object implements TestListener {
    */
   public function testWarning(TestWarning $warning) {
     $t= $this->addTestCase($warning, 'errors');
-    $t->addChild(new \xml\Node('error', $this->messageFor($warning), array(
+    $t->addChild(new \xml\Node('error', $this->messageFor($warning), [
       'message' => 'Non-clear error stack',
       'type'    => 'warnings'
-    )));
+    ]));
   }
   
   /**

@@ -84,7 +84,7 @@ class ShmSegment extends \lang\Object {
    * @throws  io.IOException in case an error occurs
    */
   public function put($val, $permissions= 0666) {
-    $v= array($val);
+    $v= [$val];
     $h= shm_attach($this->spot, (strlen(serialize($v)) + 44) * 2, $permissions);
     $ret= shm_put_var($h, $this->name, $v);
     shm_detach($h);

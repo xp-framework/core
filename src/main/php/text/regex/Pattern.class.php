@@ -18,7 +18,7 @@ class Pattern extends \lang\Object implements Matcher {
     UNGREEDY         = 0x0080,
     UTF8             = 0x0100;
     
-  protected static $flags= array(
+  protected static $flags= [
     self::CASE_INSENSITIVE => 'i',
     self::MULTILINE        => 'm',
     self::DOTALL           => 's',
@@ -28,7 +28,7 @@ class Pattern extends \lang\Object implements Matcher {
     self::ANALYSIS         => 'S',
     self::UNGREEDY         => 'U',
     self::UTF8             => 'u',
-  );
+  ];
   
   protected
     $regex    = '',

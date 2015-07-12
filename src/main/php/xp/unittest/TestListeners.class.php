@@ -7,19 +7,19 @@ abstract class TestListeners extends \lang\Enum {
   public static $DEFAULT, $VERBOSE, $QUIET;
   
   static function __static() {
-    self::$DEFAULT= newinstance(__CLASS__, array(0, 'DEFAULT'), '{
+    self::$DEFAULT= newinstance(__CLASS__, [0, 'DEFAULT'], '{
       static function __static() { }
       public function getImplementation() {
         return \lang\XPClass::forName("xp.unittest.DefaultListener");
       }
     }');
-    self::$VERBOSE= newinstance(__CLASS__, array(1, 'VERBOSE'), '{
+    self::$VERBOSE= newinstance(__CLASS__, [1, 'VERBOSE'], '{
       static function __static() { }
       public function getImplementation() {
         return \lang\XPClass::forName("xp.unittest.VerboseListener");
       }
     }');
-    self::$QUIET= newinstance(__CLASS__, array(2, 'QUIET'), '{
+    self::$QUIET= newinstance(__CLASS__, [2, 'QUIET'], '{
       static function __static() { }
       public function getImplementation() {
         return \lang\XPClass::forName("xp.unittest.QuietListener");

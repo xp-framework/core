@@ -37,11 +37,11 @@ class HashFormat extends IFormat {
     }
     
     $ret= '';
-    $fmt= strtr($fmt, array(
+    $fmt= strtr($fmt, [
       '\r'    => "\r",
       '\n'    => "\n",
       '\t'    => "\t"
-    ));
+    ]);
     foreach (array_keys($argument) as $key) {
       $ret.= sprintf($fmt, $key, $argument[$key]);
     }

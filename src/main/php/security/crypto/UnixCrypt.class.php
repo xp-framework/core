@@ -189,11 +189,11 @@ class UnixCrypt extends \lang\Object {
    * @return  [:security.crypto.CryptImpl]
    */
   public static function implementations() {
-    return array(
+    return [
       'std_des'  => self::$STANDARD, 
       'ext_des'  => self::$EXTENDED, 
       'blowfish' => self::$BLOWFISH, 
       'md5'      => self::$MD5
-    );
+    ];
   }
 }

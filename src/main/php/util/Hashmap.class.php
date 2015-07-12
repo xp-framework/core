@@ -102,7 +102,7 @@ class Hashmap extends \lang\Object {
    * @param  util.Comparator comparator an existing function or method
    */
   public function usort($comparator) {
-    uasort($this->_hash, array($comparator, 'compare'));
+    uasort($this->_hash, [$comparator, 'compare']);
   }
   
   /**

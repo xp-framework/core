@@ -99,7 +99,7 @@ class MessageFormat extends IFormat {
     if (!isset($instance)) {
       $instance= MessageFormat::getInstance();
     }
-    if (!is_array($argument)) $argument= array($argument);
+    if (!is_array($argument)) $argument= [$argument];
     $level++;
     
     // Loop while {'s can be found

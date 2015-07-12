@@ -46,15 +46,15 @@ class Policy extends \lang\Object {
    * @return  security.Policy policy
    */
   public static function fromFile($stream) {
-    static $errors= array(
+    static $errors= [
       PF_ST_EPARSE    => 'Parse error', 
       PF_ST_EGRANT    => 'Grant syntax error',
       PF_ST_EPERM     => 'Permission syntax error',
       PF_ST_ESTATE    => 'State error',
       PF_ST_EREFLECT  => 'Reflection error'
-    );
-    
-    $policy= new Policy();
+    ];
+
+    $policy= new self();
     
     $stream->open(File::READ);
     $state= PF_ST_INITIAL;

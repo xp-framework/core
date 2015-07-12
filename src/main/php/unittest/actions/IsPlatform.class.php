@@ -1,7 +1,7 @@
 <?php namespace unittest\actions;
 
-use unittest\TestAction;
-
+use unittest\TestCase;
+use unittest\PrerequisitesNotMetError;
 
 /**
  * Only runs this testcase on a given platform
@@ -13,7 +13,7 @@ use unittest\TestAction;
  *
  * @test  xp://net.xp_framework.unittest.tests.IsPlatformTest
  */
-class IsPlatform extends \lang\Object implements TestAction {
+class IsPlatform extends \lang\Object implements \unittest\TestAction {
   protected $platform= '';
   protected static $os= '';
 
@@ -31,7 +31,7 @@ class IsPlatform extends \lang\Object implements TestAction {
    * @param string platform A pattern to match against PHP_OS, case-insensitively
    */
   public function __construct($platform) {
-    $this->platform= strtr($platform, array('*' => '.+', '?' => '.'));
+    $this->platform= strtr($platform, ['*' => '.+', '?' => '.']);
   }
 
   /**
@@ -56,9 +56,9 @@ class IsPlatform extends \lang\Object implements TestAction {
    * @param  unittest.TestCase $t
    * @throws unittest.PrerequisitesNotMetError
    */
-  public function beforeTest(\unittest\TestCase $t) { 
+  public function beforeTest(TestCase $t) { 
     if (!$this->verify()) {
-      throw new \unittest\PrerequisitesNotMetError('Test not intended for this platform ('.self::$os.')', null, array($this->platform));
+      throw new PrerequisitesNotMetError('Test not intended for this platform ('.self::$os.')', null, [$this->platform]);
     }
   }
 
@@ -68,7 +68,7 @@ class IsPlatform extends \lang\Object implements TestAction {
    *
    * @param  unittest.TestCase $t
    */
-  public function afterTest(\unittest\TestCase $t) {
+  public function afterTest(TestCase $t) {
     // Empty
   }
 }

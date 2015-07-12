@@ -198,9 +198,9 @@ class DateUtil extends \lang\Object {
    * and 0 if both dates are equal
    *
    * Example usage with usort():
-   * <code>
-   *   usort($datelist, array('DateUtil', 'compare'))
-   * </code>
+   * ```php
+   * usort($datelist, ['util\\DateUtil', 'compare'])
+   * ```
    *
    * @param   util.Date a
    * @param   util.Date b

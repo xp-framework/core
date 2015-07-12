@@ -37,7 +37,7 @@ abstract class Tokenizer extends \lang\Object implements \IteratorAggregate {
    * @return  php.Iterator
    */
   public function getIterator() {
-    if (!$this->iterator) $this->iterator= newinstance('Iterator', array($this), '{
+    if (!$this->iterator) $this->iterator= newinstance('Iterator', [$this], '{
       private $i, $t, $r;
       public function __construct($r) { $this->r= $r; }
       public function current() { return $this->r->nextToken(); }

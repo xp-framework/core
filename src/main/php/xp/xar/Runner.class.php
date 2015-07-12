@@ -93,11 +93,11 @@ class Runner extends \lang\Object {
    */
   protected static function textOf($markup) {
     $line= str_repeat('=', 72);
-    return strip_tags(preg_replace(array(
-      '#<pre>#', '#</pre>#', '#<li>#',
-    ), array(
-      $line, $line, '* ',
-    ), trim($markup)));
+    return strip_tags(preg_replace(
+      ['#<pre>#', '#</pre>#', '#<li>#'],
+      [$line, $line, '* '],
+      trim($markup)
+    ));
   }
 
   /**
@@ -133,7 +133,7 @@ class Runner extends \lang\Object {
     for ($i= 0; $i < sizeof($args); $i++) {
       if ('-R' == $args[$i]) {
         chdir($args[++$i]);
-      } else if (in_array($args[$i], array('-?', '-h', '--help'))) {
+      } else if (in_array($args[$i], ['-?', '-h', '--help'])) {
         return self::usage();
       } else {
         $options= 0;

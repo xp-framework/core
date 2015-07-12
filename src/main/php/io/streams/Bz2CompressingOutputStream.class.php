@@ -21,7 +21,7 @@ class Bz2CompressingOutputStream extends \lang\Object implements OutputStream {
       throw new \lang\IllegalArgumentException('Level '.$level.' out of range [0..9]');
     }
     $this->out= Streams::writeableFd($out);
-    if (!stream_filter_append($this->out, 'bzip2.compress', STREAM_FILTER_WRITE, array('blocks' => $level))) {
+    if (!stream_filter_append($this->out, 'bzip2.compress', STREAM_FILTER_WRITE, ['blocks' => $level])) {
       fclose($this->out);
       $this->out= null;
       throw new \io\IOException('Could not append stream filter');

@@ -1,7 +1,9 @@
 <?php namespace unittest\mock;
 
 use lang\Type;
-
+use lang\XPClass;
+use lang\IllegalArgumentException;
+use lang\ClassLoader;
 
 /**
  * Class for creating mock/stub instances of arbitrary types
@@ -20,13 +22,13 @@ class MockRepository extends \lang\Object {
    */
   public function createMock($typeName, $overrideAll= true) {
     $type= Type::forName($typeName);
-    if (!($type instanceof \lang\XPClass)) {
-      throw new \lang\IllegalArgumentException('Cannot mock other types than XPClass types.');
+    if (!($type instanceof XPClass)) {
+      throw new IllegalArgumentException('Cannot mock other types than XPClass types.');
     }
 
     $parentClass= null;
-    $interfaces= array(\lang\XPClass::forName('unittest.mock.IMock'));
-    if($type->isInterface()) {
+    $interfaces= [XPClass::forName('unittest.mock.IMock')];
+    if ($type->isInterface()) {
       $interfaces[]= $type;
     } else {
       $parentClass= $type;
@@ -34,7 +36,7 @@ class MockRepository extends \lang\Object {
     
     $proxy= new MockProxyBuilder();
     $proxy->setOverwriteExisting($overrideAll);
-    $proxyClass= $proxy->createProxyClass(\lang\ClassLoader::getDefault(), $interfaces, $parentClass);
+    $proxyClass= $proxy->createProxyClass(ClassLoader::getDefault(), $interfaces, $parentClass);
     $mock= $proxyClass->newInstance(new MockProxy());
     $this->mocks[]= $mock;
     return $mock;
@@ -42,6 +44,7 @@ class MockRepository extends \lang\Object {
   /**
    * Replays all mocks.
    *
+   * @return void
    */
   public function replayAll() {
     foreach($this->mocks as $mock) {
@@ -52,6 +55,7 @@ class MockRepository extends \lang\Object {
   /**
    * Verifies all mocks.
    *
+   * @return void
    */
   public function verifyAll() {
     foreach($this->mocks as $mock) {
