@@ -14,8 +14,8 @@ class Dump extends \lang\Object {
    * @param   string[] args
    */
   public static function main(array $args) {
-    $argc= sizeof($argv);
     $way= array_shift($args);
+    $argc= sizeof($args);
 
     // Read sourcecode from STDIN if no further argument is given
     if (0 === $argc) {
