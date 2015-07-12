@@ -371,6 +371,7 @@ function __error($code, $msg, $file, $line) {
 // {{{ proto deprecated void uses (string* args)
 //     Uses one or more classes
 function uses() {
+  xp::error(new \Exception('Uses has been deprecated'));
   $scope= null;
   foreach (func_get_args() as $str) {
     $class= xp::$loader->loadClass0($str);
