@@ -121,9 +121,7 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
       $name= $class;
       \xp::$sn[$class]= $name;
     } else if (null !== $package) {
-      $name= strtr($class, '.', '·');
-      class_alias($name, strtr($class, '.', '\\'));
-      \xp::$sn[$class]= $name;
+      \xp::error(new \Exception('Package classes are deprecated '.$class.' => '.$package));
     } else if (($ns= strtr($class, '.', '\\')) && (
       class_exists($ns, false) || interface_exists($ns, false) || trait_exists($ns, false))
     ) {

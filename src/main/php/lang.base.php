@@ -111,7 +111,6 @@ final class xp {
       }
 
       // Register class name and call static initializer if available
-      $p= strrpos($class, '.');
       $name= strtr($class, '.', '\\');
       method_exists($name, '__static') && xp::$cli[]= [$name, '__static'];
       if (0 === xp::$cll) {
