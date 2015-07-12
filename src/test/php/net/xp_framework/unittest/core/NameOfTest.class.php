@@ -18,14 +18,6 @@ class NameOfTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function of_packaged_class() {
-    $this->assertEquals(
-      'net.xp_framework.unittest.core.PackagedClass',
-      nameof(XPClass::forName('net.xp_framework.unittest.core.PackagedClass')->newInstance())
-    );
-  }
-
-  #[@test]
   public function of_php_instance() {
     $this->assertEquals('Exception', nameof(new \Exception('Test')));
   }
