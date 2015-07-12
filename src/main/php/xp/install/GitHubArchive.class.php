@@ -1,4 +1,4 @@
-<?php namespace xp\install;
+tf<?php namespace xp\install;
 
 use peer\http\HttpConnection;
 use peer\http\HttpConstants;
@@ -61,7 +61,7 @@ class GitHubArchive extends \lang\Object implements Origin {
         case HttpConstants::STATUS_FOUND: case HttpConstants::STATUS_SEE_OTHER:
           Console::writeLine('Redirect');
           $headers['Referer']= $url;
-          $url= this($response->header('Location'), 0);
+          $url= $response->header('Location')[0];
           continue;
 
         default:
