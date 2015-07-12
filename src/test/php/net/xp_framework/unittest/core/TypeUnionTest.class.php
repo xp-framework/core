@@ -8,6 +8,7 @@ use lang\ArrayType;
 use lang\MapType;
 use lang\FunctionType;
 use lang\Type;
+use lang\XPClass;
 
 class TypeUnionTest extends \unittest\TestCase {
 

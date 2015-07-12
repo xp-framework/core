@@ -521,7 +521,7 @@ function newinstance($spec, $args, $def= null) {
   if (0 === strncmp($spec, 'php.', 4)) {
     $spec= substr($spec, 4);
   } else if (false === strpos($spec, '.')) {
-    $spec= XPClass::nameOf($spec);
+    $spec= \lang\XPClass::nameOf($spec);
   }
 
   // Handle generics, PHP types and all others.
@@ -696,14 +696,4 @@ spl_autoload_register(function($class) {
     return true;
   }
 });
-
-foreach ([
-  'lang.Generic', 'lang.Object', 'lang.Type', 'lang.XPClass', 'lang.ClassLoader',
-  'lang.Throwable', 'lang.XPException', 'lang.Error',
-  'lang.reflect.Method', 'lang.reflect.Constructor', 'lang.reflect.Field'
-] as $class) {
-  $short= substr($class, strrpos($class, '.') + 1);
-  class_alias(strtr($class, '.', '\\'), $short);
-  \xp::$cn[$short]= $class;
-}
 // }}}

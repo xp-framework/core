@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use util\collections\Vector;
+use lang\Object;
 
 /**
  * Tests the is() core functionality
@@ -57,12 +58,12 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function object_array() {
-    $this->assertTrue(is('lang.Object[]', [new \lang\Object(), new \lang\Object(), new \lang\Object()]));
+    $this->assertTrue(is('lang.Object[]', [new Object(), new Object(), new Object()]));
   }
 
   #[@test]
   public function objectArrayWithnull() {
-    $this->assertFalse(is('lang.Object[]', [new \lang\Object(), new \lang\Object(), null]));
+    $this->assertFalse(is('lang.Object[]', [new Object(), new Object(), null]));
   }
 
   #[@test]
@@ -136,19 +137,14 @@ class IsTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function shortClassName() {
-    $this->assertTrue(is('Generic', new \lang\Object()));
-  }
-
-  #[@test]
   public function undefinedClassName() {
     $this->assertFalse(class_exists('Undefined_Class', false));
-    $this->assertFalse(is('Undefined_Class', new \lang\Object()));
+    $this->assertFalse(is('Undefined_Class', new Object()));
   }
 
   #[@test]
   public function fullyQualifiedClassName() {
-    $this->assertTrue(is('lang.Generic', new \lang\Object()));
+    $this->assertTrue(is('lang.Generic', new Object()));
   }
 
   #[@test]
@@ -168,7 +164,7 @@ class IsTest extends \unittest\TestCase {
     
     $this->assertTrue(is('lang.Runnable', new RunnableImpl()));
     $this->assertTrue(is('lang.Runnable', new RunnableImplEx()));
-    $this->assertFalse(is('lang.Runnable', new \lang\Object()));
+    $this->assertFalse(is('lang.Runnable', new Object()));
   }
 
   #[@test]

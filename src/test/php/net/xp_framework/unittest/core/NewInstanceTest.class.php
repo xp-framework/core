@@ -292,17 +292,6 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function className() {
-    $instance= newinstance('Object', [], '{ }');
-    $n= nameof($instance);
-    $this->assertEquals(
-      'lang.Object',
-      substr($n, 0, strrpos($n, '·')),
-      $n
-    );
-  }
-
-  #[@test]
-  public function classNameWithFullyQualifiedClassName() {
     $instance= newinstance('lang.Object', [], '{ }');
     $n= nameof($instance);
     $this->assertEquals(

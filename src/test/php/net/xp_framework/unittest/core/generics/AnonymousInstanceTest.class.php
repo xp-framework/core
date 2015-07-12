@@ -30,13 +30,13 @@ class AnonymousInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function class_name_contains_argument() {
-    $name= nameof(newinstance('util.collections.Vector<Object>', []));
+    $name= nameof(newinstance('util.collections.Vector<lang.Object>', []));
     $this->assertEquals('util.collections.Vector··lang¦Object', substr($name, 0, strrpos($name, '·')), $name);
   }
 
   #[@test]
   public function class_name_of_generic_package_class() {
-    $instance= newinstance('net.xp_framework.unittest.core.generics.ArrayFilter<Object>', [], '{
+    $instance= newinstance('net.xp_framework.unittest.core.generics.ArrayFilter<lang.Object>', [], '{
       protected function accept($e) { return true; }
     }');
     $n= nameof($instance);
@@ -49,7 +49,7 @@ class AnonymousInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function invocation() {
-    $methods= newinstance('net.xp_framework.unittest.core.generics.ArrayFilter<Method>', [], [
+    $methods= newinstance('net.xp_framework.unittest.core.generics.ArrayFilter<lang.reflect.Method>', [], [
       'accept' => function($method) { return 'invocation' === $method->getName(); }
     ]);
     $this->assertEquals(

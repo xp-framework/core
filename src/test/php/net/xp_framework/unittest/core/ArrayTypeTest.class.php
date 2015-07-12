@@ -5,6 +5,7 @@ use lang\IllegalArgumentException;
 use lang\Primitive;
 use lang\Type;
 use lang\XPClass;
+use lang\Object;
 
 /**
  * TestCase
