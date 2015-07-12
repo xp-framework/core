@@ -4,28 +4,26 @@
  * Argument matcher that uses a user function for matching.
  */
 class DynamicMatcher extends \lang\Object implements IArgumentMatcher {
-  private
-    $function      = null,
-    $classOrObject = null;
-  
+  private $invokeable;
+
   /**
    * Constructor
-   * 
+   *
    * @param   string function
    * @param   var classOrObject
    */
   public function __construct($function, $classOrObject= null) {
-    $this->function= $function;
-    $this->classOrObject= $classOrObject;
+    $this->invokeable= $classOrObject ? [$classOrObject, $function] : $function;
   }
-  
+
   /**
    * Trivial matches implementations.
-   * 
+   *
    * @param   var value
    * @return  bool
    */
   public function matches($value) {
-    return call_user_func([$this->classOrObject, $this->function], $value);
+    $inv= $this->invokeable;
+    return $inv($value);
   }
 }
