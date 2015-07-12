@@ -3,6 +3,16 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Heads up!
+
+* **Removed pre-namespace class loading**:
+  - The deprecated `uses()` core functionality has been removed.
+  - It is no longer possible to use package-qualified classes.
+  - Using classes declared in the global namespace as fully-qualified is
+    also no longer supported.
+  See xp-framework/core#88
+  (@thekid)
+
 ## 6.3.4 / 2015-06-25
 
 ### Heads up!
