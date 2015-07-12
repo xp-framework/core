@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.4.0 / 2015-07-12
+
 ### Heads up!
 
 * **Deprecated long array syntax** (for annotations and in code)
