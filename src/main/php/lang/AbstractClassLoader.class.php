@@ -112,7 +112,6 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
     // Register class name / literal mapping, which is one of the following:
     //
     // * No dot in the qualified class name -> ClassName
-    // * Dotted version declares $package -> com·example·ClassName, alias as com\example\ClassName
     // * Dotted version resolves to a namespaced class -> com\example\ClassName
     // * Global namespace -> ClassName, alias as com\example\ClassName
     // 
@@ -120,8 +119,6 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
     if (false === ($p= strrpos($class, '.'))) {
       $name= $class;
       \xp::$sn[$class]= $name;
-    } else if (null !== $package) {
-      \xp::error(new \Exception('Package classes are deprecated '.$class.' => '.$package));
     } else if (($ns= strtr($class, '.', '\\')) && (
       class_exists($ns, false) || interface_exists($ns, false) || trait_exists($ns, false))
     ) {

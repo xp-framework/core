@@ -528,11 +528,9 @@ function newinstance($spec, $args, $def= null) {
   if (strstr($spec, '<')) {
     $class= \lang\Type::forName($spec);
     $type= $class->literal();
-    $p= strrpos(substr($type, 0, strpos($type, "\xb7\xb7")), "\xb7");
     $generic= xp::$meta[$class->getName()]['class'][DETAIL_GENERIC];
   } else if (false === strpos($spec, '.')) {
     $type= $spec;
-    $p= false;
     $generic= null;
   } else {
     try {
@@ -540,16 +538,10 @@ function newinstance($spec, $args, $def= null) {
     } catch (\lang\ClassLoadingException $e) {
       xp::error($e->getMessage());
     }
-    $p= strrpos($type, "\xb7");
     $generic= null;
   }
 
-  if (false !== $p) {
-    $name= strtr(substr($type, 0, $p), "\xb7", '.').'.'.substr($type, $p+ 1).$n;
-  } else {
-    $name= strtr($type, '\\', '.').$n;
-  }
-
+  $name= strtr($type, '\\', '.').$n;
   if (interface_exists($type)) {
     $decl= ['kind' => 'class', 'extends' => ['lang.Object'], 'implements' => ['\\'.$type], 'use' => []];
   } else if (trait_exists($type)) {
