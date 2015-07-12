@@ -76,7 +76,20 @@ Now run it:
 
 ```sh
 $ xp AgeInDays 1977-12-14
-Hey, you are 13657 days old
+Hey, you are 13724 days old
+```
+
+Alternatively, you can run this directly in the shell:
+
+```sh
+$ xp -e '
+use util\{Date, DateUtil};
+use util\cmd\Console;
+
+$span= DateUtil::timespanBetween(new Date($argv[1]), Date::now());
+Console::writeLine("Hey, you are ", $span->getDays(), " days old")
+' 1977-12-14
+Hey, you are 13724 days old
 ```
 
 **Enjoy!**
