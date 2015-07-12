@@ -28,7 +28,6 @@ class Evaluate extends \lang\Object {
 
     // Perform
     $argv= [XPClass::nameOf(__CLASS__)] + $args;
-    $argc= sizeof($argv);
     return eval($code->head().$code->fragment());
   }
 }

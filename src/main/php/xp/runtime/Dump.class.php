@@ -14,10 +14,13 @@ class Dump extends \lang\Object {
    * @param   string[] args
    */
   public static function main(array $args) {
+    $argc= sizeof($argv);
     $way= array_shift($args);
 
     // Read sourcecode from STDIN if no further argument is given
-    if (0 === sizeof($args)) {
+    if (0 === $argc) {
+      $code= new Code(file_get_contents('php://stdin'));
+    } else if ('--' === $args[0]) {
       $code= new Code(file_get_contents('php://stdin'));
     } else {
       $code= new Code($args[0]);
@@ -25,7 +28,6 @@ class Dump extends \lang\Object {
 
     // Perform
     $argv= [XPClass::nameOf(__CLASS__)] + $args;
-    $argc= sizeof($argv);
     $return= eval($code->head().$code->expression());
     switch ($way) {
       case '-w': Console::writeLine($return); break;
