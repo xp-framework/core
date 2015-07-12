@@ -1,7 +1,5 @@
 <?php $package= 'net.xp_framework.unittest.core';
 
-uses('lang.Object');
-
 /**
  * Fixture for newinstance tests
  *

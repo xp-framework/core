@@ -148,14 +148,9 @@ class ClassLoaderTest extends \unittest\TestCase {
     XPClass::forName('net.xp_framework.unittest.reflection.classes.broken.FalseClass');
   }
 
-  #[@test, @expect('lang.ClassDependencyException')]
+  #[@test, @expect('lang.ClassLinkageException')]
   public function loadClassWithBrokenDependency() {
     XPClass::forName('net.xp_framework.unittest.reflection.classes.broken.BrokenDependencyClass');
-  }
-
-  #[@test, @expect('lang.ClassLinkageException')]
-  public function loadClassWithMissingDefinition() {
-    XPClass::forName('net.xp_framework.unittest.reflection.classes.broken.MissingDefinitionClass');
   }
 
   #[@test]
