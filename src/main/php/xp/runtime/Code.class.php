@@ -16,9 +16,9 @@ class Code extends \lang\Object {
    */
   public function __construct($input) {
     if (0 === strncmp($input, '<?', 2)) {
-      $input= substr($input, strcspn($input, ' =') + 1);
+      $input= substr($input, strcspn($input, "\r\n\t =") + 1);
     }
-    $this->fragment= trim($input, ' ;').';';
+    $this->fragment= trim($input, "\r\n\t ;").';';
     $this->imports= [];
     while (0 === strncmp($this->fragment, 'use ', 4)) {
       $delim= strpos($this->fragment, ';');

@@ -56,7 +56,8 @@ class CodeTest extends \unittest\TestCase {
   #  'use util\{Date, TimeZone}; Date::now()',
   #  ' use util\Date; Date::now()',
   #  '<?php use util\Date; Date::now()',
-  #  '<?php  use util\Date; Date::now()'
+  #  '<?php  use util\Date; Date::now()',
+  #  "<?php\nuse util\Date; Date::now()"
   #])]
   public function use_is_stripped_from_fragment($input) {
     $this->assertEquals('Date::now();', (new Code($input))->fragment());
@@ -69,7 +70,8 @@ class CodeTest extends \unittest\TestCase {
   #  'use util\{Date, TimeZone}; Date::now()',
   #  ' use util\Date; Date::now()',
   #  '<?php use util\Date; Date::now()',
-  #  '<?php  use util\Date; Date::now()'
+  #  '<?php  use util\Date; Date::now()',
+  #  "<?php\nuse util\Date; Date::now()"
   #])]
   public function use_is_stripped_from_expression($input) {
     $this->assertEquals('return Date::now();', (new Code($input))->expression());
@@ -89,7 +91,8 @@ class CodeTest extends \unittest\TestCase {
   #  'use util\Date;',
   #  ' use util\Date;',
   #  '<?php use util\Date;',
-  #  '<?php  use util\Date;'
+  #  '<?php  use util\Date;',
+  #  "\nuse util\Date;"
   #])]
   public function code_with_single_import($input) {
     $this->assertEquals(['util\Date'], (new Code($input))->imports());
