@@ -1,6 +1,7 @@
 <?php namespace util;
 
 use lang\ElementNotFoundException;
+use lang\FormatException;
 
 /**
  * Expands variables inside property files.
@@ -47,7 +48,7 @@ class PropertyExpansion extends \lang\Enum {
       '/\$\{([^.}]*)\.([^}|]*)(?:\|([^}]*))?\}/',
       function($match) {
         if (!isset($this->impl[$match[1]])) {
-          raise('lang.FormatException', 'Unknown expansion type in '.$match[0]);
+          throw new FormatException('Unknown expansion type in '.$match[0]);
         }
 
         $f= $this->impl[$match[1]];
