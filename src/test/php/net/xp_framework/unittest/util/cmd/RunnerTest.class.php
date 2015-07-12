@@ -1,9 +1,10 @@
 <?php namespace net\xp_framework\unittest\util\cmd;
 
-use unittest\TestCase;
-use util\cmd\Command;
 use xp\command\Runner;
+use util\cmd\Command;
+use util\cmd\ParamString;
 use util\log\Logger;
+use util\PropertyManager;
 use io\streams\MemoryInputStream;
 use io\streams\MemoryOutputStream;
 new import('lang.ResourceProvider');
@@ -11,7 +12,7 @@ new import('lang.ResourceProvider');
 /**
  * TestCase for XPCLI runner
  */
-class RunnerTest extends TestCase {
+class RunnerTest extends \unittest\TestCase {
   protected
     $runner = null,
     $in     = null,
@@ -36,7 +37,7 @@ class RunnerTest extends TestCase {
    * @return  int
    */
   protected function runWith(array $args, $in= '', $propertySources= []) {
-    $pm= \util\PropertyManager::getInstance();
+    $pm= PropertyManager::getInstance();
     $sources= $pm->getSources();
     $pm->setSources($propertySources);
 
@@ -44,7 +45,7 @@ class RunnerTest extends TestCase {
     $this->out= $this->runner->setOut(new MemoryOutputStream());
     $this->err= $this->runner->setErr(new MemoryOutputStream());
     try {
-      $res= $this->runner->run(new \util\cmd\ParamString($args));
+      $res= $this->runner->run(new ParamString($args));
       $pm->setSources($sources);
       return $res;
     } catch (\lang\Throwable $t) {
