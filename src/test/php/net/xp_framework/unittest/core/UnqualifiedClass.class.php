@@ -1,7 +1,5 @@
 <?php
 
-uses('lang.Object');
-
 /**
  * Fixture for newinstance tests
  *
