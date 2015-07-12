@@ -9,22 +9,22 @@ use lang\Value;
  * A First-In-First-Out (FIFO) queue of objects.
  *
  * Example:
- * <code>
- *   uses('util.collections.Queue');
+ * ```php
+ * use util\collections\Queue;
  *   
- *   // Fill queue
- *   with ($q= new Queue()); {
- *     $q->put(new String('One'));
- *     $q->put(new String('Two'));
- *     $q->put(new String('Three'));
- *     $q->put(new String('Four'));
- *   }
- *   
- *   // Empty queue
- *   while (!$q->isEmpty()) {
- *     var_dump($q->get());
- *   }
- * </code>
+ * // Fill queue
+ * with ($q= new Queue()); {
+ *   $q->put(new String('One'));
+ *   $q->put(new String('Two'));
+ *   $q->put(new String('Three'));
+ *   $q->put(new String('Four'));
+ * }
+ * 
+ * // Empty queue
+ * while (!$q->isEmpty()) {
+ *   var_dump($q->get());
+ * }
+ * ```
  *
  * @test     xp://net.xp_framework.unittest.util.collections.GenericsTest
  * @test     xp://net.xp_framework.unittest.util.collections.QueueTest

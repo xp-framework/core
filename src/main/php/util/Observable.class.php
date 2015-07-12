@@ -1,53 +1,47 @@
 <?php namespace util;
 
-
-
 /**
  * Observable - base class for Model/View/Controller architecture.
  *
  * A basic implementation might look like this:
  *
  * TextObserver class:
- * <code>
- *   class TextObserver extends Object implements Observer {
+ * ```php
+ * class TextObserver extends \lang\Object implements \util\Observer {
  *
- *     public function update($obs, $arg= NULL) {
- *       Console::writeLine(__CLASS__, ' was notified of update in value, is now ', $obs->getValue());
- *     }
+ *   public function update($obs, $arg= NULL) {
+ *     Console::writeLine(__CLASS__, ' was notified of update in value, is now ', $obs->getValue());
  *   }
- * </code>
+ * }
+ * ```
  *
  * ObservableValue class:
- * <code>
- *   uses('util.Observable');
- *
- *   class ObservableValue extends Observable {
- *     private $n= 0;
- *     
- *     public function __construct($n) {
- *       $this->n= $n;
- *     }
- *     
- *     public function setValue($n) {
- *       $this->n= $n;
- *       $this->setChanged();
- *       $this->notifyObservers();
- *     }
- *     
- *     public function getValue() {
- *       return $this->n;
- *     }
+ * ```php
+ * class ObservableValue extends \util\Observable {
+ *   private $n= 0;
+ *   
+ *   public function __construct($n) {
+ *     $this->n= $n;
  *   }
- * </code>
+ *   
+ *   public function setValue($n) {
+ *     $this->n= $n;
+ *     $this->setChanged();
+ *     $this->notifyObservers();
+ *   }
+ *   
+ *   public function getValue() {
+ *     return $this->n;
+ *   }
+ * }
+ * ```
  *
  * Main program:
- * <code>
- *   uses('de.thekid.util.TextObserver', 'de.thekid.util.ObservableValue');
- *
- *   $value= new ObservableValue(3);
- *   $value->addObserver(new TextObserver());
- *   $value->setValue(5);
- * </code>
+ * ```php
+ * $value= new ObservableValue(3);
+ * $value->addObserver(new TextObserver());
+ * $value->setValue(5);
+ * ```
  *
  * The update method gets passed the instance of Observable as its first
  * argument and - if existant - the argument passed to notifyObservers as 

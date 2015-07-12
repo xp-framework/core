@@ -5,26 +5,17 @@ use security\crypto\PrivateKey;
 /**
  * Key pair
  *
- * <code>
- *   uses('security.KeyPair');
+ * ```php
+ * use security\KeyPair;
  * 
- *   try {
- *     if ($keypair= KeyPair::generate('md5', OPENSSL_KEYTYPE_RSA, 384)) {
- *       $export= $keypair->export('krowemarf-px');
- *     }
- *   } catch(XPException $e) {
- *     $e->printStackTrace();
- *     exit();
- *   }
- *   
- *   var_dump(
- *     $keypair,
- *     $export
- *   );
- * </code>
+ * $keypair= KeyPair::generate('md5', OPENSSL_KEYTYPE_RSA, 384);
+ * $export= $keypair->export('krowemarf-px');
+ * 
+ * var_dump($keypair, $export);
+ * ```
  *
- * @see      php://openssl_pkey_new
- * @ext      openssl
+ * @see   php://openssl_pkey_new
+ * @ext   openssl
  */
 class KeyPair extends \lang\Object {
 

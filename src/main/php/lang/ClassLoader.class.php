@@ -5,26 +5,24 @@ use lang\reflect\Module;
 
 /** 
  * Entry point class to loading classes, packages and resources.
- * Keeps a list of class loaders that load classes from the file
- * system, xar archives, memory, or various other places. These
- * loaders are asked for each class loading request, be it via
- * XPClass::forName(), uses(), requests from the Package class,
- * or explicit calls to ClassLoader::getDefault()->loadClass().
+ *
+ * Keeps a list of class loaders that load classes from the file system,
+ * xar archives, memory, or various other places. These loaders are asked
+ * for each class loading request, be it via XPClass::forName(), SPL auto
+ * loading, requests from the lang.reflect.Package class, or explicit calls
+ * to loadClass().
  *
  * Given the following code
- * <code>
- *   $class= ClassLoader::getDefault()->loadClass($name);
- * </code>
- * ...and the following include_path setting:
- * <pre>
- *   ".:/usr/local/lib/xp/xp-rt-5.4.0.xar:/home/classes/"
- * </pre>
- * ...the classloader will ask the class loader delegates:
- * <pre>
+ * ```php
+ * $class= ClassLoader::getDefault()->loadClass($name);
+ * ```
+ * ...and `.:/usr/local/lib/xp/xp-rt-6.4.0.xar:/home/classes/` set as 
+ * PHP's include path, the classloader will ask the class loader delegates:
+ * 
  * - FileSystemClassLoader(.)
- * - ArchiveClassLoader(/usr/local/lib/xp/xp-rt-5.4.0.xar)
+ * - ArchiveClassLoader(/usr/local/lib/xp/xp-rt-6.4.0.xar)
  * - FileSystemClassLoader(/home/classes/)
- * </pre>
+ *
  * ...in the stated order. The first delegate to provide the class 
  * will be asked to load it. In case none of the delegates are able
  * to provide the class, a ClassNotFoundException will be thrown.

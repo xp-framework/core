@@ -1,22 +1,20 @@
 <?php namespace util;
-
-
  
 /**
  * Hashmap class
  *
  * Example usage:
- * <code>
- *   uses('util.Hashmap');
+ * ```php
+ * use util\Hashmap;
  *
- *   $h= new Hashmap();
- *   $h->put('color', 'red');
- *   $h->put('count', 5);
- *   if ($h->containsKey('color')) {
- *     echo 'color => '; var_dump($h->get('color'));
- *   }
- *   var_dump($h->containsValue($c= 5));
- * </code>
+ * $h= new Hashmap();
+ * $h->put('color', 'red');
+ * $h->put('count', 5);
+ * if ($h->containsKey('color')) {
+ *   echo 'color => '; var_dump($h->get('color'));
+ * }
+ * var_dump($h->containsValue($c= 5));
+ * ```
  *
  * @test     xp://net.xp_framework.unittest.util.HashmapTest
  * @see      php://array
