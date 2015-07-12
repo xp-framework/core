@@ -85,7 +85,8 @@ final class xp {
   // {{{ proto string loadClass0(string class)
   //     Loads a class by its fully qualified name
   function loadClass0($class) {
-    if (isset(xp::$cl[$class])) return array_search($class, xp::$cn, true);
+    $name= strtr($class, '.', '\\');
+    if (isset(xp::$cl[$class])) return $name;
     foreach (xp::$classpath as $path) {
 
       // We rely on paths having been expanded including a trailing directory separator
@@ -111,8 +112,6 @@ final class xp {
       }
 
       // Register class name and call static initializer if available
-      $p= strrpos($class, '.');
-      $name= strtr($class, '.', '\\');
       method_exists($name, '__static') && xp::$cli[]= [$name, '__static'];
       if (0 === xp::$cll) {
         $invocations= xp::$cli;
@@ -368,37 +367,6 @@ function __error($code, $msg, $file, $line) {
 }
 // }}}
 
-// {{{ proto deprecated void uses (string* args)
-//     Uses one or more classes
-function uses() {
-  $scope= null;
-  foreach (func_get_args() as $str) {
-    $class= xp::$loader->loadClass0($str);
-
-    // Tricky: We can arrive at this point without the class actually existing:
-    // A : uses("B")
-    // `-- B : uses("A")
-    //     `--> A : We are here, class A not complete!
-    // "Wait" until we unwind the stack until the first position so A is
-    // "complete" before calling __import.
-    // Check with class_exists(), because method_exists() triggers autoloading.
-    if (class_exists($class, false) && method_exists($class, '__import')) {
-      if (null === $scope) {
-        $trace= debug_backtrace(0, 3);
-        $scope= isset($trace[2]['args'][0]) ? literal($trace[2]['args'][0]) : null;
-      }
-      $class::__import($scope);
-    }
-
-    $short= substr($str, strrpos($str, '.') + 1);
-    if (!class_exists($short, false) && !interface_exists($short, false)) {
-      \xp::$cn[$short]= $str;
-      class_alias($class, $short);
-    }
-  }
-}
-// }}}
-
 // {{{ proto deprecated void raise (string classname, var* args)
 //     throws an exception by a given class name
 function raise($classname) {
@@ -553,18 +521,16 @@ function newinstance($spec, $args, $def= null) {
   if (0 === strncmp($spec, 'php.', 4)) {
     $spec= substr($spec, 4);
   } else if (false === strpos($spec, '.')) {
-    $spec= XPClass::nameOf($spec);
+    $spec= \lang\XPClass::nameOf($spec);
   }
 
   // Handle generics, PHP types and all others.
   if (strstr($spec, '<')) {
     $class= \lang\Type::forName($spec);
     $type= $class->literal();
-    $p= strrpos(substr($type, 0, strpos($type, "\xb7\xb7")), "\xb7");
     $generic= xp::$meta[$class->getName()]['class'][DETAIL_GENERIC];
   } else if (false === strpos($spec, '.')) {
     $type= $spec;
-    $p= false;
     $generic= null;
   } else {
     try {
@@ -572,16 +538,10 @@ function newinstance($spec, $args, $def= null) {
     } catch (\lang\ClassLoadingException $e) {
       xp::error($e->getMessage());
     }
-    $p= strrpos($type, "\xb7");
     $generic= null;
   }
 
-  if (false !== $p) {
-    $name= strtr(substr($type, 0, $p), "\xb7", '.').'.'.substr($type, $p+ 1).$n;
-  } else {
-    $name= strtr($type, '\\', '.').$n;
-  }
-
+  $name= strtr($type, '\\', '.').$n;
   if (interface_exists($type)) {
     $decl= ['kind' => 'class', 'extends' => ['lang.Object'], 'implements' => ['\\'.$type], 'use' => []];
   } else if (trait_exists($type)) {
@@ -736,14 +696,4 @@ spl_autoload_register(function($class) {
     return true;
   }
 });
-
-foreach ([
-  'lang.Generic', 'lang.Object', 'lang.Type', 'lang.XPClass', 'lang.ClassLoader',
-  'lang.Throwable', 'lang.XPException', 'lang.Error',
-  'lang.reflect.Method', 'lang.reflect.Constructor', 'lang.reflect.Field'
-] as $class) {
-  $short= substr($class, strrpos($class, '.') + 1);
-  class_alias(strtr($class, '.', '\\'), $short);
-  \xp::$cn[$short]= $class;
-}
 // }}}

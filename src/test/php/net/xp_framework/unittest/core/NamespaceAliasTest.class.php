@@ -60,17 +60,4 @@ class NamespaceAliasTest extends \unittest\TestCase {
     new NamespaceAliasAutoloadedFQFixture();            // Triggers autoloader
     $this->assertTrue(class_exists('net\xp_framework\unittest\core\NamespaceAliasAutoloadedFQFixture', false));
   }
-
-  #[@test]
-  public function namespaced_classes_aliased_to_short_name_when_loaded_via_uses() {
-    uses('net.xp_framework.unittest.core.NamespaceAliasAutoloadedNamespacedFixture');
-    $this->assertTrue(class_exists('NamespaceAliasAutoloadedNamespacedFixture', false));
-  }
-
-  #[@test]
-  public function namespaced_classes_not_aliased_twice_when_loaded_via_uses() {
-    uses('net.xp_framework.unittest.core.NamespaceAliasAutoloadedNamespacedFixture');
-    uses('net.xp_framework.unittest.core.NamespaceAliasAutoloadedNamespacedFixture');
-    $this->assertTrue(class_exists('NamespaceAliasAutoloadedNamespacedFixture', false));
-  }
 }

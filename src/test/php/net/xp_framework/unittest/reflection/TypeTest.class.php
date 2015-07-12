@@ -1,6 +1,6 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\TestCase;
+use lang\Object;
 use lang\Type;
 use lang\Primitive;
 use lang\ArrayType;
@@ -15,7 +15,7 @@ use util\collections\HashTable;
  *
  * @see      xp://lang.Type
  */
-class TypeTest extends TestCase {
+class TypeTest extends \unittest\TestCase {
 
   #[@test]
   public function stringType() {
@@ -73,11 +73,6 @@ class TypeTest extends TestCase {
   }
 
   #[@test]
-  public function objectTypeShortClass() {
-    $this->assertEquals(XPClass::forName('lang.Object'), Type::forName('Object'));
-  }
-
-  #[@test]
   public function objectTypeLiteral() {
     $this->assertEquals(XPClass::forName('lang.Object'), Type::forName('lang\\Object'));
   }
@@ -123,7 +118,7 @@ class TypeTest extends TestCase {
 
   #[@test]
   public function genericObjectType() {
-    with ($t= Type::forName('util.collections.HashTable<string, Object>')); {
+    with ($t= Type::forName('util.collections.HashTable<string, lang.Object>')); {
       $this->assertInstanceOf('lang.XPClass', $t);
       $this->assertTrue($t->isGeneric());
       $this->assertEquals(XPClass::forName('util.collections.HashTable'), $t->genericDefinition());

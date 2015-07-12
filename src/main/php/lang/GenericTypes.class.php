@@ -301,16 +301,11 @@ class GenericTypes extends \lang\Object {
         foreach ($components as $i => $component) {
           $name::$__generic[$component]= $arguments[$i];
         }
-        method_exists($name, '__static') && call_user_func([$name, '__static']);
+        method_exists($name, '__static') && $name::__static();
       }
       unset($meta['class'][DETAIL_ANNOTATIONS]['generic']);
       \xp::$meta[$qname]= $meta;
       \xp::$cn[$name]= $qname;
-
-      // Create alias if no PHP namespace is present and a qualified name exists
-      if (!$ns && strstr($qname, '.')) {
-        class_alias($name, strtr($base->getName(), '.', '\\').'··'.substr($cn, 1));
-      }
     }
     
     return $name;

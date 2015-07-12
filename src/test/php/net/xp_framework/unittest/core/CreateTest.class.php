@@ -32,15 +32,6 @@ class CreateTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function create_with_all_short_names_for_components() {
-    $h= create('new util.collections.HashTable<Object, Object>');
-    $this->assertEquals(
-      [XPClass::forName('lang.Object'), XPClass::forName('lang.Object')], 
-      $h->getClass()->genericArguments()
-    );
-  }
-
-  #[@test]
   public function create_with_all_qualified_names() {
     $h= create('new util.collections.HashTable<lang.Object, lang.Object>');
     $this->assertEquals(

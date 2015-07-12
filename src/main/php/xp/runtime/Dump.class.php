@@ -25,16 +25,6 @@ class Dump extends \lang\Object {
     }
     $src= trim($src, ' ;').';';
     
-    // Extract uses() and load classes
-    if (0 === strncmp($src, 'uses', 4)) {
-      $p= strpos($src, ');');
-      $uses= substr($src, 5, $p- 5);    // "uses("
-      $src= substr($src, $p+ 2);        // ");"
-      foreach (explode(',', $uses) as $class) {
-        uses(trim($class, '" '));
-      }
-    }
-    
     // Allow missing return
     strstr($src, 'return ') || strstr($src, 'return;') || $src= 'return '.$src;
 

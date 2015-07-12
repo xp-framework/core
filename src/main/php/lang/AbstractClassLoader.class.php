@@ -70,10 +70,10 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
    * @throws  lang.ClassFormatException in case the class format is invalud
    */
   public function loadClass0($class) {
-    if (isset(\xp::$cl[$class])) return literal($class);
+    $name= strtr($class, '.', '\\');
+    if (isset(\xp::$cl[$class])) return $name;
 
     // Load class
-    $package= null;
     \xp::$cl[$class]= nameof($this).'://'.$this->path;
     \xp::$cll++;
     try {
@@ -82,17 +82,10 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
       unset(\xp::$cl[$class]);
       \xp::$cll--;
 
-      $decl= null;
-      if (null === $package) {
-        $decl= substr($class, (false === ($p= strrpos($class, '.')) ? 0 : $p + 1));
-      } else {
-        $decl= strtr($class, '.', '·');
-      }
-
       // If class was declared, but loading threw an exception it means
       // a "soft" dependency, one that is only required at runtime, was
       // not loaded, the class itself has been declared.
-      if (class_exists($decl, false) || interface_exists($decl, false) || trait_exists($decl, false)) {
+      if (class_exists($name, false) || interface_exists($name, false) || trait_exists($name, false)) {
         throw new ClassDependencyException($class, [$this], $e);
       }
 
@@ -102,39 +95,13 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
       throw new ClassLinkageException($class, [$this], $e);
     }
     \xp::$cll--;
+
     if (false === $r) {
       unset(\xp::$cl[$class]);
       $e= new ClassNotFoundException($class, [$this]);
       \xp::gc(__FILE__);
       throw $e;
-    }
-    
-    // Register class name / literal mapping, which is one of the following:
-    //
-    // * No dot in the qualified class name -> ClassName
-    // * Dotted version declares $package -> com·example·ClassName, alias as com\example\ClassName
-    // * Dotted version resolves to a namespaced class -> com\example\ClassName
-    // * Global namespace -> ClassName, alias as com\example\ClassName
-    // 
-    // Alias lang.** classes into global namespace
-    if (false === ($p= strrpos($class, '.'))) {
-      $name= $class;
-      \xp::$sn[$class]= $name;
-    } else if (null !== $package) {
-      $name= strtr($class, '.', '·');
-      class_alias($name, strtr($class, '.', '\\'));
-      \xp::$sn[$class]= $name;
-    } else if (($ns= strtr($class, '.', '\\')) && (
-      class_exists($ns, false) || interface_exists($ns, false) || trait_exists($ns, false))
-    ) {
-      $name= $ns;
-    } else if (($cl= substr($class, $p+ 1)) && (
-      class_exists($cl, false) || interface_exists($cl, false) || trait_exists($cl, false))
-    ) {
-      $name= $cl;
-      class_alias($name, strtr($class, '.', '\\'));
-      \xp::$sn[$class]= $name;
-    } else {
+    } else if (!class_exists($name, false) && !interface_exists($name, false) && !trait_exists($name, false)) {
       unset(\xp::$cl[$class]);
       throw new ClassFormatException('Class "'.$class.'" not declared in loaded file');
     }
@@ -143,7 +110,7 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
     if (0 === \xp::$cll) {
       $invocations= \xp::$cli;
       \xp::$cli= [];
-      foreach ($invocations as $inv) call_user_func($inv, $name);
+      foreach ($invocations as $inv) $inv($name);
     }
     return $name;
   }

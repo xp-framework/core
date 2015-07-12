@@ -2,6 +2,9 @@
 
 use net\xp_framework\unittest\IgnoredOnHHVM;
 use lang\Runtime;
+use lang\RuntimeOptions;
+use lang\Process;
+use unittest\PrerequisitesNotMetError;
 
 /**
  * TestCase
@@ -13,8 +16,8 @@ class BootstrapTest extends \unittest\TestCase {
    */
   #[@beforeClass]
   public static function verifyProcessExecutionEnabled() {
-    if (\lang\Process::$DISABLED) {
-      throw new \unittest\PrerequisitesNotMetError('Process execution disabled', NULL, array('enabled'));
+    if (Process::$DISABLED) {
+      throw new PrerequisitesNotMetError('Process execution disabled', NULL, array('enabled'));
     }
   }
 
@@ -24,7 +27,7 @@ class BootstrapTest extends \unittest\TestCase {
    * @param   lang.RuntimeOptions $options
    * @return  var[] an array with three elements: exitcode, stdout and stderr contents
    */
-  protected function runWith(\lang\RuntimeOptions $options) {
+  protected function runWith(RuntimeOptions $options) {
     with ($out= $err= '', $p= Runtime::getInstance()->newInstance($options, 'class', 'xp.runtime.Evaluate', array('return 1;'))); {
       $p->in->close();
 
