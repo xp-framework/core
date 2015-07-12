@@ -58,12 +58,12 @@ class SuiteTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.MethodNotImplementedException')]
   public function addInvalidTest() {
-    $this->suite->addTest(newinstance('unittest.TestCase', array('nonExistant'), '{}'));
+    $this->suite->addTest(newinstance('unittest.TestCase', ['nonExistant'], '{}'));
   }
 
   #[@test, @expect('lang.MethodNotImplementedException')]
   public function runInvalidTest() {
-    $this->suite->runTest(newinstance('unittest.TestCase', array('nonExistant'), '{}'));
+    $this->suite->runTest(newinstance('unittest.TestCase', ['nonExistant'], '{}'));
   }
 
   #[@test]
@@ -199,7 +199,7 @@ class SuiteTest extends \unittest\TestCase {
 
   #[@test]
   public function beforeClassRaisesAPrerequisitesNotMet() {
-    $t= newinstance('unittest.TestCase', array('irrelevant'), '{
+    $t= newinstance('unittest.TestCase', ['irrelevant'], '{
       #[@beforeClass]
       public static function raise() {
         throw new \unittest\PrerequisitesNotMetError("Cannot run");
@@ -220,7 +220,7 @@ class SuiteTest extends \unittest\TestCase {
 
   #[@test]
   public function beforeClassRaisesAnException() {
-    $t= newinstance('unittest.TestCase', array('irrelevant'), '{
+    $t= newinstance('unittest.TestCase', ['irrelevant'], '{
       #[@beforeClass]
       public static function raise() {
         throw new \lang\IllegalStateException("Skip");
@@ -259,7 +259,7 @@ class SuiteTest extends \unittest\TestCase {
   public function warningsMakeTestFail() {
     with ($test= new SimpleTestCase('raisesAnError')); {
       $this->assertEquals(
-        array('"Test error" in ::trigger_error() (SimpleTestCase.class.php, line 67, occured once)'), 
+        ['"Test error" in ::trigger_error() (SimpleTestCase.class.php, line 67, occured once)'],
         $this->suite->runTest($test)->failed[$test->hashCode()]->reason
       );
     }
@@ -279,7 +279,7 @@ class SuiteTest extends \unittest\TestCase {
   public function expectedExceptionsWithWarningsMakeTestFail() {
     with ($test= new SimpleTestCase('catchExpectedWithWarning')); {
       $this->assertEquals(
-        array('"Test error" in ::trigger_error() (SimpleTestCase.class.php, line 121, occured once)'), 
+        ['"Test error" in ::trigger_error() (SimpleTestCase.class.php, line 121, occured once)'],
         $this->suite->runTest($test)->failed[$test->hashCode()]->reason
       );
     }

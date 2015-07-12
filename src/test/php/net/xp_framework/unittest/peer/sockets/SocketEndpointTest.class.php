@@ -63,7 +63,7 @@ class SocketEndpointTest extends TestCase {
     $this->assertNotEquals($this, new SocketEndpoint('127.0.0.1', 6100));
   }
 
-  #[@test, @values(array(NULL, '127.0.0.1:6100', 1270016100))]
+  #[@test, @values([null, '127.0.0.1:6100', 1270016100])]
   public function not_equal_to_primitive($value) {
     $this->assertNotEquals($value, new SocketEndpoint('127.0.0.1', 6100));
   }

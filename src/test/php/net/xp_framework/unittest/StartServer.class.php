@@ -51,7 +51,7 @@ class StartServer extends \lang\Object implements \unittest\TestClassAction {
       throw new \unittest\PrerequisitesNotMetError('Cannot start server: '.$status, null);
     }
 
-    $c->getMethod($this->connected)->invoke(null, array($bindAddress));
+    $c->getMethod($this->connected)->invoke(null, [$bindAddress]);
   }
 
   /**

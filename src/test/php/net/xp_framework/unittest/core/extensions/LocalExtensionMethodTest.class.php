@@ -4,7 +4,6 @@ use unittest\TestCase;
 
 /**
  * TestCase
- *
  */
 class LocalExtensionMethodTest extends TestCase {
 
@@ -31,7 +30,7 @@ class LocalExtensionMethodTest extends TestCase {
   #[@test]
   public function invoke_it() {
     $this->assertEquals(
-      array($this->getClass()->getMethod(__FUNCTION__)),
+      [$this->getClass()->getMethod(__FUNCTION__)],
       $this->getClass()->methodsAnnotatedWith('@test')
     );
   }

@@ -20,7 +20,7 @@ class XpTest extends \unittest\TestCase {
   public function triggered_error_at_file() {
     trigger_error('Test');
     $this->assertEquals(
-      array(__LINE__ - 2 => array('Test' => array('class' => NULL, 'method' => 'trigger_error', 'cnt' => 1))),
+      [__LINE__ - 2 => ['Test' => ['class' => NULL, 'method' => 'trigger_error', 'cnt' => 1]]],
       \xp::errorAt(__FILE__)
     );
     \xp::gc();
@@ -30,7 +30,7 @@ class XpTest extends \unittest\TestCase {
   public function triggered_error_at_file_and_line() {
     trigger_error('Test');
     $this->assertEquals(
-      array('Test' => array('class' => NULL, 'method' => 'trigger_error', 'cnt' => 1)),
+      ['Test' => ['class' => NULL, 'method' => 'trigger_error', 'cnt' => 1]],
       \xp::errorAt(__FILE__, __LINE__ - 3)
     );
     \xp::gc();
@@ -40,7 +40,7 @@ class XpTest extends \unittest\TestCase {
   public function gc() {
     trigger_error('Test');
     $this->assertEquals(
-      array(__FILE__ => array(__LINE__ - 2 => array('Test' => array('class' => NULL, 'method' => 'trigger_error', 'cnt' => 1)))),
+      [__FILE__ => [__LINE__ - 2 => ['Test' => ['class' => NULL, 'method' => 'trigger_error', 'cnt' => 1]]]],
       \xp::$errors
     );
     \xp::gc();

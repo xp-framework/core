@@ -142,7 +142,7 @@ class ArrayAccessTest extends \unittest\TestCase {
    */
   #[@test]
   public function vectorWriteElement() {
-    $v= new Vector(array(new Name('hello')));
+    $v= new Vector([new Name('hello')]);
     $world= new Name('world');
     $v[0]= $world;
     $this->assertEquals($world, $v[0]);
@@ -199,7 +199,7 @@ class ArrayAccessTest extends \unittest\TestCase {
    */
   #[@test]
   public function vectorIsUsableInForeach() {
-    $values= array(new Name('hello'), new Name('world'));
+    $values= [new Name('hello'), new Name('world')];
     foreach (new Vector($values) as $i => $value) {
       $this->assertEquals($values[$i], $value);
     }
@@ -269,7 +269,7 @@ class ArrayAccessTest extends \unittest\TestCase {
   #[@test]
   public function hashSetUsableInForeach() {
     $s= new HashSet();
-    $s->addAll(array(new Name('0'), new Name('1'), new Name('2')));
+    $s->addAll([new Name('0'), new Name('1'), new Name('2')]);
     foreach ($s as $i => $element) {
       $this->assertEquals(new Name($i), $element);
     }

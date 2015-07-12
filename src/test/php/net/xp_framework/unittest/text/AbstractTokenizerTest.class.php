@@ -217,7 +217,7 @@ abstract class AbstractTokenizerTest extends TestCase {
   #[@test]
   public function pushBackDelimiter() {
     $this->assertEquals(
-      array('// This is a one-line comment', "\n", 'a', '=', ' ', 'b', ' ', '/', ' ', 'c', ';'),
+      ['// This is a one-line comment', "\n", 'a', '=', ' ', 'b', ' ', '/', ' ', 'c', ';'],
       $this->allTokens("// This is a one-line comment\na= b / c;", "/\n =;", "/\n =;")
     );
   }
@@ -229,7 +229,7 @@ abstract class AbstractTokenizerTest extends TestCase {
   #[@test]
   public function pushBackRegex() {
     $this->assertEquals(
-      array('var', ' ', 'pattern', ' ', '=', ' ', '/', '0?([0-9]+)\.0?([0-9]+)(\.0?([0-9]+))?', '/', ';'),
+      ['var', ' ', 'pattern', ' ', '=', ' ', '/', '0?([0-9]+)\.0?([0-9]+)(\.0?([0-9]+))?', '/', ';'],
       $this->allTokens('var pattern = /0?([0-9]+)\.0?([0-9]+)(\.0?([0-9]+))?/;', "/\n =;")
     );
   }

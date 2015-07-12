@@ -72,50 +72,50 @@ class RuntimeTest extends \unittest\TestCase {
 
   #[@test]
   public function parseSetting() {
-    $startup= Runtime::parseArguments(array('-denable_dl=0'));
-    $this->assertEquals(array('0'), $startup['options']->getSetting('enable_dl'));
+    $startup= Runtime::parseArguments(['-denable_dl=0']);
+    $this->assertEquals(['0'], $startup['options']->getSetting('enable_dl'));
   }
 
   #[@test]
   public function parseSettingToleratesWhitespace() {
-    $startup= Runtime::parseArguments(array('-d magic_quotes_gpc=0'));
-    $this->assertEquals(array('0'), $startup['options']->getSetting('magic_quotes_gpc'));
+    $startup= Runtime::parseArguments(['-d magic_quotes_gpc=0']);
+    $this->assertEquals(['0'], $startup['options']->getSetting('magic_quotes_gpc'));
   }
 
   #[@test]
   public function doubleDashEndsOptions() {
-    $startup= Runtime::parseArguments(array('-q', '--', 'tools/xar.php'));
-    $this->assertArguments(array('-q'), $startup['options']);
+    $startup= Runtime::parseArguments(['-q', '--', 'tools/xar.php']);
+    $this->assertArguments(['-q'], $startup['options']);
     $this->assertEquals('tools/xar.php', $startup['bootstrap']);
   }
 
   #[@test]
   public function scriptEndsOptions() {
-    $startup= Runtime::parseArguments(array('-q', 'tools/xar.php'));
-    $this->assertArguments(array('-q'), $startup['options']);
+    $startup= Runtime::parseArguments(['-q', 'tools/xar.php']);
+    $this->assertArguments(['-q'], $startup['options']);
     $this->assertEquals('tools/xar.php', $startup['bootstrap']);
   }
 
   #[@test, @expect('lang.FormatException')]
   public function parseUnknownSwtich() {
-    Runtime::parseArguments(array('-@'));
+    Runtime::parseArguments(['-@']);
   }
 
   #[@test]
   public function parseMultiSetting() {
-    $startup= Runtime::parseArguments(array(
+    $startup= Runtime::parseArguments([
       '-dextension=php_xsl.dll', 
       '-dextension=php_sybase_ct.dll'
-    ));
+    ]);
     $this->assertEquals(
-      array('php_xsl.dll', 'php_sybase_ct.dll'), 
+      ['php_xsl.dll', 'php_sybase_ct.dll'],
       $startup['options']->getSetting('extension')
     );
   }
 
   #[@test]
   public function parseSwitch() {
-    $startup= Runtime::parseArguments(array('-q'));
+    $startup= Runtime::parseArguments(['-q']);
     $this->assertTrue($startup['options']->getSwitch('q'));
   }
 

@@ -2,9 +2,8 @@
 
 /**
  * Lookup map
- *
  */
-#[@generic(self= 'V', implements= array('lang.Type, V'))]
+#[@generic(self= 'V', implements= ['lang.Type, V'])]
 abstract class AbstractTypeDictionary extends \lang\Object implements IDictionary {
 
 }

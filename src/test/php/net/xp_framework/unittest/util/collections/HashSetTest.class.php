@@ -53,7 +53,7 @@ class HashSetTest extends \unittest\TestCase {
 
   #[@test]
   public function addAll() {
-    $array= array(new Name('one'), new Name('two'), new Name('three'));
+    $array= [new Name('one'), new Name('two'), new Name('three')];
     $this->set->addAll($array);
     $this->assertFalse($this->set->isEmpty());
     $this->assertEquals(3, $this->set->size());
@@ -61,7 +61,7 @@ class HashSetTest extends \unittest\TestCase {
 
   #[@test]
   public function addAllUniques() {
-    $array= array(new Name('one'), new Name('one'), new Name('two'));
+    $array= [new Name('one'), new Name('one'), new Name('two')];
     $this->set->addAll($array);
     $this->assertFalse($this->set->isEmpty());
     $this->assertEquals(2, $this->set->size());   // Name{"one"} and Name{"two"}
@@ -69,10 +69,10 @@ class HashSetTest extends \unittest\TestCase {
 
   #[@test]
   public function addAllReturnsWhetherSetHasChanged() {
-    $array= array(new Name('caffeine'), new Name('nicotine'));
+    $array= [new Name('caffeine'), new Name('nicotine')];
     $this->assertTrue($this->set->addAll($array));
     $this->assertFalse($this->set->addAll($array));
-    $this->assertFalse($this->set->addAll(array(new Name('caffeine'))));
+    $this->assertFalse($this->set->addAll([new Name('caffeine')]));
     $this->assertFalse($this->set->addAll([]));
   }
 
@@ -119,7 +119,7 @@ class HashSetTest extends \unittest\TestCase {
   public function toArray() {
     $color= new Name('red');
     $this->set->add($color);
-    $this->assertEquals(array($color), $this->set->toArray());
+    $this->assertEquals([$color], $this->set->toArray());
   }
 
   #[@test]

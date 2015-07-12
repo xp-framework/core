@@ -29,12 +29,12 @@ class TypeOfTest extends \unittest\TestCase {
 
   #[@test]
   public function intArray() {
-    $this->assertEquals(ArrayType::forName('var[]'), typeof(array(1, 2, 3)));
+    $this->assertEquals(ArrayType::forName('var[]'), typeof([1, 2, 3]));
   }
 
   #[@test]
   public function intMap() {
-    $this->assertEquals(MapType::forName('[:var]'), typeof(array('one' => 1, 'two' => 2, 'three' => 3)));
+    $this->assertEquals(MapType::forName('[:var]'), typeof(['one' => 1, 'two' => 2, 'three' => 3]));
   }
 
   #[@test]

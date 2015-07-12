@@ -72,13 +72,13 @@ class ValuesTest extends \unittest\TestCase {
         return range($lo, $hi);
       }
 
-      #[@test, @values(source= "range", args= array(1, 4))]
+      #[@test, @values(source= "range", args= [1, 4])]
       public function fixture($value) {
         $this->values[]= $value;
       }
     }');
     $this->suite->runTest($test);
-    $this->assertEquals(array(1, 2, 3, 4), $test->values);
+    $this->assertEquals([1, 2, 3, 4], $test->values);
   }
 
   #[@test]
@@ -132,13 +132,13 @@ class ValuesTest extends \unittest\TestCase {
     $test= newinstance('unittest.TestCase', ['fixture'], '{
       public $values= [];
 
-      #[@test, @values(source= "net.xp_framework.unittest.tests.ValuesTest::range", args= array(1, 10))]
+      #[@test, @values(source= "net.xp_framework.unittest.tests.ValuesTest::range", args= [1, 10])]
       public function fixture($value) {
         $this->values[]= $value;
       }
     }');
     $this->suite->runTest($test);
-    $this->assertEquals(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), $test->values);
+    $this->assertEquals([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], $test->values);
   }
 
   #[@test]
@@ -217,14 +217,14 @@ class ValuesTest extends \unittest\TestCase {
     $test= newinstance('unittest.TestCase', ['fixture'], '{
       public $values= [];
 
-      #[@test, @values(array(array(1, 2), array(3, 4), array(5, 6)))]
+      #[@test, @values([[1, 2], [3, 4], [5, 6]])]
       public function fixture($a, $b) {
         $this->values[]= $a;
         $this->values[]= $b;
       }
     }');
     $this->suite->runTest($test);
-    $this->assertEquals(array(1, 2, 3, 4, 5, 6), $test->values);
+    $this->assertEquals([1, 2, 3, 4, 5, 6], $test->values);
   }
 
   #[@test]
@@ -251,7 +251,7 @@ class ValuesTest extends \unittest\TestCase {
       public $values= [];
 
       public function values() {
-        return array($this);
+        return [$this];
       }
 
       #[@test, @values("values")]
@@ -260,7 +260,7 @@ class ValuesTest extends \unittest\TestCase {
       }
     }');
     $this->suite->runTest($test);
-    $this->assertEquals(array($test), $test->values);
+    $this->assertEquals([$test], $test->values);
   }
 
   #[@test]
@@ -301,8 +301,8 @@ class ValuesTest extends \unittest\TestCase {
 
   #[@test]
   public function values_with_expect() {
-    $test= newinstance('unittest.TestCase', array('not_at_number'), '{
-      #[@test, @values(array("a")), @expect("lang.FormatException")]
+    $test= newinstance('unittest.TestCase', ['not_at_number'], '{
+      #[@test, @values(["a"]), @expect("lang.FormatException")]
       public function not_at_number($value) {
         throw new \lang\FormatException("Not a number: ".$value);
       }

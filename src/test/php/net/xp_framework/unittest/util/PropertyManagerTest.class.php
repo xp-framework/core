@@ -160,7 +160,7 @@ class PropertyManagerTest extends TestCase {
     $path= new \util\FilesystemPropertySource('.');
     $fixture= $this->fixture();
     $fixture->appendSource($path);
-    $this->assertEquals(array($path), $fixture->getSources());
+    $this->assertEquals([$path], $fixture->getSources());
   }
 
   #[@test]
@@ -168,7 +168,7 @@ class PropertyManagerTest extends TestCase {
     $path= new \util\FilesystemPropertySource('.');
     $fixture= $this->fixture();
     $fixture->prependSource($path);
-    $this->assertEquals(array($path), $fixture->getSources());
+    $this->assertEquals([$path], $fixture->getSources());
   }
 
   #[@test]
@@ -235,9 +235,9 @@ key="overwritten value"'));
   public function setSingleSource() {
     $source= new \util\FilesystemPropertySource('.');
     $fixture= $this->fixture();
-    $fixture->setSources(array($source));
+    $fixture->setSources([$source]);
 
-    $this->assertEquals(array($source), $fixture->getSources());
+    $this->assertEquals([$source], $fixture->getSources());
   }
 
   #[@test]
@@ -246,9 +246,9 @@ key="overwritten value"'));
     $two= new \util\FilesystemPropertySource('..');
 
     $fixture= $this->fixture();
-    $fixture->setSources(array($one, $two));
+    $fixture->setSources([$one, $two]);
 
-    $this->assertEquals(array($one, $two), $fixture->getSources());
+    $this->assertEquals([$one, $two], $fixture->getSources());
   }
 
   #[@test, @action(new RuntimeVersion('<7.0.0-dev'))]
@@ -257,7 +257,7 @@ key="overwritten value"'));
 
     $fixture= $this->fixture();
     try {
-      $fixture->setSources(array($one, null));
+      $fixture->setSources([$one, null]);
       $this->fail('No exception thrown', null, 'lang.IllegalArgumentException');
     } catch (\lang\IllegalArgumentException $expected) {
     }
@@ -271,7 +271,7 @@ key="overwritten value"'));
 
     $fixture= $this->fixture();
     try {
-      $fixture->setSources(array($one, null));
+      $fixture->setSources([$one, null]);
       $this->fail('No exception thrown', null, 'TypeError');
     } catch (\TypeError  $expected) {
     }

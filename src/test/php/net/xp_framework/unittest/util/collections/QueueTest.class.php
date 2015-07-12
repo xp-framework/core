@@ -89,7 +89,7 @@ class QueueTest extends \unittest\TestCase {
 
   #[@test]
   public function iterativeUse() {
-    $input= array(new Name('red'), new Name('green'), new Name('blue'));
+    $input= [new Name('red'), new Name('green'), new Name('blue')];
     
     // Add
     for ($i= 0, $s= sizeof($input); $i < sizeof($input); $i++) {

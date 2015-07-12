@@ -185,7 +185,7 @@ class XPClassTest extends \unittest\TestCase {
   #[@test]
   public function getDeclaredInterfaces_consist_of_declared_interface() {
     $this->assertEquals(
-      array(XPClass::forName('util.log.Traceable')), 
+      [XPClass::forName('util.log.Traceable')],
       $this->fixture->getDeclaredInterfaces()
     );
   }
@@ -193,7 +193,7 @@ class XPClassTest extends \unittest\TestCase {
   #[@test]
   public function object_class_has_lang_Generic_interface() {
     $this->assertEquals(
-      array(XPClass::forName('lang.Generic')), 
+      [XPClass::forName('lang.Generic')],
       XPClass::forName('lang.Object')->getDeclaredInterfaces()
     );
   }
@@ -206,7 +206,7 @@ class XPClassTest extends \unittest\TestCase {
   #[@test]
   public function util_collections_IList_class_declares_ArrayAccess_and_IteratorAggregate_interfaces() {
     $this->assertEquals(
-      array(new XPClass('ArrayAccess'), new XPClass('IteratorAggregate')), 
+      [new XPClass('ArrayAccess'), new XPClass('IteratorAggregate')],
       XPClass::forName('util.collections.IList')->getDeclaredInterfaces()
     );
   }
@@ -235,7 +235,7 @@ class XPClassTest extends \unittest\TestCase {
   public function invoking_fixture_classes_constructor() {
     $this->assertEquals(
       new TestClass('1977-12-14'),
-      $this->fixture->getConstructor()->newInstance(array('1977-12-14'))
+      $this->fixture->getConstructor()->newInstance(['1977-12-14'])
     );
   }
 
@@ -256,7 +256,7 @@ class XPClassTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.reflect.TargetInvocationException')]
   public function constructors_newInstance_method_wraps_exceptions() {
-    $this->fixture->getConstructor()->newInstance(array('@@not-a-valid-date-string@@'));
+    $this->fixture->getConstructor()->newInstance(['@@not-a-valid-date-string@@']);
   }
 
   #[@test, @expect('lang.IllegalAccessException')]
@@ -283,7 +283,7 @@ class XPClassTest extends \unittest\TestCase {
 
   #[@test]
   public function fixture_class_annotations() {
-    $this->assertEquals(array('test' => 'Annotation'), $this->fixture->getAnnotations());
+    $this->assertEquals(['test' => 'Annotation'], $this->fixture->getAnnotations());
   }
 
   #[@test]
@@ -322,7 +322,7 @@ class XPClassTest extends \unittest\TestCase {
   #[@test]
   public function fixture_class_constants() {
     $this->assertEquals(
-      array('CONSTANT_STRING' => 'XP Framework', 'CONSTANT_INT' => 15, 'CONSTANT_NULL' => null),
+      ['CONSTANT_STRING' => 'XP Framework', 'CONSTANT_INT' => 15, 'CONSTANT_NULL' => null],
       $this->fixture->getConstants()
     );
   }

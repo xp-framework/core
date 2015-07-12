@@ -10,7 +10,7 @@ use lang\Runtime;
  * @see      xp://peer.Socket
  */
 abstract class AbstractSocketTest extends TestCase {
-  protected static $bindAddress= array(null, -1);
+  protected static $bindAddress= [null, -1];
   protected $fixture= null;
 
   /**

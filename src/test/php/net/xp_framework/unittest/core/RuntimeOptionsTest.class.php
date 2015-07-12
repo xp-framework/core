@@ -46,8 +46,8 @@ class RuntimeOptionsTest extends \unittest\TestCase {
   public function settingAccessors() {
     $options= new RuntimeOptions();
     $this->assertNull($options->getSetting('memory_limit'));
-    $options->withSetting('memory_limit', array('128M'));
-    $this->assertEquals(array('128M'), $options->getSetting('memory_limit'));
+    $options->withSetting('memory_limit', ['128M']);
+    $this->assertEquals(['128M'], $options->getSetting('memory_limit'));
   }
 
   #[@test]
@@ -55,16 +55,16 @@ class RuntimeOptionsTest extends \unittest\TestCase {
     $options= new RuntimeOptions();
     $this->assertNull($options->getSetting('memory_limit'));
     $options->withSetting('memory_limit', '128M');
-    $this->assertEquals(array('128M'), $options->getSetting('memory_limit'));
+    $this->assertEquals(['128M'], $options->getSetting('memory_limit'));
   }
 
   #[@test]
   public function addSetting() {
     $options= new RuntimeOptions();
-    $options->withSetting('extension', 'php_xsl.dll', TRUE);
-    $options->withSetting('extension', 'php_sybase_ct.dll', TRUE);
+    $options->withSetting('extension', 'php_xsl.dll', true);
+    $options->withSetting('extension', 'php_sybase_ct.dll', true);
     $this->assertEquals(
-      array('php_xsl.dll', 'php_sybase_ct.dll'), 
+      ['php_xsl.dll', 'php_sybase_ct.dll'],
       $options->getSetting('extension')
     );
   }
@@ -75,7 +75,7 @@ class RuntimeOptionsTest extends \unittest\TestCase {
     $options->withSetting('extension', 'php_xsl.dll');
     $options->withSetting('extension', 'php_sybase_ct.dll');
     $this->assertEquals(
-      array('php_sybase_ct.dll'), 
+      ['php_sybase_ct.dll'],
       $options->getSetting('extension')
     );
   }
@@ -101,15 +101,15 @@ class RuntimeOptionsTest extends \unittest\TestCase {
   #[@test]
   public function withClassPath() {
     $options= new RuntimeOptions();
-    $options->withClassPath(array('/opt/xp/lib/mysql-1.0.0.xar'));
-    $this->assertEquals(array('/opt/xp/lib/mysql-1.0.0.xar'), $options->getClassPath());
+    $options->withClassPath(['/opt/xp/lib/mysql-1.0.0.xar']);
+    $this->assertEquals(['/opt/xp/lib/mysql-1.0.0.xar'], $options->getClassPath());
   }
 
   #[@test]
   public function withClassPathOverload() {
     $options= new RuntimeOptions();
     $options->withClassPath('/opt/xp/lib/mysql-1.0.0.xar');
-    $this->assertEquals(array('/opt/xp/lib/mysql-1.0.0.xar'), $options->getClassPath());
+    $this->assertEquals(['/opt/xp/lib/mysql-1.0.0.xar'], $options->getClassPath());
   }
 
   #[@test]
@@ -122,22 +122,22 @@ class RuntimeOptionsTest extends \unittest\TestCase {
   public function argumentsWithSwitch() {
     $options= new RuntimeOptions(); 
     $options->withSwitch('q');
-    $this->assertArguments(array('-q'), $options);
+    $this->assertArguments(['-q'], $options);
   }
 
   #[@test]
   public function argumentsWithSetting() {
     $options= new RuntimeOptions(); 
     $options->withSetting('enable_dl', 0);
-    $this->assertArguments(array('-d', 'enable_dl=0'), $options);
+    $this->assertArguments(['-d', 'enable_dl=0'], $options);
   }
 
   #[@test]
   public function argumentsWithMultiSetting() {
     $options= new RuntimeOptions(); 
-    $options->withSetting('extension', array('php_xsl.dll', 'php_sybase_ct.dll'));
+    $options->withSetting('extension', ['php_xsl.dll', 'php_sybase_ct.dll']);
     $this->assertArguments(
-      array('-d', 'extension=php_xsl.dll', '-d', 'extension=php_sybase_ct.dll'), 
+      ['-d', 'extension=php_xsl.dll', '-d', 'extension=php_sybase_ct.dll'],
       $options
     );
   }
@@ -155,10 +155,10 @@ class RuntimeOptionsTest extends \unittest\TestCase {
       ->withSwitch('q')
       ->withSwitch('n')
       ->withSetting('enable_dl', 1)
-      ->withSetting('extension', array('php_xsl.dll', 'php_sybase_ct.dll'))
+      ->withSetting('extension', ['php_xsl.dll', 'php_sybase_ct.dll'])
     ;
     $this->assertArguments(
-      array('-q', '-n', '-d', 'enable_dl=1', '-d', 'extension=php_xsl.dll', '-d', 'extension=php_sybase_ct.dll'), 
+      ['-q', '-n', '-d', 'enable_dl=1', '-d', 'extension=php_xsl.dll', '-d', 'extension=php_sybase_ct.dll'],
       $options
     );
   }

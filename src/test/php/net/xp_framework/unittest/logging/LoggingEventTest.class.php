@@ -1,73 +1,54 @@
 <?php namespace net\xp_framework\unittest\logging;
 
-use unittest\TestCase;
 use util\log\LoggingEvent;
-
+use util\log\LogCategory;
+use util\log\LogLevel;
 
 /**
  * TestCase
  *
  * @see      xp://util.log.LoggingEvent
  */
-class LoggingEventTest extends TestCase {
+class LoggingEventTest extends \unittest\TestCase {
   protected $fixture= null;
 
   /**
    * Creates fixture
    *
+   * @return void
    */
   public function setUp() {
     $this->fixture= new LoggingEvent(
-      new \util\log\LogCategory('default', null, null, 0), 
+      new LogCategory('default', null, null, 0), 
       1258733284, 
       1, 
-      \util\log\LogLevel::INFO, 
-      array('Hello')
+      LogLevel::INFO, 
+      ['Hello']
     );
   }
 
-  /**
-   * Test getCategory() method
-   *
-   */
   #[@test]
   public function getCategory() {
-    $this->assertEquals(new \util\log\LogCategory('default', null, null, 0), $this->fixture->getCategory());
+    $this->assertEquals(new LogCategory('default', null, null, 0), $this->fixture->getCategory());
   }
  
-  /**
-   * Test getTimestamp() method
-   *
-   */
   #[@test]
   public function getTimestamp() {
     $this->assertEquals(1258733284, $this->fixture->getTimestamp());
   }
 
-  /**
-   * Test getProcessId() method
-   *
-   */
   #[@test]
   public function getProcessId() {
     $this->assertEquals(1, $this->fixture->getProcessId());
   }
 
-  /**
-   * Test getLevel() method
-   *
-   */
   #[@test]
   public function getLevel() {
-    $this->assertEquals(\util\log\LogLevel::INFO, $this->fixture->getLevel());
+    $this->assertEquals(LogLevel::INFO, $this->fixture->getLevel());
   }
 
-  /**
-   * Test getArguments() method
-   *
-   */
   #[@test]
   public function getArguments() {
-    $this->assertEquals(array('Hello'), $this->fixture->getArguments());
+    $this->assertEquals(['Hello'], $this->fixture->getArguments());
   }
 }

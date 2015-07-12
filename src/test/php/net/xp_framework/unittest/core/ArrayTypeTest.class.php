@@ -51,22 +51,22 @@ class ArrayTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function isInstance() {
-    $this->assertInstanceOf(ArrayType::forName('string[]'), array('Hello', 'World'));
+    $this->assertInstanceOf(ArrayType::forName('string[]'), ['Hello', 'World']);
   }
 
   #[@test]
   public function isInstanceOfName() {
-    $this->assertInstanceOf('string[]', array('Hello', 'World'));
+    $this->assertInstanceOf('string[]', ['Hello', 'World']);
   }
 
   #[@test]
   public function intArrayIsNotAnInstanceOfStringArray() {
-    $this->assertFalse(ArrayType::forName('string[]')->isInstance(array(1, 2)));
+    $this->assertFalse(ArrayType::forName('string[]')->isInstance([1, 2]));
   }
 
   #[@test]
   public function mapIsNotAnInstanceOfArray() {
-    $this->assertFalse(ArrayType::forName('var[]')->isInstance(array('Hello' => 'World')));
+    $this->assertFalse(ArrayType::forName('var[]')->isInstance(['Hello' => 'World']));
   }
 
   #[@test]

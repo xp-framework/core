@@ -18,6 +18,6 @@ class ArrayListDemo extends \lang\Object {
    */
   public static function main($args) {
     $sorted= ArrayList::newInstance($args)->sorted();
-    Console::writeLine('(new ArrayList(array(', implode(', ', $args), ')))->sorted()= ', $sorted);
+    Console::writeLine('(new ArrayList([', implode(', ', $args), ']))->sorted()= ', $sorted);
   }
 }

@@ -63,7 +63,7 @@ class ArrayListTest extends \unittest\TestCase {
         $r[]= $vi;
       }
     }
-    $this->assertEquals(array(1, 2, 3, 1, 2, 3, 1, 2, 3), $r);
+    $this->assertEquals([1, 2, 3, 1, 2, 3, 1, 2, 3], $r);
   }
 
   #[@test, @values([0, 1, 2])]
@@ -138,7 +138,7 @@ class ArrayListTest extends \unittest\TestCase {
 
   #[@test]
   public function newInstance_array() {
-    $a= ArrayList::newInstance(array(1, 2, 3, 4));
+    $a= ArrayList::newInstance([1, 2, 3, 4]);
     $this->assertEquals(4, $a->length);
     $this->assertEquals(1, $a[0]);
     $this->assertEquals(2, $a[1]);
