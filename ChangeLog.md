@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* **Remove variant of create() which returns object given**.
+  See xp-framework/core#91
+  (@thekid)
 * **Removed deprecated raise() core functionality**.
   See xp-framework/core#89
   (@thekid)
