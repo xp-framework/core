@@ -93,7 +93,7 @@ class Inet6Address extends \lang\Object implements InetAddress {
       if ("\x00\x00" == $this->addr{$i}.$this->addr{$i+1}) {
         $hexquads[]= '0';
       } else {
-        $hexquads[]= ltrim(this(unpack('H*', $this->addr{$i}.$this->addr{$i+1}), 1), '0');
+        $hexquads[]= ltrim(unpack('H*', $this->addr{$i}.$this->addr{$i+1})[1], '0');
       }
     }
     
@@ -116,7 +116,7 @@ class Inet6Address extends \lang\Object implements InetAddress {
    * @return  string
    */
   public function reversedNotation() {
-    $nibbles= this(unpack('H*', $this->addr), 1);
+    $nibbles= unpack('H*', $this->addr)[1];
     $ret= '';
     for ($i= 31; $i >= 0; $i--) {
       $ret.= $nibbles{$i}.'.';

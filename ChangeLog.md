@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* **Deprecated this() core functionality**.
+  See xp-framework/core#92
+  (@thekid)
 * **Remove variant of create() which returns object given**.
   See xp-framework/core#91
   (@thekid)
