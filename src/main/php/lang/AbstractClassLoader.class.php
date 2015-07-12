@@ -70,10 +70,10 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
    * @throws  lang.ClassFormatException in case the class format is invalud
    */
   public function loadClass0($class) {
-    if (isset(\xp::$cl[$class])) return literal($class);
+    $name= strtr($class, '.', '\\');
+    if (isset(\xp::$cl[$class])) return $name;
 
     // Load class
-    $name= strtr($class, '.', '\\');
     \xp::$cl[$class]= nameof($this).'://'.$this->path;
     \xp::$cll++;
     try {

@@ -85,7 +85,8 @@ final class xp {
   // {{{ proto string loadClass0(string class)
   //     Loads a class by its fully qualified name
   function loadClass0($class) {
-    if (isset(xp::$cl[$class])) return array_search($class, xp::$cn, true);
+    $name= strtr($class, '.', '\\');
+    if (isset(xp::$cl[$class])) return $name;
     foreach (xp::$classpath as $path) {
 
       // We rely on paths having been expanded including a trailing directory separator
@@ -111,7 +112,6 @@ final class xp {
       }
 
       // Register class name and call static initializer if available
-      $name= strtr($class, '.', '\\');
       method_exists($name, '__static') && xp::$cli[]= [$name, '__static'];
       if (0 === xp::$cll) {
         $invocations= xp::$cli;
