@@ -163,7 +163,7 @@ class EncapsedStream extends Stream {
    * @return  int number of bytes written
    */
   public function write($string) {
-    raise('lang.MethodNotImplementedException', 'Writing not supported');
+    throw new MethodNotImplementedException('Writing not supported');
   }    
 
   /**
@@ -173,7 +173,7 @@ class EncapsedStream extends Stream {
    * @return  int number of bytes written
    */
   public function writeLine($string= '') {
-    raise('lang.MethodNotImplementedException', 'Writing not supported');
+    throw new MethodNotImplementedException('Writing not supported');
   }
   
   /**
