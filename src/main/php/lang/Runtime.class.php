@@ -180,7 +180,11 @@ class Runtime extends Object {
         }
       }
     }
-    if ($main= array_shift($arguments)) {
+
+    $main= array_shift($arguments);
+    if ('' === $main) {
+      $return['main']= XPClass::forName(array_shift($arguments));
+    } else if ($main) {
       $return['main']= XPClass::forName($main);
     }
     return $return;
@@ -206,7 +210,7 @@ class Runtime extends Object {
         $this->startup['env']= false;
       }
     }
-  
+
     return $this->startup[$selector];
   }
   
