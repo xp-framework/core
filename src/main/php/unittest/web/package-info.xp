@@ -1,9 +1,0 @@
-<?php
-
-/**
- * Web tests
- *
- * @see      http://jwebunit.sourceforge.net/quickstart.html
- */
-package unittest.web {
-}
