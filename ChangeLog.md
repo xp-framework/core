@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed issue #96: Endless recursion when registering own classloader in
+  front of class path inside a module. This is useful when a module
+  provides a so-called "core overlay".
+  (@thekid)
+
 ## 6.4.1 / 2015-08-05
 
 ### Bugfixes

@@ -9,6 +9,7 @@ use lang\ElementNotFoundException;
  * @test  xp://net.xp_framework.unittest.reflection.ModuleTest
  */
 class Module extends \lang\Object {
+  public static $INCOMPLETE= false;
   public static $registered= [];
 
   /**

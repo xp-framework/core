@@ -121,4 +121,14 @@ class ModuleLoadingTest extends \unittest\TestCase {
     ]));
     $this->assertTrue(in_array($cl, Module::forName('xp-framework/impl')->getClass()->getInterfaces()));
   }
+
+  #[@test]
+  public function modules_initializer_can_register_itself_upfront_without_causing_endless_recursion() {
+    $selfUpfront= new LoaderProviding(['module.xp' => 'module xp-framework/self-upfront {
+      public function initialize() {
+        \lang\ClassLoader::registerLoader($this->classLoader(), true);
+      }
+    }']);
+    $this->register($selfUpfront);
+  }
 }

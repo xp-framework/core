@@ -117,10 +117,11 @@ final class ClassLoader extends Object implements IClassLoader {
     }
 
     if (!isset(self::$modules[$id]) && $l->providesResource('module.xp')) {
+      self::$modules[$id]= Module::$INCOMPLETE;
       try {
         self::$modules[$id]= Module::register(self::declareModule($l));
       } catch (Throwable $e) {
-        unset(self::$delegates[$id]);
+        unset(self::$delegates[$id], self::$modules[$id]);
         throw $e;
       }
     }
@@ -172,7 +173,9 @@ final class ClassLoader extends Object implements IClassLoader {
       unset(self::$delegates[$id]);
 
       if (isset(self::$modules[$id])) {
-        Module::remove(self::$modules[$id]);
+        if (Module::$INCOMPLETE !== self::$modules[$id]) {
+          Module::remove(self::$modules[$id]);
+        }
         unset(self::$modules[$id]);
       }
       return true;
