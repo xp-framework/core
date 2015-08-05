@@ -62,7 +62,14 @@ abstract class WebTestCase extends TestCase {
   public function getDom() {
     if (null === $this->dom) {
       $this->dom= new \DOMDocument();
-      @$this->dom->loadHTMLFile(Streams::readableUri($this->response->getInputStream()));
+
+      // HHVM blocks all external resources by default, and the .ini setting
+      // "hhvm.libxml.ext_entity_whitelist" cannot be set via ini_set().
+      if (defined('HHVM_VERSION')) {
+        @$this->dom->loadHTML(Streams::readAll($this->response->getInputStream()));
+      } else {
+        @$this->dom->loadHTMLFile(Streams::readableUri($this->response->getInputStream()));
+      }
     }
     return $this->dom;
   }
