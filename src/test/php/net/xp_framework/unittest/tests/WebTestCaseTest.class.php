@@ -2,6 +2,7 @@
 
 use unittest\TestCase;
 use unittest\web\WebTestCase;
+use unittest\PrerequisitesNotMetError;
 use io\streams\MemoryInputStream;
 use peer\http\HttpConnection;
 use peer\http\HttpResponse;
@@ -14,6 +15,17 @@ use peer\http\HttpConstants;
  */
 class WebTestCaseTest extends TestCase {
   protected $fixture= null;
+
+  /** @return void */
+  #[@beforeClass]
+  public static function verifyDependencies() {
+    if (!class_exists('xml\Tree')) {
+      throw new PrerequisitesNotMetError('XML Module not available', null, ['loaded']);
+    }
+    if (!class_exists('peer\http\HttpConnection')) {
+      throw new PrerequisitesNotMetError('HTTP Module not available', null, ['loaded']);
+    }
+  }
 
   /**
    * Sets up test case
