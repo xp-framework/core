@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.4.2 / 2015-08-05
+
 ### Bugfixes
 
 * Fixed issue #96: Endless recursion when registering own classloader in
