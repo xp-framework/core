@@ -61,9 +61,8 @@ class SelectField extends Field {
    */
   public function setValue($value) {
     $found= false;
-    $search= utf8_encode($value);
     foreach ($this->node->childNodes as $child) {
-      if ($search !== $child->getAttribute('value')) {
+      if ($value !== $child->getAttribute('value')) {
         $update[]= $child;
         continue;
       }
