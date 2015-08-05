@@ -34,7 +34,11 @@ class XmlTestListener extends \lang\Object implements TestListener {
    * @return string
    */
   private function uriFor(XPClass $class) {
-    return $class->getClassLoader()->classUri($class->getName());
+    try {
+      return $class->reflect()->getFileName();
+    } catch (\Exception $ignored) {
+      return null;
+    }
   }
 
   /**
