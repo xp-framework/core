@@ -3,6 +3,15 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.4.1 / 2015-08-05
+
+### Bugfixes
+
+* Fixed `unittest.XmlTestListener::uriFor()` raising exceptions - @thekid
+* Fixed WebTestCase test class using obsolete `assertClass()` - @thekid
+* Fixed `SelectField::setValue()` double-encoding UTF8 - @thekid
+* Fixed syntax errors in `unittest.web` package  - @thekid
+
 ## 6.4.0 / 2015-07-12
 
 ### Heads up!
