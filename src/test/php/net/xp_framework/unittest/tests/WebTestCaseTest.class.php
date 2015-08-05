@@ -59,7 +59,7 @@ class WebTestCaseTest extends TestCase {
    * @throws  unittest.AssertionFailedError
    */
   protected function assertForm($action, $method, $form) {
-    $this->assertClass($form, 'unittest.web.Form');
+    $this->assertInstanceOf('unittest.web.Form', $form);
     $this->assertEquals($action, $form->getAction());
     $this->assertEquals($method, $form->getMethod());
   }
@@ -73,6 +73,7 @@ class WebTestCaseTest extends TestCase {
     return trim('
       <html>
         <head>
+          <meta charset="utf-8"/>
           <title>Enter your name</title>
         </head>
         <body>
@@ -80,14 +81,14 @@ class WebTestCaseTest extends TestCase {
             <input type="text" name="first"/>
             <input type="text" name="initial" value=""/>
             <input type="text" name="last" value="Tester"/>
-            <input type="text" name="uber" value="Übercoder"/>
+            <input type="text" name="uber" value="Ãœbercoder"/>
 
             <hr/>
             <select name="gender">
               <option value="-">(select one)</option>
               <option value="M">male</option>
               <option value="F">female</option>
-              <option value="U">überwoman</option>
+              <option value="U">Ã¼berwoman</option>
             </select>
 
             <hr/>
@@ -101,7 +102,7 @@ class WebTestCaseTest extends TestCase {
             <textarea name="comments">(Comments)</textarea>
 
             <hr/>
-            <textarea name="umlauts">Übercoder</textarea>
+            <textarea name="umlauts">Ãœbercoder</textarea>
           </form>
         </body>
       </html>
@@ -331,7 +332,7 @@ class WebTestCaseTest extends TestCase {
     $this->fixture->beginAt('/');
 
     with ($f= $this->fixture->getForm()->getField('first')); {
-      $this->assertClass($f, 'unittest.web.InputField');
+      $this->assertInstanceOf('unittest.web.InputField', $f);
       $this->assertEquals('first', $f->getName());
       $this->assertEquals(null, $f->getValue());
     }
@@ -343,7 +344,7 @@ class WebTestCaseTest extends TestCase {
     $this->fixture->beginAt('/');
 
     with ($f= $this->fixture->getForm()->getField('initial')); {
-      $this->assertClass($f, 'unittest.web.InputField');
+      $this->assertInstanceOf('unittest.web.InputField', $f);
       $this->assertEquals('initial', $f->getName());
       $this->assertEquals('', $f->getValue());
     }
@@ -355,7 +356,7 @@ class WebTestCaseTest extends TestCase {
     $this->fixture->beginAt('/');
 
     with ($f= $this->fixture->getForm()->getField('last')); {
-      $this->assertClass($f, 'unittest.web.InputField');
+      $this->assertInstanceOf('unittest.web.InputField', $f);
       $this->assertEquals('last', $f->getName());
       $this->assertEquals('Tester', $f->getValue());
     }
@@ -367,9 +368,9 @@ class WebTestCaseTest extends TestCase {
     $this->fixture->beginAt('/');
 
     with ($f= $this->fixture->getForm()->getField('uber')); {
-      $this->assertClass($f, 'unittest.web.InputField');
+      $this->assertInstanceOf('unittest.web.InputField', $f);
       $this->assertEquals('uber', $f->getName());
-      $this->assertEquals('Übercoder', $f->getValue());
+      $this->assertEquals('Ãœbercoder', $f->getValue());
     }
   }
 
@@ -379,7 +380,7 @@ class WebTestCaseTest extends TestCase {
     $this->fixture->beginAt('/');
 
     with ($f= $this->fixture->getForm()->getField('gender')); {
-      $this->assertClass($f, 'unittest.web.SelectField');
+      $this->assertInstanceOf('unittest.web.SelectField', $f);
       $this->assertEquals('gender', $f->getName());
       $this->assertEquals('-', $f->getValue());
     }
@@ -391,7 +392,7 @@ class WebTestCaseTest extends TestCase {
     $this->fixture->beginAt('/');
 
     with ($f= $this->fixture->getForm()->getField('payment')); {
-      $this->assertClass($f, 'unittest.web.SelectField');
+      $this->assertInstanceOf('unittest.web.SelectField', $f);
       $this->assertEquals('payment', $f->getName());
       $this->assertEquals('C', $f->getValue());
     }
@@ -418,7 +419,7 @@ class WebTestCaseTest extends TestCase {
       $this->assertFalse($options[2]->isSelected());
 
       $this->assertEquals('U', $options[3]->getValue());
-      $this->assertEquals('überwoman', $options[3]->getText());
+      $this->assertEquals('Ã¼berwoman', $options[3]->getText());
       $this->assertFalse($options[3]->isSelected());
     }
   }
@@ -451,7 +452,7 @@ class WebTestCaseTest extends TestCase {
     $this->fixture->beginAt('/');
 
     with ($f= $this->fixture->getForm()->getField('comments')); {
-      $this->assertClass($f, 'unittest.web.TextAreaField');
+      $this->assertInstanceOf('unittest.web.TextAreaField', $f);
       $this->assertEquals('comments', $f->getName());
       $this->assertEquals('(Comments)', $f->getValue());
     }
@@ -463,9 +464,9 @@ class WebTestCaseTest extends TestCase {
     $this->fixture->beginAt('/');
 
     with ($f= $this->fixture->getForm()->getField('umlauts')); {
-      $this->assertClass($f, 'unittest.web.TextAreaField');
+      $this->assertInstanceOf('unittest.web.TextAreaField', $f);
       $this->assertEquals('umlauts', $f->getName());
-      $this->assertEquals('Übercoder', $f->getValue());
+      $this->assertEquals('Ãœbercoder', $f->getValue());
     }
   }
 }
