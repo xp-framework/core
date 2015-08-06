@@ -1,0 +1,10 @@
+<?php
+
+/**
+ * Web tests
+ *
+ * @see   https://github.com/xp-framework/mock
+ * @see   https://github.com/xp-framework/rfc/issues/219
+ */
+package unittest.mock {
+}

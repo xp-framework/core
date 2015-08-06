@@ -3,7 +3,8 @@
 /**
  * Web tests
  *
- * @see      http://jwebunit.sourceforge.net/quickstart.html
+ * @see   https://github.com/xp-framework/webtest
+ * @see   http://jwebunit.sourceforge.net/quickstart.html
  */
 package unittest.web {
 }

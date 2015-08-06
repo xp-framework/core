@@ -42,8 +42,8 @@
  *   }
  * </code>
  *
- * @see      http://news.xp-framework.net/category/13/Unittests/
- * @see      http://c2.com/cgi/wiki?TestDrivenDevelopment
+ * @see   https://github.com/xp-framework/unittest
+ * @see   http://c2.com/cgi/wiki?TestDrivenDevelopment
  */
 package unittest {
 }
