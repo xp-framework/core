@@ -4,6 +4,8 @@ XP Framework Core ChangeLog
 ## ?.?.? / ????-??-??
 
 * **Heads up: Bumped the minimum PHP version requirement to PHP 5.5!**
+  . Rewrote test code base to use `finally` instead of ensure (see #97)
+  . Rewrote test code base to use `::class` where applicable (see #98)
   (@thekid)
 * **Deprecated the `ensure` core functionality**. It was a future-ready
   replacement for the finally statement introduced with PHP 5.5
