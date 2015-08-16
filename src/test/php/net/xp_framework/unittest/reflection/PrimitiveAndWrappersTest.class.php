@@ -64,10 +64,9 @@ class PrimitiveAndWrappersTest extends TestCase {
     try {
       Primitive::boxed($fd);
     } catch (\lang\IllegalArgumentException $expected) {
-      // OK
-    } ensure($expected); {
+      return;
+    } finally {
       fclose($fd);    // Necessary, PHP will segfault otherwise
-      if ($expected) return;
     }
     $this->fail('Expected exception not caught', null, 'lang.IllegalArgumentException');
   }
