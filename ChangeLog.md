@@ -3,6 +3,11 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* **Heads up: Bumped the minimum PHP version requirement to PHP 5.5!**
+  (@thekid)
+* **Deprecated the `ensure` core functionality**. It was a future-ready
+  replacement for the finally statement introduced with PHP 5.5
+  (@thekid)
 * **Removed deprecated and dysfunctional XP installer**. Instead, use
   [Composer](https://getcomposer.org/)
   (@thekid)
