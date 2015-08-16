@@ -1,7 +1,6 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use util\Date;
-use util\log\Traceable;
 use util\collections\HashTable;
 use util\collections\Vector;
 
@@ -11,7 +10,7 @@ use util\collections\Vector;
  * @see    xp://net.xp_framework.unittest.reflection.ReflectionTest
  */
 #[@test('Annotation')]
-class TestClass extends AbstractTestClass implements Traceable {
+class TestClass extends AbstractTestClass implements \util\log\Traceable {
 
   #[@type('util.Date')]
   public $date   = null;
