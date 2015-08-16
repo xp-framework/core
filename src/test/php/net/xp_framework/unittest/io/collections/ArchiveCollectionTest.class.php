@@ -65,10 +65,8 @@ class ArchiveCollectionTest extends TestCase {
       $this->assertXarUri('lang/', $first->getURI());
       $this->assertEquals(0, $first->getSize());
       $this->assertEquals(null, $c->next());
-    } catch (\lang\Throwable $e) {
-    } ensure($e); {
+    } finally {
       $c->close();
-      if ($e) throw $e;
     }
   }
   
@@ -90,10 +88,8 @@ class ArchiveCollectionTest extends TestCase {
         $this->assertXarUri($name, $element->getURI());
       }
       $this->assertEquals(null, $c->next());
-    } catch (\lang\Throwable $e) {
-    } ensure($e); {
+    } finally {
       $c->close();
-      if ($e) throw $e;
     }
   }
 

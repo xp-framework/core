@@ -33,9 +33,8 @@ class ChannelWrapper extends \lang\Object {
     
     try {
       $r->run();
-    } catch (\Exception $e) { } ensure($e); {
+    } finally {
       stream_wrapper_restore('php');
-      if ($e) throw $e;
     }
     
     return self::$streams;
