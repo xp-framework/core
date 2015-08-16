@@ -32,10 +32,9 @@ class TestClass extends AbstractTestClass implements Traceable {
     self::$initializerCalled= true;
   }
   
-  const
-    CONSTANT_STRING = 'XP Framework',
-    CONSTANT_INT    = 15,
-    CONSTANT_NULL   = null;
+  const CONSTANT_STRING = 'XP Framework';
+  const CONSTANT_INT    = 15;
+  const CONSTANT_NULL   = null;
 
   /**
    * Constructor
