@@ -17,7 +17,7 @@ class TestClass extends AbstractTestClass implements \util\log\Traceable {
 
   /** @var [:lang.Object] */
   public $map    = [];
-  
+
   /** @type int */
   protected $size= 0;
   
@@ -211,4 +211,4 @@ class TestClass extends AbstractTestClass implements \util\log\Traceable {
   public function equals($cmp) {
     return $cmp instanceof self && $cmp->date->equals($this->date);
   }
-} 
+}
