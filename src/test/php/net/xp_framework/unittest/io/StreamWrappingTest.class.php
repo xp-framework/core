@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\io;
 
 use unittest\TestCase;
+use io\streams\InputStream;
 use io\streams\MemoryInputStream;
 use io\streams\MemoryOutputStream;
 use io\streams\Streams;
@@ -164,7 +165,7 @@ class StreamWrappingTest extends TestCase {
 
   #[@test, @expect('io.IOException')]
   public function readAll_propagates_exception() {
-    Streams::readAll(newinstance('io.streams.InputStream', [], [
+    Streams::readAll(newinstance(InputStream::class, [], [
       'read'      => function($limit= 8192) { throw new IOException('FAIL'); },
       'available' => function() { return 1; },
       'close'     => function() { }

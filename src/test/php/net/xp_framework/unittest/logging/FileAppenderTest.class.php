@@ -166,7 +166,7 @@ class FileAppenderTest extends AppenderTest {
 
   #[@test]
   public function filename_syncs_with_time() {
-    $fixture= newinstance('util.log.FileAppender', ['test://fn%H'], '{
+    $fixture= newinstance(FileAppender::class, ['test://fn%H'], '{
       protected $hour= 0;
       public function filename($ref= null) {
         return parent::filename(0 + 3600 * $this->hour++);

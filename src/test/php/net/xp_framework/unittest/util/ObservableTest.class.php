@@ -1,14 +1,14 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use unittest\TestCase;
 use util\Observable;
+use util\Observer;
 
 /**
  * Test Observable class
  *
  * @see  xp://util.Observable
  */
-class ObservableTest extends TestCase {
+class ObservableTest extends \unittest\TestCase {
   protected static $observable;
 
   /**
@@ -54,7 +54,7 @@ class ObservableTest extends TestCase {
 
   #[@test]
   public function add_observer_returns_added_observer() {
-    $observer= newinstance('util.Observer', [], [
+    $observer= newinstance(Observer::class, [], [
       'update' => function($obs, $arg= null) {
         /* Intentionally empty */
       }
@@ -65,7 +65,7 @@ class ObservableTest extends TestCase {
 
   #[@test]
   public function observer_gets_called_with_observable() {
-    $observer= newinstance('util.Observer', [], [
+    $observer= newinstance(Observer::class, [], [
       'calls' => [],
       'update' => function($obs, $arg= null) {
         $this->calls[]= [$obs, $arg];

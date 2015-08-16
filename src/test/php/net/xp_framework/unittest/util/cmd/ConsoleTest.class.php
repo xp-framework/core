@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\util\cmd;
 
 use util\cmd\Console;
+use lang\Object;
 use io\streams\MemoryInputStream;
 use io\streams\MemoryOutputStream;
 
@@ -117,7 +118,7 @@ class ConsoleTest extends \unittest\TestCase {
 
   #[@test]
   public function write_an_object() {
-    Console::write(newinstance('lang.Object', [], '{
+    Console::write(newinstance(Object::class, [], '{
       public function toString() { return "Hello"; }
     }'));
     $this->assertEquals('Hello', $this->streams[1]->getBytes());
@@ -126,7 +127,7 @@ class ConsoleTest extends \unittest\TestCase {
   #[@test]
   public function exception_from_toString() {
     try {
-      Console::write(newinstance('lang.Object', [], '{
+      Console::write(newinstance(Object::class, [], '{
         public function toString() { throw new IllegalStateException("Cannot render string"); }
       }'));
       $this->fail('Expected exception not thrown', null, 'lang.IllegalStateException');

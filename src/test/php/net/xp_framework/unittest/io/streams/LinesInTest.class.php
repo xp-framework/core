@@ -3,6 +3,7 @@
 use io\File;
 use io\streams\TextReader;
 use io\streams\LinesIn;
+use io\streams\InputStream;
 use io\streams\MemoryInputStream;
 use io\IOException;
 use lang\IllegalArgumentException;
@@ -71,7 +72,7 @@ class LinesInTest extends \unittest\TestCase {
 
   #[@test]
   public function can_only_iterate_unseekable_once() {
-    $fixture= new LinesIn(newinstance('io.streams.InputStream', [], [
+    $fixture= new LinesIn(newinstance(InputStream::class, [], [
       'bytes' => "A\nB\n",
       'offset' => 0,
       'read' => function($length= 8192) {

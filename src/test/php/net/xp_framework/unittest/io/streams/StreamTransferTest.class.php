@@ -2,9 +2,10 @@
 
 use unittest\TestCase;
 use io\streams\StreamTransfer;
+use io\streams\InputStream;
+use io\streams\OutputStream;
 use io\streams\MemoryInputStream;
 use io\streams\MemoryOutputStream;
-
 
 /**
  * TestCase
@@ -19,7 +20,7 @@ class StreamTransferTest extends TestCase {
    * @return  io.streams.InputStream
    */
   protected function uncloseableInputStream() {
-    return newinstance('io.streams.InputStream', [], '{
+    return newinstance(InputStream::class, [], '{
       public function read($length= 8192) { }
       public function available() { }
       public function close() { throw new \io\IOException("Close error"); }
@@ -32,7 +33,7 @@ class StreamTransferTest extends TestCase {
    * @return  io.streams.InputStream
    */
   protected function closeableInputStream() {
-    return newinstance('io.streams.InputStream', [], '{
+    return newinstance(InputStream::class, [], '{
       public $closed= FALSE;
       public function read($length= 8192) { }
       public function available() { }
@@ -46,7 +47,7 @@ class StreamTransferTest extends TestCase {
    * @return  io.streams.OutputStream
    */
   protected function uncloseableOutputStream() {
-    return newinstance('io.streams.OutputStream', [], '{
+    return newinstance(OutputStream::class, [], '{
       public function write($data) { }
       public function flush() { }
       public function close() { throw new \io\IOException("Close error"); }
@@ -59,7 +60,7 @@ class StreamTransferTest extends TestCase {
    * @return  io.streams.OutputStream
    */
   protected function closeableOutputStream() {
-    return newinstance('io.streams.OutputStream', [], '{
+    return newinstance(OutputStream::class, [], '{
       public $closed= FALSE;
       public function write($data) { }
       public function flush() { }

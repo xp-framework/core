@@ -4,6 +4,7 @@ use util\collections\HashTable;
 use util\collections\Pair;
 use lang\types\Integer;
 use lang\types\Double;
+use lang\Object;
 
 /**
  * Test HashTable class
@@ -48,7 +49,7 @@ class HashTableTest extends \unittest\TestCase {
 
   /** @return lang.Object */
   protected function hashCodeCounter() {
-    return newinstance('lang.Object', [], [
+    return newinstance(Object::class, [], [
       'invoked'  => 0,
       'hashCode' => function() { $this->invoked++; }
     ]);

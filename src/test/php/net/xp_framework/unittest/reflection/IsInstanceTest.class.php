@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\XPClass;
+use lang\Runnable;
 
 /**
  * TestCase
@@ -41,9 +42,9 @@ class IsInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function newInterfaceInstanceIsRunnable() {
-    $this->assertTrue(XPClass::forName('lang.Runnable')->isInstance(newinstance('lang.Runnable', [], '{
-      public function run() { }
-    }')));
+    $this->assertTrue(XPClass::forName('lang.Runnable')->isInstance(newinstance(Runnable::class, [], [
+      'run' => function() { }
+    ])));
   }
 
   #[@test]

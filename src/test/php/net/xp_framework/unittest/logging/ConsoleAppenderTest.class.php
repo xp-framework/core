@@ -5,8 +5,8 @@ use util\cmd\Console;
 use util\log\ConsoleAppender;
 use util\log\LogCategory;
 use util\log\Layout;
+use util\log\LoggingEvent;
 use io\streams\MemoryOutputStream;
-
 
 /**
  * TestCase
@@ -24,11 +24,11 @@ class ConsoleAppenderTest extends TestCase {
    */
   public function setUp() {
     $this->cat= (new LogCategory('default'))->withAppender(
-      (new ConsoleAppender())->withLayout(newinstance('util.log.Layout', [], '{
-        public function format(LoggingEvent $event) {
-          return implode(" ", $event->getArguments());
+      (new ConsoleAppender())->withLayout(newinstance(Layout::class, [], [
+        'format' => function(LoggingEvent $event) {
+          return implode(' ', $event->getArguments());
         }
-      }'))
+      ]))
     );
     $this->stream= Console::$err->getStream();
   }

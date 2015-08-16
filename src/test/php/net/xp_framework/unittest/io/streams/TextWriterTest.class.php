@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use lang\types\Character;
+use io\Channel;
 use io\streams\TextWriter;
 use io\streams\MemoryInputStream;
 use io\streams\MemoryOutputStream;
@@ -22,7 +23,7 @@ class TextWriterTest extends \unittest\TestCase {
 
   #[@test]
   public function can_create_with_channel() {
-    new TextWriter(newinstance('io.Channel', [], [
+    new TextWriter(newinstance(Channel::class, [], [
       'in'  => function() { return new MemoryInputStream(''); },
       'out' => function() { return new MemoryOutputStream(); }
     ]));

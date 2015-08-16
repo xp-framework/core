@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
+use io\Channel;
 use io\streams\TextReader;
 use io\streams\InputStream;
 use io\streams\MemoryInputStream;
@@ -26,7 +27,7 @@ class TextReaderTest extends \unittest\TestCase {
 
   #[@test]
   public function can_create_with_channel() {
-    new TextReader(newinstance('io.Channel', [], [
+    new TextReader(newinstance(Channel::class, [], [
       'in'  => function() { return new MemoryInputStream(''); },
       'out' => function() { return new MemoryOutputStream(); }
     ]));
@@ -54,7 +55,7 @@ class TextReaderTest extends \unittest\TestCase {
    * @return  io.streams.InputStream
    */
   protected function unseekableStream() {
-    return newinstance('io.streams.InputStream', [], [
+    return newinstance(InputStream::class, [], [
       'bytes' => "A\nB\n",
       'offset' => 0,
       'read' => function($length= 8192) {

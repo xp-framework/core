@@ -10,23 +10,19 @@ use peer\net\NameserverLookup;
  * @see   xp://peer.net.NameserverLookup'
  */
 class NameserverLookupTest extends \unittest\TestCase {
-  protected $cut= null;
+  private $cut= null;
 
   /**
    * Sets up test case and defines dummy nameserver lookup fixture
+   *
+   * @return void
    */
   public function setUp() {
-    $this->cut= newinstance('peer.net.NameserverLookup', [], '{
-      protected $results= [];
-
-      public function addLookup($ip, $type= "ip") {
-        $this->results[]= [$type => $ip];
-      }
-
-      protected function _nativeLookup($what, $type) {
-        return $this->results;
-      }
-    }');
+    $this->cut= newinstance(NameserverLookup::class, [], [
+      'results' => [],
+      'addLookup' => function($ip, $type= 'ip') { $this->results[]= [$type => $ip]; },
+      '_nativeLookup' => function($what, $type) { return $this->results; }
+    ]);
   }
 
   #[@test]
