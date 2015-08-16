@@ -2,7 +2,7 @@
  
 use unittest\TestCase;
 use util\collections\HashProvider;
-
+use util\collections\HashImplementation;
 
 /**
  * Test HashProvider class
@@ -12,21 +12,16 @@ use util\collections\HashProvider;
 class HashProviderTest extends TestCase {
   protected $fixture;
 
-  /**
-   * Creates fixture
-   */
+  /** @return void */
   public function setUp() {
     $this->fixture= HashProvider::getInstance();
   }
 
-  /**
-   * Tests getImplementation() and setImplementation()
-   */
   #[@test]
   public function implementation_accessors() {
-    $impl= newinstance('util.collections.HashImplementation', [], '{
-      public function hashOf($str) { /* Intentionally empty */ }
-    }');
+    $impl= newinstance(HashImplementation::class, [], [
+      'hashOf' => function($str) { /* Intentionally empty */ }
+    ]);
 
     $backup= $this->fixture->getImplementation();    // Backup
     $this->fixture->setImplementation($impl);
@@ -36,9 +31,6 @@ class HashProviderTest extends TestCase {
     $this->assertEquals($impl, $cmp);
   }
 
-  /**
-   * Tests hashOf()
-   */
   #[@test]
   public function hashof_uses_implementations_hashof() {
     $this->assertEquals(

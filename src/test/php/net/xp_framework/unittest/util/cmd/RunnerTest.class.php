@@ -71,7 +71,7 @@ class RunnerTest extends \unittest\TestCase {
    * @return  util.cmd.Command
    */
   protected function newCommand() {
-    return newinstance('util.cmd.Command', [], '{
+    return newinstance(Command::class, [], '{
       public static $wasRun= FALSE;
       public function __construct() { self::$wasRun= FALSE; }
       public function run() { self::$wasRun= TRUE; }
@@ -179,7 +179,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function runWritingToStandardOutput() {
-    $command= newinstance('util.cmd.Command', [], [
+    $command= newinstance(Command::class, [], [
       'run' => function() { $this->out->write('UNITTEST'); }
     ]);
 
@@ -195,7 +195,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function runWritingToStandardError() {
-    $command= newinstance('util.cmd.Command', [], [
+    $command= newinstance(Command::class, [], [
       'run' => function() { $this->err->write('UNITTEST'); }
     ]);
 
@@ -211,7 +211,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function runEchoInput() {
-    $command= newinstance('util.cmd.Command', [], [
+    $command= newinstance(Command::class, [], [
       'run' => function() {
         while ($chunk= $this->in->read()) {
           $this->out->write($chunk);
@@ -231,7 +231,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function positionalArgument() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       protected $arg= NULL;
 
       #[@arg(position= 0)]
@@ -252,7 +252,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function missingPositionalArgumentt() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       protected $arg= NULL;
 
       #[@arg(position= 0)]
@@ -272,7 +272,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function shortNamedArgument() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       protected $arg= NULL;
 
       #[@arg]
@@ -292,7 +292,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function longNamedArgument() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       protected $arg= NULL;
 
       #[@arg]
@@ -313,7 +313,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function shortRenamedArgument() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       protected $arg= NULL;
 
       #[@arg(name= "pass")]
@@ -333,7 +333,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function longRenamedArgument() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       protected $arg= NULL;
 
       #[@arg(name= "pass")]
@@ -354,7 +354,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function missingNamedArgument() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       protected $arg= NULL;
 
       #[@arg]
@@ -374,7 +374,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function existanceArgumentNotPassed() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       protected $verbose= FALSE;
 
       #[@arg]
@@ -394,7 +394,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function optionalArgument() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       protected $verbose= FALSE;
       protected $name= NULL;
 
@@ -415,7 +415,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function optionalArgumentNotPassed() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       protected $verbose= FALSE;
       protected $name= NULL;
 
@@ -437,7 +437,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function shortExistanceArgumentPassed() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       protected $verbose= FALSE;
 
       #[@arg]
@@ -458,7 +458,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function longExistanceArgumentPassed() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       protected $verbose= FALSE;
 
       #[@arg]
@@ -478,7 +478,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function positionalArgumentException() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       
       #[@arg(position= 0)]
       public function setHost($host) { 
@@ -500,7 +500,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function namedArgumentException() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       
       #[@arg]
       public function setHost($host) { 
@@ -536,7 +536,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function allArgs() {
-    $this->assertAllArgs('a, b, c, d, e, f, g', newinstance('util.cmd.Command', [], '{
+    $this->assertAllArgs('a, b, c, d, e, f, g', newinstance(Command::class, [], '{
       protected $verbose= FALSE;
       protected $args= [];
 
@@ -553,7 +553,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function allArgsCompactNotation() {
-    $this->assertAllArgs('a, b, c, d, e, f, g', newinstance('util.cmd.Command', [], '{
+    $this->assertAllArgs('a, b, c, d, e, f, g', newinstance(Command::class, [], '{
       protected $verbose= FALSE;
       protected $args= [];
 
@@ -570,7 +570,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function boundedArgs() {
-    $this->assertAllArgs('a, b, c', newinstance('util.cmd.Command', [], '{
+    $this->assertAllArgs('a, b, c', newinstance(Command::class, [], '{
       protected $verbose= FALSE;
       protected $args= [];
 
@@ -587,7 +587,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function boundedArgsFromOffset() {
-    $this->assertAllArgs('c, d, e', newinstance('util.cmd.Command', [], '{
+    $this->assertAllArgs('c, d, e', newinstance(Command::class, [], '{
       protected $verbose= FALSE;
       protected $args= [];
 
@@ -604,7 +604,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function positionalAndBoundedArgsFromOffset() {
-    $this->assertAllArgs('a, c, d, e', newinstance('util.cmd.Command', [], '{
+    $this->assertAllArgs('a, c, d, e', newinstance(Command::class, [], '{
       protected $verbose= FALSE;
       protected $args= [];
 
@@ -621,7 +621,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function boundedAndPositionalArgsWithOverlap() {
-    $this->assertAllArgs('a, b, c, b', newinstance('util.cmd.Command', [], '{
+    $this->assertAllArgs('a, b, c, b', newinstance(Command::class, [], '{
       protected $verbose= FALSE;
       protected $args= [];
 
@@ -638,7 +638,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function positionalArgs() {
-    $this->assertAllArgs('a, c, e, f', newinstance('util.cmd.Command', [], '{
+    $this->assertAllArgs('a, c, e, f', newinstance(Command::class, [], '{
       protected $verbose= FALSE;
       protected $args= [];
 
@@ -654,7 +654,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function configOption() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       protected $choke= FALSE;
 
       #[@arg]
@@ -678,7 +678,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function classPathOption() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       protected $copy= NULL;
       
       #[@arg(short= "cp")]
@@ -706,7 +706,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function unknownInjectionType() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       #[@inject(type= "io.Folder", name= "output")]
       public function setOutput($f) { 
       }
@@ -726,7 +726,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function noInjectionType() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       #[@inject(name= "output")]
       public function setOutput($f) { 
       }
@@ -746,7 +746,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function loggerCategoryInjection() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       protected $cat= NULL;
       
       #[@inject(type= "util.log.LogCategory", name= "debug")]
@@ -768,7 +768,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function loggerCategoryInjectionViaTypeRestriction() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       protected $cat= NULL;
       
       #[@inject(name= "debug")]
@@ -790,7 +790,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function loggerCategoryInjectionViaTypeDocumentation() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       protected $cat= NULL;
       
       /**
@@ -815,7 +815,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function injectionOccursBeforeArguments() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       protected $cat= NULL;
 
       /**
@@ -847,7 +847,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function injectionException() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
       
       #[@inject(name= "debug")]
       public function setTrace(\util\log\LogCategory $cat) { 
@@ -869,7 +869,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function injectProperties() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
 
       #[@inject(name= "debug")]
       public function setTrace(\util\Properties $prop) {
@@ -891,7 +891,7 @@ class RunnerTest extends \unittest\TestCase {
    */
   #[@test]
   public function injectCompositeProperties() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
 
       #[@inject(name= "debug")]
       public function setTrace(\util\Properties $prop) {
@@ -917,7 +917,7 @@ key=overwritten_value'
    */
   #[@test]
   public function injectPropertiesMultipleSources() {
-    $command= newinstance('util.cmd.Command', [], '{
+    $command= newinstance(Command::class, [], '{
 
       #[@inject(name= "debug")]
       public function setTrace(\util\Properties $prop) {

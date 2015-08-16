@@ -21,7 +21,7 @@ class LogCategoryTest extends \unittest\TestCase {
    * @return  util.log.Appender
    */
   private function mockAppender() {
-    $appender= newinstance('util.log.Appender', [], [
+    $appender= newinstance(Appender::class, [], [
       'messages' => [],
       'append' => function(LoggingEvent $event) {
         $this->messages[]= [
@@ -39,7 +39,7 @@ class LogCategoryTest extends \unittest\TestCase {
    * @return  util.log.Appender
    */
   private function emptyAppender() {
-    return newinstance('util.log.Appender', [], [
+    return newinstance(Appender::class, [], [
       'append' => function(LoggingEvent $event) { }
     ]);
   }
@@ -75,7 +75,7 @@ class LogCategoryTest extends \unittest\TestCase {
 
   #[@test]
   public function can_create_with_identifier_level_and_context() {
-    new LogCategory('identifier', LogLevel::ALL, newinstance('util.log.Context', [], [
+    new LogCategory('identifier', LogLevel::ALL, newinstance(Context::class, [], [
       'format' => function() { return ''; }
     ]));
   }

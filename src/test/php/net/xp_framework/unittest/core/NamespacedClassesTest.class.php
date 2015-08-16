@@ -50,7 +50,7 @@ class NamespacedClassesTest extends TestCase {
   #[@test]
   public function namespacedClassUsingQualified() {
     $this->assertInstanceOf(
-      'net.xp_framework.unittest.core.NamespacedClass',
+      NamespacedClass::class,
       self::$package->loadClass('NamespacedClassUsingQualified')->newInstance()->getNamespacedClass()
     );
   }
@@ -58,20 +58,20 @@ class NamespacedClassesTest extends TestCase {
   #[@test]
   public function namespacedClassUsingQualifiedUnloaded() {
     $this->assertInstanceOf(
-      'net.xp_framework.unittest.core.UnloadedNamespacedClass',
+      UnloadedNamespacedClass::class,
       self::$package->loadClass('NamespacedClassUsingQualifiedUnloaded')->newInstance()->getNamespacedClass()
     );
   }
 
   #[@test]
   public function newInstanceOnNamespacedClass() {
-    $i= newinstance('net.xp_framework.unittest.core.NamespacedClass', [], '{}');
+    $i= newinstance(NamespacedClass::class, [], '{}');
     $this->assertInstanceOf('net.xp_framework.unittest.core.NamespacedClass', $i);
   }
 
   #[@test]
   public function packageOfNewInstancedNamespacedClass() {
-    $i= newinstance('net.xp_framework.unittest.core.NamespacedClass', [], '{}');
+    $i= newinstance(NamespacedClass::class, [], '{}');
     $this->assertEquals(
       \lang\reflect\Package::forName('net.xp_framework.unittest.core'),
       $i->getClass()->getPackage()

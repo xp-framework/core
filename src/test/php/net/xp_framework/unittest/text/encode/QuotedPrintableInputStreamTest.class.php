@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\text\encode;
 
 use unittest\TestCase;
+use io\streams\InputStream;
 use io\streams\MemoryInputStream;
 use text\encode\QuotedPrintableInputStream;
-
 
 /**
  * Test QuotedPrintable decoder
@@ -132,7 +132,7 @@ class QuotedPrintableInputStreamTest extends TestCase {
   #[@test]
   public function chunkedRead() {
     $expected= 'Hello Übercoder & World';
-    $stream= new QuotedPrintableInputStream(newinstance('io.streams.InputStream', [['Hello =', 'DCbercoder=', "\n", ' & World']], '{
+    $stream= new QuotedPrintableInputStream(newinstance(InputStream::class, [['Hello =', 'DCbercoder=', "\n", ' & World']], '{
       protected $chunks;
       
       public function __construct(array $chunks) {

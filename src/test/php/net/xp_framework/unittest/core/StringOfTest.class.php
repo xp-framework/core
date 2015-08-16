@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use net\xp_framework\unittest\Name;
+use lang\Object;
 
 /**
  * Tests the xp::stringOf() core utility
@@ -17,7 +18,7 @@ class StringOfTest extends \unittest\TestCase {
    * @return lang.Object
    */
   protected function testStringInstance() {
-    return newinstance('lang.Object', [], [
+    return newinstance(Object::class, [], [
       'toString' => function() { return 'TestString(6) { String }'; }
     ]);
   }
@@ -130,7 +131,7 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function twice_the_same_object_inside_array_not_recursion() {
-    $test= newinstance('lang.Object', [], [
+    $test= newinstance(Object::class, [], [
       'toString' => function() { return 'Test'; }
     ]);
     $this->assertEquals(
@@ -141,7 +142,7 @@ class StringOfTest extends \unittest\TestCase {
   
   #[@test]
   public function twice_the_same_object_with_huge_hashcode_inside_array_not_recursion() {
-    $test= newinstance('lang.Object', [], [
+    $test= newinstance(Object::class, [], [
       'hashCode' => function() { return 9E100; },
       'toString' => function() { return 'Test'; }
     ]);
@@ -153,7 +154,7 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function toString_calling_xp_stringOf_does_not_loop_forever() {
-    $test= newinstance('lang.Object', [], [
+    $test= newinstance(Object::class, [], [
       'toString' => function() { return \xp::stringOf($this); }
     ]);
     $this->assertEquals(
@@ -174,7 +175,7 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function indenting() {
-    $cl= \lang\ClassLoader::defineClass('net.xp_framework.unittest.core.StringOfTest_IndentingFixture', 'lang.Object', [], '{
+    $cl= \lang\ClassLoader::defineClass('net.xp_framework.unittest.core.StringOfTest_IndentingFixture', Object::class, [], '{
       protected $inner= NULL;
       public function __construct($inner) {
         $this->inner= $inner;
@@ -206,7 +207,7 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function closure_inside_object_does_not_raise_serialization_exception() {
-    $instance= newinstance('lang.Object', [function($a, $b) { }], [
+    $instance= newinstance(Object::class, [function($a, $b) { }], [
       'closure'     => null,
       '__construct' => function($closure) { $this->closure= $closure; },
     ]);

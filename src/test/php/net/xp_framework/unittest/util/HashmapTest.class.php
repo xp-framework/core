@@ -218,7 +218,7 @@ class HashmapTest extends TestCase {
     $this->map->put('two', 'two');
     $this->map->put('eins', 'one');
 
-    $this->map->usort(newinstance('util.Comparator', [], [
+    $this->map->usort(newinstance(Comparator::class, [], [
       'compare' => function($a, $b) { 
         return strcasecmp($a, $b); 
       }

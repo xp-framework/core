@@ -18,7 +18,7 @@ class SmtpAppenderTest extends AppenderTest {
    * @return  util.log.SmtpAppender
    */
   protected function newFixture($prefix, $sync) {
-    $appender= newinstance('util.log.SmtpAppender', ['test@example.com', $prefix, $sync], '{
+    $appender= newinstance(SmtpAppender::class, ['test@example.com', $prefix, $sync], '{
       public $sent= [];
       protected function send($prefix, $content) {
         $this->sent[]= [$prefix, $content];

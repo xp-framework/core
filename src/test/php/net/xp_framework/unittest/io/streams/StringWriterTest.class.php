@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use unittest\TestCase;
+use lang\Object;
 use io\streams\StringWriter;
 use io\streams\MemoryOutputStream;
 use net\xp_framework\unittest\Name;
@@ -43,7 +44,7 @@ class StringWriterTest extends TestCase {
       ["[\n]", []], ["[1, 2, 3]", [1, 2, 3]],
       ["[\n  a => \"b\"\n  c => \"d\"\n]", ['a' => 'b', 'c' => 'd']],
       ['Test', new Name('Test')],
-      ['Test', newinstance('lang.Object', [], ['toString' => function() { return 'Test'; } ])]
+      ['Test', newinstance(Object::class, [], ['toString' => function() { return 'Test'; } ])]
     ];
   }
 

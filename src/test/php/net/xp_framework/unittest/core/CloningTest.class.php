@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use unittest\TestCase;
+use lang\Object;
 use lang\CloneNotSupportedException;
 
 /**
@@ -22,7 +23,7 @@ class CloningTest extends TestCase {
 
   #[@test]
   public function cloneInterceptorCalled() {
-    $original= newinstance('lang.Object', [], '{
+    $original= newinstance(Object::class, [], '{
       public $cloned= FALSE;
 
       public function __clone() {
@@ -37,7 +38,7 @@ class CloningTest extends TestCase {
 
   #[@test, @expect('lang.CloneNotSupportedException')]
   public function cloneInterceptorThrowsException() {
-    clone(newinstance('lang.Object', [], '{
+    clone(newinstance(Object::class, [], '{
       public function __clone() {
         throw new CloneNotSupportedException("I am *UN*Cloneable");
       }

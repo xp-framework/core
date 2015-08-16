@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\XPClass;
+use lang\Object;
 use lang\Type;
 use lang\MapType;
 use lang\Primitive;
@@ -382,7 +383,7 @@ class MethodsTest extends \unittest\TestCase {
 
   #[@test, @ignore('No reflection support yet'), @action(new RuntimeVersion('>=7.0'))]
   public function nativeReturnTypeName() {
-    $o= newinstance('lang.Object', [], '{
+    $o= newinstance(Object::class, [], '{
       public function fixture(): Object { }
     }');
     $this->assertEquals('lang.Object', $o->getClass()->getMethod('fixture')->getReturnTypeName());
@@ -390,7 +391,7 @@ class MethodsTest extends \unittest\TestCase {
 
   #[@test, @ignore('No reflection support yet'), @action(new RuntimeVersion('>=7.0'))]
   public function nativeReturnType() {
-    $o= newinstance('lang.Object', [], '{
+    $o= newinstance(Object::class, [], '{
       public function fixture(): Object { }
     }');
     $this->assertEquals(XPClass::forName('lang.Object'), $o->getClass()->getMethod('fixture')->getReturnType());
@@ -398,7 +399,7 @@ class MethodsTest extends \unittest\TestCase {
 
   #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0'))]
   public function violatingReturnType() {
-    $o= newinstance('lang.Object', [], '{
+    $o= newinstance(Object::class, [], '{
       public function fixture(): Object { return "Test"; }
     }');
     $o->fixture();

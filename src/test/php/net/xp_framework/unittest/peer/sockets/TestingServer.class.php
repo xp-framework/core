@@ -1,11 +1,8 @@
 <?php namespace net\xp_framework\unittest\peer\sockets;
 
-
-
 use util\cmd\Console;
 use peer\server\Server;
 use peer\server\ServerProtocol;
-
 
 /**
  * Socket server used by SocketTest. Implements a simple line-based
@@ -51,7 +48,7 @@ class TestingServer extends \lang\Object {
    * @param   string[] args
    */
   public static function main(array $args) {
-    $protocol= newinstance('peer.server.ServerProtocol', [], '{
+    $protocol= newinstance(ServerProtocol::class, [], '{
       public function initialize() { }
       public function handleDisconnect($socket) { }
       public function handleError($socket, $e) { }

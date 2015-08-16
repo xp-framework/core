@@ -21,7 +21,7 @@ class LogAppenderTest extends TestCase {
    */
   public function setUp() {
     $this->events= create('new util.collections.Vector<string>()');
-    $appender= newinstance('util.log.Appender', [$this->events], [
+    $appender= newinstance(Appender::class, [$this->events], [
       'events' => null,
       '__construct' => function($events) { $this->events= $events; },
       'append' => function(LoggingEvent $event) {

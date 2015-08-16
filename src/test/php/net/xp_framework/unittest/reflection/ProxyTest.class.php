@@ -22,7 +22,7 @@ class ProxyTest extends \unittest\TestCase {
    * Setup method 
    */
   public function setUp() {
-    $this->handler= newinstance('lang.reflect.InvocationHandler', [], [
+    $this->handler= newinstance(InvocationHandler::class, [], [
       'invocations' => [],
       'invoke'      => function($proxy, $method, $args) {
         $this->invocations[$method.'_'.sizeof($args)]= $args;
