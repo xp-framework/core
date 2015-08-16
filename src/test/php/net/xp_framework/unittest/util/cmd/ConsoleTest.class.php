@@ -215,13 +215,10 @@ class ConsoleTest extends \unittest\TestCase {
     Console::initialize($console);
     try {
       $assertions();
-    } catch (\unittest\AssertionFailedError $e) {
-      // finally
-    } ensure($e); {
+    } finally {
       Console::$in= $in;
       Console::$out= $out;
       Console::$err= $err;
-      if ($e) throw($e);
     }
   }
 
