@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Heads up!
+
 * **Heads up: Bumped the minimum PHP version requirement to PHP 5.5!**
   . Rewrote test code base to use `finally` instead of ensure (see #97)
   . Rewrote test code base to use `::class` where applicable (see #98)
