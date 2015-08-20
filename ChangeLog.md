@@ -22,6 +22,11 @@ XP Framework Core ChangeLog
   to the same identifier and facility.
   (@mikey179, @thekid)
 
+### Features
+
+* Implemented setting log appender's layout via ini file
+  (@thekid, @mikey179)
+
 ## 6.4.2 / 2015-08-05
 
 ### Bugfixes
