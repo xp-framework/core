@@ -143,4 +143,20 @@ appender.util.log.FileAppender.param.filename="/var/log/xp/default.log"
       $this->assertInstanceOf('util.log.context.NestedLogContext', $cat->getContext());
     }
   }
+
+  #[@test]
+  public function configureWithLayout() {
+    $this->logger->configure(\util\Properties::fromString(trim('
+[fixture]
+appenders="util.log.FileAppender"
+appender.util.log.FileAppender.params="filename"
+appender.util.log.FileAppender.param.filename="/var/log/xp/default.log"
+appender.util.log.FileAppender.layout="util.log.layout.PatternLayout|%m"
+    ')));
+
+    $this->assertInstanceOf(
+      'util.log.layout.PatternLayout',
+      $this->logger->getCategory('fixture')->getAppenders()[0]->getLayout()
+    );
+  }
 }

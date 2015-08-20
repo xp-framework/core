@@ -161,15 +161,25 @@ class Logger extends \lang\Object implements Configurable {
           \lang\XPClass::forName($appender)->newInstance(),
           $flags
         );
-        $params= $prop->readArray($section, 'appender.'.$appender.'.params', []);
         
         // Params
+        $params= $prop->readArray($section, 'appender.'.$appender.'.params', []);
         foreach ($params as $param) {
           $a->{$param}= $prop->readString(
             $section,
             'appender.'.$appender.'.param.'.$param,
             ''
           );
+        }
+
+        // Layout
+        if ($layout= $prop->readArray($section, 'appender.'.$appender.'.layout')) {
+          $class= \lang\XPClass::forName(array_shift($layout));
+          if ($class->hasConstructor()) {
+            $a->setLayout($class->getConstructor()->newInstance($layout));
+          } else {
+            $a->setLayout($class->newInstance());
+          }
         }
 
         // Set context
