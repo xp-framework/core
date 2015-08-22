@@ -11,11 +11,13 @@ XP Framework Core ChangeLog
   . Rewrote test code base to use `finally` instead of ensure (see #97)
   . Rewrote test code base to use `::class` where applicable (see #98)
   (@thekid)
-* **Removed deprecated `delete` core functionality**. Instead, use the
-  language construct `unset()`.
-  (@thekid)
 * **Deprecated the `ensure` core functionality**. It was a future-ready
   replacement for the finally statement introduced with PHP 5.5
+  (@thekid)
+* **Removed deprecated `text.format` package**.
+  (@thekid)
+* **Removed deprecated `delete` core functionality**. Instead, use the
+  language construct `unset()`.
   (@thekid)
 * **Removed deprecated and dysfunctional XP installer**. Instead, use
   [Composer](https://getcomposer.org/)
