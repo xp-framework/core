@@ -16,6 +16,20 @@ XP Framework Core ChangeLog
   [Composer](https://getcomposer.org/)
   (@thekid)
 
+### RFCs
+
+* Implemented first part of xp-framework/rfc#301: Extracted `util.log`
+  package into its own library - https://github.com/xp-framework/logging.
+  The classes remain in core until 7.0, the library serves as an overlay.
+  (@thekid)
+* Implemented first part of xp-framework/rfc#293: Extracted `unittest`
+  package into separate libraries:
+  . https://github.com/xp-framework/unittest 
+  . https://github.com/xp-framework/mocks 
+  . https://github.com/xp-framework/webtest 
+  The classes remain in core until 7.0, the libraries serve as an overlay.
+  (@thekid)
+
 ### Bugfixes
 
 * Fixed util.log.SyslogAppender problems with multiple instances logging
