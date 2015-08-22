@@ -33,7 +33,7 @@
  *   $cat->debug('Log message');
  * </code>
  *
- * @see      http://news.xp-framework.net/article/203/2007/07/18/
+ * @see   https://github.com/xp-framework/logging
  */
 package util.log {
 }
