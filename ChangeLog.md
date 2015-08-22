@@ -3,7 +3,7 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
-## 6.5.0 / ????-??-??
+## 6.5.0 / 2015-08-22
 
 ### Heads up!
 
@@ -14,10 +14,10 @@ XP Framework Core ChangeLog
 * **Deprecated the `ensure` core functionality**. It was a future-ready
   replacement for the finally statement introduced with PHP 5.5
   (@thekid)
-* **Removed deprecated `text.format` and `text.parser` packages**.
-  (@thekid)
 * **Removed deprecated `delete` core functionality**. Instead, use the
   language construct `unset()`.
+  (@thekid)
+* **Removed deprecated `text.format` and `text.parser` packages**.
   (@thekid)
 * **Removed deprecated and dysfunctional XP installer**. Instead, use
   [Composer](https://getcomposer.org/)
