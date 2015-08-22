@@ -2,7 +2,8 @@
 
 use io\File;
 use io\streams\Streams;
-use io\streams\MemoryInputStream;
+use io\streams\MemoryInputStream;;
+use io\IOException;
 use util\Properties;
 
 /**
@@ -17,9 +18,9 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
   
   static function __static() {
     self::$fileStreamAdapter= \lang\ClassLoader::defineClass('FileStreamAdapter', 'io.File', [], '{
-      protected $stream= NULL;
+      protected $stream= null;
       public function __construct($stream) { $this->stream= $stream; }
-      public function exists() { return NULL !== $this->stream; }
+      public function exists() { return null !== $this->stream; }
       public function getURI() { return \io\streams\Streams::readableUri($this->stream); }
       public function getInputStream() { return $this->stream; }
     }');
@@ -35,30 +36,17 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
     return Properties::fromFile(self::$fileStreamAdapter->newInstance(new MemoryInputStream($source)));
   }
 
-  /**
-   * Test construction via fromFile() method for a non-existant file
-   *
-   */
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function fromNonExistantFile() {
     Properties::fromFile(new File('@@does-not-exist.ini@@'));
   }
 
-  /**
-   * Test construction via fromFile() method for an existant file.
-   * Relies on a file "example.ini" existing parallel to this class.
-   *
-   */
   #[@test]
   public function fromFile() {
     $p= Properties::fromFile($this->getClass()->getPackage()->getResourceAsStream('example.ini'));
     $this->assertEquals('value', $p->readString('section', 'key'));
   }
 
-  /**
-   * Test exceptions are not thrown until first read
-   *
-   */
   #[@test]
   public function lazyRead() {
     $p= new Properties('@@does-not-exist.ini@@');
@@ -69,15 +57,11 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
     try {
       $p->readString('section', 'key');
       $this->fail('Expected exception not thrown', null, 'io.IOException');
-    } catch (\io\IOException $expected) {
+    } catch (IOException $expected) {
       \xp::gc();
     }
   }
 
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function propertiesFromSameFileAreEqual() {
     $one= Properties::fromFile($this->getClass()->getPackage()->getResourceAsStream('example.ini'));
@@ -87,10 +71,6 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
     $this->assertTrue($one->equals($two));
   }
 
-  /**
-   * Test
-   *
-   */
   #[@test]
   public function propertiesFromOtherFilesAreNotEqual() {
     $this->assertNotEquals(new Properties('a.ini'), new Properties('b.ini'));

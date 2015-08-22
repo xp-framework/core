@@ -8,6 +8,7 @@ use util\collections\Queue;
 use util\collections\LRUBuffer;
 use lang\types\Integer;
 use lang\types\String;
+use lang\IllegalArgumentException;
 
 /**
  * TestCase
@@ -117,7 +118,7 @@ class GenericsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function nonGenericPassedToCreate() {
     create('new lang.Object<lang.types.String>');
   }
@@ -135,22 +136,22 @@ class GenericsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function stringVectorAddIllegalValue() {
     create('new util.collections.Vector<lang.types.String>')->add(new \lang\types\Integer(1));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function stringVectorSetIllegalValue() {
     create('new util.collections.Vector<lang.types.String>', [new \lang\types\String('')])->set(0, new \lang\types\Integer(1));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function stringVectorContainsIllegalValue() {
     create('new util.collections.Vector<lang.types.String>')->contains(new \lang\types\Integer(1));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function createStringVectorWithIllegalValue() {
     create('new util.collections.Vector<lang.types.String>', [new \lang\types\Integer(1)]);
   }
@@ -160,12 +161,12 @@ class GenericsTest extends \unittest\TestCase {
     create('new util.collections.Stack<lang.types.String>')->push(new \lang\types\String('One'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function stringStackPushIllegalValue() {
     create('new util.collections.Stack<lang.types.String>')->push(new \lang\types\Integer(1));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function stringStackSearchIllegalValue() {
     create('new util.collections.Stack<lang.types.String>')->search(new \lang\types\Integer(1));
   }
@@ -175,17 +176,17 @@ class GenericsTest extends \unittest\TestCase {
     create('new util.collections.Queue<lang.types.String>')->put(new \lang\types\String('One'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function stringQueuePutIllegalValue() {
     create('new util.collections.Queue<lang.types.String>')->put(new \lang\types\Integer(1));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function stringQueueSearchIllegalValue() {
     create('new util.collections.Queue<lang.types.String>')->search(new \lang\types\Integer(1));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function stringQueueRemoveIllegalValue() {
     create('new util.collections.Queue<lang.types.String>')->remove(new \lang\types\Integer(1));
   }
@@ -195,12 +196,12 @@ class GenericsTest extends \unittest\TestCase {
     create('new util.collections.LRUBuffer<lang.types.String>', 1)->add(new \lang\types\String('One'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function stringLRUBufferAddIllegalValue() {
     create('new util.collections.LRUBuffer<lang.types.String>', 1)->add(new \lang\types\Integer(1));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function stringLRUBufferUpdateIllegalValue() {
     create('new util.collections.LRUBuffer<lang.types.String>', 1)->update(new \lang\types\Integer(1));
   }
@@ -210,22 +211,22 @@ class GenericsTest extends \unittest\TestCase {
     create('new util.collections.HashSet<lang.types.String>')->add(new \lang\types\String('One'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function stringHashSetAddIllegalValue() {
     create('new util.collections.HashSet<lang.types.String>')->add(new \lang\types\Integer(1));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function stringHashSetContainsIllegalValue() {
     create('new util.collections.HashSet<lang.types.String>')->contains(new \lang\types\Integer(1));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function stringHashSetRemoveIllegalValue() {
     create('new util.collections.HashSet<lang.types.String>')->remove(new \lang\types\Integer(1));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function stringHashSetAddAllIllegalValue() {
     create('new util.collections.HashSet<lang.types.String>')->addAll([
       new \lang\types\String('HELLO'),    // Still OK
@@ -259,12 +260,12 @@ class GenericsTest extends \unittest\TestCase {
     }
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function arrayAsKeyArrayComponentTypeMismatch() {
     create('new util.collections.HashTable<string[], lang.types.String>')->put([1], new \lang\types\String('World'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function arrayAsKeyTypeMismatch() {
     create('new util.collections.HashTable<string[], lang.types.String>')->put('hello', new \lang\types\String('World'));
   }

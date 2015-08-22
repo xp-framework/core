@@ -4,6 +4,7 @@ use unittest\TestCase;
 use util\Hashmap;
 use util\HashmapIterator;
 use util\Comparator;
+use util\NoSuchElementException;
 
 /**
  * Test HashmapIterator class
@@ -20,7 +21,7 @@ class HashmapIteratorTest extends TestCase {
     $this->map= new Hashmap(['k1' => 'v1', 'k2' => 'v2', 'k3' => 'v3']);
   }
       
-  #[@test, @expect('util.NoSuchElementException')]
+  #[@test, @expect(NoSuchElementException::class)]
   public function nextOnEmpty() {
     (new HashmapIterator([]))->next();
   }
@@ -61,7 +62,7 @@ class HashmapIteratorTest extends TestCase {
     );
   }
 
-  #[@test, @expect('util.NoSuchElementException')]
+  #[@test, @expect(NoSuchElementException::class)]
   public function nextOnEnd() {
     $i= $this->map->iterator();
     $i->next();

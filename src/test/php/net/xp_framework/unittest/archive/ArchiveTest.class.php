@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\archive;
 
-use unittest\TestCase;
 use lang\archive\Archive;
+use lang\FormatException;
 use io\File;
 use io\streams\Streams;
 use io\streams\MemoryInputStream;
@@ -14,7 +14,7 @@ use io\streams\MemoryOutputStream;
  * @see  xp://net.xp_framework.unittest.archive.ArchiveV2Test
  * @see   xp://lang.archive.Archive
  */
-abstract class ArchiveTest extends TestCase {
+abstract class ArchiveTest extends \unittest\TestCase {
   
   /**
    * Returns the xar version to test
@@ -55,7 +55,7 @@ abstract class ArchiveTest extends TestCase {
     return new File(Streams::readableFd(new MemoryInputStream($header[$version].str_repeat("\0", 248))));
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function open_non_archive() {
     $a= new Archive($this->file(0));
     $a->open(Archive::READ);

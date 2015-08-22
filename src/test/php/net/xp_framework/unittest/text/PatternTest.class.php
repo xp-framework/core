@@ -2,9 +2,11 @@
 
 use text\regex\Pattern;
 use unittest\actions\RuntimeVersion;
+use lang\FormatException;
+use lang\IndexOutOfBoundsException;
 
 /**
- * Patter test 
+ * Pattern test 
  *
  * @see   http://www.regular-expressions.info/unicode.html
  */
@@ -122,7 +124,7 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function nonExistantGroup() {
     Pattern::compile('H[ea]llo')->match('Hello')->group(1);
   }
@@ -156,7 +158,7 @@ class PatternTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function illegalPattern() {
     Pattern::compile('(');
   }
@@ -167,7 +169,7 @@ class PatternTest extends \unittest\TestCase {
     try {
       $p->matches('irrelevant');
       $this->fail('Expected exception not thrown', null, 'lang.FormatException');
-    } catch (\lang\FormatException $expected) {
+    } catch (FormatException $expected) {
       // OK
     }
   }

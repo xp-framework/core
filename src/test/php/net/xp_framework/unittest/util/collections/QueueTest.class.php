@@ -1,6 +1,8 @@
 <?php namespace net\xp_framework\unittest\util\collections;
  
 use util\collections\Queue;
+use util\NoSuchElementException;
+use lang\IndexOutOfBoundsException;
 
 class QueueTest extends \unittest\TestCase {
   private $queue;
@@ -40,7 +42,7 @@ class QueueTest extends \unittest\TestCase {
     $this->assertTrue($this->queue->isEmpty());
   }
 
-  #[@test, @expect('util.NoSuchElementException')]
+  #[@test, @expect(NoSuchElementException::class)]
   public function exceptionOnNoMoreElements() {
     $this->queue->get();
   }
@@ -109,18 +111,18 @@ class QueueTest extends \unittest\TestCase {
     }
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function elementAtIllegalOffset() {
     $this->queue->elementAt(-1);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function elementAtOffsetOutOfBounds() {
     $this->queue->put(new Name('one'));
     $this->queue->elementAt($this->queue->size() + 1);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function elementAtEmptyList() {
     $this->queue->elementAt(0);
   }

@@ -2,6 +2,11 @@
 
 use lang\XPClass;
 use lang\ClassLoader;
+use lang\ClassFormatException;
+use lang\ClassNotFoundException;
+use lang\ClassDependencyException;
+use lang\ClassCastException;
+use lang\IllegalStateException;
 use lang\reflect\Package;
 use lang\archive\Archive;
 use lang\archive\ArchiveClassLoader;
@@ -133,22 +138,22 @@ class ClassLoaderTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.ClassNotFoundException')]
+  #[@test, @expect(ClassNotFoundException::class)]
   public function loadNonExistantClass() {
     ClassLoader::getDefault()->loadClass('@@NON-EXISTANT@@');
   }
 
-  #[@test, @expect('lang.ClassFormatException')]
+  #[@test, @expect(ClassFormatException::class)]
   public function loadClassFileWithoutDeclaration() {
     XPClass::forName('net.xp_framework.unittest.reflection.classes.broken.NoClass');
   }
 
-  #[@test, @expect('lang.ClassFormatException')]
+  #[@test, @expect(ClassFormatException::class)]
   public function loadClassFileWithIncorrectDeclaration() {
     XPClass::forName('net.xp_framework.unittest.reflection.classes.broken.FalseClass');
   }
 
-  #[@test, @expect('lang.ClassDependencyException')]
+  #[@test, @expect(ClassDependencyException::class)]
   public function loadClassWithBrokenDependency() {
     XPClass::forName('net.xp_framework.unittest.reflection.classes.broken.BrokenDependencyClass');
   }
@@ -162,12 +167,12 @@ class ClassLoaderTest extends \unittest\TestCase {
     }
   }
 
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function newInstance() {
     (new XPClass('DoesNotExist'))->reflect();
   }
 
-  #[@test, @expect('lang.ClassCastException')]
+  #[@test, @expect(ClassCastException::class)]
   public function newInstance__PHP_Incomplete_Class() {
     new XPClass(unserialize('O:12:"DoesNotExist":0:{}'));
   }
@@ -197,7 +202,7 @@ class ClassLoaderTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.ClassNotFoundException')]
+  #[@test, @expect(ClassNotFoundException::class)]
   public function loadingClassoneFails() {
     ClassLoader::getDefault()
       ->loadClass('net.xp_framework.unittest.reflection.classes.Classone')
@@ -240,7 +245,7 @@ class ClassLoaderTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.ClassNotFoundException')]
+  #[@test, @expect(ClassNotFoundException::class)]
   public function loadNonExistantUri() {
     ClassLoader::getDefault()->loadUri('non/existant/Class.class.php');
   }

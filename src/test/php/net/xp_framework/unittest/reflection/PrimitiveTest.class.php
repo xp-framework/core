@@ -2,6 +2,7 @@
 
 use unittest\TestCase;
 use lang\Primitive;
+use lang\IllegalArgumentException;
 use io\streams\Streams;
 use io\streams\MemoryInputStream;
 use unittest\actions\RuntimeVersion;
@@ -33,12 +34,12 @@ class PrimitiveTest extends TestCase {
     $this->assertEquals(Primitive::$BOOL, Primitive::forName('bool'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function arrayPrimitive() {
     Primitive::forName('array');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function nonPrimitive() {
     Primitive::forName('lang.Object');
   }
@@ -233,12 +234,12 @@ class PrimitiveTest extends TestCase {
     $this->assertEquals($expected, Primitive::$BOOL->cast($value));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values(['int', 'double', 'bool', 'string'])]
+  #[@test, @expect(IllegalArgumentException::class), @values(['int', 'double', 'bool', 'string'])]
   public function cannot_create_instances_of_primitives_from_arrays($name) {
     Primitive::forName($name)->newInstance([1, 2, 3]);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values(['int', 'double', 'bool', 'string'])]
+  #[@test, @expect(IllegalArgumentException::class), @values(['int', 'double', 'bool', 'string'])]
   public function cannot_create_instances_of_primitives_from_maps($name) {
     Primitive::forName($name)->newInstance(['one' => 'two']);
   }

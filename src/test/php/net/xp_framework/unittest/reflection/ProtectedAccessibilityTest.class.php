@@ -2,7 +2,7 @@
 
 use unittest\TestCase;
 use lang\ClassLoader;
-
+use lang\IllegalAccessException;
 
 /**
  * TestCase
@@ -30,7 +30,7 @@ class ProtectedAccessibilityTest extends TestCase {
    * Invoke protected constructor from here should not work
    *
    */
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function invokingProtectedConstructor() {
     self::$fixture->getConstructor()->newInstance([]);
   }
@@ -79,7 +79,7 @@ class ProtectedAccessibilityTest extends TestCase {
    * Invoke protected method from here should not work
    *
    */
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function invokingProtectedMethod() {
     self::$fixture->getMethod('target')->invoke(ProtectedAccessibilityFixture::construct(self::$fixture));
   }
@@ -128,7 +128,7 @@ class ProtectedAccessibilityTest extends TestCase {
    * Invoke protected method from here should not work
    *
    */
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function invokingProtectedStaticMethod() {
     self::$fixture->getMethod('staticTarget')->invoke(null);
   }
@@ -177,7 +177,7 @@ class ProtectedAccessibilityTest extends TestCase {
    * Read protected member from here should not work
    *
    */
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function readingProtectedMember() {
     self::$fixture->getField('target')->get(ProtectedAccessibilityFixture::construct(self::$fixture));
   }
@@ -226,7 +226,7 @@ class ProtectedAccessibilityTest extends TestCase {
    * Read protected member from here should not work
    *
    */
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function readingProtectedStaticMember() {
     self::$fixture->getField('staticTarget')->get(null);
   }
@@ -275,7 +275,7 @@ class ProtectedAccessibilityTest extends TestCase {
    * Write protected member from here should not work
    *
    */
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function writingProtectedMember() {
     self::$fixture->getField('target')->set(ProtectedAccessibilityFixture::construct(self::$fixture), null);
   }
@@ -324,7 +324,7 @@ class ProtectedAccessibilityTest extends TestCase {
    * Write protected static member from same class
    *
    */
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function writingProtectedStaticMember() {
     self::$fixture->getField('staticTarget')->set(null, 'Modified');
   }

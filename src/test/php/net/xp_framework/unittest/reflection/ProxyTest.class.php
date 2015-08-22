@@ -3,6 +3,8 @@
 use lang\reflect\Proxy;
 use lang\XPClass;
 use lang\ClassLoader;
+use lang\IllegalArgumentException;
+use lang\Error;
 use lang\reflect\InvocationHandler;
 use util\XPIterator;
 use util\Observer;
@@ -71,27 +73,27 @@ class ProxyTest extends \unittest\TestCase {
     )]);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function nullClassLoader() {
     Proxy::getProxyClass(null, [$this->iteratorClass]);
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function nullClassLoader7() {
     Proxy::getProxyClass(null, [$this->iteratorClass]);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function emptyInterfaces() {
     Proxy::getProxyClass(ClassLoader::getDefault(), []);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function nullInterfaces() {
     Proxy::getProxyClass(ClassLoader::getDefault(), null);
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function nullInterfaces7() {
     Proxy::getProxyClass(ClassLoader::getDefault(), null);
   }
@@ -162,12 +164,12 @@ class ProxyTest extends \unittest\TestCase {
     $this->assertEquals([], $this->handler->invocations['next_0']);
   }
   
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function cannotCreateProxiesForClasses() {
     $this->proxyInstanceFor([XPClass::forName('lang.Object')]);
   }
   
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function cannotCreateProxiesForClassesAsSecondArg() {
     $this->proxyInstanceFor([
       XPClass::forName('util.XPIterator'),

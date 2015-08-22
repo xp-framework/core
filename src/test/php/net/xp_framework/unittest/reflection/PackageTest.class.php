@@ -5,6 +5,7 @@ use lang\archive\ArchiveClassLoader;
 use lang\reflect\Package;
 use lang\ClassLoader;
 use lang\XPClass;
+use lang\IllegalArgumentException;
 
 /**
  * TestCase
@@ -79,7 +80,7 @@ class PackageTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function loadClassFromDifferentPackage() {
     Package::forName('net.xp_framework.unittest.reflection.classes')->loadClass('lang.reflect.Method');
   }
@@ -183,7 +184,7 @@ class PackageTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function loadPackageByDifferentName() {
     Package::forName('net.xp_framework.unittest.reflection')->getPackage('lang.reflect');
   }

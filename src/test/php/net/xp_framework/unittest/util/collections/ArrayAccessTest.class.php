@@ -3,6 +3,8 @@
 use util\collections\HashTable;
 use util\collections\HashSet;
 use util\collections\Vector;
+use lang\IndexOutOfBoundsException;
+use lang\IllegalArgumentException;
 
 /**
  * TestCase
@@ -39,7 +41,7 @@ class ArrayAccessTest extends \unittest\TestCase {
    * Tests array access operator is overloaded for reading
    *
    */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function hashTableReadIllegalElement() {
     $c= create('new util.collections.HashTable<string, Object>()');
     $c[STDIN];
@@ -61,7 +63,7 @@ class ArrayAccessTest extends \unittest\TestCase {
    * Tests array access operator is overloaded for writing
    *
    */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function hashTableWriteIllegalKey() {
     $c= create('new util.collections.HashTable<string, Object>()');
     $c[STDIN]= new Name('Hello');
@@ -71,7 +73,7 @@ class ArrayAccessTest extends \unittest\TestCase {
    * Tests array access operator is overloaded for writing
    *
    */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function hashTableWriteIllegalValue() {
     $c= create('new util.collections.HashTable<string, Object>()');
     $c['hello']= 'scalar';
@@ -118,7 +120,7 @@ class ArrayAccessTest extends \unittest\TestCase {
    * Tests array access operator is overloaded for reading
    *
    */
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function vectorReadNonExistantElement() {
     $v= new Vector();
     $v[0];
@@ -152,7 +154,7 @@ class ArrayAccessTest extends \unittest\TestCase {
    * Tests array access operator is overloaded for writing
    *
    */
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function vectorWriteElementBeyondBoundsKey() {
     $v= new Vector();
     $v[0]= new Name('world');
@@ -162,7 +164,7 @@ class ArrayAccessTest extends \unittest\TestCase {
    * Tests array access operator is overloaded for writing
    *
    */
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function vectorWriteElementNegativeKey() {
     $v= new Vector();
     $v[-1]= new Name('world');
@@ -221,7 +223,7 @@ class ArrayAccessTest extends \unittest\TestCase {
    * Tests hashset array access operator overloading
    *
    */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function hashSetWriteElement() {
     $s= new HashSet();
     $s[0]= new Name('X');
@@ -231,7 +233,7 @@ class ArrayAccessTest extends \unittest\TestCase {
    * Tests hashset array access operator overloading
    *
    */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function hashSetReadElement() {
     $s= new HashSet();
     $s[]= new Name('X');

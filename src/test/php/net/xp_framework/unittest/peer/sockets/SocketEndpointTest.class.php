@@ -1,17 +1,16 @@
 <?php namespace net\xp_framework\unittest\peer\sockets;
 
-use unittest\TestCase;
 use peer\SocketEndpoint;
 use peer\net\Inet4Address;
 use peer\net\Inet6Address;
-
+use lang\FormatException;
 
 /**
  * TestCase
  *
  * @see      xp://peer.SocketEndpoint
  */
-class SocketEndpointTest extends TestCase {
+class SocketEndpointTest extends \unittest\TestCase {
 
   #[@test]
   public function v4_string_passed_to_constructor() {
@@ -93,17 +92,17 @@ class SocketEndpointTest extends TestCase {
     $this->assertEquals(new SocketEndpoint('fe80::1', 6100), SocketEndpoint::valueOf('[fe80::1]:6100'));
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function value_of_empty_string() {
     SocketEndpoint::valueOf('');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function value_of_without_colon() {
     SocketEndpoint::valueOf('127.0.0.1');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function value_of_without_port() {
     SocketEndpoint::valueOf('127.0.0.1:');
   }

@@ -1,7 +1,8 @@
 <?php namespace net\xp_framework\unittest\peer;
 
-use unittest\TestCase;
 use peer\URL;
+use lang\IllegalArgumentException;
+use lang\FormatException;
 
 /**
  * TestCase
@@ -11,7 +12,7 @@ use peer\URL;
  * @see   rfc://rfc1738
  * @see   http://bugs.php.net/54180
  */
-class URLTest extends TestCase {
+class URLTest extends \unittest\TestCase {
 
   #[@test]
   public function scheme() {
@@ -214,91 +215,51 @@ class URLTest extends TestCase {
     $this->assertTrue((new URL('http://localhost/?1549'))->hasParam('1549'));
   }
 
-  /**
-   * Test getFragment() method
-   *
-   */
   #[@test]
   public function fragment() {
     $this->assertEquals('top', (new URL('http://localhost#top'))->getFragment());
   }
 
-  /**
-   * Test getFragment() method
-   *
-   */
   #[@test]
   public function fragmentWithSlash() {
     $this->assertEquals('top', (new URL('http://localhost/#top'))->getFragment());
   }
 
-  /**
-   * Test getFragment() method
-   *
-   */
   #[@test]
   public function fragmentWithSlashAndQuestionMark() {
     $this->assertEquals('top', (new URL('http://localhost/?#top'))->getFragment());
   }
 
-  /**
-   * Test getFragment() method
-   *
-   */
   #[@test]
   public function fragmentWithQuery() {
     $this->assertEquals('top', (new URL('http://localhost/?query#top'))->getFragment());
   }
 
-  /**
-   * Test getFragment() method
-   *
-   */
   #[@test]
   public function emptyFragment() {
     $this->assertEquals(null, (new URL('http://localhost'))->getFragment());
   }
 
-  /**
-   * Test getFragment() method
-   *
-   */
   #[@test]
   public function hashOnly() {
     $this->assertEquals(null, (new URL('http://localhost#'))->getFragment());
   }
 
-  /**
-   * Test getFragment() method
-   *
-   */
   #[@test]
   public function hashAtEnd() {
     $this->assertEquals(null, (new URL('http://localhost?#'))->getFragment());
   }
 
-  /**
-   * Test getFragment() method
-   *
-   */
   #[@test]
   public function hashAtEndWithQuery() {
     $this->assertEquals(null, (new URL('http://localhost?query#'))->getFragment());
   }
 
-  /**
-   * Test getFragment() method when invoked with a default value
-   *
-   */
   #[@test]
   public function fragmentDefault() {
     $this->assertEquals('top', (new URL('http://localhost'))->getFragment('top'));
   }
 
-  /**
-   * Test setFragment()
-   *
-   */
   #[@test]
   public function fragmentMutability() {
     $this->assertEquals(
@@ -307,37 +268,21 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test getPort() method
-   *
-   */
   #[@test]
   public function port() {
     $this->assertEquals(8080, (new URL('http://localhost:8080'))->getPort());
   }
 
-  /**
-   * Test getPort() method
-   *
-   */
   #[@test]
   public function emptyPort() {
     $this->assertEquals(null, (new URL('http://localhost'))->getPort());
   }
 
-  /**
-   * Test getPort() method when invoked with a default value
-   *
-   */
   #[@test]
   public function portDefault() {
     $this->assertEquals(80, (new URL('http://localhost'))->getPort(80));
   }
 
-  /**
-   * Test setPort()
-   *
-   */
   #[@test]
   public function portMutability() {
     $this->assertEquals(
@@ -351,37 +296,21 @@ class URLTest extends TestCase {
     $this->assertEquals('b', (new URL('http://localhost?a=b'))->getParam('a'));
   }
 
-  /**
-   * Test getParam() method with an array parameter
-   *
-   */
   #[@test]
   public function getArrayParameter() {
     $this->assertEquals(['b'], (new URL('http://localhost?a[]=b'))->getParam('a'));
   }
 
-  /**
-   * Test getParam() method with an array parameter
-   *
-   */
   #[@test]
   public function getEncodedArrayParameter() {
     $this->assertEquals(['='], (new URL('http://localhost?a[]=%3D'))->getParam('a'));
   }
 
-  /**
-   * Test getParam() method with array parameters
-   *
-   */
   #[@test]
   public function getArrayParameters() {
     $this->assertEquals(['b', 'c'], (new URL('http://localhost?a[]=b&a[]=c'))->getParam('a'));
   }
 
-  /**
-   * Test getParam() method with array parameters
-   *
-   */
   #[@test]
   public function getArrayParametersAsHash() {
     $this->assertEquals(
@@ -390,10 +319,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test getParam() method with array parameters
-   *
-   */
   #[@test]
   public function getArrayParametersAsHashWithEncodedNames() {
     $this->assertEquals(
@@ -402,10 +327,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test getParams() with array parameters
-   *
-   */
   #[@test]
   public function arrayOffsetsInDifferentArrays() {
     $this->assertEquals(
@@ -414,10 +335,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test getParam() with array parameters
-   *
-   */
   #[@test]
   public function duplicateOffsetsOverwriteEachother() {
     $this->assertEquals(
@@ -426,10 +343,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test getParam() with array parameters
-   *
-   */
   #[@test]
   public function duplicateNamesOverwriteEachother() {
     $this->assertEquals(
@@ -438,10 +351,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test getParam() with array parameters
-   *
-   */
   #[@test]
   public function twoDimensionalArray() {
     $this->assertEquals(
@@ -450,10 +359,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test getParam() with array parameters
-   *
-   */
   #[@test]
   public function threeDimensionalArray() {
     $this->assertEquals(
@@ -462,10 +367,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test getParam() with array parameters
-   *
-   */
   #[@test]
   public function arrayOfHash() {
     $this->assertEquals(
@@ -474,10 +375,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test getParam() with array parameters
-   *
-   */
   #[@test]
   public function hashOfArray() {
     $this->assertEquals(
@@ -486,10 +383,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test getParam() with array parameters
-   *
-   */
   #[@test]
   public function hashOfArrayOfHash() {
     $this->assertEquals(
@@ -498,10 +391,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test getParam() with array parameters
-   *
-   */
   #[@test]
   public function hashNotationWithoutValues() {
     $this->assertEquals(
@@ -510,10 +399,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test getParam() with array parameters
-   *
-   */
   #[@test]
   public function arrayNotationWithoutValues() {
     $this->assertEquals(
@@ -522,10 +407,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test getParams() method with array parameters
-   *
-   */
   #[@test]
   public function getArrayParams() {
     $this->assertEquals(
@@ -534,10 +415,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test getParam() with array parameters
-   *
-   */
   #[@test]
   public function mixedOffsetsAndKeys() {
     $this->assertEquals(
@@ -546,10 +423,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test getParams() with array parameters
-   *
-   */
   #[@test]
   public function nestedBraces() {
     $this->assertEquals(
@@ -558,10 +431,6 @@ class URLTest extends TestCase {
     );
   }
  
-  /**
-   * Test getParams() with array parameters
-   *
-   */
   #[@test]
   public function nestedBracesTwice() {
     $this->assertEquals(
@@ -570,10 +439,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test getParams() with array parameters
-   *
-   */
   #[@test]
   public function nestedBracesChained() {
     $this->assertEquals(
@@ -582,10 +447,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test getParams() with array parameters
-   *
-   */
   #[@test]
   public function unnamedArrayParameterDoesNotArray() {
     $this->assertEquals(
@@ -604,19 +465,11 @@ class URLTest extends TestCase {
     $this->assertEquals('', (new URL('http://localhost?x='))->getParam('x'));
   }
 
-  /**
-   * Test getParam() method when invoked with a default value
-   *
-   */
   #[@test]
   public function paramDefault() {
     $this->assertEquals('x', (new URL('http://localhost?a=b'))->getParam('c', 'x'));
   }
  
-  /**
-   * Test addParam()
-   *
-   */
   #[@test]
   public function addNewParam() {
     $this->assertEquals(
@@ -625,10 +478,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test setParam()
-   *
-   */
   #[@test]
   public function setNewParam() {
     $this->assertEquals(
@@ -637,10 +486,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test addParam()
-   *
-   */
   #[@test]
   public function addAdditionalParam() {
     $this->assertEquals(
@@ -649,10 +494,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test setParam()
-   *
-   */
   #[@test]
   public function setAdditionalParam() {
     $this->assertEquals(
@@ -661,10 +502,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test addParam()
-   *
-   */
   #[@test]
   public function addAdditionalParamChained() {
     $this->assertEquals(
@@ -673,10 +510,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test setParam()
-   *
-   */
   #[@test]
   public function setAdditionalParamChained() {
     $this->assertEquals(
@@ -685,19 +518,11 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test addParam()
-   *
-   */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function addExistingParam() {
     (new URL('http://localhost?a=b'))->addParam('a', 'b');
   }
 
-  /**
-   * Test setParam()
-   *
-   */
   #[@test]
   public function setExistingParam() {
     $this->assertEquals(
@@ -706,34 +531,22 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test addParams()
-   *
-   */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function addExistingParams() {
     (new URL('http://localhost?a=b'))->addParams(['a' => 'b']);
   }
 
-  /**
-   * Test addParams()
-   *
-   */
   #[@test]
   public function addExistingParamsDoesNotPartiallyModify() {
     $original= 'http://localhost?a=b';
     $u= new URL($original);
     try {
       $u->addParams(['c' => 'd', 'a' => 'b']);
-      $this->fail('Existing parameter "a" not detected', null, 'lang.IllegalArgumentException');
+      $this->fail('Existing parameter "a" not detected', null, IllegalArgumentException::class);
     } catch (\lang\IllegalArgumentException $expected) { }
     $this->assertEquals($original, $u->getURL());
   }
 
-  /**
-   * Test setParams()
-   *
-   */
   #[@test]
   public function setExistingParams() {
     $this->assertEquals(
@@ -742,10 +555,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test addParams()
-   *
-   */
   #[@test]
   public function addNewParams() {
     $this->assertEquals(
@@ -754,10 +563,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test setParams()
-   *
-   */
   #[@test]
   public function setNewParams() {
     $this->assertEquals(
@@ -766,10 +571,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test addParams()
-   *
-   */
   #[@test]
   public function addAdditionalParams() {
     $this->assertEquals(
@@ -778,10 +579,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test setParams()
-   *
-   */
   #[@test]
   public function setAdditionalParams() {
     $this->assertEquals(
@@ -790,10 +587,6 @@ class URLTest extends TestCase {
     );
   }
 
-  /**
-   * Test addParam()
-   *
-   */
   #[@test]
   public function addArrayParam() {
     $u= new URL('http://localhost/');
@@ -801,10 +594,6 @@ class URLTest extends TestCase {
     $this->assertEquals('http://localhost/?x[]=y&x[]=z', $u->getURL());
   }
 
-  /**
-   * Test setParam()
-   *
-   */
   #[@test]
   public function setArrayParam() {
     $u= new URL('http://localhost/');
@@ -812,10 +601,6 @@ class URLTest extends TestCase {
     $this->assertEquals('http://localhost/?x[]=y&x[]=z', $u->getURL());
   }
 
-  /**
-   * Test getParams() method
-   *
-   */
   #[@test]
   public function params() {
     $this->assertEquals(['a' => 'b', 'c' => 'd'], (new URL('http://localhost?a=b&c=d'))->getParams());
@@ -928,37 +713,37 @@ class URLTest extends TestCase {
     );
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function insideAText() {
     new URL('this is the url http://url/ and nothing else');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function doesNotSupportMailto() {
     new URL('mailto:user@example.com');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function whiteSpaceInSchemeNotAllowed() {
     new URL('scheme ://host');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function minusInSchemeNotAllowed() {
     new URL('scheme-minus://host');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function underscoreInSchemeNotAllowed() {
     new URL('scheme_underscore://host');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function numericSchemeNotAllowed() {
     new URL('123://host');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function plusAsFirstSignInSchemeNotAllowed() {
     new URL('+v2://host');
   }
@@ -973,199 +758,167 @@ class URLTest extends TestCase {
     $this->assertEquals('f', (new URL('f://host'))->getScheme());
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function schemeOnlyUnparseable() {
     new URL('http:');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function schemeAndSeparatorOnlyUnparseable() {
     new URL('http://');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function schemeSeparatorOnlyUnparseable() {
     new URL('://');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function colonOnlyUnparseable() {
     new URL(':');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function slashSlashOnlyUnparseable() {
     new URL('//');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function missingSchemeUnparseable() {
     new URL(':///path/to/file');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function emptyUnparseable() {
     new URL('');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function withoutSchemeUnparseable() {
     new URL('/path/to/file');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function slashOnlyUnparseable() {
     new URL('/');
   }
 
-  /**
-   * Test malformed query string parsing
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function missingClosingBracket() {
     new URL('http://example.com/?a[=c');
   }
 
-  /**
-   * Test malformed query string parsing
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function missingOpeningBracket() {
     new URL('http://example.com/?a]=c');
   }
 
-  /**
-   * Test malformed query string parsing
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function unbalancedOpeningBrackets() {
     new URL('http://example.com/?a[[[]]=c');
   }
 
-  /**
-   * Test malformed query string parsing
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function unbalancedClosingBrackets() {
     new URL('http://example.com/?a[[]]]=c');
   }
 
-  /**
-   * Test malformed query string parsing
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function missingClosingBracketAfterClosed() {
     new URL('http://example.com/?a[][=c');
   }
 
-  /**
-   * Test getParams() with array parameters
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function missingClosingBracketInNested() {
     new URL('http://localhost/?a[nested[a]=c');
   }
 
-  /**
-   * Test getParams() with array parameters
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function missingClosingBracketInNestedAfterClosed() {
     new URL('http://localhost/?a[][nested[a]=c');
   }
 
-  /**
-   * Test getParams() with array parameters
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function missingClosingBracketInNestedBeforeClosed() {
     new URL('http://localhost/?a[nested[a][]=c');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function singleSlash() {
     new URL('http:/blah.com');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function portOnlyNoHost() {
     new URL('http://:80');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function userAndPortOnlyNoHost() {
     new URL('http://user@:80');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function atSignOnlyNoHost() {
     new URL('http://@');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function userOnlyNoHost() {
     new URL('http://user@');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function doubleDoubleColon() {
     new URL('http://::');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function questionMarkOnlyNoHost() {
     new URL('http://?');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function hashSignOnlyNoHost() {
     new URL('http://#');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function colonAndQuestionMarkOnlyNoHost() {
     new URL('http://:?');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function questionMarkAndColonAndOnlyNoHost() {
     new URL('http://?:');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function nonNumericPort() {
     new URL('http://example.com:ABCDEF');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function duplicatePort() {
     new URL('http://example.com:443:443');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function unclosedIPV6Brackets() {
     new URL('http://[::1');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function colonInDomainNameNotAllowed() {
     new URL('http://a:o.com/');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function percentSignInDomainNameNotAllowed() {
     new URL('http://a%o.com/');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function spaceInDomainNameNotAllowed() {
     new URL('http://a o.com/');
   }

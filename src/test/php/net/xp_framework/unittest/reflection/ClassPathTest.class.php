@@ -1,14 +1,14 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\TestCase;
-
+use lang\ClassLoader;
+use lang\ElementNotFoundException;
 
 /**
  * TestCase for classloading
  *
  * @see    xp://lang.ClassLoader#registerPath
  */
-class ClassPathTest extends TestCase {
+class ClassPathTest extends \unittest\TestCase {
   protected $registered= [];
 
   /**
@@ -25,74 +25,51 @@ class ClassPathTest extends TestCase {
   /**
    * Removes all registered paths
    *
+   * @return void
    */
   public function tearDown() {
     foreach ($this->registered as $l) {
-      \lang\ClassLoader::removeLoader($l);
+      ClassLoader::removeLoader($l);
     }
   }
 
-  /**
-   * Test registering a path before all others
-   *
-   */
   #[@test]
   public function before() {
-    $loader= $this->track(\lang\ClassLoader::registerPath('.', true));
-    $loaders= \lang\ClassLoader::getLoaders();
+    $loader= $this->track(ClassLoader::registerPath('.', true));
+    $loaders= ClassLoader::getLoaders();
     $this->assertEquals($loader, $loaders[0]);
   } 
 
-  /**
-   * Test registering a path after all others
-   *
-   */
   #[@test]
   public function after() {
-    $loader= $this->track(\lang\ClassLoader::registerPath('.', false));
-    $loaders= \lang\ClassLoader::getLoaders();
+    $loader= $this->track(ClassLoader::registerPath('.', false));
+    $loaders= ClassLoader::getLoaders();
     $this->assertEquals($loader, $loaders[sizeof($loaders)- 1]);
   }
 
-  /**
-   * Test registering a path after all others is the default
-   *
-   */
   #[@test]
   public function after_is_default() {
-    $loader= $this->track(\lang\ClassLoader::registerPath('.'));
-    $loaders= \lang\ClassLoader::getLoaders();
+    $loader= $this->track(ClassLoader::registerPath('.'));
+    $loaders= ClassLoader::getLoaders();
     $this->assertEquals($loader, $loaders[sizeof($loaders)- 1]);
   }
 
-  /**
-   * Inspect path: it begins with !, so it is loaded first
-   *
-   */
   #[@test]
   public function before_via_inspect() {
-    $loader= $this->track(\lang\ClassLoader::registerPath('!.', null));
-    $loaders= \lang\ClassLoader::getLoaders();
+    $loader= $this->track(ClassLoader::registerPath('!.', null));
+    $loaders= ClassLoader::getLoaders();
     $this->assertEquals($loader, $loaders[0]);
   }
 
-  /**
-   * Inspect path: it does not begin with !, so it is loaded last
-   *
-   */
   #[@test]
   public function after_via_inspect() {
-    $loader= $this->track(\lang\ClassLoader::registerPath('.', null));
-    $loaders= \lang\ClassLoader::getLoaders();
+    $loader= $this->track(ClassLoader::registerPath('.', null));
+    $loaders= ClassLoader::getLoaders();
     $this->assertEquals($loader, $loaders[sizeof($loaders)- 1]);
   }
 
-  /**
-   * Test registering a non-existant path
-   *
-   */
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function non_existant() {
-    \lang\ClassLoader::registerPath('@@non-existant@@');
+    ClassLoader::registerPath('@@non-existant@@');
   } 
 }

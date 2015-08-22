@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use util\TimeZone;
+use lang\IllegalArgumentException;
 
 class TimeZoneTest extends \unittest\TestCase {
   private $fixture;
@@ -87,7 +88,7 @@ class TimeZoneTest extends \unittest\TestCase {
     $this->assertEquals(new \util\Date('2007-10-28 02:00:00 Europe/Berlin'), $transition->getDate());
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function unknownTimeZone() {
     new TimeZone('UNKNOWN');
   }

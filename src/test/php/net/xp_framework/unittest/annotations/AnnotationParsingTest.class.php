@@ -2,6 +2,7 @@
 
 use net\xp_framework\unittest\annotations\fixture\Namespaced;
 use lang\reflect\ClassParser;
+use lang\ClassFormatException;
 
 /**
  * Tests the XP Framework's annotation parsing implementation
@@ -551,7 +552,7 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
     );
   }
 
-  #[@test, @expect(class= 'lang.ClassFormatException', withMessage= '/Cannot access private static field .+AbstractAnnotationParsingTest::\$parentsInternal/')]
+  #[@test, @expect(class= ClassFormatException::class, withMessage= '/Cannot access private static field .+AbstractAnnotationParsingTest::\$parentsInternal/')]
   public function parent_private_static_member() {
     $this->parse('#[@value(parent::$parentsInternal)]');
   }

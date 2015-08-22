@@ -2,6 +2,7 @@
 
 use lang\reflect\Module;
 use lang\ClassLoader;
+use lang\ElementNotFoundException;
 
 /**
  * TestCase for modules
@@ -90,7 +91,7 @@ class ModuleTest extends \unittest\TestCase {
   }
 
   #[@test, @expect(
-  #  class= 'lang.ElementNotFoundException',
+  #  class= ElementNotFoundException::class,
   #  withMessage= 'No module "@@non-existant@@" declared'
   #)]
   public function forName_throws_exception_when_no_module_registered() {

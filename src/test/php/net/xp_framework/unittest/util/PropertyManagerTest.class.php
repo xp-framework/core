@@ -4,6 +4,7 @@ use unittest\TestCase;
 use util\PropertyManager;
 use util\ResourcePropertySource;
 use lang\ClassLoader;
+use lang\ElementNotFoundException;
 use unittest\actions\RuntimeVersion;
 new import('lang.ResourceProvider');
 
@@ -218,7 +219,7 @@ key="overwritten value"'));
 
   }
 
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function getNonExistantProperties() {
     $this->preconfigured()->getProperties('does-not-exist');
   }

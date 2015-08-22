@@ -1,5 +1,10 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
+use lang\XPClass;
+use lang\ElementNotFoundException;
+use lang\IllegalArgumentException;
+use lang\IllegalAccessException;
+
 class FieldsTest extends \unittest\TestCase {
   private $fixture;
 
@@ -9,7 +14,7 @@ class FieldsTest extends \unittest\TestCase {
    * @return void
    */
   public function setUp() {
-    $this->fixture= \lang\XPClass::forName('net.xp_framework.unittest.reflection.TestClass');
+    $this->fixture= XPClass::forName('net.xp_framework.unittest.reflection.TestClass');
   }
 
   /**
@@ -104,7 +109,7 @@ class FieldsTest extends \unittest\TestCase {
    *
    * @see     xp://lang.XPClass#getField
    */
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function getNonExistantField() {
     $this->fixture->getField('@@nonexistant@@');
   }
@@ -124,7 +129,7 @@ class FieldsTest extends \unittest\TestCase {
    *
    * @see     xp://lang.XPClass#getField
    */
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function getSpecialIdField() {
     $this->fixture->getField('__id');
   }
@@ -202,7 +207,7 @@ class FieldsTest extends \unittest\TestCase {
     with ($field= $this->fixture->getField('date')); {
       $this->assertInstanceOf('lang.reflect.Field', $field);
       $this->assertEquals('date', $field->getName());
-      $this->assertEquals(\lang\XPClass::forName('util.Date'), $field->getType());
+      $this->assertEquals(XPClass::forName('util.Date'), $field->getType());
       $this->assertTrue($this->fixture->equals($field->getDeclaringClass()));
     }
   }
@@ -237,7 +242,7 @@ class FieldsTest extends \unittest\TestCase {
    *
    * @see     xp://lang.reflect.Field#get
    */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function getDateFieldValueOnWrongObject() {
     $this->fixture->getField('date')->get(new \lang\Object());
   }
@@ -247,7 +252,7 @@ class FieldsTest extends \unittest\TestCase {
    *
    * @see     xp://lang.reflect.Field#set
    */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function setDateFieldValueOnWrongObject() {
     $this->fixture->getField('date')->set(new \lang\Object(), \util\Date::now());
   }
@@ -283,7 +288,7 @@ class FieldsTest extends \unittest\TestCase {
    *
    * @see     xp://lang.reflect.Field#get
    */
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function getCacheFieldValue() {
     $this->fixture->getField('cache')->get(null);
   }
@@ -293,7 +298,7 @@ class FieldsTest extends \unittest\TestCase {
    *
    * @see     xp://lang.reflect.Field#set
    */
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function setCacheFieldValue() {
     $this->fixture->getField('cache')->set(null, []);
   }
@@ -303,7 +308,7 @@ class FieldsTest extends \unittest\TestCase {
    *
    * @see     xp://lang.reflect.Field#get
    */
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function getSizeFieldValue() {
     $this->fixture->getField('size')->get($this->fixture->newInstance());
   }
@@ -313,7 +318,7 @@ class FieldsTest extends \unittest\TestCase {
    *
    * @see     xp://lang.reflect.Field#set
    */
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function setSizeFieldValue() {
     $this->fixture->getField('size')->set($this->fixture->newInstance(), 1);
   }
@@ -323,7 +328,7 @@ class FieldsTest extends \unittest\TestCase {
    *
    * @see     xp://lang.reflect.Field#get
    */
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function factorFieldValue() {
     $this->fixture->getField('factor')->get($this->fixture->newInstance());
   }
@@ -361,7 +366,7 @@ class FieldsTest extends \unittest\TestCase {
    */
   #[@test]
   public function dateFieldType() {
-    $this->assertEquals(\lang\XPClass::forName('util.Date'), $this->fixture->getField('date')->getType());
+    $this->assertEquals(XPClass::forName('util.Date'), $this->fixture->getField('date')->getType());
   }
 
   /**
@@ -440,7 +445,7 @@ class FieldsTest extends \unittest\TestCase {
    */
   #[@test]
   public function fieldTypeForInheritedField() {
-    $this->assertEquals(\lang\XPClass::forName('lang.Object'), $this->fixture->getField('inherited')->getType());
+    $this->assertEquals(XPClass::forName('lang.Object'), $this->fixture->getField('inherited')->getType());
   }
 
   /**
