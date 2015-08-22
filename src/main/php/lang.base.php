@@ -451,13 +451,6 @@ function literal($type) {
 }
 // }}}
 
-// {{{ proto deprecated void delete(&var object)
-//     Destroys an object
-function delete(&$object) {
-  $object= null;
-}
-// }}}
-
 // {{{ proto void with(arg..., Closure)
 //     Syntactic sugar. Intentionally empty
 function with() {
