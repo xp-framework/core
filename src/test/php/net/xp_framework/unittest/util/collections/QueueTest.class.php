@@ -126,4 +126,11 @@ class QueueTest extends \unittest\TestCase {
   public function elementAtEmptyList() {
     $this->queue->elementAt(0);
   }
+
+  #[@test]
+  public function addFunction() {
+    $f= function() { return 'test'; };
+    $this->queue->put($f);
+    $this->assertEquals($f, $this->queue->elementAt(0));
+  }
 }
