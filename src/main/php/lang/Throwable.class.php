@@ -226,11 +226,11 @@ class Throwable extends \Exception implements Generic { use \__xp;
   /**
    * Indicates whether some other object is "equal to" this one.
    *
-   * @param   lang.Generic cmp
+   * @param   var $cmp
    * @return  bool TRUE if the compared object is equal to this object
    */
   public function equals($cmp) {
-    if (!$cmp instanceof Generic) return false;
+    if (!$cmp instanceof self) return false;
     if (!$cmp->__id) $cmp->__id= uniqid('', true);
     return $this === $cmp;
   }
