@@ -63,7 +63,7 @@ use util\Date;
 use util\DateUtil;
 use util\cmd\Console;
 
-class AgeInDays extends \lang\Object {
+class AgeInDays {
 
   public static function main(array $args) {
     $span= DateUtil::timespanBetween(new Date($args[0]), Date::now());
