@@ -10,6 +10,11 @@ use net\xp_framework\unittest\Name;
  * @see  xp://util.Objects
  */
 class ObjectsTest extends \unittest\TestCase {
+  private static $func;
+
+  static function __static() {
+    self::$func= function() { return 'Test'; };
+  }
 
   /** @return  var[][] */
   public function primitives() {
@@ -24,17 +29,19 @@ class ObjectsTest extends \unittest\TestCase {
   /** @return  var[][] */
   public function arrays() {
     return [
-      [[]],
-      [[1, 2, 3]],
-      [[null, null]],
-      [[['Nested'], ['Array']]]
+      [[], ''],
+      [[1, 2, 3], '|0:i:1;|1:i:2;|2:i:3;'],
+      [[null, null], '|0:N;|1:N;'],
+      [[['Nested'], ['Array']], '|0:|0:s:6:"Nested";|1:|0:s:5:"Array";'],
+      [[self::$func], '|0:'.spl_object_hash(self::$func)]
     ];
   }
 
   /** @return  var[][] */
   public function maps() {
     return [
-      [['one' => 'two']]
+      [['one' => 'two'], '|one:s:3:"two";'],
+      [['func' => self::$func], '|func:'.spl_object_hash(self::$func)]
     ];
   }
 
@@ -56,7 +63,8 @@ class ObjectsTest extends \unittest\TestCase {
       $this->primitives(),
       $this->arrays(),
       $this->maps(),
-      $this->objects()
+      $this->objects(),
+      [[function() { return 'Test'; }]]
     );
   }
 
@@ -119,7 +127,7 @@ class ObjectsTest extends \unittest\TestCase {
 
   #[@test, @values(source= 'values')]
   public function object_not_equal_to_other_values($val) {
-    $this->assertFalse(Objects::equal(new \lang\Object(), $val));
+    $this->assertFalse(Objects::equal(new Object(), $val));
   }
 
   #[@test, @values(source= 'values')]
@@ -215,13 +223,13 @@ class ObjectsTest extends \unittest\TestCase {
   }
 
   #[@test, @values('arrays')]
-  public function hashOf_calls_serialize_on_arrays($val) {
-    $this->assertEquals(serialize($val), Objects::hashOf($val));
+  public function hashOf_calls_serialize_on_arrays($val, $expected) {
+    $this->assertEquals($expected, Objects::hashOf($val));
   }
 
   #[@test, @values('maps')]
-  public function hashOf_calls_serialize_on_maps($val) {
-    $this->assertEquals(serialize($val), Objects::hashOf($val));
+  public function hashOf_calls_serialize_on_maps($val, $expected) {
+    $this->assertEquals($expected, Objects::hashOf($val));
   }
 
   #[@test, @values('objects')]
@@ -231,7 +239,6 @@ class ObjectsTest extends \unittest\TestCase {
 
   #[@test]
   public function function_hash() {
-    $closure= function($a, $b) { };
-    $this->assertEquals(spl_object_hash($closure), Objects::hashOf($closure));
+    $this->assertEquals(spl_object_hash(self::$func), Objects::hashOf(self::$func));
   }
 }

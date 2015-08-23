@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed `util.Objects::hashOf()` for arrays and maps containing closures
+  (@thekid)
 * Fixed lang.types.ArrayList and lang.types.ArrayMap's equals() methods
   in conjunction with lang.Value instances.
   (@thekid)

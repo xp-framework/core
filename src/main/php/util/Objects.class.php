@@ -78,6 +78,12 @@ abstract class Objects extends \lang\Object {
       return $val->hashCode();
     } else if ($val instanceof \Closure) {
       return spl_object_hash($val);
+    } else if (is_array($val)) {
+      $s= '';
+      foreach ($val as $key => $value) {
+        $s.= '|'.$key.':'.self::hashOf($value);
+      }
+      return $s;
     } else {
       return serialize($val);
     }
