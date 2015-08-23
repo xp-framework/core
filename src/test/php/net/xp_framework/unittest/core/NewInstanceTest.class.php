@@ -98,6 +98,12 @@ class NewInstanceTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function new_interface_does_not_use_any_base_class() {
+    $o= newinstance(Runnable::class, [], '{ public function run() { } }');
+    $this->assertFalse(get_parent_class($o));
+  }
+
+  #[@test]
   public function new_interface_with_body_as_string() {
     $o= newinstance(Runnable::class, [], '{ public function run() { } }');
     $this->assertInstanceOf(Runnable::class, $o);
@@ -116,7 +122,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $o= newinstance('#[@test] lang.Runnable', [], [
       'run' => function() { }
     ]);
-    $this->assertTrue($o->getClass()->hasAnnotation('test'));
+    $this->assertTrue(typeof($o)->hasAnnotation('test'));
   }
 
   #[@test]
@@ -140,7 +146,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $o= newinstance('#[@test] net.xp_framework.unittest.core.Named', [], [
       'run' => function() { }
     ]);
-    $this->assertTrue($o->getClass()->hasAnnotation('test'));
+    $this->assertTrue(typeof($o)->hasAnnotation('test'));
   }
 
   #[@test]
@@ -260,7 +266,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $i= newinstance(Object::class, [], '{}');
     $this->assertEquals(
       Package::forName('lang'),
-      $i->getClass()->getPackage()
+      typeof($i)->getPackage()
     );
   }
 
@@ -269,7 +275,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $i= newinstance($class, [], '{ public function getIterator() { /* Empty */ }}');
     $this->assertEquals(
       Package::forName(''),
-      $i->getClass()->getPackage()
+      typeof($i)->getPackage()
     );
   }
 
@@ -278,7 +284,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $i= newinstance($class, [], '{}');
     $this->assertEquals(
       Package::forName('net.xp_framework.unittest.core'),
-      $i->getClass()->getPackage()
+      typeof($i)->getPackage()
     );
   }
 
@@ -287,7 +293,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $i= newinstance(NamespacedInterface::class, [], '{}');
     $this->assertEquals(
       Package::forName('net.xp_framework.unittest.core'),
-      $i->getClass()->getPackage()
+      typeof($i)->getPackage()
     );
   }
 
