@@ -105,7 +105,7 @@ class WildcardType extends Type {
    * @return  bool
    */
   public function isInstance($obj) {
-    return $obj instanceof Generic && $this->assignableFromClass($obj->getClass());
+    return is_object($obj) && $this->assignableFromClass(typeof($obj));
   }
 
   /**
