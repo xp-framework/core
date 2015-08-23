@@ -121,4 +121,11 @@ class LRUBufferTest extends \unittest\TestCase {
     }
     $this->assertFalse($this->buffer->equals($other));
   }
+
+  #[@test]
+  public function addFunction() {
+    $f= function() { return 'test'; };
+    $this->buffer->add($f);
+    $this->assertEquals(1, $this->buffer->numElements());
+  }
 }

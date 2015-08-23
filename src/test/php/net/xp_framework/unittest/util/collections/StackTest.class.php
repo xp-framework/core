@@ -72,4 +72,11 @@ class StackTest extends \unittest\TestCase {
   public function elementAtIllegalOffset() {
     $this->stack->elementAt(-1);
   }
+
+  #[@test]
+  public function addFunction() {
+    $f= function() { return 'test'; };
+    $this->stack->push($f);
+    $this->assertEquals($f, $this->stack->elementAt(0));
+  }
 }

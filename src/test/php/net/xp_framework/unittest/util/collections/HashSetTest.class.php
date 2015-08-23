@@ -155,4 +155,11 @@ class HashSetTest extends \unittest\TestCase {
       $this->set->toString()
     );
   }
+
+  #[@test]
+  public function addFunction() {
+    $f= function() { return 'test'; };
+    $this->set->add($f);
+    $this->assertEquals([$f], $this->set->toArray());
+  }
 }
