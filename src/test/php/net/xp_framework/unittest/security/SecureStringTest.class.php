@@ -1,6 +1,11 @@
 <?php namespace net\xp_framework\unittest\security;
 
 use security\SecureString;
+use security\SecurityException;
+use lang\IllegalStateException;
+use lang\IllegalArgumentException;
+use lang\XPException;
+use lang\Throwable;
 
 /**
  * Baseclass for test cases for security.SecureString
@@ -24,7 +29,7 @@ abstract class SecureStringTest extends \unittest\TestCase {
     new SecureString($this->getValue());
   }
 
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function not_serializable() {
     serialize(new SecureString('payload'));
   }
@@ -82,24 +87,24 @@ abstract class SecureStringTest extends \unittest\TestCase {
     $called= false;
     SecureString::setBacking(function($value) use (&$called) {
       $called= true;
-      throw new \lang\XPException('Something went wrong - intentionally.');
+      throw new XPException('Something went wrong - intentionally.');
     }, function($value) { return null; });
 
     new SecureString('foo');
     $this->assertTrue($called);
   }
 
-  #[@test, @expect(class= 'security.SecurityException', withMessage= '/An error occurred during storing the encrypted password./')]
+  #[@test, @expect(class= SecurityException::class, withMessage= '/An error occurred during storing the encrypted password./')]
   public function decryption_throws_exception_if_creation_has_failed() {
     $called= false;
     SecureString::setBacking(function($value) {
-      throw new \lang\XPException('Something went wrong - intentionally.');
+      throw new XPException('Something went wrong - intentionally.');
     }, function($value) { return null; });
 
     // Creation may never throw exception
     try {
       $s= new SecureString('foo');
-    } catch (\lang\Throwable $t) {
+    } catch (\Throwable $t) {
       $this->fail('Exception thrown where no exception may be thrown', $t, null);
     }
 
@@ -107,7 +112,7 @@ abstract class SecureStringTest extends \unittest\TestCase {
     $s->getCharacters();
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function useBacking_with_invalid_backing_throws_exception() {
     SecureString::useBacking(77);
   }

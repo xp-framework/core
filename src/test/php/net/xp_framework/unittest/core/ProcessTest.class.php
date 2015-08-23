@@ -5,6 +5,8 @@ use unittest\AssertionFailedError;
 use lang\Runtime;
 use lang\System;
 use lang\Process;
+use lang\IllegalStateException;
+use io\IOException;
 use io\streams\Streams;
 use io\streams\MemoryOutputStream;
 
@@ -28,7 +30,7 @@ class ProcessTest extends \unittest\TestCase {
   /**
    * Return executable name
    *
-   * @return  string
+   * @return string
    */
   private function executable() {
     return Runtime::getInstance()->getExecutable()->getFilename();
@@ -131,22 +133,22 @@ class ProcessTest extends \unittest\TestCase {
     $this->assertEquals('ERR', $err);
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function runningNonExistantFile() {
     new Process(':FILE_DOES_NOT_EXIST:');
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function runningDirectory() {
     new Process(System::tempDir());
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function runningEmpty() {
     new Process('');
   }
 
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function nonExistantProcessId() {
     Process::getProcessById(-1);
   }
@@ -166,7 +168,7 @@ class ProcessTest extends \unittest\TestCase {
     $this->assertEquals(222, $p->close());
   }
 
-  #[@test, @expect(class= 'lang.IllegalStateException', withMessage= '/Cannot close not-owned/')]
+  #[@test, @expect(class= IllegalStateException::class, withMessage= '/Cannot close not-owned/')]
   public function closingProcessByProcessId() {
     Process::getProcessById(getmypid())->close();
   }

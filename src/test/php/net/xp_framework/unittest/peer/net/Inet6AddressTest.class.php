@@ -1,15 +1,16 @@
 <?php namespace net\xp_framework\unittest\peer\net;
 
-use unittest\TestCase;
 use peer\net\Inet6Address;
 use peer\net\Network;
+use lang\FormatException;
 
-class Inet6AddressTest extends TestCase {
+/**
+ * IPv6 addresses test 
+ *
+ * @see   http://en.wikipedia.org/wiki/Reverse_DNS_lookup#IPv6_reverse_resolution
+ */
+class Inet6AddressTest extends \unittest\TestCase {
 
-  /**
-   * Test creation of address
-   *
-   */
   #[@test]
   public function createAddress() {
     $this->assertEquals(
@@ -18,10 +19,6 @@ class Inet6AddressTest extends TestCase {
     );
   }
 
-  /**
-   * Test creation of address
-   *
-   */
   #[@test]
   public function createAddressFromUpperCase() {
     $this->assertEquals(
@@ -30,28 +27,22 @@ class Inet6AddressTest extends TestCase {
     );
   }
 
-  /**
-   * Test creation of address from its packed form
-   *
-   */
   #[@test]
   public function createAddressFromPackedForm() {
     $this->assertEquals(
       '::1',
       (new Inet6Address("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\1", true))->asString()
     );
-    
-    //special case when a colon is part of the packed address string
+  }
+
+  #[@test]
+  public function createAddressFromPackedFormWithColonSpecialCase() {
     $this->assertEquals(
       '::3a',
       (new Inet6Address("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0:", true))->asString() // ord(':')==0x32
     );
   }
 
-  /**
-   * Test getAddress() shortens address
-   *
-   */
   #[@test]
   public function addressIsShortened() {
     $this->assertEquals(
@@ -60,10 +51,6 @@ class Inet6AddressTest extends TestCase {
     );
   }
   
-  /**
-   * Test shortening only takes place once
-   *
-   */
   #[@test]
   public function addressShorteningOnlyTakesPlaceOnce() {
     $this->assertEquals(
@@ -72,11 +59,6 @@ class Inet6AddressTest extends TestCase {
     );
   }
   
-  
-  /**
-   * Test hexquads become shortened if first digits are zero
-   *
-   */
   #[@test]
   public function hexquadsAreShortenedWhenStartingWithZero() {
     $this->assertEquals(
@@ -85,10 +67,6 @@ class Inet6AddressTest extends TestCase {
     );
   }
   
-  /**
-   * Test prefix is shortened
-   *
-   */
   #[@test]
   public function addressPrefixIsShortened() {
     $this->assertEquals(
@@ -97,10 +75,6 @@ class Inet6AddressTest extends TestCase {
     );
   }
   
-  /**
-   * Test postfix is shortened
-   *
-   */
   #[@test]
   public function addressPostfixIsShortened() {
     $this->assertEquals(
@@ -109,156 +83,86 @@ class Inet6AddressTest extends TestCase {
     );
   }
   
-  
-  /**
-   * Test loopback address is formatted correctly
-   *
-   */
   #[@test]
   public function loopbackAddress() {
     $this->assertEquals('::1', (new Inet6Address('::1'))->asString());
   }
   
-  /**
-   * Test loopback address is detected
-   *
-   */
   #[@test]
   public function isLoopbackAddress() {
     $this->assertTrue((new Inet6Address('::1'))->isLoopback());
   }
   
-  /**
-   * Test alternative loopback address is detected
-   *
-   */
   #[@test]
   public function isNotLoopbackAddress() {
     $this->assertFalse((new Inet6Address('::2'))->isLoopback());
   }
   
-  /**
-   * Test subnet detection for loopback
-   *
-   */
   #[@test]
   public function inSubnet() {
     $this->assertTrue((new Inet6Address('::1'))->inSubnet(new Network(new Inet6Address('::1'), 120)));
   }
   
-  /**
-   * Test smallest possible subnet contains loopback
-   *
-   */
   #[@test]
   public function inSmallestPossibleSubnet() {
     $this->assertTrue((new Inet6Address('::1'))->inSubnet(new Network(new Inet6Address('::0'), 127)));
   }
   
-  /**
-   * Test address not being detected in subnet when its not
-   *
-   */
   #[@test]
   public function notInSubnet() {
     $this->assertFalse((new Inet6Address('::1'))->inSubnet(new Network(new Inet6Address('::0101'), 120)));
   }
 
-  /**
-   * Test invalid address is caught
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function illegalAddress() {
     new Inet6Address('::ffffff:::::a');
   }
 
-  /**
-   * Test invalid address is caught
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function anotherIllegalAddress() {
     new Inet6Address('');
   }
 
-  /**
-   * Test creation of address from an invalid input string
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function invalidInputOfNumbers() {
     new Inet6Address('12345678901234567');
   }
 
-  /**
-   * Test creation of address from an invalid input string
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function invalidHexQuadBeginning() {
     new Inet6Address('XXXX::a574:382b:23c1:aa49:4592:4efe:9982');
   }
 
-  /**
-   * Test creation of address from an invalid input string
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function invalidHexQuadEnd() {
     new Inet6Address('9982::a574:382b:23c1:aa49:4592:4efe:XXXX');
   }
 
-  /**
-   * Test creation of address from an invalid input string
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function invalidHexQuad() {
     new Inet6Address('a574::XXXX:382b:23c1:aa49:4592:4efe:9982');
   }
   
-  /**
-   * Test creation of address from an invalid input string
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function invalidHexDigit() {
     new Inet6Address('a574::382X:382b:23c1:aa49:4592:4efe:9982');
   }
 
-  /**
-   * The same IPs should be equal
-   *
-   */
   #[@test]
   public function sameIPsShouldBeEqual() {
     $this->assertEquals(new Inet6Address('::1'), new Inet6Address('::1'));
   }
 
-  /**
-   * Different IPs should not be equal
-   *
-   */
   #[@test]
   public function differentIPsShouldBeDifferent() {
     $this->assertNotEquals(new Inet6Address('::1'), new Inet6Address('::fe08'));
   }
 
-  /**
-   * Check casting to string works
-   *
-   */
   #[@test]
   public function castToString() {
     $this->assertEquals('[::1]', (string)new Inet6Address('::1'));
   }
 
-  /**
-   * Test
-   *
-   * @see   http://en.wikipedia.org/wiki/Reverse_DNS_lookup#IPv6_reverse_resolution
-   */
   #[@test]
   public function reversedNotation() {
     $this->assertEquals(
@@ -267,10 +171,6 @@ class Inet6AddressTest extends TestCase {
     );
   }
   
-      /**
-   * Test reverse address being built
-   *
-   */
   #[@test]
   public function createSubnet_creates_subnet_with_trailing_zeros() {
     $addr= new Inet6Address('febc:a574:382b:23c1:aa49:4592:4efe:9982');

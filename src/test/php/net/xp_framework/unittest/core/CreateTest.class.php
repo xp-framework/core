@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\XPClass;
+use lang\IllegalArgumentException;
 use util\collections\Vector;
 use util\collections\HashTable;
 
@@ -39,7 +40,7 @@ class CreateTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function create_raises_exception_when_non_generic_given() {
     create('new lang.Object<lang.Object>');
   }

@@ -9,12 +9,10 @@ use lang\MapType;
 use lang\XPClass;
 use util\collections\Vector;
 use util\collections\HashTable;
+use lang\IllegalStateException;
+use lang\IllegalAccessException;
+use lang\ClassCastException;
 
-/**
- * TestCase
- *
- * @see      xp://lang.Type
- */
 class TypeTest extends \unittest\TestCase {
 
   #[@test]
@@ -174,7 +172,7 @@ class TypeTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalStateException'), @values([null, ''])]
+  #[@test, @expect(IllegalStateException::class), @values([null, ''])]
   public function forName_raises_exception_when_given_empty($value) {
     Type::forName($value);
   }
@@ -230,7 +228,7 @@ class TypeTest extends \unittest\TestCase {
     $this->assertEquals($value, Type::$VAR->newInstance($value));
   }
 
-  #[@test, @expect('lang.IllegalAccessException'), @values('instances')]
+  #[@test, @expect(IllegalAccessException::class), @values('instances')]
   public function newInstance_of_void($value) {
     Type::$VOID->newInstance($value);
   }
@@ -240,7 +238,7 @@ class TypeTest extends \unittest\TestCase {
     $this->assertEquals($value, Type::$VAR->cast($value));
   }
 
-  #[@test, @expect('lang.ClassCastException'), @values('instances')]
+  #[@test, @expect(ClassCastException::class), @values('instances')]
   public function cast_to_void($value) {
     Type::$VOID->cast($value);
   }

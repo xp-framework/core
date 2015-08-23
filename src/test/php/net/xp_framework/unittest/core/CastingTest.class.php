@@ -2,16 +2,17 @@
 
 use unittest\TestCase;
 use lang\Runnable;
+use lang\Object;
+use lang\Generic;
+use lang\CommandLine;
+use lang\ClassCastException;
 
 /**
  * Tests cast() functionality
  */
 class CastingTest extends TestCase implements Runnable {
 
-  /**
-   * Runnable implementation
-   *
-   */
+  /** @return void */
   public function run() { 
     // Intentionally empty
   }
@@ -21,27 +22,27 @@ class CastingTest extends TestCase implements Runnable {
     $runnable= newinstance(Runnable::class, [], [
       'run' => function() { return 'Test'; }
     ]);
-    $this->assertEquals('Test', cast($runnable, 'lang.Runnable')->run());
+    $this->assertEquals('Test', cast($runnable, Runnable::class)->run());
   }
 
-  #[@test, @expect('lang.ClassCastException')]
+  #[@test, @expect(ClassCastException::class)]
   public function null() {
-    cast(null, 'lang.Object');
+    cast(null, Object::class);
   }
 
-  #[@test, @expect('lang.ClassCastException')]
+  #[@test, @expect(ClassCastException::class)]
   public function is_nullsafe_per_default() {
-    cast(null, 'lang.Runnable')->run();
+    cast(null, Runnable::class)->run();
   }
 
   #[@test]
   public function passig_null_allowed_when_nullsafe_set_to_false() {
-    $this->assertNull(cast(null, 'lang.Object', false));
+    $this->assertNull(cast(null, Object::class, false));
   }
 
   #[@test]
   public function thisClass() {
-    $this->assertTrue($this === cast($this, $this->getClass()));
+    $this->assertTrue($this === cast($this, typeof($this)));
   }
 
   #[@test]
@@ -50,42 +51,47 @@ class CastingTest extends TestCase implements Runnable {
   }
 
   #[@test]
+  public function thisClassLiteral() {
+    $this->assertTrue($this === cast($this, self::class));
+  }
+
+  #[@test]
   public function runnableInterface() {
-    $this->assertTrue($this === cast($this, 'lang.Runnable'));
+    $this->assertTrue($this === cast($this, Runnable::class));
   }
 
   #[@test]
   public function parentClass() {
-    $this->assertTrue($this === cast($this, 'unittest.TestCase'));
+    $this->assertTrue($this === cast($this, TestCase::class));
   }
 
   #[@test]
   public function objectClass() {
-    $this->assertTrue($this === cast($this, 'lang.Object'));
+    $this->assertTrue($this === cast($this, Object::class));
   }
 
   #[@test]
   public function genericInterface() {
-    $this->assertTrue($this === cast($this, 'lang.Generic'));
+    $this->assertTrue($this === cast($this, Generic::class));
   }
 
-  #[@test, @expect('lang.ClassCastException')]
+  #[@test, @expect(ClassCastException::class)]
   public function unrelated() {
-    cast($this, 'lang.CommandLine');
+    cast($this, CommandLine::class);
   }
 
-  #[@test, @expect('lang.ClassCastException')]
+  #[@test, @expect(ClassCastException::class)]
   public function subClass() {
-    cast(new \lang\Object(), 'lang.CommandLine');
+    cast(new Object(), CommandLine::class);
   }
 
-  #[@test, @expect('lang.ClassCastException')]
+  #[@test, @expect(ClassCastException::class)]
   public function nonExistant() {
     cast($this, '@@NON_EXISTANT_CLASS@@');
   }
 
-  #[@test, @expect('lang.ClassCastException')]
+  #[@test, @expect(ClassCastException::class)]
   public function primitive() {
-    cast('primitive', 'lang.Object');
+    cast('primitive', Object::class);
   }
 }

@@ -2,6 +2,7 @@
 
 use unittest\TestCase;
 use lang\Primitive;
+use lang\ClassCastException;
 use lang\IllegalArgumentException;
 use io\streams\Streams;
 use io\streams\MemoryInputStream;
@@ -244,12 +245,12 @@ class PrimitiveTest extends TestCase {
     Primitive::forName($name)->newInstance(['one' => 'two']);
   }
 
-  #[@test, @expect('lang.ClassCastException'), @values(['int', 'double', 'bool', 'string'])]
+  #[@test, @expect(ClassCastException::class), @values(['int', 'double', 'bool', 'string'])]
   public function cannot_cast_arrays_to_primitives($name) {
     Primitive::forName($name)->cast([1, 2, 3]);
   }
 
-  #[@test, @expect('lang.ClassCastException'), @values(['int', 'double', 'bool', 'string'])]
+  #[@test, @expect(ClassCastException::class), @values(['int', 'double', 'bool', 'string'])]
   public function cannot_cast_maps_to_primitives($name) {
     Primitive::forName($name)->cast(['one' => 'two']);
   }

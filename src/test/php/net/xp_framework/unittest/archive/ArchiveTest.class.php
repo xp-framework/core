@@ -2,6 +2,7 @@
 
 use lang\archive\Archive;
 use lang\FormatException;
+use lang\ElementNotFoundException;
 use io\File;
 use io\streams\Streams;
 use io\streams\MemoryInputStream;
@@ -82,7 +83,7 @@ abstract class ArchiveTest extends \unittest\TestCase {
     $this->assertFalse($a->contains('DOES-NOT-EXIST'));
   }
 
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function extract_non_existant() {
     $a= new Archive($this->file($this->version()));
     $a->open(Archive::READ);

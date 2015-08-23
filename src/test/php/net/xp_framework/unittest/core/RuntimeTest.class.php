@@ -1,12 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\Runtime;
+use lang\FormatException;
 
-/**
- * TestCase
- *
- * @see   xp://lang.Runtime
- */
 class RuntimeTest extends \unittest\TestCase {
 
   /**
@@ -14,6 +10,8 @@ class RuntimeTest extends \unittest\TestCase {
    *
    * @param  string[] $expected
    * @param  lang.RuntimeOptions $actual
+   * @return void
+   * @throws unittest.AssertionFailedError
    */
   private function assertArguments($expected, $actual) {
     if (defined('HHVM_VERSION')) {
@@ -96,7 +94,7 @@ class RuntimeTest extends \unittest\TestCase {
     $this->assertEquals('tools/xar.php', $startup['bootstrap']);
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function parseUnknownSwtich() {
     Runtime::parseArguments(['-@']);
   }

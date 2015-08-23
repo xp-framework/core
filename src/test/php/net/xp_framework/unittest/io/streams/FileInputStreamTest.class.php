@@ -4,46 +4,41 @@ use unittest\TestCase;
 use io\streams\FileInputStream;
 use io\FileUtil;
 use io\TempFile;
+use io\IOException;
+use io\FileNotFoundException;
+use unittest\PrerequisitesNotMetError;
 
-/**
- * TestCase
- *
- * @see      xp://io.streams.FileInputStream
- */
 class FileInputStreamTest extends TestCase {
-  protected 
-    $file = null;
+  private $file;
 
   /**
    * Sets up test case - creates temporary file
    *
+   * @return void
    */
   public function setUp() {
     try {
       $this->file= new TempFile();
       FileUtil::setContents($this->file, 'Created by FileInputStreamTest');
-    } catch (\io\IOException $e) {
-      throw new \unittest\PrerequisitesNotMetError('Cannot write temporary file', $e, [$this->file]);
+    } catch (IOException $e) {
+      throw new PrerequisitesNotMetError('Cannot write temporary file', $e, [$this->file]);
     }
   }
   
   /**
    * Tear down this test case - removes temporary file
    *
+   * @return void
    */
   public function tearDown() {
     try {
       $this->file->isOpen() && $this->file->close();
       $this->file->unlink();
-    } catch (\io\IOException $ignored) {
+    } catch (IOException $ignored) {
       // Can't really do anything about it...
     }
   }
   
-  /**
-   * Test read() method
-   *
-   */
   #[@test]
   public function reading() {
     with ($stream= new FileInputStream($this->file)); {
@@ -53,10 +48,6 @@ class FileInputStreamTest extends TestCase {
     }
   }
 
-  /**
-   * Test seek() and tell() methods
-   *
-   */
   #[@test]
   public function seeking() {
     with ($stream= new FileInputStream($this->file)); {
@@ -67,10 +58,6 @@ class FileInputStreamTest extends TestCase {
     }
   }
 
-  /**
-   * Test available() method
-   *
-   */
   #[@test]
   public function availability() {
     with ($stream= new FileInputStream($this->file)); {
@@ -80,10 +67,6 @@ class FileInputStreamTest extends TestCase {
     }
   }
 
-  /**
-   * Test file remains open when FileInputStream instance is deleted
-   *
-   */
   #[@test]
   public function delete() {
     with ($stream= new FileInputStream($this->file)); {
@@ -93,20 +76,12 @@ class FileInputStreamTest extends TestCase {
     }
   }
 
-  /**
-   * Test opening a file input stream with a non-existant file name
-   *
-   */
-  #[@test, @expect('io.FileNotFoundException')]
+  #[@test, @expect(FileNotFoundException::class)]
   public function nonExistantFile() {
     new FileInputStream('::NON-EXISTANT::');
   }
 
-  /**
-   * Test reading after stream has been closed
-   *
-   */
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function readingAfterClose() {
     with ($stream= new FileInputStream($this->file)); {
       $stream->close();
@@ -114,11 +89,7 @@ class FileInputStreamTest extends TestCase {
     }
   }
 
-  /**
-   * Test availability after stream has been closed
-   *
-   */
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function availableAfterClose() {
     with ($stream= new FileInputStream($this->file)); {
       $stream->close();
@@ -126,10 +97,6 @@ class FileInputStreamTest extends TestCase {
     }
   }
 
-  /**
-   * Test closig an already closed stream
-   *
-   */
   #[@test]
   public function doubleClose() {
     with ($stream= new FileInputStream($this->file)); {

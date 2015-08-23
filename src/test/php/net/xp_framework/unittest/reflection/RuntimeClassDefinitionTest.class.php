@@ -2,6 +2,7 @@
 
 use lang\XPClass;
 use lang\ClassLoader;
+use lang\ClassNotFoundException;
 
 /**
  * TestCase for lang.ClassLoader::defineClass()
@@ -89,17 +90,17 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
     $this->assertTrue($class->getField('initializerCalled')->get(null));
   }
 
-  #[@test, @expect('lang.ClassNotFoundException')]
+  #[@test, @expect(ClassNotFoundException::class)]
   public function cannot_define_class_with_non_existant_parent() {
     $this->define(['parent' => '@@nonexistant@@']);
   }
 
-  #[@test, @expect('lang.ClassNotFoundException')]
+  #[@test, @expect(ClassNotFoundException::class)]
   public function cannot_define_class_with_null_parent() {
     $this->define(['parent' => null]);
   }
 
-  #[@test, @expect('lang.ClassNotFoundException'), @values([
+  #[@test, @expect(ClassNotFoundException::class), @values([
   #  [['@@nonexistant@@']],
   #  [['lang.Runnable', '@@nonexistant@@']],
   #  [['@@nonexistant@@', 'lang.Runnable']]
@@ -108,7 +109,7 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
     $this->define(['interfaces' => $list]);
   }
 
-  #[@test, @expect('lang.ClassNotFoundException')]
+  #[@test, @expect(ClassNotFoundException::class)]
   public function cannot_define_class_with_null_interface() {
     $this->define(['interfaces' => [null]]);
   }

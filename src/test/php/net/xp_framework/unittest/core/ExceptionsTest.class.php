@@ -1,21 +1,21 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\TestCase;
 use io\streams\Streams;
 use io\streams\MemoryOutputStream;
 use lang\Throwable;
+use lang\Error;
+use lang\XPException;
+use lang\XPClass;
+use lang\IllegalArgumentException;
 use unittest\actions\RuntimeVersion;
 
-/**
- * Test the XP exception mechanism
- */
-class ExceptionsTest extends TestCase {
+class ExceptionsTest extends \unittest\TestCase {
 
   #[@test]
   public function noException() {
     try {
       // Nothing
-    } catch (\lang\XPException $caught) {
+    } catch (Throwable $caught) {
       $this->fail('Caught an exception but none where thrown', $caught);
     }
   }
@@ -36,10 +36,10 @@ class ExceptionsTest extends TestCase {
   #[@test]
   public function multipleCatches() {
     try {
-      throw new \lang\XPException('Test');
-    } catch (\lang\IllegalArgumentException $caught) {
+      throw new XPException('Test');
+    } catch (IllegalArgumentException $caught) {
       return $this->fail('Exception should have been caught in Exception block', 'IllegalArgumentException');
-    } catch (\lang\XPException $caught) {
+    } catch (XPException $caught) {
       return true;
     } catch (Throwable $caught) {
       return $this->fail('Exception should have been caught in Exception block', 'Throwable');
@@ -87,7 +87,7 @@ class ExceptionsTest extends TestCase {
 
   #[@test]
   public function classMethod() {
-    $this->assertEquals(\lang\XPClass::forName('lang.Throwable'), (new Throwable('Test'))->getClass());
+    $this->assertEquals(XPClass::forName('lang.Throwable'), (new Throwable('Test'))->getClass());
   }
 
   /** @deprecated */
@@ -112,13 +112,13 @@ class ExceptionsTest extends TestCase {
     $this->assertEquals($e->toString(), $out->getBytes());
   }
   
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function withCause_must_be_a_throwable() {
-    new \lang\XPException('Message', 'Anything...');
+    new XPException('Message', 'Anything...');
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function withCause_must_be_a_throwable7() {
-    new \lang\XPException('Message', 'Anything...');
+    new XPException('Message', 'Anything...');
   }
 }

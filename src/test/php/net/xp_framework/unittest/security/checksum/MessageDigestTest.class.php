@@ -1,41 +1,23 @@
 <?php namespace net\xp_framework\unittest\security\checksum;
 
-use unittest\TestCase;
 use security\checksum\MessageDigest;
+use security\NoSuchAlgorithmException;
+use lang\IllegalArgumentException;
 
+class MessageDigestTest extends \unittest\TestCase {
 
-/**
- * TestCase
- *
- * @see      xp://security.checksum.MessageDigest
- */
-class MessageDigestTest extends TestCase {
-
-  /**
-   * Test register() method
-   *
-   */
-  #[@test, @expect('lang.IllegalArgumentException')]
-  public function registerTestClassAsImplementation() {
-    MessageDigest::register('irrelevant', $this->getClass());
-  }
-
-  /**
-   * Test supportedAlgorithms() method
-   *
-   */
   #[@test]
-  public function supportedAlgorithms() {
-    $a= MessageDigest::supportedAlgorithms();
-    $this->assertTrue(is_array($a), 'Expected an array but have '.\xp::typeOf($a));
+  public function supported_algorithms() {
+    $this->assertInstanceOf('string[]', MessageDigest::supportedAlgorithms());
   }
 
-  /**
-   * Test newInstance() method
-   *
-   */
-  #[@test, @expect('security.NoSuchAlgorithmException')]
-  public function unsupportedAlgorithm() {
+  #[@test, @expect(IllegalArgumentException::class)]
+  public function register_this_as_implementation() {
+    MessageDigest::register('irrelevant', typeof($this));
+  }
+
+  #[@test, @expect(NoSuchAlgorithmException::class)]
+  public function unsupported_algorithm() {
     MessageDigest::newInstance('unsupported');
   }
 }

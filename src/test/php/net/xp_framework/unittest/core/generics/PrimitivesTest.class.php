@@ -2,6 +2,7 @@
 
 use lang\XPClass;
 use lang\Primitive;
+use lang\IllegalArgumentException;
 
 /**
  * TestCase for generic behaviour at runtime.
@@ -25,13 +26,13 @@ class PrimitivesTest extends \unittest\TestCase {
     $this->assertEquals('this', $l->get($this));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function primitiveVerification() {
     $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, unittest.TestCase>()');
     $l->put(1, $this);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function instanceVerification() {
     $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, unittest.TestCase>()');
     $l->put($this, $this);

@@ -3,6 +3,9 @@
 use lang\reflect\Modifiers;
 use lang\XPClass;
 use lang\Enum;
+use lang\Error;
+use lang\IllegalArgumentException;
+use lang\CloneNotSupportedException;
 use unittest\actions\RuntimeVersion;
 
 /**
@@ -20,8 +23,9 @@ class EnumTest extends \unittest\TestCase {
   /**
    * Asserts given modifiers contain abstract
    *
-   * @param   int modifiers
-   * @throws  unittest.AssertionFailedError
+   * @param  int $modifiers
+   * @return void
+   * @throws unittest.AssertionFailedError
    */
   protected function assertAbstract($modifiers) {
     $this->assertTrue(
@@ -33,8 +37,9 @@ class EnumTest extends \unittest\TestCase {
   /**
    * Asserts given modifiers do not contain abstract
    *
-   * @param   int modifiers
-   * @throws  unittest.AssertionFailedError
+   * @param  int $modifiers
+   * @return void
+   * @throws unittest.AssertionFailedError
    */
   protected function assertNotAbstract($modifiers) {
     $this->assertFalse(
@@ -135,7 +140,7 @@ class EnumTest extends \unittest\TestCase {
     $this->assertNotEquals(Coin::$penny, Coin::$quarter);
   }
 
-  #[@test, @expect('lang.CloneNotSupportedException')]
+  #[@test, @expect(CloneNotSupportedException::class)]
   public function enumMembersAreNotCloneable() {
     clone Coin::$penny;
   }
@@ -148,17 +153,17 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function valueOfNonExistant() {
     Enum::valueOf(XPClass::forName('net.xp_framework.unittest.core.Coin'), '@@DOES_NOT_EXIST@@');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function valueOfNonEnum() {
     Enum::valueOf($this, 'irrelevant');
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function valueOfNonEnum7() {
     Enum::valueOf($this, 'irrelevant');
   }
@@ -187,12 +192,12 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function valuesOfNonEnum() {
     Enum::valuesOf($this);
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function valuesOfNonEnum7() {
     Enum::valuesOf($this);
   }
@@ -233,7 +238,7 @@ class EnumTest extends \unittest\TestCase {
     );
   }
   
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function staticMemberNotWithEnumValueOf() {
     Enum::valueOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'), 'fixture');
   }

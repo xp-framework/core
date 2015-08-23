@@ -146,13 +146,13 @@ class StreamWrappingTest extends TestCase {
     $this->assertEquals($buffer, $m->getBytes());
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function reading_from_writeable_fd_raises_exception() {
     $fd= Streams::writeableFd(new MemoryOutputStream());
     fread($fd, 1024);
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function writing_to_readable_fd_raises_exception() {
     $fd= Streams::readableFd(new MemoryInputStream(''));
     fwrite($fd, 1024);
@@ -163,7 +163,7 @@ class StreamWrappingTest extends TestCase {
     $this->assertEquals($value, Streams::readAll(new MemoryInputStream($value)));
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function readAll_propagates_exception() {
     Streams::readAll(newinstance(InputStream::class, [], [
       'read'      => function($limit= 8192) { throw new IOException('FAIL'); },

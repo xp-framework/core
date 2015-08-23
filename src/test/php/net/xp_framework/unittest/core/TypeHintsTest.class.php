@@ -1,6 +1,10 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use unittest\actions\RuntimeVersion;
+use lang\Generic;
+use lang\Object;
+use lang\Error;
+use lang\IllegalArgumentException;
 
 /**
  * Test type hints.
@@ -13,7 +17,7 @@ class TypeHintsTest extends \unittest\TestCase {
    * @param  lang.Generic $o
    * @return lang.Generic
    */
-  protected function pass(\lang\Generic $o) { return $o; }
+  protected function pass(Generic $o) { return $o; }
 
   /**
    * Pass a nullable object
@@ -21,47 +25,47 @@ class TypeHintsTest extends \unittest\TestCase {
    * @param  lang.Generic $o
    * @return lang.Generic
    */
-  protected function nullable(\lang\Generic $o= null) { return $o; }
+  protected function nullable(Generic $o= null) { return $o; }
 
 
   #[@test]
   public function pass_an_object() {
-    $o= new \lang\Object();
+    $o= new Object();
     $this->assertEquals($o, $this->pass($o));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function pass_a_primitive() {
     $this->pass(1);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function pass_null() {
     $this->pass(null);
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function pass_a_primitive7() {
     $this->pass(1);
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function pass_null7() {
     $this->pass(null);
   }
 
   #[@test]
   public function pass_object_to_nullable() {
-    $o= new \lang\Object();
+    $o= new Object();
     $this->assertEquals($o, $this->nullable($o));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function pass_a_primitive_to_nullable() {
     $this->nullable(1);
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function pass_a_primitive_to_nullable7() {
     $this->nullable(1);
   }

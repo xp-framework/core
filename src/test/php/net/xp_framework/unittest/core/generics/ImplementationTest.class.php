@@ -4,6 +4,7 @@ use lang\Type;
 use lang\Primitive;
 use lang\XPClass;
 use lang\ElementNotFoundException;
+use lang\IllegalArgumentException;
 
 /**
  * TestCase for instance reflection
@@ -61,7 +62,7 @@ class ImplementationTest extends \unittest\TestCase {
     $fixture->put(Primitive::$STRING, 'string');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function putInvalid() {
     $fixture= create('new net.xp_framework.unittest.core.generics.TypeDictionary<string>');
     $fixture->put($this, 'string');

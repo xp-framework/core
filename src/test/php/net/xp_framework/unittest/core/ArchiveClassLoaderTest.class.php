@@ -1,8 +1,9 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\TestCase;
 use lang\archive\ArchiveClassLoader;
 use lang\archive\Archive;
+use lang\ClassNotFoundException;
+use lang\ElementNotFoundException;
 use io\FileUtil;
 
 /**
@@ -19,11 +20,13 @@ use io\FileUtil;
  * 
  * @see   xp://lang.archive.ArchiveClassLoader
  */
-class ArchiveClassLoaderTest extends TestCase {
-  protected $fixture= NULL;
+class ArchiveClassLoaderTest extends \unittest\TestCase {
+  private $fixture;
   
   /**
    * Sets fixture to point to archive.xar from src/test/resources/
+   *
+   * @return void
    */
   public function setUp() {
     $this->fixture= new ArchiveClassLoader(new Archive(
@@ -66,7 +69,7 @@ class ArchiveClassLoaderTest extends TestCase {
     $this->assertInstanceOf('lang.XPClass', $this->fixture->loadClass('test.ClassLoadedFromArchive'));
   }
 
-  #[@test, @expect('lang.ClassNotFoundException')]
+  #[@test, @expect(ClassNotFoundException::class)]
   public function loading_non_existant_class_raises_exception() {
     $this->fixture->loadClass('non.existant.Class');
   }
@@ -83,12 +86,12 @@ class ArchiveClassLoaderTest extends TestCase {
     $this->assertEquals('<?php', substr($contents, 0, strpos($contents, "\n")));
   }
 
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function load_non_existant_resource_from_archive() {
     $this->fixture->getResource('non/existant/resource.file');
   }
 
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function load_non_existant_resource_stream_from_archive() {
     $this->fixture->getResourceAsStream('non/existant/resource.file');
   }

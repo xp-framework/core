@@ -1,15 +1,10 @@
 <?php namespace net\xp_framework\unittest\math;
 
-use unittest\TestCase;
 use math\BigFloat;
 use math\BigInt;
+use lang\IllegalArgumentException;
 
-/**
- * TestCase
- *
- * @see     xp://math.BigFloat
- */
-class BigFloatTest extends TestCase {
+class BigFloatTest extends \unittest\TestCase {
 
   #[@test]
   public function floatFromInt() {
@@ -163,7 +158,7 @@ class BigFloatTest extends TestCase {
     $this->assertEquals(new BigFloat(6100.0), (new BigFloat(37210000.0))->divide(6100.0));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function divisionByZero() {
     (new BigFloat(5.0))->divide(new BigFloat(0.0));
   }

@@ -10,30 +10,26 @@ use lang\ElementNotFoundException;
  * @see   xp://lang.ClassLoader
  */
 class ModuleTest extends \unittest\TestCase {
-  protected $cl;
-  protected $registered= [];
+  private $cl;
+  private $registered= [];
 
   /**
    * Register a loader with the CL
    *
    * @param  lang.reflect.Module $module
    */
-  protected function register($module) {
+  private function register($module) {
     $this->registered[]= Module::register($module);
   }
 
-  /**
-   * Tears down test, removing all modules registered
-   */
+  /** @return void */
   public function tearDown() {
     foreach ($this->registered as $module) {
       Module::remove($module);
     }
   }
 
-  /**
-   * Sets up test.
-   */
+  /** @return void */
   public function setUp() {
     $this->cl= ClassLoader::getDefault();
   }

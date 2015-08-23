@@ -51,9 +51,9 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
   public function lazyRead() {
     $p= new Properties('@@does-not-exist.ini@@');
     
-    // This cannot be done via @expect because it would also catch if an
-    // exception was thrown from util.Properties' constructor. We explicitely
-    // want the exception to be thrown later on
+    // This cannot be done via expect annotation because it would also catch if
+    // an exception was thrown from util.Properties' constructor. We explicitely
+    // want the exception to be thrown later on!
     try {
       $p->readString('section', 'key');
       $this->fail('Expected exception not thrown', null, 'io.IOException');

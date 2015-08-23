@@ -1,34 +1,28 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\TestCase;
 use lang\Object;
+use lang\NullPointerException;
 use lang\CloneNotSupportedException;
 
-/**
- * Tests cloning functionality
- */
-class CloningTest extends TestCase {
+class CloningTest extends \unittest\TestCase {
 
   /** @deprecated */
-  #[@test, @expect('lang.NullPointerException')]
+  #[@test, @expect(NullPointerException::class)]
   public function cloningOfNulls() {
     clone(\xp::null());
   }
 
   #[@test]
   public function cloneOfObject() {
-    $original= new \lang\Object();
+    $original= new Object();
     $this->assertFalse($original == clone($original));
   }
 
   #[@test]
   public function cloneInterceptorCalled() {
     $original= newinstance(Object::class, [], '{
-      public $cloned= FALSE;
-
-      public function __clone() {
-        $this->cloned= true;
-      }
+      public $cloned= false;
+      public function __clone() { $this->cloned= true; }
     }');
     $this->assertFalse($original->cloned);
     $clone= clone($original);
@@ -36,12 +30,10 @@ class CloningTest extends TestCase {
     $this->assertTrue($clone->cloned);
   }
 
-  #[@test, @expect('lang.CloneNotSupportedException')]
+  #[@test, @expect(CloneNotSupportedException::class)]
   public function cloneInterceptorThrowsException() {
-    clone(newinstance(Object::class, [], '{
-      public function __clone() {
-        throw new CloneNotSupportedException("I am *UN*Cloneable");
-      }
-    }'));
+    clone(newinstance(Object::class, [], [
+      '__clone' => function() { throw new CloneNotSupportedException('I am *UN*Cloneable'); }
+    ]));
   }
 }

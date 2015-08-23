@@ -1,11 +1,13 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\Channel;
+use io\IOException;
 use io\streams\TextReader;
 use io\streams\InputStream;
 use io\streams\MemoryInputStream;
 use io\streams\MemoryOutputStream;
 use lang\IllegalArgumentException;
+use lang\FormatException;
 
 /**
  * TestCase
@@ -90,12 +92,12 @@ class TextReaderTest extends \unittest\TestCase {
     $this->assertEquals('Übercoder', $this->newReader('Übercoder', 'utf-8')->read(9));
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function readBrokenUtf8() {
     $this->newReader("Hello \334|", 'utf-8')->read(0x1000);
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function readMalformedUtf8() {
     $this->newReader("Hello \334bercoder", 'utf-8')->read(0x1000);
   }
@@ -106,7 +108,7 @@ class TextReaderTest extends \unittest\TestCase {
     try {
       $r->read(10);
       $this->fail('No exception caught', null, 'lang.FormatException');
-    } catch (\lang\FormatException $expected) {
+    } catch (FormatException $expected) {
       // OK
     }
     $this->assertNull($r->read(512));
@@ -343,7 +345,7 @@ class TextReaderTest extends \unittest\TestCase {
     $this->assertEquals('ABC', $r->read(3));
   }
 
-  #[@test, @expect(class= 'io.IOException', withMessage= 'Underlying stream does not support seeking')]
+  #[@test, @expect(class= IOException::class, withMessage= 'Underlying stream does not support seeking')]
   public function resetUnseekable() {
     $r= new TextReader($this->unseekableStream());
     $r->reset();

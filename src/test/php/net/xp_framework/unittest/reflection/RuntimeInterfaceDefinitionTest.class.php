@@ -2,6 +2,7 @@
 
 use lang\XPClass;
 use lang\ClassLoader;
+use lang\ClassNotFoundException;
 
 /**
  * TestCase for lang.ClassLoader::defineInterface()
@@ -72,12 +73,12 @@ class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
     $this->assertTrue($class->hasMethod('runAs'));
   }
 
-  #[@test, @expect('lang.ClassNotFoundException')]
+  #[@test, @expect(ClassNotFoundException::class)]
   public function cannot_define_interface_with_non_existant_parent() {
     $this->define(['parents' => ['@@nonexistant@@']]);
   }
 
-  #[@test, @expect('lang.ClassNotFoundException')]
+  #[@test, @expect(ClassNotFoundException::class)]
   public function cannot_define_interface_with_null_parent() {
     $this->define(['parents' => [null]]);
   }

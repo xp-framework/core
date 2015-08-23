@@ -1,6 +1,12 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\Object;
+use lang\Error;
+use lang\XPException;
+use lang\NullPointerException;
+use lang\IndexOutOfBoundsException;
+use lang\IllegalArgumentException;
+use lang\ClassCastException;
 use unittest\actions\RuntimeVersion;
 use net\xp_framework\unittest\IgnoredOnHHVM;
 
@@ -37,8 +43,8 @@ class ErrorsTest extends \unittest\TestCase {
     trigger_error('Test error');
       
     try {
-      throw new \lang\XPException('');
-    } catch (\lang\XPException $e) {
+      throw new XPException('');
+    } catch (XPException $e) {
       $element= $e->getStackTrace()[0];
       $this->assertEquals(
         ['file' => __FILE__, 'message' => 'Test error'],
@@ -69,60 +75,60 @@ class ErrorsTest extends \unittest\TestCase {
     $this->assertTrue((bool)\xp::errorAt(__FILE__, __LINE__ - 1));
   }
 
-  #[@test, @expect('lang.NullPointerException')]
+  #[@test, @expect(NullPointerException::class)]
   public function undefined_variable_yields_npe() {
     $a++;
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function undefined_array_offset_yields_ioobe() {
     $a= [];
     $a[0];
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function undefined_map_key_yields_ioobe() {
     $a= [];
     $a['test'];
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException'), @action(new IgnoredOnHHVM())]
+  #[@test, @expect(IndexOutOfBoundsException::class), @action(new IgnoredOnHHVM())]
   public function undefined_string_offset_yields_ioobe() {
     $a= '';
     $a{0};
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function call_to_member_on_non_object_yields_npe() {
     $a= null;
     $a->method();
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function argument_mismatch_yield_iae() {
     $f= function(Object $arg) { };
     $f('Primitive');
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function argument_mismatch_yield_type_exception() {
     $f= function(Object $arg) { };
     $f('Primitive');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new IgnoredOnHHVM())]
+  #[@test, @expect(IllegalArgumentException::class), @action(new IgnoredOnHHVM())]
   public function missing_argument_mismatch_yield_iae() {
     $f= function($arg) { };
     $f();
   }
 
-  #[@test, @expect('lang.ClassCastException')]
+  #[@test, @expect(ClassCastException::class)]
   public function cannot_convert_object_to_string_yields_cce() {
     $object= new Object();
     $object.'String';
   }
 
-  #[@test, @expect('lang.ClassCastException')]
+  #[@test, @expect(ClassCastException::class)]
   public function cannot_convert_array_to_string_yields_cce() {
     $array= [];
     $array.'String';

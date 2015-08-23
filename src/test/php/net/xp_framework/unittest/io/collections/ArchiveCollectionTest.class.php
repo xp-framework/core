@@ -1,21 +1,17 @@
 <?php namespace net\xp_framework\unittest\io\collections;
 
-use unittest\TestCase;
 use io\TempFile;
-use lang\archive\Archive;
+use io\IOException;
 use io\collections\ArchiveCollection;
+use lang\archive\Archive;
 
-/**
- * TestCase
- *
- * @see  xp://io.collections.ArchiveCollection
- */
-class ArchiveCollectionTest extends TestCase {
-  protected $file= null;
-  protected $archive= null;
+class ArchiveCollectionTest extends \unittest\TestCase {
+  private $file, $archive;
 
   /**
    * Sets up test case (creates temporary xar archive)
+   *
+   * @return void
    */
   public function setUp() {
     $this->file= new TempFile();
@@ -33,12 +29,14 @@ class ArchiveCollectionTest extends TestCase {
   
   /**
    * Tears down test case (removes temporary xar archive)
+   *
+   * @return void
    */
   public function tearDown() {
     try {
       $this->file->isOpen() && $this->file->close();
       $this->file->unlink();
-    } catch (\io\IOException $ignored) {
+    } catch (IOException $ignored) {
       // Can't really do much about it..
     }
   }
@@ -130,17 +128,17 @@ class ArchiveCollectionTest extends TestCase {
     }
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function writeObjectEntry() {
     $this->firstElement(new ArchiveCollection($this->archive, 'lang'))->getOutputStream();
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function readLangEntry() {
     $this->firstElement(new ArchiveCollection($this->archive))->getInputStream();
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function writeLangEntry() {
     $this->firstElement(new ArchiveCollection($this->archive))->getOutputStream();
   }

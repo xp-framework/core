@@ -2,6 +2,7 @@
 
 use lang\XPClass;
 use lang\Object;
+use lang\Error;
 use lang\Type;
 use lang\MapType;
 use lang\Primitive;
@@ -17,13 +18,9 @@ use unittest\actions\RuntimeVersion;
  * @see    xp://lang.reflect.Method
  */
 class MethodsTest extends \unittest\TestCase {
-  protected $fixture;
+  private $fixture;
 
-  /**
-   * Sets up test case
-   *
-   * @return void
-   */
+  /** @return void */
   public function setUp() {
     $this->fixture= XPClass::forName('net.xp_framework.unittest.reflection.TestClass');
   }
@@ -44,8 +41,8 @@ class MethodsTest extends \unittest\TestCase {
   /**
    * Assertion helper
    *
-   * @param   lang.Generic var
-   * @param   lang.Generic[] list
+   * @param   lang.Generic $var
+   * @param   lang.Generic[] $list
    * @throws  unittest.AssertionFailedError
    */
   protected function assertContained($var, $list) {
@@ -401,7 +398,7 @@ class MethodsTest extends \unittest\TestCase {
     $this->assertEquals(XPClass::forName('lang.Object'), $o->getClass()->getMethod('fixture')->getReturnType());
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0'))]
   public function violatingReturnType() {
     $o= newinstance(Object::class, [], '{
       public function fixture(): Object { return "Test"; }

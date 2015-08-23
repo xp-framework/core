@@ -1,16 +1,10 @@
 <?php namespace net\xp_framework\unittest\math;
 
-use unittest\TestCase;
 use math\BigInt;
 use math\BigFloat;
+use lang\IllegalArgumentException;
 
-/**
- * TestCase
- *
- * @see     xp://math.BigFloat
- * @see     xp://math.BigInt
- */
-class BigIntAndFloatTest extends TestCase {
+class BigIntAndFloatTest extends \unittest\TestCase {
   
   #[@test]
   public function addFloatToInt() {
@@ -52,12 +46,12 @@ class BigIntAndFloatTest extends TestCase {
     $this->assertEquals(new BigInt(4), (new BigInt(2))->divide0(new BigFloat(0.5)));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function divideIntByFloatZero() {
     (new BigInt(2))->divide(new BigFloat(0.0));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function divideIntByFloatZero0() {
     (new BigInt(2))->divide0(new BigFloat(0.0));
   }
@@ -67,7 +61,7 @@ class BigIntAndFloatTest extends TestCase {
     $this->assertEquals(new BigFloat(0.5), (new BigInt(2))->power(new BigFloat(-1)));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function powerOneHalf() {
     (new BigInt(2))->power(new BigFloat(0.5));
   }

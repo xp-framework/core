@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core\extensions;
 
-use unittest\TestCase;
+use lang\Error;
+use lang\Throwable;
 use lang\types\ArrayList;
 new import('net.xp_framework.unittest.core.extensions.ArrayListExtensions');
 new import('net.xp_framework.unittest.core.extensions.ThrowableExtensions');
@@ -12,7 +13,7 @@ new import('net.xp_framework.unittest.core.extensions.ThrowableExtensions');
  * @see   xp://net.xp_framework.unittest.core.extensions.ThrowableExtensions
  * @see   https://github.com/xp-framework/xp-framework/issues/137
  */
-class ExtensionInvocationTest extends TestCase {
+class ExtensionInvocationTest extends \unittest\TestCase {
 
   #[@test]
   public function mapMethod() {
@@ -30,14 +31,14 @@ class ExtensionInvocationTest extends TestCase {
     );
   }
 
-  #[@test, @expect('lang.Error')]
+  #[@test, @expect(Error::class)]
   public function nonExistantExtensionMethod() {
     (new ArrayList(1, 2, 3))->nonExistant();
   }
 
   #[@test]
   public function throwabeExtensions() {
-    $t= new \lang\Throwable('Test');
+    $t= new Throwable('Test');
     $this->assertNotEquals([], $t->getStackTrace());
     $t->clearStackTrace();
     $this->assertEquals([], $t->getStackTrace());

@@ -1,6 +1,10 @@
 <?php namespace net\xp_framework\unittest\io\collections;
 
 use io\collections\IOCollection;
+use io\IOException;
+use lang\IllegalStateException;
+use lang\IllegalArgumentException;
+use util\NoSuchElementException;
 
 /**
  * Unit tests for IOCollection class (basic functionality)
@@ -52,13 +56,13 @@ class IOCollectionTest extends AbstractCollectionTest {
     $empty->close();
   }
 
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function calling_next_before_opening_collection_raises_exception() {
     $c= new MockCollection('~');
     $c->next();
   }
 
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function calling_next_after_closing_collection_raises_exception() {
     $c= new MockCollection('~');
     $c->open();
@@ -124,7 +128,7 @@ class IOCollectionTest extends AbstractCollectionTest {
     }
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function get_collections_input_stream() {
     $this->firstElement($this->newCollection('/', [$this->newCollection('/root')]))->getInputStream();
   }
@@ -137,7 +141,7 @@ class IOCollectionTest extends AbstractCollectionTest {
     }
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function get_collections_output_stream() {
     $this->firstElement($this->newCollection('/', [$this->newCollection('/root')]))->getOutputStream();
   }
@@ -159,7 +163,7 @@ class IOCollectionTest extends AbstractCollectionTest {
     $this->assertEquals($created, $this->fixture->getElement('new.txt'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function create_existing_element() {
     $this->fixture->newElement('first.txt');
   }
@@ -169,7 +173,7 @@ class IOCollectionTest extends AbstractCollectionTest {
     $this->assertEquals(new MockElement('./first.txt'), $this->fixture->getElement('first.txt'));
   }
 
-  #[@test, @expect('util.NoSuchElementException')]
+  #[@test, @expect(NoSuchElementException::class)]
   public function get_nonexistant_element() {
     $this->fixture->getElement('doesnotexist.txt');
   }
@@ -189,7 +193,7 @@ class IOCollectionTest extends AbstractCollectionTest {
     $this->assertEquals(new MockCollection('./sub'), $this->fixture->getCollection('sub'));
   }
 
-  #[@test, @expect('util.NoSuchElementException')]
+  #[@test, @expect(NoSuchElementException::class)]
   public function get_nonexistant_collection() {
     $this->fixture->getCollection('doesnotexist');
   }
@@ -201,7 +205,7 @@ class IOCollectionTest extends AbstractCollectionTest {
     $this->assertEquals($created, $this->fixture->getCollection('newdir'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function new_existing_collection() {
     $this->fixture->newCollection('sub');
   }
