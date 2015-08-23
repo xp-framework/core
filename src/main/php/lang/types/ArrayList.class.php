@@ -152,28 +152,23 @@ class ArrayList extends \lang\Object implements \ArrayAccess, \IteratorAggregate
   /**
    * Helper method to compare two arrays recursively
    *
-   * @param   array a1
-   * @param   array a2
-   * @return  bool
+   * @param  [:var] $a
+   * @param  [:var] $b
+   * @return bool
    */
   protected function arrayequals($a1, $a2) {
-    if (sizeof($a1) != sizeof($a2)) return false;
-
-    foreach (array_keys((array)$a1) as $k) {
-      switch (true) {
-        case !array_key_exists($k, $a2): 
-          return false;
-
-        case is_array($a1[$k]):
-          if (!$this->arrayequals($a1[$k], $a2[$k])) return false;
-          break;
-
-        case $a1[$k] instanceof \lang\Generic:
-          if (!$a1[$k]->equals($a2[$k])) return false;
-          break;
-
-        case $a1[$k] !== $a2[$k]:
-          return false;
+    if (sizeof($a1) !== sizeof($a2)) return false;
+    foreach ($a1 as $key => $value) {
+      if (!array_key_exists($key, $a2)) {
+        return false;
+      } else if (is_array($value) && !$this->arrayequals($value, $a2[$key])) {
+        return false;
+      } else if ($value instanceof Value && (0 !== $value->compareTo($a2[$key]))) {
+        return false;
+      } else if ($value instanceof Generic && !$value->equals($a2[$key])) {
+        return false;
+      } else if ($value !== $a2[$key]) {
+        return false;
       }
     }
     return true;

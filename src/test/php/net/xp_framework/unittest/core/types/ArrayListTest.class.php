@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\core\types;
 
+use lang\Object;
+use lang\Value;
 use lang\types\ArrayList;
 use lang\IllegalArgumentException;
 use lang\IndexOutOfBoundsException;
@@ -26,6 +28,24 @@ class ArrayListTest extends \unittest\TestCase {
   #[@test]
   public function two_newly_created_arraylists_are_equal() {
     $this->assertEquals(new ArrayList(), new ArrayList());
+  }
+
+  #[@test]
+  public function equals_with_objects() {
+    $neverEqual= newinstance(Object::class, [], [
+      'equals' => function($cmp) { return false; }
+    ]);
+    $this->assertNotEquals(new ArrayList($neverEqual), new ArrayList($neverEqual));
+  }
+
+  #[@test]
+  public function equals_with_values() {
+    $neverEqual= newinstance(Value::class, [], [
+      'compareTo' => function($cmp) { return -1; },
+      'hashCode' => function() { return '0xAB'; },
+      'toString' => function() { return 'test'; }
+    ]);
+    $this->assertNotEquals(new ArrayList($neverEqual), new ArrayList($neverEqual));
   }
 
   #[@test]

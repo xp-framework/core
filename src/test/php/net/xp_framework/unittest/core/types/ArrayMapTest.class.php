@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\core\types;
 
+use lang\Object;
+use lang\Value;
 use lang\types\ArrayMap;
 use lang\IndexOutOfBoundsException;
 use lang\IllegalArgumentException;
@@ -49,6 +51,24 @@ class ArrayMapTest extends \unittest\TestCase {
   #[@test, @values('fixtures')]
   public function equals_another_instance_with_same_pairs($value) {
     $this->assertEquals(new ArrayMap($value), new ArrayMap($value));
+  }
+
+  #[@test]
+  public function equals_with_objects() {
+    $neverEqual= newinstance(Object::class, [], [
+      'equals' => function($cmp) { return false; }
+    ]);
+    $this->assertNotEquals(new ArrayMap(['test' => $neverEqual]), new ArrayMap(['test' => $neverEqual]));
+  }
+
+  #[@test]
+  public function equals_with_values() {
+    $neverEqual= newinstance(Value::class, [], [
+      'compareTo' => function($cmp) { return -1; },
+      'hashCode' => function() { return '0xAB'; },
+      'toString' => function() { return 'test'; }
+    ]);
+    $this->assertNotEquals(new ArrayMap(['test' => $neverEqual]), new ArrayMap(['test' => $neverEqual]));
   }
 
   #[@test, @values([
@@ -134,7 +154,7 @@ class ArrayMapTest extends \unittest\TestCase {
 
   #[@test]
   public function a_map_of_an_object_contains_the_given_object() {
-    $o= new \lang\Object();
+    $o= new Object();
     $this->assertTrue((new ArrayMap(['key' => $o]))->contains($o));
   }
 
@@ -146,11 +166,11 @@ class ArrayMapTest extends \unittest\TestCase {
 
   #[@test]
   public function a_map_of_an_object_does_not_contain_null() {
-    $this->assertFalse((new ArrayMap(['key' => new \lang\Object()]))->contains(null));
+    $this->assertFalse((new ArrayMap(['key' => new Object()]))->contains(null));
   }
 
   #[@test]
   public function a_map_of_strings_does_not_contain_an_object() {
-    $this->assertFalse((new ArrayMap(['T' => 'e', 's' => 't']))->contains(new \lang\Object()));
+    $this->assertFalse((new ArrayMap(['T' => 'e', 's' => 't']))->contains(new Object()));
   }
 }
