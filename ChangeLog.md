@@ -5,6 +5,10 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed `lang.FunctionType` to work as part of a generic type.
+  (@thekid)
+* Merged xp-framework/core#101: Make `util.collections` work with closures.
+  (@thekid)
 * Fixed `util.Objects::hashOf()` for arrays and maps containing closures
   (@thekid)
 * Fixed lang.types.ArrayList and lang.types.ArrayMap's equals() methods
