@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed lang.types.ArrayList and lang.types.ArrayMap's equals() methods
+  in conjunction with lang.Value instances.
+  (@thekid)
+
 ## 6.5.0 / 2015-08-22
 
 ### Heads up!
