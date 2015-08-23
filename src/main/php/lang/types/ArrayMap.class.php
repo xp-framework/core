@@ -124,7 +124,7 @@ class ArrayMap extends \lang\Object implements \ArrayAccess, \IteratorAggregate 
       return in_array($value, $this->values, true);
     }
   }
-  
+
   /**
    * Helper method to compare two arrays recursively
    *
@@ -137,12 +137,12 @@ class ArrayMap extends \lang\Object implements \ArrayAccess, \IteratorAggregate 
     foreach ($a1 as $key => $value) {
       if (!array_key_exists($key, $a2)) {
         return false;
-      } else if (is_array($value) && !$this->arrayequals($value, $a2[$key])) {
-        return false;
-      } else if ($value instanceof Value && (0 !== $value->compareTo($a2[$key]))) {
-        return false;
-      } else if ($value instanceof Generic && !$value->equals($a2[$key])) {
-        return false;
+      } else if (is_array($value)) {
+        if (!$this->arrayequals($value, $a2[$key])) return false;
+      } else if ($value instanceof Value) {
+        if (0 !== $value->compareTo($a2[$key])) return false;
+      } else if ($value instanceof Generic) {
+        if (!$value->equals($a2[$key])) return false;
       } else if ($value !== $a2[$key]) {
         return false;
       }
