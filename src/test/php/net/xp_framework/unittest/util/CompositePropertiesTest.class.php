@@ -1,10 +1,11 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use unittest\TestCase;
 use util\Properties;
 use util\Hashmap;
 use util\CompositeProperties;
 use unittest\actions\RuntimeVersion;
+use lang\IllegalArgumentException;
+use lang\Error;
 
 /**
  * Test CompositeProperties
@@ -12,7 +13,7 @@ use unittest\actions\RuntimeVersion;
  * @see   https://github.com/xp-framework/xp-framework/issues/302
  * @see    xp://util.CompositeProperies
  */
-class CompositePropertiesTest extends TestCase {
+class CompositePropertiesTest extends \unittest\TestCase {
 
   #[@test]
   public function createCompositeSingle() {
@@ -26,22 +27,22 @@ class CompositePropertiesTest extends TestCase {
     $this->assertEquals(2, $c->length());
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function createCompositeThrowsExceptionWhenNoArgumentGiven() {
     new CompositeProperties();
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function createEmptyCompositeThrowsException() {
     new CompositeProperties([]);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]]
   public function createCompositeThrowsExceptionWhenSomethingElseThenPropertiesGiven() {
     new CompositeProperties([new Properties(null), 1, new Properties(null)]);
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]]
   public function createCompositeThrowsExceptionWhenSomethingElseThenPropertiesGiven7() {
     new CompositeProperties([new Properties(null), 1, new Properties(null)]);
   }

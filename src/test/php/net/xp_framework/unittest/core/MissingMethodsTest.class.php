@@ -2,6 +2,7 @@
 
 use lang\ClassLoader;
 use lang\Object;
+use lang\Error;
 
 /**
  * Verifies lang.Object's `__call()` implementation
@@ -16,14 +17,14 @@ class MissingMethodsTest extends \unittest\TestCase {
     $f();
   }
 
-  #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method lang.Object::run()/')]
+  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined method lang.Object::run()/')]
   public function missingMethodInvocation() {
     $this->callRunOn(new Object());
   }
 
-  #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method lang.Object::run()/')]
+  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined method lang.Object::run()/')]
   public function missingParentMethodInvocation() {
-    $c= ClassLoader::defineClass('MissingMethodsTest_Fixture', 'lang.Object', [], '{
+    $c= ClassLoader::defineClass('MissingMethodsTest_Fixture', Object::class, [], '{
       public function run() {
         parent::run();
       }
@@ -31,9 +32,9 @@ class MissingMethodsTest extends \unittest\TestCase {
     $this->callRunOn($c->newInstance());
   }
 
-  #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method .+::run()/')]
+  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined method .+::run()/')]
   public function missingParentParentMethodInvocation() {
-    $b= ClassLoader::defineClass('MissingMethodsTest_BaseFixture', 'lang.Object', [], '{}');
+    $b= ClassLoader::defineClass('MissingMethodsTest_BaseFixture', Object::class, [], '{}');
     $c= ClassLoader::defineClass('MissingMethodsTest_ChildFixture', $b->getName(), [], '{
       public function run() {
         parent::run();
@@ -42,9 +43,9 @@ class MissingMethodsTest extends \unittest\TestCase {
     $this->callRunOn($c->newInstance());
   }
 
-  #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined method lang.Object::run()/')]
+  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined method lang.Object::run()/')]
   public function missingParentPassMethodInvocation() {
-    $b= ClassLoader::defineClass('MissingMethodsTest_PassBaseFixture', 'lang.Object', [], '{
+    $b= ClassLoader::defineClass('MissingMethodsTest_PassBaseFixture', Object::class, [], '{
       public function run() {
         parent::run();
       }
@@ -57,9 +58,9 @@ class MissingMethodsTest extends \unittest\TestCase {
     $this->callRunOn($c->newInstance());
   }
 
-  #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined static method lang.Object::run()/')]
+  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined static method lang.Object::run()/')]
   public function missingStaticParentMethodInvocation() {
-    $c= ClassLoader::defineClass('MissingMethodsTest_StaticFixture', 'lang.Object', [], '{
+    $c= ClassLoader::defineClass('MissingMethodsTest_StaticFixture', Object::class, [], '{
       public static function run() {
         parent::run();
       }
@@ -67,9 +68,9 @@ class MissingMethodsTest extends \unittest\TestCase {
     $this->callRunOn($c->literal());
   }
 
-  #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined static method .+::run()/')]
+  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined static method .+::run()/')]
   public function missingStaticParentParentMethodInvocation() {
-    $b= ClassLoader::defineClass('MissingMethodsTest_StaticBaseFixture', 'lang.Object', [], '{}');
+    $b= ClassLoader::defineClass('MissingMethodsTest_StaticBaseFixture', Object::class, [], '{}');
     $c= ClassLoader::defineClass('MissingMethodsTest_StaticChildFixture', $b->getName(), [], '{
       public static function run() {
         parent::run();
@@ -78,9 +79,9 @@ class MissingMethodsTest extends \unittest\TestCase {
     $this->callRunOn($c->literal());
   }
 
-  #[@test, @expect(class= 'lang.Error', withMessage= '/Call to undefined static method lang.Object::run()/')]
+  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined static method lang.Object::run()/')]
   public function missingStaticParentPassMethodInvocation() {
-    $b= ClassLoader::defineClass('MissingMethodsTest_StaticPassBaseFixture', 'lang.Object', [], '{
+    $b= ClassLoader::defineClass('MissingMethodsTest_StaticPassBaseFixture', Object::class, [], '{
       public static function run() {
         parent::run();
       }

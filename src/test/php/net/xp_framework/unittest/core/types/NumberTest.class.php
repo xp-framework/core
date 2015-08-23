@@ -1,11 +1,13 @@
 <?php namespace net\xp_framework\unittest\core\types;
 
+use lang\types\Number;
 use lang\types\Long;
 use lang\types\Byte;
 use lang\types\Short;
 use lang\types\Integer;
 use lang\types\Float;
 use lang\types\Double;
+use lang\IllegalArgumentException;
 
 /**
  * Tests the number wrapper typess
@@ -27,7 +29,7 @@ class NumberTest extends \unittest\TestCase {
    * @param   int int
    * @param   float float
    */
-  protected function testType(\lang\types\Number $number, $int, $float) {
+  protected function testType(Number $number, $int, $float) {
     $this->assertEquals($int, $number->intValue(), 'intValue');
     $this->assertEquals($float, $number->doubleValue(), 'doubleValue');
     $this->assertEquals($number, clone($number), 'clone');
@@ -125,92 +127,92 @@ class NumberTest extends \unittest\TestCase {
     $this->assertEquals(43690, $long->intValue());
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function stringIsNotANumber() {
     Long::valueOf('string');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function booleanIsNotANumber() {
     Long::valueOf(true);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function nullIsNotANumber() {
     Long::valueOf(null);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function writtenNumberIsNotANumber() {
     Long::valueOf('one');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function commaNotationIsNotANumber() {
     Long::valueOf('1,1');
   }
 
-  #[@test, @values(['1E+', '1E-', '1E', 'E+4', 'E-4', 'E4', 'E']), @expect('lang.IllegalArgumentException')]
+  #[@test, @values(['1E+', '1E-', '1E', 'E+4', 'E-4', 'E4', 'E']), @expect(IllegalArgumentException::class)]
   public function brokenExponentNotationIsNotANumber($value) {
     Long::valueOf($value);
   }
 
-  #[@test, @values(['..5', '--1', '++1']), @expect('lang.IllegalArgumentException')]
+  #[@test, @values(['..5', '--1', '++1']), @expect(IllegalArgumentException::class)]
   public function doubleLeadingSignsAreNotNumeric($value) {
     Long::valueOf($value);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function leadingLetterIsNotANumber() {
     Long::valueOf('a123');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function currencyValueIsNotANumber() {
     Long::valueOf('$44.00');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function whitespaceSeparatedNumbersAreNotNumeric() {
     Long::valueOf('4 4');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function floatingPointNumberIsNotLong() {
     Long::valueOf(4.4);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function floatingPointInStringIsNotLong() {
     Long::valueOf('4.4');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function floatingPointNumberIsNotInteger() {
     Integer::valueOf(4.4);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function floatingPointInStringIsNotInteger() {
     Integer::valueOf('4.4');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function floatingPointNumberIsNotShort() {
     Short::valueOf(4.4);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function floatingPointInStringIsNotShort() {
     Short::valueOf('4.4');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function floatingPointNumberIsNotByte() {
     Byte::valueOf(4.4);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function floatingPointInStringIsNotByte() {
     Byte::valueOf('4.4');
   }

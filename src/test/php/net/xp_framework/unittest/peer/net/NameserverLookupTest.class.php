@@ -3,6 +3,7 @@
 use peer\net\Inet4Address;
 use peer\net\Inet6Address;
 use peer\net\NameserverLookup;
+use lang\ElementNotFoundException;
 
 /**
  * Test nameserver lookup API
@@ -10,7 +11,7 @@ use peer\net\NameserverLookup;
  * @see   xp://peer.net.NameserverLookup'
  */
 class NameserverLookupTest extends \unittest\TestCase {
-  private $cut= null;
+  private $cut;
 
   /**
    * Sets up test case and defines dummy nameserver lookup fixture
@@ -76,7 +77,7 @@ class NameserverLookupTest extends \unittest\TestCase {
     $this->assertEquals([], $this->cut->lookupAll('localhost'));
   }
 
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function lookupNonexistantThrowsException() {
     $this->cut->lookup('localhost');
   }
@@ -87,7 +88,7 @@ class NameserverLookupTest extends \unittest\TestCase {
     $this->assertEquals('localhost', $this->cut->reverseLookup(new Inet4Address('127.0.0.1')));
   }
 
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function nonexistingReverseLookupCausesException() {
     $this->cut->reverseLookup(new Inet4Address('192.168.1.1'));
   }

@@ -3,6 +3,9 @@
 use lang\reflect\Modifiers;
 use lang\XPClass;
 use lang\Enum;
+use lang\Error;
+use lang\IllegalArgumentException;
+use lang\CloneNotSupportedException;
 use unittest\actions\RuntimeVersion;
 
 /**
@@ -20,8 +23,9 @@ class EnumTest extends \unittest\TestCase {
   /**
    * Asserts given modifiers contain abstract
    *
-   * @param   int modifiers
-   * @throws  unittest.AssertionFailedError
+   * @param  int $modifiers
+   * @return void
+   * @throws unittest.AssertionFailedError
    */
   protected function assertAbstract($modifiers) {
     $this->assertTrue(
@@ -33,8 +37,9 @@ class EnumTest extends \unittest\TestCase {
   /**
    * Asserts given modifiers do not contain abstract
    *
-   * @param   int modifiers
-   * @throws  unittest.AssertionFailedError
+   * @param  int $modifiers
+   * @return void
+   * @throws unittest.AssertionFailedError
    */
   protected function assertNotAbstract($modifiers) {
     $this->assertFalse(
@@ -45,12 +50,12 @@ class EnumTest extends \unittest\TestCase {
 
   #[@test]
   public function coinIsAnEnums() {
-    $this->assertTrue(XPClass::forName('net.xp_framework.unittest.core.Coin')->isEnum());
+    $this->assertTrue(XPClass::forName(Coin::class)->isEnum());
   }
   
   #[@test]
   public function operationIsAnEnums() {
-    $this->assertTrue(XPClass::forName('net.xp_framework.unittest.core.Operation')->isEnum());
+    $this->assertTrue(XPClass::forName(Operation::class)->isEnum());
   }
 
   #[@test]
@@ -60,27 +65,27 @@ class EnumTest extends \unittest\TestCase {
 
   #[@test]
   public function enumBaseClassIsAbstract() {
-    $this->assertAbstract(XPClass::forName('lang.Enum')->getModifiers());
+    $this->assertAbstract(XPClass::forName(Enum::class)->getModifiers());
   }
 
   #[@test]
   public function operationEnumIsAbstract() {
-    $this->assertAbstract(XPClass::forName('net.xp_framework.unittest.core.Operation')->getModifiers());
+    $this->assertAbstract(XPClass::forName(Operation::class)->getModifiers());
   }
 
   #[@test]
   public function coinEnumIsNotAbstract() {
-    $this->assertNotAbstract(XPClass::forName('net.xp_framework.unittest.core.Coin')->getModifiers());
+    $this->assertNotAbstract(XPClass::forName(Coin::class)->getModifiers());
   }
 
   #[@test]
   public function coinMemberAreSameClass() {
-    $this->assertInstanceOf('net.xp_framework.unittest.core.Coin', Coin::$penny);
+    $this->assertInstanceOf(Coin::class, Coin::$penny);
   }
 
   #[@test]
   public function operationMembersAreSubclasses() {
-    $this->assertInstanceOf('net.xp_framework.unittest.core.Operation', Operation::$plus);
+    $this->assertInstanceOf(Operation::class, Operation::$plus);
   }
 
   #[@test]
@@ -107,7 +112,7 @@ class EnumTest extends \unittest\TestCase {
 
   #[@test]
   public function pennyCoinClass() {
-    $this->assertInstanceOf('net.xp_framework.unittest.core.Coin', Coin::$penny);
+    $this->assertInstanceOf(Coin::class, Coin::$penny);
   }
 
   #[@test]
@@ -135,7 +140,7 @@ class EnumTest extends \unittest\TestCase {
     $this->assertNotEquals(Coin::$penny, Coin::$quarter);
   }
 
-  #[@test, @expect('lang.CloneNotSupportedException')]
+  #[@test, @expect(CloneNotSupportedException::class)]
   public function enumMembersAreNotCloneable() {
     clone Coin::$penny;
   }
@@ -144,21 +149,21 @@ class EnumTest extends \unittest\TestCase {
   public function valueOf() {
     $this->assertEquals(
       Coin::$penny, 
-      Enum::valueOf(XPClass::forName('net.xp_framework.unittest.core.Coin'), 'penny')
+      Enum::valueOf(XPClass::forName(Coin::class), 'penny')
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function valueOfNonExistant() {
-    Enum::valueOf(XPClass::forName('net.xp_framework.unittest.core.Coin'), '@@DOES_NOT_EXIST@@');
+    Enum::valueOf(XPClass::forName(Coin::class), '@@DOES_NOT_EXIST@@');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function valueOfNonEnum() {
     Enum::valueOf($this, 'irrelevant');
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function valueOfNonEnum7() {
     Enum::valueOf($this, 'irrelevant');
   }
@@ -167,7 +172,7 @@ class EnumTest extends \unittest\TestCase {
   public function valueOfAbstractEnum() {
     $this->assertEquals(
       Operation::$plus, 
-      Enum::valueOf(XPClass::forName('net.xp_framework.unittest.core.Operation'), 'plus')
+      Enum::valueOf(XPClass::forName(Operation::class), 'plus')
     );
   }
 
@@ -175,7 +180,7 @@ class EnumTest extends \unittest\TestCase {
   public function valuesOf() {
     $this->assertEquals(
       [Coin::$penny, Coin::$nickel, Coin::$dime, Coin::$quarter],
-      Enum::valuesOf(XPClass::forName('net.xp_framework.unittest.core.Coin'))
+      Enum::valuesOf(XPClass::forName(Coin::class))
     );
   }
 
@@ -183,16 +188,16 @@ class EnumTest extends \unittest\TestCase {
   public function valuesOfAbstractEnum() {
     $this->assertEquals(
       [Operation::$plus, Operation::$minus, Operation::$times, Operation::$divided_by],
-      Enum::valuesOf(XPClass::forName('net.xp_framework.unittest.core.Operation'))
+      Enum::valuesOf(XPClass::forName(Operation::class))
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function valuesOfNonEnum() {
     Enum::valuesOf($this);
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function valuesOfNonEnum7() {
     Enum::valuesOf($this);
   }
@@ -233,7 +238,7 @@ class EnumTest extends \unittest\TestCase {
     );
   }
   
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function staticMemberNotWithEnumValueOf() {
     Enum::valueOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'), 'fixture');
   }

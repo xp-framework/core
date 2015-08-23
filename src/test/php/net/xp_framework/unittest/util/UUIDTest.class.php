@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use util\UUID;
+use lang\FormatException;
 
 /**
  * TestCase
@@ -72,48 +73,48 @@ class UUIDTest extends \unittest\TestCase {
     $this->assertEquals($this->fixture, new UUID(new \lang\types\Bytes("k\xa7\xb8\x11\x9d\xad\x11\xd1\x80\xb4\x00\xc0O\xd40\xc8")));
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function emptyInput() {
     new UUID('');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function malFormedMissingOctets() {
     new UUID('00000000-0000-0000-c000');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function malFormedNonHexOctets() {
     new UUID('00000000-0000-0000-c000-XXXXXXXXXXXX');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function emptyBracedNotation() {
     new UUID('{}');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function malFormedBracedNotationMissingOctets() {
     new UUID('{00000000-0000-0000-c000}');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function malFormedBracedNotationNonHexOctets() {
     new UUID('{00000000-0000-0000-c000-XXXXXXXXXXXX}');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function emptyUrnNotation() {
     new UUID('urn:uuid:');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function malFormedUrnNotationMissingOctets() {
     new UUID('urn:uuid:00000000-0000-0000-c000');
   }
 
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function malFormedUrnNotationNonHexOctets() {
     new UUID('urn:uuid:00000000-0000-0000-c000-XXXXXXXXXXXX');
   }

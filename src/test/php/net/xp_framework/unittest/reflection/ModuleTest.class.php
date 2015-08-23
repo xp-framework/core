@@ -2,6 +2,7 @@
 
 use lang\reflect\Module;
 use lang\ClassLoader;
+use lang\ElementNotFoundException;
 
 /**
  * TestCase for modules
@@ -9,30 +10,26 @@ use lang\ClassLoader;
  * @see   xp://lang.ClassLoader
  */
 class ModuleTest extends \unittest\TestCase {
-  protected $cl;
-  protected $registered= [];
+  private $cl;
+  private $registered= [];
 
   /**
    * Register a loader with the CL
    *
    * @param  lang.reflect.Module $module
    */
-  protected function register($module) {
+  private function register($module) {
     $this->registered[]= Module::register($module);
   }
 
-  /**
-   * Tears down test, removing all modules registered
-   */
+  /** @return void */
   public function tearDown() {
     foreach ($this->registered as $module) {
       Module::remove($module);
     }
   }
 
-  /**
-   * Sets up test.
-   */
+  /** @return void */
   public function setUp() {
     $this->cl= ClassLoader::getDefault();
   }
@@ -90,7 +87,7 @@ class ModuleTest extends \unittest\TestCase {
   }
 
   #[@test, @expect(
-  #  class= 'lang.ElementNotFoundException',
+  #  class= ElementNotFoundException::class,
   #  withMessage= 'No module "@@non-existant@@" declared'
   #)]
   public function forName_throws_exception_when_no_module_registered() {

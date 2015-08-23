@@ -4,6 +4,7 @@ use unittest\TestCase;
 use io\streams\InputStream;
 use io\streams\MemoryInputStream;
 use text\encode\QuotedPrintableInputStream;
+use io\IOException;
 
 /**
  * Test QuotedPrintable decoder
@@ -12,10 +13,6 @@ use text\encode\QuotedPrintableInputStream;
  */
 class QuotedPrintableInputStreamTest extends TestCase {
 
-  /**
-   * Test single read
-   *
-   */
   #[@test]
   public function singleRead() {
     $stream= new QuotedPrintableInputStream(new MemoryInputStream('Hello'));
@@ -24,10 +21,6 @@ class QuotedPrintableInputStreamTest extends TestCase {
     $this->assertEquals('Hello', $chunk);
   }
 
-  /**
-   * Test multiple consecutive reads
-   *
-   */
   #[@test]
   public function multipleReads() {
     $stream= new QuotedPrintableInputStream(new MemoryInputStream('Hello World'));
@@ -40,10 +33,6 @@ class QuotedPrintableInputStreamTest extends TestCase {
     $this->assertEquals('World', $chunk3);
   }
 
-  /**
-   * Test decoding an umlaut
-   *
-   */
   #[@test]
   public function umlaut() {
     $stream= new QuotedPrintableInputStream(new MemoryInputStream('=DCbercoder'));
@@ -52,10 +41,6 @@ class QuotedPrintableInputStreamTest extends TestCase {
     $this->assertEquals('Übercoder', $chunk);
   }
 
-  /**
-   * Test decoding a space
-   *
-   */
   #[@test]
   public function space() {
     $stream= new QuotedPrintableInputStream(new MemoryInputStream('Space between'));
@@ -64,10 +49,6 @@ class QuotedPrintableInputStreamTest extends TestCase {
     $this->assertEquals('Space between', $chunk);
   }
 
-  /**
-   * Test decoding a space
-   *
-   */
   #[@test]
   public function encodedSpace() {
     $stream= new QuotedPrintableInputStream(new MemoryInputStream('Space=20between'));
@@ -76,10 +57,6 @@ class QuotedPrintableInputStreamTest extends TestCase {
     $this->assertEquals('Space between', $chunk);
   }
 
-  /**
-   * Test decoding a tab
-   *
-   */
   #[@test]
   public function tab() {
     $stream= new QuotedPrintableInputStream(new MemoryInputStream("Tab\tbetween"));
@@ -88,10 +65,6 @@ class QuotedPrintableInputStreamTest extends TestCase {
     $this->assertEquals("Tab\tbetween", $chunk);
   }
 
-  /**
-   * Test decoding a tab
-   *
-   */
   #[@test]
   public function encodedTab() {
     $stream= new QuotedPrintableInputStream(new MemoryInputStream('Tab=09between'));
@@ -100,10 +73,6 @@ class QuotedPrintableInputStreamTest extends TestCase {
     $this->assertEquals("Tab\tbetween", $chunk);
   }
 
-  /**
-   * Test decoding an umlaut
-   *
-   */
   #[@test]
   public function softLineBreak() {
     $stream= new QuotedPrintableInputStream(new MemoryInputStream(str_repeat('1', 75)."=\n".str_repeat('2', 75)));
@@ -112,11 +81,6 @@ class QuotedPrintableInputStreamTest extends TestCase {
     $this->assertEquals(str_repeat('1', 75).str_repeat('2', 75), $chunk);
   }
 
-  /**
-   * Test space at the end of input - though not allowed in spec - is
-   * gracefully handled
-   *
-   */
   #[@test]
   public function spaceAtEnd() {
     $stream= new QuotedPrintableInputStream(new MemoryInputStream('Hello '));
@@ -125,10 +89,6 @@ class QuotedPrintableInputStreamTest extends TestCase {
     $this->assertEquals('Hello ', $chunk);
   }
 
-  /**
-   * Test 
-   *
-   */
   #[@test]
   public function chunkedRead() {
     $expected= 'Hello Übercoder & World';
@@ -156,10 +116,6 @@ class QuotedPrintableInputStreamTest extends TestCase {
     $this->assertEquals($expected, $chunk);
   }
 
-  /**
-   * Test decoding an equals sign
-   *
-   */
   #[@test]
   public function equalsSign() {
     $stream= new QuotedPrintableInputStream(new MemoryInputStream('A=3D1'));
@@ -168,10 +124,6 @@ class QuotedPrintableInputStreamTest extends TestCase {
     $this->assertEquals('A=1', $chunk);
   }
 
-  /**
-   * Test decoding a lowercase escape sequence
-   *
-   */
   #[@test]
   public function lowerCaseEscapeSequence() {
     $stream= new QuotedPrintableInputStream(new MemoryInputStream('=3d'));
@@ -180,11 +132,7 @@ class QuotedPrintableInputStreamTest extends TestCase {
     $this->assertEquals('=', $chunk);
   }
   
-  /**
-   * Test an illegal byte sequence
-   *
-   */
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function invalidByteSequence() {
     (new QuotedPrintableInputStream(new MemoryInputStream('Hell=XX')))->read();
   }

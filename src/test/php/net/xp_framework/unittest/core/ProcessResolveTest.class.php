@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\TestCase;
 use lang\Process;
+use io\IOException;
 use unittest\actions\IsPlatform;
 
 /**
@@ -9,19 +9,15 @@ use unittest\actions\IsPlatform;
  *
  * @see      xp://lang.Process
  */
-class ProcessResolveTest extends TestCase {
-  protected $origDir;
+class ProcessResolveTest extends \unittest\TestCase {
+  private $origDir;
 
-  /**
-   * Setup test. Backs up current directory.
-   */
+  /** @return void */
   public function setUp() {
     $this->origDir= getcwd();
   }
   
-  /**
-   * Tear down test. Returns the previous working directory.
-   */
+  /** @return void */
   public function tearDown() {
     chdir($this->origDir);
   }
@@ -82,27 +78,27 @@ class ProcessResolveTest extends TestCase {
     $this->assertTrue(is_executable(Process::resolve('explorer')));
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function resolveSlashDirectory() {
     Process::resolve('/');
   }
 
-  #[@test, @action(new IsPlatform('WIN')), @expect('io.IOException')]
+  #[@test, @action(new IsPlatform('WIN')), @expect(IOException::class)]
   public function resolveBackslashDirectory() {
     Process::resolve('\\');
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function resolveEmpty() {
     Process::resolve('');
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function resolveNonExistant() {
     Process::resolve('@@non-existant@@');
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function resolveNonExistantFullyQualified() {
     Process::resolve('/@@non-existant@@');
   }

@@ -2,6 +2,7 @@
 
 use lang\Object;
 use lang\IllegalArgumentException;
+use lang\IndexOutOfBoundsException;
 use lang\types\ArrayList;
 use util\collections\Vector;
 
@@ -97,7 +98,7 @@ class VectorTest extends \unittest\TestCase {
     $this->assertTrue($v->isEmpty());
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function addingNull() {
     create('new util.collections.Vector<Object>()')->add(null);
   }
@@ -112,17 +113,17 @@ class VectorTest extends \unittest\TestCase {
     $this->assertEquals($o, $r);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function replacingWithNull() {
     create('new util.collections.Vector<Object>', [new Object()])->set(0, null);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function settingPastEnd() {
     (new Vector())->set(0, new Object());
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function settingNegative() {
     (new Vector())->set(-1, new Object());
   }
@@ -136,12 +137,12 @@ class VectorTest extends \unittest\TestCase {
     $this->assertEquals($o, $r);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function readingPastEnd() {
     (new Vector())->get(0);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function readingNegative() {
     (new Vector())->get(-1);
   }
@@ -156,12 +157,12 @@ class VectorTest extends \unittest\TestCase {
     $this->assertEquals($o, $r);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function removingPastEnd() {
     (new Vector())->get(0);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function removingNegative() {
     (new Vector())->get(-1);
   }

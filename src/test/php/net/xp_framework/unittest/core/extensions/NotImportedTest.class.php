@@ -1,20 +1,16 @@
 <?php namespace net\xp_framework\unittest\core\extensions;
 
-use unittest\TestCase;
 use lang\types\ArrayList;
+use lang\Error;
 
 /**
- * TestCase
+ * Tests situation when ArrayListExtensions hasn't been imported
  *
  * @see   xp://net.xp_framework.unittest.core.extensions.ArrayListExtensions
  */
-class NotImportedTest extends TestCase {
+class NotImportedTest extends \unittest\TestCase {
 
-  /**
-   * Tests situation when ArrayListExtensions hasn't been imported
-   *
-   */
-  #[@test, @expect('lang.Error')]
+  #[@test, @expect(Error::class)]
   public function test() {
     (new ArrayList(7, 0, 10, 1, -1))->sorted();
   }

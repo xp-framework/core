@@ -8,7 +8,7 @@ use lang\XPClass;
  * TestCase for lang.GenericTypes
  */
 class GenericTypesTest extends \unittest\TestCase {
-  protected static $filter;
+  private static $filter;
 
   #[@beforeClass]
   public static function defineBase() {
@@ -26,7 +26,7 @@ class GenericTypesTest extends \unittest\TestCase {
   #[@test]
   public function newType_returns_XPClass_instance() {
     $this->assertInstanceOf(
-      'lang.XPClass',
+      XPClass::class,
       (new GenericTypes())->newType(self::$filter, [Primitive::$INT])
     );
   }

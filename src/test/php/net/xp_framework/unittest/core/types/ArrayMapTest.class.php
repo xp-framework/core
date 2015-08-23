@@ -2,6 +2,7 @@
 
 use lang\types\ArrayMap;
 use lang\IndexOutOfBoundsException;
+use lang\IllegalArgumentException;
 use net\xp_framework\unittest\Name;
 
 /**
@@ -66,7 +67,7 @@ class ArrayMapTest extends \unittest\TestCase {
     $this->assertEquals('Test', (new ArrayMap(['key' => 'Test']))['key']);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function accessing_non_existant_key_raises_an_exception() {
     (new ArrayMap([]))['key'];
   }
@@ -95,7 +96,7 @@ class ArrayMapTest extends \unittest\TestCase {
     $this->assertEquals('Written', $map['key']);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function adding_values_is_forbidden() {
     $map= new ArrayMap([]);
     $map[]= 'Forbidden';

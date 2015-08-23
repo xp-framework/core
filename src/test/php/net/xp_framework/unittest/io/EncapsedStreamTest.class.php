@@ -1,17 +1,13 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use unittest\TestCase;
 use io\EncapsedStream;
 use io\File;
 use io\streams\Streams;
 use io\streams\MemoryInputStream;
+use lang\IllegalAccessException;
+use lang\IllegalStateException;
 
-/**
- * TestCase
- *
- * @see   xp://io.EncapsedStream
- */
-class EncapsedStreamTest extends TestCase {
+class EncapsedStreamTest extends \unittest\TestCase {
     
   /**
    * Returns a new EncapsedStream instance
@@ -26,7 +22,7 @@ class EncapsedStreamTest extends TestCase {
     );
   }
   
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function file_given_must_be_open() {
     new EncapsedStream(new File('irrelevant.txt'), 0, 0);
   }
@@ -36,7 +32,7 @@ class EncapsedStreamTest extends TestCase {
     $this->newStream()->open(File::READ);
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function cannot_open_for_writing() {
     $this->newStream()->open(File::WRITE);
   }

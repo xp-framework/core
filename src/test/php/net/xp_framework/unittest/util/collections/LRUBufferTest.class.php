@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\util\collections;
 
 use util\collections\LRUBuffer;
+use lang\IllegalArgumentException;
 
 class LRUBufferTest extends \unittest\TestCase {
   const DEFAULT_SIZE = 3;
@@ -96,7 +97,7 @@ class LRUBufferTest extends \unittest\TestCase {
     $this->assertEquals(10, $this->buffer->getSize());
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function illegalSize() {
     $this->buffer->setSize(0);
   }

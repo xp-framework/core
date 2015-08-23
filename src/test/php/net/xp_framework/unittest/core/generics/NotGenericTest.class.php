@@ -1,8 +1,9 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
+use lang\IllegalStateException;
+
 /**
  * TestCase for reflection on a non-generic
- *
  */
 class NotGenericTest extends \unittest\TestCase {
   
@@ -16,17 +17,17 @@ class NotGenericTest extends \unittest\TestCase {
     $this->assertFalse($this->getClass()->isGenericDefinition());
   }
 
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function cannotCreateGenericTypeFromThis() {
     $this->getClass()->newGenericType([]);
   }
 
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function cannotGetGenericArgumentsForThis() {
     $this->getClass()->genericArguments();
   }
 
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function cannotGetGenericComponentsForThis() {
     $this->getClass()->genericComponents();
   }

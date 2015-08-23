@@ -3,6 +3,8 @@
 use util\Date;
 use util\TimeZone;
 use net\xp_framework\unittest\IgnoredOnHHVM;
+use lang\IllegalArgumentException;
+use lang\IllegalStateException;
 
 /**
  * Tests Date class
@@ -257,7 +259,7 @@ class DateTest extends \unittest\TestCase {
     $this->assertEquals($expect, $this->refDate->format($input));
   }
   
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function unsupportedFormatToken() {
     $this->refDate->format('%b');
   }
@@ -283,7 +285,7 @@ class DateTest extends \unittest\TestCase {
    * Test PHP Bug #42910 - timezone should not fallback to default
    * timezone if it actually is unknown.
    */
-  #[@test, @ignore, @expect('lang.IllegalStateException')]
+  #[@test, @ignore, @expect(IllegalStateException::class)]
   public function emptyTimeZoneNameIfUnknown() {
   
     // Specific timezone id unknown, can be Europe/Paris, Europe/Berlin, ...
@@ -305,27 +307,27 @@ class DateTest extends \unittest\TestCase {
     $this->assertEquals('2007-11-10 19:15:00+0000', $date->toString(Date::DEFAULT_FORMAT, new TimeZone(null)));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function malformedInputString() {
     new Date('@@not-a-date@@');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function monthExceeded() {
     new Date('30.99.2010');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function dayExceeded() {
     new Date('99.30.2010');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function unknownTimeZoneNameInString() {
     new Date('14.12.2010 11:55:00 Europe/Karlsruhe');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function unknownTimeZoneOffsetInString() {
     new Date('14.12.2010 11:55:00+9999');
   }
@@ -335,17 +337,17 @@ class DateTest extends \unittest\TestCase {
     Date::now();
     try {
       new Date('bogus');
-      $this->fail('No exception raised', null, 'lang.IllegalArgumentException');
+      $this->fail('No exception raised', null, IllegalArgumentException::class);
     } catch (\lang\IllegalArgumentException $expected) { }
     Date::now();
   }
   
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new IgnoredOnHHVM())]
+  #[@test, @expect(IllegalArgumentException::class), @action(new IgnoredOnHHVM())]
   public function dateCreateWithAllInvalidArguments() {
     Date::create('', '', '', '', '', '');
   }
   
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new IgnoredOnHHVM())]
+  #[@test, @expect(IllegalArgumentException::class), @action(new IgnoredOnHHVM())]
   public function dateCreateWithInvalidArgumentsExceptTimeZone() {
     Date::create('', '', '', '', '', '', new TimeZone('UTC'));
   }
@@ -385,7 +387,7 @@ class DateTest extends \unittest\TestCase {
     $this->assertDateEquals('1970-01-12T13:46:40+00:00', new Date('1000000'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function testInvalidUnixTimestamp() {
     new Date('+1000000');
   }

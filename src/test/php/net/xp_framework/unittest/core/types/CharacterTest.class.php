@@ -1,9 +1,10 @@
 <?php namespace net\xp_framework\unittest\core\types;
 
-use unittest\TestCase;
 use lang\types\String;
 use lang\types\Character;
 use lang\types\Bytes;
+use lang\FormatException;
+use lang\IllegalArgumentException;
 
 /**
  * TestCase
@@ -11,9 +12,9 @@ use lang\types\Bytes;
  * @deprecated Wrapper types will move to their own library
  * @see  xp://lang.types.Character
  */
-class CharacterTest extends TestCase {
+class CharacterTest extends \unittest\TestCase {
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function incompleteMultiByteCharacter() {
     new Character("\xe4", 'utf-8');
   }
@@ -28,12 +29,12 @@ class CharacterTest extends TestCase {
     $this->assertEquals(new Bytes("\xe2\x82\xac"), (new Character(8364))->getBytes('utf-8')); // &#8364; in HTML
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function illegalCharacter() {
     new Character("\xe4", 'US-ASCII');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function illegalLength() {
     new Character('ABC');
   }

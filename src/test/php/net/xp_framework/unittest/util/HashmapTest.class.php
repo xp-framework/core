@@ -3,6 +3,7 @@
 use unittest\TestCase;
 use util\Hashmap;
 use util\Comparator;
+use lang\IllegalArgumentException;
 
 /**
  * Test Hashmap class
@@ -112,7 +113,7 @@ class HashmapTest extends TestCase {
     );
   }
   
-  #[@test, @expect('lang.IllegalArgumentException')]    
+  #[@test, @expect(IllegalArgumentException::class)]    
   public function mergeWithIllegalArgument() {
     $this->map->merge(new \lang\Object());
   }

@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\util\collections;
  
 use util\collections\Stack;
+use lang\IndexOutOfBoundsException;
 
 class StackTest extends \unittest\TestCase {
   private $stack;
@@ -67,7 +68,7 @@ class StackTest extends \unittest\TestCase {
     $this->assertEquals(new Name('red'), $this->stack->elementAt(2));
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function elementAtIllegalOffset() {
     $this->stack->elementAt(-1);
   }

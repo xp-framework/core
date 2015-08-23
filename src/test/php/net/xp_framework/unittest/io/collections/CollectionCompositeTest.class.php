@@ -1,6 +1,8 @@
 <?php namespace net\xp_framework\unittest\io\collections;
 
 use io\collections\CollectionComposite;
+use io\collections\IOElement;
+use lang\IllegalArgumentException;
 
 /**
  * Unit tests for CollectionComposite class
@@ -18,7 +20,7 @@ class CollectionCompositeTest extends AbstractCollectionTest {
    * @throws  unittest.AssertionFailedError
    */
   protected function assertElement($uri, $element) {
-    $this->assertInstanceOf('io.collections.IOElement', $element);
+    $this->assertInstanceOf(IOElement::class, $element);
     $this->assertEquals($uri, $element->getURI());
   }
   
@@ -32,7 +34,7 @@ class CollectionCompositeTest extends AbstractCollectionTest {
     return $this->newCollection($name, []);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function constructorThrowsExceptionForEmptyList() {
     new CollectionComposite([]);
   }

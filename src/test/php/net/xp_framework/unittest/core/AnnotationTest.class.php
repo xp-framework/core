@@ -1,5 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use lang\XPClass;
+use lang\ElementNotFoundException;
+
 /**
  * Tests the XP Framework's annotations
  *
@@ -9,13 +12,11 @@
  * @see   rfc://0016
  */
 class AnnotationTest extends \unittest\TestCase {
-  protected $class = null;
+  private $class;
 
-  /**
-   * Setup method
-   */
+  /** @return void */
   public function setUp() {
-    $this->class= \lang\XPClass::forName('net.xp_framework.unittest.core.AnnotatedClass');
+    $this->class= XPClass::forName('net.xp_framework.unittest.core.AnnotatedClass');
   }
 
   #[@test]
@@ -35,10 +36,10 @@ class AnnotationTest extends \unittest\TestCase {
 
   #[@test]
   public function simpleAnnotationValue() {
-    $this->assertEquals(NULL, $this->class->getMethod('simple')->getAnnotation('simple'));
+    $this->assertEquals(null, $this->class->getMethod('simple')->getAnnotation('simple'));
   }
 
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function getAnnotationForMethodWithout() {
     $this->getClass()->getMethod('setUp')->getAnnotation('any');
   }
@@ -48,7 +49,7 @@ class AnnotationTest extends \unittest\TestCase {
     $this->assertFalse($this->getClass()->getMethod('setUp')->hasAnnotation('any'));
   }
   
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function getNonExistantAnnotation() {
     $this->class->getMethod('simple')->getAnnotation('doesnotexist');
   }

@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core\types;
 
 use lang\types\ArrayList;
+use lang\IllegalArgumentException;
 use lang\IndexOutOfBoundsException;
 use net\xp_framework\unittest\Name;
 
@@ -86,7 +87,7 @@ class ArrayListTest extends \unittest\TestCase {
     $this->assertEquals(4, $c[2]);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function reading_non_existant_element_raises_an_exception() {
     $c= new ArrayList();
     $c[0];
@@ -97,25 +98,25 @@ class ArrayListTest extends \unittest\TestCase {
     $this->assertNull((new ArrayList())->get(0, null));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function adding_an_element_raises_an_exception() {
     $c= new ArrayList();
     $c[]= 4;
   }
 
-  #[@test, @values([0, 4]), @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @values([0, 4]), @expect(IndexOutOfBoundsException::class)]
   public function adding_an_element_by_supplying_nonexistant_offset_raises_an_exception($offset) {
     $c= new ArrayList();
     $c[$offset]= 4;
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function negative_key_raises_an_exception() {
     $c= new ArrayList();
     $c[-1]= 4;
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function key_of_incorrect_type_raises_an_exception() {
     $c= new ArrayList(1, 2, 3);
     $c['foo']= 4;
@@ -158,7 +159,7 @@ class ArrayListTest extends \unittest\TestCase {
     $this->assertFalse(isset($c[$offset]));
   }
 
-  #[@test, @values([0, 1, 2, 3, 4, -1]), @expect('lang.IllegalArgumentException')]
+  #[@test, @values([0, 1, 2, 3, 4, -1]), @expect(IllegalArgumentException::class)]
   public function array_unset_operator_is_overloaded() {
     $c= new ArrayList(1, 2, 3);
     unset($c[0]);

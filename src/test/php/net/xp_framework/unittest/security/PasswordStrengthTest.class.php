@@ -3,6 +3,8 @@
 use security\password\PasswordStrength;
 use security\password\StandardAlgorithm;
 use security\password\Algorithm;
+use util\NoSuchElementException;
+use lang\IllegalArgumentException;
 
 /**
  * TestCase for PasswordStrength entry point class
@@ -26,12 +28,12 @@ class PasswordStrengthTest extends \unittest\TestCase {
     $this->assertInstanceOf(nameof($algorithm), PasswordStrength::getAlgorithm('test'));
   }
 
-  #[@test, @expect('util.NoSuchElementException')]
+  #[@test, @expect(NoSuchElementException::class)]
   public function getAlgorithm_throws_an_exception_for_non_existant_algorithm() {
     PasswordStrength::getAlgorithm('@@NON_EXISTANT@@');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function setAlgorithm_throws_an_exception_for_non_algorithms() {
     PasswordStrength::setAlgorithm('object', typeof($this));
   }

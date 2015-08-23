@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use unittest\TestCase;
 use io\File;
 use io\FileUtil;
 use lang\System;
+use lang\IllegalArgumentException;
 use util\FilesystemPropertySource;
 use util\Properties;
 
@@ -12,7 +12,7 @@ use util\Properties;
  *
  * @see   xp://util.FilesystemPropertySource
  */
-class FilesystemPropertySourceTest extends TestCase {
+class FilesystemPropertySourceTest extends \unittest\TestCase {
   protected $tempFile;
   protected $fixture;
 
@@ -29,25 +29,16 @@ class FilesystemPropertySourceTest extends TestCase {
     $this->tempFile->unlink();
   }
 
-  /**
-   * Test provides()
-   */
   #[@test]
   public function provides_existing_ini_file() {
     $this->assertTrue($this->fixture->provides('temp'));
   }
 
-  /**
-   * Test provides()
-   */
   #[@test]
   public function does_not_provide_non_existant_ini_file() {
     $this->assertFalse($this->fixture->provides('@@non-existant@@'));
   }
 
-  /**
-   * Test fetch()
-   */
   #[@test]
   public function fetch_existing_ini_file() {
     $this->assertEquals(
@@ -56,10 +47,7 @@ class FilesystemPropertySourceTest extends TestCase {
     );
   }
 
-  /**
-   * Test fetch()
-   */
-  #[@test, @expect(class= 'lang.IllegalArgumentException', withMessage= '/No properties @@non-existant@@ found at .+/')]
+  #[@test, @expect(class= IllegalArgumentException::class, withMessage= '/No properties @@non-existant@@ found at .+/')]
   public function fetch_non_existant_ini_file() {
     $this->fixture->fetch('@@non-existant@@');
   }

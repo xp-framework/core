@@ -1,6 +1,9 @@
 <?php namespace net\xp_framework\unittest\core\types;
 
 use lang\types\String;
+use lang\FormatException;
+use lang\IllegalArgumentException;
+use lang\IndexOutOfBoundsException;
 
 /**
  * TestCase for String class
@@ -26,12 +29,12 @@ class StringTest extends \unittest\TestCase {
     $this->assertFalse((new String('ABC'))->equals(new String('CBA')));
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function incompleteMultiByteCharacter() {
     new String("\303|", 'utf-8');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function illegalCharacter() {
     new String('ä', 'US-ASCII');
   }
@@ -213,17 +216,17 @@ class StringTest extends \unittest\TestCase {
     $this->assertEquals(new \lang\types\Character('ü'), (new String('www.müller.com'))->charAt(5));
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function charAtNegative() {
     (new String('ABC'))->charAt(-1);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function charAtAfterEnd() {
     (new String('ABC'))->charAt(4);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function charAtEnd() {
     (new String('ABC'))->charAt(3);
   }
@@ -242,25 +245,25 @@ class StringTest extends \unittest\TestCase {
     $this->assertEquals(new String('www.muller.com'), $str);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function offsetSetNegative() {
     $str= new String('www.müller.com');
     $str[-1]= 'u';
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function offsetSetAfterEnd() {
     $str= new String('www.müller.com');
     $str[$str->length()]= 'u';
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function offsetSetIncorrectLength() {
     $str= new String('www.müller.com');
     $str[5]= 'ue';
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function offsetAdd() {
     $str= new String('www.müller.com');
     $str[]= '.';
@@ -302,13 +305,13 @@ class StringTest extends \unittest\TestCase {
     $this->assertEquals(new String('www.mller.com'), $str);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function offsetUnsetNegative() {
     $str= new String('www.müller.com');
     unset($str[-1]);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function offsetUnsetAfterEnd() {
     $str= new String('www.müller.com');
     unset($str[1024]);
@@ -334,7 +337,7 @@ class StringTest extends \unittest\TestCase {
     ));
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function getUmlautsAsAsciiBytes() {
     (new String('äöü', 'iso-8859-1'))->getBytes('ASCII');
   }

@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use lang\Object;
 use lang\ClassLoader;
 
 /**
@@ -26,7 +27,7 @@ class NamespaceAliasTest extends \unittest\TestCase {
   public function defined_class_exists() {
     ClassLoader::defineClass(
       'net.xp_framework.unittest.core.NamespaceAliasClassFixture', 
-      'lang.Object', 
+      Object::class, 
       [], 
       '{}'
     );

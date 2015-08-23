@@ -1,35 +1,23 @@
 <?php namespace net\xp_framework\unittest\peer\net;
 
-use unittest\TestCase;
 use peer\net\Network;
 use peer\net\Inet4Address;
 use peer\net\Inet6Address;
+use lang\FormatException;
 
-class NetworkTest extends TestCase {
+class NetworkTest extends \unittest\TestCase {
 
-  /**
-   * Create network
-   * 
-   */
   #[@test]
   public function createNetwork() {
     $net= new Network(new Inet4Address("127.0.0.1"), 24);
     $this->assertEquals('127.0.0.1/24', $net->asString());
   }
 
-  /**
-   * Create network fails
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function createNetworkFailsIfTooLargeNetmaskGiven() {
     new Network(new Inet4Address("127.0.0.1"), 33);
   }
 
-  /**
-   * Create v6 network
-   *
-   */
   #[@test]
   public function createNetworkV6() {
     $this->assertEquals(
@@ -38,10 +26,6 @@ class NetworkTest extends TestCase {
     );
   }
 
-  /**
-   * Create v6 network
-   *
-   */
   #[@test]
   public function createNetworkV6WorkAlsoWithNetmaskTooBigInV4() {
     $this->assertEquals(
@@ -50,56 +34,32 @@ class NetworkTest extends TestCase {
     );
   }
 
-  /**
-   * Create v6 network
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function createNetworkV6FailsIfTooLargeNetmaskGiven() {
     new Network(new Inet6Address('fe00::'), 763);
   }
 
-  /**
-   * Create network fails
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function createNetworkFailsIfTooSmallNetmaskGiven() {
     new Network(new Inet4Address("127.0.0.1"), -1);
   }
 
-  /**
-   * Create network fails
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function createNetworkFailsIfNonIntegerNetmaskGiven() {
     new Network(new Inet4Address("127.0.0.1"), 0.5);
   }
 
-  /**
-   * Create network fails
-   *
-   */
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function createNetworkFailsIfStringGiven() {
     new Network(new Inet4Address("127.0.0.1"), "Hello");
   }
 
-  /**
-   * Retrieve network ip
-   *
-   */
   #[@test]
   public function networkAddress() {
     $net= new Network(new Inet4Address("127.0.0.0"), 24);
     $this->assertEquals(new Inet4Address("127.0.0.0"), $net->getNetworkAddress());
   }
 
-  /**
-   * Check if given IP is part of net
-   *
-   */
   #[@test]
   public function loopbackNetworkContainsLoopbackAddressV4() {
     $this->assertTrue((new Network(new Inet4Address('127.0.0.5'), 24))->contains(new Inet4Address('127.0.0.1')));

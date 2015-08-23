@@ -5,6 +5,8 @@ use lang\archive\ArchiveClassLoader;
 use lang\reflect\Package;
 use lang\ClassLoader;
 use lang\XPClass;
+use lang\IllegalArgumentException;
+use lang\ElementNotFoundException;
 
 /**
  * TestCase
@@ -25,6 +27,8 @@ class PackageTest extends \unittest\TestCase {
   /**
    * Setup this test. Registeres class loaders deleates for the 
    * afforementioned XARs
+   *
+   * @return void
    */
   public function setUp() {
     $this->libraryLoader= ClassLoader::registerLoader(new ArchiveClassLoader(new Archive((new XPClass(__CLASS__))
@@ -37,6 +41,8 @@ class PackageTest extends \unittest\TestCase {
   /**
    * Tear down this test. Removes classloader delegates registered 
    * during setUp()
+   *
+   * @return void
    */
   public function tearDown() {
     ClassLoader::removeLoader($this->libraryLoader);
@@ -50,7 +56,7 @@ class PackageTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function nonExistantPackage() {
     Package::forName('@@non-existant-package@@');
   }
@@ -79,7 +85,7 @@ class PackageTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function loadClassFromDifferentPackage() {
     Package::forName('net.xp_framework.unittest.reflection.classes')->loadClass('lang.reflect.Method');
   }
@@ -183,7 +189,7 @@ class PackageTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function loadPackageByDifferentName() {
     Package::forName('net.xp_framework.unittest.reflection')->getPackage('lang.reflect');
   }

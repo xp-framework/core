@@ -1,15 +1,17 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use unittest\TestCase;
 use util\Properties;
 use util\Hashmap;
+use lang\FormatException;
+use lang\IllegalStateException;
+use lang\ElementNotFoundException;
 
 /**
  * Testcase for util.Properties class.
  *
  * @see      xp://util.Properties
  */
-abstract class AbstractPropertiesTest extends TestCase {
+abstract class AbstractPropertiesTest extends \unittest\TestCase {
 
   /**
    * Create a new properties object from a string source
@@ -274,7 +276,7 @@ abstract class AbstractPropertiesTest extends TestCase {
     $this->assertEquals('final', $p->getNextSection());
   }
 
-  #[@test, @expect('lang.FormatException'), @values([
+  #[@test, @expect(FormatException::class), @values([
   #  ["[section]\nfoo", 'missing equals sign for key'],
   #  ["[section]\nfoo]=value", 'key contains unbalanced bracket'],
   #  ["[section\nfoo=bar", 'section missing closing bracket']
@@ -320,7 +322,7 @@ abstract class AbstractPropertiesTest extends TestCase {
     $this->assertFalse($p->hasSection('section'));
   }
 
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function remove_non_existant_section() {
     $this->fixture('')->removeSection('non-existant');
   }
@@ -332,7 +334,7 @@ abstract class AbstractPropertiesTest extends TestCase {
     $this->assertNull($p->readString('section', 'key', null));
   }
 
-  #[@test, @expect('lang.IllegalStateException'), @values(['section', 'non-existant'])]
+  #[@test, @expect(IllegalStateException::class), @values(['section', 'non-existant'])]
   public function remove_non_existant_key($section) {
     $this->fixture('key=value')->removeKey($section, 'non-existant');
   }
@@ -366,7 +368,7 @@ abstract class AbstractPropertiesTest extends TestCase {
     $this->assertNotEquals($this->newPropertiesFrom("[section]\ndifferent=value"), $this->newPropertiesFrom($source));
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function resolve_unsupported_type() {
     $this->fixture('test=${not.supported}');
   }
@@ -379,7 +381,7 @@ abstract class AbstractPropertiesTest extends TestCase {
     $this->assertEquals('this', $value);
   }
 
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function resolve_non_existant_senvironment_variable() {
     putenv('TEST');
     $this->fixture('test=${env.TEST}');

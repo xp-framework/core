@@ -9,6 +9,7 @@ use lang\types\Short;
 use lang\types\Float;
 use lang\types\Boolean;
 use lang\types\ArrayList;
+use lang\IllegalArgumentException;
 use io\streams\Streams;
 use io\streams\MemoryInputStream;
 use unittest\actions\RuntimeVersion;
@@ -63,7 +64,7 @@ class PrimitiveAndWrappersTest extends TestCase {
     $fd= Streams::readableFd(new MemoryInputStream('test'));
     try {
       Primitive::boxed($fd);
-    } catch (\lang\IllegalArgumentException $expected) {
+    } catch (IllegalArgumentException $expected) {
       return;
     } finally {
       fclose($fd);    // Necessary, PHP will segfault otherwise
@@ -97,7 +98,7 @@ class PrimitiveAndWrappersTest extends TestCase {
     $this->assertEquals([1, 2, 3], Primitive::unboxed(new ArrayList(1, 2, 3)));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]]
+  #[@test, @expect(IllegalArgumentException::class)]]
   public function unboxObject() {
     Primitive::unboxed(new \lang\Object());
   }

@@ -3,6 +3,7 @@
 use util\Filters;
 use util\Filter;
 use lang\IllegalStateException;
+use lang\IllegalArgumentException;
 
 /**
  * Test Filters class
@@ -50,7 +51,7 @@ class FiltersTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function constructor_raises_exception_when_neither_null_nor_closure_given_for_accepting() {
     create('new util.Filters<int>', [], 'callback');
   }

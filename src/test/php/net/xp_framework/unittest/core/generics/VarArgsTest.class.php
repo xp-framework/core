@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
+use lang\IllegalArgumentException;
+
 /**
  * TestCase for generic construction behaviour at runtime.
  *
@@ -23,7 +25,7 @@ class VarArgsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function withIncorrectArguments() {
     create('new net.xp_framework.unittest.core.generics.ListOf<string>', 'Hello', 1);
   }

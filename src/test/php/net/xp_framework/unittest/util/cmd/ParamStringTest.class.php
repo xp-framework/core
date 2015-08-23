@@ -2,13 +2,10 @@
  
 use unittest\TestCase;
 use util\cmd\ParamString;
+use lang\IllegalArgumentException;
 
 class ParamStringTest extends TestCase {
   
-  /**
-   * Test short option without value ("flag")
-   *
-   */
   #[@test]
   public function shortFlag() {
     $p= new ParamString(['-k']);
@@ -17,10 +14,6 @@ class ParamStringTest extends TestCase {
     $this->assertNull($p->value('k'));
   }
 
-  /**
-   * Test short option with value
-   *
-   */
   #[@test]
   public function shortValue() {
     $p= new ParamString(['-d', 'sql']);
@@ -29,10 +22,6 @@ class ParamStringTest extends TestCase {
     $this->assertEquals('sql', $p->value('d'));
   }
 
-  /**
-   * Test long option without value ("flag")
-   *
-   */
   #[@test]
   public function longFlag() {
     $p= new ParamString(['--verbose']);
@@ -41,10 +30,6 @@ class ParamStringTest extends TestCase {
     $this->assertNull($p->value('verbose'));
   }
 
-  /**
-   * Test Long option with value
-   *
-   */
   #[@test]
   public function longValue() {
     $p= new ParamString(['--level=3']);
@@ -53,10 +38,6 @@ class ParamStringTest extends TestCase {
     $this->assertEquals('3', $p->value('level'));
   }
 
-  /**
-   * Test Long option with value
-   *
-   */
   #[@test]
   public function longValueShortGivenDefault() {
     $p= new ParamString(['-l', '3']);
@@ -65,10 +46,6 @@ class ParamStringTest extends TestCase {
     $this->assertEquals('3', $p->value('level'));
   }
 
-  /**
-   * Test Long option with value
-   *
-   */
   #[@test]
   public function longValueShortGiven() {
     $p= new ParamString(['-L', '3', '-l', 'FAIL']);
@@ -77,10 +54,6 @@ class ParamStringTest extends TestCase {
     $this->assertEquals('3', $p->value('level', 'L'));
   }
 
-  /**
-   * Test positional query
-   *
-   */
   #[@test]
   public function positional() {
     $p= new ParamString(['That is a realm']);
@@ -89,10 +62,6 @@ class ParamStringTest extends TestCase {
     $this->assertEquals('That is a realm', $p->value(0));
   }
 
-  /**
-   * Test exists() method
-   *
-   */
   #[@test]
   public function existance() {
     $p= new ParamString(['a', 'b']);
@@ -102,19 +71,11 @@ class ParamStringTest extends TestCase {
     $this->assertFalse($p->exists(2));
   }
 
-  /**
-   * Test positional query
-   *
-   */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function nonExistantPositional() {
     (new ParamString(['a']))->value(1);
   }
 
-  /**
-   * Test positional query
-   *
-   */
   #[@test]
   public function nonExistantPositionalWithDefault() {
     $this->assertEquals(
@@ -123,19 +84,11 @@ class ParamStringTest extends TestCase {
     );
   }
 
-  /**
-   * Test named query
-   *
-   */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function nonExistantNamed() {
     (new ParamString(['--verbose']))->value('name');
   }
 
-  /**
-   * Test named query
-   *
-   */
   #[@test]
   public function nonExistantNamedWithDefault() {
     $this->assertEquals(
@@ -144,10 +97,6 @@ class ParamStringTest extends TestCase {
     );
   }
   
-  /**
-   * Test long option with whitespace in value
-   *
-   */
   #[@test]
   public function whitespaceInParameter() {
     $p= new ParamString(['--realm=That is a realm']);

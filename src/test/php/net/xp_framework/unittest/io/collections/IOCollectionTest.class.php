@@ -1,6 +1,13 @@
 <?php namespace net\xp_framework\unittest\io\collections;
 
 use io\collections\IOCollection;
+use io\collections\IOElement;
+use io\streams\InputStream;
+use io\streams\OutputStream;
+use io\IOException;
+use lang\IllegalStateException;
+use lang\IllegalArgumentException;
+use util\NoSuchElementException;
 
 /**
  * Unit tests for IOCollection class (basic functionality)
@@ -52,13 +59,13 @@ class IOCollectionTest extends AbstractCollectionTest {
     $empty->close();
   }
 
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function calling_next_before_opening_collection_raises_exception() {
     $c= new MockCollection('~');
     $c->next();
   }
 
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function calling_next_after_closing_collection_raises_exception() {
     $c= new MockCollection('~');
     $c->open();
@@ -70,7 +77,7 @@ class IOCollectionTest extends AbstractCollectionTest {
   public function next_returns_IOElement_instances() {
     $this->fixture->open();
     for ($i= 0; $e= $this->fixture->next(); $i++) {
-      $this->assertInstanceOf('io.collections.IOElement', $e);
+      $this->assertInstanceOf(IOElement::class, $e);
     }
     $this->assertEquals($this->sizes[$this->fixture->getURI()], $i);
     $this->fixture->close();
@@ -118,13 +125,13 @@ class IOCollectionTest extends AbstractCollectionTest {
   #[@test]
   public function get_elements_input_stream() {
     with ($stream= $this->firstElement($this->fixture)->getInputStream()); {
-      $this->assertInstanceOf('io.streams.InputStream', $stream);
+      $this->assertInstanceOf(InputStream::class, $stream);
       $this->assertNotEquals(0, $stream->available());
       $this->assertEquals('File contents', $stream->read(13));
     }
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function get_collections_input_stream() {
     $this->firstElement($this->newCollection('/', [$this->newCollection('/root')]))->getInputStream();
   }
@@ -132,12 +139,12 @@ class IOCollectionTest extends AbstractCollectionTest {
   #[@test]
   public function get_elements_output_stream() {
     with ($stream= $this->firstElement($this->fixture)->getOutputStream()); {
-      $this->assertInstanceOf('io.streams.OutputStream', $stream);
+      $this->assertInstanceOf(OutputStream::class, $stream);
       $stream->write('File contents');
     }
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function get_collections_output_stream() {
     $this->firstElement($this->newCollection('/', [$this->newCollection('/root')]))->getOutputStream();
   }
@@ -159,7 +166,7 @@ class IOCollectionTest extends AbstractCollectionTest {
     $this->assertEquals($created, $this->fixture->getElement('new.txt'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function create_existing_element() {
     $this->fixture->newElement('first.txt');
   }
@@ -169,7 +176,7 @@ class IOCollectionTest extends AbstractCollectionTest {
     $this->assertEquals(new MockElement('./first.txt'), $this->fixture->getElement('first.txt'));
   }
 
-  #[@test, @expect('util.NoSuchElementException')]
+  #[@test, @expect(NoSuchElementException::class)]
   public function get_nonexistant_element() {
     $this->fixture->getElement('doesnotexist.txt');
   }
@@ -189,7 +196,7 @@ class IOCollectionTest extends AbstractCollectionTest {
     $this->assertEquals(new MockCollection('./sub'), $this->fixture->getCollection('sub'));
   }
 
-  #[@test, @expect('util.NoSuchElementException')]
+  #[@test, @expect(NoSuchElementException::class)]
   public function get_nonexistant_collection() {
     $this->fixture->getCollection('doesnotexist');
   }
@@ -201,7 +208,7 @@ class IOCollectionTest extends AbstractCollectionTest {
     $this->assertEquals($created, $this->fixture->getCollection('newdir'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function new_existing_collection() {
     $this->fixture->newCollection('sub');
   }

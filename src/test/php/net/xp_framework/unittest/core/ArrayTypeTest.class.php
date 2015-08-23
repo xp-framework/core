@@ -1,22 +1,18 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\ArrayType;
-use lang\IllegalArgumentException;
 use lang\Primitive;
 use lang\Type;
 use lang\XPClass;
 use lang\Object;
+use lang\IllegalArgumentException;
+use lang\ClassCastException;
 
-/**
- * TestCase
- *
- * @see      xp://lang.ArrayType
- */
 class ArrayTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function typeForName() {
-    $this->assertInstanceOf('lang.ArrayType', Type::forName('string[]'));
+    $this->assertInstanceOf(ArrayType::class, Type::forName('string[]'));
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
@@ -142,7 +138,7 @@ class ArrayTypeTest extends \unittest\TestCase {
     $this->assertEquals($expected, ArrayType::forName('string[]')->cast($value));
   }
 
-  #[@test, @expect('lang.ClassCastException'), @values([
+  #[@test, @expect(ClassCastException::class), @values([
   #  0, -1, 0.5, '', 'Test', new Object(), true, false,
   #  [['key' => 'color', 'value' => 'price']]
   #])]

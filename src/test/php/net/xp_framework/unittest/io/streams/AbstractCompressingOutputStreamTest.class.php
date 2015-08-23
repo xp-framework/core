@@ -1,37 +1,38 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use unittest\TestCase;
+use lang\IllegalArgumentException;
 use lang\types\Bytes;
 use io\streams\MemoryOutputStream;
+use io\streams\OutputStream;
+use unittest\PrerequisitesNotMetError;
 
 /**
  * Abstract base class for all compressing output stream tests
- *
  */
-abstract class AbstractCompressingOutputStreamTest extends TestCase {
+abstract class AbstractCompressingOutputStreamTest extends \unittest\TestCase {
 
   /**
    * Get filter we depend on
    *
-   * @return  string
+   * @return string
    */
   protected abstract function filter();
 
   /**
    * Get stream
    *
-   * @param   io.streams.OutputStream wrapped
-   * @return  int level
-   * @return  io.streams.OutputStream
+   * @param  io.streams.OutputStream $wrapped
+   * @param  int $level
+   * @return io.streams.OutputStream
    */
-  protected abstract function newStream(\io\streams\OutputStream $wrapped, $level);
+  protected abstract function newStream(OutputStream $wrapped, $level);
 
   /**
    * Compress data
    *
-   * @param   string in
-   * @return  int level
-   * @return  string
+   * @param  string $in
+   * @param  int $level
+   * @return string
    */
   protected abstract function compress($in, $level);
 
@@ -40,9 +41,9 @@ abstract class AbstractCompressingOutputStreamTest extends TestCase {
    * comparison to prevent binary data from appearing in assertion 
    * failure message.
    *
-   * @param   string expected
-   * @param   string actual
-   * @throws  unittest.AssertionFailedError
+   * @param  string $expected
+   * @param  string $actual
+   * @throws unittest.AssertionFailedError
    */
   protected function assertCompressedDataEquals($expected, $actual) {
     $this->assertEquals(new Bytes($expected), new Bytes($actual));
@@ -50,18 +51,16 @@ abstract class AbstractCompressingOutputStreamTest extends TestCase {
 
   /**
    * Setup method. Ensure filter we depend on is available
+   *
+   * @return void
    */
   public function setUp() {
     $depend= $this->filter();
     if (!in_array($depend, stream_get_filters())) {
-      throw new \unittest\PrerequisitesNotMetError(ucfirst($depend).' stream filter not available', null, [$depend]);
+      throw new PrerequisitesNotMetError(ucfirst($depend).' stream filter not available', null, [$depend]);
     }
   }
 
-  /**
-   * Test single write
-   *
-   */
   #[@test]
   public function singleWrite() {
     $out= new MemoryOutputStream();
@@ -71,10 +70,6 @@ abstract class AbstractCompressingOutputStreamTest extends TestCase {
     $this->assertCompressedDataEquals($this->compress('Hello', 6), $out->getBytes());
   }
 
-  /**
-   * Test multiple consecutive writes
-   *
-   */
   #[@test]
   public function multipeWrites() {
     $out= new MemoryOutputStream();
@@ -86,10 +81,6 @@ abstract class AbstractCompressingOutputStreamTest extends TestCase {
     $this->assertCompressedDataEquals($this->compress('Hello World', 6), $out->getBytes());
   }
 
-  /**
-   * Test highest level of compression (9)
-   *
-   */
   #[@test]
   public function highestLevel() {
     $out= new MemoryOutputStream();
@@ -99,10 +90,6 @@ abstract class AbstractCompressingOutputStreamTest extends TestCase {
     $this->assertCompressedDataEquals($this->compress('Hello', 9), $out->getBytes());
   }
 
-  /**
-   * Test lowest level of compression (1)
-   *
-   */
   #[@test]
   public function lowestLevel() {
     $out= new MemoryOutputStream();
@@ -112,39 +99,22 @@ abstract class AbstractCompressingOutputStreamTest extends TestCase {
     $this->assertCompressedDataEquals($this->compress('Hello', 1), $out->getBytes());
   }
 
-  /**
-   * Test level may not be larger than 10
-   *
-   */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function levelTooHigh() {
     $this->newStream(new MemoryOutputStream() , 10);
   }
  
-   /**
-   * Test level may not be smaller than 0
-   *
-   */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function levelTooLow() {
     $this->newStream(new MemoryOutputStream(), -1);
   }
 
-  /**
-   * Test closing a stream right after creation
-   *
-   */
   #[@test]
   public function closingRightAfterCreation() {
     $compressor= $this->newStream(new MemoryOutputStream(), 1);
     $compressor->close();
   }
 
-  /**
-   * Test closing a stream twice has no effect.
-   *
-   * @see   xp://lang.Closeable#close
-   */
   #[@test]
   public function closingTwice() {
     $compressor= $this->newStream(new MemoryOutputStream(), 1);

@@ -3,6 +3,9 @@
 use lang\Generic;
 use lang\XPClass;
 use lang\Type;
+use lang\ClassFormatException;
+use lang\IllegalStateException;
+use lang\ElementNotFoundException;
 
 class MethodParametersTest extends \unittest\TestCase {
 
@@ -126,7 +129,7 @@ class MethodParametersTest extends \unittest\TestCase {
     $this->assertNull($this->method('fixture')->getParameter(6)->getTypeRestriction());
   }
 
-  #[@test, @expect('lang.ClassFormatException')]
+  #[@test, @expect(ClassFormatException::class)]
   public function nonexistant_restriction_class_parameter() {
     $this->method('fixturex')->getParameter(0)->getTypeRestriction();
   }
@@ -187,7 +190,7 @@ class MethodParametersTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.ClassFormatException')]
+  #[@test, @expect(ClassFormatException::class)]
   public function nonexistant_typed_class_parameter() {
     $this->method('fixturex')->getParameter(0)->getType();
   }
@@ -266,7 +269,7 @@ class MethodParametersTest extends \unittest\TestCase {
     $this->assertTrue($this->method('fixture')->getParameter(6)->isOptional());
   }
 
-  #[@test, @expect(class= 'lang.IllegalStateException', withMessage= 'Parameter "a" has no default value')]
+  #[@test, @expect(class= IllegalStateException::class, withMessage= 'Parameter "a" has no default value')]
   public function required_parameter_does_not_have_default_value() {
     $this->method('fixture')->getParameter(0)->getDefaultValue();
   }
@@ -311,7 +314,7 @@ class MethodParametersTest extends \unittest\TestCase {
     $this->assertEquals([], $this->method('fixture')->getParameter(0)->getAnnotations());
   }
 
-  #[@test, @expect(class= 'lang.ElementNotFoundException', withMessage= 'Annotation "test" does not exist')]
+  #[@test, @expect(class= ElementNotFoundException::class, withMessage= 'Annotation "test" does not exist')]
   public function cannot_get_test_annotation_for_un_annotated_parameter() {
     $this->method('fixture')->getParameter(0)->getAnnotation('test');
   }

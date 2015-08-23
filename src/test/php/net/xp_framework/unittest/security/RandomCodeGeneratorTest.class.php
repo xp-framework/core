@@ -2,6 +2,7 @@
 
 use unittest\TestCase;
 use security\password\RandomCodeGenerator;
+use lang\IllegalArgumentException;
 
 /**
  * TestCase
@@ -29,12 +30,12 @@ class RandomCodeGeneratorTest extends TestCase {
     $this->assertTrue((bool)preg_match('/^[a-z0-9]{16}$/', $this->fixture->generate()));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function zeroLength() {
     new RandomCodeGenerator(0);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function negativeLength() {
     new RandomCodeGenerator(-1);
   }

@@ -2,14 +2,12 @@
 
 use io\File;
 use io\Folder;
+use io\IOException;
+use io\FileNotFoundException;
 use lang\System;
+use lang\IllegalStateException;
 use unittest\PrerequisitesNotMetError;
 
-/**
- * TestCase
- *
- * @see      xp://io.File
- */
 class FileIntegrationTest extends \unittest\TestCase {
   protected static $temp= null;
   protected $file= null;
@@ -141,18 +139,18 @@ class FileIntegrationTest extends \unittest\TestCase {
     $this->assertFalse($this->file->exists());
   }
   
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function cannotDeleteNonExistant() {
     $this->file->unlink();
   }
 
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function cannotDeleteOpenFile() {
     $this->file->open(File::WRITE);
     $this->file->unlink();
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function cannotCloseUnopenedFile() {
     $this->file->close();
   }
@@ -345,7 +343,7 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  #[@test, @expect('io.FileNotFoundException')]
+  #[@test, @expect(FileNotFoundException::class)]
   public function cannotOpenNonExistantForReading() {
     $this->file->open(File::READ);
   }
@@ -381,7 +379,7 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function cannotCopyOpenFile() {
     $this->file->open(File::WRITE);
     $this->file->copy('irrelevant');
@@ -426,7 +424,7 @@ class FileIntegrationTest extends \unittest\TestCase {
     }
   }
 
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function cannotMoveOpenFile() {
     $this->file->open(File::WRITE);
     $this->file->move('irrelevant');

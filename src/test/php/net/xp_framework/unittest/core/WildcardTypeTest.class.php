@@ -7,12 +7,10 @@ use lang\Primitive;
 use lang\ArrayType;
 use lang\MapType;
 use lang\Type;
+use lang\IllegalArgumentException;
+use lang\IllegalAccessException;
+use lang\ClassCastException;
 
-/**
- * TestCase
- *
- * @see      xp://lang.WildcardType
- */
 class WildcardTypeTest extends \unittest\TestCase {
 
   #[@test]
@@ -42,7 +40,7 @@ class WildcardTypeTest extends \unittest\TestCase {
     $this->assertEquals($components, (new WildcardType($base, $components))->components());
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values([
+  #[@test, @expect(IllegalArgumentException::class), @values([
   #  'util.collections.Vector',
   #  'int',
   #  'string[]',
@@ -192,7 +190,7 @@ class WildcardTypeTest extends \unittest\TestCase {
     $this->assertFalse(WildcardType::forName('util.collections.Vector<?>')->isAssignableFrom($value));
   }
 
-  #[@test, @expect('lang.ClassCastException'), @values('hashTableOfAny')]
+  #[@test, @expect(ClassCastException::class), @values('hashTableOfAny')]
   public function generic_hashtables_cannot_be_cast_to_vector_of_any($value) {
     WildcardType::forName('util.collections.Vector<?>')->cast($value->newInstance());
   }
@@ -207,7 +205,7 @@ class WildcardTypeTest extends \unittest\TestCase {
     $this->assertFalse(WildcardType::forName('util.collections.Vector<?>')->isAssignableFrom($value));
   }
 
-  #[@test, @expect('lang.ClassCastException'), @values('unGenericInstances')]
+  #[@test, @expect(ClassCastException::class), @values('unGenericInstances')]
   public function ungeneric_instancess_cannot_be_cast_to_vector_of_any($value) {
     WildcardType::forName('util.collections.Vector<?>')->cast($value);
   }
@@ -269,7 +267,7 @@ class WildcardTypeTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function wildcard_types_cannot_be_instantiated() {
     Type::forName('util.collections.Vector<?>')->newInstance();
   }

@@ -4,6 +4,9 @@ use lang\types\Bytes;
 use lang\types\String;
 use lang\types\Character;
 use lang\types\Byte;
+use lang\FormatException;
+use lang\IllegalArgumentException;
+use lang\IndexOutOfBoundsException;
 
 /**
  * TestCase for Bytes class
@@ -68,7 +71,7 @@ class BytesTest extends \unittest\TestCase {
     $this->assertEquals(new Byte(100), $b[3]);
   }
  
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function illegalConstructorArgument() {
     new Bytes(1);
   }
@@ -139,25 +142,25 @@ class BytesTest extends \unittest\TestCase {
     $this->assertEquals(new Byte(3), $b[0]);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function setNegative() {
     $b= new Bytes('negative');
     $b[-1]= new Byte(3);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function setPastEnd() {
     $b= new Bytes('ends');
     $b[5]= new Byte(3);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function getNegative() {
     $b= new Bytes('negative');
     $read= $b[-1];
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function getPastEnd() {
     $b= new Bytes('ends');
     $read= $b[5];
@@ -193,13 +196,13 @@ class BytesTest extends \unittest\TestCase {
     $this->assertEquals(new Bytes('GIF9a'), $b);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function removingNegative() {
     $b= new Bytes('negative');
     unset($b[-1]);
   }
 
-  #[@test, @expect('lang.IndexOutOfBoundsException')]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function removingPastEnd() {
     $b= new Bytes('ends');
     unset($b[5]);
@@ -302,7 +305,7 @@ class BytesTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function string_from_invalid_utf8_bytes() {
     new String(new Bytes("H\344llo"), 'utf-8');
   }

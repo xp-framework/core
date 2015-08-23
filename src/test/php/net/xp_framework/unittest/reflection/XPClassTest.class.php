@@ -2,6 +2,14 @@
 
 use lang\XPClass;
 use lang\Primitive;
+use lang\ClassLoader;
+use lang\IllegalStateException;
+use lang\ElementNotFoundException;
+use lang\ClassNotFoundException;
+use lang\IllegalAccessException;
+use lang\reflect\Package;
+use lang\reflect\Constructor;
+use lang\reflect\TargetInvocationException;
 
 /**
  * Test the XPClass class, the entry point to the XP Framework's class reflection API.
@@ -11,9 +19,7 @@ use lang\Primitive;
 class XPClassTest extends \unittest\TestCase {
   protected $fixture;
 
-  /**
-   * Setup method
-   */
+  /** @return void */
   public function setUp() {
     $this->fixture= XPClass::forName('net.xp_framework.unittest.reflection.TestClass');
   }
@@ -36,7 +42,7 @@ class XPClassTest extends \unittest\TestCase {
   #[@test]
   public function getPackage_returns_package_class_resides_in() {
     $this->assertEquals(
-      \lang\reflect\Package::forName('net.xp_framework.unittest.reflection'),
+      Package::forName('net.xp_framework.unittest.reflection'),
       $this->fixture->getPackage()
     );
   }
@@ -94,7 +100,7 @@ class XPClassTest extends \unittest\TestCase {
     $this->assertFalse($this->fixture->isAssignableFrom($name));
   }
 
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function illegal_argument_given_to_isAssignableFrom() {
     $this->fixture->isAssignableFrom('@not-a-type@');
   }
@@ -218,7 +224,7 @@ class XPClassTest extends \unittest\TestCase {
 
   #[@test]
   public function fixture_classes_constructor() {
-    $this->assertInstanceOf('lang.reflect.Constructor', $this->fixture->getConstructor());
+    $this->assertInstanceOf(Constructor::class, $this->fixture->getConstructor());
   }
 
   #[@test]
@@ -226,7 +232,7 @@ class XPClassTest extends \unittest\TestCase {
     $this->assertFalse(XPClass::forName('lang.Object')->hasConstructor());
   }
 
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function getting_object_classes_constructor_raises_an_exception() {
     XPClass::forName('lang.Object')->getConstructor();
   }
@@ -239,41 +245,37 @@ class XPClassTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function newInstance_raises_exception_if_class_is_an_interface() {
     XPClass::forName('util.log.Traceable')->newInstance();
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function newInstance_raises_exception_if_class_is_a_trait() {
     XPClass::forName('net.xp_framework.unittest.reflection.classes.TraitOne')->newInstance();
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function newInstance_raises_exception_if_class_is_abstract() {
-    XPClass::forName('net.xp_framework.unittest.reflection.AbstractTestClass')->newInstance();
+    XPClass::forName(AbstractTestClass::class)->newInstance();
   }
 
-  #[@test, @expect('lang.reflect.TargetInvocationException')]
+  #[@test, @expect(TargetInvocationException::class)]
   public function constructors_newInstance_method_wraps_exceptions() {
     $this->fixture->getConstructor()->newInstance(['@@not-a-valid-date-string@@']);
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function constructors_newInstance_method_raises_exception_if_class_is_abstract() {
-    XPClass::forName('net.xp_framework.unittest.reflection.AbstractTestClass')
-      ->getConstructor()
-      ->newInstance()
-    ;
+    XPClass::forName(AbstractTestClass::class)->getConstructor()->newInstance();
   }
   
   #[@test]
   public function implementedConstructorInvocation() {
-    $parent= 'net.xp_framework.unittest.reflection.AbstractTestClass';
-    $i= \lang\ClassLoader::defineClass('ANonAbstractClass', $parent, [], '{
+    $i= ClassLoader::defineClass('ANonAbstractClass', AbstractTestClass::class, [], '{
       public function getDate() {}
     }');    
-    $this->assertInstanceOf($parent, $i->getConstructor()->newInstance());
+    $this->assertInstanceOf(AbstractTestClass::class, $i->getConstructor()->newInstance());
   }
 
   #[@test]
@@ -296,22 +298,19 @@ class XPClassTest extends \unittest\TestCase {
     $this->assertEquals('Annotation', $this->fixture->getAnnotation('test'));
   }
   
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function getting_non_existant_annotation_raises_exception() {
     $this->fixture->getAnnotation('non-existant');
   }
   
-  #[@test, @expect('lang.ClassNotFoundException')]
+  #[@test, @expect(ClassNotFoundException::class)]
   public function forName_raises_exceptions_for_nonexistant_classes() {
     XPClass::forName('class.does.not.Exist');
   }
 
   #[@test]
   public function forName_supports_class_literals() {
-    $this->assertEquals(
-      $this->fixture,
-      XPClass::forName('net\\xp_framework\\unittest\\reflection\\TestClass')
-    );
+    $this->assertEquals($this->fixture, XPClass::forName(TestClass::class));
   }
 
   #[@test]
@@ -346,7 +345,7 @@ class XPClassTest extends \unittest\TestCase {
     $this->assertEquals('XP Framework', $this->fixture->getConstant('CONSTANT_STRING'));
   }
 
-  #[@test, @expect('lang.ElementNotFoundException'), @values(['DOES_NOT_EXIST', '', null])]
+  #[@test, @expect(ElementNotFoundException::class), @values(['DOES_NOT_EXIST', '', null])]
   public function getConstant_throws_exception_if_constant_doesnt_exist($name) {
     $this->fixture->getConstant($name);
   }

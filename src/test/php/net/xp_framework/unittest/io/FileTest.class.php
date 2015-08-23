@@ -1,17 +1,17 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use unittest\TestCase;
 use io\Folder;
 use io\File;
 use io\Path;
 use lang\Runtime;
+use lang\IllegalArgumentException;
 
 /**
  * TestCase
  *
  * @see      xp://io.File
  */
-class FileTest extends TestCase {
+class FileTest extends \unittest\TestCase {
 
   /**
    * Return a file that is known to exist
@@ -104,27 +104,27 @@ class FileTest extends TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function nulCharacterNotAllowedInFilename() {
     new File("editor.txt\0.html");
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function nulCharacterNotInTheBeginningOfFilename() {
     new File("\0editor.txt");
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function emptyFilenameNotAllowed() {
     new File('');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function nullFilenameNotAllowed() {
     new File(null);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function filterScheme() {
     new File('php://filter/read=string.toupper|string.rot13/resource=http://www.example.comn');
   }

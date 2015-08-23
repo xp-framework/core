@@ -1,5 +1,8 @@
 <?php namespace net\xp_framework\unittest\security;
 
+use security\crypto\UnixCrypt;
+use security\crypto\CryptoException;
+
 /**
  * TestCase
  *
@@ -15,7 +18,7 @@ class StandardDESUnixCryptTest extends UnixCryptTest {
    * @return  security.crypto.CryptImpl
    */
   protected function fixture() {
-    return \security\crypto\UnixCrypt::$STANDARD;
+    return UnixCrypt::$STANDARD;
   }
 
   #[@test]
@@ -32,7 +35,7 @@ class StandardDESUnixCryptTest extends UnixCryptTest {
   public function saltTooShort() {
     try {
       $this->assertCryptedMatches('a', 'a$Xz1wsurHC5M');
-    } catch (\security\crypto\CryptoException $ignored) { }
+    } catch (CryptoException $ignored) { }
   }
 
   #[@test]
@@ -44,29 +47,29 @@ class StandardDESUnixCryptTest extends UnixCryptTest {
   public function oneDollar() {
     try {
       $this->assertCryptedMatches('1$', '1$SyvOllpoCvg');
-    } catch (\security\crypto\CryptoException $ignored) { }
+    } catch (CryptoException $ignored) { }
   }
 
   #[@test]
   public function dollarTwo() {
     try {
       $this->assertCryptedMatches('$2', '$26WPvCItMuNE');
-    } catch (\security\crypto\CryptoException $ignored) { }
+    } catch (CryptoException $ignored) { }
   }
 
   #[@test]
   public function dollarDollar() {
     try {
       $this->assertCryptedMatches('$$', '$$oLnFl.kOCXI');
-    } catch (\security\crypto\CryptoException $ignored) { }
+    } catch (CryptoException $ignored) { }
   }
 
-  #[@test, @expect('security.crypto.CryptoException')]
+  #[@test, @expect(CryptoException::class)]
   public function unsafeLineFeed() {
     $this->fixture()->crypt('irrelevant', "\n_");
   }
 
-  #[@test, @expect('security.crypto.CryptoException')]
+  #[@test, @expect(CryptoException::class)]
   public function unsafeColon() {
     $this->fixture()->crypt('irrelevant', ':_');
   }

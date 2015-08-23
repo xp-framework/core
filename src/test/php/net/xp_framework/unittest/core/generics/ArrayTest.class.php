@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
+use lang\IllegalArgumentException;
+
 /**
  * TestCase for generic behaviour at runtime.
  *
@@ -22,7 +24,7 @@ class ArrayTest extends \unittest\TestCase {
     $this->assertEquals($this, $l->get(['this']));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function stringToArrayOfStringInvalid() {
     create('new net.xp_framework.unittest.core.generics.Lookup<string, string[]>')
       ->put('greeting', ['Hello', 'World', '!!!', 1])

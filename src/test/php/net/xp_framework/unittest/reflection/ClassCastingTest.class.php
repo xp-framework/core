@@ -4,6 +4,7 @@ use unittest\TestCase;
 use lang\XPClass;
 use lang\Object;
 use lang\Type;
+use lang\ClassCastException;
 
 /**
  * TestCase
@@ -27,12 +28,12 @@ class ClassCastingTest extends TestCase {
     $this->assertEquals($this, XPClass::forName('lang.Object')->cast($this));
   }
 
-  #[@test, @expect('lang.ClassCastException')]
+  #[@test, @expect(ClassCastException::class)]
   public function thisClassCastingAnObject() {
     $this->getClass()->cast(new Object());
   }
 
-  #[@test, @expect('lang.ClassCastException')]
+  #[@test, @expect(ClassCastException::class)]
   public function thisClassCastingAnUnrelatedClass() {
     $this->getClass()->cast(Type::$VOID);
   }
@@ -42,7 +43,7 @@ class ClassCastingTest extends TestCase {
     $this->assertNull($this->getClass()->cast(null));
   }
 
-  #[@test, @expect('lang.ClassCastException')]
+  #[@test, @expect(ClassCastException::class)]
   public function castPrimitive() {
     $this->getClass()->cast(0);
   }

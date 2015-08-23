@@ -1,7 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\TestCase;
 use lang\ClassLoader;
+use lang\DynamicClassLoader;
+use lang\XPClass;
 
 /**
  * Base class for runtime type definitions
@@ -9,7 +10,7 @@ use lang\ClassLoader;
  * @see   xp://lang.ClassLoader
  * @see   https://github.com/xp-framework/xp-framework/issues/94
  */
-abstract class RuntimeTypeDefinitionTest extends TestCase {
+abstract class RuntimeTypeDefinitionTest extends \unittest\TestCase {
 
   /**
    * Wraps around a function which defines types, giving it unique names and
@@ -41,12 +42,12 @@ abstract class RuntimeTypeDefinitionTest extends TestCase {
 
   #[@test]
   public function returns_XPClass_instances() {
-    $this->assertInstanceOf('lang.XPClass', $this->define());
+    $this->assertInstanceOf(XPClass::class, $this->define());
   }
 
   #[@test]
   public function classloader_of_defined_type_is_DynamicClassLoader() {
-    $this->assertInstanceOf('lang.DynamicClassLoader', $this->define()->getClassLoader());
+    $this->assertInstanceOf(DynamicClassLoader::class, $this->define()->getClassLoader());
   }
 
   #[@test]

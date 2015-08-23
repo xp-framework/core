@@ -1,38 +1,39 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use unittest\TestCase;
 use io\streams\FileOutputStream;
 use io\FileUtil;
 use io\TempFile;
+use io\IOException;
+use unittest\PrerequisitesNotMetError;
+use lang\IllegalArgumentException;
 
-/**
- * TestCase
- *
- * @see      xp://io.streams.FileOutputStream
- */
-class FileOutputStreamTest extends TestCase {
-  protected $file;
+class FileOutputStreamTest extends \unittest\TestCase {
+  private $file;
 
   /**
    * Sets up test case - creates temporary file
+   *
+   * @return void
    */
   public function setUp() {
     try {
       $this->file= new TempFile();
       FileUtil::setContents($this->file, 'Created by FileOutputStreamTest');
-    } catch (\io\IOException $e) {
-      throw new \unittest\PrerequisitesNotMetError('Cannot write temporary file', $e, [$this->file]);
+    } catch (IOException $e) {
+      throw new PrerequisitesNotMetError('Cannot write temporary file', $e, [$this->file]);
     }
   }
   
   /**
    * Tear down this test case - removes temporary file
+   *
+   * @return void
    */
   public function tearDown() {
     try {
       $this->file->isOpen() && $this->file->close();
       $this->file->unlink();
-    } catch (\io\IOException $ignored) {
+    } catch (IOException $ignored) {
       // Can't really do anything about it...
     }
   }
@@ -64,12 +65,12 @@ class FileOutputStreamTest extends TestCase {
     }
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function given_an_invalid_file_an_exception_is_raised() {
     new FileOutputStream('');
   }
 
-  #[@test, @expect('io.IOException')]
+  #[@test, @expect(IOException::class)]
   public function cannot_write_after_closing() {
     with ($stream= new FileOutputStream($this->file)); {
       $stream->close();

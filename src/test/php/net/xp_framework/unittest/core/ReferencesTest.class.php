@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\ClassLoader;
+use lang\Object;
 
 /**
  * References test.
@@ -10,7 +11,7 @@ class ReferencesTest extends \unittest\TestCase {
   static function __static() {
     
     // For singletonInstance test
-    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousSingleton', 'lang.Object', [], '{
+    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousSingleton', Object::class, [], '{
       protected static $instance= NULL;
 
       static function getInstance() {
@@ -20,17 +21,17 @@ class ReferencesTest extends \unittest\TestCase {
     }');
 
     // For returnNewObject and returnNewObjectViaReflection tests
-    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousList', 'lang.Object', [], '{
+    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousList', Object::class, [], '{
       public function __construct() {
         \net\xp_framework\unittest\core\ReferencesTest::registry("list", $this);
       }
     }');
-    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousFactory', 'lang.Object', [], '{
+    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousFactory', Object::class, [], '{
       static function factory() {
         return new AnonymousList();
       }
     }');
-    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousNewInstanceFactory', 'lang.Object', [], '{
+    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousNewInstanceFactory', Object::class, [], '{
       static function factory() {
         return \lang\XPClass::forName("net.xp_framework.unittest.core.AnonymousList")->newInstance();
       }
@@ -40,8 +41,8 @@ class ReferencesTest extends \unittest\TestCase {
   /**
    * Helper method that asserts to objects are references to each other
    *
-   * @param   &lang.Object a
-   * @param   &lang.Object b
+   * @param   &lang.Object $a
+   * @param   &lang.Object $b
    * @throws  unittest.AssertionFailedError
    */
   protected function assertReference($a, $b) {

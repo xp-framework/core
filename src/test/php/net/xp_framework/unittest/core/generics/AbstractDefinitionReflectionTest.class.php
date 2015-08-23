@@ -2,6 +2,7 @@
 
 use lang\XPClass;
 use lang\Primitive;
+use lang\IllegalArgumentException;
 
 /**
  * TestCase for definition reflection
@@ -93,17 +94,17 @@ abstract class AbstractDefinitionReflectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function missingArguments() {
     $this->fixture->newGenericType([]);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function missingArgument() {
     $this->fixture->newGenericType([$this->getClass()]);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function tooManyArguments() {
     $c= $this->getClass();
     $this->fixture->newGenericType([$c, $c, $c]);

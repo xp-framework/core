@@ -1,22 +1,23 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\Object;
+use lang\Closeable;
 use lang\ClassLoader;
+use lang\IllegalStateException;
 
 /**
  * Tests with() functionality
  */
 class WithTest extends \unittest\TestCase {
-  protected static $closes= null;
-  protected static $raises= null;
+  private static $closes, $raises;
 
   #[@beforeClass]
   public static function defineCloseableSubclasses() {
-    self::$closes= ClassLoader::defineClass('_WithTest_C0', 'lang.Object', ['lang.Closeable'], '{
+    self::$closes= ClassLoader::defineClass('_WithTest_C0', Object::class, [Closeable::class], '{
       public $closed= false;
       public function close() { $this->closed= true; }
     }');
-    self::$raises= ClassLoader::defineClass('_WithTest_C1', 'lang.Object', ['lang.Closeable'], '{
+    self::$raises= ClassLoader::defineClass('_WithTest_C1', Object::class, [Closeable::class], '{
       public function close() { throw new \lang\IllegalArgumentException("Cannot close"); }
     }');
   }
@@ -24,14 +25,14 @@ class WithTest extends \unittest\TestCase {
   #[@test]
   public function backwards_compatible_usage_without_closure() {
     with ($f= new Object()); {
-      $this->assertInstanceOf('lang.Object', $f);
+      $this->assertInstanceOf(Object::class, $f);
     }
   }
 
   #[@test]
   public function new_usage_with_closure() {
     with (new Object(), function($f) {
-      $this->assertInstanceOf('lang.Object', $f);
+      $this->assertInstanceOf(Object::class, $f);
     });
   }
 
@@ -67,10 +68,10 @@ class WithTest extends \unittest\TestCase {
     $b= self::$closes->newInstance();
     try {
       with ($a, $b, function() {
-        throw new \lang\IllegalStateException('Test');
+        throw new IllegalStateException('Test');
       });
       $this->fail('No exception thrown', null, 'lang.IllegalStateException');
-    } catch (\lang\IllegalStateException $expected) {
+    } catch (IllegalStateException $expected) {
       $this->assertEquals([true, true], [$a->closed, $b->closed]);
     }
   }

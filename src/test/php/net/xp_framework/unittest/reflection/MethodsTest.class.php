@@ -2,9 +2,15 @@
 
 use lang\XPClass;
 use lang\Object;
+use lang\Error;
 use lang\Type;
 use lang\MapType;
 use lang\Primitive;
+use lang\ElementNotFoundException;
+use lang\IllegalAccessException;
+use lang\IllegalArgumentException;
+use lang\reflect\Method;
+use lang\reflect\TargetInvocationException;
 use unittest\actions\RuntimeVersion;
 
 /**
@@ -13,13 +19,9 @@ use unittest\actions\RuntimeVersion;
  * @see    xp://lang.reflect.Method
  */
 class MethodsTest extends \unittest\TestCase {
-  protected $fixture;
+  private $fixture;
 
-  /**
-   * Sets up test case
-   *
-   * @return void
-   */
+  /** @return void */
   public function setUp() {
     $this->fixture= XPClass::forName('net.xp_framework.unittest.reflection.TestClass');
   }
@@ -27,8 +29,8 @@ class MethodsTest extends \unittest\TestCase {
   /**
    * Assertion helper
    *
-   * @param   lang.Generic var
-   * @param   lang.Generic[] list
+   * @param   lang.Generic $var
+   * @param   lang.Generic[] $list
    * @throws  unittest.AssertionFailedError
    */
   protected function assertNotContained($var, $list) {
@@ -40,8 +42,8 @@ class MethodsTest extends \unittest\TestCase {
   /**
    * Assertion helper
    *
-   * @param   lang.Generic var
-   * @param   lang.Generic[] list
+   * @param   lang.Generic $var
+   * @param   lang.Generic[] $list
    * @throws  unittest.AssertionFailedError
    */
   protected function assertContained($var, $list) {
@@ -97,7 +99,7 @@ class MethodsTest extends \unittest\TestCase {
     $this->assertFalse($this->fixture->hasMethod('@@nonexistant@@'));
   }
 
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function getNonExistantMethod() {
     $this->fixture->getMethod('@@nonexistant@@');
   }
@@ -107,7 +109,7 @@ class MethodsTest extends \unittest\TestCase {
     $this->assertFalse($this->fixture->hasMethod('__construct'));
   }
   
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function constructorIsNotAMethod() {
     $this->fixture->getMethod('__construct');
   }
@@ -117,7 +119,7 @@ class MethodsTest extends \unittest\TestCase {
     $this->assertFalse($this->fixture->hasMethod('__static'));
   }
   
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function staticInitializerIsNotAMethod() {
     $this->fixture->getMethod('__static');
   }
@@ -168,19 +170,19 @@ class MethodsTest extends \unittest\TestCase {
   public function getDateMethod() {
     $this->assertTrue($this->fixture->hasMethod('getDate'));
     with ($method= $this->fixture->getMethod('getDate')); {
-      $this->assertInstanceOf('lang.reflect.Method', $method);
+      $this->assertInstanceOf(Method::class, $method);
       $this->assertEquals('getDate', $method->getName(true));
       $this->assertTrue($this->fixture->equals($method->getDeclaringClass()));
       $this->assertEquals('util.Date', $method->getReturnTypeName());
     }
   }
 
-  #[@test, @expect('lang.reflect.TargetInvocationException')]
+  #[@test, @expect(TargetInvocationException::class)]
   public function invokeSetTrace() {
     $this->fixture->getMethod('setTrace')->invoke($this->fixture->newInstance(), [null]);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function invokeSetTraceOnWrongObject() {
     $this->fixture->getMethod('setTrace')->invoke(new \lang\Object(), [null]);
   }
@@ -190,17 +192,17 @@ class MethodsTest extends \unittest\TestCase {
     $this->assertTrue($this->fixture->getMethod('initializerCalled')->invoke(null));
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function invokePrivateMethod() {
     $this->fixture->getMethod('defaultMap')->invoke($this->fixture->newInstance());
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function invokeProtectedMethod() {
     $this->fixture->getMethod('clearMap')->invoke($this->fixture->newInstance());
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function invokeAbstractMethod() {
     XPClass::forName('net.xp_framework.unittest.reflection.AbstractTestClass')
       ->getMethod('getDate')
@@ -397,7 +399,7 @@ class MethodsTest extends \unittest\TestCase {
     $this->assertEquals(XPClass::forName('lang.Object'), $o->getClass()->getMethod('fixture')->getReturnType());
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0'))]
   public function violatingReturnType() {
     $o= newinstance(Object::class, [], '{
       public function fixture(): Object { return "Test"; }

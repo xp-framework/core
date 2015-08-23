@@ -1,12 +1,11 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\Runtime;
+use lang\RuntimeOptions;
+use lang\Process;
+use lang\XPClass;
+use lang\FormatException;
 
-/**
- * TestCase
- *
- * @see   xp://lang.Runtime
- */
 class RuntimeTest extends \unittest\TestCase {
 
   /**
@@ -14,18 +13,18 @@ class RuntimeTest extends \unittest\TestCase {
    *
    * @param  string[] $expected
    * @param  lang.RuntimeOptions $actual
+   * @return void
+   * @throws unittest.AssertionFailedError
    */
   private function assertArguments($expected, $actual) {
-    if (defined('HHVM_VERSION')) {
-      array_unshift($expected, '--php');
-    }
+    defined('HHVM_VERSION') && array_unshift($expected, '--php');
     $this->assertEquals($expected, $actual->asArguments());
   }
 
   #[@test]
   public function getExecutable() {
     $exe= Runtime::getInstance()->getExecutable();
-    $this->assertInstanceOf('lang.Process', $exe);
+    $this->assertInstanceOf(Process::class, $exe);
     $this->assertEquals(getmypid(), $exe->getProcessId());
   }
 
@@ -42,7 +41,7 @@ class RuntimeTest extends \unittest\TestCase {
   #[@test]
   public function startupOptions() {
     $startup= Runtime::getInstance()->startupOptions();
-    $this->assertInstanceOf('lang.RuntimeOptions', $startup);
+    $this->assertInstanceOf(RuntimeOptions::class, $startup);
   }
 
   #[@test]
@@ -67,7 +66,7 @@ class RuntimeTest extends \unittest\TestCase {
   #[@test]
   public function mainClass() {
     $main= Runtime::getInstance()->mainClass();
-    $this->assertInstanceOf('lang.XPClass', $main);
+    $this->assertInstanceOf(XPClass::class, $main);
   }
 
   #[@test]
@@ -96,7 +95,7 @@ class RuntimeTest extends \unittest\TestCase {
     $this->assertEquals('tools/xar.php', $startup['bootstrap']);
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function parseUnknownSwtich() {
     Runtime::parseArguments(['-@']);
   }

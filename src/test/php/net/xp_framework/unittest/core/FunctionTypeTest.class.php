@@ -2,10 +2,14 @@
 
 use lang\FunctionType;
 use lang\Primitive;
+use lang\Object;
 use lang\XPClass;
 use lang\Type;
 use lang\ArrayType;
 use lang\MapType;
+use lang\ClassCastException;
+use lang\IllegalArgumentException;
+use lang\reflect\TargetInvocationException;
 
 /**
  * TestCase
@@ -251,7 +255,7 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertNull((new FunctionType([Type::$VAR], Type::$VAR))->cast(null));
   }
 
-  #[@test, @expect('lang.ClassCastException'), @values([
+  #[@test, @expect(ClassCastException::class), @values([
   #  0, -1, 0.5, true, false, '', 'Test',
   #  [[]], [['key' => 'value']],
   #  [['non-existant', 'method']], [['lang.XPClass', 'non-existant']],
@@ -261,17 +265,17 @@ class FunctionTypeTest extends \unittest\TestCase {
     (new FunctionType([Type::$VAR], Type::$VAR))->cast($value);
   }
 
-  #[@test, @expect('lang.ClassCastException')]
+  #[@test, @expect(ClassCastException::class)]
   public function return_type_verified_for_instance_methods_when_casting() {
     (new FunctionType([], Primitive::$VOID))->cast([$this, 'getName']);
   }
 
-  #[@test, @expect('lang.ClassCastException')]
+  #[@test, @expect(ClassCastException::class)]
   public function number_of_required_parameters_is_verified_when_casting() {
     (new FunctionType([], Type::$VAR))->cast('strlen');
   }
 
-  #[@test, @expect('lang.ClassCastException')]
+  #[@test, @expect(ClassCastException::class)]
   public function excess_parameters_are_verified_when_casting() {
     (new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR))->cast('strlen');
   }
@@ -288,12 +292,12 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertEquals(4, $value('Test'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function number_of_required_parameters_is_verified_when_creating_instances() {
     (new FunctionType([], Type::$VAR))->newInstance('strlen');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function excess_parameters_are_verified_when_creating_instances() {
     (new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR))->newInstance('strlen');
   }
@@ -318,7 +322,7 @@ class FunctionTypeTest extends \unittest\TestCase {
   #])]
   public function create_instances_from_array_referencing_constructor($value) {
     $new= (new FunctionType([], XPClass::forName('lang.Object')))->newInstance($value);
-    $this->assertInstanceOf('lang.Object', $new());
+    $this->assertInstanceOf(Object::class, $new());
   }
 
   #[@test, @values([
@@ -336,12 +340,12 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertInstanceOf('util.collections.Vector<int>', $new());
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values([[['lang.Generic', 'new']], ['lang.Generic::new']])]
+  #[@test, @expect(IllegalArgumentException::class), @values([[['lang.Generic', 'new']], ['lang.Generic::new']])]
   public function cannot_create_instances_from_interfaces($value) {
     (new FunctionType([Type::$VAR], Type::forName('lang.Generic')))->newInstance($value);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values([[['util.collections.IList<int>', 'new']], ['util.collections.IList<int>::new']])]
+  #[@test, @expect(IllegalArgumentException::class), @values([[['util.collections.IList<int>', 'new']], ['util.collections.IList<int>::new']])]
   public function cannot_create_instances_from_generic_interfaces($value) {
     (new FunctionType([Type::$VAR], Type::forName('util.collections.IList<int>')))->newInstance($value);
   }
@@ -359,24 +363,24 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertEquals([1, 2, 3], $value());
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function generic_argument_parameter_types_are_verified_when_creating_instances() {
     $vector= create('new util.collections.Vector<int>');
     (new FunctionType([Primitive::$STRING], Primitive::$INT))->newInstance([$vector, 'add']);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function generic_argument_return_type_is_verified_when_creating_instances() {
     $vector= create('new util.collections.Vector<int>');
     (new FunctionType([Primitive::$INT], Primitive::$STRING))->newInstance([$vector, 'add']);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function return_type_verified_for_instance_methods_when_creating_instances() {
     (new FunctionType([], Primitive::$VOID))->newInstance([$this, 'getName']);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values([
+  #[@test, @expect(IllegalArgumentException::class), @values([
   #  null,
   #  0, -1, 0.5, true, false, '', 'Test',
   #  [[]], [['key' => 'value']],
@@ -446,7 +450,7 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertEquals('string', $t->invoke($f, [Primitive::$STRING]));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values([
+  #[@test, @expect(IllegalArgumentException::class), @values([
   #  null,
   #  0, -1, 0.5, true, false, '', 'Test',
   #  [[]], [['key' => 'value']],
@@ -459,7 +463,7 @@ class FunctionTypeTest extends \unittest\TestCase {
     $t->invoke($value);
   }
 
-  #[@test, @expect('lang.reflect.TargetInvocationException')]
+  #[@test, @expect(TargetInvocationException::class)]
   public function invoke_wraps_exceptions_in_TargetInvocationExceptions() {
     $t= new FunctionType([], Primitive::$VOID);
     $t->invoke(function() { throw new \lang\IllegalArgumentException('Test'); }, []);

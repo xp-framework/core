@@ -1,7 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\TestCase;
 use lang\ClassLoader;
+use lang\XPClass;
+use lang\IllegalAccessException;
 
 /**
  * TestCase
@@ -10,23 +11,20 @@ use lang\ClassLoader;
  * @see      xp://lang.reflect.Method
  * @see      xp://lang.reflect.Field
  */
-class PrivateAccessibilityTest extends TestCase {
-  private static 
-    $fixture          = null, 
-    $fixtureChild     = null,
-    $fixtureCtorChild = null;
+class PrivateAccessibilityTest extends \unittest\TestCase {
+  private static $fixture, $fixtureChild, $fixtureCtorChild;
   
   /**
    * Initialize fixture, fixtureChild and fixtureCtorChild members
    */
   #[@beforeClass]
   public static function initializeClasses() {
-    self::$fixture= \lang\XPClass::forName('net.xp_framework.unittest.reflection.PrivateAccessibilityFixture');
-    self::$fixtureChild= \lang\XPClass::forName('net.xp_framework.unittest.reflection.PrivateAccessibilityFixtureChild');
-    self::$fixtureCtorChild= \lang\XPClass::forName('net.xp_framework.unittest.reflection.PrivateAccessibilityFixtureCtorChild');
+    self::$fixture= XPClass::forName('net.xp_framework.unittest.reflection.PrivateAccessibilityFixture');
+    self::$fixtureChild= XPClass::forName('net.xp_framework.unittest.reflection.PrivateAccessibilityFixtureChild');
+    self::$fixtureCtorChild= XPClass::forName('net.xp_framework.unittest.reflection.PrivateAccessibilityFixtureCtorChild');
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function invokingPrivateConstructor() {
     self::$fixture->getConstructor()->newInstance([]);
   }
@@ -36,12 +34,12 @@ class PrivateAccessibilityTest extends TestCase {
     $this->assertInstanceOf(self::$fixture, PrivateAccessibilityFixture::construct(self::$fixture));
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function invokingPrivateConstructorFromParentClass() {
     PrivateAccessibilityFixtureCtorChild::construct(self::$fixture);
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function invokingPrivateConstructorFromChildClass() {
     PrivateAccessibilityFixtureCtorChild::construct(self::$fixtureChild);
   }
@@ -55,7 +53,7 @@ class PrivateAccessibilityTest extends TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function invokingPrivateMethod() {
     self::$fixture->getMethod('target')->invoke(PrivateAccessibilityFixture::construct(self::$fixture));
   }
@@ -65,12 +63,12 @@ class PrivateAccessibilityTest extends TestCase {
     $this->assertEquals('Invoked', PrivateAccessibilityFixture::invoke(self::$fixture));
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function invokingPrivateMethodFromParentClass() {
     PrivateAccessibilityFixtureChild::invoke(self::$fixture);
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function invokingPrivateMethodFromChildClass() {
     PrivateAccessibilityFixtureChild::invoke(self::$fixtureChild);
   }
@@ -84,7 +82,7 @@ class PrivateAccessibilityTest extends TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function invokingPrivateStaticMethod() {
     self::$fixture->getMethod('staticTarget')->invoke(null);
   }
@@ -94,12 +92,12 @@ class PrivateAccessibilityTest extends TestCase {
     $this->assertEquals('Invoked', PrivateAccessibilityFixture::invokeStatic(self::$fixture));
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function invokingPrivateStaticMethodFromParentClass() {
     PrivateAccessibilityFixtureChild::invokeStatic(self::$fixture);
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function invokingPrivateStaticMethodFromChildClass() {
     PrivateAccessibilityFixtureChild::invokeStatic(self::$fixtureChild);
   }
@@ -113,7 +111,7 @@ class PrivateAccessibilityTest extends TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function readingPrivateMember() {
     self::$fixture->getField('target')->get(PrivateAccessibilityFixture::construct(self::$fixture));
   }
@@ -123,7 +121,7 @@ class PrivateAccessibilityTest extends TestCase {
     $this->assertEquals('Target', PrivateAccessibilityFixture::read(self::$fixture));
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function readingPrivateMemberFromParentClass() {
     PrivateAccessibilityFixtureChild::read(self::$fixture);
   }
@@ -142,7 +140,7 @@ class PrivateAccessibilityTest extends TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function readingPrivateStaticMember() {
     self::$fixture->getField('staticTarget')->get(null);
   }
@@ -152,7 +150,7 @@ class PrivateAccessibilityTest extends TestCase {
     $this->assertEquals('Target', PrivateAccessibilityFixture::readStatic(self::$fixture));
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function readingPrivateStaticMemberFromParentClass() {
     PrivateAccessibilityFixtureChild::readStatic(self::$fixture);
   }
@@ -171,7 +169,7 @@ class PrivateAccessibilityTest extends TestCase {
     );
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function writingPrivateMember() {
     self::$fixture->getField('target')->set(PrivateAccessibilityFixture::construct(self::$fixture), null);
   }
@@ -181,7 +179,7 @@ class PrivateAccessibilityTest extends TestCase {
     $this->assertEquals('Modified', PrivateAccessibilityFixture::write(self::$fixture));
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function writingPrivateMemberFromParentClass() {
     PrivateAccessibilityFixtureChild::write(self::$fixture);
   }
@@ -200,7 +198,7 @@ class PrivateAccessibilityTest extends TestCase {
     }
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function writingPrivateStaticMember() {
     self::$fixture->getField('staticTarget')->set(null, 'Modified');
   }
@@ -210,7 +208,7 @@ class PrivateAccessibilityTest extends TestCase {
     $this->assertEquals('Modified', PrivateAccessibilityFixture::writeStatic(self::$fixture));
   }
 
-  #[@test, @expect('lang.IllegalAccessException')]
+  #[@test, @expect(IllegalAccessException::class)]
   public function writingPrivateStaticMemberFromParentClass() {
     PrivateAccessibilityFixtureChild::writeStatic(self::$fixture);
   }

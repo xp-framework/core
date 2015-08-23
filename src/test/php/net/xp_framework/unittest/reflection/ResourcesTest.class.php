@@ -1,17 +1,17 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\TestCase;
+use lang\ClassLoader;
 use lang\archive\Archive;
+use lang\archive\ArchiveClassLoader;
+use lang\ElementNotFoundException;
 use io\File;
 
-class ResourcesTest extends TestCase {
-  private $cl= null;
+class ResourcesTest extends \unittest\TestCase {
+  private $cl;
 
-  /**
-   * Sets up class loader
-   */
+  /** @return void */
   public function setUp() {
-    $this->cl= \lang\ClassLoader::registerLoader(new \lang\archive\ArchiveClassLoader(new Archive($this
+    $this->cl= ClassLoader::registerLoader(new ArchiveClassLoader(new Archive($this
       ->getClass()
       ->getPackage()
       ->getPackage('lib')
@@ -19,19 +19,18 @@ class ResourcesTest extends TestCase {
     ));
   }
 
-  /**
-   * Removes class loader
-   */
+  /** @return void */
   public function tearDown() {
-    \lang\ClassLoader::removeLoader($this->cl);
+    ClassLoader::removeLoader($this->cl);
   }
 
   /**
    * Helper method for getResource() and getResourceAsStream()
    *
-   * @param   string contents
+   * @param  string $contents
+   * @throws unittest.AssertionFailedError
    */
-  protected function assertManifestFile($contents) {
+  private function assertManifestFile($contents) {
     $this->assertEquals(
       "[runnable]\nmain-class=\"remote.server.impl.ApplicationServer\"",
       trim($contents)
@@ -41,32 +40,32 @@ class ResourcesTest extends TestCase {
   #[@test]
   public function findResource() {
     $this->assertInstanceOf(
-      'lang.archive.ArchiveClassLoader',
-      \lang\ClassLoader::getDefault()->findResource('META-INF/manifest.ini')
+      ArchiveClassLoader::class,
+      ClassLoader::getDefault()->findResource('META-INF/manifest.ini')
     );
   }
 
   #[@test]
   public function getResource() {
-    $this->assertManifestFile(\lang\ClassLoader::getDefault()->getResource('META-INF/manifest.ini'));
+    $this->assertManifestFile(ClassLoader::getDefault()->getResource('META-INF/manifest.ini'));
   }
 
   #[@test]
   public function getResourceAsStream() {
-    $stream= \lang\ClassLoader::getDefault()->getResourceAsStream('META-INF/manifest.ini');
-    $this->assertInstanceOf('io.File', $stream);
+    $stream= ClassLoader::getDefault()->getResourceAsStream('META-INF/manifest.ini');
+    $this->assertInstanceOf(File::class, $stream);
     $stream->open(File::READ);
     $this->assertManifestFile($stream->read($stream->size()));
     $stream->close();
   }
 
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function nonExistantResource() {
-    \lang\ClassLoader::getDefault()->getResource('::DOES-NOT-EXIST::');
+    ClassLoader::getDefault()->getResource('::DOES-NOT-EXIST::');
   }
 
-  #[@test, @expect('lang.ElementNotFoundException')]
+  #[@test, @expect(ElementNotFoundException::class)]
   public function nonExistantResourceStream() {
-    \lang\ClassLoader::getDefault()->getResourceAsStream('::DOES-NOT-EXIST::');
+    ClassLoader::getDefault()->getResourceAsStream('::DOES-NOT-EXIST::');
   }
 }

@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\security;
 
-
+use security\crypto\UnixCrypt;
+use security\crypto\CryptoException;
 
 /**
  * TestCase
@@ -15,7 +16,7 @@ class ExtendedDESUnixCryptTest extends UnixCryptTest {
    * @return  security.crypto.CryptImpl
    */
   protected function fixture() {
-    return \security\crypto\UnixCrypt::$EXTENDED;
+    return UnixCrypt::$EXTENDED;
   }
 
   #[@test]
@@ -28,17 +29,17 @@ class ExtendedDESUnixCryptTest extends UnixCryptTest {
     $this->assertCryptedMatches('_J9..rasm', '_J9..rasmBYk8r9AiWNc', 'rasmuslerdorf');
   }
 
-  #[@test, @expect('security.crypto.CryptoException')]
+  #[@test, @expect(CryptoException::class)]
   public function extendedDES1CharSalt() {
     $this->fixture()->crypt('plain', '_');
   }
 
-  #[@test, @expect('security.crypto.CryptoException')]
+  #[@test, @expect(CryptoException::class)]
   public function extendedDES2CharSalt() {
     $this->fixture()->crypt('plain', '_1');
   }
 
-  #[@test, @expect('security.crypto.CryptoException')]
+  #[@test, @expect(CryptoException::class)]
   public function extendedDES7CharSalt() {
     $this->fixture()->crypt('plain', '_1234567');
   }

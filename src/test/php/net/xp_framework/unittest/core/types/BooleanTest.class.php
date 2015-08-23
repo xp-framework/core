@@ -1,8 +1,7 @@
 <?php namespace net\xp_framework\unittest\core\types;
 
-use unittest\TestCase;
 use lang\types\Boolean;
-
+use lang\IllegalArgumentException;
 
 /**
  * Tests the boolean wrapper type
@@ -10,7 +9,7 @@ use lang\types\Boolean;
  * @deprecated Wrapper types will move to their own library
  * @see      xp://lang.types.Boolean
  */
-class BooleanTest extends TestCase {
+class BooleanTest extends \unittest\TestCase {
 
   #[@test]
   public function trueBoolPrimitiveIsTrue() {
@@ -87,17 +86,17 @@ class BooleanTest extends TestCase {
     $this->assertEquals(Boolean::$FALSE, new Boolean('0'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function emptyStringIsNotAValidBoolean() {
     new Boolean('');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function misspelledFalse() {
     new Boolean('fals3');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function doublePrimitiveIsNotAValidBoolean() {
     new Boolean(1.0);
   }

@@ -16,6 +16,7 @@ use io\collections\iterate\UriMatchesFilter;
 use io\collections\iterate\SizeBiggerThanFilter;
 use io\collections\iterate\SizeEqualsFilter;
 use io\collections\iterate\SizeSmallerThanFilter;
+use io\collections\IOElement;
 use util\Filters;
 
 /**
@@ -48,7 +49,7 @@ class IOCollectionIteratorTest extends AbstractCollectionTest {
   public function iteration() {
     for ($it= new IOCollectionIterator($this->fixture), $i= 0; $it->hasNext(); $i++) {
       $element= $it->next();
-      $this->assertInstanceOf('io.collections.IOElement', $element);
+      $this->assertInstanceOf(IOElement::class, $element);
     }
     $this->assertEquals($this->sizes[$this->fixture->getURI()], $i);
   }
@@ -57,7 +58,7 @@ class IOCollectionIteratorTest extends AbstractCollectionTest {
   public function recursiveIteration() {
     for ($it= new IOCollectionIterator($this->fixture, true), $i= 0; $it->hasNext(); $i++) {
       $element= $it->next();
-      $this->assertInstanceOf('io.collections.IOElement', $element);
+      $this->assertInstanceOf(IOElement::class, $element);
     }
     $this->assertEquals($this->total, $i);
   }
@@ -65,7 +66,7 @@ class IOCollectionIteratorTest extends AbstractCollectionTest {
   #[@test]
   public function foreachLoop() {
     foreach (new IOCollectionIterator($this->fixture) as $i => $element) {
-      $this->assertInstanceOf('io.collections.IOElement', $element);
+      $this->assertInstanceOf(IOElement::class, $element);
     }
     $this->assertEquals($this->sizes[$this->fixture->getURI()]- 1, $i);
   }
@@ -73,7 +74,7 @@ class IOCollectionIteratorTest extends AbstractCollectionTest {
   #[@test]
   public function foreachLoopRecursive() {
     foreach (new IOCollectionIterator($this->fixture, true) as $i => $element) {
-      $this->assertInstanceOf('io.collections.IOElement', $element);
+      $this->assertInstanceOf(IOElement::class, $element);
     }
     $this->assertEquals($this->total- 1, $i);
   }

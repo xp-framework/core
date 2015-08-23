@@ -1,23 +1,19 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\ArrayType;
-use lang\IllegalArgumentException;
 use lang\MapType;
 use lang\Primitive;
 use lang\Type;
 use lang\XPClass;
 use lang\Object;
+use lang\IllegalArgumentException;
+use lang\ClassCastException;
 
-/**
- * TestCase
- *
- * @see      xp://lang.MapType
- */
 class MapTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function typeForName() {
-    $this->assertInstanceOf('lang.MapType', Type::forName('[:string]'));
+    $this->assertInstanceOf(MapType::class, Type::forName('[:string]'));
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
@@ -161,7 +157,7 @@ class MapTypeTest extends \unittest\TestCase {
     $this->assertEquals($expected, MapType::forName('[:string]')->cast($value));
   }
 
-  #[@test, @expect('lang.ClassCastException'), @values([
+  #[@test, @expect(ClassCastException::class), @values([
   #  0, -1, 0.5, '', 'Test', new Object(), true, false,
   #  [[0, 1, 2]]
   #])]

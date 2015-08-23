@@ -1,14 +1,14 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\TestCase;
 use lang\MethodNotImplementedException;
+use lang\ClassNotFoundException;
 
 /**
  * TestCase for resolving classes from URIs using the `loadUri()` method.
  *
  * @see  xp://net.xp_framework.unittest.reflection.ClassFromFileSystemTest
  */
-abstract class ClassFromUriTest extends TestCase {
+abstract class ClassFromUriTest extends \unittest\TestCase {
   protected static $base;
   protected $fixture;
 
@@ -133,22 +133,22 @@ abstract class ClassFromUriTest extends TestCase {
     );
   }
 
-  #[@test, @expect('lang.ClassNotFoundException')]
+  #[@test, @expect(ClassNotFoundException::class)]
   public function from_an_absolute_path_not_inside_cl_base() {
     $this->fixture->loadUri($this->compose(null, 'CLT1.class.php'));
   }
 
-  #[@test, @expect('lang.ClassNotFoundException')]
+  #[@test, @expect(ClassNotFoundException::class)]
   public function from_non_class_file() {
     $this->fixture->loadUri('CLT1.txt');
   }
 
-  #[@test, @expect('lang.ClassNotFoundException')]
+  #[@test, @expect(ClassNotFoundException::class)]
   public function from_directory() {
     $this->fixture->loadUri($this->compose(self::$base, 'net', 'xp_framework'));
   }
 
-  #[@test, @expect('lang.ClassNotFoundException')]
+  #[@test, @expect(ClassNotFoundException::class)]
   public function from_non_existant_file() {
     $this->fixture->loadUri($this->compose(self::$base, 'NonExistant.File'));
   }
