@@ -5,6 +5,7 @@ use io\streams\Streams;
 use io\streams\MemoryInputStream;;
 use io\IOException;
 use util\Properties;
+use lang\ClassLoader;
 
 /**
  * Testcase for util.Properties class.
@@ -17,7 +18,7 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
   protected static $fileStreamAdapter;
   
   static function __static() {
-    self::$fileStreamAdapter= \lang\ClassLoader::defineClass('FileStreamAdapter', 'io.File', [], '{
+    self::$fileStreamAdapter= ClassLoader::defineClass('FileStreamAdapter', File::class, [], '{
       protected $stream= null;
       public function __construct($stream) { $this->stream= $stream; }
       public function exists() { return null !== $this->stream; }

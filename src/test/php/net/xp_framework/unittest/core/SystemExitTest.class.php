@@ -1,7 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\TestCase;
 use lang\System;
+use lang\Object;
+use lang\ClassLoader;
 use lang\SystemExit;
 
 /**
@@ -9,15 +10,12 @@ use lang\SystemExit;
  *
  * @see      xp://lang.SystemExit
  */
-class SystemExitTest extends TestCase {
-  protected static $exiterClass= NULL;
+class SystemExitTest extends \unittest\TestCase {
+  protected static $exiterClass;
 
-  /**
-   * Defines Exiter class
-   */
   #[@beforeClass]
   public static function defineExiterClass() {
-    self::$exiterClass= \lang\ClassLoader::defineClass('net.xp_framework.unittest.core.Exiter', 'lang.Object', [], '{
+    self::$exiterClass= ClassLoader::defineClass('net.xp_framework.unittest.core.Exiter', Object::class, [], '{
       public function __construct() { throw new \lang\SystemExit(0); }
       public static function doExit() { new self(); }
     }');

@@ -2,6 +2,8 @@
 
 use util\collections\Vector;
 use lang\Object;
+use lang\Runnable;
+use lang\ClassLoader;
 
 /**
  * Tests the is() core functionality
@@ -149,13 +151,13 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function interfaces() {
-    \lang\ClassLoader::defineClass(
+    ClassLoader::defineClass(
       'net.xp_framework.unittest.core.RunnableImpl', 
-      'lang.Object',
-      ['lang.Runnable'],
+      Object::class,
+      [Runnable::class],
       ['run' => function() { }]
     );
-    \lang\ClassLoader::defineClass(
+    ClassLoader::defineClass(
       'net.xp_framework.unittest.core.RunnableImplEx', 
       'net.xp_framework.unittest.core.RunnableImpl',
       [],

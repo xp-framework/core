@@ -25,7 +25,7 @@ class PropertyManagerTest extends \unittest\TestCase {
    * @return  util.PropertyManager
    */
   private function fixture() {
-    $class= ClassLoader::getDefault()->defineClass('NonSingletonPropertyManager', 'util.PropertyManager', [], '{
+    $class= ClassLoader::getDefault()->defineClass('NonSingletonPropertyManager', PropertyManager::class, [], '{
       public static function newInstance() {
         return new self();
       }

@@ -107,7 +107,7 @@ class ModuleLoadingTest extends \unittest\TestCase {
 
   #[@test]
   public function module_inheritance() {
-    $cl= ClassLoader::defineClass('net.xp_framework.unittest.reflection.BaseModule', 'lang.reflect.Module', []);
+    $cl= ClassLoader::defineClass('net.xp_framework.unittest.reflection.BaseModule', Module::class, []);
     $this->register(new LoaderProviding([
       'module.xp' => '<?php module xp-framework/child extends net\xp_framework\unittest\reflection\BaseModule { }'
     ]));

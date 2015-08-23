@@ -2,6 +2,7 @@
 
 use util\Observable;
 use util\Observer;
+use lang\ClassLoader;
 
 /**
  * Test Observable class
@@ -11,12 +12,9 @@ use util\Observer;
 class ObservableTest extends \unittest\TestCase {
   protected static $observable;
 
-  /**
-   * Creates observable
-   */
   #[@beforeClass]
   public static function defineObservable() {
-    self::$observable= \lang\ClassLoader::defineClass('net.xp_framework.unittest.util.ObservableFixture', 'util.Observable', [], '{
+    self::$observable= ClassLoader::defineClass('net.xp_framework.unittest.util.ObservableFixture', Observable::class, [], '{
       private $value= 0;
 
       public function setValue($value) {

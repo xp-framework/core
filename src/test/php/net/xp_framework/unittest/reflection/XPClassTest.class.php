@@ -257,7 +257,7 @@ class XPClassTest extends \unittest\TestCase {
 
   #[@test, @expect(IllegalAccessException::class)]
   public function newInstance_raises_exception_if_class_is_abstract() {
-    XPClass::forName('net.xp_framework.unittest.reflection.AbstractTestClass')->newInstance();
+    XPClass::forName(AbstractTestClass::class)->newInstance();
   }
 
   #[@test, @expect(TargetInvocationException::class)]
@@ -267,19 +267,15 @@ class XPClassTest extends \unittest\TestCase {
 
   #[@test, @expect(IllegalAccessException::class)]
   public function constructors_newInstance_method_raises_exception_if_class_is_abstract() {
-    XPClass::forName('net.xp_framework.unittest.reflection.AbstractTestClass')
-      ->getConstructor()
-      ->newInstance()
-    ;
+    XPClass::forName(AbstractTestClass::class)->getConstructor()->newInstance();
   }
   
   #[@test]
   public function implementedConstructorInvocation() {
-    $parent= 'net.xp_framework.unittest.reflection.AbstractTestClass';
-    $i= ClassLoader::defineClass('ANonAbstractClass', $parent, [], '{
+    $i= ClassLoader::defineClass('ANonAbstractClass', AbstractTestClass::class, [], '{
       public function getDate() {}
     }');    
-    $this->assertInstanceOf($parent, $i->getConstructor()->newInstance());
+    $this->assertInstanceOf(AbstractTestClass::class, $i->getConstructor()->newInstance());
   }
 
   #[@test]

@@ -2,6 +2,7 @@
 
 use lang\reflect\Proxy;
 use lang\XPClass;
+use lang\Type;
 use lang\ClassLoader;
 use lang\IllegalArgumentException;
 use lang\Error;
@@ -16,13 +17,9 @@ use unittest\actions\RuntimeVersion;
  * @see   xp://lang.reflect.Proxy
  */
 class ProxyTest extends \unittest\TestCase {
-  protected $handler       = null;
-  protected $iteratorClass = null;
-  protected $observerClass = null;
+  protected $handler, $iteratorClass, $observerClass;
 
-  /**
-   * Setup method 
-   */
+  /** @return void */
   public function setUp() {
     $this->handler= newinstance(InvocationHandler::class, [], [
       'invocations' => [],
@@ -30,8 +27,8 @@ class ProxyTest extends \unittest\TestCase {
         $this->invocations[$method.'_'.sizeof($args)]= $args;
       }
     ]);
-    $this->iteratorClass= XPClass::forName('util.XPIterator');
-    $this->observerClass= XPClass::forName('util.Observer');
+    $this->iteratorClass= XPClass::forName(XPIterator::class);
+    $this->observerClass= XPClass::forName(Observer::class);
   }
 
   /**
@@ -172,7 +169,7 @@ class ProxyTest extends \unittest\TestCase {
   #[@test, @expect(IllegalArgumentException::class)]
   public function cannotCreateProxiesForClassesAsSecondArg() {
     $this->proxyInstanceFor([
-      XPClass::forName('util.XPIterator'),
+      $this->iteratorClass,
       XPClass::forName('lang.Object')
     ]);
   }
@@ -180,14 +177,14 @@ class ProxyTest extends \unittest\TestCase {
   #[@test]
   public function allowDoubledInterfaceMethod() {
     $this->proxyInstanceFor([
-      XPClass::forName('util.XPIterator'),
-      ClassLoader::defineInterface('util.NewIterator', 'util.XPIterator')
+      $this->iteratorClass,
+      ClassLoader::defineInterface('util.NewIterator', XPIterator::class)
     ]);
   }
   
   #[@test]
   public function overloadedMethod() {
-    $proxy= $this->proxyInstanceFor([XPClass::forName('net.xp_framework.unittest.reflection.OverloadedInterface')]);
+    $proxy= $this->proxyInstanceFor([XPClass::forName(OverloadedInterface::class)]);
     $proxy->overloaded('foo');
     $proxy->overloaded('foo', 'bar');
     $this->assertEquals(['foo'], $this->handler->invocations['overloaded_1']);
@@ -216,7 +213,7 @@ class ProxyTest extends \unittest\TestCase {
   public function builtin_array_parameters_handled_correctly() {
     $proxy= $this->newProxyWith('{ public function fixture(array $param); }');
     $this->assertEquals(
-      \lang\Type::$ARRAY,
+      Type::$ARRAY,
       $proxy->getMethod('fixture')->getParameters()[0]->getTypeRestriction()
     );
   }
