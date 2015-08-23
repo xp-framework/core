@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\TestCase;
 use lang\ClassLoader;
+use lang\XPClass;
 use lang\IllegalAccessException;
 
 /**
@@ -11,20 +11,17 @@ use lang\IllegalAccessException;
  * @see      xp://lang.reflect.Method
  * @see      xp://lang.reflect.Field
  */
-class PrivateAccessibilityTest extends TestCase {
-  private static 
-    $fixture          = null, 
-    $fixtureChild     = null,
-    $fixtureCtorChild = null;
+class PrivateAccessibilityTest extends \unittest\TestCase {
+  private static $fixture, $fixtureChild, $fixtureCtorChild;
   
   /**
    * Initialize fixture, fixtureChild and fixtureCtorChild members
    */
   #[@beforeClass]
   public static function initializeClasses() {
-    self::$fixture= \lang\XPClass::forName('net.xp_framework.unittest.reflection.PrivateAccessibilityFixture');
-    self::$fixtureChild= \lang\XPClass::forName('net.xp_framework.unittest.reflection.PrivateAccessibilityFixtureChild');
-    self::$fixtureCtorChild= \lang\XPClass::forName('net.xp_framework.unittest.reflection.PrivateAccessibilityFixtureCtorChild');
+    self::$fixture= XPClass::forName('net.xp_framework.unittest.reflection.PrivateAccessibilityFixture');
+    self::$fixtureChild= XPClass::forName('net.xp_framework.unittest.reflection.PrivateAccessibilityFixtureChild');
+    self::$fixtureCtorChild= XPClass::forName('net.xp_framework.unittest.reflection.PrivateAccessibilityFixtureCtorChild');
   }
 
   #[@test, @expect(IllegalAccessException::class)]

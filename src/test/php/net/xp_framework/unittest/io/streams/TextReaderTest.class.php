@@ -2,6 +2,7 @@
 
 use io\Channel;
 use io\IOException;
+use io\streams\LinesIn;
 use io\streams\TextReader;
 use io\streams\InputStream;
 use io\streams\MemoryInputStream;
@@ -408,7 +409,7 @@ class TextReaderTest extends \unittest\TestCase {
 
   #[@test]
   public function lines() {
-    $this->assertInstanceOf('io.streams.LinesIn', $this->newReader('')->lines());
+    $this->assertInstanceOf(LinesIn::class, $this->newReader('')->lines());
   }
 
   #[@test]

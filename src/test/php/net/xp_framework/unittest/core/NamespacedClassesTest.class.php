@@ -1,6 +1,6 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\TestCase;
+use lang\Object;
 use lang\reflect\Package;
 use util\collections\Vector;
 
@@ -12,12 +12,9 @@ use util\collections\Vector;
  * @see   xp://net.xp_framework.unittest.core.NamespacedClass
  * @see   php://namespaces
  */
-class NamespacedClassesTest extends TestCase {
-  protected static $package= null;
+class NamespacedClassesTest extends \unittest\TestCase {
+  protected static $package;
 
-  /**
-   * Initializes package member
-   */
   #[@beforeClass]
   public static function initializePackage() {
     self::$package= Package::forName('net.xp_framework.unittest.core');
@@ -26,7 +23,7 @@ class NamespacedClassesTest extends TestCase {
   #[@test]
   public function namespacedClassLiteral() {
     $this->assertEquals(
-      'net\\xp_framework\\unittest\\core\\NamespacedClass', 
+      NamespacedClass::class, 
       self::$package->loadClass('NamespacedClass')->literal()
     );
   }
@@ -42,7 +39,7 @@ class NamespacedClassesTest extends TestCase {
   #[@test]
   public function namespacedClassUsingUnqualified() {
     $this->assertInstanceOf(
-      'lang.Object',
+      Object::class,
       self::$package->loadClass('NamespacedClassUsingUnqualified')->newInstance()->newObject()
     );
   }
@@ -66,14 +63,14 @@ class NamespacedClassesTest extends TestCase {
   #[@test]
   public function newInstanceOnNamespacedClass() {
     $i= newinstance(NamespacedClass::class, [], '{}');
-    $this->assertInstanceOf('net.xp_framework.unittest.core.NamespacedClass', $i);
+    $this->assertInstanceOf(NamespacedClass::class, $i);
   }
 
   #[@test]
   public function packageOfNewInstancedNamespacedClass() {
     $i= newinstance(NamespacedClass::class, [], '{}');
     $this->assertEquals(
-      \lang\reflect\Package::forName('net.xp_framework.unittest.core'),
+      Package::forName('net.xp_framework.unittest.core'),
       $i->getClass()->getPackage()
     );
   }

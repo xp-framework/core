@@ -3,6 +3,8 @@
 use io\TempFile;
 use io\IOException;
 use io\collections\ArchiveCollection;
+use io\collections\IOElement;
+use io\collections\IOCollection;
 use lang\archive\Archive;
 
 class ArchiveCollectionTest extends \unittest\TestCase {
@@ -59,7 +61,7 @@ class ArchiveCollectionTest extends \unittest\TestCase {
     try {
       $c->open();
       $first= $c->next();
-      $this->assertInstanceOf('io.collections.IOCollection', $first);
+      $this->assertInstanceOf(IOCollection::class, $first);
       $this->assertXarUri('lang/', $first->getURI());
       $this->assertEquals(0, $first->getSize());
       $this->assertEquals(null, $c->next());
@@ -75,11 +77,11 @@ class ArchiveCollectionTest extends \unittest\TestCase {
     try {
       $c->open();
       $expect= [
-        'lang/Object.xp'    => 'io.collections.IOElement', 
-        'lang/Type.xp'      => 'io.collections.IOElement',
-        'lang/reflect/'     => 'io.collections.IOCollection',
-        'lang/types/'       => 'io.collections.IOCollection',
-        'lang/Runnable.xp'  => 'io.collections.IOElement',
+        'lang/Object.xp'    => IOElement::class,
+        'lang/Type.xp'      => IOElement::class,
+        'lang/reflect/'     => IOCollection::class,
+        'lang/types/'       => IOCollection::class,
+        'lang/Runnable.xp'  => IOElement::class
       ];
       for (reset($expect); $element= $c->next(), $name= key($expect); next($expect)) {
         $this->assertInstanceOf($expect[$name], $element);

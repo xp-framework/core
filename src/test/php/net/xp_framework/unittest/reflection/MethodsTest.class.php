@@ -9,6 +9,7 @@ use lang\Primitive;
 use lang\ElementNotFoundException;
 use lang\IllegalAccessException;
 use lang\IllegalArgumentException;
+use lang\reflect\Method;
 use lang\reflect\TargetInvocationException;
 use unittest\actions\RuntimeVersion;
 
@@ -169,7 +170,7 @@ class MethodsTest extends \unittest\TestCase {
   public function getDateMethod() {
     $this->assertTrue($this->fixture->hasMethod('getDate'));
     with ($method= $this->fixture->getMethod('getDate')); {
-      $this->assertInstanceOf('lang.reflect.Method', $method);
+      $this->assertInstanceOf(Method::class, $method);
       $this->assertEquals('getDate', $method->getName(true));
       $this->assertTrue($this->fixture->equals($method->getDeclaringClass()));
       $this->assertEquals('util.Date', $method->getReturnTypeName());

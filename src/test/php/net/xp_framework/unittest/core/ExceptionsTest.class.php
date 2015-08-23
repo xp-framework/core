@@ -25,7 +25,7 @@ class ExceptionsTest extends \unittest\TestCase {
     try {
       throw new Throwable('Test');
     } catch (Throwable $caught) {
-      $this->assertInstanceOf('lang.Throwable', $caught);
+      $this->assertInstanceOf(Throwable::class, $caught);
       unset($caught);
       return true;
     }

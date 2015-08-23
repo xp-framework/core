@@ -8,6 +8,7 @@ use lang\ElementNotFoundException;
 use lang\ClassNotFoundException;
 use lang\IllegalAccessException;
 use lang\reflect\Package;
+use lang\reflect\Constructor;
 use lang\reflect\TargetInvocationException;
 
 /**
@@ -223,7 +224,7 @@ class XPClassTest extends \unittest\TestCase {
 
   #[@test]
   public function fixture_classes_constructor() {
-    $this->assertInstanceOf('lang.reflect.Constructor', $this->fixture->getConstructor());
+    $this->assertInstanceOf(Constructor::class, $this->fixture->getConstructor());
   }
 
   #[@test]

@@ -19,6 +19,8 @@ class ProcessTest extends \unittest\TestCase {
 
   /**
    * Skips tests if process execution has been disabled.
+   *
+   * @return void
    */
   #[@beforeClass]
   public static function verifyProcessExecutionEnabled() {
@@ -157,7 +159,7 @@ class ProcessTest extends \unittest\TestCase {
   public function getByProcessId() {
     $pid= getmypid();
     $p= Process::getProcessById($pid);
-    $this->assertInstanceOf('lang.Process', $p);
+    $this->assertInstanceOf(Process::class, $p);
     $this->assertEquals($pid, $p->getProcessId());
   }
 

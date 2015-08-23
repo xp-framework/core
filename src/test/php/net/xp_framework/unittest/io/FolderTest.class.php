@@ -1,18 +1,14 @@
 <?php namespace net\xp_framework\unittest\io;
 
 use io\Folder;
+use io\FolderEntries;
 use io\Path;
 use io\IOException;
 use lang\System;
 use unittest\PrerequisitesNotMetError;
 
-/**
- * TestCase
- *
- * @see      xp://io.Folder
- */
 class FolderTest extends \unittest\TestCase {
-  protected $temp= '';
+  private $temp;
   
   /**
    * Normalizes path by adding a trailing slash to the end if not already
@@ -185,7 +181,7 @@ class FolderTest extends \unittest\TestCase {
 
   #[@test]
   public function entries() {
-    $this->assertInstanceOf('io.FolderEntries', (new Folder($this->temp))->entries());
+    $this->assertInstanceOf(FolderEntries::class, (new Folder($this->temp))->entries());
   }
 
   #[@test, @expect(IOException::class)]

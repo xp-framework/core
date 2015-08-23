@@ -4,6 +4,7 @@ use lang\archive\ArchiveClassLoader;
 use lang\archive\Archive;
 use lang\ClassNotFoundException;
 use lang\ElementNotFoundException;
+use lang\XPClass;
 use io\FileUtil;
 
 /**
@@ -66,7 +67,7 @@ class ArchiveClassLoaderTest extends \unittest\TestCase {
 
   #[@test]
   public function load_existing_class_from_archive() {
-    $this->assertInstanceOf('lang.XPClass', $this->fixture->loadClass('test.ClassLoadedFromArchive'));
+    $this->assertInstanceOf(XPClass::class, $this->fixture->loadClass('test.ClassLoadedFromArchive'));
   }
 
   #[@test, @expect(ClassNotFoundException::class)]

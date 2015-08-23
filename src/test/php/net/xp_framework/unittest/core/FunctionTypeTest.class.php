@@ -2,6 +2,7 @@
 
 use lang\FunctionType;
 use lang\Primitive;
+use lang\Object;
 use lang\XPClass;
 use lang\Type;
 use lang\ArrayType;
@@ -321,7 +322,7 @@ class FunctionTypeTest extends \unittest\TestCase {
   #])]
   public function create_instances_from_array_referencing_constructor($value) {
     $new= (new FunctionType([], XPClass::forName('lang.Object')))->newInstance($value);
-    $this->assertInstanceOf('lang.Object', $new());
+    $this->assertInstanceOf(Object::class, $new());
   }
 
   #[@test, @values([

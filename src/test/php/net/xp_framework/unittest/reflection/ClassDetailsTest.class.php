@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\TestCase;
 use lang\reflect\ClassParser;
+use lang\Object;
 
 define('APIDOC_TAG',        0x0001);
 define('APIDOC_VALUE',      0x0002);
@@ -13,7 +13,7 @@ define('APIDOC_VALUE',      0x0002);
  * @see  https://github.com/xp-framework/xp-framework/issues/230
  * @see  https://github.com/xp-framework/xp-framework/issues/270
  */
-class ClassDetailsTest extends TestCase {
+class ClassDetailsTest extends \unittest\TestCase {
 
   /**
    * Helper method that parses an apidoc comment and returns the matches
@@ -262,7 +262,7 @@ class ClassDetailsTest extends TestCase {
       class Test extends Object {
       }
     ');
-    $this->assertInstanceOf('lang.Object', $actual['class'][DETAIL_ANNOTATIONS]['value']);
+    $this->assertInstanceOf(Object::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
   }
 
   #[@test]

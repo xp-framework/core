@@ -13,7 +13,7 @@ class MapTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function typeForName() {
-    $this->assertInstanceOf('lang.MapType', Type::forName('[:string]'));
+    $this->assertInstanceOf(MapType::class, Type::forName('[:string]'));
   }
 
   #[@test, @expect(IllegalArgumentException::class)]

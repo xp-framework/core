@@ -12,7 +12,7 @@ class ArrayTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function typeForName() {
-    $this->assertInstanceOf('lang.ArrayType', Type::forName('string[]'));
+    $this->assertInstanceOf(ArrayType::class, Type::forName('string[]'));
   }
 
   #[@test, @expect(IllegalArgumentException::class)]

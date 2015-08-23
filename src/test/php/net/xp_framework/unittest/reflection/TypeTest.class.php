@@ -117,7 +117,7 @@ class TypeTest extends \unittest\TestCase {
   #[@test]
   public function genericObjectType() {
     with ($t= Type::forName('util.collections.HashTable<string, lang.Object>')); {
-      $this->assertInstanceOf('lang.XPClass', $t);
+      $this->assertInstanceOf(XPClass::class, $t);
       $this->assertTrue($t->isGeneric());
       $this->assertEquals(XPClass::forName('util.collections.HashTable'), $t->genericDefinition());
       $this->assertEquals(

@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\Runnable;
+use lang\Object;
 use lang\Runtime;
 use lang\Process;
 use lang\reflect\Package;
@@ -42,25 +43,25 @@ class NewInstanceTest extends \unittest\TestCase {
   
   #[@test]
   public function new_class_with_empty_body() {
-    $o= newinstance('lang.Object', []);
-    $this->assertInstanceOf('lang.Object', $o);
+    $o= newinstance(Object::class, []);
+    $this->assertInstanceOf(Object::class, $o);
   }
 
   #[@test]
   public function new_class_with_empty_body_as_string() {
-    $o= newinstance('lang.Object', [], '{}');
-    $this->assertInstanceOf('lang.Object', $o);
+    $o= newinstance(Object::class, [], '{}');
+    $this->assertInstanceOf(Object::class, $o);
   }
 
   #[@test]
   public function new_class_with_empty_body_as_closuremap() {
-    $o= newinstance('lang.Object', [], []);
-    $this->assertInstanceOf('lang.Object', $o);
+    $o= newinstance(Object::class, [], []);
+    $this->assertInstanceOf(Object::class, $o);
   }
 
   #[@test]
   public function new_class_with_member_as_string() {
-    $o= newinstance('lang.Object', [], '{
+    $o= newinstance(Object::class, [], '{
       public $test= "Test";
     }');
     $this->assertEquals('Test', $o->test);
@@ -68,7 +69,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function new_class_with_member_as_closuremap() {
-    $o= newinstance('lang.Object', [], [
+    $o= newinstance(Object::class, [], [
       'test' => 'Test'
     ]);
     $this->assertEquals('Test', $o->test);
@@ -82,7 +83,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function new_class_with_field_annotations() {
-    $o= newinstance('lang.Object', [], [
+    $o= newinstance(Object::class, [], [
       '#[@test] fixture' => null
     ]);
     $this->assertTrue($o->getClass()->getField('fixture')->hasAnnotation('test'));
@@ -90,7 +91,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function new_class_with_method_annotations() {
-    $o= newinstance('lang.Object', [], [
+    $o= newinstance(Object::class, [], [
       '#[@test] fixture' => function() { }
     ]);
     $this->assertTrue($o->getClass()->getMethod('fixture')->hasAnnotation('test'));
@@ -98,16 +99,16 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function new_interface_with_body_as_string() {
-    $o= newinstance('lang.Runnable', [], '{ public function run() { } }');
-    $this->assertInstanceOf('lang.Runnable', $o);
+    $o= newinstance(Runnable::class, [], '{ public function run() { } }');
+    $this->assertInstanceOf(Runnable::class, $o);
   }
 
   #[@test]
   public function new_interface_with_body_as_closuremap() {
-    $o= newinstance('lang.Runnable', [], [
+    $o= newinstance(Runnable::class, [], [
       'run' => function() { }
     ]);
-    $this->assertInstanceOf('lang.Runnable', $o);
+    $this->assertInstanceOf(Runnable::class, $o);
   }
 
   #[@test]
@@ -120,7 +121,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function new_trait_with_body_as_string() {
-    $o= newinstance('net.xp_framework.unittest.core.Named', ['Test'], '{
+    $o= newinstance(Named::class, ['Test'], '{
       public function __construct($name) { $this->name= $name; }
     }');
     $this->assertEquals('Test', $o->name());
@@ -128,7 +129,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function new_trait_with_body_as_closuremap() {
-    $o= newinstance('net.xp_framework.unittest.core.Named', ['Test'], [
+    $o= newinstance(Named::class, ['Test'], [
       '__construct' => function($name) { $this->name= $name; }
     ]);
     $this->assertEquals('Test', $o->name());
@@ -144,13 +145,13 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function new_trait_with_constructor() {
-    $o= newinstance('net.xp_framework.unittest.core.ListOf', [[1, 2, 3]], []);
+    $o= newinstance(ListOf::class, [[1, 2, 3]], []);
     $this->assertEquals([1, 2, 3], $o->elements());
   }
 
   #[@test]
   public function arguments_are_passed_to_constructor() {
-    $instance= newinstance('lang.Object', [$this], '{
+    $instance= newinstance(Object::class, [$this], '{
       public $test= null;
       public function __construct($test) {
         $this->test= $test;
@@ -161,7 +162,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function arguments_are_passed_to_constructor_in_closuremap() {
-    $instance= newinstance('lang.Object', [$this], [
+    $instance= newinstance(Object::class, [$this], [
       'test' => null,
       '__construct' => function($test) {
         $this->test= $test;
@@ -172,7 +173,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function arguments_are_passed_to_base_constructor_in_closuremap() {
-    $base= ClassLoader::defineClass(nameof($this).'_BaseFixture', 'lang.Object', [], [
+    $base= ClassLoader::defineClass(nameof($this).'_BaseFixture', Object::class, [], [
       'test' => null,
       '__construct' => function($test) {
         $this->test= $test;
@@ -256,7 +257,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function packageOfNewInstancedClass() {
-    $i= newinstance('lang.Object', [], '{}');
+    $i= newinstance(Object::class, [], '{}');
     $this->assertEquals(
       Package::forName('lang'),
       $i->getClass()->getPackage()
@@ -264,15 +265,15 @@ class NewInstanceTest extends \unittest\TestCase {
   }
 
   #[@test, @values(['php.IteratorAggregate', 'IteratorAggregate'])]
-  public function packageOfNewInstancedPHPClass() {
-    $i= newinstance('php.IteratorAggregate', [], '{ public function getIterator() { /* Empty */ }}');
+  public function packageOfNewInstancedPHPClass($class) {
+    $i= newinstance($class, [], '{ public function getIterator() { /* Empty */ }}');
     $this->assertEquals(
       Package::forName(''),
       $i->getClass()->getPackage()
     );
   }
 
-  #[@test, @values(['net.xp_framework.unittest.core.NamespacedClass', 'net\\xp_framework\\unittest\\core\\NamespacedClass'])]
+  #[@test, @values(['net.xp_framework.unittest.core.NamespacedClass', NamespacedClass::class])]
   public function packageOfNewInstancedNamespacedClass($class) {
     $i= newinstance($class, [], '{}');
     $this->assertEquals(
@@ -283,7 +284,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function packageOfNewInstancedNamespacedInterface() {
-    $i= newinstance('net.xp_framework.unittest.core.NamespacedInterface', [], '{}');
+    $i= newinstance(NamespacedInterface::class, [], '{}');
     $this->assertEquals(
       Package::forName('net.xp_framework.unittest.core'),
       $i->getClass()->getPackage()
@@ -292,7 +293,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function className() {
-    $instance= newinstance('lang.Object', [], '{ }');
+    $instance= newinstance(Object::class, [], '{ }');
     $n= nameof($instance);
     $this->assertEquals(
       'lang.Object',
@@ -303,33 +304,33 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function anonymousClassWithoutConstructor() {
-    newinstance('util.log.Traceable', [], '{
-      public function setTrace($cat) {}
+    newinstance(Runnable::class, [], '{
+      public function run() {}
     }');
   }
 
   #[@test]
   public function anonymousClassWithoutConstructorIgnoresConstructArgs() {
-    newinstance('util.log.Traceable', ['arg1'], '{
-      public function setTrace($cat) {}
+    newinstance(Runnable::class, ['arg1'], '{
+      public function run() {}
     }');
   }
 
   #[@test]
   public function anonymousClassWithConstructor() {
-    newinstance('util.log.Traceable', ['arg1'], '{
+    newinstance(Runnable::class, ['arg1'], '{
       public function __construct($arg) {
         if ($arg != "arg1") {
           throw new \\unittest\\AssertionFailedError("equals", $arg, "arg1");
         }
       }
-      public function setTrace($cat) {}
+      public function run() {}
     }');
   }
 
   #[@test]
   public function this_can_be_accessed() {
-    $instance= newinstance('lang.Object', [], [
+    $instance= newinstance(Object::class, [], [
       'test'    => null,
       'setTest' => function($test) {
         $this->test= $test;

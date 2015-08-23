@@ -2,8 +2,11 @@
 
 use util\cmd\Console;
 use lang\Object;
+use lang\IllegalStateException;
 use io\streams\MemoryInputStream;
 use io\streams\MemoryOutputStream;
+use io\streams\ConsoleOutputStream;
+use io\streams\ConsoleInputStream;
 
 /**
  * TestCase for the Console class
@@ -131,7 +134,7 @@ class ConsoleTest extends \unittest\TestCase {
         public function toString() { throw new IllegalStateException("Cannot render string"); }
       }'));
       $this->fail('Expected exception not thrown', null, 'lang.IllegalStateException');
-    } catch (\lang\IllegalStateException $expected) {
+    } catch (IllegalStateException $expected) {
       $this->assertEquals('', $this->streams[1]->getBytes());
     }
   }
@@ -225,9 +228,9 @@ class ConsoleTest extends \unittest\TestCase {
   #[@test]
   public function initialize_on_console() {
     $this->initialize(true, function() {
-      $this->assertInstanceOf('io.streams.ConsoleInputStream', Console::$in->getStream());
-      $this->assertInstanceOf('io.streams.ConsoleOutputStream', Console::$out->getStream());
-      $this->assertInstanceOf('io.streams.ConsoleOutputStream', Console::$err->getStream());
+      $this->assertInstanceOf(ConsoleInputStream::class, Console::$in->getStream());
+      $this->assertInstanceOf(ConsoleOutputStream::class, Console::$out->getStream());
+      $this->assertInstanceOf(ConsoleOutputStream::class, Console::$err->getStream());
     });
   }
 

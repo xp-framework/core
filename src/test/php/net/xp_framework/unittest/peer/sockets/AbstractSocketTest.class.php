@@ -1,18 +1,13 @@
 <?php namespace net\xp_framework\unittest\peer\sockets;
 
-use unittest\TestCase;
 use peer\Socket;
+use peer\SocketEndpoint;
 use peer\SocketException;
 use peer\ConnectException;
 use peer\SocketTimeoutException;
 use lang\Runtime;
 
-/**
- * TestCase
- *
- * @see      xp://peer.Socket
- */
-abstract class AbstractSocketTest extends TestCase {
+abstract class AbstractSocketTest extends \unittest\TestCase {
   protected static $bindAddress= [null, -1];
   protected $fixture= null;
 
@@ -327,7 +322,7 @@ abstract class AbstractSocketTest extends TestCase {
   #[@test]
   public function remoteEndpoint() {
     $this->assertEquals(
-      new \peer\SocketEndpoint(self::$bindAddress[0], self::$bindAddress[1]),
+      new SocketEndpoint(self::$bindAddress[0], self::$bindAddress[1]),
       $this->fixture->remoteEndpoint()
     );
   }
@@ -340,6 +335,6 @@ abstract class AbstractSocketTest extends TestCase {
   #[@test]
   public function localEndpointForConnectedSocket() {
     $this->fixture->connect();
-    $this->assertInstanceOf('peer.SocketEndpoint', $this->fixture->localEndpoint());
+    $this->assertInstanceOf(SocketEndpoint::class, $this->fixture->localEndpoint());
   }
 }

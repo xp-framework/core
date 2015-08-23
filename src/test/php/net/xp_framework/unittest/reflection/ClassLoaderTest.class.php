@@ -85,16 +85,16 @@ class ClassLoaderTest extends \unittest\TestCase {
   #[@test]
   public function archiveClassLoader() {
     $this->assertInstanceOf(
-      'lang.archive.ArchiveClassLoader',
-       XPClass::forName('net.xp_framework.unittest.reflection.classes.ClassThree')->getClassLoader()
+      ArchiveClassLoader::class,
+      XPClass::forName('net.xp_framework.unittest.reflection.classes.ClassThree')->getClassLoader()
     );
   }
 
   #[@test]
   public function containedArchiveClassLoader() {
     $this->assertInstanceOf(
-      'lang.archive.ArchiveClassLoader',
-       XPClass::forName('net.xp_framework.unittest.reflection.classes.ClassFive')->getClassLoader()
+      ArchiveClassLoader::class,
+      XPClass::forName('net.xp_framework.unittest.reflection.classes.ClassFive')->getClassLoader()
     );
   }
 

@@ -1,6 +1,9 @@
 <?php namespace net\xp_framework\unittest\io\collections;
 
 use io\collections\IOCollection;
+use io\collections\IOElement;
+use io\streams\InputStream;
+use io\streams\OutputStream;
 use io\IOException;
 use lang\IllegalStateException;
 use lang\IllegalArgumentException;
@@ -74,7 +77,7 @@ class IOCollectionTest extends AbstractCollectionTest {
   public function next_returns_IOElement_instances() {
     $this->fixture->open();
     for ($i= 0; $e= $this->fixture->next(); $i++) {
-      $this->assertInstanceOf('io.collections.IOElement', $e);
+      $this->assertInstanceOf(IOElement::class, $e);
     }
     $this->assertEquals($this->sizes[$this->fixture->getURI()], $i);
     $this->fixture->close();
@@ -122,7 +125,7 @@ class IOCollectionTest extends AbstractCollectionTest {
   #[@test]
   public function get_elements_input_stream() {
     with ($stream= $this->firstElement($this->fixture)->getInputStream()); {
-      $this->assertInstanceOf('io.streams.InputStream', $stream);
+      $this->assertInstanceOf(InputStream::class, $stream);
       $this->assertNotEquals(0, $stream->available());
       $this->assertEquals('File contents', $stream->read(13));
     }
@@ -136,7 +139,7 @@ class IOCollectionTest extends AbstractCollectionTest {
   #[@test]
   public function get_elements_output_stream() {
     with ($stream= $this->firstElement($this->fixture)->getOutputStream()); {
-      $this->assertInstanceOf('io.streams.OutputStream', $stream);
+      $this->assertInstanceOf(OutputStream::class, $stream);
       $stream->write('File contents');
     }
   }

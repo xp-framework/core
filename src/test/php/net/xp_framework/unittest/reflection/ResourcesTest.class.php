@@ -1,13 +1,12 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\TestCase;
 use lang\ClassLoader;
 use lang\archive\Archive;
 use lang\archive\ArchiveClassLoader;
 use lang\ElementNotFoundException;
 use io\File;
 
-class ResourcesTest extends TestCase {
+class ResourcesTest extends \unittest\TestCase {
   private $cl;
 
   /** @return void */
@@ -41,7 +40,7 @@ class ResourcesTest extends TestCase {
   #[@test]
   public function findResource() {
     $this->assertInstanceOf(
-      'lang.archive.ArchiveClassLoader',
+      ArchiveClassLoader::class,
       ClassLoader::getDefault()->findResource('META-INF/manifest.ini')
     );
   }
@@ -54,7 +53,7 @@ class ResourcesTest extends TestCase {
   #[@test]
   public function getResourceAsStream() {
     $stream= ClassLoader::getDefault()->getResourceAsStream('META-INF/manifest.ini');
-    $this->assertInstanceOf('io.File', $stream);
+    $this->assertInstanceOf(File::class, $stream);
     $stream->open(File::READ);
     $this->assertManifestFile($stream->read($stream->size()));
     $stream->close();
