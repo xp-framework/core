@@ -1,5 +1,8 @@
 <?php namespace util\collections;
 
+use util\Objects;
+use lang\IllegalArgumentException;
+
 /**
  * LRU (last recently used) buffer.
  *
@@ -44,7 +47,7 @@ class LRUBuffer extends \lang\Object {
    */
   #[@generic(params= 'T', return= 'T')]
   public function add($element) {
-    $h= $this->prefix.(($element instanceof Generic || $element instanceof Value) ? $element->hashCode() : serialize($element));
+    $h= $this->prefix.Objects::hashOf($element);
     $this->_elements[$h]= $element;
 
     // Check if this buffer's size has been exceeded
@@ -65,7 +68,7 @@ class LRUBuffer extends \lang\Object {
    */
   #[@generic(params= 'T')]
   public function update($element) {
-    $h= $this->prefix.(($element instanceof Generic || $element instanceof Value) ? $element->hashCode() : serialize($element));
+    $h= $this->prefix.Objects::hashOf($element);
     unset($this->_elements[$h]);
     $this->_elements= $this->_elements + [$h => $element];
   }
@@ -86,7 +89,7 @@ class LRUBuffer extends \lang\Object {
    * @throws  lang.IllegalArgumentException is size is not greater than zero
    */
   public function setSize($size) {
-    if ($size <= 0) throw new \lang\IllegalArgumentException(
+    if ($size <= 0) throw new IllegalArgumentException(
       'Size must be greater than zero, '.$size.' given'
     );
 

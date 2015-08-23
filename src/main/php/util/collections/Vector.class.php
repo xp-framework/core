@@ -1,6 +1,7 @@
 <?php namespace util\collections;
 
 use lang\Generic;
+use lang\Value;
 use lang\IllegalArgumentException;
 use lang\IndexOutOfBoundsException;
 

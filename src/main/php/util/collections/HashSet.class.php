@@ -1,7 +1,7 @@
 <?php namespace util\collections;
 
-use lang\Generic;
-use lang\Value;
+use util\Objects;
+use lang\IllegalArgumentException;
 
 /**
  * A set of objects
@@ -12,8 +12,7 @@ use lang\Value;
  */
 #[@generic(self= 'T', implements= ['T'])]
 class HashSet extends \lang\Object implements Set {
-  protected static
-    $iterate   = null;
+  protected static $iterate;
 
   protected
     $_elements = [],
@@ -48,7 +47,7 @@ class HashSet extends \lang\Object implements Set {
    * @return  lang.Generic
    */
   public function offsetGet($offset) {
-    throw new \lang\IllegalArgumentException('Unsupported operation');
+    throw new IllegalArgumentException('Unsupported operation');
   }
 
   /**
@@ -63,7 +62,7 @@ class HashSet extends \lang\Object implements Set {
      if (null === $offset) {
       $this->add($value);
     } else {
-      throw new \lang\IllegalArgumentException('Unsupported operation');
+      throw new IllegalArgumentException('Unsupported operation');
     }
   }
 
@@ -96,7 +95,7 @@ class HashSet extends \lang\Object implements Set {
    */
   #[@generic(params= 'T')]
   public function add($element) { 
-    $h= ($element instanceof Generic || $element instanceof Value) ? $element->hashCode() : serialize($element);
+    $h= Objects::hashOf($element);
     if (isset($this->_elements[$h])) return false;
     
     $this->_hash+= HashProvider::hashOf($h);
@@ -112,7 +111,7 @@ class HashSet extends \lang\Object implements Set {
    */
   #[@generic(params= 'T')]
   public function remove($element) { 
-    $h= ($element instanceof Generic || $element instanceof Value) ? $element->hashCode() : serialize($element);
+    $h= Objects::hashOf($element);
     if (!isset($this->_elements[$h])) return false;
 
     $this->_hash-= HashProvider::hashOf($h);
@@ -128,7 +127,7 @@ class HashSet extends \lang\Object implements Set {
    */
   #[@generic(params= 'T')]
   public function contains($element) { 
-    $h= ($element instanceof Generic || $element instanceof Value) ? $element->hashCode() : serialize($element);
+    $h= Objects::hashOf($element);
     return isset($this->_elements[$h]);
   }
 
@@ -144,6 +143,7 @@ class HashSet extends \lang\Object implements Set {
   /**
    * Removes all of the elements from this set
    *
+   * @return void
    */
   public function clear() { 
     $this->_elements= [];
@@ -169,7 +169,7 @@ class HashSet extends \lang\Object implements Set {
   public function addAll($elements) { 
     $changed= false;
     foreach ($elements as $element) {
-      $h= ($element instanceof Generic || $element instanceof Value) ? $element->hashCode() : serialize($element);
+      $h= Objects::hashOf($element);
       if (isset($this->_elements[$h])) continue;
 
       $this->_hash+= HashProvider::hashOf($h);

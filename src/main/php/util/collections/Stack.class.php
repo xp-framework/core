@@ -4,6 +4,7 @@ use lang\IndexOutOfBoundsException;
 use util\NoSuchElementException;
 use lang\Generic;
 use lang\Value;
+use util\Objects;
 
 /**
  * A Last-In-First-Out (LIFO) stack of objects.
@@ -47,7 +48,7 @@ class Stack extends \lang\Object {
    */
   #[@generic(params= 'T', return= 'T')]
   public function push($element) {
-    $h= ($element instanceof Generic || $element instanceof Value) ? $element->hashCode() : serialize($element);
+    $h= Objects::hashOf($element);
     array_unshift($this->_elements, $element);
     $this->_hash+= HashProvider::hashOf($h);
     return $element;
@@ -65,7 +66,7 @@ class Stack extends \lang\Object {
       throw new NoSuchElementException('Stack is empty');
     }
     $element= array_shift($this->_elements);
-    $h= ($element instanceof Generic || $element instanceof Value) ? $element->hashCode() : serialize($element);
+    $h= Objects::hashOf($element);
     $this->_hash+= HashProvider::hashOf($h);
     return $element;
   }
