@@ -1,5 +1,6 @@
 <?php namespace util\collections;
 
+use util\Objects;
 use lang\IndexOutOfBoundsException;
 use util\NoSuchElementException;
 use lang\Generic;
@@ -45,7 +46,7 @@ class Queue extends \lang\Object {
    */
   #[@generic(params= 'T', return= 'T')]
   public function put($element) {
-    $h= ($element instanceof Generic || $element instanceof Value) ? $element->hashCode() : serialize($element);
+    $h= Objects::hashOf($element);
     $this->_elements[]= $element;
     $this->_hash+= HashProvider::hashOf($h);
     return $element;
@@ -64,7 +65,7 @@ class Queue extends \lang\Object {
     }
 
     $element= $this->_elements[0];
-    $h= ($element instanceof Generic || $element instanceof Value)? $element->hashCode() : serialize($element);
+    $h= Objects::hashOf($element);
     $this->_hash-= HashProvider::hashOf($h);
     $this->_elements= array_slice($this->_elements, 1);
     return $element;
@@ -124,9 +125,9 @@ class Queue extends \lang\Object {
   #[@generic(params= 'T')]
   public function remove($element) {
     if (-1 == ($pos= $this->search($element))) return false;
-    
+
     $element= $this->_elements[$pos];
-    $h= ($element instanceof Generic || $element instanceof Value)? $element->hashCode() : serialize($element);
+    $h= Objects::hashOf($element);
     $this->_hash-= HashProvider::hashOf($h);
     unset($this->_elements[$pos]);
     $this->_elements= array_values($this->_elements);   // Re-index

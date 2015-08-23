@@ -298,4 +298,16 @@ class VectorTest extends \unittest\TestCase {
     $b= [new Name('b'), new Name('a')];
     $this->assertFalse((new Vector($a))->equals(new Vector($b)));
   }
+
+  #[@test]
+  public function addFunction() {
+    $f= function() { return 'test'; };
+    $this->assertEquals($f, (new Vector([$f]))[0]);
+  }
+
+  #[@test]
+  public function addFunctions() {
+    $f= [function() { return 'one'; }, function() { return 'two'; }];
+    $this->assertEquals($f, (new Vector($f))->elements());
+  }
 }
