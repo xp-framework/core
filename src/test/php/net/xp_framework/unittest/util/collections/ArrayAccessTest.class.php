@@ -15,10 +15,6 @@ use lang\IllegalArgumentException;
  */
 class ArrayAccessTest extends \unittest\TestCase {
 
-  /**
-   * Tests array access operator is overloaded for reading
-   *
-   */
   #[@test]
   public function hashTableReadElement() {
     $c= new HashTable();
@@ -27,30 +23,18 @@ class ArrayAccessTest extends \unittest\TestCase {
     $this->assertEquals($world, $c[new Name('hello')]);
   }
 
-  /**
-   * Tests array access operator is overloaded for reading
-   *
-   */
   #[@test]
   public function hashTableReadNonExistantElement() {
     $c= new HashTable();
     $this->assertEquals(null, $c[new Name('hello')]);
   }
 
-  /**
-   * Tests array access operator is overloaded for reading
-   *
-   */
   #[@test, @expect(IllegalArgumentException::class)]
   public function hashTableReadIllegalElement() {
     $c= create('new util.collections.HashTable<string, Object>()');
     $c[STDIN];
   }
 
-  /**
-   * Tests array access operator is overloaded for writing
-   *
-   */
   #[@test]
   public function hashTableWriteElement() {
     $c= new HashTable();
@@ -59,30 +43,18 @@ class ArrayAccessTest extends \unittest\TestCase {
     $this->assertEquals($world, $c->get(new Name('hello')));
   }
 
-  /**
-   * Tests array access operator is overloaded for writing
-   *
-   */
   #[@test, @expect(IllegalArgumentException::class)]
   public function hashTableWriteIllegalKey() {
     $c= create('new util.collections.HashTable<string, Object>()');
     $c[STDIN]= new Name('Hello');
   }
 
-  /**
-   * Tests array access operator is overloaded for writing
-   *
-   */
   #[@test, @expect(IllegalArgumentException::class)]
   public function hashTableWriteIllegalValue() {
     $c= create('new util.collections.HashTable<string, Object>()');
     $c['hello']= 'scalar';
   }
 
-  /**
-   * Tests array access operator is overloaded for isset()
-   *
-   */
   #[@test]
   public function hashTableTestElement() {
     $c= new HashTable();
@@ -91,10 +63,6 @@ class ArrayAccessTest extends \unittest\TestCase {
     $this->assertFalse(isset($c[new Name('world')]));
   }
 
-  /**
-   * Tests array access operator is overloaded for unset()
-   *
-   */
   #[@test]
   public function hashTableRemoveElement() {
     $c= new HashTable();
@@ -104,10 +72,6 @@ class ArrayAccessTest extends \unittest\TestCase {
     $this->assertFalse(isset($c[new Name('hello')]));
   }
 
-  /**
-   * Tests array access operator is overloaded for reading
-   *
-   */
   #[@test]
   public function vectorReadElement() {
     $v= new Vector();
@@ -116,20 +80,12 @@ class ArrayAccessTest extends \unittest\TestCase {
     $this->assertEquals($world, $v[0]);
   }
 
-  /**
-   * Tests array access operator is overloaded for reading
-   *
-   */
   #[@test, @expect(IndexOutOfBoundsException::class)]
   public function vectorReadNonExistantElement() {
     $v= new Vector();
     $v[0];
   }
 
-  /**
-   * Tests array access operator is overloaded for adding
-   *
-   */
   #[@test]
   public function vectorAddElement() {
     $v= new Vector();
@@ -138,10 +94,6 @@ class ArrayAccessTest extends \unittest\TestCase {
     $this->assertEquals($world, $v[0]);
   }
   
-  /**
-   * Tests array access operator is overloaded for writing
-   *
-   */
   #[@test]
   public function vectorWriteElement() {
     $v= new Vector([new Name('hello')]);
@@ -150,30 +102,18 @@ class ArrayAccessTest extends \unittest\TestCase {
     $this->assertEquals($world, $v[0]);
   }
 
-  /**
-   * Tests array access operator is overloaded for writing
-   *
-   */
   #[@test, @expect(IndexOutOfBoundsException::class)]
   public function vectorWriteElementBeyondBoundsKey() {
     $v= new Vector();
     $v[0]= new Name('world');
   }
 
-  /**
-   * Tests array access operator is overloaded for writing
-   *
-   */
   #[@test, @expect(IndexOutOfBoundsException::class)]
   public function vectorWriteElementNegativeKey() {
     $v= new Vector();
     $v[-1]= new Name('world');
   }
 
-  /**
-   * Tests array access operator is overloaded for isset()
-   *
-   */
   #[@test]
   public function vectorTestElement() {
     $v= new Vector();
@@ -183,10 +123,6 @@ class ArrayAccessTest extends \unittest\TestCase {
     $this->assertFalse(isset($v[-1]));
   }
 
-  /**
-   * Tests array access operator is overloaded for unset()
-   *
-   */
   #[@test]
   public function vectorRemoveElement() {
     $v= new Vector();
@@ -195,10 +131,6 @@ class ArrayAccessTest extends \unittest\TestCase {
     $this->assertFalse(isset($v[0]));
   }
 
-  /**
-   * Tests Vector is usable in foreach()
-   *
-   */
   #[@test]
   public function vectorIsUsableInForeach() {
     $values= [new Name('hello'), new Name('world')];
@@ -208,10 +140,6 @@ class ArrayAccessTest extends \unittest\TestCase {
     $this->assertEquals(sizeof($values)- 1, $i);
   }
 
-  /**
-   * Tests hashset array access operator overloading
-   *
-   */
   #[@test]
   public function hashSetAddElement() {
     $s= new HashSet();
@@ -219,20 +147,12 @@ class ArrayAccessTest extends \unittest\TestCase {
     $this->assertTrue($s->contains(new Name('X')));
   }
 
-  /**
-   * Tests hashset array access operator overloading
-   *
-   */
   #[@test, @expect(IllegalArgumentException::class)]
   public function hashSetWriteElement() {
     $s= new HashSet();
     $s[0]= new Name('X');
   }
 
-  /**
-   * Tests hashset array access operator overloading
-   *
-   */
   #[@test, @expect(IllegalArgumentException::class)]
   public function hashSetReadElement() {
     $s= new HashSet();
@@ -240,10 +160,6 @@ class ArrayAccessTest extends \unittest\TestCase {
     $x= $s[0];
   }
 
-  /**
-   * Tests hashset array access operator overloading
-   *
-   */
   #[@test]
   public function hashSetTestElement() {
     $s= new HashSet();
@@ -252,10 +168,6 @@ class ArrayAccessTest extends \unittest\TestCase {
     $this->assertTrue(isset($s[new Name('X')]));
   }
 
-  /**
-   * Tests hashset array access operator overloading
-   *
-   */
   #[@test]
   public function hashSetRemoveElement() {
     $s= new HashSet();
@@ -264,10 +176,6 @@ class ArrayAccessTest extends \unittest\TestCase {
     $this->assertFalse(isset($s[new Name('X')]));
   }
 
-  /**
-   * Tests hashset array access operator overloading
-   *
-   */
   #[@test]
   public function hashSetUsableInForeach() {
     $s= new HashSet();
