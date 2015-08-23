@@ -82,7 +82,11 @@ class FunctionType extends Type {
    * @return  string
    */
   public function literal() {
-    throw new IllegalStateException('Function types cannot be used in type literals');
+    return sprintf(
+      "\xaa%s\xbb%s",
+      null === $this->signature ? "\xbf" : implode("\xb8", array_map(function($e) { return $e->literal(); }, $this->signature)),
+      $this->returns->literal()
+    );
   }
 
   /**

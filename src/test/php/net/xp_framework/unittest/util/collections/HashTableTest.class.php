@@ -36,7 +36,11 @@ class HashTableTest extends \unittest\TestCase {
       [create('new util.collections.HashTable<int[], var>'), [
         new Pair([1, 2], 3),
         new Pair([0, -1], 'Test')
-      ]]
+      ]],
+      [create('new util.collections.HashTable<string, function(): var>'), [
+        new Pair('color', function() { return 'purple'; }),
+        new Pair('price', function() { return 12.99; }),
+      ]],
     ];
   }
 
