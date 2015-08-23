@@ -98,12 +98,6 @@ class NewInstanceTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function new_interface_does_not_use_any_base_class() {
-    $o= newinstance(Runnable::class, [], '{ public function run() { } }');
-    $this->assertFalse(get_parent_class($o));
-  }
-
-  #[@test]
   public function new_interface_with_body_as_string() {
     $o= newinstance(Runnable::class, [], '{ public function run() { } }');
     $this->assertInstanceOf(Runnable::class, $o);
