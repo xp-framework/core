@@ -5,8 +5,8 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
-* Fixed `lang.FunctionType` to work as part of a generic type.
-  (@thekid)
+* Fixed `peer.SocketOutputStream` declaration - @thekid
+* Fixed `lang.FunctionType` to work as part of a generic type - @thekid
 * Merged xp-framework/core#101: Make collections API work with closures
   (@thekid)
 * Fixed `util.Objects::hashOf()` for arrays and maps containing closures
