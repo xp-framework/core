@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.5.1 / 2015-08-24
+
 ### Bugfixes
 
 * Fixed `peer.SocketOutputStream` declaration - @thekid
