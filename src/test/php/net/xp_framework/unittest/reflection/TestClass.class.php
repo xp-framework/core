@@ -38,7 +38,7 @@ class TestClass extends AbstractTestClass implements \util\log\Traceable {
   /**
    * Constructor
    *
-   * @param   mixed in default NULL
+   * @param   var in default NULL
    */
   public function __construct($in= null) {
     $this->date= new Date($in);

@@ -63,8 +63,8 @@ class ReferencesTest extends \unittest\TestCase {
    * Simulates static class member
    * 
    * @param   string key
-   * @param   &mixed val
-   * @return  &mixed
+   * @param   &var val
+   * @return  &var
    */
   public static function registry($key, $val) {
     static $registry= [];

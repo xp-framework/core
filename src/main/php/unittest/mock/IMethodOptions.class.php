@@ -2,7 +2,6 @@
 
 use lang\Throwable;
 
-
 /**
  * Fluent interface for specifying mock expectation.
  *
@@ -12,8 +11,8 @@ interface IMethodOptions {
   /**
    * Specifies return value for that method call.
    *
-   * @param   mixed The return value for that expectation.
-   * @return  IMethodOptions
+   * @param   var The return value for that expectation.
+   * @return  self
    */
   public function returns($value);
 
@@ -21,7 +20,7 @@ interface IMethodOptions {
    * Specifies an exception that should be thrown on exectution of that method.
    *
    * @param   lang.Throwable The exception that should be thrown
-   * @return  IMethodOptions
+   * @return  self
    */
   public function throws(Throwable $exception);
   
