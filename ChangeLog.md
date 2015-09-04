@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.5.2 / 2015-09-04
+
+### Features
+
+* Created an XP Framework release from an airplane - @thekid
+* Cleaned up deprecated "mixed" type in favor of "var" - @thekid
+
 ## 6.5.1 / 2015-08-24
 
 ### Bugfixes
