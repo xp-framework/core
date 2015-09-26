@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\logging;
 
+use lang\IllegalArgumentException;
 use util\log\layout\PatternLayout;
 use util\log\context\MappedLogContext;
 use util\log\LoggingEvent;
@@ -17,7 +18,7 @@ class PatternLayoutTest extends \unittest\TestCase {
    * Test illegal format token %Q
    * 
    */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function illegalFormatToken() {
     new PatternLayout('%Q');
   }
@@ -26,7 +27,7 @@ class PatternLayoutTest extends \unittest\TestCase {
    * Test unterminated format token
    * 
    */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function unterminatedFormatToken() {
     new PatternLayout('%');
   }

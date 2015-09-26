@@ -1,5 +1,8 @@
 <?php namespace net\xp_framework\unittest\tests\mock;
  
+use lang\ClassNotFoundException;
+use lang\IllegalArgumentException;
+use lang\IllegalStateException;
 use unittest\TestCase;
 use unittest\mock\MockRepository;
 use lang\reflect\Proxy;
@@ -56,7 +59,7 @@ class MockRepositoryTest extends TestCase {
    * Can create mock for non-empty interface
    *
    */
-  #[@test, @expect('lang.ClassNotFoundException')]
+  #[@test, @expect(ClassNotFoundException::class)]
   public function cannotCreateMockForUnknownTypes() {
     $this->fixture->createMock('foooooo.Unknown');
   }
@@ -65,7 +68,7 @@ class MockRepositoryTest extends TestCase {
    * Can create mock for non-empty interface
    *
    */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function cannotCreateMockForNonXPClassTypes() {
     $this->fixture->createMock('string');
   }
@@ -319,7 +322,7 @@ class MockRepositoryTest extends TestCase {
   /**
    * Unexpected calls should fail, when _verifyMock is called.
    */
-  #[@test, @expect('unittest.mock.ExpectationViolationException')]
+  #[@test, @expect(ExpectationViolationException::class)]
   public function unexpected_calls_should_fail_on_mock_object_verification() {
     $object= $this->fixture->createMock('net.xp_framework.unittest.tests.mock.IComplexInterface');
 
@@ -355,7 +358,7 @@ class MockRepositoryTest extends TestCase {
   /**
    * verifyAll() verifies all mocks of that mockery.
    */
-  #[@test, @expect('unittest.mock.ExpectationViolationException')]
+  #[@test, @expect(ExpectationViolationException::class)]
   public function verfyAll_should_verfiy_all_mocks__negative_case() {
     $object1= $this->fixture->createMock('net.xp_framework.unittest.tests.mock.IComplexInterface');
     $object2= $this->fixture->createMock('net.xp_framework.unittest.tests.mock.IComplexInterface');
@@ -439,7 +442,7 @@ class MockRepositoryTest extends TestCase {
    * Test
    *
    */
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function property_behavior_should_throw_exception_if_returns_is_set_before() {
     $object= $this->fixture->createMock('net.xp_framework.unittest.tests.mock.IComplexInterface');
 
@@ -454,7 +457,7 @@ class MockRepositoryTest extends TestCase {
    * Test
    *
    */
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function property_behavior_should_throw_exception_if_returns_is_set_afterwards() {
     $object= $this->fixture->createMock('net.xp_framework.unittest.tests.mock.IComplexInterface');
 
@@ -485,7 +488,7 @@ class MockRepositoryTest extends TestCase {
    * Test
    *
    */
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function property_behavior_should_only_be_applicable_to_getters_and_setters() {
     $object= $this->fixture->createMock('net.xp_framework.unittest.tests.mock.IComplexInterface');
     $object->foo()->propertyBehavior();

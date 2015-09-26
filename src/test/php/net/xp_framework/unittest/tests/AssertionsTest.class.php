@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\tests;
  
+use unittest\AssertionFailedError;
 use lang\types\Integer;
 use lang\types\ArrayList;
 use net\xp_framework\unittest\Name;
@@ -14,7 +15,7 @@ class AssertionsTest extends \unittest\TestCase {
     $this->assertTrue(true);
   }
 
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function falseIsNotTrue() {
     $this->assertTrue(false);
   }
@@ -24,7 +25,7 @@ class AssertionsTest extends \unittest\TestCase {
     $this->assertFalse(false);
   }
 
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function trueIsNotFalse() {
     $this->assertFalse(true);
   }
@@ -34,22 +35,22 @@ class AssertionsTest extends \unittest\TestCase {
     $this->assertNull(null);
   }
 
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function falseIsNotNull() {
     $this->assertNull(false);
   }
 
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function zeroIsNotNull() {
     $this->assertNull(0);
   }
 
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function emptyStringIsNotNull() {
     $this->assertNull('');
   }
 
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function emptyArrayIsNotNull() {
     $this->assertNull([]);
   }
@@ -114,7 +115,7 @@ class AssertionsTest extends \unittest\TestCase {
     $this->assertEquals(new Name($str), new Name($str));
   }
 
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function differentNotTypesAreNotEqual() {
     $this->assertEquals(false, null);
   }    
@@ -134,7 +135,7 @@ class AssertionsTest extends \unittest\TestCase {
     $this->assertNotEquals([], $cmp);
   }    
 
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function sameIntegersAreEqual() {
     $this->assertNotEquals(1, 1);
   }    
@@ -159,28 +160,28 @@ class AssertionsTest extends \unittest\TestCase {
     $this->assertInstanceOf('lang.Object', new \lang\Object());
   }    
 
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function objectIsNotAnInstanceOfString() {
     $this->assertInstanceOf('lang.types.Integer', new \lang\Object());
   }    
 
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function zeroIsNotAnInstanceOfGeneric() {
     $this->assertInstanceOf('lang.Generic', 0);
   }    
 
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function nullIsNotAnInstanceOfGeneric() {
     $this->assertInstanceOf('lang.Generic', null);
   }    
 
   /** @deprecated */
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function xpNullIsNotAnInstanceOfGeneric() {
     $this->assertInstanceOf('lang.Generic', \xp::null());
   }    
 
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function thisIsNotAnInstanceOfString() {
     $this->assertInstanceOf('lang.types.Integer', $this);
   }    
@@ -195,7 +196,7 @@ class AssertionsTest extends \unittest\TestCase {
     $this->assertInstanceOf('int', 0);
   }
 
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function zeroPointZeroIsNotInstanceOfInt() {
     $this->assertInstanceOf('int', 0.0);
   }    
@@ -205,12 +206,12 @@ class AssertionsTest extends \unittest\TestCase {
     $this->assertInstanceOf(\lang\Type::$VAR, null);
   }    
 
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function nullIsNotInstanceOfVoidType() {
     $this->assertInstanceOf(\lang\Type::$VOID, null);
   }
 
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function nullIsNotInstanceOfVoid() {
     $this->assertInstanceOf('void', null);
   }
@@ -230,17 +231,17 @@ class AssertionsTest extends \unittest\TestCase {
     $this->assertInstanceOf('array', ['color' => 'green']);
   }
 
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function nullIsNotInstanceOfArray() {
     $this->assertInstanceOf('array', null);
   }
 
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function arrayListIsNotInstanceOfArray() {
     $this->assertInstanceOf('array', new ArrayList(1, 2, 3));
   }
 
-  #[@test, @expect('unittest.AssertionFailedError')]
+  #[@test, @expect(AssertionFailedError::class)]
   public function primitiveIsNotAnInstanceOfIntegerlass() {
     $this->assertInstanceOf('int', new Integer(1));
   }    

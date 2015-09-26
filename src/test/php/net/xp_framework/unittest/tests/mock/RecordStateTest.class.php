@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\tests\mock;
  
+use lang\IllegalArgumentException;
+use lang\Error;
 use unittest\mock\RecordState;
 use util\collections\HashTable;
 use unittest\actions\RuntimeVersion;
@@ -22,12 +24,12 @@ class RecordStateTest extends \unittest\TestCase {
     $this->sut= new RecordState($this->expectationMap);
   }
     
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function expectationMapRequiredOnCreate() {
     new RecordState(null);
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function expectationMapRequiredOnCreate7() {
     new RecordState(null);
   }

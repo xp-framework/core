@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\tests\mock;
 
+use lang\IllegalArgumentException;
+use lang\Error;
 use unittest\mock\ExpectationList;
 use unittest\mock\Expectation;
 use unittest\actions\RuntimeVersion;
@@ -55,22 +57,22 @@ class ExpectationListTest extends \unittest\TestCase {
     $this->assertEquals($expect, $this->sut->getNext([]));
   }
   
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function cannotAddNull() {
     $this->sut->add(null);
   }
   
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function cannotAddObjects() {
     $this->sut->add(new \lang\Object());
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function cannotAddNull7() {
     $this->sut->add(null);
   }
   
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function cannotAddObjects7() {
     $this->sut->add(new \lang\Object());
   }

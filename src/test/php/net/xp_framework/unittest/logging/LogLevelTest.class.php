@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\logging;
 
+use lang\IllegalArgumentException;
 use unittest\TestCase;
 use util\log\LogLevel;
 
@@ -54,7 +55,7 @@ class LogLevelTest extends TestCase {
    * Test named() method
    *
    */
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function unknown() {
     LogLevel::named('@UNKNOWN@');
   }
