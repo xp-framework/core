@@ -172,7 +172,6 @@ class Reflect extends \lang\Object {
     Console::write(' trait ', self::displayNameOf($trait));
 
     // Fields
-    $i && Console::writeLine();
     $i= 0;
     foreach ($trait->getFields() as $field) {
       Console::writeLine('  ', $field);
