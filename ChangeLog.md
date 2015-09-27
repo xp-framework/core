@@ -7,6 +7,7 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged #102: Add in() and out() methods to io.collections - @thekid
 * Merged #103: Refactor: Use ::class - @thekid
 * Merged #104: Show traits w/ trait keyword, w/o abstract - @thekid
 
