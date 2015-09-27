@@ -25,6 +25,7 @@
  * }
  * ```
  *
+ * @deprecated See https://github.com/xp-framework/io-collections
  * @see  http://news.xp-framework.net/article/113/2006/09/21/
  * @see  http://news.xp-framework.net/article/129/2006/11/09/
  * @see  http://developer.xp-framework.net/xml/rfc/view?0077

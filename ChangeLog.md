@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Extracted the `io.collections` API to its own package and deprecated the
+  one inside core. See https://github.com/xp-framework/io-collections
+  (@thekid)
+
 ### Bugfixes
 
 * Fixed `xp -r T` for when *T* refers to a trait - @thekid
