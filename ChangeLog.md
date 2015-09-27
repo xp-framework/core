@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.5.3 / 2015-09-27
+
+### Features
+
+* Merged #103: Refactor: Use ::class - @thekid
+* Merged #104: Show traits w/ trait keyword, w/o abstract - @thekid
+
 ## 6.5.2 / 2015-09-04
 
 ### Features
