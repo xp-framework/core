@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.5.4 / 2015-09-27
+
 ### Features
 
 * Extracted the `io.collections` API to its own package and deprecated the
