@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\tests;
 
+use lang\IllegalArgumentException;
+use lang\XPException;
 use unittest\PrerequisitesNotMetError;
 use unittest\AssertionFailedError;
 
@@ -86,17 +88,17 @@ class SimpleTestCase extends \unittest\TestCase {
   public function ignored() {
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function catchExpected() {
     throw new \lang\IllegalArgumentException('');
   }
 
-  #[@test, @expect('lang.XPException')]
+  #[@test, @expect(XPException::class)]
   public function catchSubclassOfExpected() {
     throw new \lang\IllegalArgumentException('');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function expectedExceptionNotThrown() {
     throw new \lang\FormatException('Test');
   }
@@ -116,7 +118,7 @@ class SimpleTestCase extends \unittest\TestCase {
     throw new \lang\IllegalArgumentException('Another message');
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function catchExpectedWithWarning() {
     trigger_error('Test error');
     throw new \lang\IllegalArgumentException('');

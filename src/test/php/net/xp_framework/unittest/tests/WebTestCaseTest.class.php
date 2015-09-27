@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\tests;
 
+use lang\IllegalArgumentException;
 use unittest\TestCase;
 use unittest\web\WebTestCase;
 use unittest\PrerequisitesNotMetError;
@@ -318,7 +319,7 @@ class WebTestCaseTest extends TestCase {
     $this->assertForm('/', HttpConstants::GET, $this->fixture->getForm('three'));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function nonExistantField() {
     $this->fixture->respondWith(HttpConstants::STATUS_OK, [], $this->formFixture());
     $this->fixture->beginAt('/');

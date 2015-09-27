@@ -1,5 +1,9 @@
 <?php namespace net\xp_framework\unittest\tests;
 
+use lang\IllegalArgumentException;
+use lang\Error;
+use lang\MethodNotImplementedException;
+use util\NoSuchElementException;
 use unittest\TestSuite;
 use unittest\actions\RuntimeVersion;
 
@@ -36,32 +40,32 @@ class SuiteTest extends \unittest\TestCase {
     $this->assertEquals(2, $this->suite->numTests());
   }    
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function addNonTest() {
     $this->suite->addTest(new \lang\Object());
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function addNonTest7() {
     $this->suite->addTest(new \lang\Object());
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function runNonTest() {
     $this->suite->runTest(new \lang\Object());
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function runNonTest7() {
     $this->suite->runTest(new \lang\Object());
   }
 
-  #[@test, @expect('lang.MethodNotImplementedException')]
+  #[@test, @expect(MethodNotImplementedException::class)]
   public function addInvalidTest() {
     $this->suite->addTest(newinstance('unittest.TestCase', ['nonExistant'], '{}'));
   }
 
-  #[@test, @expect('lang.MethodNotImplementedException')]
+  #[@test, @expect(MethodNotImplementedException::class)]
   public function runInvalidTest() {
     $this->suite->runTest(newinstance('unittest.TestCase', ['nonExistant'], '{}'));
   }
@@ -91,7 +95,7 @@ class SuiteTest extends \unittest\TestCase {
     $this->assertEquals($n * 2, $this->suite->numTests());
   }
 
-  #[@test, @expect('util.NoSuchElementException')]
+  #[@test, @expect(NoSuchElementException::class)]
   public function addingEmptyTest() {
     $this->suite->addTestClass(\lang\XPClass::forName('net.xp_framework.unittest.tests.EmptyTestCase'));
   }    
@@ -108,7 +112,7 @@ class SuiteTest extends \unittest\TestCase {
     $this->assertEquals($before, $this->suite->numTests());
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function addingANonTestClass() {
     $this->suite->addTestClass(\lang\XPClass::forName('lang.Object'));
   }    
@@ -259,7 +263,7 @@ class SuiteTest extends \unittest\TestCase {
   public function warningsMakeTestFail() {
     with ($test= new SimpleTestCase('raisesAnError')); {
       $this->assertEquals(
-        ['"Test error" in ::trigger_error() (SimpleTestCase.class.php, line 67, occured once)'],
+        ['"Test error" in ::trigger_error() (SimpleTestCase.class.php, line 69, occured once)'],
         $this->suite->runTest($test)->failed[$test->hashCode()]->reason
       );
     }
@@ -279,7 +283,7 @@ class SuiteTest extends \unittest\TestCase {
   public function expectedExceptionsWithWarningsMakeTestFail() {
     with ($test= new SimpleTestCase('catchExpectedWithWarning')); {
       $this->assertEquals(
-        ['"Test error" in ::trigger_error() (SimpleTestCase.class.php, line 121, occured once)'],
+        ['"Test error" in ::trigger_error() (SimpleTestCase.class.php, line 123, occured once)'],
         $this->suite->runTest($test)->failed[$test->hashCode()]->reason
       );
     }

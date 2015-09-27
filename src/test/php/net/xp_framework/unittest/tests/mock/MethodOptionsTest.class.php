@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\tests\mock;
  
+use lang\IllegalArgumentException;
+use lang\IllegalStateException;
 use unittest\mock\MethodOptions;
 
 /**
@@ -17,12 +19,12 @@ class MethodOptionsTest extends \unittest\TestCase {
     $this->sut= new MethodOptions(new \unittest\mock\Expectation('method'), 'method');
   }
     
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function expectationRequiredOnCreate() {
     new MethodOptions(null, null);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function nameRequiredOnCreate() {
     new MethodOptions(new \unittest\mock\Expectation('method'), null);
   }
@@ -58,7 +60,7 @@ class MethodOptionsTest extends \unittest\TestCase {
     $this->assertEquals($expected, $expectation->getException());
   }
   
-  #[@test, @expect('lang.IllegalStateException')]
+  #[@test, @expect(IllegalStateException::class)]
   public function setPropertyBehavior_throws_an_exception_if_no_setter_or_getter() {
     $expectation= new \unittest\mock\Expectation('blabla');
     $sut= new MethodOptions($expectation, 'blabla');

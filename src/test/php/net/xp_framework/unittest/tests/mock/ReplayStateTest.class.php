@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\tests\mock;
  
+use lang\IllegalArgumentException;
+use lang\Error;
 use unittest\mock\ReplayState;
 use unittest\mock\Expectation;
 use unittest\mock\ExpectationList;
@@ -26,22 +28,22 @@ class ReplayStateTest extends \unittest\TestCase {
     $this->sut= new ReplayState($this->expectationMap, $this->properties);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function expectationMapRequiredOnCreate() {
     new ReplayState(null, null);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
   public function propertiesRequiredOnCreate() {
     new ReplayState(new HashTable(), null);
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function expectationMapRequiredOnCreate7() {
     new ReplayState(null, null);
   }
 
-  #[@test, @expect('lang.Error'), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
   public function propertiesRequiredOnCreate7() {
     new ReplayState(new HashTable(), null);
   }
