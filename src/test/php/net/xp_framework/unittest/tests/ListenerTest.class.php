@@ -19,7 +19,7 @@ class ListenerTest extends TestCase implements \unittest\TestListener {
    * Setup method. Creates a new test suite.
    */
   public function setUp() {
-    $this->invocations= create('new util.collections.HashTable<string, lang.types.ArrayList>()');
+    $this->invocations= [];
     $this->suite= new TestSuite();
     $this->suite->addListener($this);
   }

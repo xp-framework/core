@@ -163,6 +163,37 @@ class Reflect extends \lang\Object {
   }
 
   /**
+   * Handles traits
+   *
+   * @param   lang.XPClass trait
+   */
+  protected static function printTrait(XPClass $trait) {
+    Console::write(implode(' ', Modifiers::namesOf($trait->getModifiers() ^ MODIFIER_ABSTRACT)));
+    Console::write(' trait ', self::displayNameOf($trait));
+
+    // Fields
+    $i && Console::writeLine();
+    $i= 0;
+    foreach ($trait->getFields() as $field) {
+      Console::writeLine('  ', $field);
+      $i++;
+    }
+
+    // Constructor
+    $i && Console::writeLine();
+    $i= 0;
+    if ($trait->hasConstructor()) {
+      Console::writeLine('  ', $trait->getConstructor());
+      $i++;
+    }
+
+    // Methods
+    $i && Console::writeLine();
+    self::printMethods($trait->getMethods());
+    Console::writeLine('}');
+  }
+
+  /**
    * Handles classes
    *
    * @param   lang.XPClass class
@@ -229,6 +260,7 @@ class Reflect extends \lang\Object {
     // Classes
     $order= [
       'interface' => [],
+      'trait'     => [],
       'enum'      => [],
       'class'     => []
     ];
@@ -236,6 +268,9 @@ class Reflect extends \lang\Object {
       $mod= $class->getModifiers();
       if ($class->isInterface()) {
         $type= 'interface';
+        $mod= $mod ^ MODIFIER_ABSTRACT;
+      } else if ($class->isTrait()) {
+        $type= 'trait';
         $mod= $mod ^ MODIFIER_ABSTRACT;
       } else if ($class->isEnum()) {
         $type= 'enum';
@@ -327,6 +362,8 @@ class Reflect extends \lang\Object {
     Console::writeLine('@', $class->getClassLoader());
     if ($class->isInterface()) {
       self::printInterface($class);
+    } else if ($class->isTrait()) {
+      self::printTrait($class);
     } else if ($class->isEnum()) {
       self::printEnum($class);
     } else {
