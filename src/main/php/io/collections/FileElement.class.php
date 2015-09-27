@@ -110,10 +110,32 @@ class FileElement extends \lang\Object implements IOElement {
   /**
    * Gets input stream to read from this element
    *
+   * @deprecated Use in() instead
    * @return  io.streams.InputStream
    * @throws  io.IOException
    */
   public function getInputStream() {
+    return $this->in();
+  }
+
+  /**
+   * Gets output stream to read from this element
+   *
+   * @deprecated Use out() instead
+   * @return  io.streams.OutputStream
+   * @throws  io.IOException
+   */
+  public function getOutputStream() {
+    return $this->out();
+  }
+
+  /**
+   * Gets input stream to read from this element
+   *
+   * @return  io.streams.InputStream
+   * @throws  io.IOException
+   */
+  public function in() {
     return new FileInputStream($this->uri);
   }
 
@@ -123,7 +145,7 @@ class FileElement extends \lang\Object implements IOElement {
    * @return  io.streams.OutputStream
    * @throws  io.IOException
    */
-  public function getOutputStream() {
+  public function out() {
     return new FileOutputStream($this->uri);
   }
 } 

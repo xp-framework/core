@@ -119,10 +119,32 @@ class ArchiveElement extends \lang\Object implements IOElement {
   /**
    * Gets input stream to read from this element
    *
+   * @deprecated Use in() instead
    * @return  io.streams.InputStream
    * @throws  io.IOException
    */
   public function getInputStream() {
+    return $this->in();
+  }
+
+  /**
+   * Gets output stream to read from this element
+   *
+   * @deprecated Use out() instead
+   * @return  io.streams.OutputStream
+   * @throws  io.IOException
+   */
+  public function getOutputStream() {
+    return $this->out();
+  }
+
+  /**
+   * Gets input stream to read from this element
+   *
+   * @return  io.streams.InputStream
+   * @throws  io.IOException
+   */
+  public function in() {
     return new MemoryInputStream($this->archive->extract($this->name));
   }
 
@@ -132,7 +154,7 @@ class ArchiveElement extends \lang\Object implements IOElement {
    * @return  io.streams.OutputStream
    * @throws  io.IOException
    */
-  public function getOutputStream() {
+  public function out() {
     throw new \io\IOException('Cannot write to an archive');
   }
 } 
