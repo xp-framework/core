@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed `xp -r T` for when *T* refers to a trait - @thekid
+
 ## 6.5.3 / 2015-09-27
 
 ### Features
