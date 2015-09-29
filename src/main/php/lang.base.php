@@ -386,7 +386,7 @@ function uses() {
     // Check with class_exists(), because method_exists() triggers autoloading.
     if (class_exists($class, false) && method_exists($class, '__import')) {
       if (null === $scope) {
-        $trace= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+        $trace= debug_backtrace(0, 3);
         $scope= literal($trace[2]['args'][0]);
       }
       $class::__import($scope);
