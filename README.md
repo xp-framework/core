@@ -96,4 +96,4 @@ Hey, you are 13724 days old
 
 Contributing
 ------------
-To contribute, use the GitHub way - fork, hack, and submit a pull request!
+To contribute, use the GitHub way - fork, hack, and submit a pull request! :octocat:
