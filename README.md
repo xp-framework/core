@@ -7,16 +7,11 @@ XP Framework Core
 [![Supports HHVM 3.5+](https://raw.githubusercontent.com/xp-framework/web/master/static/hhvm-3_5plus.png)](http://hhvm.com/)
 [![Latest Stable Version](https://poser.pugx.org/xp-framework/core/version.png)](https://packagist.org/packages/xp-framework/core)
 
-This is the XP Framework's development checkout
+This is the XP Framework's development checkout. 
 
 Installation
 ------------
-Clone this repository, e.g. using Git Read-Only:
-
-```sh
-$ cd /path/to/xp
-$ git clone git://github.com/xp-framework/core.git
-```
+If you just want to use the XP Framework, grab a release using `composer require xp-framework/core`. If you wish to use this development checkout, clone this repository instead.
 
 ### Runners
 The entry point for software written in the XP Framework is not the PHP
