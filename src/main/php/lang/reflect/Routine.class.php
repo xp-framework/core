@@ -128,8 +128,13 @@ class Routine extends \lang\Object {
     if (!($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName()))) return \lang\Type::$VAR;
     if (null === $details[DETAIL_RETURNS]) {
       return \lang\Type::$VAR;
-    } else if ('self' === ($t= ltrim($details[DETAIL_RETURNS], '&'))) {
+    }
+
+    $t= $t= ltrim($details[DETAIL_RETURNS], '&');
+    if ('self' === $t) {
       return new \lang\XPClass($this->_reflect->getDeclaringClass());
+    } else if ('\\' === $t{0}) {
+      return new \lang\XPClass(substr($t, 1));
     } else {
       return \lang\Type::forName($t);
     }

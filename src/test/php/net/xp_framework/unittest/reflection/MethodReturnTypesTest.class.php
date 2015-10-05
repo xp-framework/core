@@ -10,10 +10,14 @@ use unittest\actions\RuntimeVersion;
 
 class MethodReturnTypesTest extends MethodsTest {
 
-
   #[@test]
   public function return_type_defaults_to_var() {
     $this->assertEquals(Type::$VAR, $this->method('public function fixture() { }')->getReturnType());
+  }
+
+  #[@test]
+  public function return_typeName_defaults_to_var() {
+    $this->assertEquals('var', $this->method('public function fixture() { }')->getReturnTypeName());
   }
 
   #[@test]
@@ -27,10 +31,25 @@ class MethodReturnTypesTest extends MethodsTest {
   #  ['/** @return bool */', Primitive::$BOOL],
   #  ['/** @return string[] */', new ArrayType(Primitive::$STRING)],
   #  ['/** @return [:int] */', new MapType(Primitive::$INT)],
-  #  ['/** @return lang.Value */', new XPClass(Value::class)]
+  #  ['/** @return lang.Value */', new XPClass(Value::class)],
+  #  ['/** @return \lang\Value */', new XPClass(Value::class)]
   #])]
   public function return_type_determined_via_apidoc($apidoc, $type) {
     $this->assertEquals($type, $this->method($apidoc.' public function fixture() { }')->getReturnType());
+  }
+
+  #[@test, @values([
+  #  ['/** @return void */', 'void'],
+  #  ['/** @return var */', 'var'],
+  #  ['/** @return bool */', 'bool'],
+  #  ['/** @return string[] */', 'string[]'],
+  #  ['/** @return [:int] */', '[:int]'],
+  #  ['/** @return lang.Value */', 'lang.Value'],
+  #  ['/** @return \lang\Value */', '\lang\Value'],
+  #  ['/** @return self */', 'self']
+  #])]
+  public function return_typeName_determined_via_apidoc($apidoc, $type) {
+    $this->assertEquals($type, $this->method($apidoc.' public function fixture() { }')->getReturnTypeName());
   }
 
   #[@test, @ignore('No reflection support yet'), @action(new RuntimeVersion('>=7.0')), @values([
