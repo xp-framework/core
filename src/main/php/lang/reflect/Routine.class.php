@@ -167,7 +167,13 @@ class Routine extends \lang\Object {
    */
   public function getExceptionTypes() {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
-    return $details ? array_map(['lang\XPClass', 'forName'], $details[DETAIL_THROWS]) : [];
+    if (!$details) return [];
+
+    $thrown= [];
+    foreach ($details[DETAIL_THROWS] as $name) {
+      $thrown[]= '\\' === $name{0} ? new \lang\XPClass(substr($name, 1)) : \lang\XPClass::forName($name);
+    }
+    return $thrown;
   }
   
   /**

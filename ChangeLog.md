@@ -4,7 +4,8 @@ XP Framework Core ChangeLog
 ## ?.?.? / ????-??-??
 
 * Changed reflection to support fully-qualified class names inside api
-  doc tags, e.g. `@param \util\Date $param` and `@return \util\Date`.
+  doc tags, e.g.: `@param \util\Date $param`, `@return \util\Date` and 
+  `@throws \lang\IllegalArgumentException`.
   (@thekid, @mikey179)
 * Changed `ClassLoader::defineType()` to also support native type notation
   with backslashes inside its first argument.

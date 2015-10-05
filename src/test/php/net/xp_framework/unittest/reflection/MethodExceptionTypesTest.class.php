@@ -16,11 +16,14 @@ class MethodExceptionTypesTest extends MethodsTest {
     $this->assertEquals([], $this->method('public function fixture() { }')->getExceptionNames());
   }
 
-  #[@test]
-  public function thrown_exception_via_compact_apidoc() {
+  #[@test, @values([
+  #  ['/** @throws lang.IllegalAccessException */'],
+  #  ['/** @throws \lang\IllegalAccessException */']
+  #])]
+  public function thrown_exception_via_compact_apidoc($apidoc) {
     $this->assertEquals(
       [new XPClass(IllegalAccessException::class)],
-      $this->method('/** @throws lang.IllegalAccessException */ public function fixture() { }')->getExceptionTypes()
+      $this->method($apidoc.' public function fixture() { }')->getExceptionTypes()
     );
   }
 
