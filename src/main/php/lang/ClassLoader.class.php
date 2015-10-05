@@ -341,6 +341,7 @@ final class ClassLoader extends Object implements IClassLoader {
     } else if (false !== ($p= strrpos($spec, '\\'))) {
       $header= 'namespace '.substr($spec, 0, $p).';';
       $name= substr($spec, $p + 1);
+      $spec= strtr($spec, '\\', '.');
     } else {
       $header= '';
       $name= $spec;
@@ -349,9 +350,10 @@ final class ClassLoader extends Object implements IClassLoader {
 
     $dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__));
     $dyn->setClassBytes($spec, sprintf(
-      '%s%s%s %s%s%s {%s%s}',
+      '%s%s%s %s %s%s%s {%s%s}',
       $header,
       $typeAnnotations,
+      isset($declaration['modifiers']) ? $declaration['modifiers'] : '',
       $declaration['kind'],
       $name,
       $declaration['extends'] ? ' extends '.implode(', ', array_map('self::classLiteral', $declaration['extends'])) : '',
