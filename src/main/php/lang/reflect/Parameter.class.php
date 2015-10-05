@@ -59,8 +59,12 @@ class Parameter extends \lang\Object {
     ) {   // Unknown or unparseable, return ANYTYPE
       return \lang\Type::$VAR;
     }
-    if ('self' === ($t= ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&'))) {
+
+    $t= ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&');
+    if ('self' === $t) {
       return new \lang\XPClass($this->_details[0]);
+    } else if ('\\' === $t{0}) {
+      return new \lang\XPClass(substr($t, 1));
     } else {
       return \lang\Type::forName($t);
     }

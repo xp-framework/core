@@ -31,7 +31,8 @@ class MethodParametersTest extends MethodsTest {
   #  ['/** @param bool */', Primitive::$BOOL],
   #  ['/** @param string[] */', new ArrayType(Primitive::$STRING)],
   #  ['/** @param [:int] */', new MapType(Primitive::$INT)],
-  #  ['/** @param lang.Value */', new XPClass(Value::class)]
+  #  ['/** @param lang.Value */', new XPClass(Value::class)],
+  #  ['/** @param \lang\Value */', new XPClass(Value::class)]
   #])]
   public function parameter_type_determined_via_apidoc($apidoc, $type) {
     $this->assertEquals($type, $this->method($apidoc.' public function fixture($param) { }')->getParameter(0)->getType());
@@ -42,7 +43,8 @@ class MethodParametersTest extends MethodsTest {
   #  ['/** @param bool */', 'bool'],
   #  ['/** @param string[] */', 'string[]'],
   #  ['/** @param [:int] */', '[:int]'],
-  #  ['/** @param lang.Value */', 'lang.Value']
+  #  ['/** @param lang.Value */', 'lang.Value'],
+  #  ['/** @param \lang\Value */', '\lang\Value']
   #])]
   public function parameter_typeName_determined_via_apidoc($apidoc, $type) {
     $this->assertEquals($type, $this->method($apidoc.' public function fixture($param) { }')->getParameter(0)->getTypeName());
@@ -213,6 +215,7 @@ class MethodParametersTest extends MethodsTest {
   #[@test, @values([
   #  ['/** @param string */ function fixture($a)', 'lang.reflect.Parameter<lang.Primitive<string> a>'],
   #  ['/** @param lang.Value */ function fixture($a)', 'lang.reflect.Parameter<lang.XPClass<lang.Value> a>'],
+  #  ['/** @param \lang\Value */ function fixture($a)', 'lang.reflect.Parameter<lang.XPClass<lang.Value> a>'],
   #  ['function fixture(\lang\Value $a)', 'lang.reflect.Parameter<lang.XPClass<lang.Value> a>'],
   #  ['/** @param var[] */ function fixture($a)', 'lang.reflect.Parameter<lang.ArrayType<var[]> a>'],
   #  ['/** @param function(string): int */ function fixture($a)', 'lang.reflect.Parameter<lang.FunctionType<(function(string): int)> a>'],

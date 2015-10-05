@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Changed reflection to support `@param \util\Date $param`
+  (@thekid, @mikey179)
 * Changed `ClassLoader::defineType()` to also support native type notation
   with backslashes inside its first argument.
   (@thekid, @mikey179)

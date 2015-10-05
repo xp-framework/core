@@ -73,5 +73,4 @@ class MethodInvocationTest extends MethodsTest {
     $fixture= $this->type($declaration);
     $this->assertEquals('Test', $fixture->getMethod('fixture')->setAccessible(true)->invoke($fixture->newInstance(), []));
   }
-
 }
