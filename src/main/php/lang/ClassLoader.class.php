@@ -338,6 +338,9 @@ final class ClassLoader extends Object implements IClassLoader {
     if (false !== ($p= strrpos($spec, '.'))) {
       $header= 'namespace '.strtr(substr($spec, 0, $p), '.', '\\').';';
       $name= substr($spec, $p + 1);
+    } else if (false !== ($p= strrpos($spec, '\\'))) {
+      $header= 'namespace '.substr($spec, 0, $p).';';
+      $name= substr($spec, $p + 1);
     } else {
       $header= '';
       $name= $spec;

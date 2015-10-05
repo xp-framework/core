@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Changed `ClassLoader::defineType()` to also support native type notation
+  with backslashes inside its first argument.
+  (@thekid, @mikey179)
+
 ## 6.5.4 / 2015-09-27
 
 ### Features

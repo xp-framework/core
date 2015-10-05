@@ -75,15 +75,14 @@ abstract class RuntimeTypeDefinitionTest extends \unittest\TestCase {
     $this->assertEquals('/rest', $this->define(['annotations' => '#[@webservice(path= "/rest")]'])->getAnnotation('webservice', 'path'));
   }
 
-  #[@test]
-  public function type_with_package_is_declared_inside_namespace() {
-    $n= $this->getClass()->getSimpleName().'N';
-    $this->assertEquals('com\\example\\test\\'.$n, $this->define(['name' => 'com.example.test.'.$n])->literal());
+  #[@test, @values(['com.example.test.RTTDDotted', 'com\\example\\test\\RTTDNative'])]
+  public function type_with_package_is_declared_inside_namespace($name) {
+    $this->assertEquals('com\\example\\test\\', substr($this->define(['name' => $name])->literal(), 0, 17));
   }
 
   #[@test]
   public function type_without_package_is_declared_globally() {
-    $n= $this->getClass()->getSimpleName().'G';
-    $this->assertEquals($n, $this->define(['name' => $n])->literal());
+    $name= 'RTTDGlobal';
+    $this->assertEquals($name, $this->define(['name' => $name])->literal());
   }
 }
