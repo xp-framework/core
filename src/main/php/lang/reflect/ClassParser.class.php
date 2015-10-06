@@ -411,11 +411,17 @@ class ClassParser extends \lang\Object {
             $annotations= $this->parseAnnotations($parsed, $context, $imports, isset($tokens[$i][2]) ? $tokens[$i][2] : -1);
             $parsed= '';
           }
-          $name= substr($tokens[$i][1], 1);
-          $details[0][$name]= [
-            DETAIL_ANNOTATIONS => $annotations[0]
-          ];
+          $f= substr($tokens[$i][1], 1);
+          $details[0][$f]= [DETAIL_ANNOTATIONS => $annotations[0]];
           $annotations= [0 => [], 1 => []];
+          $matches= null;
+          preg_match_all('/@([a-z]+)\s*([^\r\n]+)?/', $comment, $matches, PREG_SET_ORDER);
+          $comment= null;
+          foreach ($matches as $match) {
+            if ('var' === $match[1] || 'type' === $match[1]) {
+              $details[0][$f][DETAIL_RETURNS]= self::typeIn($match[2], $imports);
+            }
+          }
           break;
 
         case T_FUNCTION:

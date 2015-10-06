@@ -44,17 +44,21 @@ class Field extends \lang\Object {
    * @return  lang.Type
    */
   public function getType() {
-    $raw= $this->_reflect->getDocComment();
-    if (false === $raw) {
-      if ($details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName())) {
-        if (isset($details[DETAIL_ANNOTATIONS]['type'])) return \lang\Type::forName($details[DETAIL_ANNOTATIONS]['type']);
+    if ($details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName())) {
+      if (isset($details[DETAIL_RETURNS])) {
+        $type= $details[DETAIL_RETURNS];
+      } else if (isset($details[DETAIL_ANNOTATIONS]['type'])) {
+        $type= $details[DETAIL_ANNOTATIONS]['type'];
+      } else {
+        return \lang\Type::$VAR;
       }
-    } else {
-      if (preg_match('/@(var|type)\s*([^\r\n]+)/', $raw, $matches)) {
-        return \lang\Type::forName(ClassParser::typeIn($matches[2], []));
+
+      if ('self' === $type) {
+        return new \lang\XPClass($this->_reflect->getDeclaringClass());
+      } else {
+        return \lang\Type::forName($type);
       }
     }
-
     return \lang\Type::$VAR;
   }
 
@@ -64,17 +68,13 @@ class Field extends \lang\Object {
    * @return  string
    */
   public function getTypeName() {
-    $raw= $this->_reflect->getDocComment();
-    if (false === $raw) {
-      if ($details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName())) {
-        if (isset($details[DETAIL_ANNOTATIONS]['type'])) return $details[DETAIL_ANNOTATIONS]['type'];
-      }
-    } else {
-      if (preg_match('/@(var|type)\s*([^\r\n]+)/', $raw, $matches)) {
-        return ClassParser::typeIn($matches[2], []);
+    if ($details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName())) {
+      if (isset($details[DETAIL_RETURNS])) {
+        return $details[DETAIL_RETURNS];
+      } else if (isset($details[DETAIL_ANNOTATIONS]['type'])) {
+        return $details[DETAIL_ANNOTATIONS]['type'];
       }
     }
-
     return 'var';
   }
 
