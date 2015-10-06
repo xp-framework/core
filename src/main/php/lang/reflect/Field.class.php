@@ -51,7 +51,7 @@ class Field extends \lang\Object {
       }
     } else {
       if (preg_match('/@(var|type)\s*([^\r\n]+)/', $raw, $matches)) {
-        return \lang\Type::forName(ClassParser::typeIn($matches[2]));
+        return \lang\Type::forName(ClassParser::typeIn($matches[2], []));
       }
     }
 
@@ -71,7 +71,7 @@ class Field extends \lang\Object {
       }
     } else {
       if (preg_match('/@(var|type)\s*([^\r\n]+)/', $raw, $matches)) {
-        return ClassParser::typeIn($matches[2]);
+        return ClassParser::typeIn($matches[2], []);
       }
     }
 

@@ -348,6 +348,12 @@ final class ClassLoader extends Object implements IClassLoader {
       \xp::$cn[$name]= $name;
     }
 
+    if (isset($declaration['imports'])) {
+      foreach ($declaration['imports'] as $class => $alias) {
+        $header.= 'use '.substr(self::classLiteral($class), 1).($alias ? ' as '.$alias : '').';';
+      }
+    }
+
     $dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__));
     $dyn->setClassBytes($spec, sprintf(
       '%s%s%s %s %s%s%s {%s%s}',

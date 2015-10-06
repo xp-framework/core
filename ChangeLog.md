@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Made reflection resolve unqualified classes inside api doc via imports
+  (@thekid)
 * Changed reflection to support fully-qualified class names inside api
   doc tags, e.g.: `@param \util\Date $param`, `@return \util\Date` and 
   `@throws \lang\IllegalArgumentException`.

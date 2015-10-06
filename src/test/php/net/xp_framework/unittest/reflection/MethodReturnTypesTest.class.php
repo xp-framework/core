@@ -32,6 +32,7 @@ class MethodReturnTypesTest extends MethodsTest {
   #  ['/** @return string[] */', new ArrayType(Primitive::$STRING)],
   #  ['/** @return [:int] */', new MapType(Primitive::$INT)],
   #  ['/** @return lang.Value */', new XPClass(Value::class)],
+  #  ['/** @return Value */', new XPClass(Value::class)],
   #  ['/** @return \lang\Value */', new XPClass(Value::class)]
   #])]
   public function return_type_determined_via_apidoc($apidoc, $type) {
@@ -45,7 +46,8 @@ class MethodReturnTypesTest extends MethodsTest {
   #  ['/** @return string[] */', 'string[]'],
   #  ['/** @return [:int] */', '[:int]'],
   #  ['/** @return lang.Value */', 'lang.Value'],
-  #  ['/** @return \lang\Value */', '\lang\Value'],
+  #  ['/** @return Value */', 'lang.Value'],
+  #  ['/** @return \lang\Value */', 'lang.Value'],
   #  ['/** @return self */', 'self']
   #])]
   public function return_typeName_determined_via_apidoc($apidoc, $type) {
@@ -55,7 +57,8 @@ class MethodReturnTypesTest extends MethodsTest {
   #[@test, @ignore('No reflection support yet'), @action(new RuntimeVersion('>=7.0')), @values([
   #  ['string', Primitive::$STRING],
   #  ['array', Type::$ARRAY],
-  #  ['\lang\Value', new XPClass(Value::class)]
+  #  ['\lang\Value', new XPClass(Value::class)],
+  #  ['Value', new XPClass(Value::class)]
   #])]
   public function return_type_determined_via_syntax($literal, $type) {
     $this->assertEquals($type, $this->method('public function fixture(): '.$literal.' { }')->getReturnType());

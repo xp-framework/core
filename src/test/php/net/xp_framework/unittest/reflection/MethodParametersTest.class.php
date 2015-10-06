@@ -32,6 +32,7 @@ class MethodParametersTest extends MethodsTest {
   #  ['/** @param string[] */', new ArrayType(Primitive::$STRING)],
   #  ['/** @param [:int] */', new MapType(Primitive::$INT)],
   #  ['/** @param lang.Value */', new XPClass(Value::class)],
+  #  ['/** @param Value */', new XPClass(Value::class)],
   #  ['/** @param \lang\Value */', new XPClass(Value::class)]
   #])]
   public function parameter_type_determined_via_apidoc($apidoc, $type) {
@@ -44,7 +45,8 @@ class MethodParametersTest extends MethodsTest {
   #  ['/** @param string[] */', 'string[]'],
   #  ['/** @param [:int] */', '[:int]'],
   #  ['/** @param lang.Value */', 'lang.Value'],
-  #  ['/** @param \lang\Value */', '\lang\Value']
+  #  ['/** @param Value */', 'lang.Value'],
+  #  ['/** @param \lang\Value */', 'lang.Value']
   #])]
   public function parameter_typeName_determined_via_apidoc($apidoc, $type) {
     $this->assertEquals($type, $this->method($apidoc.' public function fixture($param) { }')->getParameter(0)->getTypeName());
@@ -52,7 +54,8 @@ class MethodParametersTest extends MethodsTest {
 
   #[@test, @values([
   #  ['\lang\Value', new XPClass(Value::class)],
-  #  ['\lang\Object', new XPClass(Object::class)]
+  #  ['\lang\Object', new XPClass(Object::class)],
+  #  ['Value', new XPClass(Value::class)]
   #])]
   public function parameter_type_determined_via_syntax($literal, $type) {
     $this->assertEquals($type, $this->method('public function fixture('.$literal.' $param) { }')->getParameter(0)->getType());

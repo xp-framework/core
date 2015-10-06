@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\Object;
+use lang\Value;
 use lang\ClassLoader;
 
 abstract class MethodsTest extends \unittest\TestCase {
@@ -20,7 +21,8 @@ abstract class MethodsTest extends \unittest\TestCase {
         'kind'       => 'class',
         'extends'    => [Object::class],
         'implements' => [],
-        'use'        => []
+        'use'        => [],
+        'imports'    => [Value::class => null]
       ];
       self::$fixtures[$decl]= ClassLoader::defineType(self::class.sizeof(self::$fixtures), $definition, $decl);
     }

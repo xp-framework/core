@@ -319,24 +319,33 @@ class ClassParser extends \lang\Object {
    * Extracts type from a text
    *
    * @param  string $text
+   * @param  [:string] $imports
    * @return string
    */
-  public static function typeIn($text) {
+  public static function typeIn($text, $imports) {
     if (0 === strncmp($text, 'function(', 9)) {
       $p= self::matching($text, '(', ')');
       $p+= strspn($text, ': ', $p);
-      return substr($text, 0, $p).self::typeIn(substr($text, $p));
+      return substr($text, 0, $p).self::typeIn(substr($text, $p), $imports);
     } else if (0 === strncmp($text, '(function(', 10)) {
       $p= self::matching($text, '(', ')');
-      return substr($text, 0, $p).self::typeIn(substr($text, $p));
+      return substr($text, 0, $p).self::typeIn(substr($text, $p), $imports);
     } else if ('[' === $text{0}) {
       $p= self::matching($text, '[', ']');
       return substr($text, 0, $p);
     } else if (strstr($text, '<')) {
       $p= self::matching($text, '<', '>');
-      return substr($text, 0, $p);
+      $type= substr($text, 0, $p);
     } else {
-      return substr($text, 0, strcspn($text, ' '));
+      $type= substr($text, 0, strcspn($text, ' '));
+    }
+
+    if ('\\' === $type{0}) {
+      return strtr(substr($type, 1), '\\', '.');
+    } else if (isset($imports[$type])) {
+      return $imports[$type];
+    } else {
+      return $type;
     }
   }
 
@@ -436,15 +445,15 @@ class ClassParser extends \lang\Object {
           foreach ($matches as $match) {
             switch ($match[1]) {
               case 'param':
-                $details[1][$m][DETAIL_ARGUMENTS][$arg++]= self::typeIn($match[2]);
+                $details[1][$m][DETAIL_ARGUMENTS][$arg++]= self::typeIn($match[2], $imports);
                 break;
 
               case 'return':
-                $details[1][$m][DETAIL_RETURNS]= self::typeIn($match[2]);
+                $details[1][$m][DETAIL_RETURNS]= self::typeIn($match[2], $imports);
                 break;
 
               case 'throws': 
-                $details[1][$m][DETAIL_THROWS][]= self::typeIn($match[2]);
+                $details[1][$m][DETAIL_THROWS][]= self::typeIn($match[2], $imports);
                 break;
             }
           }

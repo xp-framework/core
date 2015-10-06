@@ -133,8 +133,6 @@ class Routine extends \lang\Object {
     $t= $t= ltrim($details[DETAIL_RETURNS], '&');
     if ('self' === $t) {
       return new \lang\XPClass($this->_reflect->getDeclaringClass());
-    } else if ('\\' === $t{0}) {
-      return new \lang\XPClass(substr($t, 1));
     } else {
       return \lang\Type::forName($t);
     }
