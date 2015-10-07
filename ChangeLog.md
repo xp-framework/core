@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.5.5 / 2015-10-07
+
+### Features
+
 * Made reflection resolve unqualified classes inside api doc via imports
   (@thekid)
 * Changed reflection to support fully-qualified class names inside api
