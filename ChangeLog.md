@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.3.4 / ????-??-??
+
+* Cherry picked: Fix "Interface `io\streams\SocketOutputStream` not found"
+  (@kiesel, originally from @friebe)
+
+
 ## 6.3.0 / 2015-06-02
 
 ### Heads up!
