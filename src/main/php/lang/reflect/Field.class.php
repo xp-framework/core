@@ -44,7 +44,7 @@ class Field extends \lang\Object {
    * @return  lang.Type
    */
   public function getType() {
-    if ($details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName())) {
+    if ($details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName())) {
       if (isset($details[DETAIL_RETURNS])) {
         $type= $details[DETAIL_RETURNS];
       } else if (isset($details[DETAIL_ANNOTATIONS]['type'])) {
@@ -68,7 +68,7 @@ class Field extends \lang\Object {
    * @return  string
    */
   public function getTypeName() {
-    if ($details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName())) {
+    if ($details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName())) {
       if (isset($details[DETAIL_RETURNS])) {
         return $details[DETAIL_RETURNS];
       } else if (isset($details[DETAIL_ANNOTATIONS]['type'])) {
@@ -86,7 +86,7 @@ class Field extends \lang\Object {
    * @return  bool
    */
   public function hasAnnotation($name, $key= null) {
-    $details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
+    $details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
 
     return $details && ($key 
       ? array_key_exists($key, (array)@$details[DETAIL_ANNOTATIONS][$name]) 
@@ -103,7 +103,7 @@ class Field extends \lang\Object {
    * @throws  lang.ElementNotFoundException
    */
   public function getAnnotation($name, $key= null) {
-    $details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
+    $details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
 
     if (!$details || !($key 
       ? array_key_exists($key, @$details[DETAIL_ANNOTATIONS][$name]) 
@@ -124,7 +124,7 @@ class Field extends \lang\Object {
    * @return  bool
    */
   public function hasAnnotations() {
-    $details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
+    $details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     return $details ? !empty($details[DETAIL_ANNOTATIONS]) : false;
   }
 
@@ -134,7 +134,7 @@ class Field extends \lang\Object {
    * @return  array annotations
    */
   public function getAnnotations() {
-    $details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
+    $details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     return $details ? $details[DETAIL_ANNOTATIONS] : [];
   }
 
