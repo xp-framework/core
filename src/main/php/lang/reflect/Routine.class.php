@@ -130,11 +130,11 @@ class Routine extends \lang\Object {
       return \lang\Type::$VAR;
     }
 
-    $t= $t= ltrim($details[DETAIL_RETURNS], '&');
-    if ('self' === $t) {
+    $type= ltrim($details[DETAIL_RETURNS], '&');
+    if ('self' === $type) {
       return new \lang\XPClass($this->_reflect->getDeclaringClass());
     } else {
-      return \lang\Type::forName($t);
+      return \lang\Type::forName($type);
     }
   }
 
