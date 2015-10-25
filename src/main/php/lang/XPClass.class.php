@@ -705,12 +705,12 @@ class XPClass extends Type {
    * Retrieve details for a specified class and method. Note: Results 
    * from this method are cached!
    *
-   * @param   string class unqualified class name
-   * @param   string method
+   * @param   php.ReflectionClass $class
+   * @param   string $method
    * @return  array or NULL if not available
    */
   public static function detailsForMethod($class, $method) {
-    $details= self::detailsForClass(self::nameOf($class));
+    $details= self::detailsForClass(self::nameOf($class->getName()));
     return $details ? (isset($details[1][$method]) ? $details[1][$method] : null) : null;
   }
 

@@ -125,16 +125,16 @@ class Routine extends \lang\Object {
    * @return  lang.Type
    */
   public function getReturnType() {
-    if (!($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName()))) return \lang\Type::$VAR;
+    if (!($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))) return \lang\Type::$VAR;
     if (null === $details[DETAIL_RETURNS]) {
       return \lang\Type::$VAR;
     }
 
-    $type= ltrim($details[DETAIL_RETURNS], '&');
-    if ('self' === $type) {
+    $t= $t= ltrim($details[DETAIL_RETURNS], '&');
+    if ('self' === $t) {
       return new \lang\XPClass($this->_reflect->getDeclaringClass());
     } else {
-      return \lang\Type::forName($type);
+      return \lang\Type::forName($t);
     }
   }
 
@@ -144,7 +144,7 @@ class Routine extends \lang\Object {
    * @return  string
    */
   public function getReturnTypeName() {
-    if (!($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName()))) return 'var';
+    if (!($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))) return 'var';
     return null === $details[DETAIL_RETURNS] ? 'var' : ltrim($details[DETAIL_RETURNS], '&');
   }
 
@@ -154,7 +154,7 @@ class Routine extends \lang\Object {
    * @return  string[]
    */
   public function getExceptionNames() {
-    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
+    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     return $details ? $details[DETAIL_THROWS] : [];
   }
 
@@ -164,7 +164,7 @@ class Routine extends \lang\Object {
    * @return  lang.XPClass[]
    */
   public function getExceptionTypes() {
-    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
+    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     if (!$details) return [];
 
     $thrown= [];
@@ -191,7 +191,7 @@ class Routine extends \lang\Object {
    * @return  string
    */
   public function getComment() {
-    if (!($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName()))) return null;
+    if (!($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))) return null;
     return $details[DETAIL_COMMENT];
   }
   
@@ -203,7 +203,7 @@ class Routine extends \lang\Object {
    * @return  bool
    */
   public function hasAnnotation($name, $key= null) {
-    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
+    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
 
     return $details && ($key 
       ? array_key_exists($key, (array)@$details[DETAIL_ANNOTATIONS][$name]) 
@@ -220,7 +220,7 @@ class Routine extends \lang\Object {
    * @throws  lang.ElementNotFoundException
    */
   public function getAnnotation($name, $key= null) {
-    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
+    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     if (!$details || !($key 
       ? array_key_exists($key, @$details[DETAIL_ANNOTATIONS][$name]) 
       : array_key_exists($name, @$details[DETAIL_ANNOTATIONS])
@@ -240,7 +240,7 @@ class Routine extends \lang\Object {
    * @return  bool
    */
   public function hasAnnotations() {
-    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
+    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     return $details ? !empty($details[DETAIL_ANNOTATIONS]) : false;
   }
 
@@ -250,7 +250,7 @@ class Routine extends \lang\Object {
    * @return  array annotations
    */
   public function getAnnotations() {
-    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass()->getName(), $this->_reflect->getName());
+    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     return $details ? $details[DETAIL_ANNOTATIONS] : [];
   }
   

@@ -103,7 +103,7 @@ class FunctionType extends Type {
       return $false('Required signature length mismatch, expecting '.sizeof($signature).', have '.$r->getNumberOfParameters());
     }
 
-    $details= $class ? XPClass::detailsForMethod($class->getName(), $r->getName()) : null;
+    $details= $class ? XPClass::detailsForMethod($class, $r->getName()) : null;
     if (isset($details[DETAIL_RETURNS])) {
       $returns= Type::forName($details[DETAIL_RETURNS]);
       if (!$this->returns->equals($returns) && !$this->returns->isAssignableFrom($returns)) {

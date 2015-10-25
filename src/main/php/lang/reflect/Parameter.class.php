@@ -54,7 +54,7 @@ class Parameter extends \lang\Object {
     }
 
     if (
-      !($details= \lang\XPClass::detailsForMethod($this->_details[0], $this->_details[1])) ||  
+      !($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||  
       !isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
     ) {   // Unknown or unparseable, return ANYTYPE
       return \lang\Type::$VAR;
@@ -75,7 +75,7 @@ class Parameter extends \lang\Object {
    */
   public function getTypeName() {
     if (
-      !($details= \lang\XPClass::detailsForMethod($this->_details[0], $this->_details[1])) ||  
+      !($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||  
       !isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
     ) {   // Unknown or unparseable, return ANYTYPE
       return 'var';
@@ -144,7 +144,7 @@ class Parameter extends \lang\Object {
   public function hasAnnotation($name, $key= null) {
     $n= '$'.$this->_reflect->getName();
     if (
-      !($details= \lang\XPClass::detailsForMethod($this->_details[0], $this->_details[1])) ||  
+      !($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||  
       !isset($details[DETAIL_TARGET_ANNO][$n])
     ) {   // Unknown or unparseable
       return false;
@@ -167,7 +167,7 @@ class Parameter extends \lang\Object {
   public function getAnnotation($name, $key= null) {
     $n= '$'.$this->_reflect->getName();
     if (
-      !($details= \lang\XPClass::detailsForMethod($this->_details[0], $this->_details[1])) ||  
+      !($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||  
       !isset($details[DETAIL_TARGET_ANNO][$n]) || !($key 
         ? array_key_exists($key, (array)@$details[DETAIL_TARGET_ANNO][$n][$name]) 
         : array_key_exists($name, (array)@$details[DETAIL_TARGET_ANNO][$n])
@@ -190,7 +190,7 @@ class Parameter extends \lang\Object {
   public function hasAnnotations() {
     $n= '$'.$this->_reflect->getName();
     if (
-      !($details= \lang\XPClass::detailsForMethod($this->_details[0], $this->_details[1])) ||  
+      !($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||  
       !isset($details[DETAIL_TARGET_ANNO][$n])
     ) {   // Unknown or unparseable
       return false;
@@ -206,7 +206,7 @@ class Parameter extends \lang\Object {
   public function getAnnotations() {
     $n= '$'.$this->_reflect->getName();
     if (
-      !($details= \lang\XPClass::detailsForMethod($this->_details[0], $this->_details[1])) ||  
+      !($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||  
       !isset($details[DETAIL_TARGET_ANNO][$n])
     ) {   // Unknown or unparseable
       return [];
