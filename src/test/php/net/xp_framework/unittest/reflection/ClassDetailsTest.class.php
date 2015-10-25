@@ -35,6 +35,15 @@ class ClassDetailsTest extends \unittest\TestCase {
     return $details[1]['test'];
   }
   
+  #[@test, @values(['class', 'interface', 'trait'])]
+  public function parses($kind) {
+    $details= (new ClassParser())->parseDetails('<?php '.$kind.' Test { }');
+    $this->assertEquals(
+      [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => []],
+      $details['class']
+    );
+  }
+
   #[@test]
   public function commentString() {
     $details= $this->parseComment('

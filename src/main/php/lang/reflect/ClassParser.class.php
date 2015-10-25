@@ -390,6 +390,7 @@ class ClassParser extends \lang\Object {
 
         case T_CLASS:
         case T_INTERFACE:
+        case T_TRAIT:
           if ($parsed) {
             $annotations= $this->parseAnnotations($parsed, $context, $imports, isset($tokens[$i][2]) ? $tokens[$i][2] : -1);
             $parsed= '';
