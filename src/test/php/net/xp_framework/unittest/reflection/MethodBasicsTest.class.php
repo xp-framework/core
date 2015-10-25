@@ -128,4 +128,14 @@ class MethodBasicsTest extends MethodsTest {
   public function string_representation($declaration, $expected) {
     $this->assertEquals($expected, $this->method($declaration)->toString());
   }
+
+  #[@test]
+  public function trait_comment() {
+    $this->assertEquals('Compares a given value to this', $this->type()->getMethod('compareTo')->getComment());
+  }
+
+  #[@test]
+  public function trait_return_type() {
+    $this->assertEquals('int', $this->type()->getMethod('compareTo')->getReturnTypeName());
+  }
 }

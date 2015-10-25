@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed XPClass not searching traits for member declarations - @thekid
+
 ## 6.5.5 / 2015-10-07
 
 ### Features

@@ -21,7 +21,7 @@ abstract class FieldsTest extends \unittest\TestCase {
         'kind'       => 'class',
         'extends'    => [Object::class],
         'implements' => [],
-        'use'        => [],
+        'use'        => [CompareTo::class],
         'imports'    => [Value::class => null]
       ];
       self::$fixtures[$decl]= ClassLoader::defineType(self::class.sizeof(self::$fixtures), $definition, $decl);

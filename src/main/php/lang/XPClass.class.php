@@ -705,26 +705,36 @@ class XPClass extends Type {
    * Retrieve details for a specified class and method. Note: Results 
    * from this method are cached!
    *
-   * @param   string class unqualified class name
-   * @param   string method
+   * @param   php.ReflectionClass $class
+   * @param   string $method
    * @return  array or NULL if not available
    */
   public static function detailsForMethod($class, $method) {
-    $details= self::detailsForClass(self::nameOf($class));
-    return $details ? (isset($details[1][$method]) ? $details[1][$method] : null) : null;
+    $details= self::detailsForClass(self::nameOf($class->name));
+    if (isset($details[1][$method])) return $details[1][$method];
+    foreach ($class->getTraitNames() as $trait) {
+      $details= self::detailsForClass(self::nameOf($trait));
+      if (isset($details[1][$method])) return $details[1][$method];
+    }
+    return null;
   }
 
   /**
    * Retrieve details for a specified class and field. Note: Results 
    * from this method are cached!
    *
-   * @param   string class unqualified class name
+   * @param   php.ReflectionClass $class
    * @param   string method
    * @return  array or NULL if not available
    */
   public static function detailsForField($class, $field) {
-    $details= self::detailsForClass(self::nameOf($class));
-    return $details ? (isset($details[0][$field]) ? $details[0][$field] : null) : null;
+    $details= self::detailsForClass(self::nameOf($class->name));
+    if (isset($details[0][$field])) return $details[0][$field];
+    foreach ($class->getTraitNames() as $trait) {
+      $details= self::detailsForClass(self::nameOf($trait));
+      if (isset($details[0][$field])) return $details[0][$field];
+    }
+    return null;
   }
 
   /**
