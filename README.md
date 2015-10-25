@@ -51,7 +51,7 @@ The XP Framework runs classes with a public static `main()` method. To run a cla
 Any argument after the classname will be passed to the class' main method.
 
 ### Hello World
-Save the following sourcecode to a file called  AgeInDays.class.php :
+Save the following sourcecode to a file called AgeInDays.class.php:
 
 ```php
 <?php
