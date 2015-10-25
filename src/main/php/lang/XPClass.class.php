@@ -711,7 +711,12 @@ class XPClass extends Type {
    */
   public static function detailsForMethod($class, $method) {
     $details= self::detailsForClass(self::nameOf($class->name));
-    return $details ? (isset($details[1][$method]) ? $details[1][$method] : null) : null;
+    if (isset($details[1][$method])) return $details[1][$method];
+    foreach ($class->getTraitNames() as $trait) {
+      $details= self::detailsForClass(self::nameOf($trait));
+      if (isset($details[1][$method])) return $details[1][$method];
+    }
+    return null;
   }
 
   /**
@@ -724,7 +729,12 @@ class XPClass extends Type {
    */
   public static function detailsForField($class, $field) {
     $details= self::detailsForClass(self::nameOf($class->name));
-    return $details ? (isset($details[0][$field]) ? $details[0][$field] : null) : null;
+    if (isset($details[0][$field])) return $details[0][$field];
+    foreach ($class->getTraitNames() as $trait) {
+      $details= self::detailsForClass(self::nameOf($trait));
+      if (isset($details[0][$field])) return $details[0][$field];
+    }
+    return null;
   }
 
   /**

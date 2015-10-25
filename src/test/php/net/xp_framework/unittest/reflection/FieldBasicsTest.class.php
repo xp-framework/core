@@ -70,4 +70,9 @@ class FieldBasicsTest extends FieldsTest {
     $fixture= $this->type('{ '.$declaration.' }');
     $this->assertEquals(sprintf($expected, $fixture->getName()), $fixture->getField('fixture')->toString());
   }
+
+  #[@test]
+  public function trait_field_type() {
+    $this->assertEquals('int', $this->type()->getField('NOT_INSTANCE')->getTypeName());
+  }
 }
