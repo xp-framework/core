@@ -2,6 +2,23 @@ XP Framework Core ChangeLog
 ========================================================================
 
 ## ?.?.? / ????-??-??
+* Fixed VERSION-string in `src/main/resources/VERSION`
+  (@kiesel)
+* Cherry picked: Fix syntax errors (in unittest/web/{SelectOption,WebTestCase})
+  (@kiesel, originally from @friebe)
+* Cherry picked: Fix unittest.web.SelectField::setValue() double-encoding UTF8
+  (@kiesel, originally from @friebe)
+* Cherry picked: Only run tests if dependencies are loaded
+  (@kiesel, originally from @friebe)
+* Cherry picked: Fix DOM not being loaded on HHVM
+  (@kiesel, originally from @friebe)
+* Cherry picked: Fix util.log.SyslogAppender problems with multiple instances
+  (@kiesel, originally from @friebe)
+* Cherry picked: Fix uriFor() raising exceptions
+  (@kiesel, originally from @friebe)
+* Cherry picked: Remove uses()-related tests
+  (@kiesel, originally from @friebe)
+
 
 ## 6.3.6 / ????-??-??
 * Cherry picked: Fix "Interface `io\streams\SocketOutputStream` not found"
