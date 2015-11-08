@@ -117,22 +117,7 @@ final class xp {
       return $name;
     }
     
-    xp::error('Cannot bootstrap class '.$class.' (include_path= '.get_include_path().')');
-  }
-  // }}}
-
-  // {{{ proto deprecated string nameOf(string name)
-  //     Returns the fully qualified name
-  static function nameOf($name) {
-    if (isset(xp::$cn[$name])) {
-      return xp::$cn[$name];
-    } else if (strstr($name, '\\')) {
-      return strtr($name, '\\', '.');
-    } else if ($result= array_search($name, \xp::$sn, true)) {
-      return $result;
-    } else {
-      return 'php.'.$name;
-    }
+    throw new \Exception('Cannot bootstrap class '.$class.' (include_path= '.get_include_path().')', 0x3d);
   }
   // }}}
 
