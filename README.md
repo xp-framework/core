@@ -21,7 +21,7 @@ the following one-liner:
 
 ```sh
 $ cd ~/bin
-$ wget 'https://github.com/xp-framework/xp-runners/releases/download/v5.5.0/setup' -O - | php
+$ wget 'https://github.com/xp-framework/xp-runners/releases/download/v5.6.1/setup' -O - | php
 ```
 
 ### Using it
@@ -36,7 +36,7 @@ Finally, start `xp -v` to see it working:
 
 ```sh
 $ xp -v
-XP 6.5.7-dev { PHP 5.6.14 & ZE 2.6.0 } @ Windows NT SLATE 10.0 build 10240 (Windows 10) i586
+XP 6.5.7-dev { PHP 5.6.15 & ZE 2.6.0 } @ Windows NT SLATE 10.0 build 10240 (Windows 10) i586
 Copyright (c) 2001-2015 the XP group
 FileSystemCL<...\xp\core\src\main\php\>
 FileSystemCL<...\xp\core\src\test\php\>
