@@ -12,7 +12,7 @@ class FunctionType extends Type {
   private static $VARIADIC_SUPPORTED;
 
   static function __static() {
-    self::$VARIADIC_SUPPORTED= method_exists(\ReflectionParameter::class, 'isVariadic');
+    self::$VARIADIC_SUPPORTED= method_exists('ReflectionParameter', 'isVariadic');
   }
 
   /**
