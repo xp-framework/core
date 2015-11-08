@@ -102,10 +102,6 @@ class FunctionType extends Type {
    * @return var
    */
   protected function verify($r, $signature, $false, $class= null) {
-    if (null !== $signature && sizeof($signature) < $r->getNumberOfRequiredParameters()) {
-      return $false('Required signature length mismatch, expecting '.sizeof($signature).', have '.$r->getNumberOfParameters());
-    }
-
     $details= $class ? XPClass::detailsForMethod($class, $r->getName()) : null;
     if (isset($details[DETAIL_RETURNS])) {
       $returns= Type::forName($details[DETAIL_RETURNS]);
@@ -116,10 +112,13 @@ class FunctionType extends Type {
 
     if (null === $signature) return true;
     $params= $r->getParameters();
+    $i= -1;
+
+    // Verify signature
     foreach ($signature as $i => $type) {
       if (isset($details[DETAIL_ARGUMENTS][$i])) {
         if (0 === substr_compare($details[DETAIL_ARGUMENTS][$i], '...', -3)) {
-          break;  // No further checks necessary
+          return true;  // No further checks necessary
         }
         $param= Type::forName($details[DETAIL_ARGUMENTS][$i]);
         if (!$type->isAssignableFrom($param)) {
@@ -130,7 +129,7 @@ class FunctionType extends Type {
       } else {
         $param= $params[$i];
         if (self::$VARIADIC_SUPPORTED && $param->isVariadic()) {
-          break;  // No further checks necessary
+          return true;  // No further checks necessary
         } else if ($param->isArray()) {
           if (!$type->equals(Primitive::$ARRAY) && !$type instanceof ArrayType && !$type instanceof MapType) {
             return $false('Parameter #'.($i + 1).' not an array type: '.$type->getName());
@@ -144,6 +143,16 @@ class FunctionType extends Type {
             return $false('Parameter #'.($i + 1).' not a '.$class->getName().': '.$type->getName());
           }
         }
+      }
+    }
+
+    // Check if there are required parameters
+    while (++$i < $r->getNumberOfParameters()) {
+      $param= $params[$i];
+      if ($param->isOptional() || self::$VARIADIC_SUPPORTED && $param->isVariadic()) {
+        return true;  // No further checks necessary
+      } else {
+        return $false('Signature mismatch, additional required parameter $'.$param->getName().' found');
       }
     }
     return true;
