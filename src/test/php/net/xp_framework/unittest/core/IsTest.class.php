@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use util\collections\Vector;
 use lang\Object;
 use lang\Runnable;
 use lang\ClassLoader;
+use net\xp_framework\unittest\core\generics\ListOf;
 
 /**
  * Tests the is() core functionality
@@ -160,88 +160,78 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function aStringVectorIsIsItself() {
-    $this->assertTrue(is('util.collections.Vector<string>', create('new util.collections.Vector<string>')));
+    $this->assertTrue(is('net.xp_framework.unittest.core.generics.ListOf<string>', create('new net.xp_framework.unittest.core.generics.ListOf<string>')));
   }
 
   #[@test]
   public function aVectorIsNotAStringVector() {
-    $this->assertFalse(is('util.collections.Vector<string>', new Vector()));
+    $this->assertFalse(is('net.xp_framework.unittest.core.generics.ListOf<string>', new ListOf()));
   }
 
   #[@test]
   public function aStringVectorIsNotAVector() {
     $this->assertFalse(is(
-      'util.collections.Vector',
-      create('new util.collections.Vector<string>')
+      'net.xp_framework.unittest.core.generics.ListOf',
+      create('new net.xp_framework.unittest.core.generics.ListOf<string>')
     ));
   }
 
   #[@test]
   public function anIntVectorIsNotAStringVector() {
     $this->assertFalse(is(
-      'util.collections.Vector<string>',
-      create('new util.collections.Vector<int>')
+      'net.xp_framework.unittest.core.generics.ListOf<string>',
+      create('new net.xp_framework.unittest.core.generics.ListOf<int>')
     ));
   }
 
   #[@test]
   public function aVectorOfIntVectorsIsItself() {
     $this->assertTrue(is(
-      'util.collections.Vector<util.collections.Vector<int>>',
-      create('new util.collections.Vector<util.collections.Vector<int>>')
+      'net.xp_framework.unittest.core.generics.ListOf<net.xp_framework.unittest.core.generics.ListOf<int>>',
+      create('new net.xp_framework.unittest.core.generics.ListOf<net.xp_framework.unittest.core.generics.ListOf<int>>')
     ));
   }
 
   #[@test]
   public function aVectorOfIntVectorsIsNotAVectorOfStringVectors() {
     $this->assertFalse(is(
-      'util.collections.Vector<Vector<string>>',
-      create('new util.collections.Vector<util.collections.Vector<int>>')
+      'net.xp_framework.unittest.core.generics.ListOf<Vector<string>>',
+      create('new net.xp_framework.unittest.core.generics.ListOf<net.xp_framework.unittest.core.generics.ListOf<int>>')
     ));
   }
  
   #[@test]
   public function anIntVectorIsNotAnUndefinedGeneric() {
-    $this->assertFalse(is('Undefined_Class<string>', create('new util.collections.Vector<int>')));
+    $this->assertFalse(is('Undefined_Class<string>', create('new net.xp_framework.unittest.core.generics.ListOf<int>')));
   }
 
   /** @return var[][] */
-  protected function genericVectors() {
+  private function genericDictionaries() {
     return [
-      [create('new util.collections.Vector<string>')],
-      [create('new util.collections.Vector<lang.Generic>')],
-      [create('new util.collections.Vector<util.collections.Vector<int>>')],
+      [create('new net.xp_framework.unittest.core.generics.Lookup<string, lang.Generic>')],
+      [create('new net.xp_framework.unittest.core.generics.Lookup<lang.Generic, lang.Generic>')],
+      [create('new net.xp_framework.unittest.core.generics.Lookup<net.xp_framework.unittest.core.generics.ListOf<int>, lang.Generic>')],
     ];
   }
 
-  #[@test, @values('genericVectors')]
-  public function wildcard_check_for_single_type_parameter($value) {
-    $this->assertTrue(is('util.collections.Vector<?>', $value));
+  #[@test, @values('genericDictionaries')]
+  public function wildcard_check_for_type_parameters($value) {
+    $this->assertTrue(is('net.xp_framework.unittest.core.generics.Lookup<?, ?>', $value));
   }
 
-  #[@test, @values('genericVectors')]
-  public function wildcard_check_for_single_type_parameter_super_type($value) {
-    $this->assertTrue(is('util.collections.IList<?>', $value));
+  #[@test, @values('genericDictionaries')]
+  public function wildcard_check_for_type_parameter_with_super_type($value) {
+    $this->assertTrue(is('net.xp_framework.unittest.core.generics.IDictionary<?, ?>', $value));
   }
 
   #[@test]
   public function wildcard_check_for_single_type_parameter_generic() {
-    $this->assertTrue(is('util.collections.IList<util.collections.IList<?>>', create('new util.collections.Vector<util.collections.Vector<int>>')));
-  }
-
-  #[@test]
-  public function wildcard_check_for_type_parameters() {
-    $this->assertTrue(is('util.collections.HashTable<?, ?>', create('new util.collections.HashTable<string, lang.Generic>')));
-  }
-
-  #[@test]
-  public function wildcard_check_for_type_parameters_super_type() {
-    $this->assertTrue(is('util.collections.Map<?, ?>', create('new util.collections.HashTable<string, lang.Generic>')));
+    $this->assertTrue(is('net.xp_framework.unittest.core.generics.ListOf<net.xp_framework.unittest.core.generics.ListOf<?>>', create('new net.xp_framework.unittest.core.generics.ListOf<net.xp_framework.unittest.core.generics.ListOf<int>>')));
   }
 
   #[@test]
   public function wildcard_check_for_type_parameters_partial() {
-    $this->assertTrue(is('util.collections.HashTable<string, ?>', create('new util.collections.HashTable<string, lang.Generic>')));
+    $this->assertTrue(is('net.xp_framework.unittest.core.generics.Lookup<string, ?>', create('new net.xp_framework.unittest.core.generics.Lookup<string, lang.Generic>')));
   }
 
   #[@test]

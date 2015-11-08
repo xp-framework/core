@@ -200,9 +200,9 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertTrue($type->isInstance($value));
   }
 
-  #[@test, @values([[['util.collections.Vector<int>', 'new']], ['util.collections.Vector<int>::new']])]
+  #[@test, @values([[['net.xp_framework.unittest.core.generics.Nullable<int>', 'new']], ['net.xp_framework.unittest.core.generics.Nullable<int>::new']])]
   public function array_referencing_generic_constructor_is_instance($value) {
-    $type= new FunctionType([], Type::forName('util.collections.Vector<int>'));
+    $type= new FunctionType([], Type::forName('net.xp_framework.unittest.core.generics.Nullable<int>'));
     $this->assertTrue($type->isInstance($value));
   }
 
@@ -334,10 +334,10 @@ class FunctionTypeTest extends \unittest\TestCase {
     $this->assertEquals($this, $new($this->getName()));
   }
 
-  #[@test, @values([[['util.collections.Vector<int>', 'new']], ['util.collections.Vector<int>::new']])]
+  #[@test, @values([[['net.xp_framework.unittest.core.generics.Nullable<int>', 'new']], ['net.xp_framework.unittest.core.generics.Nullable<int>::new']])]
   public function create_instances_from_array_referencing_generic_constructor($value) {
-    $new= (new FunctionType([Type::$VAR], Type::forName('util.collections.Vector<int>')))->newInstance($value);
-    $this->assertInstanceOf('util.collections.Vector<int>', $new());
+    $new= (new FunctionType([Type::$VAR], Type::forName('net.xp_framework.unittest.core.generics.Nullable<int>')))->newInstance($value);
+    $this->assertInstanceOf('net.xp_framework.unittest.core.generics.Nullable<int>', $new());
   }
 
   #[@test, @expect(IllegalArgumentException::class), @values([[['lang.Generic', 'new']], ['lang.Generic::new']])]
@@ -358,20 +358,20 @@ class FunctionTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function create_instances_from_array_referencing_generic_instance_method() {
-    $vector= create('new util.collections.Vector<int>', [1, 2, 3]);
+    $vector= create('new net.xp_framework.unittest.core.generics.ListOf<int>', 1, 2, 3);
     $value= (new FunctionType([], new ArrayType('int')))->newInstance([$vector, 'elements']);
     $this->assertEquals([1, 2, 3], $value());
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
   public function generic_argument_parameter_types_are_verified_when_creating_instances() {
-    $vector= create('new util.collections.Vector<int>');
+    $vector= create('new net.xp_framework.unittest.core.generics.Nullable<int>');
     (new FunctionType([Primitive::$STRING], Primitive::$INT))->newInstance([$vector, 'add']);
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
   public function generic_argument_return_type_is_verified_when_creating_instances() {
-    $vector= create('new util.collections.Vector<int>');
+    $vector= create('new net.xp_framework.unittest.core.generics.Nullable<int>');
     (new FunctionType([Primitive::$INT], Primitive::$STRING))->newInstance([$vector, 'add']);
   }
 

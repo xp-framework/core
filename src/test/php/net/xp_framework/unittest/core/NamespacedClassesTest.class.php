@@ -77,7 +77,7 @@ class NamespacedClassesTest extends \unittest\TestCase {
 
   #[@test]
   public function generics() {
-    $v= create('new util.collections.Vector<net.xp_framework.unittest.core.NamespacedClass>');
+    $v= create('new net.xp_framework.unittest.core.generics.Nullable<net.xp_framework.unittest.core.NamespacedClass>');
     $this->assertTrue($v->getClass()->isGeneric());
   }
 }
