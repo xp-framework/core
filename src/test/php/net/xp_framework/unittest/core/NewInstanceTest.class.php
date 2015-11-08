@@ -243,7 +243,7 @@ class NewInstanceTest extends \unittest\TestCase {
   public function notPreviouslyDefinedClassIsLoaded() {
     $r= $this->runInNewRuntime('
       if (isset(xp::$cl["lang.Runnable"])) {
-        xp::error("Class lang.Runnable may not have been previously loaded");
+        throw new \lang\IllegalStateException("Class lang.Runnable may not have been previously loaded");
       }
       $r= newinstance("lang.Runnable", [], "{ public function run() { echo \"Hi\"; } }");
       $r->run();
