@@ -231,15 +231,6 @@ final class xp {
   }
   // }}}
 
-  // {{{ proto void error(string message)
-  //     Throws a fatal error and exits with exitcode 61
-  static function error($message) {
-    restore_error_handler();
-    trigger_error($message, E_USER_ERROR);
-    exit(0x3d);
-  }
-  // }}}
-
   // {{{ proto string version()
   //     Retrieves current XP version
   static function version() {
@@ -440,11 +431,7 @@ function newinstance($spec, $args, $def= null) {
     $type= $spec;
     $generic= null;
   } else {
-    try {
-      $type= xp::$loader->loadClass0($spec);
-    } catch (\lang\ClassLoadingException $e) {
-      xp::error($e->getMessage());
-    }
+    $type= xp::$loader->loadClass0($spec);
     $generic= null;
   }
 
@@ -567,7 +554,9 @@ class import {
 // {{{ main
 error_reporting(E_ALL);
 set_error_handler('__error');
-date_default_timezone_set(ini_get('date.timezone')) || xp::error('[xp::core] date.timezone not configured properly.');
+if (!date_default_timezone_set(ini_get('date.timezone'))) {
+  throw new \Exception('[xp::core] date.timezone not configured properly.', 0x3d);
+}
 
 define('MODIFIER_STATIC',       1);
 define('MODIFIER_ABSTRACT',     2);
