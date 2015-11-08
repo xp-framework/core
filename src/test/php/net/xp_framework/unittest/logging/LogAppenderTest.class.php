@@ -14,18 +14,17 @@ use util\collections\Vector;
  */
 class LogAppenderTest extends TestCase {
   protected $fixture= null;
-  protected $events= null;
+  public $events= [];
 
   /**
    * Sets up test case
    */
   public function setUp() {
-    $this->events= create('new util.collections.Vector<string>()');
-    $appender= newinstance(Appender::class, [$this->events], [
-      'events' => null,
-      '__construct' => function($events) { $this->events= $events; },
+    $appender= newinstance(Appender::class, [$this], [
+      'test' => null,
+      '__construct' => function($test) { $this->test= $test; },
       'append' => function(LoggingEvent $event) {
-        $this->events[]= $this->layout->format($event);
+        $this->test->events[]= $this->layout->format($event);
       }
     ]);
     $this->fixture= (new LogCategory('default'))
