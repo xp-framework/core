@@ -3,27 +3,67 @@
 use unittest\actions\RuntimeVersion;
 use lang\FunctionType;
 use lang\Type;
+use lang\ClassLoader;
 
-#[@action(new RuntimeVersion('>=5.6.0'))]
 class FunctionTypeVarArgsTest extends \unittest\TestCase {
   private static $compiled= [];
 
   /**
-   * Returns a varargs function with a given signature. Uses caching.
+   * Returns a varargs method with a given signature. Uses caching.
    *
    * @param  string $signature
-   * @return php.Closure
+   * @return string[] A reference to the method
    */
-  private function varargs($signature) {
-    if (!isset(self::$compiled[$signature])) {
-      self::$compiled[$signature]= eval('return function('.$signature.') { };');
+  private function compile($signature, $apidoc= []) {
+    $class= nameof($this).md5($signature);
+    if (!isset(self::$compiled[$class])) {
+      self::$compiled[$class]= ClassLoader::defineClass($class, 'lang.Object', [], '{
+        /**
+         '.implode("\n* ", $apidoc).'
+         */
+        public static function fixture('.$signature.') { }
+      }');
     }
-    return self::$compiled[$signature];
+    return [$class, 'fixture'];
   }
 
-  #[@test]
-  public function isInstance() {
-    $type= new FunctionType([], Type::$VAR);
-    $this->assertTrue($type->isInstance($this->varargs('... $args')));
+  #[@test, @action(new RuntimeVersion('>=5.6.0')), @values([
+  #  [new FunctionType(null, Type::$VAR)],
+  #  [new FunctionType([], Type::$VAR)],
+  #  [new FunctionType([Type::$VAR], Type::$VAR)],
+  #  [new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR)]
+  #])]
+  public function single_vararg_parameter_via_syntax($type) {
+    $this->assertTrue($type->isInstance($this->compile('... $args')));
+  }
+
+  #[@test, @values([
+  #  [new FunctionType(null, Type::$VAR)],
+  #  [new FunctionType([], Type::$VAR)],
+  #  [new FunctionType([Type::$VAR], Type::$VAR)],
+  #  [new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR)]
+  #])]
+  public function single_vararg_parameter_via_apidoc($type) {
+    $this->assertTrue($type->isInstance($this->compile('', ['@param  var... $args]'])));
+  }
+
+  #[@test, @action(new RuntimeVersion('>=5.6.0')), @values([
+  #  [new FunctionType(null, Type::$VAR)],
+  #  [new FunctionType([Type::$ARRAY], Type::$VAR)],
+  #  [new FunctionType([Type::$ARRAY, Type::$VAR], Type::$VAR)],
+  #  [new FunctionType([Type::$ARRAY, Type::$VAR, Type::$VAR], Type::$VAR)]
+  #])]
+  public function array_parameter_followed_by_vararg_parameter_via_syntax($type) {
+    $this->assertTrue($type->isInstance($this->compile('array $tokens, ... $args')));
+  }
+
+  #[@test, @values([
+  #  [new FunctionType(null, Type::$VAR)],
+  #  [new FunctionType([Type::$ARRAY], Type::$VAR)],
+  #  [new FunctionType([Type::$ARRAY, Type::$VAR], Type::$VAR)],
+  #  [new FunctionType([Type::$ARRAY, Type::$VAR, Type::$VAR], Type::$VAR)]
+  #])]
+  public function array_parameter_followed_by_vararg_parameter_via_apidoc($type) {
+    $this->assertTrue($type->isInstance($this->compile('array $tokens', ['@param  var[] $tokens', '@param var... $args'])));
   }
 }

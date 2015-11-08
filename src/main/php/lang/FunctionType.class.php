@@ -9,8 +9,11 @@
 class FunctionType extends Type {
   protected $signature;
   protected $returns;
+  private static $VARIADIC_SUPPORTED;
 
-  static function __static() { }
+  static function __static() {
+    self::$VARIADIC_SUPPORTED= method_exists(\ReflectionParameter::class, 'isVariadic');
+  }
 
   /**
    * Creates a new array type instance
@@ -114,15 +117,21 @@ class FunctionType extends Type {
     if (null === $signature) return true;
     $params= $r->getParameters();
     foreach ($signature as $i => $type) {
-      if (!isset($params[$i])) return $false('No parameter #'.($i + 1));
       if (isset($details[DETAIL_ARGUMENTS][$i])) {
+        if (0 === substr_compare($details[DETAIL_ARGUMENTS][$i], '...', -3)) {
+          break;  // No further checks necessary
+        }
         $param= Type::forName($details[DETAIL_ARGUMENTS][$i]);
         if (!$type->isAssignableFrom($param)) {
           return $false('Parameter #'.($i + 1).' not a '.$param->getName().' type: '.$type->getName());
         }
+      } else if (!isset($params[$i])) {
+        return $false('No parameter #'.($i + 1));
       } else {
         $param= $params[$i];
-        if ($param->isArray()) {
+        if (self::$VARIADIC_SUPPORTED && $param->isVariadic()) {
+          break;  // No further checks necessary
+        } else if ($param->isArray()) {
           if (!$type->equals(Primitive::$ARRAY) && !$type instanceof ArrayType && !$type instanceof MapType) {
             return $false('Parameter #'.($i + 1).' not an array type: '.$type->getName());
           }

@@ -12,6 +12,10 @@ XP Framework Core ChangeLog
   . Removed deprecated `this()` - replaced by syntactic support
   (@thekid)
 
+### Bugfixes
+
+* Fixed FunctionType not handling varargs correctly - @thekid
+
 ## 6.5.6 / 2015-10-25
 
 ### Bugfixes
