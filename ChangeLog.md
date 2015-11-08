@@ -8,7 +8,8 @@ XP Framework Core ChangeLog
 * Implemented next part of xp-framework/rfc#298:
   . Removed deprecated `xp::null()`
   . Removed deprecated `xp::nameOf()`
-  * Removed deprecated `xp::error()` and replace by exceptions
+  . Removed deprecated `xp::error()` and replace by exceptions
+  . Removed deprecated `this()` - replaced by syntactic support
   (@thekid)
 
 ## 6.5.6 / 2015-10-25

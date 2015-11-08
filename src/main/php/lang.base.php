@@ -394,13 +394,6 @@ function with() {
 }
 // }}}
 
-// {{{ proto deprecated var this(var expr, var offset)
-//     Indexer access for a given expression
-function this($expr, $offset) {
-  return $expr[$offset];
-}
-// }}}
-
 // {{{ proto lang.Object newinstance(string spec, var[] args, var def)
 //     Anonymous instance creation
 function newinstance($spec, $args, $def= null) {
