@@ -34,12 +34,6 @@ class StringOfTest extends \unittest\TestCase {
     $this->assertEquals($expected, \xp::stringOf($value));
   }
 
-  /** @deprecated */
-  #[@test]
-  public function xpnull_representation() {
-    $this->assertEquals('<null>', \xp::stringOf(\xp::null()));
-  }
-
   #[@test]
   public function testString_representation() {
     $this->assertEquals('TestString(6) { String }', \xp::stringOf($this->testStringInstance()));

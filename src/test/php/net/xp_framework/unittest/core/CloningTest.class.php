@@ -6,12 +6,6 @@ use lang\CloneNotSupportedException;
 
 class CloningTest extends \unittest\TestCase {
 
-  /** @deprecated */
-  #[@test, @expect(NullPointerException::class)]
-  public function cloningOfNulls() {
-    clone(\xp::null());
-  }
-
   #[@test]
   public function cloneOfObject() {
     $original= new Object();

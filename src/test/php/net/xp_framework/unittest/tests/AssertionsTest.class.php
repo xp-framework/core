@@ -175,12 +175,6 @@ class AssertionsTest extends \unittest\TestCase {
     $this->assertInstanceOf('lang.Generic', null);
   }    
 
-  /** @deprecated */
-  #[@test, @expect(AssertionFailedError::class)]
-  public function xpNullIsNotAnInstanceOfGeneric() {
-    $this->assertInstanceOf('lang.Generic', \xp::null());
-  }    
-
   #[@test, @expect(AssertionFailedError::class)]
   public function thisIsNotAnInstanceOfString() {
     $this->assertInstanceOf('lang.types.Integer', $this);

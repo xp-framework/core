@@ -12,17 +12,6 @@ use lang\ClassLoader;
  */
 class IsTest extends \unittest\TestCase {
 
-  /** @deprecated */
-  #[@test]
-  public function xpnullIsnull() {
-    $this->assertTrue(is(null, \xp::null()));
-  }
-
-  #[@test]
-  public function intIsNotIsnull() {
-    $this->assertFalse(is(null, 1));
-  }
-
   #[@test]
   public function string_array() {
     $this->assertTrue(is('string[]', ['Hello']));

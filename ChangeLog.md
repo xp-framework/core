@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### RFCs
+
+* Implemented next part of xp-framework/rfc#298:
+  . Removed deprecated `xp::null()`
+  (@thekid)
+
 ## 6.5.6 / 2015-10-25
 
 ### Bugfixes

@@ -55,20 +55,15 @@ final class xp {
   public static $cli= [];
   public static $cll= 0;
   public static $cl= [];
-  public static $cn= [
-    'xp'     => '<xp>',
-    '__null' => '<null>'
-  ];
+  public static $cn= ['xp' => '<xp>'];
   public static $sn= [
     'xp'     => 'xp',
-    'null'   => '__null',
     'string' => "\xfestring",
     'int'    => "\xfeint",
     'double' => "\xfedouble",
     'bool'   => "\xfebool",
     'var'    => "var",
   ];
-  public static $null= null;
   public static $loader= null;
   public static $classpath= null;
   public static $errors= [];
@@ -159,8 +154,6 @@ final class xp {
       return $arg ? 'true' : 'false';
     } else if (is_null($arg)) {
       return 'null';
-    } else if ($arg instanceof __null) {
-      return '<null>';
     } else if (is_int($arg) || is_float($arg)) {
       return (string)$arg;
     } else if (($arg instanceof \lang\Generic || $arg instanceof \lang\Value) && !isset($protect[(string)$arg->hashCode()])) {
@@ -235,13 +228,6 @@ final class xp {
   }
   // }}}
 
-  // {{{ proto deprecated <null> null()
-  //     Runs a fatal-error safe version of null
-  static function null() {
-    return xp::$null;
-  }
-  // }}}
-
   // {{{ proto var errorAt(string file [, int line])
   //     Returns errors that occured at the specified position or null
   static function errorAt($file, $line= -1) {
@@ -278,47 +264,6 @@ final class xp {
       $version= trim(\lang\ClassLoader::getDefault()->getResource('VERSION'));
     }
     return $version;
-  }
-  // }}}
-}
-// }}}
-
-// {{{ final deprecated class null
-final class __null {
-
-  // {{{ proto __construct(void)
-  //     Constructor to avoid magic __call invokation
-  public function __construct() {
-    if (isset(xp::$null)) {
-      throw new \lang\IllegalAccessException('Cannot create new instances of xp::null()');
-    }
-  }
-  
-  // {{{ proto void __clone(void)
-  //     Clone interceptor
-  public function __clone() {
-    throw new \lang\NullPointerException('Object cloning intercepted.');
-  }
-  // }}}
-  
-  // {{{ proto var __call(string name, var[] args)
-  //     Call proxy
-  function __call($name, $args) {
-    throw new \lang\NullPointerException('Method.invokation('.$name.')');
-  }
-  // }}}
-
-  // {{{ proto void __set(string name, var value)
-  //     Set proxy
-  function __set($name, $value) {
-    throw new \lang\NullPointerException('Property.write('.$name.')');
-  }
-  // }}}
-
-  // {{{ proto var __get(string name)
-  //     Set proxy
-  function __get($name) {
-    throw new \lang\NullPointerException('Property.read('.$name.')');
   }
   // }}}
 }
@@ -390,9 +335,7 @@ function cast($arg, $type, $nullsafe= true) {
 // {{{ proto bool is(string type, var object)
 //     Checks whether a given object is an instance of the type given
 function is($type, $object) {
-  if (null === $type) {
-    return $object instanceof __null;
-  } else if ('int' === $type) {
+  if ('int' === $type) {
     return is_int($object);
   } else if ('double' === $type) {
     return is_double($object);
@@ -648,7 +591,6 @@ define('MODIFIER_PUBLIC',     256);
 define('MODIFIER_PROTECTED',  512);
 define('MODIFIER_PRIVATE',   1024);
 
-xp::$null= new __null();
 xp::$loader= new xp();
 
 // Paths are passed via class loader API from *-main.php. Retaining BC:
