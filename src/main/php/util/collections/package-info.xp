@@ -50,6 +50,7 @@
  *   Console::writeLine('Hello in German: ', $v[0]);
  * </code>
  *
+ * @deprecated Now in https://github.com/xp-framework/collections
  * @see      xp://lang.types.ArrayList
  * @see      http://developer.xp-framework.net/xml/rfc/view?0106
  * @see      http://news.xp-framework.net/article/180/2007/04/29/
