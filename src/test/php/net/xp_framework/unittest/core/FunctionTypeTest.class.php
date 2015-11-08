@@ -11,11 +11,6 @@ use lang\ClassCastException;
 use lang\IllegalArgumentException;
 use lang\reflect\TargetInvocationException;
 
-/**
- * TestCase
- *
- * @see      xp://lang.FunctionType
- */
 class FunctionTypeTest extends \unittest\TestCase {
 
   #[@test]
