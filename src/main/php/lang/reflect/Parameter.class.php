@@ -117,7 +117,7 @@ class Parameter extends \lang\Object {
    * @return  bool
    */
   public function isOptional() {
-    return $this->_reflect->isOptional();
+    return $this->_reflect->isOptional() || (defined('HHVM_VERSION') && $this->_reflect->isVariadic());
   }
 
   /**
