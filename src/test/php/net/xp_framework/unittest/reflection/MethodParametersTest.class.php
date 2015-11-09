@@ -230,11 +230,19 @@ class MethodParametersTest extends MethodsTest {
 
   #[@test, @action(new RuntimeVersion('>=5.6'))]
   public function variadic_via_syntax() {
-    $this->assertTrue($this->method('function fixture(... $args) { }')->getParameter(0)->isVariadic());
+    $param= $this->method('function fixture(... $args) { }')->getParameter(0);
+    $this->assertEquals(
+      ['variadic' => true, 'optional' => true],
+      ['variadic' => $param->isVariadic(), 'optional' => $param->isOptional()]
+    );
   }
 
   #[@test]
   public function variadic_via_apidoc() {
-    $this->assertTrue($this->method('/** @param var... $args */ function fixture($args= null) { }')->getParameter(0)->isVariadic());
+    $param= $this->method('/** @param var... $args */ function fixture($args= null) { }')->getParameter(0);
+    $this->assertEquals(
+      ['variadic' => true, 'optional' => true],
+      ['variadic' => $param->isVariadic(), 'optional' => $param->isOptional()]
+    );
   }
 }
