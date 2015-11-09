@@ -126,8 +126,8 @@ class Parameter extends \lang\Object {
    * @return  bool
    */
   public function isVariadic() {
-    if (\lang\XPClass::$VARIADIC_SUPPORTED) {
-      return $this->_reflect->isVariadic();
+    if (\lang\XPClass::$VARIADIC_SUPPORTED && $this->_reflect->isVariadic()) {
+      return true;
     } else if (
       ($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) &&
       isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
