@@ -227,4 +227,14 @@ class MethodParametersTest extends MethodsTest {
   public function parameter_representations($declaration, $expected) {
     $this->assertEquals($expected, $this->method($declaration.' { }')->getParameter(0)->toString());
   }
+
+  #[@test, @action(new RuntimeVersion('>=5.6'))]
+  public function variadic_via_syntax() {
+    $this->assertTrue($this->method('function fixture(... $args) { }')->getParameter(0)->isVariadic());
+  }
+
+  #[@test]
+  public function variadic_via_apidoc() {
+    $this->assertTrue($this->method('/** @param var... $args */ function fixture($args= null) { }')->getParameter(0)->isVariadic());
+  }
 }

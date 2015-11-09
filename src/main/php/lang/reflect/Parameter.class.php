@@ -15,6 +15,12 @@ class Parameter extends \lang\Object {
     $_reflect = null,
     $_details = null;
 
+  private static $VARIADIC_SUPPORTED;
+
+  static function __static() {
+    self::$VARIADIC_SUPPORTED= method_exists('ReflectionParameter', 'isVariadic');
+  }
+
   /**
    * Constructor
    *
@@ -118,6 +124,24 @@ class Parameter extends \lang\Object {
    */
   public function isOptional() {
     return $this->_reflect->isOptional();
+  }
+
+  /**
+   * Retrieve whether this argument is variadic
+   *
+   * @return  bool
+   */
+  public function isVariadic() {
+    if (self::$VARIADIC_SUPPORTED) {
+      return $this->_reflect->isVariadic();
+    } else if (
+      ($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) &&
+      isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
+    ) {
+      return 0 === substr_compare($details[DETAIL_ARGUMENTS][$this->_details[2]], '...', -3);
+    } else {
+      return false;
+    }
   }
 
   /**
