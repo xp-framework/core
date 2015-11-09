@@ -15,12 +15,6 @@ class Parameter extends \lang\Object {
     $_reflect = null,
     $_details = null;
 
-  public static $TYPE_SUPPORTED;
-
-  static function __static() {
-    self::$TYPE_SUPPORTED= method_exists('ReflectionParameter', 'getType');
-  }
-
   /**
    * Constructor
    *
@@ -50,7 +44,7 @@ class Parameter extends \lang\Object {
     try {
       if ($c= $this->_reflect->getClass()) {
         return new \lang\XPClass($c);
-      } else if (self::$TYPE_SUPPORTED && $t= $this->_reflect->getType()) {
+      } else if (\lang\XPClass::$TYPE_SUPPORTED && $t= $this->_reflect->getType()) {
         return \lang\Type::forName((string)$t);
       }
     } catch (\ReflectionException $e) {
@@ -84,7 +78,7 @@ class Parameter extends \lang\Object {
    * @return  string
    */
   public function getTypeName() {
-    if (self::$TYPE_SUPPORTED && ($t= $this->_reflect->getType())) {
+    if (\lang\XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getType())) {
       return (string)$t;
     } else if (
       !($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||  
