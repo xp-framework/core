@@ -15,12 +15,6 @@ class Parameter extends \lang\Object {
     $_reflect = null,
     $_details = null;
 
-  private static $VARIADIC_SUPPORTED;
-
-  static function __static() {
-    self::$VARIADIC_SUPPORTED= method_exists('ReflectionParameter', 'isVariadic');
-  }
-
   /**
    * Constructor
    *
@@ -132,7 +126,7 @@ class Parameter extends \lang\Object {
    * @return  bool
    */
   public function isVariadic() {
-    if (self::$VARIADIC_SUPPORTED) {
+    if (\lang\XPClass::$VARIADIC_SUPPORTED) {
       return $this->_reflect->isVariadic();
     } else if (
       ($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) &&
