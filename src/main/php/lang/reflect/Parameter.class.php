@@ -15,6 +15,12 @@ class Parameter extends \lang\Object {
     $_reflect = null,
     $_details = null;
 
+  public static $TYPE_SUPPORTED;
+
+  static function __static() {
+    self::$TYPE_SUPPORTED= method_exists('ReflectionParameter', 'getType');
+  }
+
   /**
    * Constructor
    *
@@ -42,7 +48,11 @@ class Parameter extends \lang\Object {
    */
   public function getType() {
     try {
-      if ($c= $this->_reflect->getClass()) return new \lang\XPClass($c);
+      if ($c= $this->_reflect->getClass()) {
+        return new \lang\XPClass($c);
+      } else if (self::$TYPE_SUPPORTED && $t= $this->_reflect->getType()) {
+        return \lang\Type::forName((string)$t);
+      }
     } catch (\ReflectionException $e) {
       throw new \lang\ClassFormatException(sprintf(
         'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',
@@ -60,7 +70,7 @@ class Parameter extends \lang\Object {
       return \lang\Type::$VAR;
     }
 
-    $t= ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&');
+    $t= rtrim(ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&'), '.');
     if ('self' === $t) {
       return new \lang\XPClass($this->_details[0]);
     } else {
@@ -74,13 +84,16 @@ class Parameter extends \lang\Object {
    * @return  string
    */
   public function getTypeName() {
-    if (
+    if (self::$TYPE_SUPPORTED && ($t= $this->_reflect->getType())) {
+      return (string)$t;
+    } else if (
       !($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||  
       !isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
     ) {   // Unknown or unparseable, return ANYTYPE
       return 'var';
+    } else {
+      return ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&');
     }
-    return ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&');
   }
 
   /**

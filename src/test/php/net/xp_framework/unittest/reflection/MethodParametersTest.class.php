@@ -82,10 +82,18 @@ class MethodParametersTest extends MethodsTest {
     $this->method('public function fixture(UnknownTypeRestriction $param) { }')->getParameter(0)->getType();
   }
 
-  #[@test]
-  public function nonexistant_name_class_parameter() {
+  #[@test, @action(new RuntimeVersion("<=7.0"))]
+  public function nonexistant_name_class_parameter_before_php7() {
     $this->assertEquals(
       'var',
+      $this->method('public function fixture(UnknownTypeRestriction $param) { }')->getParameter(0)->getTypeName()
+    );
+  }
+
+  #[@test, @action(new RuntimeVersion(">=7.0"))]
+  public function nonexistant_name_class_parameter_with_php7() {
+    $this->assertEquals(
+      'net\xp_framework\unittest\reflection\UnknownTypeRestriction',
       $this->method('public function fixture(UnknownTypeRestriction $param) { }')->getParameter(0)->getTypeName()
     );
   }
@@ -228,12 +236,21 @@ class MethodParametersTest extends MethodsTest {
     $this->assertEquals($expected, $this->method($declaration.' { }')->getParameter(0)->toString());
   }
 
+  #[@test, @action(new RuntimeVersion('>=7.0'))]
+  public function variadic_via_syntax_with_type() {
+    $param= $this->method('function fixture(string... $args) { }')->getParameter(0);
+    $this->assertEquals(
+      ['variadic' => true, 'optional' => true, 'type' => Primitive::$STRING],
+      ['variadic' => $param->isVariadic(), 'optional' => $param->isOptional(), 'type' => $param->getType()]
+    );
+  }
+
   #[@test, @action(new RuntimeVersion('>=5.6'))]
   public function variadic_via_syntax() {
     $param= $this->method('function fixture(... $args) { }')->getParameter(0);
     $this->assertEquals(
-      ['variadic' => true, 'optional' => true],
-      ['variadic' => $param->isVariadic(), 'optional' => $param->isOptional()]
+      ['variadic' => true, 'optional' => true, 'type' => Type::$VAR],
+      ['variadic' => $param->isVariadic(), 'optional' => $param->isOptional(), 'type' => $param->getType()]
     );
   }
 
@@ -241,8 +258,8 @@ class MethodParametersTest extends MethodsTest {
   public function variadic_via_apidoc() {
     $param= $this->method('/** @param var... $args */ function fixture($args= null) { }')->getParameter(0);
     $this->assertEquals(
-      ['variadic' => true, 'optional' => true],
-      ['variadic' => $param->isVariadic(), 'optional' => $param->isOptional()]
+      ['variadic' => true, 'optional' => true, 'type' => Type::$VAR],
+      ['variadic' => $param->isVariadic(), 'optional' => $param->isOptional(), 'type' => $param->getType()]
     );
   }
 }
