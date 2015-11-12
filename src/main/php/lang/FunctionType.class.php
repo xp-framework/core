@@ -9,11 +9,8 @@
 class FunctionType extends Type {
   protected $signature;
   protected $returns;
-  private static $VARIADIC_SUPPORTED;
 
-  static function __static() {
-    self::$VARIADIC_SUPPORTED= method_exists('ReflectionParameter', 'isVariadic');
-  }
+  static function __static() { }
 
   /**
    * Creates a new array type instance
@@ -128,7 +125,7 @@ class FunctionType extends Type {
         return $false('No parameter #'.($i + 1));
       } else {
         $param= $params[$i];
-        if (self::$VARIADIC_SUPPORTED && $param->isVariadic()) {
+        if (XPClass::$VARIADIC_SUPPORTED && $param->isVariadic()) {
           return true;  // No further checks necessary
         } else if ($param->isArray()) {
           if (!$type->equals(Primitive::$ARRAY) && !$type instanceof ArrayType && !$type instanceof MapType) {
@@ -149,7 +146,7 @@ class FunctionType extends Type {
     // Check if there are required parameters
     while (++$i < $r->getNumberOfParameters()) {
       $param= $params[$i];
-      if ($param->isOptional() || self::$VARIADIC_SUPPORTED && $param->isVariadic()) {
+      if ($param->isOptional() || XPClass::$VARIADIC_SUPPORTED && $param->isVariadic()) {
         return true;  // No further checks necessary
       } else {
         return $false('Signature mismatch, additional required parameter $'.$param->getName().' found');

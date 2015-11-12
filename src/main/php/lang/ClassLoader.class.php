@@ -38,14 +38,12 @@ use lang\reflect\Module;
  * @see   xp://lang.reflect.Package#loadClass
  */
 final class ClassLoader extends Object implements IClassLoader {
-  private static $VARIADIC;
   protected static
     $delegates = [],
     $modules   = [];
 
   static function __static() {
     $modules= [];
-    self::$VARIADIC= method_exists('ReflectionParameter', 'isVariadic');
     
     // Scan include-path, setting up classloaders for each element
     foreach (\xp::$classpath as $element) {
@@ -227,7 +225,7 @@ final class ClassLoader extends Object implements IClassLoader {
         $sig.= ', callable $'.$p;
       } else if (null !== ($restriction= $param->getClass())) {
         $sig.= ', \\'.$restriction->getName().' $'.$p;
-      } else if (self::$VARIADIC && $param->isVariadic()) {
+      } else if (XPClass::$VARIADIC_SUPPORTED && $param->isVariadic()) {
         $sig.= ', ...$'.$p;
         $pass.= ', ...$'.$p;
         continue;

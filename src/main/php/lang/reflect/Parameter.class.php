@@ -1,6 +1,9 @@
 <?php namespace lang\reflect;
 
 use lang\ElementNotFoundException;
+use lang\ClassFormatException;
+use lang\XPClass;
+use lang\Type;
 
 /**
  * Represents a method's parameter
@@ -42,9 +45,13 @@ class Parameter extends \lang\Object {
    */
   public function getType() {
     try {
-      if ($c= $this->_reflect->getClass()) return new \lang\XPClass($c);
+      if ($c= $this->_reflect->getClass()) {
+        return new XPClass($c);
+      } else if (XPClass::$TYPE_SUPPORTED && $t= $this->_reflect->getType()) {
+        return Type::forName((string)$t);
+      }
     } catch (\ReflectionException $e) {
-      throw new \lang\ClassFormatException(sprintf(
+      throw new ClassFormatException(sprintf(
         'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',
         strtr($this->_details[0], '\\', '.'),
         $this->_details[1],
@@ -54,17 +61,17 @@ class Parameter extends \lang\Object {
     }
 
     if (
-      !($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||  
+      !($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||
       !isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
     ) {   // Unknown or unparseable, return ANYTYPE
-      return \lang\Type::$VAR;
+      return Type::$VAR;
     }
 
-    $t= ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&');
+    $t= rtrim(ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&'), '.');
     if ('self' === $t) {
-      return new \lang\XPClass($this->_details[0]);
+      return new XPClass($this->_details[0]);
     } else {
-      return \lang\Type::forName($t);
+      return Type::forName($t);
     }
   }
 
@@ -74,13 +81,16 @@ class Parameter extends \lang\Object {
    * @return  string
    */
   public function getTypeName() {
-    if (
-      !($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||  
+    if (XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getType())) {
+      return (string)$t;
+    } else if (
+      !($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||
       !isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
     ) {   // Unknown or unparseable, return ANYTYPE
       return 'var';
+    } else {
+      return ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&');
     }
-    return ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&');
   }
 
   /**
@@ -92,16 +102,16 @@ class Parameter extends \lang\Object {
   public function getTypeRestriction() {
     try {
       if ($this->_reflect->isArray()) {
-        return \lang\Type::$ARRAY;
+        return Type::$ARRAY;
       } else if ($this->_reflect->isCallable()) {
-        return \lang\Type::$CALLABLE;
+        return Type::$CALLABLE;
       } else if ($c= $this->_reflect->getClass()) {
-        return new \lang\XPClass($c);
+        return new XPClass($c);
       } else {
         return null;
       }
     } catch (\ReflectionException $e) {
-      throw new \lang\ClassFormatException(sprintf(
+      throw new ClassFormatException(sprintf(
         'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',
         strtr($this->_details[0], '\\', '.'),
         $this->_details[1],
@@ -117,7 +127,26 @@ class Parameter extends \lang\Object {
    * @return  bool
    */
   public function isOptional() {
-    return $this->_reflect->isOptional();
+    return $this->_reflect->isOptional() || (defined('HHVM_VERSION') && $this->_reflect->isVariadic());
+  }
+
+  /**
+   * Retrieve whether this argument is variadic
+   *
+   * @return  bool
+   */
+  public function isVariadic() {
+    if (XPClass::$VARIADIC_SUPPORTED && $this->_reflect->isVariadic()) {
+      return true;
+    } else if (
+      $this->_reflect->isOptional() &&
+      ($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) &&
+      isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
+    ) {
+      return 0 === substr_compare($details[DETAIL_ARGUMENTS][$this->_details[2]], '...', -3);
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -144,7 +173,7 @@ class Parameter extends \lang\Object {
   public function hasAnnotation($name, $key= null) {
     $n= '$'.$this->_reflect->getName();
     if (
-      !($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||  
+      !($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||
       !isset($details[DETAIL_TARGET_ANNO][$n])
     ) {   // Unknown or unparseable
       return false;
@@ -167,7 +196,7 @@ class Parameter extends \lang\Object {
   public function getAnnotation($name, $key= null) {
     $n= '$'.$this->_reflect->getName();
     if (
-      !($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||  
+      !($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||
       !isset($details[DETAIL_TARGET_ANNO][$n]) || !($key 
         ? array_key_exists($key, (array)@$details[DETAIL_TARGET_ANNO][$n][$name]) 
         : array_key_exists($name, (array)@$details[DETAIL_TARGET_ANNO][$n])
@@ -190,7 +219,7 @@ class Parameter extends \lang\Object {
   public function hasAnnotations() {
     $n= '$'.$this->_reflect->getName();
     if (
-      !($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||  
+      !($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||
       !isset($details[DETAIL_TARGET_ANNO][$n])
     ) {   // Unknown or unparseable
       return false;
@@ -206,7 +235,7 @@ class Parameter extends \lang\Object {
   public function getAnnotations() {
     $n= '$'.$this->_reflect->getName();
     if (
-      !($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||  
+      !($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||
       !isset($details[DETAIL_TARGET_ANNO][$n])
     ) {   // Unknown or unparseable
       return [];
