@@ -2,13 +2,13 @@
 
 use lang\Primitive;
 use lang\Type;
+use lang\XPClass;
 use lang\ArrayType;
 use lang\MapType;
 use lang\FunctionType;
 
 /**
  * Tests typeof() functionality
- *
  */
 class TypeOfTest extends \unittest\TestCase {
 
@@ -19,7 +19,12 @@ class TypeOfTest extends \unittest\TestCase {
 
   #[@test]
   public function this() {
-    $this->assertEquals($this->getClass(), typeof($this));
+    $this->assertEquals(new XPClass(self::class), typeof($this));
+  }
+
+  #[@test]
+  public function native() {
+    $this->assertEquals(new XPClass(\ArrayObject::class), typeof(new \ArrayObject([])));
   }
 
   #[@test]
