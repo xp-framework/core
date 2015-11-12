@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented next part of xp-framework/rfc#297: Merged PR #100
+  (@thekid)
 * Implemented next part of xp-framework/rfc#298:
   . Removed deprecated `xp::null()`
   . Removed deprecated `xp::nameOf()`
