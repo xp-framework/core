@@ -16,6 +16,11 @@ XP Framework Core ChangeLog
 
 * Fixed FunctionType not handling varargs correctly - @thekid
 
+### Features
+
+* Merged PR #107: Variadic parameter support in reflection
+  (@thekid)
+
 ## 6.5.6 / 2015-10-25
 
 ### Bugfixes
