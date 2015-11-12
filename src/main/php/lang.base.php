@@ -506,9 +506,7 @@ function nameof($arg) {
 // {{{ proto lang.Type typeof(mixed arg)
 //     Returns type
 function typeof($arg) {
-  if ($arg instanceof \lang\Generic) {
-    return new \lang\XPClass($arg);
-  } else if (null === $arg) {
+  if (null === $arg) {
     return \lang\Type::$VOID;
   } else if ($arg instanceof \Closure) {
     $r= new \ReflectionFunction($arg);
@@ -525,6 +523,8 @@ function typeof($arg) {
       }
     }
     return new \lang\FunctionType($signature, \lang\Type::$VAR);
+  } else if (is_object($arg)) {
+    return new \lang\XPClass($arg);
   } else if (is_array($arg)) {
     return 0 === key($arg) ? \lang\ArrayType::forName('var[]') : \lang\MapType::forName('[:var]');
   } else {

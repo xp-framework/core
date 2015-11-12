@@ -38,7 +38,7 @@ abstract class Objects extends \lang\Object {
    *
    * @param   var $a
    * @param   var $b
-   * @return  bool
+   * @return  int
    */
   public static function compare($a, $b) {
     if ($a instanceof Value) {

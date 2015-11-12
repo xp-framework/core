@@ -116,7 +116,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $o= newinstance('#[@test] lang.Runnable', [], [
       'run' => function() { }
     ]);
-    $this->assertTrue($o->getClass()->hasAnnotation('test'));
+    $this->assertTrue(typeof($o)->hasAnnotation('test'));
   }
 
   #[@test]
@@ -140,7 +140,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $o= newinstance('#[@test] net.xp_framework.unittest.core.Named', [], [
       'run' => function() { }
     ]);
-    $this->assertTrue($o->getClass()->hasAnnotation('test'));
+    $this->assertTrue(typeof($o)->hasAnnotation('test'));
   }
 
   #[@test]
@@ -260,7 +260,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $i= newinstance(Object::class, [], '{}');
     $this->assertEquals(
       Package::forName('lang'),
-      $i->getClass()->getPackage()
+      typeof($i)->getPackage()
     );
   }
 
@@ -269,7 +269,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $i= newinstance($class, [], '{ public function getIterator() { /* Empty */ }}');
     $this->assertEquals(
       Package::forName(''),
-      $i->getClass()->getPackage()
+      typeof($i)->getPackage()
     );
   }
 
@@ -278,7 +278,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $i= newinstance($class, [], '{}');
     $this->assertEquals(
       Package::forName('net.xp_framework.unittest.core'),
-      $i->getClass()->getPackage()
+      typeof($i)->getPackage()
     );
   }
 
@@ -287,7 +287,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $i= newinstance(NamespacedInterface::class, [], '{}');
     $this->assertEquals(
       Package::forName('net.xp_framework.unittest.core'),
-      $i->getClass()->getPackage()
+      typeof($i)->getPackage()
     );
   }
 
