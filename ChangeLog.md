@@ -16,6 +16,10 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed "Call to undefined method lang.FunctionType::isGeneric()"
+  in lang.WildcardType (occurred in the sequence library when
+  using the current development checkout)
+  (@thekid)
 * Fixed FunctionType not handling varargs correctly - @thekid
 
 ### Features

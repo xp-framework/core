@@ -105,7 +105,8 @@ class WildcardType extends Type {
    * @return  bool
    */
   public function isInstance($obj) {
-    return is_object($obj) && $this->assignableFromClass(typeof($obj));
+    $t= typeof($obj);
+    return $t instanceof XPClass && $this->assignableFromClass($t);
   }
 
   /**
@@ -126,7 +127,8 @@ class WildcardType extends Type {
    * @throws  lang.ClassCastException
    */
   public function cast($value) {
-    if ($value instanceof Generic && $this->assignableFromClass($value->getClass())) {
+    $t= typeof($value);
+    if ($t instanceof XPClass && $this->assignableFromClass($t)) {
       return $value;
     }
     throw new ClassCastException('Cannot cast '.\xp::typeOf($value).' to the '.$this->getName().' type');
