@@ -16,6 +16,9 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed fatal errors when parsing URLs w/ hashes.
+  See xp-framework/xp-framework#380
+  (@patzerr)
 * Fixed "Call to undefined method lang.FunctionType::isGeneric()"
   in lang.WildcardType (occurred in the sequence library when
   using the current development checkout)
