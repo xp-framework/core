@@ -225,7 +225,9 @@ class URL extends \lang\Object {
       }
       if ($start= strpos($key, '[')) {    // Array notation
         $base= substr($key, 0, $start);
-        isset($params[$base]) || $params[$base]= [];
+        if (!isset($params[$base]) || !is_array($params[$base])) {
+          $params[$base]= [];
+        }
         $ptr= &$params[$base];
         $offset= 0;
         do {

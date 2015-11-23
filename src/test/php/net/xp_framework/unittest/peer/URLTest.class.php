@@ -1194,4 +1194,10 @@ class URLTest extends \unittest\TestCase {
     $u= new URL('http://user:pass@localhost/path?query#fragment');
     $this->assertEquals('http://user:********@localhost/path?query#fragment', $u->toString());
   }
+
+  #[@test]
+  public function scalar_parameter_overwritten_by_hash() {
+    $u= new URL('http://unittest.localhost/includes/orderSuccess.inc.php?&glob=1&cart_order_id=1&glob[rootDir]=http://cirt.net/rfiinc.txt?');
+    $this->assertEquals(['rootDir' => 'http://cirt.net/rfiinc.txt?'], $u->getParam('glob'));
+  }
 }
