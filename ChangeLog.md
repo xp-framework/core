@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.6.0 / 2015-11-23
+
 ### RFCs
 
 * Implemented next part of xp-framework/rfc#297: Merged PR #100
