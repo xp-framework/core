@@ -51,6 +51,7 @@ use util\Date;
  * date's field referenced by the variable if used to look up the value
  * in the map, concatenating it to the output string.
  *
+ * @deprecated Will be reinstated inside a new date/time package if necessary
  * @see      php://strftime
  * @see      php://strptime
  * @test     xp://net.xp_framework.unittest.text.DateFormatTest

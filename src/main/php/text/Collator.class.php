@@ -5,6 +5,8 @@ use util\Comparator;
 
 /**
  * The Collator class performs locale-sensitive String comparison. 
+ *
+ * @deprecated
  */
 class Collator extends \lang\Object implements Comparator {
   protected static $instance= [];
