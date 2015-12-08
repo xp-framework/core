@@ -3,19 +3,18 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
-### Features
+### RFCs
 
-* Extracted the `math` API to its own package and deprecated the
-  one inside core. See https://github.com/xp-framework/math
-  (@thekid)
-* Extracted the `text` API to its own package and deprecated the
-  one inside core. Split into:
-  . https://github.com/xp-framework/tokenize
-  . https://github.com/xp-framework/patterns
-  . https://github.com/xp-framework/text-encode
-  (@thekid)
-* Extracted the `security` API to its own package and deprecated the
-  one inside core. See https://github.com/xp-framework/security
+* Implemented more parts of xp-framework/rfc#296:
+  . Extracted the `math` API to its own package and deprecated the
+    one inside core. See https://github.com/xp-framework/math
+  . Extracted the `text` API to its own package and deprecated the
+    one inside core. Split into:
+    . https://github.com/xp-framework/tokenize
+    . https://github.com/xp-framework/patterns
+    . https://github.com/xp-framework/text-encode
+  . Extracted the `security` API to its own package and deprecated the
+    one inside core. See https://github.com/xp-framework/security
   (@thekid)
 
 ## 6.6.0 / 2015-11-23
