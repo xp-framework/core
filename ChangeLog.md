@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Extracted the `math` API to its own package and deprecated the
+  one inside core. See https://github.com/xp-framework/math
+  (@thekid)
 * Extracted the `text` API to its own package and deprecated the
   one inside core. Split into:
   . https://github.com/xp-framework/tokenize
