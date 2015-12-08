@@ -24,168 +24,6 @@ abstract class AbstractTokenizerTest extends TestCase {
   protected abstract function tokenizerInstance($source, $delimiters= ' ', $returnDelims= false);
 
   /**
-   * Test string tokenizing
-   *
-   */
-  #[@test]
-  public function testSimpleString() {
-    $t= $this->tokenizerInstance("Hello World!\nThis is an example", " \n");
-    $this->assertEquals('Hello', $t->nextToken());
-    $this->assertEquals('World!', $t->nextToken());
-    $this->assertEquals('This', $t->nextToken());
-    $this->assertEquals('is', $t->nextToken());
-    $this->assertEquals('an', $t->nextToken());
-    $this->assertEquals('example', $t->nextToken());
-    $this->assertFalse($t->hasMoreTokens());
-  }
-
-  /**
-   * Test string tokenizing
-   *
-   */
-  #[@test]
-  public function testSimpleStringWithDelims() {
-    $t= $this->tokenizerInstance("Hello World!\nThis is an example", " \n", true);
-    $this->assertEquals('Hello', $t->nextToken());
-    $this->assertEquals(' ', $t->nextToken());
-    $this->assertEquals('World!', $t->nextToken());
-    $this->assertEquals("\n", $t->nextToken());
-    $this->assertEquals('This', $t->nextToken());
-    $this->assertEquals(' ', $t->nextToken());
-    $this->assertEquals('is', $t->nextToken());
-    $this->assertEquals(' ', $t->nextToken());
-    $this->assertEquals('an', $t->nextToken());
-    $this->assertEquals(' ', $t->nextToken());
-    $this->assertEquals('example', $t->nextToken());
-    $this->assertFalse($t->hasMoreTokens());
-  }
-  
-  /**
-   * Test string tokenizing
-   *
-   */
-  #[@test]
-  public function repetetiveDelimiters() {
-    $t= $this->tokenizerInstance("Hello \nWorld!", " \n");
-    $this->assertEquals('Hello', $t->nextToken());
-    $this->assertEquals('', $t->nextToken());
-    $this->assertEquals('World!', $t->nextToken());
-    $this->assertFalse($t->hasMoreTokens());
-  }
-
-  /**
-   * Test string tokenizing
-   *
-   */
-  #[@test]
-  public function repetetiveDelimitersWithDelims() {
-    $t= $this->tokenizerInstance("Hello \nWorld!", " \n", true);
-    $this->assertEquals('Hello', $t->nextToken());
-    $this->assertEquals(' ', $t->nextToken());
-    $this->assertEquals("\n", $t->nextToken());
-    $this->assertEquals('World!', $t->nextToken());
-    $this->assertFalse($t->hasMoreTokens());
-  }
-  
-  /**
-   * Test for loop iteration
-   *
-   */
-  #[@test]
-  public function forIteration() {
-    $r= [];
-    for ($t= $this->tokenizerInstance('A B C', ' '); $t->hasMoreTokens(); ) {
-      $r[]= $t->nextToken();
-    }
-    $this->assertEquals(range('A', 'C'), $r);
-  }
-
-  /**
-   * Test while loop iteration
-   *
-   */
-  #[@test]
-  public function whileIteration() {
-    $r= [];
-    $t= $this->tokenizerInstance('A B C', ' ');
-    while ($t->hasMoreTokens()) {
-      $r[]= $t->nextToken();
-    }
-    $this->assertEquals(range('A', 'C'), $r);
-  }
-
-  /**
-   * Test foreach() overloading
-   *
-   */
-  #[@test]
-  public function foreachIteration() {
-    $r= [];
-    foreach ($this->tokenizerInstance('A B C', ' ') as $token) {
-      $r[]= $token;
-    }
-    $this->assertEquals(range('A', 'C'), $r);
-  }
-
-  /**
-   * Test resetting a tokenizer
-   *
-   */
-  #[@test]
-  public function reset() {
-    $t= $this->tokenizerInstance('A B C', ' ');
-    $this->assertTrue($t->hasMoreTokens());
-    $this->assertEquals('A', $t->nextToken());
-    $t->reset();
-    $this->assertTrue($t->hasMoreTokens());
-    $this->assertEquals('A', $t->nextToken());
-  }
-
-  /**
-   * Test pushing back a string with delimiters
-   *
-   */
-  #[@test]
-  public function pushBackTokens() {
-    $t= $this->tokenizerInstance('1,2,5', ',');
-    $this->assertEquals('1', $t->nextToken());
-    $this->assertEquals('2', $t->nextToken());
-    $t->pushBack('3,4,');
-    $this->assertEquals('3', $t->nextToken());
-    $this->assertEquals('4', $t->nextToken());
-    $this->assertEquals('5', $t->nextToken());
-  }
-
-  /**
-   * Test pushBack() order
-   *
-   */
-  #[@test]
-  public function pushBackOrder() {
-    $t= $this->tokenizerInstance('1,2,5', ',');
-    $this->assertEquals('1', $t->nextToken());
-    $this->assertEquals('2', $t->nextToken());
-    $t->pushBack('4,');
-    $t->pushBack('3,');
-    $this->assertEquals('3', $t->nextToken());
-    $this->assertEquals('4', $t->nextToken());
-    $this->assertEquals('5', $t->nextToken());
-  }
-
-  /**
-   * Test pushing back a delimiter
-   *
-   */
-  #[@test]
-  public function pushBackDelimiterAtEnd() {
-    $t= $this->tokenizerInstance("One\nTwo", "\n");
-    $this->assertEquals('One', $t->nextToken());
-    $this->assertEquals('Two', $t->nextToken());
-    $t->pushBack("Two\n");
-    $this->assertEquals('Two', $t->nextToken());
-  }
-
-  /**
    * Returns all tokens
    *
    * @param   string input
@@ -210,10 +48,124 @@ abstract class AbstractTokenizerTest extends TestCase {
     return $tokens;
   }
 
-  /**
-   * Test pushing back a delimiter
-   *
-   */
+  #[@test]
+  public function testSimpleString() {
+    $t= $this->tokenizerInstance("Hello World!\nThis is an example", " \n");
+    $this->assertEquals('Hello', $t->nextToken());
+    $this->assertEquals('World!', $t->nextToken());
+    $this->assertEquals('This', $t->nextToken());
+    $this->assertEquals('is', $t->nextToken());
+    $this->assertEquals('an', $t->nextToken());
+    $this->assertEquals('example', $t->nextToken());
+    $this->assertFalse($t->hasMoreTokens());
+  }
+
+  #[@test]
+  public function testSimpleStringWithDelims() {
+    $t= $this->tokenizerInstance("Hello World!\nThis is an example", " \n", true);
+    $this->assertEquals('Hello', $t->nextToken());
+    $this->assertEquals(' ', $t->nextToken());
+    $this->assertEquals('World!', $t->nextToken());
+    $this->assertEquals("\n", $t->nextToken());
+    $this->assertEquals('This', $t->nextToken());
+    $this->assertEquals(' ', $t->nextToken());
+    $this->assertEquals('is', $t->nextToken());
+    $this->assertEquals(' ', $t->nextToken());
+    $this->assertEquals('an', $t->nextToken());
+    $this->assertEquals(' ', $t->nextToken());
+    $this->assertEquals('example', $t->nextToken());
+    $this->assertFalse($t->hasMoreTokens());
+  }
+  
+  #[@test]
+  public function repetetiveDelimiters() {
+    $t= $this->tokenizerInstance("Hello \nWorld!", " \n");
+    $this->assertEquals('Hello', $t->nextToken());
+    $this->assertEquals('', $t->nextToken());
+    $this->assertEquals('World!', $t->nextToken());
+    $this->assertFalse($t->hasMoreTokens());
+  }
+
+  #[@test]
+  public function repetetiveDelimitersWithDelims() {
+    $t= $this->tokenizerInstance("Hello \nWorld!", " \n", true);
+    $this->assertEquals('Hello', $t->nextToken());
+    $this->assertEquals(' ', $t->nextToken());
+    $this->assertEquals("\n", $t->nextToken());
+    $this->assertEquals('World!', $t->nextToken());
+    $this->assertFalse($t->hasMoreTokens());
+  }
+  
+  #[@test]
+  public function forIteration() {
+    $r= [];
+    for ($t= $this->tokenizerInstance('A B C', ' '); $t->hasMoreTokens(); ) {
+      $r[]= $t->nextToken();
+    }
+    $this->assertEquals(range('A', 'C'), $r);
+  }
+
+  #[@test]
+  public function whileIteration() {
+    $r= [];
+    $t= $this->tokenizerInstance('A B C', ' ');
+    while ($t->hasMoreTokens()) {
+      $r[]= $t->nextToken();
+    }
+    $this->assertEquals(range('A', 'C'), $r);
+  }
+
+  #[@test]
+  public function foreachIteration() {
+    $r= [];
+    foreach ($this->tokenizerInstance('A B C', ' ') as $token) {
+      $r[]= $token;
+    }
+    $this->assertEquals(range('A', 'C'), $r);
+  }
+
+  #[@test]
+  public function reset() {
+    $t= $this->tokenizerInstance('A B C', ' ');
+    $this->assertTrue($t->hasMoreTokens());
+    $this->assertEquals('A', $t->nextToken());
+    $t->reset();
+    $this->assertTrue($t->hasMoreTokens());
+    $this->assertEquals('A', $t->nextToken());
+  }
+
+  #[@test]
+  public function pushBackTokens() {
+    $t= $this->tokenizerInstance('1,2,5', ',');
+    $this->assertEquals('1', $t->nextToken());
+    $this->assertEquals('2', $t->nextToken());
+    $t->pushBack('3,4,');
+    $this->assertEquals('3', $t->nextToken());
+    $this->assertEquals('4', $t->nextToken());
+    $this->assertEquals('5', $t->nextToken());
+  }
+
+  #[@test]
+  public function pushBackOrder() {
+    $t= $this->tokenizerInstance('1,2,5', ',');
+    $this->assertEquals('1', $t->nextToken());
+    $this->assertEquals('2', $t->nextToken());
+    $t->pushBack('4,');
+    $t->pushBack('3,');
+    $this->assertEquals('3', $t->nextToken());
+    $this->assertEquals('4', $t->nextToken());
+    $this->assertEquals('5', $t->nextToken());
+  }
+
+  #[@test]
+  public function pushBackDelimiterAtEnd() {
+    $t= $this->tokenizerInstance("One\nTwo", "\n");
+    $this->assertEquals('One', $t->nextToken());
+    $this->assertEquals('Two', $t->nextToken());
+    $t->pushBack("Two\n");
+    $this->assertEquals('Two', $t->nextToken());
+  }
+
   #[@test]
   public function pushBackDelimiter() {
     $this->assertEquals(
@@ -222,10 +174,6 @@ abstract class AbstractTokenizerTest extends TestCase {
     );
   }
 
-  /**
-   * Test pushing back a longer string part which is a regex
-   *
-   */
   #[@test]
   public function pushBackRegex() {
     $this->assertEquals(
@@ -234,10 +182,6 @@ abstract class AbstractTokenizerTest extends TestCase {
     );
   }
 
-  /**
-   * Test pushBack()
-   *
-   */
   #[@test]
   public function pushBackAfterHavingReadUntilEnd() {
     $t= $this->tokenizerInstance('1,2,', ',');
@@ -251,10 +195,6 @@ abstract class AbstractTokenizerTest extends TestCase {
     $this->assertFalse($t->hasMoreTokens(), 'Should be at end again');
   }
 
-  /**
-   * Test pushBack()
-   *
-   */
   #[@test]
   public function pushBackWithDelimitersAfterHavingReadUntilEnd() {
     $t= $this->tokenizerInstance('1,2,', ',', true);
@@ -271,10 +211,6 @@ abstract class AbstractTokenizerTest extends TestCase {
     $this->assertFalse($t->hasMoreTokens(), 'Should be at end again');
   }
 
-  /**
-   * Test performance
-   *
-   */
   #[@test, @ignore('Remove ignore annotation to test performance')]
   public function performance() {
   
