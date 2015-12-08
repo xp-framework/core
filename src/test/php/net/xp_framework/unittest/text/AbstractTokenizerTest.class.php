@@ -1,24 +1,20 @@
 <?php namespace net\xp_framework\unittest\text;
 
-use unittest\TestCase;
-use text\Tokenizer;
-
-
 /**
  * Abstract base class for different tokenizer tests
  *
- * @see  xp://text.Tokenizer
- * @see  xp://net.xp_framework.unittest.text.StringTokenizerTest
- * @see  xp://net.xp_framework.unittest.text.StreamTokenizerTest
+ * @see   xp://text.Tokenizer
+ * @see   xp://net.xp_framework.unittest.text.StringTokenizerTest
+ * @see   xp://net.xp_framework.unittest.text.StreamTokenizerTest
  */
-abstract class AbstractTokenizerTest extends TestCase {
+abstract class AbstractTokenizerTest extends \unittest\TestCase {
 
   /**
    * Retrieve a tokenizer instance
    *
-   * @param   string source
-   * @param   string delimiters default ' '
-   * @param   bool returnDelims default FALSE
+   * @param   string $source
+   * @param   string $delimiters
+   * @param   bool $returnDelims
    * @return  text.Tokenizer
    */
   protected abstract function tokenizerInstance($source, $delimiters= ' ', $returnDelims= false);
