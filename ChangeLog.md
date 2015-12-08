@@ -6,6 +6,8 @@ XP Framework Core ChangeLog
 ### RFCs
 
 * Implemented more parts of xp-framework/rfc#296:
+  . Extracted the `peer.*` APIs to its own package and deprecated the
+    one inside core. See https://github.com/xp-framework/networking
   . Extracted the `math` API to its own package and deprecated the
     one inside core. See https://github.com/xp-framework/math
   . Extracted the `text` API to its own package and deprecated the
