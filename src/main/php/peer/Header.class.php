@@ -2,6 +2,8 @@
 
 /**
  * Represents a header
+ *
+ * @deprecated
  */
 class Header extends \lang\Object {
   public 
