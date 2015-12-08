@@ -224,13 +224,6 @@ final class xp {
   }
   // }}}
   
-  // {{{ proto deprecated string reflect(string type)
-  //     Retrieve type literal for a given type name
-  static function reflect($type) {
-    return literal($type);
-  }
-  // }}}
-
   // {{{ proto string version()
   //     Retrieves current XP version
   static function version() {

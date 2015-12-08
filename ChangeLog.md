@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented next part of xp-framework/rfc#296: Remove xp::reflect()
+  @thekid
 * Implemented more parts of xp-framework/rfc#296:
   . Extracted the `peer.*` APIs to its own package and deprecated the
     one inside core. See https://github.com/xp-framework/networking
