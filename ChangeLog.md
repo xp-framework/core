@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Extracted the `security` API to its own package and deprecated the
+  one inside core. See https://github.com/xp-framework/security
+  (@thekid)
+
 ## 6.6.0 / 2015-11-23
 
 ### RFCs
