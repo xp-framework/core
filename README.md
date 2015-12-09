@@ -54,8 +54,7 @@ Save the following sourcecode to a file called AgeInDays.class.php:
 
 ```php
 <?php
-use util\Date;
-use util\DateUtil;
+use util\{Date, DateUtil};
 use util\cmd\Console;
 
 class AgeInDays {
