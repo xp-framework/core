@@ -52,6 +52,7 @@ final class Password extends \lang\Object {
    * @param  int $type one of BACKING_MCRYPT, BACKING_OPENSSL, BACKING_PLAINTEXT
    * @throws lang.IllegalArgumentException If illegal backing type was given
    * @throws lang.IllegalStateException If chosen backing missed a extension dependency
+   * @return void
    */
   public static function useBacking($type) {
     switch ($type) {
@@ -99,8 +100,9 @@ final class Password extends \lang\Object {
   /**
    * Store encryption and decryption routines (unittest method only)
    *
-   * @param callable $encrypt
-   * @param callable $decrypt
+   * @param  callable $encrypt
+   * @param  callable $decrypt
+   * @return void
    */
   public static function setBacking($encrypt, $decrypt) {
     self::$encrypt= $encrypt;
@@ -110,13 +112,12 @@ final class Password extends \lang\Object {
   /**
    * Constructor
    *
-   * @param string $c Characters to secure
+   * @param string $characters Characters to secure
    */
-  public function __construct($c) {
+  public function __construct($characters) {
     $key= $this->hashCode();
     try {
-      $m= self::$encrypt;
-      self::$store[$key]= $m($c);
+      self::$store[$key]= self::$encrypt->__invoke($characters);
     } catch (\Exception $e) {
       // This intentionally catches *ALL* exceptions, in order not to fail
       // and produce a stacktrace (containing arguments on the stack that were)
@@ -126,8 +127,8 @@ final class Password extends \lang\Object {
       \xp::gc();
     }
 
-    $c= str_repeat('*', strlen($c));
-    $c= null;
+    $characters= str_repeat('*', strlen($characters));
+    $characters= null;
   }
 
   /**
@@ -150,8 +151,7 @@ final class Password extends \lang\Object {
       throw new IllegalStateException('An error occurred during storing the encrypted password.');
     }
     
-    $m= self::$decrypt;
-    return $m(self::$store[$key]);
+    return self::$decrypt->__invoke(self::$store[$key]);
   }
 
   /**
