@@ -45,11 +45,7 @@ class Parameter extends \lang\Object {
    */
   public function getType() {
     try {
-      if ($c= $this->_reflect->getClass()) {
-        return new XPClass($c);
-      } else if (XPClass::$TYPE_SUPPORTED && $t= $this->_reflect->getType()) {
-        return Type::forName((string)$t);
-      }
+      if ($c= $this->_reflect->getClass()) return new XPClass($c);
     } catch (\ReflectionException $e) {
       throw new ClassFormatException(sprintf(
         'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',
@@ -63,8 +59,16 @@ class Parameter extends \lang\Object {
     if (
       !($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||
       !isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
-    ) {   // Unknown or unparseable, return ANYTYPE
-      return Type::$VAR;
+    ) {
+
+      // Cannot parse api doc, fall back to PHP native syntax. The reason for not doing
+      // this the other way around is that we have "richer" information, e.g. "string[]",
+      // where PHP simply knows about "arrays" (of whatever).
+      if (XPClass::$TYPE_SUPPORTED && $t= $this->_reflect->getType()) {
+        return Type::forName((string)$t);
+      } else {
+        return Type::$VAR;
+      }
     }
 
     $t= rtrim(ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&'), '.');
@@ -81,15 +85,15 @@ class Parameter extends \lang\Object {
    * @return  string
    */
   public function getTypeName() {
-    if (XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getType())) {
-      return (string)$t;
-    } else if (
-      !($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||
-      !isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
-    ) {   // Unknown or unparseable, return ANYTYPE
-      return 'var';
-    } else {
+    if (
+      ($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]))
+      && isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
+    ) {
       return ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&');
+    } else if (XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getType())) {
+      return (string)$t;
+    } else {
+      return 'var';
     }
   }
 

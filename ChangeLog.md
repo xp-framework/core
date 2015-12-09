@@ -21,6 +21,14 @@ XP Framework Core ChangeLog
     one inside core. See https://github.com/xp-framework/security
   (@thekid)
 
+### Bugfixes
+
+* Fixed `lang.reflect.Parameter` to only use PHP's type information if
+  no apidoc is present. The reason is that we might have much "richer"
+  information, e.g. a parameter typed `string[]` (whereas PHP would 
+  only know about an array of whatever).
+  (@thekid)
+
 ## 6.6.0 / 2015-11-23
 
 ### RFCs
