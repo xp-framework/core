@@ -71,6 +71,7 @@ class Binford extends \lang\Object {
    *   X-Binford: 6100 (more power)
    * </pre>
    *
+   * @deprecated
    * @return  peer.Header
    */
   public function getHeader() {
