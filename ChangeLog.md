@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.7.0 / 2015-12-09
+
 ### RFCs
 
 * Implemented next part of xp-framework/rfc#296: Remove xp::reflect()
