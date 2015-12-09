@@ -54,7 +54,7 @@ class MethodReturnTypesTest extends MethodsTest {
     $this->assertEquals($type, $this->method($apidoc.' public function fixture() { }')->getReturnTypeName());
   }
 
-  #[@test, @ignore('No reflection support yet'), @action(new RuntimeVersion('>=7.0')), @values([
+  #[@test, @action(new RuntimeVersion('>=7.0')), @values([
   #  ['string', Primitive::$STRING],
   #  ['array', Type::$ARRAY],
   #  ['\lang\Value', new XPClass(Value::class)],

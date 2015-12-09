@@ -125,16 +125,20 @@ class Routine extends \lang\Object {
    * @return  lang.Type
    */
   public function getReturnType() {
-    if (!($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))) return \lang\Type::$VAR;
-    if (null === $details[DETAIL_RETURNS]) {
-      return \lang\Type::$VAR;
-    }
-
-    $t= $t= ltrim($details[DETAIL_RETURNS], '&');
-    if ('self' === $t) {
-      return new \lang\XPClass($this->_reflect->getDeclaringClass());
+    if (
+      ($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))
+      && isset($details[DETAIL_RETURNS])
+    ) {
+      $t= ltrim($details[DETAIL_RETURNS], '&');
+      if ('self' === $t) {
+        return new \lang\XPClass($this->_reflect->getDeclaringClass());
+      } else {
+        return \lang\Type::forName($t);
+      }
+    } else if (\lang\XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getReturnType())) {
+      return \lang\Type::forName((string)$t);
     } else {
-      return \lang\Type::forName($t);
+      return \lang\Type::$VAR;
     }
   }
 
@@ -144,8 +148,16 @@ class Routine extends \lang\Object {
    * @return  string
    */
   public function getReturnTypeName() {
-    if (!($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))) return 'var';
-    return null === $details[DETAIL_RETURNS] ? 'var' : ltrim($details[DETAIL_RETURNS], '&');
+    if (
+      ($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))
+      && isset($details[DETAIL_RETURNS])
+    ) {
+      return ltrim($details[DETAIL_RETURNS], '&');
+    } else if (\lang\XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getReturnType())) {
+      return (string)$t;
+    } else {
+      return 'var';
+    }
   }
 
   /**

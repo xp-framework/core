@@ -23,6 +23,9 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed `lang.reflect.Method` to use PHP's type information if available
+  but consistently prefer the apidocs for the reason stated below.
+  (@thekid)
 * Fixed `lang.reflect.Parameter` to only use PHP's type information if
   no apidoc is present. The reason is that we might have much "richer"
   information, e.g. a parameter typed `string[]` (whereas PHP would 
