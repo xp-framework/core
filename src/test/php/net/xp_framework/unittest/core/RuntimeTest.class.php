@@ -63,7 +63,7 @@ class RuntimeTest extends \unittest\TestCase {
     $this->assertEquals('class-main.php', strstr($bootstrap, 'class-main.php'), $bootstrap);
   }
 
-  #[@test, @ignore('...for the moment!')]
+  #[@test]
   public function mainClass() {
     $main= Runtime::getInstance()->mainClass();
     $this->assertInstanceOf(XPClass::class, $main);
