@@ -62,12 +62,4 @@ class BinfordTest extends \unittest\TestCase {
   public function string_representation() {
     $this->assertEquals('util.Binford(6100)', (new Binford(6100))->toString());
   }
-
-  #[@test]
-  public function header_representation() {
-    $this->assertEquals(
-      new \peer\Header('X-Binford', '6100 (more power)'),
-      (new Binford(6100))->getHeader()
-    );
-  }
 }

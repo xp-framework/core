@@ -1,7 +1,5 @@
 <?php namespace util;
 
-use peer\Header;
-
 /**
  * This class adds power to an application
  *
@@ -61,19 +59,5 @@ class Binford extends \lang\Object {
    */
   public function equals($cmp) {
     return $cmp instanceof self && $this->poweredBy == $cmp->poweredBy;
-  }
-
-  /**
-   * Retrieve header suited for HTTP/Mail
-   *
-   * Example:
-   * <pre>
-   *   X-Binford: 6100 (more power)
-   * </pre>
-   *
-   * @return  peer.Header
-   */
-  public function getHeader() {
-    return new Header('X-Binford', $this->poweredBy.' (more power)');
   }
 }
