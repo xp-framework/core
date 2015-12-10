@@ -65,14 +65,14 @@ abstract class SecretTest extends \unittest\TestCase {
   #[@test]
   public function getPayload_reveals_original_data() {
     $secure= new Secret('payload');
-    $this->assertEquals('payload', $secure->characters());
+    $this->assertEquals('payload', $secure->reveal());
   }
 
   #[@test]
   public function big_data() {
     $data= str_repeat('*', 1024000);
     $secure= new Secret($data);
-    $this->assertEquals($data, $secure->characters());
+    $this->assertEquals($data, $secure->reveal());
   }
 
   #[@test]
@@ -102,7 +102,7 @@ abstract class SecretTest extends \unittest\TestCase {
     }
 
     // Buf if creation failed, an exception must be raised here:
-    $s->characters();
+    $s->reveal();
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
