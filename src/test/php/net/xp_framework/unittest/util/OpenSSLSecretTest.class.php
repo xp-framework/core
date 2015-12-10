@@ -1,18 +1,18 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use util\Password;
+use util\Secret;
 use unittest\actions\ExtensionAvailable;
 
 /**
- * Testcase for openssl backed security.Password implementation
+ * Testcase for openssl backed security.Secret implementation
  */
 #[@action(new ExtensionAvailable('openssl'))]
-class OpenSSLPasswordTest extends PasswordTest {
+class OpenSSLSecretTest extends SecretTest {
 
   /**
    * Use OPENSSL backing
    */
   public function setUp() {
-    Password::useBacking(Password::BACKING_OPENSSL);
+    Secret::useBacking(Secret::BACKING_OPENSSL);
   }
 }
