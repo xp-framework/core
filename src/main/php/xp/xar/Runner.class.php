@@ -70,7 +70,7 @@ use io\File;
  *
  * <tt>$ xar df one.xar two.xar</tt>
  */
-class Runner extends \lang\Object {
+class Runner {
 
   /**
    * Set operation

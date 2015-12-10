@@ -7,7 +7,7 @@ use lang\XPClass;
  * Evaluates sourcecode
  *
  */
-class Evaluate extends \lang\Object {
+class Evaluate {
   
   /**
    * Main

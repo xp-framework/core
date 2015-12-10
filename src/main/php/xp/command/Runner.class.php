@@ -50,7 +50,7 @@ use lang\XPClass;
  * @test  xp://net.xp_framework.unittest.util.cmd.RunnerTest
  * @see   xp://util.cmd.Command
  */
-class Runner extends \lang\Object {
+class Runner {
   private static
     $in     = null,
     $out    = null,

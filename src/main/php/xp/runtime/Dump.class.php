@@ -6,7 +6,7 @@ use lang\XPClass;
 /**
  * Evaluates code and dumps its output.
  */
-class Dump extends \lang\Object {
+class Dump {
 
   /**
    * Main

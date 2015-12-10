@@ -8,7 +8,7 @@ use lang\archive\Archive;
 /**
  * Runs an application from a XAR file
  */
-class Xar extends \lang\Object {
+class Xar {
   const MANIFEST = 'META-INF/manifest.ini';
   
   /**
