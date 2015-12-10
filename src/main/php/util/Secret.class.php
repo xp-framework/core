@@ -141,11 +141,11 @@ final class Secret extends \lang\Object {
   }
 
   /**
-   * Retrieve secured characters
+   * Reveal secured characters
    *
    * @return string
    */
-  public function characters() {
+  public function reveal() {
     $key= $this->hashCode();
     if (!isset(self::$store[$key])) {
       throw new IllegalStateException('An error occurred during storing the encrypted password.');
