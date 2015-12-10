@@ -27,7 +27,7 @@ use lang\IllegalArgumentException;
  * @test   xp://net.xp_framework.unittest.util.OpenSSLSecretTest
  * @test   xp://net.xp_framework.unittest.util.PlainTextSecretTest
  */
-final class Secret extends \lang\Object {
+class Secret extends \lang\Object {
   const BACKING_MCRYPT    = 0x01;
   const BACKING_OPENSSL   = 0x02;
   const BACKING_PLAINTEXT = 0x03;
@@ -104,7 +104,7 @@ final class Secret extends \lang\Object {
    * @param  callable $decrypt
    * @return void
    */
-  public static function setBacking($encrypt, $decrypt) {
+  public static function setBacking(\Closure $encrypt, \Closure $decrypt) {
     self::$encrypt= $encrypt;
     self::$decrypt= $decrypt;
   }
@@ -115,6 +115,16 @@ final class Secret extends \lang\Object {
    * @param string $characters Characters to secure
    */
   public function __construct($characters) {
+    $this->update($characters);
+  }
+
+  /**
+   * Update with given characters
+   *
+   * @param  string $characters
+   * @return void
+   */
+  protected function update(&$characters) {
     $key= $this->hashCode();
     try {
       self::$store[$key]= self::$encrypt->__invoke($characters);
@@ -134,7 +144,7 @@ final class Secret extends \lang\Object {
   /**
    * Prevent serialization of object
    *
-   * @return array
+   * @return string[]
    */
   public function __sleep() {
     throw new IllegalStateException('Cannot serialize Password instances.');
