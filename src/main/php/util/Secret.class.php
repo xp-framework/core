@@ -5,7 +5,7 @@ use lang\IllegalStateException;
 use lang\IllegalArgumentException;
 
 /**
- * Password provides a reasonable secure storage for security-sensistive
+ * Secret provides a reasonable secure storage for security-sensistive
  * lists of characters, such as passwords.
  *
  * It prevents accidentially revealing them in output, by var_dump()ing,
@@ -23,11 +23,11 @@ use lang\IllegalArgumentException;
  *
  * As a rule of thumb: extract it from the container at the last possible location.
  *
- * @test   xp://net.xp_framework.unittest.util.McryptPasswordTest
- * @test   xp://net.xp_framework.unittest.util.OpenSSLPasswordTest
- * @test   xp://net.xp_framework.unittest.util.PlainTextPasswordTest
+ * @test   xp://net.xp_framework.unittest.util.McryptSecretTest
+ * @test   xp://net.xp_framework.unittest.util.OpenSSLSecretTest
+ * @test   xp://net.xp_framework.unittest.util.PlainTextSecretTest
  */
-final class Password extends \lang\Object {
+final class Secret extends \lang\Object {
   const BACKING_MCRYPT    = 0x01;
   const BACKING_OPENSSL   = 0x02;
   const BACKING_PLAINTEXT = 0x03;
