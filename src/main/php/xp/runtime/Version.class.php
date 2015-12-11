@@ -5,7 +5,7 @@ use util\cmd\Console;
 /**
  * Displays XP version and runtime information
  */
-class Version extends \lang\Object {
+class Version {
   
   /**
    * Main

@@ -3,6 +3,9 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #108: security.SecureString -> util.Secret
+  (@thekid, @mikey179, @kiesel)
+
 ## 6.7.0 / 2015-12-09
 
 ### RFCs

@@ -10,7 +10,7 @@ use util\cmd\Console;
  * $ xp xp.runtime.ShowResource usage.txt 255
  * ```
  */
-class ShowResource extends \lang\Object {
+class ShowResource {
 
   /**
    * Main

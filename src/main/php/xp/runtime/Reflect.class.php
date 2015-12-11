@@ -10,7 +10,7 @@ use lang\ElementNotFoundException;
 /**
  * Dumps reflection information about a class
  */
-class Reflect extends \lang\Object {
+class Reflect {
 
   /**
    * Gets class name (and generic components if this class is a 
