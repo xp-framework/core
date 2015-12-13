@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed `lang.reflect.Constructor` to catch PHP7's native `\Throwable`
+  instead of `BaseException` from before [the Throwable RFC](https://wiki.php.net/rfc/throwable-interface)
+  (@thekid)
+
 ### Features
 
 * Refactored util.Properties to work without Tokenizer API, which has
