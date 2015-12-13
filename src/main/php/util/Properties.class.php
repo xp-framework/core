@@ -3,11 +3,11 @@
 use io\IOException;
 use io\File;
 use io\streams\InputStream;
+use io\streams\OutputStream;
 use io\streams\MemoryInputStream;
 use io\streams\MemoryOutputStream;
 use io\streams\FileInputStream;
 use io\streams\TextReader;
-use text\TextTokenizer;
 use lang\FormatException;
 use lang\IllegalStateException;
 
@@ -56,12 +56,11 @@ class Properties extends \lang\Object implements PropertyAccess {
    * @throws  lang.FormatException
    */
   public function load(InputStream $in, $charset= null, $expansion= null) {
-    $s= new TextTokenizer(new TextReader($in, $charset), "\r\n");
+    $reader= new TextReader($in, $charset);
     $expansion || $expansion= new PropertyExpansion();
     $this->_data= [];
     $section= null;
-    while ($s->hasMoreTokens()) {
-      $t= $s->nextToken();
+    while (null !== ($t= $reader->readLine())) {
       $trimmedToken= trim($t);
       if ('' === $trimmedToken) continue;                   // Empty lines
       $c= $trimmedToken{0};
@@ -79,11 +78,12 @@ class Properties extends \lang\Object implements PropertyAccess {
         if ('' === $value) {
           // OK
         } else if ('"' === $value{0}) {                     // Quoted strings
-          if (false === ($p= strrpos($value, '"', 1))) {
-            $value= $expansion->in(substr($value, 1)."\n".$s->nextToken('"'));
-          } else {
-            $value= $expansion->in(substr($value, 1, $p- 1));
+          $quoted= substr($value, 1);
+          while (false === ($p= strrpos($quoted, '"'))) {
+            if (null === ($line= $reader->readLine())) break;
+            $quoted.= "\n".$line;
           }
+          $value= $expansion->in(substr($quoted, 0, $p));
         } else {        // unquoted string
           if (false !== ($p= strpos($value, ';'))) {        // Comments at end of line
             $value= substr($value, 0, $p);
@@ -131,7 +131,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    * @param   io.streams.OutputStream out
    * @throws  io.IOException
    */
-  public function store(\io\streams\OutputStream $out) {
+  public function store(OutputStream $out) {
     foreach (array_keys($this->_data) as $section) {
       $out->write('['.$section."]\n");
       foreach ($this->_data[$section] as $key => $val) {

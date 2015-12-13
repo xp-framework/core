@@ -3,6 +3,11 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Refactored util.Properties to work without Tokenizer API, which has
+  been extracted to its own package in 6.7.0
+  (@thekid)
 * Merged PR #108: security.SecureString -> util.Secret
   (@thekid, @mikey179, @kiesel)
 
