@@ -182,6 +182,17 @@ class ObjectsTest extends \unittest\TestCase {
     $this->assertEquals($expected, Objects::compare(new ValueObject($a), new ValueObject($b)));
   }
 
+  #[@test, @values([
+  #  [[], [1], -1], [['color' => 'green'], ['color' => 'red'], -1],
+  #  [[1], [1], 0], [[], [], 0], [[1, 2, 3], [1, 2, 3], 0], [['color' => 'green'], ['color' => 'green'], 0],
+  #  [['color' => 'green'], [1], 1], [[1], ['color' => 'green'], 1],
+  #  [['color' => 'green'], ['key' => 'value'], 1], [['key' => 'value'], ['color' => 'green'], 1],
+  #  [[1], [], 1],
+  #])]
+  public function compare_arrays($a, $b, $expected) {
+    $this->assertEquals($expected, Objects::compare($a, $b));
+  }
+
   #[@test]
   public function null_string_without_default() {
     $this->assertEquals('', Objects::stringOf(null));

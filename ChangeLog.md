@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed `util.Objects::compare()` consistency with PHP7's `<=>` operator
+  for arrays and maps.
+  (@thekid)
 * Fixed `lang.reflect.Constructor` to catch PHP7's native `\Throwable`
   instead of `BaseException` from before [the Throwable RFC](https://wiki.php.net/rfc/throwable-interface)
   (@thekid)
