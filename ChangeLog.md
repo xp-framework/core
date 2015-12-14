@@ -19,15 +19,16 @@ XP Framework Core ChangeLog
   for arrays and maps.
   (@thekid)
 * Fixed `lang.reflect.Constructor` to catch PHP7's native `\Throwable`
-  instead of `BaseException` from before [the Throwable RFC](https://wiki.php.net/rfc/throwable-interface)
+  class instead of `\BaseException` class, which was the root class before
+  [the Throwable RFC](https://wiki.php.net/rfc/throwable-interface).
   (@thekid)
 
 ### Features
 
-* Refactored util.Properties to work without Tokenizer API, which has
+* Refactored `util.Properties` to work without Tokenizer API, which has
   been extracted to its own package in 6.7.0
   (@thekid)
-* Merged PR #108: security.SecureString -> util.Secret
+* Merged PR #108: security.SecureString -> `util.Secret`
   (@thekid, @mikey179, @kiesel)
 
 ## 6.7.0 / 2015-12-09
