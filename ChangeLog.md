@@ -3,8 +3,21 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Heads up!
+
+* **Heads up: Removed classes deprecated since XP 6.3.0:**
+  . `util`: util.StringUtil
+  . `io`: Stream, ZipFile, SearchableStream, SpoolDirectory, FilePermission
+  . `io.sys`: StdStream
+  . `security`: Permission, Policy, PolicyException
+  . `security.password`: RandomPasswordGenerator, RandomCodeGenerator
+  (@thekid)
+
 ### Bugfixes
 
+* Fixed `util.Objects::compare()` consistency with PHP7's `<=>` operator
+  for arrays and maps.
+  (@thekid)
 * Fixed `lang.reflect.Constructor` to catch PHP7's native `\Throwable`
   instead of `BaseException` from before [the Throwable RFC](https://wiki.php.net/rfc/throwable-interface)
   (@thekid)

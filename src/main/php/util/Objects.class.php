@@ -45,6 +45,15 @@ abstract class Objects extends \lang\Object {
       return $a->compareTo($b);
     } else if ($a instanceof Generic) {
       return $a->equals($b) ? 0 : ($a < $b ? -1 : 1);
+    } else if (is_array($a)) {
+      if (!is_array($b)) return 1;
+      if (sizeof($a) < sizeof($b)) return -1;
+      if (sizeof($a) > sizeof($b)) return 1;
+      foreach ($a as $key => $val) {
+        if (!array_key_exists($key, $b)) return 1;
+        if (0 !== $r= self::compare($val, $b[$key])) return $r;
+      }
+      return 0;
     } else {
       return $a === $b ? 0 : ($a < $b ? -1 : 1);
     }
