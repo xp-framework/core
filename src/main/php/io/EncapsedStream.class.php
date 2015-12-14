@@ -6,9 +6,8 @@ use lang\MethodNotImplementedException;
  * Encapsulated / embedded stream
  *
  * @test  xp://net.xp_framework.unittest.io.EncapsedStreamTest
- * @see   xp://io.Stream
  */
-class EncapsedStream extends Stream {
+class EncapsedStream extends File {
   public
     $_super     = null,
     $_offset    = 0,
@@ -17,7 +16,7 @@ class EncapsedStream extends Stream {
   /**
    * Constructor
    *
-   * @param   io.Stream super parent stream
+   * @param   io.File super parent stream
    * @param   int offset offset where encapsed stream starts in parent stream
    * @param   int size
    * @throws  lang.IllegalStateException when stream is not yet opened
