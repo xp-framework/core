@@ -281,13 +281,6 @@ function __error($code, $msg, $file, $line) {
 }
 // }}}
 
-// {{{ proto deprecated void ensure ($t)
-//     Replacement for finally() which clashes with PHP 5.5.0's finally
-function ensure(&$t) {
-  if (!isset($t)) $t= null;
-}
-// }}}
-
 // {{{ proto Generic cast (var arg, var type[, bool nullsafe= true])
 //     Casts an arg NULL-safe
 function cast($arg, $type, $nullsafe= true) {
@@ -370,9 +363,7 @@ function with() {
   if (($block= array_pop($args)) instanceof \Closure)  {
     try {
       call_user_func_array($block, $args);
-    } catch (\lang\Throwable $e) {
-      // Fall through
-    } ensure($e); {
+    } finally {
       foreach ($args as $arg) {
         if (!($arg instanceof \lang\Closeable)) continue;
         try {
@@ -381,7 +372,6 @@ function with() {
           // 
         }
       }
-      if ($e) throw($e);
     }
   }
 }
