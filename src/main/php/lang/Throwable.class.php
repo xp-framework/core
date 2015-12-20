@@ -48,7 +48,7 @@ class Throwable extends \Exception implements Generic { use \__xp;
       $wrapped->fillInStackTrace($e);
       return $wrapped;
     } else if ($e instanceof \Exception) {    // PHP 5
-      $wrapped= new Error($e->getMessage(), $e->getPrevious(), false);
+      $wrapped= new XPException($e->getMessage(), $e->getPrevious(), false);
       $wrapped->addStackTraceFor($e->getFile(), '<native>', get_class($e), $e->getLine(), [$e->getCode(), $e->getMessage()], [['' => 1]]);
       $wrapped->fillInStackTrace($e);
       return $wrapped;
