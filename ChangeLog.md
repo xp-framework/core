@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.8.0 / 2015-12-20
+
 ### Heads up!
 
 * **Heads up: Removed classes deprecated since XP 6.3.0:**
