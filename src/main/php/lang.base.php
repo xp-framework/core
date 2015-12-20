@@ -357,7 +357,7 @@ function literal($type) {
 // }}}
 
 // {{{ proto void with(arg..., Closure)
-//     Syntactic sugar. Intentionally empty
+//     Executes closure, closes all given args on exit.
 function with() {
   $args= func_get_args();
   if (($block= array_pop($args)) instanceof \Closure)  {
