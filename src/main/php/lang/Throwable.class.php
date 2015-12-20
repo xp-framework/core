@@ -21,29 +21,40 @@ class Throwable extends \Exception implements Generic { use \__xp;
   /**
    * Constructor
    *
-   * @param   string $message
-   * @param   lang.Throwable|php.Throwable|php.Exception $cause
-   * @param   bool $fill Whether to populate stack trace
+   * @param  string $message
+   * @param  lang.Throwable|php.Throwable|php.Exception $cause
+   * @param  bool $fill Whether to populate stack trace
    */
   public function __construct($message, $cause= null, $fill= true) {
     $this->__id= uniqid('', true);
     $this->message= is_string($message) ? $message : \xp::stringOf($message);
-
-    if ($cause instanceof self || null === $cause) {
-      $this->cause= $cause;
-    } else if ($cause instanceof \Throwable) {    // PHP 7
-      $this->cause= new Error($cause->getMessage(), $cause->getPrevious(), false);
-      $this->cause->addStackTraceFor($cause->getFile(), '<native>', get_class($cause), $cause->getLine(), [$cause->getCode(), $cause->getMessage()], [['' => 1]]);
-      $this->cause->fillInStackTrace($cause);
-    } else if ($cause instanceof \Exception) {    // PHP 5
-      $this->cause= new XPException($cause->getMessage(), $cause->getPrevious(), false);
-      $this->cause->addStackTraceFor($cause->getFile(), '<native>', get_class($cause), $cause->getLine(), [$cause->getCode(), $cause->getMessage()], [['' => 1]]);
-      $this->cause->fillInStackTrace($cause);
-    } else {
-      throw new IllegalArgumentException('Cause must be a lang.Throwable or a PHP base exception');
-    }
-
+    $cause && $this->cause= self::wrap($cause);
     $fill && $this->fillInStackTrace();
+  }
+
+  /**
+   * Wraps an exception inside a throwable
+   *
+   * @param  lang.Throwable|php.Throwable|php.Exception $e
+   * @return self
+   * @throws lang.IllegalArgumentException
+   */
+  public static function wrap($e) {
+    if ($e instanceof self) {
+      return $e;
+    } else if ($e instanceof \Throwable) {    // PHP 7
+      $wrapped= new Error($e->getMessage(), $e->getPrevious(), false);
+      $wrapped->addStackTraceFor($e->getFile(), '<native>', get_class($e), $e->getLine(), [$e->getCode(), $e->getMessage()], [['' => 1]]);
+      $wrapped->fillInStackTrace($e);
+      return $wrapped;
+    } else if ($e instanceof \Exception) {    // PHP 5
+      $wrapped= new Error($e->getMessage(), $e->getPrevious(), false);
+      $wrapped->addStackTraceFor($e->getFile(), '<native>', get_class($e), $e->getLine(), [$e->getCode(), $e->getMessage()], [['' => 1]]);
+      $wrapped->fillInStackTrace($e);
+      return $wrapped;
+    } else {
+      throw new IllegalArgumentException('Given argument must be a lang.Throwable or a PHP base exception');
+    }
   }
 
   /**
