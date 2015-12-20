@@ -362,7 +362,7 @@ function with() {
   $args= func_get_args();
   if (($block= array_pop($args)) instanceof \Closure)  {
     try {
-      call_user_func_array($block, $args);
+      return call_user_func_array($block, $args);
     } finally {
       foreach ($args as $arg) {
         if (!($arg instanceof \lang\Closeable)) continue;

@@ -91,4 +91,9 @@ class WithTest extends \unittest\TestCase {
     });
     $this->assertTrue($b->closed);
   }
+
+  #[@test]
+  public function usage_with_closure_returns_whatever_closure_returns() {
+    $this->assertEquals('Test', with (function() { return 'Test'; }));
+  }
 }
