@@ -1,14 +1,9 @@
 <?php namespace net\xp_framework\unittest\core\extensions;
 
-use unittest\TestCase;
-
-/**
- * TestCase
- */
-class LocalExtensionMethodTest extends TestCase {
+class LocalExtensionMethodTest extends \unittest\TestCase {
 
   static function __static() {
-    \xp::extensions(__CLASS__, $scope= __CLASS__);
+    \xp::extensions(self::class, $scope= self::class);
   }
 
   /**

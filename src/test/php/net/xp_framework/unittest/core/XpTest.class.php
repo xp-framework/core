@@ -2,7 +2,6 @@
 
 /**
  * Tests the <xp> functions
- *
  */
 class XpTest extends \unittest\TestCase {
 
@@ -94,6 +93,6 @@ class XpTest extends \unittest\TestCase {
 
   #[@test]
   public function literal_of_this() {
-    $this->assertEquals(__CLASS__, literal(nameof($this)));
+    $this->assertEquals(self::class, literal(nameof($this)));
   }
 }
