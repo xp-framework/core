@@ -29,9 +29,10 @@ class SystemExit extends Throwable {
    * Fills in stack trace information. For this class, does not include
    * any information.
    *
+   * @return  lang.Throwable $from
    * @return  lang.Throwable this
    */
-  public function fillInStackTrace() {
+  public function fillInStackTrace($from= null) {
     return $this;
   }
 }

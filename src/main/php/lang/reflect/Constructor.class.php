@@ -70,12 +70,10 @@ class Constructor extends Routine {
       return $instance;
     } catch (\lang\SystemExit $e) {
       throw $e;
-    } catch (\lang\Throwable $e) {
-      throw new TargetInvocationException(XPClass::nameOf($this->_class).'::<init>', $e);
     } catch (\Exception $e) {
-      throw new TargetInvocationException(XPClass::nameOf($this->_class).'::<init>', new \lang\XPException($e->getMessage()));
+      throw new TargetInvocationException(XPClass::nameOf($this->_class).'::<init>', $e);
     } catch (\Throwable $e) {
-      throw new TargetInvocationException(XPClass::nameOf($this->_class).'::<init>', new \lang\Error($e->getMessage()));
+      throw new TargetInvocationException(XPClass::nameOf($this->_class).'::<init>', $e);
     }
   }
 

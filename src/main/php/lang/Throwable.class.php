@@ -21,15 +21,29 @@ class Throwable extends \Exception implements Generic { use \__xp;
   /**
    * Constructor
    *
-   * @param   string message
-   * @param   lang.Throwable cause default null
+   * @param   string $message
+   * @param   lang.Throwable|php.Throwable|php.Exception $cause
+   * @param   bool $fill Whether to populate stack trace
    */
-  public function __construct($message, self $cause= null) {
+  public function __construct($message, $cause= null, $fill= true) {
     $this->__id= uniqid('', true);
     $this->message= is_string($message) ? $message : \xp::stringOf($message);
-    $this->cause= $cause;
-    $this->trace= [];
-    $this->fillInStackTrace();
+
+    if ($cause instanceof self || null === $cause) {
+      $this->cause= $cause;
+    } else if ($cause instanceof \Throwable) {    // PHP 7
+      $this->cause= new Error($cause->getMessage(), $cause->getPrevious(), false);
+      $this->cause->addStackTraceFor($cause->getFile(), '<native>', get_class($cause), $cause->getLine(), [$cause->getCode(), $cause->getMessage()], [['' => 1]]);
+      $this->cause->fillInStackTrace($cause);
+    } else if ($cause instanceof \Exception) {    // PHP 5
+      $this->cause= new XPException($cause->getMessage(), $cause->getPrevious(), false);
+      $this->cause->addStackTraceFor($cause->getFile(), '<native>', get_class($cause), $cause->getLine(), [$cause->getCode(), $cause->getMessage()], [['' => 1]]);
+      $this->cause->fillInStackTrace($cause);
+    } else {
+      throw new IllegalArgumentException('Cause must be a lang.Throwable or a PHP base exception');
+    }
+
+    $fill && $this->fillInStackTrace();
   }
 
   /**
@@ -53,9 +67,10 @@ class Throwable extends \Exception implements Generic { use \__xp;
   /**
    * Fills in stack trace information. 
    *
-   * @return  lang.Throwable this
+   * @param   self $from
+   * @return  self this
    */
-  public function fillInStackTrace() {
+  public function fillInStackTrace($from= null) {
     static $except= [
       'call_user_func_array'  => 1, 
       'call_user_func'        => 1
@@ -66,7 +81,7 @@ class Throwable extends \Exception implements Generic { use \__xp;
       $this->addStackTraceFor($file, null, null, null, [], $list);
     }
 
-    foreach (debug_backtrace() as $i => $trace) {
+    foreach ($from ? $from->getTrace() : $this->getTrace() as $i => $trace) {
       if (
         !isset($trace['function']) || 
         isset($except[$trace['function']]) ||
