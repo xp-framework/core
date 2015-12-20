@@ -112,13 +112,8 @@ class ExceptionsTest extends \unittest\TestCase {
     $this->assertEquals($e->toString(), $out->getBytes());
   }
   
-  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function withCause_must_be_a_throwable() {
-    new XPException('Message', 'Anything...');
-  }
-
-  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
-  public function withCause_must_be_a_throwable7() {
     new XPException('Message', 'Anything...');
   }
 }
