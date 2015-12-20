@@ -5,6 +5,7 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed xp-framework/core#110: Fatal error location swallowed - @thekid
 * Catch both PHP 5 and PHP 7 base exceptions in lang.Thread - @thekid
 
 ### Features
