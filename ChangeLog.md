@@ -8,7 +8,7 @@ XP Framework Core ChangeLog
 ### Heads up!
 
 * **Heads up: Removed deprecated ensure()**, which has been replaced
-  by the `finally` statement.
+  by the `finally` statement. See xp-framework/core#111
   (@thekid)
 
 ### Bugfixes
