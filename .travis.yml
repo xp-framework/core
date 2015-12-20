@@ -9,7 +9,7 @@ php:
   - hhvm
 
 before_script:
-  - wget 'https://github.com/xp-framework/xp-runners/releases/download/v5.6.1/setup' -O - | php
+  - wget 'https://github.com/xp-framework/xp-runners/releases/download/v5.7.2/setup' -O - | php
   - echo "use=." > xp.ini
   - echo "[runtime]" >> xp.ini
   - echo "date.timezone=Europe/Berlin" >> xp.ini
