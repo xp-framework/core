@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Catch both PHP 5 and PHP 7 base exceptions in lang.Thread - @thekid
+
 ## 6.8.0 / 2015-12-20
 
 ### Heads up!
