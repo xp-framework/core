@@ -29,7 +29,7 @@ class ChannelWrapper extends \lang\Object {
   public static function capture(Runnable $r, $initial= []) {
     self::$streams= $initial;
     stream_wrapper_unregister('php');
-    stream_wrapper_register('php', __CLASS__);
+    stream_wrapper_register('php', self::class);
     
     try {
       $r->run();

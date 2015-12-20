@@ -1,9 +1,11 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
+use lang\XPClass;
+
 /**
  * Fixture class for accessibility tests
  *
- * @see      xp://net.xp_framework.unittest.reflection.PrivateAccessibilityTest
+ * @see   xp://net.xp_framework.unittest.reflection.PrivateAccessibilityTest
  */
 class PrivateAccessibilityFixture extends \lang\Object {
   private $target= 'Target';
@@ -11,7 +13,6 @@ class PrivateAccessibilityFixture extends \lang\Object {
 
   /**
    * Constructor
-   *
    */
   private function __construct() { }
 
@@ -39,7 +40,7 @@ class PrivateAccessibilityFixture extends \lang\Object {
    * @param   lang.XPClass
    * @return  net.xp_framework.unittest.reflection.PrivateAccessibilityFixture
    */
-  public static function construct(\lang\XPClass $class) {
+  public static function construct(XPClass $class) {
     return $class->getConstructor()->newInstance([]);
   }
 
@@ -49,7 +50,7 @@ class PrivateAccessibilityFixture extends \lang\Object {
    * @param   lang.XPClass
    * @return  string
    */
-  public static function invoke(\lang\XPClass $class) {
+  public static function invoke(XPClass $class) {
     return $class->getMethod('target')->invoke(new self());
   }
 
@@ -59,7 +60,7 @@ class PrivateAccessibilityFixture extends \lang\Object {
    * @param   lang.XPClass
    * @return  string
    */
-  public static function invokeStatic(\lang\XPClass $class) {
+  public static function invokeStatic(XPClass $class) {
     return $class->getMethod('staticTarget')->invoke(null);
   }
 
@@ -69,7 +70,7 @@ class PrivateAccessibilityFixture extends \lang\Object {
    * @param   lang.XPClass
    * @return  string
    */
-  public static function read(\lang\XPClass $class) {
+  public static function read(XPClass $class) {
     return $class->getField('target')->get(new self());
   }
 
@@ -79,7 +80,7 @@ class PrivateAccessibilityFixture extends \lang\Object {
    * @param   lang.XPClass
    * @return  string
    */
-  public static function readStatic(\lang\XPClass $class) {
+  public static function readStatic(XPClass $class) {
     return $class->getField('staticTarget')->get(null);
   }
 
@@ -89,7 +90,7 @@ class PrivateAccessibilityFixture extends \lang\Object {
    * @param   lang.XPClass
    * @return  string
    */
-  public static function write(\lang\XPClass $class) {
+  public static function write(XPClass $class) {
     with ($s= new self(), $f= $class->getField('target')); {
       $f->set($s, 'Modified');
       return $f->get($s);
@@ -102,7 +103,7 @@ class PrivateAccessibilityFixture extends \lang\Object {
    * @param   lang.XPClass
    * @return  string
    */
-  public static function writeStatic(\lang\XPClass $class) {
+  public static function writeStatic(XPClass $class) {
     with ($f= $class->getField('staticTarget')); {
       $f->set(null, 'Modified');
       return $f->get(null);
