@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.9.0 / ????-??-??
+
+### Heads up!
+
+* **Heads up: Removed deprecated ensure()**, which has been replaced
+  by the `finally` statement.
+  (@thekid)
+
 ### Bugfixes
 
 * Fixed xp-framework/core#110: Fatal error location swallowed - @thekid
