@@ -297,7 +297,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $n= nameof($instance);
     $this->assertEquals(
       'lang.Object',
-      substr($n, 0, strrpos($n, '·')),
+      substr($n, 0, strrpos($n, "\xb7")),
       $n
     );
   }
