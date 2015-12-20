@@ -368,8 +368,10 @@ function with() {
         if (!($arg instanceof \lang\Closeable)) continue;
         try {
           $arg->close();
-        } catch (\lang\Throwable $ignored) {
-          // 
+        } catch (\Throwable $ignored) {
+          // PHP 7
+        } catch (\Exception $ignored) {
+          // PHP 5
         }
       }
     }
