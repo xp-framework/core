@@ -24,10 +24,18 @@ class Throwable extends \Exception implements Generic { use \__xp;
    * @param   string message
    * @param   lang.Throwable cause default null
    */
-  public function __construct($message, self $cause= null) {
+  public function __construct($message, $cause= null) {
     $this->__id= uniqid('', true);
     $this->message= is_string($message) ? $message : \xp::stringOf($message);
-    $this->cause= $cause;
+    if ($cause instanceof self) {
+      $this->cause= $cause;
+    } else if ($cause instanceof \Throwable) {    // PHP 7
+      $this->cause= new Error($cause->getMessage());
+    } else if ($cause instanceof \Exception) {    // PHP 5
+      $this->cause= new XPException($cause->getMessage());
+    } else if (null !== $cause) {
+      throw new IllegalArgumentException('Cause must be a lang.Throwable or a PHP base exception');
+    }
     $this->trace= [];
     $this->fillInStackTrace();
   }

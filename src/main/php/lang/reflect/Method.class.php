@@ -90,12 +90,10 @@ class Method extends Routine {
       return $this->_reflect->invokeArgs($obj, (array)$args);
     } catch (\lang\SystemExit $e) {
       throw $e;
-    } catch (\lang\Throwable $e) {
-      throw new TargetInvocationException(XPClass::nameOf($this->_class).'::'.$this->_reflect->getName(), $e);
     } catch (\Exception $e) {
-      throw new TargetInvocationException(XPClass::nameOf($this->_class).'::'.$this->_reflect->getName(), new \lang\XPException($e->getMessage()));
+      throw new TargetInvocationException(XPClass::nameOf($this->_class).'::'.$this->_reflect->getName(), $e);
     } catch (\Throwable $e) {
-      throw new TargetInvocationException(XPClass::nameOf($this->_class).'::'.$this->_reflect->getName(), new \lang\Error($e->getMessage()));
+      throw new TargetInvocationException(XPClass::nameOf($this->_class).'::'.$this->_reflect->getName(), $e);
     }
   }
 }
