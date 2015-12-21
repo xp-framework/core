@@ -173,12 +173,7 @@ class Field extends \lang\Object {
     $public= $m & MODIFIER_PUBLIC;
     if (!$public && !$this->accessible) {
       $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
-      if (isset($t[1]['class'])) {
-        $scope= $t[1]['class'];
-      } else {
-        $scope= \lang\ClassLoader::getDefault()->loadUri($t[0]['file'])->literal();
-      }
-
+      $scope= isset($t[1]['class']) ? $t[1]['class'] : \lang\ClassLoader::getDefault()->loadUri($t[0]['file'])->literal();
       $decl= $this->_reflect->getDeclaringClass()->getName();
       if ($m & MODIFIER_PROTECTED) {
         $allow= $scope === $decl || is_subclass_of($scope, $decl);
@@ -232,12 +227,7 @@ class Field extends \lang\Object {
     $public= $m & MODIFIER_PUBLIC;
     if (!$public && !$this->accessible) {
       $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
-      if (isset($t[1]['class'])) {
-        $scope= $t[1]['class'];
-      } else {
-        $scope= \lang\ClassLoader::getDefault()->loadUri($t[0]['file'])->literal();
-      }
-
+      $scope= isset($t[1]['class']) ? $t[1]['class'] : \lang\ClassLoader::getDefault()->loadUri($t[0]['file'])->literal();
       $decl= $this->_reflect->getDeclaringClass()->getName();
       if ($m & MODIFIER_PROTECTED) {
         $allow= $scope === $decl || is_subclass_of($scope, $decl);
