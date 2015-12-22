@@ -91,10 +91,10 @@ class PrivateAccessibilityFixture extends \lang\Object {
    * @return  string
    */
   public static function write(XPClass $class) {
-    with ($s= new self(), $f= $class->getField('target')); {
-      $f->set($s, 'Modified');
-      return $f->get($s);
-    }
+    return with (new self(), $class->getField('target'), function($self, $f) {
+      $f->set($self, 'Modified');
+      return $f->get($self);
+    });
   }
 
   /**
@@ -104,9 +104,9 @@ class PrivateAccessibilityFixture extends \lang\Object {
    * @return  string
    */
   public static function writeStatic(XPClass $class) {
-    with ($f= $class->getField('staticTarget')); {
+    return with ($class->getField('staticTarget'), function($f) {
       $f->set(null, 'Modified');
       return $f->get(null);
-    }
+    });
   }
 }
