@@ -11,6 +11,11 @@ XP Framework Core ChangeLog
   by the `finally` statement. See xp-framework/core#111
   (@thekid)
 
+### RFCs
+
+* Implemented xp-framework/rfc#305: with() results. See pull request #112
+  @thekid
+
 ### Bugfixes
 
 * Fixed xp-framework/core#110: Fatal error location swallowed - @thekid
