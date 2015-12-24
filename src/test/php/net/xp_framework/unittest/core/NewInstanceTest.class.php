@@ -27,18 +27,19 @@ class NewInstanceTest extends \unittest\TestCase {
    * @return  var[] an array with three elements: exitcode, stdout and stderr contents
    */
   protected function runInNewRuntime($src) {
-    with ($out= $err= '', $p= Runtime::getInstance()->newInstance(null, 'class', 'xp.runtime.Evaluate', [])); {
+    return with (Runtime::getInstance()->newInstance(null, 'class', 'xp.runtime.Evaluate', []), function($p) use($src) {
       $p->in->write($src);
       $p->in->close();
 
       // Read output
+      $out= $err= '';
       while ($b= $p->out->read()) { $out.= $b; }
       while ($b= $p->err->read()) { $err.= $b; }
 
       // Close child process
       $exitv= $p->close();
-    }
-    return [$exitv, $out, $err];
+      return [$exitv, $out, $err];
+    });
   }
   
   #[@test]
@@ -297,7 +298,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $n= nameof($instance);
     $this->assertEquals(
       'lang.Object',
-      substr($n, 0, strrpos($n, '·')),
+      substr($n, 0, strrpos($n, "\xb7")),
       $n
     );
   }

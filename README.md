@@ -20,7 +20,7 @@ the following one-liner:
 
 ```sh
 $ cd ~/bin
-$ wget 'https://github.com/xp-framework/xp-runners/releases/download/v5.6.1/setup' -O - | php
+$ curl -L 'https://github.com/xp-framework/xp-runners/releases/download/v5.7.2/setup' | php
 ```
 
 ### Using it

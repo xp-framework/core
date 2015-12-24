@@ -41,39 +41,39 @@ class FileInputStreamTest extends TestCase {
   
   #[@test]
   public function reading() {
-    with ($stream= new FileInputStream($this->file)); {
+    with (new FileInputStream($this->file), function($stream) {
       $this->assertEquals('Created by ', $stream->read(11));
       $this->assertEquals('FileInputStreamTest', $stream->read());
       $this->assertEquals('', $stream->read());
-    }
+    });
   }
 
   #[@test]
   public function seeking() {
-    with ($stream= new FileInputStream($this->file)); {
+    with (new FileInputStream($this->file), function($stream) {
       $this->assertEquals(0, $stream->tell());
       $stream->seek(20);
       $this->assertEquals(20, $stream->tell());
       $this->assertEquals('StreamTest', $stream->read());
-    }
+    });
   }
 
   #[@test]
   public function availability() {
-    with ($stream= new FileInputStream($this->file)); {
+    with (new FileInputStream($this->file), function($stream) {
       $this->assertNotEquals(0, $stream->available());
       $stream->read(30);
       $this->assertEquals(0, $stream->available());
-    }
+    });
   }
 
   #[@test]
   public function delete() {
-    with ($stream= new FileInputStream($this->file)); {
+    with (new FileInputStream($this->file), function($stream) {
       $this->assertTrue($this->file->isOpen());
       unset($stream);
       $this->assertTrue($this->file->isOpen());
-    }
+    });
   }
 
   #[@test, @expect(FileNotFoundException::class)]
@@ -83,25 +83,25 @@ class FileInputStreamTest extends TestCase {
 
   #[@test, @expect(IOException::class)]
   public function readingAfterClose() {
-    with ($stream= new FileInputStream($this->file)); {
+    with (new FileInputStream($this->file), function($stream) {
       $stream->close();
       $stream->read();
-    }
+    });
   }
 
   #[@test, @expect(IOException::class)]
   public function availableAfterClose() {
-    with ($stream= new FileInputStream($this->file)); {
+    with (new FileInputStream($this->file), function($stream) {
       $stream->close();
       $stream->available();
-    }
+    });
   }
 
   #[@test]
   public function doubleClose() {
-    with ($stream= new FileInputStream($this->file)); {
+    with (new FileInputStream($this->file), function($stream) {
       $stream->close();
       $stream->close();
-    }
+    });
   }
 }

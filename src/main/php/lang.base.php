@@ -281,13 +281,6 @@ function __error($code, $msg, $file, $line) {
 }
 // }}}
 
-// {{{ proto deprecated void ensure ($t)
-//     Replacement for finally() which clashes with PHP 5.5.0's finally
-function ensure(&$t) {
-  if (!isset($t)) $t= null;
-}
-// }}}
-
 // {{{ proto Generic cast (var arg, var type[, bool nullsafe= true])
 //     Casts an arg NULL-safe
 function cast($arg, $type, $nullsafe= true) {
@@ -364,24 +357,23 @@ function literal($type) {
 // }}}
 
 // {{{ proto void with(arg..., Closure)
-//     Syntactic sugar. Intentionally empty
+//     Executes closure, closes all given args on exit.
 function with() {
   $args= func_get_args();
   if (($block= array_pop($args)) instanceof \Closure)  {
     try {
-      call_user_func_array($block, $args);
-    } catch (\lang\Throwable $e) {
-      // Fall through
-    } ensure($e); {
+      return call_user_func_array($block, $args);
+    } finally {
       foreach ($args as $arg) {
         if (!($arg instanceof \lang\Closeable)) continue;
         try {
           $arg->close();
-        } catch (\lang\Throwable $ignored) {
-          // 
+        } catch (\Throwable $ignored) {
+          // PHP 7
+        } catch (\Exception $ignored) {
+          // PHP 5
         }
       }
-      if ($e) throw($e);
     }
   }
 }

@@ -15,7 +15,7 @@ class StackTraceElementTest extends \unittest\TestCase {
    * @return lang.StackTraceElement the fixture
    */
   protected function newFixtureWith($args) {
-    return new StackTraceElement('Test.class.php', __CLASS__, __FUNCTION__, 1, $args, 'Test');
+    return new StackTraceElement('Test.class.php', self::class, __FUNCTION__, 1, $args, 'Test');
   }
 
   #[@test]

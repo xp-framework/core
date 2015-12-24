@@ -18,7 +18,9 @@ class WithTest extends \unittest\TestCase {
       public function close() { $this->closed= true; }
     }');
     self::$raises= ClassLoader::defineClass('_WithTest_C1', Object::class, [Closeable::class], '{
-      public function close() { throw new \lang\IllegalArgumentException("Cannot close"); }
+      private $throwable;
+      public function __construct($class) { $this->throwable= $class; }
+      public function close() { throw new $this->throwable("Cannot close"); }
     }');
   }
 
@@ -78,17 +80,22 @@ class WithTest extends \unittest\TestCase {
 
   #[@test]
   public function exceptions_from_close_are_ignored() {
-    with (self::$raises->newInstance(), function() {
+    with (self::$raises->newInstance(IllegalStateException::class), function() {
       // NOOP
     });
   }
 
-  #[@test]
-  public function exceptions_from_close_are_ignored_and_subsequent_closes_executed() {
+  #[@test, @values([IllegalStateException::class, 'Exception'])]
+  public function exceptions_from_close_are_ignored_and_subsequent_closes_executed($class) {
     $b= self::$closes->newInstance();
-    with (self::$raises->newInstance(), $b, function() {
+    with (self::$raises->newInstance($class), $b, function() {
       // NOOP
     });
     $this->assertTrue($b->closed);
+  }
+
+  #[@test]
+  public function usage_with_closure_returns_whatever_closure_returns() {
+    $this->assertEquals('Test', with (function() { return 'Test'; }));
   }
 }

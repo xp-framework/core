@@ -166,26 +166,28 @@ class Field extends \lang\Object {
       ));
     }
 
-    // Check modifiers. If caller is an instance of this class, allow
+    // Check modifiers. If scope is an instance of this class, allow
     // protected method invocation (which the PHP reflection API does 
     // not).
     $m= $this->_reflect->getModifiers();
     $public= $m & MODIFIER_PUBLIC;
     if (!$public && !$this->accessible) {
-      $t= debug_backtrace(0);
+      $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+      $scope= isset($t[1]['class']) ? $t[1]['class'] : \lang\ClassLoader::getDefault()->loadUri($t[0]['file'])->literal();
       $decl= $this->_reflect->getDeclaringClass()->getName();
       if ($m & MODIFIER_PROTECTED) {
-        $allow= $t[1]['class'] === $decl || is_subclass_of($t[1]['class'], $decl);
+        $allow= $scope === $decl || is_subclass_of($scope, $decl);
       } else {
-        $allow= $t[1]['class'] === $decl;
+        $allow= $scope === $decl;
       }
+
       if (!$allow) {
         throw new \lang\IllegalAccessException(sprintf(
           'Cannot read %s %s::$%s from scope %s',
           Modifiers::stringOf($this->getModifiers()),
           $this->_class,
           $this->_reflect->getName(),
-          $t[1]['class']
+          $scope
         ));
       }
     }
@@ -218,18 +220,19 @@ class Field extends \lang\Object {
       ));
     }
   
-    // Check modifiers. If caller is an instance of this class, allow
+    // Check modifiers. If scope is an instance of this class, allow
     // protected method invocation (which the PHP reflection API does 
     // not).
     $m= $this->_reflect->getModifiers();
     $public= $m & MODIFIER_PUBLIC;
     if (!$public && !$this->accessible) {
-      $t= debug_backtrace(0);
+      $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+      $scope= isset($t[1]['class']) ? $t[1]['class'] : \lang\ClassLoader::getDefault()->loadUri($t[0]['file'])->literal();
       $decl= $this->_reflect->getDeclaringClass()->getName();
       if ($m & MODIFIER_PROTECTED) {
-        $allow= $t[1]['class'] === $decl || is_subclass_of($t[1]['class'], $decl);
+        $allow= $scope === $decl || is_subclass_of($scope, $decl);
       } else {
-        $allow= $t[1]['class'] === $decl;
+        $allow= $scope === $decl;
       }
       if (!$allow) {
         throw new IllegalAccessException(sprintf(
@@ -237,7 +240,7 @@ class Field extends \lang\Object {
           Modifiers::stringOf($this->getModifiers()),
           XPClass::nameOf($this->_class),
           $this->_reflect->getName(),
-          $t[1]['class']
+          $scope
         ));
       }
     }

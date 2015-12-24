@@ -3,6 +3,19 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.9.0 / 2015-12-24
+
+### Heads up!
+
+* **Heads up: Removed deprecated ensure()**, which has been replaced
+  by the `finally` statement. See xp-framework/core#111
+  (@thekid)
+
+### RFCs
+
+* Implemented xp-framework/rfc#305: with() results. See pull request #112
+  @thekid
+
 ### Bugfixes
 
 * Fixed xp-framework/core#110: Fatal error location swallowed - @thekid
@@ -10,6 +23,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added static `lang.Throwable::wrap()` to wrap any exception, including
+  PHP 5 and PHP 7's native base exceptions, in a `lang.Throwable` instance
+  (@thekid)
 * Changed `lang.Throwable` to accept any other instance of itself as
   cause *as well as* PHP 5 and PHP 7's native base exceptions.
   (@thekid)

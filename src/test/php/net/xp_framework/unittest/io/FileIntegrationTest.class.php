@@ -9,6 +9,8 @@ use lang\IllegalStateException;
 use unittest\PrerequisitesNotMetError;
 
 class FileIntegrationTest extends \unittest\TestCase {
+  const TESTDATA = 'Test';
+
   protected static $temp= null;
   protected $file= null;
   protected $folder= null;
@@ -157,168 +159,140 @@ class FileIntegrationTest extends \unittest\TestCase {
 
   #[@test]
   public function write() {
-    $this->assertEquals(5, $this->writeData($this->file, 'Hello'));
+    $this->assertEquals(4, $this->writeData($this->file, self::TESTDATA));
   }
 
   #[@test]
   public function read() {
-    with ($data= 'Hello'); {
-      $this->writeData($this->file, $data);
+    $this->writeData($this->file, self::TESTDATA);
 
-      $this->file->open(File::READ);
-      $this->assertEquals($data, $this->file->read(strlen($data)));
-      $this->file->close();
-    }
+    $this->file->open(File::READ);
+    $this->assertEquals(self::TESTDATA, $this->file->read(strlen(self::TESTDATA)));
+    $this->file->close();
   }
 
   #[@test]
   public function read0() {
-    with ($data= 'Hello'); {
-      $this->writeData($this->file, $data);
+    $this->writeData($this->file, self::TESTDATA);
 
-      $this->file->open(File::READ);
-      $this->assertEquals('', $this->file->read(0));
-      $this->file->close();
-    }
+    $this->file->open(File::READ);
+    $this->assertEquals('', $this->file->read(0));
+    $this->file->close();
   }
 
   #[@test]
   public function readAfterEnd() {
-    with ($data= 'Hello'); {
-      $this->writeData($this->file, $data);
+    $this->writeData($this->file, self::TESTDATA);
 
-      $this->file->open(File::READ);
-      $this->assertEquals($data, $this->file->read(strlen($data)));
-      $this->assertFalse($this->file->read(1));
-      $this->file->close();
-    }
+    $this->file->open(File::READ);
+    $this->assertEquals(self::TESTDATA, $this->file->read(strlen(self::TESTDATA)));
+    $this->assertFalse($this->file->read(1));
+    $this->file->close();
   }
 
   #[@test]
   public function gets() {
-    with ($data= 'Hello'); {
-      $this->writeData($this->file, $data);
+    $this->writeData($this->file, self::TESTDATA);
 
-      $this->file->open(File::READ);
-      $this->assertEquals($data, $this->file->gets());
-      $this->file->close();
-    }
+    $this->file->open(File::READ);
+    $this->assertEquals(self::TESTDATA, $this->file->gets());
+    $this->file->close();
   }
 
   #[@test]
   public function gets0() {
-    with ($data= 'Hello'); {
-      $this->writeData($this->file, $data);
+    $this->writeData($this->file, self::TESTDATA);
 
-      $this->file->open(File::READ);
-      $this->assertEquals('', $this->file->gets(0));
-      $this->file->close();
-    }
+    $this->file->open(File::READ);
+    $this->assertEquals('', $this->file->gets(0));
+    $this->file->close();
   }
 
   #[@test]
   public function getsTwoLines() {
-    with ($data= "Hello\nWorld\n"); {
-      $this->writeData($this->file, $data);
+    $this->writeData($this->file, "Hello\nWorld\n");
 
-      $this->file->open(File::READ);
-      $this->assertEquals("Hello\n", $this->file->gets());
-      $this->assertEquals("World\n", $this->file->gets());
-      $this->file->close();
-    }
+    $this->file->open(File::READ);
+    $this->assertEquals("Hello\n", $this->file->gets());
+    $this->assertEquals("World\n", $this->file->gets());
+    $this->file->close();
   }
 
   #[@test]
   public function getsAfterEnd() {
-    with ($data= 'Hello'); {
-      $this->writeData($this->file, $data);
+    $this->writeData($this->file, self::TESTDATA);
 
-      $this->file->open(File::READ);
-      $this->assertEquals('Hello', $this->file->gets());
-      $this->assertFalse($this->file->gets());
-      $this->file->close();
-    }
+    $this->file->open(File::READ);
+    $this->assertEquals(self::TESTDATA, $this->file->gets());
+    $this->assertFalse($this->file->gets());
+    $this->file->close();
   }
 
   #[@test]
   public function readLine() {
-    with ($data= 'Hello'); {
-      $this->writeData($this->file, $data);
+    $this->writeData($this->file, self::TESTDATA);
 
-      $this->file->open(File::READ);
-      $this->assertEquals($data, $this->file->readLine());
-      $this->file->close();
-    }
+    $this->file->open(File::READ);
+    $this->assertEquals(self::TESTDATA, $this->file->readLine());
+    $this->file->close();
   }
 
   #[@test]
   public function readLine0() {
-    with ($data= 'Hello'); {
-      $this->writeData($this->file, $data);
+    $this->writeData($this->file, self::TESTDATA);
 
-      $this->file->open(File::READ);
-      $this->assertEquals('', $this->file->readLine(0));
-      $this->file->close();
-    }
+    $this->file->open(File::READ);
+    $this->assertEquals('', $this->file->readLine(0));
+    $this->file->close();
   }
 
   #[@test]
   public function readLines() {
-    with ($data= "Hello\nWorld\n"); {
-      $this->writeData($this->file, $data);
+    $this->writeData($this->file, "Hello\nWorld\n");
 
-      $this->file->open(File::READ);
-      $this->assertEquals('Hello', $this->file->readLine());
-      $this->assertEquals('World', $this->file->readLine());
-      $this->file->close();
-    }
+    $this->file->open(File::READ);
+    $this->assertEquals('Hello', $this->file->readLine());
+    $this->assertEquals('World', $this->file->readLine());
+    $this->file->close();
   }
 
   #[@test]
   public function readLinesAfterEnd() {
-    with ($data= 'Hello'); {
-      $this->writeData($this->file, $data);
+    $this->writeData($this->file, self::TESTDATA);
 
-      $this->file->open(File::READ);
-      $this->assertEquals('Hello', $this->file->readLine());
-      $this->assertFalse($this->file->readLine());
-      $this->file->close();
-    }
+    $this->file->open(File::READ);
+    $this->assertEquals(self::TESTDATA, $this->file->readLine());
+    $this->assertFalse($this->file->readLine());
+    $this->file->close();
   }
 
   #[@test]
   public function readChar() {
-    with ($data= 'Hello'); {
-      $this->writeData($this->file, $data);
+    $this->writeData($this->file, self::TESTDATA);
 
-      $this->file->open(File::READ);
-      $this->assertEquals($data{0}, $this->file->readChar());
-      $this->file->close();
-    }
+    $this->file->open(File::READ);
+    $this->assertEquals(substr(self::TESTDATA, 0, 1), $this->file->readChar());
+    $this->file->close();
   }
 
   #[@test]
   public function readChars() {
-    with ($data= 'Hello'); {
-      $this->writeData($this->file, $data);
+    $this->writeData($this->file, self::TESTDATA);
 
-      $this->file->open(File::READ);
-      $this->assertEquals($data{0}, $this->file->readChar());
-      $this->assertEquals($data{1}, $this->file->readChar());
-      $this->file->close();
-    }
+    $this->file->open(File::READ);
+    $this->assertEquals(substr(self::TESTDATA, 0, 1), $this->file->readChar());
+    $this->assertEquals(substr(self::TESTDATA, 1, 1), $this->file->readChar());
+    $this->file->close();
   }
 
   #[@test]
   public function readCharsAfterEnd() {
-    with ($data= 'H'); {
-      $this->writeData($this->file, $data);
+    $this->writeData($this->file, 'H');
 
-      $this->file->open(File::READ);
-      $this->assertEquals('H', $this->file->readChar());
-      $this->assertFalse($this->file->readChar());
-      $this->file->close();
-    }
+    $this->file->open(File::READ);
+    $this->assertEquals('H', $this->file->readChar());
+    $this->assertFalse($this->file->readChar());
+    $this->file->close();
   }
 
   #[@test]
