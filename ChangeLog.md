@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.9.1 / 2015-12-28
+
 ### Bugfixes
 
 * Fix wrapping \Exceptions behavior difference betwee PHP5 and PHP7
