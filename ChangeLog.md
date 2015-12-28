@@ -7,7 +7,7 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
-* Fix wrapping \Exceptions behavior difference betwee PHP5 and PHP7
+* Fix wrapping \Exceptions behavior difference between PHP5 and PHP7
   (@thekid)
 * Made `lang.XPClass::forName()` accept native class names, also
   (@thekid)
