@@ -42,13 +42,13 @@ class Throwable extends \Exception implements Generic { use \__xp;
   public static function wrap($e) {
     if ($e instanceof self) {
       return $e;
-    } else if ($e instanceof \Throwable) {    // PHP 7
-      $wrapped= new Error($e->getMessage(), $e->getPrevious(), false);
+    } else if ($e instanceof \Exception) {    // PHP 5
+      $wrapped= new XPException($e->getMessage(), $e->getPrevious(), false);
       $wrapped->addStackTraceFor($e->getFile(), '<native>', get_class($e), $e->getLine(), [$e->getCode(), $e->getMessage()], [['' => 1]]);
       $wrapped->fillInStackTrace($e);
       return $wrapped;
-    } else if ($e instanceof \Exception) {    // PHP 5
-      $wrapped= new XPException($e->getMessage(), $e->getPrevious(), false);
+    } else if ($e instanceof \Throwable) {    // PHP 7
+      $wrapped= new Error($e->getMessage(), $e->getPrevious(), false);
       $wrapped->addStackTraceFor($e->getFile(), '<native>', get_class($e), $e->getLine(), [$e->getCode(), $e->getMessage()], [['' => 1]]);
       $wrapped->fillInStackTrace($e);
       return $wrapped;

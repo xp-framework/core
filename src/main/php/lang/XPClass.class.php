@@ -834,17 +834,20 @@ class XPClass extends Type {
    * Returns the XPClass object associated with the class with the given 
    * string name. Uses the default classloader if none is specified.
    *
-   * @param   string name - e.g. "io.File", "rdbms.mysql.MySQL"
+   * @param   string name - e.g. "Exception", "io.File" or "lang.XPClass"
    * @param   lang.IClassLoader classloader default NULL
    * @return  lang.XPClass class object
    * @throws  lang.ClassNotFoundException when there is no such class
    */
   public static function forName($name, IClassLoader $classloader= null) {
-    if (null === $classloader) {
-      $classloader= ClassLoader::getDefault();
+    $qualified= strtr($name, '.', '\\');
+    if (class_exists($qualified, false) || interface_exists($qualified, false) || trait_exists($qualified, false)) {
+      return new self($qualified);
+    } else if (null === $classloader) {
+      return ClassLoader::getDefault()->loadClass(strtr($name, '\\', '.'));
+    } else {
+      return $classloader->loadClass(strtr($name, '\\', '.'));
     }
-
-    return $classloader->loadClass(strtr($name, '\\', '.'));
   }
 
   /**

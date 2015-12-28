@@ -81,4 +81,9 @@ class ClassMemberParsingTest extends \unittest\TestCase {
       $value
     );
   }
+
+  #[@test, @values([\Exception::class])]
+  public function class_constant_referencing_native_class($value) {
+    $this->assertEquals('Exception', $value);
+  }
 }
