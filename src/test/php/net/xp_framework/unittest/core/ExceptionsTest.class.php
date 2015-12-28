@@ -49,31 +49,35 @@ class ExceptionsTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function stackTrace() {
+  public function exceptions_have_non_empty_stracktraces() {
     $trace= (new Throwable('Test'))->getStackTrace();
     $this->assertInstanceOf('lang.StackTraceElement[]', $trace);
     $this->assertNotEquals(0, sizeof($trace));
   }
 
   #[@test]
-  public function firstFrame() {
-    $trace= (new Throwable('Test'))->getStackTrace();
+  public function first_frame_contains_this_class_and_method() {
+    $first= (new Throwable('Test'))->getStackTrace()[0];
     
-    $this->assertEquals(get_class($this), $trace[0]->class);
-    $this->assertEquals($this->getName(), $trace[0]->method);
-    $this->assertEquals(NULL, $trace[0]->file);
-    $this->assertEquals(0, $trace[0]->line);
-    $this->assertEquals([], $trace[0]->args);
-    $this->assertEquals('', $trace[0]->message);
+    $this->assertEquals(
+      ['class' => __CLASS__, 'method' => __FUNCTION__],
+      ['class' => $first->class, 'method' => $first->method]
+    );
   }
 
   #[@test]
-  public function allExceptionsAreUnique() {
+  public function an_exception_equals_itself() {
+    $e= new Throwable('Test');
+    $this->assertEquals($e, $e);
+  }
+
+  #[@test]
+  public function all_exceptions_are_unique() {
     $this->assertNotEquals(new Throwable('Test'), new Throwable('Test'));
   }
 
   #[@test]
-  public function hashCodesAreUnique() {
+  public function exceptions_hashcodes_are_also_unique() {
     $this->assertNotEquals(
       (new Throwable('Test'))->hashCode(),
       (new Throwable('Test'))->hashCode()
