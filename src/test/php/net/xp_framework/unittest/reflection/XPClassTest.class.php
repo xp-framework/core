@@ -31,7 +31,7 @@ class XPClassTest extends \unittest\TestCase {
 
   #[@test]
   public function literal_returns_name_as_known_to_PHP() {
-    $this->assertEquals(get_class(new TestClass()), $this->fixture->literal());
+    $this->assertEquals(TestClass::class, $this->fixture->literal());
   }
 
   #[@test]
@@ -311,6 +311,11 @@ class XPClassTest extends \unittest\TestCase {
   #[@test]
   public function forName_supports_class_literals() {
     $this->assertEquals($this->fixture, XPClass::forName(TestClass::class));
+  }
+
+  #[@test]
+  public function forName_supports_native_classes() {
+    $this->assertEquals(new XPClass(\Exception::class), XPClass::forName(\Exception::class));
   }
 
   #[@test]
