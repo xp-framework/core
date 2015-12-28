@@ -116,4 +116,27 @@ class ExceptionsTest extends \unittest\TestCase {
   public function withCause_must_be_a_throwable() {
     new XPException('Message', 'Anything...');
   }
+
+  #[@test]
+  public function wrap_xp_exceptions() {
+    $e= new XPException('Test');
+    $this->assertEquals($e, Throwable::wrap($e));
+  }
+
+  #[@test]
+  public function wrap_php5_exceptions() {
+    $e= new \Exception('Test');
+    $this->assertInstanceOf(XPException::class, Throwable::wrap($e));
+  }
+
+  #[@test, @action(new RuntimeVersion('>=7.0.0'))]
+  public function wrap_php7_exceptions() {
+    $e= new \TypeError('Test');
+    $this->assertInstanceOf(Error::class, Throwable::wrap($e));
+  }
+
+  #[@test, @expect(IllegalArgumentException::class)]
+  public function wrap_non_exceptions() {
+    Throwable::wrap($this);
+  }
 }
