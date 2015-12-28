@@ -158,4 +158,10 @@ class ExceptionsTest extends \unittest\TestCase {
   public function wrap_non_exceptions() {
     Throwable::wrap($this);
   }
+
+  #[@test]
+  public function wrapping_native_exceptions_adds_stacktrace_with_file_and_line() {
+    $first= Throwable::wrap(new \Exception('Test'))->getStackTrace()[0];
+    $this->assertEquals([__FILE__, __LINE__ - 1], [$first->file, $first->line]);
+  }
 }
