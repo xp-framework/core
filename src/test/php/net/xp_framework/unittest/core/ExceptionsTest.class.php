@@ -86,6 +86,25 @@ class ExceptionsTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function cause() {
+    $cause= new Throwable('Cause');
+    $this->assertEquals($cause, (new Throwable('Test', $cause))->getCause());
+  }
+
+  #[@test]
+  public function cause_is_optional() {
+    $this->assertNull((new Throwable('Test'))->getCause());
+  }
+
+  #[@test]
+  public function cause_can_be_modified() {
+    $cause= new Throwable('Cause');
+    $e= new Throwable('Test');
+    $e->setCause($cause);
+    $this->assertEquals($cause, $e->getCause());
+  }
+
+  #[@test]
   public function classMethod() {
     $this->assertEquals(XPClass::forName('lang.Throwable'), (new Throwable('Test'))->getClass());
   }
