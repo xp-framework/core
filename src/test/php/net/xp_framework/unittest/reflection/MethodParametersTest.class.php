@@ -61,7 +61,7 @@ class MethodParametersTest extends MethodsTest {
     $this->assertEquals($type, $this->method('public function fixture('.$literal.' $param) { }')->getParameter(0)->getType());
   }
 
-  #[@test, @ignore('No reflection support yet'), @action(new RuntimeVersion('>=7.0')), @values([
+  #[@test, @action(new RuntimeVersion('>=7.0')), @values([
   #  ['string', Primitive::$STRING],
   #  ['int', Primitive::$INT],
   #  ['bool', Primitive::$BOOL],
