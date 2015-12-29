@@ -1,7 +1,5 @@
 <?php namespace io\streams;
 
-use security\checksum\CRC32;
-
 /**
  * OuputStream that compresses content using GZIP encoding. Data
  * produced with this stream can be read with the "gunzip" command
@@ -45,7 +43,7 @@ class GzCompressingOutputStream extends \lang\Object implements OutputStream {
       $this->out= null;
       throw new \io\IOException('Could not append stream filter');
     }
-    $this->md= CRC32::digest();
+    $this->md= hash_init('crc32b');
   }
   
   /**
@@ -56,7 +54,7 @@ class GzCompressingOutputStream extends \lang\Object implements OutputStream {
   public function write($arg) {
     fwrite($this->out, $arg);
     $this->length+= strlen($arg);
-    $this->md->update($arg);
+    hash_update($this->md, $arg);
   }
 
   /**
@@ -77,13 +75,16 @@ class GzCompressingOutputStream extends \lang\Object implements OutputStream {
   
     // Remove deflating filter so we can continue writing "raw"
     stream_filter_remove($this->filter);
+
+    $final= hash_final($this->md, true);
     
     // Write GZIP footer:
     // * CRC32    (CRC-32 checksum)
     // * ISIZE    (Input size)
-    fwrite($this->out, pack('VV', (new CRC32($this->md->digest()))->asInt32(), $this->length));
+    fwrite($this->out, pack('a4V', strrev($final), $this->length));
     fclose($this->out);
     $this->out= null;
+    $this->md= null;
   }
   
   /**
