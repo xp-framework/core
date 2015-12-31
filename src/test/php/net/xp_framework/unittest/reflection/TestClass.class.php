@@ -10,7 +10,7 @@ use util\collections\Vector;
  * @see    xp://net.xp_framework.unittest.reflection.ReflectionTest
  */
 #[@test('Annotation')]
-class TestClass extends AbstractTestClass implements \util\log\Traceable {
+class TestClass extends AbstractTestClass implements \lang\Runnable {
 
   #[@type('util.Date')]
   public $date   = null;
@@ -116,14 +116,13 @@ class TestClass extends AbstractTestClass implements \util\log\Traceable {
   }
   
   /**
-   * Set a trace for debugging
+   * Runnable implementation
    *
-   * @param   util.log.LogCategory cat
    * @return  void
    * @throws  lang.IllegalStateException *ALWAYS*
    */
-  public function setTrace($cat) {
-    throw new \lang\IllegalStateException('Not debuggable yet');
+  public function run() {
+    throw new \lang\IllegalStateException('Not runnable yet');
   }
     
   /**
