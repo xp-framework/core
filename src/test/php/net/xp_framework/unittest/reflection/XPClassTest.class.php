@@ -183,7 +183,7 @@ class XPClassTest extends \unittest\TestCase {
   #[@test]
   public function getInterfaces_contains_declared_interface() {
     $this->assertTrue(in_array(
-      XPClass::forName('util.log.Traceable'),
+      XPClass::forName('lang.Runnable'),
       $this->fixture->getInterfaces()
     ));
   }
@@ -191,7 +191,7 @@ class XPClassTest extends \unittest\TestCase {
   #[@test]
   public function getDeclaredInterfaces_consist_of_declared_interface() {
     $this->assertEquals(
-      [XPClass::forName('util.log.Traceable')],
+      [XPClass::forName('lang.Runnable')],
       $this->fixture->getDeclaredInterfaces()
     );
   }
@@ -247,7 +247,7 @@ class XPClassTest extends \unittest\TestCase {
 
   #[@test, @expect(IllegalAccessException::class)]
   public function newInstance_raises_exception_if_class_is_an_interface() {
-    XPClass::forName('util.log.Traceable')->newInstance();
+    XPClass::forName('lang.Runnable')->newInstance();
   }
 
   #[@test, @expect(IllegalAccessException::class)]
