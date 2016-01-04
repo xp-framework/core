@@ -303,6 +303,11 @@ class ObjectsTest extends \unittest\TestCase {
     $this->assertEquals($val->toString(), Objects::stringOf($val));
   }
 
+  #[@test, @values('natives')]
+  public function stringOf_calls_xpStringOf_on_natives($val) {
+    $this->assertEquals(\xp::stringOf($val), Objects::stringOf($val));
+  }
+
   #[@test]
   public function null_hash() {
     $this->assertEquals('N;', Objects::hashOf(null));
