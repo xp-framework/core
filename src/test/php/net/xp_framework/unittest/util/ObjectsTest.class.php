@@ -57,6 +57,14 @@ class ObjectsTest extends \unittest\TestCase {
   }
 
   /** @return  var[][] */
+  public function natives() {
+    return [
+      [new \ReflectionClass(self::class)],
+      [new \StdClass()]
+    ];
+  }
+
+  /** @return  var[][] */
   public function values() {
     return array_merge(
       [null],
@@ -64,6 +72,7 @@ class ObjectsTest extends \unittest\TestCase {
       $this->arrays(),
       $this->maps(),
       $this->objects(),
+      $this->natives(),
       [[function() { return 'Test'; }]]
     );
   }
@@ -83,6 +92,42 @@ class ObjectsTest extends \unittest\TestCase {
   #[@test, @values('values')]
   public function value_is_equal_to_self($val) {
     $this->assertTrue(Objects::equal($val, $val));
+  }
+
+  #[@test, @values([
+  #  [new ValueObject('')],
+  #  [new ValueObject('Test')]
+  #])]
+  public function objects_with_equal_methods_are_equal_to_clones_of_themselves($val) {
+    $this->assertTrue(Objects::equal($val, clone $val));
+  }
+
+  #[@test]
+  public function natives_with_equal_members_are_equal() {
+    $this->assertTrue(Objects::equal(new \ReflectionClass(self::class), new \ReflectionClass(self::class)));
+  }
+
+  #[@test]
+  public function natives_with_equal_members_but_different_types_are_not_equal() {
+    $parent= new \ReflectionClass(self::class);
+    $inherited= newinstance(\ReflectionClass::class, [self::class]);
+    $this->assertFalse(Objects::equal($parent, $inherited), 'parent, inherited');
+    $this->assertFalse(Objects::equal($inherited, $parent), 'inherited, parent');
+  }
+
+  #[@test]
+  public function natives_with_different_members_are_not_equal() {
+    $this->assertFalse(Objects::equal(new \ReflectionClass(self::class), new \ReflectionClass(parent::class)));
+  }
+
+  #[@test]
+  public function natives_are_not_equal_to_maps_with_same_members() {
+    $this->assertFalse(Objects::equal((object)['name' => self::class], ['name' => self::class]));
+  }
+
+  #[@test]
+  public function natives_are_not_equal_to_instances_with_same_members() {
+    $this->assertFalse(Objects::equal((object)['name' => self::class], new \ReflectionClass(self::class)));
   }
 
   #[@test, @values(source= 'valuesExcept', args= [null])]
@@ -180,6 +225,41 @@ class ObjectsTest extends \unittest\TestCase {
   #])]
   public function compare_objects($a, $b, $expected) {
     $this->assertEquals($expected, Objects::compare(new ValueObject($a), new ValueObject($b)));
+  }
+
+  #[@test, @values([
+  #  [new ValueObject('')],
+  #  [new ValueObject('Test')]
+  #])]
+  public function compare_objects_to_clones_of_themselves($val) {
+    $this->assertEquals(0, Objects::compare($val, clone $val));
+  }
+
+  #[@test, @values([
+  #  [self::class, self::class, 0],
+  #  [self::class, parent::class, -1],
+  #  [parent::class, self::class, 1]
+  #])]
+  public function compare_natives($a, $b, $expected) {
+    $this->assertEquals($expected, Objects::compare(new \ReflectionClass($a), new \ReflectionClass($b)));
+  }
+
+  #[@test]
+  public function compare_natives_with_equal_members_but_different_types() {
+    $parent= new \ReflectionClass(self::class);
+    $inherited= newinstance(\ReflectionClass::class, [self::class]);
+    $this->assertEquals(1, Objects::compare($parent, $inherited), 'parent, inherited');
+    $this->assertEquals(1, Objects::compare($inherited, $parent), 'inherited, parent');
+  }
+
+  #[@test]
+  public function compare_natives_to_maps_with_same_members() {
+    $this->assertEquals(1, Objects::compare((object)['name' => self::class], ['name' => self::class]));
+  }
+
+  #[@test]
+  public function compare_natives_to_instances_with_same_members() {
+    $this->assertEquals(1, Objects::compare((object)['name' => self::class], new \ReflectionClass(self::class)));
   }
 
   #[@test, @values([
