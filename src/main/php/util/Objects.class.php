@@ -105,7 +105,7 @@ abstract class Objects extends \lang\Object {
       }
       return $s;
     } else {
-      return serialize($val);
+      return is_object($val) ? spl_object_hash($val) : serialize($val);
     }
   }
 }

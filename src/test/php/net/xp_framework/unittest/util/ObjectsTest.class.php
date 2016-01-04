@@ -328,6 +328,11 @@ class ObjectsTest extends \unittest\TestCase {
     $this->assertEquals($val->hashCode(), Objects::hashOf($val));
   }
 
+  #[@test, @values('natives')]
+  public function hashOf_calls_spl_object_hash_on_natives($val) {
+    $this->assertEquals(spl_object_hash($val), Objects::hashOf($val));
+  }
+
   #[@test]
   public function function_hash() {
     $this->assertEquals(spl_object_hash(self::$func), Objects::hashOf(self::$func));
