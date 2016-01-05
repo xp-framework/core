@@ -42,11 +42,20 @@ class Help {
   /**
    * Main
    *
-   * @param   string[] args
+   * @param  string[] $args
+   * @return int
    */
   public static function main(array $args) {
-    $class= XPClass::forName($args[0]);
-    Console::writeLine('@', $class->getClassLoader());
-    Console::writeLine(self::textOf($class->getComment()));
+    if ('@' === $args[0]{0}) {
+      $class= (new XPClass(__CLASS__));
+      $markdown= $class->getPackage()->getResource(substr($args[0], 1));
+    } else {
+      $class= XPClass::forName($args[0]);
+      $markdown= $class->getComment();
+    }
+
+    Console::writeLine("\e[33m@", $class->getClassLoader(), "\e[0m");
+    Console::writeLine(self::textOf($markdown));
+    return 1;
   }
 }
