@@ -18,7 +18,7 @@ class ShowResource {
    * @param   string[] args
    */
   public static function main(array $args) {
-    Console::$err->writeLine((new \lang\XPClass(__CLASS__))->getPackage()->getResource($args[0]));
+    Help::main(['@'.$args[0]]);
     return (int)$args[1];
   }
 }
