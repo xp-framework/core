@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.9.2 / 2016-01-05
+
+### Bugfixes
+
+* Fixed util.Objects to handle instances of non-XP classes in equal(),
+  compare() and hashOf(). See xp-framework/core#113
+  (@thekid)
+
 ## 6.9.1 / 2015-12-28
 
 ### Bugfixes
