@@ -29,7 +29,11 @@ abstract class Objects extends \lang\Object {
       }
       return true;
     } else {
-      return $a === $b;
+      return $a === $b || (
+        is_object($a) && is_object($b) &&
+        get_class($a) === get_class($b) &&
+        self::equal((array)$a, (array)$b)
+      );
     }
   }
 
@@ -54,8 +58,15 @@ abstract class Objects extends \lang\Object {
         if (0 !== $r= self::compare($val, $b[$key])) return $r;
       }
       return 0;
+    } else if ($a === $b) {
+      return 0;
+    } else if (is_object($a)) {
+      return (is_object($b) && get_class($a) === get_class($b))
+        ? self::compare((array)$a, (array)$b)
+        : 1
+      ;
     } else {
-      return $a === $b ? 0 : ($a < $b ? -1 : 1);
+      return $a < $b ? -1 : 1;
     }
   }
 
@@ -94,7 +105,7 @@ abstract class Objects extends \lang\Object {
       }
       return $s;
     } else {
-      return serialize($val);
+      return is_object($val) ? spl_object_hash($val) : serialize($val);
     }
   }
 }
