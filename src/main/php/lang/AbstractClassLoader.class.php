@@ -152,11 +152,11 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
    */
   private function compactPath($path, $bases) {
     foreach ($bases as $base => $replace) {
-      if (0 === substr_compare($path, $base, 0, $length= strlen($base))) {
-        $path= $replace.substr($path, $length);
+      if (0 === strpos($path, $base)) {
+        $path= $replace.substr($path, strlen($base));
       }
     }
-    return $path;;
+    return $path;
   }
 
   /**
