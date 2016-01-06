@@ -21,9 +21,9 @@ class Help {
         '#(.+)\n=+\n#m',                      // Underlined first-level headline
         '#\# (.+)#',                          // Underlined first-level headline
         '#( *)```([a-z]*)\n *(.+)\n *```#m',  // Code section
-        '#\{([^\}]+)\}#',                     // {placeholder}
-        '#"([^"]+)"#',                        // "string"
-        '#`([^`]+)`#',                        // `number`
+        '#\*\*([^\*]+)\*\*#',                 // **bold**
+        '#\*([^ ][^\*]+[^ ])\*#',             // *italic*
+        '#`([^`]+)`#',                        // `preformat`
         '#^\* \* \*#',                        // horizontal rule
         '#^\- #'                              // unordered list
       ],
@@ -31,7 +31,7 @@ class Help {
         "\e[1m".'$1'."\n\e[36m".$line."\e[0m\n",
         "\e[1m".'$1'."\n\e[36m".$line."\e[0m\n",
         "\n".'$1'."\e[44;1;37m".'$3'."\e[0m\n",
-        "\e[33;1m{".'$1'."}\e[0m",
+        "\e[33;1m".'$1'."\e[0m",
         "\e[36;1m".'$1'."\e[0m",
         "\e[32;1m".'$1'."\e[0m",
         $line,
