@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Merged xp-framework/core#114: Make paths displayed in class loaders'
+  `toString()` copy&pasteable
+  (@thekid)
+
 ## 6.9.2 / 2016-01-05
 
 ### Bugfixes
