@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Merged xp-framework/core#114: Make paths displayed in class loaders'
+  `toString()` copy&pasteable
+  (@thekid)
+* Added `xp.runtime.Help` with support for basic markdown. It is used by
+  the *xp help*  subcommand. See xp-runners/reference#5 
+  (@thekid)
+
 ## 6.9.2 / 2016-01-05
 
 ### Bugfixes

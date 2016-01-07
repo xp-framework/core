@@ -1,4 +1,4 @@
-<?php namespace net\xp_framework\unittest\core;
+<?php namespace net\xp_framework\unittest\runtime;
 
 use xp\runtime\Code;
 

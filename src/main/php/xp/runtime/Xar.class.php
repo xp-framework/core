@@ -7,6 +7,8 @@ use lang\archive\Archive;
 
 /**
  * Runs an application from a XAR file
+ *
+ * @deprecated See https://github.com/xp-framework/xp-runners/pull/38
  */
 class Xar {
   const MANIFEST = 'META-INF/manifest.ini';
