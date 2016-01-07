@@ -34,6 +34,7 @@ class RenderMarkdownTest extends \unittest\TestCase {
 
   #[@test, @values([
   #  ['<b>Text</b>', '**Text**'],
+  #  ['<b>T</b>', '**T**'],
   #  ['This is <b>bold</b>', 'This is **bold**'],
   #  ['A <b>bold</b> word', 'A **bold** word'],
   #  ['<b>Bold</b> start', '**Bold** start']
@@ -44,12 +45,23 @@ class RenderMarkdownTest extends \unittest\TestCase {
 
   #[@test, @values([
   #  ['<i>Text</i>', '*Text*'],
+  #  ['<i>T</i>', '*T*'],
   #  ['This is <i>italic</i>', 'This is *italic*'],
   #  ['A <i>italic</i> word', 'A *italic* word'],
   #  ['<i>Italic</i> start', '*Italic* start']
   #])]
   public function italic($expected, $input) {
     $this->assertMarkdown($expected, $input);
+  }
+
+  #[@test, @values(['a * b', 'a * b *', 'a * b*', ' * a*b', ' * a * b'])]
+  public function not_italic($input) {
+    $this->assertMarkdown($input, $input);
+  }
+
+  #[@test, @values(['a ** b', 'a ** b **', 'a ** b**', ' ** a**b', ' ** a ** b'])]
+  public function not_bold($input) {
+    $this->assertMarkdown($input, $input);
   }
 
   #[@test, @values([

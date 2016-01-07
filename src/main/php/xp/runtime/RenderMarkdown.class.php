@@ -29,8 +29,8 @@ class RenderMarkdown {
     return preg_replace(
       [
         '/# (.+)/',                              // Prefixed first-level headline
-        '/\*\*([^\*]+)\*\*/',                    // **bold**
-        '/\*([^ ][^\*]+[^ ])\*/',                // *italic*
+        '/\*\*([^ ][^\*]+[^ ]|[^ ]{1,2})\*\*/',  // **bold**
+        '/\*([^ \*][^\*]+[^ \*]|[^ ]{1,2})\*/',  // *italic*
         '/`([^`]+)`/'                            // `preformat`
       ],
       [$style['h1'], $style['bold'], $style['italic'], $style['pre']],
