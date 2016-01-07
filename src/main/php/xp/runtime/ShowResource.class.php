@@ -1,7 +1,5 @@
 <?php namespace xp\runtime;
 
-use util\cmd\Console;
-
 /**
  * Shows a given resource from the package this class is contained in
  * on standard error and exit with a given value.
@@ -9,6 +7,8 @@ use util\cmd\Console;
  * ```sh
  * $ xp xp.runtime.ShowResource usage.txt 255
  * ```
+ *
+ * @deprecated Use xp.runtime.Help instead
  */
 class ShowResource {
 
