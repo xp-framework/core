@@ -15,8 +15,11 @@ class Help {
    * @return int
    */
   public static function main(array $args) {
-    if ('@' === $args[0]{0}) {
-      $class= (new XPClass(__CLASS__));
+    if (empty($args)) {
+      $class= new XPClass(__CLASS__);
+      $markdown= $class->getComment();
+    } else if ('@' === $args[0]{0}) {
+      $class= new XPClass(__CLASS__);
       $markdown= $class->getPackage()->getResource(substr($args[0], 1));
     } else {
       $class= XPClass::forName($args[0]);
