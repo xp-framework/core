@@ -5,6 +5,7 @@ use xp\runtime\RenderMarkdown;
 class RenderMarkdownTest extends \unittest\TestCase {
   private $markdown;
 
+  /** @return void */
   public function setUp() {
     $this->markdown= new RenderMarkdown([
       'h1'     => '<h1>$1</h1>',
