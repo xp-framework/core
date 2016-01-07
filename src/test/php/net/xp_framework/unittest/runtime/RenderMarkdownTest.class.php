@@ -54,12 +54,18 @@ class RenderMarkdownTest extends \unittest\TestCase {
     $this->assertMarkdown($expected, $input);
   }
 
-  #[@test, @values(['a * b', 'a * b *', 'a * b*', ' * a*b', ' * a * b'])]
+  #[@test, @values([
+  #  'a * b', 'a * b *', 'a * b*', ' * a*b', ' * a * b',
+  #  "First line*\nSecond line*"
+  #])]
   public function not_italic($input) {
     $this->assertMarkdown($input, $input);
   }
 
-  #[@test, @values(['a ** b', 'a ** b **', 'a ** b**', ' ** a**b', ' ** a ** b'])]
+  #[@test, @values([
+  #  'a ** b', 'a ** b **', 'a ** b**', ' ** a**b', ' ** a ** b',
+  #  "First line**\nSecond line**"
+  #])]
   public function not_bold($input) {
     $this->assertMarkdown($input, $input);
   }

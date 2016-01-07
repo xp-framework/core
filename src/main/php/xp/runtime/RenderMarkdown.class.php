@@ -28,18 +28,18 @@ class RenderMarkdown {
     $style= $this->style;
     return preg_replace(
       [
-        '/# (.+)/',                              // Prefixed first-level headline
-        '/\*\*([^ ][^\*]+[^ ]|[^ ]{1,2})\*\*/',  // **bold**
-        '/\*([^ \*][^\*]+[^ \*]|[^ ]{1,2})\*/',  // *italic*
-        '/`([^`]+)`/'                            // `preformat`
+        '/# (.+)/',                                     // Prefixed first-level headline
+        '/\*\*([^\n ][^\n\*]+[^\n ]|[^\n ]{1,2})\*\*/', // **bold**
+        '/\*([^\n \*][^\n\*]+[^\n \*]|[^\n ]{1,2})\*/', // *italic*
+        '/`([^`]+)`/'                                   // `preformat`
       ],
       [$style['h1'], $style['bold'], $style['italic'], $style['pre']],
       preg_replace(
         [
-          '/^(.+)\n=+$/m',                       // Underlined first-level headline
-          '/^\* \* \*$/m',                       // horizontal rule
-          '/^([*+-]) (.+)$/m',                   // unordered list
-          '/^( *)```([a-z]*)\n *(.+)\n *```$/m', // Code section
+          '/^(.+)\n=+$/m',                              // Underlined first-level headline
+          '/^\* \* \*$/m',                              // horizontal rule
+          '/^([*+-]) (.+)$/m',                          // unordered list
+          '/^( *)```([a-z]*)\n *(.+)\n *```$/m',        // Code section
         ],
         [$style['h1'], $style['hr'], $style['li'], $style['code']],
         trim($markdown, "\r\n")
