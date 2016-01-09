@@ -9,6 +9,7 @@ class RenderMarkdownTest extends \unittest\TestCase {
   public function setUp() {
     $this->markdown= new RenderMarkdown([
       'h1'     => '<h1>$1</h1>',
+      'link'   => '<a href="$2">$1</a>',
       'bold'   => '<b>$1</b>',
       'italic' => '<i>$1</i>',
       'pre'    => '<pre>$1</pre>',
@@ -30,6 +31,16 @@ class RenderMarkdownTest extends \unittest\TestCase {
   #[@test]
   public function underlined_first_level_headline() {
     $this->assertMarkdown('<h1>Headline</h1>', "Headline\n=============\n");
+  }
+
+  #[@test, @values([
+  #  ['<a href="text">Text</a>', '[Text](text)'],
+  #  ['<a href="">Text</a>', '[Text]()'],
+  #  ['<a href="prev">«</a> <a href="next">»</a>', '[«](prev) [»](next)'],
+  #  ['<li symbol="*"><a href="next">Next</a></li>', '* [Next](next)']
+  #])]
+  public function link($expected, $input) {
+    $this->assertMarkdown($expected, $input);
   }
 
   #[@test, @values([

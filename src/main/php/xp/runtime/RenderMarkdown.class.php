@@ -31,9 +31,10 @@ class RenderMarkdown {
         '/# (.+)/',                                     // Prefixed first-level headline
         '/\*\*([^\n ][^\n\*]+[^\n ]|[^\n ]{1,2})\*\*/', // **bold**
         '/\*([^\n \*][^\n\*]+[^\n \*]|[^\n ]{1,2})\*/', // *italic*
-        '/`([^`]+)`/'                                   // `preformat`
+        '/`([^`]+)`/',                                  // `preformat`
+        '/(?<!\e)\[([^\]]+)\]\(([^\)]*)\)/'             // links
       ],
-      [$style['h1'], $style['bold'], $style['italic'], $style['pre']],
+      [$style['h1'], $style['bold'], $style['italic'], $style['pre'], $style['link']],
       preg_replace(
         [
           '/^(.+)\n=+$/m',                              // Underlined first-level headline
