@@ -14,7 +14,7 @@ class Help {
     $line= str_repeat('═', 72);
     self::$colored= new RenderMarkdown([
       'h1'     => "\e[1m".'$1'."\n\e[36m".$line."\e[0m",
-      'link'   => "\e[33;1m".'$1'."\e[0m (» \e[35;1m".'${SELF}/$2'."\e[0m)",
+      'link'   => "\e[33;1m".'$1'."\e[0m (» \e[35;4m".'$2'."\e[0m)",
       'bold'   => "\e[33;1m".'$1'."\e[0m",
       'italic' => "\e[36;1m".'$1'."\e[0m",
       'pre'    => "\e[32;1m".'$1'."\e[0m",
@@ -32,9 +32,9 @@ class Help {
    * @param  var $source E.g., a ClassLoader instance
    * @return void
    */
-  public static function render($writer, $markdown, $source, $replace= []) {
+  public static function render($writer, $markdown, $source) {
     $source && $writer->writeLine("\e[33m@", $source, "\e[0m");
-    $writer->writeLine(strtr(self::$colored->render($markdown), $replace));
+    $writer->writeLine(self::$colored->render($markdown));
   }
 
   /**
@@ -51,14 +51,14 @@ class Help {
       $source= $class->getClassLoader();
       $markdown= $class->getComment();
     } else if ('@' === $args[0]{0}) {
-      sscanf($args[0], '@%[^:]:%s', $resource, $command);
+      $resource= substr($args[0], 1);
       if (null === ($source= ClassLoader::getDefault()->findResource($resource))) {
         Console::$err->writeLine('No help topic named ', $resource);
         return 2;
       }
       $markdown= $source->getResource($resource);
     } else {
-      sscanf($args[0], '%[^:]:%s', $class, $command);
+      $class= $args[0];
       if (null === ($source= ClassLoader::getDefault()->findClass($class))) {
         Console::$err->writeLine('No class named ', $class);
         return 2;
@@ -66,7 +66,7 @@ class Help {
       $markdown= $source->loadClass($class)->getComment();
     }
 
-    self::render(Console::$out, $markdown, $source, ['${SELF}' => rtrim('xp help '.$command, ' ')]);
+    self::render(Console::$out, $markdown, $source);
     return 1;
   }
 }
