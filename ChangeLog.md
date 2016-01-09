@@ -15,7 +15,8 @@ XP Framework Core ChangeLog
   `toString()` copy&pasteable
   (@thekid)
 * Added `xp.runtime.Help` with support for basic markdown. It is used by
-  the *xp help*  subcommand. See xp-runners/reference#5 
+  the *xp help*  subcommand, and exports a public API for rendering. See
+  xp-runners/reference#5, xp-framework/unittest#14 and xp-framework/command#1
   (@thekid)
 
 ## 6.9.2 / 2016-01-05
