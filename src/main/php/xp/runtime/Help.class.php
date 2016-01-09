@@ -60,7 +60,7 @@ class Help {
         Console::$err->writeLine('No class named ', $class);
         return 2;
       }
-      $markdown= $source->loadClass($class)->getComment($resource);
+      $markdown= $source->loadClass($class)->getComment();
     }
 
     self::render(Console::$out, $markdown, $source);
