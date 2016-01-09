@@ -49,12 +49,18 @@ class Help {
       $markdown= $class->getComment();
     } else if ('@' === $args[0]{0}) {
       $resource= substr($args[0], 1);
-      $source= ClassLoader::getDefault()->findResource($resource);
+      if (null === ($source= ClassLoader::getDefault()->findResource($resource))) {
+        Console::$err->writeLine('No help topic named ', $resource);
+        return 2;
+      }
       $markdown= $source->getResource($resource);
     } else {
-      $class= XPClass::forName($args[0]);
-      $source= $class->getClassLoader();
-      $markdown= $class->getComment();
+      $class= $args[0];
+      if (null === ($source= ClassLoader::getDefault()->findClass($class))) {
+        Console::$err->writeLine('No class named ', $class);
+        return 2;
+      }
+      $markdown= $source->loadClass($class)->getComment($resource);
     }
 
     self::render(Console::$out, $markdown, $source);
