@@ -11,6 +11,8 @@ new import('lang.ResourceProvider');
 
 /**
  * TestCase for XPCLI runner
+ *
+ * @deprecated  See https://github.com/xp-framework/rfc/issues/307
  */
 class RunnerTest extends \unittest\TestCase {
   protected

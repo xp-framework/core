@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### RFCs
+
+* Implemented xp-framework/rfc#307: Extract XPCLI from core. The new
+  package lives in https://github.com/xp-framework/command
+  @thekid
+
+### Features
+
 * Merged xp-framework/core#114: Make paths displayed in class loaders'
   `toString()` copy&pasteable
   (@thekid)

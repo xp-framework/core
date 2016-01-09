@@ -47,6 +47,7 @@ use lang\XPClass;
  * class' api documentation is shown. All other class options are
  * dependant on the class.
  *
+ * @deprecated  See https://github.com/xp-framework/rfc/issues/307
  * @test  xp://net.xp_framework.unittest.util.cmd.RunnerTest
  * @see   xp://util.cmd.Command
  */

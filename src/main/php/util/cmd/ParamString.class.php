@@ -6,6 +6,7 @@
  *
  * It supports short and long options, e.g. -h or --help
  *
+ * @deprecated  See https://github.com/xp-framework/rfc/issues/307
  * @test   xp://net.xp_framework.unittest.util.cmd.ParamStringTest
  */
 class ParamString extends \lang\Object {
