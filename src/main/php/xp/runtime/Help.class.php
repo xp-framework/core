@@ -7,6 +7,33 @@ use lang\XPClass;
  * Shows help
  */
 class Help {
+  private static $colored;
+
+  static function __static() {
+    $line= str_repeat('═', 72);
+    self::$colored= new RenderMarkdown([
+      'h1'     => "\e[1m".'$1'."\n\e[36m".$line."\e[0m",
+      'bold'   => "\e[33;1m".'$1'."\e[0m",
+      'italic' => "\e[36;1m".'$1'."\e[0m",
+      'pre'    => "\e[32;1m".'$1'."\e[0m",
+      'code'   => "\n".'$1'."\e[44;1;37m".'$3'."\e[0m\n",
+      'li'     => "\e[33;1m".'>'."\e[0m".' $2',
+      'hr'     => $line
+    ]);
+  }
+
+  /**
+   * Render markdown to a stream
+   *
+   * @param  io.streams.StringWriter $writer
+   * @param  string $markdown
+   * @param  var $source E.g., a ClassLoader instance
+   * @return void
+   */
+  public static function render($writer, $markdown, $source= null) {
+    $source && $writer->writeLine("\e[33m@", $source, "\e[0m");
+    $writer->writeLine(self::$colored->render($markdown));
+  }
 
   /**
    * Main
@@ -26,19 +53,7 @@ class Help {
       $markdown= $class->getComment();
     }
 
-    $line= str_repeat('═', 72);
-    $colored= new RenderMarkdown([
-      'h1'     => "\e[1m".'$1'."\n\e[36m".$line."\e[0m",
-      'bold'   => "\e[33;1m".'$1'."\e[0m",
-      'italic' => "\e[36;1m".'$1'."\e[0m",
-      'pre'    => "\e[32;1m".'$1'."\e[0m",
-      'code'   => "\n".'$1'."\e[44;1;37m".'$3'."\e[0m\n",
-      'li'     => "\e[33;1m".'>'."\e[0m".' $2',
-      'hr'     => $line
-    ]);
-
-    Console::writeLine("\e[33m@", $class->getClassLoader(), "\e[0m");
-    Console::writeLine($colored->render($markdown));
+    self::render(Console::$out, $markdown, $class->getClassLoader());
     return 1;
   }
 }
