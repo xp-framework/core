@@ -18,7 +18,7 @@ class ShowResource {
    * @param   string[] args
    */
   public static function main(array $args) {
-    Help::main(['@'.$args[0]]);
+    Help::main(['@xp/runtime/'.$args[0]]);
     return (int)$args[1];
   }
 }
