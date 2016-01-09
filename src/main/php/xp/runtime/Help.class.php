@@ -2,6 +2,7 @@
 
 use util\cmd\Console;
 use lang\XPClass;
+use lang\ClassLoader;
 
 /**
  * Shows help
@@ -44,16 +45,19 @@ class Help {
   public static function main(array $args) {
     if (empty($args)) {
       $class= new XPClass(__CLASS__);
+      $source= $class->getClassLoader();
       $markdown= $class->getComment();
     } else if ('@' === $args[0]{0}) {
-      $class= new XPClass(__CLASS__);
-      $markdown= $class->getPackage()->getResource(substr($args[0], 1));
+      $resource= substr($args[0], 1);
+      $source= ClassLoader::getDefault()->findResource($resource);
+      $markdown= $source->getResource($resource);
     } else {
       $class= XPClass::forName($args[0]);
+      $source= $class->getClassLoader();
       $markdown= $class->getComment();
     }
 
-    self::render(Console::$out, $markdown, $class->getClassLoader());
+    self::render(Console::$out, $markdown, $source);
     return 1;
   }
 }
