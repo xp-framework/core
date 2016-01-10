@@ -1,13 +1,26 @@
 XP Framework Core ChangeLog
 ========================================================================
 
-## ?.?.? / ????-??-??
+## ?.??.? / ????-??-??
+
+## 6.10.0 / 2016-01-10
+
+### RFCs
+
+* Integraded support for new XP runners defined in xp-framework/rfc#303.
+  (@thekid)
+* Implemented xp-framework/rfc#307: Extract XPCLI from core. The new
+  package lives in https://github.com/xp-framework/command
+  @thekid
+
+### Features
 
 * Merged xp-framework/core#114: Make paths displayed in class loaders'
   `toString()` copy&pasteable
   (@thekid)
 * Added `xp.runtime.Help` with support for basic markdown. It is used by
-  the *xp help*  subcommand. See xp-runners/reference#5 
+  the *xp help*  subcommand, and exports a public API for rendering. See
+  xp-runners/reference#5, xp-framework/unittest#14 and xp-framework/command#1
   (@thekid)
 
 ## 6.9.2 / 2016-01-05

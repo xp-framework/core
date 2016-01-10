@@ -4,6 +4,7 @@ use unittest\TestCase;
 use util\cmd\ParamString;
 use lang\IllegalArgumentException;
 
+/** @deprecated  See https://github.com/xp-framework/rfc/issues/307 */
 class ParamStringTest extends TestCase {
   
   #[@test]
