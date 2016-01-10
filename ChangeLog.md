@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Integraded support for new XP runners defined in xp-framework/rfc#303.
+  (@thekid)
 * Implemented xp-framework/rfc#307: Extract XPCLI from core. The new
   package lives in https://github.com/xp-framework/command
   @thekid
