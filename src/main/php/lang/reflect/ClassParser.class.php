@@ -401,7 +401,8 @@ class ClassParser extends \lang\Object {
               4,                              // "/**\n"
               strpos($comment, '* @')- 2      // position of first details token
             ))),
-            DETAIL_ANNOTATIONS  => $annotations[0]
+            DETAIL_ANNOTATIONS  => $annotations[0],
+            DETAIL_RETURNS      => $tokens[$i + 2][1]
           ];
           $annotations= [0 => [], 1 => []];
           $comment= null;
