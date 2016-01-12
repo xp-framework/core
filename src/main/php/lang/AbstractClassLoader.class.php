@@ -102,8 +102,18 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
       \xp::gc(__FILE__);
       throw $e;
     } else if (!class_exists($name, false) && !interface_exists($name, false) && !trait_exists($name, false)) {
+      $details= XPClass::detailsForClass($class);
+      $uri= $this->classUri($class);
       unset(\xp::$cl[$class]);
-      throw new ClassFormatException('Class "'.$class.'" not declared in loaded file');
+      if (isset($details['class'])) {
+        $reflect= new \ReflectionClass($details['class'][DETAIL_ARGUMENTS]);
+        \xp::$errors[$uri][$reflect->getStartLine()]= ['' => 1];
+        $e= new ClassFormatException('File does not declare type `'.$class.'`, but `'.strtr($reflect->getName(), '\\', '.').'`');
+        \xp::gc($uri);
+        throw $e;
+      } else {
+        throw new ClassFormatException('Loading `'.$class.'`: No types declared in '.$this->classUri($class));
+      }
     }
 
     method_exists($name, '__static') && \xp::$cli[]= [$name, '__static'];
