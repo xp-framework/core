@@ -143,12 +143,12 @@ class ClassLoaderTest extends \unittest\TestCase {
     ClassLoader::getDefault()->loadClass('@@NON-EXISTANT@@');
   }
 
-  #[@test, @expect(ClassFormatException::class)]
+  #[@test, @expect(class= ClassFormatException::class, withMessage= '/No types declared in .+/')]
   public function loadClassFileWithoutDeclaration() {
     XPClass::forName('net.xp_framework.unittest.reflection.classes.broken.NoClass');
   }
 
-  #[@test, @expect(ClassFormatException::class)]
+  #[@test, @expect(class= ClassFormatException::class, withMessage= '/File does not declare type `.+FalseClass`, but `.+TrueClass`/')]
   public function loadClassFileWithIncorrectDeclaration() {
     XPClass::forName('net.xp_framework.unittest.reflection.classes.broken.FalseClass');
   }
