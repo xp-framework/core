@@ -190,7 +190,7 @@ class XPClass extends Type {
    *   }
    * </code>
    *
-   * @param   var* args
+   * @param   var... args
    * @return  lang.Object 
    * @throws  lang.IllegalAccessException in case this class cannot be instantiated
    */
