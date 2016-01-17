@@ -26,6 +26,7 @@ class ClassParser extends \lang\Object {
    * @param  string $context
    * @param  [:string] $imports
    * @return lang.XPClass
+   * @throws lang.IllegalStateException
    */
   protected function resolve($type, $context, $imports) {
     if ('self' === $type) {
@@ -41,6 +42,8 @@ class ClassParser extends \lang\Object {
       return new XPClass($type);
     } else if (false !== ($p= strrpos($context, '.'))) {
       return XPClass::forName(substr($context, 0, $p + 1).$type);
+    } else {
+      throw new IllegalStateException('Cannot resolve '.$type);
     }
   }
 
