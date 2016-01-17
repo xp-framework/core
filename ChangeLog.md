@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 6.10.2 / 2016-01-17
+
 ### Bugfixes
 
 * Fixed xp-framework/core#116: ClassParser and "use .. as .." - @thekid
