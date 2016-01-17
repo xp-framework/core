@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\reflect\ClassParser;
+use lang\ClassFormatException;
 use lang\Object;
 
 define('APIDOC_TAG',        0x0001);
@@ -367,5 +368,16 @@ class ClassDetailsTest extends \unittest\TestCase {
       }
     ');
     $this->assertEquals(['test' => null], $details[0]['fixture'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[@test, @expect(class= ClassFormatException::class, withMessage= '/Class does not have a parent/')]
+  public function annotation_with_parent_reference_in_parentless_class() {
+    (new ClassParser())->parseDetails('<?php
+      class Test {
+        #[@fixture(new parent())]
+        public function fixture() { }
+      }',
+      'lang.Object'
+    );
   }
 }

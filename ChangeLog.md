@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+### Bugfixes
+
+* Fixed `lang.reflect.ClassParser` to raise an exception if `parent` is
+  used in annotations inside a type without parent instead of causing a
+  method call on NULL.
+  (@thekid)
+
 ## 6.10.0 / 2016-01-10
 
 ### RFCs
