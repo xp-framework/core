@@ -371,8 +371,8 @@ class ClassParser extends \lang\Object {
     for ($i= 0, $s= sizeof($tokens); $i < $s; $i++) {
       switch ($tokens[$i][0]) {
         case T_NAMESPACE:
-          while (';' !== $tokens[++$i] && $i < $s) {
-            T_WHITESPACE === $tokens[$i][0] || $namespace.= $tokens[$i][1];
+          for ($i+= 2; (T_NS_SEPARATOR === $tokens[$i][0] || T_STRING === $tokens[$i][0]) && $i < $s; $i++) {
+            $namespace.= $tokens[$i][1];
           }
           $namespace.= '\\';
           break;
@@ -380,10 +380,11 @@ class ClassParser extends \lang\Object {
         case T_USE:
           if (isset($details['class'])) break;  // Inside class, e.g. function() use(...) {}
           $type= '';
-          while (';' !== $tokens[++$i] && $i < $s) {
-            T_WHITESPACE === $tokens[$i][0] || $type.= $tokens[$i][1];
+          for ($i+= 2; (T_NS_SEPARATOR === $tokens[$i][0] || T_STRING === $tokens[$i][0]) && $i < $s; $i++) {
+            $type.= $tokens[$i][1];
           }
-          $imports[substr($type, strrpos($type, '\\')+ 1)]= strtr($type, '\\', '.');
+          $alias= (T_AS === $tokens[++$i][0]) ? $tokens[$i + 2][1] : substr($type, strrpos($type, '\\')+ 1);
+          $imports[$alias]= strtr($type, '\\', '.');
           break;
 
         case T_DOC_COMMENT:
