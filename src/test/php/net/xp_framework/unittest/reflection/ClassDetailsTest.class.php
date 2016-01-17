@@ -40,7 +40,7 @@ class ClassDetailsTest extends \unittest\TestCase {
   public function parses($kind) {
     $details= (new ClassParser())->parseDetails('<?php '.$kind.' Test { }');
     $this->assertEquals(
-      [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => []],
+      [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => [], DETAIL_ARGUMENTS => 'Test'],
       $details['class']
     );
   }

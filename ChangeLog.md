@@ -10,6 +10,14 @@ XP Framework Core ChangeLog
   method call on NULL.
   (@thekid)
 
+## 6.10.1 / 2016-01-12
+
+### Features
+
+* Merged xp-framework/core#114: Improve error messages when file loaded
+  fails to declare type. Now includes mismatching declaration.
+  (@thekid, @mikey179)
+
 ## 6.10.0 / 2016-01-10
 
 ### RFCs

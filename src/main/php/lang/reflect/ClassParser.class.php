@@ -362,10 +362,18 @@ class ClassParser extends \lang\Object {
     $annotations= [0 => [], 1 => []];
     $imports= [];
     $comment= null;
+    $namespace= '';
     $parsed= '';
     $tokens= token_get_all($bytes);
     for ($i= 0, $s= sizeof($tokens); $i < $s; $i++) {
       switch ($tokens[$i][0]) {
+        case T_NAMESPACE:
+          while (';' !== $tokens[++$i] && $i < $s) {
+            T_WHITESPACE === $tokens[$i][0] || $namespace.= $tokens[$i][1];
+          }
+          $namespace.= '\\';
+          break;
+
         case T_USE:
           if (isset($details['class'])) break;  // Inside class, e.g. function() use(...) {}
           $type= '';
@@ -402,7 +410,8 @@ class ClassParser extends \lang\Object {
               4,                              // "/**\n"
               strpos($comment, '* @')- 2      // position of first details token
             ))),
-            DETAIL_ANNOTATIONS  => $annotations[0]
+            DETAIL_ANNOTATIONS  => $annotations[0],
+            DETAIL_ARGUMENTS    => $namespace.$tokens[$i + 2][1]
           ];
           $annotations= [0 => [], 1 => []];
           $comment= null;
