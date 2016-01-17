@@ -5,6 +5,7 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed xp-framework/core#116: ClassParser and "use .. as .." - @thekid
 * Fixed `lang.reflect.ClassParser` to raise an exception if `parent` is
   used in annotations inside a type without parent instead of causing a
   method call on NULL.
