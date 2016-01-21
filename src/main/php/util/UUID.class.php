@@ -1,6 +1,5 @@
 <?php namespace util;
 
-use lang\types\Bytes;
 use lang\FormatException;
 
 /**
@@ -239,7 +238,7 @@ class UUID extends \lang\Object {
   /**
    * Get bytes
    *
-   * @return  lang.types.Bytes
+   * @return  util.Bytes
    */
   public function getBytes() {
     return new Bytes(pack('H32', str_replace('-', '', $this->hashCode())));
