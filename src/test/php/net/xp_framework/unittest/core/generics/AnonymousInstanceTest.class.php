@@ -1,6 +1,5 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
-use lang\types\Integer;
 use lang\Primitive;
 
 /**
@@ -31,7 +30,7 @@ class AnonymousInstanceTest extends \unittest\TestCase {
   #[@test]
   public function class_name_contains_argument() {
     $name= nameof(newinstance('util.collections.Vector<lang.Object>', []));
-    $this->assertEquals('util.collections.Vector··lang¦Object', substr($name, 0, strrpos($name, '·')), $name);
+    $this->assertEquals("util.collections.Vector\xb7\xb7lang\xa6Object", substr($name, 0, strrpos($name, "\xb7")), $name);
   }
 
   #[@test]
@@ -41,8 +40,8 @@ class AnonymousInstanceTest extends \unittest\TestCase {
     }');
     $n= nameof($instance);
     $this->assertEquals(
-      'net.xp_framework.unittest.core.generics.ArrayFilter··lang¦Object',
-      substr($n, 0, strrpos($n, '·')),
+      "net.xp_framework.unittest.core.generics.ArrayFilter\xb7\xb7lang\xa6Object",
+      substr($n, 0, strrpos($n, "\xb7")),
       $n
     );
   }
