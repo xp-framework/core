@@ -1,6 +1,6 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use lang\types\Bytes;
+use util\Bytes;
 use io\streams\MemoryInputStream;
 use io\streams\InputStream;
 use unittest\PrerequisitesNotMetError;

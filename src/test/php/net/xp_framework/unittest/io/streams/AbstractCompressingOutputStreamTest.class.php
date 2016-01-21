@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use lang\IllegalArgumentException;
-use lang\types\Bytes;
+use util\Bytes;
 use io\streams\MemoryOutputStream;
 use io\streams\OutputStream;
 use unittest\PrerequisitesNotMetError;
@@ -37,7 +37,7 @@ abstract class AbstractCompressingOutputStreamTest extends \unittest\TestCase {
   protected abstract function compress($in, $level);
 
   /**
-   * Asserts compressed data equals. Used lang.types.Bytes objects in
+   * Asserts compressed data equals. Used util.Bytes objects in
    * comparison to prevent binary data from appearing in assertion 
    * failure message.
    *
