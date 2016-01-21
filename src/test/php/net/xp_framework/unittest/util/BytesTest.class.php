@@ -311,7 +311,7 @@ class BytesTest extends \unittest\TestCase {
     $c= ['H', "\303", "\244", 'l', 'l', 'o'];
     $b= new Bytes($c);
     foreach ($b as $i => $byte) {
-      $this->assertEquals($c[$i], chr($byte->intValue()));
+      $this->assertEquals($c[$i], chr($byte));
     }
     $this->assertEquals($i, sizeof($c)- 1);
   }
