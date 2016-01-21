@@ -193,9 +193,9 @@ class ProxyTest extends \unittest\TestCase {
 
   #[@test]
   public function namespaced_typehinted_parameters_handled_correctly() {
-    $proxy= $this->newProxyWith('{ public function fixture(\lang\types\Long $param); }');
+    $proxy= $this->newProxyWith('{ public function fixture(\util\Date $param); }');
     $this->assertEquals(
-      XPClass::forName('lang.types.Long'),
+      XPClass::forName('util.Date'),
       $proxy->getMethod('fixture')->getParameters()[0]->getTypeRestriction()
     );
   }
