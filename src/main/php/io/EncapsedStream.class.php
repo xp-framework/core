@@ -8,10 +8,8 @@ use lang\MethodNotImplementedException;
  * @test  xp://net.xp_framework.unittest.io.EncapsedStreamTest
  */
 class EncapsedStream extends File {
-  public
-    $_super     = null,
-    $_offset    = 0,
-    $_size      = 0;
+  private $_super, $_offset, $_size;
+  public $offset;
 
   /**
    * Constructor
