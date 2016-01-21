@@ -26,8 +26,8 @@ class Method extends Routine {
    *
    * Example (passing arguments)
    * ```php
-   * $method= XPClass::forName('lang.types.String')->getMethod('concat');
-   * $str= $method->invoke(new String('Hello'), ['World']);
+   * $method= XPClass::forName('util.Date')->getMethod('format');
+   * $str= $method->invoke(Date::now(), ['%d.%m.%Y']);
    * ```
    *
    * Example (static invokation):
