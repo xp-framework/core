@@ -14,6 +14,7 @@ class ChannelWrapper extends \lang\Object {
 
   protected 
     $offset  = 0,
+    $bytes   = '',
     $channel = null;
   
   public
