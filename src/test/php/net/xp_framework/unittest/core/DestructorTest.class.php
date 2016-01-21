@@ -22,7 +22,6 @@ class DestructorTest extends \unittest\TestCase {
   public function deleteCallsDestructor() {
     $hash= $this->destroyable->hashCode();
     unset($this->destroyable);
-    $this->assertNull($this->destroyable);
     $this->assertEquals(1, $this->destroyed[$hash]);
   } 
 }
