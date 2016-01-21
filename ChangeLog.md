@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 7.0.0 / ????-??-??
+
+### RFCs
+
+* Implemented xp-framework/rfc#298: Path to XP7 - @thekid
+
 ## 6.10.2 / 2016-01-17
 
 ### Bugfixes
