@@ -26,12 +26,14 @@ class ClassParser extends \lang\Object {
    * @param  string $context
    * @param  [:string] $imports
    * @return lang.XPClass
+   * @throws lang.IllegalStateException
    */
   protected function resolve($type, $context, $imports) {
     if ('self' === $type) {
       return XPClass::forName($context);
     } else if ('parent' === $type) {
-      return XPClass::forName($context)->getParentclass();
+      if ($parent= XPClass::forName($context)->getParentclass()) return $parent;
+      throw new IllegalStateException('Class does not have a parent');
     } else if (false !== strpos($type, '.')) {
       return XPClass::forName($type);
     } else if (isset($imports[$type])) {
@@ -40,6 +42,8 @@ class ClassParser extends \lang\Object {
       return new XPClass($type);
     } else if (false !== ($p= strrpos($context, '.'))) {
       return XPClass::forName(substr($context, 0, $p + 1).$type);
+    } else {
+      throw new IllegalStateException('Cannot resolve '.$type);
     }
   }
 
@@ -361,17 +365,26 @@ class ClassParser extends \lang\Object {
     $annotations= [0 => [], 1 => []];
     $imports= [];
     $comment= null;
+    $namespace= '';
     $parsed= '';
     $tokens= token_get_all($bytes);
     for ($i= 0, $s= sizeof($tokens); $i < $s; $i++) {
       switch ($tokens[$i][0]) {
+        case T_NAMESPACE:
+          for ($i+= 2; (T_NS_SEPARATOR === $tokens[$i][0] || T_STRING === $tokens[$i][0]) && $i < $s; $i++) {
+            $namespace.= $tokens[$i][1];
+          }
+          $namespace.= '\\';
+          break;
+
         case T_USE:
           if (isset($details['class'])) break;  // Inside class, e.g. function() use(...) {}
           $type= '';
-          while (';' !== $tokens[++$i] && $i < $s) {
-            T_WHITESPACE === $tokens[$i][0] || $type.= $tokens[$i][1];
+          for ($i+= 2; (T_NS_SEPARATOR === $tokens[$i][0] || T_STRING === $tokens[$i][0]) && $i < $s; $i++) {
+            $type.= $tokens[$i][1];
           }
-          $imports[substr($type, strrpos($type, '\\')+ 1)]= strtr($type, '\\', '.');
+          $alias= (T_AS === $tokens[++$i][0]) ? $tokens[$i + 2][1] : substr($type, strrpos($type, '\\')+ 1);
+          $imports[$alias]= strtr($type, '\\', '.');
           break;
 
         case T_DOC_COMMENT:
@@ -401,7 +414,8 @@ class ClassParser extends \lang\Object {
               4,                              // "/**\n"
               strpos($comment, '* @')- 2      // position of first details token
             ))),
-            DETAIL_ANNOTATIONS  => $annotations[0]
+            DETAIL_ANNOTATIONS  => $annotations[0],
+            DETAIL_ARGUMENTS    => $namespace.$tokens[$i + 2][1]
           ];
           $annotations= [0 => [], 1 => []];
           $comment= null;

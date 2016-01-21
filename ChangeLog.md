@@ -3,6 +3,24 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 6.10.2 / 2016-01-17
+
+### Bugfixes
+
+* Fixed xp-framework/core#116: ClassParser and "use .. as .." - @thekid
+* Fixed `lang.reflect.ClassParser` to raise an exception if `parent` is
+  used in annotations inside a type without parent instead of causing a
+  method call on NULL.
+  (@thekid)
+
+## 6.10.1 / 2016-01-12
+
+### Features
+
+* Merged xp-framework/core#114: Improve error messages when file loaded
+  fails to declare type. Now includes mismatching declaration.
+  (@thekid, @mikey179)
+
 ## 6.10.0 / 2016-01-10
 
 ### RFCs

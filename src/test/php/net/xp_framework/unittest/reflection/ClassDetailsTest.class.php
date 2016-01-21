@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\reflect\ClassParser;
+use lang\ClassFormatException;
 use lang\Object;
 
 define('APIDOC_TAG',        0x0001);
@@ -39,7 +40,7 @@ class ClassDetailsTest extends \unittest\TestCase {
   public function parses($kind) {
     $details= (new ClassParser())->parseDetails('<?php '.$kind.' Test { }');
     $this->assertEquals(
-      [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => []],
+      [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => [], DETAIL_ARGUMENTS => 'Test'],
       $details['class']
     );
   }
@@ -275,6 +276,18 @@ class ClassDetailsTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function use_statements_with_alias_evaluated() {
+    $actual= (new ClassParser())->parseDetails('<?php namespace test;
+      use lang\\Object as Base;
+
+      #[@value(new Base())]
+      class Test extends Base {
+      }
+    ');
+    $this->assertInstanceOf(Object::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
+  }
+
+  #[@test]
   public function closure_use_not_evaluated() {
     (new ClassParser())->parseDetails('<?php 
       class Test extends Object {
@@ -367,5 +380,16 @@ class ClassDetailsTest extends \unittest\TestCase {
       }
     ');
     $this->assertEquals(['test' => null], $details[0]['fixture'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[@test, @expect(class= ClassFormatException::class, withMessage= '/Class does not have a parent/')]
+  public function annotation_with_parent_reference_in_parentless_class() {
+    (new ClassParser())->parseDetails('<?php
+      class Test {
+        #[@fixture(new parent())]
+        public function fixture() { }
+      }',
+      'lang.Object'
+    );
   }
 }
