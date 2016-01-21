@@ -11,34 +11,12 @@ trait __xp {
   }
   // }}}
 
-  // {{{ field read handler
-  public function __get($name) {
-    return null;
-  }
-  // }}}
-
-  // {{{ field write handler
-  public function __set($name, $value) {
-    $this->{$name}= $value;
-  }
-  // }}}
-
   // {{{ invocation handler
   public function __call($name, $args) {
     $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
     $c= PHP_VERSION >= '7.0.0' || defined('HHVM_VERSION');
     $self= $t[1 - $c]['class'];
     $scope= isset($t[2 - $c]['class']) ? $t[2 - $c]['class'] : $t[3 - $c]['class'];
-
-    // Check scope for extension methods
-    if (null != $scope && isset(\xp::$ext[$scope])) {
-      foreach (\xp::$ext[$scope] as $type => $class) {
-        if (!$this instanceof $type || !method_exists($class, $name)) continue;
-        array_unshift($args, $this);
-        return call_user_func_array([$class, $name], $args);
-      }
-    }
-
     throw new \lang\Error('Call to undefined method '.\lang\XPClass::nameOf($self).'::'.$name.'() from scope '.\lang\XPClass::nameOf($scope));
   }
   // }}}
@@ -184,20 +162,6 @@ final class xp {
       return $r.$indent.'}';
     } else if (is_resource($arg)) {
       return 'resource(type= '.get_resource_type($arg).', id= '.(int)$arg.')';
-    }
-  }
-  // }}}
-
-  // {{{ proto void extensions(string class, string scope)
-  //     Registers extension methods for a certain scope
-  static function extensions($class, $scope) {
-    foreach ((new \lang\XPClass($class))->getMethods() as $method) {
-      if (MODIFIER_STATIC & $method->getModifiers() && $method->numParameters() > 0) {
-        $param= $method->getParameter(0);
-        if ('self' === $param->getName()) {
-          xp::$ext[$scope][$param->getType()->literal()]= $class;
-        }
-      }
     }
   }
   // }}}
