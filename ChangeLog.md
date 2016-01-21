@@ -7,6 +7,7 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented xp-framework/rfc#302: Remove extension methods- @thekid
 * Implemented xp-framework/rfc#303: THIS! IS! VERSIOOOOON!- @thekid
 * Implemented xp-framework/rfc#298: Path to XP7 - @thekid
 * Implemented xp-framework/rfc#307: Extract XPCLI from core - @thekid
