@@ -166,20 +166,6 @@ final class xp {
   }
   // }}}
 
-  // {{{ proto void extensions(string class, string scope)
-  //     Registers extension methods for a certain scope
-  static function extensions($class, $scope) {
-    foreach ((new \lang\XPClass($class))->getMethods() as $method) {
-      if (MODIFIER_STATIC & $method->getModifiers() && $method->numParameters() > 0) {
-        $param= $method->getParameter(0);
-        if ('self' === $param->getName()) {
-          xp::$ext[$scope][$param->getType()->literal()]= $class;
-        }
-      }
-    }
-  }
-  // }}}
-
   // {{{ proto void gc([string file default null])
   //     Runs the garbage collector
   static function gc($file= null) {
