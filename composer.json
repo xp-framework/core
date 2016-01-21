@@ -6,6 +6,9 @@
   "description" : "The XP framework is an all-purpose, object oriented PHP framework.",
   "keywords": ["framework", "xp"],
   "require" : {
+    "php" : ">=5.6.0"
+  },
+  "suggest" : {
     "php" : ">=7.0.0"
   },
   "autoload" : {

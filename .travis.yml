@@ -3,11 +3,12 @@ language: php
 sudo: false
 
 php:
+  - 5.6
   - 7.0
   - hhvm
 
 before_script:
-  - wget 'https://github.com/xp-framework/xp-runners/releases/download/v6.2.0/setup' -O - | php
+  - wget 'https://github.com/xp-framework/xp-runners/releases/download/v6.3.0/setup' -O - | php
   - echo "use=." > xp.ini
   - echo "[runtime]" >> xp.ini
   - echo "date.timezone=Europe/Berlin" >> xp.ini
