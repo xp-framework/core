@@ -1,6 +1,5 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use lang\types\Character;
 use io\Channel;
 use io\streams\TextWriter;
 use io\streams\MemoryInputStream;
@@ -121,30 +120,6 @@ class TextWriterTest extends \unittest\TestCase {
   public function writeLineUtf8() {
     $this->newWriter('utf-8')->writeLine('Übercoder');
     $this->assertEquals("\303\234bercoder\n", $this->out->getBytes());
-  }
-
-  #[@test, @action(new RuntimeVersion('<7.0.0-dev'))]
-  public function writeUtf8StringInstance() {
-    $this->newWriter('utf-8')->write(new \lang\types\String('Übercoder'));
-    $this->assertEquals("\303\234bercoder", $this->out->getBytes());
-  }
-
-  #[@test, @action(new RuntimeVersion('<7.0.0-dev'))]
-  public function writeLineUtf8StringInstance() {
-    $this->newWriter('utf-8')->writeLine(new \lang\types\String('Übercoder'));
-    $this->assertEquals("\303\234bercoder\n", $this->out->getBytes());
-  }
-
-  #[@test]
-  public function writeUtf8CharacterInstance() {
-    $this->newWriter('utf-8')->write(new Character('Ü'));
-    $this->assertEquals("\303\234", $this->out->getBytes());
-  }
-
-  #[@test]
-  public function writeLineUtf8CharacterInstance() {
-    $this->newWriter('utf-8')->writeLine(new Character('Ü'));
-    $this->assertEquals("\303\234\n", $this->out->getBytes());
   }
 
   #[@test]
