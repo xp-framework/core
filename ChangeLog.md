@@ -7,7 +7,13 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented xp-framework/rfc#303: THIS! IS! VERSIOOOOON!- @thekid
 * Implemented xp-framework/rfc#298: Path to XP7 - @thekid
+* Implemented xp-framework/rfc#307: Extract XPCLI from core - @thekid
+* Implemented xp-framework/rfc#301: Extract logging from core - @thekid
+* Implemented xp-framework/rfc#293: Extract unittest from core - @thekid
+* Implemented xp-framework/rfc#296: Further minimize the framework - @thekid
+* Implemented xp-framework/rfc#297: Rebase - @thekid
 
 ## 6.10.2 / 2016-01-17
 
