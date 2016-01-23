@@ -10,10 +10,7 @@ use lang\IndexOutOfBoundsException;
  */
 class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
   private $iterator = null;
-
-  public 
-    $buffer = '',
-    $size   = 0;
+  private $buffer, $size;
   
   /**
    * Returns input as byte
