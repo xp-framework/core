@@ -339,7 +339,7 @@ class FunctionType extends Type {
       $m
     )); });
     try {
-      return call_user_func_array($closure, $args);
+      return $closure(...$args);
     } catch (SystemExit $e) {
       throw $e;
     } catch (Throwable $e) {
