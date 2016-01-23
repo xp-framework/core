@@ -28,8 +28,8 @@ class TimeSpan extends \lang\Object {
    * @param   util.TimeSpan... args
    * @return  util.TimeSpan
    */
-  public function add() {
-    foreach (func_get_args() as $span) {
+  public function add(... $args) {
+    foreach ($args as $span) {
       if (!$span instanceof self) {
         throw new \lang\IllegalArgumentException('Given argument is not a TimeSpan: '.\xp::typeOf($span));
       }
@@ -47,8 +47,8 @@ class TimeSpan extends \lang\Object {
    * @return  util.TimeSpan
    * @throws  lang.IllegalStateException if the result would be a negative timespan
    */
-  public function substract() {
-    foreach (func_get_args() as $span) {
+  public function substract(... $args) {
+    foreach ($args as $span) {
       if (!$span instanceof self) {
         throw new \lang\IllegalArgumentException('Given argument is not a TimeSpan: '.\xp::typeOf($span));
       }

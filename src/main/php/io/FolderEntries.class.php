@@ -18,8 +18,8 @@ class FolderEntries extends \lang\Object implements \Iterator {
    * @param  var... $args Either an io.Folder, an io.Path or a string
    * @throws lang.IllegalArgumentException
    */
-  public function __construct() {
-    $this->base= Path::compose(func_get_args());
+  public function __construct(... $args) {
+    $this->base= Path::compose($args);
     if ($this->base->isEmpty()) {
       throw new IllegalArgumentException('Cannot create from empty name');
     }

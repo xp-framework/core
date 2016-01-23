@@ -28,9 +28,9 @@ class Folder extends \lang\Object {
    * Constructor
    *
    * @param   var base either a string or an io.Folder instance
-   * @param   string* args components
+   * @param   string... args components
    */
-  public function __construct($base= null) {
+  public function __construct($base= null, ... $args) {
     if (null === $base) {
       return;
     } else if ($base instanceof self) {
@@ -39,8 +39,7 @@ class Folder extends \lang\Object {
       $composed= rtrim($base, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
     }
 
-    $args= func_get_args();
-    $this->setURI($composed.implode(DIRECTORY_SEPARATOR, array_slice($args, 1)));
+    $this->setURI($composed.implode(DIRECTORY_SEPARATOR, $args));
   }
   
   /**

@@ -15,11 +15,11 @@ class System extends Object {
    * variable by name, and, if it fails, tries the given
    * alternatives in the sequence they are specified
    *
-   * @param   string* args
+   * @param   string... args
    * @return  string environment variable by name
    */
-  protected static function _env() {
-    foreach (func_get_args() as $a) {
+  protected static function _env(... $args) {
+    foreach ($args as $a) {
       if ($e= getenv($a)) return $e;
     }
     return $e;

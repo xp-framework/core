@@ -60,10 +60,10 @@ class Console extends \lang\Object {
         public function getStream() { return null; }
         public function flush() { $this->raise(); }
         public function raise() { throw new \lang\IllegalStateException("There is no console present"); }
-        public function write() { $this->raise(); }
-        public function writeLine() { $this->raise(); }
-        public function writef() { $this->raise(); }
-        public function writeLinef() { $this->raise(); }
+        public function write(... $args) { $this->raise(); }
+        public function writeLine(... $args) { $this->raise(); }
+        public function writef($format, ... $args) { $this->raise(); }
+        public function writeLinef($format, ... $args) { $this->raise(); }
       }');
     }
   }
@@ -80,33 +80,30 @@ class Console extends \lang\Object {
   /**
    * Write a string to standard output
    *
-   * @param   var* args
+   * @param   var... args
    */
-  public static function write() {
-    $a= func_get_args();
-    call_user_func_array([self::$out, 'write'], $a);
+  public static function write(... $args) {
+    self::$out->write(...$args);
   }
   
   /**
    * Write a string to standard output and append a newline
    *
-   * @param   var* args
+   * @param   var... args
    */
-  public static function writeLine() {
-    $a= func_get_args();
-    call_user_func_array([self::$out, 'writeLine'], $a);
+  public static function writeLine(... $args) {
+    self::$out->writeLine(...$args);
   }
   
   /**
    * Write a formatted string to standard output
    *
    * @param   string format
-   * @param   var* args
+   * @param   var... args
    * @see     php://printf
    */
-  public static function writef() {
-    $a= func_get_args();
-    call_user_func_array([self::$out, 'writef'], $a);
+  public static function writef($format, ... $args) {
+    self::$out->writef($format, ...$args);
   }
 
   /**
@@ -115,9 +112,8 @@ class Console extends \lang\Object {
    * @param   string format
    * @param   var* args
    */
-  public static function writeLinef() {
-    $a= func_get_args();
-    call_user_func_array([self::$out, 'writeLinef'], $a);
+  public static function writeLinef($format, ... $args) {
+    self::$out->writeLinef($format, ...$args);
   }
   
   /**

@@ -1,20 +1,18 @@
 <?php namespace util;
 
-
-
 /**
  * Locale
  * 
  * Usage [retreiving default locale]
- * <code>
- *   $locale= util·Locale::getDefault();
- *   var_dump($locale);
- * </code>
+ * ```php
+ * $locale= Locale::getDefault();
+ * var_dump($locale);
+ * ```
  *
  * Usage [setting default locale]
- * <code>
- *   util·Locale::setDefault(new util·Locale('de_DE'));
- * </code>
+ * ```php
+ * Locale::setDefault(new Locale('de_DE'));
+ * ```
  *
  * @see   http://ftp.ics.uci.edu/pub/ietf/http/related/iso639.txt
  * @see   http://userpage.chemie.fu-berlin.de/diverse/doc/ISO_3166.html
@@ -37,22 +35,15 @@ class Locale extends \lang\Object {
    * @param   string country 2-letter abbreviation of country
    * @param   string variant default ''
    */
-  public function __construct() {
-    switch (func_num_args()) {
-      case 1: 
-        $this->_str= func_get_arg(0);
-        sscanf(func_get_arg(0), '%2s_%2s%s', $this->lang, $this->country, $this->variant);
-        break;
-        
-      case 2:
-        list($this->lang, $this->country)= func_get_args();
-        $this->_str= $this->lang.'_'.$this->country;
-        break;
-        
-      case 3:
-        list($this->lang, $this->country, $this->variant)= func_get_args();
-        $this->_str= $this->lang.'_'.$this->country.'@'.$this->variant;
-        break;
+  public function __construct($lang, $country= null, $variant= null) {
+    if (1 === func_num_args()) {
+      $this->_str= $lang;
+      sscanf($this->_str, '%2s_%2s%s', $this->lang, $this->country, $this->variant);
+    } else {
+      $this->_str= $lang.'_'.$country.($variant ? '@'.$variant : '');
+      $this->lang= $lang;
+      $this->country= $country;
+      $this->variant= $variant;
     }
   }
   
