@@ -1,12 +1,12 @@
 <?php namespace util;
 
 use lang\IndexOutOfBoundsException;
+use lang\IllegalArgumentException;
 
 /**
  * Represents a list of bytes
  *
- * @deprecated Wrapper types will move to their own library
- * @test     xp://net.xp_framework.unittest.util.BytesTest
+ * @test  xp://net.xp_framework.unittest.util.BytesTest
  */
 class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
   private $buffer, $size;
@@ -35,7 +35,7 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
     } else if (is_string($initial)) {
       $this->buffer= $initial;
     } else {
-      throw new \lang\IllegalArgumentException('Expected either char[], int[] or string but was '.\xp::typeOf($initial));
+      throw new IllegalArgumentException('Expected either char[], int[] or string but was '.\xp::typeOf($initial));
     }
     $this->size= strlen($this->buffer);
   }
