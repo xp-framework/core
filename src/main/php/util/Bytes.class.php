@@ -127,7 +127,7 @@ class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
   /**
    * Returns this byte list's size
    *
-   * @return  string
+   * @return  int
    */
   public function size() {
     return $this->size;
