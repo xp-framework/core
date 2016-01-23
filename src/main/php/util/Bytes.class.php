@@ -14,8 +14,8 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
   /**
    * Returns input as byte
    *
-   * @param   var in
-   * @return  string
+   * @param  var $in
+   * @return string
    */
   protected function asByte($in) {
     return is_int($in) ? chr($in) : $in{0};
@@ -24,8 +24,8 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
   /**
    * Constructor
    *
-   * @param   var initial default NULL
-   * @throws  lang.IllegalArgumentException in case argument is of incorrect type.
+   * @param  var $initial default NULL
+   * @throws lang.IllegalArgumentException in case argument is of incorrect type.
    */
   public function __construct($initial= null) {
     if (null === $initial) {
@@ -43,8 +43,8 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
   /**
    * Returns an iterator for use in foreach()
    *
-   * @see     php://language.oop5.iterations
-   * @return  php.Iterator
+   * @see    php://language.oop5.iterations
+   * @return php.Iterator
    */
   public function getIterator() {
     for ($offset= 0; $offset < $this->size; $offset++) {
@@ -56,9 +56,9 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
   /**
    * = list[] overloading
    *
-   * @param   int offset
-   * @return  lang.types.Byte 
-   * @throws  lang.IndexOutOfBoundsException if offset does not exist
+   * @param  int $offset
+   * @return int 
+   * @throws lang.IndexOutOfBoundsException if offset does not exist
    */
   public function offsetGet($offset) {
     if ($offset >= $this->size || $offset < 0) {
@@ -71,9 +71,9 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
   /**
    * list[]= overloading
    *
-   * @param   int offset
-   * @param   var value
-   * @throws  lang.IllegalArgumentException if key is neither numeric (set) nor NULL (add)
+   * @param  int $offset
+   * @param  var $value
+   * @throws lang.IllegalArgumentException if key is neither numeric (set) nor NULL (add)
    * @throws  lang.IndexOutOfBoundsException if key does not exist
    */
   public function offsetSet($offset, $value) {
@@ -90,8 +90,8 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
   /**
    * isset() overloading
    *
-   * @param   int offset
-   * @return  bool
+   * @param  int $offset
+   * @return bool
    */
   public function offsetExists($offset) {
     return ($offset >= 0 && $offset < $this->size);
@@ -100,8 +100,8 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
   /**
    * unset() overloading
    *
-   * @param   int offset
-   * @throws  lang.IndexOutOfBoundsException if offset does not exist
+   * @param  int $offset
+   * @throws lang.IndexOutOfBoundsException if offset does not exist
    */
   public function offsetUnset($offset) {
     if ($offset >= $this->size || $offset < 0) {
@@ -117,7 +117,7 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
   /**
    * Returns this byte list's size
    *
-   * @return  int
+   * @return int
    */
   public function size() {
     return $this->size;
@@ -136,25 +136,25 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
   /**
    * Returns a hashcode for this bytes object
    *
-   * @return  string
+   * @return string
    */
   public function hashCode() {
     return md5($this->buffer);
   }
 
   /**
-   * Returns a string representation of this string.
+   * Returns a string representation of this bytes instance.
    *
-   * @return  string
+   * @return string
    */
   public function toString() {
     return nameof($this).'('.$this->size.')@{'.addcslashes($this->buffer, "\0..\37\177..\377").'}';
   }
 
   /**
-   * String conversion overloading. This is for use with fwrite()
+   * String conversion overloading
    *
-   * @return  string
+   * @return string
    */
   public function __toString() {
     return $this->buffer;
