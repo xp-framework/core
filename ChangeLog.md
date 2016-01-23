@@ -14,7 +14,7 @@ XP Framework Core ChangeLog
   . Bumped minimum PHP version required to PHP 5.6
   (@thekid)
 * Implemented xp-framework/rfc#302: Remove extension methods- @thekid
-* Implemented xp-framework/rfc#303: THIS! IS! VERSIOOOOON!- @thekid
+* Implemented xp-framework/rfc#300: THIS! IS! VERSIOOOOON!- @thekid
 * Implemented xp-framework/rfc#307: Extract XPCLI from core - @thekid
 * Implemented xp-framework/rfc#301: Extract logging from core - @thekid
 * Implemented xp-framework/rfc#293: Extract unittest from core - @thekid
