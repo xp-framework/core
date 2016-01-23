@@ -37,11 +37,12 @@ class Path extends \lang\Object {
    * @param  var $base Either a string, a Path, a File, Folder or IOElement
    * @param  var... $args Further components to be concatenated, Paths or strings.
    */
-  public function __construct($base) {
+  public function __construct($base, ... $args) {
     if (is_array($base)) {
       $this->path= self::pathFor($base);
     } else {
-      $this->path= self::pathFor(func_get_args());
+      array_unshift($args, $base);
+      $this->path= self::pathFor($args);
     }
   }
 
