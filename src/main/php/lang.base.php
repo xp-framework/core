@@ -403,9 +403,9 @@ function newinstance($spec, $args, $def= null) {
 }
 // }}}
 
-// {{{ proto lang.Generic create(string spec)
+// {{{ proto lang.Generic create(string spec, var... $args)
 //     Creates a generic object
-function create($spec) {
+function create($spec, ... $args) {
   if (!is_string($spec)) {
     throw new \lang\IllegalArgumentException('Create expects its first argument to be a string');
   }
@@ -421,13 +421,7 @@ function create($spec) {
   // BC: Wrap IllegalStateExceptions into IllegalArgumentExceptions
   $class= \lang\XPClass::forName(strstr($base, '.') ? $base : \lang\XPClass::nameOf($base));
   try {
-    $reflect= $class->newGenericType($typeargs)->reflect();
-    if ($reflect->hasMethod('__construct')) {
-      $a= func_get_args();
-      return $reflect->newInstanceArgs(array_slice($a, 1));
-    } else {
-      return $reflect->newInstance();
-    }
+    return $class->newGenericType($typeargs)->newInstance(...$args);
   } catch (\lang\IllegalStateException $e) {
     throw new \lang\IllegalArgumentException($e->getMessage());
   } catch (ReflectionException $e) {
