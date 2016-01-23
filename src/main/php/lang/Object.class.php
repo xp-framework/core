@@ -39,17 +39,6 @@ class Object implements Generic { use \__xp;
     return $this === $cmp;
   }
   
-  /** 
-   * Returns the fully qualified class name for this class 
-   * (e.g. "io.File")
-   *
-   * @deprecated Use nameof($this) instead.
-   * @return  string fully qualified class name
-   */
-  public function getClassName() {
-    return nameof($this);
-  }
-
   /**
    * Returns the runtime class of an object.
    *

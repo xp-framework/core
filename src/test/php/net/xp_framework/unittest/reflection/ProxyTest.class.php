@@ -137,9 +137,9 @@ class ProxyTest extends \unittest\TestCase {
   #[@test]
   public function iteratorMethods() {
     $expected= [
-      'hashcode', 'equals', 'getclassname', 'getclass', 'tostring', // lang.Object
-      'getproxyclass', 'newproxyinstance',                          // lang.reflect.Proxy
-      'hasnext', 'next'                                             // util.XPIterator
+      'hashcode', 'equals', 'getclass', 'tostring', // lang.Object
+      'getproxyclass', 'newproxyinstance',          // lang.reflect.Proxy
+      'hasnext', 'next'                             // util.XPIterator
     ];
     
     $class= $this->proxyClassFor([$this->iteratorClass]);
