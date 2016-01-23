@@ -8,7 +8,7 @@ use lang\IndexOutOfBoundsException;
  * @deprecated Wrapper types will move to their own library
  * @test     xp://net.xp_framework.unittest.util.BytesTest
  */
-class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
+class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
   private $buffer, $size;
   
   /**
@@ -126,15 +126,11 @@ class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
   /**
    * Returns whether a given object is equal to this object
    *
-   * @param   lang.Generic cmp
-   * @return  bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return (
-      $cmp instanceof self && 
-      $this->size === $cmp->size && 
-      $this->buffer === $cmp->buffer
-    );
+  public function compareTo($value) {
+    return $value instanceof self ? strcmp($this->buffer, $value->buffer) : 1;
   }
 
   /**

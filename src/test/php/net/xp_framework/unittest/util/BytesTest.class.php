@@ -315,4 +315,14 @@ class BytesTest extends \unittest\TestCase {
     }
     $this->assertEquals($i, sizeof($c)- 1);
   }
+
+  #[@test, @values([
+  #  [new Bytes('Test'), 0],
+  #  [new Bytes('T'), +3],
+  #  [new Bytes('Testing'), -3],
+  #  [null, 1]
+  #])]
+  public function compare($value, $expected) {
+    $this->assertEquals($expected, (new Bytes('Test'))->compareTo($value));
+  }
 }
