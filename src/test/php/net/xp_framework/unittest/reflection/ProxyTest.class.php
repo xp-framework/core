@@ -136,22 +136,11 @@ class ProxyTest extends \unittest\TestCase {
 
   #[@test]
   public function iteratorMethods() {
-    $expected= [
-      'hashcode', 'equals', 'getclass', 'tostring', // lang.Object
-      'getproxyclass', 'newproxyinstance',          // lang.reflect.Proxy
-      'hasnext', 'next'                             // util.XPIterator
-    ];
-    
     $class= $this->proxyClassFor([$this->iteratorClass]);
-    $methods= $class->getMethods();
-
-    $this->assertEquals(sizeof($expected), sizeof($methods));
-    foreach ($methods as $method) {
-      $this->assertTrue(
-        in_array(strtolower($method->getName()), $expected), 
-        'Unexpected method "'.$method->getName().'"'
-      );
-    }
+    $this->assertEquals(
+      [true, true],
+      [$class->hasMethod('hasNext'), $class->hasMethod('next')]
+    );
   }
 
   #[@test]
