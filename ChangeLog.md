@@ -8,6 +8,7 @@ XP Framework Core ChangeLog
 ### RFCs
 
 * Implemented xp-framework/rfc#298: Path to XP7
+  . Removed deprecated `getClasssName()` - see xp-framework/core#120
   . Changed code to use new variadic syntax - see xp-framework/core#119
   . Removed wrapper types - see xp-framework/core#118
   . Bumped minimum PHP version required to PHP 5.6
