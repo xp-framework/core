@@ -57,11 +57,9 @@ class XPClass extends Type {
   private $_class;
   private $_reflect= null;
 
-  public static $VARIADIC_SUPPORTED;
   public static $TYPE_SUPPORTED;
 
   static function __static() {
-    self::$VARIADIC_SUPPORTED= method_exists('ReflectionParameter', 'isVariadic');
     self::$TYPE_SUPPORTED= method_exists('ReflectionParameter', 'getType');
 
     // Workaround for missing detail information about return types in

@@ -140,7 +140,7 @@ class Parameter extends \lang\Object {
    * @return  bool
    */
   public function isVariadic() {
-    if (XPClass::$VARIADIC_SUPPORTED && $this->_reflect->isVariadic()) {
+    if ($this->_reflect->isVariadic()) {
       return true;
     } else if (
       $this->_reflect->isOptional() &&

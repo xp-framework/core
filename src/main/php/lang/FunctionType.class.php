@@ -125,7 +125,7 @@ class FunctionType extends Type {
         return $false('No parameter #'.($i + 1));
       } else {
         $param= $params[$i];
-        if (XPClass::$VARIADIC_SUPPORTED && $param->isVariadic()) {
+        if ($param->isVariadic()) {
           return true;  // No further checks necessary
         } else if ($param->isArray()) {
           if (!$type->equals(Primitive::$ARRAY) && !$type instanceof ArrayType && !$type instanceof MapType) {
@@ -146,7 +146,7 @@ class FunctionType extends Type {
     // Check if there are required parameters
     while (++$i < $r->getNumberOfParameters()) {
       $param= $params[$i];
-      if ($param->isOptional() || XPClass::$VARIADIC_SUPPORTED && $param->isVariadic()) {
+      if ($param->isOptional() || $param->isVariadic()) {
         return true;  // No further checks necessary
       } else {
         return $false('Signature mismatch, additional required parameter $'.$param->getName().' found');

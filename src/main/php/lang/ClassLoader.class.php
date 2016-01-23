@@ -225,7 +225,7 @@ final class ClassLoader extends Object implements IClassLoader {
         $sig.= ', callable $'.$p;
       } else if (null !== ($restriction= $param->getClass())) {
         $sig.= ', \\'.$restriction->getName().' $'.$p;
-      } else if (XPClass::$VARIADIC_SUPPORTED && $param->isVariadic()) {
+      } else if ($param->isVariadic()) {
         $sig.= ', ...$'.$p;
         $pass.= ', ...$'.$p;
         continue;
