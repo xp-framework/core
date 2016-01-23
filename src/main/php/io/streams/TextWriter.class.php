@@ -85,10 +85,7 @@ class TextWriter extends Writer {
    * @param   string text
    */
   public function write($text) {
-    $this->stream->write($text instanceof \lang\types\String || $text instanceof \lang\types\Character
-      ? $text->getBytes($this->charset)
-      : iconv(\xp::ENCODING, $this->charset, $text)
-    );
+    $this->stream->write(iconv(\xp::ENCODING, $this->charset, $text));
   }
   
   /**
@@ -97,9 +94,6 @@ class TextWriter extends Writer {
    * @param   string text
    */
   public function writeLine($text= '') {
-    $this->stream->write(($text instanceof \lang\types\String || $text instanceof \lang\types\Character
-      ? $text->getBytes($this->charset)
-      : iconv(\xp::ENCODING, $this->charset, $text)
-    ).$this->newLine);
+    $this->stream->write(iconv(\xp::ENCODING, $this->charset, $text).$this->newLine);
   }
 }

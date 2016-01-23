@@ -1,9 +1,6 @@
-<?php namespace net\xp_framework\unittest\core\types;
+<?php namespace net\xp_framework\unittest\util;
 
-use lang\types\Bytes;
-use lang\types\String;
-use lang\types\Character;
-use lang\types\Byte;
+use util\Bytes;
 use lang\FormatException;
 use lang\IllegalArgumentException;
 use lang\IndexOutOfBoundsException;
@@ -11,8 +8,7 @@ use lang\IndexOutOfBoundsException;
 /**
  * TestCase for Bytes class
  *
- * @deprecated Wrapper types will move to their own library
- * @see      xp://lang.types.Bytes
+ * @see   xp://util.Bytes
  */
 class BytesTest extends \unittest\TestCase {
 
@@ -35,40 +31,40 @@ class BytesTest extends \unittest\TestCase {
   public function fromString() {
     $b= new Bytes('abcd');
     $this->assertEquals(4, $b->size());
-    $this->assertEquals(new Byte(97), $b[0]);
-    $this->assertEquals(new Byte(98), $b[1]);
-    $this->assertEquals(new Byte(99), $b[2]);
-    $this->assertEquals(new Byte(100), $b[3]);
+    $this->assertEquals(97, $b[0]);
+    $this->assertEquals(98, $b[1]);
+    $this->assertEquals(99, $b[2]);
+    $this->assertEquals(100, $b[3]);
   }
 
   #[@test]
   public function fromIntegerArray() {
     $b= new Bytes([97, 98, 99, 100]);
     $this->assertEquals(4, $b->size());
-    $this->assertEquals(new Byte(97), $b[0]);
-    $this->assertEquals(new Byte(98), $b[1]);
-    $this->assertEquals(new Byte(99), $b[2]);
-    $this->assertEquals(new Byte(100), $b[3]);
+    $this->assertEquals(97, $b[0]);
+    $this->assertEquals(98, $b[1]);
+    $this->assertEquals(99, $b[2]);
+    $this->assertEquals(100, $b[3]);
   }
  
   #[@test]
   public function fromCharArray() {
     $b= new Bytes(['a', 'b', 'c', 'd']);
     $this->assertEquals(4, $b->size());
-    $this->assertEquals(new Byte(97), $b[0]);
-    $this->assertEquals(new Byte(98), $b[1]);
-    $this->assertEquals(new Byte(99), $b[2]);
-    $this->assertEquals(new Byte(100), $b[3]);
+    $this->assertEquals(97, $b[0]);
+    $this->assertEquals(98, $b[1]);
+    $this->assertEquals(99, $b[2]);
+    $this->assertEquals(100, $b[3]);
   }
 
   #[@test]
   public function fromByteArray() {
-    $b= new Bytes([new Byte(97), new Byte(98), new Byte(99), new Byte(100)]);
+    $b= new Bytes([97, 98, 99, 100]);
     $this->assertEquals(4, $b->size());
-    $this->assertEquals(new Byte(97), $b[0]);
-    $this->assertEquals(new Byte(98), $b[1]);
-    $this->assertEquals(new Byte(99), $b[2]);
-    $this->assertEquals(new Byte(100), $b[3]);
+    $this->assertEquals(97, $b[0]);
+    $this->assertEquals(98, $b[1]);
+    $this->assertEquals(99, $b[2]);
+    $this->assertEquals(100, $b[3]);
   }
  
   #[@test, @expect(IllegalArgumentException::class)]
@@ -104,54 +100,54 @@ class BytesTest extends \unittest\TestCase {
   public function appendInteger() {
     $b= new Bytes();
     $b[]= 1;
-    $this->assertEquals(new Byte(1), $b[0]);
+    $this->assertEquals(1, $b[0]);
   }
 
   #[@test]
   public function appendChar() {
     $b= new Bytes();
     $b[]= "\1";
-    $this->assertEquals(new Byte(1), $b[0]);
+    $this->assertEquals(1, $b[0]);
   }
 
   #[@test]
   public function appendByte() {
     $b= new Bytes();
-    $b[]= new Byte(1);
-    $this->assertEquals(new Byte(1), $b[0]);
+    $b[]= 1;
+    $this->assertEquals(1, $b[0]);
   }
 
   #[@test]
   public function setInteger() {
     $b= new Bytes("\1\2");
     $b[0]= 3;
-    $this->assertEquals(new Byte(3), $b[0]);
+    $this->assertEquals(3, $b[0]);
   }
 
   #[@test]
   public function setChar() {
     $b= new Bytes("\1\2");
     $b[0]= "\3";
-    $this->assertEquals(new Byte(3), $b[0]);
+    $this->assertEquals(3, $b[0]);
   }
 
   #[@test]
   public function setByte() {
     $b= new Bytes("\1\2");
-    $b[0]= new Byte(3);
-    $this->assertEquals(new Byte(3), $b[0]);
+    $b[0]= 3;
+    $this->assertEquals(3, $b[0]);
   }
 
   #[@test, @expect(IndexOutOfBoundsException::class)]
   public function setNegative() {
     $b= new Bytes('negative');
-    $b[-1]= new Byte(3);
+    $b[-1]= 3;
   }
 
   #[@test, @expect(IndexOutOfBoundsException::class)]
   public function setPastEnd() {
     $b= new Bytes('ends');
-    $b[5]= new Byte(3);
+    $b[5]= 3;
   }
 
   #[@test, @expect(IndexOutOfBoundsException::class)]
@@ -211,31 +207,31 @@ class BytesTest extends \unittest\TestCase {
   #[@test]
   public function binarySafeBeginning() {
     $b= new Bytes(["\0", 'A', 'B']);
-    $this->assertEquals(new Byte(0), $b[0]);
-    $this->assertEquals(new Byte(65), $b[1]);
-    $this->assertEquals(new Byte(66), $b[2]);
+    $this->assertEquals(0, $b[0]);
+    $this->assertEquals(65, $b[1]);
+    $this->assertEquals(66, $b[2]);
   }
 
   #[@test]
   public function binarySafeInBetween() {
     $b= new Bytes(['A', "\0", 'B']);
-    $this->assertEquals(new Byte(65), $b[0]);
-    $this->assertEquals(new Byte(0), $b[1]);
-    $this->assertEquals(new Byte(66), $b[2]);
+    $this->assertEquals(65, $b[0]);
+    $this->assertEquals(0, $b[1]);
+    $this->assertEquals(66, $b[2]);
   }
 
   #[@test]
   public function binarySafeInEnd() {
     $b= new Bytes(['A', 'B', "\0"]);
-    $this->assertEquals(new Byte(65), $b[0]);
-    $this->assertEquals(new Byte(66), $b[1]);
-    $this->assertEquals(new Byte(0), $b[2]);
+    $this->assertEquals(65, $b[0]);
+    $this->assertEquals(66, $b[1]);
+    $this->assertEquals(0, $b[2]);
   }
 
   #[@test]
   public function abcBytesToString() {
     $this->assertEquals(
-      'lang.types.Bytes(6)@{@ ABC!}', 
+      'util.Bytes(6)@{@ ABC!}', 
       (new Bytes('@ ABC!'))->toString()
     );
   }
@@ -243,7 +239,7 @@ class BytesTest extends \unittest\TestCase {
   #[@test]
   public function controlCharsToString() {
     $this->assertEquals(
-      'lang.types.Bytes(32)@{'.
+      'util.Bytes(32)@{'.
       '\000\001\002\003\004\005\006\a'.     //  0 -  7
       '\b\t\n\v\f\r\016\017'.               //  8 - 15
       '\020\021\022\023\024\025\026\027'.   // 16 - 23
@@ -256,8 +252,8 @@ class BytesTest extends \unittest\TestCase {
   #[@test]
   public function umlautsToString() {
     $this->assertEquals(
-      'lang.types.Bytes(6)@{A\344O\366U\374}', 
-      (new Bytes('AäOöUü'))->toString()
+      'util.Bytes(9)@{A\303\244O\303\266U\303\274}', 
+      (new Bytes('AÃ¤OÃ¶UÃ¼'))->toString()
     );
   }
 
@@ -290,93 +286,24 @@ class BytesTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function string_from_iso88591_bytes() {
-    $this->assertEquals(
-      new String("H\xe4llo", 'iso-8859-1'),
-      new String(new Bytes("H\344llo"), 'iso-8859-1')
-    );
-  }
-
-  #[@test]
-  public function string_from_utf8_bytes() {
-    $this->assertEquals(
-      new String("H\xe4llo", 'iso-8859-1'),
-      new String(new Bytes("H\303\244llo"), 'utf-8')
-    );
-  }
-
-  #[@test, @expect(FormatException::class)]
-  public function string_from_invalid_utf8_bytes() {
-    new String(new Bytes("H\344llo"), 'utf-8');
-  }
-
-  #[@test]
-  public function utf8_bytes_from_string() {
-    $this->assertEquals(
-      new Bytes("H\303\244llo"),
-      (new String("H\xe4llo", 'iso-8859-1'))->getBytes('utf-8')
-    );
-  }
-
-  #[@test]
-  public function iso88591_bytes_from_string() {
-    $this->assertEquals(
-      new Bytes("H\344llo"),
-      (new String("H\xe4llo", 'iso-8859-1'))->getBytes('iso-8859-1')
-    );
-  }
-
-  #[@test]
-  public function character_from_iso88591_bytes() {
-    $this->assertEquals(
-      new Character("\xe4", 'iso-8859-1'),
-      new Character(new Bytes("\344"), 'iso-8859-1')
-    );
-  }
-
-  #[@test]
-  public function character_from_utf8_bytes() {
-    $this->assertEquals(
-      new Character("\xe4", 'iso-8859-1'),
-      new Character(new Bytes("\303\244"), 'utf-8')
-    );
-  }
-
-  #[@test]
-  public function utf8_bytes_from_character() {
-    $this->assertEquals(
-      new Bytes("\303\244"),
-      (new Character("\xe4", 'iso-8859-1'))->getBytes('utf-8')
-    );
-  }
-
-  #[@test]
-  public function iso88591_bytes_from_character() {
-    $this->assertEquals(
-      new Bytes("\344"),
-      (new Character("\xe4", 'iso-8859-1'))->getBytes('iso-8859-1')
-    );
-  }
-
-  #[@test]
   public function worksWithEchoStatement() {
     ob_start();
-    echo new Bytes('ü');
-    $this->assertEquals('ü', ob_get_clean());
+    echo new Bytes('Ã¼');
+    $this->assertEquals('Ã¼', ob_get_clean());
   }
 
   #[@test]
   public function integerArrayToBytes() {
     $b= new Bytes([228, 246, 252]);
-    $this->assertEquals(new Byte(-28), $b[0]);
-    $this->assertEquals(new Byte(-10), $b[1]);
-    $this->assertEquals(new Byte(-4), $b[2]);
+    $this->assertEquals(-28, $b[0]);
+    $this->assertEquals(-10, $b[1]);
+    $this->assertEquals(-4, $b[2]);
   }
 
   #[@test]
   public function byteArrayToBytes() {
-    $b= new Bytes([new Byte(-28)]);
-    $this->assertEquals(new Byte(-28), $b[0]);
+    $b= new Bytes([-28]);
+    $this->assertEquals(-28, $b[0]);
   }
 
   #[@test]
@@ -384,8 +311,18 @@ class BytesTest extends \unittest\TestCase {
     $c= ['H', "\303", "\244", 'l', 'l', 'o'];
     $b= new Bytes($c);
     foreach ($b as $i => $byte) {
-      $this->assertEquals($c[$i], chr($byte->intValue()));
+      $this->assertEquals($c[$i], chr($byte));
     }
     $this->assertEquals($i, sizeof($c)- 1);
+  }
+
+  #[@test, @values([
+  #  [new Bytes('Test'), 0],
+  #  [new Bytes('T'), +3],
+  #  [new Bytes('Testing'), -3],
+  #  [null, 1]
+  #])]
+  public function compare($value, $expected) {
+    $this->assertEquals($expected, (new Bytes('Test'))->compareTo($value));
   }
 }

@@ -1,8 +1,5 @@
 <?php namespace util;
 
-use lang\types\Double;
-
-
 /**
  * Represents money.
  *
@@ -38,7 +35,7 @@ class Money extends \lang\Object {
   /**
    * Constructor
    *
-   * @param   var amount
+   * @param   string|double|int amount
    * @param   util.Currency currency
    */
   public function __construct($amount, Currency $currency) {
@@ -47,12 +44,13 @@ class Money extends \lang\Object {
   }
 
   /**
-   * Get amount as double
+   * Get amount
    *
-   * @return  lang.types.Double
+   * @param   int $round
+   * @return  string
    */
-  public function amount() {
-    return new Double((double)$this->amount);
+  public function amount($round= 0) {
+    return $round ? sprintf('%.'.$round.'f', $this->amount) : $this->amount;
   }
 
   /**

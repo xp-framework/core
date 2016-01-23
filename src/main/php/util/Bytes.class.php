@@ -1,4 +1,4 @@
-<?php namespace lang\types;
+<?php namespace util;
 
 use lang\IndexOutOfBoundsException;
 
@@ -6,34 +6,26 @@ use lang\IndexOutOfBoundsException;
  * Represents a list of bytes
  *
  * @deprecated Wrapper types will move to their own library
- * @test     xp://net.xp_framework.unittest.core.types.BytesTest
+ * @test     xp://net.xp_framework.unittest.util.BytesTest
  */
-class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
-  protected
-    $iterator = null;
-
-  public 
-    $buffer = '',
-    $size   = 0;
+class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
+  private $buffer, $size;
   
   /**
    * Returns input as byte
    *
-   * @param   var in
-   * @return  string
+   * @param  var $in
+   * @return string
    */
   protected function asByte($in) {
-    return is_int($in) && -1 < $in && $in < 256 
-      ? chr($in)
-      : ($in instanceof Byte ? chr($in->value) : $in{0})
-    ;
+    return is_int($in) ? chr($in) : $in{0};
   }
 
   /**
    * Constructor
    *
-   * @param   var initial default NULL
-   * @throws  lang.IllegalArgumentException in case argument is of incorrect type.
+   * @param  var $initial default NULL
+   * @throws lang.IllegalArgumentException in case argument is of incorrect type.
    */
   public function __construct($initial= null) {
     if (null === $initial) {
@@ -43,7 +35,7 @@ class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
     } else if (is_string($initial)) {
       $this->buffer= $initial;
     } else {
-      throw new \lang\IllegalArgumentException('Expected either Byte[], char[], int[] or string but was '.\xp::typeOf($initial));
+      throw new \lang\IllegalArgumentException('Expected either char[], int[] or string but was '.\xp::typeOf($initial));
     }
     $this->size= strlen($this->buffer);
   }
@@ -51,43 +43,37 @@ class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
   /**
    * Returns an iterator for use in foreach()
    *
-   * @see     php://language.oop5.iterations
-   * @return  php.Iterator
+   * @see    php://language.oop5.iterations
+   * @return php.Iterator
    */
   public function getIterator() {
-    if (!$this->iterator) $this->iterator= newinstance('Iterator', [$this], '{
-      private $i= 0, $v;
-      public function __construct($v) { $this->v= $v; }
-      public function current() { $n= ord($this->v->buffer{$this->i}); return new \lang\types\Byte($n < 128 ? $n : $n - 256); }
-      public function key() { return $this->i; }
-      public function next() { $this->i++; }
-      public function rewind() { $this->i= 0; }
-      public function valid() { return $this->i < $this->v->size; }
-    }');
-    return $this->iterator;
+    for ($offset= 0; $offset < $this->size; $offset++) {
+      $n= ord($this->buffer{$offset});
+      yield $n < 128 ? $n : $n - 256;
+    }
   }
 
   /**
    * = list[] overloading
    *
-   * @param   int offset
-   * @return  lang.types.Byte 
-   * @throws  lang.IndexOutOfBoundsException if offset does not exist
+   * @param  int $offset
+   * @return int 
+   * @throws lang.IndexOutOfBoundsException if offset does not exist
    */
   public function offsetGet($offset) {
     if ($offset >= $this->size || $offset < 0) {
       throw new IndexOutOfBoundsException('Offset '.$offset.' out of bounds');
     }
     $n= ord($this->buffer{$offset});
-    return new Byte($n < 128 ? $n : $n - 256);
+    return $n < 128 ? $n : $n - 256;
   }
 
   /**
    * list[]= overloading
    *
-   * @param   int offset
-   * @param   var value
-   * @throws  lang.IllegalArgumentException if key is neither numeric (set) nor NULL (add)
+   * @param  int $offset
+   * @param  var $value
+   * @throws lang.IllegalArgumentException if key is neither numeric (set) nor NULL (add)
    * @throws  lang.IndexOutOfBoundsException if key does not exist
    */
   public function offsetSet($offset, $value) {
@@ -104,8 +90,8 @@ class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
   /**
    * isset() overloading
    *
-   * @param   int offset
-   * @return  bool
+   * @param  int $offset
+   * @return bool
    */
   public function offsetExists($offset) {
     return ($offset >= 0 && $offset < $this->size);
@@ -114,8 +100,8 @@ class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
   /**
    * unset() overloading
    *
-   * @param   int offset
-   * @throws  lang.IndexOutOfBoundsException if offset does not exist
+   * @param  int $offset
+   * @throws lang.IndexOutOfBoundsException if offset does not exist
    */
   public function offsetUnset($offset) {
     if ($offset >= $this->size || $offset < 0) {
@@ -131,7 +117,7 @@ class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
   /**
    * Returns this byte list's size
    *
-   * @return  string
+   * @return int
    */
   public function size() {
     return $this->size;
@@ -140,39 +126,35 @@ class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
   /**
    * Returns whether a given object is equal to this object
    *
-   * @param   lang.Generic cmp
-   * @return  bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return (
-      $cmp instanceof self && 
-      $this->size === $cmp->size && 
-      $this->buffer === $cmp->buffer
-    );
+  public function compareTo($value) {
+    return $value instanceof self ? strcmp($this->buffer, $value->buffer) : 1;
   }
 
   /**
    * Returns a hashcode for this bytes object
    *
-   * @return  string
+   * @return string
    */
   public function hashCode() {
     return md5($this->buffer);
   }
 
   /**
-   * Returns a string representation of this string.
+   * Returns a string representation of this bytes instance.
    *
-   * @return  string
+   * @return string
    */
   public function toString() {
     return nameof($this).'('.$this->size.')@{'.addcslashes($this->buffer, "\0..\37\177..\377").'}';
   }
 
   /**
-   * String conversion overloading. This is for use with fwrite()
+   * String conversion overloading
    *
-   * @return  string
+   * @return string
    */
   public function __toString() {
     return $this->buffer;

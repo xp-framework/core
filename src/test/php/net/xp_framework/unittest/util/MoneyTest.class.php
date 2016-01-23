@@ -3,7 +3,6 @@
 use util\Money;
 use util\Currency;
 use lang\IllegalArgumentException;
-use lang\types\Double;
 
 /**
  * TestCase
@@ -15,24 +14,24 @@ class MoneyTest extends \unittest\TestCase {
   #[@test]
   public function tenUsDollarsFromInt() {
     $this->assertEquals(
-      new Double(10.00), 
-      (new Money(10, Currency::$USD))->amount()
+      '10.00', 
+      (new Money(10, Currency::$USD))->amount(2)
     );
   }
 
   #[@test]
   public function tenUsDollarsFromFloat() {
     $this->assertEquals(
-      new Double(10.00), 
-      (new Money(10.00, Currency::$USD))->amount()
+      '10.00', 
+      (new Money(10.00, Currency::$USD))->amount(2)
     );
   }
 
   #[@test]
   public function tenUsDollarsFromString() {
     $this->assertEquals(
-      new Double(10.00), 
-      (new Money('10.00', Currency::$USD))->amount()
+      '10.00', 
+      (new Money('10.00', Currency::$USD))->amount(2)
     );
   }
 
