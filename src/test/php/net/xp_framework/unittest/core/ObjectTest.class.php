@@ -57,12 +57,6 @@ class ObjectTest extends \unittest\TestCase {
     $this->assertFalse((new Object())->equals(0));
   }
 
-  /** @deprecated */
-  #[@test]
-  public function getClassName_returns_fully_qualified_class_name() {
-    $this->assertEquals('lang.Object', (new Object())->getClassName());
-  }
-
   #[@test]
   public function getClass_returns_XPClass_object() {
     $this->assertEquals(XPClass::forName('lang.Object'), (new Object())->getClass());

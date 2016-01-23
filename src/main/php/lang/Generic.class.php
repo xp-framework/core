@@ -20,15 +20,6 @@ interface Generic {
    * @return  bool TRUE if the compared object is equal to this object
    */
   public function equals($cmp);
-  
-  /** 
-   * Returns the fully qualified class name for this class 
-   * (e.g. "io.File")
-   * 
-   * @deprecated Use nameof($this) instead.
-   * @return  string fully qualified class name
-   */
-  public function getClassName();
 
   /**
    * Returns the runtime class of an object.

@@ -28,15 +28,6 @@ class InstanceReflectionTest extends \unittest\TestCase {
     );
   }
 
-  /** @deprecated */
-  #[@test]
-  public function getClassNameMethod() {
-    $this->assertEquals(
-      'net.xp_framework.unittest.core.generics.Lookup<string,unittest.TestCase>', 
-      $this->fixture->getClassName()
-    );
-  }
-
   #[@test]
   public function nameOfClass() {
     $this->assertEquals(
