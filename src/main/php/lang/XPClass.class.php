@@ -192,7 +192,7 @@ class XPClass extends Type {
    * @return  lang.Object 
    * @throws  lang.IllegalAccessException in case this class cannot be instantiated
    */
-  public function newInstance($value= null) {
+  public function newInstance(...$args) {
     $reflect= $this->reflect();
     if ($reflect->isInterface()) {
       throw new IllegalAccessException('Cannot instantiate interfaces ('.$this->name.')');
@@ -204,7 +204,7 @@ class XPClass extends Type {
     
     try {
       if ($this->hasConstructor()) {
-        return $reflect->newInstanceArgs(func_get_args());
+        return $reflect->newInstanceArgs($args);
       } else {
         return $reflect->newInstance();
       }

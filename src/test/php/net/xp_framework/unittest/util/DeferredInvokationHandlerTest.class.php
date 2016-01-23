@@ -14,9 +14,9 @@ class DeferredInvokationHandlerTest extends \unittest\TestCase {
   public function echo_runnable_invokation() {
     $handler= newinstance(AbstractDeferredInvokationHandler::class, [], [
       'initialize' => function() {
-        return newinstance(Runnable::class, [], '{
-          public function run() { return func_get_args(); }
-        }');
+        return newinstance(Runnable::class, [], [
+          'run' => function(...$args) { return $args; }
+        ]);
       }
     ]);
     $args= [1, 2, 'Test'];
@@ -27,9 +27,9 @@ class DeferredInvokationHandlerTest extends \unittest\TestCase {
   public function throwing_runnable_invokation() {
     $handler= newinstance(AbstractDeferredInvokationHandler::class, [], [
       'initialize' => function() {
-        return newinstance(Runnable::class, [], '{
-          public function run() { throw new \lang\IllegalStateException(func_get_arg(0)); }
-        }');
+        return newinstance(Runnable::class, [], [
+          'run' => function(...$args) { throw new \lang\IllegalStateException($args[0]); }
+        ]);
       }
     ]);
     $handler->invoke($this, 'run', ['Test']);

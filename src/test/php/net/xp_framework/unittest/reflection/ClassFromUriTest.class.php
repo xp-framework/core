@@ -62,13 +62,13 @@ abstract class ClassFromUriTest extends \unittest\TestCase {
    * @param  var... args either strings or a ClassFromUriBase instance
    * @return string
    */
-  protected function compose() {
+  protected function compose(... $args) {
     $base= self::$base;
     return implode(DIRECTORY_SEPARATOR, array_map(
       function($e) use($base) {
         return $base->equals($e) ? $base->path() : rtrim($e, DIRECTORY_SEPARATOR);
       },
-      func_get_args()
+      $args
     ));
   }
 

@@ -221,7 +221,7 @@ class FunctionType extends Type {
       }
       $c= new \ReflectionClass($class);
       if (!$c->isInstantiable()) return $false($arg.' cannot be instantiated');
-      return $return ? function() use($c) { return $c->newInstanceArgs(func_get_args()); } : true;
+      return $return ? function(... $args) use($c) { return $c->newInstanceArgs($args); } : true;
     } else if (is_string($arg) && is_string($method)) {
       $class= literal($arg);
       if (!method_exists($class, $method)) return $false('Method '.$arg.'::'.$method.' does not exist');
@@ -240,8 +240,7 @@ class FunctionType extends Type {
           $verify= array_slice($this->signature, 1);
         }
         if ($this->verify($r, $verify, $false, $r->getDeclaringClass())) {
-          return $return ? function() use($r) {
-            $args= func_get_args();
+          return $return ? function(... $args) use($r) {
             $self= array_shift($args);
             try {
               return $r->invokeArgs($self, $args);

@@ -14,8 +14,8 @@ class ListOf extends \lang\Object {
    * @param   T... initial
    */
   #[@generic(params= 'T...')]
-  public function __construct() {
-    $this->elements= func_get_args();
+  public function __construct(... $args) {
+    $this->elements= $args;
   }
 
   /**
@@ -25,8 +25,7 @@ class ListOf extends \lang\Object {
    * @return  net.xp_framework.unittest.core.generics.List self
    */
   #[@generic(params= 'T...')]
-  public function withAll() {
-    $args= func_get_args();
+  public function withAll(... $args) {
     $this->elements= array_merge($this->elements, $args);
     return $this;
   }

@@ -322,11 +322,10 @@ function literal($type) {
 
 // {{{ proto void with(arg..., Closure)
 //     Executes closure, closes all given args on exit.
-function with() {
-  $args= func_get_args();
+function with(... $args) {
   if (($block= array_pop($args)) instanceof \Closure)  {
     try {
-      return call_user_func_array($block, $args);
+      return $block(...$args);
     } finally {
       foreach ($args as $arg) {
         if (!($arg instanceof \lang\Closeable)) continue;

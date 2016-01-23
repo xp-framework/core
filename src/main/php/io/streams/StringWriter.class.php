@@ -57,11 +57,10 @@ class StringWriter extends \lang\Object implements OutputStreamWriter {
   /**
    * Print arguments
    *
-   * @param   var* args
+   * @param   var... args
    */
-  public function write() {
-    $a= func_get_args();
-    foreach ($a as $arg) {
+  public function write(... $args) {
+    foreach ($args as $arg) {
       if (is_string($arg)) {
         $this->out->write($arg);
       } else {
@@ -73,11 +72,10 @@ class StringWriter extends \lang\Object implements OutputStreamWriter {
   /**
    * Print arguments and append a newline
    *
-   * @param   var* args
+   * @param   var... args
    */
-  public function writeLine() {
-    $a= func_get_args();
-    foreach ($a as $arg) {
+  public function writeLine(... $args) {
+    foreach ($args as $arg) {
       if (is_string($arg)) {
         $this->out->write($arg);
       } else {
@@ -91,22 +89,20 @@ class StringWriter extends \lang\Object implements OutputStreamWriter {
    * Print a formatted string
    *
    * @param   string format
-   * @param   var* args
+   * @param   var... args
    * @see     php://writef
    */
-  public function writef() {
-    $a= func_get_args();
-    $this->out->write(vsprintf(array_shift($a), $a));
+  public function writef($format, ... $args) {
+    $this->out->write(vsprintf($format, $args));
   }
 
   /**
    * Print a formatted string and append a newline
    *
    * @param   string format
-   * @param   var* args
+   * @param   var... args
    */
-  public function writeLinef() {
-    $a= func_get_args();
-    $this->out->write(vsprintf(array_shift($a), $a)."\n");
+  public function writeLinef($format, ... $args) {
+    $this->out->write(vsprintf($format, $args)."\n");
   }
 }
