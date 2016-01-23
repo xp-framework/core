@@ -9,7 +9,6 @@ use lang\IndexOutOfBoundsException;
  * @test     xp://net.xp_framework.unittest.util.BytesTest
  */
 class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
-  private $iterator = null;
   private $buffer, $size;
   
   /**
@@ -48,16 +47,10 @@ class Bytes extends \lang\Object implements \ArrayAccess, \IteratorAggregate {
    * @return  php.Iterator
    */
   public function getIterator() {
-    if (!$this->iterator) $this->iterator= newinstance('Iterator', [$this], '{
-      private $i= 0, $v;
-      public function __construct($v) { $this->v= $v; }
-      public function current() { $n= ord($this->v->buffer{$this->i}); return $n < 128 ? $n : $n - 256; }
-      public function key() { return $this->i; }
-      public function next() { $this->i++; }
-      public function rewind() { $this->i= 0; }
-      public function valid() { return $this->i < $this->v->size; }
-    }');
-    return $this->iterator;
+    for ($offset= 0; $offset < $this->size; $offset++) {
+      $n= ord($this->buffer{$offset});
+      yield $n < 128 ? $n : $n - 256;
+    }
   }
 
   /**
