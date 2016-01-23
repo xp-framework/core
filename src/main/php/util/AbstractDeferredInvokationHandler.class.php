@@ -44,6 +44,6 @@ abstract class AbstractDeferredInvokationHandler extends \lang\Object implements
         );
       }
     }
-    return call_user_func_array([$this->_instance, $method], $args);
+    return $this->_instance->{$method}(...$args);
   }
 } 
