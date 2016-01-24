@@ -5,6 +5,7 @@ use lang\Enum;
 use lang\Primitive;
 use lang\ArrayType;
 use lang\MapType;
+use lang\TypeUnion;
 use lang\XPClass;
 use lang\ElementNotFoundException;
 use lang\DynamicClassLoader;
@@ -93,6 +94,11 @@ class HackLanguageSupportTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function method_noreturn_type() {
+    $this->assertEquals(Type::$VOID, $this->testClass()->getMethod('returnsNoreturn')->getReturnType());
+  }
+
+  #[@test]
   public function method_this_return_type() {
     $this->assertEquals($this->testClass(), $this->testClass()->getMethod('returnsThis')->getReturnType());
   }
@@ -100,6 +106,16 @@ class HackLanguageSupportTest extends \unittest\TestCase {
   #[@test]
   public function method_self_return_type() {
     $this->assertEquals($this->testClass(), $this->testClass()->getMethod('returnsSelf')->getReturnType());
+  }
+
+  #[@test]
+  public function method_num_return_type() {
+    $this->assertEquals(new TypeUnion([Primitive::$INT, Primitive::$DOUBLE]), $this->testClass()->getMethod('returnsNum')->getReturnType());
+  }
+
+  #[@test]
+  public function method_arraykey_return_type() {
+    $this->assertEquals(new TypeUnion([Primitive::$INT, Primitive::$STRING]), $this->testClass()->getMethod('returnsArraykey')->getReturnType());
   }
 
   #[@test]

@@ -168,7 +168,7 @@ class Type extends Object {
       return Primitive::forName($primitives[$type]);
     } else if ('var' === $type || 'resource' === $type || 'HH\mixed' === $type) {
       return self::$VAR;
-    } else if ('void' === $type || 'HH\void' == $type) {
+    } else if ('void' === $type || 'HH\void' === $type || 'HH\noreturn' === $type) {
       return self::$VOID;
     } else if ('array' === $type) {
       return self::$ARRAY;
@@ -188,6 +188,10 @@ class Type extends Object {
       return new ArrayType(self::forName(substr($type, 0, -1)));
     } else if (strstr($type, '|')) {
       return TypeUnion::forName($type);
+    } else if ('HH\num' === $type) {
+      return new TypeUnion([Primitive::$INT, Primitive::$DOUBLE]);
+    } else if ('HH\arraykey' === $type) {
+      return new TypeUnion([Primitive::$INT, Primitive::$STRING]);
     } else if (false === ($p= strpos($type, '<'))) {
       $normalized= strtr($type, '\\', '.');
       return strstr($normalized, '.') ? XPClass::forName($normalized) : new XPClass($normalized);
