@@ -222,6 +222,7 @@ class Routine extends \lang\Object {
       $attr= $this->_reflect->getAttributes();
       return $key ? isset($attr[$name]) && array_key_exists($key, @$attr[$name][0]) : isset($attr[$name]); 
     }
+    return false;
   }
 
   /**
