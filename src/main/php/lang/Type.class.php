@@ -180,9 +180,6 @@ class Type extends Object {
       return new ArrayType(self::forName(substr($type, 0, -2)));
     } else if (0 === substr_compare($type, '[:', 0, 2)) {
       return new MapType(self::forName(substr($type, 2, -1)));
-    } else if (0 === substr_compare($type, 'array<', 0, 6)) {
-      $components= self::forNames(substr($type, 6, -1));
-      return 1 === sizeof($components)? new ArrayType($components[0]) : new MapType($components[1]);
     } else if ('?' === $type{0}) {
       return self::forName(substr($type, 1));
     } else if ('(' === $type{0}) {
@@ -199,7 +196,11 @@ class Type extends Object {
     } else {
       $base= substr($type, 0, $p);
       $components= self::forNames(substr($type, $p+ 1, -1));
-      return cast(self::forName($base), 'lang.XPClass')->newGenericType($components);
+      if ('array' === $base) {
+        return 1 === sizeof($components)? new ArrayType($components[0]) : new MapType($components[1]);
+      } else {
+        return cast(self::forName($base), 'lang.XPClass')->newGenericType($components);
+      }
     }
   }
   
