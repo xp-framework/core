@@ -135,6 +135,15 @@ class Routine extends \lang\Object {
       } else {
         return \lang\Type::forName($t);
       }
+    } else if (defined('HHVM_VERSION')) {
+      $t= $this->_reflect->getReturnTypeText() ?: 'var';
+      if ('self' === $t) {
+        return new \lang\XPClass($this->_reflect->getDeclaringClass());
+      } else if ('HH\\this' === $t) {
+        return new \lang\XPClass($this->_class);
+      } else {
+        return \lang\Type::forName($t);
+      }
     } else if (\lang\XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getReturnType())) {
       return \lang\Type::forName((string)$t);
     } else {
@@ -154,7 +163,9 @@ class Routine extends \lang\Object {
     ) {
       return ltrim($details[DETAIL_RETURNS], '&');
     } else if (\lang\XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getReturnType())) {
-      return (string)$t;
+      return str_replace('HH\\', '', $t);
+    } else if (defined('HHVM_VERSION')) {
+      return str_replace('HH\\', '', $this->_reflect->getReturnTypeText() ?: 'var');
     } else {
       return 'var';
     }
