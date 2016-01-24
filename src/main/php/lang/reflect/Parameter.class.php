@@ -91,7 +91,7 @@ class Parameter extends \lang\Object {
     ) {
       return ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&');
     } else if (XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getType())) {
-      return (string)$t;
+      return str_replace('HH\\', '', $t);
     } else {
       return 'var';
     }
