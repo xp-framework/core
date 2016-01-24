@@ -6,6 +6,7 @@ use lang\Runtime;
 use lang\Process;
 use lang\reflect\Package;
 use lang\ClassLoader;
+use lang\IllegalAccessException;
 use unittest\actions\VerifyThat;
 use unittest\actions\RuntimeVersion;
 
@@ -310,8 +311,8 @@ class NewInstanceTest extends \unittest\TestCase {
     }');
   }
 
-  #[@test]
-  public function anonymousClassWithoutConstructorIgnoresConstructArgs() {
+  #[@test, @expect(IllegalAccessException::class)]
+  public function anonymousClassWithoutConstructorRaisesWhenArgsGiven() {
     newinstance(Runnable::class, ['arg1'], '{
       public function run() {}
     }');

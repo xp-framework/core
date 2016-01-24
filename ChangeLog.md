@@ -7,6 +7,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Changed `newinstance` to raise an error if no constructor is defined
+  but arguments are passed. Errors surface earlier this way!
+  (@thekid)
 * Removed deprecated overload of `ClassLoader::defineType()` - @thekid
 * Removed deprecated Hashmap class. See xp-framework/core#121 - @thekid
 * Removed deprecated global FILE_MODE_* constants - @thekid

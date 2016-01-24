@@ -166,7 +166,7 @@ class ClassParser extends \lang\Object {
           $arg= [$this->valueOf($tokens, $i, $context, $imports)];
         }
       }
-      return $class->hasConstructor() ? $class->getConstructor()->newInstance($args) : $class->newInstance();
+      return $class->newInstance(...$args);
     } else if (T_FUNCTION === $tokens[$i][0]) {
       $b= 0;
       $code= 'function';

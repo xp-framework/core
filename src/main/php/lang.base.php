@@ -395,11 +395,7 @@ function newinstance($spec, $args, $def= null) {
     xp::$meta[$name]['class'][DETAIL_GENERIC]= $generic;
   }
 
-  if ($defined->hasConstructor()) {
-    return $defined->getConstructor()->newInstance($args);
-  } else {
-    return $defined->newInstance();
-  }
+  return $defined->newInstance(...$args);
 }
 // }}}
 
