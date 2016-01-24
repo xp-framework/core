@@ -490,12 +490,15 @@ class XPClass extends Type {
   }
 
   /**
-   * Determines if this XPClass object represents an interface type.
+   * Determines if this XPClass object represents an enum type.
    *
    * @return  bool
    */
   public function isEnum() {
-    return class_exists('lang\Enum', false) && $this->reflect()->isSubclassOf('lang\Enum');
+    return
+      (class_exists('lang\Enum', false) && $this->reflect()->isSubclassOf('lang\Enum')) ||
+      (class_exists('HH\BuiltinEnum', false) && $this->reflect()->isSubclassOf('HH\BuiltinEnum'))
+    ;
   }
 
   /**
@@ -617,7 +620,6 @@ class XPClass extends Type {
    */
   public function getAnnotation($name, $key= null) {
     $details= self::detailsForClass($this->name);
-
     if (!$details || !($key 
       ? @array_key_exists($key, @$details['class'][DETAIL_ANNOTATIONS][$name]) 
       : @array_key_exists($name, @$details['class'][DETAIL_ANNOTATIONS])

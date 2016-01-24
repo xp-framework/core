@@ -82,18 +82,15 @@ class MethodParametersTest extends MethodsTest {
     $this->method('public function fixture(UnknownTypeRestriction $param) { }')->getParameter(0)->getType();
   }
 
-  #[@test, @action(new RuntimeVersion("<=7.0"))]
-  public function nonexistant_name_class_parameter_before_php7() {
+  #[@tes]
+  public function nonexistant_name_class_parameter() {
+    if (PHP_VERSION >= '7.0.0' || defined('HHVM_VERSION')) {
+      $expect= 'net\xp_framework\unittest\reflection\UnknownTypeRestriction';
+    } else {
+      $expect= 'var';
+    }
     $this->assertEquals(
-      'var',
-      $this->method('public function fixture(UnknownTypeRestriction $param) { }')->getParameter(0)->getTypeName()
-    );
-  }
-
-  #[@test, @action(new RuntimeVersion(">=7.0"))]
-  public function nonexistant_name_class_parameter_with_php7() {
-    $this->assertEquals(
-      'net\xp_framework\unittest\reflection\UnknownTypeRestriction',
+      $expect,
       $this->method('public function fixture(UnknownTypeRestriction $param) { }')->getParameter(0)->getTypeName()
     );
   }
