@@ -33,6 +33,10 @@ XP Framework Core ChangeLog
 * Implemented xp-framework/rfc#296: Further minimize the framework - @thekid
 * Implemented xp-framework/rfc#297: Rebase - @thekid
 
+### Features
+
+* Merged xp-framework/core#127: Enable running scripts from files - @thekid
+
 ## 6.10.2 / 2016-01-17
 
 ### Bugfixes
