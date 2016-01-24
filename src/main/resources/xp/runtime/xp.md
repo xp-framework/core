@@ -4,7 +4,7 @@
   ```sh
   $ xp -v
   ```
-* Evaluate code
+* Evaluate code. More details [available](xp help eval)
   ```sh
   $ xp -e 'var_dump(1 + 2)'
   ```

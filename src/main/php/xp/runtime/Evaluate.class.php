@@ -22,6 +22,8 @@ class Evaluate {
       $code= new Code(file_get_contents('php://stdin'));
     } else if ('--' === $args[0]) {
       $code= new Code(file_get_contents('php://stdin'));
+    } else if (is_file($args[0])) {
+      $code= new Code(file_get_contents($args[0]));
     } else {
       $code= new Code($args[0]);
     }
