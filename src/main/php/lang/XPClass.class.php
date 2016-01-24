@@ -192,7 +192,7 @@ class XPClass extends Type {
    * @return  lang.Object 
    * @throws  lang.IllegalAccessException in case this class cannot be instantiated
    */
-  public function newInstance(...$args) {
+  public function newInstance($value= null) {
     $reflect= $this->reflect();
     if ($reflect->isInterface()) {
       throw new IllegalAccessException('Cannot instantiate interfaces ('.$this->name.')');
@@ -201,13 +201,10 @@ class XPClass extends Type {
     } else if ($reflect->isAbstract()) {
       throw new IllegalAccessException('Cannot instantiate abstract classes ('.$this->name.')');
     }
-    
+
+    $args= func_get_args();
     try {
-      if ($this->hasConstructor()) {
-        return $reflect->newInstanceArgs($args);
-      } else {
-        return $reflect->newInstance();
-      }
+      return $reflect->newInstance(...$args);
     } catch (\ReflectionException $e) {
       throw new IllegalAccessException($e->getMessage());
     }
