@@ -24,7 +24,7 @@
  * @see     xp://util.Currency
  * @see     http://martinfowler.com/eaaCatalog/money.html
  */
-class Money extends \lang\Object {
+class Money implements \lang\Value {
   protected $amount   = '';
   protected $currency = null;
 
@@ -122,30 +122,25 @@ class Money extends \lang\Object {
   }
 
   /**
+   * Creates a hashcode representation
+   *
+   * @return  string
+   */
+  public function hashCode() {
+    return $this->currency->name().$this->amount;
+  }
+
+  /**
    * Compare this amount of value to another
    *
-   * @param   util.Money m
-   * @return  int equal: 0, m less than this: -1, 1 otherwise
-   * @throws  lang.IllegalArgumentException if the currencies don't match
+   * @param   var $value
+   * @return  int equal: 0, value less than this: -1, 1 otherwise
    */
-  public function compareTo(Money $m) {
-    if (!$this->currency->equals($m->currency)) {
-      throw new \lang\IllegalArgumentException('Cannot compare '.$m->currency->name().' to '.$this->currency->name());
+  public function compareTo($value) {
+    if ($value instanceof self && $this->currency->equals($value->currency)) {
+      return bccomp($value->amount, $this->amount);
+    } else {
+      return 1;
     }
-    return bccomp($m->amount, $this->amount);
-  }
-  
-  /**
-   * Returns whether a given object is equal to this money instance
-   *
-   * @param   lang.Generic cmp
-   * @return  bool
-   */
-  public function equals($cmp) {
-    return (
-      $cmp instanceof self && 
-      0 === bccomp($this->amount, $cmp->amount) && 
-      $this->currency->equals($cmp->currency)
-    );
   }
 }

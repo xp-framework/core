@@ -114,9 +114,12 @@ class MoneyTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
-  public function cannotCompareDifferentCurrencies() {
-    (new Money('1.01', Currency::$EUR))->compareTo(new Money('0.99', Currency::$USD));
+  #[@test]
+  public function comparingDifferentCurrencies() {
+    $this->assertEquals(
+      1,
+      (new Money('1.01', Currency::$EUR))->compareTo(new Money('0.99', Currency::$USD))
+    );
   }
   
   #[@test]
