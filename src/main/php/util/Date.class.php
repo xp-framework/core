@@ -7,9 +7,8 @@ use lang\IllegalArgumentException;
  *
  * @test  xp://net.xp_framework.unittest.util.DateTest
  */
-class Date extends \lang\Object implements \lang\Value {
-  protected
-    $date     = null;
+class Date implements \lang\Value {
+  protected $date= null;
   
   const
     DEFAULT_FORMAT    = 'Y-m-d H:i:sO',
@@ -79,7 +78,7 @@ class Date extends \lang\Object implements \lang\Value {
    */
   public function __sleep() {
     $this->value= date_format($this->date, self::SERIALIZE_FORMAT);
-    return ['value', '__id'];
+    return ['value'];
   }
   
   /**
