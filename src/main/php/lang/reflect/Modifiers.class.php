@@ -9,7 +9,7 @@
  * @see   xp://lang.reflect.Field#getModifiers
  * @test  xp://net.xp_framework.unittest.reflection.ModifiersTest
  */
-class Modifiers extends \lang\Object {
+abstract class Modifiers {
 
   /**
    * Returns TRUE when the given modifiers include the public modifier.

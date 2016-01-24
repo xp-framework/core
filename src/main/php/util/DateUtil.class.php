@@ -6,7 +6,7 @@
  *
  * @test    xp://net.xp_framework.unittest.util.DateUtilTest
  */
-class DateUtil extends \lang\Object {
+abstract class DateUtil {
 
   /**
    * Returns a Date object which represents the date at

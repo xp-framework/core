@@ -91,7 +91,7 @@ define('MIME_X_WORLD_X_VRML',                 'x-world/x-vrml');
  * @see   http://www.stalkpire.de/mime-types-liste.aspx
  * @test  xp://net.xp_framework.unittest.util.MimeTypeTest
  */
-class MimeType extends \lang\Object {
+abstract class MimeType {
 
   /**
    * Get mime type by filename (guess)

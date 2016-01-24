@@ -8,7 +8,7 @@ use lang\Value;
  *
  * @test  xp://net.xp_framework.unittest.util.ObjectsTest
  */
-abstract class Objects extends \lang\Object {
+abstract class Objects {
 
   /**
    * Returns whether to objects are equal

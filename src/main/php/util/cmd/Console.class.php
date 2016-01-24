@@ -27,7 +27,7 @@ use io\streams\ConsoleInputStream;
  * @test  xp://net.xp_framework.unittest.util.cmd.ConsoleTest
  * @see   http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlrfSystemConsoleClassTopic.asp
  */
-class Console extends \lang\Object {
+abstract class Console {
   public static 
     $out= null,
     $err= null,

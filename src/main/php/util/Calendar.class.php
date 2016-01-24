@@ -12,7 +12,7 @@ define('CAL_DST_US',      0x0001);
  *
  * @test     xp://net.xp_framework.unittest.util.CalendarTest
  */
-class Calendar extends \lang\Object {
+abstract class Calendar {
 
   /**
    * Calculates start of DST (daylight savings time).

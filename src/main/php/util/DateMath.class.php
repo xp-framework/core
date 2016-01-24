@@ -7,7 +7,7 @@
  * @test  xp://net.xp_framework.unittest.util.DateMathTest
  * @see   xp://util.Date
  */
-class DateMath extends \lang\Object {
+abstract class DateMath {
 
   /**
    * Diff two date objects. Only full units are returned.

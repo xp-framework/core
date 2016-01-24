@@ -9,7 +9,7 @@ use io\FileNotFoundException;
  * @test  xp://net.xp_framework.unittest.io.StreamWrappingTest
  * @see   php://streams
  */
-abstract class Streams extends \lang\Object {
+abstract class Streams {
   protected static 
     $streams = [];
   

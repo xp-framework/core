@@ -16,7 +16,7 @@ use lang\ClassFormatException;
  * @test  xp://net.xp_framework.unittest.annotations.BrokenAnnotationTest
  * @test  xp://net.xp_framework.unittest.annotations.MultiValueBCTest
  */
-class ClassParser extends \lang\Object {
+class ClassParser {
 
   /**
    * Resolves a type in a given context. Recognizes classes imported via

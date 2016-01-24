@@ -9,7 +9,7 @@ use lang\IllegalArgumentException;
  * @see   xp://io.streams.TextReader#lines
  * @test  xp://net.xp_framework.unittest.io.streams.LinesTest
  */
-class LinesIn extends \lang\Object implements \Iterator {
+class LinesIn implements \Iterator {
   const EOF = -1;
   private $reader, $line, $number, $reset;
 

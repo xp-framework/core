@@ -15,7 +15,7 @@ define('LITTLE_ENDIAN',   0x0001);
  *
  * @see   http://www.netrino.com/Publications/Glossary/Endianness.html
  */
-class ByteOrder extends \lang\Object {
+abstract class ByteOrder {
   const BIG_ENDIAN =    0x0000;
   const LITTLE_ENDIAN = 0x0001;
 
