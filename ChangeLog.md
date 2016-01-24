@@ -7,6 +7,7 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Removed deprecated Hashmap class. See xp-framework/core#121 - @thekid
 * Removed deprecated global FILE_MODE_* constants - @thekid
 
 ### RFCs
