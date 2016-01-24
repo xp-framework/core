@@ -66,6 +66,8 @@ class Parameter extends \lang\Object {
       // where PHP simply knows about "arrays" (of whatever).
       if (XPClass::$TYPE_SUPPORTED && $t= $this->_reflect->getType()) {
         return Type::forName((string)$t);
+      } else if (defined('HHVM_VERSION')) {
+        return Type::forName($this->_reflect->getTypeText());
       } else {
         return Type::$VAR;
       }
@@ -92,6 +94,8 @@ class Parameter extends \lang\Object {
       return ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&');
     } else if (XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getType())) {
       return str_replace('HH\\', '', $t);
+    } else if (defined('HHVM_VERSION')) {
+      return str_replace('HH\\', '', $this->_reflect->getTypeText());
     } else {
       return 'var';
     }
