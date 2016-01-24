@@ -533,24 +533,6 @@ class Properties extends \lang\Object implements PropertyAccess {
   }
 
   /**
-   * Add a hashmap (and the section, if necessary)
-   *
-   * @param   string section
-   * @param   string key
-   * @param   var value either a util.Hashmap or an array
-   * @deprecated Use writeMap() instead
-   */
-  public function writeHash($section, $key, $value) {
-    $this->_load();
-    if (!$this->hasSection($section)) $this->_data[$section]= [];
-    if ($value instanceof Hashmap) {
-      $this->_data[$section][$key]= $value->toArray();
-    } else {
-      $this->_data[$section][$key]= $value;
-    }
-  }
-  
-  /**
    * Add a comment (and the section, if necessary)
    *
    * @param   string section
