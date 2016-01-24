@@ -7,7 +7,7 @@ use io\File;
  *
  * @test  xp://net.xp_framework.unittest.io.streams.FileOutputStreamTest
  */
-class FileOutputStream extends \lang\Object implements OutputStream {
+class FileOutputStream implements OutputStream {
   protected $file;
   
   /**

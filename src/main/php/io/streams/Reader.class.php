@@ -9,7 +9,7 @@ use io\IOException;
  * implementation (which works with bytes - for single-byte character
  * sets, there is no difference, obviously).
  */
-abstract class Reader extends \lang\Object implements Closeable {
+abstract class Reader implements Closeable {
   protected $stream= null;
   
   /**

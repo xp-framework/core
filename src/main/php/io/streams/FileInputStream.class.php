@@ -7,7 +7,7 @@ use io\File;
  *
  * @test     xp://net.xp_framework.unittest.io.streams.FileInputStreamTest
  */
-class FileInputStream extends \lang\Object implements InputStream, Seekable {
+class FileInputStream implements InputStream, Seekable {
   protected $file;
   
   /**

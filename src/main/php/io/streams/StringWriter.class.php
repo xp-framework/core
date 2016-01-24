@@ -6,9 +6,8 @@
  *
  * @test  xp://net.xp_framework.unittest.io.streams.StringWriterTest
  */
-class StringWriter extends \lang\Object implements OutputStreamWriter {
-  protected
-    $out= null;
+class StringWriter implements OutputStreamWriter {
+  protected $out= null;
   
   /**
    * Constructor

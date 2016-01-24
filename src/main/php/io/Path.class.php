@@ -4,7 +4,7 @@ use lang\IllegalStateException;
 use lang\IllegalArgumentException;
 use io\collections\IOElement;
 
-class Path extends \lang\Object {
+class Path implements \lang\Value {
   const EXISTING = true;
   protected $path;
 
@@ -362,13 +362,22 @@ class Path extends \lang\Object {
   }
 
   /**
-   * Returns whether this path instance is equal to a given object.
+   * Returns a hashcode for this path instance
    *
-   * @param  var $cmp
    * @return bool
    */
-  public function equals($cmp) {
-    return $cmp instanceof self && $this->normalize()->path === $cmp->normalize()->path;
+  public function hashCode() {
+    return $this->normalize()->path;
+  }
+
+  /**
+   * Returns whether this path instance is equal to a given object.
+   *
+   * @param  var $value
+   * @return bool
+   */
+  public function compareTo($value) {
+    return $value instanceof self ? strcmp($this->normalize()->path, $value->normalize()->path) : 1;
   }
 
   /** @return string */

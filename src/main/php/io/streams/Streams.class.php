@@ -77,8 +77,9 @@ abstract class Streams {
    * @return  resource
    */
   public static function readableFd(InputStream $s) { 
-    self::$streams[$s->hashCode()]= $s;
-    return fopen('iostrr://'.$s->hashCode(), 'rb');
+    $hash= spl_object_hash($s);
+    self::$streams[$hash]= $s;
+    return fopen('iostrr://'.$hash, 'rb');
   }
 
   /**
@@ -88,8 +89,9 @@ abstract class Streams {
    * @return  string
    */
   public static function readableUri(InputStream $s) { 
-    self::$streams[$s->hashCode()]= $s;
-    return 'iostrr://'.$s->hashCode();
+    $hash= spl_object_hash($s);
+    self::$streams[$hash]= $s;
+    return 'iostrr://'.$hash;
   }
 
   /**
@@ -99,8 +101,9 @@ abstract class Streams {
    * @return  resource
    */
   public static function writeableFd(OutputStream $s) { 
-    self::$streams[$s->hashCode()]= $s;
-    return fopen('iostrw://'.$s->hashCode(), 'wb');
+    $hash= spl_object_hash($s);
+    self::$streams[$hash]= $s;
+    return fopen('iostrw://'.$hash, 'wb');
   }
 
   /**
@@ -110,8 +113,9 @@ abstract class Streams {
    * @return  resource
    */
   public static function writeableUri(OutputStream $s) { 
-    self::$streams[$s->hashCode()]= $s;
-    return 'iostrw://'.$s->hashCode();
+    $hash= spl_object_hash($s);
+    self::$streams[$hash]= $s;
+    return 'iostrw://'.$hash;
   }
   
   /**

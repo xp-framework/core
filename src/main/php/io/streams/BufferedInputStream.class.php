@@ -3,7 +3,7 @@
 /**
  * Buffered InputStream
  */
-class BufferedInputStream extends \lang\Object implements InputStream {
+class BufferedInputStream implements InputStream {
   protected 
     $in   = null,
     $buf  = '',

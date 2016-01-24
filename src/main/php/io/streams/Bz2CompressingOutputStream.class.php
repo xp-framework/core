@@ -6,7 +6,7 @@
  * @ext   bz2
  * @test  xp://net.xp_framework.unittest.io.streams.Bz2CompressingOutputStreamTest
  */
-class Bz2CompressingOutputStream extends \lang\Object implements OutputStream {
+class Bz2CompressingOutputStream implements OutputStream {
   protected $out= null;
   
   /**

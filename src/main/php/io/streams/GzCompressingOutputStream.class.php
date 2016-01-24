@@ -9,7 +9,7 @@
  * @see   rfc://1952
  * @test  xp://net.xp_framework.unittest.io.streams.GzCompressingOutputStreamTest
  */
-class GzCompressingOutputStream extends \lang\Object implements OutputStream {
+class GzCompressingOutputStream implements OutputStream {
   protected $out= null;
   protected $md= null;
   protected $length= null;

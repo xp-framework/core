@@ -6,7 +6,7 @@
  * @ext   zlib
  * @test  xp://net.xp_framework.unittest.io.streams.DeflatingOutputStreamTest
  */
-class DeflatingOutputStream extends \lang\Object implements OutputStream {
+class DeflatingOutputStream implements OutputStream {
   protected $out= null;
   
   /**

@@ -6,7 +6,7 @@
  * @ext   bz2
  * @test  xp://net.xp_framework.unittest.io.streams.Bz2DecompressingInputStreamTest
  */
-class Bz2DecompressingInputStream extends \lang\Object implements InputStream {
+class Bz2DecompressingInputStream implements InputStream {
   protected $in = null;
   
   /**

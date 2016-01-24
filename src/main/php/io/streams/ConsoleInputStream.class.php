@@ -8,9 +8,8 @@
  * $in= new ConsoleInputStream(STDIN);
  * ```
  */
-class ConsoleInputStream extends \lang\Object implements InputStream {
-  protected
-    $descriptor= null;
+class ConsoleInputStream implements InputStream {
+  protected $descriptor= null;
   
   /**
    * Constructor

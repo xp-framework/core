@@ -5,7 +5,7 @@
  *
  * @test  xp://net.xp_framework.unittest.io.streams.MemoryOutputStreamTest
  */
-class MemoryOutputStream extends \lang\Object implements OutputStream, Seekable {
+class MemoryOutputStream implements OutputStream, Seekable {
   protected $pos= 0;
   protected $bytes= '';
   
