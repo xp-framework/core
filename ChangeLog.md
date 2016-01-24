@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+### Features
+
+* Merged xp-framework/core#127: Enable running scripts from files - @thekid
+
 ## 6.10.2 / 2016-01-17
 
 ### Bugfixes
