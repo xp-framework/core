@@ -93,7 +93,7 @@ class HackLanguageSupportTest extends \unittest\TestCase {
     $this->assertEquals(Type::$VOID, $this->testClass()->getMethod('returnsNothing')->getReturnType());
   }
 
-  #[@test]
+  #[@test, @action(new VerifyThat(function() { return version_compare(HHVM_VERSION, '3.7.0', 'ge'); }))]
   public function method_noreturn_type() {
     $this->assertEquals(Type::$VOID, $this->testClass()->getMethod('returnsNoreturn')->getReturnType());
   }
