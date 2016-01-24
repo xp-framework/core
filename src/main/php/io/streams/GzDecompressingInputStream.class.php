@@ -9,7 +9,7 @@ use io\IOException;
  * @see   rfc://1952
  * @test  xp://net.xp_framework.unittest.io.streams.GzDecompressingInputStreamTest
  */
-class GzDecompressingInputStream extends \lang\Object implements InputStream {
+class GzDecompressingInputStream implements InputStream {
   private $in, $header;
   public static $wrapped= [];
 
@@ -86,7 +86,7 @@ class GzDecompressingInputStream extends \lang\Object implements InputStream {
     }
 
     // Now, convert stream to file handle and append inflating filter
-    $wri= 'zlib.bounded://'.$in->hashCode();
+    $wri= 'zlib.bounded://'.spl_object_hash($in);
     self::$wrapped[$wri]= $in;
     $this->in= fopen($wri, 'r');
     if (!stream_filter_append($this->in, 'zlib.inflate', STREAM_FILTER_READ)) {

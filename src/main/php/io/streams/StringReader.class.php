@@ -6,7 +6,7 @@
  *
  * @test  xp://net.xp_framework.unittest.io.streams.StringReaderTest
  */
-class StringReader extends \lang\Object implements InputStreamReader {
+class StringReader implements InputStreamReader {
   protected
     $in  = null,
     $buf = '';

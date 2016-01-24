@@ -5,7 +5,7 @@
  *
  * @test  xp://net.xp_framework.unittest.io.streams.MemoryInputStreamTest
  */
-class MemoryInputStream extends \lang\Object implements InputStream, Seekable {
+class MemoryInputStream implements InputStream, Seekable {
   protected $pos= 0;
   protected $bytes;
 

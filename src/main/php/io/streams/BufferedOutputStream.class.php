@@ -5,7 +5,7 @@
  * results internally. This means not every single byte passed to
  * write() will be written.
  */
-class BufferedOutputStream extends \lang\Object implements OutputStream {
+class BufferedOutputStream implements OutputStream {
   protected 
     $out  = null,
     $buf  = '',

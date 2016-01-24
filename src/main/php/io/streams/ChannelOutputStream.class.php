@@ -10,7 +10,7 @@ use io\IOException;
  * @see   php://wrappers
  * @see   xp://io.streams.ChannelInputStream
  */
-class ChannelOutputStream extends \lang\Object implements OutputStream {
+class ChannelOutputStream implements OutputStream {
   protected
     $name = null,
     $fd   = null;

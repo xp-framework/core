@@ -17,7 +17,7 @@ use lang\Closeable;
  *
  * @test    xp://net.xp_framework.unittest.io.streams.StreamTransferTest
  */
-class StreamTransfer extends \lang\Object implements Closeable {
+class StreamTransfer implements Closeable {
   protected $in= null;
   protected $out= null;
   

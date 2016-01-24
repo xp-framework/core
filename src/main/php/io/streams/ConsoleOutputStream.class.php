@@ -9,9 +9,8 @@
  * $err= new ConsoleOutputStream(STDERR);
  * ```
  */
-class ConsoleOutputStream extends \lang\Object implements OutputStream {
-  protected
-    $descriptor= null;
+class ConsoleOutputStream implements OutputStream {
+  protected $descriptor= null;
   
   /**
    * Constructor

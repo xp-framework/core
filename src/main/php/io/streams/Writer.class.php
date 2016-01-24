@@ -8,7 +8,7 @@ use lang\Closeable;
  * (which works with bytes - for single-byte character sets, there is 
  * no difference, obviously).
  */
-abstract class Writer extends \lang\Object {
+abstract class Writer {
   protected $stream= null;
   
   /**
