@@ -138,7 +138,7 @@ class Routine extends \lang\Object {
     } else if (\lang\XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getReturnType())) {
       return \lang\Type::forName((string)$t);
     } else if (defined('HHVM_VERSION')) {
-      return \lang\Type::forName($this->_reflect->getReturnTypeText());
+      return \lang\Type::forName($this->_reflect->getReturnTypeText() ?: 'var');
     } else {
       return \lang\Type::$VAR;
     }
@@ -158,7 +158,7 @@ class Routine extends \lang\Object {
     } else if (\lang\XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getReturnType())) {
       return str_replace('HH\\', '', $t);
     } else if (defined('HHVM_VERSION')) {
-      return str_replace('HH\\', '', $this->_reflect->getReturnTypeText());
+      return str_replace('HH\\', '', $this->_reflect->getReturnTypeText() ?: 'var');
     } else {
       return 'var';
     }

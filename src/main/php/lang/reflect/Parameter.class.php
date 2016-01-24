@@ -67,7 +67,7 @@ class Parameter extends \lang\Object {
       if (XPClass::$TYPE_SUPPORTED && $t= $this->_reflect->getType()) {
         return Type::forName((string)$t);
       } else if (defined('HHVM_VERSION')) {
-        return Type::forName($this->_reflect->getTypeText());
+        return Type::forName($this->_reflect->getTypeText() ?: 'var');
       } else {
         return Type::$VAR;
       }
@@ -95,7 +95,7 @@ class Parameter extends \lang\Object {
     } else if (XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getType())) {
       return str_replace('HH\\', '', $t);
     } else if (defined('HHVM_VERSION')) {
-      return str_replace('HH\\', '', $this->_reflect->getTypeText());
+      return str_replace('HH\\', '', $this->_reflect->getTypeText() ?: 'var');
     } else {
       return 'var';
     }
