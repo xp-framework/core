@@ -13,6 +13,9 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented first part of xp-framework/rfc#308: Basic Hack language
+  support. See xp-framework/core#123
+  (@thekid)
 * Implemented xp-framework/rfc#298: Path to XP7
   . Removed deprecated `getClasssName()` - see xp-framework/core#120
   . Changed code to use new variadic syntax - see xp-framework/core#119
