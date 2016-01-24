@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Made util.Hashmap class implement ArrayAccess to ease forward-compatible
+  migrations of code using it
+  (@thekid)
 * Merged xp-framework/core#127: Enable running scripts from files - @thekid
 
 ## 6.10.2 / 2016-01-17

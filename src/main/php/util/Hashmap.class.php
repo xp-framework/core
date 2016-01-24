@@ -20,9 +20,8 @@
  * @see      php://array
  * @deprecated Use util.collections.HashTable or lang.types.ArrayMap
  */
-class Hashmap extends \lang\Object {
-  public 
-    $_hash= [];
+class Hashmap extends \lang\Object implements \ArrayAccess {
+  public $_hash= [];
 
   /**
    * Constructor
@@ -334,5 +333,44 @@ class Hashmap extends \lang\Object {
    */
   public function toString() {
     return nameof($this).'('.$this->size().')@'.\xp::stringOf($this->_hash);
+  }
+
+  /**
+   * = list[] overloading
+   *
+   * @param   var offset
+   * @return  var
+   */
+  public function offsetGet($offset) {
+    return $this->get($offset);
+  }
+
+  /**
+   * list[]= overloading
+   *
+   * @param   var offset
+   * @param   var value
+   */
+  public function offsetSet($offset, $value) {
+    $this->put($offset, $value);
+  }
+
+  /**
+   * isset() overloading
+   *
+   * @param   var offset
+   * @return  bool
+   */
+  public function offsetExists($offset) {
+    return $this->containsKey($offset);
+  }
+
+  /**
+   * unset() overloading
+   *
+   * @param   var offset
+   */
+  public function offsetUnset($offset) {
+    $this->remove($offset);
   }
 }

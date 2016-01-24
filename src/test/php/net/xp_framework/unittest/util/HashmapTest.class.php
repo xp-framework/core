@@ -261,4 +261,45 @@ class HashmapTest extends TestCase {
 
     $this->assertTrue($map->containsKey("myKey"));
   }
+
+  #[@test]
+  public function overloads_reading_nonexistant() {
+    $map= new Hashmap();
+    $this->assertNull($map['key']);
+  }
+
+  #[@test]
+  public function overloads_reading_existing() {
+    $map= new Hashmap();
+    $map->put('key', 'value');
+    $this->assertEquals('value', $map['key']);
+  }
+
+  #[@test]
+  public function overloads_writing() {
+    $map= new Hashmap();
+    $map['key']= 'value';
+    $this->assertEquals('value', $map->get('key'));
+  }
+
+  #[@test]
+  public function overloads_isset_nonexistant() {
+    $map= new Hashmap();
+    $this->assertFalse(isset($map['key']));
+  }
+
+  #[@test]
+  public function overloads_isset_existing() {
+    $map= new Hashmap();
+    $map->put('key', 'value');
+    $this->assertTrue(isset($map['key']));
+  }
+
+  #[@test]
+  public function overloads_unset() {
+    $map= new Hashmap();
+    $map->put('key', 'value');
+    unset($map['key']);
+    $this->assertFalse(isset($map['key']));
+  }
 }
