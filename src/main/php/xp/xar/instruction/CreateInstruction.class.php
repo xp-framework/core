@@ -3,24 +3,13 @@
 use xp\xar\Options;
 use util\Filters;
 use io\Path;
-use io\collections\FileCollection;
-use io\collections\iterate\FilteredIOCollectionIterator;
-use io\collections\iterate\UriMatchesFilter;
-use io\collections\iterate\CollectionFilter;
 use lang\archive\Archive;
 
 /**
  * Create Instruction. Always ignores well-known VCS control files!
  */
 class CreateInstruction extends AbstractInstruction {
-  protected static $filter;
-
-  static function __static() {
-    self::$filter= Filters::noneOf([
-      new UriMatchesFilter('#/(CVS|\.svn|\.git|\.arch|\.hg|_darcs|\.bzr)/#'),
-      new CollectionFilter()
-    ]);
-  }
+  const VERSION_CONTROL = '/^(CVS|\.svn|\.git|\.arch|\.hg|_darcs|\.bzr)$/';
 
   /**
    * Add a single file to the archive, and print out the name if verbose option is set.
@@ -33,6 +22,25 @@ class CreateInstruction extends AbstractInstruction {
     $name= $target->toString('/');
     $this->options & Options::VERBOSE && $this->out->writeLine($name);
     $this->archive->addFile($name, $source->asFile());
+  }
+
+  /**
+   * Iterates through a given folder recursively and return all files
+   * as io.Path instances. Filters well-known version control directories.
+   *
+   * @param  io.Folder $folder
+   * @return php.Generator
+   */
+  private function filesIn($folder) {
+    foreach ($folder->entries() as $entry) {
+      if ($entry->isFolder() && !preg_match($entry->name(), self::VERSION_CONTROL)) {
+        foreach ($this->filesIn($entry->asFolder()) as $file) {
+          yield $file;
+        }
+      } else {
+        yield $entry;
+      }
+    }
   }
 
   /**
@@ -55,9 +63,7 @@ class CreateInstruction extends AbstractInstruction {
       if ($path->isFile()) {
         $this->add($named ?: $path->relativeTo($cwd), $path);
       } else if ($path->isFolder()) {
-        $files= new FilteredIOCollectionIterator(new FileCollection($path), self::$filter, true);
-        foreach ($files as $file) {
-          $source= new Path($file);
+        foreach ($this->filesIn($path->asFolder()) as $source) {
           if ($named) {
             $this->add((new Path($named, $source->relativeTo($path)))->normalize(), $source);
           } else {
