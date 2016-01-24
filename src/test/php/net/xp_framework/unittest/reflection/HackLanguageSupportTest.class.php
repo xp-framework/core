@@ -27,26 +27,6 @@ class HackLanguageSupportTest extends \unittest\TestCase {
     return XPClass::forName('net.xp_framework.unittest.reflection.HackLanguageSupport');
   }
 
-  /**
-   * Returns a fixture for integration tests
-   *
-   * @param  string $decl
-   * @param  string $name
-   * @return lang.XPClass
-   */
-  private function genericClass($decl, $name= null) {
-    $name= $name ?: 'HackLanguageSupportTest_'.$this->name;
-    $class= 'net.xp_framework.unittest.reflection.'.$name;
-
-    $dyn= DynamicClassLoader::instanceFor(__METHOD__);
-    $dyn->setClassBytes(
-      $class,
-      sprintf($decl, $name),
-      '<?hh namespace net\xp_framework\unittest\reflection;'
-    );
-    return $dyn->loadClass($class);
-  }
-
   #[@test]
   public function mixed_type() {
     $this->assertEquals(Type::$VAR, Type::forName('HH\mixed'));
