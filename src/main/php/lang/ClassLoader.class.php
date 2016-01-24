@@ -266,22 +266,6 @@ final class ClassLoader extends Object implements IClassLoader {
 
     if (isset(\xp::$cl[$spec])) return new XPClass(literal($spec));
 
-    // Backwards compatibility, deprecated usage via declaration inside string.
-    if (!is_array($declaration)) {
-      preg_match('/(class|interface|trait)\s+([^ ]+)(\s+extends\s+([^ ]+))?(\s+implements\s+([^\{]+))?/', $declaration, $parsed);
-      $declaration= ['kind' => $parsed[1], 'use' => [], 'extends' => [], 'implements' => []];
-      if (isset($parsed[4])) {
-        foreach (explode(',', $parsed[4]) as $type) {
-          $declaration['extends'][]= trim($type, ' ');
-        }
-      }
-      if (isset($parsed[6])) {
-        foreach (explode(',', $parsed[6]) as $type) {
-          $declaration['implements'][]= trim($type, ' ');
-        }
-      }
-    }
-
     $functions= [];
     if (is_array($def)) {
       $iface= 'interface' === $declaration['kind'];
