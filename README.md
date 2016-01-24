@@ -38,10 +38,11 @@ Finally, start `xp -v` to see it working:
 $ xp -v
 XP 7.0.0-dev { PHP 7.0.2 & ZE 3.0.0 } @ Windows NT SLATE 10.0 build 10586 (Windows 10) i586
 Copyright (c) 2001-2016 the XP group
-FileSystemCL<...\xp\core\src\main\php\>
-FileSystemCL<...\xp\core\src\test\php\>
-FileSystemCL<...\xp\core\src\test\resources\>
-FileSystemCL<...\home\Timm\devel\xp\core\>
+FileSystemCL<./src/main/php>
+FileSystemCL<./src/test/php>
+FileSystemCL<./src/main/resources>
+FileSystemCL<./src/test/resources>
+FileSystemCL<.>
 ```
 
 Basic usage
