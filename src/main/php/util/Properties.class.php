@@ -362,20 +362,6 @@ class Properties extends \lang\Object implements PropertyAccess {
   }
 
   /**
-   * Read a value as hash
-   *
-   * @param   string section
-   * @param   string key
-   * @param   util.Hashmap default default NULL what to return in case the section or key does not exist
-   * @return  util.Hashmap
-   * @deprecated Use readMap() instead
-   */
-  public function readHash($section, $key, $default= null) {
-    $value= $this->readMap($section, $key, $default);
-    return is_array($value) ? new Hashmap($value) : $value;
-  }
-
-  /**
    * Read a value as range
    *
    * @param   string section

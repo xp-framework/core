@@ -166,30 +166,6 @@ abstract class AbstractPropertiesTest extends \unittest\TestCase {
     $this->assertEquals(['default' => 'value'], $this->fixture('')->readSection('non-existant', ['default' => 'value']));
   }
 
-  /** @deprecated */
-  #[@test, @values(['key[k]=value', 'key="k:value"'])]
-  public function read_hash_with_one_element($section) {
-    $this->assertEquals(new Hashmap(['k' => 'value']), $this->fixture($section)->readHash('section', 'key'));
-  }
-
-  /** @deprecated */
-  #[@test, @values(["key[a]=1\nkey[b]=2\nkey[c]=3", 'key="a:1|b:2|c:3"'])]
-  public function read_hash($section) {
-    $this->assertEquals(new Hashmap(['a' => '1', 'b' => '2', 'c' => '3']), $this->fixture($section)->readHash('section', 'key'));
-  }
-
-  /** @deprecated */
-  #[@test, @values(['key=""', 'key='])]
-  public function read_empty_hash($section) {
-    $this->assertEquals(new Hashmap([]), $this->fixture($section)->readHash('section', 'key'));
-  }
-
-  /** @deprecated */
-  #[@test]
-  public function readHash_returns_default_for_non_existant_key() {
-    $this->assertNull($this->fixture('')->readFloat('section', 'non-existant', null));
-  }
-
   #[@test, @values([
   #  'key=value    ; A comment',
   #  'key="value"  ; A comment'

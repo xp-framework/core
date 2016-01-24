@@ -188,23 +188,23 @@ anotherkey="is there, too"
   }
 
   #[@test]
-  public function readHashUsesFirst() {
-    $this->assertEquals(new Hashmap(['a' => 'b', 'b' => 'c']), $this->fixture()->readHash('section', 'hash1'));
+  public function readMapUsesFirst() {
+    $this->assertEquals(['a' => 'b', 'b' => 'c'], $this->fixture()->readMap('section', 'hash1'));
   }
 
   #[@test]
-  public function readHashUsesSecondIfFirstUnset() {
-    $this->assertEquals(new Hashmap(['b' => 'null']), $this->fixture()->readHash('section', 'hash2'));
+  public function readMapUsesSecondIfFirstUnset() {
+    $this->assertEquals(['b' => 'null'], $this->fixture()->readMap('section', 'hash2'));
   }
 
   #[@test]
-  public function readHashUsesDefaultOnNoOccurrance() {
-    $this->assertEquals('Hello.', $this->fixture()->readHash('section', 'hash3', 'Hello.'));
+  public function readMapUsesDefaultOnNoOccurrance() {
+    $this->assertEquals('Hello.', $this->fixture()->readMap('section', 'hash3', 'Hello.'));
   }
 
   #[@test]
-  public function readHashUsesNullForDefaultOnNoOccurrance() {
-    $this->assertEquals(null, $this->fixture()->readHash('section', 'hash3'));
+  public function readMapUsesNullForDefaultOnNoOccurrance() {
+    $this->assertEquals(null, $this->fixture()->readMap('section', 'hash3'));
   }
 
   #[@test]
