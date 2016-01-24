@@ -6,7 +6,7 @@
  * @see   https://wiki.php.net/rfc/group_use_declarations
  * @test  xp://net.xp_framework.unittest.runtime.CodeTest
  */
-class Code extends \lang\Object {
+class Code {
   private $fragment, $imports;
 
   /**
