@@ -1,12 +1,14 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\Type;
+use lang\Enum;
 use lang\Primitive;
 use lang\ArrayType;
 use lang\MapType;
 use lang\XPClass;
 use lang\ElementNotFoundException;
 use lang\DynamicClassLoader;
+use lang\IllegalArgumentException;
 use unittest\actions\VerifyThat;
 
 /**
@@ -25,6 +27,15 @@ class HackLanguageSupportTest extends \unittest\TestCase {
    */
   private function testClass() {
     return XPClass::forName('net.xp_framework.unittest.reflection.HackLanguageSupport');
+  }
+
+  /**
+   * Returns a fixture for integration tests
+   *
+   * @return lang.XPClass
+   */
+  private function enumClass() {
+    return XPClass::forName('net.xp_framework.unittest.reflection.HackLanguageEnum');
   }
 
   #[@test]
@@ -176,5 +187,29 @@ class HackLanguageSupportTest extends \unittest\TestCase {
   #[@test]
   public function untyped_field_type_name() {
     $this->assertEquals('var', $this->testClass()->getField('untyped')->getTypeName());
+  }
+
+  #[@test]
+  public function is_enum() {
+    $this->assertTrue($this->enumClass()->isEnum());
+  }
+
+  #[@test]
+  public function enum_values() {
+    $values= [];
+    foreach (Enum::valuesOf($this->enumClass()) as $value) {
+      $values[$value->name()]= $value->ordinal();
+    }
+    $this->assertEquals(['SMALL' => 0, 'MEDIUM' => 1, 'LARGE' => 2, 'X_LARGE' => 3], $values);
+  }
+
+  #[@test]
+  public function enum_valueOf() {
+    $this->assertEquals(1, Enum::valueOf($this->enumClass(), 'MEDIUM')->ordinal());
+  }
+
+  #[@test, @expect(IllegalArgumentException::class)]
+  public function enum_valueOf_nonexistant() {
+    Enum::valueOf($this->enumClass(), 'does-not-exist');
   }
 }

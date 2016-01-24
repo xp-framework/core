@@ -490,12 +490,15 @@ class XPClass extends Type {
   }
 
   /**
-   * Determines if this XPClass object represents an interface type.
+   * Determines if this XPClass object represents an enum type.
    *
    * @return  bool
    */
   public function isEnum() {
-    return class_exists('lang\Enum', false) && $this->reflect()->isSubclassOf('lang\Enum');
+    return
+      (class_exists('lang\Enum', false) && $this->reflect()->isSubclassOf('lang\Enum')) ||
+      (class_exists('HH\BuiltinEnum', false) && $this->reflect()->isSubclassOf('HH\BuiltinEnum'))
+    ;
   }
 
   /**

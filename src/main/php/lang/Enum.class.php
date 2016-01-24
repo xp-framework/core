@@ -49,11 +49,19 @@ abstract class Enum extends Object {
     if (!$class->isEnum()) {
       throw new IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
     }
-    try {
-      $prop= $class->reflect()->getStaticPropertyValue($name);
-      if ($class->isInstance($prop)) return $prop;
-    } catch (\ReflectionException $e) {
-      throw new IllegalArgumentException($e->getMessage());
+
+    if ($class->isSubclassOf(__CLASS__)) {
+      try {
+        $prop= $class->reflect()->getStaticPropertyValue($name);
+        if ($class->isInstance($prop)) return $prop;
+      } catch (\ReflectionException $e) {
+        throw new IllegalArgumentException($e->getMessage());
+      }
+    } else {
+      if ($class->reflect()->hasConstant($name)) {
+        $t= ClassLoader::defineClass($class->getName().'Enum', __CLASS__, []);
+        return $t->newInstance($class->reflect()->getConstant($name), $name);
+      }
     }
     throw new IllegalArgumentException('No such member "'.$name.'" in '.$class->getName());
   }
@@ -69,9 +77,17 @@ abstract class Enum extends Object {
     if (!$class->isEnum()) {
       throw new IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
     }
+
     $r= [];
-    foreach ($class->reflect()->getStaticProperties() as $prop) {
-      $class->isInstance($prop) && $r[]= $prop;
+    if ($class->isSubclassOf(__CLASS__)) {
+      foreach ($class->reflect()->getStaticProperties() as $prop) {
+        $class->isInstance($prop) && $r[]= $prop;
+      }
+    } else {
+      $t= ClassLoader::defineClass($class->getName().'Enum', __CLASS__, []);
+      foreach ($class->reflect()->getMethod('getValues')->invoke(null) as $name => $ordinal) {
+        $r[]= $t->newInstance($ordinal, $name);
+      }
     }
     return $r;
   }
