@@ -9,7 +9,7 @@ use lang\IllegalArgumentException;
  * @see   xp://io.Folder#entries
  */
 class FolderEntries extends \lang\Object implements \IteratorAggregate {
-  private $base, $entry;
+  private $base;
   private $handle= null;
 
   /**
