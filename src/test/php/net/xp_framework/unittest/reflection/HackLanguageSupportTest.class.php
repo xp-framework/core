@@ -93,8 +93,23 @@ class HackLanguageSupportTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function method_this_return_type() {
+    $this->assertEquals($this->testClass(), $this->testClass()->getMethod('returnsThis')->getReturnType());
+  }
+
+  #[@test]
+  public function method_self_return_type() {
+    $this->assertEquals($this->testClass(), $this->testClass()->getMethod('returnsSelf')->getReturnType());
+  }
+
+  #[@test]
   public function method_int_param_type() {
     $this->assertEquals(Primitive::$INT, $this->testClass()->getMethod('returnsNothing')->getParameter(0)->getType());
+  }
+
+  #[@test]
+  public function method_self_param_type() {
+    $this->assertEquals($this->testClass(), $this->testClass()->getMethod('returnsSelf')->getParameter(0)->getType());
   }
 
   #[@test]

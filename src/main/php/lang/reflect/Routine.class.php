@@ -135,10 +135,17 @@ class Routine extends \lang\Object {
       } else {
         return \lang\Type::forName($t);
       }
+    } else if (defined('HHVM_VERSION')) {
+      $t= $this->_reflect->getReturnTypeText() ?: 'var';
+      if ('self' === $t) {
+        return new \lang\XPClass($this->_reflect->getDeclaringClass());
+      } else if ('HH\\this' === $t) {
+        return new \lang\XPClass($this->_class);
+      } else {
+        return \lang\Type::forName($t);
+      }
     } else if (\lang\XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getReturnType())) {
       return \lang\Type::forName((string)$t);
-    } else if (defined('HHVM_VERSION')) {
-      return \lang\Type::forName($this->_reflect->getReturnTypeText() ?: 'var');
     } else {
       return \lang\Type::$VAR;
     }

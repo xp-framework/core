@@ -6,6 +6,10 @@ class HackLanguageSupport extends \lang\Object {
 
   public function returnsString(): string { return 'Test'; }
 
+  public function returnsThis(): this { return $this; }
+
+  public function returnsSelf(self $self): self { return $self; }
+
   public function returnsNothing(int $param): void { }
 
 }
