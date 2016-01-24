@@ -5,6 +5,10 @@ XP Framework Core ChangeLog
 
 ## 7.0.0 / ????-??-??
 
+### Heads up!
+
+* Removed deprecated global FILE_MODE_* constants - @thekid
+
 ### RFCs
 
 * Implemented xp-framework/rfc#298: Path to XP7

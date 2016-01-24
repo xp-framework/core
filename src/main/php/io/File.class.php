@@ -5,14 +5,6 @@ use io\streams\FileOutputStream;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
 
-// Deprecated mode constants for open() method (use class constants!)
-define('FILE_MODE_READ',      'rb');          // Read
-define('FILE_MODE_READWRITE', 'rb+');         // Read/Write
-define('FILE_MODE_WRITE',     'wb');          // Write
-define('FILE_MODE_REWRITE',   'wb+');         // Read/Write, truncate on open
-define('FILE_MODE_APPEND',    'ab');          // Append (Read-only)
-define('FILE_MODE_READAPPEND','ab+');         // Append (Read/Write)
-  
 /**
  * Instances of the file class serve as an opaque handle to the underlying machine-
  * specific structure representing an open file.
