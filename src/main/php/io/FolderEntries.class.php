@@ -8,7 +8,7 @@ use lang\IllegalArgumentException;
  * @test  xp://net.xp_framework.unittest.io.FolderEntriesTest
  * @see   xp://io.Folder#entries
  */
-class FolderEntries extends \lang\Object implements \Iterator {
+class FolderEntries extends \lang\Object implements \IteratorAggregate {
   private $base, $entry;
   private $handle= null;
 
@@ -35,25 +35,8 @@ class FolderEntries extends \lang\Object implements \Iterator {
     return new Path($this->base, $name);
   }
 
-  /** @return string */
-  public function current() { return new Path($this->base, $this->entry); }
-
-  /** @return string */
-  public function key() { return $this->entry; }
-
-  /** @return bool */
-  public function valid() { return false !== $this->entry; }
-
-  /** @return void */
-  public function next() {
-    do {
-      $entry= readdir($this->handle);
-    } while ('.' === $entry || '..' === $entry);
-    $this->entry= $entry;
-  }
-
-  /** @return void */
-  public function rewind() {
+  /** @return php.Generator */
+  public function getIterator() {
     if (null === $this->handle) {
       if (!is_resource($handle= opendir($this->base->asFolder()->getURI()))) {
         $e= new IOException('Cannot open folder '.$this->base);
@@ -64,7 +47,11 @@ class FolderEntries extends \lang\Object implements \Iterator {
     } else {
       rewinddir($this->handle);
     }
-    $this->next();
+
+    while (false !== ($entry= readdir($this->handle))) {
+      if ('.' === $entry || '..' === $entry) continue;
+      yield $entry => new Path($this->base, $entry);
+    }
   }
 
   /** @return void */
