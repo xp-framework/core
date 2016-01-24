@@ -1,7 +1,6 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use util\Properties;
-use util\Hashmap;
 use io\streams\MemoryOutputStream;
 
 /**
@@ -102,39 +101,6 @@ class PropertyWritingTest extends \unittest\TestCase {
   #[@test]
   public function emptyArray() {
     $this->fixture->writeArray('section', 'key', []);
-    $this->assertSavedFixtureEquals('
-      [section]
-      key=
-    ');
-  }
-
-  #[@test]
-  public function hashmapOneElement() {
-    $h= new Hashmap();
-    $h->put('color', 'green');
-    $this->fixture->writeHash('section', 'key', $h);
-    $this->assertSavedFixtureEquals('
-      [section]
-      key[color]="green"
-    ');
-  }
-
-  #[@test]
-  public function hashmapTwoElements() {
-    $h= new Hashmap();
-    $h->put('color', 'green');
-    $h->put('size', 'L');
-    $this->fixture->writeHash('section', 'key', $h);
-    $this->assertSavedFixtureEquals('
-      [section]
-      key[color]="green"
-      key[size]="L"
-    ');
-  }
-
-  #[@test]
-  public function emptyHashmap() {
-    $this->fixture->writeHash('section', 'key', new Hashmap());
     $this->assertSavedFixtureEquals('
       [section]
       key=

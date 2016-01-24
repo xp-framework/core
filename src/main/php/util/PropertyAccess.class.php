@@ -16,14 +16,14 @@ interface PropertyAccess {
   public function readArray($section, $key, $default= []);
 
   /**
-   * Read hash value
+   * Read map value
    *
    * @param   string section
    * @param   string key
-   * @param   var default default NULL
-   * @return  util.Hashmap
+   * @param   var default
+   * @return  [:var]
    */
-  public function readHash($section, $key, $default= null);
+  public function readMap($section, $key, $default= null);
 
   /**
    * Read bool value
