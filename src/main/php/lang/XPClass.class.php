@@ -490,12 +490,15 @@ class XPClass extends Type {
   }
 
   /**
-   * Determines if this XPClass object represents an interface type.
+   * Determines if this XPClass object represents an enum type.
    *
    * @return  bool
    */
   public function isEnum() {
-    return class_exists('lang\Enum', false) && $this->reflect()->isSubclassOf('lang\Enum');
+    return
+      (class_exists('lang\Enum', false) && $this->reflect()->isSubclassOf('lang\Enum')) ||
+      (class_exists('HH\BuiltinEnum', false) && $this->reflect()->isSubclassOf('HH\BuiltinEnum'))
+    ;
   }
 
   /**
@@ -600,11 +603,13 @@ class XPClass extends Type {
    */
   public function hasAnnotation($name, $key= null) {
     $details= self::detailsForClass($this->name);
-    
-    return $details && ($key 
-      ? @array_key_exists($key, @$details['class'][DETAIL_ANNOTATIONS][$name]) 
-      : @array_key_exists($name, @$details['class'][DETAIL_ANNOTATIONS])
-    );
+    if ($details && ($annotations= $details['class'][DETAIL_ANNOTATIONS])) {
+      return $key ? array_key_exists($key, @$annotations[$name]) : array_key_exists($name, $annotations);
+    } else if (defined('HHVM_VERSION')) {
+      $attr= $this->reflect()->getAttributes();
+      return $key ? isset($attr[$name]) && array_key_exists($key, @$attr[$name][0]) : isset($attr[$name]); 
+    }
+    return false;
   }
 
   /**
@@ -617,18 +622,21 @@ class XPClass extends Type {
    */
   public function getAnnotation($name, $key= null) {
     $details= self::detailsForClass($this->name);
-
-    if (!$details || !($key 
-      ? @array_key_exists($key, @$details['class'][DETAIL_ANNOTATIONS][$name]) 
-      : @array_key_exists($name, @$details['class'][DETAIL_ANNOTATIONS])
-    )) {
-      throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
+    if ($details && ($annotations= $details['class'][DETAIL_ANNOTATIONS])) {
+      if ($key) {
+        if (array_key_exists($key, @$annotations[$name])) return $annotations[$name][$key];  
+      } else {
+        if (array_key_exists($name, $annotations)) return $annotations[$name];  
+      }  
+    } else if (defined('HHVM_VERSION')) {
+      $attr= $this->reflect()->getAttributes();
+      if ($key) {
+        if (isset($attr[$name]) && array_key_exists($key, @$attr[$name][0])) return $attr[$name][0][$key];
+      } else {
+        if (isset($attr[$name])) return empty($attr[$name]) ? null : $attr[$name][0];
+      }  
     }
-
-    return ($key 
-      ? $details['class'][DETAIL_ANNOTATIONS][$name][$key] 
-      : $details['class'][DETAIL_ANNOTATIONS][$name]
-    );
+    throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
   }
 
   /**
@@ -638,7 +646,12 @@ class XPClass extends Type {
    */
   public function hasAnnotations() {
     $details= self::detailsForClass($this->name);
-    return $details ? !empty($details['class'][DETAIL_ANNOTATIONS]) : false;
+    if ($details && $details['class'][DETAIL_ANNOTATIONS]) {
+      return true;
+    } else if (defined('HHVM_VERSION')) {
+      return sizeof($this->reflect()->getAttributes()) > 0; 
+    }
+    return false;
   }
 
   /**
@@ -648,7 +661,16 @@ class XPClass extends Type {
    */
   public function getAnnotations() {
     $details= self::detailsForClass($this->name);
-    return $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
+    if ($details && $details['class'][DETAIL_ANNOTATIONS]) {
+      return $details['class'][DETAIL_ANNOTATIONS];
+    } else if (defined('HHVM_VERSION')) {
+      $return= [];
+      foreach (array_reverse($this->reflect()->getAttributes()) as $name => $attr) {
+        $return[$name]= empty($attr) ? null : $attr[0];
+      }
+      return $return;
+    }
+    return [];
   }
   
   /**

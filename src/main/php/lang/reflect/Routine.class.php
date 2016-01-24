@@ -137,6 +137,8 @@ class Routine extends \lang\Object {
       }
     } else if (\lang\XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getReturnType())) {
       return \lang\Type::forName((string)$t);
+    } else if (defined('HHVM_VERSION')) {
+      return \lang\Type::forName($this->_reflect->getReturnTypeText() ?: 'var');
     } else {
       return \lang\Type::$VAR;
     }
@@ -154,7 +156,9 @@ class Routine extends \lang\Object {
     ) {
       return ltrim($details[DETAIL_RETURNS], '&');
     } else if (\lang\XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getReturnType())) {
-      return (string)$t;
+      return str_replace('HH\\', '', $t);
+    } else if (defined('HHVM_VERSION')) {
+      return str_replace('HH\\', '', $this->_reflect->getReturnTypeText() ?: 'var');
     } else {
       return 'var';
     }
@@ -216,11 +220,13 @@ class Routine extends \lang\Object {
    */
   public function hasAnnotation($name, $key= null) {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
-
-    return $details && ($key 
-      ? array_key_exists($key, (array)@$details[DETAIL_ANNOTATIONS][$name]) 
-      : array_key_exists($name, (array)@$details[DETAIL_ANNOTATIONS])
-    );
+    if ($details && ($annotations= $details[DETAIL_ANNOTATIONS])) {
+      return $key ? array_key_exists($key, @$annotations[$name]) : array_key_exists($name, $annotations); 
+    } else if (defined('HHVM_VERSION')) {
+      $attr= $this->_reflect->getAttributes();
+      return $key ? isset($attr[$name]) && array_key_exists($key, @$attr[$name][0]) : isset($attr[$name]); 
+    }
+    return false;
   }
 
   /**
@@ -233,17 +239,21 @@ class Routine extends \lang\Object {
    */
   public function getAnnotation($name, $key= null) {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
-    if (!$details || !($key 
-      ? array_key_exists($key, @$details[DETAIL_ANNOTATIONS][$name]) 
-      : array_key_exists($name, @$details[DETAIL_ANNOTATIONS])
-    )) {
-      throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
+    if ($details && ($annotations= $details[DETAIL_ANNOTATIONS])) {
+      if ($key) {
+        if (array_key_exists($key, @$annotations[$name])) return $annotations[$name][$key];  
+      } else {
+        if (array_key_exists($name, $annotations)) return $annotations[$name];  
+      }  
+    } else if (defined('HHVM_VERSION')) {
+      $attr= $this->_reflect->getAttributes();
+      if ($key) {
+        if (isset($attr[$name]) && array_key_exists($key, @$attr[$name][0])) return $attr[$name][0][$key];
+      } else {
+        if (isset($attr[$name])) return empty($attr[$name]) ? null : $attr[$name][0];
+      }  
     }
-
-    return ($key 
-      ? $details[DETAIL_ANNOTATIONS][$name][$key] 
-      : $details[DETAIL_ANNOTATIONS][$name]
-    );
+    throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
   }
 
   /**
@@ -253,7 +263,12 @@ class Routine extends \lang\Object {
    */
   public function hasAnnotations() {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
-    return $details ? !empty($details[DETAIL_ANNOTATIONS]) : false;
+    if ($details && $details[DETAIL_ANNOTATIONS]) {
+      return true;
+    } else if (defined('HHVM_VERSION')) {
+      return sizeof($this->_reflect->getAttributes()) > 0; 
+    }
+    return false;
   }
 
   /**
@@ -263,7 +278,16 @@ class Routine extends \lang\Object {
    */
   public function getAnnotations() {
     $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
-    return $details ? $details[DETAIL_ANNOTATIONS] : [];
+    if ($details && $details[DETAIL_ANNOTATIONS]) {
+      return $details[DETAIL_ANNOTATIONS];
+    } else if (defined('HHVM_VERSION')) {
+      $return= [];
+      foreach (array_reverse($this->_reflect->getAttributes()) as $name => $attr) {
+        $return[$name]= empty($attr) ? null : $attr[0];
+      }
+      return $return;
+    }
+    return [];
   }
   
   /**

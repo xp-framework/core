@@ -143,7 +143,11 @@ class Type extends Object {
       'double'    => 'double',
       'float'     => 'double',
       'bool'      => 'bool',
-      'boolean'   => 'bool'
+      'boolean'   => 'bool',
+      'HH\int'    => 'int',
+      'HH\string' => 'string',
+      'HH\float'  => 'double',
+      'HH\bool'   => 'bool'
     ];
 
     if (0 === strlen($type)) {
@@ -162,9 +166,9 @@ class Type extends Object {
     // * Anything else is a qualified or unqualified class name
     if (isset($primitives[$type])) {
       return Primitive::forName($primitives[$type]);
-    } else if ('var' === $type || 'resource' === $type) {
+    } else if ('var' === $type || 'resource' === $type || 'HH\mixed' === $type) {
       return self::$VAR;
-    } else if ('void' === $type) {
+    } else if ('void' === $type || 'HH\void' == $type) {
       return self::$VOID;
     } else if ('array' === $type) {
       return self::$ARRAY;
@@ -176,6 +180,8 @@ class Type extends Object {
       return new ArrayType(self::forName(substr($type, 0, -2)));
     } else if (0 === substr_compare($type, '[:', 0, 2)) {
       return new MapType(self::forName(substr($type, 2, -1)));
+    } else if ('?' === $type{0}) {
+      return self::forName(substr($type, 1));
     } else if ('(' === $type{0}) {
       return self::forName(substr($type, 1, -1));
     } else if (0 === substr_compare($type, '*', -1)) {
@@ -190,7 +196,11 @@ class Type extends Object {
     } else {
       $base= substr($type, 0, $p);
       $components= self::forNames(substr($type, $p+ 1, -1));
-      return cast(self::forName($base), 'lang.XPClass')->newGenericType($components);
+      if ('array' === $base) {
+        return 1 === sizeof($components)? new ArrayType($components[0]) : new MapType($components[1]);
+      } else {
+        return cast(self::forName($base), 'lang.XPClass')->newGenericType($components);
+      }
     }
   }
   
