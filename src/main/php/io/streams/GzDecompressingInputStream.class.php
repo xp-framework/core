@@ -128,9 +128,13 @@ class GzDecompressingInputStream implements InputStream {
   
   /**
    * Destructor. Ensures output stream is closed.
-   *
    */
   public function __destruct() {
     $this->close();
+  }
+
+  /** @return string */
+  public function toString() {
+    return nameof($this).'(->'.$this->in.')';
   }
 }

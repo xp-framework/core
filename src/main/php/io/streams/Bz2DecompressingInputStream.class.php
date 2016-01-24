@@ -57,4 +57,9 @@ class Bz2DecompressingInputStream implements InputStream {
   public function __destruct() {
     $this->close();
   }
+
+  /** @return string */
+  public function toString() {
+    return nameof($this).'(->'.$this->in.')';
+  }
 }

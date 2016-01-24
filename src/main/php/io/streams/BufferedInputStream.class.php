@@ -62,4 +62,9 @@ class BufferedInputStream implements InputStream {
    */
   public function close() {
   }
+
+  /** @return string */
+  public function toString() {
+    return nameof($this).'(buffered '.strlen($this->buf).' of '.$this->size.')';
+  }
 }

@@ -59,4 +59,9 @@ class BufferedOutputStream implements OutputStream {
   public function __destruct() {
     $this->close();
   }
+
+  /** @return string */
+  public function toString() {
+    return nameof($this).'(buffered '.strlen($this->buf).' of '.$this->size.')';
+  }
 }

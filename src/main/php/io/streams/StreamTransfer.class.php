@@ -68,4 +68,9 @@ class StreamTransfer implements Closeable {
       throw new \io\IOException(rtrim($errors, ', '));
     }
   }
+
+  /** @return string */
+  public function toString() {
+    return nameof($this).'('.$this->in->toString().' -> '.$this->out->toString().')';
+  }
 }

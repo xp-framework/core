@@ -49,6 +49,7 @@ class FileOutputStream implements OutputStream {
   /**
    * Close this buffer.
    *
+   * @return void
    */
   public function close() {
     $this->file->isOpen() && $this->file->close();

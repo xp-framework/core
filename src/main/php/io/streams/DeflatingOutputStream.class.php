@@ -63,4 +63,10 @@ class DeflatingOutputStream implements OutputStream {
   public function __destruct() {
     $this->close();
   }
+
+
+  /** @return string */
+  public function toString() {
+    return nameof($this).'(->'.$this->out.')';
+  }
 }

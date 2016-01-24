@@ -96,4 +96,9 @@ class GzCompressingOutputStream implements OutputStream {
     fclose($this->out);
     $this->out= null;
   }
+
+  /** @return string */
+  public function toString() {
+    return nameof($this).'(->'.$this->out.')';
+  }
 }

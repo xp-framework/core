@@ -79,4 +79,9 @@ class MemoryOutputStream implements OutputStream, Seekable {
   public function __destruct() {
     unset($this->bytes);
   }
+
+  /** @return string */
+  public function toString() {
+    return nameof($this).'(@end of '.strlen($this->bytes).' bytes)';
+  }
 }
