@@ -392,4 +392,17 @@ class ClassDetailsTest extends \unittest\TestCase {
       'lang.Object'
     );
   }
+
+  #[@test]
+  public function field_initializer_with_class_keyword() {
+    $details= (new ClassParser())->parseDetails('<?php
+      class Test extends Object {
+        private $classes= [self::class, parent::class];
+      }
+    ');
+    $this->assertEquals(
+      [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => [], DETAIL_ARGUMENTS => 'Test'],
+      $details['class']
+    );
+  }
 }

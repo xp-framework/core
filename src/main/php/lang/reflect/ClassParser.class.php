@@ -402,6 +402,8 @@ class ClassParser extends \lang\Object {
           break;
 
         case T_CLASS:
+          if (isset($details['class'])) break;  // Inside class, e.g. $lookup= ['self' => self::class]
+
         case T_INTERFACE:
         case T_TRAIT:
           if ($parsed) {
