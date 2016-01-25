@@ -35,6 +35,11 @@ XP Framework Core ChangeLog
 
 ## 6.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed xp-framework/core#128: ClassParser chokes on ::class inside members
+  (@theid)
+
 ### Features
 
 * Made util.Hashmap class implement ArrayAccess to ease forward-compatible
