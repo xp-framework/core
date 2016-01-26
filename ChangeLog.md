@@ -3,10 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 6.10.3 / 2016-01-27
+
 ### Bugfixes
 
 * Fixed xp-framework/core#128: ClassParser chokes on ::class inside members
-  (@theid)
+  (@thekid)
 
 ### Features
 
