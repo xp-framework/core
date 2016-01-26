@@ -33,12 +33,12 @@ XP Framework Core ChangeLog
 * Implemented xp-framework/rfc#296: Further minimize the framework - @thekid
 * Implemented xp-framework/rfc#297: Rebase - @thekid
 
-## 6.?.? / ????-??-??
+## 6.10.3 / 2016-01-27
 
 ### Bugfixes
 
 * Fixed xp-framework/core#128: ClassParser chokes on ::class inside members
-  (@theid)
+  (@thekid)
 
 ### Features
 
