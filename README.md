@@ -21,12 +21,11 @@ the following one-liner:
 
 ```sh
 $ cd ~/bin
-$ curl -L 'https://github.com/xp-framework/xp-runners/releases/download/v6.3.0/setup' | php
+$ curl -sSL https://bintray.com/artifact/download/xp-runners/generic/setup-7.1.2.sh | sh
 ```
 
 ### Using it
-To use the the XP Framework development checkout, put the following
-in your `~/bin/xp.ini` file:
+To use the the XP Framework development checkout, put the following in your `~/bin/xp.ini` file:
 
 ```ini
 use=/path/to/xp/core
