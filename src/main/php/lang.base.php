@@ -450,12 +450,15 @@ function typeof($arg) {
 
     if (\lang\XPClass::$TYPE_SUPPORTED) {
       foreach ($r->getParameters() as $param) {
+        if ($param->isVariadic()) break;
         $signature[]= \lang\Type::forName((string)$param->getType() ?: 'var');
       }
       return new \lang\FunctionType($signature, \lang\Type::forName((string)$r->getReturnType() ?: 'var'));
     } else {
       foreach ($r->getParameters() as $param) {
-        if ($param->isArray()) {
+        if ($param->isVariadic()) {
+          break;
+        } else if ($param->isArray()) {
           $signature[]= \lang\Primitive::$ARRAY;
         } else if ($param->isCallable()) {
           $signature[]= \lang\Primitive::$CALLABLE;

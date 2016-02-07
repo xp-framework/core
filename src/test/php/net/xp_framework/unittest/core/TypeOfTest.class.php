@@ -59,6 +59,21 @@ class TypeOfTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function function_with_var_arg() {
+    $this->assertEquals(FunctionType::forName('function(): var'), typeof(function(... $a) { }));
+  }
+
+  #[@test]
+  public function function_with_normal_and_var_arg() {
+    $this->assertEquals(FunctionType::forName('function(lang.Type): var'), typeof(function(Type $t, ... $a) { }));
+  }
+
+  #[@test, @action(new RuntimeVersion('>=7.0'))]
+  public function function_with_typed_var_arg() {
+    $this->assertEquals(FunctionType::forName('function(): var'), typeof(eval('return function(\lang\Type... $a) { };')));
+  }
+
+  #[@test]
   public function function_with_class_hint() {
     $this->assertEquals(FunctionType::forName('function(lang.Type): var'), typeof(function(Type $t) { }));
   }

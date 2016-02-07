@@ -46,7 +46,7 @@ class FunctionType extends Type {
    * @throws  lang.IllegalArgumentException if the given name does not correspond to a function type
    */
   public static function forName($name) {
-      if (0 !== strncmp($name, 'function(', 9)) {
+    if (0 !== strncmp($name, 'function(', 9)) {
       throw new IllegalArgumentException('Not a function type: '.$name);
     }
 
