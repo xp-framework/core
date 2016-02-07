@@ -3,12 +3,17 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 7.0.1 / 2016-02-07
+
+### Bugfixes
+
+* Fixed support for varargs in `typeof()` - @thekid
+* Fixed support for primitive parameter types in `typeof()` - @thekid
+* Fixed support for function return types in `typeof()` - @thekid
+
 ### Features
 
 * Added *PHP nightly* to build matrix (currently: PHP 7.1.0-dev) - @thekid
-* Added support for varargs to `typeof()` - @thekid
-* Added support for primitive parameter types to `typeof()` - @thekid
-* Added support for function return types to `typeof()` - @thekid
 * Verified support for the `void` return type, which is part of PHP 7.1
   See https://wiki.php.net/rfc/void_return_type
   (@thekid)
