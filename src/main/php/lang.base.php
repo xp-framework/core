@@ -20,7 +20,6 @@ trait __xp {
     throw new \lang\Error('Call to undefined method '.\lang\XPClass::nameOf($self).'::'.$name.'() from scope '.\lang\XPClass::nameOf($scope));
   }
   // }}}
-
 }
 // }}}
 
@@ -29,7 +28,6 @@ final class xp {
   const CLASS_FILE_EXT= '.class.php';
   const ENCODING= 'utf-8';
 
-  public static $ext= [];
   public static $cli= [];
   public static $cll= 0;
   public static $cl= [];
