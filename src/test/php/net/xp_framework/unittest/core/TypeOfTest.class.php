@@ -6,6 +6,7 @@ use lang\XPClass;
 use lang\ArrayType;
 use lang\MapType;
 use lang\FunctionType;
+use unittest\actions\RuntimeVersion;
 
 /**
  * Tests typeof() functionality
@@ -70,5 +71,25 @@ class TypeOfTest extends \unittest\TestCase {
   #[@test]
   public function function_with_callable_hint() {
     $this->assertEquals(new FunctionType([Type::$CALLABLE], Type::$VAR), typeof(function(callable $c) { }));
+  }
+
+  #[@test, @action(new RuntimeVersion('>=7.0'))]
+  public function function_with_primitive_arg() {
+    $this->assertEquals(FunctionType::forName('function(int): var'), typeof(eval('return function(int $a) { };')));
+  }
+
+  #[@test, @action(new RuntimeVersion('>=7.0'))]
+  public function function_with_return_type() {
+    $this->assertEquals(FunctionType::forName('function(): lang.Type'), typeof(eval('return function(): \lang\Type { };')));
+  }
+
+  #[@test, @action(new RuntimeVersion('>=7.0'))]
+  public function function_with_primitive_return_type() {
+    $this->assertEquals(FunctionType::forName('function(): int'), typeof(eval('return function(): int { };')));
+  }
+
+  #[@test, @action(new RuntimeVersion('>=7.1'))]
+  public function function_with_void_return_type() {
+    $this->assertEquals(FunctionType::forName('function(): void'), typeof(eval('return function(): void { };')));
   }
 }

@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added support for primitive parameter types to `typeof()` - @thekid
+* Added support for function return types to `typeof()` - @thekid
 * Verified support for the `void` return type, which is part of PHP 7.1
   See https://wiki.php.net/rfc/void_return_type
   (@thekid)
