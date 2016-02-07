@@ -628,4 +628,23 @@ class FunctionTypeTest extends \unittest\TestCase {
     $inv= new FunctionTypeInvokeable();
     $this->assertInstanceOf('Closure', $type->newInstance($inv));
   }
+
+  #[@test, @values([
+  #  'function(?): var',
+  #  'function(var): var',
+  #  'function(var, var): var'
+  #])]
+  public function var_arg_is_instance_of($type) {
+    $this->assertTrue(FunctionType::forName($type)->isInstance(function(... $args) { }));
+  }
+
+  #[@test, @values([
+  #  'function(?): var',
+  #  'function(lang.Type): var',
+  #  'function(lang.Type, var): var',
+  #  'function(lang.Type, var, var): var'
+  #])]
+  public function normal_and_var_arg_is_instance_of($type) {
+    $this->assertTrue(FunctionType::forName($type)->isInstance(function(Type $t, ... $args) { }));
+  }
 }
