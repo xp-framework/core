@@ -6,6 +6,7 @@ XP Framework Core ChangeLog
 ### Features
 
 * Added *PHP nightly* to build matrix (currently: PHP 7.1.0-dev) - @thekid
+* Added support for varargs to `typeof()` - @thekid
 * Added support for primitive parameter types to `typeof()` - @thekid
 * Added support for function return types to `typeof()` - @thekid
 * Verified support for the `void` return type, which is part of PHP 7.1
