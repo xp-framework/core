@@ -69,4 +69,10 @@ class MethodReturnTypesTest extends MethodsTest {
     $fixture= $this->type('{ /** @return self */ public function fixture() { } }');
     $this->assertEquals($fixture, $fixture->getMethod('fixture')->getReturnType());
   }
+
+  #[@test, @action(new RuntimeVersion('>=7.1'))]
+  public function void_return_type() {
+    $fixture= $this->type('{ public function fixture(): void { } }');
+    $this->assertEquals(Type::$VOID, $fixture->getMethod('fixture')->getReturnType());
+  }
 }

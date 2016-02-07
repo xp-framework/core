@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+### Features
+
+* Verified support for the `void` return type, which is part of PHP 7.1
+  See https://wiki.php.net/rfc/void_return_type
+  (@thekid)
+
 ## 7.0.0 / 2016-02-01
 
 ### Heads up!
