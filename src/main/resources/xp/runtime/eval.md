@@ -14,7 +14,7 @@
   ```
 * Running [scripts](https://github.com/xp-framework/core/pull/127)
   ```sh
-  $ xp -e AgeInDays.script.php 1977-12-24
+  $ xp AgeInDays.script.php 1977-12-24
   ```
 
 Arguments are accessible via *$argv*: `$argv[0]` is the entry point
