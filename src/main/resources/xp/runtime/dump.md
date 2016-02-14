@@ -1,23 +1,19 @@
-# Evaluates code
+# Evaluates code and displays result using var_dump()
 
 * Evaluate code from a command line argument
   ```sh
-  $ xp -e 'echo PHP_BINARY'
+  $ xp -d 'PHP_BINARY'
   ```
 * Evaluate code from standard input
   ```sh
-  $ echo 'var_dump(1 + 2)' | xp -e
+  $ echo '1 + 2' | xp -d
   ```
 * Use `--` to separate arguments when piping from standard input
   ```sh
-  $ echo 'var_dump($argv[1])' | xp -e -- -a
-  ```
-* Running [scripts](https://github.com/xp-framework/core/pull/127)
-  ```sh
-  $ xp AgeInDays.script.php 1977-12-24
+  $ echo '$argv[1]' | xp -d -- -a
   ```
 
 Arguments are accessible via *$argv*: `$argv[0]` is the entry point
 class, `$argv[1]` is the first argument on the command line, etcetera.
 
-See also [dump](xp help dump) and [write](xp help write).
+See also [write](xp help write) and [eval](xp help eval).
