@@ -4,8 +4,7 @@ use util\cmd\Console;
 use lang\XPClass;
 
 /**
- * Evaluates sourcecode
- *
+ * Evaluates sourcecode. Used by `xp eval` subcommand.
  */
 class Evaluate {
   
