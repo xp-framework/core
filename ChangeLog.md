@@ -3,6 +3,19 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 7.1.0 / 2016-02-14
+
+### Features
+
+* Merged xp-framework/core#129: Shebang support - @thekid
+* Added version details to version subcommand:
+  . xp version xp: XP Version
+  . xp version php: PHP Version
+  . xp version engine: Engine version - HHVM_VERSION || zend_version()
+  . xp version os: OS Version (and distribution if available)
+  (@thekid)
+* Added missing help topics - see xp-framework/core#130 - @thekid
+
 ## 7.0.1 / 2016-02-07
 
 ### Bugfixes
