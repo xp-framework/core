@@ -21,7 +21,7 @@ the following one-liner:
 
 ```sh
 $ cd ~/bin
-$ curl -sSL https://bintray.com/artifact/download/xp-runners/generic/setup-7.2.3.sh | sh
+$ curl -sSL https://bintray.com/artifact/download/xp-runners/generic/setup-7.3.1.sh | sh
 ```
 
 ### Using it
