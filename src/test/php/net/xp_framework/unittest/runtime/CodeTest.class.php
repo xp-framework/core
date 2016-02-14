@@ -131,4 +131,12 @@ class CodeTest extends \unittest\TestCase {
   public function head_with_multiple_imports($input) {
     $this->assertEquals('use util\Date, util\TimeZone;', (new Code($input))->head());
   }
+
+  #[@test, @values([
+  #  '#!/usr/bin/xp',
+  #  '#!/usr/bin/env xp'
+  #])]
+  public function fragment_with_shebang($variation) {
+    $this->assertEquals('exit();', (new Code($variation."\n<?php exit();"))->fragment());
+  }
 }

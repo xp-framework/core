@@ -15,9 +15,17 @@ class Code {
    * @param  string $input
    */
   public function __construct($input) {
+
+    // Shebang
+    if (0 === strncmp($input, '#!', 2)) {
+      $input= substr($input, strcspn($input, "\n") + 1);
+    }
+
+    // PHP open tags
     if (0 === strncmp($input, '<?', 2)) {
       $input= substr($input, strcspn($input, "\r\n\t =") + 1);
     }
+
     $this->fragment= trim($input, "\r\n\t ;").';';
     $this->imports= [];
     while (0 === strncmp($this->fragment, 'use ', 4)) {
