@@ -27,24 +27,24 @@ define('DETAIL_GENERIC',        7);
  * Examples
  * ========
  * To retrieve the fully qualified name of a class, use this:
- * <code>
- *   $o= new File('...');
- *   echo 'The class name for $o is '.$o->getClass()->getName();
- * </code>
+ * ```php
+ * $file= new File('...');
+ * echo 'The class name for $file is '.typeof($file)->getName();
+ * ```
  *
  * Create an instance of a class:
- * <code>
- *   $instance= XPClass::forName('util.Binford')->newInstance();
- * </code>
+ * ```php
+ * $instance= XPClass::forName('util.Binford')->newInstance();
+ * ```
  *
  * Invoke a method by its name:
- * <code>
- *   try {
- *     $instance->getClass()->getMethod('connect')->invoke($instance);
- *   } catch (TargetInvocationException $e) {
- *     $e->getCause()->printStackTrace();
- *   }
- * </code> 
+ * ```php
+ * try {
+ *   typeof($instance)->getMethod('connect')->invoke($instance);
+ * } catch (TargetInvocationException $e) {
+ *   $e->getCause()->printStackTrace();
+ * }
+ * ``` 
  *
  * @see   xp://lang.Object#getClass
  * @see   xp://lang.XPClass#forName
