@@ -21,7 +21,7 @@ class Version {
     if ('Linux' === PHP_OS) {
       if (is_file('/etc/os-release')) {
         $rel= parse_ini_file('/etc/os-release');
-        return 'Linux/'.(ucfirst($rel['ID']).' '.$rel['VERSION']);
+        return 'Linux/'.($rel['PRETTY_NAME'] ?: $rel['NAME'].' '.$rel['VERSION']);
       } else is_executable('/usr/bin/lsb_release')) {
         return 'Linux/'.strtr(`/usr/bin/lsb_release -scd`, "\n", ' ');
       }
