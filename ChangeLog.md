@@ -61,6 +61,13 @@ XP Framework Core ChangeLog
 * Implemented xp-framework/rfc#296: Further minimize the framework - @thekid
 * Implemented xp-framework/rfc#297: Rebase - @thekid
 
+## 6.11.0 / 2016-02-18
+
+### Features
+
+* Added `util.Bytes` class as replacement for deprecated lang.types.Bytes
+  (@thekid)
+
 ## 6.10.3 / 2016-01-27
 
 ### Bugfixes
