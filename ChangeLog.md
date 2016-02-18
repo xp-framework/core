@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 6.11.0 / 2016-02-18
+
+### Features
+
+* Added `util.Bytes` class as replacement for deprecated lang.types.Bytes
+  (@thekid)
+
 ## 6.10.3 / 2016-01-27
 
 ### Bugfixes
