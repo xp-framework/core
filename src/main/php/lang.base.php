@@ -360,21 +360,28 @@ function literal($type) {
 //     Executes closure, closes all given args on exit.
 function with() {
   $args= func_get_args();
-  if (($block= array_pop($args)) instanceof \Closure)  {
+  if (($block= array_pop($args)) instanceof \Closure) {
+    $e= null;
     try {
-      return call_user_func_array($block, $args);
-    } finally {
-      foreach ($args as $arg) {
-        if (!($arg instanceof \lang\Closeable)) continue;
-        try {
-          $arg->close();
-        } catch (\Throwable $ignored) {
-          // PHP 7
-        } catch (\Exception $ignored) {
-          // PHP 5
-        }
+      $r= call_user_func_array($block, $args);
+    } catch (\Throwable $e) {
+      // PHP 7
+    } catch (\Exception $e) {
+      // PHP 5
+    }
+
+    foreach ($args as $arg) {
+      if (!($arg instanceof \lang\Closeable)) continue;
+      try {
+        $arg->close();
+      } catch (\Throwable $ignored) {
+        // PHP 7
+      } catch (\Exception $ignored) {
+        // PHP 5
       }
     }
+
+    if ($e) throw $e; else return $r;
   }
 }
 // }}}

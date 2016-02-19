@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+* Restored PHP 5.4 compatibility. *Note: PHP 5.4 is supported unofficially!*
+  Composer requirements are PHP 5.5.0 minimum.
+  See https://github.com/xp-framework/rfc/issues/298#issuecomment-131530029
+  (@thekid, @kiesel)
+
+
 ## 6.11.0 / 2016-02-18
 
 ### Features
