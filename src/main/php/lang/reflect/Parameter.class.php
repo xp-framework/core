@@ -164,7 +164,7 @@ class Parameter extends \lang\Object {
    * @return  var
    */
   public function getDefaultValue() {
-    if ($this->_reflect->isOptional()) {
+    if ($this->_reflect->isOptional() || (defined('HHVM_VERSION') && $this->_reflect->isVariadic())) {
       return $this->_reflect->isDefaultValueAvailable() ? $this->_reflect->getDefaultValue() : null;
     }
 
