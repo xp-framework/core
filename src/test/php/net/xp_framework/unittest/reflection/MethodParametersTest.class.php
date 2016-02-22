@@ -220,6 +220,11 @@ class MethodParametersTest extends MethodsTest {
     $this->assertEquals(true, $this->method('public function fixture($param= true) { }')->getParameter(0)->getDefaultValue());
   }
 
+  #[@test]
+  public function vararg_parameters_default_value() {
+    $this->assertEquals(null, $this->method('public function fixture(... $param) { }')->getParameter(0)->getDefaultValue());
+  }
+
   #[@test, @values([
   #  ['/** @param string */ function fixture($a)', 'lang.reflect.Parameter<lang.Primitive<string> a>'],
   #  ['/** @param lang.Value */ function fixture($a)', 'lang.reflect.Parameter<lang.XPClass<lang.Value> a>'],

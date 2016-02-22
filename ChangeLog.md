@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 7.1.1 / 2016-02-22
+
+### Bugfixes
+
+* Fixed Parameter::getDefaultValue() with variadics on HHVM.
+  See https://travis-ci.org/xp-lang/compiler/jobs/110851645
+  (@thekid)
+
 ## 7.1.0 / 2016-02-14
 
 ### Features
