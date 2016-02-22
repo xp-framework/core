@@ -25,6 +25,10 @@ class Version {
       } else is_executable('/usr/bin/lsb_release')) {
         return 'Linux/'.strtr(`/usr/bin/lsb_release -scd`, "\n", ' ');
       }
+    } else if ('Darwin' === PHP_OS) {
+      if (is_executable('/usr/bin/sw_vers')) {
+        return 'Mac OS X/'.trim(`/usr/bin/sw_vers -productVersion`);
+      }
     }
 
     return PHP_OS.'/'.php_uname('v');
