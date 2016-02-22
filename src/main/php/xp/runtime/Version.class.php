@@ -18,13 +18,20 @@ class Version {
 
   /** @return string */
   private function osVersion() {
-    if ('Linux' === PHP_OS && is_executable('/usr/bin/lsb_release')) {
-      return 'Linux/'.strtr(`/usr/bin/lsb_release -scd`, "\n", ' ');
-    } else if ('Darwin' === PHP_OS && is_executable('/usr/bin/sw_vers')) {
-      return 'Mac OS X/'.trim(`/usr/bin/sw_vers -productVersion`);
-    } else {
-      return PHP_OS.'/'.php_uname('v');
+    if ('Linux' === PHP_OS) {
+      if (is_file('/etc/os-release')) {
+        $rel= parse_ini_file('/etc/os-release');
+        return 'Linux/'.($rel['PRETTY_NAME'] ?: $rel['NAME'].' '.$rel['VERSION']);
+      } else is_executable('/usr/bin/lsb_release')) {
+        return 'Linux/'.strtr(`/usr/bin/lsb_release -scd`, "\n", ' ');
+      }
+    } else if ('Darwin' === PHP_OS) {
+      if (is_executable('/usr/bin/sw_vers')) {
+        return 'Mac OS X/'.trim(`/usr/bin/sw_vers -productVersion`);
+      }
     }
+
+    return PHP_OS.'/'.php_uname('v');
   }
 
   /**

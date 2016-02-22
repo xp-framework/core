@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 7.1.1 / 2016-02-22
+
+### Bugfixes
+
+* Fixed Parameter::getDefaultValue() with variadics on HHVM.
+  See https://travis-ci.org/xp-lang/compiler/jobs/110851645
+  (@thekid)
+
 ## 7.1.0 / 2016-02-14
 
 ### Features
@@ -60,6 +68,13 @@ XP Framework Core ChangeLog
 * Implemented xp-framework/rfc#293: Extract unittest from core - @thekid
 * Implemented xp-framework/rfc#296: Further minimize the framework - @thekid
 * Implemented xp-framework/rfc#297: Rebase - @thekid
+
+## 6.11.0 / 2016-02-18
+
+### Features
+
+* Added `util.Bytes` class as replacement for deprecated lang.types.Bytes
+  (@thekid)
 
 ## 6.10.3 / 2016-01-27
 
