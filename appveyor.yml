@@ -23,6 +23,10 @@ install:
 test_script:
   - php -d extension_dir=.\xp\ext -d extension=php_openssl.dll .\xp\composer.phar install --prefer-dist
   - echo vendor/autoload.php > composer.pth
+  - echo [runtime] > xp.ini
+  - echo default=.\xp\php.exe >> xp.ini
+  - echo extension_dir=.\xp\ext >> xp.ini
+  - echo extension=php_com_dotnet.dll >> xp.ini
   - ps: |
       xp -v
       $files = Get-ChildItem .\src\test\config\unittest\*.ini
@@ -30,7 +34,7 @@ test_script:
       foreach ($file in $files)
       {
         echo $file.Name
-        xp -cp src\test\php -cp test.xar xp.unittest.Runner $file.FullName
+        xp -cp src\test\php -cp src\test\resources -cp test.xar xp.unittest.Runner $file.FullName
         if ($lastexitcode -gt 0) { $result = 1 }
       }
       exit $result
