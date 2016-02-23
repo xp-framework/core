@@ -22,7 +22,7 @@ class Version {
       if (is_file('/etc/os-release')) {
         $rel= parse_ini_file('/etc/os-release');
         return 'Linux/'.($rel['PRETTY_NAME'] ?: $rel['NAME'].' '.$rel['VERSION']);
-      } else is_executable('/usr/bin/lsb_release')) {
+      } else if (is_executable('/usr/bin/lsb_release')) {
         return 'Linux/'.strtr(`/usr/bin/lsb_release -scd`, "\n", ' ');
       }
     } else if ('Darwin' === PHP_OS) {
