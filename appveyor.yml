@@ -25,7 +25,7 @@ test_script:
   - echo vendor/autoload.php > composer.pth
   - ps: |
       $files = Get-ChildItem .\src\test\config\unittest\*.ini
-      $result = 1
+      $result = 0
       foreach ($file in $files)
       {
         echo $file.Name
