@@ -24,12 +24,12 @@ test_script:
   - php -d extension_dir=.\xp\ext -d extension=php_openssl.dll .\xp\composer.phar install --prefer-dist
   - echo vendor/autoload.php > composer.pth
   - ps: |
-    $files = Get-ChildItem .\src\test\config\unittest\*.ini
-    $result = 1
-    foreach ($file in $files)
-    {
-      echo $file.Name
-      xp -cp test.xar $file.FullName
-      if ($lastexitcode -gt 0) { $result = 1 }
-    }
-    exit $result
+      $files = Get-ChildItem .\src\test\config\unittest\*.ini
+      $result = 1
+      foreach ($file in $files)
+      {
+        echo $file.Name
+        xp -cp test.xar $file.FullName
+        if ($lastexitcode -gt 0) { $result = 1 }
+      }
+      exit $result
