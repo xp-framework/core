@@ -29,7 +29,7 @@ test_script:
       foreach ($file in $files)
       {
         echo $file.Name
-        xp -cp test.xar $file.FullName
+        xp -cp test.xar xp.unittest.Runner $file.FullName
         if ($lastexitcode -gt 0) { $result = 1 }
       }
       exit $result
