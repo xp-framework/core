@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 7.1.2 / 2016-02-23
+
 ### Features
 
 * Merged xp-framework/core#131: OS Version handling for Mac OS X
