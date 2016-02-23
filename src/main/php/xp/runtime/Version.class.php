@@ -41,10 +41,7 @@ class Version {
    * @return  int
    */
   public static function main(array $args) {
-    if (isset($args[0])) {
-      $method= $args[0].'Version';
-      Console::writeLine(self::$method());
-    } else {
+    if (empty($args)) {
       Console::writeLinef(
         'XP %s { PHP %s & ZE %s } @ %s',
         \xp::version(),
@@ -57,6 +54,16 @@ class Version {
         Console::writeLine($delegate->toString());
       }
       return 1;
+    } else {
+      foreach ($args as $arg) {
+        $method= $arg.'Version';
+        if (is_callable(['self', $method])) {
+          Console::writeLine(self::$method());
+        } else {
+          Console::$err->writeLinef('Unkown version argument `%s\'', $arg);
+        }
+      }
+      return 0;
     }
   }
 }
