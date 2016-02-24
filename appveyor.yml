@@ -23,10 +23,11 @@ install:
 test_script:
   - php -d extension_dir=.\xp\ext -d extension=php_openssl.dll .\xp\composer.phar install --prefer-dist
   - echo vendor/autoload.php > composer.pth
-  - echo [runtime] > xp.ini
+  - echo "[runtime]" > xp.ini
   - echo default=.\xp\php.exe >> xp.ini
   - echo extension_dir=.\xp\ext >> xp.ini
   - echo extension=php_com_dotnet.dll >> xp.ini
+  - type xp.ini
   - ps: |
       xp -v
       $files = Get-ChildItem .\src\test\config\unittest\*.ini
