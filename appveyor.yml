@@ -21,6 +21,7 @@ install:
   - if %CACHED%==0 echo extension_dir=%cd%\ext >> php.ini
   - if %CACHED%==0 echo extension=php_com_dotnet.dll >> php.ini
   - if %CACHED%==0 echo extension=php_openssl.dll >> php.ini
+  - if %CACHED%==0 echo extension=php_bz2.dll >> php.ini
   - if %CACHED%==0 cd ..
   - type .\xp\php.ini
 
