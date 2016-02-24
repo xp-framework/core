@@ -34,7 +34,7 @@ test_script:
       foreach ($file in $files)
       {
         echo $file.Name
-        xp -cp src\test\php -cp src\test\resources -cp test.xar xp.unittest.Runner $file.FullName
+        xp -m . -cp test.xar xp.unittest.Runner $file.FullName
         if ($lastexitcode -gt 0) { $result = 1 }
       }
       exit $result
