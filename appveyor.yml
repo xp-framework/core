@@ -28,7 +28,6 @@ test_script:
   - echo extension_dir=.\xp\ext >> .\xp\xp.ini
   - echo extension=php_com_dotnet.dll >> .\xp\xp.ini
   - type .\xp\xp.ini
-  - xp -v || echo
   - ps: |
       $files = Get-ChildItem .\src\test\config\unittest\*.ini
       $result = 0
