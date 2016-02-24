@@ -23,7 +23,7 @@ install:
   - if %CACHED%==0 echo extension=php_com_dotnet.dll >> php.ini
   - if %CACHED%==0 echo extension=php_openssl.dll >> php.ini
   - if %CACHED%==0 cd ..
-  - type .\xp\xp.ini
+  - type .\xp\php.ini
 
 test_script:
   - php .\xp\composer.phar install --prefer-dist
