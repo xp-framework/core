@@ -3,6 +3,11 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+### Features
+
+* Made test suite run on [AppVeyor](https://ci.appveyor.com/project/thekid/core)
+  (@thekid)
+
 ## 7.1.2 / 2016-02-23
 
 ### Features
