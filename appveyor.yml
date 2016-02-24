@@ -19,18 +19,15 @@ install:
   - if %CACHED%==0 appveyor DownloadFile https://bintray.com/artifact/download/xp-runners/windows/xp-runners_7.3.3.zip -FileName xp.zip
   - if %CACHED%==0 7z x php.zip -y
   - if %CACHED%==0 7z x xp.zip -y
-  - if %CACHED%==0 echo [runtime] > xp.ini
-  - if %CACHED%==0 echo default=%cd%\php.exe >> xp.ini
-  - if %CACHED%==0 echo extension_dir=%cd%\ext >> xp.ini
-  - if %CACHED%==0 echo extension=php_com_dotnet.dll >> xp.ini
+  - if %CACHED%==0 echo extension_dir=%cd%\ext >> php.ini
+  - if %CACHED%==0 echo extension=php_com_dotnet.dll >> php.ini
+  - if %CACHED%==0 echo extension=php_openssl.dll >> php.ini
   - if %CACHED%==0 cd ..
   - type .\xp\xp.ini
 
 test_script:
-  - php -d extension_dir=.\xp\ext -d extension=php_openssl.dll .\xp\composer.phar install --prefer-dist
-  - php -d extension_dir=.\xp\ext -d extension=php_com_dotnet.dll -m
+  - php .\xp\composer.phar install --prefer-dist
   - echo vendor/autoload.php > composer.pth
-  - xp -w "\lang\Runtime::getInstance()->getExecutable()->getCommandLine()"
   - ps: |
       $files = Get-ChildItem .\src\test\config\unittest\*.ini
       $result = 0
