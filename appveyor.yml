@@ -9,7 +9,6 @@ init:
   - set PATH=%PATH%;.\xp
   - set COMPOSER_NO_INTERACTION=1
   - set CACHED=0
-  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 install:
   - if exist .\xp (set CACHED=1) else (mkdir .\xp)
@@ -38,6 +37,3 @@ test_script:
         if ($lastexitcode -gt 0) { $result = 1 }
       }
       exit $result
-
-on_finish:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
