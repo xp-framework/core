@@ -3,6 +3,29 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+### Features
+
+* Made test suite run on [AppVeyor](https://ci.appveyor.com/project/thekid/core)
+  (@thekid)
+
+## 7.1.2 / 2016-02-23
+
+### Features
+
+* Merged xp-framework/core#131: OS Version handling for Mac OS X
+  (@thekid)
+* Merged xp-framework/core#133: OS Version handling for systems with 
+  /etc/os-release
+  (@thekid)
+
+## 7.1.1 / 2016-02-22
+
+### Bugfixes
+
+* Fixed Parameter::getDefaultValue() with variadics on HHVM.
+  See https://travis-ci.org/xp-lang/compiler/jobs/110851645
+  (@thekid)
+
 ## 7.1.0 / 2016-02-14
 
 ### Features

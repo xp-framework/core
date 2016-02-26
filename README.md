@@ -1,6 +1,7 @@
 XP Framework Core
 =================
 [![Build Status on TravisCI](https://secure.travis-ci.org/xp-framework/core.png)](http://travis-ci.org/xp-framework/core)
+[![Build status on AppVeyor](https://ci.appveyor.com/api/projects/status/bb9gkkq1o7f6m2ns?svg=true)](https://ci.appveyor.com/project/thekid/core)
 [![BSD Licence](https://raw.githubusercontent.com/xp-framework/web/master/static/licence-bsd.png)](https://github.com/xp-framework/core/blob/master/LICENCE.md)
 [![Required PHP 5.6+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-5_6plus.png)](http://php.net/)
 [![Suggests PHP 7.0+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-7_0plus.png)](http://php.net/)
@@ -35,7 +36,7 @@ Finally, start `xp -v` to see it working:
 
 ```sh
 $ xp -v
-XP 7.1.1-dev { PHP 7.0.3 & ZE 3.0.0 } @ Windows NT SLATE 10.0 build 10586 (Windows 10) i586
+XP 7.1.3-dev { PHP 7.0.3 & ZE 3.0.0 } @ Windows NT SLATE 10.0 build 10586 (Windows 10) i586
 Copyright (c) 2001-2016 the XP group
 FileSystemCL<./src/main/php>
 FileSystemCL<./src/test/php>

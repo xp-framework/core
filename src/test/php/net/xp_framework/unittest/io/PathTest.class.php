@@ -194,7 +194,7 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals($current, Path::compose($components)->asRealpath($current)->toString());
   }
 
-  #[@test]
+  #[@test, @action(new IsPlatform('!^Win'))]
   public function links_resolved_in_realpath() {
     $temp= System::tempDir();
     $link= new Path($temp, 'link-to-temp');

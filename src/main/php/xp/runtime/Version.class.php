@@ -18,11 +18,20 @@ class Version {
 
   /** @return string */
   private function osVersion() {
-    if ('Linux' == PHP_OS && is_executable('/usr/bin/lsb_release')) {
-      return 'Linux/'.strtr(`/usr/bin/lsb_release -scd`, "\n", ' ');
-    } else {
-      return PHP_OS.'/'.php_uname('v');
+    if ('Linux' === PHP_OS) {
+      if (is_file('/etc/os-release')) {
+        $rel= parse_ini_file('/etc/os-release');
+        return 'Linux/'.($rel['PRETTY_NAME'] ?: $rel['NAME'].' '.$rel['VERSION']);
+      } else if (is_executable('/usr/bin/lsb_release')) {
+        return 'Linux/'.strtr(`/usr/bin/lsb_release -scd`, "\n", ' ');
+      }
+    } else if ('Darwin' === PHP_OS) {
+      if (is_executable('/usr/bin/sw_vers')) {
+        return 'Mac OS X/'.trim(`/usr/bin/sw_vers -productVersion`);
+      }
     }
+
+    return PHP_OS.'/'.php_uname('v');
   }
 
   /**
@@ -32,10 +41,7 @@ class Version {
    * @return  int
    */
   public static function main(array $args) {
-    if (isset($args[0])) {
-      $method= $args[0].'Version';
-      Console::writeLine(self::$method());
-    } else {
+    if (empty($args)) {
       Console::writeLinef(
         'XP %s { PHP %s & ZE %s } @ %s',
         \xp::version(),
@@ -48,6 +54,16 @@ class Version {
         Console::writeLine($delegate->toString());
       }
       return 1;
+    } else {
+      foreach ($args as $arg) {
+        $method= $arg.'Version';
+        if (is_callable(['self', $method])) {
+          Console::writeLine(self::$method());
+        } else {
+          Console::$err->writeLinef('Unkown version argument `%s\'', $arg);
+        }
+      }
+      return 0;
     }
   }
 }
