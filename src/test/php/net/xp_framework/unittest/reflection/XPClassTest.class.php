@@ -312,7 +312,7 @@ class XPClassTest extends \unittest\TestCase {
 
   #[@test]
   public function getClasses_returns_a_list_of_class_objects() {
-    $this->assertInstanceOf('lang.XPClass[]', XPClass::getClasses());
+    $this->assertInstanceOf('lang.XPClass[]', iterator_to_array(XPClass::getClasses()));
   }
   
   #[@test]

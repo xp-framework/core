@@ -859,12 +859,11 @@ class XPClass extends Type {
    * Returns an array containing class objects representing all the 
    * public classes
    *
-   * @return  lang.XPClass[] class objects
+   * @return  php.Iterator
    */
   public static function getClasses() {
     foreach (\xp::$cl as $class => $loader) {
-      $ret[]= new self(literal($class));
+      yield new self(literal($class));
     }
-    return $ret;
   }
 }
