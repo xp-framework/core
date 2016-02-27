@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 7.2.0 / 2016-02-27
+
+### Heads up!
+
+* Removed net.xp_framework.unittest.StartServer - unused inside core,
+  but xp-framework/networking depended on this (fixed by copying there!)
+  (@thekid)
+
 ### Features
 
 * Code QA: Use `::class` throughout codebase where applicable - @thekid
