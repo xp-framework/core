@@ -435,7 +435,7 @@ class XPClass extends Type {
    *   XPClass::forName('lang.Object')->isAssignableFrom('util.Date');   // TRUE
    * </code>
    *
-   * @param   var type
+   * @param   string|lang.Type $type
    * @return  bool
    */
   public function isAssignableFrom($type) {
