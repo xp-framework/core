@@ -7,7 +7,7 @@
  * @test  xp://net.xp_framework.unittest.core.SystemExitTest
  * @test  xp://net.xp_framework.unittest.core.RuntimeTest
  */
-class Runtime extends Object {
+class Runtime {
   protected static 
     $instance   = null;
     

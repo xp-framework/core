@@ -15,7 +15,7 @@
  *
  * @test  xp://net.xp_framework.unittest.util.TimerTest
  */
-class Timer extends \lang\Object {
+class Timer {
   protected $start= null;
   protected $stop= null;
     

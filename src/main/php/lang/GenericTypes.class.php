@@ -5,7 +5,7 @@
  *
  * @test  xp://net.xp_framework.unittest.core.generics.GenericTypesTest
  */
-class GenericTypes extends \lang\Object {
+class GenericTypes {
 
   /**
    * Creates a generic type
