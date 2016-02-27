@@ -100,26 +100,26 @@ class TypeTest extends \unittest\TestCase {
   #[@test]
   public function generic() {
     $this->assertEquals(
-      XPClass::forName('util.collections.Vector')->newGenericType([Primitive::$STRING]),
-      Type::forName('util.collections.Vector<string>')
+      XPClass::forName('net.xp_framework.unittest.core.generics.Nullable')->newGenericType([Primitive::$STRING]),
+      Type::forName('net.xp_framework.unittest.core.generics.Nullable<string>')
     );
   }
 
   #[@test]
   public function genericOfGeneneric() {
-    $t= XPClass::forName('util.collections.Vector');
+    $t= XPClass::forName('net.xp_framework.unittest.core.generics.Nullable');
     $this->assertEquals(
       $t->newGenericType([$t->newGenericType([Primitive::$INT])]), 
-      Type::forName('util.collections.Vector<util.collections.Vector<int>>')
+      Type::forName('net.xp_framework.unittest.core.generics.Nullable<net.xp_framework.unittest.core.generics.Nullable<int>>')
     );
   }
 
   #[@test]
   public function genericObjectType() {
-    with ($t= Type::forName('util.collections.HashTable<string, lang.Object>')); {
+    with ($t= Type::forName('net.xp_framework.unittest.core.generics.IDictionary<string, lang.Object>')); {
       $this->assertInstanceOf(XPClass::class, $t);
       $this->assertTrue($t->isGeneric());
-      $this->assertEquals(XPClass::forName('util.collections.HashTable'), $t->genericDefinition());
+      $this->assertEquals(XPClass::forName('net.xp_framework.unittest.core.generics.IDictionary'), $t->genericDefinition());
       $this->assertEquals(
         [Primitive::$STRING, XPClass::forName('lang.Object')],
         $t->genericArguments()

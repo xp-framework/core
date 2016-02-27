@@ -210,14 +210,6 @@ class XPClassTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function util_collections_IList_class_declares_ArrayAccess_and_IteratorAggregate_interfaces() {
-    $this->assertEquals(
-      [new XPClass('ArrayAccess'), new XPClass('IteratorAggregate')],
-      XPClass::forName('util.collections.IList')->getDeclaredInterfaces()
-    );
-  }
-
-  #[@test]
   public function fixture_class_has_a_constructor() {
     $this->assertTrue($this->fixture->hasConstructor());
   }

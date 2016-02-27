@@ -340,9 +340,9 @@ class FunctionTypeTest extends \unittest\TestCase {
     (new FunctionType([Type::$VAR], Type::forName('lang.Generic')))->newInstance($value);
   }
 
-  #[@test, @expect(IllegalArgumentException::class), @values([[['util.collections.IList<int>', 'new']], ['util.collections.IList<int>::new']])]
+  #[@test, @expect(IllegalArgumentException::class), @values([[['net.xp_framework.unittest.core.generics.IDictionary<int, string>', 'new']], ['net.xp_framework.unittest.core.generics.IDictionary<int, string>::new']])]
   public function cannot_create_instances_from_generic_interfaces($value) {
-    (new FunctionType([Type::$VAR], Type::forName('util.collections.IList<int>')))->newInstance($value);
+    (new FunctionType([Type::$VAR], Type::forName('net.xp_framework.unittest.core.generics.IDictionary<int, string>')))->newInstance($value);
   }
 
   #[@test]
