@@ -81,12 +81,12 @@ class ObjectsTest extends \unittest\TestCase {
    * Filters values() method
    *
    * @param   var exclude
-   * @return  var[]
+   * @return  php.Iterator
    */
   public function valuesExcept($exclude) {
-    return array_filter($this->values(), function($value) use($exclude) {
-      return $value[0] !== $exclude;
-    });
+    foreach ($this->values as $value) {
+      if ($value[0] !== $exclude) yield $value;
+    }
   }
 
   #[@test, @values('values')]

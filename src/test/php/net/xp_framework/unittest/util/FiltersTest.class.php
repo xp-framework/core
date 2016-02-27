@@ -15,14 +15,12 @@ class FiltersTest extends \unittest\TestCase {
    *
    * @param  var[] $input
    * @param  util.Filter<var>[] $filter
-   * @param  var[]
+   * @param  php.Iterator
    */
   protected function filter($input, Filter $filter) {
-    $output= [];
     foreach ($input as $value) {
-      if ($filter->accept($value)) $output[]= $value;
+      if ($filter->accept($value)) yield $value;
     }
-    return $output;
   }
 
   /** @return var[][] */
@@ -89,25 +87,25 @@ class FiltersTest extends \unittest\TestCase {
 
   #[@test]
   public function allOf() {
-    $this->assertEquals([2, 3], $this->filter([1, 2, 3, 4], Filters::allOf([
+    $this->assertEquals([2, 3], iterator_to_array($this->filter([1, 2, 3, 4], Filters::allOf([
       newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }]),
       newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e < 4; }])
-    ])));
+    ]))));
   }
 
   #[@test]
   public function anyOf() {
-    $this->assertEquals(['Hello', 'World', '!'], $this->filter(['Hello', 'test', '', 'World', '!'], Filters::anyOf([
+    $this->assertEquals(['Hello', 'World', '!'], iterator_to_array($this->filter(['Hello', 'test', '', 'World', '!'], Filters::anyOf([
       newinstance('util.Filter<string>', [], ['accept' => function($e) { return 1 === strlen($e); }]),
       newinstance('util.Filter<string>', [], ['accept' => function($e) { return strlen($e) > 0 && ord($e{0}) < 97; }])
-    ])));
+    ]))));
   }
 
   #[@test]
   public function noneOf() {
-    $this->assertEquals(['index.html'], $this->filter(['file.txt', 'index.html', 'test.php'], Filters::noneOf([
+    $this->assertEquals(['index.html'], iterator_to_array($this->filter(['file.txt', 'index.html', 'test.php'], Filters::noneOf([
       newinstance('util.Filter<string>', [], ['accept' => function($e) { return strstr($e, 'test'); }]),
       newinstance('util.Filter<string>', [], ['accept' => function($e) { return strstr($e, '.txt'); }])
-    ])));
+    ]))));
   }
 }

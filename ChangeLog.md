@@ -6,6 +6,7 @@ XP Framework Core ChangeLog
 ### Features
 
 * Code QA: Use `::class` throughout codebase where applicable - @thekid
+* Code QA: Use `yield` throughout codebase where applicable - @thekid
 * Made test suite run on [AppVeyor](https://ci.appveyor.com/project/thekid/core)
   (@thekid)
 
