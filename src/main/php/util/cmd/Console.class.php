@@ -1,5 +1,7 @@
 <?php namespace util\cmd;
 
+use io\streams\InputStreamReader;
+use io\streams\OutputStreamWriter;
 use io\streams\StringWriter;
 use io\streams\StringReader;
 use io\streams\ConsoleOutputStream;
@@ -48,14 +50,14 @@ abstract class Console {
       self::$out= new StringWriter(new ConsoleOutputStream(STDOUT));
       self::$err= new StringWriter(new ConsoleOutputStream(STDERR));
     } else {
-      self::$in= newinstance('io.streams.InputStreamReader', [null], '{
+      self::$in= newinstance(InputStreamReader::class, [null], '{
         public function __construct($in) { }
         public function getStream() { return null; }
         public function raise() { throw new \lang\IllegalStateException("There is no console present"); }
         public function read($count= 8192) { $this->raise(); }
         public function readLine() { $this->raise(); }
       }');
-      self::$out= self::$err= newinstance('io.streams.OutputStreamWriter', [null], '{
+      self::$out= self::$err= newinstance(OutputStreamWriter::class, [null], '{
         public function __construct($out) { }
         public function getStream() { return null; }
         public function flush() { $this->raise(); }

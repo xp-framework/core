@@ -12,7 +12,7 @@ abstract class Enum extends Object {
   protected $ordinal= 0;
 
   static function __static() {
-    if (__CLASS__ === ($class= get_called_class())) return;
+    if (self::class === ($class= get_called_class())) return;
 
     // Automatically initialize this enum's public static members
     $i= 0;
@@ -50,7 +50,7 @@ abstract class Enum extends Object {
       throw new IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
     }
 
-    if ($class->isSubclassOf(__CLASS__)) {
+    if ($class->isSubclassOf(self::class)) {
       try {
         $prop= $class->reflect()->getStaticPropertyValue($name);
         if ($class->isInstance($prop)) return $prop;
@@ -59,7 +59,7 @@ abstract class Enum extends Object {
       }
     } else {
       if ($class->reflect()->hasConstant($name)) {
-        $t= ClassLoader::defineClass($class->getName().'Enum', __CLASS__, []);
+        $t= ClassLoader::defineClass($class->getName().'Enum', self::class, []);
         return $t->newInstance($class->reflect()->getConstant($name), $name);
       }
     }
@@ -79,12 +79,12 @@ abstract class Enum extends Object {
     }
 
     $r= [];
-    if ($class->isSubclassOf(__CLASS__)) {
+    if ($class->isSubclassOf(self::class)) {
       foreach ($class->reflect()->getStaticProperties() as $prop) {
         $class->isInstance($prop) && $r[]= $prop;
       }
     } else {
-      $t= ClassLoader::defineClass($class->getName().'Enum', __CLASS__, []);
+      $t= ClassLoader::defineClass($class->getName().'Enum', self::class, []);
       foreach ($class->reflect()->getMethod('getValues')->invoke(null) as $name => $ordinal) {
         $r[]= $t->newInstance($ordinal, $name);
       }

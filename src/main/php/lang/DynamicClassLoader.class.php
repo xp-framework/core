@@ -21,7 +21,7 @@ class DynamicClassLoader extends AbstractClassLoader {
     $bytes    = [];
   
   static function __static() {
-    stream_wrapper_register('dyn', __CLASS__);
+    stream_wrapper_register('dyn', self::class);
   }
 
   /**

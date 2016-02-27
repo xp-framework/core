@@ -106,7 +106,7 @@ class Runner {
    * @return  int
    */
   protected static function usage() {
-    Console::$err->writeLine(self::textOf((new \lang\XPClass(__CLASS__))->getComment()));
+    Console::$err->writeLine(self::textOf((new \lang\XPClass(self::class))->getComment()));
     return 1;
   }
 

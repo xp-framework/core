@@ -28,7 +28,7 @@ class CompositeProperties extends \lang\Object implements PropertyAccess {
    */
   public function __construct(array $properties= []) {
     if (empty($properties)) {
-      throw new IllegalArgumentException(__CLASS__.' requires at least 1 util.PropertyAccess child.');
+      throw new IllegalArgumentException(self::class.' requires at least 1 util.PropertyAccess child.');
     }
 
     foreach ($properties as $p) $this->add($p);

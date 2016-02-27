@@ -28,7 +28,7 @@ class Evaluate {
     }
 
     // Perform
-    $argv= [XPClass::nameOf(__CLASS__)] + $args;
+    $argv= [XPClass::nameOf(self::class)] + $args;
     return eval($code->head().$code->fragment());
   }
 }

@@ -1,5 +1,6 @@
 <?php namespace io\streams;
 
+use lang\Object;
 use io\IOException;
 
 /**
@@ -14,7 +15,7 @@ class GzDecompressingInputStream implements InputStream {
   public static $wrapped= [];
 
   static function __static() {
-    stream_wrapper_register('zlib.bounded', get_class(newinstance('lang.Object', [], '{
+    stream_wrapper_register('zlib.bounded', get_class(newinstance(Object::class, [], '{
       protected $id, $st= null;
       protected $buffer= "";
       public $context = null;

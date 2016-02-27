@@ -1,5 +1,8 @@
 <?php namespace lang\reflect;
 
+use lang\XPClass;
+use lang\ClassLoader;
+use lang\IllegalArgumentException;
 use lang\ElementNotFoundException;
 
 /**
@@ -37,7 +40,7 @@ class Package extends \lang\Object {
    * @return  bool
    */
   public function providesClass($name) { 
-    return \lang\ClassLoader::getDefault()->providesClass($this->name.'.'.$name);
+    return ClassLoader::getDefault()->providesClass($this->name.'.'.$name);
   }
 
   /**
@@ -47,7 +50,7 @@ class Package extends \lang\Object {
    * @return  bool
    */
   public function providesPackage($name) {
-    return \lang\ClassLoader::getDefault()->providesPackage($this->name.'.'.$name);
+    return ClassLoader::getDefault()->providesPackage($this->name.'.'.$name);
   }
 
   /**
@@ -57,7 +60,7 @@ class Package extends \lang\Object {
    * @return  bool
    */
   public function providesResource($name) { 
-    return \lang\ClassLoader::getDefault()->providesResource(strtr($this->name, '.', '/').'/'.$name);
+    return ClassLoader::getDefault()->providesResource(strtr($this->name, '.', '/').'/'.$name);
   }
 
   /**
@@ -67,7 +70,7 @@ class Package extends \lang\Object {
    * @return  lang.XPClass[]
    */
   public function getClasses() { 
-    return array_map(['lang\XPClass', 'forName'], $this->getClassNames());
+    return array_map([XPClass::class, 'forName'], $this->getClassNames());
   }
 
   /**
@@ -77,7 +80,7 @@ class Package extends \lang\Object {
    */
   public function getClassNames() { 
     $classes= [];
-    foreach (\lang\ClassLoader::getDefault()->packageContents($this->name) as $file) {
+    foreach (ClassLoader::getDefault()->packageContents($this->name) as $file) {
       if (\xp::CLASS_FILE_EXT == substr($file, -10)) $classes[]= ltrim($this->name.'.'.substr($file, 0, -10), '.');
     }
     return $classes;
@@ -96,12 +99,12 @@ class Package extends \lang\Object {
     // Handle fully qualified names
     if (false !== ($p= strrpos($name, '.'))) {
       if (substr($name, 0, $p) != $this->name) {
-        throw new \lang\IllegalArgumentException('Class '.$name.' is not in '.$this->name);
+        throw new IllegalArgumentException('Class '.$name.' is not in '.$this->name);
       }
       $name= substr($name, $p+ 1);
     }
 
-    return \lang\XPClass::forName($this->name.'.'.$name);
+    return XPClass::forName($this->name.'.'.$name);
   }
 
   /**
@@ -110,7 +113,7 @@ class Package extends \lang\Object {
    * @return  lang.reflect.Package[]
    */
   public function getPackages() {
-    return array_map(['lang\reflect\Package', 'forName'], $this->getPackageNames());
+    return array_map([self::class, 'forName'], $this->getPackageNames());
   } 
 
   /**
@@ -120,7 +123,7 @@ class Package extends \lang\Object {
    */
   public function getPackageNames() { 
     $packages= [];
-    foreach (\lang\ClassLoader::getDefault()->packageContents($this->name) as $file) {
+    foreach (ClassLoader::getDefault()->packageContents($this->name) as $file) {
       if ('/' == substr($file, -1)) $packages[]= ltrim($this->name.'.'.substr($file, 0, -1), '.');
     }
     return $packages;
@@ -133,7 +136,7 @@ class Package extends \lang\Object {
    */
   public function getResources() {
     $resources= [];
-    foreach (\lang\ClassLoader::getDefault()->packageContents($this->name) as $file) {
+    foreach (ClassLoader::getDefault()->packageContents($this->name) as $file) {
       if ('/' == substr($file, -1) || \xp::CLASS_FILE_EXT == substr($file, -10)) continue;
       $resources[]= strtr($this->name, '.', '/').'/'.$file;
     }
@@ -154,7 +157,7 @@ class Package extends \lang\Object {
     // Handle fully qualified names
     if (false !== ($p= strrpos($name, '.'))) {
       if (substr($name, 0, $p) != $this->name) {
-        throw new \lang\IllegalArgumentException('Package '.$name.' is not in '.$this->name);
+        throw new IllegalArgumentException('Package '.$name.' is not in '.$this->name);
       }
       $name= substr($name, $p+ 1);
     }
@@ -173,7 +176,7 @@ class Package extends \lang\Object {
     $p= new self();
     $p->name= rtrim($name, '.');   // Normalize
 
-    if (!\lang\ClassLoader::getDefault()->providesPackage($p->name)) {
+    if (!ClassLoader::getDefault()->providesPackage($p->name)) {
       throw new ElementNotFoundException('No classloaders provide '.$name);
     }
     return $p;
@@ -191,11 +194,11 @@ class Package extends \lang\Object {
     // Handle fully qualified names
     if (false !== ($p= strrpos($filename, '/'))) {
       if (substr($filename, 0, $p) != strtr($this->name, '.', '/')) {
-        throw new \lang\IllegalArgumentException('Resource '.$filename.' is not in '.$this->name);
+        throw new IllegalArgumentException('Resource '.$filename.' is not in '.$this->name);
       }
       $filename= substr($filename, $p+ 1);
     }
-    return \lang\ClassLoader::getDefault()->getResource(strtr($this->name, '.', '/').'/'.$filename);
+    return ClassLoader::getDefault()->getResource(strtr($this->name, '.', '/').'/'.$filename);
   }
   
   /**
@@ -210,11 +213,11 @@ class Package extends \lang\Object {
     // Handle fully qualified names
     if (false !== ($p= strrpos($filename, '/'))) {
       if (substr($filename, 0, $p) != strtr($this->name, '.', '/')) {
-        throw new \lang\IllegalArgumentException('Resource '.$filename.' is not in '.$this->name);
+        throw new IllegalArgumentException('Resource '.$filename.' is not in '.$this->name);
       }
       $filename= substr($filename, $p+ 1);
     }
-    return \lang\ClassLoader::getDefault()->getResourceAsStream(strtr($this->name, '.', '/').'/'.$filename);
+    return ClassLoader::getDefault()->getResourceAsStream(strtr($this->name, '.', '/').'/'.$filename);
   }
   
   /**
@@ -226,7 +229,7 @@ class Package extends \lang\Object {
    */
   public static function detailsForPackage($package) {
     if (!isset(\xp::$meta[$package])) {
-      $cl= \lang\ClassLoader::getDefault();
+      $cl= ClassLoader::getDefault();
       $info= strtr($package, '.', '/').'/package-info.xp';
       if (!$cl->providesResource($info)) return null;
 

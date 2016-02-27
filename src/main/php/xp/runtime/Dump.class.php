@@ -27,7 +27,7 @@ class Dump {
     }
 
     // Perform
-    $argv= [XPClass::nameOf(__CLASS__)] + $args;
+    $argv= [XPClass::nameOf(self::class)] + $args;
     $return= eval($code->head().$code->expression());
     switch ($way) {
       case '-w': Console::writeLine($return); break;

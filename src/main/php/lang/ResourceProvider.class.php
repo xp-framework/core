@@ -14,7 +14,7 @@ class ResourceProvider extends Object {
   public $context= null;
 
   static function __static() {
-    stream_wrapper_register('res', __CLASS__);
+    stream_wrapper_register('res', self::class);
     self::$instance= new self();
   }
 

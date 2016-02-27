@@ -21,13 +21,13 @@ abstract class Streams {
     $id      = null;
     
   static function __static() {
-    stream_wrapper_register('iostrr', get_class(newinstance(__CLASS__, [], '{
+    stream_wrapper_register('iostrr', get_class(newinstance(self::class, [], '{
       static function __static() { }
 
       public function stream_open($path, $mode, $options, $opened_path) {
         parent::stream_open($path, $mode, $options, $opened_path);
         $this->length= parent::$streams[$this->id]->available();
-        return TRUE;
+        return true;
       }
 
       public function stream_write($data) {
@@ -39,14 +39,14 @@ abstract class Streams {
       }
 
       public function stream_flush() {
-        return TRUE;
+        return true;
       }
 
       public function stream_eof() {
         return 0 === parent::$streams[$this->id]->available();
       }
     }')));
-    stream_wrapper_register('iostrw', get_class(newinstance(__CLASS__, [], '{
+    stream_wrapper_register('iostrw', get_class(newinstance(self::class, [], '{
       static function __static() { }
 
       public function stream_write($data) {
@@ -65,7 +65,7 @@ abstract class Streams {
       }
 
       public function stream_eof() {
-        return FALSE;
+        return false;
       }
     }')));
   }

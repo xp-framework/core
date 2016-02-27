@@ -47,7 +47,7 @@ class Help {
     $command= null;
 
     if (empty($args)) {
-      $class= new XPClass(__CLASS__);
+      $class= new XPClass(self::class);
       $source= $class->getClassLoader();
       $markdown= $class->getComment();
     } else if ('@' === $args[0]{0}) {

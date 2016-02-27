@@ -219,6 +219,6 @@ class Currency extends \lang\Enum {
    * @throws  lang.IllegalArgumentException
    */
   public static function getInstance($code) {
-    return parent::valueOf(new XPClass(__CLASS__), $code);
+    return parent::valueOf(new XPClass(self::class), $code);
   }
 }

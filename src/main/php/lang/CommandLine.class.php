@@ -27,7 +27,7 @@ abstract class CommandLine extends Enum {
   public static $WINDOWS, $UNIX;
 
   static function __static() {
-    self::$WINDOWS= newinstance(__CLASS__, [0, 'WINDOWS'], '{
+    self::$WINDOWS= newinstance(self::class, [0, 'WINDOWS'], '{
       static function __static() { }
       public function parse($cmd) {
         static $triple= "\"\"\"";
@@ -79,7 +79,7 @@ abstract class CommandLine extends Enum {
         return $cmd;
       }
     }');
-    self::$UNIX= newinstance(__CLASS__, [1, 'UNIX'], '{
+    self::$UNIX= newinstance(self::class, [1, 'UNIX'], '{
       static function __static() { }
       public function parse($cmd) {
         $parts= [];
