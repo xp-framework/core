@@ -22,7 +22,7 @@ the following one-liner:
 
 ```sh
 $ cd ~/bin
-$ curl -sSL https://bintray.com/artifact/download/xp-runners/generic/setup-7.3.3.sh | sh
+$ curl -sSL https://bintray.com/artifact/download/xp-runners/generic/setup-7.4.0.sh | sh
 ```
 
 ### Using it
