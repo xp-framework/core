@@ -72,7 +72,7 @@ class TypeTest extends \unittest\TestCase {
 
   #[@test]
   public function objectTypeLiteral() {
-    $this->assertEquals(XPClass::forName('lang.Object'), Type::forName('lang\\Object'));
+    $this->assertEquals(XPClass::forName('lang.Object'), Type::forName(Object::class));
   }
 
   #[@test]

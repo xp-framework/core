@@ -493,7 +493,7 @@ class XPClass extends Type {
    */
   public function isEnum() {
     return
-      (class_exists('lang\Enum', false) && $this->reflect()->isSubclassOf('lang\Enum')) ||
+      (class_exists(Enum::class, false) && $this->reflect()->isSubclassOf(Enum::class)) ||
       (class_exists('HH\BuiltinEnum', false) && $this->reflect()->isSubclassOf('HH\BuiltinEnum'))
     ;
   }
@@ -809,7 +809,7 @@ class XPClass extends Type {
     }
     if (!isset($details['class'][DETAIL_GENERIC][1])) {
       $details['class'][DETAIL_GENERIC][1]= array_map(
-        ['lang\Type', 'forName'], 
+        [Type::class, 'forName'], 
         $details['class'][DETAIL_GENERIC][2]
       );
       unset($details['class'][DETAIL_GENERIC][2]);

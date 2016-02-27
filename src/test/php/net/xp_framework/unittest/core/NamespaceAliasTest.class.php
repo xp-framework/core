@@ -2,25 +2,27 @@
 
 use lang\Object;
 use lang\ClassLoader;
+use lang\Generic;
+use unittest\TestCase;
 
 /**
  * Tests the XP Framework's optional namespace support
  */
-class NamespaceAliasTest extends \unittest\TestCase {
+class NamespaceAliasTest extends TestCase {
 
   #[@test]
   public function lang_object_class_exists() {
-    $this->assertTrue(class_exists('lang\Object', false));
+    $this->assertTrue(class_exists(Object::class, false));
   }
 
   #[@test]
   public function lang_generic_interface_exists() {
-    $this->assertTrue(interface_exists('lang\Generic', false));
+    $this->assertTrue(interface_exists(Generic::class, false));
   }
 
   #[@test]
   public function unittest_testcase_class_exists() {
-    $this->assertTrue(class_exists('unittest\TestCase', false));
+    $this->assertTrue(class_exists(TestCase::class, false));
   }
 
   #[@test]

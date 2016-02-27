@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use lang\Object;
+
 /**
  * Tests the <xp> functions
  */
@@ -88,7 +90,7 @@ class XpTest extends \unittest\TestCase {
 
   #[@test]
   public function literal_of_object() {
-    $this->assertEquals('lang\Object', literal('lang.Object'));
+    $this->assertEquals(Object::class, literal('lang.Object'));
   }
 
   #[@test]

@@ -13,7 +13,7 @@ class ObjectTest extends \unittest\TestCase {
 
   #[@test]
   public function is_declared_with_qualified_name() {
-    $this->assertTrue(class_exists('lang\Object', false));
+    $this->assertTrue(class_exists(Object::class, false));
   }
 
   #[@test]
@@ -85,6 +85,6 @@ class ObjectTest extends \unittest\TestCase {
 
   #[@test, @expect(class= Error::class, withMessage= '/Call to undefined method .+::undefMethod\(\) from scope net\.xp_framework\.unittest\.core\.ObjectTest/')]
   public function calling_undefined_static_methods_via_call_user_func_array_raises_an_error() {
-    call_user_func_array(['lang\Object', 'undefMethod'], []);
+    call_user_func_array([Object::class, 'undefMethod'], []);
   }
 }
