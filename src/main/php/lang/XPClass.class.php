@@ -419,13 +419,12 @@ class XPClass extends Type {
   /**
    * Tests whether this class is a subclass of a specified class.
    *
-   * @param   var class either a string or an XPClass object
+   * @param   string|self $class
    * @return  bool
    */
   public function isSubclassOf($class) {
     if (!($class instanceof self)) $class= XPClass::forName($class);
-    if ($class->name == $this->name) return false;   // Catch bordercase (ZE bug?)
-    return $this->reflect()->isSubclassOf($class->reflect());
+    return $class->name === $this->name ? false : $this->reflect()->isSubclassOf($class->reflect());
   }
 
   /**
