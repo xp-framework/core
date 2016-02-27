@@ -1,8 +1,7 @@
 <?php namespace xp;
 
-if (version_compare(PHP_VERSION, '5.4.0', '<')) {
-  trigger_error('This version of the XP Framework requires PHP 5.4.0+, have PHP '.PHP_VERSION, E_USER_ERROR);
-  exit(0x3d);
+if (version_compare(PHP_VERSION, '5.6.0', '<')) {
+  throw new \Exception('This version of the XP Framework requires PHP 5.6.0+, have PHP '.PHP_VERSION);
 }
 
 $p= max(strrpos(__FILE__, DIRECTORY_SEPARATOR), strrpos(__FILE__, '?'));
