@@ -7,8 +7,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
-* Removed net.xp_framework.unittest.StartServer - unused inside core,
-  but xp-framework/networking depended on this (fixed by copying there!)
+* Removed `net.xp_framework.unittest.StartServer` - unused inside core,
+  but xp-framework/networking's test suite depended on this (fixed by
+  copying there and releasing as 7.0.1).
   (@thekid)
 
 ### Features
