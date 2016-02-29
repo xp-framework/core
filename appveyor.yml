@@ -38,6 +38,3 @@ test_script:
         if ($lastexitcode -gt 0) { $result = 1 }
       }
       $lastexitcode = $result
-
-on_finish:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
