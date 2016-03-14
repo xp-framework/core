@@ -212,6 +212,8 @@ class MockProxyBuilder extends \lang\Object {
   private function generateBaseClassMethods($baseClass) {
     $bytes= '';
 
+    $bytes.= 'static function __static() {}';
+
     $reservedMethods= \lang\XPClass::forName('lang.Generic')->getMethods();
     $reservedMethodNames= array_map(function($i) { return $i->getName(); }, $reservedMethods);
     
