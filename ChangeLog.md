@@ -1,7 +1,10 @@
 XP Framework Core ChangeLog
 ========================================================================
 
-## ?.?.? / ????-??-??
+## 6.3.7 / 2015-03-15
+
+* Cherry picked: Declare static initializer in a MockProxy
+  (@beorgler, @haimich, @kiesel)
 * Fixed VERSION-string in `src/main/resources/VERSION`
   (@kiesel)
 * Cherry picked: Fix syntax errors (in unittest/web/{SelectOption,WebTestCase})
