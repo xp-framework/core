@@ -13,7 +13,7 @@ class LogObserver extends \lang\Object implements BoundLogObserver {
    *
    * @param   util.log.LogCategory cat
    */
-  public function __construct(\LogCategory $cat) {
+  public function __construct(LogCategory $cat) {
     $this->cat= $cat;
   }
 
