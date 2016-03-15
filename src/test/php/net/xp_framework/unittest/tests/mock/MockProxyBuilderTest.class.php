@@ -32,16 +32,6 @@ class MockProxyBuilderTest extends TestCase {
     }');
     $this->iteratorClass= \lang\XPClass::forName('util.XPIterator');
     $this->observerClass= \lang\XPClass::forName('util.Observer');
-    $this->staticInitializerClass= newinstance('lang.Object', [], '{
-      private static $counter= 0;
-      static function __static() {
-        self::$counter++;
-      }
-
-      public function counter() {
-        return self::$counter;
-      }
-    }');
   }
 
   /**
@@ -176,10 +166,19 @@ class MockProxyBuilderTest extends TestCase {
 
   #[@test]
   public function static_initializer_gets_overwritten() {
-    $class= (new MockProxyBuilder())->createProxyClass(\lang\ClassLoader::getDefault(), [], $this->staticInitializerClass->getClass());
-    $obj= $class->newInstance(null);
+    $staticInited= newinstance('lang.Object', [], '{
+      private static $counter= 0;
+      static function __static() {
+        self::$counter++;
+      }
 
-    $this->assertEquals(1, $obj->counter());
+      public function counter() {
+        return self::$counter;
+      }
+    }');
+
+    $proxyClass= (new MockProxyBuilder())->createProxyClass(\lang\ClassLoader::getDefault(), [], $staticInited->getClass());
+    $this->assertEquals(1, $proxyClass->newInstance(null)->counter());
   }
 
   #[@test]
