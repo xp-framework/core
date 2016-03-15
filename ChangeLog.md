@@ -1,6 +1,8 @@
 XP Framework Core ChangeLog
 ========================================================================
 
+## ?.?.? / ????-??-??
+
 ## 6.3.7 / 2015-03-15
 
 * Cherry picked: Declare static initializer in a MockProxy
