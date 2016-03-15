@@ -165,6 +165,23 @@ class MockProxyBuilderTest extends TestCase {
   }
 
   #[@test]
+  public function static_initializer_gets_overwritten() {
+    $staticInited= newinstance('lang.Object', [], '{
+      private static $counter= 0;
+      static function __static() {
+        self::$counter++;
+      }
+
+      public function counter() {
+        return self::$counter;
+      }
+    }');
+
+    $proxyClass= (new MockProxyBuilder())->createProxyClass(\lang\ClassLoader::getDefault(), [], $staticInited->getClass());
+    $this->assertEquals(1, $proxyClass->newInstance(null)->counter());
+  }
+
+  #[@test]
   public function proxyClass_implements_IMockProxy() {
     $proxy= $this->proxyClassFor([$this->iteratorClass]);
     $interfaces= $proxy->getInterfaces();
