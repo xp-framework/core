@@ -7,6 +7,8 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Backported [AppVeyor integration](https://ci.appveyor.com/project/thekid/core/build/1.0.48)
+  (@thekid)
 * Fixed issue when expected exception's message was empty. Originally
   reported in xp-framework/core#135 by @kiesel
   (@thekid)
