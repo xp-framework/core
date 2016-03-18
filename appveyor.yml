@@ -1,0 +1,40 @@
+build: false  
+shallow_clone: true  
+
+cache:
+  - .\xp -> appveyor.yml 
+  - vendor -> composer.json
+
+init:
+  - set PATH=%PATH%;.\xp
+  - set COMPOSER_NO_INTERACTION=1
+  - set CACHED=0
+
+install:
+  - if exist .\xp (set CACHED=1) else (mkdir .\xp)
+  - if %CACHED%==0 cd .\xp
+  - if %CACHED%==0 appveyor DownloadFile http://windows.php.net/downloads/releases/archives/php-7.0.2-nts-Win32-VC14-x86.zip -FileName php.zip
+  - if %CACHED%==0 appveyor DownloadFile https://getcomposer.org/composer.phar
+  - if %CACHED%==0 appveyor DownloadFile https://bintray.com/artifact/download/xp-runners/windows/xp-runners_7.4.0.zip -FileName xp.zip
+  - if %CACHED%==0 7z x php.zip -y
+  - if %CACHED%==0 7z x xp.zip -y
+  - if %CACHED%==0 echo extension_dir=%cd%\ext >> php.ini
+  - if %CACHED%==0 echo extension=php_com_dotnet.dll >> php.ini
+  - if %CACHED%==0 echo extension=php_openssl.dll >> php.ini
+  - if %CACHED%==0 echo extension=php_bz2.dll >> php.ini
+  - if %CACHED%==0 cd ..
+  - type .\xp\php.ini
+
+test_script:
+  - php .\xp\composer.phar install --prefer-dist
+  - echo vendor/autoload.php > composer.pth
+  - ps: |
+      $files = Get-ChildItem .\src\test\config\unittest\*.ini
+      $result = 0
+      foreach ($file in $files)
+      {
+        echo $file.Name
+        xp -m . -cp test.xar xp.unittest.Runner $file.FullName
+        if ($lastexitcode -gt 0) { $result = 1 }
+      }
+      $lastexitcode = $result
