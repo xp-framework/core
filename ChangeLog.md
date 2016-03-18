@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 6.11.2 / 2016-03-18
+
+### Bugfixes
+
+* Fixed issue when expected exception's message was empty. Originally
+  reported in xp-framework/core#135 by @kiesel
+  (@thekid)
+
 ## 6.11.1 / 2016-03-15
 
 ### Bugfixes

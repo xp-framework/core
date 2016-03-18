@@ -366,6 +366,17 @@ class SuiteTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function catchExpectedWithEmptyMessage() {
+    $this->suite->addTest(newinstance('unittest.TestCase', ['fixture'], [
+      '#[@test, @expect(class= "lang.IllegalArgumentException", withMessage= "")] fixture' => function() {
+        throw new IllegalArgumentException('');
+      }
+    ]));
+    $r= $this->suite->run();
+    $this->assertEquals(1, $r->successCount());
+  }
+
+  #[@test]
   public function catchExceptionsDuringSetUpOfTestDontBringDownTestSuite() {
     $this->suite->addTest(new SetUpFailingTestCase('emptyTest'));
     $r= $this->suite->run();

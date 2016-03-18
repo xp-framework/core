@@ -245,7 +245,7 @@ class TestSuite extends \lang\Object {
     $expected= null;
     if ($method->hasAnnotation('expect', 'class')) {
       $message= $method->getAnnotation('expect', 'withMessage');
-      if ('/' === $message{0}) {
+      if ('' === $message || '/' === $message{0}) {
         $pattern= $message;
       } else {
         $pattern= '/'.preg_quote($message, '/').'/';
