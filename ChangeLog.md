@@ -95,6 +95,27 @@ XP Framework Core ChangeLog
 * Implemented xp-framework/rfc#296: Further minimize the framework - @thekid
 * Implemented xp-framework/rfc#297: Rebase - @thekid
 
+## 6.11.2 / 2016-03-18
+
+### Bugfixes
+
+* Backported [AppVeyor integration](https://ci.appveyor.com/project/thekid/core/build/1.0.48)
+  (@thekid)
+* Fixed issue when expected exception's message was empty. Originally
+  reported in xp-framework/core#135 by @kiesel
+  (@thekid)
+
+## 6.11.1 / 2016-03-15
+
+### Bugfixes
+
+* Fixed problem w/ static initializer and MockProxy
+  (@beorgler, @haimich, @kiesel)
+* Restored PHP 5.4 compatibility. *Note: PHP 5.4 is supported unofficially!*
+  Composer requirements are PHP 5.5.0 minimum.
+  See https://github.com/xp-framework/rfc/issues/298#issuecomment-131530029
+  (@thekid, @kiesel)
+
 ## 6.11.0 / 2016-02-18
 
 ### Features
