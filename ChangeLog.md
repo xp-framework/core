@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 6.11.3 / 2016-03-29
+
+### Bugfixes
+
+* Fixed malformed typehint for util.log.LogCategory
+  (@elquand, @haimich)
+
 ## 6.11.2 / 2016-03-18
 
 ### Bugfixes
