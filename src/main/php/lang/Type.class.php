@@ -194,6 +194,9 @@ class Type extends Object {
       return new TypeUnion([Primitive::$INT, Primitive::$STRING]);
     } else if (false === ($p= strpos($type, '<'))) {
       $normalized= strtr($type, '\\', '.');
+      if (substr($normalized, 0, 1) == '.') {
+        $normalized= substr($normalized, 1);
+      }
       return strstr($normalized, '.') ? XPClass::forName($normalized) : new XPClass($normalized);
     } else if (strstr($type, '?')) {
       return WildcardType::forName($type);
