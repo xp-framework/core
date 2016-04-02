@@ -251,7 +251,11 @@ function cast($arg, $type, $nullsafe= true) {
   } else if ($type instanceof \lang\Type) {
     return $type->cast($arg);
   } else {
-    return \lang\Type::forName($type)->cast($arg);
+    try {
+      return \lang\Type::forName($type)->cast($arg);
+    } catch (\lang\Throwable $t) {
+      throw new \lang\ClassCastException('Cannot cast', $t);
+    }
   }
 }
 // }}}

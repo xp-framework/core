@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+### Bugfixes
+
+* Fixed `cast()` to wrap any thrown exception from Type::forName() in a
+  lang.ClassCastException
+  (@thekid)
+
 ## 7.2.0 / 2016-02-27
 
 ### Heads up!

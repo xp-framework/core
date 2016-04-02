@@ -94,4 +94,9 @@ class CastingTest extends TestCase implements Runnable {
   public function primitive() {
     cast('primitive', Object::class);
   }
+
+  #[@test, @expect(ClassCastException::class), @values(['', null])]
+  public function empty_or_null_name($name) {
+    cast($this, $name);
+  }
 }
