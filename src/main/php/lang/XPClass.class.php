@@ -839,11 +839,8 @@ class XPClass extends Type {
     $p= strpos($name, '\\');
     if (false === $p) {     // No backslashes, using dotted form
       $resolved= strtr($name, '.', '\\');
-    } else if (0 === $p) {  // Absolute name
-      $resolved= substr($name, 1);
-      $name= strtr($resolved, '\\', '.');
     } else {                // Name literal
-      $resolved= $name;
+      $resolved= 0 === $p ? substr($name, 1) : $name;
       $name= strtr($resolved, '\\', '.');
     }
 
