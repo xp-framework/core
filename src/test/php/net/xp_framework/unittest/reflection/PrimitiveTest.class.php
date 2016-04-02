@@ -53,7 +53,7 @@ class PrimitiveTest extends TestCase {
    */
   public function instances($except) {
     $values= [
-      [$this], [null], [new \lang\Object()],
+      [$this], [null], [new \lang\Object()], [new \ReflectionClass(self::class)],
       [false], [true],
       [''], ['Hello'],
       [0], [-1],
@@ -97,7 +97,7 @@ class PrimitiveTest extends TestCase {
     $this->assertFalse(Primitive::$DOUBLE->isInstance($value));
   }
 
-  #[@test, @values([FALSE, TRUE])]
+  #[@test, @values([false, true])]
   public function isAnInstanceOfBooleanPrimitive($value) {
     $this->assertTrue(Primitive::$BOOL->isInstance($value));
   }

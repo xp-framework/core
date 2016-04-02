@@ -59,10 +59,7 @@ class Primitive extends Type {
    * @return  bool
    */
   public function isInstance($obj) {
-    return $obj === null || $obj instanceof \Generic 
-      ? false 
-      : $this === Type::forName(gettype($obj))
-    ;
+    return is_scalar($obj) && $this === Type::forName(gettype($obj));
   }
 
   /**
