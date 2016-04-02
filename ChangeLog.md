@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Merged xp-framework/core#140: Fix {Type,XPClass}::forName to support 
+  absolute type names
+  (@johannes85, @thekid)
 * Fixed `cast()` to wrap any thrown exception from Type::forName() in a
   lang.ClassCastException
   (@thekid)
