@@ -193,8 +193,7 @@ class Type extends Object {
     } else if ('HH\arraykey' === $type) {
       return new TypeUnion([Primitive::$INT, Primitive::$STRING]);
     } else if (false === ($p= strpos($type, '<'))) {
-      $normalized= strtr($type, '\\', '.');
-      return strstr($normalized, '.') ? XPClass::forName($normalized) : new XPClass($normalized);
+      return XPClass::forName($type);
     } else if (strstr($type, '?')) {
       return WildcardType::forName($type);
     } else {
@@ -203,7 +202,7 @@ class Type extends Object {
       if ('array' === $base) {
         return 1 === sizeof($components) ? new ArrayType($components[0]) : new MapType($components[1]);
       } else {
-        return cast(self::forName($base), 'lang.XPClass')->newGenericType($components);
+        return XPClass::forName($base)->newGenericType($components);
       }
     }
   }

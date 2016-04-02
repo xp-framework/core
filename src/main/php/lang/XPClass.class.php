@@ -836,13 +836,14 @@ class XPClass extends Type {
    * @throws  lang.ClassNotFoundException when there is no such class
    */
   public static function forName($name, IClassLoader $classloader= null) {
-    $qualified= strtr($name, '.', '\\');
+    $qualified= ltrim(strtr($name, '.', '\\'), '\\');
+
     if (class_exists($qualified, false) || interface_exists($qualified, false) || trait_exists($qualified, false)) {
       return new self($qualified);
     } else if (null === $classloader) {
-      return ClassLoader::getDefault()->loadClass(strtr($name, '\\', '.'));
+      return ClassLoader::getDefault()->loadClass(strtr($qualified, '\\', '.'));
     } else {
-      return $classloader->loadClass(strtr($name, '\\', '.'));
+      return $classloader->loadClass(strtr($qualified, '\\', '.'));
     }
   }
 
