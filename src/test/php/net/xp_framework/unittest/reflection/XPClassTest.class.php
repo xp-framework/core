@@ -100,7 +100,7 @@ class XPClassTest extends \unittest\TestCase {
     $this->assertFalse($this->fixture->isAssignableFrom($name));
   }
 
-  #[@test, @expect(IllegalStateException::class)]
+  #[@test, @expect(ClassNotFoundException::class)]
   public function illegal_argument_given_to_isAssignableFrom() {
     $this->fixture->isAssignableFrom('@not-a-type@');
   }
@@ -303,6 +303,11 @@ class XPClassTest extends \unittest\TestCase {
   #[@test]
   public function forName_supports_class_literals() {
     $this->assertEquals($this->fixture, XPClass::forName(TestClass::class));
+  }
+
+  #[@test]
+  public function forName_supports_absolute_class_names() {
+    $this->assertEquals($this->fixture, XPClass::forName('\\net\\xp_framework\\unittest\\reflection\\TestClass'));
   }
 
   #[@test]
