@@ -65,14 +65,9 @@ class TypeTest extends \unittest\TestCase {
     $this->assertEquals(MapType::forName('[:string]'), Type::forName('[:string]'));
   }
 
-  #[@test]
-  public function objectType() {
-    $this->assertEquals(XPClass::forName('lang.Object'), Type::forName('lang.Object'));
-  }
-
-  #[@test]
-  public function objectTypeLiteral() {
-    $this->assertEquals(XPClass::forName('lang.Object'), Type::forName(Object::class));
+  #[@test, @values(['lang.Object', Object::class])]
+  public function objectType($name) {
+    $this->assertEquals(XPClass::forName('lang.Object'), Type::forName($name));
   }
 
   #[@test]
