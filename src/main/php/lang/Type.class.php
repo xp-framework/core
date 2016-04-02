@@ -53,8 +53,8 @@ class Type extends Object {
   /**
    * Constructor
    *
-   * @param   string $name
-   * @param   var $default
+   * @param  string $name
+   * @param  var $default
    */
   protected function __construct($name, $default) {
     $this->name= $name;
@@ -64,7 +64,7 @@ class Type extends Object {
   /**
    * Retrieves the fully qualified class name for this class.
    * 
-   * @return  string name - e.g. "io.File", "rdbms.mysql.MySQL"
+   * @return string name - e.g. "io.File", "rdbms.mysql.MySQL"
    */
   public function getName() {
     return $this->name;
@@ -73,7 +73,7 @@ class Type extends Object {
   /**
    * Creates a string representation of this object
    *
-   * @return  string
+   * @return string
    */
   public function toString() {
     return nameof($this).'<'.$this->name.'>';
@@ -82,8 +82,8 @@ class Type extends Object {
   /**
    * Checks whether a given object is equal to this type
    *
-   * @param   lang.Generic cmp
-   * @return  bool
+   * @param  lang.Generic $cmp
+   * @return bool
    */
   public function equals($cmp) {
     return $cmp instanceof self && $cmp->name === $this->name;
@@ -92,7 +92,7 @@ class Type extends Object {
   /**
    * Returns a hashcode for this object
    *
-   * @return  string
+   * @return string
    */
   public function hashCode() {
     return get_class($this).':'.$this->name;
@@ -101,8 +101,8 @@ class Type extends Object {
   /**
    * Creates a type list from a given string
    *
-   * @param   string names
-   * @return  lang.Type[] list
+   * @param  string $names
+   * @return lang.Type[] list
    */
   public static function forNames($names) {
     $types= [];
@@ -131,9 +131,9 @@ class Type extends Object {
    * - Generic notations (util.collections.HashTable<lang.types.String, lang.Generic>)
    * - Anything else will be passed to XPClass::forName()
    *
-   * @param   string $type
-   * @return  lang.Type
-   * @throws  lang.IllegalStateException if type is empty
+   * @param  string $type
+   * @return lang.Type
+   * @throws lang.IllegalStateException if type is empty
    */
   public static function forName($type) {
     static $primitives= [
@@ -210,28 +210,26 @@ class Type extends Object {
   /**
    * Returns type literal
    *
-   * @return  string
+   * @return string
    */
-  public function literal() {
-    return $this->name;
-  }
+  public function literal() { return $this->name; }
 
   /**
    * Determines whether the specified object is an instance of this
    * type. 
    *
-   * @param   var obj
-   * @return  bool
+   * @param  var $value
+   * @return bool
    */
-  public function isInstance($obj) {
+  public function isInstance($value) {
     return self::$VAR === $this;      // VAR is always true, VOID never
   }
 
   /**
    * Returns a new instance of this object
    *
-   * @param   var value
-   * @return  var
+   * @param  var $value
+   * @return var
    */
   public function newInstance($value= null) {
     if (self::$VAR === $this) return $value;
@@ -241,9 +239,9 @@ class Type extends Object {
   /**
    * Cast a value to this type
    *
-   * @param   var value
-   * @return  var
-   * @throws  lang.ClassCastException
+   * @param  var $value
+   * @return var
+   * @throws lang.ClassCastException
    */
   public function cast($value) {
     if (self::$VAR === $this) return $value;
@@ -253,8 +251,8 @@ class Type extends Object {
   /**
    * Tests whether this type is assignable from another type
    *
-   * @param   var type
-   * @return  bool
+   * @param  var $type
+   * @return bool
    */
   public function isAssignableFrom($type) {
     return self::$VAR === $this && self::$VOID !== $type;
@@ -263,9 +261,7 @@ class Type extends Object {
   /**
    * Creates a string representation of this object
    *
-   * @return  string
+   * @return string
    */
-  public function __toString() {
-    return $this->name;
-  }
+  public function __toString() { return $this->name; }
 }
