@@ -192,7 +192,7 @@ class Routine extends \lang\Object {
 
     $thrown= [];
     foreach ($details[DETAIL_THROWS] as $name) {
-      $thrown[]= '\\' === $name{0} ? new \lang\XPClass(substr($name, 1)) : \lang\XPClass::forName($name);
+      $thrown[]= \lang\XPClass::forName($name);
     }
     return $thrown;
   }
