@@ -199,9 +199,9 @@ class Type extends Object {
       return WildcardType::forName($type);
     } else {
       $base= substr($type, 0, $p);
-      $components= self::forNames(substr($type, $p+ 1, -1));
+      $components= self::forNames(substr($type, $p + 1, -1));
       if ('array' === $base) {
-        return 1 === sizeof($components)? new ArrayType($components[0]) : new MapType($components[1]);
+        return 1 === sizeof($components) ? new ArrayType($components[0]) : new MapType($components[1]);
       } else {
         return cast(self::forName($base), 'lang.XPClass')->newGenericType($components);
       }
