@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 7.2.1 / 2016-04-03
+
 ### Bugfixes
 
 * Merged xp-framework/core#140: Fix {Type,XPClass}::forName to support 
