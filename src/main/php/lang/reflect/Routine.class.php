@@ -1,6 +1,8 @@
 <?php namespace lang\reflect;
 
 use lang\ElementNotFoundException;
+use lang\XPClass;
+use lang\Type;
 
 /**
  * Base class for methods and constructors. Note that the methods provided
@@ -17,12 +19,9 @@ use lang\ElementNotFoundException;
  * @see   http://de3.php.net/manual/en/reflectionmethod.setaccessible.php
  */
 class Routine extends \lang\Object {
-  protected
-    $accessible = false,
-    $_class     = null;
-
-  public 
-    $_reflect   = null;
+  protected $accessible= false;
+  protected $_class= null;
+  public $_reflect= null;
 
   /**
    * Constructor
@@ -126,28 +125,28 @@ class Routine extends \lang\Object {
    */
   public function getReturnType() {
     if (
-      ($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))
+      ($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))
       && isset($details[DETAIL_RETURNS])
     ) {
       $t= ltrim($details[DETAIL_RETURNS], '&');
       if ('self' === $t) {
-        return new \lang\XPClass($this->_reflect->getDeclaringClass());
+        return new XPClass($this->_reflect->getDeclaringClass());
       } else {
-        return \lang\Type::forName($t);
+        return Type::forName($t);
       }
     } else if (defined('HHVM_VERSION')) {
       $t= $this->_reflect->getReturnTypeText() ?: 'var';
       if ('self' === $t) {
-        return new \lang\XPClass($this->_reflect->getDeclaringClass());
+        return new XPClass($this->_reflect->getDeclaringClass());
       } else if ('HH\\this' === $t) {
-        return new \lang\XPClass($this->_class);
+        return new XPClass($this->_class);
       } else {
-        return \lang\Type::forName($t);
+        return Type::forName($t);
       }
-    } else if (\lang\XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getReturnType())) {
-      return \lang\Type::forName((string)$t);
+    } else if (XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getReturnType())) {
+      return Type::forName((string)$t);
     } else {
-      return \lang\Type::$VAR;
+      return Type::$VAR;
     }
   }
 
@@ -158,11 +157,11 @@ class Routine extends \lang\Object {
    */
   public function getReturnTypeName() {
     if (
-      ($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))
+      ($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))
       && isset($details[DETAIL_RETURNS])
     ) {
       return ltrim($details[DETAIL_RETURNS], '&');
-    } else if (\lang\XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getReturnType())) {
+    } else if (XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getReturnType())) {
       return str_replace('HH\\', '', $t);
     } else if (defined('HHVM_VERSION')) {
       return str_replace('HH\\', '', $this->_reflect->getReturnTypeText() ?: 'var');
@@ -177,7 +176,7 @@ class Routine extends \lang\Object {
    * @return  string[]
    */
   public function getExceptionNames() {
-    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     return $details ? $details[DETAIL_THROWS] : [];
   }
 
@@ -187,12 +186,12 @@ class Routine extends \lang\Object {
    * @return  lang.XPClass[]
    */
   public function getExceptionTypes() {
-    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     if (!$details) return [];
 
     $thrown= [];
     foreach ($details[DETAIL_THROWS] as $name) {
-      $thrown[]= \lang\XPClass::forName($name);
+      $thrown[]= XPClass::forName($name);
     }
     return $thrown;
   }
@@ -204,7 +203,7 @@ class Routine extends \lang\Object {
    * @return  lang.XPClass
    */
   public function getDeclaringClass() {
-    return new \lang\XPClass($this->_reflect->getDeclaringClass());
+    return new XPClass($this->_reflect->getDeclaringClass());
   }
   
   /**
@@ -214,7 +213,7 @@ class Routine extends \lang\Object {
    * @return  string
    */
   public function getComment() {
-    if (!($details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))) return null;
+    if (!($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))) return null;
     return $details[DETAIL_COMMENT];
   }
   
@@ -226,7 +225,7 @@ class Routine extends \lang\Object {
    * @return  bool
    */
   public function hasAnnotation($name, $key= null) {
-    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
 
     return $details && ($key 
       ? array_key_exists($key, (array)@$details[DETAIL_ANNOTATIONS][$name]) 
@@ -243,7 +242,7 @@ class Routine extends \lang\Object {
    * @throws  lang.ElementNotFoundException
    */
   public function getAnnotation($name, $key= null) {
-    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     if (!$details || !($key 
       ? array_key_exists($key, @$details[DETAIL_ANNOTATIONS][$name]) 
       : array_key_exists($name, @$details[DETAIL_ANNOTATIONS])
@@ -263,7 +262,7 @@ class Routine extends \lang\Object {
    * @return  bool
    */
   public function hasAnnotations() {
-    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     return $details ? !empty($details[DETAIL_ANNOTATIONS]) : false;
   }
 
@@ -273,7 +272,7 @@ class Routine extends \lang\Object {
    * @return  array annotations
    */
   public function getAnnotations() {
-    $details= \lang\XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     return $details ? $details[DETAIL_ANNOTATIONS] : [];
   }
   
