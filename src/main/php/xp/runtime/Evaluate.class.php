@@ -1,6 +1,5 @@
 <?php namespace xp\runtime;
 
-use util\cmd\Console;
 use lang\XPClass;
 
 /**
@@ -11,13 +10,13 @@ class Evaluate {
   /**
    * Main
    *
-   * @param   string[] args
+   * @param  string[] $args
+   * @return int
    */
   public static function main(array $args) {
-    $argc= sizeof($args);
 
     // Read sourcecode from STDIN if no further argument is given
-    if (0 === $argc) {
+    if (empty($args)) {
       $code= new Code(file_get_contents('php://stdin'));
     } else if ('--' === $args[0]) {
       $code= new Code(file_get_contents('php://stdin'));
