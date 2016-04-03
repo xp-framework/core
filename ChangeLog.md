@@ -104,6 +104,13 @@ XP Framework Core ChangeLog
 * Implemented xp-framework/rfc#296: Further minimize the framework - @thekid
 * Implemented xp-framework/rfc#297: Rebase - @thekid
 
+## 6.11.3 / 2016-03-29
+
+### Bugfixes
+
+* Fixed malformed typehint for util.log.LogCategory
+  (@elquand, @haimich)
+
 ## 6.11.2 / 2016-03-18
 
 ### Bugfixes
