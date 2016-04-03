@@ -26,8 +26,8 @@ class Routine extends \lang\Object {
   /**
    * Constructor
    *
-   * @param   string class
-   * @param   php.ReflectionMethod reflect
+   * @param  string $class
+   * @param  php.ReflectionMethod $reflect
    */    
   public function __construct($class, $reflect) {
     $this->_class= $class;
@@ -37,7 +37,7 @@ class Routine extends \lang\Object {
   /**
    * Get routine's name.
    *
-   * @return  string
+   * @return string
    */
   public function getName() {
     return $this->_reflect->getName();
@@ -46,8 +46,8 @@ class Routine extends \lang\Object {
   /**
    * Retrieve this method's modifiers
    *
-   * @see     xp://lang.reflect.Modifiers
-   * @return  int
+   * @see    xp://lang.reflect.Modifiers
+   * @return int
    */    
   public function getModifiers() {
   
@@ -83,7 +83,7 @@ class Routine extends \lang\Object {
   /**
    * Returns this method's parameters
    *
-   * @return  lang.reflect.Parameter[]
+   * @return lang.reflect.Parameter[]
    */
   public function getParameters() {
     $r= [];
@@ -97,8 +97,8 @@ class Routine extends \lang\Object {
   /**
    * Retrieve one of this method's parameters by its offset
    *
-   * @param   int offset
-   * @return  lang.reflect.Parameter or NULL if it does not exist
+   * @param  int $offset
+   * @return lang.reflect.Parameter or NULL if it does not exist
    */
   public function getParameter($offset) {
     $list= $this->_reflect->getParameters();
@@ -112,7 +112,7 @@ class Routine extends \lang\Object {
    * Retrieve how many parameters this method declares (including optional 
    * ones)
    *
-   * @return  int
+   * @return int
    */
   public function numParameters() {
     return $this->_reflect->getNumberOfParameters();
@@ -121,7 +121,7 @@ class Routine extends \lang\Object {
   /**
    * Retrieve return type
    *
-   * @return  lang.Type
+   * @return lang.Type
    */
   public function getReturnType() {
     if (
@@ -153,7 +153,7 @@ class Routine extends \lang\Object {
   /**
    * Retrieve return type name
    *
-   * @return  string
+   * @return string
    */
   public function getReturnTypeName() {
     if (
@@ -173,7 +173,7 @@ class Routine extends \lang\Object {
   /**
    * Retrieve exception names
    *
-   * @return  string[]
+   * @return string[]
    */
   public function getExceptionNames() {
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
@@ -183,7 +183,7 @@ class Routine extends \lang\Object {
   /**
    * Retrieve exception types
    *
-   * @return  lang.XPClass[]
+   * @return lang.XPClass[]
    */
   public function getExceptionTypes() {
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
@@ -200,7 +200,7 @@ class Routine extends \lang\Object {
    * Returns the XPClass object representing the class or interface 
    * that declares the method represented by this Method object.
    *
-   * @return  lang.XPClass
+   * @return lang.XPClass
    */
   public function getDeclaringClass() {
     return new XPClass($this->_reflect->getDeclaringClass());
@@ -210,7 +210,7 @@ class Routine extends \lang\Object {
    * Retrieves the api doc comment for this method. Returns NULL if
    * no documentation is present.
    *
-   * @return  string
+   * @return string
    */
   public function getComment() {
     if (!($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))) return null;
@@ -220,9 +220,9 @@ class Routine extends \lang\Object {
   /**
    * Check whether an annotation exists
    *
-   * @param   string name
-   * @param   string key default NULL
-   * @return  bool
+   * @param  string $name
+   * @param  string $key default NULL
+   * @return bool
    */
   public function hasAnnotation($name, $key= null) {
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
@@ -236,10 +236,10 @@ class Routine extends \lang\Object {
   /**
    * Retrieve annotation by name
    *
-   * @param   string name
-   * @param   string key default NULL
-   * @return  var
-   * @throws  lang.ElementNotFoundException
+   * @param  string $name
+   * @param  string $key default NULL
+   * @return var
+   * @throws lang.ElementNotFoundException
    */
   public function getAnnotation($name, $key= null) {
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
@@ -259,7 +259,7 @@ class Routine extends \lang\Object {
   /**
    * Retrieve whether a method has annotations
    *
-   * @return  bool
+   * @return bool
    */
   public function hasAnnotations() {
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
@@ -269,7 +269,7 @@ class Routine extends \lang\Object {
   /**
    * Retrieve all of a method's annotations
    *
-   * @return  array annotations
+   * @return [:var] annotations
    */
   public function getAnnotations() {
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
@@ -280,8 +280,8 @@ class Routine extends \lang\Object {
    * Sets whether this routine should be accessible from anywhere, 
    * regardless of its visibility level.
    *
-   * @param   bool flag
-   * @return  lang.reflect.Routine this
+   * @param  bool $flag
+   * @return self this
    */
   public function setAccessible($flag) {
     $this->accessible= $flag;
@@ -291,8 +291,8 @@ class Routine extends \lang\Object {
   /**
    * Returns whether an object is equal to this routine
    *
-   * @param   lang.Generic cmp
-   * @return  bool
+   * @param  var $cmp
+   * @return bool
    */
   public function equals($cmp) {
     return (
@@ -305,7 +305,7 @@ class Routine extends \lang\Object {
   /**
    * Returns a hashcode for this routine
    *
-   * @return  string
+   * @return string
    */
   public function hashCode() {
     return 'R['.$this->_reflect->getDeclaringClass().$this->_reflect->getName();
@@ -320,7 +320,7 @@ class Routine extends \lang\Object {
    *   public open(string $mode) throws io.FileNotFoundException, io.IOException
    * </pre>
    *
-   * @return  string
+   * @return string
    */
   public function toString() {
     $signature= '';
