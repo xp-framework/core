@@ -91,23 +91,24 @@ class ClassParser {
    * @return var
    */
   protected function valueOf($tokens, &$i, $context, $imports) {
-    if ('-' ===  $tokens[$i][0]) {
+    $token= $tokens[$i][0];
+    if ('-' === $token) {
       $i++;
       return -1 * $this->valueOf($tokens, $i, $context, $imports);
-    } else if ('+' === $tokens[$i][0]) {
+    } else if ('+' === $token) {
       $i++;
       return +1 * $this->valueOf($tokens, $i, $context, $imports);
-    } else if (T_CONSTANT_ENCAPSED_STRING === $tokens[$i][0]) {
+    } else if (T_CONSTANT_ENCAPSED_STRING === $token) {
       return eval('return '.$tokens[$i][1].';');
     } else if (T_LNUMBER === $tokens[$i][0]) {
       return (int)$tokens[$i][1];
     } else if (T_DNUMBER === $tokens[$i][0]) {
       return (double)$tokens[$i][1];
-    } else if ('[' === $tokens[$i] || T_ARRAY === $tokens[$i][0]) {
+    } else if ('[' === $token || T_ARRAY === $token) {
       $value= [];
       $element= null;
       $key= 0;
-      $end= '[' === $tokens[$i] ? ']' : ')';
+      $end= '[' === $token ? ']' : ')';
       for ($i++, $s= sizeof($tokens); ; $i++) {
         if ($i >= $s) {
           throw new IllegalStateException('Parse error: Unterminated array');
@@ -132,15 +133,15 @@ class ClassParser {
         }
       }
       return $value;
-    } else if ('"' === $tokens[$i] || T_ENCAPSED_AND_WHITESPACE === $tokens[$i][0]) {
+    } else if ('"' === $token || T_ENCAPSED_AND_WHITESPACE === $token) {
       throw new IllegalStateException('Parse error: Unterminated string');
-    } else if (T_NS_SEPARATOR === $tokens[$i][0]) {
+    } else if (T_NS_SEPARATOR === $token) {
       $type= '';
       while (T_NS_SEPARATOR === $tokens[$i++][0]) {
         $type.= '.'.$tokens[$i++][1];
       }
       return $this->memberOf(XPClass::forName(substr($type, 1)), $tokens[$i], $context);
-    } else if (T_STRING === $tokens[$i][0]) {     // constant vs. class::constant
+    } else if (T_STRING === $token) {     // constant vs. class::constant
       if (T_DOUBLE_COLON === $tokens[$i + 1][0]) {
         $i+= 2;
         return $this->memberOf($this->resolve($tokens[$i - 2][1], $context, $imports), $tokens[$i], $context);
@@ -149,7 +150,7 @@ class ClassParser {
       } else {
         throw new ElementNotFoundException('Undefined constant "'.$tokens[$i][1].'"');
       }
-    } else if (T_NEW === $tokens[$i][0]) {
+    } else if (T_NEW === $token) {
       $type= '';
       while ('(' !== $tokens[$i++]) {
         if (T_STRING === $tokens[$i][0]) $type.= '.'.$tokens[$i][1];
@@ -167,7 +168,7 @@ class ClassParser {
         }
       }
       return $class->newInstance(...$args);
-    } else if (T_FUNCTION === $tokens[$i][0]) {
+    } else if (T_FUNCTION === $token) {
       $b= 0;
       $code= 'function';
       for ($i++, $s= sizeof($tokens); $i < $s; $i++) {
@@ -201,7 +202,7 @@ class ClassParser {
     } else {
       throw new IllegalStateException(sprintf(
         'Parse error: Unexpected %s',
-        is_array($tokens[$i]) ? token_name($tokens[$i][0]) : '"'.$tokens[$i].'"'
+        is_array($tokens[$i]) ? token_name($token) : '"'.$tokens[$i].'"'
       ));
     }
   }
