@@ -17,9 +17,9 @@ class ClassNotFoundException extends XPException implements ClassLoadingExceptio
   /**
    * Constructor
    *
-   * @param   string failedClass
-   * @param   lang.IClassLoader[] loaders default []
-   * @param   lang.Throwable cause default NULL
+   * @param  string $failedClass
+   * @param  lang.IClassLoader[] $loaders default []
+   * @param  lang.Throwable $cause default NULL
    */
   public function __construct($failedClass, $loaders= [], $cause= null) {
     parent::__construct(sprintf($this->message(), $failedClass).($cause ? ': '.$cause->getMessage() : ''), $cause);
@@ -30,30 +30,24 @@ class ClassNotFoundException extends XPException implements ClassLoadingExceptio
   /**
    * Returns the classloaders that were asked
    *
-   * @return  lang.IClassLoader[]
+   * @return lang.IClassLoader[]
    */
-  public function getLoaders() {
-    return $this->loaders;
-  }
+  public function getLoaders() { return $this->loaders; }
 
   /**
    * Returns the exception's message - override this in
    * subclasses to provide exact error hints.
    *
-   * @return  string
+   * @return string
    */
-  protected function message() {
-    return 'Class "%s" could not be found';
-  }
+  protected function message() { return 'Class "%s" could not be found'; }
 
   /**
    * Retrieve name of class which could not be loaded
    *
-   * @return  string
+   * @return string
    */
-  public function getFailedClassName() {
-    return $this->failedClass;
-  }
+  public function getFailedClassName() { return $this->failedClass; }
 
   /**
    * Retrieve compound representation
@@ -62,7 +56,7 @@ class ClassNotFoundException extends XPException implements ClassLoadingExceptio
    */
   public function compoundMessage() {
     return
-      'Exception '.nameof($this).' ('.$this->message.") {\n  ".
+      'Exception '.nameof($this).' ('.$this->message.") {\n    ".
       implode("\n    ", array_map(['xp', 'stringOf'], $this->loaders))."\n  }"
     ;
   }
