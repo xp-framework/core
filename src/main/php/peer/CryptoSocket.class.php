@@ -13,9 +13,11 @@ class CryptoSocket extends Socket {
   /**
    * Connect, then enable crypto
    * 
-   * @param   float  $timeout
+   * @param   float $timeout
    * @return  bool
-   * @throws  peer.SocketException
+   * @throws  peer.SSLUnverifiedPeerException if peer verification fails
+   * @throws  peer.SSLHandshakeException if handshake fails for any other reasons
+   * @throws  peer.ConnectException for all other reasons
    */
   public function connect($timeout= 2.0) {
     if ($this->isConnected()) return true;
