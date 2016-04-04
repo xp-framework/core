@@ -16,6 +16,6 @@ class TLSSocket extends CryptoSocket {
    */
   public function __construct($host, $port, $socket= null) {
     parent::__construct($host, $port, $socket);
-    $this->_prefix= 'tls://';
+    $this->cryptoImpl= STREAM_CRYPTO_METHOD_TLS_CLIENT;
   }
 }
