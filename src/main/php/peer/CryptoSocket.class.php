@@ -8,6 +8,42 @@ use security\cert\X509Certificate;
  */
 class CryptoSocket extends Socket {
   const CTX_WRP = 'ssl';      // stream context option key
+  protected $crpytoImpl= null;
+
+  /**
+   * Connect, then enable crypto
+   * 
+   * @param   float $timeout
+   * @return  bool
+   * @throws  peer.SSLUnverifiedPeerException if peer verification fails
+   * @throws  peer.SSLHandshakeException if handshake fails for any other reasons
+   * @throws  peer.ConnectException for all other reasons
+   */
+  public function connect($timeout= 2.0) {
+    if ($this->isConnected()) return true;
+
+    parent::connect($timeout);
+
+    if (stream_socket_enable_crypto($this->_sock, true, $this->cryptoImpl)) {
+      return true;
+    }
+
+    // Parse OpenSSL errors:
+    if (preg_match('/error:(\d+):(.+)/', key(end(\xp::$errors[__FILE__])), $matches)) {
+      switch ($matches[1]) {
+        case '14090086':
+          $e= new SSLUnverifiedPeerException($matches[2]); break;
+
+        default:
+          $e= new SSLHandshakeException($matches[2]); break;
+      }
+    } else {
+      $e= new SSLHandshakeException('Unable to enable crypto.');
+    }
+
+    $this->close();
+    throw $e;
+  }
 
   /**
    * Set verify peer
