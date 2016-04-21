@@ -7,6 +7,8 @@ use util\Objects;
  */
 #[@generic(self= 'K, V', parent= 'K, V')]
 class Lookup extends AbstractDictionary {
+
+  #[@generic(var= '[:V]')]
   protected $elements= [];
   
   /**

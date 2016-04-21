@@ -165,6 +165,12 @@ class GenericTypes {
             $m= $tokens[$i+ 2][1];
             $p= 0;
             $annotations= [$meta[1][$m][DETAIL_ANNOTATIONS], $meta[1][$m][DETAIL_TARGET_ANNO]];
+          } else if (T_VARIABLE === $tokens[$i][0]) {
+            $f= substr($tokens[$i][1], 1);
+            $annotations= $meta[0][$f][DETAIL_ANNOTATIONS];
+            if (isset($annotations['generic']['var'])) {
+              $meta[0][$f][DETAIL_RETURNS]= strtr($annotations['generic']['var'], $placeholders);
+            }
           } else if ('}' === $tokens[$i][0]) {
             $src.= '}';
             break;
