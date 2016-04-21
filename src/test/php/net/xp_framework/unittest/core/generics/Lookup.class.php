@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
+use util\Objects;
+
 /**
  * Lookup map
  */
@@ -15,8 +17,7 @@ class Lookup extends AbstractDictionary {
    */
   #[@generic(params= 'K, V')]
   public function put($key, $value) {
-    $offset= $key instanceof \lang\Generic ? $key->hashCode() : serialize($key);
-    $this->elements[$offset]= $value;
+    $this->elements[Objects::hashOf($key)]= $value;
   } 
 
   /**
@@ -28,7 +29,7 @@ class Lookup extends AbstractDictionary {
    */
   #[@generic(params= 'K', return= 'V')]
   public function get($key) {
-    $offset= $key instanceof \lang\Generic ? $key->hashCode() : serialize($key);
+    $offset= Objects::hashOf($key);
     if (!isset($this->elements[$offset])) {
       throw new \util\NoSuchElementException('No such key '.\xp::stringOf($key));
     }
