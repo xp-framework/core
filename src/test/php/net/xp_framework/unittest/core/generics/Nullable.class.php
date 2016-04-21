@@ -1,11 +1,13 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
+use lang\Object;
+
 /**
  * Nullable value
  *
  */
 #[@generic(self= 'T')]
-class Nullable extends \lang\Object {
+class Nullable extends Object {
   protected $value;
 
   /**
