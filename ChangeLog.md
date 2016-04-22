@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ## 6.11.4 / 2016-04-22
 
+### Features
+
 * Merged xp-framework/core#141: Backported separation of connecting and
   enabling crypto for SSL sockets.
   (@kiesel, @thekid)
