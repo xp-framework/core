@@ -106,6 +106,14 @@ XP Framework Core ChangeLog
 * Implemented xp-framework/rfc#296: Further minimize the framework - @thekid
 * Implemented xp-framework/rfc#297: Rebase - @thekid
 
+## 6.11.4 / 2016-04-22
+
+### Features
+
+* Merged xp-framework/core#141: Backported separation of connecting and
+  enabling crypto for SSL sockets.
+  (@kiesel, @thekid)
+
 ## 6.11.3 / 2016-03-29
 
 ### Bugfixes
