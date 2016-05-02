@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+### Features
+
+* Merged xp-framework/core#145: Generic fields - @thekid
+
 ## 7.2.1 / 2016-04-03
 
 ### Bugfixes
