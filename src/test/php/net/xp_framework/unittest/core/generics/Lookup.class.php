@@ -7,6 +7,9 @@ use util\Objects;
  */
 #[@generic(self= 'K, V', parent= 'K, V')]
 class Lookup extends AbstractDictionary {
+  protected $size;
+
+  #[@generic(var= '[:V]')]
   protected $elements= [];
   
   /**
@@ -18,6 +21,7 @@ class Lookup extends AbstractDictionary {
   #[@generic(params= 'K, V')]
   public function put($key, $value) {
     $this->elements[Objects::hashOf($key)]= $value;
+    $this->size= sizeof($this->elements);
   } 
 
   /**
@@ -45,4 +49,7 @@ class Lookup extends AbstractDictionary {
   public function values() {
     return array_values($this->elements);
   }
+
+  /** @return int */
+  public function size() { return $this->size; }
 }

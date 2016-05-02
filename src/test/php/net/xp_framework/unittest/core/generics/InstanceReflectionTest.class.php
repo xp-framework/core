@@ -79,11 +79,11 @@ class InstanceReflectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @ignore('No longer existant in new implementation')]
-  public function delegateFieldType() {
+  #[@test]
+  public function elementFieldType() {
     $this->assertEquals(
-      'net.xp_framework.unittest.core.generics.Lookup',
-      $this->fixture->getClass()->getField('delegate')->getType()
+      '[:unittest.TestCase]',
+      $this->fixture->getClass()->getField('elements')->getTypeName()
     );
   }
 
