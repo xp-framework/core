@@ -68,7 +68,9 @@ class TypeUnionTest extends \unittest\TestCase {
 
   #[@test, @values([
   #  'string|int',
-  #  'string | int'
+  #  'string | int',
+  #  '(string|int)',
+  #  '(string | int)'
   #])]
   public function forName_from_Type_class($literal) {
     $this->assertEquals(
