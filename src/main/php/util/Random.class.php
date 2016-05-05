@@ -46,7 +46,7 @@ class Random {
       self::$sources[self::SECURE]= &self::$sources[key(self::$sources)];
     }
 
-    if (is_readable('/dev/urandom')) {
+    if (strncasecmp(PHP_OS, 'Win', 3) !== 0 && is_readable('/dev/urandom')) {
       self::$sources[self::URANDOM]= ['bytes' => [__CLASS__, self::URANDOM], 'ints' => null];
     }
 
@@ -104,8 +104,16 @@ class Random {
    *
    * @param  int $limit
    * @return string $bytes
+   * @throws io.IOException if there is a problem accessing the urandom character device
    */
   private static function urandom($limit) {
+
+    // See http://man7.org/linux/man-pages/man2/stat.2.html
+    $stat= stat('/dev/urandom');
+    if (($stat['mode'] & 0170000) !== 020000) {
+      throw new IOException('Not a character device: /dev/urandom');
+    }
+
     if (!($f= fopen('/dev/urandom', 'r'))) {
       $e= new IOException('Cannot access /dev/urandom');
       \xp::gc(__FILE__);
