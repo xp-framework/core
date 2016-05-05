@@ -130,12 +130,16 @@ class RandomTest extends \unittest\TestCase {
     (new Random())->int($min, 10);
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[@test, @expect(IllegalArgumentException::class), @action(new VerifyThat(function() {
+  #  return 0x7FFFFFFF === PHP_INT_MAX;
+  #}))]
   public function max_cannot_be_larger_than_int_max() {
     (new Random())->int(0, PHP_INT_MAX + 1);
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[@test, @expect(IllegalArgumentException::class), @action(new VerifyThat(function() {
+  #  return 0x7FFFFFFF === PHP_INT_MAX;
+  #}))]
   public function min_cannot_be_smaller_than_int_min() {
     (new Random())->int(PHP_INT_MIN - 1, 0);
   }
