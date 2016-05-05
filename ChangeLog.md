@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged xp-framework/core#146: Create util.Random class: A random number
+  generator with a preference for secure pseudo-random sources
+  (@thekid)
 * Merged xp-framework/core#145: Generic fields - @thekid
 
 ## 7.2.1 / 2016-04-03
