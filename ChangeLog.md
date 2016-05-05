@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 7.3.0 / 2016-05-05
+
 ### Features
 
 * Merged xp-framework/core#146: Create util.Random class: A random number
