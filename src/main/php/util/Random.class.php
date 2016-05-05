@@ -107,17 +107,17 @@ class Random {
    * @throws io.IOException if there is a problem accessing the urandom character device
    */
   private static function urandom($limit) {
-
-    // See http://man7.org/linux/man-pages/man2/stat.2.html
-    $stat= stat('/dev/urandom');
-    if (($stat['mode'] & 0170000) !== 020000) {
-      throw new IOException('Not a character device: /dev/urandom');
-    }
-
     if (!($f= fopen('/dev/urandom', 'r'))) {
       $e= new IOException('Cannot access /dev/urandom');
       \xp::gc(__FILE__);
       throw $e;
+    }
+
+    // See http://man7.org/linux/man-pages/man2/stat.2.html
+    $stat= fstat($f);
+    if (($stat['mode'] & 0170000) !== 020000) {
+      fclose($f);
+      throw new IOException('Not a character device: /dev/urandom');
     }
 
     // HHVM does not have stream_set_read_buffer()!
