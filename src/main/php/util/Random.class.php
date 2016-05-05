@@ -17,7 +17,7 @@ use lang\IllegalArgumentException;
  * @test  xp://net.xp_framework.unittest.util.RandomTest
  */
 class Random {
-  const DEFAULT = null;
+  const BEST    = null;
   const OPENSSL = 'openssl';
   const MCRYPT  = 'mcrypt';
   const URANDOM = 'urandom';
@@ -43,15 +43,15 @@ class Random {
   /**
    * Creates a new random
    *
-   * @param  string $source Optionally select source: DEFAULT, OPENSSL, MCRYPT, URANDOM, MTRAND
+   * @param  string $source Optionally select source: BEST, OPENSSL, MCRYPT, URANDOM, MTRAND
    */
-  public function __construct($source= self::DEFAULT) {
-    if ($source) {
-      $this->bytes= [__CLASS__, $source];
-      $this->ints= [$this, 'random'];
-    } else {
+  public function __construct($source= self::BEST) {
+    if (self::BEST === $source) {
       $this->bytes= self::$default['bytes'];
       $this->ints= self::$default['ints'] ?: [$this, 'random'];
+    } else {
+      $this->bytes= [__CLASS__, $source];
+      $this->ints= [$this, 'random'];
     }
   }
 

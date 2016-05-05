@@ -19,7 +19,7 @@ class RandomTest extends \unittest\TestCase {
 
   #[@test]
   public function default_bytes() {
-    $this->assertEquals(20, (new Random(Random::DEFAULT))->bytes(20)->size());
+    $this->assertEquals(20, (new Random(Random::BEST))->bytes(20)->size());
   }
 
   #[@test, @action(new ExtensionAvailable('openssl'))]
