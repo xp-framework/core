@@ -34,16 +34,22 @@ class Random {
     if (function_exists('random_bytes')) {
       self::$sources[self::SYSTEM]= ['bytes' => 'random_bytes', 'ints' => 'random_int'];
     }
-    if (function_exists('openssl_random_pseudo_bytes')) {
-      self::$sources[self::OPENSSL]= ['bytes' => [__CLASS__, self::OPENSSL], 'ints' => null];
-    }
     if (function_exists('mcrypt_create_iv')) {
       self::$sources[self::MCRYPT]= ['bytes' => [__CLASS__, self::MCRYPT], 'ints' => null];
     }
 
-    // All of the above are secure pseudo-random sources
+    // Both of these above are secure pseudo-random sources
     if (!empty(self::$sources)) {
       self::$sources[self::SECURE]= &self::$sources[key(self::$sources)];
+    }
+
+    // Regard openssl functionality insecure in PHP version affected by CVE-2015-8867
+    // This was fixed in PHP 5.6.12; see also https://bugs.php.net/70014
+    if (function_exists('openssl_random_pseudo_bytes')) {
+      self::$sources[self::OPENSSL]= ['bytes' => [__CLASS__, self::OPENSSL], 'ints' => null];
+      if (!isset(self::$sources[self::SECURE]) && version_compare(PHP_VERSION, '5.6.12', 'ge')) {
+        self::$sources[self::SECURE]= &self::$sources[self::OPENSSL];
+      }
     }
 
     if (strncasecmp(PHP_OS, 'Win', 3) !== 0 && is_readable('/dev/urandom')) {
