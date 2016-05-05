@@ -23,6 +23,12 @@ class SSLSocket extends CryptoSocket {
    */
   public function __construct($host, $port, $socket= null, $version= null) {
     parent::__construct($host, $port, $socket);
-    $this->_prefix= 'ssl'.($version ? 'v'.$version : '').'://';
+    switch ($version) {
+      case 2: $this->cryptoImpl= STREAM_CRYPTO_METHOD_SSLv2_CLIENT; break;
+      case 3: $this->cryptoImpl= STREAM_CRYPTO_METHOD_SSLv3_CLIENT; break;
+
+      default:
+        $this->cryptoImpl= STREAM_CRYPTO_METHOD_SSLv23_CLIENT; break;
+    }
   }
 }
