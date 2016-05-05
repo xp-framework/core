@@ -188,6 +188,9 @@ class Random {
     if ($min >= $max) {
       throw new IllegalArgumentException('Minimum value must be lower than max');
     }
+    if ($min < PHP_INT_MIN || $max > PHP_INT_MAX) {
+      throw new IllegalArgumentException('Boundaries ['.$min.'..'.$max.'] out of range for integers');
+    }
     $f= $this->ints;
     return $f($min, $max);
   }

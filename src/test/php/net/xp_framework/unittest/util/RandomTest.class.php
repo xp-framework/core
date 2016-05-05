@@ -129,4 +129,14 @@ class RandomTest extends \unittest\TestCase {
   public function min_cannot_be_larger_or_equal_to_max($min) {
     (new Random())->int($min, 10);
   }
+
+  #[@test, @expect(IllegalArgumentException::class)]
+  public function max_cannot_be_larger_than_int_max() {
+    (new Random())->int(0, PHP_INT_MAX + 1);
+  }
+
+  #[@test, @expect(IllegalArgumentException::class)]
+  public function min_cannot_be_smaller_than_int_min() {
+    (new Random())->int(PHP_INT_MIN - 1, 0);
+  }
 }
