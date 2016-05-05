@@ -160,7 +160,7 @@ class Random extends \lang\Object {
     // How many bytes do we need to represent the range?
     $bits= (int)ceil(log($range, 2));
     $bytes= (int)ceil($bits / 8);
-    $mask= 2 ** $bits - 1;
+    $mask= pow(2, $bits) - 1;
 
     do {
       for ($random= $this->bytes($bytes), $result= 0, $i= 0; $i < $bytes; $i++) {
