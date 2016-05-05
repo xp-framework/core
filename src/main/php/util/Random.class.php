@@ -17,43 +17,67 @@ use lang\IllegalArgumentException;
  * @test  xp://net.xp_framework.unittest.util.RandomTest
  */
 class Random {
-  const BEST    = null;
+  const SYSTEM  = 'system';
   const OPENSSL = 'openssl';
   const MCRYPT  = 'mcrypt';
   const URANDOM = 'urandom';
   const MTRAND  = 'mtrand';
 
-  private static $default;
-  private $bytes, $ints;
+  const BEST    = '(best)';
+  const FAST    = '(fast)';
+  const SECURE  = '(secure)';
+
+  private static $sources= [];
+  private $bytes, $ints, $source;
 
   static function __static() {
     if (function_exists('random_bytes')) {
-      self::$default= ['bytes' => 'random_bytes', 'ints' => 'random_int'];
-    } else if (function_exists('openssl_random_pseudo_bytes')) {
-      self::$default= ['bytes' => [__CLASS__, self::OPENSSL], 'ints' => null];
-    } else if (function_exists('mcrypt_create_iv')) {
-      self::$default= ['bytes' => [__CLASS__, self::MCRYPT], 'ints' => null];
-    } else if (is_readable('/dev/urandom')) {
-      self::$default= ['bytes' => [__CLASS__, self::URANDOM], 'ints' => null];
-    } else {
-      self::$default= ['bytes' => [__CLASS__, self::MTRAND], 'ints' => 'mt_rand'];
+      self::$sources[self::SYSTEM]= ['bytes' => 'random_bytes', 'ints' => 'random_int'];
     }
+    if (function_exists('openssl_random_pseudo_bytes')) {
+      self::$sources[self::OPENSSL]= ['bytes' => [__CLASS__, self::OPENSSL], 'ints' => null];
+    }
+    if (function_exists('mcrypt_create_iv')) {
+      self::$sources[self::MCRYPT]= ['bytes' => [__CLASS__, self::MCRYPT], 'ints' => null];
+    }
+
+    // All of the above are secure pseudo-random sources
+    if (!empty(self::$sources)) {
+      self::$sources[self::SECURE]= &self::$sources[key(self::$sources)];
+    }
+
+    if (is_readable('/dev/urandom')) {
+      self::$sources[self::URANDOM]= ['bytes' => [__CLASS__, self::URANDOM], 'ints' => null];
+    }
+
+    // The Mersenne Twister algorithm is always available
+    self::$sources[self::MTRAND]= ['bytes' => [__CLASS__, self::MTRAND], 'ints' => 'mt_rand'];
+
+    self::$sources[self::BEST]= &self::$sources[key(self::$sources)];
+    self::$sources[self::FAST]= &self::$sources[self::MTRAND];
   }
 
   /**
    * Creates a new random
    *
-   * @param  string $source Optionally select source: BEST, OPENSSL, MCRYPT, URANDOM, MTRAND
+   * @param  string|string[] $sources One or more of SYSTEM, OPENSSL, MCRYPT, URANDOM, MTRAND, BEST, FAST and SECURE
+   * @throws lang.IllegalArgumentException
    */
-  public function __construct($source= self::BEST) {
-    if (self::BEST === $source) {
-      $this->bytes= self::$default['bytes'];
-      $this->ints= self::$default['ints'] ?: [$this, 'random'];
-    } else {
-      $this->bytes= [__CLASS__, $source];
-      $this->ints= [$this, 'random'];
+  public function __construct($sources= self::BEST) {
+    $test= is_array($sources) ? $sources : [$sources];
+    foreach ($test as $source) {
+      if (isset(self::$sources[$source])) {
+        $this->bytes= self::$sources[$source]['bytes'];
+        $this->ints= self::$sources[$source]['ints'] ?: [$this, 'random'];
+        $this->source= $source;
+        return;
+      }
     }
+    throw new IllegalArgumentException('None of the supplied sources '.implode(', ', $test).' are available');
   }
+
+  /** @return string */
+  public function source() { return $this->source; }
 
   /**
    * Implementation using OpenSSL

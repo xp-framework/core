@@ -13,13 +13,49 @@ class RandomTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function can_create_with_source() {
+    new Random(Random::FAST);
+  }
+
+  #[@test, @expect(IllegalArgumentException::class)]
+  public function unknown_source() {
+    new Random('unknown');
+  }
+
+  #[@test]
+  public function best_is_default_source() {
+    $this->assertEquals(Random::BEST, (new Random())->source());
+  }
+
+  #[@test]
+  public function passing_more_than_one_source_selects_first_available() {
+    $this->assertEquals(Random::FAST, (new Random(['unknown', Random::FAST]))->source());
+  }
+
+  #[@test]
   public function bytes() {
     $this->assertEquals(20, (new Random())->bytes(20)->size());
   }
 
   #[@test]
-  public function default_bytes() {
+  public function best_bytes() {
     $this->assertEquals(20, (new Random(Random::BEST))->bytes(20)->size());
+  }
+
+  #[@test]
+  public function fast_bytes() {
+    $this->assertEquals(20, (new Random(Random::FAST))->bytes(20)->size());
+  }
+
+  #[@test, @action(new VerifyThat(function() {
+  #  return (
+  #    function_exists('random_bytes') ||
+  #    function_exists('openssl_random_pseudo_bytes') ||
+  #    function_exists('mcrypt_create_iv')
+  #  );
+  #}))]
+  public function secure_bytes() {
+    $this->assertEquals(20, (new Random(Random::SECURE))->bytes(20)->size());
   }
 
   #[@test, @action(new ExtensionAvailable('openssl'))]
