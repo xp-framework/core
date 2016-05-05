@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 6.12.0 / 2016-05-05
+
+### Features
+
+* Backported xp-framework/core#146 from XP 7 - @thekid
+
 ## 6.11.4 / 2016-04-22
 
 ### Features

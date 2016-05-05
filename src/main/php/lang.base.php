@@ -550,6 +550,8 @@ define('MODIFIER_PUBLIC',     256);
 define('MODIFIER_PROTECTED',  512);
 define('MODIFIER_PRIVATE',   1024);
 
+defined('PHP_INT_MIN') || define('PHP_INT_MIN', ~PHP_INT_MAX);
+
 xp::$loader= new xp();
 
 // Paths are passed via class loader API from *-main.php. Retaining BC:

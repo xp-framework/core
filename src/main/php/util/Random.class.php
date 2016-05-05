@@ -16,7 +16,7 @@ use lang\IllegalArgumentException;
  * @see   http://sockpuppet.org/blog/2014/02/25/safely-generate-random-numbers/
  * @test  xp://net.xp_framework.unittest.util.RandomTest
  */
-class Random {
+class Random extends \lang\Object {
   const SYSTEM  = 'system';
   const OPENSSL = 'openssl';
   const MCRYPT  = 'mcrypt';
