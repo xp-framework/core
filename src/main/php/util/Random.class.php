@@ -37,8 +37,11 @@ class Random {
     if (function_exists('mcrypt_create_iv')) {
       self::$sources[self::MCRYPT]= ['bytes' => [__CLASS__, self::MCRYPT], 'ints' => null];
     }
+    if (strncasecmp(PHP_OS, 'Win', 3) !== 0 && is_readable('/dev/urandom')) {
+      self::$sources[self::URANDOM]= ['bytes' => [__CLASS__, self::URANDOM], 'ints' => null];
+    }
 
-    // Both of these above are secure pseudo-random sources
+    // All of these above are secure pseudo-random sources
     if (!empty(self::$sources)) {
       self::$sources[self::SECURE]= &self::$sources[key(self::$sources)];
     }
@@ -50,10 +53,6 @@ class Random {
       if (!isset(self::$sources[self::SECURE]) && version_compare(PHP_VERSION, '5.6.12', 'ge')) {
         self::$sources[self::SECURE]= &self::$sources[self::OPENSSL];
       }
-    }
-
-    if (strncasecmp(PHP_OS, 'Win', 3) !== 0 && is_readable('/dev/urandom')) {
-      self::$sources[self::URANDOM]= ['bytes' => [__CLASS__, self::URANDOM], 'ints' => null];
     }
 
     // The Mersenne Twister algorithm is always available
