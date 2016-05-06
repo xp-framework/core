@@ -115,6 +115,18 @@ XP Framework Core ChangeLog
 * Implemented xp-framework/rfc#296: Further minimize the framework - @thekid
 * Implemented xp-framework/rfc#297: Rebase - @thekid
 
+## 6.13.0 / 2016-05-06
+
+### Heads up!
+
+* **Heads up: Changed UUID class to return util.Bytes** instead of the
+  version from lang.types
+  (@thekid)
+
+### Bugfixes
+
+* Fixed PHP 5.4 compatibility for util.Bytes class added in 6.11 - @thekid
+
 ## 6.12.0 / 2016-05-05
 
 ### Features
