@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 6.13.0 / 2016-05-06
+
 ### Heads up!
 
 * **Heads up: Changed UUID class to return util.Bytes** instead of the
