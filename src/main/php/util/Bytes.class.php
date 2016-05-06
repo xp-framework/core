@@ -10,6 +10,7 @@ use lang\IllegalArgumentException;
  */
 class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
   private $buffer, $size;
+  private $iterator= null;
   
   /**
    * Returns input as byte
@@ -47,10 +48,16 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
    * @return php.Iterator
    */
   public function getIterator() {
-    for ($offset= 0; $offset < $this->size; $offset++) {
-      $n= ord($this->buffer{$offset});
-      yield $n < 128 ? $n : $n - 256;
-    }
+    if (!$this->iterator) $this->iterator= newinstance('Iterator', [$this], '{
+      private $i= 0, $v;
+      public function __construct($v) { $this->v= $v; }
+      public function current() { return $this->v[$this->i]; }
+      public function key() { return $this->i; }
+      public function next() { $this->i++; }
+      public function rewind() { $this->i= 0; }
+      public function valid() { return $this->i < $this->v->size(); }
+    }');
+    return $this->iterator;
   }
 
   /**

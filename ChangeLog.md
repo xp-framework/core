@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+### Bugfixes
+
+* Fixed PHP 5.4 compatibility for util.Bytes class added in 6.11 - @thekid
+
 ## 6.12.0 / 2016-05-05
 
 ### Features
