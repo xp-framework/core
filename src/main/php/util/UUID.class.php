@@ -1,6 +1,5 @@
 <?php namespace util;
 
-use lang\types\Bytes;
 use lang\FormatException;
 
 /**
@@ -88,7 +87,7 @@ class UUID extends \lang\Object {
    * @throws  lang.FormatException in case str is not a valid UUID string
    */
   public function __construct($arg) {
-    if ($arg instanceof Bytes) {
+    if ($arg instanceof \lang\types\Bytes || $arg instanceof Bytes) {
       $this->populate(implode('-', unpack('H8a/H4b/H4c/H4d/H12e', $arg)));
     } else if (is_array($arg)) {
       $this->version= $arg[0];
@@ -239,7 +238,7 @@ class UUID extends \lang\Object {
   /**
    * Get bytes
    *
-   * @return  lang.types.Bytes
+   * @return  util.Bytes
    */
   public function getBytes() {
     return new Bytes(pack('H32', str_replace('-', '', $this->hashCode())));

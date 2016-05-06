@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use util\UUID;
+use util\Bytes;
 use lang\FormatException;
 
 /**
@@ -33,7 +34,7 @@ class UUIDTest extends \unittest\TestCase {
   #[@test]
   public function getBytes() {
     $this->assertEquals(
-      new \lang\types\Bytes("k\xa7\xb8\x11\x9d\xad\x11\xd1\x80\xb4\x00\xc0O\xd40\xc8"), 
+      new Bytes("k\xa7\xb8\x11\x9d\xad\x11\xd1\x80\xb4\x00\xc0O\xd40\xc8"), 
       $this->fixture->getBytes()
     );
   }

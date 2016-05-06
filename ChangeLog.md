@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+### Heads up!
+
+* **Heads up: Changed UUID class to return util.Bytes** instead of the
+  version from lang.types
+  (@thekid)
+
 ### Bugfixes
 
 * Fixed PHP 5.4 compatibility for util.Bytes class added in 6.11 - @thekid
