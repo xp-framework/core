@@ -13,6 +13,7 @@ matrix:
     - php: nightly
 
 before_script:
+  - phpenv config-rm xdebug.ini; true
   - wget 'https://github.com/xp-framework/xp-runners/releases/download/v6.3.0/setup' -O - | php
   - echo "use=." > xp.ini
   - echo "[runtime]" >> xp.ini
