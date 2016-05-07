@@ -1,6 +1,6 @@
 language: php
 
-sudo: false
+sudo: required
 
 php:
   - nightly
@@ -18,4 +18,5 @@ before_script:
   - php -m
 
 script:
-- strace -f ./xp -cp test.xar xp.unittest.Runner src/test/config/unittest/core.ini
+  - apt-get install strace
+  - strace -f ./xp -cp test.xar xp.unittest.Runner src/test/config/unittest/core.ini
