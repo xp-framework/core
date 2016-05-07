@@ -18,5 +18,9 @@ before_script:
   - php -m
 
 script:
-  - apt-get install strace
+  - apt-get install strace gdb
   - strace -f ./xp -cp test.xar xp.unittest.Runner src/test/config/unittest/core.ini
+  - rm -f gdb-commands
+  - echo run -C -q -d include_path=".:./.::.:test.xar" -d magic_quotes_gpc=0 -d date.timezone="Europe/Berlin" -d date.timezone="Europe/Berlin" ./class-main.php xp.unittest.Runner src/test/config/unittest/core.ini >> gdb-commands
+  - echo quit >> gdb-commands
+  - gdb `which php` -x gdb-commands
