@@ -20,6 +20,7 @@ before_script:
 script:
   - sudo apt-get install gdb
   - rm -f gdb-commands
+  - cat /home/travis/.phpenv/shims/php
   - echo run -C -q -d include_path=".:./.::.:test.xar" -d magic_quotes_gpc=0 -d date.timezone="Europe/Berlin" -d date.timezone="Europe/Berlin" ./class-main.php xp.unittest.Runner src/test/config/unittest/core.ini >> gdb-commands
   - echo quit >> gdb-commands
   - gdb `which php` -x gdb-commands
