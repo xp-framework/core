@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ## 6.13.1 / 2016-05-07
 
+### Bugfixes
+
 * Backported fix for issue #147: TypeUnion literal bug - @thekid
 
 ## 6.13.0 / 2016-05-06
