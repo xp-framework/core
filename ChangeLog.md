@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+### Bugfixes
+
+* Fixed xp-framework/core#147: TypeUnion literal bug - @thekid
+
 ## 7.3.0 / 2016-05-05
 
 ### Features

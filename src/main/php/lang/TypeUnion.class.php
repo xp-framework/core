@@ -62,7 +62,7 @@ class TypeUnion extends Type {
    * @return  string
    */
   public function literal() {
-    return '∪'.$this->component->literal();
+    return "\xb5".implode("\xb8", array_map(function($type) { return $type->literal(); }, $this->types));
   }
 
   /**
