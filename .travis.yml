@@ -16,7 +16,6 @@ before_script:
   - echo "date.timezone=Europe/Berlin" >> xp.ini
   - php -v
   - php -m
-  - ./xp -v
 
 script:
 - strace -f ./xp -cp test.xar xp.unittest.Runner src/test/config/unittest/core.ini
