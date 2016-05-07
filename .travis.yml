@@ -1,11 +1,8 @@
 language: php
 
-sudo: false
+sudo: required
 
 php:
-  - 5.6
-  - 7.0
-  - hhvm
   - nightly
 
 matrix:
@@ -17,6 +14,12 @@ before_script:
   - echo "use=." > xp.ini
   - echo "[runtime]" >> xp.ini
   - echo "date.timezone=Europe/Berlin" >> xp.ini
+  - php -v
+  - php -m
 
 script:
-  - (EXCD=0; for i in `ls -1 src/test/config/unittest/*.ini`; do echo "---> $i"; ./xp -cp test.xar xp.unittest.Runner $i; RES=$?; if [ $RES -ne 0 ]; then EXCD=$RES; fi; done; exit $EXCD;)
+  - sudo apt-get install gdb
+  - rm -f gdb-commands
+  - echo run -C -q -d include_path=".:./.::.:test.xar" -d magic_quotes_gpc=0 -d date.timezone="Europe/Berlin" -d date.timezone="Europe/Berlin" ./class-main.php xp.unittest.Runner src/test/config/unittest/core.ini >> gdb-commands
+  - echo quit >> gdb-commands
+  - gdb /home/travis/.phpenv/versions/nightly/bin/php -x gdb-commands
