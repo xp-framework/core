@@ -121,6 +121,12 @@ XP Framework Core ChangeLog
 * Implemented xp-framework/rfc#296: Further minimize the framework - @thekid
 * Implemented xp-framework/rfc#297: Rebase - @thekid
 
+## 6.13.1 / 2016-05-07
+
+### Bugfixes
+
+* Backported fix for issue #147: TypeUnion literal bug - @thekid
+
 ## 6.13.0 / 2016-05-06
 
 ### Heads up!
