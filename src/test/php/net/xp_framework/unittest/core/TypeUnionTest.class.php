@@ -168,4 +168,12 @@ class TypeUnionTest extends \unittest\TestCase {
       Type::forName('(string|int)[]')
     );
   }
+
+  #[@test]
+  public function literal() {
+    $this->assertEquals(
+      "\xb5\xfestring\xb8\xfeint",
+      (new TypeUnion([Primitive::$STRING, Primitive::$INT]))->literal()
+    );
+  }
 }
