@@ -59,6 +59,7 @@ define('MIME_IMAGE_IEF',                      'image/ief');
 define('MIME_IMAGE_JPEG',                     'image/jpeg');
 define('MIME_IMAGE_PNG',                      'image/png');
 define('MIME_IMAGE_TIFF',                     'image/tiff');
+define('MIME_IMAGE_SVG',                      'image/svg+xml');
 define('MIME_IMAGE_X_CMU_RASTER',             'image/x-cmu-raster');
 define('MIME_IMAGE_X_PORTABLE_ANYMAP',        'image/x-portable-anymap');
 define('MIME_IMAGE_X_PORTABLE_BITMAP',        'image/x-portable-bitmap');
@@ -179,6 +180,7 @@ abstract class MimeType {
       '.png'     => MIME_IMAGE_PNG,
       '.tif'     => MIME_IMAGE_TIFF,
       '.tiff'    => MIME_IMAGE_TIFF,
+      '.svg'     => MIME_IMAGE_SVG,
       '.ras'     => MIME_IMAGE_X_CMU_RASTER,
       '.pnm'     => MIME_IMAGE_X_PORTABLE_ANYMAP,
       '.pbm'     => MIME_IMAGE_X_PORTABLE_BITMAP,
