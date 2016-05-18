@@ -149,7 +149,9 @@ class Runtime {
   public static function parseArguments($arguments) {
     $return= ['options' => new RuntimeOptions(), 'bootstrap' => null, 'main' => null];
     while (null !== ($argument= array_shift($arguments))) {
-      if ('-' !== $argument{0}) {
+      if ('' === $argument) {
+        continue;
+      } else if ('-' !== $argument{0}) {
         $return['bootstrap']= trim($argument, '"\'');;
         break;
       } else if ('--' === $argument) {
