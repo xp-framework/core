@@ -15,28 +15,35 @@ class FunctionType extends Type {
   /**
    * Creates a new array type instance
    *
-   * @param  lang.Type[] $signature
-   * @param  lang.Type $returns
+   * @param  string[]|lang.Type[] $signature
+   * @param  string|lang.Type $returns
    */
   public function __construct(array $signature= null, $returns) {
-    $this->signature= $signature;
-    $this->returns= $returns;
-    parent::__construct(sprintf(
-      '(function(%s): %s)',
-      null === $signature ? '?' : implode(',', array_map(function($e) { return $e->getName(); }, $signature)),
-      $this->returns->getName()
-    ), null);
+    if (null === $signature) {
+      $this->signature= null;
+      $name= ',?';
+    } else {
+      $this->signature= [];
+      $name= '';
+      foreach ($signature as $type) {
+        if ($type instanceof Type) {
+          $this->signature[]= $type;
+          $name.= ','.$type->getName();
+        } else {
+          $this->signature[]= Type::forName($type);
+          $name.= ','.$type;
+        }
+      }
+    }
+    $this->returns= $returns instanceof Type ? $returns : Type::forName($returns);
+    parent::__construct(sprintf('(function(%s): %s)', substr($name, 1), $this->returns->getName()), null);
   }
 
   /** @return lang.Type[] */
-  public function signature() {
-    return $this->signature;
-  }
+  public function signature() { return $this->signature; }
 
   /** @return lang.Type */
-  public function returns() {
-    return $this->returns;
-  }
+  public function returns() { return $this->returns; }
 
   /**
    * Get a type instance for a given name

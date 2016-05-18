@@ -15,8 +15,13 @@ use unittest\TestCase;
 class FunctionTypeTest extends TestCase {
 
   #[@test]
-  public function can_create() {
+  public function can_create_with_type_instances() {
     new FunctionType([Primitive::$STRING], Primitive::$STRING);
+  }
+
+  #[@test]
+  public function can_create_with_type_names() {
+    new FunctionType(['string'], 'string');
   }
 
   #[@test]

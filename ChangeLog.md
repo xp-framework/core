@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+### Features
+
+* Extended `lang.FunctionType`'s constructor to accept type names in
+  addition to Type instances.
+  (@thekid)
+
 ## 7.3.1 / 2016-05-07
 
 ### Bugfixes

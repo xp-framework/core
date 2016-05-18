@@ -14,7 +14,7 @@ class ArrayType extends Type {
   /**
    * Creates a new array type instance
    *
-   * @param  var component
+   * @param  string|lang.Type $component
    */
   public function __construct($component) {
     if ($component instanceof Type) {
