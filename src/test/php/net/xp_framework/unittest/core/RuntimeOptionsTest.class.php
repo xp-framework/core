@@ -81,6 +81,14 @@ class RuntimeOptionsTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function removeSetting() {
+    $options= new RuntimeOptions();
+    $options->withSetting('encoding', 'utf-8');
+    $options->withSetting('encoding', null);
+    $this->assertNull($options->getSetting('encoding'));
+  }
+
+  #[@test]
   public function chainingSwitch() {
     $options= new RuntimeOptions();
     $this->assertTrue($options === $options->withSwitch('q'));
