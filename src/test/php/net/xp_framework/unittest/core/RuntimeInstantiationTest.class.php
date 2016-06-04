@@ -201,7 +201,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     $this->assertEquals($expected, $out);
   }
 
-  #[@test, @action(new IgnoredOnHHVM()), @values([
+  #[@test, @values([
   #  [['mysql+x://test@127.0.0.1/test'], '2: xp.runtime.Evaluate mysql+x://test@127.0.0.1/test'],
   #  [['über', '€uro'], '3: xp.runtime.Evaluate über €uro']
   #])]
