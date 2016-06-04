@@ -69,7 +69,9 @@ class RuntimeOptions extends Object {
    */
   public function withSetting($setting, $value, $add= false) {
     $key= 'd'.$setting;
-    if ($add && isset($this->backing[$key])) {
+    if (null === $value) {
+      unset($this->backing[$key]);
+    } else if ($add && isset($this->backing[$key])) {
       $this->backing[$key]= array_merge($this->backing[$key], (array)$value); 
     } else {
       $this->backing[$key]= (array)$value; 
