@@ -304,7 +304,7 @@ class Runtime {
       $include.= PATH_SEPARATOR.implode(PATH_SEPARATOR, $cp); 
     }
     $cmdline= array_merge(
-      $options->withSetting('include_path', $include)->asArguments(),
+      $options->withSetting('include_path', $include)->withSetting('encoding', 'utf-7')->asArguments(),
       $bootstrap ? [$this->bootstrapScript($bootstrap)] : [],
       $class ? [$class] : []
     );
@@ -316,6 +316,7 @@ class Runtime {
     }
 
     // Finally, fork executable
-    return $this->getExecutable()->newInstance(array_merge($cmdline, $arguments), $cwd, $env);
+    $pass= array_map(function($arg) { return iconv(\xp::ENCODING, 'utf-7', $arg); }, $arguments);
+    return $this->getExecutable()->newInstance(array_merge($cmdline, $pass), $cwd, $env);
   }
 }

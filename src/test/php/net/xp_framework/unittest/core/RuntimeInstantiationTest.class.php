@@ -25,14 +25,15 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
   /**
    * Runs sourcecode in a new runtime
    *
-   * @param   lang.RuntimeOptions options
-   * @param   string src
-   * @param   int expectedExitCode default 0
-   * @throws  lang.IllegalStateException if process exits with a non-zero exitcode
-   * @return  string out
+   * @param  lang.RuntimeOptions $options
+   * @param  string $src
+   * @param  int $expectedExitCode default 0
+   * @param  string[] $args
+   * @throws lang.IllegalStateException if process exits with a non-zero exitcode
+   * @return string output
    */
-  protected function runInNewRuntime(\lang\RuntimeOptions $startup, $src, $expectedExitCode= 0) {
-    with ($out= $err= '', $p= Runtime::getInstance()->newInstance($startup, 'class', 'xp.runtime.Evaluate', [])); {
+  protected function runInNewRuntime(\lang\RuntimeOptions $startup, $src, $expectedExitCode= 0, $args= []) {
+    with ($out= $err= '', $p= Runtime::getInstance()->newInstance($startup, 'class', 'xp.runtime.Evaluate', array_merge(['--'], $args))); {
       $p->in->write('use lang\Runtime;');
       $p->in->write($src);
       $p->in->close();
@@ -42,7 +43,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
       while ($b= $p->err->read()) { $err.= $b; }
 
       // Check for exitcode
-        if ($expectedExitCode !== ($exitv= $p->close())) {
+      if ($expectedExitCode !== ($exitv= $p->close())) {
         throw new \lang\IllegalStateException(sprintf(
           "Command %s failed with exit code #%d (instead of %d) {OUT: %s\nERR: %s\n}",
           $p->getCommandLine(),
@@ -184,5 +185,21 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     ', 255);
     $this->assertEquals('+OK exiting', substr($out, 0, 11), $out);
     $this->assertEquals('+OK Shutdown hook run', substr($out, -21), $out);
+  }
+
+  #[@test, @values([
+  #  [[], '1: xp.runtime.Evaluate'],
+  #  [['test'], '2: xp.runtime.Evaluate test'],
+  #  [['mysql+x://test@127.0.0.1/test'], '2: xp.runtime.Evaluate mysql+x://test@127.0.0.1/test'],
+  #  [['über', '€uro'], '3: xp.runtime.Evaluate über €uro']
+  #])]
+  public function pass_arguments($args, $expected) {
+    $out= $this->runInNewRuntime(
+      Runtime::getInstance()->startupOptions(),
+      'echo sizeof($argv), ": ", implode(" ", $argv);',
+      0,
+      $args
+    );
+    $this->assertEquals($expected, $out);
   }
 }
