@@ -304,7 +304,7 @@ class Runtime {
       $include.= PATH_SEPARATOR.implode(PATH_SEPARATOR, $cp); 
     }
     $cmdline= array_merge(
-      $options->withSetting('include_path', $include)->withSetting('encoding', 'utf-7')->asArguments(),
+      $options->withSetting('include_path', $include)->asArguments(),
       $bootstrap ? [$this->bootstrapScript($bootstrap)] : [],
       $class ? [$class] : []
     );
