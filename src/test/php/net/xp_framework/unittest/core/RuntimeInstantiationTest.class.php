@@ -189,11 +189,23 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
 
   #[@test, @values([
   #  [[], '1: xp.runtime.Evaluate'],
-  #  [['test'], '2: xp.runtime.Evaluate test'],
+  #  [['test'], '2: xp.runtime.Evaluate test']
+  #])]
+  public function pass_arguments($args, $expected) {
+    $out= $this->runInNewRuntime(
+      Runtime::getInstance()->startupOptions(),
+      'echo sizeof($argv), ": ", implode(" ", $argv);',
+      0,
+      $args
+    );
+    $this->assertEquals($expected, $out);
+  }
+
+  #[@test, @action(new IgnoredOnHHVM()), @values([
   #  [['mysql+x://test@127.0.0.1/test'], '2: xp.runtime.Evaluate mysql+x://test@127.0.0.1/test'],
   #  [['über', '€uro'], '3: xp.runtime.Evaluate über €uro']
   #])]
-  public function pass_arguments($args, $expected) {
+  public function pass_arguments_which_need_encoding($args, $expected) {
     $out= $this->runInNewRuntime(
       Runtime::getInstance()->startupOptions(),
       'echo sizeof($argv), ": ", implode(" ", $argv);',
