@@ -8,7 +8,7 @@ define('SYSTEM_RETURN_CMDNOTEXECUTABLE',   126);
  * The System class contains several useful class fields and methods. 
  * It cannot be instantiated.
  */
-class System extends Object {
+class System {
 
   /**
    * Private helper method. Tries to locate an environment
@@ -149,6 +149,39 @@ class System extends Object {
     }
 
     return rtrim($dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+  }
+
+  /**
+   * Returns certificates trusted by this system.
+   *
+   * @return string
+   * @throws lang.SystemException
+   */
+  public static function trustedCertificates() {
+    static $search= [
+      'SSL_CERT_FILE'   => '$0',
+      'HOME'            => '$0/.xp/ca-bundle.crt',
+      'LOCALAPPDATA'    => '$0/Xp/ca-bundle.crt',
+      'XDG_CONFIG_HOME' => '$0/xp/ca-bundle.crt'
+    ];
+
+    $tested= [];
+    foreach ($search as $name => $path) {
+      if ($var= getenv($name)) {
+        $file= strtr($path, ['$0' => $var, '/' => DIRECTORY_SEPARATOR]);
+        if (is_file($file)) return $file;
+      }
+      $tested[]= str_replace('$0', '${'.$name.'}', $path);
+    }
+
+    parse_str(getenv('XP_ENVIRONMENT'), $env);
+    if ($env) {
+      $file= dirname($env['exe']).DIRECTORY_SEPARATOR.'ca-bundle.crt';
+      if (is_file($file)) return $file;
+      $tested[]= '$(dirname '.$env['exe'].')/ca-bundle.crt';
+    }
+
+    throw new SystemException('No ca-bundle.crt found in '.\xp::stringOf($tested), 2);
   }
 
   /** 
