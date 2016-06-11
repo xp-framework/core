@@ -152,6 +152,61 @@ class System {
   }
 
   /**
+   * Checks whether inside an XDG environment
+   *
+   * @see    https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+   * @return bool
+   */
+  private static function inXdgEnvironment() {
+    static $xdg= null;
+
+    if (null === $xdg) {
+      $xdg= false;
+      foreach ($_ENV as $name => $value) {
+        if (0 === strncmp($name, 'XDG_', 4)) {
+          $xdg= true;
+          break;
+        }
+      }
+    }
+    return $xdg;
+  }
+
+  /**
+   * Returns current user's home directory
+   *
+   * @return string
+   */
+  public static function homeDir() {
+    return rtrim(getenv('HOME') ?: getenv('USERPROFILE'), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+  }
+
+  /**
+   * Returns current user's configuration directory
+   *
+   * - $LOCALAPPDATA/{Named} on Windows
+   * - $XDG_CONFIG_HOME/{named} inside an XDG environment
+   * - $HOME/.{named} otherwise
+   *
+   * @param  string $named Pass NULL to retrieve configuration base directory
+   * @return string
+   */
+  public static function configDir($named= null) {
+    $home= getenv('HOME');
+    if (false === $home) {
+      $base= getenv('LOCALAPPDATA');
+      $dir= ucfirst($named);
+    } else if (self::inXdgEnvironment()) {
+      $base= getenv('XDG_CONFIG_HOME') ?: $home.DIRECTORY_SEPARATOR.'.config';
+      $dir= $named;
+    } else {
+      $base= $home;
+      $dir= '.'.$named;
+    }
+    return rtrim($named ? $base.DIRECTORY_SEPARATOR.$dir : $base, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+  }
+
+  /**
    * Returns certificates trusted by this system.
    *
    * @see    https://github.com/xp-framework/core/issues/150
@@ -161,20 +216,12 @@ class System {
    * @throws lang.SystemException If nothing is found and no default is given
    */
   public static function trustedCertificates($default= null) {
-    static $search= [
-      'SSL_CERT_FILE'   => '$0',
-      'HOME'            => '$0/.xp/ca-bundle.crt',
-      'LOCALAPPDATA'    => '$0/Xp/ca-bundle.crt',
-      'XDG_CONFIG_HOME' => '$0/xp/ca-bundle.crt'
-    ];
+    if (is_file($certs= getenv('SSL_CERT_FILE'))) {
+      return $certs;
+    }
 
-    $tested= [];
-    foreach ($search as $name => $path) {
-      if ($var= getenv($name)) {
-        $file= strtr($path, ['$0' => $var, '/' => DIRECTORY_SEPARATOR]);
-        if (is_file($file)) return $file;
-      }
-      $tested[]= str_replace('$0', '${'.$name.'}', $path);
+    if (is_file($bundle= self::configDir('xp').'ca-bundle.crt')) {
+      return $bundle;
     }
 
     parse_str(getenv('XP_ENVIRONMENT'), $env);
@@ -185,7 +232,7 @@ class System {
     }
 
     if (null !== $default) return $default;
-    throw new SystemException('No ca-bundle.crt found in '.\xp::stringOf($tested), 2);
+    throw new SystemException('No ca-bundle.crt found', 2);
   }
 
   /** 
