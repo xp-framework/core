@@ -155,6 +155,7 @@ class System {
    * Returns certificates trusted by this system.
    *
    * @see    https://github.com/xp-framework/core/issues/150
+   * @see    https://github.com/xp-runners/cert
    * @return string
    * @throws lang.SystemException
    */
