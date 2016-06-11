@@ -156,10 +156,11 @@ class System {
    *
    * @see    https://github.com/xp-framework/core/issues/150
    * @see    https://github.com/xp-runners/cert
+   * @param  string $default
    * @return string
-   * @throws lang.SystemException
+   * @throws lang.SystemException If nothing is found and no default is given
    */
-  public static function trustedCertificates() {
+  public static function trustedCertificates($default= null) {
     static $search= [
       'SSL_CERT_FILE'   => '$0',
       'HOME'            => '$0/.xp/ca-bundle.crt',
@@ -183,6 +184,7 @@ class System {
       $tested[]= '$(dirname '.$env['exe'].')/ca-bundle.crt';
     }
 
+    if (null !== $default) return $default;
     throw new SystemException('No ca-bundle.crt found in '.\xp::stringOf($tested), 2);
   }
 
