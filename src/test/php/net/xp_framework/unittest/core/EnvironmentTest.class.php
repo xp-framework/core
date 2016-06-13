@@ -3,7 +3,9 @@
 use lang\Environment;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
+use net\xp_framework\unittest\IgnoredOnHHVM;
 
+#[@action(new IgnoredOnHHVM())]
 class EnvironmentTest extends \unittest\TestCase {
 
   #[@test]
