@@ -7,6 +7,8 @@ define('SYSTEM_RETURN_CMDNOTEXECUTABLE',   126);
 /**
  * The System class contains several useful class fields and methods. 
  * It cannot be instantiated.
+ *
+ * @deprecated  Replaced by lang.Environment and lang.Process
  */
 class System extends Object {
 
