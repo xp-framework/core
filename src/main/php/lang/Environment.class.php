@@ -3,7 +3,7 @@
 /**
  * User environment
  *
- * @test  xp://net.xp_framework.unittest.core.EnvironmentTest:
+ * @test  xp://net.xp_framework.unittest.core.EnvironmentTest
  */
 abstract class Environment {
 
@@ -45,10 +45,12 @@ abstract class Environment {
   }
 
   /**
-   * Gets the value of an environment variable
+   * Gets the value of an environment variable. Accepts an optional default,
+   * which can either be a closure to be executed or any other value to be 
+   * returned when none of the given names is found.
    *
    * @param  string|string[] $arg One or more names to test
-   * @param  (string|function(string|string[]): string)... $default Pass a default, including NULL
+   * @param  var... $default Optional default
    * @return string
    * @throws lang.IllegalArgumentException If none of the names is found
    */
