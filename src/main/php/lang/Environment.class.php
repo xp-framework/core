@@ -158,15 +158,12 @@ abstract class Environment {
       return $bundle;
     }
 
-    parse_str(getenv('XP_ENVIRONMENT'), $env);
-    if ($env) {
-      $file= dirname($env['exe']).DIRECTORY_SEPARATOR.'ca-bundle.crt';
+    if ($env= getenv('XP_EXE')) {
+      $file= dirname($env).DIRECTORY_SEPARATOR.'ca-bundle.crt';
       if (is_file($file)) return $file;
-      $tested[]= '$(dirname '.$env['exe'].')/ca-bundle.crt';
     }
 
     if (null !== $default) return $default;
     throw new SystemException('No ca-bundle.crt found', 2);
   }
-
 }
