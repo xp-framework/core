@@ -56,6 +56,11 @@ class TypeTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function iterableTypeUnion() {
+    $this->assertEquals(Type::$ITERABLE, Type::forName('iterable'));
+  }
+
+  #[@test]
   public function arrayOfString() {
     $this->assertEquals(ArrayType::forName('string[]'), Type::forName('string[]'));
   }
@@ -293,6 +298,11 @@ class TypeTest extends \unittest\TestCase {
     $this->assertEquals(null, Type::$CALLABLE->default);
   }
 
+  #[@test]
+  public function native_iterable_default() {
+    $this->assertEquals(null, Type::$ITERABLE->default);
+  }
+
   #[@test, @values([
   #  [[]],
   #  [[1, 2, 3]],
@@ -333,6 +343,7 @@ class TypeTest extends \unittest\TestCase {
   }
 
   #[@test, @values([
+  #  [null],
   #  [1], [1.5], [true], ['Test'],
   #  [[]],
   #  [[1, 2, 3]],
@@ -370,6 +381,7 @@ class TypeTest extends \unittest\TestCase {
   }
 
   #[@test, @values([
+  #  [null],
   #  ['strlen'],
   #  ['xp::gc'],
   #  [['xp', 'gc']],
@@ -398,5 +410,45 @@ class TypeTest extends \unittest\TestCase {
   #[@test]
   public function callable_type_union_is_not_assignable_from_this() {
     $this->assertFalse(Type::$CALLABLE->isAssignableFrom($this->getClass()));
+  }
+
+  #[@test, @values([
+  #  [[]],
+  #  [[1, 2, 3]],
+  #  [['key' => 'value']],
+  #  [new \ArrayObject(['hello', 'world'])],
+  #  [new \ArrayIterator(['hello', 'world'])]
+  #])]
+  public function iterable_type_union_isInstance($value) {
+    $this->assertTrue(Type::$ITERABLE->isInstance($value));
+  }
+
+  #[@test]
+  public function iterable_type_union_generator_isInstance() {
+    $gen= function() { yield 'Test'; };
+    $this->assertTrue(Type::$ITERABLE->isInstance($gen()));
+  }
+
+  #[@test, @values([
+  #  [[]],
+  #  [[1, 2, 3]],
+  #  [['key' => 'value']],
+  #  [new \ArrayObject(['hello', 'world'])],
+  #  [new \ArrayIterator(['hello', 'world'])]
+  #])]
+  public function iterable_type_union_newInstance($value) {
+    $this->assertEquals($value, Type::$ITERABLE->newInstance($value));
+  }
+
+  #[@test, @values([
+  #  [null],
+  #  [[]],
+  #  [[1, 2, 3]],
+  #  [['key' => 'value']],
+  #  [new \ArrayObject(['hello', 'world'])],
+  #  [new \ArrayIterator(['hello', 'world'])]
+  #])]
+  public function iterable_type_union_cast($value) {
+    $this->assertEquals($value, Type::$ITERABLE->cast($value));
   }
 }

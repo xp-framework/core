@@ -8,10 +8,7 @@
  * @test   xp://net.xp_framework.unittest.reflection.TypeTest 
  */
 class Type extends Object {
-  public static $VAR;
-  public static $VOID;
-  public static $ARRAY;
-  public static $CALLABLE;
+  public static $VAR, $VOID, $ARRAY, $CALLABLE, $ITERABLE;
   public $name;
   public $default;
 
@@ -48,6 +45,22 @@ class Type extends Object {
         return $type instanceof self || $type instanceof FunctionType;
       }
     } return new NativeCallableType("callable", null);');
+
+    self::$ITERABLE= eval('namespace lang; class NativeIterableType extends Type {
+      static function __static() { }
+      public function isInstance($value) { return $value instanceof \Traversable || is_array($value); }
+      public function newInstance($value= null) {
+        if ($value instanceof \Traversable || is_array($value)) return $value;
+        throw new IllegalAccessException("Cannot instantiate iterable type from ".\xp::typeOf($value));
+      }
+      public function cast($value) {
+        if (null === $value || $value instanceof \Traversable || is_array($value)) return $value;
+        throw new ClassCastException("Cannot cast ".\xp::typeOf($value)." to the iterable type");
+      }
+      public function isAssignableFrom($type) {
+        return $type instanceof self;
+      }
+    } return new NativeIterableType("callable", null);');
   }
 
   /**
@@ -166,6 +179,8 @@ class Type extends Object {
       return self::$ARRAY;
     } else if ('callable' === $type) {
       return self::$CALLABLE;
+    } else if ('iterable' === $type) {
+      return self::$ITERABLE;
     } else if (0 === substr_compare($type, 'function(', 0, 9)) {
       return FunctionType::forName($type);
     } else if (0 === substr_compare($type, '[]', -2)) {
