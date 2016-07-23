@@ -60,7 +60,7 @@ class Type extends Object {
       public function isAssignableFrom($type) {
         return $type instanceof self;
       }
-    } return new NativeIterableType("callable", null);');
+    } return new NativeIterableType("iterable", null);');
   }
 
   /**
