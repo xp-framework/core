@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+### Features
+
+* Merged xp-framework/core#154: Implement iterable type. Forward compat
+  with PHP 7.1's [iterable type](https://wiki.php.net/rfc/iterable)
+  (@thekid)
+
 ## 7.4.0 / 2016-06-04
 
 ### Bugfixes
