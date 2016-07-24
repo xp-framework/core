@@ -268,13 +268,23 @@ class IsTest extends \unittest\TestCase {
 
   #[@test, @values([
   #  [function() { }],
+  #  [function() { yield 'Test'; }],
   #  ['strlen'],
   #  ['xp::gc'],
   #  [['xp', 'gc']],
   #  [[new Object(), 'toString']]
   #])]
-  public function callable($val) {
+  public function is_callable($val) {
     $this->assertTrue(is('callable', $val));
+  }
+
+  #[@test, @values([
+  #  [[]],
+  #  [[1, 2, 3]],
+  #  [['key' => 'value']],
+  #])]
+  public function is_array($val) {
+    $this->assertTrue(is('array', $val));
   }
 
   #[@test, @values([
@@ -284,7 +294,23 @@ class IsTest extends \unittest\TestCase {
   #  [new \ArrayObject([])],
   #  [new \ArrayIterator([])]
   #])]
-  public function iterable($val) {
+  public function is_iterable($val) {
     $this->assertTrue(is('iterable', $val));
+  }
+
+  #[@test, @values([
+  #  [new Object()],
+  #  [new \ArrayObject([])]
+  #])]
+  public function is_object($val) {
+    $this->assertTrue(is('object', $val));
+  }
+
+  #[@test, @values([
+  #  [function() { }],
+  #  [function() { yield 'Test'; }]
+  #])]
+  public function closures_are_not_objects($val) {
+    $this->assertFalse(is('object', $val));
   }
 }

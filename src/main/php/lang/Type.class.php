@@ -8,7 +8,7 @@
  * @test   xp://net.xp_framework.unittest.reflection.TypeTest 
  */
 class Type extends Object {
-  public static $VAR, $VOID, $ARRAY, $CALLABLE, $ITERABLE;
+  public static $VAR, $VOID, $ARRAY, $OBJECT, $CALLABLE, $ITERABLE;
   public $name;
   public $default;
 
@@ -29,6 +29,22 @@ class Type extends Object {
         return $type instanceof self || $type instanceof ArrayType || $type instanceof MapType;
       }
     } return new NativeArrayType("array", []);');
+
+    self::$OBJECT= eval('namespace lang; class NativeObjectType extends Type {
+      static function __static() { }
+      public function isInstance($value) { return is_object($value) && !$value instanceof \Closure; }
+      public function newInstance($value= null) {
+        if (is_object($value) && !$value instanceof \Closure) return clone $value;
+        throw new IllegalAccessException("Cannot instantiate ".\xp::typeOf($value));
+      }
+      public function cast($value) {
+        if (null === $value || is_object($value) && !$value instanceof \Closure) return $value;
+        throw new ClassCastException("Cannot cast ".\xp::typeOf($value)." to the object type");
+      }
+      public function isAssignableFrom($type) {
+        return $type instanceof self || $type instanceof XPClass;
+      }
+    } return new NativeObjectType("object", null);');
 
     self::$CALLABLE= eval('namespace lang; class NativeCallableType extends Type {
       static function __static() { }
@@ -177,6 +193,8 @@ class Type extends Object {
       return self::$VOID;
     } else if ('array' === $type) {
       return self::$ARRAY;
+    } else if ('object' === $type) {
+      return self::$OBJECT;
     } else if ('callable' === $type) {
       return self::$CALLABLE;
     } else if ('iterable' === $type) {
