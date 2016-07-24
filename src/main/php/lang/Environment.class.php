@@ -146,7 +146,9 @@ abstract class Environment {
    * - `$SSL_CERT_FILE`
    * - `ca-bundle.crt` in the user's config dir named "xp"
    * - `ca-bundle.crt` alongside *xp.exe* (provided by "cert" utility)
-   * - Various well-known system-wide locations on Unix and Linux systems
+   *
+   * If not found, it test various well-known system-wide locations on Unix and
+   * Linux systems.
    *
    * @see    https://github.com/xp-framework/core/issues/150
    * @see    https://github.com/xp-runners/cert
@@ -156,13 +158,13 @@ abstract class Environment {
    */
   public static function trustedCertificates($default= null) {
     static $search= [
-      '/etc/ssl/certs/ca-certificates.crt',
-      '/etc/pki/tls/certs/ca-bundle.crt',
-      '/etc/ssl/ca-bundle.pem',
-      '/etc/pki/tls/cacert.pem',
-      '/usr/local/share/certs/ca-root-nss.crt',
-      '/etc/ssl/cert.pem',
-      '/etc/openssl/certs/ca-certificates.crt'
+      '/etc/ssl/certs/ca-certificates.crt',     // Debian/Ubuntu/Gentoo etc.
+      '/etc/pki/tls/certs/ca-bundle.crt',       // Fedora/RHEL
+      '/etc/ssl/ca-bundle.pem',                 // OpenSUSE
+      '/etc/pki/tls/cacert.pem',                // OpenELEC
+      '/usr/local/share/certs/ca-root-nss.crt', // FreeBSD/DragonFly
+      '/etc/ssl/cert.pem',                      // OpenBSD
+      '/etc/openssl/certs/ca-certificates.crt'  // NetBSD
     ];
 
     if (is_file($certs= getenv('SSL_CERT_FILE'))) {
