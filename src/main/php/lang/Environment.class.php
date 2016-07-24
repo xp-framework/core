@@ -148,7 +148,7 @@ abstract class Environment {
    * - `ca-bundle.crt` alongside *xp.exe* (provided by "cert" utility)
    *
    * If not found, it test various well-known system-wide locations on Unix and
-   * Linux systems.
+   * Linux systems as well as Cygwin installation paths on Windows.
    *
    * @see    https://github.com/xp-framework/core/issues/150
    * @see    https://github.com/xp-runners/cert
@@ -158,13 +158,18 @@ abstract class Environment {
    */
   public static function trustedCertificates($default= null) {
     static $search= [
-      '/etc/ssl/certs/ca-certificates.crt',     // Debian/Ubuntu/Gentoo etc.
-      '/etc/pki/tls/certs/ca-bundle.crt',       // Fedora/RHEL
-      '/etc/ssl/ca-bundle.pem',                 // OpenSUSE
-      '/etc/pki/tls/cacert.pem',                // OpenELEC
-      '/usr/local/share/certs/ca-root-nss.crt', // FreeBSD/DragonFly
-      '/etc/ssl/cert.pem',                      // OpenBSD
-      '/etc/openssl/certs/ca-certificates.crt'  // NetBSD
+      'un*x' => [
+        '/etc/ssl/certs/ca-certificates.crt',     // Debian/Ubuntu/Gentoo etc.
+        '/etc/pki/tls/certs/ca-bundle.crt',       // Fedora/RHEL
+        '/etc/ssl/ca-bundle.pem',                 // OpenSUSE
+        '/etc/pki/tls/cacert.pem',                // OpenELEC
+        '/usr/local/share/certs/ca-root-nss.crt', // FreeBSD/DragonFly
+        '/etc/ssl/cert.pem',                      // OpenBSD
+        '/etc/openssl/certs/ca-certificates.crt'  // NetBSD
+      ],
+      'cygwin' => [
+        '\etc\pki\ca-trust\extracted\pem\tls-ca-bundle.pem'
+      ]
     ];
 
     if (is_file($certs= getenv('SSL_CERT_FILE'))) {
@@ -180,8 +185,19 @@ abstract class Environment {
       if (is_file($bundle)) return $bundle;
     }
 
-    foreach ($search as $bundle) {
-      if (is_file($bundle)) return $bundle;
+    // Search well-known locations
+    if (0 === strncasecmp(PHP_OS, 'Win', 3)) {
+      $base= dirname(getenv('HOME'));
+      while (strlen($base) > 3 && !is_file($base.DIRECTORY_SEPARATOR.'bin\\cygwin1.dll')) {
+        $base= dirname($base);
+      }
+      foreach ($search['cygwin'] as $file) {
+        if (is_file($bundle= $base.$file)) return $bundle;
+      }
+    } else {
+      foreach ($search['un*x'] as $bundle) {
+        if (is_file($bundle)) return $bundle;
+      }
     }
 
     if (null !== $default) return $default;
