@@ -99,10 +99,7 @@ abstract class Environment {
    * @return  string
    */
   public static function tempDir() {
-    $dir= self::variable(['TEMP', 'TMP', 'TMPDIR', 'TEMPDIR'], function() {
-      return sys_get_temp_dir();
-    });
-
+    $dir= self::variable(['TEMP', 'TMP', 'TMPDIR', 'TEMPDIR'], function() { return sys_get_temp_dir(); });
     return rtrim($dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
   }
 
