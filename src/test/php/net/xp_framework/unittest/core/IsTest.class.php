@@ -274,8 +274,17 @@ class IsTest extends \unittest\TestCase {
   #  [['xp', 'gc']],
   #  [[new Object(), 'toString']]
   #])]
-  public function callable($val) {
+  public function is_callable($val) {
     $this->assertTrue(is('callable', $val));
+  }
+
+  #[@test, @values([
+  #  [[]],
+  #  [[1, 2, 3]],
+  #  [['key' => 'value']],
+  #])]
+  public function is_array($val) {
+    $this->assertTrue(is('array', $val));
   }
 
   #[@test, @values([
@@ -285,7 +294,7 @@ class IsTest extends \unittest\TestCase {
   #  [new \ArrayObject([])],
   #  [new \ArrayIterator([])]
   #])]
-  public function iterable($val) {
+  public function is_iterable($val) {
     $this->assertTrue(is('iterable', $val));
   }
 
@@ -293,7 +302,7 @@ class IsTest extends \unittest\TestCase {
   #  [new Object()],
   #  [new \ArrayObject([])]
   #])]
-  public function object($val) {
+  public function is_object($val) {
     $this->assertTrue(is('object', $val));
   }
 
