@@ -144,8 +144,9 @@ abstract class Environment {
    * Returns certificates trusted by this system. Searches for a file called:
    *
    * - `$SSL_CERT_FILE`
-   * - `ca-bundle.crt` in the config dir named "xp"
-   * - `ca-bundle.crt` alongside *xp.exe*
+   * - `ca-bundle.crt` in the user's config dir named "xp"
+   * - `ca-bundle.crt` alongside *xp.exe* (provided by "cert" utility)
+   * - Various well-known system-wide locations on Unix and Linux systems
    *
    * @see    https://github.com/xp-framework/core/issues/150
    * @see    https://github.com/xp-runners/cert
@@ -154,6 +155,16 @@ abstract class Environment {
    * @throws lang.SystemException If nothing is found and no default is given
    */
   public static function trustedCertificates($default= null) {
+    static $search= [
+      '/etc/ssl/certs/ca-certificates.crt',
+      '/etc/pki/tls/certs/ca-bundle.crt',
+      '/etc/ssl/ca-bundle.pem',
+      '/etc/pki/tls/cacert.pem',
+      '/usr/local/share/certs/ca-root-nss.crt',
+      '/etc/ssl/cert.pem',
+      '/etc/openssl/certs/ca-certificates.crt'
+    ];
+
     if (is_file($certs= getenv('SSL_CERT_FILE'))) {
       return $certs;
     }
@@ -163,8 +174,12 @@ abstract class Environment {
     }
 
     if ($env= getenv('XP_EXE')) {
-      $file= dirname($env).DIRECTORY_SEPARATOR.'ca-bundle.crt';
-      if (is_file($file)) return $file;
+      $bundle= dirname($env).DIRECTORY_SEPARATOR.'ca-bundle.crt';
+      if (is_file($bundle)) return $bundle;
+    }
+
+    foreach ($search as $bundle) {
+      if (is_file($bundle)) return $bundle;
     }
 
     if (null !== $default) return $default;
