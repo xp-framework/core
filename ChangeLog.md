@@ -5,6 +5,7 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged xp-framework/core#155: Implement object type union - @thekid
 * Merged xp-framework/core#153: Environment class - @thekid
 * Merged xp-framework/core#154: Implement iterable type. Forward compat
   with PHP 7.1's [iterable type](https://wiki.php.net/rfc/iterable)
