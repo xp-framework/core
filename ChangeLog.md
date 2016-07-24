@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 7.5.0 / 2016-07-24
+
+### Bugfixes
+
+* Fixed compatibility with PHP 7.1, which replaces the "Missing argument"
+  warning with ["Too few arguments" exception](https://wiki.php.net/rfc/too_few_args)
+  (@thekid)
+
 ### Features
 
 * Merged xp-framework/core#155: Implement object type union - @thekid
