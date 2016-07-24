@@ -61,6 +61,11 @@ class TypeTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function objectTypeUnion() {
+    $this->assertEquals(Type::$OBJECT, Type::forName('object'));
+  }
+
+  #[@test]
   public function arrayOfString() {
     $this->assertEquals(ArrayType::forName('string[]'), Type::forName('string[]'));
   }
@@ -450,5 +455,45 @@ class TypeTest extends \unittest\TestCase {
   #])]
   public function iterable_type_union_cast($value) {
     $this->assertEquals($value, Type::$ITERABLE->cast($value));
+  }
+
+  #[@test, @values([
+  #  [new Object()],
+  #  [new \ArrayObject([])],
+  #])]
+  public function object_type_union_isInstance($value) {
+    $this->assertTrue(Type::$OBJECT->isInstance($value));
+  }
+
+  #[@test, @values([
+  #  [null],
+  #  [new Object()],
+  #  [new \ArrayObject([])],
+  #])]
+  public function object_type_union_cast($value) {
+    $this->assertEquals($value, Type::$OBJECT->cast($value));
+  }
+
+  #[@test, @values([
+  #  [new Object()],
+  #  [new \ArrayObject([])],
+  #])]
+  public function object_type_union_newInstance($value) {
+    $this->assertInstanceOf(typeof($value), Type::$OBJECT->newInstance($value));
+  }
+
+  #[@test]
+  public function object_type_union_isAssignableFrom_self() {
+    $this->assertTrue(Type::$OBJECT->isAssignableFrom(Type::$OBJECT));
+  }
+
+  #[@test]
+  public function object_type_union_isAssignableFrom_this_class() {
+    $this->assertTrue(Type::$OBJECT->isAssignableFrom(typeof($this)));
+  }
+
+  #[@test, @values([Primitive::$INT, Type::$VOID, Type::$VAR, new ArrayType('var'), new MapType('var')])]
+  public function object_type_union_is_not_assignable_from($type) {
+    $this->assertFalse(Type::$OBJECT->isAssignableFrom($type));
   }
 }
