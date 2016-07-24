@@ -116,8 +116,17 @@ class ErrorsTest extends \unittest\TestCase {
     $f('Primitive');
   }
 
-  #[@test, @expect(IllegalArgumentException::class), @action(new IgnoredOnHHVM())]
+  #[@test, @expect(IllegalArgumentException::class), @action([
+  #  new IgnoredOnHHVM(),
+  #  new RuntimeVersion('<7.1.0alpha1')
+  #])]
   public function missing_argument_mismatch_yield_iae() {
+    $f= function($arg) { };
+    $f();
+  }
+
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.1.0alpha1'))]
+  public function missing_argument_mismatch_yield_error() {
     $f= function($arg) { };
     $f();
   }
