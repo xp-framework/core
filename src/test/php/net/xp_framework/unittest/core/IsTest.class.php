@@ -265,4 +265,26 @@ class IsTest extends \unittest\TestCase {
   public function type_union($val) {
     $this->assertTrue(is('int|string', $val));
   }
+
+  #[@test, @values([
+  #  [function() { }],
+  #  ['strlen'],
+  #  ['xp::gc'],
+  #  [['xp', 'gc']],
+  #  [[new Object(), 'toString']]
+  #])]
+  public function callable($val) {
+    $this->assertTrue(is('callable', $val));
+  }
+
+  #[@test, @values([
+  #  [[]],
+  #  [[1, 2, 3]],
+  #  [['key' => 'value']],
+  #  [new \ArrayObject([])],
+  #  [new \ArrayIterator([])]
+  #])]
+  public function iterable($val) {
+    $this->assertTrue(is('iterable', $val));
+  }
 }

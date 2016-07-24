@@ -273,6 +273,10 @@ function is($type, $object) {
     return is_bool($object);
   } else if ('var' === $type) {
     return true;
+  } else if ('callable' === $type) {
+    return is_callable($object);
+  } else if ('iterable' === $type) {
+    return is_array($object) || $object instanceof \Traversable;
   } else if (0 === strncmp($type, 'function(', 9)) {
     return \lang\FunctionType::forName($type)->isInstance($object);
   } else if (0 === substr_compare($type, '[]', -2)) {
