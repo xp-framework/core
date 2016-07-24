@@ -459,16 +459,24 @@ class TypeTest extends \unittest\TestCase {
 
   #[@test, @values([
   #  [new Object()],
-  #  [new \ArrayObject([])],
+  #  [new \ArrayObject([])]
   #])]
   public function object_type_union_isInstance($value) {
     $this->assertTrue(Type::$OBJECT->isInstance($value));
   }
 
   #[@test, @values([
+  #  [function() { }],
+  #  [function() { yield 'Test'; }]
+  #])]
+  public function closures_are_not_instances_of_the_object_type_union($value) {
+    $this->assertFalse(Type::$OBJECT->isInstance($value));
+  }
+
+  #[@test, @values([
   #  [null],
   #  [new Object()],
-  #  [new \ArrayObject([])],
+  #  [new \ArrayObject([])]
   #])]
   public function object_type_union_cast($value) {
     $this->assertEquals($value, Type::$OBJECT->cast($value));
