@@ -141,12 +141,16 @@ abstract class Environment {
   }
 
   /**
-   * Returns certificates trusted by this system.
+   * Returns certificates trusted by this system. Searches for a file called:
+   *
+   * - `$SSL_CERT_FILE`
+   * - `ca-bundle.crt` in the config dir named "xp"
+   * - `ca-bundle.crt` alongside *xp.exe*
    *
    * @see    https://github.com/xp-framework/core/issues/150
    * @see    https://github.com/xp-runners/cert
    * @param  string $default
-   * @return string
+   * @return string The file path, or the value of $default
    * @throws lang.SystemException If nothing is found and no default is given
    */
   public static function trustedCertificates($default= null) {
