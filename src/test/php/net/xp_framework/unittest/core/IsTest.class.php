@@ -268,6 +268,7 @@ class IsTest extends \unittest\TestCase {
 
   #[@test, @values([
   #  [function() { }],
+  #  [function() { yield 'Test'; }],
   #  ['strlen'],
   #  ['xp::gc'],
   #  [['xp', 'gc']],
@@ -286,5 +287,21 @@ class IsTest extends \unittest\TestCase {
   #])]
   public function iterable($val) {
     $this->assertTrue(is('iterable', $val));
+  }
+
+  #[@test, @values([
+  #  [new Object()],
+  #  [new \ArrayObject([])]
+  #])]
+  public function object($val) {
+    $this->assertTrue(is('object', $val));
+  }
+
+  #[@test, @values([
+  #  [function() { }],
+  #  [function() { yield 'Test'; }]
+  #])]
+  public function closures_are_not_objects($val) {
+    $this->assertFalse(is('object', $val));
   }
 }

@@ -273,6 +273,10 @@ function is($type, $object) {
     return is_bool($object);
   } else if ('var' === $type) {
     return true;
+  } else if ('array' === $type) {
+    return is_array($object);
+  } else if ('object' === $type) {
+    return is_object($object) && !($object instanceof \Closure);
   } else if ('callable' === $type) {
     return is_callable($object);
   } else if ('iterable' === $type) {
