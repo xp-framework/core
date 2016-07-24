@@ -188,7 +188,7 @@ abstract class Environment {
     // Search well-known locations
     if (0 === strncasecmp(PHP_OS, 'Win', 3)) {
       $base= dirname(getenv('HOME'));
-      while (strlen($base) > 3 && !is_file($base.DIRECTORY_SEPARATOR.'bin\\cygwin1.dll')) {
+      while (strlen($base) > 3 && !is_file($base.'\bin\cygwin1.dll')) {
         $base= dirname($base);
       }
       foreach ($search['cygwin'] as $file) {
