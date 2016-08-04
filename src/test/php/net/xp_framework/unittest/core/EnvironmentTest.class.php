@@ -7,6 +7,21 @@ use net\xp_framework\unittest\IgnoredOnHHVM;
 
 #[@action(new IgnoredOnHHVM())]
 class EnvironmentTest extends \unittest\TestCase {
+  private static $set;
+
+  #[@beforeClass]
+  public static function clearXDG() {
+    $remove= [];
+    foreach ($_ENV as $variable => $value) {
+      if (0 === strncmp('XDG_', $variable, 4)) $remove[$variable]= null;
+    }
+    self::$set= new EnvironmentSet($remove);
+  }
+
+  #[@afterClass]
+  public static function restoreXDG() {
+    self::$set->close();
+  }
 
   #[@test]
   public function variable() {
