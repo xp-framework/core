@@ -29,7 +29,7 @@ class PropertyExpansion extends \lang\Enum {
    * Register an expansion implementation
    *
    * @param  string $name
-   * @param  function(string, string: string) $impl
+   * @param  function(string, string): string $impl
    * @return self
    */
   public function expand($name, $impl) {
