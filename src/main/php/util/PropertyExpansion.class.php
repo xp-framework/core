@@ -8,8 +8,8 @@ use lang\FormatException;
  *
  * @see  xp://util.Properties
  */
-class PropertyExpansion extends \lang\Enum {
-  protected $impl= [];
+class PropertyExpansion {
+  private $impl= [];
 
   /**
    * Creates an instance 
