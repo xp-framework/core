@@ -13,11 +13,10 @@ matrix:
     - php: nightly
 
 before_script:
-  - phpenv config-rm xdebug.ini; true
-  - wget 'https://github.com/xp-framework/xp-runners/releases/download/v6.4.0/setup' -O - | php
-  - echo "use=." > xp.ini
-  - echo "[runtime]" >> xp.ini
-  - echo "date.timezone=Europe/Berlin" >> xp.ini
+  - curl -sSL https://dl.bintray.com/xp-runners/generic/xp-run-master.sh > xp-run
+  - composer install --prefer-dist
+  - echo "vendor/autoload.php" > composer.pth
+  - echo "test.xar" > composer.pth
 
 script:
-  - (EXCD=0; for i in `ls -1 src/test/config/unittest/*.ini`; do echo "---> $i"; ./xp -cp test.xar xp.unittest.Runner $i; RES=$?; if [ $RES -ne 0 ]; then EXCD=$RES; fi; done; exit $EXCD;)
+  - (EXCD=0; for i in `ls -1 src/test/config/unittest/*.ini`; do echo "---> $i"; sh xp-run xp.unittest.Runner $i; RES=$?; if [ $RES -ne 0 ]; then EXCD=$RES; fi; done; exit $EXCD;)

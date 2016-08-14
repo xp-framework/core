@@ -13,9 +13,9 @@ init:
 install:
   - if exist .\xp (set CACHED=1) else (mkdir .\xp)
   - if %CACHED%==0 cd .\xp
-  - if %CACHED%==0 appveyor DownloadFile http://windows.php.net/downloads/releases/archives/php-7.0.2-nts-Win32-VC14-x86.zip -FileName php.zip
+  - if %CACHED%==0 appveyor DownloadFile http://windows.php.net/downloads/releases/archives/php-7.0.8-nts-Win32-VC14-x86.zip -FileName php.zip
   - if %CACHED%==0 appveyor DownloadFile https://getcomposer.org/composer.phar
-  - if %CACHED%==0 appveyor DownloadFile https://bintray.com/artifact/download/xp-runners/windows/xp-runners_7.4.0.zip -FileName xp.zip
+  - if %CACHED%==0 appveyor DownloadFile https://bintray.com/artifact/download/xp-runners/windows/xp-runners_master.zip -FileName xp.zip
   - if %CACHED%==0 7z x php.zip -y
   - if %CACHED%==0 7z x xp.zip -y
   - if %CACHED%==0 echo extension_dir=%cd%\ext >> php.ini
@@ -37,4 +37,4 @@ test_script:
         xp -m . -cp test.xar xp.unittest.Runner $file.FullName
         if ($lastexitcode -gt 0) { $result = 1 }
       }
-      $lastexitcode = $result
+      if ($result -gt 0) { throw "Build failed" }

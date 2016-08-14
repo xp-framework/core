@@ -12,7 +12,7 @@ use lang\IllegalArgumentException;
 class PathTest extends \unittest\TestCase {
 
   /** @return io.File */
-  protected function existingFile() { return new File(Runtime::getInstance()->bootstrapScript('class')); }
+  protected function existingFile() { return new File(__FILE__); }
 
   /** @return io.Folder */
   protected function existingFolder() { return new Folder($this->existingFile()->path); }
