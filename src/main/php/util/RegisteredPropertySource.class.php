@@ -1,20 +1,20 @@
 <?php namespace util;
 
+use lang\IllegalArgumentException;
+
 /**
  * Memory-based property source
  *
  * @test  xp://net.xp_framework.unittest.RegisteredPropertySourceTest
  */
 class RegisteredPropertySource extends \lang\Object implements PropertySource {
-  protected
-    $name = null,
-    $prop = null;
+  protected $name, $prop;
 
   /**
    * Constructor
    *
-   * @param   string name
-   * @param   util.PropertyAccess prop
+   * @param  string $name
+   * @param  util.PropertyAccess $prop
    */
   public function __construct($name, PropertyAccess $prop) {
     $this->name= $name;
@@ -24,22 +24,22 @@ class RegisteredPropertySource extends \lang\Object implements PropertySource {
   /**
    * Check for properties
    *
-   * @param   string name
-   * @return  bool
+   * @param  string $name
+   * @return bool
    */
   public function provides($name) {
-    return $name == $this->name;
+    return $name === $this->name;
   }
 
   /**
    * Retrieve properties
    *
-   * @param   string name
-   * @return  util.PropertyAccess
+   * @param  string $name
+   * @return util.PropertyAccess
    */
   public function fetch($name) {
-    if (!$name == $this->name)
-      throw new \lang\IllegalArgumentException('Access to property source under wrong name "'.$name.'"');
+    if ($name !== $this->name)
+      throw new IllegalArgumentException('Access to property source under wrong name "'.$name.'"');
 
     return $this->prop;
   }
@@ -47,7 +47,7 @@ class RegisteredPropertySource extends \lang\Object implements PropertySource {
   /**
    * Returns hashcode for this source
    *
-   * @return  string
+   * @return string
    */
   public function hashCode() {
     return md5($this->name.serialize($this->prop));
@@ -56,12 +56,12 @@ class RegisteredPropertySource extends \lang\Object implements PropertySource {
   /**
    * Compare against other object
    *
-   * @param   util.RegisteredPropertySource cmp
-   * @return  bool
+   * @param  var $cmp
+   * @return bool
    */
   public function equals($cmp) {
     return $cmp instanceof self &&
-      $cmp->name == $this->name &&
+      $cmp->name === $this->name &&
       $this->prop->equals($cmp->prop)
     ;
   }

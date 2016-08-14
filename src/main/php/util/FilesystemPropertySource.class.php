@@ -1,11 +1,14 @@
 <?php namespace util;
 
+use lang\IllegalArgumentException;
+
 /**
  * Filesystem-based property source
  *
  * @test  xp://net.xp_framework.unittest.util.FilesystemPropertySourceTest
  */
 class FilesystemPropertySource extends \lang\Object implements PropertySource {
+  protected $root;
   protected $cache= [];
 
   /**
@@ -36,8 +39,9 @@ class FilesystemPropertySource extends \lang\Object implements PropertySource {
    * @throws  lang.IllegalArgumentException if property requested is not available
    */
   public function fetch($name) {
-    if (!$this->provides($name))
-      throw new \lang\IllegalArgumentException('No properties '.$name.' found at '.$this->root);
+    if (!$this->provides($name)) {
+      throw new IllegalArgumentException('No properties '.$name.' found at '.$this->root);
+    }
 
     if (!isset($this->cache[$name])) {
       $this->cache[$name]= new Properties($this->root.DIRECTORY_SEPARATOR.$name.'.ini');
@@ -58,8 +62,8 @@ class FilesystemPropertySource extends \lang\Object implements PropertySource {
   /**
    * Check if this instance equals another
    *
-   * @param   Generic cmp
-   * @return  bool
+   * @param  var $cmp
+   * @return bool
    */
   public function equals($cmp) {
     return $cmp instanceof self && $cmp->root === $this->root;
@@ -68,7 +72,7 @@ class FilesystemPropertySource extends \lang\Object implements PropertySource {
   /**
    * Creates a string representation of this object
    *
-   * @return  string
+   * @return string
    */
   public function toString() {
     return nameof($this).'<'.$this->root.'>';
