@@ -37,4 +37,4 @@ test_script:
         xp -m . -cp test.xar xp.unittest.Runner $file.FullName
         if ($lastexitcode -gt 0) { $result = 1 }
       }
-      $lastexitcode = $result
+      exit $result
