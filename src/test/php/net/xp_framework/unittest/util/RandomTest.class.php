@@ -2,6 +2,7 @@
 
 use util\Random;
 use unittest\actions\ExtensionAvailable;
+use unittest\actions\RuntimeVersion;
 use unittest\actions\VerifyThat;
 use lang\IllegalArgumentException;
 
@@ -63,7 +64,10 @@ class RandomTest extends \unittest\TestCase {
     $this->assertEquals(20, (new Random(Random::OPENSSL))->bytes(20)->size());
   }
 
-  #[@test, @action(new ExtensionAvailable('mcrypt'))]
+  #[@action([
+  #  new ExtensionAvailable('mcrypt'),
+  #  new RuntimeVersion('<7.1.0-dev')
+  #])]
   public function mcrypt_bytes() {
     $this->assertEquals(20, (new Random(Random::MCRYPT))->bytes(20)->size());
   }
@@ -107,7 +111,10 @@ class RandomTest extends \unittest\TestCase {
     $this->assertTrue($random >= 0 && $random <= 10);
   }
 
-  #[@test, @action(new ExtensionAvailable('mcrypt'))]
+  #[@action([
+  #  new ExtensionAvailable('mcrypt'),
+  #  new RuntimeVersion('<7.1.0-dev')
+  #])]
   public function mcrypt_int() {
     $random= (new Random(Random::MCRYPT))->int(0, 10);
     $this->assertTrue($random >= 0 && $random <= 10);

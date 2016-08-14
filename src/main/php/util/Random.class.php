@@ -19,7 +19,7 @@ use lang\IllegalArgumentException;
 class Random {
   const SYSTEM  = 'system';
   const OPENSSL = 'openssl';
-  const MCRYPT  = 'mcrypt';
+  const MCRYPT  = 'mcrypt';   // Deprecated, see https://wiki.php.net/rfc/mcrypt-viking-funeral
   const URANDOM = 'urandom';
   const MTRAND  = 'mtrand';
 
