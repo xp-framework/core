@@ -11,7 +11,7 @@ use unittest\actions\RuntimeVersion;
  */
 #[@action([
 #  new ExtensionAvailable('mcrypt'),
-#  new RuntimeVersion('<=7.1.0')
+#  new RuntimeVersion('<7.1.0-dev')
 #])]
 class McryptSecretTest extends SecretTest {
 
