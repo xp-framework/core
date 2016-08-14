@@ -3,6 +3,16 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 7.5.1 / 2016-08-14
+
+### Bugfixes
+
+* Fixed `Runtime::newInstance()` to inherit all currently loaded paths
+  (@thekid)
+* Fixed ClassLoaders' path output if environment doesn't contain resolved
+  paths - e.g. paths with symlinks or ".." parts inside.
+  (@thekid)
+
 ## 7.5.0 / 2016-07-24
 
 ### Bugfixes

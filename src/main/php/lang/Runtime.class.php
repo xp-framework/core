@@ -1,5 +1,7 @@
 <?php namespace lang;
 
+use lang\archive\ArchiveClassLoader;
+
 /**
  * Represents the runtime - that is, the PHP binary executing the
  * current process.
@@ -287,22 +289,26 @@ class Runtime {
     if (null === $options) {
       $options= $this->startupOptions();
     }
-    
-    // Merge together options (overwriting include_path which is misused
-    // by the XP runners to transport scan_path, but since we're invoking
-    // PHP directly here, expand it), and, if present, the bootstrap 
-    // script and entry point class.
-    $include= '.'.PATH_SEPARATOR.get_include_path();
-    
-    // If invocation uses a bootstrap mode, add the scanpath separator
-    // in front of the includes - this will be stripped off by the
-    // runner.
+
+    // Inherit all currently loaded paths acceptable to bootstrapping
+    $include= '.';
+    foreach (ClassLoader::getLoaders() as $delegate) {
+      if ($delegate instanceof FileSystemClassLoader || $delegate instanceof ArchiveClassLoader) {
+        $include.= PATH_SEPARATOR.$delegate->path;
+      }
+    }
+
+    // If a bootstrap script is given, it will expect the include_path setting to be
+    // in the form `[MODULES];;[CLASSPATH]` (both starting with a dot).
     if (null !== $bootstrap) {
       $include= '.'.PATH_SEPARATOR.PATH_SEPARATOR.$include;
     }
+
+    // Append extra class path elements
     if ($cp= $options->getClassPath()) {
       $include.= PATH_SEPARATOR.implode(PATH_SEPARATOR, $cp); 
     }
+
     $cmdline= array_merge(
       $options->withSetting('include_path', $include)->withSetting('encoding', null)->asArguments(),
       $bootstrap ? [$this->bootstrapScript($bootstrap)] : [],
