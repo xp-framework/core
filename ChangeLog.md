@@ -8,7 +8,7 @@ XP Framework Core ChangeLog
 ### Heads up!
 
 * Deprecated `Secret::BACKING_MCRYPT` and started preferring OpenSSL. See
-  https://wiki.php.net/rfc/mcrypt-viking-funeral
+  https://wiki.php.net/rfc/mcrypt-viking-funeral and xp-framework/core#156
   (@thekid)
 
 ### Bugfixes
