@@ -162,6 +162,7 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
    */
   private function compactPath($path, $bases) {
     foreach ($bases as $base => $replace) {
+      $base= realpath($base);
       if (0 === strpos($path, $base)) {
         $path= $replace.substr($path, strlen($base));
       }
