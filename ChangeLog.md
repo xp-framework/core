@@ -5,6 +5,12 @@ XP Framework Core ChangeLog
 
 ## 7.5.1 / 2016-08-14
 
+### Heads up!
+
+* Deprecated `Secret::BACKING_MCRYPT` and started preferring OpenSSL. See
+  https://wiki.php.net/rfc/mcrypt-viking-funeral
+  (@thekid)
+
 ### Bugfixes
 
 * Fixed `Runtime::newInstance()` to inherit all currently loaded paths

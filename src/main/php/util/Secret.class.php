@@ -37,10 +37,10 @@ class Secret extends \lang\Object {
   private static $decrypt = null;
 
   static function __static() {
-    if (Runtime::getInstance()->extensionAvailable('mcrypt')) {
-      self::useBacking(self::BACKING_MCRYPT);
-    } else if (Runtime::getInstance()->extensionAvailable('openssl')) {
+    if (Runtime::getInstance()->extensionAvailable('openssl')) {
       self::useBacking(self::BACKING_OPENSSL);
+    } else if (Runtime::getInstance()->extensionAvailable('mcrypt')) {
+      self::useBacking(self::BACKING_MCRYPT);
     } else {
       self::useBacking(self::BACKING_PLAINTEXT);
     }
@@ -56,7 +56,20 @@ class Secret extends \lang\Object {
    */
   public static function useBacking($type) {
     switch ($type) {
-      case self::BACKING_MCRYPT: {
+      case self::BACKING_OPENSSL: {
+        if (!Runtime::getInstance()->extensionAvailable('openssl')) {
+          throw new IllegalStateException('Backing "openssl" required but extension not available.');
+        }
+        $key= md5(uniqid());
+        $iv= substr(md5(uniqid()), 0, openssl_cipher_iv_length('des'));
+
+        return self::setBacking(
+          function($value) use ($key, $iv) { return openssl_encrypt($value, 'DES', $key,  0, $iv); },
+          function($value) use ($key, $iv) { return openssl_decrypt($value, 'DES', $key,  0, $iv); }
+        );
+      }
+
+      case self::BACKING_MCRYPT: {  // Deprecated, see https://wiki.php.net/rfc/mcrypt-viking-funeral
         if (!Runtime::getInstance()->extensionAvailable('mcrypt')) {
           throw new IllegalStateException('Backing "mcrypt" required but extension not available.');
         }
@@ -68,19 +81,6 @@ class Secret extends \lang\Object {
         return self::setBacking(
           function($value) use($engine) { return mcrypt_generic($engine, $value); },
           function($value) use($engine) { return rtrim(mdecrypt_generic($engine, $value), "\0"); }
-        );
-      }
-
-      case self::BACKING_OPENSSL: {
-        if (!Runtime::getInstance()->extensionAvailable('openssl')) {
-          throw new IllegalStateException('Backing "openssl" required but extension not available.');
-        }
-        $key= md5(uniqid());
-        $iv= substr(md5(uniqid()), 0, openssl_cipher_iv_length('des'));
-
-        return self::setBacking(
-          function($value) use ($key, $iv) { return openssl_encrypt($value, 'DES', $key,  0, $iv); },
-          function($value) use ($key, $iv) { return openssl_decrypt($value, 'DES', $key,  0, $iv); }
         );
       }
 
