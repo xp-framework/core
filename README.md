@@ -35,7 +35,7 @@ Finally, start `xp -v` to see it working:
 
 ```sh
 $ xp -v
-XP 8.0.0-dev { PHP 7.0.10 & ZE 3.0.0 } @ Windows NT SLATE 10.0 build 10586 (Windows 10) i586
+XP 8.0.0-dev { PHP 7.0.10 & ZE 3.0.0 } @ Windows NT SLATE 10.0 build 14393 (Windows 10) i586
 Copyright (c) 2001-2016 the XP group
 FileSystemCL<./src/main/php>
 FileSystemCL<./src/test/php>
@@ -68,19 +68,20 @@ $ xp ageindays.script.php 1977-12-14
 Hey, you are 13724 days old
 ```
 
-Alternatively, you can put this code inside a class - this time, `AgeInDays.class.php`.
+Alternatively, you can put this code inside a class and give it a static *main* method. This time, save te code to a file called `AgeInDays.class.php`.
 
 ```php
-<?php ageindays;
+<?php
 
 use util\{Date, DateUtil};
 use util\cmd\Console;
 
-class Test {
+class AgeInDays {
 
-  public static function main(array $args) {
+  public static function main(array $args): int {
     $span= DateUtil::timespanBetween(new Date($args[0]), Date::now());
     Console::writeLine('Hey, you are ', $span->getDays(), ' days old');
+    return 0;
   }
 }
 ```
