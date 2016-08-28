@@ -391,11 +391,11 @@ class ClassParser {
             $group= '';
             for ($i+= 1; $i < $s; $i++) {
               if (',' === $tokens[$i]) {
-                $imports[$alias ?? $group]= strtr($type.$group, '\\', '.');
+                $imports[$alias ? $alias : $group]= strtr($type.$group, '\\', '.');
                 $alias= null;
                 $group= '';
               } else if ('}' === $tokens[$i]) {
-                $imports[$alias ?? $group]= strtr($type.$group, '\\', '.');
+                $imports[$alias ? $alias : $group]= strtr($type.$group, '\\', '.');
                 break;
               } else if (T_AS === $tokens[$i][0]) {
                 $i+= 2;
