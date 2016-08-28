@@ -13,6 +13,13 @@ XP Framework Core ChangeLog
   . Simplified code by remove PHP5-specific handling
   (@thekid)
 
+## 7.6.1 / 2016-08-28
+
+### Features
+
+* Added support for [grouped use statements](https://wiki.php.net/rfc/group_use_declarations)
+  (@thekid)
+
 ## 7.6.0 / 2016-08-14
 
 ### Heads up!
