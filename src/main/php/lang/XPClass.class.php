@@ -81,6 +81,8 @@ class XPClass extends Type {
   public function __construct($ref) {
     if ($ref instanceof \ReflectionClass) {
       $this->_class= $ref->getName();
+    } else if ($ref instanceof \__PHP_Incomplete_Class) {
+      throw new ClassCastException('Cannot use incomplete classes in reflection');
     } else if (is_object($ref)) {
       $this->_class= get_class($ref);
     } else {

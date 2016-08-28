@@ -15,6 +15,11 @@ XP Framework Core ChangeLog
 
 ## 7.6.1 / 2016-08-28
 
+### Bugfixes
+
+* Fixed issue #158: PHP Nightly failing test with `__PHP_Incomplete_Class`
+  (@thekid)
+
 ### Features
 
 * Added support for [grouped use statements](https://wiki.php.net/rfc/group_use_declarations)
