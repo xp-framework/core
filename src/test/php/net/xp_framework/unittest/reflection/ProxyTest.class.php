@@ -21,12 +21,12 @@ class ProxyTest extends \unittest\TestCase {
 
   /** @return void */
   public function setUp() {
-    $this->handler= newinstance(InvocationHandler::class, [], [
-      'invocations' => [],
-      'invoke'      => function($proxy, $method, $args) {
+    $this->handler= new class() implements InvocationHandler {
+      public $invocations = [];
+      public function invoke($proxy, $method, $args) {
         $this->invocations[$method.'_'.sizeof($args)]= $args;
       }
-    ]);
+    };
     $this->iteratorClass= XPClass::forName(XPIterator::class);
     $this->observerClass= XPClass::forName(Observer::class);
   }

@@ -22,10 +22,10 @@ class TextWriterTest extends \unittest\TestCase {
 
   #[@test]
   public function can_create_with_channel() {
-    new TextWriter(newinstance(Channel::class, [], [
-      'in'  => function() { return new MemoryInputStream(''); },
-      'out' => function() { return new MemoryOutputStream(); }
-    ]));
+    new TextWriter(new class() implements Channel {
+      public function in() { return new MemoryInputStream(''); }
+      public function out() { return new MemoryOutputStream(); }
+    });
   }
 
   #[@test, @expect(IllegalArgumentException::class)]

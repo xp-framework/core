@@ -62,13 +62,13 @@ class NamespacedClassesTest extends \unittest\TestCase {
 
   #[@test]
   public function newInstanceOnNamespacedClass() {
-    $i= newinstance(NamespacedClass::class, [], '{}');
+    $i= new class() extends NamespacedClass {};
     $this->assertInstanceOf(NamespacedClass::class, $i);
   }
 
   #[@test]
   public function packageOfNewInstancedNamespacedClass() {
-    $i= newinstance(NamespacedClass::class, [], '{}');
+    $i= newinstance(NamespacedClass::class, []);
     $this->assertEquals(
       Package::forName('net.xp_framework.unittest.core'),
       $i->getClass()->getPackage()

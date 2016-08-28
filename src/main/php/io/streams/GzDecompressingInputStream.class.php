@@ -15,7 +15,7 @@ class GzDecompressingInputStream implements InputStream {
   public static $wrapped= [];
 
   static function __static() {
-    stream_wrapper_register('zlib.bounded', get_class(newinstance(Object::class, [], '{
+    stream_wrapper_register('zlib.bounded', get_class(new class() extends Object {
       protected $id, $st= null;
       protected $buffer= "";
       public $context = null;
@@ -54,7 +54,7 @@ class GzDecompressingInputStream implements InputStream {
         $this->st->close();
         unset(\io\streams\GzDecompressingInputStream::$wrapped[$this->id]);
       }
-    }')));
+    }));
   }
   
   /**

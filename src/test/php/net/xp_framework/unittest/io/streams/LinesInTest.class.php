@@ -72,19 +72,19 @@ class LinesInTest extends \unittest\TestCase {
 
   #[@test]
   public function can_only_iterate_unseekable_once() {
-    $fixture= new LinesIn(newinstance(InputStream::class, [], [
-      'bytes' => "A\nB\n",
-      'offset' => 0,
-      'read' => function($length= 8192) {
+    $fixture= new LinesIn(new class() implements InputStream {
+      public $bytes = "A\nB\n";
+      public $offset = 0;
+      public function read($length= 8192) {
         $chunk= substr($this->bytes, $this->offset, $length);
         $this->offset+= strlen($chunk);
         return $chunk;
-      },
-      'available' => function() {
+      }
+      public function available() {
         return strlen($this->bytes) - $this->offset;
-      },
-      'close' => function() { }
-    ]));
+      }
+      public function close() { }
+    });
 
     $this->assertEquals([1 => 'A', 2 => 'B'], iterator_to_array($fixture));
     try {

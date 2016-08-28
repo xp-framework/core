@@ -165,11 +165,11 @@ class StreamWrappingTest extends TestCase {
 
   #[@test, @expect(IOException::class)]
   public function readAll_propagates_exception() {
-    Streams::readAll(newinstance(InputStream::class, [], [
-      'read'      => function($limit= 8192) { throw new IOException('FAIL'); },
-      'available' => function() { return 1; },
-      'close'     => function() { }
-    ]));
+    Streams::readAll(new class() implements InputStream {
+      public function read($limit= 8192) { throw new IOException('FAIL'); }
+      public function available() { return 1; }
+      public function close() { }
+    });
   }
 
   #[@test]

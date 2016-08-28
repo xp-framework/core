@@ -50,84 +50,84 @@ class ChannelStreamTest extends \unittest\TestCase {
 
   #[@test, @expect(IOException::class)]
   public function writeToClosedChannel() {
-    ChannelWrapper::capture(newinstance(Runnable::class, [], [
-      'run' => function() {
+    ChannelWrapper::capture(new class() implements Runnable {
+      public function run() {
         $s= new ChannelOutputStream("output");
         $s->close();
         $s->write("whatever");
       }
-    ]));
+    });
   }
 
   #[@test, @expect(IOException::class)]
   public function readingFromClosedChannel() {
-    ChannelWrapper::capture(newinstance(Runnable::class, [], [
-      'run' => function() {
+    ChannelWrapper::capture(new class() implements Runnable {
+      public function run() {
         $s= new ChannelInputStream('input');
         $s->close();
         $s->read();
       }
-    ]));
+    });
   }
 
   #[@test]
   public function output() {
-    $r= ChannelWrapper::capture(newinstance(Runnable::class, [], [
-      'run' => function() {
+    $r= ChannelWrapper::capture(new class() implements Runnable {
+      public function run() {
         $s= new ChannelOutputStream('output');
         $s->write("+OK Hello");
       }
-    ]));      
+    });
     $this->assertEquals('+OK Hello', $r['output']);
   }
 
   #[@test]
   public function stdout() {
-    $r= ChannelWrapper::capture(newinstance(Runnable::class, [], [
-      'run' => function() {
+    $r= ChannelWrapper::capture(new class() implements Runnable {
+      public function run() {
         $s= new ChannelOutputStream('stdout');
         $s->write("+OK Hello");
       }
-    ]));      
+    });
     $this->assertEquals('+OK Hello', $r['stdout']);
   }
 
   #[@test]
   public function stderr() {
-    $r= ChannelWrapper::capture(newinstance(Runnable::class, [], [
-      'run' => function() {
+    $r= ChannelWrapper::capture(new class() implements Runnable {
+      public function run() {
         $s= new ChannelOutputStream('stderr');
         $s->write("+OK Hello");
       }
-    ]));      
+    });
     $this->assertEquals('+OK Hello', $r['stderr']);
   }
 
   #[@test]
   public function stdin() {
-    $r= ChannelWrapper::capture(newinstance(Runnable::class, [], [
-      'run' => function() {
+    $r= ChannelWrapper::capture(new class() implements Runnable {
+      public function run() {
         $i= new ChannelInputStream('stdin');
         $o= new ChannelOutputStream('stdout');
         while ($i->available()) {
           $o->write($i->read());
         }
       }
-    ]), ['stdin' => '+OK Piped input']);
+    }, ['stdin' => '+OK Piped input']);
     $this->assertEquals('+OK Piped input', $r['stdout']);
   }
 
   #[@test]
   public function input() {
-    $r= ChannelWrapper::capture(newinstance(Runnable::class, [], [
-      'run' => function() {
+    $r= ChannelWrapper::capture(new class() implements Runnable {
+      public function run() {
         $i= new ChannelInputStream('input');
         $o= new ChannelOutputStream('stdout');
         while ($i->available()) {
           $o->write($i->read());
         }
       }
-    ]), ['input' => '+OK Piped input']);      
+    }, ['input' => '+OK Piped input']);      
     $this->assertEquals('+OK Piped input', $r['stdout']);
   }
 }

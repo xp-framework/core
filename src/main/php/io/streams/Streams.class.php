@@ -21,7 +21,7 @@ abstract class Streams {
     $id      = null;
     
   static function __static() {
-    stream_wrapper_register('iostrr', get_class(newinstance(self::class, [], '{
+    stream_wrapper_register('iostrr', get_class(new class() extends Streams {
       static function __static() { }
 
       public function stream_open($path, $mode, $options, $opened_path) {
@@ -45,8 +45,8 @@ abstract class Streams {
       public function stream_eof() {
         return 0 === parent::$streams[$this->id]->available();
       }
-    }')));
-    stream_wrapper_register('iostrw', get_class(newinstance(self::class, [], '{
+    }));
+    stream_wrapper_register('iostrw', get_class(new class() extends Streams {
       static function __static() { }
 
       public function stream_write($data) {
@@ -67,7 +67,7 @@ abstract class Streams {
       public function stream_eof() {
         return false;
       }
-    }')));
+    }));
   }
 
   /**

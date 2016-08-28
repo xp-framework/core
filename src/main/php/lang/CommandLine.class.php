@@ -27,7 +27,7 @@ abstract class CommandLine extends Enum {
   public static $WINDOWS, $UNIX;
 
   static function __static() {
-    self::$WINDOWS= newinstance(self::class, [0, 'WINDOWS'], '{
+    self::$WINDOWS= new class(0, 'WINDOWS') extends CommandLine {
       static function __static() { }
       public function parse($cmd) {
         static $triple= "\"\"\"";
@@ -78,8 +78,8 @@ abstract class CommandLine extends Enum {
         }
         return $cmd;
       }
-    }');
-    self::$UNIX= newinstance(self::class, [1, 'UNIX'], '{
+    };
+    self::$UNIX= new class(1, 'UNIX') extends CommandLine {
       static function __static() { }
       public function parse($cmd) {
         $parts= [];
@@ -110,7 +110,7 @@ abstract class CommandLine extends Enum {
       protected static function quote($arg) {
         $l= strlen($arg);
         if ($l && strcspn($arg, "&;`\'\"|*?~<>^()[]{}\$ ") >= $l) return $arg;
-        return "\'".str_replace("\'", "\'\\\'\'", $arg)."\'";
+        return "\'".str_replace("\'", "\'\\'\'", $arg)."\'";
       }
       
       public function compose($command, $arguments= []) {
@@ -120,7 +120,7 @@ abstract class CommandLine extends Enum {
         }
         return $cmd;
       }
-    }');
+    };
   }
   
   /**

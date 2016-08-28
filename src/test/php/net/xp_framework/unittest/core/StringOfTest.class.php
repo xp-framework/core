@@ -18,9 +18,9 @@ class StringOfTest extends \unittest\TestCase {
    * @return lang.Object
    */
   protected function testStringInstance() {
-    return newinstance(Object::class, [], [
-      'toString' => function() { return 'TestString(6) { String }'; }
-    ]);
+    return new class() extends Object {
+      public function toString() { return 'TestString(6) { String }'; }
+    };
   }
 
   #[@test, @values([
@@ -125,9 +125,9 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function twice_the_same_object_inside_array_not_recursion() {
-    $test= newinstance(Object::class, [], [
-      'toString' => function() { return 'Test'; }
-    ]);
+    $test= new class() extends Object {
+      public function toString() { return 'Test'; }
+    };
     $this->assertEquals(
       "[\n  a => Test\n  b => Test\n]", 
       \xp::stringOf(['a' => $test, 'b' => $test])
@@ -136,10 +136,10 @@ class StringOfTest extends \unittest\TestCase {
   
   #[@test]
   public function twice_the_same_object_with_huge_hashcode_inside_array_not_recursion() {
-    $test= newinstance(Object::class, [], [
-      'hashCode' => function() { return 9E100; },
-      'toString' => function() { return 'Test'; }
-    ]);
+    $test= new class() extends Object {
+      public function hashCode() { return 9E100; }
+      public function toString() { return 'Test'; }
+    };
     $this->assertEquals(
       "[\n  a => Test\n  b => Test\n]", 
       \xp::stringOf(['a' => $test, 'b' => $test])
@@ -148,9 +148,9 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function toString_calling_xp_stringOf_does_not_loop_forever() {
-    $test= newinstance(Object::class, [], [
-      'toString' => function() { return \xp::stringOf($this); }
-    ]);
+    $test= new class() extends Object {
+      public function toString() { return \xp::stringOf($this); }
+    };
     $this->assertEquals(
       nameof($test)." {\n  __id => \"".$test->hashCode()."\"\n}",
       \xp::stringOf($test)
@@ -201,10 +201,10 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function closure_inside_object_does_not_raise_serialization_exception() {
-    $instance= newinstance(Object::class, [function($a, $b) { }], [
-      'closure'     => null,
-      '__construct' => function($closure) { $this->closure= $closure; },
-    ]);
+    $instance= new class(function($a, $b) { }) extends Object {
+      public $closure = null;
+      public function __construct($closure) { $this->closure= $closure; }
+    };
     \xp::stringOf($instance);
   }
 

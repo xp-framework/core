@@ -36,9 +36,9 @@ class FileUtilTest extends TestCase {
 
   #[@test]
   public function get_contents_read_returns_less_than_size() {
-    $f= new File(Streams::readableFd(newinstance(MemoryInputStream::class, ['Test'], [
-      'read' => function($size= 4096) { return parent::read(min(1, $size)); }
-    ])));
+    $f= new File(Streams::readableFd(new class('Test') extends MemoryInputStream {
+      public function read($size= 4096) { return parent::read(min(1, $size)); }
+    }));
     $this->assertEquals('Test', FileUtil::getContents($f));
   }
 }

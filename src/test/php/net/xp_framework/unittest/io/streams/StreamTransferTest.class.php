@@ -20,11 +20,11 @@ class StreamTransferTest extends TestCase {
    * @return  io.streams.InputStream
    */
   protected function uncloseableInputStream() {
-    return newinstance(InputStream::class, [], '{
+    return new class() implements InputStream {
       public function read($length= 8192) { }
       public function available() { }
       public function close() { throw new \io\IOException("Close error"); }
-    }');
+    };
   }
 
   /**
@@ -33,12 +33,12 @@ class StreamTransferTest extends TestCase {
    * @return  io.streams.InputStream
    */
   protected function closeableInputStream() {
-    return newinstance(InputStream::class, [], '{
+    return new class() implements InputStream {
       public $closed= FALSE;
       public function read($length= 8192) { }
       public function available() { }
       public function close() { $this->closed= TRUE; }
-    }');
+    };
   }
   
   /**
@@ -47,11 +47,11 @@ class StreamTransferTest extends TestCase {
    * @return  io.streams.OutputStream
    */
   protected function uncloseableOutputStream() {
-    return newinstance(OutputStream::class, [], '{
+    return new class() implements OutputStream {
       public function write($data) { }
       public function flush() { }
       public function close() { throw new \io\IOException("Close error"); }
-    }');
+    };
   }
 
   /**
@@ -60,12 +60,12 @@ class StreamTransferTest extends TestCase {
    * @return  io.streams.OutputStream
    */
   protected function closeableOutputStream() {
-    return newinstance(OutputStream::class, [], '{
+    return new class() implements OutputStream {
       public $closed= FALSE;
       public function write($data) { }
       public function flush() { }
       public function close() { $this->closed= TRUE; }
-    }');
+    };
   }
 
   /**

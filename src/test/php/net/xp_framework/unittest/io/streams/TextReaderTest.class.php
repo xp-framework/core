@@ -30,10 +30,10 @@ class TextReaderTest extends \unittest\TestCase {
 
   #[@test]
   public function can_create_with_channel() {
-    new TextReader(newinstance(Channel::class, [], [
-      'in'  => function() { return new MemoryInputStream(''); },
-      'out' => function() { return new MemoryOutputStream(); }
-    ]));
+    new TextReader(new class() implements Channel {
+      public function in() { return new MemoryInputStream(''); }
+      public function out() { return new MemoryOutputStream(); }
+    });
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
@@ -58,19 +58,19 @@ class TextReaderTest extends \unittest\TestCase {
    * @return  io.streams.InputStream
    */
   protected function unseekableStream() {
-    return newinstance(InputStream::class, [], [
-      'bytes' => "A\nB\n",
-      'offset' => 0,
-      'read' => function($length= 8192) {
+    return new class() implements InputStream {
+      public $bytes = "A\nB\n";
+      public $offset = 0;
+      public function read($length= 8192) {
         $chunk= substr($this->bytes, $this->offset, $length);
         $this->offset+= strlen($chunk);
         return $chunk;
-      },
-      'available' => function() {
+      }
+      public function available() {
         return strlen($this->bytes) - $this->offset;
-      },
-      'close' => function() { }
-    ]);
+      }
+      public function close() { }
+    };
   }
 
   #[@test]

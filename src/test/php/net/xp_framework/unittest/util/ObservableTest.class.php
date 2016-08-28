@@ -52,23 +52,23 @@ class ObservableTest extends \unittest\TestCase {
 
   #[@test]
   public function add_observer_returns_added_observer() {
-    $observer= newinstance(Observer::class, [], [
-      'update' => function($obs, $arg= null) {
+    $observer= new class() implements Observer {
+      public function update($obs, $arg= null) {
         /* Intentionally empty */
       }
-    ]);
+    };
     $o= self::$observable->newInstance();
     $this->assertEquals($observer, $o->addObserver($observer));
   }
 
   #[@test]
   public function observer_gets_called_with_observable() {
-    $observer= newinstance(Observer::class, [], [
-      'calls' => [],
-      'update' => function($obs, $arg= null) {
+    $observer= new class() implements Observer {
+      public $calls = [];
+      public function update($obs, $arg= null) {
         $this->calls[]= [$obs, $arg];
       }
-    ]);
+    };
     $o= self::$observable->newInstance();
     $o->addObserver($observer);
     $o->setValue(5);

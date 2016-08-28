@@ -19,9 +19,9 @@ class CastingTest extends TestCase implements Runnable {
 
   #[@test]
   public function newinstance() {
-    $runnable= newinstance(Runnable::class, [], [
-      'run' => function() { return 'Test'; }
-    ]);
+    $runnable= new class() implements Runnable {
+      public function run() { return 'Test'; }
+    };
     $this->assertEquals('Test', cast($runnable, Runnable::class)->run());
   }
 

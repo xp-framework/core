@@ -50,14 +50,14 @@ abstract class Console {
       self::$out= new StringWriter(new ConsoleOutputStream(STDOUT));
       self::$err= new StringWriter(new ConsoleOutputStream(STDERR));
     } else {
-      self::$in= newinstance(InputStreamReader::class, [null], '{
+      self::$in= new class(null) implements InputStreamReader {
         public function __construct($in) { }
         public function getStream() { return null; }
         public function raise() { throw new \lang\IllegalStateException("There is no console present"); }
         public function read($count= 8192) { $this->raise(); }
         public function readLine() { $this->raise(); }
-      }');
-      self::$out= self::$err= newinstance(OutputStreamWriter::class, [null], '{
+      };
+      self::$out= self::$err= new class(null) implements OutputStreamWriter {
         public function __construct($out) { }
         public function getStream() { return null; }
         public function flush() { $this->raise(); }
@@ -66,7 +66,7 @@ abstract class Console {
         public function writeLine(... $args) { $this->raise(); }
         public function writef($format, ... $args) { $this->raise(); }
         public function writeLinef($format, ... $args) { $this->raise(); }
-      }');
+      };
     }
   }
 

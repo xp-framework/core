@@ -24,7 +24,7 @@ class ClassFromDynamicDefinitionTest extends ClassFromUriTest {
    * @return  net.xp_framework.unittest.reflection.ClassFromUriBase
    */
   protected static function baseImpl() {
-    return newinstance(ClassFromUriBase::class, [], '{
+    return new class() extends ClassFromUriBase {
       protected $t= NULL;
 
       public function create() {
@@ -41,7 +41,7 @@ class ClassFromDynamicDefinitionTest extends ClassFromUriTest {
           $ns= "";
         } else {
           $class= substr($name, $p + 1);
-          $ns= "namespace ".strtr(substr($name, 0, $p), ".", "\\\\").";";
+          $ns= "namespace ".strtr(substr($name, 0, $p), ".", "\\").";";
         }
 
         \lang\DynamicClassLoader::instanceFor("test")->setClassBytes($name, sprintf(
@@ -59,7 +59,7 @@ class ClassFromDynamicDefinitionTest extends ClassFromUriTest {
       public function path() {
         return "dyn://";
       }
-    }');
+    };
   }
 
   #[@test]

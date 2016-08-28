@@ -24,7 +24,7 @@ class ClassFromArchiveTest extends ClassFromUriTest {
    * @return  net.xp_framework.unittest.reflection.ClassFromUriBase
    */
   protected static function baseImpl() {
-    return newinstance(ClassFromUriBase::class, [], '{
+    return new class() extends ClassFromUriBase {
       protected $t= NULL;
 
       public function initialize($initializer) {
@@ -56,6 +56,6 @@ class ClassFromArchiveTest extends ClassFromUriTest {
       public function path() {
         return "xar://".$this->t->getURI()."?";
       }
-    }');
+    };
   }
 }

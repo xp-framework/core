@@ -14,10 +14,10 @@ class CloningTest extends \unittest\TestCase {
 
   #[@test]
   public function cloneInterceptorCalled() {
-    $original= newinstance(Object::class, [], '{
+    $original= new class() extends Object {
       public $cloned= false;
       public function __clone() { $this->cloned= true; }
-    }');
+    };
     $this->assertFalse($original->cloned);
     $clone= clone($original);
     $this->assertFalse($original->cloned);
@@ -26,8 +26,8 @@ class CloningTest extends \unittest\TestCase {
 
   #[@test, @expect(CloneNotSupportedException::class)]
   public function cloneInterceptorThrowsException() {
-    clone(newinstance(Object::class, [], [
-      '__clone' => function() { throw new CloneNotSupportedException('I am *UN*Cloneable'); }
-    ]));
+    clone(new class() extends Object {
+      public function __clone() { throw new CloneNotSupportedException('I am *UN*Cloneable'); }
+    });
   }
 }

@@ -121,18 +121,18 @@ class ConsoleTest extends \unittest\TestCase {
 
   #[@test]
   public function write_an_object() {
-    Console::write(newinstance(Object::class, [], '{
+    Console::write(new class() extends Object {
       public function toString() { return "Hello"; }
-    }'));
+    });
     $this->assertEquals('Hello', $this->streams[1]->getBytes());
   }
 
   #[@test]
   public function exception_from_toString() {
     try {
-      Console::write(newinstance(Object::class, [], '{
+      Console::write(new class() extends Object {
         public function toString() { throw new IllegalStateException("Cannot render string"); }
-      }'));
+      });
       $this->fail('Expected exception not thrown', null, 'lang.IllegalStateException');
     } catch (IllegalStateException $expected) {
       $this->assertEquals('', $this->streams[1]->getBytes());
