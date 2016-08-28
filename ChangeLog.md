@@ -5,6 +5,12 @@ XP Framework Core ChangeLog
 
 ## 8.0.0 / ????-??-??
 
+### Heads up!
+
+* **Removed support for legacy date serialization** (has been deprecated
+  since October 2011). See xp-framework/core#159
+  (@thekid)
+
 ### RFCs
 
 * Implemented xp-framework/rfc#310: XP8
