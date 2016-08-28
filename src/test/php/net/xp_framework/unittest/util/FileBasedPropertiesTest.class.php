@@ -14,9 +14,11 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
 
   /** Create a new properties object from a string source */
   protected function newPropertiesFrom(string $source): Properties {
-    $t= new TempFile();
-    $t->out()->write($source);
-    $t->close();
+    with ($t= new TempFile()); {
+      $t->out()->write($source);
+      $t->close();
+    }
+
     return (new Properties())->load($t);
   }
 

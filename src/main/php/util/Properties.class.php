@@ -185,10 +185,18 @@ class Properties extends \lang\Object implements PropertyAccess {
   public function reset() {
     $this->_load(true);
   }
+
+  /** Returns sections */
+  public function sections(): \Iterator {
+    foreach ($this->_data as $section => $_) {
+      yield $section;
+    }
+  }
   
   /**
    * Get the first configuration section
    *
+   * @deprecated Use sections() iterator instead
    * @see     xp://util.Properties#getNextSection
    * @return  string the first section's name
    */
@@ -208,6 +216,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    *   } while ($section= $prop->getNextSection());
    * </code>
    *
+   * @deprecated Use sections() iterator instead
    * @see     xp://util.Properties#getFirstSection
    * @return  var string section or FALSE if this was the last section
    */
