@@ -30,23 +30,23 @@ abstract class CommandLine extends Enum {
     self::$WINDOWS= new class(0, 'WINDOWS') extends CommandLine {
       static function __static() { }
       public function parse($cmd) {
-        static $triple= "\"\"\"";
+        static $triple= '"""';
         $parts= [];
-        $r= "";
+        $r= '';
         for ($i= 0, $s= strlen($cmd); $i < $s; $i++) {
-          if (" " === $cmd{$i}) {
+          if (' ' === $cmd{$i}) {
             $parts[]= $r;
-            $r= "";
-          } else if ("\"" === $cmd{$i}) {
+            $r= '';
+          } else if ('"' === $cmd{$i}) {
             $q= $i+ 1;
             do {
-              if (FALSE === ($p= strpos($cmd, "\"", $q))) {
+              if (false === ($p= strpos($cmd, '"', $q))) {
                 $q= $s;
                 break;
               }
               $q= $p;
               if ($triple === substr($cmd, $q, 3)) {
-                if (FALSE === ($p= strpos($cmd, $triple, $q+ 3))) {
+                if (false === ($p= strpos($cmd, $triple, $q+ 3))) {
                   $q= $q+ 3;
                   continue;
                 }
@@ -55,7 +55,7 @@ abstract class CommandLine extends Enum {
               }
               break;
             } while ($q < $s);
-            $r.= str_replace($triple, "\"", substr($cmd, $i+ 1, $q- $i- 1));
+            $r.= str_replace($triple, '"', substr($cmd, $i+ 1, $q- $i- 1));
             $i= $q;
           } else {
             $r.= $cmd{$i};
@@ -67,8 +67,8 @@ abstract class CommandLine extends Enum {
       
       protected static function quote($arg) {
         $l= strlen($arg);
-        if ($l && strcspn($arg, "\" ") >= $l) return $arg;
-        return \'"\'.str_replace(\'"\', \'"""\', $arg).\'"\';
+        if ($l && strcspn($arg, '" ') >= $l) return $arg;
+        return '"'.str_replace('"', '"""', $arg).'"';
       }
       
       public function compose($command, $arguments= []) {
@@ -86,22 +86,22 @@ abstract class CommandLine extends Enum {
         $o= 0;
         $l= strlen($cmd);
         while ($o < $l) {
-          $p= strcspn($cmd, " ", $o);
+          $p= strcspn($cmd, ' ', $o);
           $option= substr($cmd, $o, $p);
-          if (1 === substr_count($option, \'"\')) {
+          if (1 === substr_count($option, '"')) {
             $ql= $o+ $p;
-            $qp= strpos($cmd, \'"\', $ql)+ 1;
+            $qp= strpos($cmd, '"', $ql)+ 1;
             $option.= substr($cmd, $ql, $qp- $ql);
             $o= $qp+ 1;
-          } else if (1 === substr_count($option, "\'")) {
+          } else if (1 === substr_count($option, "'")) {
             $ql= $o+ $p;
-            $qp= strpos($cmd, "\'", $ql)+ 1;
+            $qp= strpos($cmd, "'", $ql)+ 1;
             $option.= substr($cmd, $ql, $qp- $ql);
             $o= $qp+ 1;
           } else {
             $o+= $p+ 1;
           }
-          if (\'"\' === $option{0} || "\'" === $option{0}) $option= substr($option, 1, -1);
+          if ('"' === $option{0} || "'" === $option{0}) $option= substr($option, 1, -1);
           $parts[]= $option;
         }
         return $parts;
@@ -110,13 +110,13 @@ abstract class CommandLine extends Enum {
       protected static function quote($arg) {
         $l= strlen($arg);
         if ($l && strcspn($arg, "&;`\'\"|*?~<>^()[]{}\$ ") >= $l) return $arg;
-        return "\'".str_replace("\'", "\'\\'\'", $arg)."\'";
+        return "'".str_replace("'", "'\\''", $arg)."'";
       }
       
       public function compose($command, $arguments= []) {
         $cmd= self::quote($command);
         foreach ($arguments as $arg) {
-          $cmd.= " ".self::quote($arg);
+          $cmd.= ' '.self::quote($arg);
         }
         return $cmd;
       }
