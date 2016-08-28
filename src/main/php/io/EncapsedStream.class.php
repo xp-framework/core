@@ -48,11 +48,13 @@ class EncapsedStream extends File {
    * Open the stream. For EncapsedStream only reading is supported
    *
    * @param   string mode default File::READ one of the File::* constants
+   * @return  self
    */
-  public function open($mode= File::READ) {
+  public function open($mode= File::READ): parent {
     if (File::READ !== $mode) throw new \lang\IllegalAccessException(
       'EncapsedStream only supports reading but writing operation requested.'
     );
+    return $this;
   }
   
   /**
@@ -60,7 +62,7 @@ class EncapsedStream extends File {
    *
    * @return  bool TRUE, when the stream is open
    */
-  public function isOpen() {
+  public function isOpen(): bool {
     return $this->_super->isOpen();
   }
   
@@ -69,7 +71,7 @@ class EncapsedStream extends File {
    *
    * @return  int size streamsize in bytes
    */
-  public function size() {
+  public function size(): int {
     return $this->_size;
   }
   
@@ -79,7 +81,7 @@ class EncapsedStream extends File {
    * @param   int size default 0
    * @return  bool
    */
-  public function truncate($size= 0) {
+  public function truncate($size= 0): bool {
     throw new MethodNotImplementedException('Truncation not supported');
   }
   

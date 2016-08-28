@@ -1,9 +1,7 @@
 <?php namespace io;
 
-use io\streams\FileInputStream;
-use io\streams\FileOutputStream;
-use lang\IllegalArgumentException;
-use lang\IllegalStateException;
+use io\streams\{InputStream, FileInputStream, OutputStream, FileOutputStream};
+use lang\{IllegalArgumentException, IllegalStateException};
 
 /**
  * Instances of the file class serve as an opaque handle to the underlying machine-
@@ -62,76 +60,32 @@ class File extends \lang\Object implements Channel {
     }
   }
 
-  /**
-   * Retrieve input stream
-   *
-   * @deprecated Use in() instead
-   * @return  io.streams.InputStream
-   */
-  public function getInputStream() {
-    return $this->in();
-  }
-
-  /**
-   * Retrieve output stream
-   *
-   * @deprecated Use out() instead
-   * @return  io.streams.OutputStream
-   */
-  public function getOutputStream() {
-    return $this->out();
-  }
-
   /** @return io.streams.InputStream */
-  public function in() { return new FileInputStream($this); }
+  public function in(): InputStream { return new FileInputStream($this); }
 
   /** @return io.streams.OutputStream */
-  public function out() { return new FileOutputStream($this); }
+  public function out(): OutputStream { return new FileOutputStream($this); }
 
-  /**
-   * Retrieve internal file handle
-   *
-   * @return  resource
-   */
-  public function getHandle() {
-    return $this->_fd;
-  }
+  /** Retrieve internal file handle */
+  public function getHandle() { return $this->_fd; }
   
   /**
-   * Returns the URI of the file
+   * Returns the URI of the file 
    *
-   * @return string uri
+   * @return string or NULL
    */
   public function getURI() {
     return $this->uri;
   }
   
-  /**
-   * Returns the filename of the file
-   *
-   * @return string filename
-   */
-  public function getFileName() {
-    return $this->filename;
-  }
+  /** Returns the filename of the file */
+  public function getFileName(): string { return $this->filename; }
 
-  /**
-   * Get Path
-   *
-   * @return  string
-   */
-  public function getPath() {
-    return $this->path;
-  }
+  /** Get Path */
+  public function getPath(): string { return $this->path; }
 
-  /**
-   * Get Extension
-   *
-   * @return  string
-   */
-  public function getExtension() {
-    return $this->extension;
-  }
+  /** Get Extension */
+  public function getExtension(): string { return $this->extension; }
 
   /**
    * Set this file's URI
@@ -177,7 +131,7 @@ class File extends \lang\Object implements Channel {
    * @throws  io.FileNotFoundException in case the file is not found
    * @throws  io.IOException in case the file cannot be opened (e.g., lacking permissions)
    */
-  public function open($mode= self::READ) {
+  public function open($mode= self::READ): self {
     $this->mode= $mode;
     if (
       self::READ === $mode && 
@@ -195,23 +149,11 @@ class File extends \lang\Object implements Channel {
     return $this;
   }
   
-  /**
-   * Returns whether this file is open
-   *
-   * @return  bool TRUE, if the file is open
-   */
-  public function isOpen() {
-    return is_resource($this->_fd);
-  }
+  /** Returns whether this file is open */
+  public function isOpen(): bool { return is_resource($this->_fd); }
   
-  /**
-   * Returns whether this file eixtss
-   *
-   * @return  bool TRUE in case the file exists
-   */
-  public function exists() {
-    return file_exists($this->uri);
-  }
+  /** Returns whether this file eixts */
+  public function exists(): bool { return file_exists($this->uri); }
   
   /**
    * Retrieve the file's size in bytes
@@ -219,7 +161,7 @@ class File extends \lang\Object implements Channel {
    * @return  int size filesize in bytes
    * @throws  io.IOException in case of an error
    */
-  public function size() {
+  public function size(): int {
     if (false === ($size= filesize($this->uri))) {
       $e= new IOException('Cannot get filesize for '.$this->uri);
       \xp::gc(__FILE__);
@@ -234,7 +176,7 @@ class File extends \lang\Object implements Channel {
    * @param   bool TRUE if method succeeded
    * @throws  io.IOException in case of an error
    */
-  public function truncate($size= 0) {
+  public function truncate($size= 0): bool {
     if (false === ($return= ftruncate($this->_fd, $size))) {
       $e= new IOException('Cannot truncate file '.$this->uri);
       \xp::gc(__FILE__);
@@ -667,53 +609,29 @@ class File extends \lang\Object implements Channel {
     return true;
   }
   
-  /**
-   * Change permissions for the file
-   *
-   * @see     php://chmod
-   * @param   var mode
-   * @return  bool success
-   */
-  public function setPermissions($mode) {
+  /** Change permissions for the file */
+  public function setPermissions(int $mode): bool {
     return chmod($this->uri, $mode);
   }
   
-  /**
-   * Get permission mask of the file
-   *
-   * @see     php://stat
-   * @return  int
-   */
-  public function getPermissions() {
+  /** Get permission mask of the file */
+  public function getPermissions(): int {
     $stat= stat($this->uri);
     return $stat['mode'];
   }
 
-  /**
-   * Returns whether a given value is equal to this file
-   *
-   * @param   var cmp
-   * @return  bool
-   */
-  public function equals($cmp) {
+  /** Returns whether a given value is equal to this file */
+  public function equals($cmp): bool {
     return $cmp instanceof self && $cmp->hashCode() === $this->hashCode();
   }
 
-  /**
-   * Returns a hashcode
-   *
-   * @return  string
-   */
-  public function hashCode() {
+  /** Returns a hashcode */
+  public function hashCode(): string {
     return null === $this->uri ? (string)$this->_fd : md5($this->uri);
   }
 
-  /**
-   * Returns a string representation of this object
-   *
-   * @return  string
-   */
-  public function toString() {
+  /** Returns a string representation of this object */
+  public function toString(): string {
     return sprintf(
       '%s(uri= %s, mode= %s)',
       nameof($this),
