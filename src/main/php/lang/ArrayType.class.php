@@ -30,7 +30,7 @@ class ArrayType extends Type {
   public function componentType(): Type { return $this->component; }
 
   /** Returns type literal */
-  public function literal(): string { return '¦'.$this->component->literal(); }
+  public function literal(): string { return "\xa6".$this->component->literal(); }
 
   /**
    * Get a type instance for a given name

@@ -30,7 +30,7 @@ class MapType extends Type {
   public function componentType(): Type { return $this->component; }
 
   /** Returns type literal */
-  public function literal(): string { return '»'.$this->component->literal(); }
+  public function literal(): string { return "\xbb".$this->component->literal(); }
 
   /**
    * Get a type instance for a given name
