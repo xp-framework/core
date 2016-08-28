@@ -1,11 +1,8 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use io\File;
-use io\streams\Streams;
-use io\streams\MemoryInputStream;;
+use io\TempFile;
 use io\IOException;
 use util\Properties;
-use lang\ClassLoader;
 
 /**
  * Testcase for util.Properties class.
@@ -15,17 +12,6 @@ use lang\ClassLoader;
  * @test  xp://net.xp_framework.unittest.util.FilesystemPropertySourceTest
  */
 class FileBasedPropertiesTest extends AbstractPropertiesTest {
-  protected static $fileStreamAdapter;
-  
-  static function __static() {
-    self::$fileStreamAdapter= ClassLoader::defineClass('FileStreamAdapter', File::class, [], '{
-      protected $stream= null;
-      public function __construct($stream) { $this->stream= $stream; }
-      public function exists() { return null !== $this->stream; }
-      public function getURI() { return \io\streams\Streams::readableUri($this->stream); }
-      public function getInputStream() { return $this->stream; }
-    }');
-  }
 
   /**
    * Create a new properties object from a string source
@@ -34,46 +20,33 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
    * @return  util.Properties
    */
   protected function newPropertiesFrom($source) {
-    return Properties::fromFile(self::$fileStreamAdapter->newInstance(new MemoryInputStream($source)));
+    with ($t= new TempFile()); {
+      $t->out()->write($source);
+      $t->close();
+    }
+
+    return (new Properties())->load($t);
+  }
+
+  #[@test]
+  public function from_resource() {
+    $prop= new Properties($this->getClass()->getPackage()->getResourceAsStream('example.ini')->getURI());
+    $this->assertEquals('value', $prop->readString('section', 'key'));
   }
 
   #[@test, @expect(IOException::class)]
-  public function fromNonExistantFile() {
-    Properties::fromFile(new File('@@does-not-exist.ini@@'));
-  }
-
-  #[@test]
-  public function fromFile() {
-    $p= Properties::fromFile($this->getClass()->getPackage()->getResourceAsStream('example.ini'));
-    $this->assertEquals('value', $p->readString('section', 'key'));
-  }
-
-  #[@test]
-  public function lazyRead() {
+  public function throws_error_when_reading() {
     $p= new Properties('@@does-not-exist.ini@@');
-    
-    // This cannot be done via expect annotation because it would also catch if
-    // an exception was thrown from util.Properties' constructor. We explicitely
-    // want the exception to be thrown later on!
-    try {
-      $p->readString('section', 'key');
-      $this->fail('Expected exception not thrown', null, 'io.IOException');
-    } catch (IOException $expected) {
-      \xp::gc();
-    }
+    $p->readString('section', 'key');
   }
 
   #[@test]
-  public function propertiesFromSameFileAreEqual() {
-    $one= Properties::fromFile($this->getClass()->getPackage()->getResourceAsStream('example.ini'));
-    $two= Properties::fromFile($this->getClass()->getPackage()->getResourceAsStream('example.ini'));
-
-    $this->assertFalse($one === $two);
-    $this->assertTrue($one->equals($two));
+  public function properties_from_same_file_are_equal() {
+    $this->assertEquals(new Properties('a.ini'), new Properties('a.ini'));
   }
 
   #[@test]
-  public function propertiesFromOtherFilesAreNotEqual() {
+  public function properties_from_different_file_are_not_equal() {
     $this->assertNotEquals(new Properties('a.ini'), new Properties('b.ini'));
   }
 }

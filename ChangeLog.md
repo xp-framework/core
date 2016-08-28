@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+### Features
+
+* Added forward compatiblity with XP8: Backported BC-break-free parts of
+  xp-framework/core#160 (new fluent interface, `load()` now also accepting
+  strings and io.Channel / io.File instances, deprecations)
+  (@thekid)
+
 ## 7.6.1 / 2016-08-28
 
 ### Bugfixes

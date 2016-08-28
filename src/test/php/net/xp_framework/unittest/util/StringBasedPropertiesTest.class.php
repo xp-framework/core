@@ -17,6 +17,6 @@ class StringBasedPropertiesTest extends AbstractPropertiesTest {
    * @return  util.Properties
    */
   protected function newPropertiesFrom($source) {
-    return Properties::fromString($source);
+    return (new Properties())->load($source);
   }
 }

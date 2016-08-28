@@ -15,7 +15,7 @@ use lang\IllegalStateException;
  * An interface to property-files (aka "ini-files")
  *
  * Property-files syntax is easy.
- * <pre>
+ * ```ini
  * [section]
  * key1=value
  * key2="value"
@@ -25,7 +25,7 @@ use lang\IllegalStateException;
  *
  * [section2]
  * key=value
- * </pre>
+ * ```
  *
  * @test    xp://net.xp_framework.unittest.util.PropertyWritingTest
  * @test    xp://net.xp_framework.unittest.util.StringBasedPropertiesTest
@@ -38,24 +38,25 @@ class Properties extends \lang\Object implements PropertyAccess {
     $_data    = null;
 
   /**
-   * Constructor
+   * Creates a new properties instance from a given file
    *
    * @param   string filename
    */
-  public function __construct($filename) {
+  public function __construct($filename= null) {
     $this->_file= $filename;
   }
 
   /**
    * Load from an input stream, e.g. a file
    *
-   * @param   io.streams.InputStream $in
+   * @param   io.streams.InputStream|io.Channel|string $in
    * @param   string $charset the charset the stream is encoded in or NULL to trigger autodetection by BOM
    * @param   util.PropertyExpansion $expansion
+   * @return  self
    * @throws  io.IOException
    * @throws  lang.FormatException
    */
-  public function load(InputStream $in, $charset= null, $expansion= null) {
+  public function load($in, $charset= null, $expansion= null) {
     $reader= new TextReader($in, $charset);
     $expansion || $expansion= new PropertyExpansion();
     $this->_data= [];
@@ -113,6 +114,7 @@ class Properties extends \lang\Object implements PropertyAccess {
         throw new FormatException('Invalid line "'.$t.'"');
       }
     }
+    return $this;
   }
 
   /**
@@ -152,7 +154,7 @@ class Properties extends \lang\Object implements PropertyAccess {
       $out->write("\n");
     }
   }
-  
+
   /**
    * Create a property file from an io.File object
    *
@@ -188,7 +190,7 @@ class Properties extends \lang\Object implements PropertyAccess {
   public function getFilename() {
     return $this->_file;
   }
-  
+
   /**
    * Create the property file
    *
@@ -202,7 +204,7 @@ class Properties extends \lang\Object implements PropertyAccess {
     }
     $this->_data= [];
   }
-  
+
   /**
    * Returns whether the property file exists
    *
@@ -211,7 +213,7 @@ class Properties extends \lang\Object implements PropertyAccess {
   public function exists() {
     return file_exists($this->_file);
   }
-  
+
   /**
    * Helper method that loads the data from the file if needed
    *
@@ -219,16 +221,18 @@ class Properties extends \lang\Object implements PropertyAccess {
    * @throws  io.IOException
    */
   protected function _load($force= false) {
-    if (!$force && null !== $this->_data) return;
-    $this->load(new FileInputStream($this->_file));
+    if ($force || null === $this->_data) {
+      $this->load(new FileInputStream($this->_file));
+    }
   }
-  
+
   /**
    * Reload all data from the file
    *
+   * @return void
    */
   public function reset() {
-    return $this->_load(true);
+    $this->_load(true);
   }
   
   /**
@@ -243,9 +247,18 @@ class Properties extends \lang\Object implements PropertyAccess {
     $fd->close();
   }
 
+  /** @return php.Iterator */
+  public function sections() {
+    $this->_load();
+    foreach ($this->_data as $section => $_) {
+      yield $section;
+    }
+  }
+
   /**
    * Get the first configuration section
    *
+   * @deprecated  Use sections() iterator instead
    * @see     xp://util.Properties#getNextSection
    * @return  string the first section's name
    */
@@ -265,6 +278,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    *   } while ($section= $prop->getNextSection());
    * </code>
    *
+   * @deprecated  Use sections() iterator instead
    * @see     xp://util.Properties#getFirstSection
    * @return  var string section or FALSE if this was the last section
    */

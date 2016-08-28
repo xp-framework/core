@@ -231,6 +231,7 @@ abstract class AbstractPropertiesTest extends \unittest\TestCase {
     $this->assertFalse($this->fixture('')->hasSection('nonexistant'));
   }
 
+  /** @deprecated */
   #[@test]
   public function iterate_sections_with_first_and_next() {
     $p= $this->newPropertiesFrom('
@@ -250,6 +251,24 @@ abstract class AbstractPropertiesTest extends \unittest\TestCase {
     $this->assertEquals('next', $p->getNextSection());
     $this->assertEquals('empty', $p->getNextSection());     
     $this->assertEquals('final', $p->getNextSection());
+  }
+
+  #[@test]
+  public function iterate_sections() {
+    $p= $this->newPropertiesFrom('
+      [section]
+      foo=bar
+
+      [next]
+      foo=bar
+
+      [empty]
+
+      [final]
+      foo=bar
+    ');
+
+    $this->assertEquals(['section', 'next', 'empty', 'final'], iterator_to_array($p->sections()));
   }
 
   #[@test, @expect(FormatException::class), @values([
