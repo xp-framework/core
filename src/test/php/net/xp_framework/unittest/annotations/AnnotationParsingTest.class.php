@@ -161,55 +161,11 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
     );
   }
 
-  /** @deprecated */
-  #[@test]
-  public function array_value() {
-    $this->assertEquals(
-      [0 => ['versions' => [3.4, 3.5]], 1 => []],
-      $this->parse('#[@versions(array(3.4, 3.5))]')
-    );
-  }
-
-  /** @deprecated */
-  #[@test]
-  public function array_value_with_nested_array() {
-    $this->assertEquals(
-      [0 => ['versions' => [[3]]], 1 => []],
-      $this->parse('#[@versions(array(array(3)))]')
-    );
-  }
-
-  /** @deprecated */
-  #[@test]
-  public function array_value_with_nested_arrays() {
-    $this->assertEquals(
-      [0 => ['versions' => [[3], [4]]], 1 => []],
-      $this->parse('#[@versions(array(array(3), array(4)))]')
-    );
-  }
-
-  /** @deprecated */
-  #[@test]
-  public function array_value_with_strings_containing_braces() {
-    $this->assertEquals(
-      [0 => ['versions' => ['(3..4]']], 1 => []],
-      $this->parse('#[@versions(array("(3..4]"))]')
-    );
-  }
-
   #[@test]
   public function short_array_value() {
     $this->assertEquals(
       [0 => ['versions' => [3.4, 3.5]], 1 => []],
       $this->parse('#[@versions([3.4, 3.5])]')
-    );
-  }
-
-  #[@test]
-  public function short_array_value_with_nested_array() {
-    $this->assertEquals(
-      [0 => ['versions' => [[3]]], 1 => []],
-      $this->parse('#[@versions(array(array(3)))]')
     );
   }
 
@@ -250,15 +206,6 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
     $this->assertEquals(
       [0 => ['config' => ['key' => 'value', 'times' => 5, 'disabled' => false, 'null' => null, 'list' => [1, 2]]], 1 => []],
       $this->parse("#[@config(key = 'value', times= 5, disabled= false, null = null, list= [1, 2])]")
-    );
-  }
-
-  /** @deprecated */
-  #[@test]
-  public function map_value() {
-    $this->assertEquals(
-      [0 => ['colors' => ['green' => '$10.50', 'red' => '$9.99']], 1 => []],
-      $this->parse("#[@colors(array('green' => '$10.50', 'red' => '$9.99'))]")
     );
   }
 
@@ -403,24 +350,6 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
     $this->assertEquals(
       [0 => ['test' => ['values' => [[1, 1], [2, 2], [3, 3]]]], 1 => []],
       $this->parse("#[@test(values = [[1, 1], [2, 2], [3, 3]])]")
-    );
-  }
-
-  /** @deprecated */
-  #[@test]
-  public function combined_long_and_short_array_syntaxes() {
-    $this->assertEquals(
-      [0 => ['values' => [[1, 1], [2, 2], [3, 3]]], 1 => []],
-      $this->parse("#[@values(array([1, 1], [2, 2], [3, 3]))]")
-    );
-  }
-
-  /** @deprecated */
-  #[@test]
-  public function combined_short_and_long_array_syntaxes() {
-    $this->assertEquals(
-      [0 => ['values' => [[1, 1], [2, 2], [3, 3]]], 1 => []],
-      $this->parse("#[@values([array(1, 1), array(2, 2), array(3, 3)])]")
     );
   }
 

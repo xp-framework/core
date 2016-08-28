@@ -31,6 +31,8 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented xp-framework/rfc#311: Deprecate array() syntax 
+  (@thekid)
 * Implemented xp-framework/rfc#310: XP8
   . Deprecated `newinstance` in favor of builtin anonymous class support
   . Simplified code by removing PHP5-specific handling

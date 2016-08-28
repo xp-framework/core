@@ -100,15 +100,14 @@ class ClassParser {
       return (int)$tokens[$i][1];
     } else if (T_DNUMBER === $tokens[$i][0]) {
       return (double)$tokens[$i][1];
-    } else if ('[' === $token || T_ARRAY === $token) {
+    } else if ('[' === $token) {
       $value= [];
       $element= null;
       $key= 0;
-      $end= '[' === $token ? ']' : ')';
       for ($i++, $s= sizeof($tokens); ; $i++) {
         if ($i >= $s) {
           throw new IllegalStateException('Parse error: Unterminated array');
-        } else if ($end === $tokens[$i]) {
+        } else if (']' === $tokens[$i]) {
           $element && $value[$key]= $element[0];
           break;
         } else if ('(' === $tokens[$i]) {
