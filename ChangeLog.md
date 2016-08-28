@@ -10,6 +10,7 @@ XP Framework Core ChangeLog
 * Implemented xp-framework/rfc#310: XP8
   . **Heads up: Bumped minimum required PHP version to 7.0.0**
   . Deprecated `newinstance` in favor of builtin anonymous class support
+  . Simplified code by remove PHP5-specific handling
   (@thekid)
 
 ## 7.6.0 / 2016-08-14
