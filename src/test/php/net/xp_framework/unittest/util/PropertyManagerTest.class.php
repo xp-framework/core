@@ -1,11 +1,11 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use util\{
-  FilesystemPropertySource
+  FilesystemPropertySource,
   Properties,
   PropertyAccess,
   PropertyManager,
-  ResourcePropertySource,
+  ResourcePropertySource
 };
 use lang\{ClassLoader, ElementNotFoundException, IllegalArgumentException};
 use unittest\actions\RuntimeVersion;

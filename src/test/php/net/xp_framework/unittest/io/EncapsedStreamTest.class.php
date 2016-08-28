@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use io\{EncapsedStream, File, Streams};
-use io\streams\MemoryInputStream;
+use io\{EncapsedStream, File};
+use io\streams\{Streams, MemoryInputStream};
 use lang\{IllegalAccessException, IllegalStateException};
 
 class EncapsedStreamTest extends \unittest\TestCase {

@@ -175,8 +175,8 @@ class ClassLoaderTest extends \unittest\TestCase {
 
   #[@test, @expect(ClassCastException::class)]
   public function newInstance__PHP_Incomplete_Class() {
-    $d= unserialize('O:12:"DoesNotExist":0:{}')
-    var_dump($d, is_object($d));
+    $d= unserialize('O:12:"DoesNotExist":0:{}');
+    var_dump((string)$d);
     new XPClass(unserialize('O:12:"DoesNotExist":0:{}'));
   }
   
