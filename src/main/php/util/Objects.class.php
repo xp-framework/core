@@ -1,7 +1,6 @@
 <?php namespace util;
 
-use lang\Generic;
-use lang\Value;
+use lang\{Generic, Value};
 
 /**
  * Objects utility methods
@@ -10,14 +9,8 @@ use lang\Value;
  */
 abstract class Objects {
 
-  /**
-   * Returns whether to objects are equal
-   *
-   * @param   var $a
-   * @param   var $b
-   * @return  bool
-   */
-  public static function equal($a, $b) {
+  /** Returns whether to objects are equal */
+  public static function equal($a, $b): bool {
     if ($a instanceof Value) {
       return 0 === $a->compareTo($b);
     } else if ($a instanceof Generic) {
@@ -37,14 +30,8 @@ abstract class Objects {
     }
   }
 
-  /**
-   * Compares two objects
-   *
-   * @param   var $a
-   * @param   var $b
-   * @return  int
-   */
-  public static function compare($a, $b) {
+  /** Compares two objects */
+  public static function compare($a, $b): int {
     if ($a instanceof Value) {
       return $a->compareTo($b);
     } else if ($a instanceof Generic) {
@@ -77,7 +64,7 @@ abstract class Objects {
    * @param  string $default the value to use for NULL
    * @return string
    */
-  public static function stringOf($val, $default= '') {
+  public static function stringOf($val, $default= ''): string {
     if (null === $val) {
       return $default;
     } else {
@@ -85,13 +72,8 @@ abstract class Objects {
     }
   }
 
-  /**
-   * Returns a hash code
-   *
-   * @param  var $val
-   * @return string
-   */
-  public static function hashOf($val) {
+  /** Returns a hash code */
+  public static function hashOf($val): string {
     if (null === $val) {
       return 'N;';
     } else if ($val instanceof Generic || $val instanceof Value) {

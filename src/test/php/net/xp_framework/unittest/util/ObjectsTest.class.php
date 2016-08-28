@@ -330,7 +330,7 @@ class ObjectsTest extends \unittest\TestCase {
 
   #[@test, @values('objects')]
   public function hashOf_calls_hashCode_on_objects($val) {
-    $this->assertEquals($val->hashCode(), Objects::hashOf($val));
+    $this->assertEquals((string)$val->hashCode(), Objects::hashOf($val));
   }
 
   #[@test, @values('natives')]
