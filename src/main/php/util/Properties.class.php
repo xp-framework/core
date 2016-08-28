@@ -187,7 +187,7 @@ class Properties extends \lang\Object implements PropertyAccess {
   }
 
   /** Returns sections */
-  public function sections(): \Iterator {
+  public function sections(): \Traversable {
     foreach ($this->_data as $section => $_) {
       yield $section;
     }

@@ -30,7 +30,7 @@ class LinesIn implements \IteratorAggregate {
   }
 
   /** Iterate over the lines */
-  public function getIterator(): \Iterator {
+  public function getIterator(): \Traversable {
     if ($this->reset && !$this->reader->atBeginning()) {
       $this->reader->reset();
     }

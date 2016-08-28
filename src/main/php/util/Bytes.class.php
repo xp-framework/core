@@ -40,7 +40,7 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
   }
 
   /** Returns an iterator for use in foreach() */
-  public function getIterator(): \Iterator {
+  public function getIterator(): \Traversable {
     for ($offset= 0; $offset < $this->size; $offset++) {
       $n= ord($this->buffer{$offset});
       yield $n < 128 ? $n : $n - 256;

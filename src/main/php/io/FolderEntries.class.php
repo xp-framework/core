@@ -30,8 +30,8 @@ class FolderEntries extends \lang\Object implements \IteratorAggregate {
     return new Path($this->base, $name);
   }
 
-  /** Iteratre over all entries */
-  public function getIterator(): \Iterator {
+  /** Iterate over all entries */
+  public function getIterator(): \Traversable {
     if (null === $this->handle) {
       if (!is_resource($handle= opendir($this->base->asFolder()->getURI()))) {
         $e= new IOException('Cannot open folder '.$this->base);

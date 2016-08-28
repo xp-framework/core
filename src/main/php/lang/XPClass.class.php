@@ -835,7 +835,7 @@ class XPClass extends Type {
   }
   
   /** Returns all loaded classes */
-  public static function getClasses(): \Iterator {
+  public static function getClasses(): \Traversable {
     foreach (\xp::$cl as $class => $loader) {
       yield new self(literal($class));
     }
