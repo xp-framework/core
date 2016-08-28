@@ -1,6 +1,6 @@
 <?php namespace io;
 
-use lang\System;
+use lang\Environment;
   
 /**
  * Represents a temporary file
@@ -28,7 +28,7 @@ use lang\System;
  * microsecond, though, and is therefore quite unlikely.
  *
  * @see      xp://io.File
- * @see      xp://lang.System#tempDir
+ * @see      xp://lang.Environment#tempDir
  */
 class TempFile extends File {
 
@@ -38,6 +38,6 @@ class TempFile extends File {
    * @param   string $prefix default "tmp"
    */
   public function __construct($prefix= 'tmp') {
-    parent::__construct(tempnam(System::tempDir(), $prefix.uniqid((double)microtime())));
+    parent::__construct(tempnam(Environment::tempDir(), $prefix.uniqid((double)microtime())));
   }
 }
