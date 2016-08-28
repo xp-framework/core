@@ -201,18 +201,6 @@ class DateTest extends \unittest\TestCase {
   }
   
   #[@test]
-  public function serializationOfLegacyDates() {
-    $serialized= 'O:9:"util\Date":12:{s:6:"_utime";i:1185310311;s:7:"seconds";i:51;s:7:"minutes";i:51;s:5:"hours";i:22;s:4:"mday";i:24;s:4:"wday";i:2;s:3:"mon";i:7;s:4:"year";i:2007;s:4:"yday";i:204;s:7:"weekday";s:7:"Tuesday";s:5:"month";s:4:"July";s:4:"__id";N;}';
-
-    $date= unserialize($serialized);
-    $this->assertDateEquals('2007-07-24T20:51:51+00:00', $date);
-
-    // Only __id may be set, all the other "old" public members 
-    // should have been removed here
-    $this->assertEquals(['__id' => null], get_object_vars($date));
-  }
-
-  #[@test]
   public function handlingOfTimezone() {
     $date= new Date('2007-07-18T09:42:08 Europe/Athens');
 
@@ -259,9 +247,9 @@ class DateTest extends \unittest\TestCase {
     $this->assertEquals($expect, $this->refDate->format($input));
   }
   
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[@test]
   public function unsupportedFormatToken() {
-    $this->refDate->format('%b');
+    $this->assertEquals('%b', $this->refDate->format('%b'));
   }
   
   #[@test]
