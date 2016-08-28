@@ -3,22 +3,6 @@
 // {{{ trait xp
 trait __xp {
 
-  // {{{ static invocation handler
-  public static function __callStatic($name, $args) {
-    $self= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[0]['class'];
-    throw new \lang\Error('Call to undefined static method '.\lang\XPClass::nameOf($self).'::'.$name.'()');
-  }
-  // }}}
-
-  // {{{ invocation handler
-  public function __call($name, $args) {
-    $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
-    $self= $t[0]['class'];
-    $scope= $t[1]['class'] ?? $t[2]['class'];
-    throw new \lang\Error('Call to undefined method '.\lang\XPClass::nameOf($self).'::'.$name.'() from scope '.\lang\XPClass::nameOf($scope));
-  }
-  // }}}
-
   /** Returns the runtime class of an object */
   public final function getClass(): \lang\XPClass { return new \lang\XPClass($this); }
 }

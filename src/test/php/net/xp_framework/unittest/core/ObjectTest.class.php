@@ -68,23 +68,13 @@ class ObjectTest extends \unittest\TestCase {
     $this->assertEquals("lang.Object {\n  __id => \"".$o->hashCode()."\"\n}", $o->toString());
   }
 
-  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined method .+::undefMethod\(\) from scope net\.xp_framework\.unittest\.core\.ObjectTest/')]
+  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined method .+::undefMethod\(\)/')]
   public function calling_undefined_methods_raises_an_error() {
     (new Object())->undefMethod();
   }
 
-  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined method .+::undefMethod\(\) from scope net\.xp_framework\.unittest\.core\.ObjectTest/')]
-  public function calling_undefined_methods_via_call_user_func_array_raises_an_error() {
-    call_user_func_array([new Object(), 'undefMethod'], []);
-  }
-
-  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined method .+::undefMethod\(\) from scope net\.xp_framework\.unittest\.core\.ObjectTest/')]
+  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined method .+::undefMethod\(\)/')]
   public function calling_undefined_static_methods_raises_an_error() {
     Object::undefMethod();
-  }
-
-  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined method .+::undefMethod\(\) from scope net\.xp_framework\.unittest\.core\.ObjectTest/')]
-  public function calling_undefined_static_methods_via_call_user_func_array_raises_an_error() {
-    call_user_func_array([Object::class, 'undefMethod'], []);
   }
 }

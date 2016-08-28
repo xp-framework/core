@@ -58,7 +58,7 @@ class MissingMethodsTest extends \unittest\TestCase {
     $this->callRunOn($c->newInstance());
   }
 
-  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined static method lang.Object::run()/')]
+  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined method lang.Object::run()/')]
   public function missingStaticParentMethodInvocation() {
     $c= ClassLoader::defineClass('MissingMethodsTest_StaticFixture', Object::class, [], '{
       public static function run() {
@@ -68,7 +68,7 @@ class MissingMethodsTest extends \unittest\TestCase {
     $this->callRunOn($c->literal());
   }
 
-  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined static method .+::run()/')]
+  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined method .+::run()/')]
   public function missingStaticParentParentMethodInvocation() {
     $b= ClassLoader::defineClass('MissingMethodsTest_StaticBaseFixture', Object::class, [], '{}');
     $c= ClassLoader::defineClass('MissingMethodsTest_StaticChildFixture', $b->getName(), [], '{
@@ -79,7 +79,7 @@ class MissingMethodsTest extends \unittest\TestCase {
     $this->callRunOn($c->literal());
   }
 
-  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined static method lang.Object::run()/')]
+  #[@test, @expect(class= Error::class, withMessage= '/Call to undefined method lang.Object::run()/')]
   public function missingStaticParentPassMethodInvocation() {
     $b= ClassLoader::defineClass('MissingMethodsTest_StaticPassBaseFixture', Object::class, [], '{
       public static function run() {
