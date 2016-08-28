@@ -1,6 +1,14 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\{FunctionType, Primitive, Object, XPClass, Type, ArrayType, MapType, ClassCastException, IllegalArgumentException};
+use lang\FunctionType;
+use lang\Primitive;
+use lang\Object;
+use lang\XPClass;
+use lang\Type;
+use lang\ArrayType;
+use lang\MapType;
+use lang\ClassCastException;
+use lang\IllegalArgumentException;
 use lang\reflect\TargetInvocationException;
 use unittest\TestCase;
 

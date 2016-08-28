@@ -1,6 +1,10 @@
 <?php namespace lang\reflect;
 
-use lang\{XPClass, IllegalStateException, IllegalAccessException, ElementNotFoundException, ClassFormatException};
+use lang\XPClass;
+use lang\IllegalStateException;
+use lang\IllegalAccessException;
+use lang\ElementNotFoundException;
+use lang\ClassFormatException;
 
 /**
  * Parses classes for class meta information (apidoc, return and 
