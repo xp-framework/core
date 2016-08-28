@@ -1,8 +1,6 @@
 <?php namespace lang\reflect;
 
-use lang\ElementNotFoundException;
-use lang\XPClass;
-use lang\Type;
+use lang\{ElementNotFoundException, XPClass, Type};
 
 /**
  * Base class for methods and constructors. Note that the methods provided
@@ -34,22 +32,11 @@ class Routine extends \lang\Object {
     $this->_reflect= $reflect;
   }
   
-  /**
-   * Get routine's name.
-   *
-   * @return string
-   */
-  public function getName() {
-    return $this->_reflect->getName();
-  }
+  /** Get routine's name */
+  public function getName(): string { return $this->_reflect->getName(); }
   
-  /**
-   * Retrieve this method's modifiers
-   *
-   * @see    xp://lang.reflect.Modifiers
-   * @return int
-   */    
-  public function getModifiers() {
+  /** Retrieve this method's modifiers */    
+  public function getModifiers(): int {
   
     // Note: ReflectionMethod::getModifiers() returns whatever PHP reflection 
     // returns, but the numeric value changed since 5.0.0 as the zend_function
@@ -108,22 +95,13 @@ class Routine extends \lang\Object {
     ;
   }
   
-  /**
-   * Retrieve how many parameters this method declares (including optional 
-   * ones)
-   *
-   * @return int
-   */
-  public function numParameters() {
+  /** Retrieve how many parameters this method declares (including optional ones) */
+  public function numParameters(): int {
     return $this->_reflect->getNumberOfParameters();
   }
 
-  /**
-   * Retrieve return type
-   *
-   * @return lang.Type
-   */
-  public function getReturnType() {
+  /** Retrieve return type */
+  public function getReturnType(): Type {
     if (
       ($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))
       && isset($details[DETAIL_RETURNS])
@@ -150,12 +128,8 @@ class Routine extends \lang\Object {
     }
   }
 
-  /**
-   * Retrieve return type name
-   *
-   * @return string
-   */
-  public function getReturnTypeName() {
+  /** Retrieve return type name */
+  public function getReturnTypeName(): string {
     if (
       ($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))
       && isset($details[DETAIL_RETURNS])
@@ -224,7 +198,7 @@ class Routine extends \lang\Object {
    * @param  string $key default NULL
    * @return bool
    */
-  public function hasAnnotation($name, $key= null) {
+  public function hasAnnotation($name, $key= null): bool {
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
 
     return $details && ($key 
@@ -256,12 +230,8 @@ class Routine extends \lang\Object {
     );
   }
 
-  /**
-   * Retrieve whether a method has annotations
-   *
-   * @return bool
-   */
-  public function hasAnnotations() {
+  /** Retrieve whether a method has annotations */
+  public function hasAnnotations(): bool {
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     return $details ? !empty($details[DETAIL_ANNOTATIONS]) : false;
   }
@@ -276,25 +246,17 @@ class Routine extends \lang\Object {
     return $details ? $details[DETAIL_ANNOTATIONS] : [];
   }
   
-  /**
+  /** 
    * Sets whether this routine should be accessible from anywhere, 
    * regardless of its visibility level.
-   *
-   * @param  bool $flag
-   * @return self this
    */
-  public function setAccessible($flag) {
+  public function setAccessible(bool $flag): self {
     $this->accessible= $flag;
     return $this;
   }
   
-  /**
-   * Returns whether an object is equal to this routine
-   *
-   * @param  var $cmp
-   * @return bool
-   */
-  public function equals($cmp) {
+  /** Returns whether an object is equal to this routine */
+  public function equals($cmp): bool {
     return (
       $cmp instanceof self && 
       $cmp->_reflect->getName() === $this->_reflect->getName() &&
@@ -302,27 +264,13 @@ class Routine extends \lang\Object {
     );
   }
 
-  /**
-   * Returns a hashcode for this routine
-   *
-   * @return string
-   */
-  public function hashCode() {
+  /** Returns a hashcode for this routine */
+  public function hashCode(): string {
     return 'R['.$this->_reflect->getDeclaringClass().$this->_reflect->getName();
   }
   
-  /**
-   * Retrieve string representation. Examples:
-   *
-   * <pre>
-   *   public lang.XPClass getClass()
-   *   public static util.Date now()
-   *   public open(string $mode) throws io.FileNotFoundException, io.IOException
-   * </pre>
-   *
-   * @return string
-   */
-  public function toString() {
+  /** Retrieve string representation */
+  public function toString(): string {
     $signature= '';
     foreach ($this->getParameters() as $param) {
       if ($param->isOptional()) {
@@ -331,11 +279,13 @@ class Routine extends \lang\Object {
         $signature.= ', '.$param->getTypeName().' $'.$param->getName();
       }
     }
+
     if ($exceptions= $this->getExceptionNames()) {
       $throws= ' throws '.implode(', ', $exceptions);
     } else {
       $throws= '';
     }
+
     return sprintf(
       '%s %s %s(%s)%s',
       Modifiers::stringOf($this->getModifiers()),

@@ -139,24 +139,16 @@ class XPClass extends Type {
     }
   }
 
-  /**
-   * Returns simple name
-   *
-   * @return  string
-   */
-  public function getSimpleName() {
+  /** Returns simple name */
+  public function getSimpleName(): string {
     return false === ($p= strrpos(substr($this->name, 0, strcspn($this->name, '<')), '.')) 
       ? $this->name                   // Already unqualified
       : substr($this->name, $p+ 1)    // Full name
     ;
   }
   
-  /**
-   * Retrieves the package associated with this class
-   * 
-   * @return  lang.reflect.Package
-   */
-  public function getPackage() {
+  /** Retrieves the package associated with this class */
+  public function getPackage(): Package {
     return Package::forName(substr($this->name, 0, strrpos($this->name, '.')));
   }
   
@@ -243,7 +235,7 @@ class XPClass extends Type {
    * @see     xp://lang.reflect.Method
    * @throws  lang.ElementNotFoundException
    */
-  public function getMethod($name) {
+  public function getMethod($name): Method {
     if ($this->hasMethod($name)) {
       return new Method($this->_class, $this->reflect()->getMethod($name));
     }
@@ -261,7 +253,7 @@ class XPClass extends Type {
    * @param   string method the method's name
    * @return  bool TRUE if method exists
    */
-  public function hasMethod($method) {
+  public function hasMethod($method): bool {
     return ((0 === strncmp('__', $method, 2))
       ? false
       : $this->reflect()->hasMethod($method)
@@ -273,7 +265,7 @@ class XPClass extends Type {
    *
    * @return  bool
    */
-  public function hasConstructor() {
+  public function hasConstructor(): bool {
     return $this->reflect()->hasMethod('__construct');
   }
   
@@ -284,7 +276,7 @@ class XPClass extends Type {
    * @see     xp://lang.reflect.Constructor
    * @throws  lang.ElementNotFoundException
    */
-  public function getConstructor() {
+  public function getConstructor(): Constructor {
     if ($this->hasConstructor()) {
       return new Constructor($this->_class, $this->reflect()->getMethod('__construct')); 
     }
@@ -334,7 +326,7 @@ class XPClass extends Type {
    * @return  lang.reflect.Field
    * @throws  lang.ElementNotFoundException
    */
-  public function getField($name) {
+  public function getField($name): Field {
     if ($this->hasField($name)) {
       return new Field($this->_class, $this->reflect()->getProperty($name));
     }
@@ -347,7 +339,7 @@ class XPClass extends Type {
    * @param   string field the fields's name
    * @return  bool TRUE if field exists
    */
-  public function hasField($field) {
+  public function hasField($field): bool {
     return '__id' == $field ? false : $this->reflect()->hasProperty($field);
   }
 
@@ -367,7 +359,7 @@ class XPClass extends Type {
    * @param   string constant
    * @return  bool
    */
-  public function hasConstant($constant) {
+  public function hasConstant($constant): bool {
     return $this->reflect()->hasConstant($constant);
   }
   
@@ -418,7 +410,7 @@ class XPClass extends Type {
    * @param   string|self $class
    * @return  bool
    */
-  public function isSubclassOf($class) {
+  public function isSubclassOf($class): bool {
     if (!($class instanceof self)) $class= XPClass::forName($class);
     return $class->name === $this->name ? false : $this->reflect()->isSubclassOf($class->reflect());
   }
@@ -434,7 +426,7 @@ class XPClass extends Type {
    * @param   string|lang.Type $type
    * @return  bool
    */
-  public function isAssignableFrom($type) {
+  public function isAssignableFrom($type): bool {
     $t= $type instanceof Type ? $type : Type::forName($type);
     return $t instanceof self
       ? $t->name === $this->name || $t->reflect()->isSubclassOf($this->reflect())
@@ -459,7 +451,7 @@ class XPClass extends Type {
    * @param   var obj
    * @return  bool
    */
-  public function isInstance($obj) {
+  public function isInstance($obj): bool {
     return is($this->name, $obj);
   }
 
@@ -468,7 +460,7 @@ class XPClass extends Type {
    *
    * @return  bool
    */
-  public function isInterface() {
+  public function isInterface(): bool {
     return $this->reflect()->isInterface();
   }
 
@@ -477,7 +469,7 @@ class XPClass extends Type {
    *
    * @return  bool
    */
-  public function isTrait() {
+  public function isTrait(): bool {
     return $this->reflect()->isTrait();
   }
 
@@ -486,7 +478,7 @@ class XPClass extends Type {
    *
    * @return  bool
    */
-  public function isEnum() {
+  public function isEnum(): bool {
     return
       (class_exists(Enum::class, false) && $this->reflect()->isSubclassOf(Enum::class)) ||
       (class_exists('HH\BuiltinEnum', false) && $this->reflect()->isSubclassOf('HH\BuiltinEnum'))
@@ -574,7 +566,7 @@ class XPClass extends Type {
    * @see     xp://lang.reflect.Modifiers
    * @return  int
    */
-  public function getModifiers() {
+  public function getModifiers(): int {
     $r= MODIFIER_PUBLIC;
 
     // Map PHP reflection modifiers to generic form
@@ -593,7 +585,7 @@ class XPClass extends Type {
    * @param   string key default NULL
    * @return  bool
    */
-  public function hasAnnotation($name, $key= null) {
+  public function hasAnnotation($name, $key= null): bool {
     $details= self::detailsForClass($this->name);
     
     return $details && ($key 
@@ -625,12 +617,8 @@ class XPClass extends Type {
     );
   }
 
-  /**
-   * Retrieve whether a method has annotations
-   *
-   * @return  bool
-   */
-  public function hasAnnotations() {
+  /** Retrieve whether a method has annotations */
+  public function hasAnnotations(): bool {
     $details= self::detailsForClass($this->name);
     return $details ? !empty($details['class'][DETAIL_ANNOTATIONS]) : false;
   }
@@ -645,12 +633,8 @@ class XPClass extends Type {
     return $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
   }
   
-  /**
-   * Retrieve the class loader a class was loaded with.
-   *
-   * @return  lang.IClassLoader
-   */
-  public function getClassLoader() {
+  /** Retrieve the class loader a class was loaded with */
+  public function getClassLoader(): IClassLoader {
     return self::_classLoaderFor($this->name);
   }
   
@@ -773,7 +757,7 @@ class XPClass extends Type {
    *
    * @return  bool
    */
-  public function isGenericDefinition() {
+  public function isGenericDefinition(): bool {
     return $this->hasAnnotation('generic', 'self');
   }
 
@@ -812,12 +796,8 @@ class XPClass extends Type {
     return $details['class'][DETAIL_GENERIC][1];
   }
       
-  /**
-   * Returns whether this class is generic
-   *
-   * @return  bool
-   */
-  public function isGeneric() {
+  /** Returns whether this class is generic */
+  public function isGeneric(): bool {
     if (!($details= self::detailsForClass($this->name))) return false;
     return isset($details['class'][DETAIL_GENERIC]);
   }
@@ -831,7 +811,7 @@ class XPClass extends Type {
    * @return  lang.XPClass class object
    * @throws  lang.ClassNotFoundException when there is no such class
    */
-  public static function forName($name, IClassLoader $classloader= null) {
+  public static function forName($name, IClassLoader $classloader= null): self {
     $p= strpos($name, '\\');
     if (false === $p) {     // No backslashes, using dotted form
       $resolved= strtr($name, '.', '\\');
@@ -849,22 +829,13 @@ class XPClass extends Type {
     }
   }
 
-  /**
-   * Returns type literal
-   *
-   * @return  string
-   */
-  public function literal() {
+  /** Returns type literal */
+  public function literal(): string {
     return literal($this->name);
   }
   
-  /**
-   * Returns an array containing class objects representing all the 
-   * public classes
-   *
-   * @return  php.Iterator
-   */
-  public static function getClasses() {
+  /** Returns all loaded classes */
+  public static function getClasses(): \Iterator {
     foreach (\xp::$cl as $class => $loader) {
       yield new self(literal($class));
     }

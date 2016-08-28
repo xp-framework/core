@@ -35,6 +35,9 @@ XP Framework Core ChangeLog
   (@thekid)
 * Implemented xp-framework/rfc#310: XP8
   . Deprecated `newinstance` in favor of builtin anonymous class support
+  . Rewrote codebase to use grouped use statements where applicable
+  . Made use of `??` and `<=>` operators
+  . Added return type hints in various places
   . Simplified code by removing PHP5-specific handling
   (@thekid)
 

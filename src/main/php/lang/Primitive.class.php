@@ -42,23 +42,13 @@ class Primitive extends Type {
     }
   }
 
-  /**
-   * Returns type literal
-   *
-   * @return  string
-   */
-  public function literal() {
+  /** Returns type literal */
+  public function literal(): string {
     return 'þ'.$this->name;
   }
 
-  /**
-   * Determines whether the specified object is an instance of this
-   * type. 
-   *
-   * @param   var obj
-   * @return  bool
-   */
-  public function isInstance($obj) {
+  /** Determines whether the specified object is an instance of this type. */
+  public function isInstance($obj): bool {
     return is_scalar($obj) && $this === Type::forName(gettype($obj));
   }
 
@@ -105,13 +95,8 @@ class Primitive extends Type {
     });
   }
 
-  /**
-   * Tests whether this type is assignable from another type
-   *
-   * @param   var type
-   * @return  bool
-   */
-  public function isAssignableFrom($type) {
+  /** Tests whether this type is assignable from another type */
+  public function isAssignableFrom($type): bool {
     return $this === ($type instanceof Type ? $type : Type::forName($type));
   }
 }

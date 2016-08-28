@@ -28,15 +28,11 @@ class WildcardType extends Type {
     ), null);
   }
 
-  /** @return lang.XPClass */
-  public function base() {
-    return $this->base;
-  }
+  /** Returns base type */
+  public function base(): XPClass { return $this->base; }
 
   /** @return lang.Type[] */
-  public function components() {
-    return $this->components;
-  }
+  public function components() { return $this->components; }
 
   /**
    * Get a type instance for a given name
@@ -72,12 +68,8 @@ class WildcardType extends Type {
     return new self(XPClass::forName($base), $components);
   }
 
-  /**
-   * Returns type literal
-   *
-   * @return  string
-   */
-  public function literal() {
+  /** Returns type literal */
+  public function literal(): string {
     throw new IllegalStateException('Wildcard types cannot be used in type literals');
   }
 
@@ -97,14 +89,8 @@ class WildcardType extends Type {
     return false;
   }
 
-  /**
-   * Determines whether the specified object is an instance of this
-   * type. 
-   *
-   * @param   var $obj
-   * @return  bool
-   */
-  public function isInstance($obj) {
+  /** Determines whether the specified object is an instance of this type */
+  public function isInstance($obj): bool {
     $t= typeof($obj);
     return $t instanceof XPClass && $this->assignableFromClass($t);
   }
@@ -134,13 +120,8 @@ class WildcardType extends Type {
     throw new ClassCastException('Cannot cast '.\xp::typeOf($value).' to the '.$this->getName().' type');
   }
 
-  /**
-   * Tests whether this type is assignable from another type
-   *
-   * @param   var $type
-   * @return  bool
-   */
-  public function isAssignableFrom($type) {
+  /** Tests whether this type is assignable from another type */
+  public function isAssignableFrom($type): bool {
     $t= $type instanceof Type ? $type : Type::forName($type);
     return $t instanceof XPClass && $this->assignableFromClass($t);
   }

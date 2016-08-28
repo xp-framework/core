@@ -1,8 +1,6 @@
 <?php namespace lang\reflect;
 
-use lang\XPClass;
-use lang\IllegalArgumentException;
-use lang\IllegalAccessException;
+use lang\{XPClass, Type, IllegalArgumentException, IllegalAccessException};
 
 /**
  * Represents a class field
@@ -29,22 +27,12 @@ class Field extends \lang\Object {
     $this->_reflect= $reflect;
   }
 
-  /**
-   * Get field's name.
-   *
-   * @return  string
-   */
-  public function getName() {
-    return $this->_reflect->getName();
-  }
+  /** Get field's name */
+  public function getName(): string { return $this->_reflect->getName(); }
   
-  /**
-   * Gets field type
-   *
-   * @return  lang.Type
-   */
-  public function getType() {
-    if ($details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName())) {
+  /** Gets field type */
+  public function getType(): Type {
+    if ($details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName())) {
       if (isset($details[DETAIL_RETURNS])) {
         $type= $details[DETAIL_RETURNS];
       } else if (isset($details[DETAIL_ANNOTATIONS]['type'])) {
@@ -56,7 +44,7 @@ class Field extends \lang\Object {
       }
 
       if ('self' === $type) {
-        return new \lang\XPClass($this->_reflect->getDeclaringClass());
+        return new XPClass($this->_reflect->getDeclaringClass());
       } else {
         return \lang\Type::forName($type);
       }
@@ -64,13 +52,9 @@ class Field extends \lang\Object {
     return \lang\Type::$VAR;
   }
 
-  /**
-   * Gets field type
-   *
-   * @return  string
-   */
-  public function getTypeName() {
-    if ($details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName())) {
+  /** Gets field type's name */
+  public function getTypeName(): string {
+    if ($details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName())) {
       if (isset($details[DETAIL_RETURNS])) {
         return $details[DETAIL_RETURNS];
       } else if (isset($details[DETAIL_ANNOTATIONS]['type'])) {
@@ -89,8 +73,8 @@ class Field extends \lang\Object {
    * @param   string key default NULL
    * @return  bool
    */
-  public function hasAnnotation($name, $key= null) {
-    $details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+  public function hasAnnotation($name, $key= null): bool {
+    $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
 
     return $details && ($key 
       ? array_key_exists($key, (array)@$details[DETAIL_ANNOTATIONS][$name]) 
@@ -107,7 +91,7 @@ class Field extends \lang\Object {
    * @throws  lang.ElementNotFoundException
    */
   public function getAnnotation($name, $key= null) {
-    $details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
 
     if (!$details || !($key 
       ? array_key_exists($key, @$details[DETAIL_ANNOTATIONS][$name]) 
@@ -122,41 +106,35 @@ class Field extends \lang\Object {
     );
   }
   
-  /**
-   * Retrieve whether this field has annotations
-   *
-   * @return  bool
-   */
-  public function hasAnnotations() {
-    $details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+  /** Retrieve whether this field has annotations */
+  public function hasAnnotations(): bool {
+    $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     return $details ? !empty($details[DETAIL_ANNOTATIONS]) : false;
   }
 
   /**
    * Retrieve all of this field's annotations
    *
-   * @return  array annotations
+   * @return [:var] annotations
    */
   public function getAnnotations() {
-    $details= \lang\XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     return $details ? $details[DETAIL_ANNOTATIONS] : [];
   }
 
   /**
    * Returns the XPClass object representing the class or interface 
    * that declares the field represented by this Field object.
-   *
-   * @return  lang.XPClass
    */
-  public function getDeclaringClass() {
-    return new \lang\XPClass($this->_reflect->getDeclaringClass()->getName());
+  public function getDeclaringClass(): XPClass {
+    return new XPClass($this->_reflect->getDeclaringClass());
   }
   
   /**
    * Returns the value of the field represented by this Field, on the 
    * specified object.
    *
-   * @param   lang.Object instance
+   * @param   object instance
    * @return  var  
    * @throws  lang.IllegalArgumentException in case the passed object is not an instance of the declaring class
    * @throws  lang.IllegalAccessException in case this field is not public
@@ -165,7 +143,7 @@ class Field extends \lang\Object {
     if (null !== $instance && !($instance instanceof $this->_class)) {
       throw new \lang\IllegalArgumentException(sprintf(
         'Passed argument is not a %s class (%s)',
-        \lang\XPClass::nameOf($this->_class),
+        XPClass::nameOf($this->_class),
         \xp::typeOf($instance)
       ));
     }
@@ -210,7 +188,7 @@ class Field extends \lang\Object {
    * Changes the value of the field represented by this Field, on the 
    * specified object.
    *
-   * @param   lang.Object instance
+   * @param   object instance
    * @param   var value
    * @throws  lang.IllegalArgumentException in case the passed object is not an instance of the declaring class
    * @throws  lang.IllegalAccessException in case this field is not public
@@ -259,35 +237,20 @@ class Field extends \lang\Object {
     }
   }
 
-  /**
-   * Retrieve this field's modifiers
-   *
-   * @see     xp://lang.reflect.Modifiers
-   * @return  int
-   */    
-  public function getModifiers() {
-    return $this->_reflect->getModifiers();
-  }
+  /** Retrieve this field's modifiers */    
+  public function getModifiers(): int { return $this->_reflect->getModifiers(); }
 
   /**
    * Sets whether this routine should be accessible from anywhere, 
    * regardless of its visibility level.
-   *
-   * @param   bool flag
-   * @return  lang.reflect.Routine this
    */
-  public function setAccessible($flag) {
+  public function setAccessible($flag): self {
     $this->accessible= $flag;
     return $this;
   }
 
-  /**
-   * Returns whether an object is equal to this routine
-   *
-   * @param   lang.Generic cmp
-   * @return  bool
-   */
-  public function equals($cmp) {
+  /** Returns whether an object is equal to this routine */
+  public function equals($cmp): bool {
     return (
       $cmp instanceof self && 
       $cmp->_reflect->getName() === $this->_reflect->getName() &&
@@ -295,21 +258,13 @@ class Field extends \lang\Object {
     );
   }
 
-  /**
-   * Returns a hashcode for this routine
-   *
-   * @return  string
-   */
-  public function hashCode() {
+  /** Returns a hashcode for this routine */
+  public function hashCode(): string {
     return 'F['.$this->_reflect->getDeclaringClass().$this->_reflect->getName();
   }
   
-  /**
-   * Creates a string representation of this field
-   *
-   * @return  string
-   */
-  public function toString() {
+  /** Creates a string representation of this field */
+  public function toString(): string {
     return sprintf(
       '%s %s %s::$%s',
       Modifiers::stringOf($this->getModifiers()),
