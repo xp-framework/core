@@ -37,13 +37,8 @@ class CompositePropertiesTest extends \unittest\TestCase {
     new CompositeProperties([]);
   }
 
-  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]]
+  #[@test, @expect(Error::class)]]
   public function createCompositeThrowsExceptionWhenSomethingElseThenPropertiesGiven() {
-    new CompositeProperties([new Properties(null), 1, new Properties(null)]);
-  }
-
-  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]]
-  public function createCompositeThrowsExceptionWhenSomethingElseThenPropertiesGiven7() {
     new CompositeProperties([new Properties(null), 1, new Properties(null)]);
   }
 

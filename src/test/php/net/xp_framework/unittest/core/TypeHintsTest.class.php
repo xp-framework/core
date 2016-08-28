@@ -34,23 +34,13 @@ class TypeHintsTest extends \unittest\TestCase {
     $this->assertEquals($o, $this->pass($o));
   }
 
-  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(Error::class)]
   public function pass_a_primitive() {
     $this->pass(1);
   }
 
-  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(Error::class)]
   public function pass_null() {
-    $this->pass(null);
-  }
-
-  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
-  public function pass_a_primitive7() {
-    $this->pass(1);
-  }
-
-  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
-  public function pass_null7() {
     $this->pass(null);
   }
 
@@ -60,13 +50,8 @@ class TypeHintsTest extends \unittest\TestCase {
     $this->assertEquals($o, $this->nullable($o));
   }
 
-  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test, @expect(Error::class)]
   public function pass_a_primitive_to_nullable() {
-    $this->nullable(1);
-  }
-
-  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
-  public function pass_a_primitive_to_nullable7() {
     $this->nullable(1);
   }
 

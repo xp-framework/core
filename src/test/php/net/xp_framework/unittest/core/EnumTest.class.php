@@ -158,12 +158,7 @@ class EnumTest extends \unittest\TestCase {
     Enum::valueOf(XPClass::forName(Coin::class), '@@DOES_NOT_EXIST@@');
   }
 
-  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
-  public function valueOfNonEnum() {
-    Enum::valueOf($this, 'irrelevant');
-  }
-
-  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class)]
   public function valueOfNonEnum7() {
     Enum::valueOf($this, 'irrelevant');
   }
@@ -192,12 +187,7 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
-  public function valuesOfNonEnum() {
-    Enum::valuesOf($this);
-  }
-
-  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class)]
   public function valuesOfNonEnum7() {
     Enum::valuesOf($this);
   }

@@ -67,12 +67,7 @@ class TimerTest extends TestCase {
     $this->assertTrue($elapsed > 0.0, 'Elapsed time '.$elapsed.' should be greater than zero');
   }
 
-  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
-  public function not_callable_argument_passed_to_measure() {
-    Timer::measure('@not-callable@');
-  }
-
-  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class)]
   public function not_callable_argument_passed_to_measure_7() {
     Timer::measure('@not-callable@');
   }

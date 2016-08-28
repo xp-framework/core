@@ -255,22 +255,8 @@ key="overwritten value"'));
     $this->assertEquals([$one, $two], $fixture->getSources());
   }
 
-  #[@test, @action(new RuntimeVersion('<7.0.0-dev'))]
+  #[@test]
   public function setIllegalSourceKeepsPreviousStateAndThrowsException() {
-    $one= new FilesystemPropertySource('.');
-
-    $fixture= $this->fixture();
-    try {
-      $fixture->setSources([$one, null]);
-      $this->fail('No exception thrown', null, 'lang.IllegalArgumentException');
-    } catch (IllegalArgumentException $expected) {
-    }
-
-    $this->assertEquals([], $fixture->getSources());
-  }
-
-  #[@test, @action(new RuntimeVersion('>=7.0.0-dev'))]
-  public function setIllegalSourceKeepsPreviousStateAndThrowsException7() {
     $one= new FilesystemPropertySource('.');
 
     $fixture= $this->fixture();

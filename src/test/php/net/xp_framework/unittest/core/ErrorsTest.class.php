@@ -98,19 +98,13 @@ class ErrorsTest extends \unittest\TestCase {
     $a{0};
   }
 
-  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class)]
   public function call_to_member_on_non_object_yields_npe() {
     $a= null;
     $a->method();
   }
 
-  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.0.0-dev'))]
-  public function argument_mismatch_yield_iae() {
-    $f= function(Object $arg) { };
-    $f('Primitive');
-  }
-
-  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.0.0-dev'))]
+  #[@test, @expect(Error::class)]
   public function argument_mismatch_yield_type_exception() {
     $f= function(Object $arg) { };
     $f('Primitive');
