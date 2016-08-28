@@ -213,9 +213,7 @@ final class ClassLoader extends Object implements IClassLoader {
    * @param  php.ReflectionParameter[] $params
    * @param  string $invoke
    */
-  protected static function defineForward($name, $params, $invoke) {
-    static $bind= 'foreach (self::$__func as &$f) { $f= $f->bindTo($this, $this); }';
-
+  protected static function defineForward($name, $params, $invoke, $offset= 2) {
     $pass= $sig= '';
     foreach ($params as $param) {
       $p= $param->getName();
@@ -242,8 +240,7 @@ final class ClassLoader extends Object implements IClassLoader {
     if (null === $invoke) {
       return $decl.';';
     } else {
-      $init= ('__construct' === $name ? $bind : '');
-      return $decl.'{'.$init.sprintf($invoke, substr($pass, 2)).'}';
+      return $decl.'{'.sprintf($invoke, substr($pass, $offset)).'}';
     }
   }
 
@@ -283,7 +280,8 @@ final class ClassLoader extends Object implements IClassLoader {
           $bytes.= $memberAnnotations.self::defineForward(
             $name,
             (new \ReflectionFunction($member))->getParameters(),
-            $iface ? null : 'return self::$__func["'.$name.'"]->__invoke(%s);'
+            $iface ? null : 'return self::$__func["'.$name.'"]->call($this%s);',
+            0
           );
           $iface || $functions[$name]= $member;
         } else {
@@ -291,28 +289,7 @@ final class ClassLoader extends Object implements IClassLoader {
         }
       }
 
-      if ($iface) {
-        // Don't handle constructors
-      } else if (isset($functions['__construct'])) {
-        $bytes= 'static $__func= []; '.$bytes;
-      } else {
-        if ($declaration['extends'] && ($ctor= (new \ReflectionClass(self::classLiteral($declaration['extends'][0])))->getConstructor())) {
-          $constructor= self::defineForward('__construct', $ctor->getParameters(), 'parent::__construct(%s);');
-        } else {
-          $constructor= self::defineForward('__construct', [], '');
-          foreach ($declaration['use'] as $use) {
-            $trait= self::classLiteral($use);
-            if ($ctor= (new \ReflectionClass($trait))->getConstructor()) {
-              $bytes.= 'use '.$trait.' { __construct as __trait; }';
-              $constructor= self::defineForward('__construct', $ctor->getParameters(), 'self::__trait(%s);');
-            } else {
-              $bytes.= 'use '.$trait.';';
-            }
-          }
-          $declaration['use']= [];
-        }
-        $bytes= 'static $__func= []; '.$constructor.$bytes;
-      }
+      $iface || $bytes= 'static $__func= []; '.$bytes;
     } else {
       $bytes= substr(trim($def), 1, -1);
     }
@@ -337,7 +314,7 @@ final class ClassLoader extends Object implements IClassLoader {
     }
 
     $dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__));
-    $dyn->setClassBytes($spec, sprintf(
+    $dyn->setClassBytes($spec, $x= sprintf(
       '%s%s%s %s %s%s%s {%s%s}',
       $header,
       $typeAnnotations,
