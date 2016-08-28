@@ -14,13 +14,6 @@ class Wildcard extends Type {
     self::$ANY= new self('?', null);
   }
 
-  /**
-   * Tests whether this type is assignable from another type
-   *
-   * @param   var type
-   * @return  bool
-   */
-  public function isAssignableFrom($type) {
-    return true;
-  }
+  /** Tests whether this type is assignable from another type */
+  public function isAssignableFrom($type): bool { return true; }
 }

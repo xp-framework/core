@@ -84,8 +84,12 @@ class File extends \lang\Object implements Channel {
   /** Get Path */
   public function getPath(): string { return $this->path; }
 
-  /** Get Extension */
-  public function getExtension(): string { return $this->extension; }
+  /**
+   * Get Extension
+   *
+   * @return string or NULL if there is no extension
+   */
+  public function getExtension() { return $this->extension; }
 
   /**
    * Set this file's URI

@@ -16,25 +16,16 @@
  * @test  xp://net.xp_framework.unittest.util.TimerTest
  */
 class Timer {
-  protected $start= null;
-  protected $stop= null;
+  private $start, $stop;
     
-  /**
-   * Start the timer
-   *
-   * @return  self
-   */
-  public function start() {
+  /** Start the timer */
+  public function start(): self {
     $this->start= microtime(true);
     return $this;
   }
   
-  /**
-   * Stop the timer
-   *
-   * @return  self
-   */
-  public function stop() {
+  /** Stop the timer */
+  public function stop(): self {
     $this->stop= microtime(true);
     return $this;
   }
@@ -47,7 +38,7 @@ class Timer {
    * @return self
    * @throws lang.IllegalArgumentException when block is not callable
    */
-  public static function measure(callable $block) {
+  public static function measure(callable $block): self {
     $self= new self();
     $self->start= microtime(true);
     $block();
@@ -55,12 +46,8 @@ class Timer {
     return $self;
   }
 
-  /**
-   * Retrieve elapsed time
-   *
-   * @return  float seconds elapsed
-   */
-  public function elapsedTime() {
+  /** Retrieve elapsed time */
+  public function elapsedTime(): float {
     if (null === $this->start) {
       return 0.0;
     } else if (null === $this->stop) {

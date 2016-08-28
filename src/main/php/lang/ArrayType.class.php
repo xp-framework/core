@@ -26,14 +26,11 @@ class ArrayType extends Type {
     }
   }
 
-  /**
-   * Gets this array's component type
-   *
-   * @return  lang.Type
-   */
-  public function componentType() {
-    return $this->component;
-  }
+  /** Gets this array's component type */
+  public function componentType(): Type { return $this->component; }
+
+  /** Returns type literal */
+  public function literal(): string { return '¦'.$this->component->literal(); }
 
   /**
    * Get a type instance for a given name
@@ -51,22 +48,13 @@ class ArrayType extends Type {
   }
 
   /**
-   * Returns type literal
-   *
-   * @return  string
-   */
-  public function literal() {
-    return '¦'.$this->component->literal();
-  }
-
-  /**
    * Determines whether the specified object is an instance of this
    * type. 
    *
    * @param   var obj
    * @return  bool
    */
-  public function isInstance($obj) {
+  public function isInstance($obj): bool {
     if (!is_array($obj)) return false;
 
     foreach ($obj as $k => $element) {
@@ -117,13 +105,8 @@ class ArrayType extends Type {
     }
   }
 
-  /**
-   * Tests whether this type is assignable from another type
-   *
-   * @param   var type
-   * @return  bool
-   */
-  public function isAssignableFrom($type) {
+  /** Tests whether this type is assignable from another type */
+  public function isAssignableFrom($type): bool {
     $t= $type instanceof Type ? $type : Type::forName($type);
     return $t instanceof self && $t->component->isAssignableFrom($this->component);
   }

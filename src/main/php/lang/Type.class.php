@@ -18,21 +18,21 @@ class Type extends Object {
 
     self::$ARRAY= eval('namespace lang; class NativeArrayType extends Type {
       static function __static() { }
-      public function isInstance($value) { return is_array($value); }
+      public function isInstance($value): bool { return is_array($value); }
       public function newInstance($value= null) {
         return null === $value ? [] : (array)$value;
       }
       public function cast($value) {
         return null === $value ? null : (array)$value;
       }
-      public function isAssignableFrom($type) {
+      public function isAssignableFrom($type): bool {
         return $type instanceof self || $type instanceof ArrayType || $type instanceof MapType;
       }
     } return new NativeArrayType("array", []);');
 
     self::$OBJECT= eval('namespace lang; class NativeObjectType extends Type {
       static function __static() { }
-      public function isInstance($value) { return is_object($value) && !$value instanceof \Closure; }
+      public function isInstance($value): bool { return is_object($value) && !$value instanceof \Closure; }
       public function newInstance($value= null) {
         if (is_object($value) && !$value instanceof \Closure) return clone $value;
         throw new IllegalAccessException("Cannot instantiate ".\xp::typeOf($value));
@@ -41,14 +41,14 @@ class Type extends Object {
         if (null === $value || is_object($value) && !$value instanceof \Closure) return $value;
         throw new ClassCastException("Cannot cast ".\xp::typeOf($value)." to the object type");
       }
-      public function isAssignableFrom($type) {
+      public function isAssignableFrom($type): bool {
         return $type instanceof self || $type instanceof XPClass;
       }
     } return new NativeObjectType("object", null);');
 
     self::$CALLABLE= eval('namespace lang; class NativeCallableType extends Type {
       static function __static() { }
-      public function isInstance($value) { return is_callable($value); }
+      public function isInstance($value): bool { return is_callable($value); }
       public function newInstance($value= null) {
         if (is_callable($value)) return $value;
         throw new IllegalAccessException("Cannot instantiate callable type from ".\xp::typeOf($value));
@@ -57,14 +57,14 @@ class Type extends Object {
         if (null === $value || is_callable($value)) return $value;
         throw new ClassCastException("Cannot cast ".\xp::typeOf($value)." to the callable type");
       }
-      public function isAssignableFrom($type) {
+      public function isAssignableFrom($type): bool {
         return $type instanceof self || $type instanceof FunctionType;
       }
     } return new NativeCallableType("callable", null);');
 
     self::$ITERABLE= eval('namespace lang; class NativeIterableType extends Type {
       static function __static() { }
-      public function isInstance($value) { return $value instanceof \Traversable || is_array($value); }
+      public function isInstance($value): bool { return $value instanceof \Traversable || is_array($value); }
       public function newInstance($value= null) {
         if ($value instanceof \Traversable || is_array($value)) return $value;
         throw new IllegalAccessException("Cannot instantiate iterable type from ".\xp::typeOf($value));
@@ -73,7 +73,7 @@ class Type extends Object {
         if (null === $value || $value instanceof \Traversable || is_array($value)) return $value;
         throw new ClassCastException("Cannot cast ".\xp::typeOf($value)." to the iterable type");
       }
-      public function isAssignableFrom($type) {
+      public function isAssignableFrom($type): bool {
         return $type instanceof self;
       }
     } return new NativeIterableType("iterable", null);');
@@ -90,34 +90,17 @@ class Type extends Object {
     $this->default= $default;
   }
 
-  /**
-   * Retrieves this type's name
-   * 
-   * @return string
-   */
-  public function getName() { return $this->name; }
+  /** Retrieves this type's name  */
+  public function getName(): string { return $this->name; }
   
-  /**
-   * Creates a string representation of this object
-   *
-   * @return string
-   */
-  public function toString() { return nameof($this).'<'.$this->name.'>'; }
+  /** Creates a string representation of this object */
+  public function toString(): string { return nameof($this).'<'.$this->name.'>'; }
 
-  /**
-   * Checks whether a given object is equal to this type
-   *
-   * @param  lang.Generic $cmp
-   * @return bool
-   */
-  public function equals($cmp) { return $cmp instanceof self && $cmp->name === $this->name; }
+  /** Checks whether a given object is equal to this type */
+  public function equals($cmp): bool { return $cmp instanceof self && $cmp->name === $this->name; }
 
-  /**
-   * Returns a hashcode for this object
-   *
-   * @return string
-   */
-  public function hashCode() { return get_class($this).':'.$this->name; }
+  /** Returns a hashcode for this object */
+  public function hashCode(): string { return get_class($this).':'.$this->name; }
 
   /**
    * Creates a type list from a given string
@@ -232,21 +215,11 @@ class Type extends Object {
     }
   }
   
-  /**
-   * Returns type literal
-   *
-   * @return string
-   */
-  public function literal() { return $this->name; }
+  /** Returns type literal */
+  public function literal(): string { return $this->name; }
 
-  /**
-   * Determines whether the specified object is an instance of this
-   * type. 
-   *
-   * @param  var $value
-   * @return bool
-   */
-  public function isInstance($value) {
+  /** Determines whether the specified object is an instance of this type. */
+  public function isInstance($value): bool {
     return self::$VAR === $this;      // VAR is always true, VOID never
   }
 
@@ -273,18 +246,9 @@ class Type extends Object {
     throw new ClassCastException('Cannot cast '.\xp::typeOf($value).' to the void type');
   }
 
-  /**
-   * Tests whether this type is assignable from another type
-   *
-   * @param  var $type
-   * @return bool
-   */
-  public function isAssignableFrom($type) { return self::$VAR === $this && self::$VOID !== $type; }
+  /** Tests whether this type is assignable from another type */
+  public function isAssignableFrom($type): bool { return self::$VAR === $this && self::$VOID !== $type; }
 
-  /**
-   * Creates a string representation of this object
-   *
-   * @return string
-   */
-  public function __toString() { return $this->name; }
+  /** Creates a string representation of this object */
+  public function __toString(): string { return $this->name; }
 }

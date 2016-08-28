@@ -1,8 +1,6 @@
 <?php namespace lang\reflect;
 
-use lang\XPClass;
-use lang\IllegalArgumentException;
-use lang\IllegalAccessException;
+use lang\{XPClass, IllegalArgumentException, IllegalAccessException};
 
 /**
  * Represents a class method
@@ -36,7 +34,7 @@ class Method extends Routine {
    * $log= $method->invoke(null);
    * ```
    *
-   * @param   lang.Object $obj
+   * @param   object $obj
    * @param   var[] $args default []
    * @return  var
    * @throws  lang.IllegalArgumentException in case the passed object is not an instance of the declaring class

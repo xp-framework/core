@@ -42,8 +42,8 @@ class FunctionType extends Type {
   /** @return lang.Type[] */
   public function signature() { return $this->signature; }
 
-  /** @return lang.Type */
-  public function returns() { return $this->returns; }
+  /** Return type */
+  public function returns(): Type { return $this->returns; }
 
   /**
    * Get a type instance for a given name
@@ -83,12 +83,8 @@ class FunctionType extends Type {
     return new self($signature, Type::forName(ltrim(substr($args, $o+ 1), ' ')));
   }
 
-  /**
-   * Returns type literal
-   *
-   * @return  string
-   */
-  public function literal() {
+  /** Returns type literal */
+  public function literal(): string {
     return sprintf(
       "\xaa%s\xbb%s",
       null === $this->signature ? "\xbf" : implode("\xb8", array_map(function($e) { return $e->literal(); }, $this->signature)),
@@ -270,14 +266,8 @@ class FunctionType extends Type {
     return $false('Verifying method failed');
   }
 
-  /**
-   * Determines whether the specified object is an instance of this
-   * type. 
-   *
-   * @param   var $obj
-   * @return  bool
-   */
-  public function isInstance($obj) {
+  /** Determines whether the specified object is an instance of this type */
+  public function isInstance($obj): bool {
     return $this->verified($obj, function($m) { return false; }, false);
   }
 
@@ -312,13 +302,8 @@ class FunctionType extends Type {
     )); });
   }
 
-  /**
-   * Tests whether this type is assignable from another type
-   *
-   * @param   var $type
-   * @return  bool
-   */
-  public function isAssignableFrom($type) {
+  /** Tests whether this type is assignable from another type */
+  public function isAssignableFrom($type): bool {
     $t= $type instanceof Type ? $type : Type::forName($type);
     if (!($t instanceof self) || !$this->returns->isAssignableFrom($t->returns)) return false;
     if (null === $this->signature) return true;

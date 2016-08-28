@@ -1,6 +1,6 @@
 <?php namespace lang\reflect;
 
-use lang\XPClass;
+use lang\{Type, XPClass};
 use lang\IllegalAccessException;
 
 /**
@@ -75,21 +75,9 @@ class Constructor extends Routine {
     }
   }
 
-  /**
-   * Retrieve return type
-   *
-   * @return  lang.Type
-   */
-  public function getReturnType() {
-    return new XPClass($this->_class);
-  }
+  /** Retrieve return type */
+  public function getReturnType(): Type { return new XPClass($this->_class); }
 
-  /**
-   * Retrieve return type
-   *
-   * @return  string
-   */
-  public function getReturnTypeName() {
-    return XPClass::nameOf($this->_class);
-  }
+  /** Retrieve return type name */
+  public function getReturnTypeName(): string { return XPClass::nameOf($this->_class); }
 }

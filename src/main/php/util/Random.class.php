@@ -79,8 +79,8 @@ class Random {
     throw new IllegalArgumentException('None of the supplied sources '.implode(', ', $test).' are available');
   }
 
-  /** @return string */
-  public function source() { return $this->source; }
+  /** Returns this random's source */
+  public function source(): string { return $this->source; }
 
   /**
    * Implementation using OpenSSL
@@ -175,11 +175,9 @@ class Random {
   /**
    * Returns a number of random bytes
    *
-   * @param  int $amount
-   * @return util.Bytes
    * @throws lang.IllegalArgumentException
    */
-  public function bytes($amount) {
+  public function bytes(int $amount): Bytes {
     if ($amount <= 0) {
       throw new IllegalArgumentException('Amount must be greater than 0');
     }
@@ -195,7 +193,7 @@ class Random {
    * @return int
    * @throws lang.IllegalArgumentException
    */
-  public function int($min= 0, $max= PHP_INT_MAX) {
+  public function int($min= 0, $max= PHP_INT_MAX): int {
     if ($min >= $max) {
       throw new IllegalArgumentException('Minimum value must be lower than max');
     }

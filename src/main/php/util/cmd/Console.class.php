@@ -124,11 +124,8 @@ abstract class Console {
   /**
    * Read a line from standard input. The line ending (\r and/or \n)
    * is trimmed off the end.
-   *
-   * @param   string prompt = NULL
-   * @return  string
    */    
-  public static function readLine($prompt= null) {
+  public static function readLine(string $prompt= null): string {
     $prompt && self::$out->write($prompt.' ');
     return self::$in->readLine();
   }
@@ -139,7 +136,7 @@ abstract class Console {
    * @param   string prompt = NULL
    * @return  string
    */    
-  public static function read($prompt= null) {
+  public static function read(string $prompt= null): string {
     $prompt && self::$out->write($prompt.' ');
     return self::$in->read(1);
   }

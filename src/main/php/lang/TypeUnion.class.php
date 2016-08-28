@@ -25,14 +25,8 @@ class TypeUnion extends Type {
     parent::__construct(implode('|', array_map(function($type) { return $type->getName(); }, $types)), null);
   }
 
-  /**
-   * Gets types this union consists of
-   *
-   * @return  lang.Type[]
-   */
-  public function types() {
-    return $this->types;
-  }
+  /** @return lang.Type[] */
+  public function types() { return $this->types; }
 
   /**
    * Get a type instance for a given name
@@ -56,23 +50,13 @@ class TypeUnion extends Type {
     return new self($types);
   }
 
-  /**
-   * Returns type literal
-   *
-   * @return  string
-   */
-  public function literal() {
+  /** Returns type literal */
+  public function literal(): string {
     return "\xb5".implode("\xb8", array_map(function($type) { return $type->literal(); }, $this->types));
   }
 
-  /**
-   * Determines whether the specified object is an instance of this
-   * type. 
-   *
-   * @param   var obj
-   * @return  bool
-   */
-  public function isInstance($obj) {
+  /** Determines whether the specified object is an instance of this type */
+  public function isInstance($obj): bool {
     foreach ($this->types as $type) {
       if ($type->isInstance($obj)) return true;
     }
@@ -137,7 +121,7 @@ class TypeUnion extends Type {
    * @param   var $from Either a type or a type name
    * @return  bool
    */
-  public function isAssignableFrom($from) {
+  public function isAssignableFrom($from): bool {
     $t= $from instanceof Type ? $from : Type::forName($from);
     if ($t instanceof self) {
       foreach ($t->types as $type) {
