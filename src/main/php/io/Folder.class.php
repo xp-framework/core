@@ -104,14 +104,8 @@ class Folder extends \lang\Object {
     $this->dirname= basename($this->uri);
   }
   
-  /**
-   * Get URI
-   *
-   * @return  string uri of this folder
-   */    
-  public function getURI() {
-    return $this->uri;
-  }
+  /** Get URI */
+  public function getURI(): string { return $this->uri; }
   
   /**
    * Create this directory, recursively, if needed.
@@ -194,53 +188,11 @@ class Folder extends \lang\Object {
     return true;
   }
 
-  /**
-   * Returns whether this directory exists
-   *
-   * @return  bool TRUE in case the directory exists
-   */
-  public function exists() {
-    return is_dir($this->uri);
-  }
+  /** Returns whether this directory exists */
+  public function exists(): bool { return is_dir($this->uri); }
 
-  /** @return io.FolderEntries */
-  public function entries() { return new FolderEntries($this); }
-
-  /**
-   * Read through the contents of the directory, ommitting the entries "." and ".."
-   *
-   * @deprecated Use entries() instead
-   * @return  string entry directory entry (w/o path!), FALSE, if no more entries are left
-   * @throws  io.IOException in case an error occurs
-   */
-  public function getEntry() {
-    if (false === $this->_hdir) {
-
-      // Not open yet, try to open
-      if (!is_object($this->_hdir= dir($this->uri))) {
-        $this->_hdir= false;
-        throw new IOException('Cannot open directory "'.$this->uri.'"');
-      }
-    }
-    
-    while (false !== ($entry= $this->_hdir->read())) {
-      if ($entry != '.' && $entry != '..') return $entry;
-    }
-    return false;
-  }
- 
-  /**
-   * Rewinds the directory to the beginning.
-   *
-   * @deprecated Use entries() instead
-   * @throws  io.IOException in case an error occurs
-   */
-  public function rewind() {
-    if (false === $this->_hdir) {
-      throw new IOException('Cannot rewind non-open folder.');
-    }
-    rewinddir($this->_hdir->handle);
-  }
+  /** Returns entries in this folder */
+  public function entries(): FolderEntries { return new FolderEntries($this); }
 
   /**
    * Retrieve when the folder was created

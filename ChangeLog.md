@@ -7,6 +7,8 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* **Removed deprecated `io.Folder` methods** getEntries() and rewind()
+  (@thekid)
 * **Removed deprecated `io.File` methods** get(Input|Output)Stream()
   (@thekid)
 * **Removed deprecated `util.Properties` I/O methods** save(), fromString()
