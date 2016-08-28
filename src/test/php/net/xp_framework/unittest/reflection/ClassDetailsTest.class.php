@@ -288,6 +288,30 @@ class ClassDetailsTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function grouped_use_statements_evaluated() {
+    $actual= (new ClassParser())->parseDetails('<?php namespace test;
+      use lang\\{Object, Type};
+
+      #[@value(new Object())]
+      class Test extends Object {
+      }
+    ');
+    $this->assertInstanceOf(Object::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
+  }
+
+  #[@test]
+  public function grouped_use_statements_with_alias_evaluated() {
+    $actual= (new ClassParser())->parseDetails('<?php namespace test;
+      use lang\\{Object as Base};
+
+      #[@value(new Base())]
+      class Test extends Base {
+      }
+    ');
+    $this->assertInstanceOf(Object::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
+  }
+
+  #[@test]
   public function closure_use_not_evaluated() {
     (new ClassParser())->parseDetails('<?php 
       class Test extends Object {
