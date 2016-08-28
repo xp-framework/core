@@ -13,6 +13,11 @@ XP Framework Core ChangeLog
   . Simplified code by remove PHP5-specific handling
   (@thekid)
 
+### Features
+
+* Merged PR #134: Change lang.XPClass::getClasses() to return an iterator
+  (@thekid)
+
 ## 7.6.1 / 2016-08-28
 
 ### Bugfixes
