@@ -84,13 +84,8 @@ class MethodParametersTest extends MethodsTest {
 
   #[@tes]
   public function nonexistant_name_class_parameter() {
-    if (PHP_VERSION >= '7.0.0' || defined('HHVM_VERSION')) {
-      $expect= 'net\xp_framework\unittest\reflection\UnknownTypeRestriction';
-    } else {
-      $expect= 'var';
-    }
     $this->assertEquals(
-      $expect,
+      'net\xp_framework\unittest\reflection\UnknownTypeRestriction',
       $this->method('public function fixture(UnknownTypeRestriction $param) { }')->getParameter(0)->getTypeName()
     );
   }
@@ -238,7 +233,7 @@ class MethodParametersTest extends MethodsTest {
     $this->assertEquals($expected, $this->method($declaration.' { }')->getParameter(0)->toString());
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.0'))]
+  #[@test]
   public function variadic_via_syntax_with_type() {
     $param= $this->method('function fixture(string... $args) { }')->getParameter(0);
     $this->assertEquals(
@@ -247,7 +242,7 @@ class MethodParametersTest extends MethodsTest {
     );
   }
 
-  #[@test, @action(new RuntimeVersion('>=5.6'))]
+  #[@test]
   public function variadic_via_syntax() {
     $param= $this->method('function fixture(... $args) { }')->getParameter(0);
     $this->assertEquals(

@@ -46,11 +46,9 @@ class Random {
       self::$sources[self::SECURE]= &self::$sources[key(self::$sources)];
     }
 
-    // Regard openssl functionality insecure in PHP version affected by CVE-2015-8867
-    // This was fixed in PHP 5.6.12; see also https://bugs.php.net/70014
     if (function_exists('openssl_random_pseudo_bytes')) {
       self::$sources[self::OPENSSL]= ['bytes' => [__CLASS__, self::OPENSSL], 'ints' => null];
-      if (!isset(self::$sources[self::SECURE]) && version_compare(PHP_VERSION, '5.6.12', 'ge')) {
+      if (!isset(self::$sources[self::SECURE])) {
         self::$sources[self::SECURE]= &self::$sources[self::OPENSSL];
       }
     }

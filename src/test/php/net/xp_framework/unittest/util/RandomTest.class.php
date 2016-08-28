@@ -51,7 +51,7 @@ class RandomTest extends \unittest\TestCase {
   #[@test, @action(new VerifyThat(function() {
   #  return (
   #    function_exists('random_bytes') ||
-  #    version_compare(PHP_VERSION, '5.6.12', 'ge') && function_exists('openssl_random_pseudo_bytes') ||
+  #    function_exists('openssl_random_pseudo_bytes') ||
   #    function_exists('mcrypt_create_iv')
   #  );
   #}))]

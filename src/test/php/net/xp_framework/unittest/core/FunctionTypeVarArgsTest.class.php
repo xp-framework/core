@@ -27,7 +27,7 @@ class FunctionTypeVarArgsTest extends \unittest\TestCase {
     return [$class, 'fixture'];
   }
 
-  #[@test, @action(new RuntimeVersion('>=5.6.0')), @values([
+  #[@test, @values([
   #  [new FunctionType(null, Type::$VAR)],
   #  [new FunctionType([], Type::$VAR)],
   #  [new FunctionType([Type::$VAR], Type::$VAR)],
@@ -47,7 +47,7 @@ class FunctionTypeVarArgsTest extends \unittest\TestCase {
     $this->assertTrue($type->isInstance($this->compile('', ['@param  var... $args]'])));
   }
 
-  #[@test, @action(new RuntimeVersion('>=5.6.0')), @values([
+  #[@test, @values([
   #  [new FunctionType(null, Type::$VAR)],
   #  [new FunctionType([Type::$ARRAY], Type::$VAR)],
   #  [new FunctionType([Type::$ARRAY, Type::$VAR], Type::$VAR)],

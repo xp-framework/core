@@ -184,7 +184,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals($this, newinstance($base->getName(), [$this], [])->test);
   }
 
-  #[@test, @action([new RuntimeVersion('>=5.6'), new VerifyThat('processExecutionEnabled')])]
+  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function variadic_argument_passing() {
     $r= $this->runInNewRuntime('
       class Test {
