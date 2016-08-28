@@ -26,9 +26,8 @@ class Process extends Object {
     $err    = null,
     $exitv  = -1;
   
-  protected
-    $_proc  = null,
-    $status = [];
+  private $handle;
+  private $status= [];
 
   public static $DISABLED;
 
@@ -68,11 +67,11 @@ class Process extends Object {
 
     // Open process
     $cmd= CommandLine::forName(PHP_OS)->compose($binary, $arguments);
-    if (!is_resource($this->_proc= proc_open($cmd, $spec, $pipes, $cwd, $env, ['bypass_shell' => true]))) {
+    if (!is_resource($this->handle= proc_open($cmd, $spec, $pipes, $cwd, $env, ['bypass_shell' => true]))) {
       throw new \io\IOException('Could not execute "'.$cmd.'"');
     }
 
-    $this->status= proc_get_status($this->_proc);
+    $this->status= proc_get_status($this->handle);
     $this->status['exe']= $binary;
     $this->status['arguments']= $arguments;
     $this->status['owner']= true;
@@ -89,9 +88,10 @@ class Process extends Object {
    * @param   string[] arguments default []
    * @param   string cwd default NULL the working directory
    * @param   [:string] default NULL the environment
+   * @return  self
    * @throws  io.IOException in case the command could not be executed
    */
-  public function newInstance($arguments= [], $cwd= null, $env= null) {
+  public function newInstance($arguments= [], $cwd= null, $env= null): self {
     return new self($this->status['exe'], $arguments, $cwd, $env);
   }
 
@@ -102,7 +102,7 @@ class Process extends Object {
    * @return  string executable
    * @throws  io.IOException in case the command could not be found or is not an executable
    */
-  public static function resolve($command) {
+  public static function resolve(string $command): string {
   
     // Short-circuit this
     if ('' === $command) throw new \io\IOException('Empty command not resolveable');
@@ -142,10 +142,10 @@ class Process extends Object {
    *
    * @param   int pid process id
    * @param   string exe
-   * @return  lang.Process
+   * @return  self
    * @throws  lang.IllegalStateException
    */
-  public static function getProcessById($pid, $exe= null) {
+  public static function getProcessById($pid, $exe= null): self {
     $self= new self();
     $self->status= [
       'pid'       => $pid, 
@@ -171,7 +171,7 @@ class Process extends Object {
     //   purposes)
     if (strncasecmp(PHP_OS, 'Win', 3) === 0) {
       try {
-        $c= new \com('winmgmts:');
+        $c= new \Com('winmgmts:');
         $p= $c->get('//./root/cimv2:Win32_Process.Handle="'.$pid.'"');
         if (null === $exe) $self->status['exe']= $p->executablePath;
         $self->status['command']= $p->commandLine;
@@ -213,32 +213,14 @@ class Process extends Object {
     return $self;
   }
   
-  /**
-   * Get process ID
-   *
-   * @return  int
-   */
-  public function getProcessId() {
-    return $this->status['pid'];
-  }
+  /** Get process ID */
+  public function getProcessId(): int { return $this->status['pid']; }
   
-  /**
-   * Get filename of executable
-   *
-   * @return  string
-   */
-  public function getFilename() {
-    return $this->status['exe'];
-  }
+  /** Get filename of executable */
+  public function getFilename(): string { return $this->status['exe']; }
 
-  /**
-   * Get command line
-   *
-   * @return  string
-   */
-  public function getCommandLine() {
-    return $this->status['command'];
-  }
+  /** Get command line */
+  public function getCommandLine(): string { return $this->status['command']; }
   
   /**
    * Get command line arguments
@@ -253,41 +235,17 @@ class Process extends Object {
     return $this->status['arguments'];
   }
   
-  /**
-   * Get error stream
-   *
-   * @return  io.File STDERR
-   */
-  public function getErrorStream() {
-    return $this->err;
-  }
+  /** Get error stream */
+  public function getErrorStream(): File { return $this->err; }
 
-  /**
-   * Get input stream
-   *
-   * @return  io.File STDIN
-   */
-  public function getInputStream() {
-    return $this->in;
-  }
+  /** Get input stream */
+  public function getInputStream(): File { return $this->in; }
   
-  /**
-   * Get output stream
-   *
-   * @return  io.File STDOUT
-   */
-  public function getOutputStream() {
-    return $this->out;
-  }
+  /** Get output stream */
+  public function getOutputStream(): File { return $this->out; }
   
-  /**
-   * Returns the exit value for the process
-   *
-   * @return  int
-   */
-  public function exitValue() {
-    return $this->exitv;
-  }
+  /** Returns the exit value for the process */
+  public function exitValue(): int { return $this->exitv; }
   
   /**
    * Close this process
@@ -295,16 +253,16 @@ class Process extends Object {
    * @return  int exit value of process
    * @throws  lang.IllegalStateException if process is not owned
    */
-  public function close() {
+  public function close(): int {
     if (!$this->status['owner']) {
       throw new IllegalStateException('Cannot close not-owned process #'.$this->status['pid']);
     }
-    if (null !== $this->_proc) {
+    if (null !== $this->handle) {
       $this->in->isOpen() && $this->in->close();
       $this->out->isOpen() && $this->out->close();
       $this->err->isOpen() && $this->err->close();
-      $this->exitv= proc_close($this->_proc);
-      $this->_proc= null;
+      $this->exitv= proc_close($this->handle);
+      $this->handle= null;
     }
     
     // If the process wasn't running when we entered this method,

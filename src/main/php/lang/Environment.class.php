@@ -94,21 +94,14 @@ abstract class Environment {
    * Retrieve location of temporary directory. This method looks at the 
    * environment variables TEMP, TMP, TMPDIR and TEMPDIR and, if these 
    * cannot be found, uses PHP's builtin functionality.
-   *
-   * @see     php://sys_get_temp_dir
-   * @return  string
    */
-  public static function tempDir() {
+  public static function tempDir(): string {
     $dir= self::variable(['TEMP', 'TMP', 'TMPDIR', 'TEMPDIR'], function() { return sys_get_temp_dir(); });
     return rtrim($dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
   }
 
-  /**
-   * Returns current user's home directory
-   *
-   * @return string
-   */
-  public static function homeDir() {
+  /** Returns current user's home directory */
+  public static function homeDir(): string {
     return rtrim(self::variable(['HOME', 'USERPROFILE']), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
   }
 
@@ -119,10 +112,9 @@ abstract class Environment {
    * - $XDG_CONFIG_HOME/{named} inside an XDG environment
    * - $HOME/.{named} otherwise
    *
-   * @param  string $named Pass NULL to retrieve configuration base directory
-   * @return string
+   * Pass NULL to retrieve configuration base directory
    */
-  public static function configDir($named= null) {
+  public static function configDir(string $named= null): string {
     $home= getenv('HOME');
     if (false === $home) {
       $base= getenv('LOCALAPPDATA');

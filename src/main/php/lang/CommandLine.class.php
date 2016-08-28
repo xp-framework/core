@@ -130,7 +130,7 @@ abstract class CommandLine extends Enum {
    * @param   string os operating system name, e.g. PHP_OS
    * @return  lang.CommandLine
    */
-  public static function forName($os) {
+  public static function forName(string $os): self {
     if (0 === strncasecmp($os, 'Win', 3)) {
       return self::$WINDOWS;
     } else {

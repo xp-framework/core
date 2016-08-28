@@ -39,7 +39,7 @@ class Throwable extends \Exception implements Generic { use \__xp;
    * @return self
    * @throws lang.IllegalArgumentException
    */
-  public static function wrap($e) {
+  public static function wrap($e): self {
     if ($e instanceof self) {
       return $e;
     } else if ($e instanceof \Exception) {
@@ -57,23 +57,11 @@ class Throwable extends \Exception implements Generic { use \__xp;
     }
   }
 
-  /**
-   * Set cause
-   *
-   * @param   lang.Throwable cause
-   */
-  public function setCause($cause) {
-    $this->cause= $cause;
-  }
+  /** Set cause */
+  public function setCause(self $cause= null) { $this->cause= $cause; }
 
-  /**
-   * Get cause
-   *
-   * @return  lang.Throwable
-   */
-  public function getCause() {
-    return $this->cause;
-  }
+  /** @return self */
+  public function getCause() { return $this->cause; }
   
   /**
    * Fills in stack trace information. 
@@ -171,9 +159,9 @@ class Throwable extends \Exception implements Generic { use \__xp;
    * Return compound message of this exception. In this default 
    * implementation, returns the following:
    *
-   * <pre>
-   *   Exception [FULLY-QUALIFIED-CLASSNAME] ([MESSAGE])
-   * </pre>
+   * ```
+   * Exception [FULLY-QUALIFIED-CLASSNAME] ([MESSAGE])
+   * ```
    *
    * May be overriden by subclasses
    *
@@ -192,14 +180,14 @@ class Throwable extends \Exception implements Generic { use \__xp;
    * exception's stacktrace.
    *
    * Example:
-   * <pre>
+   * ```
    * Exception lang.ClassNotFoundException (class "" [] not found)
    *   at lang.ClassNotFoundException::__construct((0x15)'class "" [] not found') \
    *   [line 79 of StackTraceElement.class.php] 
    *   at lang.ClassLoader::loadclass(NULL) [line 143 of XPClass.class.php] 
    *   at lang.XPClass::forname(NULL) [line 6 of base_test.php] \
    *   Undefined variable:  nam
-   * </pre>
+   * ```
    *
    * Usually not overridden by subclasses unless stacktrace format 
    * should differ - otherwise overwrite compoundMessage() instead!.
@@ -243,31 +231,19 @@ class Throwable extends \Exception implements Generic { use \__xp;
   /**
    * Returns a hashcode for this object
    *
-   * @return  string
+   * @return string
    */
-  public function hashCode() {
-    return $this->__id;
-  }
+  public function hashCode() { return $this->__id; }
   
   /**
-   * Indicates whether some other object is "equal to" this one.
-   *
-   * @param   var $cmp
-   * @return  bool TRUE if the compared object is equal to this object
+   * Indicates whether some other object is "equal to" this one 
+   * 
+   * @param  var $cmp
+   * @return bool
    */
-  public function equals($cmp) {
+  public function equals($cmp): bool {
     if (!$cmp instanceof self) return false;
     if (!$cmp->__id) $cmp->__id= uniqid('', true);
     return $this === $cmp;
-  }
-  
-  /**
-   * Returns the runtime class of an object.
-   *
-   * @return  lang.XPClass runtime class
-   * @see     xp://lang.XPClass
-   */
-  public function getClass() {
-    return new XPClass($this);
   }
 }

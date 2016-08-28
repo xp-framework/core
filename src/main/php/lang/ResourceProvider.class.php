@@ -22,14 +22,8 @@ class ResourceProvider extends Object {
     // NOOP
   }
 
-  /**
-   * Retrieve instance
-   *
-   * @return  self
-   */
-  public static function getInstance() {
-    return self::$instance;
-  }
+  /** Retrieve instance */
+  public static function getInstance(): self { return self::$instance; }
 
   /**
    * Opens new stream
@@ -49,12 +43,8 @@ class ResourceProvider extends Object {
     return true;
   }
   
-  /**
-   * Retrieve associated loader
-   *
-   * @return  lang.IClassLoader
-   */
-  protected function getLoader() {
+  /** Retrieve associated loader */
+  protected function getLoader(): IClassLoader {
     return ClassLoader::getDefault();
   }
 
@@ -74,6 +64,7 @@ class ResourceProvider extends Object {
   /**
    * Close stream
    *
+   * @return void
    */
   public function stream_close() {
     $this->resource->close();

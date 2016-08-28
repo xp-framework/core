@@ -20,12 +20,12 @@ class StackTraceElement extends Object {
   /**
    * Constructor
    *
-   * @param   string file
-   * @param   string class
-   * @param   string method
-   * @param   int line
-   * @param   array args
-   * @param   string message
+   * @param  string $file
+   * @param  string $class
+   * @param  string $method
+   * @param  int $line
+   * @param  var[] $args
+   * @param  string $message
    */
   public function __construct($file, $class, $method, $line, $args, $message) {
     $this->file     = $file;  
@@ -36,12 +36,8 @@ class StackTraceElement extends Object {
     $this->message  = $message;
   }
   
-  /**
-   * Create string representation
-   *
-   * @return  string
-   */
-  public function toString() {
+  /** Create string representation */
+  public function toString(): string {
     $args= [];
     if (isset($this->args)) {
       foreach ($this->args as $arg) {
@@ -79,13 +75,8 @@ class StackTraceElement extends Object {
     );
   }
 
-  /**
-   * Compares this stacktrace element to another object
-   *
-   * @param   lang.Object cmp
-   * @return  bool
-   */
-  public function equals($cmp) {
+  /** Compares this stacktrace element to another object */
+  public function equals($cmp): bool {
     return $cmp instanceof self && $this->toString() === $cmp->toString();
   }
 }
