@@ -64,7 +64,7 @@ class Parameter extends \lang\Object {
       // Cannot parse api doc, fall back to PHP native syntax. The reason for not doing
       // this the other way around is that we have "richer" information, e.g. "string[]",
       // where PHP simply knows about "arrays" (of whatever).
-      if (XPClass::$TYPE_SUPPORTED && $t= $this->_reflect->getType()) {
+      if ($t= $this->_reflect->getType()) {
         return Type::forName((string)$t);
       } else if (defined('HHVM_VERSION')) {
         return Type::forName($this->_reflect->getTypeText() ?: 'var');
@@ -92,7 +92,7 @@ class Parameter extends \lang\Object {
       && isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
     ) {
       return ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&');
-    } else if (XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getType())) {
+    } else if ($t= $this->_reflect->getType()) {
       return str_replace('HH\\', '', $t);
     } else if (defined('HHVM_VERSION')) {
       return str_replace('HH\\', '', $this->_reflect->getTypeText() ?: 'var');

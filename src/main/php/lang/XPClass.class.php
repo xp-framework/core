@@ -57,10 +57,7 @@ class XPClass extends Type {
   private $_class;
   private $_reflect= null;
 
-  public static $TYPE_SUPPORTED;
-
   static function __static() {
-    self::$TYPE_SUPPORTED= method_exists('ReflectionParameter', 'getType');
 
     // Workaround for missing detail information about return types in
     // builtin classes.

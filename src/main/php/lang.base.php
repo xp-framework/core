@@ -455,29 +455,11 @@ function typeof($arg) {
   } else if ($arg instanceof \Closure) {
     $r= new \ReflectionFunction($arg);
     $signature= [];
-
-    if (\lang\XPClass::$TYPE_SUPPORTED) {
-      foreach ($r->getParameters() as $param) {
-        if ($param->isVariadic()) break;
-        $signature[]= \lang\Type::forName((string)$param->getType() ?: 'var');
-      }
-      return new \lang\FunctionType($signature, \lang\Type::forName((string)$r->getReturnType() ?: 'var'));
-    } else {
-      foreach ($r->getParameters() as $param) {
-        if ($param->isVariadic()) {
-          break;
-        } else if ($param->isArray()) {
-          $signature[]= \lang\Primitive::$ARRAY;
-        } else if ($param->isCallable()) {
-          $signature[]= \lang\Primitive::$CALLABLE;
-        } else if (null === ($class= $param->getClass())) {
-          $signature[]= \lang\Type::$VAR;
-        } else {
-          $signature[]= new \lang\XPClass($class);
-        }
-      }
-      return new \lang\FunctionType($signature, \lang\Type::$VAR);
+    foreach ($r->getParameters() as $param) {
+      if ($param->isVariadic()) break;
+      $signature[]= \lang\Type::forName((string)$param->getType() ?: 'var');
     }
+    return new \lang\FunctionType($signature, \lang\Type::forName((string)$r->getReturnType() ?: 'var'));
   } else if (is_object($arg)) {
     return new \lang\XPClass($arg);
   } else if (is_array($arg)) {

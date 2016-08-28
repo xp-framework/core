@@ -143,7 +143,7 @@ class Routine extends \lang\Object {
       } else {
         return Type::forName($t);
       }
-    } else if (XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getReturnType())) {
+    } else if ($t= $this->_reflect->getReturnType()) {
       return Type::forName((string)$t);
     } else {
       return Type::$VAR;
@@ -161,7 +161,7 @@ class Routine extends \lang\Object {
       && isset($details[DETAIL_RETURNS])
     ) {
       return ltrim($details[DETAIL_RETURNS], '&');
-    } else if (XPClass::$TYPE_SUPPORTED && ($t= $this->_reflect->getReturnType())) {
+    } else if ($t= $this->_reflect->getReturnType()) {
       return str_replace('HH\\', '', $t);
     } else if (defined('HHVM_VERSION')) {
       return str_replace('HH\\', '', $this->_reflect->getReturnTypeText() ?: 'var');
