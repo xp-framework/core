@@ -48,7 +48,7 @@ abstract class Objects {
     if ($a instanceof Value) {
       return $a->compareTo($b);
     } else if ($a instanceof Generic) {
-      return $a->equals($b) ? 0 : ($a < $b ? -1 : 1);
+      return $a->equals($b) ? 0 : $a <=> $b;
     } else if (is_array($a)) {
       if (!is_array($b)) return 1;
       if (sizeof($a) < sizeof($b)) return -1;
@@ -66,7 +66,7 @@ abstract class Objects {
         : 1
       ;
     } else {
-      return $a < $b ? -1 : 1;
+      return $a <=> $b;
     }
   }
 
