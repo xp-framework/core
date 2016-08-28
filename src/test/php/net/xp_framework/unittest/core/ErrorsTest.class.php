@@ -138,4 +138,12 @@ class ErrorsTest extends \unittest\TestCase {
     $array= [];
     $array.'String';
   }
+
+  #[@test, @expect(ClassCastException::class)]
+  public function __toString_not_returning_a_string_yields_cce() {
+    $object= new class() {
+      public function __toString() { return null; }
+    };
+    (string)$object;
+  }
 }

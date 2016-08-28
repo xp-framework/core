@@ -191,9 +191,7 @@ function __error($code, $msg, $file, $line) {
   if (0 === error_reporting() || null === $file) return;
 
   if (E_RECOVERABLE_ERROR === $code) {
-    if (0 === strncmp($msg, 'Argument', 8)) {
-      throw new \lang\IllegalArgumentException($msg);
-    } else if (0 === strncmp($msg, 'Object', 6)) {
+    if (0 === strncmp($msg, 'Object', 6) || strpos($msg, '__toString() must')) {
       throw new \lang\ClassCastException($msg);
     } else {
       throw new \lang\Error($msg);
