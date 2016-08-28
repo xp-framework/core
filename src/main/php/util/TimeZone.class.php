@@ -29,7 +29,7 @@ class TimeZone extends \lang\Object {
     } else if (is_string($tz)) {
       try {
         $this->tz= new \DateTimeZone($tz);
-      } catch (\Exception $e) {
+      } catch (\Throwable $e) {
         throw new IllegalArgumentException('Invalid timezone identifier given: '.$e->getMessage());
       }
     } else if ($tz instanceof \DateTimeZone) {

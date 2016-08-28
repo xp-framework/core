@@ -128,7 +128,7 @@ class Secret extends \lang\Object {
     $key= $this->hashCode();
     try {
       self::$store[$key]= self::$encrypt->__invoke($characters);
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
       // This intentionally catches *ALL* exceptions, in order not to fail
       // and produce a stacktrace (containing arguments on the stack that were)
       // supposed to be protected.

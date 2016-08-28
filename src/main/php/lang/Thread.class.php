@@ -166,9 +166,6 @@ class Thread extends Object {
       } catch (SystemExit $e) {
         if ($message= $e->getMessage()) echo $message, "\n";
         exit($e->getCode());
-      } catch (\Exception $e) {
-        fputs(STDERR, 'Uncaught exception (in child #'.$this->_id.'): '.\xp::stringOf($e));
-        exit(0xf0);
       } catch (\Throwable $t) {
         fputs(STDERR, 'Uncaught exception (in child #'.$this->_id.'): '.\xp::stringOf($t));
         exit(0xf0);

@@ -342,9 +342,7 @@ function with(... $args) {
         try {
           $arg->close();
         } catch (\Throwable $ignored) {
-          // PHP 7
-        } catch (\Exception $ignored) {
-          // PHP 5
+          // ...
         }
       }
     }

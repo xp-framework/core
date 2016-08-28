@@ -70,8 +70,6 @@ class Constructor extends Routine {
       return $instance;
     } catch (\lang\SystemExit $e) {
       throw $e;
-    } catch (\Exception $e) {
-      throw new TargetInvocationException(XPClass::nameOf($this->_class).'::<init>', $e);
     } catch (\Throwable $e) {
       throw new TargetInvocationException(XPClass::nameOf($this->_class).'::<init>', $e);
     }

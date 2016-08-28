@@ -175,7 +175,7 @@ class Process extends Object {
         $p= $c->get('//./root/cimv2:Win32_Process.Handle="'.$pid.'"');
         if (null === $exe) $self->status['exe']= $p->executablePath;
         $self->status['command']= $p->commandLine;
-      } catch (\Exception $e) {
+      } catch (\Throwable $e) {
         throw new IllegalStateException('Cannot find executable: '.$e->getMessage());
       }
     } else if (is_dir('/proc/1')) {

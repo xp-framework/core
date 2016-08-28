@@ -83,9 +83,6 @@ class PropertyManager extends \lang\Object {
       foreach ($sources as $source) {
         $this->appendSource($source);
       }
-    } catch (\Exception $e) {
-      $this->provider= $provider;
-      throw $e;
     } catch (\Throwable $e) {
       $this->provider= $provider;
       throw $e;

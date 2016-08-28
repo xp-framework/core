@@ -201,7 +201,7 @@ class Field extends \lang\Object {
       return $this->_reflect->getValue($instance);
     } catch (\lang\Throwable $e) {
       throw $e;
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
       throw new \lang\XPException($e->getMessage());
     }
   }
@@ -254,7 +254,7 @@ class Field extends \lang\Object {
       $this->_reflect->setValue($instance, $value);
     } catch (\lang\Throwable $e) {
       throw $e;
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
       throw new \lang\XPException($e->getMessage());
     }
   }
