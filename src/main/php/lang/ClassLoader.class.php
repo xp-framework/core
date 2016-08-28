@@ -341,7 +341,7 @@ final class ClassLoader extends Object implements IClassLoader {
       '%s%s%s %s %s%s%s {%s%s}',
       $header,
       $typeAnnotations,
-      isset($declaration['modifiers']) ? $declaration['modifiers'] : '',
+      $declaration['modifiers'] ?? '',
       $declaration['kind'],
       $name,
       $declaration['extends'] ? ' extends '.implode(', ', array_map('self::classLiteral', $declaration['extends'])) : '',

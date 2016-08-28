@@ -98,10 +98,7 @@ class FileTest extends \unittest\TestCase {
   public function getExtension() {
     $fn= $this->fileKnownToExist();
     $info= pathinfo($fn);
-    $this->assertEquals(
-      isset($info['extension']) ? $info['extension'] : null, 
-      (new File($fn))->getExtension()
-    );
+    $this->assertEquals($info['extension'] ?? null, (new File($fn))->getExtension());
   }
 
   #[@test, @expect(IllegalArgumentException::class)]

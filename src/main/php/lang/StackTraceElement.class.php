@@ -71,10 +71,10 @@ class StackTraceElement extends Object {
     return sprintf(
       "  at %s::%s(%s) [line %d of %s] %s\n",
       isset($this->class) ? XPClass::nameOf($this->class) : '<main>',
-      isset($this->method) ? $this->method : '<main>',
+      $this->method ?? '<main>',
       implode(', ', $args),
       $this->line,
-      basename(isset($this->file) ? $this->file : __FILE__),
+      basename($this->file ?? __FILE__),
       $this->message
     );
   }

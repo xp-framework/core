@@ -99,7 +99,7 @@ class RuntimeOptions extends Object {
    * @return  string[]
    */
   public function getClassPath() {
-    return isset($this->backing["\0cp"]) ? $this->backing["\0cp"] : [];
+    return $this->backing["\0cp"] ?? [];
   }
 
   /**

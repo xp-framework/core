@@ -408,7 +408,7 @@ class ClassParser {
         case T_INTERFACE:
         case T_TRAIT:
           if ($parsed) {
-            $annotations= $this->parseAnnotations($parsed, $context, $imports, isset($tokens[$i][2]) ? $tokens[$i][2] : -1);
+            $annotations= $this->parseAnnotations($parsed, $context, $imports, $tokens[$i][2] ?? -1);
             $parsed= '';
           }
           $details['class']= [
@@ -426,7 +426,7 @@ class ClassParser {
 
         case T_VARIABLE:                      // Have a member variable
           if ($parsed) {
-            $annotations= $this->parseAnnotations($parsed, $context, $imports, isset($tokens[$i][2]) ? $tokens[$i][2] : -1);
+            $annotations= $this->parseAnnotations($parsed, $context, $imports, $tokens[$i][2] ?? -1);
             $parsed= '';
           }
           $f= substr($tokens[$i][1], 1);
@@ -444,7 +444,7 @@ class ClassParser {
 
         case T_FUNCTION:
           if ($parsed) {
-            $annotations= $this->parseAnnotations($parsed, $context, $imports, isset($tokens[$i][2]) ? $tokens[$i][2] : -1);
+            $annotations= $this->parseAnnotations($parsed, $context, $imports, $tokens[$i][2] ?? -1);
             $parsed= '';
           }
           $i+= 2;

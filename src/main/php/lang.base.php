@@ -16,7 +16,7 @@ trait __xp {
     $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
     $c= PHP_VERSION >= '7.0.0' || defined('HHVM_VERSION');
     $self= $t[1 - $c]['class'];
-    $scope= isset($t[2 - $c]['class']) ? $t[2 - $c]['class'] : $t[3 - $c]['class'];
+    $scope= $t[2 - $c]['class'] ?? $t[3 - $c]['class'];
     throw new \lang\Error('Call to undefined method '.\lang\XPClass::nameOf($self).'::'.$name.'() from scope '.\lang\XPClass::nameOf($scope));
   }
   // }}}
@@ -179,9 +179,9 @@ final class xp {
   //     Returns errors that occured at the specified position or null
   static function errorAt($file, $line= -1) {
     if ($line < 0) {    // If no line is given, check for an error in the file
-      return isset(xp::$errors[$file]) ? xp::$errors[$file] : null;
+      return xp::$errors[$file] ?? null;
     } else {            // Otherwise, check for an error in the file on a certain line
-      return isset(xp::$errors[$file][$line]) ? xp::$errors[$file][$line] : null;
+      return xp::$errors[$file][$line] ?? null;
     }
   }
   // }}}
@@ -227,8 +227,8 @@ function __error($code, $msg, $file, $line) {
     throw new \lang\ClassCastException($msg);
   } else {
     $bt= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-    $class= (isset($bt[1]['class']) ? $bt[1]['class'] : null);
-    $method= (isset($bt[1]['function']) ? $bt[1]['function'] : null);
+    $class= $bt[1]['class'] ?? null;
+    $method= $bt[1]['function'] ?? null;
     
     if (!isset(xp::$errors[$file][$line][$msg])) {
       xp::$errors[$file][$line][$msg]= [

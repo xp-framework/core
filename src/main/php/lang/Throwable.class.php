@@ -102,11 +102,11 @@ class Throwable extends \Exception implements Generic { use \__xp;
       // Not all of these are always set: debug_backtrace() should
       // initialize these - at least - to NULL, IMO => Workaround.
       $this->addStackTraceFor(
-        isset($trace['file']) ? $trace['file'] : null,
-        isset($trace['class']) ? $trace['class'] : null,
-        isset($trace['function']) ? $trace['function'] : null,
-        isset($trace['line']) ? $trace['line'] : null,
-        isset($trace['args']) ? $trace['args'] : null,
+        $trace['file'] ?? null,
+        $trace['class'] ?? null,
+        $trace['function'] ?? null,
+        $trace['line'] ?? null,
+        $trace['args'] ?? null,
         [['' => 1]]
       );
     }

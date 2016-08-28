@@ -52,7 +52,7 @@ class PropertyExpansion {
         }
 
         $f= $this->impl[$match[1]];
-        return $f($match[2], isset($match[3]) ? $match[3] : null);
+        return $f($match[2], $match[3] ?? null);
       },
       $string
     );

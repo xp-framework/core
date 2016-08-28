@@ -284,10 +284,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    */
   public function readSection($name, $default= []) {
     $this->_load();
-    return isset($this->_data[$name]) 
-      ? $this->_data[$name] 
-      : $default
-    ;
+    return $this->_data[$name] ?? $default;
   }
   
   /**
@@ -300,10 +297,7 @@ class Properties extends \lang\Object implements PropertyAccess {
    */ 
   public function readString($section, $key, $default= '') {
     $this->_load();
-    return isset($this->_data[$section][$key])
-      ? $this->_data[$section][$key]
-      : $default
-    ;
+    return $this->_data[$section][$key] ?? $default;
   }
   
   /**
