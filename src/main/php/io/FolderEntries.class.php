@@ -25,18 +25,13 @@ class FolderEntries extends \lang\Object implements \IteratorAggregate {
     }
   }
 
-  /**
-   * Returns a path by a given name inside this folder
-   *
-   * @param  string $name
-   * @return io.Path
-   */
-  public function named($name) {
+  /** Returns a path by a given name inside this folder */
+  public function named(string $name): Path {
     return new Path($this->base, $name);
   }
 
-  /** @return php.Generator */
-  public function getIterator() {
+  /** Iteratre over all entries */
+  public function getIterator(): \Iterator {
     if (null === $this->handle) {
       if (!is_resource($handle= opendir($this->base->asFolder()->getURI()))) {
         $e= new IOException('Cannot open folder '.$this->base);

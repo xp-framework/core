@@ -29,8 +29,8 @@ class LinesIn implements \IteratorAggregate {
     $this->reset= $reset;
   }
 
-  /** @return php.Generator */
-  public function getIterator() {
+  /** Iterate over the lines */
+  public function getIterator(): \Iterator {
     if ($this->reset && !$this->reader->atBeginning()) {
       $this->reader->reset();
     }

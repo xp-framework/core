@@ -52,7 +52,7 @@ class Path implements \lang\Value {
    * @param  var[] $args
    * @return self
    */
-  public static function compose(array $args) {
+  public static function compose(array $args): self {
     return new self($args);
   }
 
@@ -64,7 +64,7 @@ class Path implements \lang\Value {
    * @param  var $wd Working directory A string, a Path, Folder or IOElement
    * @return self
    */
-  public static function real($arg, $wd= null) {
+  public static function real($arg, $wd= null): self {
     if (is_array($arg)) {
       $path= self::pathFor($arg);
     } else {
@@ -73,14 +73,8 @@ class Path implements \lang\Value {
     return new self(self::real0($path, $wd ?: getcwd()));
   }
 
-  /**
-   * Returns the name of this path
-   *
-   * @return string
-   */
-  public function name() {
-    return basename($this->path);
-  }
+  /** Returns the name of this path */
+  public function name(): string { return basename($this->path); }
 
   /**
    * Returns the parent of this path
@@ -102,40 +96,24 @@ class Path implements \lang\Value {
     }
   }
 
-  /**
-   * Tests whether this path exists
-   *
-   * @return bool
-   */
-  public function exists() {
-    return file_exists($this->path);
-  }
+  /** Tests whether this path exists */
+  public function exists(): bool { return file_exists($this->path); }
 
-  /**
-   * Tests whether this path exists and references a file
-   *
-   * @return bool
-   */
-  public function isFile() {
-    return is_file($this->path);
-  }
+  /** Tests whether this path exists and references a file */
+  public function isFile(): bool { return is_file($this->path); }
 
-  /**
-   * Tests whether this path exists and references a folder
-   *
-   * @return bool
-   */
-  public function isFolder() {
-    return is_dir($this->path);
-  }
+  /** Tests whether this path exists and references a folder */
+  public function isFolder(): bool { return is_dir($this->path); }
 
-  /**
-   * Tests whether this path references an empty string
-   *
-   * @return bool
-   */
-  public function isEmpty() {
-    return '' === $this->path;
+  /** Tests whether this path references an empty string */
+  public function isEmpty() { return '' === $this->path; }
+
+  /** Tests whether this path is absolute, e.g. `/usr` or `C:\Windows` */
+  public function isAbsolute(): bool {
+    return '' !== $this->path && (
+      DIRECTORY_SEPARATOR === $this->path{0} ||
+      2 === sscanf($this->path, '%c%[:]', $drive, $colon)
+    );
   }
 
   /**
@@ -190,7 +168,7 @@ class Path implements \lang\Value {
    * @param  var $wd Working directory A string, a Path, Folder or IOElement
    * @return string
    */
-  public function asURI($wd= null) {
+  public function asURI($wd= null): string {
     return self::real0($this->path, $wd ?: getcwd());
   }
 
@@ -203,7 +181,7 @@ class Path implements \lang\Value {
    * @param  var $wd Working directory A string, a Path, Folder or IOElement
    * @return self
    */
-  public function asRealpath($wd= null) {
+  public function asRealpath($wd= null): self {
     return new self(self::real0($this->path, $wd ?: getcwd()));
   }
 
@@ -214,7 +192,7 @@ class Path implements \lang\Value {
    * @return io.File
    * @throws lang.IllegalStateException if the path is not a file
    */
-  public function asFile($existing= false) {
+  public function asFile(bool $existing= false): File {
     if (is_file($this->path)) {
       return new File($this->path);
     } else if (file_exists($this->path)) {
@@ -230,10 +208,10 @@ class Path implements \lang\Value {
    * Returns a folder instance for this path
    *
    * @param  bool $existing Whether only to return existing folder
-   * @return io.File
+   * @return io.Folder
    * @throws lang.IllegalStateException if the path is not a folder
    */
-  public function asFolder($existing= false) {
+  public function asFolder(bool $existing= false): Folder {
     if (is_dir($this->path)) {
       return new Folder($this->path);
     } else if (file_exists($this->path)) {
@@ -246,24 +224,10 @@ class Path implements \lang\Value {
   }
 
   /**
-   * Tests whether this path is absolute, e.g. `/usr` or `C:\Windows`.
-   *
-   * @return bool
-   */
-  public function isAbsolute() {
-    return '' !== $this->path && (
-      DIRECTORY_SEPARATOR === $this->path{0} ||
-      2 === sscanf($this->path, '%c%[:]', $drive, $colon)
-    );
-  }
-
-  /**
    * Normalizes path sections. Note: This method does not access the filesystem,
    * it only removes redundant elements.
-   *
-   * @return self
    */
-  public function normalize() {
+  public function normalize(): self {
     $components= explode(DIRECTORY_SEPARATOR, $this->path);
     $normalized= [];
     foreach ($components as $component) {
@@ -293,7 +257,7 @@ class Path implements \lang\Value {
    * @param  var $other Either a string or a path
    * @return self
    */
-  public function resolve($arg) {
+  public function resolve($arg): self {
     $other= $arg instanceof self ? $arg : new self($arg);
 
     if ($other->isAbsolute()) {
@@ -324,7 +288,7 @@ class Path implements \lang\Value {
    * @param  var $other Either a string or a path
    * @return self
    */
-  public function relativeTo($arg) {
+  public function relativeTo($arg): self {
     $other= $arg instanceof self ? $arg : new self($arg);
     if ($this->isAbsolute() !== $other->isAbsolute()) {
       throw new IllegalArgumentException('Cannot calculate relative path from '.$this.' to '.$other);
@@ -357,29 +321,18 @@ class Path implements \lang\Value {
    * @param  string $separator
    * @return string
    */
-  public function toString($separator= DIRECTORY_SEPARATOR) {
+  public function toString(string $separator= DIRECTORY_SEPARATOR): string {
     return strtr($this->path, [DIRECTORY_SEPARATOR => $separator]);
   }
 
-  /**
-   * Returns a hashcode for this path instance
-   *
-   * @return bool
-   */
-  public function hashCode() {
-    return $this->normalize()->path;
-  }
+  /** Returns a hashcode for this path instance */
+  public function hashCode(): string { return $this->normalize()->path; }
 
-  /**
-   * Returns whether this path instance is equal to a given object.
-   *
-   * @param  var $value
-   * @return bool
-   */
-  public function compareTo($value) {
+  /** Returns whether this path instance is equal to a given object */
+  public function compareTo($value): int {
     return $value instanceof self ? strcmp($this->normalize()->path, $value->normalize()->path) : 1;
   }
 
-  /** @return string */
-  public function __toString() { return $this->path; }
+  /** String casts */
+  public function __toString(): string { return $this->path; }
 }
