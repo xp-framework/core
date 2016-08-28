@@ -5,12 +5,6 @@ use io\EncapsedStream;
 use io\FileUtil;
 use io\File;
 
-// Deprecated
-define('ARCHIVE_READ',             0x0000);
-define('ARCHIVE_CREATE',           0x0001);
-define('ARCHIVE_HEADER_SIZE',      0x0100);
-define('ARCHIVE_INDEX_ENTRY_SIZE', 0x0100);
-
 /**
  * Archives contain a collection of classes.
  *

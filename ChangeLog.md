@@ -7,6 +7,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* **Removed deprecated `ARCHIVE_*` constants** (use class constants from
+  lang.Archove instead!)
+  (@thekid)
 * **Removed deprecated `io.Folder` methods** getEntries() and rewind()
   (@thekid)
 * **Removed deprecated `io.File` methods** get(Input|Output)Stream()
@@ -21,13 +24,14 @@ XP Framework Core ChangeLog
 * **Removed support for legacy date serialization** (has been deprecated
   since October 2011). See xp-framework/core#159
   (@thekid)
+* **Heads up: Bumped minimum required PHP version to 7.0.0**
+  (@thekid)
 
 ### RFCs
 
 * Implemented xp-framework/rfc#310: XP8
-  . **Heads up: Bumped minimum required PHP version to 7.0.0**
   . Deprecated `newinstance` in favor of builtin anonymous class support
-  . Simplified code by remove PHP5-specific handling
+  . Simplified code by removing PHP5-specific handling
   (@thekid)
 
 ### Features
