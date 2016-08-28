@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 7.6.1 / 2016-08-28
+
 ### Features
 
 * Added support for [grouped use statements](https://wiki.php.net/rfc/group_use_declarations)
