@@ -9,15 +9,8 @@
  */
 abstract class DateMath {
 
-  /**
-   * Diff two date objects. Only full units are returned.
-   *
-   * @param   util.Date date1
-   * @param   util.Date date2
-   * @param   util.TimeInterval interval
-   * @return  int
-   */
-  public static function diff(TimeInterval $interval, Date $date1, Date $date2) {
+  /** Diff two date objects. Only full units are returned */
+  public static function diff(TimeInterval $interval, Date $date1, Date $date2): int {
     if ($date1->getOffsetInSeconds() != $date2->getOffsetInSeconds()) {
   
       // Convert date2 to same timezone as date1. To work around PHP bug #45038, 
