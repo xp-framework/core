@@ -56,11 +56,6 @@ class FolderTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function initiallyNotOpen() {
-    $this->assertFalse((new Folder($this->temp))->isOpen());
-  }
-
-  #[@test]
   public function exists() {
     $this->assertFalse((new Folder($this->temp))->exists());
   }

@@ -8,11 +8,13 @@ XP Framework Core ChangeLog
 ### Heads up!
 
 * **Removed deprecated `ARCHIVE_*` constants** (use class constants from
-  lang.Archove instead!)
+  lang.Archive instead!)
   (@thekid)
-* **Removed deprecated `io.Folder` methods** getEntries() and rewind()
+* **Removed deprecated `io.Folder` methods** getEntries(), isOpen() and
+  rewind() - replaced by `entries()` iterator.
   (@thekid)
-* **Removed deprecated `io.File` methods** get(Input|Output)Stream()
+* **Removed deprecated `io.File` methods** get(Input|Output)Stream() -
+  replace by in() and out().
   (@thekid)
 * **Removed deprecated `util.Properties` I/O methods** save(), fromString()
   and fromFile(). See xp-framework/core#160

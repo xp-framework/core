@@ -241,45 +241,16 @@ class Folder extends \lang\Object {
     return $mtime;
   }
 
-  /**
-   * Returns whether a given value is equal to this folder
-   *
-   * @param   var cmp
-   * @return  bool
-   */
-  public function equals($cmp) {
+  /** Returns whether a given value is equal to this folder */
+  public function equals($cmp): bool {
     return $cmp instanceof self && $cmp->hashCode() === $this->hashCode();
   }
 
-  /**
-   * Returns a hashcode
-   *
-   * @return  string
-   */
-  public function hashCode() {
-    return md5($this->uri);
-  }
+  /** Returns a hashcode */
+  public function hashCode(): string { return md5($this->uri); }
 
-  /**
-   * Returns a string representation of this object
-   *
-   * @return  string
-   */
-  public function toString() {
-    return sprintf(
-      '%s(uri= %s)',
-      nameof($this),
-      $this->uri
-    );
-  }
-
-  /**
-   * Return if the folder was already opened
-   *
-   * @deprecated Use entries() instead
-   * @return  bool
-   */
-  public function isOpen() {
-    return is_resource($this->_hdir);
+  /** Returns a string representation of this object */
+  public function toString(): string {
+    return sprintf('%s(uri= %s)', nameof($this), $this->uri);
   }
 }
