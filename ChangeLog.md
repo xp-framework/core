@@ -7,6 +7,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* **Removed deprecated `util.Properties` I/O methods** save(), fromString()
+  and fromFile(). See xp-framework/core#160
+  (@thekid)
 * **Removed support for legacy XP runners**. The XP7 runners have been
   available for more than half a year now and are well-tested on various
   operating systems and distributions.
