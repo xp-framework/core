@@ -253,7 +253,7 @@ abstract class AbstractPropertiesTest extends \unittest\TestCase {
   #  ["[section\nfoo=bar", 'section missing closing bracket']
   #])]
   public function malformed_property_file($source) {
-    $this->newPropertiesFrom($source)->reset();
+    $this->newPropertiesFrom($source);
   }
 
   #[@test]
