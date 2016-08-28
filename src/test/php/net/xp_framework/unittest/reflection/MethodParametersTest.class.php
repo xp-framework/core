@@ -1,17 +1,19 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\Generic;
-use lang\Value;
-use lang\Object;
-use lang\XPClass;
-use lang\Type;
-use lang\Primitive;
-use lang\ArrayType;
-use lang\MapType;
-use lang\FunctionType;
-use lang\ClassFormatException;
-use lang\IllegalStateException;
-use lang\ElementNotFoundException;
+use lang\{
+  ArrayType,
+  ClassFormatException,
+  ElementNotFoundException,
+  FunctionType,
+  Generic,
+  IllegalStateException,
+  MapType,
+  Object,
+  Primitive,
+  Type,
+  Value,
+  XPClass
+};
 use unittest\actions\RuntimeVersion;
 
 class MethodParametersTest extends MethodsTest {

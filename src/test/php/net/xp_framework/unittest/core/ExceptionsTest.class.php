@@ -1,12 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use io\streams\Streams;
-use io\streams\MemoryOutputStream;
-use lang\Throwable;
-use lang\Error;
-use lang\XPException;
-use lang\XPClass;
-use lang\IllegalArgumentException;
+use io\streams\{Streams, MemoryOutputStream};
+use lang\{Throwable, Error, XPException, XPClass, IllegalArgumentException};
 use unittest\actions\RuntimeVersion;
 
 class ExceptionsTest extends \unittest\TestCase {

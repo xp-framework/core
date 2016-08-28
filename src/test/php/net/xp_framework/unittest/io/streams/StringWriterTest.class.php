@@ -1,11 +1,10 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use unittest\TestCase;
+use io\streams\{StringWriter, MemoryOutputStream};
 use lang\Object;
-use io\streams\StringWriter;
-use io\streams\MemoryOutputStream;
 use net\xp_framework\unittest\Name;
 use unittest\actions\RuntimeVersion;
+use unittest\TestCase;
 
 /**
  * Test StringWriter

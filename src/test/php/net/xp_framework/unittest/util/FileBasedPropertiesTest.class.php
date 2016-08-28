@@ -1,9 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use io\File;
-use io\streams\Streams;
-use io\streams\MemoryInputStream;;
-use io\IOException;
+use io\{File, IOException};
+use io\streams\{Streams, MemoryInputStream};
 use util\Properties;
 use lang\ClassLoader;
 

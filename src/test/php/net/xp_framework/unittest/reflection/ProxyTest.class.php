@@ -1,14 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\reflect\Proxy;
-use lang\XPClass;
-use lang\Type;
-use lang\ClassLoader;
-use lang\IllegalArgumentException;
-use lang\Error;
-use lang\reflect\InvocationHandler;
-use util\XPIterator;
-use util\Observer;
+use lang\{XPClass, Type, ClassLoader, IllegalArgumentException, Error};
+use lang\reflect\{Proxy, InvocationHandler};
+use util\{XPIterator, Observer};
 use unittest\actions\RuntimeVersion;
 
 /**

@@ -1,11 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\reflect\Modifiers;
-use lang\XPClass;
-use lang\Enum;
-use lang\Error;
-use lang\IllegalArgumentException;
-use lang\CloneNotSupportedException;
+use lang\{XPClass, Enum, Error, IllegalArgumentException, CloneNotSupportedException};
 use unittest\actions\RuntimeVersion;
 
 /**

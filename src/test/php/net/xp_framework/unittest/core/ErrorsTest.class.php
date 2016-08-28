@@ -1,12 +1,14 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\Object;
-use lang\Error;
-use lang\XPException;
-use lang\NullPointerException;
-use lang\IndexOutOfBoundsException;
-use lang\IllegalArgumentException;
-use lang\ClassCastException;
+use lang\{
+  ClassCastException,
+  Error,
+  IllegalArgumentException,
+  IndexOutOfBoundsException,
+  NullPointerException,
+  Object,
+  XPException
+};
 use unittest\actions\RuntimeVersion;
 use net\xp_framework\unittest\IgnoredOnHHVM;
 

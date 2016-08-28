@@ -1,11 +1,8 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use io\File;
-use io\FileUtil;
-use lang\System;
-use lang\IllegalArgumentException;
-use util\FilesystemPropertySource;
-use util\Properties;
+use io\{File, FileUtil};
+use lang\{System, IllegalArgumentException};
+use util\{FilesystemPropertySource, Properties};
 
 /**
  * Testcase for util.Properties class.

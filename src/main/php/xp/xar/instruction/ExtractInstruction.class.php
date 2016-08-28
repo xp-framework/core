@@ -1,9 +1,7 @@
 <?php namespace xp\xar\instruction;
 
 use xp\xar\Options;
-use io\File;
-use io\FileUtil;
-use io\Folder;
+use io\{File, FileUtil, Folder};
 use lang\archive\Archive;
 
 /**

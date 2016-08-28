@@ -1,13 +1,8 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use io\Path;
-use io\File;
-use io\Folder;
-use lang\Runtime;
-use lang\System;
+use io\{Path, File, Folder};
+use lang\{Runtime, System, IllegalStateException, IllegalArgumentException};
 use unittest\actions\IsPlatform;
-use lang\IllegalStateException;
-use lang\IllegalArgumentException;
 
 class PathTest extends \unittest\TestCase {
 

@@ -1,10 +1,7 @@
 <?php namespace net\xp_framework\unittest\io;
 
 use unittest\TestCase;
-use io\streams\InputStream;
-use io\streams\MemoryInputStream;
-use io\streams\MemoryOutputStream;
-use io\streams\Streams;
+use io\streams\{InputStream, MemoryInputStream, MemoryOutputStream, Streams};
 use io\IOException;
 
 /**

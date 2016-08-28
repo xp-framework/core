@@ -1,15 +1,17 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\WildcardType;
-use lang\Wildcard;
-use lang\XPClass;
-use lang\Primitive;
-use lang\ArrayType;
-use lang\MapType;
-use lang\Type;
-use lang\IllegalArgumentException;
-use lang\IllegalAccessException;
-use lang\ClassCastException;
+use lang\{
+  ArrayType,
+  ClassCastException,
+  IllegalAccessException,
+  IllegalArgumentException,
+  MapType,
+  Primitive,
+  Type,
+  Wildcard,
+  WildcardType,
+  XPClass
+};
 
 class WildcardTypeTest extends \unittest\TestCase {
 

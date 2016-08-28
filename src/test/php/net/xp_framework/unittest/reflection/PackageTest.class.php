@@ -1,12 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\archive\Archive;
-use lang\archive\ArchiveClassLoader;
+use lang\archive\{Archive, ArchiveClassLoader};
 use lang\reflect\Package;
-use lang\ClassLoader;
-use lang\XPClass;
-use lang\IllegalArgumentException;
-use lang\ElementNotFoundException;
+use lang\{ClassLoader, XPClass, IllegalArgumentException, ElementNotFoundException};
 
 /**
  * TestCase

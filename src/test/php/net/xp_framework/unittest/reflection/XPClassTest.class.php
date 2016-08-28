@@ -1,15 +1,15 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\XPClass;
-use lang\Primitive;
-use lang\ClassLoader;
-use lang\IllegalStateException;
-use lang\ElementNotFoundException;
-use lang\ClassNotFoundException;
-use lang\IllegalAccessException;
-use lang\reflect\Package;
-use lang\reflect\Constructor;
-use lang\reflect\TargetInvocationException;
+use lang\{
+  ClassLoader,
+  ClassNotFoundException,
+  ElementNotFoundException,
+  IllegalAccessException,
+  IllegalStateException,
+  Primitive,
+  XPClass
+};
+use lang\reflect\{Package, Constructor, TargetInvocationException};
 
 /**
  * Test the XPClass class, the entry point to the XP Framework's class reflection API.
@@ -17,7 +17,7 @@ use lang\reflect\TargetInvocationException;
  * @see  xp://lang.XPClass
  */
 class XPClassTest extends \unittest\TestCase {
-  protected $fixture;
+  private $fixture;
 
   /** @return void */
   public function setUp() {

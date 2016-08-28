@@ -1,9 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\Channel;
-use io\streams\TextWriter;
-use io\streams\MemoryInputStream;
-use io\streams\MemoryOutputStream;
+use io\streams\{TextWriter, MemoryInputStream, MemoryOutputStream};
 use lang\IllegalArgumentException;
 use unittest\actions\RuntimeVersion;
 

@@ -1,14 +1,9 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\PrerequisitesNotMetError;
-use unittest\AssertionFailedError;
-use lang\Runtime;
-use lang\System;
-use lang\Process;
-use lang\IllegalStateException;
+use unittest\{PrerequisitesNotMetError, AssertionFailedError};
+use lang\{Runtime, System, Process, IllegalStateException};
 use io\IOException;
-use io\streams\Streams;
-use io\streams\MemoryOutputStream;
+use io\streams\{Streams, MemoryOutputStream};
 
 /**
  * TestCase for Process class

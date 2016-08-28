@@ -1,11 +1,6 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\Primitive;
-use lang\Type;
-use lang\XPClass;
-use lang\ArrayType;
-use lang\MapType;
-use lang\FunctionType;
+use lang\{Primitive, Type, XPClass, ArrayType, MapType, FunctionType};
 use unittest\actions\RuntimeVersion;
 
 /**

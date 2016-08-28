@@ -4,8 +4,7 @@ use unittest\TestCase;
 use util\profiling\Timer;
 use util\Comparator;
 use unittest\actions\RuntimeVersion;
-use lang\Error;
-use lang\IllegalArgumentException;
+use lang\{Error, IllegalArgumentException};
 
 /**
  * Tests Timer class

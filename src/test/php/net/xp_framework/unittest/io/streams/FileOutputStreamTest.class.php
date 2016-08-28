@@ -1,11 +1,9 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\streams\FileOutputStream;
-use io\FileUtil;
-use io\TempFile;
-use io\IOException;
-use unittest\PrerequisitesNotMetError;
+use io\{FileUtil, TempFile, IOException};
 use lang\IllegalArgumentException;
+use unittest\PrerequisitesNotMetError;
 
 class FileOutputStreamTest extends \unittest\TestCase {
   private $file;

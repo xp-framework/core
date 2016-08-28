@@ -1,14 +1,8 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use io\Channel;
-use io\IOException;
-use io\streams\LinesIn;
-use io\streams\TextReader;
-use io\streams\InputStream;
-use io\streams\MemoryInputStream;
-use io\streams\MemoryOutputStream;
-use lang\IllegalArgumentException;
-use lang\FormatException;
+use io\{Channel, IOException};
+use io\streams\{LinesIn, TextReader, InputStream, MemoryInputStream, MemoryOutputStream};
+use lang\{IllegalArgumentException, FormatException};
 
 /**
  * TestCase

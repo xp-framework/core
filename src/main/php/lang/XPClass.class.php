@@ -1,9 +1,6 @@
 <?php namespace lang;
 
-use lang\reflect\Method;
-use lang\reflect\Field;
-use lang\reflect\Constructor;
-use lang\reflect\Package;
+use lang\reflect\{Method, Field, Constructor, Package};
 use lang\ElementNotFoundException;
 
 define('DETAIL_ARGUMENTS',      1);

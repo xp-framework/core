@@ -1,14 +1,16 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\TypeUnion;
-use lang\IllegalArgumentException;
-use lang\ClassCastException;
-use lang\Primitive;
-use lang\ArrayType;
-use lang\MapType;
-use lang\FunctionType;
-use lang\Type;
-use lang\XPClass;
+use lang\{
+  ArrayType,
+  ClassCastException,
+  FunctionType,
+  IllegalArgumentException,
+  MapType,
+  Primitive,
+  Type,
+  TypeUnion,
+  XPClass
+};
 
 class TypeUnionTest extends \unittest\TestCase {
 

@@ -1,11 +1,7 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use io\Folder;
-use io\Path;
-use io\File;
-use io\FolderEntries;
-use lang\System;
-use lang\IllegalArgumentException;
+use io\{Folder, Path, File, FolderEntries};
+use lang\{IllegalArgumentException, System};
 
 class FolderEntriesTest extends \unittest\TestCase {
   private $folder;

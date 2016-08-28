@@ -1,11 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use unittest\TestCase;
-use io\streams\StreamTransfer;
-use io\streams\InputStream;
-use io\streams\OutputStream;
-use io\streams\MemoryInputStream;
-use io\streams\MemoryOutputStream;
+use io\streams\{StreamTransfer, InputStream, OutputStream, MemoryInputStream, MemoryOutputStream};
 
 /**
  * TestCase

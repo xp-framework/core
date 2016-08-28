@@ -1,21 +1,14 @@
 <?php namespace util;
 
-use io\IOException;
-use io\File;
-use io\streams\InputStream;
-use io\streams\OutputStream;
-use io\streams\MemoryInputStream;
-use io\streams\MemoryOutputStream;
-use io\streams\FileInputStream;
-use io\streams\TextReader;
-use lang\FormatException;
-use lang\IllegalStateException;
+use io\{IOException, File};
+use io\streams\{InputStream, OutputStream, MemoryInputStream, FileInputStream, TextReader};
+use lang\{FormatException, IllegalStateException};
 
 /**
  * An interface to property-files (aka "ini-files")
  *
  * Property-files syntax is easy.
- * <pre>
+ * ```ini
  * [section]
  * key1=value
  * key2="value"
@@ -25,7 +18,7 @@ use lang\IllegalStateException;
  *
  * [section2]
  * key=value
- * </pre>
+ * ```
  *
  * @test    xp://net.xp_framework.unittest.util.PropertyWritingTest
  * @test    xp://net.xp_framework.unittest.util.StringBasedPropertiesTest

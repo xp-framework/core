@@ -1,15 +1,16 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\XPClass;
-use lang\ClassLoader;
-use lang\ClassFormatException;
-use lang\ClassNotFoundException;
-use lang\ClassDependencyException;
-use lang\ClassCastException;
-use lang\IllegalStateException;
+use lang\{
+  ClassCastException,
+  ClassDependencyException,
+  ClassFormatException,
+  ClassLoader,
+  ClassNotFoundException,
+  IllegalStateException,
+  XPClass
+};
 use lang\reflect\Package;
-use lang\archive\Archive;
-use lang\archive\ArchiveClassLoader;
+use lang\archive\{Archive, ArchiveClassLoader};
 
 /**
  * TestCase for classloading

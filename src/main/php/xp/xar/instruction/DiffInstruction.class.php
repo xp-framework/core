@@ -1,12 +1,9 @@
 <?php namespace xp\xar\instruction;
 
 use xp\xar\Options;
-use io\TempFile;
-use io\File;
-use io\IOException;
-use lang\Process;
+use io\{TempFile, File, IOException};
+use lang\{Process, IllegalArgumentException};
 use lang\archive\Archive;
-use lang\IllegalArgumentException;
 
 /**
  * Shows a diff between two XARs

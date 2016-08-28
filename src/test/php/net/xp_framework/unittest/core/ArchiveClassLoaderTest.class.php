@@ -1,10 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\archive\ArchiveClassLoader;
-use lang\archive\Archive;
-use lang\ClassNotFoundException;
-use lang\ElementNotFoundException;
-use lang\XPClass;
+use lang\archive\{Archive, ArchiveClassLoader};
+use lang\{ClassNotFoundException, ElementNotFoundException, XPClass};
 use io\FileUtil;
 
 /**

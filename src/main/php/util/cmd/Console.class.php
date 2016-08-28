@@ -1,11 +1,14 @@
 <?php namespace util\cmd;
 
-use io\streams\InputStreamReader;
-use io\streams\OutputStreamWriter;
-use io\streams\StringWriter;
-use io\streams\StringReader;
-use io\streams\ConsoleOutputStream;
-use io\streams\ConsoleInputStream;
+use lang\IllegalStateException;
+use io\streams\{
+  InputStreamReader,
+  OutputStreamWriter,
+  StringWriter,
+  StringReader,
+  ConsoleOutputStream,
+  ConsoleInputStream
+};
 
 /**
  * Represents system console
@@ -42,7 +45,7 @@ abstract class Console {
   /**
    * Initialize streams
    *
-   * @param  bool console
+   * @param  bool $console
    */
   public static function initialize($console) {
     if ($console) {
@@ -53,7 +56,7 @@ abstract class Console {
       self::$in= new class(null) implements InputStreamReader {
         public function __construct($in) { }
         public function getStream() { return null; }
-        public function raise() { throw new \lang\IllegalStateException("There is no console present"); }
+        public function raise() { throw new IllegalStateException('There is no console present'); }
         public function read($count= 8192) { $this->raise(); }
         public function readLine() { $this->raise(); }
       };
@@ -61,7 +64,7 @@ abstract class Console {
         public function __construct($out) { }
         public function getStream() { return null; }
         public function flush() { $this->raise(); }
-        public function raise() { throw new \lang\IllegalStateException("There is no console present"); }
+        public function raise() { throw new IllegalStateException('There is no console present'); }
         public function write(... $args) { $this->raise(); }
         public function writeLine(... $args) { $this->raise(); }
         public function writef($format, ... $args) { $this->raise(); }

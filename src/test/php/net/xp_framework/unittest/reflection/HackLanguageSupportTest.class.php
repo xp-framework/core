@@ -1,15 +1,17 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\Type;
-use lang\Enum;
-use lang\Primitive;
-use lang\ArrayType;
-use lang\MapType;
-use lang\TypeUnion;
-use lang\XPClass;
-use lang\ElementNotFoundException;
-use lang\DynamicClassLoader;
-use lang\IllegalArgumentException;
+use lang\{
+  ArrayType,
+  DynamicClassLoader,
+  ElementNotFoundException,
+  Enum,
+  IllegalArgumentException,
+  MapType,
+  Primitive,
+  Type,
+  TypeUnion,
+  XPClass
+};
 use unittest\actions\VerifyThat;
 
 /**

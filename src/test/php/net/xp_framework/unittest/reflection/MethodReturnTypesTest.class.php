@@ -1,11 +1,6 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\Type;
-use lang\Primitive;
-use lang\ArrayType;
-use lang\MapType;
-use lang\XPClass;
-use lang\Value;
+use lang\{Type, Primitive, ArrayType, MapType, XPClass, Value};
 use unittest\actions\RuntimeVersion;
 
 class MethodReturnTypesTest extends MethodsTest {

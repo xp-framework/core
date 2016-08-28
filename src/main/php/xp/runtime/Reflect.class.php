@@ -1,11 +1,9 @@
 <?php namespace xp\runtime;
 
 use util\cmd\Console;
-use io\File;
-use io\Folder;
-use lang\XPClass;
+use io\{File, Folder};
+use lang\{XPClass, ElementNotFoundException};
 use lang\reflect\Modifiers;
-use lang\ElementNotFoundException;
 
 /**
  * Dumps reflection information about a class

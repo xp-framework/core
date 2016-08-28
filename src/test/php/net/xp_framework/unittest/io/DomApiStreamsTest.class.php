@@ -1,11 +1,9 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use unittest\PrerequisitesNotMetError;
-use io\streams\MemoryInputStream;
-use io\streams\MemoryOutputStream;
-use io\streams\Streams;
+use io\streams\{MemoryInputStream, MemoryOutputStream, Streams};
 use lang\Runtime;
 use net\xp_framework\unittest\IgnoredOnHHVM;
+use unittest\PrerequisitesNotMetError;
 
 /**
  * TestCase

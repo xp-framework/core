@@ -1,11 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use io\File;
-use io\streams\TextReader;
-use io\streams\LinesIn;
-use io\streams\InputStream;
-use io\streams\MemoryInputStream;
-use io\IOException;
+use io\{File, IOException};
+use io\streams\{TextReader, LinesIn, InputStream, MemoryInputStream};
 use lang\IllegalArgumentException;
 
 class LinesInTest extends \unittest\TestCase {

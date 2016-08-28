@@ -1,12 +1,9 @@
 <?php namespace net\xp_framework\unittest\archive;
 
 use lang\archive\Archive;
-use lang\FormatException;
-use lang\ElementNotFoundException;
+use lang\{FormatException, ElementNotFoundException};
 use io\File;
-use io\streams\Streams;
-use io\streams\MemoryInputStream;
-use io\streams\MemoryOutputStream;
+use io\streams\{Streams, MemoryInputStream, MemoryOutputStream};
 
 /**
  * Base class for archive file tests

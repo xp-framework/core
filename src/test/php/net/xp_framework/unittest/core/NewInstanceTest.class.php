@@ -1,14 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\Runnable;
-use lang\Object;
-use lang\Runtime;
-use lang\Process;
-use lang\reflect\Package;
-use lang\ClassLoader;
-use lang\IllegalAccessException;
-use unittest\actions\VerifyThat;
-use unittest\actions\RuntimeVersion;
+use lang\{Runnable, Object, Runtime, Process, reflect\Package, ClassLoader, IllegalAccessException};
+use unittest\actions\{VerifyThat, RuntimeVersion};
 
 /**
  * TestCase for newinstance() functionality. Some tests are skipped if

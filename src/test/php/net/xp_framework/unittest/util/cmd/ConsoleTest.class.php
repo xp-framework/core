@@ -1,12 +1,8 @@
 <?php namespace net\xp_framework\unittest\util\cmd;
 
 use util\cmd\Console;
-use lang\Object;
-use lang\IllegalStateException;
-use io\streams\MemoryInputStream;
-use io\streams\MemoryOutputStream;
-use io\streams\ConsoleOutputStream;
-use io\streams\ConsoleInputStream;
+use lang\{Object, IllegalStateException};
+use io\streams\{MemoryInputStream, MemoryOutputStream, ConsoleOutputStream, ConsoleInputStream};
 
 /**
  * TestCase for the Console class

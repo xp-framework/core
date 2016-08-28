@@ -1,9 +1,6 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use io\Folder;
-use io\FolderEntries;
-use io\Path;
-use io\IOException;
+use io\{Folder, FolderEntries, Path, IOException};
 use lang\System;
 use unittest\PrerequisitesNotMetError;
 

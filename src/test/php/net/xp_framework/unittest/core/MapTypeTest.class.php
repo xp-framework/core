@@ -1,13 +1,15 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\ArrayType;
-use lang\MapType;
-use lang\Primitive;
-use lang\Type;
-use lang\XPClass;
-use lang\Object;
-use lang\IllegalArgumentException;
-use lang\ClassCastException;
+use lang\{
+  ArrayType,
+  ClassCastException,
+  IllegalArgumentException,
+  MapType,
+  Object,
+  Primitive,
+  Type,
+  XPClass
+};
 
 class MapTypeTest extends \unittest\TestCase {
 

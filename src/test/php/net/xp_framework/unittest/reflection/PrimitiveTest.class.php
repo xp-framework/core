@@ -1,11 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use unittest\TestCase;
-use lang\Primitive;
-use lang\ClassCastException;
-use lang\IllegalArgumentException;
-use io\streams\Streams;
-use io\streams\MemoryInputStream;
+use lang\{Primitive, ClassCastException, IllegalArgumentException};
+use io\streams\{Streams, MemoryInputStream};
 use unittest\actions\RuntimeVersion;
 
 /**

@@ -1,11 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use unittest\TestCase;
-use lang\Runnable;
-use lang\Object;
-use lang\Generic;
-use lang\CommandLine;
-use lang\ClassCastException;
+use lang\{Runnable, Object, Generic, CommandLine, ClassCastException};
 
 /**
  * Tests cast() functionality

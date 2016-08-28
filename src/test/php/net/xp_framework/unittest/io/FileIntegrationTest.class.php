@@ -1,11 +1,7 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use io\File;
-use io\Folder;
-use io\IOException;
-use io\FileNotFoundException;
-use lang\System;
-use lang\IllegalStateException;
+use io\{File, Folder, IOException, FileNotFoundException};
+use lang\{System, IllegalStateException};
 use unittest\PrerequisitesNotMetError;
 
 class FileIntegrationTest extends \unittest\TestCase {

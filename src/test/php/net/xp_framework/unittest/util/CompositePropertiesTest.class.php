@@ -1,11 +1,8 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use util\Properties;
-use util\Hashmap;
-use util\CompositeProperties;
+use lang\{IllegalArgumentException, Error};
 use unittest\actions\RuntimeVersion;
-use lang\IllegalArgumentException;
-use lang\Error;
+use util\{Properties, Hashmap, CompositeProperties};
 
 /**
  * Test CompositeProperties

@@ -1,17 +1,18 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\Object;
-use lang\Type;
-use lang\Primitive;
-use lang\ArrayType;
-use lang\FunctionType;
-use lang\MapType;
-use lang\XPClass;
-use util\collections\Vector;
-use util\collections\HashTable;
-use lang\IllegalStateException;
-use lang\IllegalAccessException;
-use lang\ClassCastException;
+use lang\{
+  ArrayType,
+  ClassCastException,
+  FunctionType,
+  IllegalAccessException,
+  IllegalStateException,
+  MapType,
+  Object,
+  Primitive,
+  Type,
+  XPClass
+};
+use util\collections\{Vector, HashTable};
 
 class TypeTest extends \unittest\TestCase {
 

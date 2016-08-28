@@ -1,12 +1,8 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use unittest\TestCase;
 use io\streams\FileInputStream;
-use io\FileUtil;
-use io\TempFile;
-use io\IOException;
-use io\FileNotFoundException;
-use unittest\PrerequisitesNotMetError;
+use io\{FileUtil, TempFile, IOException, FileNotFoundException};
+use unittest\{TestCase, PrerequisitesNotMetError};
 
 class FileInputStreamTest extends TestCase {
   private $file;
