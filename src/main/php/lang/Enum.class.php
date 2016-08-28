@@ -29,10 +29,10 @@ abstract class Enum extends Object {
   /**
    * Constructor
    *
-   * @param   int ordinal default 0
-   * @param   string name default ''
+   * @param  int $ordinal default 0
+   * @param  string $name default ''
    */
-  public function __construct($ordinal= 0, $name= '') {
+  public function __construct(int $ordinal= 0, string $name= '') {
     $this->ordinal= $ordinal;
     $this->name= $name;
   }
@@ -40,10 +40,10 @@ abstract class Enum extends Object {
   /**
    * Returns the enumeration member uniquely identified by its name
    *
-   * @param   lang.XPClass class class object
-   * @param   string name enumeration member
-   * @return  lang.Enum
-   * @throws  lang.IllegalArgumentException in case the enum member does not exist or when the given class is not an enum
+   * @param  lang.XPClass class class object
+   * @param  string name enumeration member
+   * @return self
+   * @throws lang.IllegalArgumentException in case the enum member does not exist or when the given class is not an enum
    */
   public static function valueOf(XPClass $class, string $name): self {
     if (!$class->isEnum()) {
@@ -69,9 +69,9 @@ abstract class Enum extends Object {
   /**
    * Returns the enumeration members for a given class
    *
-   * @param   lang.XPClass class class object
-   * @return  lang.Enum[]
-   * @throws  lang.IllegalArgumentException in case the given class is not an enum
+   * @param  lang.XPClass class class object
+   * @return self[]
+   * @throws lang.IllegalArgumentException in case the given class is not an enum
    */
   public static function valuesOf(XPClass $class) {
     if (!$class->isEnum()) {
@@ -95,7 +95,7 @@ abstract class Enum extends Object {
   /**
    * Returns all members for the called enum class
    *
-   * @return  lang.Enum[]
+   * @return self[]
    */
   public static function values() {
     $r= [];
