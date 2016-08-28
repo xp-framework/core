@@ -1,10 +1,6 @@
 <?php namespace lang\reflect;
 
-use lang\XPClass;
-use lang\IllegalStateException;
-use lang\IllegalAccessException;
-use lang\ElementNotFoundException;
-use lang\ClassFormatException;
+use lang\{XPClass, IllegalStateException, IllegalAccessException, ElementNotFoundException, ClassFormatException};
 
 /**
  * Parses classes for class meta information (apidoc, return and 
@@ -384,8 +380,30 @@ class ClassParser {
           for ($i+= 2; (T_NS_SEPARATOR === $tokens[$i][0] || T_STRING === $tokens[$i][0]) && $i < $s; $i++) {
             $type.= $tokens[$i][1];
           }
-          $alias= (T_AS === $tokens[++$i][0]) ? $tokens[$i + 2][1] : substr($type, strrpos($type, '\\')+ 1);
-          $imports[$alias]= strtr($type, '\\', '.');
+
+          // use lang\{Type, Primitive as P}
+          if ('{' === $tokens[$i]) {
+            $alias= null;
+            $group= '';
+            for ($i+= 1; $i < $s; $i++) {
+              if (',' === $tokens[$i]) {
+                $imports[$alias ?? $group]= strtr($type.$group, '\\', '.');
+                $alias= null;
+                $group= '';
+              } else if ('}' === $tokens[$i]) {
+                $imports[$alias ?? $group]= strtr($type.$group, '\\', '.');
+                break;
+              } else if (T_AS === $tokens[$i][0]) {
+                $i+= 2;
+                $alias= $tokens[$i][1];
+              } else if (T_WHITESPACE !== $tokens[$i][0]) {
+                $group.= $tokens[$i][1];
+              }
+            }
+          } else {
+            $alias= (T_AS === $tokens[++$i][0]) ? $tokens[$i + 2][1] : substr($type, strrpos($type, '\\')+ 1);
+            $imports[$alias]= strtr($type, '\\', '.');
+          }
           break;
 
         case T_DOC_COMMENT:
