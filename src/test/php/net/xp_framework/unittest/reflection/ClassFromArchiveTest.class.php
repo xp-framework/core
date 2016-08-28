@@ -1,6 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\archive\ArchiveClassLoader;
+use lang\IClassLoader;
+use io\TempFile;
+use lang\archive\{Archive, ArchiveClassLoader};
 
 /**
  * TestCase for classloading
@@ -9,12 +11,8 @@ use lang\archive\ArchiveClassLoader;
  */
 class ClassFromArchiveTest extends ClassFromUriTest {
 
-  /**
-   * Creates fixture
-   *
-   * @return   lang.IClassLoader
-   */
-  protected function newFixture() {
+  /** Creates fixture */
+  protected function newFixture(): IClassLoader {
     return new ArchiveClassLoader(self::$base->archive());
   }
 
@@ -35,8 +33,8 @@ class ClassFromArchiveTest extends ClassFromUriTest {
       }
 
       public function create() {
-        $this->t= new \lang\archive\Archive(new \io\TempFile("arcl"));
-        $this->t->open(\lang\archive\Archive::CREATE);
+        $this->t= new Archive(new TempFile('arcl'));
+        $this->t->open(Archive::CREATE);
       }
 
       public function delete() {
@@ -46,7 +44,7 @@ class ClassFromArchiveTest extends ClassFromUriTest {
       public function newFile($name, $contents) {
 
         // Always use forward slashes inside archive
-        $this->t->addBytes(strtr($name, DIRECTORY_SEPARATOR, "/"), $contents);
+        $this->t->addBytes(strtr($name, DIRECTORY_SEPARATOR, '/'), $contents);
       }
 
       public function archive() {
@@ -54,7 +52,7 @@ class ClassFromArchiveTest extends ClassFromUriTest {
       }
 
       public function path() {
-        return "xar://".$this->t->getURI()."?";
+        return 'xar://'.$this->t->getURI().'?';
       }
     };
   }

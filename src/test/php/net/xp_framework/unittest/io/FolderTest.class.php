@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\io;
 
 use io\{Folder, FolderEntries, Path, IOException};
-use lang\System;
+use lang\Environment;
 use unittest\PrerequisitesNotMetError;
 
 class FolderTest extends \unittest\TestCase {
@@ -24,7 +24,7 @@ class FolderTest extends \unittest\TestCase {
    * @return void
    */
   public function setUp() {
-    $this->temp= $this->normalize(realpath(System::tempDir())).md5(uniqid()).'.xp'.DIRECTORY_SEPARATOR;
+    $this->temp= $this->normalize(realpath(Environment::tempDir())).md5(uniqid()).'.xp'.DIRECTORY_SEPARATOR;
     if (is_dir($this->temp) && !rmdir($this->temp)) {
       throw new PrerequisitesNotMetError('Fixture directory exists, but cannot remove', null, $this->temp);
     }

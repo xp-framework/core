@@ -1,6 +1,6 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\DynamicClassLoader;
+use lang\{DynamicClassLoader, IClassLoader};
 
 /**
  * TestCase for classloading
@@ -9,12 +9,8 @@ use lang\DynamicClassLoader;
  */
 class ClassFromDynamicDefinitionTest extends ClassFromUriTest {
 
-  /**
-   * Creates fixture
-   *
-   * @return   lang.IClassLoader
-   */
-  protected function newFixture() {
+  /** Creates fixture */
+  protected function newFixture(): IClassLoader {
     return DynamicClassLoader::instanceFor('test');
   }
 

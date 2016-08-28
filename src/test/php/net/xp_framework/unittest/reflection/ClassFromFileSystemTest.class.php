@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\FileSystemClassLoader;
+use io\{File, Folder};
+use lang\{IClassLoader, Environment, FileSystemClassLoader};
 
 /**
  * TestCase for classloading
@@ -9,12 +10,8 @@ use lang\FileSystemClassLoader;
  */
 class ClassFromFileSystemTest extends ClassFromUriTest {
 
-  /**
-   * Creates fixture
-   *
-   * @return   lang.IClassLoader
-   */
-  protected function newFixture() {
+  /** Creates fixture */
+  protected function newFixture(): IClassLoader {
     return new FileSystemClassLoader(realpath(self::$base->path()));
   }
 
@@ -28,7 +25,7 @@ class ClassFromFileSystemTest extends ClassFromUriTest {
       protected $t= NULL;
 
       public function create() {
-        $this->t= new \io\Folder(\lang\System::tempDir(), "fsclt");
+        $this->t= new Folder(Environment::tempDir(), 'fsclt');
         $this->t->create();
       }
 
@@ -37,11 +34,11 @@ class ClassFromFileSystemTest extends ClassFromUriTest {
       }
 
       public function newFile($name, $contents) {
-        $file= new \io\File($this->t, $name);
-        $path= new \io\Folder($file->getPath());
+        $file= new File($this->t, $name);
+        $path= new Folder($file->getPath());
         $path->exists() || $path->create();
 
-        \io\FileUtil::setContents($file, $contents);
+        $file->out()->write($contents);
       }
 
       public function path() {
