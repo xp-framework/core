@@ -13,13 +13,8 @@ use lang\ElementNotFoundException;
  */
 abstract class AbstractPropertiesTest extends \unittest\TestCase {
 
-  /**
-   * Create a new properties object from a string source
-   *
-   * @param   string $source
-   * @return  util.Properties
-   */
-  protected abstract function newPropertiesFrom($source);
+  /** Create a new properties object from a string source */
+  protected abstract function newPropertiesFrom(string $source): Properties;
 
   /**
    * Gets a fixture
@@ -258,7 +253,7 @@ abstract class AbstractPropertiesTest extends \unittest\TestCase {
   #  ["[section\nfoo=bar", 'section missing closing bracket']
   #])]
   public function malformed_property_file($source) {
-    $this->newPropertiesFrom($source);
+    $this->newPropertiesFrom($source)->reset();
   }
 
   #[@test]

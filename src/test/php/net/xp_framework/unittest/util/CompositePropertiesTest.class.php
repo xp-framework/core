@@ -44,7 +44,7 @@ class CompositePropertiesTest extends \unittest\TestCase {
     $c= new CompositeProperties([new Properties(null)]);
     $this->assertEquals(1, $c->length());
 
-    $c->add(Properties::fromString('[section]'));
+    $c->add(new Properties('a.ini'));
     $this->assertEquals(2, $c->length());
   }
 
@@ -60,19 +60,15 @@ class CompositePropertiesTest extends \unittest\TestCase {
 
   #[@test]
   public function addingEqualPropertiesIsIdempotent() {
-    $c= new CompositeProperties([Properties::fromString('[section]
-a=b
-b=c')]);
+    $c= new CompositeProperties([(new Properties())->load("[section]\na=b\nb=c")]);
     $this->assertEquals(1, $c->length());
 
-    $c->add(Properties::fromString('[section]
-a=b
-b=c'));
+    $c->add((new Properties())->load("[section]\na=b\nb=c"));
     $this->assertEquals(1, $c->length());
   }
 
   protected function fixture() {
-    return new CompositeProperties([Properties::fromString('[section]
+    return new CompositeProperties([(new Properties())->load('[section]
 str="string..."
 b1=true
 arr1="foo|bar"
@@ -84,7 +80,7 @@ range1=1..3
 
 [read]
 key=value'),
-      Properties::fromString('[section]
+      (new Properties())->load('[section]
 str="Another thing"
 str2="Another thing"
 b1=false
@@ -346,7 +342,7 @@ anotherkey="is there, too"
   #[@test]
   public function addingToCompositeResetsIterationPointer() {
     $fixture= $this->getThirdSection();
-    $fixture->add(Properties::fromString('[unknown]'));
+    $fixture->add(new Properties());
 
     $this->assertEquals(null, $fixture->getNextSection());
   }

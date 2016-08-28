@@ -65,7 +65,7 @@ class PropertyManagerTest extends \unittest\TestCase {
   public function registerProperties() {
     $fixture= $this->fixture();
     $this->assertFalse($fixture->hasProperties('props'));
-    $fixture->register('props', Properties::fromString('[section]'));
+    $fixture->register('props', (new Properties())->load('[section]'));
     
     $this->assertTrue($fixture->hasProperties('props'));
   }
@@ -92,7 +92,7 @@ class PropertyManagerTest extends \unittest\TestCase {
   #[@test]
   public function registerOverwritesExistingProperties() {
     $fixture= $this->preconfigured();
-    $fixture->register('example', Properties::fromString('[any-section]'));
+    $fixture->register('example', (new Properties())->load('[any-section]'));
     $this->assertEquals('any-section', $fixture->getProperties('example')->getFirstSection());
   }
 
@@ -180,7 +180,7 @@ class PropertyManagerTest extends \unittest\TestCase {
     $fixture= $this->preconfigured();
 
     // Register new Properties, with some value in existing section
-    $fixture->register('example', Properties::fromString('[section]
+    $fixture->register('example', (new Properties())->load('[section]
 dynamic-value=whatever'));
 
     $prop= $fixture->getProperties('example');
@@ -200,7 +200,7 @@ dynamic-value=whatever'));
 
     $this->assertEquals('value', $fixture->getProperties('example')->readString('section', 'key'));
 
-    $fixture->register('example', Properties::fromString('[section]
+    $fixture->register('example', (new Properties())->load('[section]
 key="overwritten value"'));
     $this->assertEquals('overwritten value', $fixture->getProperties('example')->readString('section', 'key'));
   }

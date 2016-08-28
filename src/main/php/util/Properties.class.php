@@ -38,13 +38,14 @@ class Properties extends \lang\Object implements PropertyAccess {
   /**
    * Load from an input stream, e.g. a file
    *
-   * @param   io.streams.InputStream $in
+   * @param   io.streams.InputStream|io.Channel|string $in
    * @param   string $charset the charset the stream is encoded in or NULL to trigger autodetection by BOM
    * @param   util.PropertyExpansion $expansion
+   * @return  self
    * @throws  io.IOException
    * @throws  lang.FormatException
    */
-  public function load(InputStream $in, $charset= null, $expansion= null) {
+  public function load($in, $charset= null, $expansion= null): self {
     $reader= new TextReader($in, $charset);
     $expansion || $expansion= new PropertyExpansion();
     $this->_data= [];
@@ -102,6 +103,7 @@ class Properties extends \lang\Object implements PropertyAccess {
         throw new FormatException('Invalid line "'.$t.'"');
       }
     }
+    return $this;
   }
 
   /**
@@ -141,33 +143,6 @@ class Properties extends \lang\Object implements PropertyAccess {
       $out->write("\n");
     }
   }
-  
-  /**
-   * Create a property file from an io.File object
-   *
-   * @deprecated  Use load() method instead
-   * @param   io.File file
-   * @return  util.Properties
-   * @throws  io.IOException in case the file given does not exist
-   */
-  public static function fromFile(File $file) {
-    $self= new self($file->getURI());
-    $self->load($file->getInputStream());
-    return $self;
-  }
-
-  /**
-   * Create a property file from a string
-   *
-   * @deprecated  Use load() method instead
-   * @param   string str
-   * @return  util.Properties
-   */
-  public static function fromString($str) {
-    $self= new self(null);
-    $self->load(new MemoryInputStream($str));
-    return $self;
-  }
 
   /** Retrieves the file name containing the properties */
   public function getFilename() { return $this->_file; }
@@ -196,32 +171,21 @@ class Properties extends \lang\Object implements PropertyAccess {
    * @param   bool force default FALSE
    * @throws  io.IOException
    */
-  protected function _load($force= false) {
-    if (!$force && null !== $this->_data) return;
-    $this->load(new FileInputStream($this->_file));
+  private function _load($force= false) {
+    if ($force || null === $this->_data) {
+      $this->load(new FileInputStream($this->_file));
+    }
   }
   
   /**
    * Reload all data from the file
    *
-   * @return return void
+   * @return void
    */
   public function reset() {
     $this->_load(true);
   }
   
-  /**
-   * Save properties to the file
-   *
-   * @deprecated  Use store() method instead
-   * @throws  io.IOException if the property file could not be written
-   */
-  public function save() {
-    $fd= new File($this->_file);
-    $this->store($fd->getOutputStream());
-    $fd->close();
-  }
-
   /**
    * Get the first configuration section
    *
