@@ -30,12 +30,8 @@ class Properties extends \lang\Object implements PropertyAccess {
     $_file    = '',
     $_data    = null;
 
-  /**
-   * Constructor
-   *
-   * @param   string filename
-   */
-  public function __construct($filename) {
+  /** Creates a new properties instance from a given file */
+  public function __construct(string $filename= null) {
     $this->_file= $filename;
   }
 
@@ -173,18 +169,16 @@ class Properties extends \lang\Object implements PropertyAccess {
     return $self;
   }
 
-  /**
-   * Retrieves the file name containing the properties
-   *
-   * @return  string
-   */
-  public function getFilename() {
-    return $this->_file;
-  }
-  
+  /** Retrieves the file name containing the properties */
+  public function getFilename() { return $this->_file; }
+
+  /** Returns whether the property file exists */
+  public function exists(): bool { return file_exists($this->_file); }
+
   /**
    * Create the property file
    *
+   * @return  void
    * @throws  io.IOException if the property file could not be created
    */
   public function create() {
@@ -195,16 +189,7 @@ class Properties extends \lang\Object implements PropertyAccess {
     }
     $this->_data= [];
   }
-  
-  /**
-   * Returns whether the property file exists
-   *
-   * @return  bool
-   */
-  public function exists() {
-    return file_exists($this->_file);
-  }
-  
+
   /**
    * Helper method that loads the data from the file if needed
    *
@@ -219,9 +204,10 @@ class Properties extends \lang\Object implements PropertyAccess {
   /**
    * Reload all data from the file
    *
+   * @return return void
    */
   public function reset() {
-    return $this->_load(true);
+    $this->_load(true);
   }
   
   /**
@@ -557,13 +543,8 @@ class Properties extends \lang\Object implements PropertyAccess {
     unset($this->_data[$section][$key]);
   }
 
-  /**
-   * Check if is equal to other object
-   *
-   * @param   var $cmp
-   * @return  bool
-   */
-  public function equals($cmp) {
+  /** Check if is equal to other object */
+  public function equals($cmp): bool {
     if (!$cmp instanceof self) return false;
 
     // If based on files, and both base on the same file, then they're equal
@@ -574,12 +555,8 @@ class Properties extends \lang\Object implements PropertyAccess {
     }
   }
 
-  /**
-   * Creates a string representation of this property file
-   *
-   * @return  string
-   */
-  public function toString() {
+  /** Creates a string representation of this property file */
+  public function toString(): string {
     return nameof($this).'('.$this->_file.')@{'.\xp::stringOf($this->_data).'}';
   }
 }

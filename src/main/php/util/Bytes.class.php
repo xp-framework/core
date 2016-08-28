@@ -1,7 +1,6 @@
 <?php namespace util;
 
-use lang\IndexOutOfBoundsException;
-use lang\IllegalArgumentException;
+use lang\{IndexOutOfBoundsException, IllegalArgumentException};
 
 /**
  * Represents a list of bytes
@@ -17,14 +16,14 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
    * @param  var $in
    * @return string
    */
-  protected function asByte($in) {
+  private function asByte($in) {
     return is_int($in) ? chr($in) : $in{0};
   }
 
   /**
    * Constructor
    *
-   * @param  var $initial default NULL
+   * @param  string|string[]|int[] $initial default NULL
    * @throws lang.IllegalArgumentException in case argument is of incorrect type.
    */
   public function __construct($initial= null) {
@@ -35,18 +34,13 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
     } else if (is_string($initial)) {
       $this->buffer= $initial;
     } else {
-      throw new IllegalArgumentException('Expected either char[], int[] or string but was '.\xp::typeOf($initial));
+      throw new IllegalArgumentException('Expected either string[], int[] or string but was '.\xp::typeOf($initial));
     }
     $this->size= strlen($this->buffer);
   }
 
-  /**
-   * Returns an iterator for use in foreach()
-   *
-   * @see    php://language.oop5.iterations
-   * @return php.Iterator
-   */
-  public function getIterator() {
+  /** Returns an iterator for use in foreach() */
+  public function getIterator(): \Iterator {
     for ($offset= 0; $offset < $this->size; $offset++) {
       $n= ord($this->buffer{$offset});
       yield $n < 128 ? $n : $n - 256;
@@ -114,49 +108,22 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
     $this->size--;
   }
 
-  /**
-   * Returns this byte list's size
-   *
-   * @return int
-   */
-  public function size() {
-    return $this->size;
-  }
+  /** Returns this byte list's size */
+  public function size(): int { return $this->size; }
 
-  /**
-   * Returns whether a given object is equal to this object
-   *
-   * @param  var $value
-   * @return int
-   */
-  public function compareTo($value) {
+  /** Returns a hashcode for this bytes object */
+  public function hashCode(): string { return md5($this->buffer); }
+
+  /** String conversion overloading */
+  public function __toString(): string { return $this->buffer; }
+
+  /** Returns whether a given object is equal to this object */
+  public function compareTo($value): int {
     return $value instanceof self ? strcmp($this->buffer, $value->buffer) : 1;
   }
 
-  /**
-   * Returns a hashcode for this bytes object
-   *
-   * @return string
-   */
-  public function hashCode() {
-    return md5($this->buffer);
-  }
-
-  /**
-   * Returns a string representation of this bytes instance.
-   *
-   * @return string
-   */
-  public function toString() {
+  /** Returns a string representation of this bytes */
+  public function toString(): string {
     return nameof($this).'('.$this->size.')@{'.addcslashes($this->buffer, "\0..\37\177..\377").'}';
-  }
-
-  /**
-   * String conversion overloading
-   *
-   * @return string
-   */
-  public function __toString() {
-    return $this->buffer;
   }
 }
