@@ -1,8 +1,7 @@
 <?php namespace xp\runtime;
 
 use util\cmd\Console;
-use lang\XPClass;
-use lang\ClassLoader;
+use lang\{XPClass, ClassLoader};
 
 /**
  * Shows help

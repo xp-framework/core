@@ -7,6 +7,10 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* **Removed support for legacy XP runners**. The XP7 runners have been
+  available for more than half a year now and are well-tested on various
+  operating systems and distributions.
+  (@thekid)
 * **Removed support for legacy date serialization** (has been deprecated
   since October 2011). See xp-framework/core#159
   (@thekid)
