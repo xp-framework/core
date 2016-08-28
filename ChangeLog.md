@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 8.0.0 / ????-??-??
+
+### RFCs
+
+* Implemented xp-framework/rfc#310: XP8
+  . **Heads up: Bumped minimum required PHP version to 7.0.0**
+  (@thekid)
+
 ## 7.6.0 / 2016-08-14
 
 ### Heads up!
