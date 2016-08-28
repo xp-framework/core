@@ -11,17 +11,13 @@ use util\Properties;
  * @test  xp://net.xp_framework.unittest.util.FilesystemPropertySourceTest
  */
 class FileBasedPropertiesTest extends AbstractPropertiesTest {
-  private static $files= [];
 
   /** Create a new properties object from a string source */
   protected function newPropertiesFrom(string $source): Properties {
-    if (!isset(self::$files[$source])) {
-      $t= new TempFile();
-      $t->out()->write($source);
-      $t->close();
-      self::$files[$source]= $t;
-    }
-    return (new Properties())->load(self::$files[$source]);
+    $t= new TempFile();
+    $t->out()->write($source);
+    $t->close();
+    return (new Properties())->load($t);
   }
 
   #[@test]
