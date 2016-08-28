@@ -31,6 +31,8 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented xp-framework/rfc#312: Advertise scripts as entry point 
+  (@thekid)
 * Implemented xp-framework/rfc#311: Deprecate array() syntax 
   (@thekid)
 * Implemented xp-framework/rfc#310: XP8
