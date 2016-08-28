@@ -45,7 +45,7 @@ abstract class Enum extends Object {
    * @return  lang.Enum
    * @throws  lang.IllegalArgumentException in case the enum member does not exist or when the given class is not an enum
    */
-  public static function valueOf(XPClass $class, $name) {
+  public static function valueOf(XPClass $class, string $name): self {
     if (!$class->isEnum()) {
       throw new IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
     }
@@ -120,30 +120,16 @@ abstract class Enum extends Object {
   /**
    * Returns the name of this enum constant, exactly as declared in its 
    * enum declaration.
-   *
-   * @return  string
    */
-  public function name() {
-    return $this->name;
-  }
+  public function name(): string { return $this->name; }
   
   /**
    * Returns the ordinal of this enumeration constant (its position in 
    * its enum declaration, where the initial constant is assigned an 
    * ordinal of zero).
-   *
-   * @return  int
    */
-  public function ordinal() {
-    return $this->ordinal;
-  }
+  public function ordinal(): int { return $this->ordinal; }
 
-  /**
-   * Create a string representation of this enum
-   *
-   * @return  string
-   */
-  public function toString() {
-    return $this->name;
-  }
+  /** Create a string representation of this enum */
+  public function toString(): string { return $this->name; }
 }
