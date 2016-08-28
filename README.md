@@ -46,19 +46,37 @@ FileSystemCL<.>
 
 Basic usage
 -----------
-The XP Framework runs classes with a public static `main()` method. To run a class, supply the fully qualified classname as command line argument: `$ xp {class.Name}`.
-
-Any argument after the classname will be passed to the class' main method.
+The XP Framework runs scripts or classes.
 
 ### Hello World
-Save the following sourcecode to a file called AgeInDays.class.php:
+Save the following sourcecode to a file called `ageindays.script.php`:
 
 ```php
-<?php
+<?php namespace ageindays;
+
 use util\{Date, DateUtil};
 use util\cmd\Console;
 
-class AgeInDays {
+$span= DateUtil::timespanBetween(new Date($argv[1]), Date::now());
+Console::writeLine('Hey, you are ', $span->getDays(), ' days old');
+```
+
+Now run it:
+
+```sh
+$ xp ageindays.script.php 1977-12-14
+Hey, you are 13724 days old
+```
+
+Alternatively, you can put this code inside a class - this time, `AgeInDays.class.php`.
+
+```php
+<?php ageindays;
+
+use util\{Date, DateUtil};
+use util\cmd\Console;
+
+class Test {
 
   public static function main(array $args) {
     $span= DateUtil::timespanBetween(new Date($args[0]), Date::now());
@@ -67,27 +85,15 @@ class AgeInDays {
 }
 ```
 
-Now run it:
+*Note the arguments have shifted by one: If you want the class' name, simply use `self::class`!*
 
 ```sh
 $ xp AgeInDays 1977-12-14
 Hey, you are 13724 days old
 ```
 
-Alternatively, you can run this directly in the shell:
-
-```sh
-$ xp -w '
-use util\{Date, DateUtil};
-
-$span= DateUtil::timespanBetween(new Date($argv[1]), Date::now());
-return "Hey, you are ".$span->getDays()." days old"
-' 1977-12-14
-Hey, you are 13724 days old
-```
-
-**Enjoy!**
-
 Contributing
 ------------
 To contribute, use the GitHub way - fork, hack, and submit a pull request! :octocat:
+
+**Enjoy!**
