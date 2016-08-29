@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 7.7.0 / 2016-08-29
+
 ### Features
 
 * Added forward compatiblity with XP8: Backported BC-break-free parts of
