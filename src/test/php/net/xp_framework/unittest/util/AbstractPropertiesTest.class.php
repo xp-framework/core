@@ -262,7 +262,7 @@ abstract class AbstractPropertiesTest extends \unittest\TestCase {
       [final]
       foo=bar
     ');
-    
+
     $this->assertEquals(['section', 'next', 'empty', 'final'], iterator_to_array($p->sections()));
   }
 

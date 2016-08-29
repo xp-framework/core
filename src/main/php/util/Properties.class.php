@@ -176,7 +176,7 @@ class Properties extends \lang\Object implements PropertyAccess {
       $this->load(new FileInputStream($this->_file));
     }
   }
-  
+
   /**
    * Reload all data from the file
    *
@@ -188,6 +188,7 @@ class Properties extends \lang\Object implements PropertyAccess {
 
   /** Returns sections */
   public function sections(): \Traversable {
+    $this->_load();
     foreach ($this->_data as $section => $_) {
       yield $section;
     }
