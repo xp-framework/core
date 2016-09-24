@@ -8,6 +8,7 @@
  */
 class Code {
   private $fragment, $imports;
+  private $namespace= null;
 
   /**
    * Creates a new code instance
@@ -27,6 +28,13 @@ class Code {
     }
 
     $this->fragment= trim($input, "\r\n\t ;").';';
+
+    if (0 === strncmp($this->fragment, 'namespace', 9)) {
+      $length= strcspn($this->fragment, ';', 10);
+      $this->namespace= substr($this->fragment, 10, $length);
+      $this->fragment= substr($this->fragment, 10 + $length);
+    }
+
     $this->imports= [];
     while (0 === strncmp($this->fragment, 'use ', 4)) {
       $delim= strpos($this->fragment, ';');
@@ -53,7 +61,15 @@ class Code {
 
   /** @return string */
   public function head() {
-    return empty($this->imports) ? '' : 'use '.implode(', ', $this->imports).';';
+    if ($this->namespace) {
+      $head= 'namespace '.$this->namespace.';';
+      $head.= 'function from($module, $imports) { \from($module, $imports, __NAMESPACE__); }';
+    } else {
+      $head= '';
+    }
+
+    $head.= empty($this->imports) ? '' : 'use '.implode(', ', $this->imports).';';
+    return $head;
   }
 
   /**

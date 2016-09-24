@@ -455,6 +455,63 @@ function typeof($arg) {
 }
 // }}}
 
+// {{{ proto void from(string module, string[] imports[, string namespace])
+//     Imports types from a module, loading it if necessary
+function from($module, $imports, $namespace= null) {
+  static $modules= ['php' => true, 'xp-framework/core' => true];
+
+  if (null === $namespace) {
+    $file= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0]['file'];
+    $ns= \lang\ClassLoader::getDefault()->findUri($file)->path;
+    $namespace= rtrim(dirname(substr($file, strlen($ns))), '.');
+  }
+
+  if (!isset($modules[$module])) {
+    $base= getenv('APPDATA').'\\Composer\\vendor\\'.strtr($module, ['/' => '\\']).'\\';
+    foreach (glob($base.'\\*.pth') as $file) {
+      foreach (file($file) as $line) {
+        $path= trim($line);
+        if ('' === $path || '#' === $path{0}) {
+          continue;
+        } else if ('?' === $path{0}) {
+          $path= substr($path, 1);
+          if (!file_exists($path)) continue;
+        }
+        if ('!' === $path{0}) {
+          \lang\ClassLoader::registerPath($base.strtr(substr($path, 1), ['/' => '\\']), true);
+        } else {
+          \lang\ClassLoader::registerPath($base.strtr($path, ['/' => '\\']));
+        }
+      }
+    }
+
+    $modules[$module]= true;
+    if (false === ($composer= file_get_contents($base.'composer.json'))) {
+      throw new \Error('Could not load '.$module);
+    }
+    foreach (json_decode($composer, true)['require'] as $depend => $_) {
+      from($depend, [], $namespace);
+    }
+  }
+
+  foreach ($imports as $import) {
+    if ('*' === $import{strlen($import)- 1}) {
+      $package= \lang\reflect\Package::forName(strtr(substr($import, 0, -2), ['\\' => '.']));
+      foreach ($package->getClassNames() as $name) {
+        class_alias(strtr($name, ['.' => '\\']), $namespace.'\\'.substr($name, strrpos($name, '.')+ 1));
+      }
+    } else if ($p= strpos($import, '{')) {
+      $base= substr($import, 0, $p);
+      foreach (explode(', ', substr($import, $p + 1, -1)) as $type) {
+        class_alias($base.$type, $namespace.'\\'.$type);
+      }
+    } else {
+      class_alias($import, $namespace.substr($import, strrpos($import, '\\')));
+    }
+  }
+}
+// }}}
+
 // {{{ class import
 class import {
   function __construct($str) {
