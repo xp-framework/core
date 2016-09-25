@@ -489,10 +489,11 @@ function from($module, $imports, $namespace= null) {
       break;
     }
 
-    $modules[$module]= true;
     if (false === ($composer= file_get_contents($base.'composer.json'))) {
       throw new \Error('Could not load '.$module.' @ '.$base);
     }
+
+    $modules[$module]= true;
     foreach (json_decode($composer, true)['require'] as $depend => $_) {
       from($depend, [], $namespace);
     }
