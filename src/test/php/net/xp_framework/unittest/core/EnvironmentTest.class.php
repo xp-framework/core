@@ -133,9 +133,9 @@ class EnvironmentTest extends \unittest\TestCase {
   }
 
   #[@test, @values([
-  #  [['HOME' => null, 'LOCALAPPDATA' => 'dir', 'XDG_CONFIG_HOME' => null]],
-  #  [['HOME' => 'dir', 'LOCALAPPDATA' => null, 'XDG_CONFIG_HOME' => null]],
-  #  [['HOME' => 'home', 'LOCALAPPDATA' => null, 'XDG_CONFIG_HOME' => 'dir']]
+  #  [['HOME' => null, 'APPDATA' => 'dir', 'XDG_CONFIG_HOME' => null]],
+  #  [['HOME' => 'dir', 'APPDATA' => null, 'XDG_CONFIG_HOME' => null]],
+  #  [['HOME' => 'home', 'APPDATA' => null, 'XDG_CONFIG_HOME' => 'dir']]
   #])]
   public function config_dir_via_variables($environment) {
     with (new EnvironmentSet($environment), function() {
@@ -152,14 +152,14 @@ class EnvironmentTest extends \unittest\TestCase {
 
   #[@test]
   public function cygwin_named_config_dir() {
-    with (new EnvironmentSet(['HOME' => 'dir', 'LOCALAPPDATA' => 'local']), function() {
+    with (new EnvironmentSet(['HOME' => 'dir', 'APPDATA' => '']), function() {
       $this->assertEquals('dir'.DIRECTORY_SEPARATOR.'.test'.DIRECTORY_SEPARATOR, Environment::configDir('test'));
     });
   }
 
   #[@test]
   public function windows_named_config_dir() {
-    with (new EnvironmentSet(['HOME' => null, 'LOCALAPPDATA' => 'dir']), function() {
+    with (new EnvironmentSet(['HOME' => null, 'APPDATA' => 'dir']), function() {
       $this->assertEquals('dir'.DIRECTORY_SEPARATOR.'Test'.DIRECTORY_SEPARATOR, Environment::configDir('test'));
     });
   }

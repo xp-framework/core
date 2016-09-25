@@ -108,16 +108,17 @@ abstract class Environment {
   /**
    * Returns current user's configuration directory
    *
-   * - $LOCALAPPDATA/{Named} on Windows
+   * - $APPDATA/{Named} on Windows
    * - $XDG_CONFIG_HOME/{named} inside an XDG environment
    * - $HOME/.{named} otherwise
    *
    * Pass NULL to retrieve configuration base directory
    */
-  public static function configDir(string $named= null): string {
-    $home= getenv('HOME');
-    if (false === $home) {
-      $base= getenv('LOCALAPPDATA');
+  public static function configDir(string $named= null, $home= null): string {
+    $home ?? $home= getenv('HOME');
+
+    if (!$home) {
+      $base= getenv('APPDATA');
       $dir= ucfirst($named);
     } else if (self::xdgCompliant()) {
       $base= getenv('XDG_CONFIG_HOME') ?: $home.DIRECTORY_SEPARATOR.'.config';
@@ -126,6 +127,7 @@ abstract class Environment {
       $base= $home;
       $dir= '.'.$named;
     }
+
     return rtrim($named ? $base.DIRECTORY_SEPARATOR.$dir : $base, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
   }
 
