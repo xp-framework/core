@@ -455,9 +455,9 @@ function typeof($arg) {
 }
 // }}}
 
-// {{{ proto void from(string module, string[] imports[, string namespace])
+// {{{ proto void from(string module, string[] imports[, string namespace[, strinv composer]])
 //     Imports types from a module, loading it if necessary
-function from($module, $imports, $namespace= null) {
+function from($module, $imports, $namespace= null, $composer= null) {
   static $modules= ['php' => true, 'xp-framework/core' => true];
 
   if (null === $namespace) {
@@ -467,35 +467,24 @@ function from($module, $imports, $namespace= null) {
   }
 
   if (!isset($modules[$module])) {
-    foreach ([getenv('APPDATA').DIRECTORY_SEPARATOR.'Composer', \lang\Environment::configDir('composer')] as $variant) {
-      $base= $variant.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.strtr($module, '/', DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-      if (!is_dir($base)) continue;
-      foreach (glob($base.'*.pth') as $file) {
-        foreach (file($file) as $line) {
-          $path= trim($line);
-          if ('' === $path || '#' === $path{0}) {
-            continue;
-          } else if ('?' === $path{0}) {
-            $path= substr($path, 1);
-            if (!file_exists($path)) continue;
-          }
-          if ('!' === $path{0}) {
-            \lang\ClassLoader::registerPath($base.strtr(substr($path, 1), ['/' => '\\']), true);
-          } else {
-            \lang\ClassLoader::registerPath($base.strtr($path, ['/' => '\\']));
-          }
-        }
-      }
-      break;
+
+    // See https://getcomposer.org/doc/03-cli.md#composer-home
+    if (null === $composer) {
+      $env= getenv('APPDATA');
+      $composer= $env ? $env.DIRECTORY_SEPARATOR.'Composer' : \lang\Environment::configDir('composer');
     }
 
-    if (false === ($composer= file_get_contents($base.'composer.json'))) {
-      throw new \Error('Could not load '.$module.' @ '.$base);
+    $base= $composer.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.strtr($module, '/', DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+    if (null === ($defines= json_decode(file_get_contents($base.'composer.json'), true))) {
+      throw new \lang\Error('Could not load module '.$module.' @ '.$composer);
     }
 
     $modules[$module]= true;
-    foreach (json_decode($composer, true)['require'] as $depend => $_) {
-      from($depend, [], $namespace);
+    foreach ($defines['autoload']['files'] as $file) {
+      require($base.strtr($file, '/', DIRECTORY_SEPARATOR));
+    }
+    foreach ($defines['require'] as $depend => $_) {
+      from($depend, [], $namespace, $composer);
     }
   }
 
