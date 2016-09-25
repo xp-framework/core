@@ -467,27 +467,31 @@ function from($module, $imports, $namespace= null) {
   }
 
   if (!isset($modules[$module])) {
-    $base= getenv('APPDATA').'\\Composer\\vendor\\'.strtr($module, ['/' => '\\']).'\\';
-    foreach (glob($base.'\\*.pth') as $file) {
-      foreach (file($file) as $line) {
-        $path= trim($line);
-        if ('' === $path || '#' === $path{0}) {
-          continue;
-        } else if ('?' === $path{0}) {
-          $path= substr($path, 1);
-          if (!file_exists($path)) continue;
-        }
-        if ('!' === $path{0}) {
-          \lang\ClassLoader::registerPath($base.strtr(substr($path, 1), ['/' => '\\']), true);
-        } else {
-          \lang\ClassLoader::registerPath($base.strtr($path, ['/' => '\\']));
+    foreach ([getenv('APPDATA').DIRECTORY_SEPARATOR.'Composer', \lang\Environment::configDir('composer')] as $variant) {
+      $base= $variant.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.strtr($module, '/', DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+      if (!is_dir($base)) continue;
+      foreach (glob($base.'*.pth') as $file) {
+        foreach (file($file) as $line) {
+          $path= trim($line);
+          if ('' === $path || '#' === $path{0}) {
+            continue;
+          } else if ('?' === $path{0}) {
+            $path= substr($path, 1);
+            if (!file_exists($path)) continue;
+          }
+          if ('!' === $path{0}) {
+            \lang\ClassLoader::registerPath($base.strtr(substr($path, 1), ['/' => '\\']), true);
+          } else {
+            \lang\ClassLoader::registerPath($base.strtr($path, ['/' => '\\']));
+          }
         }
       }
+      break;
     }
 
     $modules[$module]= true;
     if (false === ($composer= file_get_contents($base.'composer.json'))) {
-      throw new \Error('Could not load '.$module);
+      throw new \Error('Could not load '.$module.' @ '.$base);
     }
     foreach (json_decode($composer, true)['require'] as $depend => $_) {
       from($depend, [], $namespace);
