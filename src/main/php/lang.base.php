@@ -470,7 +470,7 @@ function from($module, $imports, $namespace= null, $composer= null) {
 
     // See https://getcomposer.org/doc/03-cli.md#composer-home
     if (null === $composer) {
-      $composer= \lang\Environment::configDir('composer', false);
+      $composer= getenv('COMPOSER_HOME') ?: \lang\Environment::configDir('composer', false);
     }
 
     $base= $composer.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.strtr($module, '/', DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
