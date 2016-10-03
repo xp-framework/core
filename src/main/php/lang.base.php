@@ -491,15 +491,20 @@ function from($module, $imports, $namespace= null, $composer= null) {
     if ('*' === $import{strlen($import)- 1}) {
       $package= \lang\reflect\Package::forName(strtr(substr($import, 0, -2), ['\\' => '.']));
       foreach ($package->getClassNames() as $name) {
-        class_alias(strtr($name, ['.' => '\\']), $namespace.'\\'.substr($name, strrpos($name, '.')+ 1));
+        $import= strtr($name, ['.' => '\\']);
+        class_alias($import, $namespace.'\\'.substr($name, strrpos($name, '.')+ 1));
       }
     } else if ($p= strpos($import, '{')) {
       $base= substr($import, 0, $p);
       foreach (explode(', ', substr($import, $p + 1, -1)) as $type) {
-        class_alias($base.$type, $namespace.'\\'.$type);
+        if (!class_alias($base.$type, $namespace.'\\'.$type)) {
+          throw new \lang\Error('Cannot import '.$base.$type);
+        }
       }
     } else {
-      class_alias($import, $namespace.substr($import, strrpos($import, '\\')));
+      if (!class_alias($import, $namespace.substr($import, strrpos($import, '\\')))) {
+        throw new \lang\Error('Cannot import '.$import);
+      }
     }
   }
 }
