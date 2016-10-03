@@ -489,9 +489,9 @@ function from($module, $imports, $namespace= null, $composer= null) {
 
   foreach ((array)$imports as $import) {
     if ('*' === $import{strlen($import)- 1}) {
-      $package= \lang\reflect\Package::forName(strtr(substr($import, 0, -2), ['\\' => '.']));
+      $package= \lang\reflect\Package::forName(strtr(substr($import, 0, -2), '\\', '.'));
       foreach ($package->getClassNames() as $name) {
-        $import= strtr($name, ['.' => '\\']);
+        $import= strtr($name, '.', '\\');
         class_alias($import, $namespace.'\\'.substr($name, strrpos($name, '.')+ 1));
       }
     } else if ($p= strpos($import, '{')) {
