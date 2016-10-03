@@ -175,6 +175,7 @@ class FromTest extends \unittest\TestCase {
   #[@test]
   public function module_loaded_from_composer_home_by_default() {
     Environment::export(['COMPOSER_HOME' => self::$composerPath]);
+    chdir(Environment::tempDir());
     try {
       $r= $this->runInNewRuntime('
         from("xp-framework/testing", ["testing\Fixture"], "");
