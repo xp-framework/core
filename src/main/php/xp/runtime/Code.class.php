@@ -59,17 +59,18 @@ class Code {
   /** @return string[] */
   public function imports() { return $this->imports; }
 
-  /** @return string */
-  public function head() {
-    if ($this->namespace) {
-      $head= 'namespace '.$this->namespace.';';
-      $head.= 'function from($module, $imports) { \from($module, $imports, __NAMESPACE__); }';
-    } else {
-      $head= '';
-    }
-
-    $head.= empty($this->imports) ? '' : 'use '.implode(', ', $this->imports).';';
-    return $head;
+  /**
+   * Returns head including namespace, from() and imports
+   *
+   * @param  bool $forward Whether to return from() forward
+   * @return string
+   */
+  public function head($forward= true) {
+    return
+      ($this->namespace ? 'namespace '.$this->namespace.';' : '').
+      ($forward ? Imports::FROM_FORWARD : '').
+      (empty($this->imports) ? '' : 'use '.implode(', ', $this->imports).';')
+    ;
   }
 
   /**

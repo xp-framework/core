@@ -115,12 +115,12 @@ class CodeTest extends \unittest\TestCase {
 
   #[@test]
   public function head_with_no_import() {
-    $this->assertEquals('', (new Code('"Test"'))->head());
+    $this->assertEquals('', (new Code('"Test"'))->head(false));
   }
 
   #[@test]
   public function head_with_single_import() {
-    $this->assertEquals('use util\Date;', (new Code('use util\Date; "Test"'))->head());
+    $this->assertEquals('use util\Date;', (new Code('use util\Date; "Test"'))->head(false));
   }
 
   #[@test, @values([
@@ -129,7 +129,7 @@ class CodeTest extends \unittest\TestCase {
   #  'use util\{Date, TimeZone}; Date::now()'
   #])]
   public function head_with_multiple_imports($input) {
-    $this->assertEquals('use util\Date, util\TimeZone;', (new Code($input))->head());
+    $this->assertEquals('use util\Date, util\TimeZone;', (new Code($input))->head(false));
   }
 
   #[@test, @values([

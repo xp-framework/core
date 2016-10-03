@@ -455,60 +455,6 @@ function typeof($arg) {
 }
 // }}}
 
-// {{{ proto void from(string module, string|string[] imports[, string namespace[, strinv composer]])
-//     Imports types from a module, loading it if necessary
-function from($module, $imports, $namespace= null, $composer= null) {
-  static $modules= ['php' => true, 'xp-framework/core' => true];
-
-  if (null === $namespace) {
-    $file= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1)[0]['file'];
-    $ns= \lang\ClassLoader::getDefault()->findUri($file)->path;
-    $namespace= rtrim(dirname(substr($file, strlen($ns))), '.');
-  }
-
-  if (!isset($modules[$module])) {
-
-    // See https://getcomposer.org/doc/03-cli.md#composer-home
-    if (null === $composer) {
-      $composer= getenv('COMPOSER_HOME') ?: \lang\Environment::configDir('composer', false);
-    }
-
-    $base= $composer.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.strtr($module, '/', DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-    if (null === ($defines= json_decode(file_get_contents($base.'composer.json'), true))) {
-      throw new \lang\Error('Could not load module '.$module.' @ '.$composer);
-    }
-
-    $modules[$module]= true;
-    foreach ($defines['autoload']['files'] as $file) {
-      require($base.strtr($file, '/', DIRECTORY_SEPARATOR));
-    }
-    foreach ($defines['require'] as $depend => $_) {
-      from($depend, [], $namespace, $composer);
-    }
-  }
-
-  foreach ((array)$imports as $import) {
-    if ('*' === $import{strlen($import)- 1}) {
-      $package= \lang\reflect\Package::forName(strtr(substr($import, 0, -2), '\\', '.'));
-      foreach ($package->getClassNames() as $name) {
-        class_alias(strtr($name, '.', '\\'), $namespace.'\\'.substr($name, strrpos($name, '.')+ 1));
-      }
-    } else if ($p= strpos($import, '{')) {
-      $base= substr($import, 0, $p);
-      foreach (explode(', ', substr($import, $p + 1, -1)) as $type) {
-        if (!class_alias($base.$type, $namespace.'\\'.$type)) {
-          throw new \lang\Error('Cannot import '.$base.$type);
-        }
-      }
-    } else {
-      if (!class_alias($import, $namespace.substr($import, strrpos($import, '\\')))) {
-        throw new \lang\Error('Cannot import '.$import);
-      }
-    }
-  }
-}
-// }}}
-
 // {{{ class import
 class import {
   function __construct($str) {
