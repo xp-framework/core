@@ -1,8 +1,9 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\Runtime;
+use lang\{ClassLoader, Environment, Runtime};
 
 class FromTest extends \unittest\TestCase {
+  private static $composerPath;
 
   /**
    * Runs sourcecode inside a new runtime
@@ -24,6 +25,14 @@ class FromTest extends \unittest\TestCase {
       $exitv= $p->close();
       return [$exitv, $out, $err];
     });
+  }
+
+  #[@beforeClass]
+  public static function composerPath() {
+    self::$composerPath= ClassLoader::getDefault()
+      ->findResource('vendor/xp-framework/testing/composer.json')
+      ->path
+    ;
   }
 
   #[@test, @values([
@@ -141,5 +150,36 @@ class FromTest extends \unittest\TestCase {
       (bool)strstr($r[1].$r[2], "Cannot import util\NonExistantType"),
       \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
+  }
+
+  #[@test]
+  public function module_loaded() {
+    $r= $this->runInNewRuntime('
+      from("xp-framework/testing", ["testing\Fixture"], "", "'.strtr(self::$composerPath, ['\\' => '\\\\']).'");
+
+      echo typeof(new Fixture());
+    ');
+    $this->assertEquals([0, 'testing.Fixture', ''], $r);
+  }
+
+  #[@test]
+  public function module_dependencies_loaded() {
+    $r= $this->runInNewRuntime('
+      from("xp-framework/assertions", ["assertions\Assertion"], "", "'.strtr(self::$composerPath, ['\\' => '\\\\']).'");
+
+      echo typeof((new Assertion())->fixture());
+    ');
+    $this->assertEquals([0, 'testing.Fixture', ''], $r);
+  }
+
+  #[@test]
+  public function module_loaded_from_composer_home_by_default() {
+    Environment::export(['COMPOSER_HOME' => self::$composerPath]);
+    $r= $this->runInNewRuntime('
+      from("xp-framework/testing", ["testing\Fixture"], "");
+
+      echo typeof(new Fixture());
+    ');
+    $this->assertEquals([0, 'testing.Fixture', ''], $r);
   }
 }
