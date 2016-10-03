@@ -491,8 +491,7 @@ function from($module, $imports, $namespace= null, $composer= null) {
     if ('*' === $import{strlen($import)- 1}) {
       $package= \lang\reflect\Package::forName(strtr(substr($import, 0, -2), '\\', '.'));
       foreach ($package->getClassNames() as $name) {
-        $import= strtr($name, '.', '\\');
-        class_alias($import, $namespace.'\\'.substr($name, strrpos($name, '.')+ 1));
+        class_alias(strtr($name, '.', '\\'), $namespace.'\\'.substr($name, strrpos($name, '.')+ 1));
       }
     } else if ($p= strpos($import, '{')) {
       $base= substr($import, 0, $p);

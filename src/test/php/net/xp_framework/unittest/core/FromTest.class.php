@@ -175,11 +175,15 @@ class FromTest extends \unittest\TestCase {
   #[@test]
   public function module_loaded_from_composer_home_by_default() {
     Environment::export(['COMPOSER_HOME' => self::$composerPath]);
-    $r= $this->runInNewRuntime('
-      from("xp-framework/testing", ["testing\Fixture"], "");
+    try {
+      $r= $this->runInNewRuntime('
+        from("xp-framework/testing", ["testing\Fixture"], "");
 
-      echo typeof(new Fixture());
-    ');
-    $this->assertEquals([0, 'testing.Fixture', ''], $r);
+        echo typeof(new Fixture());
+      ');
+      $this->assertEquals([0, 'testing.Fixture', ''], $r);
+    } finally {
+      Environment::export(['COMPOSER_HOME' => null]);
+    }
   }
 }
