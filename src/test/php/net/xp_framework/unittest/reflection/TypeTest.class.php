@@ -16,22 +16,22 @@ use util\collections\{Vector, HashTable};
 
 class TypeTest extends \unittest\TestCase {
 
-  #[@test]
-  public function stringType() {
-    $this->assertEquals(Primitive::$STRING, Type::forName('string'));
+  #[@test, @values(['string', '?string'])]
+  public function stringType($named) {
+    $this->assertEquals(Primitive::$STRING, Type::forName($named));
   }
 
-  #[@test, @values(['int', 'integer'])]
+  #[@test, @values(['int', 'integer', '?int'])]
   public function intType($named) {
     $this->assertEquals(Primitive::$INT, Type::forName($named));
   }
 
-  #[@test, @values(['double', 'float'])]
+  #[@test, @values(['double', 'float', '?float'])]
   public function doubleType($named) {
     $this->assertEquals(Primitive::$DOUBLE, Type::forName($named));
   }
 
-  #[@test, @values(['bool', 'boolean'])]
+  #[@test, @values(['bool', 'boolean', '?bool'])]
   public function boolType($named) {
     $this->assertEquals(Primitive::$BOOL, Type::forName($named));
   }
@@ -46,24 +46,24 @@ class TypeTest extends \unittest\TestCase {
     $this->assertEquals(Type::$VAR, Type::forName('var'));
   }
 
-  #[@test]
-  public function arrayTypeUnion() {
-    $this->assertEquals(Type::$ARRAY, Type::forName('array'));
+  #[@test, @values(['array', '?array'])]
+  public function arrayTypeUnion($named) {
+    $this->assertEquals(Type::$ARRAY, Type::forName($named));
   }
 
-  #[@test]
-  public function callableTypeUnion() {
-    $this->assertEquals(Type::$CALLABLE, Type::forName('callable'));
+  #[@test, @values(['callable', '?callable'])]
+  public function callableTypeUnion($named) {
+    $this->assertEquals(Type::$CALLABLE, Type::forName($named));
   }
 
-  #[@test]
-  public function iterableTypeUnion() {
-    $this->assertEquals(Type::$ITERABLE, Type::forName('iterable'));
+  #[@test, @values(['iterable', '?iterable'])]
+  public function iterableTypeUnion($named) {
+    $this->assertEquals(Type::$ITERABLE, Type::forName($named));
   }
 
-  #[@test]
-  public function objectTypeUnion() {
-    $this->assertEquals(Type::$OBJECT, Type::forName('object'));
+  #[@test, @values(['object', '?object'])]
+  public function objectTypeUnion($named) {
+    $this->assertEquals(Type::$OBJECT, Type::forName($named));
   }
 
   #[@test]
@@ -76,7 +76,7 @@ class TypeTest extends \unittest\TestCase {
     $this->assertEquals(MapType::forName('[:string]'), Type::forName('[:string]'));
   }
 
-  #[@test, @values(['lang.Object', Object::class, '\\lang\\Object'])]
+  #[@test, @values(['lang.Object', Object::class, '\\lang\\Object', '?lang.Object'])]
   public function objectType($name) {
     $this->assertEquals(XPClass::forName('lang.Object'), Type::forName($name));
   }
