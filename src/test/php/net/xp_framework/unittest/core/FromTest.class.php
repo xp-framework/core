@@ -26,40 +26,37 @@ class FromTest extends \unittest\TestCase {
     });
   }
 
-  #[@test]
-  public function type_from_xp_core() {
-    $r= $this->runInNewRuntime('
-      from("xp-framework/core", ["util\\Date"], "");
-
-      echo typeof(new Date());
-    ');
+  #[@test, @values([
+  #  'from("xp-framework/core", "util\\Date", "");',
+  #  'from("xp-framework/core", ["util\\Date"], "");'
+  #])]
+  public function type_from_xp_core($statement) {
+    $r= $this->runInNewRuntime($statement.' echo typeof(new Date());');
     $this->assertEquals([0, 'util.Date', ''], $r);
+  }
+
+  #[@test, @values([
+  #  'from("xp-framework/core", "util\\{Date, TimeZone}", "");',
+  #  'from("xp-framework/core", ["util\\{Date, TimeZone}"], "");'
+  #])]
+  public function grouped_use_declarations($statement) {
+    $r= $this->runInNewRuntime($statement.' echo typeof(new Date()), " & ", typeof(new TimeZone("UTC"));');
+    $this->assertEquals([0, 'util.Date & util.TimeZone', ''], $r);
+  }
+
+  #[@test, @values([
+  #  'from("xp-framework/core", "util\\*", "");',
+  #  'from("xp-framework/core", ["util\\*"], "");'
+  #])]
+  public function all_types_from_util_package($statement) {
+    $r= $this->runInNewRuntime($statement.' echo typeof(new Date()), " & ", typeof(new TimeZone("UTC"));');
+    $this->assertEquals([0, 'util.Date & util.TimeZone', ''], $r);
   }
 
   #[@test]
   public function types_from_xp_core() {
     $r= $this->runInNewRuntime('
       from("xp-framework/core", ["util\\Date", "util\\TimeZone"], "");
-
-      echo typeof(new Date()), " & ", typeof(new TimeZone("Europe/Berlin"));
-    ');
-    $this->assertEquals([0, 'util.Date & util.TimeZone', ''], $r);
-  }
-
-  #[@test]
-  public function grouped_use_declarations() {
-    $r= $this->runInNewRuntime('
-      from("xp-framework/core", ["util\\{Date, TimeZone}"], "");
-
-      echo typeof(new Date()), " & ", typeof(new TimeZone("Europe/Berlin"));
-    ');
-    $this->assertEquals([0, 'util.Date & util.TimeZone', ''], $r);
-  }
-
-  #[@test]
-  public function all_types_from_util_package() {
-    $r= $this->runInNewRuntime('
-      from("xp-framework/core", ["util\\*"], "");
 
       echo typeof(new Date()), " & ", typeof(new TimeZone("Europe/Berlin"));
     ');

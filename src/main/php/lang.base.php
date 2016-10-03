@@ -455,7 +455,7 @@ function typeof($arg) {
 }
 // }}}
 
-// {{{ proto void from(string module, string[] imports[, string namespace[, strinv composer]])
+// {{{ proto void from(string module, string|string[] imports[, string namespace[, strinv composer]])
 //     Imports types from a module, loading it if necessary
 function from($module, $imports, $namespace= null, $composer= null) {
   static $modules= ['php' => true, 'xp-framework/core' => true];
@@ -487,7 +487,7 @@ function from($module, $imports, $namespace= null, $composer= null) {
     }
   }
 
-  foreach ($imports as $import) {
+  foreach ((array)$imports as $import) {
     if ('*' === $import{strlen($import)- 1}) {
       $package= \lang\reflect\Package::forName(strtr(substr($import, 0, -2), ['\\' => '.']));
       foreach ($package->getClassNames() as $name) {
