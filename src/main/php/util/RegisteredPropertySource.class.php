@@ -28,7 +28,7 @@ class RegisteredPropertySource extends \lang\Object implements PropertySource {
    * @return  bool
    */
   public function provides($name) {
-    return $name == $this->name;
+    return $name === $this->name;
   }
 
   /**
@@ -38,7 +38,7 @@ class RegisteredPropertySource extends \lang\Object implements PropertySource {
    * @return  util.PropertyAccess
    */
   public function fetch($name) {
-    if (!$name == $this->name)
+    if ($name !== $this->name)
       throw new \lang\IllegalArgumentException('Access to property source under wrong name "'.$name.'"');
 
     return $this->prop;
@@ -50,7 +50,7 @@ class RegisteredPropertySource extends \lang\Object implements PropertySource {
    * @return  string
    */
   public function hashCode() {
-    return md5($this->name.serialize($this->prop));
+    return md5($this->name.$this->prop->hashCode());
   }
 
   /**
