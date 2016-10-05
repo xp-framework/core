@@ -377,7 +377,7 @@ abstract class AbstractPropertiesTest extends \unittest\TestCase {
   }
 
   #[@test, @expect(ElementNotFoundException::class)]
-  public function resolve_non_existant_senvironment_variable() {
+  public function resolve_non_existant_environment_variable() {
     putenv('TEST');
     $this->fixture('test=${env.TEST}');
   }

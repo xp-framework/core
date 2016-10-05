@@ -28,7 +28,7 @@ class RegisteredPropertySource extends \lang\Object implements PropertySource {
    * @return bool
    */
   public function provides($name) {
-    return $name === $this->name;
+    return $name == $this->name;
   }
 
   /**
