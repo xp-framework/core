@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 7.8.0 / 2016-10-06
+
+### Features
+
+* Merged PR #163: Make adding property file expansions easy to use
+  (@thekid)
+
 ## 7.7.0 / 2016-08-29
 
 ### Features
