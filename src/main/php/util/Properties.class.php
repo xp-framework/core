@@ -2,7 +2,7 @@
 
 use io\{IOException, File};
 use io\streams\{InputStream, OutputStream, MemoryInputStream, FileInputStream, TextReader};
-use lang\{FormatException, IllegalStateException};
+use lang\{FormatException, IllegalStateException, ElementNotFoundException};
 
 /**
  * An interface to property-files (aka "ini-files")
@@ -26,9 +26,13 @@ use lang\{FormatException, IllegalStateException};
  * @see     php://parse_ini_file
  */
 class Properties extends \lang\Object implements PropertyAccess {
-  public
-    $_file    = '',
-    $_data    = null;
+  private static $env;
+  public $_file, $_data;
+  private $expansion= null;
+
+  static function __static() {
+    self::$env= (new PropertyExpansion())->expand('env', 'getenv');
+  }
 
   /** Creates a new properties instance from a given file */
   public function __construct(string $filename= null) {
@@ -36,20 +40,40 @@ class Properties extends \lang\Object implements PropertyAccess {
   }
 
   /**
+   * Add expansion `${kind.X}` with a given expansion function `f(X)`
+   *
+   * @param  string $kind
+   * @param  [:var]|function(string): string $expansion
+   * @return self
+   */
+  public function expanding($kind, $expansion) {
+    $this->expansion= $this->expansion ?: clone self::$env;
+
+    if ($expansion instanceof \ArrayAccess || (is_array($expansion) && 0 !== key($expansion))) {
+      $func= function($name) use($expansion) { return isset($expansion[$name]) ? $expansion[$name] : null; };
+    } else {
+      $func= cast($expansion, 'function(string): string');
+    }
+
+    $this->expansion->expand($kind, $func);
+    return $this;
+  }
+
+  /**
    * Load from an input stream, e.g. a file
    *
    * @param   io.streams.InputStream|io.Channel|string $in
    * @param   string $charset the charset the stream is encoded in or NULL to trigger autodetection by BOM
-   * @param   util.PropertyExpansion $expansion
    * @return  self
    * @throws  io.IOException
    * @throws  lang.FormatException
    */
-  public function load($in, $charset= null, $expansion= null): self {
+  public function load($in, $charset= null): self {
     $reader= new TextReader($in, $charset);
-    $expansion || $expansion= new PropertyExpansion();
+    $expansion= $this->expansion ?: self::$env;
     $this->_data= [];
     $section= null;
+
     while (null !== ($t= $reader->readLine())) {
       $trimmedToken= trim($t);
       if ('' === $trimmedToken) continue;                   // Empty lines
@@ -527,6 +551,11 @@ class Properties extends \lang\Object implements PropertyAccess {
     } else {
       return Objects::equal($this->_data, $cmp->_data);
     }
+  }
+
+  /** Creates hashcode */
+  public function hashCode(): string {
+    return $this->_file.serialize($this->_data);
   }
 
   /** Creates a string representation of this property file */

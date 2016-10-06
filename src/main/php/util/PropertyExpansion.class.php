@@ -12,28 +12,24 @@ class PropertyExpansion {
   private $impl= [];
 
   /**
-   * Creates an instance 
-   */
-  public function __construct() {
-    $this->impl['env']= function($name, $default= null) {
-      if (false === ($value= getenv($name))) {
-        if (null === ($value= $default)) {
-          throw new ElementNotFoundException('Environment variable "'.$name.'" doesn\'t exist');
-        }
-      }
-      return $value;
-    };
-  }
-
-  /**
    * Register an expansion implementation
    *
-   * @param  string $name
-   * @param  function(string, string): string $impl
+   * @param  string $kind
+   * @param  function(string, string): string $func
    * @return self
    */
-  public function expand($name, $impl) {
-    $this->impl[$name]= $impl;
+  public function expand($kind, callable $func) {
+    $this->impl[$kind]= function($name, $default= null) use($kind, $func) {
+      $expanded= $func($name);
+      if (false === $expanded || null === $expanded) {
+        if (null === $default) {
+          throw new ElementNotFoundException('Cannot expand '.$kind.' '.$name);
+        }
+        return $default;
+      } else {
+        return $expanded;
+      }
+    };
     return $this;
   }
 

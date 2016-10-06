@@ -47,6 +47,13 @@ XP Framework Core ChangeLog
 
 * Merged PR #134: Change lang.XPClass::getClasses() to return an iterator
 
+## 7.8.0 / 2016-10-06
+
+### Features
+
+* Merged PR #163: Make adding property file expansions easy to use
+  (@thekid)
+
 ## 7.7.0 / 2016-08-29
 
 ### Features
