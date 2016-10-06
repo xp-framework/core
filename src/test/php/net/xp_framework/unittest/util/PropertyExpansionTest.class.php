@@ -38,12 +38,12 @@ class PropertyExpansionTest extends \unittest\TestCase {
 
   #[@test]
   public function arrayaccess_lookup() {
-    $prop= $this->newFixture(newinstance(\ArrayAccess::class, [], [
-      'offsetExists' => function($key) { return true; },
-      'offsetGet'    => function($key) { return 'test'; },
-      'offsetSet'    => function($key, $value) { /* Not implemented */ },
-      'offsetUnset'  => function($key) { /* Not implemented */ }
-    ]));
+    $prop= $this->newFixture(new class implements \ArrayAccess {
+      function offsetExists($key) { return true; }
+      function offsetGet($key) { return 'test'; }
+      function offsetSet($key, $value) { /* Not implemented */ }
+      function offsetUnset($key) { /* Not implemented */ }
+    });
     $this->assertEquals('test', $prop->readString('section', 'test'));
   }
 
