@@ -39,7 +39,7 @@ abstract class Imports {
         require($base.strtr($file, '/', DIRECTORY_SEPARATOR));
       }
       foreach ($defines['require'] as $depend => $_) {
-        from($depend, [], $namespace, $composer);
+        self::from($depend, [], $namespace, $composer);
       }
     }
 
