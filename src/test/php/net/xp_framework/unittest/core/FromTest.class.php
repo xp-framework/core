@@ -175,7 +175,13 @@ class FromTest extends \unittest\TestCase {
   #[@test]
   public function module_loaded_from_composer_home_by_default() {
     Environment::export(['COMPOSER_HOME' => self::$composerPath]);
-    chdir(Environment::tempDir());
+
+    // Run in temporary directory to ensure ./vendor doesn't exist!
+    $tmp= Environment::tempDir().DIRECTORY_SEPARATOR.uniqid(microtime(true));
+    mkdir($tmp);
+    $pushed= getcwd();
+    chdir($tmp);
+
     try {
       $r= $this->runInNewRuntime('
         from("xp-framework/testing", ["testing\Fixture"], "");
@@ -185,6 +191,7 @@ class FromTest extends \unittest\TestCase {
       $this->assertEquals([0, 'testing.Fixture', ''], $r);
     } finally {
       Environment::export(['COMPOSER_HOME' => null]);
+      chdir($pushed);
     }
   }
 }
