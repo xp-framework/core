@@ -186,9 +186,9 @@ class FromTest extends \unittest\TestCase {
       $r= $this->runInNewRuntime('
         from("xp-framework/testing", ["testing\Fixture"], "");
 
-        echo typeof(new Fixture());
+        echo getcwd(), "::", typeof(new Fixture());
       ');
-      $this->assertEquals([0, 'testing.Fixture', ''], $r);
+      $this->assertEquals([0, realpath($tmp).'::testing.Fixture', ''], $r);
     } finally {
       Environment::export(['COMPOSER_HOME' => null]);
       chdir($pushed);
