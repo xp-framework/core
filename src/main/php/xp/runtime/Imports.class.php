@@ -22,9 +22,8 @@ abstract class Imports {
 
       // Composer local or global (see https://getcomposer.org/doc/03-cli.md#composer-home)
       if (null === $composer) {
-        if (is_dir('vendor')) {
-          $composer= '.';
-        } else {
+        $composer= getcwd();
+        if (!is_dir($composer.DIRECTORY_SEPARATOR.'vendor')) {
           $composer= getenv('COMPOSER_HOME') ?: Environment::configDir('composer', false);
         }
       }
