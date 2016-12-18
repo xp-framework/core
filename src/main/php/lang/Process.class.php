@@ -75,6 +75,10 @@ class Process extends Object {
     $this->status['exe']= $binary;
     $this->status['arguments']= $arguments;
     $this->status['owner']= true;
+    $this->status['running?']= function() {
+      if (null === $this->handle) return false;
+      return $this->status['running']= proc_get_status($this->handle)['running'];
+    };
 
     // Assign in, out and err members
     $this->in= new File($pipes[0]);
@@ -153,7 +157,8 @@ class Process extends Object {
       'exe'       => $exe,
       'command'   => '',
       'arguments' => null,
-      'owner'     => false
+      'owner'     => false,
+      'running?'  => null
     ];
 
     // Determine executable and command line:
@@ -171,10 +176,17 @@ class Process extends Object {
     //   purposes)
     if (strncasecmp(PHP_OS, 'Win', 3) === 0) {
       try {
-        $c= new \Com('winmgmts:');
-        $p= $c->get('//./root/cimv2:Win32_Process.Handle="'.$pid.'"');
+        $c= new \Com('winmgmts://./root/cimv2');
+        $p= $c->get('Win32_Process.Handle="'.$pid.'"');
         if (null === $exe) $self->status['exe']= $p->executablePath;
         $self->status['command']= $p->commandLine;
+        $self->status['running?']= function() use($c, $pid) {
+          $p= $c->execQuery('select * from Win32_Process where Handle="'.$pid.'"');
+          foreach ($p as $result) {
+            return true;
+          }
+          return false;
+        };
       } catch (\Throwable $e) {
         throw new IllegalStateException('Cannot find executable: '.$e->getMessage());
       }
@@ -191,6 +203,9 @@ class Process extends Object {
         throw new IllegalStateException('Cannot find executable in '.$proc);
       } while (0);
       $self->status['command']= strtr(file_get_contents($proc.'/cmdline'), "\0", ' ');
+      $self->status['running?']= function() use($pid) {
+        return file_exists('/proc/'.$pid);
+      };
     } else {
       try {
         if (null !== $exe) {
@@ -207,6 +222,10 @@ class Process extends Object {
       } catch (\io\IOException $e) {
         throw new IllegalStateException($e->getMessage());
       }
+      $self->status['running?']= function() use($pid) {
+        exec('ps -p '.$pid, $out, $exit);
+        return 0 === $exit;
+      };
     }
 
     $self->in= $self->out= $self->err= null;
@@ -246,6 +265,9 @@ class Process extends Object {
   
   /** Returns the exit value for the process */
   public function exitValue(): int { return $this->exitv; }
+
+  /** Returns whether the process is running */
+  public function running(): bool { return $this->status['running?'](); }
   
   /**
    * Close this process

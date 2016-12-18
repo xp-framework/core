@@ -190,4 +190,33 @@ class ProcessTest extends \unittest\TestCase {
     $p->close();
     $this->assertEquals(65536, strlen($err));
   }
+
+  #[@test]
+  public function new_process_is_running() {
+    $p= new Process($this->executable(), $this->arguments('-r', 'fgets(STDIN, 8192);'));
+    $this->assertTrue($p->running());
+    $p->in->writeLine();
+    $p->close();
+  }
+
+  #[@test]
+  public function process_is_not_running_after_it_exited() {
+    $p= new Process($this->executable(), $this->arguments('-r', 'exit(0);'));
+    $p->close();
+    $this->assertFalse($p->running());
+  }
+
+  #[@test]
+  public function runtime_is_running() {
+    $p= Runtime::getInstance()->getExecutable();
+    $this->assertTrue($p->running());
+  }
+
+  #[@test]
+  public function mirror_is_not_running() {
+    $p= new Process($this->executable(), $this->arguments('-r', 'exit(0);'));
+    $mirror= Process::getProcessById($p->getProcessId());
+    $p->close();
+    $this->assertFalse($mirror->running());
+  }
 }
