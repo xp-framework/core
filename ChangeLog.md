@@ -5,8 +5,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
-* Added new method `lang.Process::running()` to test whether a process
-  is running
+* Merged PR #164: Implement new `Process::running()` method which tests
+  if a process is running
   (@thekid)
 * Merged PR #163: Make adding property file expansions easy to use
   (@thekid)
