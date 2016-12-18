@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 8.1.0 / 2016-12-18
+
 ### Features
 
 * Merged PR #164: Implement new `Process::running()` method which tests
