@@ -51,9 +51,9 @@ final class ClassLoader extends Object implements IClassLoader {
     foreach (\xp::$classpath as $element) {
       if (isset(self::$delegates[$element])) {
         continue;
-      } else if (is_dir($element)) {
+      } else if (DIRECTORY_SEPARATOR === $element{strlen($element) - 1}) {
         self::$delegates[$element]= FileSystemClassLoader::instanceFor($element, false);
-      } else if (is_file($element)) {
+      } else {
         self::$delegates[$element]= ArchiveClassLoader::instanceFor($element, false);
       }
     }
