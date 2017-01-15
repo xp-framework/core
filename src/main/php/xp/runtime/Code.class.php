@@ -1,5 +1,7 @@
 <?php namespace xp\runtime;
 
+use lang\Throwable;
+
 /**
  * Wrap code passed in from the command line.
  *
@@ -112,11 +114,16 @@ class Code {
    * @param  string $expression
    * @param  string[] $argv
    * @return int
+   * @throws lang.Throwable
    */
   public function run($expression, $argv= []) {
     $this->modules->require();
 
     $argc= sizeof($argv);
-    return eval($this->head().$expression);
+    try {
+      return eval($this->head().$expression);
+    } catch (\Throwable $t) {
+      throw Throwable::wrap($t);
+    }
   }
 }
