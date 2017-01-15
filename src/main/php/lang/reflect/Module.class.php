@@ -11,7 +11,7 @@ use lang\ElementNotFoundException;
 class Module extends \lang\Object {
   public static $INCOMPLETE= false;
   public static $registered= [];
-  private $definition;
+  private $definitions;
 
   /**
    * Creates a new module
