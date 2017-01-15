@@ -100,7 +100,7 @@ final class ClassLoader extends Object implements IClassLoader {
    *
    * @param  string $element
    * @param  bool $before default FALSE whether to register this as the first loader,
-   *         NULL wheather to figure out position by inspecting $element
+   *         NULL whether to figure out position by inspecting $element
    * @param  string $module
    * @param  [:var] $definition
    * @return lang.IClassLoader the registered loader
@@ -121,7 +121,7 @@ final class ClassLoader extends Object implements IClassLoader {
     }
     throw new ElementNotFoundException('Element "'.$element.'" not found');
   }
-  
+
   /**
    * Register a class loader as a delegate
    *
