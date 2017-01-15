@@ -78,9 +78,11 @@ final class ClassLoader extends Object implements IClassLoader {
     }
 
     // BC: If autoload.php did not define a module, check module.xp
-    if (!isset(self::$modules[$id]) && $cl->providesResource('module.xp')) {
+    if (!isset(self::$modules[$id])) {
       self::$modules[$id]= Module::$INCOMPLETE;
-      self::$modules[$id]= Module::register(self::declareModule($cl));
+      if ($cl->providesResource('module.xp')) {
+        self::$modules[$id]= Module::register(self::declareModule($cl));
+      }
     }
   }
 
@@ -197,10 +199,8 @@ final class ClassLoader extends Object implements IClassLoader {
     if (isset(self::$delegates[$id])) {
       unset(self::$delegates[$id]);
 
-      if (isset(self::$modules[$id])) {
-        if (Module::$INCOMPLETE !== self::$modules[$id]) {
-          Module::remove(self::$modules[$id]);
-        }
+      if (Module::$INCOMPLETE !== self::$modules[$id]) {
+        Module::remove(self::$modules[$id]);
         unset(self::$modules[$id]);
       }
       return true;
