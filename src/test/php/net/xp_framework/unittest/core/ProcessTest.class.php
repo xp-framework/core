@@ -214,8 +214,9 @@ class ProcessTest extends \unittest\TestCase {
 
   #[@test]
   public function mirror_is_not_running() {
-    $p= new Process($this->executable(), $this->arguments('-r', 'exit(0);'));
+    $p= new Process($this->executable(), $this->arguments('-r', 'fgets(STDIN, 8192); exit(0);'));
     $mirror= Process::getProcessById($p->getProcessId());
+    $p->in->write("\n");
     $p->close();
     $this->assertFalse($mirror->running());
   }
