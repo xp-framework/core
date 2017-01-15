@@ -42,9 +42,12 @@ final class ClassLoader extends Object implements IClassLoader {
     $delegates = [],
     $modules   = [];
 
-  static function __static() {
-    
-    // Scan include-path, setting up classloaders for each unique element
+  /**
+   * Scan include-path, setting up classloaders for each unique element
+   *
+   * @return void
+   */
+  public static function bootstrap() {
     foreach (\xp::$classpath as $element) {
       if (DIRECTORY_SEPARATOR === $element{strlen($element) - 1}) {
         $cl= FileSystemClassLoader::instanceFor($element, false);
@@ -56,7 +59,6 @@ final class ClassLoader extends Object implements IClassLoader {
       isset(self::$delegates[$id]) || self::$delegates[$id]= $cl;
     }
 
-    // Initialize
     \xp::$loader= new self();
     foreach (self::$delegates as $id => $delegate) {
       self::initialize($id, $delegate);
