@@ -50,31 +50,31 @@ class CodeTest extends \unittest\TestCase {
   }
 
   #[@test, @values([
-  #  'use util\Date; Date::now()',
-  #  'use util\Date, util\TimeZone; Date::now()',
-  #  'use util\Date; use util\TimeZone; Date::now()',
-  #  'use util\{Date, TimeZone}; Date::now()',
-  #  ' use util\Date; Date::now()',
-  #  '<?php use util\Date; Date::now()',
-  #  '<?php  use util\Date; Date::now()',
-  #  "<?php\nuse util\Date; Date::now()"
+  #  'use util\Date; test()',
+  #  'use util\Date, util\TimeZone; test()',
+  #  'use util\Date; use util\TimeZone; test()',
+  #  'use util\{Date, TimeZone}; test()',
+  #  ' use util\Date; test()',
+  #  '<?php use util\Date; test()',
+  #  '<?php  use util\Date; test()',
+  #  "<?php\nuse util\Date; test()"
   #])]
   public function use_is_stripped_from_fragment($input) {
-    $this->assertEquals('Date::now();', (new Code($input))->fragment());
+    $this->assertEquals('test();', (new Code($input))->fragment());
   }
 
   #[@test, @values([
-  #  'use util\Date; Date::now()',
-  #  'use util\Date, util\TimeZone; Date::now()',
-  #  'use util\Date; use util\TimeZone; Date::now()',
-  #  'use util\{Date, TimeZone}; Date::now()',
-  #  ' use util\Date; Date::now()',
-  #  '<?php use util\Date; Date::now()',
-  #  '<?php  use util\Date; Date::now()',
-  #  "<?php\nuse util\Date; Date::now()"
+  #  'use util\Date; test()',
+  #  'use util\Date, util\TimeZone; test()',
+  #  'use util\Date; use util\TimeZone; test()',
+  #  'use util\{Date, TimeZone}; test()',
+  #  ' use util\Date; test()',
+  #  '<?php use util\Date; test()',
+  #  '<?php  use util\Date; test()',
+  #  "<?php\nuse util\Date; test()"
   #])]
   public function use_is_stripped_from_expression($input) {
-    $this->assertEquals('return Date::now();', (new Code($input))->expression());
+    $this->assertEquals('return test();', (new Code($input))->expression());
   }
 
   #[@test]
@@ -110,26 +110,37 @@ class CodeTest extends \unittest\TestCase {
 
   #[@test]
   public function code_with_grouped_import() {
-    $this->assertEquals(['util\Date', 'util\TimeZone'], (new Code('use util\{Date, TimeZone}; "Test"'))->imports());
+    $this->assertEquals(['util\Date', 'util\TimeZone'], (new Code('use util\{Date, TimeZone}; test();'))->imports());
+  }
+
+  #[@test]
+  public function code_with_import_from_module() {
+    $this->assertEquals(['util\data\Sequence'], (new Code('use util\data\Sequence from "xp-forge/sequence"'))->imports());
   }
 
   #[@test]
   public function head_with_no_import() {
-    $this->assertEquals('', (new Code('"Test"'))->head(false));
+    $this->assertEquals('', (new Code('test();'))->head());
   }
 
   #[@test]
   public function head_with_single_import() {
-    $this->assertEquals('use util\Date;', (new Code('use util\Date; "Test"'))->head(false));
+    $this->assertEquals('use util\Date;', (new Code('use util\Date; test();'))->head());
   }
 
   #[@test, @values([
-  #  'use util\Date, util\TimeZone; Date::now()',
-  #  'use util\Date; use util\TimeZone; Date::now()',
-  #  'use util\{Date, TimeZone}; Date::now()'
+  #  'use util\Date, util\TimeZone; test()',
+  #  'use util\Date; use util\TimeZone; test()',
+  #  'use util\{Date, TimeZone}; test()',
+  #  "use util\Date;\nuse util\TimeZone;\ntest()"
   #])]
   public function head_with_multiple_imports($input) {
-    $this->assertEquals('use util\Date, util\TimeZone;', (new Code($input))->head(false));
+    $this->assertEquals('use util\Date, util\TimeZone;', (new Code($input))->head());
+  }
+
+  #[@test]
+  public function head_with_namespace() {
+    $this->assertEquals('namespace test;', (new Code('namespace test; test();'))->head());
   }
 
   #[@test, @values([
@@ -138,5 +149,15 @@ class CodeTest extends \unittest\TestCase {
   #])]
   public function fragment_with_shebang($variation) {
     $this->assertEquals('exit();', (new Code($variation."\n<?php exit();"))->fragment());
+  }
+
+  #[@test]
+  public function modules_for_code_with_import_without_module() {
+    $this->assertEquals([], (new Code('use util\data\Sequence;'))->modules()->all());
+  }
+
+  #[@test]
+  public function modules_for_code_with_import_from_module() {
+    $this->assertEquals(['xp-forge/sequence'], (new Code('use util\data\Sequence from "xp-forge/sequence";'))->modules()->all());
   }
 }

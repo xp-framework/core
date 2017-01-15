@@ -26,8 +26,6 @@ class Evaluate {
       $code= new Code($args[0]);
     }
 
-    // Perform
-    $argv= [XPClass::nameOf(self::class)] + $args;
-    return eval($code->head().$code->fragment());
+    return $code->run($code->fragment(), [XPClass::nameOf(self::class)] + $args);
   }
 }

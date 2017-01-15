@@ -15,10 +15,9 @@ class Dump {
    */
   public static function main(array $args) {
     $way= array_shift($args);
-    $argc= sizeof($args);
 
     // Read sourcecode from STDIN if no further argument is given
-    if (0 === $argc) {
+    if (empty($args)) {
       $code= new Code(file_get_contents('php://stdin'));
     } else if ('--' === $args[0]) {
       $code= new Code(file_get_contents('php://stdin'));
@@ -27,8 +26,7 @@ class Dump {
     }
 
     // Perform
-    $argv= [XPClass::nameOf(self::class)] + $args;
-    $return= eval($code->head().$code->expression());
+    $return= $code->run($code->expression(), [XPClass::nameOf(self::class)] + $args);
     switch ($way) {
       case '-w': Console::writeLine($return); break;
       case '-d': var_dump($return); break;
