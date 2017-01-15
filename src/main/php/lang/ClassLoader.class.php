@@ -43,28 +43,51 @@ final class ClassLoader extends Object implements IClassLoader {
     $modules   = [];
 
   static function __static() {
-    $modules= [];
     
-    // Scan include-path, setting up classloaders for each element
+    // Scan include-path, setting up classloaders for each unique element
     foreach (\xp::$classpath as $element) {
       if (DIRECTORY_SEPARATOR === $element{strlen($element) - 1}) {
         $cl= FileSystemClassLoader::instanceFor($element, false);
       } else {
         $cl= ArchiveClassLoader::instanceFor($element, false);
       }
-      if (isset(self::$delegates[$cl->instanceId()])) continue;
 
-      self::$delegates[$cl->instanceId()]= $cl;
-      if ($cl->providesResource('module.xp')) $modules[]= $cl;
+      $id= $cl->instanceId();
+      isset(self::$delegates[$id]) || self::$delegates[$id]= $cl;
     }
 
-    // Initialize modules
+    // Initialize
     \xp::$loader= new self();
-    foreach ($modules as $cl) {
-      self::$modules[$cl->instanceId()]= Module::register(self::declareModule($cl));
+    foreach (self::$delegates as $id => $delegate) {
+      self::initialize($id, $delegate);
     }
   }
-  
+
+  /**
+   * Initialize a classloader delegate
+   *
+   * @param  string $id
+   * @param  lang.IClassLoader $cl
+   */
+  private static function initialize($id, $cl) {
+    self::$modules[$id]= Module::$INCOMPLETE;
+
+    try {
+      $module= null;
+      if ($cl->providesResource('/autoload.php')) {
+        require($cl->getResourceAsStream('/autoload.php')->getURI());
+      }
+      if ($module) {
+        self::$modules[$id]= Module::register($module);
+      } else if ($cl->providesResource('module.xp')) {
+        self::$modules[$id]= Module::register(self::declareModule($cl));
+      }
+    } catch (Throwable $e) {
+      unset(self::$delegates[$id], self::$modules[$id]);
+      throw $e;
+    }
+  }
+
   /**
    * Retrieve the default class loader
    *
@@ -114,15 +137,7 @@ final class ClassLoader extends Object implements IClassLoader {
       self::$delegates[$id]= $l;
     }
 
-    if (!isset(self::$modules[$id]) && $l->providesResource('module.xp')) {
-      self::$modules[$id]= Module::$INCOMPLETE;
-      try {
-        self::$modules[$id]= Module::register(self::declareModule($l));
-      } catch (Throwable $e) {
-        unset(self::$delegates[$id], self::$modules[$id]);
-        throw $e;
-      }
-    }
+    isset(self::$modules[$id]) || self::initialize($id, $l);
     return $l;
   }
 
@@ -170,10 +185,8 @@ final class ClassLoader extends Object implements IClassLoader {
     if (isset(self::$delegates[$id])) {
       unset(self::$delegates[$id]);
 
-      if (isset(self::$modules[$id])) {
-        if (Module::$INCOMPLETE !== self::$modules[$id]) {
-          Module::remove(self::$modules[$id]);
-        }
+      if (Module::$INCOMPLETE !== self::$modules[$id]) {
+        Module::remove(self::$modules[$id]);
         unset(self::$modules[$id]);
       }
       return true;
