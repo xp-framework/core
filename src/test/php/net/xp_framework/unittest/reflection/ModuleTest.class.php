@@ -142,8 +142,8 @@ class ModuleTest extends \unittest\TestCase {
   #[@test]
   public function method() {
     $module= new Module('xp-framework/loaded1', $this->cl, [
-      'method'   => function() { return 'test'; },
-      'finalize' => function(...$args) use(&$invoked) { $invoked[]= $this->method(); }
+      'method'   => function($arg) { return strtolower($arg); },
+      'finalize' => function(...$args) use(&$invoked) { $invoked[]= $this->method('Test'); }
     ]);
 
     $invoked= null;
