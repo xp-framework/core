@@ -197,12 +197,10 @@ final class ClassLoader extends Object implements IClassLoader {
   public static function removeLoader(IClassLoader $l) {
     $id= $l->instanceId();
     if (isset(self::$delegates[$id])) {
-      unset(self::$delegates[$id]);
-
       if (Module::$INCOMPLETE !== self::$modules[$id]) {
         Module::remove(self::$modules[$id]);
       }
-      unset(self::$modules[$id]);
+      unset(self::$delegates[$id], self::$modules[$id]);
       return true;
     }
     return false;
