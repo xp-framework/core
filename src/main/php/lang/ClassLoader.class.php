@@ -197,8 +197,10 @@ final class ClassLoader extends Object implements IClassLoader {
     if (isset(self::$delegates[$id])) {
       unset(self::$delegates[$id]);
 
-      if (Module::$INCOMPLETE !== self::$modules[$id]) {
-        Module::remove(self::$modules[$id]);
+      if (isset(self::$modules[$id])) {
+        if (Module::$INCOMPLETE !== self::$modules[$id]) {
+          Module::remove(self::$modules[$id]);
+        }
         unset(self::$modules[$id]);
       }
       return true;
