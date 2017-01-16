@@ -6,7 +6,7 @@ http://www.opensource.org/licenses/bsd-license.php
 
 This is the licence's text:
 ```
-Copyright (c) 2001-2016, XP-Framework Team
+Copyright (c) 2001-2017, XP-Framework Team
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

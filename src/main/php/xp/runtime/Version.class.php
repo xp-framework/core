@@ -49,7 +49,7 @@ class Version {
         zend_version(),
         php_uname()
       );
-      Console::writeLine('Copyright (c) 2001-2016 the XP group');
+      Console::writeLine('Copyright (c) 2001-2017 the XP group');
       foreach (\lang\ClassLoader::getLoaders() as $delegate) {
         Console::writeLine($delegate->toString());
       }

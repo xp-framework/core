@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 8.1.1 / 2017-01-16
+
+### Bugfixes
+
+* Fixed flaky test for Process class if process exited too quickly - @thekid
+
 ## 8.1.0 / 2016-12-18
 
 ### Features
