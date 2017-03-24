@@ -51,27 +51,12 @@ class URI implements Value {
     }
   }
 
-  private function resolve0($authority, $path, $query, $fragment) {
-    if ($authority) {
-      $this->authority= $authority;
-      $this->path= $path;
-    } else if (null === $path) {
-      // Do not change this instance's path
-    } else if ('/' === $path{0}) {
-      $this->path= $path;
-    } else if (null === $this->path) {
-      $this->path= '/'.$path;
-    } else if ('/' === $this->path{strlen($this->path)- 1}) {
-      $this->path= $this->path.$path;
-    } else {
-      $this->path= substr($this->path, 0, strpos($this->path, '/')).'/'.$path;
-    }
-
-    $this->query= $query;
-    $this->fragment= $fragment;
-    return $this;
-  }
-
+  /**
+   * Parse relative URI into authority, path, query and fragment
+   *
+   * @param  string $relative
+   * @return var[]
+   */
   private function parse($relative) {
     if (0 === strlen($relative)) {
       throw new FormatException('Cannot parse empty input');
@@ -90,6 +75,35 @@ class URI implements Value {
     $fragment= isset($matches[7]) && '' !== $matches[7] ? substr($matches[7], 1) : null;
 
     return [$authority, $path, $query, $fragment];
+  }
+
+  /**
+   * Resolve authority, path, query and fragment against this URI
+   *
+   * @param  util.Authority $authority
+   * @param  string $path
+   * @param  string $query
+   * @param  string $fragment
+   * @return void
+   */
+  private function resolve0($authority, $path, $query, $fragment) {
+    if ($authority) {
+      $this->authority= $authority;
+      $this->path= $path;
+    } else if (null === $path) {
+      // Do not change this instance's path
+    } else if ('/' === $path{0}) {
+      $this->path= $path;
+    } else if (null === $this->path) {
+      $this->path= '/'.$path;
+    } else if ('/' === $this->path{strlen($this->path)- 1}) {
+      $this->path= $this->path.$path;
+    } else {
+      $this->path= substr($this->path, 0, strpos($this->path, '/')).'/'.$path;
+    }
+
+    $this->query= $query;
+    $this->fragment= $fragment;
   }
 
   /**
@@ -167,7 +181,9 @@ class URI implements Value {
     if ($uri->scheme) {
       return $uri;
     } else {
-      return (clone $this)->resolve0($uri->authority, $uri->path, $uri->query, $uri->fragment);
+      $result= clone $this;
+      $result->resolve0($uri->authority, $uri->path, $uri->query, $uri->fragment);
+      return $result;
     }
   }
 
