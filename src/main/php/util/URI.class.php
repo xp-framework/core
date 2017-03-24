@@ -94,7 +94,7 @@ class URI implements Value {
       $this->authority= $authority;
       $this->path= $path;
     } else if (null === $path) {
-      // Do not change this instance's path
+      if (null === $query) $query= $this->query;
     } else if ('/' === $path{0}) {
       $this->path= $path;
     } else if (null === $this->path) {

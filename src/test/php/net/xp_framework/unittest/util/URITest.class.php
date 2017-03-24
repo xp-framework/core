@@ -355,6 +355,7 @@ class URITest extends \unittest\TestCase {
   #  [new URI('http://localhost'), 'index.html', new URI('http://localhost/index.html')],
   #  [new URI('http://localhost'), '?a=b', new URI('http://localhost?a=b')],
   #  [new URI('http://localhost'), '#top', new URI('http://localhost#top')],
+  #  [new URI('http://localhost?a=b'), '#top', new URI('http://localhost?a=b#top')],
   #  [new URI('http://localhost'), 'index.html?a=b', new URI('http://localhost/index.html?a=b')],
   #  [new URI('http://localhost'), 'index.html#top', new URI('http://localhost/index.html#top')],
   #  [new URI('http://localhost/home.html'), 'index.html', new URI('http://localhost/index.html')],
