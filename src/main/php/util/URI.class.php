@@ -26,6 +26,7 @@ class URI implements Value {
    * Creates a URI instance, either by parsing a string or by using a
    * given `URICreation` instance, which offers a fluent interface.
    *
+   * @see    https://tools.ietf.org/html/rfc3986#section-1.1.2
    * @param  string|util.URICreation $arg
    * @throws lang.FormatException if string argument cannot be parsed
    */
@@ -36,8 +37,24 @@ class URI implements Value {
       $this->path= $arg->path;
       $this->query= $arg->query;
       $this->fragment= $arg->fragment;
+    } else if (preg_match('!^([a-zA-Z][a-zA-Z0-9\+]*):(//([^/?#]*)(/[^?#]*)?|([^?#]+))(\?[^#]*)?(#.*)?!', $arg, $matches)) {
+      $this->scheme= $matches[1];
+
+      if (isset($matches[5]) && '' !== $matches[5]) {   // E.g. mailto:test@example.com
+        $this->authority= null;
+        $this->path= $matches[5];
+      } else if ('' === $matches[3]) {                  // E.g. file:///usr/local/etc/php.ini
+        $this->authority= Authority::$EMPTY;
+        $this->path= $matches[4];
+      } else {                                          // E.g. http://example.com/
+        $this->authority= Authority::parse($matches[3]);
+        $this->path= $matches[4] ?? null;
+      }
+
+      $this->query= isset($matches[6]) && '' !== $matches[6] ? substr($matches[6], 1) : null;
+      $this->fragment= isset($matches[7]) && '' !== $matches[7] ? substr($matches[7], 1) : null;
     } else {
-      $this->parse($arg);
+      throw new FormatException('Cannot parse "'.$arg.'"');
     }
   }
 
@@ -56,37 +73,13 @@ class URI implements Value {
   public static function with(): URICreation { return new URICreation(); }
 
   /**
-   * Parses a given input string
+   * Use a fluent interface to create a new URI based on this URI
    *
-   * @see    https://tools.ietf.org/html/rfc3986#section-1.1.2
-   * @param  string $input
-   * @return void
-   * @throws lang.FormatException if string argument cannot be parsed
+   * ```php
+   * $uri= (new URI('http://example.com'))->using()->scheme('https')->create();
+   * ```
    */
-  private function parse($input) {
-    if (!preg_match('!^([a-zA-Z][a-zA-Z0-9\+]*):(//([^/?#]*)(/[^?#]*)?|([^?#]+))(\?[^#]*)?(#.*)?!', $input, $matches)) {
-      throw new FormatException('Cannot parse "'.$input.'"');
-    }
-
-    $this->scheme= $matches[1];
-
-    if (isset($matches[5]) && '' !== $matches[5]) {   // E.g. mailto:test@example.com
-      $this->authority= null;
-      $this->path= $matches[5];
-    } else if ('' === $matches[3]) {                  // E.g. file:///usr/local/etc/php.ini
-      $this->authority= Authority::$EMPTY;
-      $this->path= $matches[4];
-    } else {                                          // E.g. http://example.com/
-      $this->authority= Authority::parse($matches[3]);
-      $this->path= $matches[4] ?? null;
-    }
-
-    $this->query= isset($matches[6]) && '' !== $matches[6] ? substr($matches[6], 1) : null;
-    $this->fragment= isset($matches[7]) && '' !== $matches[7] ? substr($matches[7], 1) : null;
-  }
-
-  /** @return util.URICreation */
-  public function using() { return new URICreation($this); }
+  public function using(): URICreation { return new URICreation($this); }
 
   /** @return bool */
   public function isOpaque() { return null === $this->authority; }
