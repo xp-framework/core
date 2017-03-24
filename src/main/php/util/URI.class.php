@@ -16,6 +16,9 @@ use lang\{Value, FormatException};
  *   urn:example:animal:ferret:nose
  * ```
  *
+ * This class implements a URI reference, which is either a
+ * URI or a relative reference.
+ *
  * @see   https://tools.ietf.org/html/rfc3986
  * @test  xp://net.xp_framework.unittest.util.URITest
  */
