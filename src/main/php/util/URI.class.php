@@ -49,6 +49,7 @@ class URI implements Value {
    *   ->scheme('http')
    *   ->authority('example.com')
    *   ->path('/index')
+   *   ->create();
    * ;
    * ```
    */
@@ -84,6 +85,9 @@ class URI implements Value {
     $this->fragment= isset($matches[7]) && '' !== $matches[7] ? substr($matches[7], 1) : null;
   }
 
+  /** @return util.URICreation */
+  public function using() { return new URICreation($this); }
+
   /** @return bool */
   public function isOpaque() { return null === $this->authority; }
 
@@ -116,9 +120,6 @@ class URI implements Value {
 
   /** @return self */
   public function canonicalize() { return (new URICanonicalization())->canonicalize($this); }
-
-  /** @return util.URICreation */
-  public function using() { return new URICreation($this); }
 
   /**
    * Helper to create a string representations.
