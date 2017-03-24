@@ -349,6 +349,9 @@ class URITest extends \unittest\TestCase {
   }
 
   #[@test, @values([
+  #  [new URI('/'), 'index.html', new URI('/index.html')],
+  #  [new URI('/home/'), 'index.html', new URI('/home/index.html')],
+  #  [new URI('file:///var/www-data/'), 'index.html', new URI('file:///var/www-data/index.html')],
   #  [new URI('http://localhost'), 'index.html', new URI('http://localhost/index.html')],
   #  [new URI('http://localhost'), '?a=b', new URI('http://localhost?a=b')],
   #  [new URI('http://localhost'), '#top', new URI('http://localhost#top')],
