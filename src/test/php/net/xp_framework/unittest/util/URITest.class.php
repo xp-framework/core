@@ -34,13 +34,23 @@ class URITest extends \unittest\TestCase {
   }
 
   #[@test, @values([
+  #  'http://example.com',
+  #  'http://example.com:8080',
+  #  'http://user:pass@example.com',
+  #  'ldap://example.com/c=GB?objectClass?one'
+  #])]
+  public function domain_as_host($uri) {
+    $this->assertEquals('example.com', (new URI($uri))->host());
+  }
+
+  #[@test, @values([
   #  'http://127.0.0.1',
   #  'http://127.0.0.1:8080',
   #  'http://user:pass@127.0.0.1',
   #  'ldap://127.0.0.1/c=GB?objectClass?one'
   #])]
   public function ipv4_address_as_host($uri) {
-    $this->assertEquals('127.0.0.1', (new URI($uri))->authority()->host());
+    $this->assertEquals('127.0.0.1', (new URI($uri))->host());
   }
 
   #[@test, @values([
@@ -50,17 +60,17 @@ class URITest extends \unittest\TestCase {
   #  'ldap://[::1]/c=GB?objectClass?one'
   #])]
   public function ipv6_address_as_host($uri) {
-    $this->assertEquals('[::1]', (new URI($uri))->authority()->host());
+    $this->assertEquals('[::1]', (new URI($uri))->host());
   }
 
   #[@test]
   public function without_port() {
-    $this->assertEquals(null, (new URI('http://example.com'))->authority()->port());
+    $this->assertEquals(null, (new URI('http://example.com'))->port());
   }
 
   #[@test]
   public function with_port() {
-    $this->assertEquals(8080, (new URI('http://example.com:8080'))->authority()->port());
+    $this->assertEquals(8080, (new URI('http://example.com:8080'))->port());
   }
 
   #[@test]
@@ -89,17 +99,17 @@ class URITest extends \unittest\TestCase {
   #  'http://api:secret@example.com:8080',
   #])]
   public function with_user($uri) {
-    $this->assertEquals('api', (new URI($uri))->authority()->user());
+    $this->assertEquals('api', (new URI($uri))->user());
   }
 
   #[@test]
   public function without_user() {
-    $this->assertEquals(null, (new URI('http://example.com'))->authority()->user());
+    $this->assertEquals(null, (new URI('http://example.com'))->user());
   }
 
   #[@test]
   public function urlencoded_user() {
-    $this->assertEquals('u:root', (new URI('http://u%3Aroot@example.com'))->authority()->user());
+    $this->assertEquals('u:root', (new URI('http://u%3Aroot@example.com'))->user());
   }
 
   #[@test, @values([
@@ -107,17 +117,17 @@ class URITest extends \unittest\TestCase {
   #  'http://api:secret@example.com:8080'
   #])]
   public function with_password($uri) {
-    $this->assertEquals('secret', (new URI($uri))->authority()->password()->reveal());
+    $this->assertEquals('secret', (new URI($uri))->password()->reveal());
   }
 
   #[@test]
   public function without_password() {
-    $this->assertEquals(null, (new URI('http://example.com'))->authority()->password());
+    $this->assertEquals(null, (new URI('http://example.com'))->password());
   }
 
   #[@test]
   public function urlencoded_password() {
-    $this->assertEquals('p:secret', (new URI('http://u%3Aroot:p%3Asecret@example.com'))->authority()->password()->reveal());
+    $this->assertEquals('p:secret', (new URI('http://u%3Aroot:p%3Asecret@example.com'))->password()->reveal());
   }
 
   #[@test]

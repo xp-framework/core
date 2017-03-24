@@ -94,6 +94,18 @@ class URI implements Value {
   public function authority($default= null) { return $this->authority ?? $default; }
 
   /** @return string */
+  public function host() { return $this->authority ? $this->authority->host() : null; }
+
+  /** @return int */
+  public function port() { return $this->authority ? $this->authority->port() : null; }
+
+  /** @return string */
+  public function user() { return $this->authority ? $this->authority->user() : null; }
+
+  /** @return util.Secret */
+  public function password() { return $this->authority ? $this->authority->password() : null; }
+
+  /** @return string */
   public function path($default= null) { return $this->path ?? $default; }
 
   /** @return string */
