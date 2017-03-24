@@ -143,7 +143,7 @@ class URI implements Value {
   public function scheme() { return $this->scheme; }
 
   /** @return util.Authority */
-  public function authority($default= null) { return $this->authority ?? $default; }
+  public function authority() { return $this->authority; }
 
   /** @return string */
   public function host() { return $this->authority ? $this->authority->host() : null; }
@@ -158,13 +158,13 @@ class URI implements Value {
   public function password() { return $this->authority ? $this->authority->password() : null; }
 
   /** @return string */
-  public function path($default= null) { return $this->path ?? $default; }
+  public function path() { return $this->path; }
 
   /** @return string */
-  public function query($default= null) { return $this->query ?? $default; }
+  public function query() { return $this->query; }
 
   /** @return string */
-  public function fragment($default= null) { return $this->fragment ?? $default; }
+  public function fragment() { return $this->fragment; }
 
   /** @return self */
   public function canonicalize() { return (new URICanonicalization())->canonicalize($this); }
