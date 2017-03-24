@@ -213,6 +213,10 @@ class URITest extends \unittest\TestCase {
   #  'http://example.com/path/with%2Fslashes',
   #  'http://example.com/path?param=value&ie=utf8#fragment',
   #  'https://example.com',
+  #  'svn+ssh://example.com/repo/trunk',
+  #  'ms-help://section/path/file.htm',
+  #  'h323:seconix.com:1740',
+  #  'soap.beep://stockquoteserver.example.com/StockQuote',
   #  'https://[::1]:443',
   #  'ftp://example.com',
   #  'file:///usr/local/etc/php.ini',
@@ -287,6 +291,24 @@ class URITest extends \unittest\TestCase {
 
   #[@test, @expect(FormatException::class)]
   public function empty_input() {
+    new URI('');
+  }
+
+  #[@test, @expect(FormatException::class), @values([
+  #  '://example.com',
+  #  '0://example.com',
+  #  '-://example.com',
+  #  '+://example.com',
+  #  '.://example.com',
+  #  '0http://example.com',
+  #  '-http://example.com',
+  #  '+http://example.com',
+  #  '.http://example.com',
+  #  'http\\://example.com',
+  #  'http$://example.com',
+  #  '1234://example.com'
+  #])]
+  public function malformed_scheme() {
     new URI('');
   }
 

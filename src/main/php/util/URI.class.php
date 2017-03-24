@@ -41,7 +41,7 @@ class URI implements Value {
       $this->path= $base->path;
       $this->query= $base->query;
       $this->fragment= $base->fragment;
-    } else if (preg_match('/^([a-zA-Z][a-zA-Z0-9\+]*):(.+)/', $base, $matches)) {
+    } else if (preg_match('/^([a-zA-Z][a-zA-Z0-9\+\-\.]*):(.+)/', $base, $matches)) {
       $this->scheme= $matches[1];
       list($this->authority, $this->path, $this->query, $this->fragment)= $this->parse($matches[2]);
     } else {
@@ -83,6 +83,7 @@ class URI implements Value {
   /**
    * Resolve authority, path, query and fragment against this URI
    *
+   * @see    https://tools.ietf.org/html/rfc3986#section-5.2.2
    * @param  util.Authority $authority
    * @param  string $path
    * @param  string $query
