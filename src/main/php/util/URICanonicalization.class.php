@@ -9,7 +9,6 @@ class URICanonicalization {
     'https' => 443,
   ];
 
-
   private function normalize($segment, $default) {
     if (null === $segment) return $default;
 

@@ -27,17 +27,18 @@ class URI implements Value {
    * given `URICreation` instance, which offers a fluent interface.
    *
    * @see    https://tools.ietf.org/html/rfc3986#section-1.1.2
-   * @param  string|util.URICreation $arg
+   * @param  string|util.URICreation $base
+   * @param  string $relative Optional relative URI
    * @throws lang.FormatException if string argument cannot be parsed
    */
-  public function __construct($arg) {
-    if ($arg instanceof URICreation) {
-      $this->scheme= $arg->scheme;
-      $this->authority= $arg->authority;
-      $this->path= $arg->path;
-      $this->query= $arg->query;
-      $this->fragment= $arg->fragment;
-    } else if (preg_match('!^([a-zA-Z][a-zA-Z0-9\+]*):(//([^/?#]*)(/[^?#]*)?|([^?#]+))(\?[^#]*)?(#.*)?!', $arg, $matches)) {
+  public function __construct($base, $relative= null) {
+    if ($base instanceof URICreation) {
+      $this->scheme= $base->scheme;
+      $this->authority= $base->authority;
+      $this->path= $base->path;
+      $this->query= $base->query;
+      $this->fragment= $base->fragment;
+    } else if (preg_match('!^([a-zA-Z][a-zA-Z0-9\+]*):(//([^/?#]*)(/[^?#]*)?|([^?#]+))(\?[^#]*)?(#.*)?!', $base, $matches)) {
       $this->scheme= $matches[1];
 
       if (isset($matches[5]) && '' !== $matches[5]) {   // E.g. mailto:test@example.com
@@ -53,9 +54,21 @@ class URI implements Value {
 
       $this->query= isset($matches[6]) && '' !== $matches[6] ? substr($matches[6], 1) : null;
       $this->fragment= isset($matches[7]) && '' !== $matches[7] ? substr($matches[7], 1) : null;
+      $matches= [];
     } else {
-      throw new FormatException('Cannot parse "'.$arg.'"');
+      throw new FormatException('Cannot parse "'.$base.'"');
     }
+
+    preg_match('!^([^?#]*)(\?[^#]*)?(#.*)?!', $relative, $matches);
+    if ('' === $matches[1]) {
+      // Empty path
+    } else if ('/' === $matches[1]{0}) {
+      $this->path= $matches[1];
+    } else {
+      $this->path= rtrim($this->path, '/').'/'.$matches[1];
+    }
+    isset($matches[2]) && '' !== $matches[2] && $this->query= substr($matches[2], 1);
+    isset($matches[3]) && '' !== $matches[3] && $this->fragment= substr($matches[3], 1);
   }
 
   /**

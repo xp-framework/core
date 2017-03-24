@@ -309,4 +309,34 @@ class URITest extends \unittest\TestCase {
       (new URI('ftp://cnn.example.com&story=breaking_news@10.0.0.1/top_story.htm'))->authority()->user()
     );
   }
+
+  #[@test, @values([
+  #  [new URI('http://localhost', 'index.html')],
+  #  [new URI('http://localhost/', 'index.html')],
+  #  [new URI('http://localhost/.', 'index.html')],
+  #  [new URI('http://localhost/./', 'index.html')],
+  #  [new URI('http://localhost/home', '../index.html')],
+  #  [new URI('http://localhost/home/', '../index.html')]
+  #])]
+  public function with_relative_part($uri) {
+    $this->assertEquals(new URI('http://localhost/index.html'), $uri->canonicalize());
+  }
+
+  #[@test, @values([
+  #  [new URI('http://localhost', '?a=b')],
+  #  [new URI('http://localhost/', '?a=b')],
+  #  [new URI('http://localhost/.', '?a=b')]
+  #])]
+  public function with_relative_part_including_query($uri) {
+    $this->assertEquals(new URI('http://localhost/?a=b'), $uri->canonicalize());
+  }
+
+  #[@test, @values([
+  #  [new URI('http://localhost', '#top')],
+  #  [new URI('http://localhost/', '#top')],
+  #  [new URI('http://localhost/.', '#top')]
+  #])]
+  public function with_relative_part_including_fragment($uri) {
+    $this->assertEquals(new URI('http://localhost/#top'), $uri->canonicalize());
+  }
 }
