@@ -53,7 +53,7 @@ class Authority implements Value {
    */
   public static function parse($input) {
     if (!preg_match('!^(([^:@]+)(:([^@]+))?@)?([a-zA-Z0-9\.-]+|\[[^\]]+\])(:([0-9]+))?$!', $input, $matches)) {
-      throw new FormatException('Cannot parse "'.$input.'": Authority malformed');
+      throw new FormatException('Authority "'.$input.'" malformed');
     }
 
     return new self(

@@ -41,9 +41,12 @@ class URI implements Value {
       $this->path= $base->path;
       $this->query= $base->query;
       $this->fragment= $base->fragment;
-    } else if (preg_match('/^([a-zA-Z][a-zA-Z0-9\+\-\.]*):(.+)/', $base, $matches)) {
-      $this->scheme= $matches[1];
-      list($this->authority, $this->path, $this->query, $this->fragment)= $this->parse($matches[2]);
+    } else if (false !== ($p= strpos($base, ':'))) {
+      $this->scheme= substr($base, 0, $p);
+      if (!preg_match('!^([a-zA-Z][a-zA-Z0-9+.-]*)$!', $this->scheme)) {
+        throw new FormatException('Scheme "'.$this->scheme.'" malformed');
+      }
+      list($this->authority, $this->path, $this->query, $this->fragment)= $this->parse(substr($base, $p + 1));
     } else {
       $this->scheme= null;
       list($this->authority, $this->path, $this->query, $this->fragment)= $this->parse($base);

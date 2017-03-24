@@ -294,7 +294,7 @@ class URITest extends \unittest\TestCase {
     new URI('');
   }
 
-  #[@test, @expect(FormatException::class), @values([
+  #[@test, @expect(class= FormatException::class, withMessage= '/Scheme .+ malformed/'), @values([
   #  '://example.com',
   #  '0://example.com',
   #  '-://example.com',
@@ -306,13 +306,14 @@ class URITest extends \unittest\TestCase {
   #  '.http://example.com',
   #  'http\\://example.com',
   #  'http$://example.com',
-  #  '1234://example.com'
+  #  '1234://example.com',
+  #  'mailto!:test@example.com'
   #])]
-  public function malformed_scheme() {
-    new URI('');
+  public function malformed_scheme($arg) {
+    new URI($arg);
   }
 
-  #[@test, @expect(class= FormatException::class, withMessage= '/Authority malformed/'), @values([
+  #[@test, @expect(class= FormatException::class, withMessage= '/Authority .+ malformed/'), @values([
   #  'http://user:',
   #  'http://user@',
   #  'http://user:password@',
