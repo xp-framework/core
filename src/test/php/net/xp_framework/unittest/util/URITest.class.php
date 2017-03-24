@@ -13,6 +13,14 @@ class URITest extends \unittest\TestCase {
     yield 'urn:isbn:096139210x';
   }
 
+  /** @return iterable */
+  private function hierarchicalUris() {
+    yield 'http://example.com';
+    yield 'http://127.0.0.1:8080';
+    yield 'http://user:pass@[::1]';
+    yield 'ldap://example.com/c=GB?objectClass?one';
+  }
+
   #[@test, @values('opaqueUris')]
   public function opaque_uris($uri) {
     $this->assertTrue((new URI($uri))->isOpaque());
@@ -21,6 +29,16 @@ class URITest extends \unittest\TestCase {
   #[@test, @values('opaqueUris')]
   public function opaque_uris_have_no_authority($uri) {
     $this->assertNull((new URI($uri))->authority());
+  }
+
+  #[@test, @values('hierarchicalUris')]
+  public function hierarchical_uris($uri) {
+    $this->assertFalse((new URI($uri))->isOpaque());
+  }
+
+  #[@test, @values('hierarchicalUris')]
+  public function hierarchical_uris_have_authority($uri) {
+    $this->assertInstanceOf(Authority::class, (new URI($uri))->authority());
   }
 
   #[@test]
