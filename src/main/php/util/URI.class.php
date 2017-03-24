@@ -38,37 +38,58 @@ class URI implements Value {
       $this->path= $base->path;
       $this->query= $base->query;
       $this->fragment= $base->fragment;
-    } else if (preg_match('!^([a-zA-Z][a-zA-Z0-9\+]*):(//([^/?#]*)(/[^?#]*)?|([^?#]+))(\?[^#]*)?(#.*)?!', $base, $matches)) {
+    } else if (preg_match('/^([a-zA-Z][a-zA-Z0-9\+]*):(.+)/', $base, $matches)) {
       $this->scheme= $matches[1];
-
-      if (isset($matches[5]) && '' !== $matches[5]) {   // E.g. mailto:test@example.com
-        $this->authority= null;
-        $this->path= $matches[5];
-      } else if ('' === $matches[3]) {                  // E.g. file:///usr/local/etc/php.ini
-        $this->authority= Authority::$EMPTY;
-        $this->path= $matches[4];
-      } else {                                          // E.g. http://example.com/
-        $this->authority= Authority::parse($matches[3]);
-        $this->path= $matches[4] ?? null;
-      }
-
-      $this->query= isset($matches[6]) && '' !== $matches[6] ? substr($matches[6], 1) : null;
-      $this->fragment= isset($matches[7]) && '' !== $matches[7] ? substr($matches[7], 1) : null;
-      $matches= [];
+      list($this->authority, $this->path, $this->query, $this->fragment)= $this->parse($matches[2]);
     } else {
-      throw new FormatException('Cannot parse "'.$base.'"');
+      $this->scheme= null;
+      list($this->authority, $this->path, $this->query, $this->fragment)= $this->parse($base);
     }
 
-    preg_match('!^([^?#]*)(\?[^#]*)?(#.*)?!', $relative, $matches);
-    if ('' === $matches[1]) {
-      // Empty path
-    } else if ('/' === $matches[1]{0}) {
-      $this->path= $matches[1];
-    } else {
-      $this->path= rtrim($this->path, '/').'/'.$matches[1];
+    if (null !== $relative) {
+      $this->resolve0(...$this->parse($relative));
     }
-    isset($matches[2]) && '' !== $matches[2] && $this->query= substr($matches[2], 1);
-    isset($matches[3]) && '' !== $matches[3] && $this->fragment= substr($matches[3], 1);
+  }
+
+  private function resolve0($authority, $path, $query, $fragment) {
+    if ($authority) {
+      $this->authority= $authority;
+      $this->path= $path;
+    } else if (null === $path) {
+      // Do not change this instance's path
+    } else if ('/' === $path{0}) {
+      $this->path= $path;
+    } else if (null === $this->path) {
+      $this->path= '/'.$path;
+    } else if ('/' === $this->path{strlen($this->path)- 1}) {
+      $this->path= $this->path.$path;
+    } else {
+      $this->path= substr($this->path, 0, strpos($this->path, '/')).'/'.$path;
+    }
+
+    $this->query= $query;
+    $this->fragment= $fragment;
+    return $this;
+  }
+
+  private function parse($relative) {
+    if (0 === strlen($relative)) {
+      throw new FormatException('Cannot parse empty input');
+    }
+
+    preg_match('!^((//)([^/?#]*)(/[^?#]*)?|([^?#]*))(\?[^#]*)?(#.*)?!', $relative, $matches);
+    if ('//' === $matches[2]) {
+      $authority= '' === $matches[3] ? Authority::$EMPTY : Authority::parse($matches[3]);
+      $path= isset($matches[4]) && '' !== $matches[4] ? $matches[4] : null;
+    } else {
+      $authority= null;
+      $path= '' === $matches[5] ? null : $matches[5];
+    }
+
+    $query= isset($matches[6]) && '' !== $matches[6] ? substr($matches[6], 1) : null;
+    $fragment= isset($matches[7]) && '' !== $matches[7] ? substr($matches[7], 1) : null;
+
+    return [$authority, $path, $query, $fragment];
   }
 
   /**
@@ -93,6 +114,9 @@ class URI implements Value {
    * ```
    */
   public function using(): URICreation { return new URICreation($this); }
+
+  /** @return bool */
+  public function isRelative() { return null === $this->scheme; }
 
   /** @return bool */
   public function isOpaque() { return null === $this->authority; }
@@ -128,6 +152,26 @@ class URI implements Value {
   public function canonicalize() { return (new URICanonicalization())->canonicalize($this); }
 
   /**
+   * Resolves another URI against this URI. If the given URI is absolute,
+   * it's returned directly. Otherwise, a new URI is returned; with the
+   * given URI's authority (if any), its path relativized against this URI's
+   * path, and its query and fragment.
+   *
+   * @see    https://tools.ietf.org/html/rfc3986#section-5
+   * @param  string|self $arg
+   * @return self
+   */
+  public function resolve($arg) {
+    $uri= $arg instanceof self ? $arg : new self($arg);
+
+    if ($uri->scheme) {
+      return $uri;
+    } else {
+      return (clone $this)->resolve0($uri->authority, $uri->path, $uri->query, $uri->fragment);
+    }
+  }
+
+  /**
    * Helper to create a string representations.
    *
    * @see    https://tools.ietf.org/html/rfc3986#section-5.3
@@ -135,7 +179,8 @@ class URI implements Value {
    * @return string
    */
   public function asString($reveal) {
-    $s= $this->scheme.':';
+    $s= '';
+    isset($this->scheme) && $s.= $this->scheme.':';
     isset($this->authority) && $s.= '//'.$this->authority->asString($reveal);
     isset($this->path) && $s.= $this->path;
     isset($this->query) && $s.= '?'.$this->query;

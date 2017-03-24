@@ -7,38 +7,50 @@ class URITest extends \unittest\TestCase {
 
   /** @return iterable */
   private function opaqueUris() {
-    yield 'mailto:fred@example.com';
-    yield 'news:comp.infosystems.www.servers.unix';
-    yield 'tel:+1-816-555-1212';
-    yield 'urn:isbn:096139210x';
+    yield [new URI('mailto:fred@example.com')];
+    yield [new URI('news:comp.infosystems.www.servers.unix')];
+    yield [new URI('tel:+1-816-555-1212')];
+    yield [new URI('urn:isbn:096139210x')];
   }
 
   /** @return iterable */
   private function hierarchicalUris() {
-    yield 'http://example.com';
-    yield 'http://127.0.0.1:8080';
-    yield 'http://user:pass@[::1]';
-    yield 'ldap://example.com/c=GB?objectClass?one';
+    yield [new URI('http://example.com')];
+    yield [new URI('http://127.0.0.1:8080')];
+    yield [new URI('http://user:pass@[::1]')];
+    yield [new URI('ldap://example.com/c=GB?objectClass?one')];
+  }
+
+  /** @return iterable */
+  private function relativeUris() {
+    yield [new URI('/index.html')];
+    yield [new URI('../../demo/index.html')];
+    yield [new URI('//example.com/?a=b')];
   }
 
   #[@test, @values('opaqueUris')]
   public function opaque_uris($uri) {
-    $this->assertTrue((new URI($uri))->isOpaque());
-  }
-
-  #[@test, @values('opaqueUris')]
-  public function opaque_uris_have_no_authority($uri) {
-    $this->assertNull((new URI($uri))->authority());
+    $this->assertEquals([true, false], [$uri->isOpaque(), $uri->isRelative()]);
   }
 
   #[@test, @values('hierarchicalUris')]
   public function hierarchical_uris($uri) {
-    $this->assertFalse((new URI($uri))->isOpaque());
+    $this->assertEquals([false, false], [$uri->isOpaque(), $uri->isRelative()]);
+  }
+
+  #[@test, @values('relativeUris')]
+  public function relative_uris($uri) {
+    $this->assertTrue($uri->isRelative());
+  }
+
+  #[@test, @values('opaqueUris')]
+  public function opaque_uris_have_no_authority($uri) {
+    $this->assertNull($uri->authority());
   }
 
   #[@test, @values('hierarchicalUris')]
   public function hierarchical_uris_have_authority($uri) {
-    $this->assertInstanceOf(Authority::class, (new URI($uri))->authority());
+    $this->assertInstanceOf(Authority::class, $uri->authority());
   }
 
   #[@test]
@@ -208,7 +220,8 @@ class URITest extends \unittest\TestCase {
   #  'file:///c|/php/php.ini',
   #  'tel:+1-816-555-1212',
   #  'urn:oasis:names:specification:docbook:dtd:xml:4.1.2',
-  #  'ldap://[2001:db8::7]/c=GB?objectClass?one'
+  #  'ldap://[2001:db8::7]/c=GB?objectClass?one',
+  #  'index.html'
   #])]
   public function string_cast_yields_input($input) {
     $this->assertEquals($input, (string)new URI($input));
@@ -277,11 +290,6 @@ class URITest extends \unittest\TestCase {
     new URI('');
   }
 
-  #[@test, @expect(FormatException::class)]
-  public function missing_scheme() {
-    new URI('example.com');
-  }
-
   #[@test, @expect(class= FormatException::class, withMessage= '/Authority malformed/'), @values([
   #  'http://user:',
   #  'http://user@',
@@ -338,5 +346,26 @@ class URITest extends \unittest\TestCase {
   #])]
   public function with_relative_part_including_fragment($uri) {
     $this->assertEquals(new URI('http://localhost/#top'), $uri->canonicalize());
+  }
+
+  #[@test, @values([
+  #  [new URI('http://localhost'), 'index.html', new URI('http://localhost/index.html')],
+  #  [new URI('http://localhost'), '?a=b', new URI('http://localhost?a=b')],
+  #  [new URI('http://localhost'), '#top', new URI('http://localhost#top')],
+  #  [new URI('http://localhost'), 'index.html?a=b', new URI('http://localhost/index.html?a=b')],
+  #  [new URI('http://localhost'), 'index.html#top', new URI('http://localhost/index.html#top')],
+  #  [new URI('http://localhost/home.html'), 'index.html', new URI('http://localhost/index.html')],
+  #  [new URI('http://localhost?c=d'), 'index.html?a=b', new URI('http://localhost/index.html?a=b')],
+  #  [new URI('http://localhost?c=d'), 'index.html#top', new URI('http://localhost/index.html#top')],
+  #  [new URI('http://localhost#top'), 'index.html', new URI('http://localhost/index.html')],
+  #  [new URI('http://localhost/home/'), 'index.html', new URI('http://localhost/home/index.html')],
+  #  [new URI('http://localhost/home'), '/index.html', new URI('http://localhost/index.html')],
+  #  [new URI('http://localhost'), '//example.com', new URI('http://example.com')],
+  #  [new URI('http://localhost/home'), '//example.com', new URI('http://example.com')],
+  #  [new URI('http://localhost'), 'https://example.com', new URI('https://example.com')],
+  #  [new URI('http://localhost/home'), 'https://example.com', new URI('https://example.com')]
+  #])]
+  public function resolve($uri, $resolve, $result) {
+    $this->assertEquals($result, $uri->resolve($resolve));
   }
 }
