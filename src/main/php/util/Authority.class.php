@@ -11,6 +11,7 @@ use lang\{Value, FormatException};
  * 
  * @see   xp://util.URI#authority
  * @see   https://tools.ietf.org/html/rfc3986#section-3.2
+ * @test  xp://net.xp_framework.unittest.util.AuthorityTest
  */
 class Authority implements Value {
   public static $EMPTY;
@@ -27,13 +28,20 @@ class Authority implements Value {
    * @param  string $host
    * @param  int $port
    * @param  string $user
-   * @param  util.Secret $password
+   * @param  string|util.Secret $password
    */
-  public function __construct($host, $port= null, $user= null, Secret $password= null) {
+  public function __construct($host, $port= null, $user= null, $password= null) {
     $this->host= $host;
     $this->port= $port;
     $this->user= $user;
-    $this->password= $password;
+
+    if (null === $password) {
+      $this->password= null;
+    } else if ($password instanceof Secret) {
+      $this->password= $password;
+    } else {
+      $this->password= new Secret($password);
+    }
   }
 
   /**
