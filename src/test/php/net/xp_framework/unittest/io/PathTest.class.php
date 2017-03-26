@@ -277,6 +277,7 @@ class PathTest extends \unittest\TestCase {
   #[@test, @values([
   #  ['/dev', true], ['/', true],
   #  ['C:/Windows', true], ['C:/', true], ['C:', true],
+  #  ['\\\\remote\\file.txt', true], ['\\\\remote', true],
   #  ['', false], ['.', false], ['..', false],
   #  ['a', false],
   #  ['a/b', false], ['a/b/c', false]
@@ -342,7 +343,7 @@ class PathTest extends \unittest\TestCase {
   #  ['/var', '/var', ''], ['/usr/local', '/usr/bin', '../local'],
   #  ['C:/Windows', 'C:/', 'Windows'], ['C:\Windows', 'C:', 'Windows']
   #])]
-  public function relativeTo($a, $b, $result) {
+  public function relative_to($a, $b, $result) {
     $this->assertEquals($result, (new Path($a))->relativeTo($b)->toString('/'));
   }
 
@@ -363,5 +364,15 @@ class PathTest extends \unittest\TestCase {
   #[@test]
   public function equals_performs_normalization() {
     $this->assertEquals(new Path('.'), new Path('dir/..'));
+  }
+
+  #[@test]
+  public function unc_path() {
+    $this->assertEquals('//remote/file.txt', (new Path('\\\\remote\file.txt'))->toString('/'));
+  }
+
+  #[@test]
+  public function unc_path_as_base() {
+    $this->assertEquals('//remote/file.txt', (new Path('\\\\remote', 'file.txt'))->toString('/'));
   }
 }
