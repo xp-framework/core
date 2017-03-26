@@ -366,12 +366,12 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals(new Path('.'), new Path('dir/..'));
   }
 
-  #[@test]
+  #[@test, @action(new IsPlatform('^Win'))]
   public function unc_path() {
     $this->assertEquals('//remote/file.txt', (new Path('\\\\remote\file.txt'))->toString('/'));
   }
 
-  #[@test]
+  #[@test, @action(new IsPlatform('^Win'))]
   public function unc_path_as_base() {
     $this->assertEquals('//remote/file.txt', (new Path('\\\\remote', 'file.txt'))->toString('/'));
   }
