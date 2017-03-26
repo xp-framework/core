@@ -277,7 +277,6 @@ class PathTest extends \unittest\TestCase {
   #[@test, @values([
   #  ['/dev', true], ['/', true],
   #  ['C:/Windows', true], ['C:/', true], ['C:', true],
-  #  ['\\\\remote\\file.txt', true], ['\\\\remote', true],
   #  ['', false], ['.', false], ['..', false],
   #  ['a', false],
   #  ['a/b', false], ['a/b/c', false]
@@ -364,6 +363,14 @@ class PathTest extends \unittest\TestCase {
   #[@test]
   public function equals_performs_normalization() {
     $this->assertEquals(new Path('.'), new Path('dir/..'));
+  }
+
+  #[@test, @action(new IsPlatform('^Win')), @values([
+  #  ['\\\\remote\\file.txt', true],
+  #  ['\\\\remote', true]
+  #])]
+  public function unc_path_is_absolute() {
+    $this->assertTrue((new Path('\\\\remote\file.txt'))->isAbsolute());
   }
 
   #[@test, @action(new IsPlatform('^Win'))]
