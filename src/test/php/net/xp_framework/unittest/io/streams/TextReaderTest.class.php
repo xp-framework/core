@@ -264,6 +264,26 @@ class TextReaderTest extends \unittest\TestCase {
     $this->assertEquals('utf-16le', $r->charset());
   }
 
+  #[@test, @values([
+  #  "L\000\000\0001\000\000\000\n\000\000\000L\000\000\0002\000\000\000",
+  #  "L\000\000\0001\000\000\000\r\000\000\000L\000\000\0002\000\000\000",
+  #  "L\000\000\0001\000\000\000\r\000\000\000\n\000\000\000L\000\000\0002\000\000\000"
+  #])]
+  public function readLinesUtf32Le($value) {
+    $r= $this->newReader($value, 'utf-32le');
+    $this->assertEquals(['L1', 'L2'], [$r->readLine(), $r->readLine()]);
+  }
+
+  #[@test, @values([
+  #  "\000\000\000L\000\000\0001\000\000\000\n\000\000\000L\000\000\0002",
+  #  "\000\000\000L\000\000\0001\000\000\000\r\000\000\000L\000\000\0002",
+  #  "\000\000\000L\000\000\0001\000\000\000\r\000\000\000\n\000\000\000L\000\000\0002"
+  #])]
+  public function readLinesUtf32Be($value) {
+    $r= $this->newReader($value, 'utf-32be');
+    $this->assertEquals(['L1', 'L2'], [$r->readLine(), $r->readLine()]);
+  }
+
   #[@test]
   public function defaultCharsetIsIso88591() {
     $r= $this->newReader('Übercoder', null);
