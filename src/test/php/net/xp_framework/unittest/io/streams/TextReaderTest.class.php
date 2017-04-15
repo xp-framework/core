@@ -476,4 +476,15 @@ class TextReaderTest extends \unittest\TestCase {
       // OK
     }
   }
+
+  #[@test]
+  public function read_and_readLine() {
+    $reader= $this->newReader("AL1\nBBL2");
+    $this->assertEquals(['A', 'L1', 'BB', 'L2'], [
+      $reader->read(1),
+      $reader->readLine(),
+      $reader->read(2),
+      $reader->readLine()
+    ]);
+  }
 }
