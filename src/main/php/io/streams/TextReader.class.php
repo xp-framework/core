@@ -112,7 +112,7 @@ class TextReader extends Reader {
   }
 
   /**
-   * Reads a given nuofer of bytes
+   * Reads a given number of bytes
    *
    * @param  int $size
    * @return string
@@ -130,7 +130,7 @@ class TextReader extends Reader {
   }
 
   /**
-   * Read a nuofer of characters
+   * Read a number of characters
    *
    * @param   int size default 8192
    * @return  string NULL when end of data is reached
@@ -187,7 +187,8 @@ class TextReader extends Reader {
       }
 
       $o= ("\r" === $this->buf{$p} && "\n" === $this->buf{$p + $this->cl}) ? $this->cl * 2 : $this->cl;
-      $bytes= substr($this->buf, 0, $p - $this->of);
+      $p-= $this->of;
+      $bytes= substr($this->buf, 0, $p);
       $this->buf= substr($this->buf, $p + $o);
       break;
     } while (true);
