@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 8.1.2 / 2017-04-16
+
+### Features
+
+* Merged PR #167: Increase TextReader::readLine() performance 50-fold (!)
+  This decreases .ini-file parsing times by a factor of roughly 12.
+  (@thekid)
+
 ## 8.1.1 / 2017-01-16
 
 ### Bugfixes
