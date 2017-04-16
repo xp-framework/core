@@ -99,7 +99,18 @@ abstract class Console {
   public static function writeLine(... $args) {
     self::$out->writeLine(...$args);
   }
-  
+
+  /**
+   * Writes lines to standard output
+   *
+   * @param   var* args
+   */
+  public static function writeLines() {
+    foreach (func_get_args() as $line) {
+      call_user_func_array(array(self::$out, 'writeLine'), (array)$line);
+    }
+  }
+
   /**
    * Write a formatted string to standard output
    *

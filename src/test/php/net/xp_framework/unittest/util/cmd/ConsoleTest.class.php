@@ -172,6 +172,16 @@ class ConsoleTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function writeLines() {
+    Console::writeLines(
+      ['Hello ', $this->getName()],
+      ['Second line'],
+      'Third line'
+    );
+    $this->assertEquals("Hello writeLines\nSecond line\nThird line\n", $this->streams[1]->getBytes());
+  }
+
+  #[@test]
   public function writeLine_to_standard_out() {
     Console::$out->writeLine('.');
     $this->assertEquals(".\n", $this->streams[1]->getBytes());
