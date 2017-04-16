@@ -42,7 +42,7 @@ class TextReaderTest extends \unittest\TestCase {
    * @param   string $charset
    * @return  io.streams.TextReader
    */
-  protected function newReader($str, $charset= \xp::ENCODING) {
+  private function newReader($str, $charset= \xp::ENCODING) {
     return new TextReader(new MemoryInputStream($str), $charset);
   }
 
@@ -51,18 +51,21 @@ class TextReaderTest extends \unittest\TestCase {
    *
    * @return  io.streams.InputStream
    */
-  protected function unseekableStream() {
+  private function unseekableStream() {
     return new class() implements InputStream {
       public $bytes = "A\nB\n";
       public $offset = 0;
+
       public function read($length= 8192) {
         $chunk= substr($this->bytes, $this->offset, $length);
         $this->offset+= strlen($chunk);
         return $chunk;
       }
+
       public function available() {
         return strlen($this->bytes) - $this->offset;
       }
+
       public function close() { }
     };
   }
