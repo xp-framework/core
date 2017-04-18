@@ -10,7 +10,7 @@ define('SYSTEM_RETURN_CMDNOTEXECUTABLE',   126);
  *
  * @deprecated  Replaced by lang.Environment and lang.Process
  */
-class System extends Object {
+class System {
 
   /**
    * Private helper method. Tries to locate an environment
@@ -151,6 +151,90 @@ class System extends Object {
     }
 
     return rtrim($dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+  }
+
+  /**
+   * Checks whether inside an XDG environment
+   *
+   * @see    https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+   * @return bool
+   */
+  private static function inXdgEnvironment() {
+    static $xdg= null;
+
+    if (null === $xdg) {
+      $xdg= false;
+      foreach ($_ENV as $name => $value) {
+        if (0 === strncmp($name, 'XDG_', 4)) {
+          $xdg= true;
+          break;
+        }
+      }
+    }
+    return $xdg;
+  }
+
+  /**
+   * Returns current user's home directory
+   *
+   * @return string
+   */
+  public static function homeDir() {
+    return rtrim(getenv('HOME') ?: getenv('USERPROFILE'), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+  }
+
+  /**
+   * Returns current user's configuration directory
+   *
+   * - $LOCALAPPDATA/{Named} on Windows
+   * - $XDG_CONFIG_HOME/{named} inside an XDG environment
+   * - $HOME/.{named} otherwise
+   *
+   * @param  string $named Pass NULL to retrieve configuration base directory
+   * @return string
+   */
+  public static function configDir($named= null) {
+    $home= getenv('HOME');
+    if (false === $home) {
+      $base= getenv('LOCALAPPDATA');
+      $dir= ucfirst($named);
+    } else if (self::inXdgEnvironment()) {
+      $base= getenv('XDG_CONFIG_HOME') ?: $home.DIRECTORY_SEPARATOR.'.config';
+      $dir= $named;
+    } else {
+      $base= $home;
+      $dir= '.'.$named;
+    }
+    return rtrim($named ? $base.DIRECTORY_SEPARATOR.$dir : $base, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+  }
+
+  /**
+   * Returns certificates trusted by this system.
+   *
+   * @see    https://github.com/xp-framework/core/issues/150
+   * @see    https://github.com/xp-runners/cert
+   * @param  string $default
+   * @return string
+   * @throws lang.SystemException If nothing is found and no default is given
+   */
+  public static function trustedCertificates($default= null) {
+    if (is_file($certs= getenv('SSL_CERT_FILE'))) {
+      return $certs;
+    }
+
+    if (is_file($bundle= self::configDir('xp').'ca-bundle.crt')) {
+      return $bundle;
+    }
+
+    parse_str(getenv('XP_ENVIRONMENT'), $env);
+    if ($env) {
+      $file= dirname($env['exe']).DIRECTORY_SEPARATOR.'ca-bundle.crt';
+      if (is_file($file)) return $file;
+      $tested[]= '$(dirname '.$env['exe'].')/ca-bundle.crt';
+    }
+
+    if (null !== $default) return $default;
+    throw new SystemException('No ca-bundle.crt found', 2);
   }
 
   /** 
