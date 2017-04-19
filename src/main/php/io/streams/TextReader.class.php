@@ -171,27 +171,28 @@ class TextReader extends Reader {
     if (null === $this->buf) return null;
 
     $this->beginning= false;
-    do {
-      $p= strcspn($this->buf, "\r\n");
-      $l= strlen($this->buf);
-      if ($p >= $l - $this->cl) {
-        $chunk= $this->stream->read();
-        if ('' === $chunk) {
-          if ('' === $this->buf) return null;
-          $bytes= $p === $l ? $this->buf : substr($this->buf, 0, $p - $this->of);
-          $this->buf= null;
-          break;
-        }
-        $this->buf.= $chunk;
-        continue;
-      }
 
+    // Search for \r or \n, whatever comes first. If neither of both can be
+    // found, read another chunk from the underlying stream.
+    read:
+    $p= strcspn($this->buf, "\r\n");
+    $l= strlen($this->buf);
+    if ($p >= $l - $this->cl) {
+      $chunk= $this->stream->read();
+      if ('' === $chunk) {
+        if ('' === $this->buf) return null;
+        $bytes= $p === $l ? $this->buf : substr($this->buf, 0, $p - $this->of);
+        $this->buf= null;
+      } else {
+        $this->buf.= $chunk;
+        goto read;
+      }
+    } else {
       $o= ("\r" === $this->buf{$p} && "\n" === $this->buf{$p + $this->cl}) ? $this->cl * 2 : $this->cl;
       $p-= $this->of;
       $bytes= substr($this->buf, 0, $p);
       $this->buf= substr($this->buf, $p + $o);
-      break;
-    } while (true);
+    }
 
     // echo "<<< '", addcslashes($bytes, "\0..\17!\177..\377"), "'\n";
 
