@@ -194,8 +194,6 @@ class TextReader extends Reader {
       $this->buf= substr($this->buf, $p + $o);
     }
 
-    // echo "<<< '", addcslashes($bytes, "\0..\17!\177..\377"), "'\n";
-
     $line= iconv($this->charset, \xp::ENCODING, $bytes);
     if (false === $line) {
       $message= key(@\xp::$errors[__FILE__][__LINE__ - 2]);
