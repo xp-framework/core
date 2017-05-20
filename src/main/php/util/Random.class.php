@@ -19,7 +19,6 @@ use lang\IllegalArgumentException;
 class Random {
   const SYSTEM  = 'system';
   const OPENSSL = 'openssl';
-  const MCRYPT  = 'mcrypt';   // Deprecated, see https://wiki.php.net/rfc/mcrypt-viking-funeral
   const URANDOM = 'urandom';
   const MTRAND  = 'mtrand';
 
@@ -33,9 +32,6 @@ class Random {
   static function __static() {
     if (function_exists('random_bytes')) {
       self::$sources[self::SYSTEM]= ['bytes' => 'random_bytes', 'ints' => 'random_int'];
-    }
-    if (function_exists('mcrypt_create_iv')) {
-      self::$sources[self::MCRYPT]= ['bytes' => [__CLASS__, self::MCRYPT], 'ints' => null];
     }
     if (strncasecmp(PHP_OS, 'Win', 3) !== 0 && is_readable('/dev/urandom')) {
       self::$sources[self::URANDOM]= ['bytes' => [__CLASS__, self::URANDOM], 'ints' => null];
@@ -63,7 +59,7 @@ class Random {
   /**
    * Creates a new random
    *
-   * @param  string|string[] $sources One or more of SYSTEM, OPENSSL, MCRYPT, URANDOM, MTRAND, BEST, FAST and SECURE
+   * @param  string|string[] $sources One or more of SYSTEM, OPENSSL, URANDOM, MTRAND, BEST, FAST and SECURE
    * @throws lang.IllegalArgumentException
    */
   public function __construct($sources= self::BEST) {
@@ -90,16 +86,6 @@ class Random {
    */
   private static function openssl($limit) {
     return openssl_random_pseudo_bytes($limit);
-  }
-
-  /**
-   * Implementation using MCrypt
-   *
-   * @param  int $limit
-   * @return string $bytes
-   */
-  private static function mcrypt($limit) {
-    return mcrypt_create_iv($limit, MCRYPT_DEV_URANDOM);
   }
 
   /**
