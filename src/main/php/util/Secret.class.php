@@ -23,12 +23,10 @@ use lang\IllegalArgumentException;
  *
  * As a rule of thumb: extract it from the container at the last possible location.
  *
- * @test   xp://net.xp_framework.unittest.util.McryptSecretTest
  * @test   xp://net.xp_framework.unittest.util.OpenSSLSecretTest
  * @test   xp://net.xp_framework.unittest.util.PlainTextSecretTest
  */
 class Secret extends \lang\Object {
-  const BACKING_MCRYPT    = 0x01;
   const BACKING_OPENSSL   = 0x02;
   const BACKING_PLAINTEXT = 0x03;
 
@@ -39,8 +37,6 @@ class Secret extends \lang\Object {
   static function __static() {
     if (Runtime::getInstance()->extensionAvailable('openssl')) {
       self::useBacking(self::BACKING_OPENSSL);
-    } else if (Runtime::getInstance()->extensionAvailable('mcrypt')) {
-      self::useBacking(self::BACKING_MCRYPT);
     } else {
       self::useBacking(self::BACKING_PLAINTEXT);
     }
@@ -49,7 +45,7 @@ class Secret extends \lang\Object {
   /**
    * Switch storage algorithm backing
    *
-   * @param  int $type one of BACKING_MCRYPT, BACKING_OPENSSL, BACKING_PLAINTEXT
+   * @param  int $type one of BACKING_OPENSSL, BACKING_PLAINTEXT
    * @throws lang.IllegalArgumentException If illegal backing type was given
    * @throws lang.IllegalStateException If chosen backing missed a extension dependency
    * @return void
@@ -66,21 +62,6 @@ class Secret extends \lang\Object {
         return self::setBacking(
           function($value) use ($key, $iv) { return openssl_encrypt($value, 'DES', $key,  0, $iv); },
           function($value) use ($key, $iv) { return openssl_decrypt($value, 'DES', $key,  0, $iv); }
-        );
-      }
-
-      case self::BACKING_MCRYPT: {  // Deprecated, see https://wiki.php.net/rfc/mcrypt-viking-funeral
-        if (!Runtime::getInstance()->extensionAvailable('mcrypt')) {
-          throw new IllegalStateException('Backing "mcrypt" required but extension not available.');
-        }
-        $engine= mcrypt_module_open(MCRYPT_DES, '', 'ecb', '');
-        $engineiv= mcrypt_create_iv(mcrypt_enc_get_iv_size($engine), MCRYPT_RAND);
-        $key= substr(md5(uniqid()), 0, mcrypt_enc_get_key_size($engine));
-        mcrypt_generic_init($engine, $key, $engineiv);
-
-        return self::setBacking(
-          function($value) use($engine) { return mcrypt_generic($engine, $value); },
-          function($value) use($engine) { return rtrim(mdecrypt_generic($engine, $value), "\0"); }
         );
       }
 
