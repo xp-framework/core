@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+* Un-deprecated `newinstance()`, which is here to stay. By being able to
+  capture local variables in methods, it is helpful in unittest scenarios
+  and has a clear advantage over PHP's anonymous classes; at least until
+  https://wiki.php.net/rfc/lexical-anon is implemented.
+  (@thekid)
+
 ## 8.1.2 / 2017-04-16
 
 ### Features

@@ -333,7 +333,7 @@ function with(... $args) {
 }
 // }}}
 
-// {{{ proto deprecated object newinstance(string spec, var[] args, var def)
+// {{{ proto object newinstance(string spec, var[] args, var def)
 //     Anonymous instance creation
 function newinstance($spec, $args, $def= null) {
   static $u= 0;
