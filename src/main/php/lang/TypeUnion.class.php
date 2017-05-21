@@ -74,7 +74,7 @@ class TypeUnion extends Type {
       if ($type->isInstance($value)) return $type->newInstance($value);
     }
 
-    throw new IllegalArgumentException('Cannot create instances of the '.$this->getName().' type from '.\xp::typeOf($value));
+    throw new IllegalArgumentException('Cannot create instances of the '.$this->getName().' type from '.typeof($value)->getName());
   }
 
   /**
@@ -93,7 +93,7 @@ class TypeUnion extends Type {
       }
     }
 
-    throw new ClassCastException('Cannot cast to the '.$this->getName().' type from '.\xp::typeOf($value));
+    throw new ClassCastException('Cannot cast to the '.$this->getName().' type from '.typeof($value)->getName());
   }
 
   /**

@@ -59,7 +59,7 @@ class Filters extends \lang\Object implements Filter {
     } else if ($accept instanceof \Closure) {
       $this->accept= $accept;
     } else {
-      throw new IllegalArgumentException('Expecting either a closure or null, '.\xp::typeOf($accept).' given');
+      throw new IllegalArgumentException('Expecting either a closure or null, '.typeof($accept)->getName().' given');
     }
   }
 

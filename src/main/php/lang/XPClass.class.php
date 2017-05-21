@@ -400,7 +400,7 @@ class XPClass extends Type {
     if ($value instanceof $literal) {
       return $value;
     } else {
-      throw new ClassCastException('Cannot cast '.\xp::typeOf($value).' to '.$this->name);
+      throw new ClassCastException('Cannot cast '.typeof($value)->getName().' to '.$this->name);
     }
   }
   

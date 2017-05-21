@@ -35,7 +35,7 @@ class TimeZone extends \lang\Object {
     } else if ($tz instanceof \DateTimeZone) {
       $this->tz= $tz;
     } else {
-      throw new IllegalArgumentException('Expecting NULL, a string or a DateTimeZone instance, have '.\xp::typeOf($tz));
+      throw new IllegalArgumentException('Expecting NULL, a string or a DateTimeZone instance, have '.typeof($tz)->getName());
     }
   }
   

@@ -36,7 +36,7 @@ class TextReader extends Reader {
     } else if (is_string($arg)) {
       parent::__construct(new MemoryInputStream($arg));
     } else {
-      throw new IllegalArgumentException('Given argument is neither an input stream, a channel nor a string: '.\xp::typeOf($arg));
+      throw new IllegalArgumentException('Given argument is neither an input stream, a channel nor a string: '.typeof($arg)->getName());
     }
 
     $this->beginning= true;

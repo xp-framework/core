@@ -46,7 +46,7 @@ class Method extends Routine {
       throw new IllegalArgumentException(sprintf(
         'Passed argument is not a %s class (%s)',
         XPClass::nameOf($this->_class),
-        \xp::typeOf($obj)
+        typeof($obj)->getName()
       ));
     }
     

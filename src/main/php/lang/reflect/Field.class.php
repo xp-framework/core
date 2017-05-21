@@ -144,7 +144,7 @@ class Field extends \lang\Object {
       throw new \lang\IllegalArgumentException(sprintf(
         'Passed argument is not a %s class (%s)',
         XPClass::nameOf($this->_class),
-        \xp::typeOf($instance)
+        typeof($instance)->getName()
       ));
     }
 
@@ -198,7 +198,7 @@ class Field extends \lang\Object {
       throw new IllegalArgumentException(sprintf(
         'Passed argument is not a %s class (%s)',
         XPClass::nameOf($this->_class),
-        \xp::typeOf($instance)
+        typeof($instance)->getName()
       ));
     }
   

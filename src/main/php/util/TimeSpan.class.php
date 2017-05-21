@@ -17,7 +17,7 @@ class TimeSpan extends \lang\Object {
    */
   public function __construct($secs= 0) {
     if (!is_numeric($secs)) {
-      throw new \lang\IllegalArgumentException('Given argument is not an integer: '.\xp::typeOf($secs));
+      throw new \lang\IllegalArgumentException('Given argument is not an integer: '.typeof($secs)->getName());
     }
     $this->_seconds= (int)abs($secs);
   }
@@ -31,7 +31,7 @@ class TimeSpan extends \lang\Object {
   public function add(... $args) {
     foreach ($args as $span) {
       if (!$span instanceof self) {
-        throw new \lang\IllegalArgumentException('Given argument is not a TimeSpan: '.\xp::typeOf($span));
+        throw new \lang\IllegalArgumentException('Given argument is not a TimeSpan: '.typeof($span)->getName());
       }
 
       $this->_seconds+= $span->_seconds;
@@ -50,7 +50,7 @@ class TimeSpan extends \lang\Object {
   public function substract(... $args) {
     foreach ($args as $span) {
       if (!$span instanceof self) {
-        throw new \lang\IllegalArgumentException('Given argument is not a TimeSpan: '.\xp::typeOf($span));
+        throw new \lang\IllegalArgumentException('Given argument is not a TimeSpan: '.typeof($span)->getName());
       }
       if ($span->_seconds > $this->_seconds) {
         throw new \lang\IllegalStateException('Cannot subtract '.$span->toString().' from '.$this->toString());
