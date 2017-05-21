@@ -248,7 +248,7 @@ class GenericTypes {
                     ' if ('.(isset($default[$j]) ? '('.$default[$j].' !== '.$parameters[$j].') && ' : '').
                     '!is(\''.$generic[$j].'\', '.$parameters[$j].')) throw new \lang\IllegalArgumentException('.
                     '"Argument '.($j + 1).' passed to ".__METHOD__."'.
-                    ' must be of '.$type.', ".\xp::typeOf('.$parameters[$j].')." given"'.
+                    ' must be of '.$type.', ".typeof('.$parameters[$j].')->getName()." given"'.
                     ');'
                   );
                 }

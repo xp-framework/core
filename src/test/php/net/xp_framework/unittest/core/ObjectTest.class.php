@@ -32,8 +32,8 @@ class ObjectTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function xp_typeOf_returns_fully_qualified_class_name() {
-    $this->assertEquals('lang.Object', \xp::typeOf(new Object()));
+  public function typeof_returns_fully_qualified_class_name() {
+    $this->assertEquals('lang.Object', typeof(new Object())->getName());
   }
 
   #[@test]

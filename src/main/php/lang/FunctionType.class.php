@@ -281,7 +281,7 @@ class FunctionType extends Type {
     return $this->verified($value, function($m) use($value) { throw new IllegalArgumentException(sprintf(
       'Cannot create instances of the %s type from %s: %s',
       $this->getName(),
-      \xp::typeOf($value),
+      typeof($value)->getName(),
       $m
     )); });
   }
@@ -296,7 +296,7 @@ class FunctionType extends Type {
   public function cast($value) {
     return null === $value ? null : $this->verified($value, function($m) use($value) { throw new ClassCastException(sprintf(
       'Cannot cast %s to the %s type: %s',
-      \xp::typeOf($value),
+      typeof($value)->getName(),
       $this->getName(),
       $m
     )); });
@@ -327,7 +327,7 @@ class FunctionType extends Type {
     $closure= $this->verified($func, function($m) use($func) { throw new IllegalArgumentException(sprintf(
       'Passed argument is not of a %s type (%s): %s',
       $this->getName(),
-      \xp::typeOf($func),
+      typeof($func)->getName(),
       $m
     )); });
     try {
