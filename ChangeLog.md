@@ -3,6 +3,9 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+* Refactored code to use dedicated fixture methods instead of using
+  `xp` class methods *typeOf()* and *gc()*, see xp-framework/rfc#323
+  (@thekid)
 * Un-deprecated `newinstance()`, which is here to stay. By being able to
   capture local variables in methods, it is helpful in unittest scenarios
   and has a clear advantage over PHP's anonymous classes; at least until
