@@ -122,7 +122,7 @@ class PathTest extends \unittest\TestCase {
 
   #[@test]
   public function non_existant_absolute_as_uri() {
-    $current= rtrim(getcwd(), DIRECTORY_SEPARATOR);
+    $current= rtrim(realpath(getcwd()), DIRECTORY_SEPARATOR);
     $this->assertEquals(
       $current.DIRECTORY_SEPARATOR.'@does-not-exist@',
       (new Path($current, '@does-not-exist@'))->asURI($current)
@@ -131,7 +131,7 @@ class PathTest extends \unittest\TestCase {
 
   #[@test]
   public function non_existant_relative_as_uri() {
-    $current= rtrim(getcwd(), DIRECTORY_SEPARATOR);
+    $current= rtrim(realpath(getcwd()), DIRECTORY_SEPARATOR);
     $this->assertEquals(
       $current.DIRECTORY_SEPARATOR.'@does-not-exist@',
       (new Path('@does-not-exist@'))->asURI($current)
@@ -185,7 +185,7 @@ class PathTest extends \unittest\TestCase {
   #  [['.', '@does-', 'not-exist@', '..', '..']]
   #])]
   public function relative_as_realpath_with_non_existant_components($components) {
-    $current= getcwd();
+    $current= realpath(getcwd());
     $this->assertEquals($current, Path::compose($components)->asRealpath($current)->toString());
   }
 
