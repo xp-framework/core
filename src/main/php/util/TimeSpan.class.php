@@ -1,6 +1,6 @@
 <?php namespace util;
 
-use lang\{Value, IllegalArgumentException};
+use lang\{Value, IllegalArgumentException, IllegalStateException};
 
 /**
  * Represents a span of time
@@ -304,6 +304,15 @@ class TimeSpan implements Value {
    */
   public function compareTo($value) {
     return $value instanceof self ? $this->_seconds <=> $value->_seconds : 1;
+  }
+
+  /**
+   * Create a hashcode
+   *
+   * @return string
+   */
+  public function hashCode() {
+    return 'S'.$this->_seconds;
   }
 
   /**
