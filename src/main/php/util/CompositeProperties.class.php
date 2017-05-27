@@ -8,7 +8,7 @@ use lang\IllegalArgumentException;
  *
  * @test   xp://net.xp_framework.unittest.util.CompositePropertiesTest
  */
-class CompositeProperties extends \lang\Object implements PropertyAccess {
+class CompositeProperties implements PropertyAccess {
   private static $NONEXISTANT;
   protected $props  = [];
   private $sections = null;

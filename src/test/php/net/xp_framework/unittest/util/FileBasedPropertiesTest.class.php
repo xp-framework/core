@@ -24,7 +24,7 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
 
   #[@test]
   public function from_resource() {
-    $prop= new Properties($this->getClass()->getPackage()->getResourceAsStream('example.ini')->getURI());
+    $prop= new Properties(typeof($this)->getPackage()->getResourceAsStream('example.ini')->getURI());
     $this->assertEquals('value', $prop->readString('section', 'key'));
   }
 

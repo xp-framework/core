@@ -6,7 +6,7 @@
  * @test  xp://net.xp_framework.unittest.core.RuntimeOptionsTest
  * @see   xp://lang.Runtime#startupOptions
  */
-class RuntimeOptions extends Object {
+class RuntimeOptions {
   protected $backing= [];
 
   /**

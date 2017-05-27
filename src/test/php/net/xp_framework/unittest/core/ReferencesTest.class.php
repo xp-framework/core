@@ -1,7 +1,6 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\ClassLoader;
-use lang\Object;
 
 /**
  * References test.
@@ -11,7 +10,7 @@ class ReferencesTest extends \unittest\TestCase {
   static function __static() {
     
     // For singletonInstance test
-    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousSingleton', Object::class, [], '{
+    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousSingleton', null, [], '{
       protected static $instance= NULL;
 
       static function getInstance() {
@@ -21,17 +20,17 @@ class ReferencesTest extends \unittest\TestCase {
     }');
 
     // For returnNewObject and returnNewObjectViaReflection tests
-    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousList', Object::class, [], '{
+    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousList', null, [], '{
       public function __construct() {
         \net\xp_framework\unittest\core\ReferencesTest::registry("list", $this);
       }
     }');
-    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousFactory', Object::class, [], '{
+    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousFactory', null, [], '{
       static function factory() {
         return new AnonymousList();
       }
     }');
-    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousNewInstanceFactory', Object::class, [], '{
+    ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousNewInstanceFactory', null, [], '{
       static function factory() {
         return \lang\XPClass::forName("net.xp_framework.unittest.core.AnonymousList")->newInstance();
       }
@@ -46,9 +45,7 @@ class ReferencesTest extends \unittest\TestCase {
    * @throws  unittest.AssertionFailedError
    */
   protected function assertReference($a, $b) {
-    $this->assertEquals($a->__id, $b->__id);
-    $a->__id= 'R:'.$a->__id;
-    $this->assertEquals($a->__id, $b->__id);
+    $this->assertTrue($a === $b);
   }
 
   #[@test]

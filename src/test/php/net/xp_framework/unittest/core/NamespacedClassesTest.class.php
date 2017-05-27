@@ -1,8 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\Object;
 use lang\reflect\Package;
 use util\collections\Vector;
+use net\xp_framework\unittest\Name;
 
 /**
  * TestCase for XP Framework's namespaces support
@@ -39,8 +39,8 @@ class NamespacedClassesTest extends \unittest\TestCase {
   #[@test]
   public function namespacedClassUsingUnqualified() {
     $this->assertInstanceOf(
-      Object::class,
-      self::$package->loadClass('NamespacedClassUsingUnqualified')->newInstance()->newObject()
+      Name::class,
+      self::$package->loadClass('NamespacedClassUsingUnqualified')->newInstance()->newName()
     );
   }
 
@@ -71,13 +71,13 @@ class NamespacedClassesTest extends \unittest\TestCase {
     $i= newinstance(NamespacedClass::class, []);
     $this->assertEquals(
       Package::forName('net.xp_framework.unittest.core'),
-      $i->getClass()->getPackage()
+      typeof($i)->getPackage()
     );
   }
 
   #[@test]
   public function generics() {
     $v= create('new net.xp_framework.unittest.core.generics.Nullable<net.xp_framework.unittest.core.NamespacedClass>');
-    $this->assertTrue($v->getClass()->isGeneric());
+    $this->assertTrue(typeof($v)->isGeneric());
   }
 }

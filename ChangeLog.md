@@ -5,12 +5,16 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
-* Merged PR ##169: Remove MCrypt (from `util.Secret` & `util.Random`), 
+* Merged PR #169: Remove MCrypt (from `util.Secret` & `util.Random`), 
   see https://wiki.php.net/rfc/mcrypt-viking-funeral
   (@thekid)
 
 ### RFCs
 
+* Implemented xp-framework/rfc#325: Remove Object class. This radical
+  change was implemented to be forward-compatible with PHP 7.2, see
+  https://wiki.php.net/rfc/object-typehint
+  (@thekid)
 * Implemented xp-framework/rfc#323: Remove `xp::typeOf()` - @thekid
 
 ## 8.2.0 / 2017-05-28

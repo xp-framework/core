@@ -22,21 +22,21 @@ class ArchiveV2Test extends ArchiveTest {
 
   #[@test]
   public function archive_with_version_1() {
-    $a= new Archive($this->getClass()->getPackage()->getResourceAsStream('v1.xar'));
+    $a= new Archive($this->resource('v1.xar'));
     $a->open(Archive::READ);
     $this->assertEquals(1, $a->version);
   }
 
   #[@test]
   public function archive_version_1_contains_contained_text_file() {
-    $a= new Archive($this->getClass()->getPackage()->getResourceAsStream('v1.xar'));
+    $a= new Archive($this->resource('v1.xar'));
     $a->open(Archive::READ);
     $this->assertTrue($a->contains('contained.txt'));
   }
 
   #[@test]
   public function archive_version_1_contents() {
-    $a= new Archive($this->getClass()->getPackage()->getResourceAsStream('v1.xar'));
+    $a= new Archive($this->resource('v1.xar'));
     $a->open(Archive::READ);
     $this->assertEntries($a, ['contained.txt' => "This file is contained in an archive!\n"]);
   }

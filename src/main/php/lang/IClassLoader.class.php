@@ -3,7 +3,7 @@
 /**
  * Classloader interface
  */
-interface IClassLoader {
+interface IClassLoader extends Value {
 
   /**
    * Checks whether this loader can provide the requested class

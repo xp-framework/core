@@ -1,6 +1,6 @@
 <?php namespace lang\reflect;
 
-use lang\{XPClass, Type, IllegalArgumentException, IllegalAccessException};
+use lang\{XPClass, Type, Value, IllegalArgumentException, IllegalAccessException};
 
 /**
  * Represents a class field
@@ -8,7 +8,7 @@ use lang\{XPClass, Type, IllegalArgumentException, IllegalAccessException};
  * @test  xp://net.xp_framework.unittest.reflection.FieldsTest
  * @see   xp://lang.XPClass
  */
-class Field extends \lang\Object {
+class Field implements Value {
   protected
     $accessible = false,
     $_class     = null;
@@ -244,18 +244,17 @@ class Field extends \lang\Object {
    * Sets whether this routine should be accessible from anywhere, 
    * regardless of its visibility level.
    */
-  public function setAccessible($flag): self {
+  public function setAccessible(bool $flag): self {
     $this->accessible= $flag;
     return $this;
   }
 
-  /** Returns whether an object is equal to this routine */
-  public function equals($cmp): bool {
-    return (
-      $cmp instanceof self && 
-      $cmp->_reflect->getName() === $this->_reflect->getName() &&
-      $cmp->getDeclaringClass()->equals($this->getDeclaringClass())
-    );
+  /** Compares this field to another value */
+  public function compareTo($value): int {
+    if (!($value instanceof self)) return 1;
+    if (0 !== ($c= $value->_reflect->getName() <=> $this->_reflect->getName())) return $c;
+    if (0 !== ($c= $value->getDeclaringClass()->compareTo($this->getDeclaringClass()))) return $c;
+    return 0;
   }
 
   /** Returns a hashcode for this routine */

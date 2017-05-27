@@ -1,12 +1,14 @@
 <?php namespace util;
 
+use lang\{Value, IllegalArgumentException, IllegalStateException};
+
 /**
  * Represents a span of time
  *
  * @see   xp://util.DateUtil#timespanBetween
  * @test  xp://net.xp_framework.unittest.util.TimeSpanTest
  */
-class TimeSpan extends \lang\Object {
+class TimeSpan implements Value {
   protected $_seconds = 0;
   
   /**
@@ -17,7 +19,7 @@ class TimeSpan extends \lang\Object {
    */
   public function __construct($secs= 0) {
     if (!is_numeric($secs)) {
-      throw new \lang\IllegalArgumentException('Given argument is not an integer: '.typeof($secs)->getName());
+      throw new IllegalArgumentException('Given argument is not an integer: '.typeof($secs)->getName());
     }
     $this->_seconds= (int)abs($secs);
   }
@@ -31,7 +33,7 @@ class TimeSpan extends \lang\Object {
   public function add(... $args) {
     foreach ($args as $span) {
       if (!$span instanceof self) {
-        throw new \lang\IllegalArgumentException('Given argument is not a TimeSpan: '.typeof($span)->getName());
+        throw new IllegalArgumentException('Given argument is not a TimeSpan: '.typeof($span)->getName());
       }
 
       $this->_seconds+= $span->_seconds;
@@ -50,10 +52,10 @@ class TimeSpan extends \lang\Object {
   public function substract(... $args) {
     foreach ($args as $span) {
       if (!$span instanceof self) {
-        throw new \lang\IllegalArgumentException('Given argument is not a TimeSpan: '.typeof($span)->getName());
+        throw new IllegalArgumentException('Given argument is not a TimeSpan: '.typeof($span)->getName());
       }
       if ($span->_seconds > $this->_seconds) {
-        throw new \lang\IllegalStateException('Cannot subtract '.$span->toString().' from '.$this->toString());
+        throw new IllegalStateException('Cannot subtract '.$span->toString().' from '.$this->toString());
       }
 
       $this->_seconds-= $span->_seconds;
@@ -294,15 +296,23 @@ class TimeSpan extends \lang\Object {
     return $return;
   }
 
-  /*
-     * Indicates whether the timespan to compare equals this timespan
-     *
-     * @param   util.TimeSpan cmp
-     * @return  bool TRUE if timespans are equal
-     */
+  /**
+   * Compares this timespan to another value
+   *
+   * @param  var $value
+   * @return int
+   */
+  public function compareTo($value) {
+    return $value instanceof self ? $this->_seconds <=> $value->_seconds : 1;
+  }
 
-  public function equals($cmp) {
-    return ($cmp instanceof self) && ($cmp->getSeconds() == $this->getSeconds());
+  /**
+   * Create a hashcode
+   *
+   * @return string
+   */
+  public function hashCode() {
+    return 'S'.$this->_seconds;
   }
 
   /**

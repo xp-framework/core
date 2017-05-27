@@ -18,7 +18,7 @@ use io\File;
  * $sp->unlock();
  * ```
  */  
-class SingleProcess extends \lang\Object {
+class SingleProcess {
   public $lockfile;
 
   /**

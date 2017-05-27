@@ -7,7 +7,7 @@
  *
  * TextObserver class:
  * ```php
- * class TextObserver extends \lang\Object implements \util\Observer {
+ * class TextObserver implements \util\Observer {
  *
  *   public function update($obs, $arg= NULL) {
  *     Console::writeLine(__CLASS__, ' was notified of update in value, is now ', $obs->getValue());
@@ -50,7 +50,7 @@
  * @see   http://www.javaworld.com/javaworld/jw-10-1996/jw-10-howto.html
  * @test  xp://net.xp_framework.unittest.util.ObservableTest
  */
-class Observable extends \lang\Object {
+class Observable {
   public
     $_obs      = [],
     $_changed  = false;

@@ -4,7 +4,7 @@
  * Lookup map
  */
 #[@generic(self= 'K, V', implements= ['K, V'])]
-abstract class AbstractDictionary extends \lang\Object implements IDictionary {
+abstract class AbstractDictionary implements IDictionary {
   
   /**
    * Constructor

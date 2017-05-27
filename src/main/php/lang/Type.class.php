@@ -7,7 +7,7 @@
  * @see    xp://lang.Primitive
  * @test   xp://net.xp_framework.unittest.reflection.TypeTest 
  */
-class Type extends Object {
+class Type implements Value {
   public static $VAR, $VOID, $ARRAY, $OBJECT, $CALLABLE, $ITERABLE;
   public $name;
   public $default;
@@ -96,11 +96,13 @@ class Type extends Object {
   /** Creates a string representation of this object */
   public function toString(): string { return nameof($this).'<'.$this->name.'>'; }
 
-  /** Checks whether a given object is equal to this type */
-  public function equals($cmp): bool { return $cmp instanceof self && $cmp->name === $this->name; }
-
   /** Returns a hashcode for this object */
   public function hashCode(): string { return get_class($this).':'.$this->name; }
+
+  /** Compares to another value */
+  public function compareTo($value): int {
+    return $value instanceof self ? $this->name <=> $value->name : 1;
+  }
 
   /**
    * Creates a type list from a given string

@@ -1,14 +1,13 @@
 <?php namespace lang\reflect;
 
-use lang\IClassLoader;
-use lang\ElementNotFoundException;
+use lang\{IClassLoader, ElementNotFoundException, Value};
 
 /**
  * Represents a module
  *
  * @test  xp://net.xp_framework.unittest.reflection.ModuleTest
  */
-class Module extends \lang\Object {
+class Module implements Value {
   public static $INCOMPLETE= false;
   public static $registered= [];
 
@@ -43,22 +42,21 @@ class Module extends \lang\Object {
    */
   public function finalize() { }
 
-  /**
-   * Returns whether a given value equals this module
-   *
-   * @param  var $cmp
-   * @return bool
-   */
-  public function equals($cmp) {
-    return $cmp instanceof self && $cmp->name === $this->name;
+  /** Compares this module to another value */
+  public function compareTo($value): int {
+    if (!($value instanceof self)) return 1;
+    if (0 !== ($c= $value->name <=> $this->name)) return $c;
+    if (0 !== ($c= $value->classLoader->compareTo($this->classLoader))) return $c;
+    return 0;
   }
 
-  /**
-   * Returns a string representation of this module
-   *
-   * @return string
-   */
-  public function toString() {
+  /** Returns a hashcode for this module */
+  public function hashCode(): string {
+    return 'M['.$this->name.'@'.$this->classLoader->hashCode();
+  }
+
+  /** Returns a string representation of this module */
+  public function toString(): string {
     return nameof($this).'<'.$this->name.'@'.$this->classLoader->toString().'>';
   }
 

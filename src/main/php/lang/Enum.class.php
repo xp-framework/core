@@ -7,7 +7,7 @@
  * @see   http://news.xp-framework.net/article/207/2007/07/29/
  * @test  xp://net.xp_framework.unittest.core.EnumTest
  */
-abstract class Enum extends Object {
+abstract class Enum implements Value {
   public $name= '';
   protected $ordinal= 0;
 
@@ -132,4 +132,10 @@ abstract class Enum extends Object {
 
   /** Create a string representation of this enum */
   public function toString(): string { return $this->name; }
+
+  /** Create a hashcode for this enum */
+  public function hashCode(): string { return get_class($this).':'.$this->name; }
+
+  /** Compare this enum to another value */
+  public function compareTo($value): int { return $value instanceof self ? $this->name <=> $value->name : 1; }
 }

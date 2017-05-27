@@ -1,6 +1,6 @@
 <?php namespace util;
 
-use lang\IllegalArgumentException;
+use lang\{IllegalArgumentException, Value};
 
 /**
  * Time zone calculation
@@ -14,7 +14,7 @@ use lang\IllegalArgumentException;
  * @see     php://datetime
  * @see     php://timezones
  */
-class TimeZone extends \lang\Object {
+class TimeZone implements Value {
   protected $tz= null;
 
   /**
@@ -156,23 +156,32 @@ class TimeZone extends \lang\Object {
       ->invoke(null, [$this, $date])
     ;
   }
-  
+
   /**
-   * Indicates whether the timezome to compare equals this timezone.
+   * Compare this timezone to a give value
    *
-   * @param   util.TimeZone cmp
-   * @return  bool TRUE if timezones are equal
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return ($cmp instanceof self) && ($cmp->getName() == $this->getName());
+  public function compareTo($value) {
+    return $value instanceof self ? $this->getName() <=> $value->getName() : 1;
   }
-  
+
+  /**
+   * Create a hashcode
+   *
+   * @return string
+   */
+  public function hashCode() {
+    return $this->getName();
+  }
+
   /**
    * Create a string representation
    *
-   * @return  string
+   * @return string
    */
   public function toString() {
     return nameof($this).' ("'.$this->getName().'" / '.$this->getOffset().')';
-  }    
+  }
 }

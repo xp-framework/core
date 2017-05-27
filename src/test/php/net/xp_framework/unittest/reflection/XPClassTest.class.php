@@ -58,8 +58,8 @@ class XPClassTest extends \unittest\TestCase {
   }
   
   #[@test]
-  public function is_subclass_of_lang_Object() {
-    $this->assertTrue($this->fixture->isSubclassOf('lang.Object'));
+  public function is_subclass_of_its_parent() {
+    $this->assertTrue($this->fixture->isSubclassOf('net.xp_framework.unittest.reflection.AbstractTestClass'));
   }
 
   #[@test]
@@ -78,18 +78,13 @@ class XPClassTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function object_class_is_assignable_from_fixture() {
-    $this->assertTrue(XPClass::forName('lang.Object')->isAssignableFrom($this->fixture));
-  }
-
-  #[@test]
   public function fixtures_parent_class_is_assignable_from_fixture() {
     $this->assertTrue(XPClass::forName('net.xp_framework.unittest.reflection.AbstractTestClass')->isAssignableFrom($this->fixture));
   }
 
   #[@test]
   public function this_class_is_not_assignable_from_fixture() {
-    $this->assertFalse($this->getClass()->isAssignableFrom($this->fixture));
+    $this->assertFalse(typeof($this)->isAssignableFrom($this->fixture));
   }
 
   #[@test, @values([
@@ -115,15 +110,7 @@ class XPClassTest extends \unittest\TestCase {
 
   #[@test]
   public function fixtures_parents_parent_class() {
-    $this->assertEquals(
-      XPClass::forName('lang.Object'),
-      $this->fixture->getParentClass()->getParentClass()
-    );
-  }
-
-  #[@test]
-  public function object_classes_parent_is_null() {
-    $this->assertNull(XPClass::forName('lang.Object')->getParentClass());
+    $this->assertNull($this->fixture->getParentClass()->getParentClass());
   }
 
   #[@test]
@@ -132,8 +119,8 @@ class XPClassTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function lang_Generic_class_is_an_interface() {
-    $this->assertTrue(XPClass::forName('lang.Generic')->isInterface());
+  public function lang_Value_class_is_an_interface() {
+    $this->assertTrue(XPClass::forName('lang.Value')->isInterface());
   }
 
   #[@test]
@@ -142,8 +129,8 @@ class XPClassTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function lang_Generic_class_is_not_a_trait() {
-    $this->assertFalse(XPClass::forName('lang.Generic')->isTrait());
+  public function lang_Value_class_is_not_a_trait() {
+    $this->assertFalse(XPClass::forName('lang.Value')->isTrait());
   }
 
   #[@test]
@@ -197,16 +184,8 @@ class XPClassTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function object_class_has_lang_Generic_interface() {
-    $this->assertEquals(
-      [XPClass::forName('lang.Generic')],
-      XPClass::forName('lang.Object')->getDeclaredInterfaces()
-    );
-  }
-
-  #[@test]
   public function this_class_does_not_declare_any_interfaces() {
-    $this->assertEquals([], $this->getClass()->getDeclaredInterfaces());
+    $this->assertEquals([], typeof($this)->getDeclaredInterfaces());
   }
 
   #[@test]
@@ -220,13 +199,13 @@ class XPClassTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function object_class_does_not_have_a_constructor() {
-    $this->assertFalse(XPClass::forName('lang.Object')->hasConstructor());
+  public function value_class_does_not_have_a_constructor() {
+    $this->assertFalse(XPClass::forName('lang.Value')->hasConstructor());
   }
 
   #[@test, @expect(ElementNotFoundException::class)]
-  public function getting_object_classes_constructor_raises_an_exception() {
-    XPClass::forName('lang.Object')->getConstructor();
+  public function getting_value_classes_constructor_raises_an_exception() {
+    XPClass::forName('lang.Value')->getConstructor();
   }
 
   #[@test]

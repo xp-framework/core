@@ -3,7 +3,7 @@
 /**
  * Base Instruction class
  */
-abstract class AbstractInstruction extends \lang\Object {
+abstract class AbstractInstruction {
   protected
     $out        = null,
     $err        = null,

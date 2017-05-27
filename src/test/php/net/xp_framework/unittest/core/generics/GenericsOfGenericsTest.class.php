@@ -11,7 +11,7 @@ class GenericsOfGenericsTest extends \unittest\TestCase {
   public function listOfListOfStringsReflection() {
     $l= create('new net.xp_framework.unittest.core.generics.ListOf<net.xp_framework.unittest.core.generics.ListOf<string>>');
     
-    with ($class= $l->getClass()); {
+    with ($class= typeof($l)); {
       $this->assertTrue($class->isGeneric());
       $arguments= $class->genericArguments();
       $this->assertEquals(1, sizeof($arguments));
@@ -29,7 +29,7 @@ class GenericsOfGenericsTest extends \unittest\TestCase {
   public function lookupOfListOfStringsReflection() {
     $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, net.xp_framework.unittest.core.generics.ListOf<string>>');
     
-    with ($class= $l->getClass()); {
+    with ($class= typeof($l)); {
       $this->assertTrue($class->isGeneric());
       $arguments= $class->genericArguments();
       $this->assertEquals(2, sizeof($arguments));
@@ -46,9 +46,9 @@ class GenericsOfGenericsTest extends \unittest\TestCase {
 
   #[@test]
   public function lookupOfLookupOfStringsReflection() {
-    $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, net.xp_framework.unittest.core.generics.Lookup<string, lang.Generic>>');
+    $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, net.xp_framework.unittest.core.generics.Lookup<string, lang.Value>>');
     
-    with ($class= $l->getClass()); {
+    with ($class= typeof($l)); {
       $this->assertTrue($class->isGeneric());
       $arguments= $class->genericArguments();
       $this->assertEquals(2, sizeof($arguments));
@@ -59,7 +59,7 @@ class GenericsOfGenericsTest extends \unittest\TestCase {
         $arguments= $vclass->genericArguments();
         $this->assertEquals(2, sizeof($arguments));
         $this->assertEquals(\lang\Primitive::$STRING, $arguments[0]);
-        $this->assertEquals(\lang\XPClass::forName('lang.Generic'), $arguments[1]);
+        $this->assertEquals(\lang\XPClass::forName('lang.Value'), $arguments[1]);
       }
     }
   }

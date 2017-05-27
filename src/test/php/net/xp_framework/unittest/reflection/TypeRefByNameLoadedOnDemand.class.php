@@ -3,6 +3,6 @@
 /**
  * Used by net.xp_framework.unittest.reflection.TypeTest::objectTypeLoadedIfNecessary
  */
-class TypeRefByNameLoadedOnDemand extends \lang\Object {
+class TypeRefByNameLoadedOnDemand {
   
 }

@@ -5,7 +5,7 @@
  *
  * @see   xp://net.xp_framework.unittest.reflection.ClassFromUriTest
  */
-abstract class ClassFromUriBase extends \lang\Object {
+abstract class ClassFromUriBase {
 
   /**
    * Lifecycle: Initializes this base
@@ -60,7 +60,7 @@ abstract class ClassFromUriBase extends \lang\Object {
     }
 
     $this->newFile($path.\xp::CLASS_FILE_EXT, sprintf(
-      '<?php %s %s %s extends \lang\Object { }',
+      '<?php %s %s %s { }',
       $ns,
       $type,
       $class

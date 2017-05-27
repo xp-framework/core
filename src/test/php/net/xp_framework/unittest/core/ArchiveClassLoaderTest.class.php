@@ -28,7 +28,7 @@ class ArchiveClassLoaderTest extends \unittest\TestCase {
    */
   public function setUp() {
     $this->fixture= new ArchiveClassLoader(new Archive(
-      $this->getClass()->getPackage()->getResourceAsStream('archive.xar')
+      typeof($this)->getPackage()->getResourceAsStream('archive.xar')
     ));
   }
 

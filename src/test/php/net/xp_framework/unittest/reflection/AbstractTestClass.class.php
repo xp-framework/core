@@ -5,7 +5,7 @@
  *
  * @see      xp://net.xp_framework.unittest.reflection.ReflectionTest
  */
-abstract class AbstractTestClass extends \lang\Object {
+abstract class AbstractTestClass {
   protected
     #[@type('lang.Object')]
     $inherited= null;

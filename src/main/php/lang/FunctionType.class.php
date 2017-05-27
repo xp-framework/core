@@ -105,7 +105,7 @@ class FunctionType extends Type {
     $details= $class ? XPClass::detailsForMethod($class, $r->getName()) : null;
     if (isset($details[DETAIL_RETURNS])) {
       $returns= Type::forName($details[DETAIL_RETURNS]);
-      if (!$this->returns->equals($returns) && !$this->returns->isAssignableFrom($returns)) {
+      if (0 !== $this->returns->compareTo($returns) && !$this->returns->isAssignableFrom($returns)) {
         return $false('Return type mismatch, expecting '.$this->returns->getName().', have '.$returns->getName()); 
       }
     }
@@ -131,7 +131,7 @@ class FunctionType extends Type {
         if ($param->isVariadic()) {
           return true;  // No further checks necessary
         } else if ($param->isArray()) {
-          if (!$type->equals(Primitive::$ARRAY) && !$type instanceof ArrayType && !$type instanceof MapType) {
+          if (0 !== $type->compareTo(Primitive::$ARRAY) && !$type instanceof ArrayType && !$type instanceof MapType) {
             return $false('Parameter #'.($i + 1).' not an array type: '.$type->getName());
           }
         } else if ($param->isCallable()) {

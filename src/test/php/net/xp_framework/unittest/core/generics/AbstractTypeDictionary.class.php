@@ -4,6 +4,6 @@
  * Lookup map
  */
 #[@generic(self= 'V', implements= ['lang.Type, V'])]
-abstract class AbstractTypeDictionary extends \lang\Object implements IDictionary {
+abstract class AbstractTypeDictionary implements IDictionary {
 
 }

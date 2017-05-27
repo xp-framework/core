@@ -1,12 +1,14 @@
 <?php namespace util;
 
+use lang\{Value, IllegalArgumentException};
+
 /**
  * Represent a timezone transition.
  *
  * @see   xp://util.TimeZone
  * @test  xp://net.xp_framework.unittest.util.TimeZoneTest
  */
-class TimeZoneTransition extends \lang\Object {
+class TimeZoneTransition implements Value {
   protected
     $tz     = null,
     $date   = null,
@@ -65,7 +67,7 @@ class TimeZoneTransition extends \lang\Object {
     foreach (timezone_transitions_get($this->tz->getHandle()) as $t) {
       if ($t['ts'] > $ts) break;
     }
-    if (!isset($t)) throw new \lang\IllegalArgumentException('Timezone '.$this->tz->getName().' does not have DST transitions.');
+    if (!isset($t)) throw new IllegalArgumentException('Timezone '.$this->tz->getName().' does not have DST transitions.');
     
     $this->date= new Date($t['ts']);
     $this->isDst= $t['isdst'];
@@ -84,7 +86,7 @@ class TimeZoneTransition extends \lang\Object {
       if ($t['ts'] >= $ts) break;
       $last= $t;
     }
-    if (!isset($t)) throw new \lang\IllegalArgumentException('Timezone '.$this->tz->getName().' does not have DST transitions.');
+    if (!isset($t)) throw new IllegalArgumentException('Timezone '.$this->tz->getName().' does not have DST transitions.');
 
     $this->date= new Date($last['ts'], $this->date->getTimeZone());
     $this->isDst= $last['isdst'];
@@ -136,14 +138,33 @@ class TimeZoneTransition extends \lang\Object {
   public function abbr() {
     return $this->abbr;
   }
-  
+
+  /**
+   * Compare this timezone to a give value
+   *
+   * @param  var $value
+   * @return int
+   */
+  public function compareTo($value) {
+    return $value instanceof self ? $this->toString() <=> $value->toString() : 1;
+  }
+
+  /**
+   * Create a hashcode
+   *
+   * @return string
+   */
+  public function hashCode() {
+    return md5($this->toString());
+  }
+
   /**
    * Create string representation of transition
    *
    * @return  string
    */
   public function toString() {
-    $s= nameof($this).'('.$this->hashCode().")@{\n";
+    $s= nameof($this)."@{\n";
     $s.= '  transition at: '.$this->date->toString()."\n";
     $s.= sprintf('  transition to: %s (%s), %s',
       $this->offset,

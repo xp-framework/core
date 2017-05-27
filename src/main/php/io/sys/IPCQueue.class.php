@@ -80,7 +80,7 @@ define('IPC_MSG_MAXSIZE', 16384);
  * var_dump($t[0]->join(), $t[1]->join());
  * ```
  */
-class IPCQueue extends \lang\Object {
+class IPCQueue {
   public
     $key      = 0,
     $id       = 0,

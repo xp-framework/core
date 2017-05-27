@@ -3,6 +3,6 @@
 /**
  * Fixture for `net.xp_framework.unittest.reflection.ClassLoaderTest`
  */
-class ClassOne extends \lang\Object {
+class ClassOne {
 
 }

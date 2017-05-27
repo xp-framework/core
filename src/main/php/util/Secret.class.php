@@ -1,8 +1,6 @@
 <?php namespace util;
 
-use lang\Runtime;
-use lang\IllegalStateException;
-use lang\IllegalArgumentException;
+use lang\{Runtime, IllegalStateException, IllegalArgumentException, Value};
 
 /**
  * Secret provides a reasonable secure storage for security-sensistive
@@ -26,10 +24,11 @@ use lang\IllegalArgumentException;
  * @test   xp://net.xp_framework.unittest.util.OpenSSLSecretTest
  * @test   xp://net.xp_framework.unittest.util.PlainTextSecretTest
  */
-class Secret extends \lang\Object {
+class Secret implements Value {
   const BACKING_OPENSSL   = 0x02;
   const BACKING_PLAINTEXT = 0x03;
 
+  private $id;
   private static $store   = [];
   private static $encrypt = null;
   private static $decrypt = null;
@@ -96,6 +95,7 @@ class Secret extends \lang\Object {
    * @param string $characters Characters to secure
    */
   public function __construct($characters) {
+    $this->id= uniqid(microtime(true));
     $this->update($characters);
   }
 
@@ -159,8 +159,27 @@ class Secret extends \lang\Object {
    *
    * @return string
    */
+  public function hashCode() {
+    return $this->id;
+  }
+
+  /**
+   * Provide string representation
+   *
+   * @return string
+   */
   public function toString() {
-    return nameof($this).'('.$this->hashCode().') {}';
+    return nameof($this).'('.$this->id.') {}';
+  }
+
+  /**
+   * Compares to another value
+   *
+   * @param  var $value
+   * @return int
+   */
+  public function compareTo($value) {
+    return $value instanceof self ? $this->id <=> $value->id : 1;
   }
 
   /**

@@ -8,7 +8,7 @@ use lang\IllegalArgumentException;
  * @test  xp://net.xp_framework.unittest.io.FolderEntriesTest
  * @see   xp://io.Folder#entries
  */
-class FolderEntries extends \lang\Object implements \IteratorAggregate {
+class FolderEntries implements \IteratorAggregate {
   private $base;
   private $handle= null;
 

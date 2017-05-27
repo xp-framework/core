@@ -21,12 +21,12 @@ class AnnotationTest extends \unittest\TestCase {
 
   #[@test]
   public function setUpMethodHasNoAnnotations() {
-    $this->assertFalse($this->getClass()->getMethod('setUp')->hasAnnotations());
+    $this->assertFalse(typeof($this)->getMethod('setUp')->hasAnnotations());
   }
 
   #[@test]
   public function thisMethodHasAnnotations() {
-    $this->assertTrue($this->getClass()->getMethod('thisMethodHasAnnotations')->hasAnnotations());
+    $this->assertTrue(typeof($this)->getMethod('thisMethodHasAnnotations')->hasAnnotations());
   }
 
   #[@test]
@@ -41,12 +41,12 @@ class AnnotationTest extends \unittest\TestCase {
 
   #[@test, @expect(ElementNotFoundException::class)]
   public function getAnnotationForMethodWithout() {
-    $this->getClass()->getMethod('setUp')->getAnnotation('any');
+    typeof($this)->getMethod('setUp')->getAnnotation('any');
   }
 
   #[@test]
   public function hasAnnotationForMethodWithout() {
-    $this->assertFalse($this->getClass()->getMethod('setUp')->hasAnnotation('any'));
+    $this->assertFalse(typeof($this)->getMethod('setUp')->hasAnnotation('any'));
   }
   
   #[@test, @expect(ElementNotFoundException::class)]

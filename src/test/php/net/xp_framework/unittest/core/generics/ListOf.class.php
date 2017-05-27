@@ -1,11 +1,8 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
-/**
- * List of elements
- *
- */
+/** List of elements */
 #[@generic(self= 'T')]
-class ListOf extends \lang\Object {
+class ListOf {
   public $elements= [];
 
   /**

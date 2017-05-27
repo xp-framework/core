@@ -6,7 +6,7 @@
  * @test  xp://net.xp_framework.unittest.util.BinfordTest
  * @see   http://www.binford.de/
  */
-class Binford extends \lang\Object { 
+class Binford implements \lang\Value { 
   public $poweredBy= 0;
 
   /**
@@ -52,12 +52,21 @@ class Binford extends \lang\Object {
   }
 
   /**
+   * Retrieve string representation of this object
+   *
+   * @return  string
+   */
+  public function hashCode() {
+    return 'B'.$this->poweredBy;
+  }
+
+  /**
    * Returns whether another object is equal to this object.
    *
-   * @param   lang.Generic cmp
-   * @return  bool
+   * @param   var $value
+   * @return  int
    */
-  public function equals($cmp) {
-    return $cmp instanceof self && $this->poweredBy == $cmp->poweredBy;
+  public function compareTo($value) {
+    return $value instanceof self ? $this->poweredBy <=> $value->poweredBy : 1;
   }
 }

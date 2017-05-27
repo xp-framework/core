@@ -19,7 +19,7 @@
  * @see   http://groups.google.com/groups?threadm=DREPPER.96Aug8030605%40i44d2.ipd.info.uni-karlsruhe.de#link1
  * @test  xp://net.xp_framework.unittest.util.LocaleTest
  */
-class Locale extends \lang\Object {
+class Locale {
   public
     $lang     = '',
     $country  = '',
