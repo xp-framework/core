@@ -56,7 +56,7 @@ class EnumTest extends \unittest\TestCase {
 
   #[@test]
   public function thisIsNotAnEnum() {
-    $this->assertFalse($this->getClass()->isEnum());
+    $this->assertFalse(typeof($this)->isEnum());
   }
 
   #[@test]
@@ -86,8 +86,8 @@ class EnumTest extends \unittest\TestCase {
 
   #[@test]
   public function enumMembersAreNotAbstract() {
-    $this->assertNotAbstract(Coin::$penny->getClass()->getModifiers());
-    $this->assertNotAbstract(Operation::$plus->getClass()->getModifiers());
+    $this->assertNotAbstract(typeof(Coin::$penny)->getModifiers());
+    $this->assertNotAbstract(typeof(Operation::$plus)->getModifiers());
   }
 
   #[@test]

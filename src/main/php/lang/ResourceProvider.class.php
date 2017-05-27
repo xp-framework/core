@@ -8,7 +8,7 @@ use io\File;
  * @see   xp://lang.ClassLoader
  * @test  xp://net.xp_framework.unittest.core.ResourceProviderTest
  */
-class ResourceProvider extends Object {
+class ResourceProvider {
   protected static $instance= null;
   protected $resource= null;
   public $context= null;

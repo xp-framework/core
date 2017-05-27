@@ -10,7 +10,7 @@ define('SYSTEM_RETURN_CMDNOTEXECUTABLE',   126);
  *
  * @deprecated  Replaced by lang.Environment and lang.Process
  */
-class System extends Object {
+class System {
 
   /**
    * Private helper method. Tries to locate an environment

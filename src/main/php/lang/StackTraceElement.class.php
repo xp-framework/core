@@ -8,7 +8,7 @@
  * @test  xp://net.xp_framework.unittest.core.ExceptionsTest
  * @test  xp://net.xp_framework.unittest.core.StackTraceElementTest
  */
-class StackTraceElement extends Object {
+class StackTraceElement {
   public
     $file     = '',
     $class    = '',

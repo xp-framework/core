@@ -104,11 +104,6 @@ class ExceptionsTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function classMethod() {
-    $this->assertEquals(XPClass::forName('lang.Throwable'), (new Throwable('Test'))->getClass());
-  }
-
-  #[@test]
   public function compoundMessage() {
     $this->assertEquals(
       'Exception lang.Throwable (Test)', 

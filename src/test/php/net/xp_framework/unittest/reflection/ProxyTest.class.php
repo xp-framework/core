@@ -105,7 +105,7 @@ class ProxyTest extends \unittest\TestCase {
   public function iteratorInterfaceIsImplemented() {
     $class= $this->proxyClassFor([$this->iteratorClass]);
     $interfaces= $class->getInterfaces();
-    $this->assertEquals(2, sizeof($interfaces));
+    $this->assertEquals(1, sizeof($interfaces));
     $this->assertTrue(in_array($this->iteratorClass, $interfaces)); 
   }
 
@@ -113,7 +113,7 @@ class ProxyTest extends \unittest\TestCase {
   public function allInterfacesAreImplemented() {
     $class= $this->proxyClassFor([$this->iteratorClass, $this->observerClass]);
     $interfaces= $class->getInterfaces();
-    $this->assertEquals(3, sizeof($interfaces));
+    $this->assertEquals(2, sizeof($interfaces));
     $this->assertTrue(in_array($this->iteratorClass, $interfaces));
     $this->assertTrue(in_array($this->observerClass, $interfaces));
   }

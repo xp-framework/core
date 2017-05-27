@@ -10,7 +10,7 @@
  * @test  xp://net.xp_framework.unittest.core.ExceptionsTest
  * @test  xp://net.xp_framework.unittest.core.ChainedExceptionTest
  */
-class Throwable extends \Exception implements Generic { use \__xp;
+class Throwable extends \Exception implements Value {
   public $__id;
 
   public 
@@ -191,10 +191,8 @@ class Throwable extends \Exception implements Generic { use \__xp;
    *
    * Usually not overridden by subclasses unless stacktrace format 
    * should differ - otherwise overwrite compoundMessage() instead!.
-   *
-   * @return  string
    */
-  public function toString() {
+  public function toString(): string {
     $s= $this->compoundMessage()."\n";
     $tt= $this->getStackTrace();
     $t= sizeof($tt);
@@ -228,22 +226,13 @@ class Throwable extends \Exception implements Generic { use \__xp;
     return $s;
   }
 
-  /**
-   * Returns a hashcode for this object
-   *
-   * @return string
-   */
-  public function hashCode() { return $this->__id; }
+  /** Returns a hashcode for this object */
+  public function hashCode(): string {
+    return $this->__id;
+  }
   
-  /**
-   * Indicates whether some other object is "equal to" this one 
-   * 
-   * @param  var $cmp
-   * @return bool
-   */
-  public function equals($cmp): bool {
-    if (!$cmp instanceof self) return false;
-    if (!$cmp->__id) $cmp->__id= uniqid('', true);
-    return $this === $cmp;
+  /** Compares to another value */
+  public function compareTo($value): int {
+    return $value instanceof self ? $this->__id <=> $value->__id : 1;
   }
 }

@@ -7,7 +7,7 @@
  * @see   http://news.xp-framework.net/article/207/2007/07/29/
  * @test  xp://net.xp_framework.unittest.core.EnumTest
  */
-abstract class Enum extends Object {
+abstract class Enum {
   public $name= '';
   protected $ordinal= 0;
 

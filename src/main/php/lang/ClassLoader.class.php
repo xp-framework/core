@@ -37,7 +37,7 @@ use lang\reflect\Module;
  * @see   xp://lang.XPClass#forName
  * @see   xp://lang.reflect.Package#loadClass
  */
-final class ClassLoader extends Object implements IClassLoader {
+final class ClassLoader implements IClassLoader {
   protected static
     $delegates = [],
     $modules   = [];
@@ -567,14 +567,14 @@ final class ClassLoader extends Object implements IClassLoader {
     return array_unique($contents);
   }
 
-  /**
-   * Creates a string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    return nameof($this);
-  }
+  /** Creates a string representation */
+  public function toString(): string { return nameof($this); }
+
+  /** Returns a hashcode for this class loader */
+  public function hashCode(): string { return 'cl@default'; }
+
+  /** Compares this class loader to another value */
+  public function compareTo($value): int { return $value instanceof self ? $value <=> $this : 1; }
 
   /**
    * Returns a unique identifier for this class loader instance

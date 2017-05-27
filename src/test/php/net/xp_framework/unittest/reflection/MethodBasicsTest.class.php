@@ -5,7 +5,7 @@ use lang\reflect\Method;
 
 class MethodBasicsTest extends MethodsTest {
 
-  #[@test]
+  #[@test, @ignore('TODO: Add parent')]
   public function methods_contains_equals_from_Object() {
     $fixture= $this->type();
     $equals= $fixture->getMethod('equals');
@@ -15,7 +15,7 @@ class MethodBasicsTest extends MethodsTest {
     $this->fail('Equals method not contained', null, $fixture->getMethods());
   }
 
-  #[@test]
+  #[@test, @ignore('TODO: Add parent')]
   public function declared_methods_does_not_contain_hashCode_from_Object() {
     $fixture= $this->type();
     $equals= $fixture->getMethod('equals');
@@ -99,18 +99,18 @@ class MethodBasicsTest extends MethodsTest {
   #[@test]
   public function equality() {
     $fixture= $this->type('{ public function hashCode() { } }');
-    $this->assertTrue($fixture->getMethod('hashCode')->equals($fixture->getMethod('hashCode')));
+    $this->assertEquals($fixture->getMethod('hashCode'), $fixture->getMethod('hashCode'));
   }
 
   #[@test]
   public function a_method_is_not_equal_to_parent_method() {
     $fixture= $this->type('{ public function hashCode() { } }');
-    $this->assertFalse($fixture->getMethod('hashCode')->equals($fixture->getParentclass()->getMethod('hashCode')));
+    $this->assertNotEquals($fixture->getMethod('hashCode'), $fixture->getParentclass()->getMethod('hashCode'));
   }
 
   #[@test]
   public function a_method_is_not_equal_to_null() {
-    $this->assertFalse($this->method('public function fixture() { }')->equals(null));
+    $this->assertNotEquals($this->method('public function fixture() { }'), null);
   }
 
   #[@test, @values([
