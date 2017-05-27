@@ -7,7 +7,7 @@
  *
  * TextObserver class:
  * ```php
- * class TextObserver extends \lang\Object implements \util\Observer {
+ * class TextObserver implements \util\Observer {
  *
  *   public function update($obs, $arg= NULL) {
  *     Console::writeLine(__CLASS__, ' was notified of update in value, is now ', $obs->getValue());
