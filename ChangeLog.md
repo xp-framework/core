@@ -1,7 +1,25 @@
 XP Framework Core ChangeLog
 ========================================================================
 
-## ?.??.? / ????-??-??
+## 9.0.0 / ????-??-??
+
+### Heads up!
+
+* Merged PR ##169: Remove MCrypt (from `util.Secret` & `util.Random`), 
+  see https://wiki.php.net/rfc/mcrypt-viking-funeral
+  (@thekid)
+
+### RFCs
+
+* Implemented xp-framework/rfc#323: Remove `xp::typeOf()` - @thekid
+
+## 8.2.0 / 2017-05-28
+
+### Bugfixes
+
+* Fixed issue #172: Endless loop in io.Path::relativeTo() - @thekid
+
+### Features
 
 * Refactored code to use `typeof()` instead of `xp::typeOf()`, see
   https://github.com/xp-framework/rfc/issues/323

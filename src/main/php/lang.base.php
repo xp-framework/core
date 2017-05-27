@@ -82,13 +82,6 @@ final class xp {
   }
   // }}}
 
-  // {{{ proto string typeOf(var arg)
-  //     Returns the fully qualified type name
-  static function typeOf($arg) {
-    return is_object($arg) ? nameof($arg) : gettype($arg);
-  }
-  // }}}
-
   // {{{ proto string stringOf(var arg [, string indent default ''])
   //     Returns a string representation of the given argument
   static function stringOf($arg, $indent= '') {

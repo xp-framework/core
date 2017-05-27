@@ -269,7 +269,7 @@ class PathTest extends \unittest\TestCase {
     $this->assertNull((new Path('/'))->parent());
   }
 
-  #[@test, @values(['C:', 'C:/']), @action(new IsPlatform('^Win'))]
+  #[@test, @values(['C:', 'C:/', 'c:', 'C:/']), @action(new IsPlatform('^Win'))]
   public function parent_of_root_windows($root) {
     $this->assertNull((new Path($root))->parent());
   }
@@ -309,6 +309,11 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals($result, (new Path($input))->normalize()->toString('/'));
   }
 
+  #[@test]
+  public function normalize_uppercases_drive_letter() {
+    $this->assertEquals('C:/test', (new Path('c:/test'))->normalize()->toString('/'));
+  }
+
   #[@test, @values([
   #  ['a', 'b', 'a/b'],
   #  ['.', 'b', './b'], ['..', 'b', '../b'],
@@ -324,7 +329,8 @@ class PathTest extends \unittest\TestCase {
 
   #[@test, @expect(IllegalArgumentException::class), @values([
   #  ['relative', '/dev'],
-  #  ['relative', 'C:/Windows']
+  #  ['relative', 'C:/Windows'],
+  #  ['relative', 'c:/Windows']
   #])]
   public function cannot_resolve_path_if_path_is_relative_and_arg_is_absolute($a, $b) {
     (new Path($a))->relativeTo($b);
@@ -340,7 +346,8 @@ class PathTest extends \unittest\TestCase {
   #  ['src', 'src/test/php', '../..'], ['src/main', 'src/main/php', '..'],
   #  ['/var', '/', 'var'],
   #  ['/var', '/var', ''], ['/usr/local', '/usr/bin', '../local'],
-  #  ['C:/Windows', 'C:/', 'Windows'], ['C:\Windows', 'C:', 'Windows']
+  #  ['C:/Windows', 'C:/', 'Windows'], ['C:\Windows', 'C:', 'Windows'],
+  #  ['c:/Windows', 'C:/', 'Windows'], ['C:\Windows', 'c:', 'Windows']
   #])]
   public function relative_to($a, $b, $result) {
     $this->assertEquals($result, (new Path($a))->relativeTo($b)->toString('/'));
@@ -348,7 +355,8 @@ class PathTest extends \unittest\TestCase {
 
   #[@test, @expect(IllegalArgumentException::class), @values([
   #  ['/dev', 'relative'], ['relative', '/dev'],
-  #  ['C:/Windows', 'relative'], ['relative', 'C:/Windows']
+  #  ['C:/Windows', 'relative'], ['relative', 'C:/Windows'],
+  #  ['c:/Windows', 'relative'], ['relative', 'c:/Windows']
   #])]
   public function cannot_calculate_relative_path_if_one_component_is_absolute_and_the_other_isnt($a, $b) {
     (new Path($a))->relativeTo($b);
