@@ -1,9 +1,6 @@
 <?php namespace lang\reflect;
 
-use lang\ElementNotFoundException;
-use lang\ClassFormatException;
-use lang\XPClass;
-use lang\Type;
+use lang\{ElementNotFoundException, ClassFormatException, XPClass, Type};
 
 /**
  * Represents a method's parameter
@@ -13,7 +10,7 @@ use lang\Type;
  * @see   xp://lang.reflect.Method#numParameters
  * @test  xp://net.xp_framework.unittest.reflection.MethodParametersTest
  */
-class Parameter extends \lang\Object {
+class Parameter {
   protected
     $_reflect = null,
     $_details = null;

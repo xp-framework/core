@@ -18,7 +18,7 @@ use lang\ElementNotFoundException;
  *
  * @test      xp://net.xp_framework.unittest.util.PropertyManagerTest
  */
-class PropertyManager extends \lang\Object {
+class PropertyManager {
   protected static $instance= null;
   protected $provider= [];
 

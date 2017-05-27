@@ -48,17 +48,14 @@ class PropertyManagerTest extends \unittest\TestCase {
 
   #[@test]
   public function isSingleton() {
-    $this->assertEquals(
-      PropertyManager::getInstance()->hashCode(),
-      PropertyManager::getInstance()->hashCode()
-    );
+    $this->assertTrue(PropertyManager::getInstance() === PropertyManager::getInstance());
   }
   
   #[@test]
   public function testCanAcquireNewInstance() {
     $instance= $this->fixture();
     $this->assertInstanceOf(PropertyManager::class, $instance);
-    $this->assertNotEquals($instance->hashCode(), $this->fixture()->hashCode());
+    $this->assertFalse($instance === $this->fixture());
   }
   
   #[@test]

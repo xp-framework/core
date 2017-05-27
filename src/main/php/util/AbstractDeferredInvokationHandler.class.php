@@ -9,7 +9,7 @@ use lang\ClassCastException;
  *
  * @test  xp://net.xp_framework.unittest.util.DeferredInvokationHandlerTest
  */
-abstract class AbstractDeferredInvokationHandler extends \lang\Object implements InvocationHandler {
+abstract class AbstractDeferredInvokationHandler implements InvocationHandler {
   private $_instance= null;
 
   /**

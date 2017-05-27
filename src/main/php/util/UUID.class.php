@@ -53,7 +53,7 @@ use lang\FormatException;
  * @see   rfc://4122
  * @see   http://www.ietf.org/internet-drafts/draft-mealling-uuid-urn-00.txt
  */
-class UUID extends \lang\Object {
+class UUID implements \lang\Value {
   const FORMAT = '%04x%04x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x';
 
   public static
@@ -292,11 +292,11 @@ class UUID extends \lang\Object {
   /**
    * Returns whether another instance is equal to this
    *
-   * @param   var cmp
-   * @return  bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return $cmp instanceof self && $cmp->hashCode() === $this->hashCode();
+  public function compareTo($value) {
+    return $value instanceof self ? $this->hashCode() <=> $value->hashCode() : 1;
   }
 
   /**

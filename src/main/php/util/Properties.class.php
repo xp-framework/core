@@ -25,7 +25,7 @@ use lang\{FormatException, IllegalStateException, ElementNotFoundException};
  * @test    xp://net.xp_framework.unittest.util.FileBasedPropertiesTest
  * @see     php://parse_ini_file
  */
-class Properties extends \lang\Object implements PropertyAccess {
+class Properties implements PropertyAccess {
   private static $env;
   public $_file, $_data;
   private $expansion= null;
