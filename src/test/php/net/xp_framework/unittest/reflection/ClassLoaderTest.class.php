@@ -109,7 +109,7 @@ class ClassLoaderTest extends \unittest\TestCase {
 
   #[@test]
   public function loadClass() {
-    $this->assertEquals(XPClass::forName('lang.Object'), ClassLoader::getDefault()->loadClass('lang.Object'));
+    $this->assertEquals(XPClass::forName('lang.Value'), ClassLoader::getDefault()->loadClass('lang.Value'));
   }
 
   #[@test]
