@@ -47,7 +47,7 @@ class ClassLoaderTest extends \unittest\TestCase {
    * afforementioned XARs
    */
   public function setUp() {
-    $lib= $this->getClass()->getPackage()->getPackage('lib');
+    $lib= typeof($this)->getPackage()->getPackage('lib');
     $this->libraryLoader= $this->registerXar($lib->getResourceAsStream('three-and-four.xar'));
     $this->brokenLoader= $this->registerXar($lib->getResourceAsStream('broken.xar'));
     $this->containedLoader= $this->registerXar($this->libraryLoader->getResourceAsStream('contained.xar'));
@@ -70,7 +70,7 @@ class ClassLoaderTest extends \unittest\TestCase {
   #])]
   public function classloader_for_types_alongside_this_class($type) {
     $this->assertEquals(
-      $this->getClass()->getClassLoader(),
+      typeof($this)->getClassLoader(),
       XPClass::forName($type)->getClassLoader()
     );
   }
@@ -115,7 +115,7 @@ class ClassLoaderTest extends \unittest\TestCase {
   #[@test]
   public function findThisClass() {
     $this->assertEquals(
-      $this->getClass()->getClassLoader(),
+      typeof($this)->getClassLoader(),
       ClassLoader::getDefault()->findClass(nameof($this))
     );
   }
