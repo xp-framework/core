@@ -176,13 +176,19 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function indenting() {
-    $cl= \lang\ClassLoader::defineClass('net.xp_framework.unittest.core.StringOfTest_IndentingFixture', \lang\Object::class, [], '{
+    $cl= \lang\ClassLoader::defineClass('net.xp_framework.unittest.core.StringOfTest_IndentingFixture', null, ['lang.Value'], '{
       protected $inner= null;
       public function __construct($inner) {
         $this->inner= $inner;
       }
+      public function hashCode() {
+        return "test";
+      }
       public function toString() {
         return "object {\n  ".\xp::stringOf($this->inner, "  ")."\n}";
+      }
+      public function compareTo($value) {
+        return 1; 
       }
     }');
     $this->assertEquals(

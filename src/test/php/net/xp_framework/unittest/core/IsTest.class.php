@@ -1,15 +1,10 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\Object;
-use lang\Runnable;
-use lang\ClassLoader;
+use lang\{Runnable, ClassLoader};
 use net\xp_framework\unittest\core\generics\ListOf;
+use net\xp_framework\unittest\Name;
 
-/**
- * Tests the is() core functionality
- *
- * @see      php://is_a
- */
+/** Tests the is() core functionality */
 class IsTest extends \unittest\TestCase {
 
   #[@test]
@@ -49,12 +44,12 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function object_array() {
-    $this->assertTrue(is('lang.Object[]', [new Object(), new Object(), new Object()]));
+    $this->assertTrue(is('net.xp_framework.unittest.Name[]', [new Name(), new Name(), new Name()]));
   }
 
   #[@test]
   public function objectArrayWithnull() {
-    $this->assertFalse(is('lang.Object[]', [new Object(), new Object(), null]));
+    $this->assertFalse(is('net.xp_framework.unittest.Name[]', [new Name(), new Name(), null]));
   }
 
   #[@test]
@@ -135,7 +130,7 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function fullyQualifiedClassName() {
-    $this->assertTrue(is('lang.Generic', new Object()));
+    $this->assertTrue(is('lang.Value', new Name()));
   }
 
   #[@test]
@@ -272,7 +267,7 @@ class IsTest extends \unittest\TestCase {
   #  ['strlen'],
   #  ['xp::gc'],
   #  [['xp', 'gc']],
-  #  [[new Object(), 'toString']]
+  #  [[new Name('test'), 'toString']]
   #])]
   public function is_callable($val) {
     $this->assertTrue(is('callable', $val));
@@ -299,7 +294,7 @@ class IsTest extends \unittest\TestCase {
   }
 
   #[@test, @values([
-  #  [new Object()],
+  #  [new Name('test')],
   #  [new \ArrayObject([])]
   #])]
   public function is_object($val) {

@@ -1,11 +1,11 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use net\xp_framework\unittest\Name;
 use lang\{
   ArrayType,
   ClassCastException,
   IllegalArgumentException,
   MapType,
-  Object,
   Primitive,
   Type,
   XPClass
@@ -55,7 +55,10 @@ class MapTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function objectComponentType() {
-    $this->assertEquals(XPClass::forName('lang.Object'), MapType::forName('[:lang.Object]')->componentType());
+    $this->assertEquals(
+      XPClass::forName('net.xp_framework.unittest.Name'),
+      MapType::forName('[:net.xp_framework.unittest.Name]')->componentType()
+    );
   }
 
   #[@test]
@@ -143,7 +146,7 @@ class MapTypeTest extends \unittest\TestCase {
   }
 
   #[@test, @expect(IllegalArgumentException::class), @values([
-  #  0, -1, 0.5, '', 'Test', new Object(), true, false,
+  #  0, -1, 0.5, '', 'Test', new Name('test'), true, false,
   #  [[0, 1, 2]]
   #])]
   public function newInstance_raises_exceptions_for_non_arrays($value) {
@@ -160,7 +163,7 @@ class MapTypeTest extends \unittest\TestCase {
   }
 
   #[@test, @expect(ClassCastException::class), @values([
-  #  0, -1, 0.5, '', 'Test', new Object(), true, false,
+  #  0, -1, 0.5, '', 'Test', new Name('test'), true, false,
   #  [[0, 1, 2]]
   #])]
   public function cast_raises_exceptions_for_non_arrays($value) {

@@ -1,10 +1,10 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use net\xp_framework\unittest\Name;
 use lang\{
   ArrayType,
   ClassCastException,
   IllegalArgumentException,
-  Object,
   Primitive,
   Type,
   XPClass
@@ -123,7 +123,7 @@ class ArrayTypeTest extends \unittest\TestCase {
   }
 
   #[@test, @expect(IllegalArgumentException::class), @values([
-  #  0, -1, 0.5, '', 'Test', new Object(), true, false,
+  #  0, -1, 0.5, '', 'Test', new Name('test'), true, false,
   #  [['key' => 'color', 'value' => 'price']]
   #])]
   public function newInstance_raises_exceptions_for_non_arrays($value) {
@@ -141,7 +141,7 @@ class ArrayTypeTest extends \unittest\TestCase {
   }
 
   #[@test, @expect(ClassCastException::class), @values([
-  #  0, -1, 0.5, '', 'Test', new Object(), true, false,
+  #  0, -1, 0.5, '', 'Test', new Name('test'), true, false,
   #  [['key' => 'color', 'value' => 'price']]
   #])]
   public function cast_raises_exceptions_for_non_arrays($value) {

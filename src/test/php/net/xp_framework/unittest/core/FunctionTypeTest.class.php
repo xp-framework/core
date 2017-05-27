@@ -1,8 +1,9 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\{FunctionType, Primitive, Object, XPClass, Type, ArrayType, MapType, ClassCastException, IllegalArgumentException};
+use lang\{FunctionType, Primitive, XPClass, Type, ArrayType, MapType, ClassCastException, IllegalArgumentException};
 use lang\reflect\TargetInvocationException;
 use unittest\TestCase;
+use net\xp_framework\unittest\Name;
 
 class FunctionTypeTest extends TestCase {
 
@@ -127,7 +128,7 @@ class FunctionTypeTest extends TestCase {
   #  [function() { }],
   #  [function($a) { }],
   #  [function($a, $b) { }],
-  #  [function(array $a, callable $b, \lang\Object $c, $d, $e= false) { }]
+  #  [function(array $a, callable $b, \lang\Value $c, $d, $e= false) { }]
   #])]
   public function function_with_no_args_is_instance_of_null_signature_function_type($value) {
     $this->assertTrue((new FunctionType(null, Type::$VAR))->isInstance($value));
@@ -185,8 +186,9 @@ class FunctionTypeTest extends TestCase {
   }
 
   #[@test, @values([
-  #  [['lang.Object', 'new']], ['lang.Object::new'],
-  #  [[Object::class, 'new']]
+  #  [['net.xp_framework.unittest.Name', 'new']], 
+  #  ['net.xp_framework.unittest.Name::new'],
+  #  [[Name::class, 'new']]
   #])]
   public function array_referencing_constructor_is_instance($value) {
     $type= new FunctionType([], XPClass::forName('lang.Object'));
@@ -252,7 +254,7 @@ class FunctionTypeTest extends TestCase {
   #  0, -1, 0.5, true, false, '', 'Test',
   #  [[]], [['key' => 'value']],
   #  [['non-existant', 'method']], [['lang.XPClass', 'non-existant']],
-  #  [[null, 'method']], [[new \lang\Object(), 'non-existant']]
+  #  [[null, 'method']], [[new Name('test'), 'non-existant']]
   #])]
   public function cannot_cast_this($value) {
     (new FunctionType([Type::$VAR], Type::$VAR))->cast($value);
@@ -306,16 +308,17 @@ class FunctionTypeTest extends TestCase {
   #])]
   public function create_instances_from_array_referencing_static_class_method($value) {
     $value= (new FunctionType([Primitive::$STRING], XPClass::forName('lang.XPClass')))->newInstance($value);
-    $this->assertEquals(XPClass::forName('lang.Object'), $value('lang.Object'));
+    $this->assertEquals(XPClass::forName('net.xp_framework.unittest.Name'), $value('net.xp_framework.unittest.Name'));
   }
 
   #[@test, @values([
-  #  [['lang.Object', 'new']], ['lang.Object::new'],
-  #  [[Object::class, 'new']]
+  #  [['net.xp_framework.unittest.Name', 'new']], 
+  #  ['net.xp_framework.unittest.Name::new'],
+  #  [[Name::class, 'new']]
   #])]
   public function create_instances_from_array_referencing_constructor($value) {
-    $new= (new FunctionType([], XPClass::forName('lang.Object')))->newInstance($value);
-    $this->assertInstanceOf(Object::class, $new());
+    $new= (new FunctionType([], XPClass::forName('net.xp_framework.unittest.Name')))->newInstance($value);
+    $this->assertInstanceOf(Name::class, $new());
   }
 
   #[@test, @values([
@@ -378,7 +381,7 @@ class FunctionTypeTest extends TestCase {
   #  0, -1, 0.5, true, false, '', 'Test',
   #  [[]], [['key' => 'value']],
   #  [['non-existant', 'method']], [['lang.XPClass', 'non-existant']],
-  #  [[null, 'method']], [[new \lang\Object(), 'non-existant']]
+  #  [[null, 'method']], [[new Name('test'), 'non-existant']]
   #])]
   public function cannot_create_instances_from($value) {
     (new FunctionType([], Type::$VAR))->newInstance($value);
@@ -448,7 +451,7 @@ class FunctionTypeTest extends TestCase {
   #  0, -1, 0.5, true, false, '', 'Test',
   #  [[]], [['key' => 'value']],
   #  [['non-existant', 'method']], [['lang.XPClass', 'non-existant']],
-  #  [[null, 'method']], [[new \lang\Object(), 'non-existant']],
+  #  [[null, 'method']], [[new Name('Test'), 'non-existant']],
   #  function() { }
   #])]
   public function invoke_not_instance($value) {

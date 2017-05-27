@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
+use util\collections\{Vector, HashTable};
+use net\xp_framework\unittest\Name;
 use lang\{
   ArrayType,
   ClassCastException,
@@ -7,12 +9,10 @@ use lang\{
   IllegalAccessException,
   IllegalStateException,
   MapType,
-  Object,
   Primitive,
   Type,
   XPClass
 };
-use util\collections\{Vector, HashTable};
 
 class TypeTest extends \unittest\TestCase {
 
@@ -76,9 +76,14 @@ class TypeTest extends \unittest\TestCase {
     $this->assertEquals(MapType::forName('[:string]'), Type::forName('[:string]'));
   }
 
-  #[@test, @values(['lang.Object', Object::class, '\\lang\\Object', '?lang.Object'])]
+  #[@test, @values([
+  #  'net.xp_framework.unittest.Name',
+  #  '?net.xp_framework.unittest.Name',
+  #  '\net\xp_framework\unittest\Name',
+  #  Name::class
+  #])]
   public function objectType($name) {
-    $this->assertEquals(XPClass::forName('lang.Object'), Type::forName($name));
+    $this->assertEquals(XPClass::forName('net.xp_framework.unittest.Name'), Type::forName($name));
   }
 
   #[@test]
@@ -368,7 +373,7 @@ class TypeTest extends \unittest\TestCase {
   #  ['strlen'],
   #  ['xp::gc'],
   #  [['xp', 'gc']],
-  #  [[new Object(), 'equals']],
+  #  [[new Name('test'), 'equals']],
   #  [function() { }]
   #])]
   public function callable_type_union_isInstance($value) {
@@ -379,7 +384,7 @@ class TypeTest extends \unittest\TestCase {
   #  ['strlen'],
   #  ['xp::gc'],
   #  [['xp', 'gc']],
-  #  [[new Object(), 'equals']],
+  #  [[new Name('test'), 'equals']],
   #  [function() { }]
   #])]
   public function callable_type_union_newInstance($value) {
@@ -391,7 +396,7 @@ class TypeTest extends \unittest\TestCase {
   #  ['strlen'],
   #  ['xp::gc'],
   #  [['xp', 'gc']],
-  #  [[new Object(), 'equals']],
+  #  [[new Name('test'), 'equals']],
   #  [function() { }]
   #])]
   public function callable_type_union_cast($value) {
@@ -459,7 +464,7 @@ class TypeTest extends \unittest\TestCase {
   }
 
   #[@test, @values([
-  #  [new Object()],
+  #  [new Name('test')],
   #  [new \ArrayObject([])]
   #])]
   public function object_type_union_isInstance($value) {
@@ -476,7 +481,7 @@ class TypeTest extends \unittest\TestCase {
 
   #[@test, @values([
   #  [null],
-  #  [new Object()],
+  #  [new Name('test')],
   #  [new \ArrayObject([])]
   #])]
   public function object_type_union_cast($value) {
@@ -484,7 +489,7 @@ class TypeTest extends \unittest\TestCase {
   }
 
   #[@test, @values([
-  #  [new Object()],
+  #  [new Name('test')],
   #  [new \ArrayObject([])],
   #])]
   public function object_type_union_newInstance($value) {
