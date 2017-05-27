@@ -3,6 +3,9 @@ XP Framework Core ChangeLog
 
 ## 9.0.0 / ????-??-??
 
+* Merged PR ##169: Remove MCrypt (from `util.Secret` & `util.Random`), 
+  see https://wiki.php.net/rfc/mcrypt-viking-funeral
+  (@thekid)
 * Implemented xp-framework/rfc#323: Remove `xp::typeOf()` - @thekid
 
 ## 8.2.0 / 2017-05-28
