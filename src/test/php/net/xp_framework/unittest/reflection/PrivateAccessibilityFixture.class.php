@@ -7,7 +7,7 @@ use lang\XPClass;
  *
  * @see   xp://net.xp_framework.unittest.reflection.PrivateAccessibilityTest
  */
-class PrivateAccessibilityFixture extends \lang\Object {
+class PrivateAccessibilityFixture {
   private $target= 'Target';
   private static $staticTarget= 'Target';
 

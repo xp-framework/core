@@ -17,7 +17,7 @@ use io\IOException;
  * @see   http://www.cs.cf.ac.uk/Dave/C/node26.html#SECTION002600000000000000000
  * @see   xp://io.sys.Semaphore
  */
-class ShmSegment extends \lang\Object {
+class ShmSegment {
   public 
     $name     = '',
     $spot     = '';
@@ -112,5 +112,4 @@ class ShmSegment extends \lang\Object {
     
     return $ret;
   }
-
 }

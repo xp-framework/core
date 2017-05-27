@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use net\xp_framework\unittest\Name;
-use lang\Object;
+use lang\Value;
 
 /**
  * Tests the xp::stringOf() core utility
@@ -18,8 +18,10 @@ class StringOfTest extends \unittest\TestCase {
    * @return lang.Object
    */
   protected function testStringInstance() {
-    return new class() extends Object {
+    return new class() implements Value {
       public function toString() { return 'TestString(6) { String }'; }
+      public function hashCode() { return get_class($this); }
+      public function compareTo($value) { return 1; }
     };
   }
 
@@ -125,8 +127,10 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function twice_the_same_object_inside_array_not_recursion() {
-    $test= new class() extends Object {
+    $test= new class() implements Value {
       public function toString() { return 'Test'; }
+      public function hashCode() { return get_class($this); }
+      public function compareTo($value) { return 1; }
     };
     $this->assertEquals(
       "[\n  a => Test\n  b => Test\n]", 
@@ -136,9 +140,10 @@ class StringOfTest extends \unittest\TestCase {
   
   #[@test]
   public function twice_the_same_object_with_huge_hashcode_inside_array_not_recursion() {
-    $test= new class() extends Object {
-      public function hashCode() { return 9E100; }
+    $test= new class() implements Value {
       public function toString() { return 'Test'; }
+      public function hashCode() { return 9E100; }
+      public function compareTo($value) { return 1; }
     };
     $this->assertEquals(
       "[\n  a => Test\n  b => Test\n]", 
@@ -148,18 +153,20 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function toString_calling_xp_stringOf_does_not_loop_forever() {
-    $test= new class() extends Object {
+    $test= new class() implements Value {
       public function toString() { return \xp::stringOf($this); }
+      public function hashCode() { return get_class($this); }
+      public function compareTo($value) { return 1; }
     };
     $this->assertEquals(
-      nameof($test)." {\n  __id => \"".$test->hashCode()."\"\n}",
+      nameof($test)." {\n}",
       \xp::stringOf($test)
     );
   }
   
   #[@test]
   public function repeated_calls_to_xp_stringOf_yield_same_result() {
-    $object= new \lang\Object();
+    $object= $this->testStringInstance();
     $stringRep= $object->toString();
     $this->assertEquals(
       [$stringRep, $stringRep],
@@ -169,8 +176,8 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function indenting() {
-    $cl= \lang\ClassLoader::defineClass('net.xp_framework.unittest.core.StringOfTest_IndentingFixture', Object::class, [], '{
-      protected $inner= NULL;
+    $cl= \lang\ClassLoader::defineClass('net.xp_framework.unittest.core.StringOfTest_IndentingFixture', \lang\Object::class, [], '{
+      protected $inner= null;
       public function __construct($inner) {
         $this->inner= $inner;
       }
@@ -180,7 +187,7 @@ class StringOfTest extends \unittest\TestCase {
     }');
     $this->assertEquals(
       "object {\n  object {\n    null\n  }\n}",
-      $cl->newInstance($cl->newInstance(NULL))->toString()
+      $cl->newInstance($cl->newInstance(null))->toString()
     );
   }
 
@@ -201,7 +208,7 @@ class StringOfTest extends \unittest\TestCase {
 
   #[@test]
   public function closure_inside_object_does_not_raise_serialization_exception() {
-    $instance= new class(function($a, $b) { }) extends Object {
+    $instance= new class(function($a, $b) { }) {
       public $closure = null;
       public function __construct($closure) { $this->closure= $closure; }
     };

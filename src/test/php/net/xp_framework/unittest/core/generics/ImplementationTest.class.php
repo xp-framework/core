@@ -34,7 +34,7 @@ class ImplementationTest extends \unittest\TestCase {
     $fixture= create('new net.xp_framework.unittest.core.generics.TypeDictionary<string>');
     $this->assertEquals(
       [Primitive::$STRING],
-      $fixture->getClass()->genericArguments()
+      typeof($fixture)->genericArguments()
     );
   }
 
@@ -43,7 +43,7 @@ class ImplementationTest extends \unittest\TestCase {
     $fixture= create('new net.xp_framework.unittest.core.generics.TypeDictionary<string>');
     $this->assertEquals(
       XPClass::forName('lang.Type'),
-      $fixture->getClass()->getMethod('put')->getParameter(0)->getType()
+      typeof($fixture)->getMethod('put')->getParameter(0)->getType()
     );
   }
 
@@ -73,7 +73,7 @@ class ImplementationTest extends \unittest\TestCase {
     $fixture= create('new net.xp_framework.unittest.core.generics.TypeDictionary<string>');
     $this->assertEquals(
       [XPClass::forName('lang.Type'), Primitive::$STRING], 
-      $this->interfaceNamed($fixture->getClass(), 'net.xp_framework.unittest.core.generics.IDictionary')->genericArguments()
+      $this->interfaceNamed(typeof($fixture), 'net.xp_framework.unittest.core.generics.IDictionary')->genericArguments()
     );
   }
 
@@ -115,8 +115,7 @@ class ImplementationTest extends \unittest\TestCase {
 
   #[@test]
   public function closed() {
-    $this->assertEquals(
-      XPClass::forName('lang.Object'),
+    $this->assertNull(
       Type::forName('net.xp_framework.unittest.core.generics.ListOf<string>')->getParentclass()
     );
   }

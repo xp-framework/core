@@ -5,7 +5,7 @@
  *
  * @see      xp://net.xp_framework.unittest.reflection.ClassLoaderTest#loadClassFileWithRecusionInStaticBlock
  */
-class StaticRecursionOne extends \lang\Object {
+class StaticRecursionOne {
   public static $two= null;
 
   static function __static() {

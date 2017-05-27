@@ -4,6 +4,6 @@
  * Tests the XP Framework's optional namespace support
  *
  */
-class NamespaceAliasAutoloadedNamespacedFixture extends \lang\Object {
+class NamespaceAliasAutoloadedNamespacedFixture {
 
 }

@@ -7,7 +7,7 @@ use lang\Object;
  *
  * @see   xp://net.xp_framework.unittest.core.NamespacedClassesTest
  */
-class NamespacedClassUsingUnqualified extends \lang\Object {
+class NamespacedClassUsingUnqualified {
   
   /**
    * Returns a new object

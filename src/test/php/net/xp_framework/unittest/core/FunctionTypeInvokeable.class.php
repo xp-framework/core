@@ -1,9 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
-/**
- * Class for FunctionTypeTest
- */
-class FunctionTypeInvokeable extends \lang\Object {
+/** Class for FunctionTypeTest */
+class FunctionTypeInvokeable {
 
   /**
    * @param  var $arg

@@ -16,14 +16,14 @@ class CreateTest extends \unittest\TestCase {
     $h= create('new net.xp_framework.unittest.core.generics.Lookup<lang.Object, lang.Object>');
     $this->assertEquals(
       [XPClass::forName('lang.Object'), XPClass::forName('lang.Object')], 
-      $h->getClass()->genericArguments()
+      typeof($h)->genericArguments()
     );
   }
 
   #[@test]
   public function create_can_be_used_with_type_variables() {
     $T= XPClass::forName('lang.Object');
-    $this->assertEquals([$T], create("new net.xp_framework.unittest.core.generics.ListOf<$T>")->getClass()->genericArguments());
+    $this->assertEquals([$T], typeof(create("new net.xp_framework.unittest.core.generics.ListOf<$T>"))->genericArguments());
   }
 
   #[@test]

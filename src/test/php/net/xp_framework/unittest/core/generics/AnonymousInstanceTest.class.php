@@ -12,19 +12,19 @@ class AnonymousInstanceTest extends \unittest\TestCase {
   #[@test]
   public function anonymous_generic_is_generic() {
     $filter= newinstance('net.xp_framework.unittest.core.generics.Nullable<string>', [], []);
-    $this->assertTrue($filter->getClass()->isGeneric());
+    $this->assertTrue(typeof($filter)->isGeneric());
   }
 
   #[@test]
   public function anonymous_generics_arguments() {
     $filter= newinstance('net.xp_framework.unittest.core.generics.Nullable<string>', [], []);
-    $this->assertEquals([Primitive::$STRING], $filter->getClass()->genericArguments());
+    $this->assertEquals([Primitive::$STRING], typeof($filter)->genericArguments());
   }
 
   #[@test]
   public function anonymous_generic_with_annotations() {
     $filter= newinstance('#[@anon] net.xp_framework.unittest.core.generics.Nullable<string>', [], []);
-    $this->assertTrue($filter->getClass()->hasAnnotation('anon'));
+    $this->assertTrue(typeof($filter)->hasAnnotation('anon'));
   }
 
   #[@test]
@@ -52,8 +52,8 @@ class AnonymousInstanceTest extends \unittest\TestCase {
       'accept' => function($method) { return 'invocation' === $method->getName(); }
     ]);
     $this->assertEquals(
-      [$this->getClass()->getMethod('invocation')],
-      $methods->filter($this->getClass()->getMethods())
+      [typeof($this)->getMethod('invocation')],
+      $methods->filter(typeof($this)->getMethods())
     );
   }
 }

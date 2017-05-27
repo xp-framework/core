@@ -4,6 +4,6 @@
  * Tests the XP Framework's optional namespace support
  *
  */
-class NamespaceAliasAutoloadedFQFixture extends \lang\Object {
+class NamespaceAliasAutoloadedFQFixture {
 
 }

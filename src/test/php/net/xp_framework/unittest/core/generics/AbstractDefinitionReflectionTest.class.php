@@ -78,7 +78,7 @@ abstract class AbstractDefinitionReflectionTest extends \unittest\TestCase {
   #[@test]
   public function classesFromReflectionAndCreateAreEqual() {
     $this->assertEquals(
-      $this->fixtureInstance()->getClass(),
+      typeof($this->fixtureInstance()),
       $this->fixture->newGenericType([
         Primitive::$STRING, 
         XPClass::forName('unittest.TestCase')
@@ -101,12 +101,12 @@ abstract class AbstractDefinitionReflectionTest extends \unittest\TestCase {
 
   #[@test, @expect(IllegalArgumentException::class)]
   public function missingArgument() {
-    $this->fixture->newGenericType([$this->getClass()]);
+    $this->fixture->newGenericType([typeof($this)]);
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
   public function tooManyArguments() {
-    $c= $this->getClass();
+    $c= typeof($this);
     $this->fixture->newGenericType([$c, $c, $c]);
   }
 

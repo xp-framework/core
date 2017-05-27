@@ -23,7 +23,7 @@ class RuntimeTest extends \unittest\TestCase {
   public function name() {
     $this->assertEquals(
       'net.xp_framework.unittest.core.generics.Lookup<string,unittest.TestCase>',
-      $this->fixture->getClass()->getName()
+      typeof($this->fixture)->getName()
     );
   }
 
@@ -31,7 +31,7 @@ class RuntimeTest extends \unittest\TestCase {
   public function literal() {
     $this->assertEquals(
       'net\\xp_framework\\unittest\\core\\generics\\Lookup··þstring¸unittest¦TestCase',
-      $this->fixture->getClass()->literal()
+      typeof($this->fixture)->literal()
     );
   }
 

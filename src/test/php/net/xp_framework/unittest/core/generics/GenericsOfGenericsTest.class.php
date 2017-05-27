@@ -11,7 +11,7 @@ class GenericsOfGenericsTest extends \unittest\TestCase {
   public function listOfListOfStringsReflection() {
     $l= create('new net.xp_framework.unittest.core.generics.ListOf<net.xp_framework.unittest.core.generics.ListOf<string>>');
     
-    with ($class= $l->getClass()); {
+    with ($class= typeof($l)); {
       $this->assertTrue($class->isGeneric());
       $arguments= $class->genericArguments();
       $this->assertEquals(1, sizeof($arguments));
@@ -29,7 +29,7 @@ class GenericsOfGenericsTest extends \unittest\TestCase {
   public function lookupOfListOfStringsReflection() {
     $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, net.xp_framework.unittest.core.generics.ListOf<string>>');
     
-    with ($class= $l->getClass()); {
+    with ($class= typeof($l)); {
       $this->assertTrue($class->isGeneric());
       $arguments= $class->genericArguments();
       $this->assertEquals(2, sizeof($arguments));
@@ -48,7 +48,7 @@ class GenericsOfGenericsTest extends \unittest\TestCase {
   public function lookupOfLookupOfStringsReflection() {
     $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, net.xp_framework.unittest.core.generics.Lookup<string, lang.Generic>>');
     
-    with ($class= $l->getClass()); {
+    with ($class= typeof($l)); {
       $this->assertTrue($class->isGeneric());
       $arguments= $class->genericArguments();
       $this->assertEquals(2, sizeof($arguments));
