@@ -239,7 +239,9 @@ class Path implements \lang\Value {
           $normalized[]= '..';
           $normalized[]= '..';
         }
-       } else {
+      } else if (':' === $component{strlen($component) - 1}) {
+        $normalized[]= strtoupper($component);
+      } else {
         $normalized[]= $component;
       }
     }
