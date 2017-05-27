@@ -127,8 +127,8 @@ abstract class ArchiveTest extends \unittest\TestCase {
   #[@test]
   public function creating_archive() {
     $contents= [
-      'lang/Object.class.php'    => '<?php class Object { }',
-      'lang/Type.class.php'      => '<?php class Type extends Object { }'
+      'lang/Type.class.php'      => '<?php class Type { }',
+      'lang/XPClass.class.php'   => '<?php class XPClass extends Type { }'
     ];
 
     $out= new MemoryOutputStream();
