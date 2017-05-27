@@ -344,7 +344,7 @@ final class ClassLoader implements IClassLoader {
   public static function defineClass($spec, $parent, $interfaces, $def= null) {
     $decl= [
       'kind'       => 'class',
-      'extends'    => [$parent],
+      'extends'    => $parent ? [$parent] : null,
       'implements' => (array)$interfaces,
       'use'        => []
     ];
