@@ -3,6 +3,7 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+* Fixed issue #172: Endless loop in io.Path::relativeTo() - @thekid
 * Refactored code to use `typeof()` instead of `xp::typeOf()`, see
   https://github.com/xp-framework/rfc/issues/323
   (@thekid)
