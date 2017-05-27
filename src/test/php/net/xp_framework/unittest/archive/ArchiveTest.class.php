@@ -21,6 +21,11 @@ abstract class ArchiveTest extends \unittest\TestCase {
    */
   protected abstract function version();
 
+  /** Helper to load a xar file from the class loading mechanism */
+  protected function resource(string $name): File {
+    return typeof($this)->getPackage()->getResourceAsStream($name);
+  }
+
   /**
    * Asserts on entries in an archive
    *
@@ -68,7 +73,7 @@ abstract class ArchiveTest extends \unittest\TestCase {
 
   #[@test]
   public function version_equals_resource_version() {
-    $a= new Archive($this->getClass()->getPackage()->getResourceAsStream('v'.$this->version().'.xar'));
+    $a= new Archive($this->resource('v'.$this->version().'.xar'));
     $a->open(Archive::READ);
     $this->assertEquals($this->version(), $a->version);
   }
@@ -96,14 +101,14 @@ abstract class ArchiveTest extends \unittest\TestCase {
 
   #[@test]
   public function contains_existant() {
-    $a= new Archive($this->getClass()->getPackage()->getResourceAsStream('v'.$this->version().'.xar'));
+    $a= new Archive($this->resource('v'.$this->version().'.xar'));
     $a->open(Archive::READ);
     $this->assertTrue($a->contains('contained.txt'));
   }
 
   #[@test]
   public function entries_contain_file() {
-    $a= new Archive($this->getClass()->getPackage()->getResourceAsStream('v'.$this->version().'.xar'));
+    $a= new Archive($this->resource('v'.$this->version().'.xar'));
     $a->open(Archive::READ);
     $this->assertEntries($a, ['contained.txt' => "This file is contained in an archive!\n"]);
   }
