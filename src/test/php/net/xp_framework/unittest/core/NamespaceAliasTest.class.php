@@ -1,8 +1,6 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\Object;
 use lang\ClassLoader;
-use lang\Generic;
 use unittest\TestCase;
 
 /**
@@ -11,25 +9,10 @@ use unittest\TestCase;
 class NamespaceAliasTest extends TestCase {
 
   #[@test]
-  public function lang_object_class_exists() {
-    $this->assertTrue(class_exists(Object::class, false));
-  }
-
-  #[@test]
-  public function lang_generic_interface_exists() {
-    $this->assertTrue(interface_exists(Generic::class, false));
-  }
-
-  #[@test]
-  public function unittest_testcase_class_exists() {
-    $this->assertTrue(class_exists(TestCase::class, false));
-  }
-
-  #[@test]
   public function defined_class_exists() {
     ClassLoader::defineClass(
       'net.xp_framework.unittest.core.NamespaceAliasClassFixture', 
-      Object::class, 
+      null, 
       [], 
       '{}'
     );

@@ -136,14 +136,14 @@ class ProxyTest extends \unittest\TestCase {
   
   #[@test, @expect(IllegalArgumentException::class)]
   public function cannotCreateProxiesForClasses() {
-    $this->proxyInstanceFor([XPClass::forName('lang.Object')]);
+    $this->proxyInstanceFor([XPClass::forName('lang.Type')]);
   }
   
   #[@test, @expect(IllegalArgumentException::class)]
   public function cannotCreateProxiesForClassesAsSecondArg() {
     $this->proxyInstanceFor([
       $this->iteratorClass,
-      XPClass::forName('lang.Object')
+      XPClass::forName('lang.Type')
     ]);
   }
 

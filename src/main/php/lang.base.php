@@ -369,9 +369,9 @@ function newinstance($spec, $args, $def= null) {
 
   $name= strtr($type, '\\', '.').$n;
   if (interface_exists($type)) {
-    $decl= ['kind' => 'class', 'extends' => ['lang.Object'], 'implements' => ['\\'.$type], 'use' => []];
+    $decl= ['kind' => 'class', 'extends' => null, 'implements' => ['\\'.$type], 'use' => []];
   } else if (trait_exists($type)) {
-    $decl= ['kind' => 'class', 'extends' => ['lang.Object'], 'implements' => [], 'use' => ['\\'.$type]];
+    $decl= ['kind' => 'class', 'extends' => null, 'implements' => [], 'use' => ['\\'.$type]];
   } else {
     $decl= ['kind' => 'class', 'extends' => ['\\'.$type], 'implements' => [], 'use' => []];
   }

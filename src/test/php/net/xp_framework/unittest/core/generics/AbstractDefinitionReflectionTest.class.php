@@ -1,8 +1,6 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
-use lang\XPClass;
-use lang\Primitive;
-use lang\IllegalArgumentException;
+use lang\{XPClass, Primitive, IllegalArgumentException};
 
 /**
  * TestCase for definition reflection
@@ -68,7 +66,7 @@ abstract class AbstractDefinitionReflectionTest extends \unittest\TestCase {
 
   #[@test]
   public function newLookupWithStringAndObject() {
-    $arguments= [Primitive::$STRING, XPClass::forName('lang.Object')];
+    $arguments= [Primitive::$STRING, XPClass::forName('lang.Value')];
     $this->assertEquals(
       $arguments, 
       $this->fixture->newGenericType($arguments)->genericArguments()
@@ -89,7 +87,7 @@ abstract class AbstractDefinitionReflectionTest extends \unittest\TestCase {
   #[@test]
   public function classesCreatedWithDifferentTypesAreNotEqual() {
     $this->assertNotEquals(
-      $this->fixture->newGenericType([Primitive::$STRING, XPClass::forName('lang.Object')]),
+      $this->fixture->newGenericType([Primitive::$STRING, XPClass::forName('lang.Value')]),
       $this->fixture->newGenericType([Primitive::$STRING, XPClass::forName('unittest.TestCase')])
     );
   }

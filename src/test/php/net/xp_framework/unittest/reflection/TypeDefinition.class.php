@@ -19,7 +19,7 @@ trait TypeDefinition {
       $definition= [
         'modifiers'  => $modifiers,
         'kind'       => 'class',
-        'extends'    => [Object::class],
+        'extends'    => null,
         'implements' => [],
         'use'        => [CompareTo::class],
         'imports'    => [Value::class => null]

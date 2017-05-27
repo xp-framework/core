@@ -39,7 +39,7 @@ class ArrayTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function objectComponentType() {
-    $this->assertEquals(XPClass::forName('lang.Object'), ArrayType::forName('lang.Object[]')->componentType());
+    $this->assertEquals(XPClass::forName('net.xp_framework.unittest.Name'), ArrayType::forName('net.xp_framework.unittest.Name[]')->componentType());
   }
 
   #[@test]
@@ -84,7 +84,7 @@ class ArrayTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function stringArrayNotAssignableFromClassType() {
-    $this->assertFalse(ArrayType::forName('string[]')->isAssignableFrom($this->getClass()));
+    $this->assertFalse(ArrayType::forName('string[]')->isAssignableFrom(typeof($this)));
   }
 
   #[@test]

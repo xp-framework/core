@@ -9,26 +9,26 @@ class NotGenericTest extends \unittest\TestCase {
   
   #[@test]
   public function thisIsNotAGeneric() {
-    $this->assertFalse($this->getClass()->isGeneric());
+    $this->assertFalse(typeof($this)->isGeneric());
   }
 
   #[@test]
   public function thisIsNotAGenericDefinition() {
-    $this->assertFalse($this->getClass()->isGenericDefinition());
+    $this->assertFalse(typeof($this)->isGenericDefinition());
   }
 
   #[@test, @expect(IllegalStateException::class)]
   public function cannotCreateGenericTypeFromThis() {
-    $this->getClass()->newGenericType([]);
+    typeof($this)->newGenericType([]);
   }
 
   #[@test, @expect(IllegalStateException::class)]
   public function cannotGetGenericArgumentsForThis() {
-    $this->getClass()->genericArguments();
+    typeof($this)->genericArguments();
   }
 
   #[@test, @expect(IllegalStateException::class)]
   public function cannotGetGenericComponentsForThis() {
-    $this->getClass()->genericComponents();
+    typeof($this)->genericComponents();
   }
 }

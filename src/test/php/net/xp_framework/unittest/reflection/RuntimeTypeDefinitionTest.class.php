@@ -77,13 +77,13 @@ abstract class RuntimeTypeDefinitionTest extends \unittest\TestCase {
 
   #[@test, @values(['com.example.test.RTTDDotted', 'com\\example\\test\\RTTDNative'])]
   public function type_with_package_is_declared_inside_namespace($name) {
-    $name.= $this->getClass()->getSimpleName().$name;
+    $name.= typeof($this)->getSimpleName().$name;
     $this->assertEquals('com\\example\\test\\', substr($this->define(['name' => $name])->literal(), 0, 17));
   }
 
   #[@test]
   public function type_without_package_is_declared_globally() {
-    $name= $this->getClass()->getSimpleName().'RTTDGlobal';
+    $name= typeof($this)->getSimpleName().'RTTDGlobal';
     $this->assertEquals($name, $this->define(['name' => $name])->literal());
   }
 }

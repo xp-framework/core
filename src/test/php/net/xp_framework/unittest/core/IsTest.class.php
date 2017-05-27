@@ -44,12 +44,12 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function object_array() {
-    $this->assertTrue(is('net.xp_framework.unittest.Name[]', [new Name(), new Name(), new Name()]));
+    $this->assertTrue(is('net.xp_framework.unittest.Name[]', [new Name('test'), new Name('test'), new Name('test')]));
   }
 
   #[@test]
   public function objectArrayWithnull() {
-    $this->assertFalse(is('net.xp_framework.unittest.Name[]', [new Name(), new Name(), null]));
+    $this->assertFalse(is('net.xp_framework.unittest.Name[]', [new Name('test'), new Name('test'), null]));
   }
 
   #[@test]
@@ -125,19 +125,19 @@ class IsTest extends \unittest\TestCase {
   #[@test]
   public function undefinedClassName() {
     $this->assertFalse(class_exists('Undefined_Class', false));
-    $this->assertFalse(is('Undefined_Class', new Object()));
+    $this->assertFalse(is('Undefined_Class', new class() { }));
   }
 
   #[@test]
   public function fullyQualifiedClassName() {
-    $this->assertTrue(is('lang.Value', new Name()));
+    $this->assertTrue(is('lang.Value', new Name('test')));
   }
 
   #[@test]
   public function interfaces() {
     ClassLoader::defineClass(
       'net.xp_framework.unittest.core.RunnableImpl', 
-      Object::class,
+      null,
       [Runnable::class],
       ['run' => function() { }]
     );
@@ -150,7 +150,7 @@ class IsTest extends \unittest\TestCase {
     
     $this->assertTrue(is('lang.Runnable', new RunnableImpl()));
     $this->assertTrue(is('lang.Runnable', new RunnableImplEx()));
-    $this->assertFalse(is('lang.Runnable', new Object()));
+    $this->assertFalse(is('lang.Runnable', new class() { }));
   }
 
   #[@test]
@@ -203,9 +203,9 @@ class IsTest extends \unittest\TestCase {
   /** @return var[][] */
   private function genericDictionaries() {
     return [
-      [create('new net.xp_framework.unittest.core.generics.Lookup<string, lang.Generic>')],
-      [create('new net.xp_framework.unittest.core.generics.Lookup<lang.Generic, lang.Generic>')],
-      [create('new net.xp_framework.unittest.core.generics.Lookup<net.xp_framework.unittest.core.generics.ListOf<int>, lang.Generic>')],
+      [create('new net.xp_framework.unittest.core.generics.Lookup<string, lang.Value>')],
+      [create('new net.xp_framework.unittest.core.generics.Lookup<lang.Value, lang.Value>')],
+      [create('new net.xp_framework.unittest.core.generics.Lookup<net.xp_framework.unittest.core.generics.ListOf<int>, lang.Value>')],
     ];
   }
 
@@ -221,12 +221,18 @@ class IsTest extends \unittest\TestCase {
 
   #[@test]
   public function wildcard_check_for_single_type_parameter_generic() {
-    $this->assertTrue(is('net.xp_framework.unittest.core.generics.ListOf<net.xp_framework.unittest.core.generics.ListOf<?>>', create('new net.xp_framework.unittest.core.generics.ListOf<net.xp_framework.unittest.core.generics.ListOf<int>>')));
+    $this->assertTrue(is(
+      'net.xp_framework.unittest.core.generics.ListOf<net.xp_framework.unittest.core.generics.ListOf<?>>',
+      create('new net.xp_framework.unittest.core.generics.ListOf<net.xp_framework.unittest.core.generics.ListOf<int>>')
+    ));
   }
 
   #[@test]
   public function wildcard_check_for_type_parameters_partial() {
-    $this->assertTrue(is('net.xp_framework.unittest.core.generics.Lookup<string, ?>', create('new net.xp_framework.unittest.core.generics.Lookup<string, lang.Generic>')));
+    $this->assertTrue(is(
+      'net.xp_framework.unittest.core.generics.Lookup<string, ?>',
+      create('new net.xp_framework.unittest.core.generics.Lookup<string, lang.Value>')
+    ));
   }
 
   #[@test]

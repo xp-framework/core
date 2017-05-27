@@ -53,6 +53,6 @@ class RuntimeTest extends \unittest\TestCase {
 
   #[@test, @expect(IllegalArgumentException::class)]
   public function valueTypeIncorrect() {
-    $this->fixture->put('Test', new \lang\Object());
+    $this->fixture->put('Test', new class() { });
   }
 }

@@ -1,6 +1,6 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\Object;
+use net\xp_framework\unittest\Name;
   
 /**
  * Fixture for namespaces tests
@@ -9,12 +9,8 @@ use lang\Object;
  */
 class NamespacedClassUsingUnqualified {
   
-  /**
-   * Returns a new object
-   *
-   * @return  lang.Object
-   */
-  public function newObject() {
-    return new Object();
+  /** Returns a new name */
+  public function newName(): Name {
+    return new Name('Test');
   }
 }

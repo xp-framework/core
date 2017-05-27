@@ -83,7 +83,7 @@ class MapTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function varMap() {
-    $this->assertTrue(MapType::forName('[:var]')->isInstance(['one' => 1, 'two' => 'Zwei', 'three' => new Object()]));
+    $this->assertTrue(MapType::forName('[:var]')->isInstance(['one' => 1, 'two' => 'Zwei', 'three' => new Name('Test')]));
   }
 
   #[@test]
@@ -108,7 +108,7 @@ class MapTypeTest extends \unittest\TestCase {
 
   #[@test]
   public function stringMapNotAssignableFromClassType() {
-    $this->assertFalse(MapType::forName('[:string]')->isAssignableFrom($this->getClass()));
+    $this->assertFalse(MapType::forName('[:string]')->isAssignableFrom(typeof($this)));
   }
 
   #[@test]

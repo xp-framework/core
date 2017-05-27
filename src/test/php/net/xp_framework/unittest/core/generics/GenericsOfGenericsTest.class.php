@@ -46,7 +46,7 @@ class GenericsOfGenericsTest extends \unittest\TestCase {
 
   #[@test]
   public function lookupOfLookupOfStringsReflection() {
-    $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, net.xp_framework.unittest.core.generics.Lookup<string, lang.Generic>>');
+    $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, net.xp_framework.unittest.core.generics.Lookup<string, lang.Value>>');
     
     with ($class= typeof($l)); {
       $this->assertTrue($class->isGeneric());
@@ -59,7 +59,7 @@ class GenericsOfGenericsTest extends \unittest\TestCase {
         $arguments= $vclass->genericArguments();
         $this->assertEquals(2, sizeof($arguments));
         $this->assertEquals(\lang\Primitive::$STRING, $arguments[0]);
-        $this->assertEquals(\lang\XPClass::forName('lang.Generic'), $arguments[1]);
+        $this->assertEquals(\lang\XPClass::forName('lang.Value'), $arguments[1]);
       }
     }
   }

@@ -1,7 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\{Runnable, Object, Runtime, Process, reflect\Package, ClassLoader, IllegalAccessException};
+use lang\{Runnable, Runtime, Process, reflect\Package, ClassLoader, IllegalAccessException};
 use unittest\actions\{VerifyThat, RuntimeVersion};
+use net\xp_framework\unittest\Name;
 
 /**
  * TestCase for newinstance() functionality. Some tests are skipped if
@@ -38,25 +39,25 @@ class NewInstanceTest extends \unittest\TestCase {
   
   #[@test]
   public function new_class_with_empty_body() {
-    $o= newinstance(Object::class, []);
-    $this->assertInstanceOf(Object::class, $o);
+    $o= newinstance(Name::class, ['Test']);
+    $this->assertInstanceOf(Name::class, $o);
   }
 
   #[@test]
   public function new_class_with_empty_body_as_string() {
-    $o= newinstance(Object::class, [], '{}');
-    $this->assertInstanceOf(Object::class, $o);
+    $o= newinstance(Name::class, ['Test'], '{}');
+    $this->assertInstanceOf(Name::class, $o);
   }
 
   #[@test]
   public function new_class_with_empty_body_as_closuremap() {
-    $o= newinstance(Object::class, [], []);
-    $this->assertInstanceOf(Object::class, $o);
+    $o= newinstance(Name::class, ['Test'], []);
+    $this->assertInstanceOf(Name::class, $o);
   }
 
   #[@test]
   public function new_class_with_member_as_string() {
-    $o= newinstance(Object::class, [], '{
+    $o= newinstance(Name::class, ['Test'], '{
       public $test= "Test";
     }');
     $this->assertEquals('Test', $o->test);
@@ -64,7 +65,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function new_class_with_member_as_closuremap() {
-    $o= newinstance(Object::class, [], [
+    $o= newinstance(Name::class, ['Test'], [
       'test' => 'Test'
     ]);
     $this->assertEquals('Test', $o->test);
@@ -72,24 +73,24 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function new_class_with_annotations() {
-    $o= newinstance('#[@test] lang.Object', []);
-    $this->assertTrue($o->getClass()->hasAnnotation('test'));
+    $o= newinstance('#[@test] net.xp_framework.unittest.Name', ['Test']);
+    $this->assertTrue(typeof($o)->hasAnnotation('test'));
   }
 
   #[@test]
   public function new_class_with_field_annotations() {
-    $o= newinstance(Object::class, [], [
+    $o= newinstance(Name::class, ['Test'], [
       '#[@test] fixture' => null
     ]);
-    $this->assertTrue($o->getClass()->getField('fixture')->hasAnnotation('test'));
+    $this->assertTrue(typeof($o)->getField('fixture')->hasAnnotation('test'));
   }
 
   #[@test]
   public function new_class_with_method_annotations() {
-    $o= newinstance(Object::class, [], [
+    $o= newinstance(Name::class, ['Test'], [
       '#[@test] fixture' => function() { }
     ]);
-    $this->assertTrue($o->getClass()->getMethod('fixture')->hasAnnotation('test'));
+    $this->assertTrue(typeof($o)->getMethod('fixture')->hasAnnotation('test'));
   }
 
   #[@test]
@@ -146,7 +147,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function arguments_are_passed_to_constructor() {
-    $instance= newinstance(Object::class, [$this], '{
+    $instance= newinstance(Name::class, [$this], '{
       public $test= null;
       public function __construct($test) {
         $this->test= $test;
@@ -157,7 +158,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function arguments_are_passed_to_constructor_in_closuremap() {
-    $instance= newinstance(Object::class, [$this], [
+    $instance= newinstance(Name::class, [$this], [
       'test' => null,
       '__construct' => function($test) {
         $this->test= $test;
@@ -168,7 +169,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function arguments_are_passed_to_base_constructor_in_closuremap() {
-    $base= ClassLoader::defineClass(nameof($this).'_BaseFixture', Object::class, [], [
+    $base= ClassLoader::defineClass(nameof($this).'_BaseFixture', Name::class, [], [
       'test' => null,
       '__construct' => function($test) {
         $this->test= $test;
@@ -182,9 +183,10 @@ class NewInstanceTest extends \unittest\TestCase {
     $r= $this->runInNewRuntime('
       class Test {
         public function verify() {
-          $r= newinstance("lang.Object", [1, 2, 3], [
+          $r= newinstance("lang.Runnable", [1, 2, 3], [
             "elements" => [],
-            "__construct" => function(...$initial) { $this->elements= $initial; }
+            "__construct" => function(...$initial) { $this->elements= $initial; },
+            "run" => function() { }
           ]);
           echo "OK: ", implode(", ", $r->elements);
         }
@@ -252,9 +254,9 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function packageOfNewInstancedClass() {
-    $i= newinstance(Object::class, [], '{}');
+    $i= newinstance(Name::class, ['Test'], '{}');
     $this->assertEquals(
-      Package::forName('lang'),
+      Package::forName('net.xp_framework.unittest'),
       typeof($i)->getPackage()
     );
   }
@@ -288,10 +290,10 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function className() {
-    $instance= newinstance(Object::class, [], '{ }');
+    $instance= newinstance(Name::class, ['Test'], '{ }');
     $n= nameof($instance);
     $this->assertEquals(
-      'lang.Object',
+      'net.xp_framework.unittest.Name',
       substr($n, 0, strrpos($n, "\xb7")),
       $n
     );
@@ -325,7 +327,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test]
   public function this_can_be_accessed() {
-    $instance= newinstance(Object::class, [], [
+    $instance= newinstance(Name::class, ['Test'], [
       'test'    => null,
       'setTest' => function($test) {
         $this->test= $test;
@@ -342,7 +344,7 @@ class NewInstanceTest extends \unittest\TestCase {
   #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function declaration_with_array_typehint() {
     $r= $this->runInNewRuntime('
-      abstract class Base extends \lang\Object {
+      abstract class Base {
         public abstract function fixture(array $args);
       }
       $instance= newinstance("Base", [], ["fixture" => function(array $args) { return "Hello"; }]);
@@ -357,7 +359,7 @@ class NewInstanceTest extends \unittest\TestCase {
   #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function declaration_with_callable_typehint() {
     $r= $this->runInNewRuntime('
-      abstract class Base extends \lang\Object {
+      abstract class Base {
         public abstract function fixture(callable $args);
       }
       $instance= newinstance("Base", [], ["fixture" => function(callable $args) { return "Hello"; }]);
@@ -372,11 +374,13 @@ class NewInstanceTest extends \unittest\TestCase {
   #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function declaration_with_class_typehint() {
     $r= $this->runInNewRuntime('
-      abstract class Base extends \lang\Object {
-        public abstract function fixture(\lang\Generic $args);
+      abstract class Base {
+        public abstract function fixture(\lang\Runnable $args);
       }
-      $instance= newinstance("Base", [], ["fixture" => function(\lang\Generic $args) { return "Hello"; }]);
-      echo $instance->fixture(new \lang\Object());
+      $instance= newinstance("Base", [], ["fixture" => function(\lang\Runnable $args) { return "Hello"; }]);
+      echo $instance->fixture(new class() implements \lang\Runnable {
+        public function run() { }
+      });
     ');
     $this->assertEquals(
       ['exitcode' => 0, 'output' => 'Hello'],
@@ -387,7 +391,7 @@ class NewInstanceTest extends \unittest\TestCase {
   #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function declaration_with_self_typehint() {
     $r= $this->runInNewRuntime('
-      abstract class Base extends \lang\Object {
+      abstract class Base {
         public abstract function fixture(self $args);
       }
       $instance= newinstance("Base", [], ["fixture" => function(\Base $args) { return "Hello"; }]);

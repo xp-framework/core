@@ -127,12 +127,12 @@ class TypeTest extends \unittest\TestCase {
 
   #[@test]
   public function genericObjectType() {
-    with ($t= Type::forName('net.xp_framework.unittest.core.generics.IDictionary<string, lang.Object>')); {
+    with ($t= Type::forName('net.xp_framework.unittest.core.generics.IDictionary<string, lang.Value>')); {
       $this->assertInstanceOf(XPClass::class, $t);
       $this->assertTrue($t->isGeneric());
       $this->assertEquals(XPClass::forName('net.xp_framework.unittest.core.generics.IDictionary'), $t->genericDefinition());
       $this->assertEquals(
-        [Primitive::$STRING, XPClass::forName('lang.Object')],
+        [Primitive::$STRING, XPClass::forName('lang.Value')],
         $t->genericArguments()
       );
     }
@@ -206,7 +206,7 @@ class TypeTest extends \unittest\TestCase {
   /** @return var[] */
   protected function types() {
     return [
-      $this->getClass(),
+      typeof($this),
       Type::$VAR,
       Primitive::$BOOL, Primitive::$STRING, Primitive::$INT, Primitive::$DOUBLE,
       new ArrayType('var'),
@@ -286,7 +286,7 @@ class TypeTest extends \unittest\TestCase {
 
   #[@test]
   public function class_type_default() {
-    $this->assertEquals(null, XPClass::forName('lang.Object')->default);
+    $this->assertEquals(null, XPClass::forName('lang.Value')->default);
   }
 
   #[@test]
@@ -350,7 +350,7 @@ class TypeTest extends \unittest\TestCase {
 
   #[@test]
   public function array_type_union_is_not_assignable_from_this() {
-    $this->assertFalse(Type::$ARRAY->isAssignableFrom($this->getClass()));
+    $this->assertFalse(Type::$ARRAY->isAssignableFrom(typeof($this)));
   }
 
   #[@test, @values([
@@ -373,7 +373,7 @@ class TypeTest extends \unittest\TestCase {
   #  ['strlen'],
   #  ['xp::gc'],
   #  [['xp', 'gc']],
-  #  [[new Name('test'), 'equals']],
+  #  [[new Name('test'), 'compareTo']],
   #  [function() { }]
   #])]
   public function callable_type_union_isInstance($value) {
@@ -384,7 +384,7 @@ class TypeTest extends \unittest\TestCase {
   #  ['strlen'],
   #  ['xp::gc'],
   #  [['xp', 'gc']],
-  #  [[new Name('test'), 'equals']],
+  #  [[new Name('test'), 'compareTo']],
   #  [function() { }]
   #])]
   public function callable_type_union_newInstance($value) {
@@ -396,7 +396,7 @@ class TypeTest extends \unittest\TestCase {
   #  ['strlen'],
   #  ['xp::gc'],
   #  [['xp', 'gc']],
-  #  [[new Name('test'), 'equals']],
+  #  [[new Name('test'), 'compareTo']],
   #  [function() { }]
   #])]
   public function callable_type_union_cast($value) {
@@ -420,7 +420,7 @@ class TypeTest extends \unittest\TestCase {
 
   #[@test]
   public function callable_type_union_is_not_assignable_from_this() {
-    $this->assertFalse(Type::$CALLABLE->isAssignableFrom($this->getClass()));
+    $this->assertFalse(Type::$CALLABLE->isAssignableFrom(typeof($this)));
   }
 
   #[@test, @values([

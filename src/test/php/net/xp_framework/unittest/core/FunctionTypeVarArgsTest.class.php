@@ -17,7 +17,7 @@ class FunctionTypeVarArgsTest extends \unittest\TestCase {
   private function compile($signature, $apidoc= []) {
     $class= nameof($this).md5($signature);
     if (!isset(self::$compiled[$class])) {
-      self::$compiled[$class]= ClassLoader::defineClass($class, 'lang.Object', [], '{
+      self::$compiled[$class]= ClassLoader::defineClass($class, null, [], '{
         /**
          '.implode("\n* ", $apidoc).'
          */

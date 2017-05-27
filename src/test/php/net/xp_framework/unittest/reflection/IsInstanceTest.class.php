@@ -1,7 +1,6 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\XPClass;
-use lang\Runnable;
+use lang\{XPClass, Runnable};
 
 /**
  * TestCase
@@ -26,8 +25,8 @@ class IsInstanceTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function this_is_not_a_value() {
-    $this->assertFalse(XPClass::forName('lang.Value')->isInstance($this));
+  public function this_is_a_value() {
+    $this->assertTrue(XPClass::forName('lang.Value')->isInstance($this));
   }
 
   #[@test]

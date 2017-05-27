@@ -1,10 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use unittest\actions\RuntimeVersion;
-use lang\Generic;
-use lang\Object;
-use lang\Error;
-use lang\IllegalArgumentException;
+use lang\{Error, Value, IllegalArgumentException};
 
 /**
  * Test type hints.
@@ -14,23 +11,27 @@ class TypeHintsTest extends \unittest\TestCase {
   /**
    * Pass an object
    * 
-   * @param  lang.Generic $o
-   * @return lang.Generic
+   * @param  lang.Value $o
+   * @return lang.Value
    */
-  protected function pass(Generic $o) { return $o; }
+  protected function pass(Value $o) { return $o; }
 
   /**
    * Pass a nullable object
    * 
-   * @param  lang.Generic $o
-   * @return lang.Generic
+   * @param  lang.Value $o
+   * @return lang.Value
    */
-  protected function nullable(Generic $o= null) { return $o; }
+  protected function nullable(Value $o= null) { return $o; }
 
 
   #[@test]
   public function pass_an_object() {
-    $o= new Object();
+    $o= new class() implements Value {
+      public function toString() { return 'Test'; }
+      public function hashCode() { return 'Test'; }
+      public function compareTo($value) { return $this <=> $value; }
+    };
     $this->assertEquals($o, $this->pass($o));
   }
 
@@ -46,7 +47,11 @@ class TypeHintsTest extends \unittest\TestCase {
 
   #[@test]
   public function pass_object_to_nullable() {
-    $o= new Object();
+    $o= new class() implements Value {
+      public function toString() { return 'Test'; }
+      public function hashCode() { return 'Test'; }
+      public function compareTo($value) { return $this <=> $value; }
+    };
     $this->assertEquals($o, $this->nullable($o));
   }
 
