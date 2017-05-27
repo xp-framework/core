@@ -1,7 +1,9 @@
 XP Framework Core ChangeLog
 ========================================================================
 
-## ?.??.? / ????-??-??
+## 9.0.0 / ????-??-??
+
+* Implemented xp-framework/rfc#323: Remove `xp::typeOf()` - @thekid
 
 ## 8.2.0 / 2017-05-28
 
