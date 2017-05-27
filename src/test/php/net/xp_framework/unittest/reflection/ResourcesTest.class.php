@@ -11,8 +11,7 @@ class ResourcesTest extends \unittest\TestCase {
 
   /** @return void */
   public function setUp() {
-    $this->cl= ClassLoader::registerLoader(new ArchiveClassLoader(new Archive($this
-      ->getClass()
+    $this->cl= ClassLoader::registerLoader(new ArchiveClassLoader(new Archive(typeof($this)
       ->getPackage()
       ->getPackage('lib')
       ->getResourceAsStream('three-and-four.xar'))
