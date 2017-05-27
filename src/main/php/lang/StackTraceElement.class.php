@@ -8,7 +8,7 @@
  * @test  xp://net.xp_framework.unittest.core.ExceptionsTest
  * @test  xp://net.xp_framework.unittest.core.StackTraceElementTest
  */
-class StackTraceElement {
+class StackTraceElement implements Value {
   public
     $file     = '',
     $class    = '',
@@ -35,7 +35,7 @@ class StackTraceElement {
     $this->args     = $args;
     $this->message  = $message;
   }
-  
+
   /** Create string representation */
   public function toString(): string {
     $args= [];
@@ -75,8 +75,13 @@ class StackTraceElement {
     );
   }
 
+  /** Create hashcode */
+  public function hashCode(): string {
+    return md5($this->toString());
+  }
+
   /** Compares this stacktrace element to another object */
-  public function equals($cmp): bool {
-    return $cmp instanceof self && $this->toString() === $cmp->toString();
+  public function compareTo($value): int {
+    return $value instanceof self ? $this->toString() <=> $value->toString() : 1;
   }
 }
