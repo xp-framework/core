@@ -104,6 +104,11 @@ class Type implements Value {
     return $value instanceof self ? $this->name <=> $value->name : 1;
   }
 
+  /** Checks for equality with another value */
+  public function equals($value): bool {
+    return $value instanceof self && $this->name === $value->name;
+  }
+
   /**
    * Creates a type list from a given string
    *
