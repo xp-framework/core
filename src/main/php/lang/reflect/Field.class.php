@@ -1,6 +1,14 @@
 <?php namespace lang\reflect;
 
-use lang\{XPClass, Type, Value, IllegalArgumentException, IllegalAccessException};
+use lang\{
+  ClassLoader,
+  ElementNotFoundException,
+  IllegalAccessException,
+  IllegalArgumentException,
+  Type,
+  Value,
+  XPClass
+};
 
 /**
  * Represents a class field
@@ -40,16 +48,16 @@ class Field implements Value {
       } else if (defined('HHVM_VERSION')) {
         $type= $this->_reflect->getTypeText() ?: 'var';
       } else {
-        return \lang\Type::$VAR;
+        return Type::$VAR;
       }
 
       if ('self' === $type) {
         return new XPClass($this->_reflect->getDeclaringClass());
       } else {
-        return \lang\Type::forName($type);
+        return Type::forName($type);
       }
     }
-    return \lang\Type::$VAR;
+    return Type::$VAR;
   }
 
   /** Gets field type's name */
@@ -141,7 +149,7 @@ class Field implements Value {
    */
   public function get($instance) {
     if (null !== $instance && !($instance instanceof $this->_class)) {
-      throw new \lang\IllegalArgumentException(sprintf(
+      throw new IllegalArgumentException(sprintf(
         'Passed argument is not a %s class (%s)',
         XPClass::nameOf($this->_class),
         typeof($instance)->getName()
@@ -155,7 +163,7 @@ class Field implements Value {
     $public= $m & MODIFIER_PUBLIC;
     if (!$public && !$this->accessible) {
       $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
-      $scope= $t[1]['class'] ?? \lang\ClassLoader::getDefault()->loadUri($t[0]['file'])->literal();
+      $scope= $t[1]['class'] ?? ClassLoader::getDefault()->loadUri($t[0]['file'])->literal();
       $decl= $this->_reflect->getDeclaringClass()->getName();
       if ($m & MODIFIER_PROTECTED) {
         $allow= $scope === $decl || is_subclass_of($scope, $decl);
@@ -164,7 +172,7 @@ class Field implements Value {
       }
 
       if (!$allow) {
-        throw new \lang\IllegalAccessException(sprintf(
+        throw new IllegalAccessException(sprintf(
           'Cannot read %s %s::$%s from scope %s',
           Modifiers::stringOf($this->getModifiers()),
           $this->_class,
@@ -177,10 +185,10 @@ class Field implements Value {
     try {
       $public || $this->_reflect->setAccessible(true);
       return $this->_reflect->getValue($instance);
-    } catch (\lang\Throwable $e) {
+    } catch (Throwable $e) {
       throw $e;
     } catch (\Throwable $e) {
-      throw new \lang\XPException($e->getMessage());
+      throw new XPException($e->getMessage());
     }
   }
 
@@ -209,7 +217,7 @@ class Field implements Value {
     $public= $m & MODIFIER_PUBLIC;
     if (!$public && !$this->accessible) {
       $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
-      $scope= $t[1]['class'] ?? \lang\ClassLoader::getDefault()->loadUri($t[0]['file'])->literal();
+      $scope= $t[1]['class'] ?? ClassLoader::getDefault()->loadUri($t[0]['file'])->literal();
       $decl= $this->_reflect->getDeclaringClass()->getName();
       if ($m & MODIFIER_PROTECTED) {
         $allow= $scope === $decl || is_subclass_of($scope, $decl);
@@ -230,10 +238,10 @@ class Field implements Value {
     try {
       $public || $this->_reflect->setAccessible(true);
       $this->_reflect->setValue($instance, $value);
-    } catch (\lang\Throwable $e) {
+    } catch (Throwable $e) {
       throw $e;
     } catch (\Throwable $e) {
-      throw new \lang\XPException($e->getMessage());
+      throw new XPException($e->getMessage());
     }
   }
 
