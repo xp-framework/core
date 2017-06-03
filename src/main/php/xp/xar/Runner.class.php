@@ -1,75 +1,12 @@
 <?php namespace xp\xar;
 
-use util\cmd\Console;
 use io\File;
+use lang\archive\Archive;
+use lang\reflect\Package;
+use util\cmd\Console;
+use xp\runtime\Help;
 
-/**
- * XAR
- * ===
- * This tool can be used for working with XAR archives.
- *
- * Usage:
- * <pre>
- *   $ xar {options} {xarfile} [{fileset}]
- * </pre>
- *
- * Option synopsis
- * ===============
- *  -c        Create archive
- *  -x        Extract archive
- *  -t        List archive contents
- *  -s        See file`s contents
- *  -d        Diff archives
- *  -m        Merge archives
- *
- *
- * Command details
- * ===============
- *
- * Creating a xar file
- * -------------------
- * The following creates a xar file containing all files inside the
- * directories "src" and "lib" as well as the file "etc/config.ini".
- *
- * <tt>$ xar cf app.xar src/ lib/ etc/config.ini</tt>
- *
- *
- * Extracting a xar file
- * ---------------------
- * The following extracts all files inside the "app.xar" into the 
- * current directory. Directories and files are created if necessary,
- * existing files are overwritten.
- * 
- * <tt>$ xar xf app.xar</tt>
- *
- *
- * Viewing an archive's contents
- * -----------------------------
- * To list what's inside a xar file, use the following command:
- *
- * <tt>$ xar tf app.xar</tt>
- *
- *
- * Viewing the contents of a contained file
- * ----------------------------------------
- * To view a single file from a given archive, use the following command:
- *
- * <tt>$ xar sf archive.xar path/to/file/in/archive</tt>
- *
- *
- * Merging multiple archives
- * -------------------------
- * To merge archives into a single new one, use the following command:
- *
- * <tt>$ xar mf new.xar old-archive-1.xar old-archive-2.xar</tt>
- *
- *
- * Comparing two archives
- * ----------------------
- * To compare two archives, use the following command:
- *
- * <tt>$ xar df one.xar two.xar</tt>
- */
+/** XAR command */
 class Runner {
 
   /**
@@ -82,41 +19,26 @@ class Runner {
     if (null !== $operation) {
       self::bail('Cannot execute more than one instruction at a time.');
     }
-    $operation= \lang\reflect\Package::forName('xp.xar.instruction')->loadClass(ucfirst($name).'Instruction');
+    $operation= Package::forName('xp.xar.instruction')->loadClass(ucfirst($name).'Instruction');
   }
   
   /**
-   * Converts api-doc "markup" to plain text w/ ASCII "art"
-   *
-   * @param   string markup
-   * @return  string text
-   */
-  protected static function textOf($markup) {
-    $line= str_repeat('=', 72);
-    return strip_tags(preg_replace(
-      ['#<pre>#', '#</pre>#', '#<li>#'],
-      [$line, $line, '* '],
-      trim($markup)
-    ));
-  }
-
-  /**
-   * Displays usage and exists
+   * Displays a message on STDERR
    *
    * @return  int
    */
-  protected static function usage() {
-    Console::$err->writeLine(self::textOf((new \lang\XPClass(self::class))->getComment()));
+  protected static function bail($message) {
+    Console::$err->writeLine('*** ', $message);
     return 1;
   }
 
   /**
-   * Displays a message and exists
+   * Displays usage
    *
+   * @return  int
    */
-  protected static function bail($message) {
-    Console::$err->writeLine('*** ', $message);
-    exit(1);
+  protected static function usage() {
+    return Help::main(['@xp/runtime/ar.md']);
   }
 
   /**
@@ -170,7 +92,7 @@ class Runner {
               $offset++;
               break;
             default: 
-              self::bail('Unsupported commandline option "'.$args[$i].'"');
+              return self::bail('Unsupported commandline option "'.$args[$i].'"');
           }
         }
         $args= array_slice($args, $offset+ 1);
@@ -184,6 +106,6 @@ class Runner {
     if ($std) $file= new File($std);
    
     // Perform operation
-    $operation->newInstance(Console::$out, Console::$err, $options, new \lang\archive\Archive($file), $args)->perform();
+    $operation->newInstance(Console::$out, Console::$err, $options, new Archive($file), $args)->perform();
   } 
 }

@@ -6,7 +6,7 @@
  * @test  xp://net.xp_framework.unittest.reflection.ClassLoaderTest
  * @see   xp://lang.XPClass#forName
  */
-abstract class AbstractClassLoader extends Object implements IClassLoader {
+abstract class AbstractClassLoader implements IClassLoader {
   public $path= '';
   
   /**
@@ -125,22 +125,13 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
     return $name;
   }
 
-  /**
-   * Checks whether two class loaders are equal
-   *
-   * @param   lang.Generic cmp
-   * @return  bool
-   */
-  public function equals($cmp) {
-    return $cmp instanceof self && $cmp->path === $this->path;
+  /** Compares this class loader to another value */
+  public function compareTo($value): int {
+    return $value instanceof self ? $value->path <=> $this->path : 1;
   }
 
-  /**
-   * Returns a hashcode for this class loader
-   *
-   * @return string
-   */
-  public function hashCode() {
+  /** Returns a hashcode for this class loader */
+  public function hashCode(): string {
     return 'cl@'.$this->path;
   }
 
@@ -189,7 +180,7 @@ abstract class AbstractClassLoader extends Object implements IClassLoader {
 
     $path= $this->compactPath(rtrim($this->path, DIRECTORY_SEPARATOR), $bases);
     return
-      str_replace('ClassLoader', 'CL', $this->getClass()->getSimpleName()).
+      str_replace('ClassLoader', 'CL', typeof($this)->getSimpleName()).
       '<'.strtr($path, DIRECTORY_SEPARATOR, $separator).'>'
     ;
   }

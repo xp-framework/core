@@ -19,7 +19,7 @@ use io\File;
  * @see   xp://lang.Runtime#getExecutable
  * @see   php://proc_open
  */
-class Process extends Object {
+class Process {
   public
     $in     = null,
     $out    = null,

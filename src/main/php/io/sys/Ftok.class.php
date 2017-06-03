@@ -21,7 +21,7 @@
  * 
  * @ext      sem
  */
-class Ftok extends \lang\Object {
+class Ftok {
   
   /**
    * Convert a pathname and a project identifier to a System V IPC key 

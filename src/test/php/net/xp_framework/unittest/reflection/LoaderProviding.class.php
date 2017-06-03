@@ -1,7 +1,6 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\IClassLoader;
-use lang\Object;
 use lang\ElementNotFoundException;
 use lang\MethodNotImplementedException;
 
@@ -10,7 +9,7 @@ use lang\MethodNotImplementedException;
  *
  * @see   xp://net.xp_framework.unittest.reflection.ModuleTest
  */
-class LoaderProviding extends Object implements IClassLoader {
+class LoaderProviding implements IClassLoader {
   protected $resources;
 
   /**
@@ -21,6 +20,15 @@ class LoaderProviding extends Object implements IClassLoader {
   public function __construct(array $resources) {
     $this->resources= $resources;
   }
+
+  /** Creates a string representation */
+  public function toString(): string { return nameof($this); }
+
+  /** Returns a hashcode for this class loader */
+  public function hashCode(): string { return 'cl@providing'; }
+
+  /** Compares this class loader to another value */
+  public function compareTo($value): int { return $value instanceof self ? $value->resources <=> $this->resources : 1; }
 
   /** @return string */
   public function instanceId() { return 'providing://'.$this->hashCode(); }

@@ -9,7 +9,7 @@ use lang\ClassCastException;
  *
  * @test  xp://net.xp_framework.unittest.util.DeferredInvokationHandlerTest
  */
-abstract class AbstractDeferredInvokationHandler extends \lang\Object implements InvocationHandler {
+abstract class AbstractDeferredInvokationHandler implements InvocationHandler {
   private $_instance= null;
 
   /**
@@ -40,7 +40,7 @@ abstract class AbstractDeferredInvokationHandler extends \lang\Object implements
       if (!is_object($this->_instance)) {
         throw new DeferredInitializationException(
           $method,
-          new ClassCastException('Initializer returned '.\xp::typeOf($this->_instance))
+          new ClassCastException('Initializer returned '.typeof($this->_instance)->getName())
         );
       }
     }

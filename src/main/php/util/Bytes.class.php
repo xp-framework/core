@@ -34,7 +34,7 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
     } else if (is_string($initial)) {
       $this->buffer= $initial;
     } else {
-      throw new IllegalArgumentException('Expected either string[], int[] or string but was '.\xp::typeOf($initial));
+      throw new IllegalArgumentException('Expected either string[], int[] or string but was '.typeof($initial)->getName());
     }
     $this->size= strlen($this->buffer);
   }

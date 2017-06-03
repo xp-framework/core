@@ -78,7 +78,7 @@ class Primitive extends Type {
    */
   public function newInstance($value= null) {
     return $this->coerce($value, function($value) {
-      throw new IllegalArgumentException('Cannot create instances of '.$this->getName().' from '.\xp::typeOf($value));
+      throw new IllegalArgumentException('Cannot create instances of '.$this->getName().' from '.typeof($value)->getName());
     });
   }
 
@@ -91,7 +91,7 @@ class Primitive extends Type {
    */
   public function cast($value) {
     return null === $value ? null : $this->coerce($value, function($value) {
-      throw new ClassCastException('Cannot cast to '.$this->getName().' from '.\xp::typeOf($value));
+      throw new ClassCastException('Cannot cast to '.$this->getName().' from '.typeof($value)->getName());
     });
   }
 

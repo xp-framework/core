@@ -7,7 +7,7 @@
  * @see    xp://lang.Primitive
  * @test   xp://net.xp_framework.unittest.reflection.TypeTest 
  */
-class Type extends Object {
+class Type implements Value {
   public static $VAR, $VOID, $ARRAY, $OBJECT, $CALLABLE, $ITERABLE;
   public $name;
   public $default;
@@ -35,11 +35,11 @@ class Type extends Object {
       public function isInstance($value): bool { return is_object($value) && !$value instanceof \Closure; }
       public function newInstance($value= null) {
         if (is_object($value) && !$value instanceof \Closure) return clone $value;
-        throw new IllegalAccessException("Cannot instantiate ".\xp::typeOf($value));
+        throw new IllegalAccessException("Cannot instantiate ".typeof($value)->getName());
       }
       public function cast($value) {
         if (null === $value || is_object($value) && !$value instanceof \Closure) return $value;
-        throw new ClassCastException("Cannot cast ".\xp::typeOf($value)." to the object type");
+        throw new ClassCastException("Cannot cast ".typeof($value)->getName()." to the object type");
       }
       public function isAssignableFrom($type): bool {
         return $type instanceof self || $type instanceof XPClass;
@@ -51,11 +51,11 @@ class Type extends Object {
       public function isInstance($value): bool { return is_callable($value); }
       public function newInstance($value= null) {
         if (is_callable($value)) return $value;
-        throw new IllegalAccessException("Cannot instantiate callable type from ".\xp::typeOf($value));
+        throw new IllegalAccessException("Cannot instantiate callable type from ".typeof($value)->getName());
       }
       public function cast($value) {
         if (null === $value || is_callable($value)) return $value;
-        throw new ClassCastException("Cannot cast ".\xp::typeOf($value)." to the callable type");
+        throw new ClassCastException("Cannot cast ".typeof($value)->getName()." to the callable type");
       }
       public function isAssignableFrom($type): bool {
         return $type instanceof self || $type instanceof FunctionType;
@@ -67,11 +67,11 @@ class Type extends Object {
       public function isInstance($value): bool { return $value instanceof \Traversable || is_array($value); }
       public function newInstance($value= null) {
         if ($value instanceof \Traversable || is_array($value)) return $value;
-        throw new IllegalAccessException("Cannot instantiate iterable type from ".\xp::typeOf($value));
+        throw new IllegalAccessException("Cannot instantiate iterable type from ".typeof($value)->getName());
       }
       public function cast($value) {
         if (null === $value || $value instanceof \Traversable || is_array($value)) return $value;
-        throw new ClassCastException("Cannot cast ".\xp::typeOf($value)." to the iterable type");
+        throw new ClassCastException("Cannot cast ".typeof($value)->getName()." to the iterable type");
       }
       public function isAssignableFrom($type): bool {
         return $type instanceof self;
@@ -96,11 +96,18 @@ class Type extends Object {
   /** Creates a string representation of this object */
   public function toString(): string { return nameof($this).'<'.$this->name.'>'; }
 
-  /** Checks whether a given object is equal to this type */
-  public function equals($cmp): bool { return $cmp instanceof self && $cmp->name === $this->name; }
-
   /** Returns a hashcode for this object */
   public function hashCode(): string { return get_class($this).':'.$this->name; }
+
+  /** Compares to another value */
+  public function compareTo($value): int {
+    return $value instanceof self ? $this->name <=> $value->name : 1;
+  }
+
+  /** Checks for equality with another value */
+  public function equals($value): bool {
+    return $value instanceof self && $this->name === $value->name;
+  }
 
   /**
    * Creates a type list from a given string
@@ -132,7 +139,7 @@ class Type extends Object {
    * - Any type (var)
    * - Void type (void)
    * - Function types
-   * - Generic notations (util.collections.HashTable<lang.types.String, lang.Generic>)
+   * - Generic notations (util.collections.HashTable<string, lang.Value>)
    * - Anything else will be passed to XPClass::forName()
    *
    * @param  string $type
@@ -243,7 +250,7 @@ class Type extends Object {
    */
   public function cast($value) {
     if (self::$VAR === $this) return $value;
-    throw new ClassCastException('Cannot cast '.\xp::typeOf($value).' to the void type');
+    throw new ClassCastException('Cannot cast '.typeof($value)->getName().' to the void type');
   }
 
   /** Tests whether this type is assignable from another type */

@@ -1,6 +1,6 @@
 <?hh namespace net\xp_framework\unittest\reflection;
 
-class HackLanguageSupport extends \lang\Object {
+class HackLanguageSupport {
   public bool $typed= false;
   public $untyped;
 

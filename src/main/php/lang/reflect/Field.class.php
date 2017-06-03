@@ -1,6 +1,14 @@
 <?php namespace lang\reflect;
 
-use lang\{XPClass, Type, IllegalArgumentException, IllegalAccessException};
+use lang\{
+  ClassLoader,
+  ElementNotFoundException,
+  IllegalAccessException,
+  IllegalArgumentException,
+  Type,
+  Value,
+  XPClass
+};
 
 /**
  * Represents a class field
@@ -8,7 +16,7 @@ use lang\{XPClass, Type, IllegalArgumentException, IllegalAccessException};
  * @test  xp://net.xp_framework.unittest.reflection.FieldsTest
  * @see   xp://lang.XPClass
  */
-class Field extends \lang\Object {
+class Field implements Value {
   protected
     $accessible = false,
     $_class     = null;
@@ -40,16 +48,16 @@ class Field extends \lang\Object {
       } else if (defined('HHVM_VERSION')) {
         $type= $this->_reflect->getTypeText() ?: 'var';
       } else {
-        return \lang\Type::$VAR;
+        return Type::$VAR;
       }
 
       if ('self' === $type) {
         return new XPClass($this->_reflect->getDeclaringClass());
       } else {
-        return \lang\Type::forName($type);
+        return Type::forName($type);
       }
     }
-    return \lang\Type::$VAR;
+    return Type::$VAR;
   }
 
   /** Gets field type's name */
@@ -141,10 +149,10 @@ class Field extends \lang\Object {
    */
   public function get($instance) {
     if (null !== $instance && !($instance instanceof $this->_class)) {
-      throw new \lang\IllegalArgumentException(sprintf(
+      throw new IllegalArgumentException(sprintf(
         'Passed argument is not a %s class (%s)',
         XPClass::nameOf($this->_class),
-        \xp::typeOf($instance)
+        typeof($instance)->getName()
       ));
     }
 
@@ -155,7 +163,7 @@ class Field extends \lang\Object {
     $public= $m & MODIFIER_PUBLIC;
     if (!$public && !$this->accessible) {
       $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
-      $scope= $t[1]['class'] ?? \lang\ClassLoader::getDefault()->loadUri($t[0]['file'])->literal();
+      $scope= $t[1]['class'] ?? ClassLoader::getDefault()->loadUri($t[0]['file'])->literal();
       $decl= $this->_reflect->getDeclaringClass()->getName();
       if ($m & MODIFIER_PROTECTED) {
         $allow= $scope === $decl || is_subclass_of($scope, $decl);
@@ -164,7 +172,7 @@ class Field extends \lang\Object {
       }
 
       if (!$allow) {
-        throw new \lang\IllegalAccessException(sprintf(
+        throw new IllegalAccessException(sprintf(
           'Cannot read %s %s::$%s from scope %s',
           Modifiers::stringOf($this->getModifiers()),
           $this->_class,
@@ -177,10 +185,10 @@ class Field extends \lang\Object {
     try {
       $public || $this->_reflect->setAccessible(true);
       return $this->_reflect->getValue($instance);
-    } catch (\lang\Throwable $e) {
+    } catch (Throwable $e) {
       throw $e;
     } catch (\Throwable $e) {
-      throw new \lang\XPException($e->getMessage());
+      throw new XPException($e->getMessage());
     }
   }
 
@@ -198,7 +206,7 @@ class Field extends \lang\Object {
       throw new IllegalArgumentException(sprintf(
         'Passed argument is not a %s class (%s)',
         XPClass::nameOf($this->_class),
-        \xp::typeOf($instance)
+        typeof($instance)->getName()
       ));
     }
   
@@ -209,7 +217,7 @@ class Field extends \lang\Object {
     $public= $m & MODIFIER_PUBLIC;
     if (!$public && !$this->accessible) {
       $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
-      $scope= $t[1]['class'] ?? \lang\ClassLoader::getDefault()->loadUri($t[0]['file'])->literal();
+      $scope= $t[1]['class'] ?? ClassLoader::getDefault()->loadUri($t[0]['file'])->literal();
       $decl= $this->_reflect->getDeclaringClass()->getName();
       if ($m & MODIFIER_PROTECTED) {
         $allow= $scope === $decl || is_subclass_of($scope, $decl);
@@ -230,10 +238,10 @@ class Field extends \lang\Object {
     try {
       $public || $this->_reflect->setAccessible(true);
       $this->_reflect->setValue($instance, $value);
-    } catch (\lang\Throwable $e) {
+    } catch (Throwable $e) {
       throw $e;
     } catch (\Throwable $e) {
-      throw new \lang\XPException($e->getMessage());
+      throw new XPException($e->getMessage());
     }
   }
 
@@ -244,18 +252,17 @@ class Field extends \lang\Object {
    * Sets whether this routine should be accessible from anywhere, 
    * regardless of its visibility level.
    */
-  public function setAccessible($flag): self {
+  public function setAccessible(bool $flag): self {
     $this->accessible= $flag;
     return $this;
   }
 
-  /** Returns whether an object is equal to this routine */
-  public function equals($cmp): bool {
-    return (
-      $cmp instanceof self && 
-      $cmp->_reflect->getName() === $this->_reflect->getName() &&
-      $cmp->getDeclaringClass()->equals($this->getDeclaringClass())
-    );
+  /** Compares this field to another value */
+  public function compareTo($value): int {
+    if (!($value instanceof self)) return 1;
+    if (0 !== ($c= $value->_reflect->getName() <=> $this->_reflect->getName())) return $c;
+    if (0 !== ($c= $value->getDeclaringClass()->compareTo($this->getDeclaringClass()))) return $c;
+    return 0;
   }
 
   /** Returns a hashcode for this routine */

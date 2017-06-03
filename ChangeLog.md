@@ -1,7 +1,50 @@
 XP Framework Core ChangeLog
 ========================================================================
 
-## ?.??.? / ????-??-??
+## 9.0.0 / ????-??-??
+
+### Heads up!
+
+* Deprecated `package-info.xp` files previously used for documentation
+  purposes. Packages have been split into libraries with their own repos,
+  and documentation typically resides in a README file therein.
+  (@thekid)
+* Merged PR #169: Remove MCrypt (from `util.Secret` & `util.Random`), 
+  see https://wiki.php.net/rfc/mcrypt-viking-funeral
+  (@thekid)
+
+### RFCs
+
+* Implemented xp-framework/rfc#325: Remove Object class. This radical
+  change was implemented to be forward-compatible with PHP 7.2, see
+  https://wiki.php.net/rfc/object-typehint
+  (@thekid)
+* Implemented xp-framework/rfc#323: Remove `xp::typeOf()` - @thekid
+
+## 8.2.0 / 2017-05-28
+
+### Bugfixes
+
+* Fixed issue #172: Endless loop in io.Path::relativeTo() - @thekid
+
+### Features
+
+* Refactored code to use `typeof()` instead of `xp::typeOf()`, see
+  https://github.com/xp-framework/rfc/issues/323
+  (@thekid)
+* Un-deprecated `newinstance()`, which is here to stay. By being able to
+  capture local variables in methods, it is helpful in unittest scenarios
+  and has a clear advantage over PHP's anonymous classes; at least until
+  https://wiki.php.net/rfc/lexical-anon is implemented.
+  (@thekid)
+
+## 8.1.2 / 2017-04-16
+
+### Features
+
+* Merged PR #167: Increase TextReader::readLine() performance 50-fold (!)
+  This decreases .ini-file parsing times by a factor of roughly 12.
+  (@thekid)
 
 ## 8.1.1 / 2017-01-16
 

@@ -45,7 +45,7 @@
  * @see      http://news.xp-framework.net/article/168/2007/04/05/
  * @see      xp://lang.Runnable
  */
-class Thread extends Object {
+class Thread {
   public
     $name     = '',
     $running  = false;

@@ -15,36 +15,36 @@ class ClassCastingTest extends TestCase {
 
   #[@test]
   public function thisClassCastingThis() {
-    $this->assertEquals($this, $this->getClass()->cast($this));
+    $this->assertEquals($this, typeof($this)->cast($this));
   }
 
   #[@test]
   public function parentClassCastingThis() {
-    $this->assertEquals($this, $this->getClass()->getParentClass()->cast($this));
+    $this->assertEquals($this, typeof($this)->getParentClass()->cast($this));
   }
 
   #[@test]
   public function objectClassCastingThis() {
-    $this->assertEquals($this, XPClass::forName('lang.Object')->cast($this));
+    $this->assertEquals($this, XPClass::forName('unittest.TestCase')->cast($this));
   }
 
   #[@test, @expect(ClassCastException::class)]
   public function thisClassCastingAnObject() {
-    $this->getClass()->cast(new Object());
+    typeof($this)->cast(new class() { });
   }
 
   #[@test, @expect(ClassCastException::class)]
   public function thisClassCastingAnUnrelatedClass() {
-    $this->getClass()->cast(Type::$VOID);
+    typeof($this)->cast(Type::$VOID);
   }
 
   #[@test]
   public function thisClassCastingNull() {
-    $this->assertNull($this->getClass()->cast(null));
+    $this->assertNull(typeof($this)->cast(null));
   }
 
   #[@test, @expect(ClassCastException::class)]
   public function castPrimitive() {
-    $this->getClass()->cast(0);
+    typeof($this)->cast(0);
   }
 }

@@ -6,7 +6,7 @@
  * @see   xp://io.File
  * @test  xp://net.xp_framework.unittest.io.FileUtilTest
  */
-class FileUtil extends \lang\Object {
+class FileUtil {
 
   /**
    * Retrieve file contents as a string. If the file was previously open,

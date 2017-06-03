@@ -51,7 +51,7 @@ class PrimitivesTest extends \unittest\TestCase {
   public function typeArguments() {
     $this->assertEquals(
       [Primitive::$STRING, XPClass::forName('unittest.TestCase')],
-      create('new net.xp_framework.unittest.core.generics.Lookup<string, unittest.TestCase>()')->getClass()->genericArguments()
+      typeof(create('new net.xp_framework.unittest.core.generics.Lookup<string, unittest.TestCase>()'))->genericArguments()
     );
   }
 }

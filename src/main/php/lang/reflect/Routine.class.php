@@ -1,6 +1,6 @@
 <?php namespace lang\reflect;
 
-use lang\{ElementNotFoundException, XPClass, Type};
+use lang\{ElementNotFoundException, XPClass, Value, Type};
 
 /**
  * Base class for methods and constructors. Note that the methods provided
@@ -16,7 +16,7 @@ use lang\{ElementNotFoundException, XPClass, Type};
  * @see   xp://lang.reflect.Constructor
  * @see   http://de3.php.net/manual/en/reflectionmethod.setaccessible.php
  */
-class Routine extends \lang\Object {
+class Routine implements Value {
   protected $accessible= false;
   protected $_class= null;
   public $_reflect= null;
@@ -255,13 +255,12 @@ class Routine extends \lang\Object {
     return $this;
   }
   
-  /** Returns whether an object is equal to this routine */
-  public function equals($cmp): bool {
-    return (
-      $cmp instanceof self && 
-      $cmp->_reflect->getName() === $this->_reflect->getName() &&
-      $cmp->getDeclaringClass()->equals($this->getDeclaringClass())
-    );
+  /** Compares this routine to another value */
+  public function compareTo($value): int {
+    if (!($value instanceof self)) return 1;
+    if (0 !== ($c= $value->_reflect->getName() <=> $this->_reflect->getName())) return $c;
+    if (0 !== ($c= $value->getDeclaringClass()->compareTo($this->getDeclaringClass()))) return $c;
+    return 0;
   }
 
   /** Returns a hashcode for this routine */

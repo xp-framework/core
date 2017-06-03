@@ -5,7 +5,7 @@
  *
  * @see      xp://net.xp_framework.unittest.core.AnnotationTest
  */
-class AnnotatedClass extends \lang\Object {
+class AnnotatedClass {
 
   /**
    * Method annotated with one simple annotation

@@ -3,7 +3,7 @@
 /**
  * Class for FunctionTypeTest::cast_loads_class_if_necessary_with_new
  */
-class FunctionTypeFixture extends \lang\Object {
+class FunctionTypeFixture {
 
   /** @param var $arg */
   public function __construct($arg) { /* Empty */ }

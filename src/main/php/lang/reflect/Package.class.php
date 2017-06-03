@@ -1,9 +1,6 @@
 <?php namespace lang\reflect;
 
-use lang\XPClass;
-use lang\ClassLoader;
-use lang\IllegalArgumentException;
-use lang\ElementNotFoundException;
+use lang\{XPClass, Value, ClassLoader, IllegalArgumentException, ElementNotFoundException};
 
 /**
  * Represents a package
@@ -11,7 +8,7 @@ use lang\ElementNotFoundException;
  * @test xp://net.xp_framework.unittest.reflection.PackageTest
  * @see  http://news.xp-framework.net/article/187/2007/05/12/
  */
-class Package extends \lang\Object {
+class Package implements Value {
   protected $name= '';
 
   /**
@@ -271,11 +268,6 @@ class Package extends \lang\Object {
 
   /**
    * Creates a string representation of this package
-   * 
-   * Example:
-   * <pre>
-   *   lang.reflect.Package<fully.qualified.package.Name>
-   * </pre>
    *
    * @return  string
    */
@@ -286,11 +278,11 @@ class Package extends \lang\Object {
   /**
    * Checks whether a given object is equal to this Package instance.
    * 
-   * @param   lang.Generic cmp
-   * @return  bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) { 
-    return $cmp instanceof self && $this->name === $cmp->name;
+  public function compareTo($value) { 
+    return $value instanceof self ? $this->name <=> $value->name : 1;
   }
 
   /**

@@ -4,7 +4,7 @@
  * Unserializer
  */
 #[@generic(self= 'T')]
-class Unserializer extends \lang\Object {
+class Unserializer {
 
   /**
    * Creates a new instance of a given value

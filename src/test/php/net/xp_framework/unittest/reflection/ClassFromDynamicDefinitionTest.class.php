@@ -41,7 +41,7 @@ class ClassFromDynamicDefinitionTest extends ClassFromUriTest {
         }
 
         \lang\DynamicClassLoader::instanceFor("test")->setClassBytes($name, sprintf(
-          "%s %s %s extends \lang\Object { }",
+          "%s %s %s { }",
           $ns,
           $type,
           $class

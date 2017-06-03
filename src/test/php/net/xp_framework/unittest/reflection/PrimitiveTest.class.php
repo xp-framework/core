@@ -4,6 +4,7 @@ use unittest\TestCase;
 use lang\{Primitive, ClassCastException, IllegalArgumentException};
 use io\streams\{Streams, MemoryInputStream};
 use unittest\actions\RuntimeVersion;
+use net\xp_framework\unittest\Name;
 
 /**
  * TestCase
@@ -39,7 +40,7 @@ class PrimitiveTest extends TestCase {
 
   #[@test, @expect(IllegalArgumentException::class)]
   public function nonPrimitive() {
-    Primitive::forName('lang.Object');
+    Primitive::forName('lang.Value');
   }
 
   /**
@@ -50,7 +51,7 @@ class PrimitiveTest extends TestCase {
    */
   public function instances($except) {
     $values= [
-      [$this], [null], [new \lang\Object()], [new \ReflectionClass(self::class)],
+      [$this], [null], [new Name('Test')], [new \ReflectionClass(self::class)],
       [false], [true],
       [''], ['Hello'],
       [0], [-1],
@@ -121,7 +122,7 @@ class PrimitiveTest extends TestCase {
 
   #[@test]
   public function stringIsNotAssignableFromClassType() {
-    $this->assertFalse(Primitive::$STRING->isAssignableFrom($this->getClass()));
+    $this->assertFalse(Primitive::$STRING->isAssignableFrom(typeof($this)));
   }
 
   #[@test]

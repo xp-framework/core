@@ -1,20 +1,19 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
+use net\xp_framework\unittest\Name;
+use unittest\actions\RuntimeVersion;
 use lang\{
   ArrayType,
   ClassFormatException,
   ElementNotFoundException,
   FunctionType,
-  Generic,
   IllegalStateException,
   MapType,
-  Object,
   Primitive,
   Type,
   Value,
   XPClass
 };
-use unittest\actions\RuntimeVersion;
 
 class MethodParametersTest extends MethodsTest {
 
@@ -56,7 +55,7 @@ class MethodParametersTest extends MethodsTest {
 
   #[@test, @values([
   #  ['\lang\Value', new XPClass(Value::class)],
-  #  ['\lang\Object', new XPClass(Object::class)],
+  #  ['\net\xp_framework\unittest\Name', new XPClass(Name::class)],
   #  ['Value', new XPClass(Value::class)]
   #])]
   public function parameter_type_determined_via_syntax($literal, $type) {
@@ -116,7 +115,7 @@ class MethodParametersTest extends MethodsTest {
 
   #[@test, @values([
   #  ['\lang\Value', new XPClass(Value::class)],
-  #  ['\lang\Object', new XPClass(Object::class)],
+  #  ['\net\xp_framework\unittest\Name', new XPClass(Name::class)],
   #  ['array', Type::$ARRAY],
   #  ['callable', Type::$CALLABLE]
   #])]

@@ -1,5 +1,7 @@
 <?php namespace util;
 
+use lang\{IllegalArgumentException, Value};
+
 /**
  * Represents money.
  *
@@ -24,7 +26,7 @@
  * @see     xp://util.Currency
  * @see     http://martinfowler.com/eaaCatalog/money.html
  */
-class Money implements \lang\Value {
+class Money implements Value {
   protected $amount   = '';
   protected $currency = null;
 
@@ -71,8 +73,8 @@ class Money implements \lang\Value {
    * @throws  lang.IllegalArgumentException if the currencies don't match
    */
   public function add(Money $m) {
-    if (!$this->currency->equals($m->currency)) {
-      throw new \lang\IllegalArgumentException('Cannot add '.$m->currency->name().' to '.$this->currency->name());
+    if (0 !== $this->currency->compareTo($m->currency)) {
+      throw new IllegalArgumentException('Cannot add '.$m->currency->name().' to '.$this->currency->name());
     }
     return new self(bcadd($this->amount, $m->amount), $this->currency);
   }
@@ -86,8 +88,8 @@ class Money implements \lang\Value {
    * @throws  lang.IllegalArgumentException if the currencies don't match
    */
   public function subtract(Money $m) {
-    if (!$this->currency->equals($m->currency)) {
-      throw new \lang\IllegalArgumentException('Cannot subtract '.$m->currency->name().' from '.$this->currency->name());
+    if (0 !== $this->currency->compareTo($m->currency)) {
+      throw new IllegalArgumentException('Cannot subtract '.$m->currency->name().' from '.$this->currency->name());
     }
     return new self(bcsub($this->amount, $m->amount), $this->currency);
   }
@@ -137,7 +139,7 @@ class Money implements \lang\Value {
    * @return  int equal: 0, value less than this: -1, 1 otherwise
    */
   public function compareTo($value) {
-    if ($value instanceof self && $this->currency->equals($value->currency)) {
+    if ($value instanceof self && 0 === $this->currency->compareTo($value->currency)) {
       return bccomp($value->amount, $this->amount);
     } else {
       return 1;

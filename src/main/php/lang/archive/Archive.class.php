@@ -30,7 +30,7 @@ use io\File;
  * @test  xp://net.xp_framework.unittest.core.ArchiveClassLoaderTest
  * @see   http://java.sun.com/javase/6/docs/api/java/util/jar/package-summary.html
  */
-class Archive extends \lang\Object {
+class Archive {
   const READ =              0x0000;
   const CREATE =            0x0001;
   const HEADER_SIZE =       0x0100;

@@ -137,7 +137,7 @@ class TypeUnionTest extends \unittest\TestCase {
   #  [new TypeUnion([Primitive::$STRING, Primitive::$INT, new XPClass(self::class)])]
   #])]
   public function is_assignable_from($type) {
-    $union= new TypeUnion([Primitive::$STRING, Primitive::$INT, $this->getClass()]);
+    $union= new TypeUnion([Primitive::$STRING, Primitive::$INT, typeof($this)]);
     $this->assertTrue($union->isAssignableFrom($type));
   }
 
@@ -153,7 +153,7 @@ class TypeUnionTest extends \unittest\TestCase {
   #  [new XPClass(Type::class)]
   #])]
   public function is_not_assignable_from($type) {
-    $union= new TypeUnion([Primitive::$STRING, Primitive::$INT, $this->getClass()]);
+    $union= new TypeUnion([Primitive::$STRING, Primitive::$INT, typeof($this)]);
     $this->assertFalse($union->isAssignableFrom($type));
   }
 

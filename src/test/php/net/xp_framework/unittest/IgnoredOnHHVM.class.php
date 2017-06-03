@@ -7,7 +7,7 @@ use unittest\PrerequisitesNotMetError;
 /**
  * Ignores this test on HHVM
  */
-class IgnoredOnHHVM extends \lang\Object implements \unittest\TestAction, \unittest\TestClassAction {
+class IgnoredOnHHVM implements \unittest\TestAction, \unittest\TestClassAction {
 
   /**
    * This method gets invoked before a test method is invoked, and before

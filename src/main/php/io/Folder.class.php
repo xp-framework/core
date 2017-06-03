@@ -1,6 +1,6 @@
 <?php namespace io;
 
-use lang\IllegalStateException;
+use lang\{IllegalStateException, Value};
 
 /**
  * Represents a Folder
@@ -16,7 +16,7 @@ use lang\IllegalStateException;
  *
  * @test  xp://net.xp_framework.unittest.io.FolderTest
  */
-class Folder extends \lang\Object {
+class Folder implements Value {
   public 
     $uri      = '',
     $dirname  = '',
@@ -242,8 +242,8 @@ class Folder extends \lang\Object {
   }
 
   /** Returns whether a given value is equal to this folder */
-  public function equals($cmp): bool {
-    return $cmp instanceof self && $cmp->hashCode() === $this->hashCode();
+  public function compareTo($value): int {
+    return $value instanceof self ? $this->uri <=> $value->uri : 1;
   }
 
   /** Returns a hashcode */

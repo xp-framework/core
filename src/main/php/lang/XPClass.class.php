@@ -390,7 +390,7 @@ class XPClass extends Type {
    * Cast a given object to the class represented by this object
    *
    * @param   var value
-   * @return  lang.Generic the given expression
+   * @return  var the given expression
    * @throws  lang.ClassCastException
    */
   public function cast($value) {
@@ -400,7 +400,7 @@ class XPClass extends Type {
     if ($value instanceof $literal) {
       return $value;
     } else {
-      throw new ClassCastException('Cannot cast '.\xp::typeOf($value).' to '.$this->name);
+      throw new ClassCastException('Cannot cast '.typeof($value)->getName().' to '.$this->name);
     }
   }
   

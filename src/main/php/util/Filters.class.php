@@ -15,7 +15,7 @@ use lang\IllegalStateException;
  * @test xp://net.xp_framework.unittest.util.FiltersTest
  */
 #[@generic(self= 'T', implements= ['T'])]
-class Filters extends \lang\Object implements Filter {
+class Filters implements Filter {
   protected $list;
   protected $accept;
 
@@ -59,7 +59,7 @@ class Filters extends \lang\Object implements Filter {
     } else if ($accept instanceof \Closure) {
       $this->accept= $accept;
     } else {
-      throw new IllegalArgumentException('Expecting either a closure or null, '.\xp::typeOf($accept).' given');
+      throw new IllegalArgumentException('Expecting either a closure or null, '.typeof($accept)->getName().' given');
     }
   }
 

@@ -49,12 +49,12 @@ class FieldBasicsTest extends FieldsTest {
   #[@test]
   public function equality() {
     $fixture= $this->type('{ public $fixture; }');
-    $this->assertTrue($fixture->getField('fixture')->equals($fixture->getField('fixture')));
+    $this->assertEquals($fixture->getField('fixture'), $fixture->getField('fixture'));
   }
 
   #[@test]
   public function a_field_is_not_equal_to_null() {
-    $this->assertFalse($this->field('public $fixture;')->equals(null));
+    $this->assertNotEquals($this->field('public $fixture;'), null);
   }
 
   #[@test, @values([

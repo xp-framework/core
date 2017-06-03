@@ -29,7 +29,7 @@ class TextWriter extends Writer {
     } else if ($arg instanceof Channel) {
       parent::__construct($arg->out());
     } else {
-      throw new IllegalArgumentException('Given argument is neither an input stream, a channel nor a string: '.\xp::typeOf($arg));
+      throw new IllegalArgumentException('Given argument is neither an input stream, a channel nor a string: '.typeof($arg)->getName());
     }
     $this->charset= $charset;
   }

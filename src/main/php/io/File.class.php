@@ -1,7 +1,7 @@
 <?php namespace io;
 
 use io\streams\{InputStream, FileInputStream, OutputStream, FileOutputStream};
-use lang\{IllegalArgumentException, IllegalStateException};
+use lang\{IllegalArgumentException, IllegalStateException, Value};
 
 /**
  * Instances of the file class serve as an opaque handle to the underlying machine-
@@ -10,7 +10,7 @@ use lang\{IllegalArgumentException, IllegalStateException};
  * @test xp://net.xp_framework.unittest.io.FileTest
  * @test xp://net.xp_framework.unittest.io.FileIntegrationTest
  */
-class File extends \lang\Object implements Channel {
+class File implements Channel, Value {
   const READ =      'rb';          // Read
   const READWRITE = 'rb+';         // Read/Write
   const WRITE =     'wb';          // Write
@@ -625,8 +625,11 @@ class File extends \lang\Object implements Channel {
   }
 
   /** Returns whether a given value is equal to this file */
-  public function equals($cmp): bool {
-    return $cmp instanceof self && $cmp->hashCode() === $this->hashCode();
+  public function compareTo($value): int {
+    return $value instanceof self
+      ? (null === $this->uri ? $this->_fd <=> $value->_fd : $this->uri <=> $value->uri)
+      : 1
+    ;
   }
 
   /** Returns a hashcode */

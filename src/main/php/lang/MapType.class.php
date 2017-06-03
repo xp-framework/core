@@ -74,7 +74,7 @@ class MapType extends Type {
       }
       return $self;
     } else {
-      throw new IllegalArgumentException('Cannot create instances of the '.$this->getName().' type from '.\xp::typeOf($value));
+      throw new IllegalArgumentException('Cannot create instances of the '.$this->getName().' type from '.typeof($value)->getName());
     }
   }
 
@@ -95,7 +95,7 @@ class MapType extends Type {
       }
       return $value;
     } else {
-      throw new ClassCastException('Cannot cast to the '.$this->getName().' type from '.\xp::typeOf($value));
+      throw new ClassCastException('Cannot cast to the '.$this->getName().' type from '.typeof($value)->getName());
     }
   }
 

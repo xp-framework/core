@@ -25,7 +25,7 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
       function($spec) use($decl, $def) {
         return ClassLoader::defineClass(
           $spec,
-          array_key_exists('parent', $decl) ? $decl['parent'] : 'lang.Object',
+          array_key_exists('parent', $decl) ? $decl['parent'] : null,
           array_key_exists('interfaces', $decl) ? $decl['interfaces'] : [],
           $def
         );
@@ -75,7 +75,7 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
 
   #[@test]
   public function parents_method_exists() {
-    $this->assertTrue($this->define()->hasMethod('equals'));
+    $this->assertTrue($this->define(['parent' => Throwable::class])->hasMethod('toString'));
   }
 
   #[@test]
@@ -95,11 +95,6 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
   #[@test, @expect(ClassNotFoundException::class)]
   public function cannot_define_class_with_non_existant_parent() {
     $this->define(['parent' => '@@nonexistant@@']);
-  }
-
-  #[@test, @expect(ClassNotFoundException::class)]
-  public function cannot_define_class_with_null_parent() {
-    $this->define(['parent' => null]);
   }
 
   #[@test, @expect(ClassNotFoundException::class), @values([

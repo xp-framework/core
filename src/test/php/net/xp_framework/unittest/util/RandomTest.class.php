@@ -51,8 +51,7 @@ class RandomTest extends \unittest\TestCase {
   #[@test, @action(new VerifyThat(function() {
   #  return (
   #    function_exists('random_bytes') ||
-  #    function_exists('openssl_random_pseudo_bytes') ||
-  #    function_exists('mcrypt_create_iv')
+  #    function_exists('openssl_random_pseudo_bytes')
   #  );
   #}))]
   public function secure_bytes() {
@@ -62,14 +61,6 @@ class RandomTest extends \unittest\TestCase {
   #[@test, @action(new ExtensionAvailable('openssl'))]
   public function openssl_bytes() {
     $this->assertEquals(20, (new Random(Random::OPENSSL))->bytes(20)->size());
-  }
-
-  #[@action([
-  #  new ExtensionAvailable('mcrypt'),
-  #  new RuntimeVersion('<7.1.0-dev')
-  #])]
-  public function mcrypt_bytes() {
-    $this->assertEquals(20, (new Random(Random::MCRYPT))->bytes(20)->size());
   }
 
   #[@test, @action(new VerifyThat(function() { return is_readable('/dev/urandom'); }))]
@@ -108,15 +99,6 @@ class RandomTest extends \unittest\TestCase {
   #[@test, @action(new ExtensionAvailable('openssl'))]
   public function openssl_int() {
     $random= (new Random(Random::OPENSSL))->int(0, 10);
-    $this->assertTrue($random >= 0 && $random <= 10);
-  }
-
-  #[@action([
-  #  new ExtensionAvailable('mcrypt'),
-  #  new RuntimeVersion('<7.1.0-dev')
-  #])]
-  public function mcrypt_int() {
-    $random= (new Random(Random::MCRYPT))->int(0, 10);
     $this->assertTrue($random >= 0 && $random <= 10);
   }
 

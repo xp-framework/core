@@ -1,27 +1,15 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-/**
- * Test class
- *
- * @see      xp://net.xp_framework.unittest.reflection.ClassLoaderTest
- */
-class LoaderTestClass extends \lang\Object {
-  protected static $initializerCalled= false;
+/** @see xp://net.xp_framework.unittest.reflection.ClassLoaderTest */
+class LoaderTestClass {
+  private static $initializerCalled= false;
 
-  /**
-   * Static initializer
-   *
-   */
-  public static function __static() {
+  static function __static() {
     self::$initializerCalled= true;
   }
   
-  /**
-   * Returns whether the static initializer was called
-   *
-   * @return  bool
-   */
-  public static function initializerCalled() {
+  /** Returns whether the static initializer was called */
+  public static function initializerCalled(): bool {
     return self::$initializerCalled;
   }
 }

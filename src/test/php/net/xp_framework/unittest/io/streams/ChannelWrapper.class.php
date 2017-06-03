@@ -8,7 +8,7 @@ use lang\Runnable;
  *
  * @see      xp://net.xp_framework.unittest.io.streams.ChannelStreamTest
  */
-class ChannelWrapper extends \lang\Object {
+class ChannelWrapper {
   protected static 
     $streams = [];
 
