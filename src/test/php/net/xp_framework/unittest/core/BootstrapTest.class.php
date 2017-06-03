@@ -1,10 +1,9 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use net\xp_framework\unittest\IgnoredOnHHVM;
-use lang\Runtime;
-use lang\RuntimeOptions;
-use lang\Process;
+use lang\{Runtime, RuntimeOptions, Process};
 use unittest\PrerequisitesNotMetError;
+use util\Objects;
 
 /**
  * TestCase
@@ -50,7 +49,7 @@ class BootstrapTest extends \unittest\TestCase {
     $r= $this->runWith(Runtime::getInstance()->startupOptions()->withSetting('date.timezone', $tz));
     $this->assertTrue(
       (bool)strstr($r[1].$r[2], '[xp::core] date.timezone not configured properly.'),
-      \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
+      Objects::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
     $this->assertEquals(255, $r[0], 'exitcode');
   }    
@@ -71,7 +70,7 @@ class BootstrapTest extends \unittest\TestCase {
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
       (bool)strstr($r[1].$r[2], '[bootstrap] Classpath element [/does-not-exist] not found'),
-      \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
+      Objects::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
   }
 
@@ -81,7 +80,7 @@ class BootstrapTest extends \unittest\TestCase {
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
       (bool)strstr($r[1].$r[2], '[bootstrap] Classpath element [/does-not-exist.xar] not found'),
-      \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
+      Objects::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
   }
 }

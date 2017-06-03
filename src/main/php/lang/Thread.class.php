@@ -1,5 +1,7 @@
 <?php namespace lang;
 
+use util\Objects;
+
 /**
  * Thread
  *
@@ -167,7 +169,7 @@ class Thread {
         if ($message= $e->getMessage()) echo $message, "\n";
         exit($e->getCode());
       } catch (\Throwable $t) {
-        fputs(STDERR, 'Uncaught exception (in child #'.$this->_id.'): '.\xp::stringOf($t));
+        fputs(STDERR, 'Uncaught exception (in child #'.$this->_id.'): '.$t->toString());
         exit(0xf0);
       }
     }
@@ -229,7 +231,7 @@ class Thread {
    * @return  string
    */
   public function toString() {
-    return sprintf('%s[%s%d]@%s', nameof($this), $this->isRunning() ? 'R' : 'S', $this->_id, \xp::stringOf($this));
+    return sprintf('%s[%s%d]@%s', nameof($this), $this->isRunning() ? 'R' : 'S', $this->_id, Objects::stringOf($this));
   }
   
   /**

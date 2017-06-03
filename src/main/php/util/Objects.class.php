@@ -57,14 +57,64 @@ abstract class Objects {
    * Returns a string representation
    *
    * @param  var $val
-   * @param  string $default the value to use for NULL
+   * @param  string $indent
    * @return string
    */
-  public static function stringOf($val, $default= ''): string {
+  public static function stringOf($val, $indent= ''): string {
+    static $protect= [];
+
     if (null === $val) {
-      return $default;
-    } else {
-      return \xp::stringOf($val);
+      return 'null';
+    } else if (is_string($val)) {
+      return '"'.$val.'"';
+    } else if (is_bool($val)) {
+      return $val ? 'true' : 'false';
+    } else if (is_int($val) || is_float($val)) {
+      return (string)$val;
+    } else if (($val instanceof Value) && !isset($protect[$hash= (string)$val->hashCode()])) {
+      $protect[$hash]= true;
+      $s= $val->toString();
+      unset($protect[$hash]);
+      return $indent ? str_replace("\n", "\n".$indent, $s) : $s;
+    } else if (is_array($val)) {
+      if (empty($val)) return '[]';
+      $hash= print_r($val, true);
+      if (isset($protect[$hash])) return '->{:recursion:}';
+      $protect[$hash]= true;
+      if (0 === key($val)) {
+        $r= '';
+        foreach ($val as $val) {
+          $r.= ', '.self::stringOf($val, $indent);
+        }
+        unset($protect[$hash]);
+        return '['.substr($r, 2).']';
+      } else {
+        $r= "[\n";
+        foreach ($val as $key => $val) {
+          $r.= $indent.'  '.$key.' => '.self::stringOf($val, $indent.'  ')."\n";
+        }
+        unset($protect[$hash]);
+        return $r.$indent.']';
+      }
+    } else if ($val instanceof \Closure) {
+      $sig= '';
+      $f= new \ReflectionFunction($val);
+      foreach ($f->getParameters() as $p) {
+        $sig.= ', $'.$p->name;
+      }
+      return '<function('.substr($sig, 2).')>';
+    } else if (is_object($val)) {
+      $hash= spl_object_hash($val);
+      if (isset($protect[$hash])) return '->{:recursion:}';
+      $protect[$hash]= true;
+      $r= nameof($val)." {\n";
+      foreach ((array)$val as $key => $value) {
+        $r.= $indent.'  '.$key.' => '.self::stringOf($value, $indent.'  ')."\n";
+      }
+      unset($protect[$hash]);
+      return $r.$indent.'}';
+    } else if (is_resource($val)) {
+      return 'resource(type= '.get_resource_type($val).', id= '.(int)$val.')';
     }
   }
 

@@ -1,36 +1,17 @@
 <?php namespace lang\archive;
  
-use lang\ElementNotFoundException;
-use io\EncapsedStream;
-use io\FileUtil;
-use io\File;
+use lang\{ElementNotFoundException, Value};
+use io\{EncapsedStream, FileUtil, File};
 
 /**
  * Archives contain a collection of classes.
  *
- * Usage example (Creating):
- * ```php
- * $a= new Archive(new File('soap.xar'));
- * $a->open(self::CREATE);
- * $a->addFile(
- *   'webservices/soap/SOAPMessage.class.php'
- *   new File($path, 'xml/soap/SOAPMessage.class.php')
- * );
- * $a->create();
- * ```
- *
- * Usage example (Extracting):
- * ```php
- * $a= new Archive(new File('soap.xar'));
- * $bytes= $a->extract('webservices/soap/SOAPMessage.class.php');
- * ```
- * 
  * @test  xp://net.xp_framework.unittest.archive.ArchiveV1Test
  * @test  xp://net.xp_framework.unittest.archive.ArchiveV2Test
  * @test  xp://net.xp_framework.unittest.core.ArchiveClassLoaderTest
  * @see   http://java.sun.com/javase/6/docs/api/java/util/jar/package-summary.html
  */
-class Archive {
+class Archive implements Value {
   const READ =              0x0000;
   const CREATE =            0x0001;
   const HEADER_SIZE =       0x0100;
@@ -278,27 +259,40 @@ class Archive {
   public function isOpen() {
     return $this->file->isOpen();
   }
-  
-  /**
-   * Returns a string representation of this object
-   *
-   * @return  string
-   */
+
+  /** @return string */
   public function toString() {
     return sprintf(
       '%s(version= %s, index size= %d) { %s }',
       nameof($this),
       $this->version,
       sizeof($this->_index),
-      \xp::stringOf($this->file)
+      $this->file->toString()
     );
   }
-  
+
+  /** @return string */
+  public function hashCode() {
+    return 'A'.$this->version.$this->file->hashCode();
+  }
+
+  /**
+   * Compares this archive to a given value
+   *
+   * @param  var $valie
+   * @return int
+   */
+  public function compareTo($value) {
+    if (!($value instanceof self)) return 1;
+    if ($c= ($this->version <=> $value->version)) return $c;
+    return $this->file->compareTo($value->file);
+  }
+
   /**
    * Destructor
    *
    */
   public function __destruct() {
-    if ($this->isOpen()) $this->close();
+    $this->file->isOpen() && $this->file->close();
   }
 }

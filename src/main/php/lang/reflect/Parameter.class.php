@@ -1,6 +1,7 @@
 <?php namespace lang\reflect;
 
 use lang\{ElementNotFoundException, ClassFormatException, XPClass, Type};
+use util\Objects;
 
 /**
  * Represents a method's parameter
@@ -259,7 +260,7 @@ class Parameter {
       nameof($this),
       $this->getType()->toString(),
       $this->_reflect->getName(),
-      $this->_reflect->isOptional() ? '= '.\xp::stringOf($this->_reflect->getDefaultValue()) : ''
+      $this->_reflect->isOptional() ? '= '.Objects::stringOf($this->_reflect->getDefaultValue()) : ''
     );
   }
 }

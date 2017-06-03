@@ -72,7 +72,7 @@ class Secret implements Value {
       }
 
       default: {
-        throw new IllegalArgumentException('Invalid backing given: '.\xp::stringOf($type));
+        throw new IllegalArgumentException('Invalid backing given: '.Objects::stringOf($type));
       }
     }
   }

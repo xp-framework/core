@@ -3,6 +3,7 @@
 use lang\archive\{Archive, ArchiveClassLoader};
 use lang\reflect\Package;
 use lang\{ClassLoader, XPClass, IllegalArgumentException, ElementNotFoundException};
+use util\Objects;
 
 /**
  * TestCase
@@ -121,7 +122,7 @@ class PackageTest extends \unittest\TestCase {
   public function getTestClassNames() {
     $base= 'net.xp_framework.unittest.reflection.classes';
     $names= Package::forName($base)->getClassNames();
-    $this->assertEquals(sizeof(self::$testClasses), sizeof($names), \xp::stringOf($names));
+    $this->assertEquals(sizeof(self::$testClasses), sizeof($names), Objects::stringOf($names));
     foreach ($names as $name) {
       $this->assertTrue(
         in_array(substr($name, strlen($base)+ 1), self::$testClasses), 
@@ -134,7 +135,7 @@ class PackageTest extends \unittest\TestCase {
   public function getTestClasses() {
     $base= 'net.xp_framework.unittest.reflection.classes';
     $classes= Package::forName($base)->getClasses();
-    $this->assertEquals(sizeof(self::$testClasses), sizeof($classes), \xp::stringOf($classes));
+    $this->assertEquals(sizeof(self::$testClasses), sizeof($classes), Objects::stringOf($classes));
     foreach ($classes as $class) {
       $this->assertTrue(
         in_array(substr($class->getName(), strlen($base)+ 1), self::$testClasses), 
@@ -147,7 +148,7 @@ class PackageTest extends \unittest\TestCase {
   public function getPackageNames() {
     $base= 'net.xp_framework.unittest.reflection';
     $names= Package::forName($base)->getPackageNames();
-    $this->assertEquals(sizeof(self::$testPackages), sizeof($names), \xp::stringOf($names));
+    $this->assertEquals(sizeof(self::$testPackages), sizeof($names), Objects::stringOf($names));
     foreach ($names as $name) {
       $this->assertTrue(
         in_array(substr($name, strlen($base)+ 1), self::$testPackages), 
@@ -160,7 +161,7 @@ class PackageTest extends \unittest\TestCase {
   public function getPackages() {
     $base= 'net.xp_framework.unittest.reflection';
     $packages= Package::forName($base)->getPackages();
-    $this->assertEquals(sizeof(self::$testPackages), sizeof($packages), \xp::stringOf($packages));
+    $this->assertEquals(sizeof(self::$testPackages), sizeof($packages), Objects::stringOf($packages));
     foreach ($packages as $package) {
       $this->assertTrue(
         in_array(substr($package->getName(), strlen($base)+ 1), self::$testPackages), 

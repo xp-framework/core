@@ -3,6 +3,7 @@
 use lang\{Runnable, Runtime, Process, reflect\Package, ClassLoader, IllegalAccessException};
 use unittest\actions\{VerifyThat, RuntimeVersion};
 use net\xp_framework\unittest\Name;
+use util\Objects;
 
 /**
  * TestCase for newinstance() functionality. Some tests are skipped if
@@ -196,7 +197,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals(0, $r[0], 'exitcode');
     $this->assertTrue(
       (bool)strstr($r[1].$r[2], 'OK: 1, 2, 3'),
-      \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
+      Objects::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
   }
 
@@ -208,7 +209,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
       (bool)strstr($r[1].$r[2], 'Fatal error'),
-      \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
+      Objects::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
   }
 
@@ -220,7 +221,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
       (bool)strstr($r[1].$r[2], "error, unexpected '@'"),
-      \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
+      Objects::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
   }
 
@@ -232,7 +233,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
       (bool)strstr($r[1].$r[2], 'Class "lang.NonExistantClass" could not be found'),
-      \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
+      Objects::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
   }
 
@@ -248,7 +249,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals(0, $r[0], 'exitcode');
     $this->assertTrue(
       (bool)strstr($r[1].$r[2], 'Hi'),
-      \xp::stringOf(['out' => $r[1], 'err' => $r[2]])
+      Objects::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
   }
 

@@ -1,6 +1,7 @@
 <?php namespace lang\reflect;
 
 use lang\{ElementNotFoundException, XPClass, Value, Type};
+use util\Objects;
 
 /**
  * Base class for methods and constructors. Note that the methods provided
@@ -273,7 +274,7 @@ class Routine implements Value {
     $signature= '';
     foreach ($this->getParameters() as $param) {
       if ($param->isOptional()) {
-        $signature.= ', ['.$param->getTypeName().' $'.$param->getName().'= '.str_replace("\n", ' ', \xp::stringOf($param->getDefaultValue())).']';
+        $signature.= ', ['.$param->getTypeName().' $'.$param->getName().'= '.str_replace("\n", ' ', Objects::stringOf($param->getDefaultValue())).']';
       } else {
         $signature.= ', '.$param->getTypeName().' $'.$param->getName();
       }

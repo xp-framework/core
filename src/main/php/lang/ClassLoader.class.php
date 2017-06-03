@@ -2,6 +2,7 @@
 
 use lang\archive\ArchiveClassLoader;
 use lang\reflect\Module;
+use util\Objects;
 
 /** 
  * Entry point class to loading classes, packages and resources.
@@ -542,7 +543,7 @@ final class ClassLoader implements IClassLoader {
     throw new ElementNotFoundException(sprintf(
       'No classloader provides resource "%s" {%s}',
       $string,
-      \xp::stringOf(self::getLoaders())
+      Objects::stringOf(self::getLoaders())
     ));
   }
   
@@ -560,7 +561,7 @@ final class ClassLoader implements IClassLoader {
     throw new ElementNotFoundException(sprintf(
       'No classloader provides resource "%s" {%s}',
       $string,
-      \xp::stringOf(self::getLoaders())
+      Objects::stringOf(self::getLoaders())
     ));
   }
 
