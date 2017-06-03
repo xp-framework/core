@@ -219,7 +219,7 @@ function __error($code, $msg, $file, $line) {
 }
 // }}}
 
-// {{{ proto Generic cast (var arg, var type[, bool nullsafe= true])
+// {{{ proto var cast (var arg, var type[, bool nullsafe= true])
 //     Casts an arg NULL-safe
 function cast($arg, $type, $nullsafe= true) {
   if (null === $arg && $nullsafe) {
@@ -383,7 +383,7 @@ function newinstance($spec, $args, $def= null) {
 }
 // }}}
 
-// {{{ proto lang.Generic create(string spec, var... $args)
+// {{{ proto object create(string spec, var... $args)
 //     Creates a generic object
 function create($spec, ... $args) {
   if (!is_string($spec)) {
@@ -410,7 +410,7 @@ function create($spec, ... $args) {
 }
 // }}}
 
-// {{{ proto string nameof(lang.Generic arg)
+// {{{ proto string nameof(object arg)
 //     Returns name of an instance.
 function nameof($arg) {
   $class= get_class($arg);
