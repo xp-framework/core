@@ -44,7 +44,7 @@ class StackTraceElement implements Value {
         if (is_array($arg)) {
           $args[]= 'array['.sizeof($arg).']';
         } else if ($arg instanceof \Closure) {
-          $args[]= \xp::stringOf($arg);
+          $args[]= 'function()';
         } else if (is_object($arg)) {
           $args[]= nameof($arg).'{}';
         } else if (is_string($arg)) {
