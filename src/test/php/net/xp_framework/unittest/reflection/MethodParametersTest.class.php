@@ -7,7 +7,6 @@ use lang\{
   ClassFormatException,
   ElementNotFoundException,
   FunctionType,
-  Generic,
   IllegalStateException,
   MapType,
   Primitive,

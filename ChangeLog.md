@@ -5,6 +5,10 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Deprecated `package-info.xp` files previously used for documentation
+  purposes. Packages have been split into libraries with their own repos,
+  and documentation typically resides in a README file therein.
+  (@thekid)
 * Merged PR #169: Remove MCrypt (from `util.Secret` & `util.Random`), 
   see https://wiki.php.net/rfc/mcrypt-viking-funeral
   (@thekid)

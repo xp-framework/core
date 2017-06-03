@@ -46,7 +46,7 @@ class WildcardTypeTest extends \unittest\TestCase {
   #  'net.xp_framework.unittest.core.generics.Nullable',
   #  'int',
   #  'string[]',
-  #  '[:lang.Generic]',
+  #  '[:lang.Value]',
   #  'net.xp_framework.unittest.core.generics.Nullable<bool>',
   #  '?', '??', 'string?'
   #])]
