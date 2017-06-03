@@ -64,7 +64,7 @@ class StringWriter implements OutputStreamWriter {
     foreach ($args as $arg) {
       if (is_string($arg)) {
         $this->out->write($arg);
-      } else if (null !== $arg) {
+      } else {
         $this->out->write(Objects::stringOf($arg));
       }
     }
@@ -79,7 +79,7 @@ class StringWriter implements OutputStreamWriter {
     foreach ($args as $arg) {
       if (is_string($arg)) {
         $this->out->write($arg);
-      } else if (null !== $arg) {
+      } else {
         $this->out->write(Objects::stringOf($arg));
       }
     }

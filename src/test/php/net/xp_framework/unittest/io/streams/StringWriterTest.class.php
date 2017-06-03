@@ -36,7 +36,7 @@ class StringWriterTest extends TestCase {
    */
   protected function values() {
     return [
-      ['', null],
+      ['null', null],
       ['1', 1], ['0', 0], ['-1', -1],
       ['1', 1.0], ['0', 0.0], ['-1', -1.0], ['0.5', 0.5],
       ['true', true], ['false', false],
