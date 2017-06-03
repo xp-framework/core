@@ -166,7 +166,7 @@ class PropertyManager {
       case 0: throw new ElementNotFoundException(sprintf(
         'Cannot find properties "%s" in any of %s',
         $name,
-        \xp::stringOf(array_values($this->provider))
+        Objects::stringOf(array_values($this->provider))
       ));
       default: return new CompositeProperties($found);
     }

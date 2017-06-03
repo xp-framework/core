@@ -560,6 +560,6 @@ class Properties implements PropertyAccess {
 
   /** Creates a string representation of this property file */
   public function toString(): string {
-    return nameof($this).'('.$this->_file.')@{'.\xp::stringOf($this->_data).'}';
+    return nameof($this).'('.$this->_file.')@{'.Objects::stringOf($this->_data).'}';
   }
 }

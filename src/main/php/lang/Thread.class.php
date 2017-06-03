@@ -167,7 +167,7 @@ class Thread {
         if ($message= $e->getMessage()) echo $message, "\n";
         exit($e->getCode());
       } catch (\Throwable $t) {
-        fputs(STDERR, 'Uncaught exception (in child #'.$this->_id.'): '.\xp::stringOf($t));
+        fputs(STDERR, 'Uncaught exception (in child #'.$this->_id.'): '.$t->toString());
         exit(0xf0);
       }
     }

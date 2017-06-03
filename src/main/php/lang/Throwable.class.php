@@ -215,7 +215,7 @@ class Throwable extends \Exception implements Value {
 
       // Output uncommon elements only and one line how many common elements exist!
       for ($i= 0; $i < $cc; $i++) {
-        $s.= \xp::stringOf($lt[$i]); 
+        $s.= $lt[$i]->toString(); 
       }
       if ($cc != $ct) $s.= '  ... '.($ct - $cc + 1)." more\n";
       

@@ -1,7 +1,6 @@
 <?php namespace util;
 
-use lang\IllegalArgumentException;
-use lang\IllegalStateException;
+use lang\{IllegalArgumentException, IllegalStateException};
 
 /**
  * Instances of this class act on a list of given filters, accepting
@@ -105,7 +104,7 @@ class Filters implements Filter {
   public function toString() {
     $s= nameof($this).'('.sizeof($this->list).")@{\n";
     foreach ($this->list as $filter) {
-      $s.= '  '.\xp::stringOf($filter, '  ')."\n";
+      $s.= '  '.Objects::stringOf($filter, '  ')."\n";
     }
     return $s.'}';
   }

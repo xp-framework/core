@@ -47,7 +47,7 @@ class Date implements \lang\Value {
       try {
         $this->handle= $timezone ? new \DateTime($in, $timezone->getHandle()) : new \DateTime($in);
       } catch (\Throwable $e) {
-        throw new IllegalArgumentException('Given argument is neither a timestamp nor a well-formed timestring: '.\xp::stringOf($in));
+        throw new IllegalArgumentException('Given argument is neither a timestamp nor a well-formed timestring: '.Objects::stringOf($in));
       }
     }
   }
