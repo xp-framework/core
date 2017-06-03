@@ -1,6 +1,6 @@
 <?php namespace util;
 
-use lang\{Generic, Value};
+use lang\Value;
 
 /**
  * Objects utility methods
@@ -13,8 +13,6 @@ abstract class Objects {
   public static function equal($a, $b): bool {
     if ($a instanceof Value) {
       return 0 === $a->compareTo($b);
-    } else if ($a instanceof Generic) {
-      return $a->equals($b);
     } else if (is_array($a)) {
       if (!is_array($b) || sizeof($a) !== sizeof($b)) return false;
       foreach ($a as $key => $val) {
@@ -34,8 +32,6 @@ abstract class Objects {
   public static function compare($a, $b): int {
     if ($a instanceof Value) {
       return $a->compareTo($b);
-    } else if ($a instanceof Generic) {
-      return $a->equals($b) ? 0 : $a <=> $b;
     } else if (is_array($a)) {
       if (!is_array($b)) return 1;
       if (sizeof($a) < sizeof($b)) return -1;
@@ -76,7 +72,7 @@ abstract class Objects {
   public static function hashOf($val): string {
     if (null === $val) {
       return 'N;';
-    } else if ($val instanceof Generic || $val instanceof Value) {
+    } else if ($val instanceof Value) {
       return $val->hashCode();
     } else if ($val instanceof \Closure) {
       return spl_object_hash($val);
