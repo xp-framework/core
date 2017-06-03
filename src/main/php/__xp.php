@@ -7,4 +7,4 @@ if (version_compare(PHP_VERSION, '7.0.0', '<')) {
 $p= max(strrpos(__FILE__, DIRECTORY_SEPARATOR), strrpos(__FILE__, '?'));
 require_once substr(__FILE__, 0, $p + 1).'lang.base.php';
 
-\lang\ClassLoader::getDefault();
+\lang\ClassLoader::bootstrap();
