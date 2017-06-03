@@ -35,7 +35,7 @@ class Lookup extends AbstractDictionary {
   public function get($key) {
     $offset= Objects::hashOf($key);
     if (!isset($this->elements[$offset])) {
-      throw new \util\NoSuchElementException('No such key '.\xp::stringOf($key));
+      throw new \util\NoSuchElementException('No such key '.Objects::stringOf($key));
     }
     return $this->elements[$offset];
   }

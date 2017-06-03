@@ -33,7 +33,7 @@ class TypeDictionary extends AbstractTypeDictionary {
   public function get($key) {
     $offset= $key->literal();
     if (!isset($this->elements[$offset])) {
-      throw new NoSuchElementException('No such key '.\xp::stringOf($key));
+      throw new NoSuchElementException('No such key '.$key->toString());
     }
     return $this->elements[$offset];
   }
