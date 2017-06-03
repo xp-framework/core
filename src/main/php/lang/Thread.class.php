@@ -1,5 +1,7 @@
 <?php namespace lang;
 
+use util\Objects;
+
 /**
  * Thread
  *
@@ -229,7 +231,7 @@ class Thread {
    * @return  string
    */
   public function toString() {
-    return sprintf('%s[%s%d]@%s', nameof($this), $this->isRunning() ? 'R' : 'S', $this->_id, \xp::stringOf($this));
+    return sprintf('%s[%s%d]@%s', nameof($this), $this->isRunning() ? 'R' : 'S', $this->_id, Objects::stringOf($this));
   }
   
   /**

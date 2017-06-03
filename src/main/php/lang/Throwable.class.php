@@ -1,5 +1,7 @@
 <?php namespace lang;
 
+use util\Objects;
+
 /**
  * Throwable
  *
@@ -27,7 +29,7 @@ class Throwable extends \Exception implements Value {
    */
   public function __construct($message, $cause= null, $fill= true) {
     $this->__id= uniqid('', true);
-    $this->message= is_string($message) ? $message : \xp::stringOf($message);
+    $this->message= is_string($message) ? $message : Objects::stringOf($message);
     $cause && $this->cause= self::wrap($cause);
     $fill && $this->fillInStackTrace();
   }
