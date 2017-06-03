@@ -1,5 +1,7 @@
 <?php namespace io\streams;
 
+use util\Objects;
+
 /**
  * A OutputStreamWriter implementation that writes the string values of
  * the given arguments to the underlying output stream.
@@ -62,8 +64,8 @@ class StringWriter implements OutputStreamWriter {
     foreach ($args as $arg) {
       if (is_string($arg)) {
         $this->out->write($arg);
-      } else {
-        $this->out->write(\xp::stringOf($arg));
+      } else if (null !== $arg) {
+        $this->out->write(Objects::stringOf($arg));
       }
     }
   }
@@ -77,8 +79,8 @@ class StringWriter implements OutputStreamWriter {
     foreach ($args as $arg) {
       if (is_string($arg)) {
         $this->out->write($arg);
-      } else {
-        $this->out->write(\xp::stringOf($arg));
+      } else if (null !== $arg) {
+        $this->out->write(Objects::stringOf($arg));
       }
     }
     $this->out->write("\n");
