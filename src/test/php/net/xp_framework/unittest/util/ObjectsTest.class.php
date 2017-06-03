@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use util\Objects;
+use lang\Value;
 use net\xp_framework\unittest\Name;
 
 /**
@@ -328,8 +329,10 @@ class ObjectsTest extends \unittest\TestCase {
 
   #[@test]
   public function twice_the_same_object_inside_array_not_recursion() {
-    $test= new class() extends Object {
+    $test= new class() implements Value {
       public function toString() { return 'Test'; }
+      public function hashCode() { return 1; }
+      public function compareTo($value) { return 1; }
     };
     $this->assertEquals(
       "[\n  a => Test\n  b => Test\n]", 
@@ -339,9 +342,10 @@ class ObjectsTest extends \unittest\TestCase {
   
   #[@test]
   public function twice_the_same_object_with_huge_hashcode_inside_array_not_recursion() {
-    $test= new class() extends Object {
-      public function hashCode() { return 9E100; }
+    $test= new class() implements Value {
       public function toString() { return 'Test'; }
+      public function hashCode() { return 1; }
+      public function compareTo($value) { return 1; }
     };
     $this->assertEquals(
       "[\n  a => Test\n  b => Test\n]", 
@@ -351,28 +355,34 @@ class ObjectsTest extends \unittest\TestCase {
 
   #[@test]
   public function toString_calling_xp_stringOf_does_not_loop_forever() {
-    $test= new class() extends Object {
+    $test= new class() implements Value {
       public function toString() { return Objects::stringOf($this); }
+      public function hashCode() { return 1; }
+      public function compareTo($value) { return 1; }
     };
     $this->assertEquals(
-      nameof($test)." {\n  __id => \"".$test->hashCode()."\"\n}",
+      nameof($test)." {\n}",
       Objects::stringOf($test)
     );
   }
 
   #[@test]
   public function repeated_calls_to_xp_stringOf_yield_same_result() {
-    $object= new Object();
-    $stringRep= $object->toString();
+    $test= new class() implements Value {
+      public function toString() { return 'Test'; }
+      public function hashCode() { return 1; }
+      public function compareTo($value) { return 1; }
+    };
+    $stringRep= $test->toString();
     $this->assertEquals(
       [$stringRep, $stringRep],
-      [Objects::stringOf($object), Objects::stringOf($object)]
+      [Objects::stringOf($test), Objects::stringOf($test)]
     );
   }
 
   #[@test]
   public function closure_inside_object_does_not_raise_serialization_exception() {
-    $instance= new class(function($a, $b) { }) extends Object {
+    $instance= new class(function($a, $b) { }) {
       public $closure;
       public function __construct($closure) { $this->closure= $closure; }
     };
