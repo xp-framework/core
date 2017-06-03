@@ -82,13 +82,6 @@ final class xp {
   }
   // }}}
 
-  // {{{ proto string typeOf(var arg)
-  //     Returns the fully qualified type name
-  static function typeOf($arg) {
-    return is_object($arg) ? nameof($arg) : gettype($arg);
-  }
-  // }}}
-
   // {{{ proto string stringOf(var arg [, string indent default ''])
   //     Returns a string representation of the given argument
   static function stringOf($arg, $indent= '') {
@@ -102,7 +95,7 @@ final class xp {
       return 'null';
     } else if (is_int($arg) || is_float($arg)) {
       return (string)$arg;
-    } else if (($arg instanceof \lang\Generic || $arg instanceof \lang\Value) && !isset($protect[(string)$arg->hashCode()])) {
+    } else if (($arg instanceof \lang\Value) && !isset($protect[(string)$arg->hashCode()])) {
       $protect[(string)$arg->hashCode()]= true;
       $s= $arg->toString();
       unset($protect[(string)$arg->hashCode()]);
@@ -226,7 +219,7 @@ function __error($code, $msg, $file, $line) {
 }
 // }}}
 
-// {{{ proto Generic cast (var arg, var type[, bool nullsafe= true])
+// {{{ proto var cast (var arg, var type[, bool nullsafe= true])
 //     Casts an arg NULL-safe
 function cast($arg, $type, $nullsafe= true) {
   if (null === $arg && $nullsafe) {
@@ -369,9 +362,9 @@ function newinstance($spec, $args, $def= null) {
 
   $name= strtr($type, '\\', '.').$n;
   if (interface_exists($type)) {
-    $decl= ['kind' => 'class', 'extends' => ['lang.Object'], 'implements' => ['\\'.$type], 'use' => []];
+    $decl= ['kind' => 'class', 'extends' => null, 'implements' => ['\\'.$type], 'use' => []];
   } else if (trait_exists($type)) {
-    $decl= ['kind' => 'class', 'extends' => ['lang.Object'], 'implements' => [], 'use' => ['\\'.$type]];
+    $decl= ['kind' => 'class', 'extends' => null, 'implements' => [], 'use' => ['\\'.$type]];
   } else {
     $decl= ['kind' => 'class', 'extends' => ['\\'.$type], 'implements' => [], 'use' => []];
   }
@@ -390,7 +383,7 @@ function newinstance($spec, $args, $def= null) {
 }
 // }}}
 
-// {{{ proto lang.Generic create(string spec, var... $args)
+// {{{ proto object create(string spec, var... $args)
 //     Creates a generic object
 function create($spec, ... $args) {
   if (!is_string($spec)) {
@@ -417,7 +410,7 @@ function create($spec, ... $args) {
 }
 // }}}
 
-// {{{ proto string nameof(lang.Generic arg)
+// {{{ proto string nameof(object arg)
 //     Returns name of an instance.
 function nameof($arg) {
   $class= get_class($arg);

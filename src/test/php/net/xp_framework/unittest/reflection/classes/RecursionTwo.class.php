@@ -1,5 +1,5 @@
 <?php namespace net\xp_framework\unittest\reflection\classes;
 
-class RecursionTwo extends \lang\Object {
+class RecursionTwo {
 
 }

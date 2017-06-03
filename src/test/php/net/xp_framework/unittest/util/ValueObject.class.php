@@ -1,6 +1,6 @@
 <?php namespace net\xp_framework\unittest\util;
 
-class ValueObject extends \lang\Object {
+class ValueObject implements \lang\Value {
   private $value;
 
   /** @param string $value */
@@ -19,13 +19,13 @@ class ValueObject extends \lang\Object {
   }
 
   /**
-   * Returns whether this name is equal to another
+   * Compares this value with another
    *
-   * @param  var $cmp
-   * @return bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return $cmp instanceof self && $this->value === $cmp->value;
+  public function compareTo($value) {
+    return $value instanceof self ? $this->value <=> $value->value : 1;
   }
 
   /**

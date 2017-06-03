@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\StackTraceElement;
+use net\xp_framework\unittest\Name;
 
 /**
  * Tests for the StackTraceElement class
@@ -138,8 +139,8 @@ class StackTraceElementTest extends \unittest\TestCase {
   #[@test]
   public function to_string_with_object_arg() {
     $this->assertEquals(
-      self::NEW_FIXTURE_METHOD."(lang.Object{}) [line 1 of Test.class.php] Test\n",
-      $this->newFixtureWith([new \lang\Object()])->toString()
+      self::NEW_FIXTURE_METHOD."(net.xp_framework.unittest.Name{}) [line 1 of Test.class.php] Test\n",
+      $this->newFixtureWith([new Name('test')])->toString()
     );
   }
 

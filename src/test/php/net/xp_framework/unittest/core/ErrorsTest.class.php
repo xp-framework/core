@@ -129,7 +129,7 @@ class ErrorsTest extends \unittest\TestCase {
 
   #[@test, @expect(ClassCastException::class)]
   public function cannot_convert_object_to_string_yields_cce() {
-    $object= new Object();
+    $object= new class() { };
     $object.'String';
   }
 

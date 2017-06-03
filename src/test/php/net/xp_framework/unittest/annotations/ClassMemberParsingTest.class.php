@@ -68,7 +68,7 @@ class ClassMemberParsingTest extends \unittest\TestCase {
   #  \net\xp_framework\unittest\annotations\ClassMemberParsingTest::class
   #])]
   public function class_constant_referencing_this_class($value) {
-    $this->assertEquals($this->getClass()->literal(), $value);
+    $this->assertEquals(typeof($this)->literal(), $value);
   }
 
   #[@test, @values([

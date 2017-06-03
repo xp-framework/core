@@ -1,7 +1,6 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use util\Objects;
-use lang\Object;
 use net\xp_framework\unittest\Name;
 
 /**
@@ -49,7 +48,6 @@ class ObjectsTest extends \unittest\TestCase {
   public function objects() {
     return [
       [$this],
-      [new Object()],
       [new ValueObject('')],
       [new ValueObject('Test')],
       [new Name('')]
@@ -172,7 +170,7 @@ class ObjectsTest extends \unittest\TestCase {
 
   #[@test, @values(source= 'values')]
   public function object_not_equal_to_other_values($val) {
-    $this->assertFalse(Objects::equal(new Object(), $val));
+    $this->assertFalse(Objects::equal(new class() { }, $val));
   }
 
   #[@test, @values(source= 'values')]

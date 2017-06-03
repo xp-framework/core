@@ -18,15 +18,15 @@ class Constructor extends Routine {
    * with the specified initialization parameters.
    *
    * Example:
-   * <code>
-   *   $constructor= XPClass::forName('util.Binford')->getConstructor();
+   * ```php
+   * $constructor= XPClass::forName('util.Binford')->getConstructor();
    *
-   *   $instance= $constructor->newInstance();
-   *   $instance= $constructor->newInstance([6100]);
-   * </code>
+   * $instance= $constructor->newInstance();
+   * $instance= $constructor->newInstance([6100]);
+   * ```
    *
    * @param   var[] args
-   * @return  lang.Generic
+   * @return  object
    * @throws  lang.IllegalAccessException in case the constructor is not public or if it is abstract
    * @throws  lang.reflect.TargetInvocationException in case the constructor throws an exception
    */

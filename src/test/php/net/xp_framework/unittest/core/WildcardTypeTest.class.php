@@ -46,7 +46,7 @@ class WildcardTypeTest extends \unittest\TestCase {
   #  'net.xp_framework.unittest.core.generics.Nullable',
   #  'int',
   #  'string[]',
-  #  '[:lang.Generic]',
+  #  '[:lang.Value]',
   #  'net.xp_framework.unittest.core.generics.Nullable<bool>',
   #  '?', '??', 'string?'
   #])]
@@ -118,7 +118,7 @@ class WildcardTypeTest extends \unittest\TestCase {
   protected function nullableOfAny() {
     return [
       [Type::forName('net.xp_framework.unittest.core.generics.Nullable<string>')],
-      [Type::forName('net.xp_framework.unittest.core.generics.Nullable<lang.Generic>')],
+      [Type::forName('net.xp_framework.unittest.core.generics.Nullable<lang.Value>')],
       [Type::forName('net.xp_framework.unittest.core.generics.Nullable<net.xp_framework.unittest.core.generics.Nullable<int>>')],
     ];
   }
@@ -127,8 +127,8 @@ class WildcardTypeTest extends \unittest\TestCase {
   protected function hashTableOfAny() {
     return [
       [Type::forName('net.xp_framework.unittest.core.generics.Lookup<int, string>')],
-      [Type::forName('net.xp_framework.unittest.core.generics.Lookup<string, lang.Generic>')],
-      [Type::forName('net.xp_framework.unittest.core.generics.Lookup<lang.Generic, net.xp_framework.unittest.core.generics.Nullable<int>>')],
+      [Type::forName('net.xp_framework.unittest.core.generics.Lookup<string, lang.Value>')],
+      [Type::forName('net.xp_framework.unittest.core.generics.Lookup<lang.Value, net.xp_framework.unittest.core.generics.Nullable<int>>')],
     ];
   }
 
@@ -137,7 +137,7 @@ class WildcardTypeTest extends \unittest\TestCase {
     return [
       [Primitive::$INT], [Primitive::$DOUBLE], [Primitive::$BOOL], [Primitive::$STRING],
       [new ArrayType('var'), new MapType('var')],
-      [$this->getClass()]
+      [typeof($this)]
     ];
   }
 
@@ -232,16 +232,16 @@ class WildcardTypeTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function hash_table_of_string_Generic_is_not_instance_of_hash_of_int_any() {
+  public function hash_table_of_string_Value_is_not_instance_of_hash_of_int_any() {
     $this->assertFalse(WildcardType::forName('net.xp_framework.unittest.core.generics.Lookup<int, ?>')->isInstance(
-      create('new net.xp_framework.unittest.core.generics.Lookup<string, lang.Generic>')
+      create('new net.xp_framework.unittest.core.generics.Lookup<string, lang.Value>')
     ));
   }
 
   #[@test]
-  public function hash_table_of_string_Generic_is_assignable_top_hash_of_int_any() {
+  public function hash_table_of_string_Value_is_assignable_top_hash_of_int_any() {
     $this->assertFalse(WildcardType::forName('net.xp_framework.unittest.core.generics.Lookup<int, ?>')->isAssignableFrom(
-      Type::forName('net.xp_framework.unittest.core.generics.Lookup<string, lang.Generic>')
+      Type::forName('net.xp_framework.unittest.core.generics.Lookup<string, lang.Value>')
     ));
   }
 

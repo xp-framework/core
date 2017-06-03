@@ -13,7 +13,7 @@ use lang\FormatException;
  * @test  xp://net.xp_framework.unittest.reflection.ProxyTest
  * @see   http://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Proxy.html
  */
-class Proxy extends \lang\Object {
+class Proxy {
   const PREFIX  = 'Proxy$';
   const LITERAL = "Proxy\xb7";
 

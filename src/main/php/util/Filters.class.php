@@ -15,7 +15,7 @@ use lang\IllegalStateException;
  * @test xp://net.xp_framework.unittest.util.FiltersTest
  */
 #[@generic(self= 'T', implements= ['T'])]
-class Filters extends \lang\Object implements Filter {
+class Filters implements Filter {
   protected $list;
   protected $accept;
 

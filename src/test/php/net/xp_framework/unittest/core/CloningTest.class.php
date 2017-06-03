@@ -7,14 +7,8 @@ use lang\CloneNotSupportedException;
 class CloningTest extends \unittest\TestCase {
 
   #[@test]
-  public function cloneOfObject() {
-    $original= new Object();
-    $this->assertFalse($original == clone($original));
-  }
-
-  #[@test]
   public function cloneInterceptorCalled() {
-    $original= new class() extends Object {
+    $original= new class() {
       public $cloned= false;
       public function __clone() { $this->cloned= true; }
     };
@@ -26,7 +20,7 @@ class CloningTest extends \unittest\TestCase {
 
   #[@test, @expect(CloneNotSupportedException::class)]
   public function cloneInterceptorThrowsException() {
-    clone(new class() extends Object {
+    clone(new class() {
       public function __clone() { throw new CloneNotSupportedException('I am *UN*Cloneable'); }
     });
   }

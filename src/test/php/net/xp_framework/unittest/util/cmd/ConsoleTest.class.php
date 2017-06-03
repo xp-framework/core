@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\util\cmd;
 
 use util\cmd\Console;
-use lang\{Object, IllegalStateException};
+use lang\{Value, IllegalStateException};
 use io\streams\{MemoryInputStream, MemoryOutputStream, ConsoleOutputStream, ConsoleInputStream};
 
 /**
@@ -117,8 +117,10 @@ class ConsoleTest extends \unittest\TestCase {
 
   #[@test]
   public function write_an_object() {
-    Console::write(new class() extends Object {
-      public function toString() { return "Hello"; }
+    Console::write(new class() implements Value {
+      public function toString() { return 'Hello'; }
+      public function hashCode() { return get_class($this); }
+      public function compareTo($value) { return 1; }
     });
     $this->assertEquals('Hello', $this->streams[1]->getBytes());
   }
@@ -126,8 +128,10 @@ class ConsoleTest extends \unittest\TestCase {
   #[@test]
   public function exception_from_toString() {
     try {
-      Console::write(new class() extends Object {
+      Console::write(new class() implements Value {
         public function toString() { throw new IllegalStateException("Cannot render string"); }
+        public function hashCode() { return get_class($this); }
+        public function compareTo($value) { return 1; }
       });
       $this->fail('Expected exception not thrown', null, 'lang.IllegalStateException');
     } catch (IllegalStateException $expected) {

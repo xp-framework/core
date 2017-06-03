@@ -4,11 +4,6 @@ use util\Money;
 use util\Currency;
 use lang\IllegalArgumentException;
 
-/**
- * TestCase
- *
- * @see      xp://util.Money
- */
 class MoneyTest extends \unittest\TestCase {
 
   #[@test]

@@ -5,7 +5,7 @@
  *
  * @see   http://de3.php.net/manual/en/ref.sem.php
  */
-class IPCMessage extends \lang\Object {
+class IPCMessage {
   public
     $message        = '',
     $type           = 0;

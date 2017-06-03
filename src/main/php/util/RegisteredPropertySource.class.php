@@ -7,7 +7,7 @@ use lang\IllegalArgumentException;
  *
  * @test  xp://net.xp_framework.unittest.RegisteredPropertySourceTest
  */
-class RegisteredPropertySource extends \lang\Object implements PropertySource {
+class RegisteredPropertySource implements PropertySource {
   protected $name, $prop;
 
   /**

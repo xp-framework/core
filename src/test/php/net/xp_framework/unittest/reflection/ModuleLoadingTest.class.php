@@ -111,7 +111,7 @@ class ModuleLoadingTest extends \unittest\TestCase {
     $this->register(new LoaderProviding([
       'module.xp' => '<?php module xp-framework/child extends net\xp_framework\unittest\reflection\BaseModule { }'
     ]));
-    $this->assertEquals($cl, Module::forName('xp-framework/child')->getClass()->getParentclass());
+    $this->assertEquals($cl, typeof(Module::forName('xp-framework/child'))->getParentclass());
   }
 
   #[@test]
@@ -120,7 +120,7 @@ class ModuleLoadingTest extends \unittest\TestCase {
     $this->register(new LoaderProviding([
       'module.xp' => '<?php module xp-framework/impl implements net\xp_framework\unittest\reflection\IModule { }'
     ]));
-    $this->assertTrue(in_array($cl, Module::forName('xp-framework/impl')->getClass()->getInterfaces()));
+    $this->assertTrue(in_array($cl, typeof(Module::forName('xp-framework/impl'))->getInterfaces()));
   }
 
   #[@test]

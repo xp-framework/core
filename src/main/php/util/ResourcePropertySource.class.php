@@ -16,7 +16,7 @@ use lang\ResourceProvider;
  *
  * @test     xp://net.xp_framework.unittest.util.ResourcePropertySourceTest
  */
-class ResourcePropertySource extends \lang\Object implements PropertySource {
+class ResourcePropertySource implements PropertySource {
   protected $cache = [];
   protected $root  = null;
 

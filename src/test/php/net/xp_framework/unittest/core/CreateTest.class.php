@@ -13,29 +13,29 @@ class CreateTest extends \unittest\TestCase {
 
   #[@test]
   public function create_with_all_qualified_names() {
-    $h= create('new net.xp_framework.unittest.core.generics.Lookup<lang.Object, lang.Object>');
+    $h= create('new net.xp_framework.unittest.core.generics.Lookup<net.xp_framework.unittest.Name, net.xp_framework.unittest.Name>');
     $this->assertEquals(
-      [XPClass::forName('lang.Object'), XPClass::forName('lang.Object')], 
-      $h->getClass()->genericArguments()
+      [XPClass::forName('net.xp_framework.unittest.Name'), XPClass::forName('net.xp_framework.unittest.Name')], 
+      typeof($h)->genericArguments()
     );
   }
 
   #[@test]
   public function create_can_be_used_with_type_variables() {
-    $T= XPClass::forName('lang.Object');
-    $this->assertEquals([$T], create("new net.xp_framework.unittest.core.generics.ListOf<$T>")->getClass()->genericArguments());
+    $T= XPClass::forName('net.xp_framework.unittest.Name');
+    $this->assertEquals([$T], typeof(create("new net.xp_framework.unittest.core.generics.ListOf<$T>"))->genericArguments());
   }
 
   #[@test]
   public function create_invokes_constructor() {
     $this->assertEquals(
       $this,
-      create('new net.xp_framework.unittest.core.generics.ListOf<lang.Object>', $this)->elements()[0]
+      create('new net.xp_framework.unittest.core.generics.ListOf<unittest.TestCase>', $this)->elements()[0]
     );
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
   public function create_raises_exception_when_non_generic_given() {
-    create('new lang.Object<lang.Object>');
+    create('new net.xp_framework.unittest.Name<string>');
   }
 }

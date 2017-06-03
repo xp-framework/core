@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use unittest\TestCase;
-use lang\{Runnable, Object, Generic, CommandLine, ClassCastException};
+use lang\{Runnable, Value, CommandLine, ClassCastException};
 
 /**
  * Tests cast() functionality
@@ -23,7 +23,7 @@ class CastingTest extends TestCase implements Runnable {
 
   #[@test, @expect(ClassCastException::class)]
   public function null() {
-    cast(null, Object::class);
+    cast(null, Value::class);
   }
 
   #[@test, @expect(ClassCastException::class)]
@@ -33,7 +33,7 @@ class CastingTest extends TestCase implements Runnable {
 
   #[@test]
   public function passig_null_allowed_when_nullsafe_set_to_false() {
-    $this->assertNull(cast(null, Object::class, false));
+    $this->assertNull(cast(null, Value::class, false));
   }
 
   #[@test]
@@ -62,23 +62,13 @@ class CastingTest extends TestCase implements Runnable {
   }
 
   #[@test]
-  public function objectClass() {
-    $this->assertTrue($this === cast($this, Object::class));
-  }
-
-  #[@test]
-  public function genericInterface() {
-    $this->assertTrue($this === cast($this, Generic::class));
+  public function selfClass() {
+    $this->assertTrue($this === cast($this, self::class));
   }
 
   #[@test, @expect(ClassCastException::class)]
   public function unrelated() {
     cast($this, CommandLine::class);
-  }
-
-  #[@test, @expect(ClassCastException::class)]
-  public function subClass() {
-    cast(new Object(), CommandLine::class);
   }
 
   #[@test, @expect(ClassCastException::class)]
@@ -88,7 +78,7 @@ class CastingTest extends TestCase implements Runnable {
 
   #[@test, @expect(ClassCastException::class)]
   public function primitive() {
-    cast('primitive', Object::class);
+    cast('primitive', Value::class);
   }
 
   #[@test, @expect(ClassCastException::class), @values(['', null])]

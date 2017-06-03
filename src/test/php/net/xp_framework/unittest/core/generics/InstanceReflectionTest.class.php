@@ -32,7 +32,7 @@ class InstanceReflectionTest extends \unittest\TestCase {
   public function nameOfClass() {
     $this->assertEquals(
       'net.xp_framework.unittest.core.generics.Lookup<string,unittest.TestCase>', 
-      $this->fixture->getClass()->getName()
+      typeof($this->fixture)->getName()
     );
   }
 
@@ -40,13 +40,13 @@ class InstanceReflectionTest extends \unittest\TestCase {
   public function simpleNameOfClass() {
     $this->assertEquals(
       'Lookup<string,unittest.TestCase>', 
-      $this->fixture->getClass()->getSimpleName()
+      typeof($this->fixture)->getSimpleName()
     );
   }
 
   #[@test]
   public function reflectedNameOfClass() {
-    $class= $this->fixture->getClass();
+    $class= typeof($this->fixture);
     $this->assertEquals(
       'net\xp_framework\unittest\core\generics\Lookup··þstring¸unittest¦TestCase', 
       literal($class->getName())
@@ -55,19 +55,19 @@ class InstanceReflectionTest extends \unittest\TestCase {
 
   #[@test]
   public function instanceIsGeneric() {
-    $this->assertTrue($this->fixture->getClass()->isGeneric());
+    $this->assertTrue(typeof($this->fixture)->isGeneric());
   }
 
   #[@test]
   public function instanceIsNoGenericDefinition() {
-    $this->assertFalse($this->fixture->getClass()->isGenericDefinition());
+    $this->assertFalse(typeof($this->fixture)->isGenericDefinition());
   }
 
   #[@test]
   public function genericDefinition() {
     $this->assertEquals(
       XPClass::forName('net.xp_framework.unittest.core.generics.Lookup'),
-      $this->fixture->getClass()->genericDefinition()
+      typeof($this->fixture)->genericDefinition()
     );
   }
 
@@ -75,7 +75,7 @@ class InstanceReflectionTest extends \unittest\TestCase {
   public function genericArguments() {
     $this->assertEquals(
       [Primitive::$STRING, XPClass::forName('unittest.TestCase')],
-      $this->fixture->getClass()->genericArguments()
+      typeof($this->fixture)->genericArguments()
     );
   }
 
@@ -83,13 +83,13 @@ class InstanceReflectionTest extends \unittest\TestCase {
   public function elementFieldType() {
     $this->assertEquals(
       '[:unittest.TestCase]',
-      $this->fixture->getClass()->getField('elements')->getTypeName()
+      typeof($this->fixture)->getField('elements')->getTypeName()
     );
   }
 
   #[@test]
   public function putParameters() {
-    $params= $this->fixture->getClass()->getMethod('put')->getParameters();
+    $params= typeof($this->fixture)->getMethod('put')->getParameters();
     $this->assertEquals(2, sizeof($params));
     $this->assertEquals(Primitive::$STRING, $params[0]->getType());
     $this->assertEquals(XPClass::forName('unittest.TestCase'), $params[1]->getType());
@@ -99,7 +99,7 @@ class InstanceReflectionTest extends \unittest\TestCase {
   public function getReturnType() {
     $this->assertEquals(
       'unittest.TestCase',
-      $this->fixture->getClass()->getMethod('get')->getReturnTypeName()
+      typeof($this->fixture)->getMethod('get')->getReturnTypeName()
     );
   }
 
@@ -107,7 +107,7 @@ class InstanceReflectionTest extends \unittest\TestCase {
   public function valuesReturnType() {
     $this->assertEquals(
       'unittest.TestCase[]',
-      $this->fixture->getClass()->getMethod('values')->getReturnTypeName()
+      typeof($this->fixture)->getMethod('values')->getReturnTypeName()
     );
   }
 }

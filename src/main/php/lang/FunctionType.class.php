@@ -106,7 +106,7 @@ class FunctionType extends Type {
     if (isset($details[DETAIL_RETURNS])) {
       $returns= Type::forName($details[DETAIL_RETURNS]);
       if (!$this->returns->equals($returns) && !$this->returns->isAssignableFrom($returns)) {
-        return $false('Return type mismatch, expecting '.$this->returns->getName().', have '.$returns->getName()); 
+        return $false('Return type mismatch, expecting '.$this->returns->getName().', have '.$returns->getName());
       }
     }
 

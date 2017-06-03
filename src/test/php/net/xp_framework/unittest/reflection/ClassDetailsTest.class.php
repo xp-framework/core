@@ -2,7 +2,7 @@
 
 use lang\reflect\ClassParser;
 use lang\ClassFormatException;
-use lang\Object;
+use net\xp_framework\unittest\Name;
 
 define('APIDOC_TAG',        0x0001);
 define('APIDOC_VALUE',      0x0002);
@@ -26,7 +26,7 @@ class ClassDetailsTest extends \unittest\TestCase {
   protected function parseComment($comment) {
     $details= (new ClassParser())->parseDetails('
       <?php
-        class Test extends Object {
+        class Test {
           '.$comment.'
           public function test() { }
         }
@@ -110,8 +110,8 @@ class ClassDetailsTest extends \unittest\TestCase {
 
   #[@test]
   public function generic_parameter_with_one_component() {
-    $details= $this->parseComment('/** @param  util.collections.Vector<lang.Object> param1 */');
-    $this->assertEquals('util.collections.Vector<lang.Object>', $details[DETAIL_ARGUMENTS][0]);
+    $details= $this->parseComment('/** @param  util.collections.Vector<unittest.TestCase> param1 */');
+    $this->assertEquals('util.collections.Vector<unittest.TestCase>', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[@test]
@@ -191,7 +191,7 @@ class ClassDetailsTest extends \unittest\TestCase {
   #[@test]
   public function withClosure() {
     $details= (new ClassParser())->parseDetails('<?php
-      class WithClosure_1 extends Object {
+      class WithClosure_1 {
 
         /**
          * Creates a new answer
@@ -209,7 +209,7 @@ class ClassDetailsTest extends \unittest\TestCase {
   #[@test]
   public function withClosures() {
     $details= (new ClassParser())->parseDetails('<?php
-      class WithClosure_2 extends Object {
+      class WithClosure_2 {
 
         /**
          * Creates a new answer
@@ -236,7 +236,7 @@ class ClassDetailsTest extends \unittest\TestCase {
   /** @return [:var] */
   protected function dummyDetails() {
     return (new ClassParser())->parseDetails('<?php
-      class DummyDetails extends Object {
+      class DummyDetails {
         protected $test = true;
 
         #[@test]
@@ -266,55 +266,55 @@ class ClassDetailsTest extends \unittest\TestCase {
   #[@test]
   public function use_statements_evaluated() {
     $actual= (new ClassParser())->parseDetails('<?php namespace test;
-      use lang\\Object;
+      use net\xp_framework\unittest\Name;
 
-      #[@value(new Object())]
-      class Test extends Object {
+      #[@value(new Name("test"))]
+      class Test {
       }
     ');
-    $this->assertInstanceOf(Object::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
+    $this->assertInstanceOf(Name::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
   }
 
   #[@test]
   public function use_statements_with_alias_evaluated() {
     $actual= (new ClassParser())->parseDetails('<?php namespace test;
-      use lang\\Object as Base;
+      use net\xp_framework\unittest\Name as Value;
 
-      #[@value(new Base())]
-      class Test extends Base {
+      #[@value(new Value("test"))]
+      class Test {
       }
     ');
-    $this->assertInstanceOf(Object::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
+    $this->assertInstanceOf(Name::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
   }
 
   #[@test]
   public function grouped_use_statements_evaluated() {
     $actual= (new ClassParser())->parseDetails('<?php namespace test;
-      use lang\\{Object, Type};
+      use net\xp_framework\unittest\{Name, IgnoredOnHHVM};
 
-      #[@value(new Object())]
-      class Test extends Object {
+      #[@value(new Name("test"))]
+      class Test {
       }
     ');
-    $this->assertInstanceOf(Object::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
+    $this->assertInstanceOf(Name::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
   }
 
   #[@test]
   public function grouped_use_statements_with_alias_evaluated() {
     $actual= (new ClassParser())->parseDetails('<?php namespace test;
-      use lang\\{Object as Base};
+      use net\xp_framework\unittest\{Name as Base};
 
-      #[@value(new Base())]
-      class Test extends Base {
+      #[@value(new Base("test"))]
+      class Test {
       }
     ');
-    $this->assertInstanceOf(Object::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
+    $this->assertInstanceOf(Name::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
   }
 
   #[@test]
   public function closure_use_not_evaluated() {
     (new ClassParser())->parseDetails('<?php 
-      class Test extends Object {
+      class Test {
         public function run() {
           $closure= function($a) use($b) { };
         }
@@ -329,7 +329,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       #  [1, 2],
       #  [3, 4]
       #])]
-      class Test extends Object {
+      class Test {
       }
     ');
     $this->assertEquals([[1, 2], [3, 4]], $actual['class'][DETAIL_ANNOTATIONS]['values']);
@@ -338,7 +338,7 @@ class ClassDetailsTest extends \unittest\TestCase {
   #[@test]
   public function field_annotations() {
     $details= (new ClassParser())->parseDetails('<?php
-      class Test extends Object {
+      class Test {
         #[@test]
         public $fixture;
       }
@@ -349,7 +349,7 @@ class ClassDetailsTest extends \unittest\TestCase {
   #[@test]
   public function method_annotations() {
     $details= (new ClassParser())->parseDetails('<?php
-      class Test extends Object {
+      class Test {
         #[@test]
         public function fixture() { }
       }
@@ -360,7 +360,7 @@ class ClassDetailsTest extends \unittest\TestCase {
   #[@test]
   public function abstract_method_annotations() {
     $details= (new ClassParser())->parseDetails('<?php
-      abstract class Test extends Object {
+      abstract class Test {
         #[@test]
         public abstract function fixture();
       }
@@ -382,7 +382,7 @@ class ClassDetailsTest extends \unittest\TestCase {
   #[@test]
   public function parser_not_confused_by_closure() {
     $details= (new ClassParser())->parseDetails('<?php
-      class Test extends Object {
+      class Test {
         #[@test]
         public function fixture() {
           return function() { };
@@ -395,7 +395,7 @@ class ClassDetailsTest extends \unittest\TestCase {
   #[@test]
   public function field_with_annotation_after_methods() {
     $details= (new ClassParser())->parseDetails('<?php
-      class Test extends Object {
+      class Test {
         #[@test]
         public function fixture() { }
 
@@ -413,14 +413,14 @@ class ClassDetailsTest extends \unittest\TestCase {
         #[@fixture(new parent())]
         public function fixture() { }
       }',
-      'lang.Object'
+      Name::class
     );
   }
 
   #[@test]
   public function field_initializer_with_class_keyword() {
     $details= (new ClassParser())->parseDetails('<?php
-      class Test extends Object {
+      class Test {
         private $classes= [self::class, parent::class];
       }
     ');

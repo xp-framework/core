@@ -129,7 +129,7 @@ class Path implements \lang\Value {
       $normalized= '';
       $components= explode(DIRECTORY_SEPARATOR, substr($path, 1));
     } else if (2 === sscanf($path, '%c%*[:]', $drive)) {
-      $normalized= $drive.':';
+      $normalized= strtoupper($drive).':';
       $components= explode(DIRECTORY_SEPARATOR, substr($path, 3));
     } else if (null === $wd) {
       throw new IllegalStateException('Cannot resolve '.$path);
@@ -228,8 +228,14 @@ class Path implements \lang\Value {
    * it only removes redundant elements.
    */
   public function normalize(): self {
-    $components= explode(DIRECTORY_SEPARATOR, $this->path);
-    $normalized= [];
+    if (2 === sscanf($this->path, '%c%*[:]', $drive)) {
+      $components= explode(DIRECTORY_SEPARATOR, substr($this->path, 3));
+      $normalized= [strtoupper($drive).':'];
+    } else {
+      $components= explode(DIRECTORY_SEPARATOR, $this->path);
+      $normalized= [];
+    }
+
     foreach ($components as $component) {
       if ('' === $component || '.' === $component) {
         // Skip
@@ -239,7 +245,7 @@ class Path implements \lang\Value {
           $normalized[]= '..';
           $normalized[]= '..';
         }
-       } else {
+      } else {
         $normalized[]= $component;
       }
     }

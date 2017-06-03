@@ -1,7 +1,6 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\XPClass;
-use lang\Runnable;
+use lang\{XPClass, Runnable};
 
 /**
  * TestCase
@@ -11,44 +10,34 @@ use lang\Runnable;
 class IsInstanceTest extends \unittest\TestCase {
 
   #[@test]
-  public function thisIsATestCase() {
+  public function this_is_an_instance_of_testcase() {
     $this->assertTrue(XPClass::forName('unittest.TestCase')->isInstance($this));
   }
 
   #[@test]
-  public function thisIsAnInstanceOfThisClass() {
-    $this->assertTrue($this->getClass()->isInstance($this));
+  public function this_is_an_instance_of_this_class() {
+    $this->assertTrue(typeof($this)->isInstance($this));
   }
  
   #[@test]
-  public function primitiveStringIsNotAValue() {
+  public function primitive_string_is_not_value() {
     $this->assertFalse(XPClass::forName('lang.Value')->isInstance('Hello'));
   }
 
   #[@test]
-  public function objectIsNotAValue() {
-    $this->assertFalse(XPClass::forName('lang.Value')->isInstance(new \lang\Object()));
+  public function this_is_a_value() {
+    $this->assertTrue(XPClass::forName('lang.Value')->isInstance($this));
   }
 
   #[@test]
-  public function objectIsAGeneric() {
-    $this->assertTrue(XPClass::forName('lang.Generic')->isInstance(new \lang\Object()));
-  }
-
-  #[@test]
-  public function throwableIsAGeneric() {
-    $this->assertTrue(XPClass::forName('lang.Generic')->isInstance(new \lang\Throwable('')));
-  }
-
-  #[@test]
-  public function newInterfaceInstanceIsRunnable() {
+  public function new_interface_instance_is_rsunnable() {
     $this->assertTrue(XPClass::forName('lang.Runnable')->isInstance(new class() implements Runnable {
       public function run() { }
     }));
   }
 
   #[@test]
-  public function nullIsNotAnObject() {
-    $this->assertFalse(XPClass::forName('lang.Generic')->isInstance(null));
+  public function null_is_not_a_value() {
+    $this->assertFalse(XPClass::forName('lang.Value')->isInstance(null));
   }
 }

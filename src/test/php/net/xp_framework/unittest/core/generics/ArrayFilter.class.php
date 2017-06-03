@@ -18,7 +18,7 @@
  * ```
  */
 #[@generic(self= 'T')]
-abstract class ArrayFilter extends \lang\Object {
+abstract class ArrayFilter {
   
   /**
    * Accept method - called for each element in the specified list.

@@ -6,7 +6,7 @@
  * @test  xp://net.xp_framework.unittest.core.RuntimeOptionsTest
  * @see   xp://lang.Runtime#startupOptions
  */
-class RuntimeOptions extends Object {
+class RuntimeOptions implements Value {
   protected $backing= [];
 
   /**
@@ -121,7 +121,16 @@ class RuntimeOptions extends Object {
     }
     return $s;
   }
-  
+
+  /**
+   * Creates a hash code of these options
+   *
+   * @return  string
+   */
+  public function hashCode() {
+    return 'O'.md5(serialize($this->asArguments()));
+  }
+
   /**
    * Creates a string representation of these options
    *
@@ -134,10 +143,10 @@ class RuntimeOptions extends Object {
   /**
    * Returns whether another object is equal to these options
    *
-   * @param   lang.Generic cmp
-   * @return  bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return $cmp instanceof self && $this->backing === $cmp->backing;
+  public function compareTo($value) {
+    return $value instanceof self ? $this->backing <=> $value->backing : 1;
   }
 }

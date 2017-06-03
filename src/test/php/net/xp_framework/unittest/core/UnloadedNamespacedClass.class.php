@@ -5,6 +5,6 @@
 *
 * @see   xp://net.xp_framework.unittest.core.NamespacedClassesTest
 */
-class UnloadedNamespacedClass extends \lang\Object {
+class UnloadedNamespacedClass {
 
 }

@@ -5,7 +5,7 @@
  *
  * @see   xp://net.xp_framework.unittest.core.NamespacedClassesTest
  */
-class NamespacedClassUsingQualifiedUnloaded extends \lang\Object {
+class NamespacedClassUsingQualifiedUnloaded {
   
   /**
    * Returns a namespaced class

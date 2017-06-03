@@ -7,7 +7,7 @@ use lang\IllegalArgumentException;
  *
  * @test  xp://net.xp_framework.unittest.util.FilesystemPropertySourceTest
  */
-class FilesystemPropertySource extends \lang\Object implements PropertySource {
+class FilesystemPropertySource implements PropertySource {
   protected $root;
   protected $cache= [];
 
