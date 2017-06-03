@@ -108,6 +108,13 @@ class GenericTypes {
               $use.= $tokens[$i][1];
               $i++;
             }
+            if ('{' === $tokens[$i]) {
+              while ('}' !== $tokens[$i] && $i < $s) {
+                $use.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
+                $i++;
+              }
+              $use.= '}';
+            }
             $imports[substr($use, strrpos($use, '\\')+ 1)]= $use;
             $src.= 'use '.$use.';';
           }
@@ -240,7 +247,7 @@ class GenericTypes {
                   $src.= (
                     ' if (!is(\''.substr($generic[$j], 0, -3).'[]\', $·args)) throw new \lang\IllegalArgumentException('.
                     '"Vararg '.($j + 1).' passed to ".__METHOD__."'.
-                    ' must be of '.$type.', ".\util\Objects::stringOf($·args)." given"'.
+                    ' must be of '.$type.', ".typeof($·args)->getName()." given"'.
                     ');'
                   );
                 } else {
