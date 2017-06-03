@@ -109,14 +109,28 @@ class GenericTypes {
               $i++;
             }
             if ('{' === $tokens[$i]) {
-              while ('}' !== $tokens[$i] && $i < $s) {
-                $use.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
+              $import= $use;
+              $i++;
+              while ($i < $s) {
+                if (',' === $tokens[$i]) {
+                  $imports[substr($import, strrpos($import, '\\')+ 1)]= $import;
+                  $src.= 'use '.$import.';';
+                  $import= $use;
+                } else if ('}' === $tokens[$i]) {
+                  $imports[substr($import, strrpos($import, '\\')+ 1)]= $import;
+                  $src.= 'use '.$import.';';
+                  break;
+                } else if (is_array($tokens[$i])) {
+                  $import.= $tokens[$i][1];
+                } else {
+                  $import.= $tokens[$i];
+                }
                 $i++;
               }
-              $use.= '}';
+            } else {
+              $imports[substr($use, strrpos($use, '\\')+ 1)]= $use;
+              $src.= 'use '.$use.';';
             }
-            $imports[substr($use, strrpos($use, '\\')+ 1)]= $use;
-            $src.= 'use '.$use.';';
           }
           continue;
         } else if (T_CLASS === $state[0]) {
