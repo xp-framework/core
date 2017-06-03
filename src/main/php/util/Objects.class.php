@@ -71,7 +71,7 @@ abstract class Objects {
       return $val ? 'true' : 'false';
     } else if (is_int($val) || is_float($val)) {
       return (string)$val;
-    } else if (($val instanceof Generic || $val instanceof Value) && !isset($protect[(string)$val->hashCode()])) {
+    } else if (($val instanceof Value) && !isset($protect[(string)$val->hashCode()])) {
       $protect[(string)$val->hashCode()]= true;
       $s= $val->toString();
       unset($protect[(string)$val->hashCode()]);
