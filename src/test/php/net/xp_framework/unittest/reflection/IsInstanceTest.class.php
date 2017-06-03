@@ -25,12 +25,7 @@ class IsInstanceTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function this_is_a_value() {
-    $this->assertTrue(XPClass::forName('lang.Value')->isInstance($this));
-  }
-
-  #[@test]
-  public function new_interface_instance_is_rsunnable() {
+  public function new_interface_instance_is_runnable() {
     $this->assertTrue(XPClass::forName('lang.Runnable')->isInstance(new class() implements Runnable {
       public function run() { }
     }));
