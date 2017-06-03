@@ -137,7 +137,7 @@ class RuntimeOptions implements Value {
    * @return  string
    */
   public function toString() {
-    return nameof($this).'@'.\xp::stringOf($this->asArguments());
+    return nameof($this).'@'.implode(' ', $this->asArguments());
   }
 
   /**

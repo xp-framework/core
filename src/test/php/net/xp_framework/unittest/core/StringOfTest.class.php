@@ -6,6 +6,7 @@ use lang\Value;
 /**
  * Tests the xp::stringOf() core utility
  *
+ * @deprecated
  * @see   xp://net.xp_framework.unittest.core.NullTest
  * @see   https://github.com/xp-framework/xp-framework/issues/325
  */

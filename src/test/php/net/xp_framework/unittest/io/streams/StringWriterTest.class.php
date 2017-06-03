@@ -36,11 +36,12 @@ class StringWriterTest extends TestCase {
    */
   protected function values() {
     return [
+      ['null', null],
       ['1', 1], ['0', 0], ['-1', -1],
       ['1', 1.0], ['0', 0.0], ['-1', -1.0], ['0.5', 0.5],
       ['true', true], ['false', false],
       ['Test', 'Test'], ['', ''],
-      ["[\n]", []], ["[1, 2, 3]", [1, 2, 3]],
+      ["[]", []], ["[1, 2, 3]", [1, 2, 3]],
       ["[\n  a => \"b\"\n  c => \"d\"\n]", ['a' => 'b', 'c' => 'd']],
       ['Test', new Name('Test')],
       ['Test', new class() implements Value {

@@ -108,8 +108,29 @@ class GenericTypes {
               $use.= $tokens[$i][1];
               $i++;
             }
-            $imports[substr($use, strrpos($use, '\\')+ 1)]= $use;
-            $src.= 'use '.$use.';';
+            if ('{' === $tokens[$i]) {
+              $import= $use;
+              $i++;
+              while ($i < $s) {
+                if (',' === $tokens[$i]) {
+                  $imports[substr($import, strrpos($import, '\\')+ 1)]= $import;
+                  $src.= 'use '.$import.';';
+                  $import= $use;
+                } else if ('}' === $tokens[$i]) {
+                  $imports[substr($import, strrpos($import, '\\')+ 1)]= $import;
+                  $src.= 'use '.$import.';';
+                  break;
+                } else if (is_array($tokens[$i])) {
+                  $import.= $tokens[$i][1];
+                } else {
+                  $import.= $tokens[$i];
+                }
+                $i++;
+              }
+            } else {
+              $imports[substr($use, strrpos($use, '\\')+ 1)]= $use;
+              $src.= 'use '.$use.';';
+            }
           }
           continue;
         } else if (T_CLASS === $state[0]) {
@@ -240,7 +261,7 @@ class GenericTypes {
                   $src.= (
                     ' if (!is(\''.substr($generic[$j], 0, -3).'[]\', $·args)) throw new \lang\IllegalArgumentException('.
                     '"Vararg '.($j + 1).' passed to ".__METHOD__."'.
-                    ' must be of '.$type.', ".\xp::stringOf($·args)." given"'.
+                    ' must be of '.$type.', ".typeof($·args)->getName()." given"'.
                     ');'
                   );
                 } else {

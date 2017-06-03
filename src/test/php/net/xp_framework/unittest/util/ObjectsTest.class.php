@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use util\Objects;
+use lang\Value;
 use net\xp_framework\unittest\Name;
 
 /**
@@ -271,29 +272,17 @@ class ObjectsTest extends \unittest\TestCase {
     $this->assertEquals($expected, Objects::compare($a, $b));
   }
 
-  #[@test]
-  public function null_string_without_default() {
-    $this->assertEquals('', Objects::stringOf(null));
-  }
-
-  #[@test]
-  public function null_string_with_default() {
-    $this->assertEquals('default-value', Objects::stringOf(null, 'default-value'));
-  }
-
-  #[@test, @values('primitives')]
-  public function stringOf_calls_xpStringOf_on_primitives($val) {
-    $this->assertEquals(\xp::stringOf($val), Objects::stringOf($val));
-  }
-
-  #[@test, @values('arrays')]
-  public function stringOf_calls_xpStringOf_on_arrays($val) {
-    $this->assertEquals(\xp::stringOf($val), Objects::stringOf($val));
-  }
-
-  #[@test, @values('maps')]
-  public function stringOf_calls_xpStringOf_on_maps($val) {
-    $this->assertEquals(\xp::stringOf($val), Objects::stringOf($val));
+  #[@test, @values([
+  #  [null, 'null'],
+  #  [true, 'true'], [false, 'false'],
+  #  [-1, '-1'], [0, '0'], [1, '1'],
+  #  [-1.0, '-1'], [0.0, '0'], [1.0, '1'], [6.1, '6.1'],
+  #  ['', '""'], ['Test', '"Test"'], ['"Hello World"', '""Hello World""'],
+  #  [[], '[]'], [[1, 2, 3], '[1, 2, 3]'], [['key' => 'value'], "[\n  key => \"value\"\n]"],
+  #  [function() { }, '<function()>'], [function($a, $b) { }, '<function($a, $b)>']
+  #])]
+  public function stringOf($val, $expected) {
+    $this->assertEquals($expected, Objects::stringOf($val));
   }
 
   #[@test, @values('objects')]
@@ -301,9 +290,108 @@ class ObjectsTest extends \unittest\TestCase {
     $this->assertEquals($val->toString(), Objects::stringOf($val));
   }
 
-  #[@test, @values('natives')]
-  public function stringOf_calls_xpStringOf_on_natives($val) {
-    $this->assertEquals(\xp::stringOf($val), Objects::stringOf($val));
+  #[@test]
+  public function stringOf_resource() {
+    $this->assertTrue((bool)preg_match('/resource\(type= stream, id= [0-9]+\)/', Objects::stringOf(STDIN)));
+  }
+
+  #[@test]
+  public function stringOf_native() {
+    $this->assertEquals(
+      "ReflectionClass {\n  name => \"net\\xp_framework\\unittest\\util\\ObjectsTest\"\n}",
+      Objects::stringOf(new \ReflectionClass($this))
+    );
+  }
+
+  #[@test]
+  public function array_with_recursion_representation() {
+    $a= [];
+    $a[0]= 'Outer array';
+    $a[1]= [];
+    $a[1][0]= 'Inner array';
+    $a[1][1]= &$a;
+    $this->assertEquals(
+      '["Outer array", ["Inner array", ->{:recursion:}]]',
+      Objects::stringOf($a)
+    );
+  }
+
+  #[@test]
+  public function object_with_recursion_representation() {
+    $o= new \StdClass();
+    $o->child= new \StdClass();
+    $o->child->parent= $o;
+    $this->assertEquals(
+      "stdClass {\n  child => stdClass {\n    parent => ->{:recursion:}\n  }\n}",
+      Objects::stringOf($o)
+    );
+  }
+
+  #[@test]
+  public function twice_the_same_object_inside_array_not_recursion() {
+    $test= new class() implements Value {
+      public function toString() { return 'Test'; }
+      public function hashCode() { return 1; }
+      public function compareTo($value) { return 1; }
+    };
+    $this->assertEquals(
+      "[\n  a => Test\n  b => Test\n]", 
+      Objects::stringOf(['a' => $test, 'b' => $test])
+    );
+  }
+  
+  #[@test]
+  public function twice_the_same_object_with_huge_hashcode_inside_array_not_recursion() {
+    $test= new class() implements Value {
+      public function toString() { return 'Test'; }
+      public function hashCode() { return 1; }
+      public function compareTo($value) { return 1; }
+    };
+    $this->assertEquals(
+      "[\n  a => Test\n  b => Test\n]", 
+      Objects::stringOf(['a' => $test, 'b' => $test])
+    );
+  }
+
+  #[@test]
+  public function toString_calling_xp_stringOf_does_not_loop_forever() {
+    $test= new class() implements Value {
+      public function toString() { return Objects::stringOf($this); }
+      public function hashCode() { return 1; }
+      public function compareTo($value) { return 1; }
+    };
+    $this->assertEquals(
+      nameof($test)." {\n}",
+      Objects::stringOf($test)
+    );
+  }
+
+  #[@test]
+  public function repeated_calls_to_xp_stringOf_yield_same_result() {
+    $test= new class() implements Value {
+      public function toString() { return 'Test'; }
+      public function hashCode() { return 1; }
+      public function compareTo($value) { return 1; }
+    };
+    $stringRep= $test->toString();
+    $this->assertEquals(
+      [$stringRep, $stringRep],
+      [Objects::stringOf($test), Objects::stringOf($test)]
+    );
+  }
+
+  #[@test]
+  public function closure_inside_object_does_not_raise_serialization_exception() {
+    $instance= new class(function($a, $b) { }) {
+      public $closure;
+      public function __construct($closure) { $this->closure= $closure; }
+    };
+    Objects::stringOf($instance);
+  }
+
+  #[@test]
+  public function closure_inside_array_does_not_raise_serialization_exception() {
+    Objects::stringOf([function($a, $b) { }]);
   }
 
   #[@test]
@@ -317,12 +405,12 @@ class ObjectsTest extends \unittest\TestCase {
   }
 
   #[@test, @values('arrays')]
-  public function hashOf_calls_serialize_on_arrays($val, $expected) {
+  public function hashOf_on_arrays($val, $expected) {
     $this->assertEquals($expected, Objects::hashOf($val));
   }
 
   #[@test, @values('maps')]
-  public function hashOf_calls_serialize_on_maps($val, $expected) {
+  public function hashOf_on_maps($val, $expected) {
     $this->assertEquals($expected, Objects::hashOf($val));
   }
 
