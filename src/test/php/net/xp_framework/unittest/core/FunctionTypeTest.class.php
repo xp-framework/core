@@ -327,7 +327,7 @@ class FunctionTypeTest extends TestCase {
   #])]
   public function create_instances_from_array_referencing_declared_constructor($value) {
     $new= (new FunctionType([Type::$VAR], XPClass::forName('unittest.TestCase')))->newInstance($value);
-    $this->assertEquals($this, $new($this->getName()));
+    $this->assertEquals($this->getName(), $new($this->getName())->getName());
   }
 
   #[@test, @values([[['net.xp_framework.unittest.core.generics.Nullable<int>', 'new']], ['net.xp_framework.unittest.core.generics.Nullable<int>::new']])]
@@ -538,7 +538,7 @@ class FunctionTypeTest extends TestCase {
   #  ['net.xp_framework.unittest.core.FunctionTypeTest::getName']
   #])]
   public function reference_to_instance_method_is_instance_with_parent_class($value) {
-    $type= new FunctionType([XPClass::forName('lang.Value')], Primitive::$STRING);
+    $type= new FunctionType([XPClass::forName('unittest.TestCase')], Primitive::$STRING);
     $this->assertTrue($type->isInstance($value));
   }
 
