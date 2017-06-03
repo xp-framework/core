@@ -82,10 +82,63 @@ final class xp {
   }
   // }}}
 
-  // {{{ proto string stringOf(var arg [, string indent default ''])
+  // {{{ proto deprecated string stringOf(var arg [, string indent default ''])
   //     Returns a string representation of the given argument
   static function stringOf($arg, $indent= '') {
-    return \util\Objects::stringOf($arg, $indent);
+    static $protect= [];
+
+    if (is_string($arg)) {
+      return '"'.$arg.'"';
+    } else if (is_bool($arg)) {
+      return $arg ? 'true' : 'false';
+    } else if (is_null($arg)) {
+      return 'null';
+    } else if (is_int($arg) || is_float($arg)) {
+      return (string)$arg;
+    } else if (($arg instanceof \lang\Value) && !isset($protect[(string)$arg->hashCode()])) {
+      $protect[(string)$arg->hashCode()]= true;
+      $s= $arg->toString();
+      unset($protect[(string)$arg->hashCode()]);
+      return $indent ? str_replace("\n", "\n".$indent, $s) : $s;
+    } else if (is_array($arg)) {
+      $ser= print_r($arg, true);
+      if (isset($protect[$ser])) return '->{:recursion:}';
+      $protect[$ser]= true;
+      if (0 === key($arg)) {
+        $r= '';
+        foreach ($arg as $val) {
+          $r.= ', '.xp::stringOf($val, $indent);
+        }
+        unset($protect[$ser]);
+        return '['.substr($r, 2).']';
+      } else {
+        $r= "[\n";
+        foreach ($arg as $key => $val) {
+          $r.= $indent.'  '.$key.' => '.xp::stringOf($val, $indent.'  ')."\n";
+        }
+        unset($protect[$ser]);
+        return $r.$indent.']';
+      }
+    } else if ($arg instanceof \Closure) {
+      $sig= '';
+      $f= new \ReflectionFunction($arg);
+      foreach ($f->getParameters() as $p) {
+        $sig.= ', $'.$p->name;
+      }
+      return '<function('.substr($sig, 2).')>';
+    } else if (is_object($arg)) {
+      $ser= spl_object_hash($arg);
+      if (isset($protect[$ser])) return '->{:recursion:}';
+      $protect[$ser]= true;
+      $r= nameof($arg)." {\n";
+      foreach ((array)$arg as $key => $val) {
+        $r.= $indent.'  '.$key.' => '.xp::stringOf($val, $indent.'  ')."\n";
+      }
+      unset($protect[$ser]);
+      return $r.$indent.'}';
+    } else if (is_resource($arg)) {
+      return 'resource(type= '.get_resource_type($arg).', id= '.(int)$arg.')';
+    }
   }
   // }}}
 
