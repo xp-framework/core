@@ -139,7 +139,7 @@ class Type implements Value {
    * - Any type (var)
    * - Void type (void)
    * - Function types
-   * - Generic notations (util.collections.HashTable<lang.types.String, lang.Generic>)
+   * - Generic notations (util.collections.HashTable<string, lang.Value>)
    * - Anything else will be passed to XPClass::forName()
    *
    * @param  string $type

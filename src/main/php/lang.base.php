@@ -95,7 +95,7 @@ final class xp {
       return 'null';
     } else if (is_int($arg) || is_float($arg)) {
       return (string)$arg;
-    } else if (($arg instanceof \lang\Generic || $arg instanceof \lang\Value) && !isset($protect[(string)$arg->hashCode()])) {
+    } else if (($arg instanceof \lang\Value) && !isset($protect[(string)$arg->hashCode()])) {
       $protect[(string)$arg->hashCode()]= true;
       $s= $arg->toString();
       unset($protect[(string)$arg->hashCode()]);

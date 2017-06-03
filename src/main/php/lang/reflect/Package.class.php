@@ -268,11 +268,6 @@ class Package implements Value {
 
   /**
    * Creates a string representation of this package
-   * 
-   * Example:
-   * <pre>
-   *   lang.reflect.Package<fully.qualified.package.Name>
-   * </pre>
    *
    * @return  string
    */
@@ -283,8 +278,8 @@ class Package implements Value {
   /**
    * Checks whether a given object is equal to this Package instance.
    * 
-   * @param   lang.Generic cmp
-   * @return  int
+   * @param  var $value
+   * @return int
    */
   public function compareTo($value) { 
     return $value instanceof self ? $this->name <=> $value->name : 1;

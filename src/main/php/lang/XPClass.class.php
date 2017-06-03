@@ -390,7 +390,7 @@ class XPClass extends Type {
    * Cast a given object to the class represented by this object
    *
    * @param   var value
-   * @return  lang.Generic the given expression
+   * @return  var the given expression
    * @throws  lang.ClassCastException
    */
   public function cast($value) {
