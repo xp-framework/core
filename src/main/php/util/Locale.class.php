@@ -19,7 +19,7 @@
  * @see   http://groups.google.com/groups?threadm=DREPPER.96Aug8030605%40i44d2.ipd.info.uni-karlsruhe.de#link1
  * @test  xp://net.xp_framework.unittest.util.LocaleTest
  */
-class Locale {
+class Locale implements \lang\Value {
   public
     $lang     = '',
     $country  = '',
@@ -115,11 +115,11 @@ class Locale {
   /**
    * Returns whether a given object is equal to this locale.
    *
-   * @param   lang.Generic cmp
-   * @return  bool
+   * @param  var $value
+   * @return int
    */
-  public function equals($cmp) {
-    return $cmp instanceof self && $this->_str === $cmp->_str;
+  public function compareTo($value) {
+    return $value instanceof self ? $this->_str <=> $value->_str : 1;
   }
   
   /**
