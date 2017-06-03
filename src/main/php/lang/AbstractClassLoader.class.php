@@ -8,7 +8,11 @@
  */
 abstract class AbstractClassLoader implements IClassLoader {
   public $path= '';
-  
+
+  /** @return void */
+  public function initialize() {
+  }
+
   /**
    * Load the class by the specified name
    *

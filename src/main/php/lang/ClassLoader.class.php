@@ -74,9 +74,7 @@ final class ClassLoader implements IClassLoader {
    * @param  lang.IClassLoader $cl
    */
   private static function initialize($id, $cl) {
-    if ($cl->providesResource('/autoload.php')) {
-      require_once($cl->getResourceAsStream('/autoload.php')->getURI());
-    }
+    $cl->initialize();
 
     // BC: If autoload.php did not define a module, check module.xp
     if (!isset(self::$modules[$id])) {

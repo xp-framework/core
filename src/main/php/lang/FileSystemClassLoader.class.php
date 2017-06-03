@@ -21,6 +21,13 @@ class FileSystemClassLoader extends AbstractClassLoader {
     $this->path= rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
   }
 
+  /** @return void */
+  public function initialize() {
+    if (is_file($autoload= $this->path.'autoload.php')) {
+      require_once($autoload);
+    }
+  }
+
   /**
    * Load class bytes
    *

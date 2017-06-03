@@ -30,6 +30,9 @@ class LoaderProviding implements IClassLoader {
   /** Compares this class loader to another value */
   public function compareTo($value): int { return $value instanceof self ? $value->resources <=> $this->resources : 1; }
 
+  /** @return void */
+  public function initialize() { }
+
   /** @return string */
   public function instanceId() { return 'providing://'.$this->hashCode(); }
 
