@@ -9,6 +9,6 @@
  * @see      http://www.artima.com/designtechniques/desexcept.html
  * @test     xp://net.xp_framework.unittest.core.ExceptionsTest
  */
-class XPException extends Throwable {
+class XPException extends \lang\Throwable {
    
 }
