@@ -49,8 +49,8 @@ class Throwable extends \Exception implements Value {
       $wrapped->addStackTraceFor($e->getFile(), '<native>', get_class($e), $e->getLine(), [$e->getCode(), $e->getMessage()], [['' => 1]]);
       $wrapped->fillInStackTrace($e);
       return $wrapped;
-    } else if ($e instanceof \Throwable) {
-      $wrapped= new Error($e->getMessage(), $e->getPrevious(), false);
+    } else if ($e instanceof \Throwable || $e instanceof \__SystemLib\Throwable) {
+      $wrapped= new \lang\Error($e->getMessage(), $e->getPrevious(), false);
       $wrapped->addStackTraceFor($e->getFile(), '<native>', get_class($e), $e->getLine(), [$e->getCode(), $e->getMessage()], [['' => 1]]);
       $wrapped->fillInStackTrace($e);
       return $wrapped;
