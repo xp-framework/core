@@ -360,7 +360,7 @@ class ClassParser {
     $details= [[], []];
     $annotations= [0 => [], 1 => []];
     $imports= [];
-    $comment= null;
+    $comment= '';
     $namespace= '';
     $parsed= '';
     $tokens= token_get_all($bytes);
@@ -438,7 +438,7 @@ class ClassParser {
             DETAIL_ARGUMENTS    => $namespace.$tokens[$i + 2][1]
           ];
           $annotations= [0 => [], 1 => []];
-          $comment= null;
+          $comment= '';
           break;
 
         case T_VARIABLE:                      // Have a member variable
@@ -450,13 +450,14 @@ class ClassParser {
           $details[0][$f]= [DETAIL_ANNOTATIONS => $annotations[0]];
           $annotations= [0 => [], 1 => []];
           $matches= null;
+          if ('' === $comment) break;
           preg_match_all('/@([a-z]+)\s*([^\r\n]+)?/', $comment, $matches, PREG_SET_ORDER);
-          $comment= null;
-          foreach ($matches as $match) {
+          foreach ((array)$matches as $match) {
             if ('var' === $match[1] || 'type' === $match[1]) {
               $details[0][$f][DETAIL_RETURNS]= self::typeIn($match[2], $imports);
             }
           }
+          $comment= '';
           break;
 
         case T_FUNCTION:
@@ -481,7 +482,7 @@ class ClassParser {
           $annotations= [0 => [], 1 => []];
           $matches= null;
           preg_match_all('/@([a-z]+)\s*([^\r\n]+)?/', $comment, $matches, PREG_SET_ORDER);
-          $comment= null;
+          $comment= '';
           $arg= 0;
           foreach ($matches as $match) {
             switch ($match[1]) {
