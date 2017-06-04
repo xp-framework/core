@@ -10,6 +10,6 @@
  * @see      http://www.artima.com/designtechniques/exceptions.html
  * @see      http://www.artima.com/designtechniques/desexcept.html
  */
-class Error extends \lang\Throwable {
+class Error extends Throwable {
    
 }
