@@ -72,6 +72,8 @@ class Constructor extends Routine {
       throw $e;
     } catch (\Throwable $e) {
       throw new TargetInvocationException(XPClass::nameOf($this->_class).'::<init>', $e);
+    } catch (\__SystemLib\Throwable $e) {   // HHVM
+      throw new TargetInvocationException(XPClass::nameOf($this->_class).'::<init>', $e);
     }
   }
 
