@@ -66,7 +66,7 @@ abstract class ClassFromUriTest extends \unittest\TestCase {
     $base= self::$base;
     return implode(DIRECTORY_SEPARATOR, array_map(
       function($e) use($base) {
-        return $base === $e ? $base->path() : rtrim($e, DIRECTORY_SEPARATOR);
+        return $base === $e ? $base->path() : rtrim((string)$e, DIRECTORY_SEPARATOR);
       },
       $args
     ));

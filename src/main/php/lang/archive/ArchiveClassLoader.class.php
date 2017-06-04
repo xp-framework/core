@@ -134,7 +134,7 @@ class ArchiveClassLoader extends AbstractClassLoader {
    * @return  bool
    */
   public function providesClass($class) {
-    return file_exists($this->archive.strtr($class, '.', '/').\xp::CLASS_FILE_EXT);
+    return file_exists($this->archive.strtr((string)$class, '.', '/').\xp::CLASS_FILE_EXT);
   }
 
   /**
@@ -191,7 +191,7 @@ class ArchiveClassLoader extends AbstractClassLoader {
   public function packageContents($package) {
     $contents= [];
     $acquired= \xp\xar::acquire(urldecode(substr($this->archive, 6, -1)));
-    $cmps= strtr($package, '.', '/');
+    $cmps= strtr((string)$package, '.', '/');
     $cmpl= strlen($cmps);
     
     foreach (array_keys($acquired['index']) as $e) {

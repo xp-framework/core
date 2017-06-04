@@ -203,7 +203,7 @@ final class ClassLoader implements IClassLoader {
     } else if ('\\' === $class{0}) {
       return $class;
     } else {
-      return '\\'.XPClass::forName($class)->literal();
+      return '\\'.XPClass::forName((string)$class)->literal();
     }
   }
 
@@ -291,6 +291,8 @@ final class ClassLoader implements IClassLoader {
       }
 
       $iface || $bytes= 'static $__func= []; '.$bytes;
+    } else if (null === $def) {
+      $bytes= '';
     } else {
       $bytes= substr(trim($def), 1, -1);
     }

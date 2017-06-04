@@ -38,7 +38,7 @@ class FileSystemClassLoader extends AbstractClassLoader {
    * @return  bool
    */
   public function providesClass($class) {
-    $f= $this->path.strtr($class, '.', DIRECTORY_SEPARATOR).\xp::CLASS_FILE_EXT;
+    $f= $this->path.strtr((string)$class, '.', DIRECTORY_SEPARATOR).\xp::CLASS_FILE_EXT;
     return $f === realpath($f);
   }
   
