@@ -1,6 +1,6 @@
 language: php
 
-sudo: false
+sudo: true
 
 dist: trusty
 
@@ -20,7 +20,7 @@ before_script:
   - composer install --prefer-dist
   - echo "vendor/autoload.php" > composer.pth
   - echo "test.xar" > composer.pth
-  - echo "hhvm.php7.all = 1" >> /etc/hhvm/php.ini
+  - echo "hhvm.php7.all = 1" | sudo tee -a /etc/hhvm/php.ini
 
 script:
   - (EXCD=0; for i in `ls -1 src/test/config/unittest/*.ini`; do echo "---> $i"; sh xp-run xp.unittest.Runner $i; RES=$?; if [ $RES -ne 0 ]; then EXCD=$RES; fi; done; exit $EXCD;)
