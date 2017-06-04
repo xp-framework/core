@@ -1,6 +1,8 @@
 language: php
 
-sudo: false
+sudo: true
+
+dist: trusty
 
 php:
   - 7.0
@@ -13,9 +15,8 @@ matrix:
 
 before_script:
   - curl -sSL https://dl.bintray.com/xp-runners/generic/xp-run-master.sh > xp-run
-  - composer install --prefer-dist
-  - echo "vendor/autoload.php" > composer.pth
   - echo "test.xar" > composer.pth
+  - if [ -f /etc/hhvm/php.ini ] ; then echo "hhvm.php7.all = 1" | sudo tee -a /etc/hhvm/php.ini ; fi
 
 script:
   - (EXCD=0; for i in `ls -1 src/test/config/unittest/*.ini`; do echo "---> $i"; sh xp-run xp.unittest.Runner $i; RES=$?; if [ $RES -ne 0 ]; then EXCD=$RES; fi; done; exit $EXCD;)
