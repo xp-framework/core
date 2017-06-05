@@ -36,7 +36,7 @@ abstract class Reader implements Closeable {
    * @throws  io.IOException in case the underlying stream does not support seeking
    */
   public function reset() {
-    if (!$this->stream instanceof \Seekable) {
+    if (!($this->stream instanceof Seekable)) {
       throw new IOException('Underlying stream does not support seeking');
     }
     $this->stream->seek(0, SEEK_SET);
