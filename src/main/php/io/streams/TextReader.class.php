@@ -176,7 +176,7 @@ class TextReader extends Reader {
       $l= strlen($this->buf);
       if ($p >= $l - $this->cl) {
         $chunk= $this->stream->read();
-        if ('' === $chunk) {
+        if ('' === $chunk || false === $chunk) {
           if ('' === $this->buf) return null;
           $bytes= $p === $l ? $this->buf : substr($this->buf, 0, $p - $this->of);
           $this->buf= null;
