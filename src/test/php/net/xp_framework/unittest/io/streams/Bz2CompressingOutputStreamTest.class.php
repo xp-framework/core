@@ -9,7 +9,7 @@ use net\xp_framework\unittest\IgnoredOnHHVM;
  * @ext      bz2
  * @see      xp://io.streams.Bz2CompressingOutputStream
  */
-#[@action(new IgnoredOnHHVM('bz2 stream filter ignores compression level'))]
+#[@action(new IgnoredOnHHVM())]
 class Bz2CompressingOutputStreamTest extends AbstractCompressingOutputStreamTest {
 
   /** @return string */
