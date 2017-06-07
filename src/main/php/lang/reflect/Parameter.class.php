@@ -61,6 +61,12 @@ class Parameter extends \lang\Object {
       !isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
     ) {
 
+      // ReflectionParameter::getType() *always* returns "array" on HHVM, this is
+      // a) useless and b) inconsistent with PHP. Fall back to "var"
+      if (defined('HHVM_VERSION') && $this->_reflect->isVariadic()) {
+        return Type::$VAR;
+      }
+
       // Cannot parse api doc, fall back to PHP native syntax. The reason for not doing
       // this the other way around is that we have "richer" information, e.g. "string[]",
       // where PHP simply knows about "arrays" (of whatever).

@@ -13,6 +13,7 @@ use lang\ClassFormatException;
 use lang\IllegalStateException;
 use lang\ElementNotFoundException;
 use unittest\actions\RuntimeVersion;
+use unittest\actions\VerifyThat;
 
 class MethodParametersTest extends MethodsTest {
 
@@ -82,7 +83,7 @@ class MethodParametersTest extends MethodsTest {
     $this->method('public function fixture(UnknownTypeRestriction $param) { }')->getParameter(0)->getType();
   }
 
-  #[@test, @action(new RuntimeVersion("<=7.0"))]
+  #[@test, @action(new VerifyThat(function() { return PHP_VERSION_ID < 70000 && !defined('HHVM_VERSION'); }))]
   public function nonexistant_name_class_parameter_before_php7() {
     $this->assertEquals(
       'var',
@@ -90,7 +91,7 @@ class MethodParametersTest extends MethodsTest {
     );
   }
 
-  #[@test, @action(new RuntimeVersion(">=7.0"))]
+  #[@test, @action(new VerifyThat(function() { return PHP_VERSION_ID >= 70000 || defined('HHVM_VERSION'); }))]
   public function nonexistant_name_class_parameter_with_php7() {
     $this->assertEquals(
       'net\xp_framework\unittest\reflection\UnknownTypeRestriction',
