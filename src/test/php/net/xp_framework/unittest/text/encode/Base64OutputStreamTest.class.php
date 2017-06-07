@@ -3,13 +3,17 @@
 use unittest\actions\VerifyThat;
 use io\streams\MemoryOutputStream;
 use text\encode\Base64OutputStream;
+use net\xp_framework\unittest\IgnoredOnHHVM;
 
 /**
  * Test base64 encoder
  *
  * @see   xp://text.encode.Base64OutputStream
  */
-#[@action(new VerifyThat(function() { return in_array("convert.*", stream_get_filters()); }))]
+#[@action([
+#  new VerifyThat(function() { return in_array("convert.*", stream_get_filters()); }),
+#  new IgnoredOnHHVM('bz2 stream filter ignores compression level')
+#])]
 class Base64OutputStreamTest extends \unittest\TestCase {
 
   /**
