@@ -25,6 +25,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added preliminary PHP 7.2.0 support - tested successfully using
+  [PHP 7.2.0 Alpha 1](http://php.net/archive/2017.php#id2017-06-08-2)
+  (@thekid)
 * Added `xp version runners` which will display XP runners version
   (@thekid)
 * Merged PR #179: Clean up inheritance and implementation oddities in 
