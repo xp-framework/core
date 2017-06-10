@@ -53,7 +53,7 @@ class File implements Channel, Value {
       $this->_fd= $base;
     } else if (null === $uri) {
       $this->setURI($base);
-    } else if (is('io.Folder', $base)) {
+    } else if ($base instanceof Folder) {
       $this->setURI($base->getURI().$uri);
     } else {
       $this->setURI(rtrim($base, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$uri);

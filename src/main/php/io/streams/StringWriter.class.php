@@ -8,102 +8,26 @@ use util\Objects;
  *
  * @test  xp://net.xp_framework.unittest.io.streams.StringWriterTest
  */
-class StringWriter implements OutputStreamWriter {
-  protected $out= null;
-  
-  /**
-   * Constructor
-   *
-   * @param   io.streams.OutputStream out
-   */
-  public function __construct($out) {
-    $this->out= $out;
-  }
-  
-  /**
-   * Return underlying output stream
-   *
-   * @return  io.streams.OutputStream
-   */
-  public function getStream() {
-    return $this->out;
-  }
+class StringWriter extends Writer {
 
   /**
    * Return underlying output stream
    *
-   * @param   io.streams.OutputStream stream
+   * @deprecated Use redirect() instead
+   * @param  io.streams.OutputStream stream
+   * @return void
    */
   public function setStream(OutputStream $stream) {
-    $this->out= $stream;
+    $this->redirect($stream);
   }
 
   /**
-   * Creates a string representation of this writer
+   * Writes text
    *
-   * @return  string
+   * @param  string $text
+   * @return int
    */
-  public function toString() {
-    return nameof($this)."@{\n  ".$this->out->toString()."\n}";
-  }
-
-  /**
-   * Flush output buffer
-   *
-   */
-  public function flush() {
-    $this->out->flush();
-  }
-
-  /**
-   * Print arguments
-   *
-   * @param   var... args
-   */
-  public function write(... $args) {
-    foreach ($args as $arg) {
-      if (is_string($arg)) {
-        $this->out->write($arg);
-      } else {
-        $this->out->write(Objects::stringOf($arg));
-      }
-    }
-  }
-  
-  /**
-   * Print arguments and append a newline
-   *
-   * @param   var... args
-   */
-  public function writeLine(... $args) {
-    foreach ($args as $arg) {
-      if (is_string($arg)) {
-        $this->out->write($arg);
-      } else {
-        $this->out->write(Objects::stringOf($arg));
-      }
-    }
-    $this->out->write("\n");
-  }
-  
-  /**
-   * Print a formatted string
-   *
-   * @param   string format
-   * @param   var... args
-   * @see     php://writef
-   */
-  public function writef($format, ... $args) {
-    $this->out->write(vsprintf($format, $args));
-  }
-
-  /**
-   * Print a formatted string and append a newline
-   *
-   * @param   string format
-   * @param   var... args
-   */
-  public function writeLinef($format, ... $args) {
-    $this->out->write(vsprintf($format, $args)."\n");
+  protected function write0($text) {
+    $this->stream->write($text);
   }
 }

@@ -59,13 +59,17 @@ class Parameter {
       !isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
     ) {
 
+      // ReflectionParameter::getType() *always* returns "array" on HHVM, this is 
+      // a) useless and b) inconsistent with PHP. Fall back to "var" 
+      if (defined('HHVM_VERSION') && $this->_reflect->isVariadic()) {
+        return Type::$VAR;
+      }
+
       // Cannot parse api doc, fall back to PHP native syntax. The reason for not doing
       // this the other way around is that we have "richer" information, e.g. "string[]",
       // where PHP simply knows about "arrays" (of whatever).
       if ($t= $this->_reflect->getType()) {
         return Type::forName((string)$t);
-      } else if (defined('HHVM_VERSION')) {
-        return Type::forName($this->_reflect->getTypeText() ?: 'var');
       } else {
         return Type::$VAR;
       }
@@ -90,10 +94,16 @@ class Parameter {
       && isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
     ) {
       return ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&');
-    } else if ($t= $this->_reflect->getType()) {
+    }
+
+    // ReflectionParameter::getType() *always* returns "array" on HHVM, this is 
+    // a) useless and b) inconsistent with PHP. Fall back to "var" 
+    if (defined('HHVM_VERSION') && $this->_reflect->isVariadic()) {
+      return 'var';
+    }
+
+    if ($t= $this->_reflect->getType()) {
       return str_replace('HH\\', '', $t);
-    } else if (defined('HHVM_VERSION')) {
-      return str_replace('HH\\', '', $this->_reflect->getTypeText() ?: 'var');
     } else {
       return 'var';
     }

@@ -6,34 +6,28 @@
 interface OutputStreamWriter {
 
   /**
-   * Constructor
-   *
-   * @param   io.streams.OutputStream out
-   */
-  public function __construct($out);
-
-  /**
    * Flush output buffer
    *
+   * @return void
    */
   public function flush();
 
   /**
-   * Print arguments
+   * Write arguments
    *
    * @param   var... args
    */
   public function write(... $args);
   
   /**
-   * Print arguments and append a newline
+   * Write arguments and append a newline
    *
    * @param   var... args
    */
   public function writeLine(... $args);
   
   /**
-   * Print a formatted string
+   * Write a formatted string
    *
    * @param   string format
    * @param   var... args
@@ -42,7 +36,7 @@ interface OutputStreamWriter {
   public function writef($format, ... $args);
 
   /**
-   * Print a formatted string and append a newline
+   * Write a formatted string and append a newline
    *
    * @param   string format
    * @param   var... args

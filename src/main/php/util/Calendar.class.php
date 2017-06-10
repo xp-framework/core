@@ -233,7 +233,7 @@ abstract class Calendar {
     $g = $year % 19;
     $c = (int)($year / 100);
     $h = (int)($c - ($c / 4) - ((8*  $c + 13) / 25) + 19 * $g + 15) % 30;
-    $i = (int)$h - (int)($h / 28) * (1 - (int)($h / 28)* (int)(29 / ($h+ 1)) * ((int)(21 - $g) / 11));
+    $i = (int)$h - (int)($h / 28) * (1 - (int)($h / 28) * (int)(29 / ($h + 1)) * (int)((int)(21 - $g) / 11));
     $j = ($year + (int)($year / 4) + $i + 2 - $c + (int)($c / 4)) % 7;
     $l = $i - $j;
     $m = 3 + (int)(($l + 40) / 44);

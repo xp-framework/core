@@ -138,7 +138,10 @@ function __error($code, $msg, $file, $line) {
     }
   } else if (0 === strncmp($msg, 'Undefined variable', 18)) {
     throw new \lang\NullPointerException($msg);
-  } else if (0 === strncmp($msg, 'Missing argument', 16)) {
+  } else if (0 === strncmp($msg, 'Missing argument', 16) || (
+    defined('HHVM_VERSION') &&
+    3 === sscanf($msg, '%*s() expects exactly %*d parameter, %*d given')
+  )) {
     throw new \lang\IllegalArgumentException($msg);
   } else if ((
     0 === strncmp($msg, 'Undefined offset', 16) ||

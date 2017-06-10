@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Minimum HHVM version required is now **3.20**, see issue #176.
+  (@thekid)
 * Deprecated `package-info.xp` files previously used for documentation
   purposes. Packages have been split into libraries with their own repos,
   and documentation typically resides in a README file therein.
@@ -20,6 +22,19 @@ XP Framework Core ChangeLog
   https://wiki.php.net/rfc/object-typehint
   (@thekid)
 * Implemented xp-framework/rfc#323: Remove `xp::typeOf()` - @thekid
+
+### Features
+
+* Added preliminary PHP 7.2.0 support - tested successfully using
+  [PHP 7.2.0 Alpha 1](http://php.net/archive/2017.php#id2017-06-08-2)
+  (@thekid)
+* Added `xp version runners` which will display XP runners version
+  (@thekid)
+* Merged PR #179: Clean up inheritance and implementation oddities in 
+  `io.streams` (StringReader and TextReader as well as StringWriter
+  and TextWriter are now interchangeable - the *Text* versions handle
+  charset encoding, the *String* versions don't).
+  (@thekid)
 
 ## 8.2.0 / 2017-05-28
 

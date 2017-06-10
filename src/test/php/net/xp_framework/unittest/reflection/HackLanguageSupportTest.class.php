@@ -77,7 +77,7 @@ class HackLanguageSupportTest extends \unittest\TestCase {
 
   #[@test]
   public function nullable_type() {
-    $this->assertEquals(XPClass::forName('lang.Object'), Type::forName('?lang\Object'));
+    $this->assertEquals(XPClass::forName('lang.Value'), Type::forName('?lang\Value'));
   }
 
   #[@test]
@@ -95,7 +95,7 @@ class HackLanguageSupportTest extends \unittest\TestCase {
     $this->assertEquals(Type::$VOID, $this->testClass()->getMethod('returnsNothing')->getReturnType());
   }
 
-  #[@test, @action(new VerifyThat(function() { return version_compare(HHVM_VERSION, '3.7.0', 'ge'); }))]
+  #[@test]
   public function method_noreturn_type() {
     $this->assertEquals(Type::$VOID, $this->testClass()->getMethod('returnsNoreturn')->getReturnType());
   }
