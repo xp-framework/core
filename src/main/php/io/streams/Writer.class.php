@@ -97,7 +97,8 @@ abstract class Writer implements OutputStreamWriter, Closeable, Value {
   /**
    * Print arguments
    *
-   * @param   var... args
+   * @param  var... $args
+   * @return void
    */
   public function write(... $args) {
     foreach ($args as $arg) {
@@ -112,7 +113,8 @@ abstract class Writer implements OutputStreamWriter, Closeable, Value {
   /**
    * Print arguments and append a newline
    *
-   * @param   var... args
+   * @param  var... $args
+   * @return void
    */
   public function writeLine(... $args) {
     foreach ($args as $arg) {
@@ -128,9 +130,9 @@ abstract class Writer implements OutputStreamWriter, Closeable, Value {
   /**
    * Print a formatted string
    *
-   * @param   string format
-   * @param   var... args
-   * @see     php://writef
+   * @param  string $format
+   * @param  var... $args
+   * @return void
    */
   public function writef($format, ... $args) {
     $this->write0(vsprintf($format, $args));
@@ -139,8 +141,9 @@ abstract class Writer implements OutputStreamWriter, Closeable, Value {
   /**
    * Print a formatted string and append a newline
    *
-   * @param   string format
-   * @param   var... args
+   * @param  string $format
+   * @param  var... $args
+   * @return void
    */
   public function writeLinef($format, ... $args) {
     $this->write0(vsprintf($format, $args).$this->newLine);
