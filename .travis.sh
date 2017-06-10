@@ -3,9 +3,20 @@
 XP_RUNNERS_URL=https://dl.bintray.com/xp-runners/generic/xp-run-master.sh
 COMPOSER_SELF=/home/travis/.phpenv/versions/hhvm/bin/composer
 
+wrap() {
+  local target=$1
+  local cmd=$2
+  local wrapper=$(basename $target).in
+  local wd=$(pwd)
+
+  mv $target $wrapper
+  echo "#!/bin/sh" > $target
+  echo "docker run --rm -v $wd:/opt/src -v $wd/php.ini:/etc/hhvm/php.ini -w /opt/src hhvm/hhvm:$version $cmd $wrapper \$@" >> $target
+  chmod 755 $target
+}
+
 replace_hhvm_with() {
   local version=$1
-  local wd=$(pwd)
 
   printf "\033[33;1mReplacing HHVM\033[0m\n"
 
@@ -16,13 +27,8 @@ replace_hhvm_with() {
   docker run --rm hhvm/hhvm:$version hhvm --version
   echo
 
-  mv $COMPOSER_SELF composer.in
-  echo "#!/bin/sh" > $COMPOSER_SELF
-  echo "docker run --rm -v $wd:/opt/src -v $wd/php.ini:/etc/hhvm/php.ini -w /opt/src hhvm/hhvm:$version hhvm --php composer.in \$@" >> $COMPOSER_SELF
-
-  mv xp-run xp-run.in
-  echo "#!/bin/sh" > xp-run
-  echo "docker run --rm -v $wd:/opt/src -v $wd/php.ini:/etc/hhvm/php.ini -w /opt/src hhvm/hhvm:$version /bin/sh xp-run.in \$@" >> xp-run
+  wrap $COMPOSER_SELF "hhvm --php"
+  wrap xp-run "/bin/sh"
 }
 
 case $1 in
@@ -30,7 +36,7 @@ case $1 in
     printf "\033[33;1mInstalling XP Runners\033[0m\n"
     echo $XP_RUNNERS_URL
     echo test.xar > test.pth
-    curl -sSL $XP_RUNNERS_URL > xp-run
+    curl -SL $XP_RUNNERS_URL > xp-run
     echo
 
     # Run HHVM inside Docker as the version provided by Travis-CI is too old
