@@ -228,9 +228,9 @@ class Path implements \lang\Value {
    * it only removes redundant elements.
    */
   public function normalize(): self {
-    if (2 === sscanf($this->path, '%c%*[:]', $drive)) {
+    if (strlen($this->path) > 1 && ':' === $this->path{1}) {
       $components= explode(DIRECTORY_SEPARATOR, substr($this->path, 3));
-      $normalized= [strtoupper($drive).':'];
+      $normalized= [strtoupper($this->path{0}).':'];
     } else {
       $components= explode(DIRECTORY_SEPARATOR, $this->path);
       $normalized= [];
