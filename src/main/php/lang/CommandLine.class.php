@@ -65,16 +65,16 @@ abstract class CommandLine extends Enum {
         return $parts;
       }
       
-      protected static function quote($arg) {
+      protected function quote($arg) {
         $l= strlen($arg);
         if ($l && strcspn($arg, '" ') >= $l) return $arg;
         return '"'.str_replace('"', '"""', $arg).'"';
       }
       
       public function compose($command, $arguments= []) {
-        $cmd= self::quote($command);
+        $cmd= $this->quote($command);
         foreach ($arguments as $arg) {
-          $cmd.= " ".self::quote($arg);
+          $cmd.= ' '.$this->quote($arg);
         }
         return $cmd;
       }
@@ -107,16 +107,16 @@ abstract class CommandLine extends Enum {
         return $parts;
       }
       
-      protected static function quote($arg) {
+      protected function quote($arg) {
         $l= strlen($arg);
         if ($l && strcspn($arg, "&;`\'\"|*?~<>^()[]{}\$ ") >= $l) return $arg;
         return "'".str_replace("'", "'\\''", $arg)."'";
       }
       
       public function compose($command, $arguments= []) {
-        $cmd= self::quote($command);
+        $cmd= $this->quote($command);
         foreach ($arguments as $arg) {
-          $cmd.= ' '.self::quote($arg);
+          $cmd.= ' '.$this->quote($arg);
         }
         return $cmd;
       }

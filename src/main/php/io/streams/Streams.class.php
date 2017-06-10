@@ -61,7 +61,7 @@ abstract class Streams {
       }
 
       public function stream_flush() {
-        return self::$streams[$this->id]->flush();
+        return parent::$streams[$this->id]->flush();
       }
 
       public function stream_eof() {
