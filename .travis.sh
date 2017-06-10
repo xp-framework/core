@@ -25,7 +25,8 @@ case $1 in
         echo
 
         printf "\033[33;1mRunning Composer\033[0m\n"
-        docker run --rm -v $(pwd):/opt/src -v $(pwd)/php.ini:/etc/hhvm/php.ini -w /opt/src hhvm/hhvm:latest hhvm --php .phpenv/versions/hhvm/bin/composer install
+        cp /home/travis/.phpenv/versions/hhvm/bin/composer composer.in
+        docker run --rm -v $(pwd):/opt/src -v $(pwd)/php.ini:/etc/hhvm/php.ini -w /opt/src hhvm/hhvm:latest hhvm --php composer.in install
 
         mv xp-run xp-run.in
         echo "#!/bin/sh" > xp-run
