@@ -101,7 +101,7 @@ class ErrorsTest extends \unittest\TestCase {
   }
 
   #[@test, @expect(Error::class)]
-  public function call_to_member_on_non_object_yields_npe() {
+  public function call_to_member_on_non_object_yields_error() {
     $a= null;
     $a->method();
   }

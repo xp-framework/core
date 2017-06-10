@@ -44,19 +44,19 @@ class Throwable extends \Exception implements Value {
   public static function wrap($e): self {
     if ($e instanceof self) {
       return $e;
+    } else if ($e instanceof \BadMethodCallException) {
+      $wrapped= new Error($e->getMessage(), $e->getPrevious(), false);
     } else if ($e instanceof \Exception) {
       $wrapped= new XPException($e->getMessage(), $e->getPrevious(), false);
-      $wrapped->addStackTraceFor($e->getFile(), '<native>', get_class($e), $e->getLine(), [$e->getCode(), $e->getMessage()], [['' => 1]]);
-      $wrapped->fillInStackTrace($e);
-      return $wrapped;
-    } else if ($e instanceof \Throwable || $e instanceof \__SystemLib\Throwable) {
+    } else if ($e instanceof \Throwable || $e instanceof \BadMethodCallException) {
       $wrapped= new Error($e->getMessage(), $e->getPrevious(), false);
-      $wrapped->addStackTraceFor($e->getFile(), '<native>', get_class($e), $e->getLine(), [$e->getCode(), $e->getMessage()], [['' => 1]]);
-      $wrapped->fillInStackTrace($e);
-      return $wrapped;
     } else {
       throw new IllegalArgumentException('Given argument must be a lang.Throwable or a PHP base exception');
     }
+
+    $wrapped->addStackTraceFor($e->getFile(), '<native>', get_class($e), $e->getLine(), [$e->getCode(), $e->getMessage()], [['' => 1]]);
+    $wrapped->fillInStackTrace($e);
+    return $wrapped;
   }
 
   /** Set cause */
