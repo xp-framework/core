@@ -18,6 +18,11 @@ case $1 in
         docker pull hhvm/hhvm:latest
         docker run --rm hhvm/hhvm:latest hhvm --version
 
+        $(which composer)
+        cat $(which composer)
+        cat "/home/travis/.phpenv/versions/hhvm/bin/composer"
+        ls -al /home/travis/.phpenv/versions/hhvm/bin/ 
+
         cp $(which composer) composer.in
         docker run --rm -v $(pwd):/opt/src -v $(pwd)/php.ini:/etc/hhvm/php.ini -w /opt/src hhvm/hhvm:latest hhvm --php composer.in install
 
