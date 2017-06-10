@@ -4,8 +4,8 @@ XP_RUNNERS_URL=https://dl.bintray.com/xp-runners/generic/xp-run-master.sh
 
 wrap() {
   local version="$1"
-  local target="$2"
-  local cmd="$3"
+  local cmd="$2"
+  local target="$3"
   local wrapper=$(basename $target).in
   local wd=$(pwd)
 
@@ -25,8 +25,8 @@ replace_hhvm_with() {
 
   echo "hhvm.php7.all = 1" > php.ini
   echo "hhvm.hack.lang.look_for_typechecker = 0" >> php.ini
-  wrap $version /home/travis/.phpenv/versions/hhvm/bin/composer "hhvm --php"
-  wrap $version xp-run "sh"
+  wrap $version "hhvm --php" /home/travis/.phpenv/versions/hhvm/bin/composer
+  wrap $version "sh" xp-run
 }
 
 case $1 in
