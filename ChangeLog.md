@@ -21,6 +21,14 @@ XP Framework Core ChangeLog
   (@thekid)
 * Implemented xp-framework/rfc#323: Remove `xp::typeOf()` - @thekid
 
+### Features
+
+* Merged PR #179: Clean up inheritance and implementation oddities in 
+  `io.streams` (StringReader and TextReader as well as StringWriter
+  and TextWriter are now interchangeable - the *Text* versions handle
+  charset encoding, the *String* versions don't).
+  (@thekid)
+
 ## 8.2.0 / 2017-05-28
 
 ### Bugfixes
