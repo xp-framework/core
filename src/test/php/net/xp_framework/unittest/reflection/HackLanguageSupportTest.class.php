@@ -77,7 +77,7 @@ class HackLanguageSupportTest extends \unittest\TestCase {
 
   #[@test]
   public function nullable_type() {
-    $this->assertEquals(XPClass::forName('lang.Object'), Type::forName('?lang\Object'));
+    $this->assertEquals(XPClass::forName('lang.Value'), Type::forName('?lang\Value'));
   }
 
   #[@test]
