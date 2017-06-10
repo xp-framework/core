@@ -48,7 +48,7 @@ class Throwable extends \Exception implements Value {
       $wrapped= new Error($e->getMessage(), $e->getPrevious(), false);
     } else if ($e instanceof \Exception) {
       $wrapped= new XPException($e->getMessage(), $e->getPrevious(), false);
-    } else if ($e instanceof \Throwable || $e instanceof \BadMethodCallException) {
+    } else if ($e instanceof \Throwable) {
       $wrapped= new Error($e->getMessage(), $e->getPrevious(), false);
     } else {
       throw new IllegalArgumentException('Given argument must be a lang.Throwable or a PHP base exception');
