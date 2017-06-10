@@ -12,7 +12,7 @@ case $1 in
 
         mv xp-run xp-run.in
         echo "#!/bin/sh" > xp-run
-        echo "docker run --rm -v $(pwd):/opt/src -v $(pwd)/php.ini:/etc/hhvm/php.ini -e USE_XP=/opt/src hhvm/hhvm:latest /bin/sh /opt/src/xp-run.in \$@" >> xp-run
+        echo "docker run --rm -v $(pwd):/opt/src -v $(pwd)/php.ini:/etc/hhvm/php.ini -w /opt/src hhvm/hhvm:latest /bin/sh xp-run.in \$@" >> xp-run
       ;;
 
       *)
