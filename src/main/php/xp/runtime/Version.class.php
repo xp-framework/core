@@ -43,10 +43,10 @@ class Version {
   public static function main(array $args) {
     if (empty($args)) {
       Console::writeLinef(
-        'XP %s { PHP %s & ZE %s } @ %s',
+        'XP %s { PHP %s & %s } @ %s',
         \xp::version(),
         phpversion(),
-        zend_version(),
+        self::engineVersion(),
         php_uname()
       );
       Console::writeLine('Copyright (c) 2001-2017 the XP group');
