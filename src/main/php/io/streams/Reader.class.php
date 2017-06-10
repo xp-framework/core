@@ -72,7 +72,8 @@ abstract class Reader implements InputStreamReader, Closeable, Value {
   /**
    * Reset to start.
    *
-   * @throws  io.IOException in case the underlying stream does not support seeking
+   * @return void
+   * @throws io.IOException in case the underlying stream does not support seeking
    */
   public function reset() {
     if ($this->stream instanceof Seekable) {
