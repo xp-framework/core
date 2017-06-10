@@ -1,16 +1,19 @@
 #!/bin/sh
 
 case $1 in
-  setup-hhvm)
+  install)
     if [ -f /etc/hhvm/php.ini ] ; then
       docker pull hhvm/hhvm:latest
+      docker run --rm hhvm/hhvm:latest hhvm --version
 
       echo "hhvm.php7.all = 1" > php.ini
-      echo "hhvm.hack.lang.look_for_typechecker = 0" > php.ini
+      echo "hhvm.hack.lang.look_for_typechecker = 0" >> php.ini
 
-      cp xp-run xp-run.in
+      mv xp-run xp-run.in
       echo "#!/bin/sh" > xp-run
-      echo "docker run -v $(pwd):/opt/src -v $(pwd)/php.ini:/etc/hhvm/php.ini hhvm/hhvm:latest /opt/src/xp-run.in \$@" >> xp-run
+      echo "docker run --rm -v $(pwd):/opt/src -v $(pwd)/php.ini:/etc/hhvm/php.ini hhvm/hhvm:latest /opt/src/xp-run.in \$@" >> xp-run
+    else
+      composer install
     fi
   ;;
 

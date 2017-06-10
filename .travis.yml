@@ -18,8 +18,7 @@ matrix:
 before_script:
   - curl -sSL https://dl.bintray.com/xp-runners/generic/xp-run-master.sh > xp-run
   - echo "test.xar" > composer.pth
-  - composer install
-  - sh .travis.sh setup-hhvm
+  - sh .travis.sh install
 
 script:
   - sh .travis.sh run-tests
