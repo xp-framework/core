@@ -25,6 +25,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added `xp version runners` which will display XP runners version
+  (@thekid)
 * Merged PR #179: Clean up inheritance and implementation oddities in 
   `io.streams` (StringReader and TextReader as well as StringWriter
   and TextWriter are now interchangeable - the *Text* versions handle
