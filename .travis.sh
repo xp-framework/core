@@ -3,7 +3,7 @@
 XP_RUNNERS_URL=https://dl.bintray.com/xp-runners/generic/xp-run-master.sh
 
 wrap() {
-  local version="$1"
+  local image="$1"
   local cmd="$2"
   local target="$3"
   local wrapper=$(basename $target).in
@@ -11,7 +11,7 @@ wrap() {
 
   mv $target $wrapper
   echo "#!/bin/sh" > $target
-  echo "docker run --rm -v $wd:/opt/src -v $wd/php.ini:/etc/hhvm/php.ini -w /opt/src hhvm/hhvm:$version $cmd $wrapper \$@" >> $target
+  echo "docker run --rm -v $wd:/opt/src -v $wd/php.ini:/etc/hhvm/php.ini -w /opt/src $image $cmd $wrapper \$@" >> $target
   chmod 755 $target
 }
 
@@ -25,8 +25,8 @@ replace_hhvm_with() {
 
   echo "hhvm.php7.all = 1" > php.ini
   echo "hhvm.hack.lang.look_for_typechecker = 0" >> php.ini
-  wrap $version "hhvm --php" /home/travis/.phpenv/versions/hhvm/bin/composer
-  wrap $version "sh" xp-run
+  wrap hhvm/hhvm:$version "hhvm --php" /home/travis/.phpenv/versions/hhvm/bin/composer
+  wrap hhvm/hhvm:$version "sh" xp-run
 }
 
 case $1 in
