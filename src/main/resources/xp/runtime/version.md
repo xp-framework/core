@@ -8,6 +8,10 @@
   ```sh
   $ xp version xp
   ```
+* Display runners version
+  ```sh
+  $ xp version runners
+  ```
 * Display PHP version
   ```sh
   $ xp version php
