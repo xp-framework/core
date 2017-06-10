@@ -19,10 +19,9 @@ abstract class Writer implements OutputStreamWriter, Closeable, Value {
    * stream with a given charset.
    *
    * @param  io.streams.OutputStream|io.Channel|string $arg The target
-   * @param  string $charset the character set to encode to.
    * @throws lang.IllegalArgumentException
    */
-  public function __construct($arg, $charset= \xp::ENCODING) {
+  public function __construct($arg) {
     if ($arg instanceof OutputStream) {
       $this->stream= $arg;
     } else if ($arg instanceof Channel) {
