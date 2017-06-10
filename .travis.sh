@@ -5,7 +5,7 @@ COMPOSER_SELF=/home/travis/.phpenv/versions/hhvm/bin/composer
 
 wrap() {
   local target=$1
-  local cmd=$2
+  local cmd="$2"
   local wrapper=$(basename $target).in
   local wd=$(pwd)
 
@@ -19,16 +19,14 @@ replace_hhvm_with() {
   local version=$1
 
   printf "\033[33;1mReplacing HHVM\033[0m\n"
-
-  echo "hhvm.php7.all = 1" > php.ini
-  echo "hhvm.hack.lang.look_for_typechecker = 0" >> php.ini
-
   docker pull hhvm/hhvm:$version
   docker run --rm hhvm/hhvm:$version hhvm --version
   echo
 
+  echo "hhvm.php7.all = 1" > php.ini
+  echo "hhvm.hack.lang.look_for_typechecker = 0" >> php.ini
   wrap $COMPOSER_SELF "hhvm --php"
-  wrap xp-run "/bin/sh"
+  wrap xp-run "sh"
 }
 
 case $1 in
@@ -39,8 +37,7 @@ case $1 in
     curl -SL $XP_RUNNERS_URL > xp-run
     echo
 
-    # Run HHVM inside Docker as the version provided by Travis-CI is too old
-    # For official PHP versions, there's nothing to do
+    # Run HHVM inside Docker as the versions provided by Travis-CI are too old
     case "$TRAVIS_PHP_VERSION" in
       hhvm-nightly*)
         replace_hhvm_with "latest"
