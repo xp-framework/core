@@ -6,7 +6,7 @@ use lang\IllegalArgumentException;
  * Represents the lines inside an input stream of bytes, delimited
  * by either Unix, Mac or Windows line endings.
  *
- * @see   xp://io.streams.TextReader#lines
+ * @see   xp://io.streams.Reader#lines
  * @test  xp://net.xp_framework.unittest.io.streams.LinesInTest
  */
 class LinesIn implements \IteratorAggregate {
@@ -15,13 +15,13 @@ class LinesIn implements \IteratorAggregate {
   /**
    * Creates a new lines instance
    *
-   * @param  io.streams.TextReader|io.streams.InputStrean|io.Channel|string $arg Input
-   * @param  string $charset Not taken into account when created by a TextReader
+   * @param  io.streams.Reader|io.streams.InputStrean|io.Channel|string $arg Input
+   * @param  string $charset Not taken into account when created by a Reader
    * @param  bool $reset Whether to start from the beginning (default: true)
    * @throws lang.IllegalArgumentException
    */
   public function __construct($arg, $charset= \xp::ENCODING, $reset= true) {
-    if ($arg instanceof TextReader) {
+    if ($arg instanceof Reader) {
       $this->reader= $arg;
     } else {
       $this->reader= new TextReader($arg, $charset);
