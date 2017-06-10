@@ -18,6 +18,7 @@ matrix:
 before_script:
   - curl -sSL https://dl.bintray.com/xp-runners/generic/xp-run-master.sh > xp-run
   - sh .travis.sh install
+  - echo test.xar > test.pth
 
 script:
   - sh .travis.sh run-tests
