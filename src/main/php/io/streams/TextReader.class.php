@@ -1,9 +1,6 @@
 <?php namespace io\streams;
 
-use io\IOException;
-use io\Channel;
 use lang\FormatException;
-use lang\IllegalArgumentException;
 
 /**
  * Reads text from an underlying input stream, converting it from the
@@ -25,16 +22,7 @@ class TextReader extends Reader {
    * @throws  lang.IllegalArgumentException
    */
   public function __construct($arg, $charset= null) {
-    if ($arg instanceof InputStream) {
-      parent::__construct($arg);
-    } else if ($arg instanceof Channel) {
-      parent::__construct($arg->in());
-    } else if (is_string($arg)) {
-      parent::__construct(new MemoryInputStream($arg));
-    } else {
-      throw new IllegalArgumentException('Given argument is neither an input stream, a channel nor a string: '.typeof($arg)->getName());
-    }
-
+    parent::__construct($arg);
     switch ($this->charset= strtolower($charset ?: $this->detectCharset())) {
       case 'utf-16le': $this->cl= 2; $this->of= 0; break;
       case 'utf-16be': $this->cl= 2; $this->of= 1; break;

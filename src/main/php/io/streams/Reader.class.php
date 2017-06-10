@@ -1,7 +1,7 @@
 <?php namespace io\streams;
 
-use io\IOException;
-use lang\{Closeable, Value};
+use io\{IOException, Channel};
+use lang\{Closeable, Value, IllegalArgumentException};
 use util\Objects;
 
 /**
@@ -17,12 +17,22 @@ abstract class Reader implements InputStreamReader, Closeable, Value {
   protected $start= 0;
 
   /**
-   * Creates a new Reader from an InputStream.
+   * Constructor. Creates a new TextReader on an underlying input
+   * stream with a given charset.
    *
-   * @param io.streams.InputStream $stream
+   * @param   io.streams.InputStream|io.Channel|string $arg The input source
+   * @throws  lang.IllegalArgumentException
    */
-  public function __construct(InputStream $stream) {
-    $this->stream= $stream;
+  public function __construct($arg, $charset= null) {
+    if ($arg instanceof InputStream) {
+      $this->stream= $arg;
+    } else if ($arg instanceof Channel) {
+      $this->stream= $arg->in();
+    } else if (is_string($arg)) {
+      $this->stream= new MemoryInputStream($arg);
+    } else {
+      throw new IllegalArgumentException('Given argument is neither an input stream, a channel nor a string: '.typeof($arg)->getName());
+    }
   }
 
   /**
