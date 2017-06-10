@@ -11,7 +11,7 @@ case $1 in
 
       mv xp-run xp-run.in
       echo "#!/bin/sh" > xp-run
-      echo "docker run --rm -v $(pwd):/opt/src -v $(pwd)/php.ini:/etc/hhvm/php.ini hhvm/hhvm:latest /opt/src/xp-run.in \$@" >> xp-run
+      echo "docker run --rm -v $(pwd):/opt/src -v $(pwd)/php.ini:/etc/hhvm/php.ini hhvm/hhvm:latest /bin/sh /opt/src/xp-run.in \$@" >> xp-run
     else
       composer install
     fi
