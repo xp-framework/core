@@ -113,7 +113,6 @@ class ErrorsTest extends \unittest\TestCase {
   }
 
   #[@test, @expect(IllegalArgumentException::class), @action([
-  #  new IgnoredOnHHVM(),
   #  new RuntimeVersion('<7.1.0-dev')
   #])]
   public function missing_argument_mismatch_yield_iae() {
@@ -121,7 +120,10 @@ class ErrorsTest extends \unittest\TestCase {
     $f();
   }
 
-  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.1.0-dev'))]
+  #[@test, @expect(Error::class), @action([
+  #  new IgnoredOnHHVM(),
+  #  new RuntimeVersion('>=7.1.0-dev')
+  #])]
   public function missing_argument_mismatch_yield_error() {
     $f= function($arg) { };
     $f();
