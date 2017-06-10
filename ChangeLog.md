@@ -5,7 +5,7 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
-* Minimum HHVM version required is now **3.20.2**, see issue #176.
+* Minimum HHVM version required is now **3.20**, see issue #176.
   (@thekid)
 * Deprecated `package-info.xp` files previously used for documentation
   purposes. Packages have been split into libraries with their own repos,
