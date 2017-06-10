@@ -1,8 +1,5 @@
 <?php namespace io\streams;
 
-use lang\IllegalArgumentException;
-use io\Channel;
-
 /**
  * Writes text from to underlying output stream, encoding to the
  * given character set.
@@ -22,16 +19,8 @@ class TextWriter extends Writer {
    * @throws  lang.IllegalArgumentException
    */
   public function __construct($arg, $charset= \xp::ENCODING) {
-    if ($arg instanceof OutputStream) {
-      $target= $arg;
-    } else if ($arg instanceof Channel) {
-      $target= $arg->out();
-    } else {
-      throw new IllegalArgumentException('Given argument is neither an input stream, a channel nor a string: '.typeof($arg)->getName());
-    }
-
-    $this->charset= $charset;
-    parent::__construct($target);
+    parent::__construct($arg);
+    $this->charset= $charset;    
   }
 
   /**

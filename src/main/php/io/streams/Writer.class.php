@@ -1,6 +1,7 @@
 <?php namespace io\streams;
 
-use lang\{Closeable, Value};
+use io\Channel;
+use lang\{Closeable, Value, IllegalArgumentException};
 use util\Objects;
 
 /**
@@ -14,12 +15,23 @@ abstract class Writer implements OutputStreamWriter, Closeable, Value {
   protected $newLine= "\n";
   
   /**
-   * Constructor. Creates a new Writer from an OutputStream.
+   * Constructor. Creates a new TextWriter on an underlying output
+   * stream with a given charset.
    *
-   * @param   io.streams.OutputStream stream
+   * @param  io.streams.OutputStream|io.Channel|string $arg The target
+   * @param  string $charset the character set to encode to.
+   * @throws lang.IllegalArgumentException
    */
-  public function __construct(OutputStream $stream) {
-    $this->stream= $stream;
+  public function __construct($arg, $charset= \xp::ENCODING) {
+    if ($arg instanceof OutputStream) {
+      $this->stream= $arg;
+    } else if ($arg instanceof Channel) {
+      $this->stream= $arg->out();
+    } else if (is_string($arg)) {
+      $this->stream= new MemoryOutputStream($arg);
+    } else {
+      throw new IllegalArgumentException('Given argument is neither an output stream, a channel nor a string: '.typeof($arg)->getName());
+    }
   }
 
   /**
