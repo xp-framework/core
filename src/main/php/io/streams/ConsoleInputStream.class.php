@@ -14,7 +14,8 @@ class ConsoleInputStream implements InputStream {
   /**
    * Constructor
    *
-   * @param   resource descriptor STDIN
+   * @param  var $descriptor STDIN
+   * @param  bool $close
    */
   public function __construct($descriptor, $close= false) {
     $this->descriptor= $descriptor;
