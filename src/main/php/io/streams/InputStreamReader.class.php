@@ -6,13 +6,6 @@
 interface InputStreamReader {
 
   /**
-   * Constructor
-   *
-   * @param   io.streams.InputStream in
-   */
-  public function __construct($in);
-
-  /**
    * Read a number of bytes
    *
    * @param   int size default 8192
