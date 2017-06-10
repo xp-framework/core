@@ -1,7 +1,6 @@
 #!/bin/sh
 
 XP_RUNNERS_URL=https://dl.bintray.com/xp-runners/generic/xp-run-master.sh
-COMPOSER_SELF=/home/travis/.phpenv/versions/hhvm/bin/composer
 
 wrap() {
   local target=$1
@@ -25,7 +24,7 @@ replace_hhvm_with() {
 
   echo "hhvm.php7.all = 1" > php.ini
   echo "hhvm.hack.lang.look_for_typechecker = 0" >> php.ini
-  wrap $COMPOSER_SELF "hhvm --php"
+  wrap /home/travis/.phpenv/versions/hhvm/bin/composer "hhvm --php"
   wrap xp-run "sh"
 }
 
@@ -33,7 +32,6 @@ case $1 in
   install)
     printf "\033[33;1mInstalling XP Runners\033[0m\n"
     echo $XP_RUNNERS_URL
-    echo test.xar > test.pth
     curl -SL $XP_RUNNERS_URL > xp-run
     echo
 
@@ -53,6 +51,7 @@ case $1 in
   ;;
 
   run-tests)
+    echo test.xar > test.pth
     result=0
     for file in `ls -1 src/test/config/unittest/*.ini`; do
       printf "\033[33;1mTesting %s\033[0m\n" $file
