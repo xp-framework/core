@@ -297,8 +297,8 @@ class ObjectsTest extends \unittest\TestCase {
   #[@test]
   public function stringOf_native() {
     $this->assertEquals(
-      "ReflectionClass {\n  name => \"net\\xp_framework\\unittest\\util\\ObjectsTest\"\n}",
-      Objects::stringOf(new \ReflectionClass($this))
+      "stdClass {\n  name => \"net\\xp_framework\\unittest\\util\\ObjectsTest\"\n}",
+      Objects::stringOf((object)['name' => self::class])
     );
   }
 
