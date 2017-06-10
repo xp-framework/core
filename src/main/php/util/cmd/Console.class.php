@@ -1,14 +1,6 @@
 <?php namespace util\cmd;
 
-use lang\IllegalStateException;
-use io\streams\{
-  InputStreamReader,
-  OutputStreamWriter,
-  StringWriter,
-  StringReader,
-  ConsoleOutputStream,
-  ConsoleInputStream
-};
+use io\streams\{StringWriter, StringReader, ConsoleOutputStream, ConsoleInputStream};
 
 /**
  * Represents system console
@@ -53,30 +45,16 @@ abstract class Console {
       self::$out= new StringWriter(new ConsoleOutputStream(STDOUT));
       self::$err= new StringWriter(new ConsoleOutputStream(STDERR));
     } else {
-      self::$in= new class(null) implements InputStreamReader {
-        public function __construct($in) { }
-        public function getStream() { return null; }
-        public function raise() { throw new IllegalStateException('There is no console present'); }
-        public function read($count= 8192) { $this->raise(); }
-        public function readLine() { $this->raise(); }
-      };
-      self::$out= self::$err= new class(null) implements OutputStreamWriter {
-        public function __construct($out) { }
-        public function getStream() { return null; }
-        public function flush() { $this->raise(); }
-        public function raise() { throw new IllegalStateException('There is no console present'); }
-        public function write(... $args) { $this->raise(); }
-        public function writeLine(... $args) { $this->raise(); }
-        public function writef($format, ... $args) { $this->raise(); }
-        public function writeLinef($format, ... $args) { $this->raise(); }
-      };
+      self::$in= new NoInput();
+      self::$out= new NoOutput();
+      self::$err= new NoOutput();
     }
   }
 
   /**
    * Flush output buffer
    *
-   * @return  void
+   * @return void
    */
   public static function flush() {
     self::$out->flush();
@@ -85,7 +63,8 @@ abstract class Console {
   /**
    * Write a string to standard output
    *
-   * @param   var... args
+   * @param  var... $args
+   * @return void
    */
   public static function write(... $args) {
     self::$out->write(...$args);
@@ -94,7 +73,8 @@ abstract class Console {
   /**
    * Write a string to standard output and append a newline
    *
-   * @param   var... args
+   * @param  var... $args
+   * @return void
    */
   public static function writeLine(... $args) {
     self::$out->writeLine(...$args);
@@ -103,9 +83,9 @@ abstract class Console {
   /**
    * Write a formatted string to standard output
    *
-   * @param   string format
-   * @param   var... args
-   * @see     php://printf
+   * @param  string $format
+   * @param  var... $args
+   * @return void
    */
   public static function writef($format, ... $args) {
     self::$out->writef($format, ...$args);
@@ -114,8 +94,9 @@ abstract class Console {
   /**
    * Write a formatted string to standard output and append a newline
    *
-   * @param   string format
-   * @param   var* args
+   * @param  string $format
+   * @param  var... $args
+   * @return void
    */
   public static function writeLinef($format, ... $args) {
     self::$out->writeLinef($format, ...$args);
@@ -124,8 +105,11 @@ abstract class Console {
   /**
    * Read a line from standard input. The line ending (\r and/or \n)
    * is trimmed off the end.
+   *
+   * @param  string $prompt Optional prompt
+   * @return string
    */    
-  public static function readLine(string $prompt= null): string {
+  public static function readLine(string $prompt= null) {
     $prompt && self::$out->write($prompt.' ');
     return self::$in->readLine();
   }
@@ -133,10 +117,10 @@ abstract class Console {
   /**
    * Read a single character from standard input.
    *
-   * @param   string prompt = NULL
-   * @return  string
+   * @param  string $prompt Optional prompt
+   * @return string
    */    
-  public static function read(string $prompt= null): string {
+  public static function read(string $prompt= null) {
     $prompt && self::$out->write($prompt.' ');
     return self::$in->read(1);
   }

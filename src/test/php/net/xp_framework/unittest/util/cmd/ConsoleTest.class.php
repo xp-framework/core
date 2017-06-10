@@ -1,6 +1,6 @@
 <?php namespace net\xp_framework\unittest\util\cmd;
 
-use util\cmd\Console;
+use util\cmd\{Console, NoInput, NoOutput};
 use lang\{Value, IllegalStateException};
 use io\streams\{MemoryInputStream, MemoryOutputStream, ConsoleOutputStream, ConsoleInputStream};
 
@@ -15,24 +15,24 @@ class ConsoleTest extends \unittest\TestCase {
    * to memory streams
    */
   public function setUp() {
-    $this->original= [Console::$in->getStream(), Console::$out->getStream(), Console::$err->getStream()];
+    $this->original= [Console::$in->stream(), Console::$out->stream(), Console::$err->stream()];
     $this->streams= [null, new MemoryOutputStream(), new MemoryOutputStream()];
-    Console::$out->setStream($this->streams[1]);
-    Console::$err->setStream($this->streams[2]);
+    Console::$out->redirect($this->streams[1]);
+    Console::$err->redirect($this->streams[2]);
   }
   
   /**
    * Tear down testcase. Restores original standard output/error streams
    */
   public function tearDown() {
-    Console::$in->setStream($this->original[0]);
-    Console::$out->setStream($this->original[1]);
-    Console::$err->setStream($this->original[2]);
+    Console::$in->redirect($this->original[0]);
+    Console::$out->redirect($this->original[1]);
+    Console::$err->redirect($this->original[2]);
   }
 
   #[@test]
   public function read() {
-    Console::$in->setStream(new MemoryInputStream('.'));
+    Console::$in->redirect(new MemoryInputStream('.'));
     $this->assertEquals('.', Console::read());
   }
 
@@ -42,20 +42,20 @@ class ConsoleTest extends \unittest\TestCase {
   #  "Hello\r\nHallo",
   #])]
   public function readLine($variation) {
-    Console::$in->setStream(new MemoryInputStream($variation));
+    Console::$in->redirect(new MemoryInputStream($variation));
     $this->assertEquals('Hello', Console::readLine());
     $this->assertEquals('Hallo', Console::readLine());
   }
 
   #[@test]
   public function read_from_standard_input() {
-    Console::$in->setStream(new MemoryInputStream('.'));
+    Console::$in->redirect(new MemoryInputStream('.'));
     $this->assertEquals('.', Console::$in->read(1));
   }
  
   #[@test]
   public function readLine_from_standard_input() {
-    Console::$in->setStream(new MemoryInputStream("Hello\nHallo\nOla"));
+    Console::$in->redirect(new MemoryInputStream("Hello\nHallo\nOla"));
     $this->assertEquals('Hello', Console::$in->readLine());
     $this->assertEquals('Hallo', Console::$in->readLine());
     $this->assertEquals('Ola', Console::$in->readLine());
@@ -208,8 +208,8 @@ class ConsoleTest extends \unittest\TestCase {
   /**
    * Test initialization
    *
-   * @param  bool console
-   * @param  var assertions
+   * @param  bool $console
+   * @param  function(): void $assertions
    */
   protected function initialize($console, $assertions) {
     $in= Console::$in;
@@ -228,18 +228,18 @@ class ConsoleTest extends \unittest\TestCase {
   #[@test]
   public function initialize_on_console() {
     $this->initialize(true, function() {
-      $this->assertInstanceOf(ConsoleInputStream::class, Console::$in->getStream());
-      $this->assertInstanceOf(ConsoleOutputStream::class, Console::$out->getStream());
-      $this->assertInstanceOf(ConsoleOutputStream::class, Console::$err->getStream());
+      $this->assertInstanceOf(ConsoleInputStream::class, Console::$in->stream());
+      $this->assertInstanceOf(ConsoleOutputStream::class, Console::$out->stream());
+      $this->assertInstanceOf(ConsoleOutputStream::class, Console::$err->stream());
     });
   }
 
   #[@test]
   public function initialize_without_console() {
     $this->initialize(false, function() {
-      $this->assertEquals(null, Console::$in->getStream());
-      $this->assertEquals(null, Console::$out->getStream());
-      $this->assertEquals(null, Console::$err->getStream());
+      $this->assertNull(Console::$in->stream());
+      $this->assertNull(Console::$out->stream());
+      $this->assertNull(Console::$err->stream());
     });
   }
 }

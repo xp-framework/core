@@ -9,15 +9,17 @@
  * ```
  */
 class ConsoleInputStream implements InputStream {
-  protected $descriptor= null;
+  private $descriptor, $close;
   
   /**
    * Constructor
    *
-   * @param   resource descriptor STDIN
+   * @param  var $descriptor STDIN
+   * @param  bool $close
    */
-  public function __construct($descriptor) {
+  public function __construct($descriptor, $close= false) {
     $this->descriptor= $descriptor;
+    $this->close= $close;
   }
 
   /**
@@ -54,6 +56,8 @@ class ConsoleInputStream implements InputStream {
    *
    */
   public function close() {
-    fclose($this->descriptor);
+    if ($this->close) {
+      fclose($this->descriptor);
+    }
   }
 }

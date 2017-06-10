@@ -10,15 +10,17 @@
  * ```
  */
 class ConsoleOutputStream implements OutputStream {
-  protected $descriptor= null;
+  private $descriptor, $close;
   
   /**
    * Constructor
    *
-   * @param   resource descriptor one of STDOUT, STDERR
+   * @param  var $descriptor one of STDOUT, STDERR
+   * @param  bool $close
    */
-  public function __construct($descriptor) {
+  public function __construct($descriptor, $close= false) {
     $this->descriptor= $descriptor;
+    $this->close= $close;
   }
 
   /**
@@ -52,6 +54,8 @@ class ConsoleOutputStream implements OutputStream {
    *
    */
   public function close() {
-    fclose($this->descriptor);
+    if ($this->close) {
+      fclose($this->descriptor);
+    }
   }
 }
