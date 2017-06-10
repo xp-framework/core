@@ -5,7 +5,7 @@ if (PHP_VERSION_ID < 70000) {
 }
 if (defined('HHVM_VERSION_ID')) {
   if (HHVM_VERSION_ID < 32002) {
-    throw new \Exception('This version of the XP Framework requires HHVM 3.20.2+, have PHP '.HHVM_VERSION);
+    throw new \Exception('This version of the XP Framework requires HHVM 3.20.2+, have HHVM '.HHVM_VERSION);
   } else if (!ini_get('hhvm.php7.all')) {
     throw new \Exception('This version of the XP Framework requires hhvm.php7.all to be set to 1');
   }
