@@ -18,12 +18,7 @@ case $1 in
         docker pull hhvm/hhvm:latest
         docker run --rm hhvm/hhvm:latest hhvm --version
 
-        $(which composer)
-        cat $(which composer)
-        cat "/home/travis/.phpenv/versions/hhvm/bin/composer"
-        ls -al /home/travis/.phpenv/versions/hhvm/bin/ 
-
-        cp $(which composer) composer.in
+        cp /home/travis/.phpenv/versions/hhvm/bin/composer composer.in
         docker run --rm -v $(pwd):/opt/src -v $(pwd)/php.ini:/etc/hhvm/php.ini -w /opt/src hhvm/hhvm:latest hhvm --php composer.in install
 
         echo "#!/bin/sh" > xp-run
@@ -40,7 +35,7 @@ case $1 in
   run-tests)
     result=0
     for file in `ls -1 src/test/config/unittest/*.ini`; do
-      echo "---> $file"
+      printf "\033[33;1mTesting %s\033[0m\n" $file
       sh xp-run xp.unittest.Runner $file || result=1
     done
     exit $result
