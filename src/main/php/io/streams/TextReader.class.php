@@ -7,17 +7,13 @@ use lang\IllegalArgumentException;
 
 /**
  * Reads text from an underlying input stream, converting it from the
- * given character set to our internal encoding (which is iso-8859-1).
+ * given character set to our internal encoding.
  *
  * @test  xp://net.xp_framework.unittest.io.streams.TextReaderTest
  * @ext   iconv
  */
 class TextReader extends Reader {
-  private $buf= '';
-  private $bom;
   private $charset;
-  private $beginning;
-
   private $cl= 1, $of= 0;
 
   /**
@@ -39,7 +35,6 @@ class TextReader extends Reader {
       throw new IllegalArgumentException('Given argument is neither an input stream, a channel nor a string: '.typeof($arg)->getName());
     }
 
-    $this->beginning= true;
     switch ($this->charset= strtolower($charset ?: $this->detectCharset())) {
       case 'utf-16le': $this->cl= 2; $this->of= 0; break;
       case 'utf-16be': $this->cl= 2; $this->of= 1; break;
@@ -51,31 +46,9 @@ class TextReader extends Reader {
   /**
    * Returns the character set used
    *
-   * @return  string
+   * @return string
    */
   public function charset() { return $this->charset; }
-
-  /**
-   * Returns whether we're at the beginning of the stream
-   *
-   * @return  bool
-   */
-  public function atBeginning() { return $this->beginning; }
-
-  /**
-   * Reset to BOM 
-   *
-   * @throws  io.IOException in case the underlying stream does not support seeking
-   */
-  public function reset() {
-    if ($this->stream instanceof Seekable) {
-      $this->stream->seek($this->bom, SEEK_SET);
-      $this->beginning= true;
-      $this->buf= '';
-    } else {
-      throw new IOException('Underlying stream does not support seeking');
-    }
-  }
 
   /**
    * Detect charset of stream
@@ -89,44 +62,26 @@ class TextReader extends Reader {
 
     // Check for UTF-16 (BE)
     if ("\376\377" === $c) {
-      $this->bom= 2;
+      $this->start= 2;
       return 'utf-16be';
     }
 
     // Check for UTF-16 (LE)
     if ("\377\376" === $c) {
-      $this->bom= 2;
+      $this->start= 2;
       return 'utf-16le';
     }
 
     // Check for UTF-8 BOM
     if ("\357\273" === $c && "\357\273\277" === ($c.= $this->stream->read(1))) {
-      $this->bom= 3;
+      $this->start= 3;
       return 'utf-8';
     }
 
     // Fall back to ISO-8859-1
     $this->buf= (string)$c;
-    $this->bom= 0;
+    $this->start= 0;
     return 'iso-8859-1';
-  }
-
-  /**
-   * Reads a given number of bytes
-   *
-   * @param  int $size
-   * @return string
-   */
-  private function read0($size) {
-    $len= $size - strlen($this->buf);
-    if ($len > 0) {
-      $bytes= $this->buf.$this->stream->read($len);
-      $this->buf= '';
-    } else {
-      $bytes= substr($this->buf, 0, $size);
-      $this->buf= substr($this->buf, $size);
-    }
-    return $bytes;
   }
 
   /**
@@ -203,18 +158,4 @@ class TextReader extends Reader {
     }
     return $line;
   }
-
-  /**
-   * Reads all lines in this reader
-   *
-   * @return io.streams.LinesIn
-   */
-  public function lines() { return new LinesIn($this, $this->charset, true); }
-
-  /**
-   * Reads the lines starting at the current position
-   *
-   * @return io.streams.LinesIn
-   */
-  public function readLines() { return new LinesIn($this, $this->charset, false); }
 }
