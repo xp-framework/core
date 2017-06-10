@@ -48,7 +48,6 @@ class ObjectsTest extends \unittest\TestCase {
   /** @return  var[][] */
   public function objects() {
     return [
-      [$this],
       [new ValueObject('')],
       [new ValueObject('Test')],
       [new Name('')]
