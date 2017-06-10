@@ -7,7 +7,8 @@ use lang\{
   IllegalArgumentException,
   Type,
   Value,
-  XPClass
+  XPClass,
+  XPException
 };
 
 /**
