@@ -25,7 +25,7 @@ case $1 in
     result=0
     for file in `ls -1 src/test/config/unittest/*.ini`; do
       echo "---> $file"
-      sh xp-run xp.unittest.Runner $file || result=1
+      sh xp-run -cp test.xar xp.unittest.Runner $file || result=1
     done
     exit $result
   ;;

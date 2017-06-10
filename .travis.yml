@@ -1,8 +1,9 @@
+dist: trusty
+
 language: php
 
-services: docker
-
-dist: trusty
+services:
+  - docker
 
 php:
   - 7.0
@@ -12,12 +13,10 @@ php:
 
 matrix:
   allow_failures:
-    - php: hhvm
     - php: nightly
 
 before_script:
   - curl -sSL https://dl.bintray.com/xp-runners/generic/xp-run-master.sh > xp-run
-  - echo "test.xar" > composer.pth
   - sh .travis.sh install
 
 script:
