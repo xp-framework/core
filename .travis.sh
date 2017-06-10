@@ -3,13 +3,14 @@
 case $1 in
   setup-hhvm)
     if [ -f /etc/hhvm/php.ini ] ; then
-      sudo apt-get install software-properties-common
-      sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0x5a16e7281be7a449
-      sudo add-apt-repository "deb http://dl.hhvm.com/ubuntu $(lsb_release -sc) main"
-      sudo apt-get update
-      sudo apt-get install hhvm
+      docker pull hhvm/hhvm:latest
 
-      (echo "hhvm.php7.all = 1"; echo "hhvm.hack.lang.look_for_typechecker = 0") | sudo tee -a /etc/hhvm/php.ini
+      echo "hhvm.php7.all = 1" > php.ini
+      echo "hhvm.hack.lang.look_for_typechecker = 0" > php.ini
+
+      cp xp-run xp-run.in
+      echo "#!/bin/sh" > xp-run
+      echo "docker run -v $(pwd):/opt/src -v $(pwd)/php.ini:/etc/hhvm/php.ini hhvm/hhvm:latest /opt/src/xp-run.in \$@" >> xp-run
     fi
   ;;
 

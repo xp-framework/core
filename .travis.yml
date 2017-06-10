@@ -1,6 +1,6 @@
 language: php
 
-sudo: true
+services: docker
 
 dist: trusty
 
@@ -18,6 +18,7 @@ matrix:
 before_script:
   - curl -sSL https://dl.bintray.com/xp-runners/generic/xp-run-master.sh > xp-run
   - echo "test.xar" > composer.pth
+  - composer install
   - sh .travis.sh setup-hhvm
 
 script:
