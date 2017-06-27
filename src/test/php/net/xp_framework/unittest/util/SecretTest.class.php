@@ -121,4 +121,16 @@ abstract class SecretTest extends \unittest\TestCase {
     $fixture= new Secret('payload');
     $this->assertTrue($fixture->matches($fixture));
   }
+
+  #[@test, @values([
+  #  null,
+  #  'payloa',
+  #  'PAYLOAD',
+  #  "payload\0",
+  #  "\0payload"
+  #])]
+  public function does_not_match($value) {
+    $fixture= new Secret('payload');
+    $this->assertFalse($fixture->matches($value));
+  }
 }
