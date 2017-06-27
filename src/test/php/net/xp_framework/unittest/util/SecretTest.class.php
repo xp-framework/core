@@ -87,7 +87,7 @@ abstract class SecretTest extends \unittest\TestCase {
     $this->assertTrue($called);
   }
 
-  #[@test, @expect(class= IllegalStateException::class, withMessage= '/An error occurred during storing the encrypted password./')]
+  #[@test, @expect(class= IllegalStateException::class, withMessage= '/An error occurred during storing the encrypted secret./')]
   public function decryption_throws_exception_if_creation_has_failed() {
     $called= false;
     Secret::setBacking(function($value) {
@@ -108,5 +108,17 @@ abstract class SecretTest extends \unittest\TestCase {
   #[@test, @expect(IllegalArgumentException::class)]
   public function useBacking_with_invalid_backing_throws_exception() {
     Secret::useBacking(77);
+  }
+
+  #[@test]
+  public function matches_original_data() {
+    $fixture= new Secret('payload');
+    $this->assertTrue($fixture->matches('payload'));
+  }
+
+  #[@test]
+  public function matches_itself() {
+    $fixture= new Secret('payload');
+    $this->assertTrue($fixture->matches($fixture));
   }
 }

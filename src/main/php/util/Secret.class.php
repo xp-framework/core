@@ -128,49 +128,41 @@ class Secret implements Value {
    * @return string[]
    */
   public function __sleep() {
-    throw new IllegalStateException('Cannot serialize Password instances.');
+    throw new IllegalStateException('Cannot serialize Secret instances.');
   }
 
-  /**
-   * Reveal secured characters
-   *
-   * @return string
-   */
-  public function reveal() {
+  /** Reveal secured characters */
+  public function reveal(): string {
     $key= $this->hashCode();
     if (!isset(self::$store[$key])) {
-      throw new IllegalStateException('An error occurred during storing the encrypted password.');
+      throw new IllegalStateException('An error occurred during storing the encrypted secret.');
     }
     
     return self::$decrypt->__invoke(self::$store[$key]);
   }
 
   /**
-   * Override regular __toString() output
+   * Check whether given argument match this secret
    *
-   * @return string
+   * @param  string|self $arg
+   * @return bool
    */
-  public function __toString() {
-    return $this->toString();
+  public function matches($arg): bool {
+    if ($arg instanceof self) {
+      return $arg->reveal() === $this->reveal();
+    } else {
+      return $arg === $this->reveal();
+    }
   }
 
-  /**
-   * Provide string representation
-   *
-   * @return string
-   */
-  public function hashCode() {
-    return $this->id;
-  }
+  /** Override string casts */
+  public function __toString(): string { return $this->toString(); }
 
-  /**
-   * Provide string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    return nameof($this).'('.$this->id.') {}';
-  }
+  /** Creates a hashcode */
+  public function hashCode(): string { return $this->id; }
+
+  /** Creates a string representation */
+  public function toString(): string { return nameof($this).'('.$this->id.')'; }
 
   /**
    * Compares to another value
@@ -182,9 +174,7 @@ class Secret implements Value {
     return $value instanceof self ? $this->id <=> $value->id : 1;
   }
 
-  /**
-   * Destructor; removes references from crypted storage for this instance.
-   */
+  /** @return void */
   public function __destruct() {
     unset(self::$store[$this->hashCode()]);
   }
