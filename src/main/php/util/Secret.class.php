@@ -106,15 +106,14 @@ class Secret implements Value {
    * @return void
    */
   protected function update(&$characters) {
-    $key= $this->hashCode();
     try {
-      self::$store[$key]= self::$encrypt->__invoke($characters);
+      self::$store[$this->id]= self::$encrypt->__invoke($characters);
     } catch (\Throwable $e) {
       // This intentionally catches *ALL* exceptions, in order not to fail
       // and produce a stacktrace (containing arguments on the stack that were)
       // supposed to be protected.
       // Also, cleanup XP error stack
-      unset(self::$store[$key]);
+      unset(self::$store[$this->id]);
       \xp::gc();
     }
 
@@ -133,12 +132,11 @@ class Secret implements Value {
 
   /** Reveal secured characters */
   public function reveal(): string {
-    $key= $this->hashCode();
-    if (!isset(self::$store[$key])) {
+    if (!isset(self::$store[$this->id])) {
       throw new IllegalStateException('An error occurred during storing the encrypted secret.');
     }
     
-    return self::$decrypt->__invoke(self::$store[$key]);
+    return self::$decrypt->__invoke(self::$store[$this->id]);
   }
 
   /**
@@ -176,6 +174,6 @@ class Secret implements Value {
 
   /** @return void */
   public function __destruct() {
-    unset(self::$store[$this->hashCode()]);
+    unset(self::$store[$this->id]);
   }
 }
