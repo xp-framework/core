@@ -142,16 +142,16 @@ class Secret implements Value {
   }
 
   /**
-   * Check whether given argument match this secret
+   * Check whether given argument matches this secret
    *
    * @param  string|self $arg
    * @return bool
    */
   public function matches($arg): bool {
     if ($arg instanceof self) {
-      return $arg->reveal() === $this->reveal();
+      return hash_equals($this->reveal(), $arg->reveal());
     } else {
-      return $arg === $this->reveal();
+      return hash_equals($this->reveal(), (string)$arg);
     }
   }
 
