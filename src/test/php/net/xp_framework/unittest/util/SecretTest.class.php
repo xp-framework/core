@@ -112,8 +112,7 @@ abstract class SecretTest extends \unittest\TestCase {
 
   #[@test]
   public function matches_original_data() {
-    $fixture= new Secret('payload');
-    $this->assertTrue($fixture->matches('payload'));
+    $this->assertTrue((new Secret('payload'))->matches('payload'));
   }
 
   #[@test]
@@ -130,7 +129,6 @@ abstract class SecretTest extends \unittest\TestCase {
   #  "\0payload"
   #])]
   public function does_not_match($value) {
-    $fixture= new Secret('payload');
-    $this->assertFalse($fixture->matches($value));
+    $this->assertFalse((new Secret('payload'))->matches($value));
   }
 }
