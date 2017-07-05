@@ -228,7 +228,8 @@ class Field extends \lang\Object {
     }
 
     try {
-      return (self::$read)($this->_class, $this->_reflect, $instance, $public);
+      $read= self::$read;
+      return $read($this->_class, $this->_reflect, $instance, $public);
     } catch (\lang\Throwable $e) {
       throw $e;
     } catch (\Exception $e) {
@@ -280,7 +281,8 @@ class Field extends \lang\Object {
     }
 
     try {
-      return (self::$write)($this->_class, $this->_reflect, $instance, $value, $public);
+      $write= self::$write;
+      return $write($this->_class, $this->_reflect, $instance, $value, $public);
     } catch (\lang\Throwable $e) {
       throw $e;
     } catch (\Exception $e) {
