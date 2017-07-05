@@ -13,6 +13,8 @@ use lang\ClassFormatException;
 use lang\IllegalStateException;
 use lang\ElementNotFoundException;
 use unittest\actions\RuntimeVersion;
+use unittest\actions\VerifyThat;
+use net\xp_framework\unittest\IgnoredOnHHVM;
 
 class MethodParametersTest extends MethodsTest {
 
@@ -81,16 +83,19 @@ class MethodParametersTest extends MethodsTest {
   public function nonexistant_type_class_parameter() {
     $this->method('public function fixture(UnknownTypeRestriction $param) { }')->getParameter(0)->getType();
   }
-
-  #[@tes]
-  public function nonexistant_name_class_parameter() {
-    if (PHP_VERSION >= '7.0.0' || defined('HHVM_VERSION')) {
-      $expect= 'net\xp_framework\unittest\reflection\UnknownTypeRestriction';
-    } else {
-      $expect= 'var';
-    }
+  
+  #[@test, @action(new VerifyThat(function() { return PHP_VERSION_ID < 70000 && !defined('HHVM_VERSION'); }))]
+  public function nonexistant_name_class_parameter_before_php7() {
     $this->assertEquals(
-      $expect,
+      'var',
+      $this->method('public function fixture(UnknownTypeRestriction $param) { }')->getParameter(0)->getTypeName()
+    );
+  }
+
+  #[@test, @action(new VerifyThat(function() { return PHP_VERSION_ID >= 70000 || defined('HHVM_VERSION'); }))]
+  public function nonexistant_name_class_parameter_with_php7() {
+    $this->assertEquals(
+      'net\xp_framework\unittest\reflection\UnknownTypeRestriction',
       $this->method('public function fixture(UnknownTypeRestriction $param) { }')->getParameter(0)->getTypeName()
     );
   }
@@ -238,7 +243,7 @@ class MethodParametersTest extends MethodsTest {
     $this->assertEquals($expected, $this->method($declaration.' { }')->getParameter(0)->toString());
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.0'))]
+  #[@test, @action([new RuntimeVersion('>=7.0'), new IgnoredOnHHVM()])]
   public function variadic_via_syntax_with_type() {
     $param= $this->method('function fixture(string... $args) { }')->getParameter(0);
     $this->assertEquals(

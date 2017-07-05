@@ -7,6 +7,7 @@ use lang\MapType;
 use lang\XPClass;
 use lang\Value;
 use unittest\actions\RuntimeVersion;
+use net\xp_framework\unittest\IgnoredOnHHVM;
 
 class MethodReturnTypesTest extends MethodsTest {
 
@@ -70,7 +71,7 @@ class MethodReturnTypesTest extends MethodsTest {
     $this->assertEquals($fixture, $fixture->getMethod('fixture')->getReturnType());
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.1'))]
+  #[@test, @action([new RuntimeVersion('>=7.1'), new IgnoredOnHHVM()])]
   public function void_return_type() {
     $fixture= $this->type('{ public function fixture(): void { } }');
     $this->assertEquals(Type::$VOID, $fixture->getMethod('fixture')->getReturnType());
