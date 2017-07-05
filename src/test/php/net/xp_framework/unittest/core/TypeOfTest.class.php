@@ -7,6 +7,7 @@ use lang\ArrayType;
 use lang\MapType;
 use lang\FunctionType;
 use unittest\actions\RuntimeVersion;
+use net\xp_framework\unittest\IgnoredOnHHVM;
 
 /**
  * Tests typeof() functionality
@@ -68,7 +69,7 @@ class TypeOfTest extends \unittest\TestCase {
     $this->assertEquals(FunctionType::forName('function(lang.Type): var'), typeof(function(Type $t, ... $a) { }));
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.0'))]
+  #[@test, @action([new RuntimeVersion('>=7.0'), new IgnoredOnHHVM()])]
   public function function_with_typed_var_arg() {
     $this->assertEquals(FunctionType::forName('function(): var'), typeof(eval('return function(\lang\Type... $a) { };')));
   }
@@ -103,7 +104,7 @@ class TypeOfTest extends \unittest\TestCase {
     $this->assertEquals(FunctionType::forName('function(): int'), typeof(eval('return function(): int { };')));
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.1'))]
+  #[@test, @action([new RuntimeVersion('>=7.1'), new IgnoredOnHHVM()])]
   public function function_with_void_return_type() {
     $this->assertEquals(FunctionType::forName('function(): void'), typeof(eval('return function(): void { };')));
   }

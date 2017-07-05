@@ -14,6 +14,7 @@ use lang\IllegalStateException;
 use lang\ElementNotFoundException;
 use unittest\actions\RuntimeVersion;
 use unittest\actions\VerifyThat;
+use net\xp_framework\unittest\IgnoredOnHHVM;
 
 class MethodParametersTest extends MethodsTest {
 
@@ -242,7 +243,7 @@ class MethodParametersTest extends MethodsTest {
     $this->assertEquals($expected, $this->method($declaration.' { }')->getParameter(0)->toString());
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.0'))]
+  #[@test, @action([new RuntimeVersion('>=7.0'), new IgnoredOnHHVM()])]
   public function variadic_via_syntax_with_type() {
     $param= $this->method('function fixture(string... $args) { }')->getParameter(0);
     $this->assertEquals(
