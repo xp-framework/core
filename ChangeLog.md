@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.??.? / ????-??-??
 
+## 6.13.2 / 2017-08-30
+
+### Bugfixes
+
+* Backporting TextReader::readLine performance improvement - @jzinnau
+
 ## 6.13.1 / 2016-05-07
 
 ### Bugfixes
