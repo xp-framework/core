@@ -236,9 +236,14 @@ class TextReaderTest extends \unittest\TestCase {
     $this->assertEquals('utf-8', $r->charset());
   }
 
-  #[@test]
-  public function readLinesAutodetectUtf16BE() {
-    $r= $this->newReader("\376\377\000\334\000b\000e\000r\000c\000o\000d\000e\000r", null);
+  #[@test, @values([
+  #  "\376\377\000\334\000b\000e\000r\000c\000o\000d\000e\000r",
+  #  "\376\377\000\334\000b\000e\000r\000c\000o\000d\000e\000r\000\015",
+  #  "\376\377\000\334\000b\000e\000r\000c\000o\000d\000e\000r\000\015\000\012",
+  #  "\376\377\000\334\000b\000e\000r\000c\000o\000d\000e\000r\000\012"
+  #])]
+  public function readLinesAutodetectUtf16BE($value) {
+    $r= $this->newReader($value, null);
     $this->assertEquals('Übercoder', $r->readLine());
   }
 
@@ -248,9 +253,14 @@ class TextReaderTest extends \unittest\TestCase {
     $this->assertEquals('utf-16be', $r->charset());
   }
   
-  #[@test]
-  public function readLinesAutodetectUtf16Le() {
-    $r= $this->newReader("\377\376\334\000b\000e\000r\000c\000o\000d\000e\000r\000", null);
+  #[@test, @values([
+  #  "\377\376\334\000b\000e\000r\000c\000o\000d\000e\000r\000",
+  #  "\377\376\334\000b\000e\000r\000c\000o\000d\000e\000r\000\015\000",
+  #  "\377\376\334\000b\000e\000r\000c\000o\000d\000e\000r\000\012\000",
+  #  "\377\376\334\000b\000e\000r\000c\000o\000d\000e\000r\000\015\000\012\000"
+  #])]
+  public function readLinesAutodetectUtf16Le($value) {
+    $r= $this->newReader($value, null);
     $this->assertEquals('Übercoder', $r->readLine());
   }
 
@@ -258,6 +268,26 @@ class TextReaderTest extends \unittest\TestCase {
   public function autodetectUtf16Le() {
     $r= $this->newReader("\377\376\334\000b\000e\000r\000c\000o\000d\000e\000r\000", null);
     $this->assertEquals('utf-16le', $r->charset());
+  }
+
+  #[@test, @values([
+  #  "L\000\000\0001\000\000\000\n\000\000\000L\000\000\0002\000\000\000",
+  #  "L\000\000\0001\000\000\000\r\000\000\000L\000\000\0002\000\000\000",
+  #  "L\000\000\0001\000\000\000\r\000\000\000\n\000\000\000L\000\000\0002\000\000\000"
+  #])]
+  public function readLinesUtf32Le($value) {
+    $r= $this->newReader($value, 'utf-32le');
+    $this->assertEquals(['L1', 'L2'], [$r->readLine(), $r->readLine()]);
+  }
+
+  #[@test, @values([
+  #  "\000\000\000L\000\000\0001\000\000\000\n\000\000\000L\000\000\0002",
+  #  "\000\000\000L\000\000\0001\000\000\000\r\000\000\000L\000\000\0002",
+  #  "\000\000\000L\000\000\0001\000\000\000\r\000\000\000\n\000\000\000L\000\000\0002"
+  #])]
+  public function readLinesUtf32Be($value) {
+    $r= $this->newReader($value, 'utf-32be');
+    $this->assertEquals(['L1', 'L2'], [$r->readLine(), $r->readLine()]);
   }
 
   #[@test]
@@ -445,5 +475,27 @@ class TextReaderTest extends \unittest\TestCase {
     } catch (\io\IOException $expected) {
       // OK
     }
+  }
+
+  #[@test]
+  public function read_and_readLine() {
+    $reader= $this->newReader("AL1\nBBL2");
+    $this->assertEquals(['A', 'L1', 'BB', 'L2'], [
+      $reader->read(1),
+      $reader->readLine(),
+      $reader->read(2),
+      $reader->readLine()
+    ]);
+  }
+
+  #[@test]
+  public function readLine_and_read() {
+    $reader= $this->newReader("L1\nABL2");
+    $this->assertEquals(['L1', 'A', 'B', 'L2'], [
+      $reader->readLine(),
+      $reader->read(1),
+      $reader->read(1),
+      $reader->readLine()
+    ]);
   }
 }

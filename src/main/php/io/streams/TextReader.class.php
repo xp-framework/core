@@ -18,6 +18,8 @@ class TextReader extends Reader {
   private $charset;
   private $beginning;
 
+  private $cl= 1, $of= 0;
+
   /**
    * Constructor. Creates a new TextReader on an underlying input
    * stream with a given charset.
@@ -36,8 +38,14 @@ class TextReader extends Reader {
     } else {
       throw new IllegalArgumentException('Given argument is neither an input stream, a channel nor a string: '.\xp::typeOf($arg));
     }
-    $this->charset= $charset ?: $this->detectCharset();
+
     $this->beginning= true;
+    switch ($this->charset= strtolower($charset ?: $this->detectCharset())) {
+      case 'utf-16le': $this->cl= 2; $this->of= 0; break;
+      case 'utf-16be': $this->cl= 2; $this->of= 1; break;
+      case 'utf-32le': $this->cl= 4; $this->of= 0; break;
+      case 'utf-32be': $this->cl= 4; $this->of= 3; break;
+    }
   }
 
   /**
@@ -147,30 +155,52 @@ class TextReader extends Reader {
       \xp::gc(__FILE__);
       throw new FormatException($message);
     } else if ('' === $bytes) {
+      $this->buf= null;
       return null;
     } else {
       return iconv($this->charset, \xp::ENCODING, $bytes);
     }
   }
-  
+
   /**
    * Read an entire line
    *
    * @return  string NULL when end of data is reached
    */
   public function readLine() {
-    if (null === ($c= $this->read(1))) return null;
-    $line= '';
+    if (null === $this->buf) return null;
+
+    $this->beginning= false;
     do {
-      if ("\r" === $c) {
-        $n= $this->read(1);
-        if ("\n" !== $n) $this->buf= $n.$this->buf;
-        return $line;
-      } else if ("\n" === $c) {
-        return $line;
+      $p= strcspn($this->buf, "\r\n");
+      $l= strlen($this->buf);
+      if ($p >= $l - $this->cl) {
+        $chunk= $this->stream->read();
+        if ('' === $chunk || false === $chunk) {
+          if ('' === $this->buf || false === $this->buf) return null;
+          $bytes= $p === $l ? $this->buf : substr($this->buf, 0, $p - $this->of);
+          $this->buf= null;
+          break;
+        }
+        $this->buf.= $chunk;
+        continue;
       }
-      $line.= $c;
-    } while (null !== ($c= $this->read(1)));
+
+      $o= ("\r" === $this->buf{$p} && "\n" === $this->buf{$p + $this->cl}) ? $this->cl * 2 : $this->cl;
+      $p-= $this->of;
+      $bytes= substr($this->buf, 0, $p);
+      $this->buf= substr($this->buf, $p + $o);
+      break;
+    } while (true);
+
+    // echo "<<< '", addcslashes($bytes, "\0..\17!\177..\377"), "'\n";
+
+    $line= iconv($this->charset, \xp::ENCODING, $bytes);
+    if (false === $line) {
+      $message= key(@\xp::$errors[__FILE__][__LINE__ - 2]);
+      \xp::gc(__FILE__);
+      throw new FormatException($message);
+    }
     return $line;
   }
 
