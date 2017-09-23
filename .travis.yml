@@ -14,7 +14,6 @@ php:
 
 matrix:
   allow_failures:
-    - php: nightly
     - php: hhvm-nightly
 
 before_script:

@@ -25,6 +25,7 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged PR #180: Secret::equals() - @thekid
 * Added preliminary PHP 7.2.0 support - tested successfully using
   [PHP 7.2.0 Alpha 1](http://php.net/archive/2017.php#id2017-06-08-2)
   (@thekid)
