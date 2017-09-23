@@ -106,15 +106,14 @@ class Secret implements Value {
    * @return void
    */
   protected function update(&$characters) {
-    $key= $this->hashCode();
     try {
-      self::$store[$key]= self::$encrypt->__invoke($characters);
+      self::$store[$this->id]= self::$encrypt->__invoke($characters);
     } catch (\Throwable $e) {
       // This intentionally catches *ALL* exceptions, in order not to fail
       // and produce a stacktrace (containing arguments on the stack that were)
       // supposed to be protected.
       // Also, cleanup XP error stack
-      unset(self::$store[$key]);
+      unset(self::$store[$this->id]);
       \xp::gc();
     }
 
@@ -128,49 +127,40 @@ class Secret implements Value {
    * @return string[]
    */
   public function __sleep() {
-    throw new IllegalStateException('Cannot serialize Password instances.');
+    throw new IllegalStateException('Cannot serialize Secret instances.');
   }
 
-  /**
-   * Reveal secured characters
-   *
-   * @return string
-   */
-  public function reveal() {
-    $key= $this->hashCode();
-    if (!isset(self::$store[$key])) {
-      throw new IllegalStateException('An error occurred during storing the encrypted password.');
+  /** Reveal secured characters */
+  public function reveal(): string {
+    if (!isset(self::$store[$this->id])) {
+      throw new IllegalStateException('An error occurred during storing the encrypted secret.');
     }
     
-    return self::$decrypt->__invoke(self::$store[$key]);
+    return self::$decrypt->__invoke(self::$store[$this->id]);
   }
 
   /**
-   * Override regular __toString() output
+   * Check whether given argument matches this secret
    *
-   * @return string
+   * @param  string|self $arg
+   * @return bool
    */
-  public function __toString() {
-    return $this->toString();
+  public function equals($arg): bool {
+    if ($arg instanceof self) {
+      return hash_equals($this->reveal(), $arg->reveal());
+    } else {
+      return hash_equals($this->reveal(), (string)$arg);
+    }
   }
 
-  /**
-   * Provide string representation
-   *
-   * @return string
-   */
-  public function hashCode() {
-    return $this->id;
-  }
+  /** Override string casts */
+  public function __toString(): string { return $this->toString(); }
 
-  /**
-   * Provide string representation
-   *
-   * @return string
-   */
-  public function toString() {
-    return nameof($this).'('.$this->id.') {}';
-  }
+  /** Creates a hashcode */
+  public function hashCode(): string { return $this->id; }
+
+  /** Creates a string representation */
+  public function toString(): string { return nameof($this).'('.$this->id.')'; }
 
   /**
    * Compares to another value
@@ -182,10 +172,8 @@ class Secret implements Value {
     return $value instanceof self ? $this->id <=> $value->id : 1;
   }
 
-  /**
-   * Destructor; removes references from crypted storage for this instance.
-   */
+  /** @return void */
   public function __destruct() {
-    unset(self::$store[$this->hashCode()]);
+    unset(self::$store[$this->id]);
   }
 }
