@@ -145,7 +145,7 @@ class Secret implements Value {
    * @param  string|self $arg
    * @return bool
    */
-  public function matches($arg): bool {
+  public function equals($arg): bool {
     if ($arg instanceof self) {
       return hash_equals($this->reveal(), $arg->reveal());
     } else {

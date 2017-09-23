@@ -111,14 +111,14 @@ abstract class SecretTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function matches_original_data() {
-    $this->assertTrue((new Secret('payload'))->matches('payload'));
+  public function equals_original_data() {
+    $this->assertTrue((new Secret('payload'))->equals('payload'));
   }
 
   #[@test]
-  public function matches_itself() {
+  public function equals_itself() {
     $fixture= new Secret('payload');
-    $this->assertTrue($fixture->matches($fixture));
+    $this->assertTrue($fixture->equals($fixture));
   }
 
   #[@test, @values([
@@ -129,6 +129,6 @@ abstract class SecretTest extends \unittest\TestCase {
   #  "\0payload"
   #])]
   public function does_not_match($value) {
-    $this->assertFalse((new Secret('payload'))->matches($value));
+    $this->assertFalse((new Secret('payload'))->equals($value));
   }
 }
