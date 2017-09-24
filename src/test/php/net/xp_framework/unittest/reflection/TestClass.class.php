@@ -15,7 +15,7 @@ class TestClass extends AbstractTestClass implements \lang\Runnable {
   #[@type('util.Date')]
   public $date   = null;
 
-  /** @var [:lang.Object] */
+  /** @var [:object] */
   public $map    = [];
 
   /** @type int */
@@ -128,7 +128,7 @@ class TestClass extends AbstractTestClass implements \lang\Runnable {
   /**
    * Retrieve map as a PHP hashmap
    *
-   * @return  [:lang.Object]
+   * @return  [:object]
    */
   public function getMap() {
     return $this->map;
@@ -153,7 +153,7 @@ class TestClass extends AbstractTestClass implements \lang\Runnable {
   /**
    * Initialize map to default values
    *
-   * @param   [:lang.Object] map
+   * @param   [:object] map
    */
   final public function setMap($map) {
     $this->map= $map;
@@ -171,7 +171,7 @@ class TestClass extends AbstractTestClass implements \lang\Runnable {
   /**
    * Create a new instance statically
    *
-   * @param   [:lang.Object] map
+   * @param   [:object] map
    * @return  net.xp_framework.unittest.reflection.TestClass
    */
   public static function fromMap(array $map) {
@@ -183,10 +183,10 @@ class TestClass extends AbstractTestClass implements \lang\Runnable {
   /**
    * Retrieve values
    *
-   * @return  util.collections.Vector<lang.Object>
+   * @return  util.collections.Vector<object>
    */
   public function mapValues() {
-    $c= create('new Vector<lang.Object>');
+    $c= create('new Vector<object>');
     $c->addAll(array_values($this->map));
     return $c;
   }
@@ -195,7 +195,7 @@ class TestClass extends AbstractTestClass implements \lang\Runnable {
    * Retrieve values filtered by a given pattern
    *
    * @param   string pattern default NULL
-   * @return  util.collections.Vector<lang.Object>
+   * @return  util.collections.Vector<object>
    */
   public function filterMap($pattern= null) {
     // TBI

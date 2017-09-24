@@ -7,7 +7,7 @@
  */
 abstract class AbstractTestClass {
   protected
-    #[@type('lang.Object')]
+    #[@type('lang.Value')]
     $inherited= null;
 
   /**

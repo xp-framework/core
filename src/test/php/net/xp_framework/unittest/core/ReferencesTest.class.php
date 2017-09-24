@@ -40,8 +40,8 @@ class ReferencesTest extends \unittest\TestCase {
   /**
    * Helper method that asserts to objects are references to each other
    *
-   * @param   &lang.Object $a
-   * @param   &lang.Object $b
+   * @param   var $a
+   * @param   var $b
    * @throws  unittest.AssertionFailedError
    */
   protected function assertReference($a, $b) {

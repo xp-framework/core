@@ -163,7 +163,7 @@ class FunctionType extends Type {
    *
    * - A closure
    * - A string referencing a function, e.g. 'strlen' or 'typeof'
-   * - A string referencing an instance creation expression: 'lang.Object::new'
+   * - A string referencing an instance creation expression: 'util.Date::new'
    * - A string referencing a static method: 'lang.XPClass::forName'
    * - An array of two strings referencing a static method: ['lang.XPClass', 'forName']
    * - An array of an instance and a string referencing an instance method: [$this, 'getName']

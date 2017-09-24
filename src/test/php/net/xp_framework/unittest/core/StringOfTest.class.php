@@ -16,7 +16,7 @@ class StringOfTest extends \unittest\TestCase {
    * Returns a class with a toString() method that always returns the 
    * string `TestString(6) { String }`.
    *
-   * @return lang.Object
+   * @return object
    */
   protected function testStringInstance() {
     return new class() implements Value {
