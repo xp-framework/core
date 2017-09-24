@@ -99,7 +99,7 @@ class ClassParser {
     } else if (T_LNUMBER === $tokens[$i][0]) {
       return (int)$tokens[$i][1];
     } else if (T_DNUMBER === $tokens[$i][0]) {
-      return (double)$tokens[$i][1];
+      return (float)$tokens[$i][1];
     } else if ('[' === $token) {
       $value= [];
       $element= null;

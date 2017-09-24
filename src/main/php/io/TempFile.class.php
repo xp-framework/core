@@ -38,6 +38,6 @@ class TempFile extends File {
    * @param   string $prefix default "tmp"
    */
   public function __construct($prefix= 'tmp') {
-    parent::__construct(tempnam(Environment::tempDir(), $prefix.uniqid((double)microtime())));
+    parent::__construct(tempnam(Environment::tempDir(), $prefix.uniqid(microtime(true))));
   }
 }
