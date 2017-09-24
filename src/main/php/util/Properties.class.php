@@ -377,7 +377,7 @@ class Properties implements PropertyAccess {
   public function readFloat($section, $key, $default= 0.0) {
     $this->_load();
     return isset($this->_data[$section][$key])
-      ? doubleval($this->_data[$section][$key])
+      ? (float)$this->_data[$section][$key]
       : $default
     ;
   }
