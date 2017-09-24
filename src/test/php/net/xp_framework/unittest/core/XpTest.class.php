@@ -88,7 +88,7 @@ class XpTest extends \unittest\TestCase {
 
   #[@test]
   public function literal_of_value() {
-    $this->assertEquals(Value::class, literal('lang.Value'));
+    $this->assertEquals(Value::class, literal('net.xp_framework.unittest.core.Value'));
   }
 
   #[@test]
