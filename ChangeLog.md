@@ -17,6 +17,9 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented xp-framework/rfc#318: Builtin dependencies, by merging
+  pull request #161. Scripts can now `use [type] from [vendor/lib]`.
+  (@thekid)
 * Implemented xp-framework/rfc#325: Remove Object class. This radical
   change was implemented to be forward-compatible with PHP 7.2, see
   https://wiki.php.net/rfc/object-typehint
