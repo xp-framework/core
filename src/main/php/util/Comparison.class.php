@@ -16,7 +16,7 @@ trait Comparison {
    * @return string
    */
   public function hashCode() {
-    $s= self::class;
+    $s= get_class($this);
     foreach ((array)$this as $val) {
       $s.= '|'.Objects::hashOf($val);
     }
