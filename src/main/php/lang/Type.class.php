@@ -204,7 +204,7 @@ class Type implements Value {
     } else if (strstr($type, '|')) {
       return TypeUnion::forName($type);
     } else if ('HH\num' === $type) {
-      return new TypeUnion([Primitive::$INT, Primitive::$DOUBLE]);
+      return new TypeUnion([Primitive::$INT, Primitive::$FLOAT]);
     } else if ('HH\arraykey' === $type) {
       return new TypeUnion([Primitive::$INT, Primitive::$STRING]);
     } else if (false === ($p= strpos($type, '<'))) {

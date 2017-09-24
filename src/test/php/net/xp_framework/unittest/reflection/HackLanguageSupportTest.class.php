@@ -57,7 +57,7 @@ class HackLanguageSupportTest extends \unittest\TestCase {
 
   #[@test]
   public function double_type() {
-    $this->assertEquals(Primitive::$DOUBLE, Type::forName('HH\float'));
+    $this->assertEquals(Primitive::$FLOAT, Type::forName('HH\float'));
   }
 
   #[@test]
@@ -112,7 +112,7 @@ class HackLanguageSupportTest extends \unittest\TestCase {
 
   #[@test]
   public function method_num_return_type() {
-    $this->assertEquals(new TypeUnion([Primitive::$INT, Primitive::$DOUBLE]), $this->testClass()->getMethod('returnsNum')->getReturnType());
+    $this->assertEquals(new TypeUnion([Primitive::$INT, Primitive::$FLOAT]), $this->testClass()->getMethod('returnsNum')->getReturnType());
   }
 
   #[@test]

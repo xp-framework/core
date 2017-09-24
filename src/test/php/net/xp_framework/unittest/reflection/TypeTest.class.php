@@ -28,7 +28,7 @@ class TypeTest extends \unittest\TestCase {
 
   #[@test, @values(['double', 'float', '?float'])]
   public function doubleType($named) {
-    $this->assertEquals(Primitive::$DOUBLE, Type::forName($named));
+    $this->assertEquals(Primitive::$FLOAT, Type::forName($named));
   }
 
   #[@test, @values(['bool', 'boolean', '?bool'])]
@@ -208,7 +208,7 @@ class TypeTest extends \unittest\TestCase {
     return [
       typeof($this),
       Type::$VAR,
-      Primitive::$BOOL, Primitive::$STRING, Primitive::$INT, Primitive::$DOUBLE,
+      Primitive::$BOOL, Primitive::$STRING, Primitive::$INT, Primitive::$FLOAT,
       new ArrayType('var'),
       new MapType('var')
     ];
@@ -266,7 +266,7 @@ class TypeTest extends \unittest\TestCase {
 
   #[@test]
   public function double_type_default() {
-    $this->assertEquals(0.0, Primitive::$DOUBLE->default);
+    $this->assertEquals(0.0, Primitive::$FLOAT->default);
   }
 
   #[@test]

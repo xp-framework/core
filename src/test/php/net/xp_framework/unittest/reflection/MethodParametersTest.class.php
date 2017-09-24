@@ -66,7 +66,7 @@ class MethodParametersTest extends MethodsTest {
   #  ['string', Primitive::$STRING],
   #  ['int', Primitive::$INT],
   #  ['bool', Primitive::$BOOL],
-  #  ['float', Primitive::$DOUBLE]
+  #  ['float', Primitive::$FLOAT]
   #])]
   public function parameter_type_determined_via_scalar_syntax($literal, $type) {
     $this->assertEquals($type, $this->method('public function fixture('.$literal.' $param) { }')->getParameter(0)->getType());

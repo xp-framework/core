@@ -89,7 +89,7 @@ class XPClassTest extends \unittest\TestCase {
 
   #[@test, @values([
   #  'int', 'double', 'string', 'bool',
-  #  Primitive::$INT, Primitive::$DOUBLE, Primitive::$STRING, Primitive::$BOOL
+  #  Primitive::$INT, Primitive::$FLOAT, Primitive::$STRING, Primitive::$BOOL
   #])]
   public function fixture_is_not_assignable_from_primitive($name) {
     $this->assertFalse($this->fixture->isAssignableFrom($name));

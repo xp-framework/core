@@ -135,7 +135,7 @@ class WildcardTypeTest extends \unittest\TestCase {
   /** @return var[][] */
   protected function unGenericTypes() {
     return [
-      [Primitive::$INT], [Primitive::$DOUBLE], [Primitive::$BOOL], [Primitive::$STRING],
+      [Primitive::$INT], [Primitive::$FLOAT], [Primitive::$BOOL], [Primitive::$STRING],
       [new ArrayType('var'), new MapType('var')],
       [typeof($this)]
     ];

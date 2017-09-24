@@ -25,7 +25,7 @@ class PrimitiveTest extends TestCase {
 
   #[@test]
   public function doublePrimitive() {
-    $this->assertEquals(Primitive::$DOUBLE, Primitive::forName('double'));
+    $this->assertEquals(Primitive::$FLOAT, Primitive::forName('double'));
   }
 
   #[@test]
@@ -87,12 +87,12 @@ class PrimitiveTest extends TestCase {
 
   #[@test, @values([0.0, -1.5])]
   public function isAnInstanceOfDoublePrimitive($value) {
-    $this->assertTrue(Primitive::$DOUBLE->isInstance($value));
+    $this->assertTrue(Primitive::$FLOAT->isInstance($value));
   }
 
   #[@test, @values(source= 'instances', args= [[0.0, -1.5]])]
   public function notInstanceOfDoublePrimitive($value) {
-    $this->assertFalse(Primitive::$DOUBLE->isInstance($value));
+    $this->assertFalse(Primitive::$FLOAT->isInstance($value));
   }
 
   #[@test, @values([false, true])]
@@ -175,7 +175,7 @@ class PrimitiveTest extends TestCase {
   #  [0.0, false]
   #])]
   public function newInstance_of_double($expected, $value) {
-    $this->assertEquals($expected, Primitive::$DOUBLE->newInstance($value));
+    $this->assertEquals($expected, Primitive::$FLOAT->newInstance($value));
   }
 
   #[@test, @values([
@@ -219,7 +219,7 @@ class PrimitiveTest extends TestCase {
   #  [0.0, false]
   #])]
   public function cast_of_double($expected, $value) {
-    $this->assertEquals($expected, Primitive::$DOUBLE->cast($value));
+    $this->assertEquals($expected, Primitive::$FLOAT->cast($value));
   }
 
   #[@test, @values([
