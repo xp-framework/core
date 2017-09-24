@@ -37,7 +37,7 @@ class Money implements Value {
   /**
    * Constructor
    *
-   * @param   string|double|int amount
+   * @param   string|float|int amount
    * @param   util.Currency currency
    */
   public function __construct($amount, Currency $currency) {

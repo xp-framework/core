@@ -61,7 +61,7 @@ interface PropertyAccess {
    * @param   string section
    * @param   string key
    * @param   var default default []
-   * @return  double
+   * @return  float
    */
   public function readFloat($section, $key, $default= 0.0);
 

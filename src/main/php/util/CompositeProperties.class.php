@@ -141,7 +141,7 @@ class CompositeProperties implements PropertyAccess {
    * @param   string section
    * @param   string key
    * @param   var default default 0.0
-   * @return  double
+   * @return  float
    */
   public function readFloat($section, $key, $default= 0.0) {
     return $this->_read(__FUNCTION__, $section, $key, $default);
