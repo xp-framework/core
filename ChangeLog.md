@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 9.1.0 / 2017-09-24
+
 ### Bugfixes
 
 * Merged #183: Remove all reference to lang.Object (@thekid)
