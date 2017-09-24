@@ -1,6 +1,5 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\Object;
 use lang\NullPointerException;
 use lang\CloneNotSupportedException;
 

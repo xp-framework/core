@@ -1,6 +1,5 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\Object;
 use lang\Value;
 use lang\ClassLoader;
 

@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\Object;
 use lang\Closeable;
 use lang\ClassLoader;
 use lang\IllegalStateException;
+use net\xp_framework\unittest\Name;
 
 /**
  * Tests with() functionality
@@ -13,11 +13,11 @@ class WithTest extends \unittest\TestCase {
 
   #[@beforeClass]
   public static function defineCloseableSubclasses() {
-    self::$closes= ClassLoader::defineClass('_WithTest_C0', Object::class, [Closeable::class], '{
+    self::$closes= ClassLoader::defineClass('_WithTest_C0', null, [Closeable::class], '{
       public $closed= false;
       public function close() { $this->closed= true; }
     }');
-    self::$raises= ClassLoader::defineClass('_WithTest_C1', Object::class, [Closeable::class], '{
+    self::$raises= ClassLoader::defineClass('_WithTest_C1', null, [Closeable::class], '{
       private $throwable;
       public function __construct($class) { $this->throwable= $class; }
       public function close() { throw new $this->throwable("Cannot close"); }
@@ -26,15 +26,15 @@ class WithTest extends \unittest\TestCase {
 
   #[@test]
   public function backwards_compatible_usage_without_closure() {
-    with ($f= new Object()); {
-      $this->assertInstanceOf(Object::class, $f);
+    with ($f= new Name('test')); {
+      $this->assertInstanceOf(Name::class, $f);
     }
   }
 
   #[@test]
   public function new_usage_with_closure() {
-    with (new Object(), function($f) {
-      $this->assertInstanceOf(Object::class, $f);
+    with (new Name('test'), function($f) {
+      $this->assertInstanceOf(Name::class, $f);
     });
   }
 

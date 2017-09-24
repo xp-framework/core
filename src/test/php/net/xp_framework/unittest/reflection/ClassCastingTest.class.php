@@ -2,7 +2,6 @@
 
 use unittest\TestCase;
 use lang\XPClass;
-use lang\Object;
 use lang\Type;
 use lang\ClassCastException;
 
