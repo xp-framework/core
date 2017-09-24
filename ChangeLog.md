@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Changed type system to prefer "float" over "double" to be consistent
+  with PHP 7's scalar types, which use the first; see issue #181.
+  (@thekid)
 * Minimum HHVM version required is now **3.20**, see issue #176.
   (@thekid)
 * Deprecated `package-info.xp` files previously used for documentation
