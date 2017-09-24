@@ -43,29 +43,48 @@ final class ClassLoader implements IClassLoader {
     $delegates = [],
     $modules   = [];
 
-  static function __static() {
-    $modules= [];
-    
-    // Scan include-path, setting up classloaders for each element
+  /**
+   * Scan include-path, setting up classloaders for each unique element
+   *
+   * @return void
+   */
+  public static function bootstrap() {
     foreach (\xp::$classpath as $element) {
-      if (DIRECTORY_SEPARATOR === $element{strlen($element) - 1}) {
-        $cl= FileSystemClassLoader::instanceFor($element, false);
+      if (isset(self::$delegates[$element])) {
+        continue;
+      } else if (DIRECTORY_SEPARATOR === $element{strlen($element) - 1}) {
+        self::$delegates[$element]= FileSystemClassLoader::instanceFor($element, false);
       } else {
-        $cl= ArchiveClassLoader::instanceFor($element, false);
+        self::$delegates[$element]= ArchiveClassLoader::instanceFor($element, false);
       }
-      if (isset(self::$delegates[$cl->instanceId()])) continue;
-
-      self::$delegates[$cl->instanceId()]= $cl;
-      if ($cl->providesResource('module.xp')) $modules[]= $cl;
     }
 
-    // Initialize modules
+    // Run deferred initialization
     \xp::$loader= new self();
-    foreach ($modules as $cl) {
-      self::$modules[$cl->instanceId()]= Module::register(self::declareModule($cl));
+    foreach (self::$delegates as $id => $delegate) {
+      self::initialize($id, $delegate);
     }
   }
-  
+
+  /**
+   * Initialize a classloader delegate: Loads autoload.php if not already
+   * required (because loaded via Composer).
+   *
+   * @param  string $id
+   * @param  lang.IClassLoader $cl
+   */
+  private static function initialize($id, $cl) {
+    $cl->initialize();
+
+    // BC: If autoload.php did not define a module, check module.xp
+    if (!isset(self::$modules[$id])) {
+      self::$modules[$id]= Module::$INCOMPLETE;
+      if ($cl->providesResource('module.xp')) {
+        self::$modules[$id]= Module::register(self::declareModule($cl));
+      }
+    }
+  }
+
   /**
    * Retrieve the default class loader
    *
@@ -78,13 +97,15 @@ final class ClassLoader implements IClassLoader {
   /**
    * Register a class loader from a path
    *
-   * @param   string element
-   * @param   bool before default FALSE whether to register this as the first loader,
-   *          NULL wheather to figure out position by inspecting $element
-   * @return  lang.IClassLoader the registered loader
-   * @throws  lang.ElementNotFoundException if the path cannot be found
+   * @param  string $element
+   * @param  bool $before default FALSE whether to register this as the first loader,
+   *         NULL whether to figure out position by inspecting $element
+   * @param  string $module
+   * @param  [:var] $definition
+   * @return lang.IClassLoader the registered loader
+   * @throws lang.ElementNotFoundException if the path cannot be found
    */
-  public static function registerPath($element, $before= false) {
+  public static function registerPath($element, $before= false, $module= null, $definition= []) {
     if (null === $before && '!' === $element{0}) {
       $before= true;
       $element= substr($element, 1);
@@ -93,21 +114,23 @@ final class ClassLoader implements IClassLoader {
     }
 
     if (is_dir($element)) {
-      return self::registerLoader(FileSystemClassLoader::instanceFor($element), $before);
+      return self::registerLoader(FileSystemClassLoader::instanceFor($element), $before, $module, $definition);
     } else if (is_file($element)) {
-      return self::registerLoader(ArchiveClassLoader::instanceFor($element), $before);
+      return self::registerLoader(ArchiveClassLoader::instanceFor($element), $before, $module, $definition);
     }
     throw new ElementNotFoundException('Element "'.$element.'" not found');
   }
-  
+
   /**
    * Register a class loader as a delegate
    *
-   * @param   lang.IClassLoader l
-   * @param   bool before default FALSE whether to register this as the first loader
-   * @return  lang.IClassLoader the registered loader
+   * @param  lang.IClassLoader $l
+   * @param  bool $before default FALSE whether to register this as the first loader
+   * @param  string $module
+   * @param  [:var] $definition
+   * @return lang.IClassLoader the registered loader
    */
-  public static function registerLoader(IClassLoader $l, $before= false) {
+  public static function registerLoader(IClassLoader $l, $before= false, $module= null, $definition= []) {
     $id= $l->instanceId();
     if ($before) {
       self::$delegates= array_merge([$id => $l], self::$delegates);
@@ -115,10 +138,14 @@ final class ClassLoader implements IClassLoader {
       self::$delegates[$id]= $l;
     }
 
-    if (!isset(self::$modules[$id]) && $l->providesResource('module.xp')) {
-      self::$modules[$id]= Module::$INCOMPLETE;
+    if (!isset(self::$modules[$id])) {
       try {
-        self::$modules[$id]= Module::register(self::declareModule($l));
+        if ($module) {
+          self::$modules[$id]= Module::$INCOMPLETE;
+          self::$modules[$id]= Module::register(new Module($module, $l, $definition));
+        } else {
+          self::initialize($id, $l);
+        }
       } catch (Throwable $e) {
         unset(self::$delegates[$id], self::$modules[$id]);
         throw $e;
@@ -169,14 +196,10 @@ final class ClassLoader implements IClassLoader {
   public static function removeLoader(IClassLoader $l) {
     $id= $l->instanceId();
     if (isset(self::$delegates[$id])) {
-      unset(self::$delegates[$id]);
-
-      if (isset(self::$modules[$id])) {
-        if (Module::$INCOMPLETE !== self::$modules[$id]) {
-          Module::remove(self::$modules[$id]);
-        }
-        unset(self::$modules[$id]);
+      if (Module::$INCOMPLETE !== self::$modules[$id]) {
+        Module::remove(self::$modules[$id]);
       }
+      unset(self::$delegates[$id], self::$modules[$id]);
       return true;
     }
     return false;

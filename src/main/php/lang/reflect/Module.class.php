@@ -10,16 +10,19 @@ use lang\{IClassLoader, ElementNotFoundException, Value};
 class Module implements Value {
   public static $INCOMPLETE= false;
   public static $registered= [];
+  private $name, $classLoader, $definitions;
 
   /**
    * Creates a new module
    *
    * @param  string $name
    * @param  lang.IClassLoader $classLoader
+   * @param  [:php.Closure] $definitions
    */
-  public function __construct($name, IClassLoader $classLoader) {
+  public function __construct($name, IClassLoader $classLoader, $definitions= []) {
     $this->name= $name;
     $this->classLoader= $classLoader;
+    $this->definitions= array_merge(['initialize' => function() { }, 'finalize' => function() { }], $definitions);
   }
 
   /** @return string */
@@ -29,18 +32,36 @@ class Module implements Value {
   public function classLoader() { return $this->classLoader; }
 
   /**
-   * Initialize this module. Template method, override in subclasses!
+   * Member write operator overloading
    *
+   * @param  string $name
+   * @param  var $value
    * @return void
    */
-  public function initialize() { }
+  public function __set($name, $value) {
+    $this->definitions[$name]= $value;
+  }
 
   /**
-   * Finalize this module. Template method, override in subclasses!
+   * Member read operator overloading
    *
-   * @return void
+   * @param  string $name
+   * @return var
    */
-  public function finalize() { }
+  public function __get($name) {
+    return $this->definitions[$name];
+  }
+
+  /**
+   * Call operator overloading
+   *
+   * @param  string $name
+   * @param  var[] $arguments
+   * @return var
+   */
+  public function __call($name, $arguments) {
+    return $this->definitions[$name]->call($this, ...$arguments);
+  }
 
   /** Compares this module to another value */
   public function compareTo($value): int {

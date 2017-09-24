@@ -41,6 +41,13 @@ class ArchiveClassLoader extends AbstractClassLoader {
     $this->archive= 'xar://'.$this->path.'?';
   }
 
+  /** @return void */
+  public function initialize() {
+    if (is_file($autoload= $this->archive.'/autoload.php')) {
+      require_once($autoload);
+    }
+  }
+
   /**
    * Load class bytes
    *

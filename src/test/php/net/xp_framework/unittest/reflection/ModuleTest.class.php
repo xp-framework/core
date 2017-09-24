@@ -101,4 +101,54 @@ class ModuleTest extends \unittest\TestCase {
     Module::remove($module);
     $this->assertFalse(Module::loaded($module->name()));
   }
+
+  #[@test]
+  public function initialize() {
+    $module= new Module('xp-framework/loaded1', $this->cl, [
+      'initialize' => function(...$args) use(&$invoked) { $invoked[]= $args; }
+    ]);
+
+    $invoked= null;
+    Module::register($module);
+    Module::remove($module);
+    $this->assertEquals([[]], $invoked);
+  }
+
+  #[@test]
+  public function finalize() {
+    $module= new Module('xp-framework/loaded1', $this->cl, [
+      'finalize' => function(...$args) use(&$invoked) { $invoked[]= $args; }
+    ]);
+
+    $invoked= null;
+    Module::register($module);
+    Module::remove($module);
+    $this->assertEquals([[]], $invoked);
+  }
+
+  #[@test]
+  public function member() {
+    $module= new Module('xp-framework/loaded1', $this->cl, [
+      'member'   => 0,
+      'finalize' => function(...$args) use(&$invoked) { $invoked[]= $this->member + 1; }
+    ]);
+
+    $invoked= null;
+    Module::register($module);
+    Module::remove($module);
+    $this->assertEquals([1], $invoked);
+  }
+
+  #[@test]
+  public function method() {
+    $module= new Module('xp-framework/loaded1', $this->cl, [
+      'method'   => function($arg) { return strtolower($arg); },
+      'finalize' => function(...$args) use(&$invoked) { $invoked[]= $this->method('Test'); }
+    ]);
+
+    $invoked= null;
+    Module::register($module);
+    Module::remove($module);
+    $this->assertEquals(['test'], $invoked);
+  }
 }
