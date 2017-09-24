@@ -151,13 +151,13 @@ class Type implements Value {
       'string'    => 'string',
       'int'       => 'int',
       'integer'   => 'int',
-      'double'    => 'double',
-      'float'     => 'double',
+      'double'    => 'float',
+      'float'     => 'float',
       'bool'      => 'bool',
       'boolean'   => 'bool',
       'HH\int'    => 'int',
       'HH\string' => 'string',
-      'HH\float'  => 'double',
+      'HH\float'  => 'float',
       'HH\bool'   => 'bool'
     ];
 

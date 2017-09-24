@@ -16,13 +16,15 @@ class Primitive extends Type {
     $STRING  = null,
     $INT     = null,
     $DOUBLE  = null,
+    $FLOAT   = null,
     $BOOL    = null;
   
   static function __static() {
     self::$STRING= new self('string', '');
     self::$INT= new self('int', 0);
-    self::$DOUBLE= new self('double', 0.0);
+    self::$FLOAT= new self('float', 0.0);
     self::$BOOL= new self('bool', false);
+    self::$DOUBLE= self::$FLOAT;  // Deprecated, kept as alias
   }
   
   /**
@@ -36,7 +38,7 @@ class Primitive extends Type {
     switch ($name) {
       case 'string': return self::$STRING;
       case 'int': return self::$INT;
-      case 'double': return self::$DOUBLE;
+      case 'float': case 'double': return self::$FLOAT;
       case 'bool': return self::$BOOL;
       default: throw new IllegalArgumentException('Not a primitive: '.$name);
     }
@@ -63,7 +65,7 @@ class Primitive extends Type {
     if (!is_array($value)) switch ($this) {
       case self::$STRING: return (string)$value;
       case self::$INT: return (int)$value;
-      case self::$DOUBLE: return (double)$value;
+      case self::$FLOAT: return (float)$value;
       case self::$BOOL: return (bool)$value;
     }
 
