@@ -122,7 +122,7 @@ class RuntimeTest extends \unittest\TestCase {
   public function memoryUsage() {
     $this->assertEquals(
       \lang\Primitive::$INT, 
-      \lang\Type::forName(gettype(Runtime::getInstance()->memoryUsage()))
+      typeof(Runtime::getInstance()->memoryUsage())
     );
   }
 
@@ -130,7 +130,7 @@ class RuntimeTest extends \unittest\TestCase {
   public function peakMemoryUsage() {
     $this->assertEquals(
       \lang\Primitive::$INT, 
-      \lang\Type::forName(gettype(Runtime::getInstance()->peakMemoryUsage()))
+      typeof(Runtime::getInstance()->peakMemoryUsage())
     );
   }
 
@@ -138,7 +138,7 @@ class RuntimeTest extends \unittest\TestCase {
   public function memoryLimit() {
     $this->assertEquals(
       \lang\Primitive::$INT,
-      \lang\Type::forName(gettype(Runtime::getInstance()->memoryLimit()))
+      typeof(Runtime::getInstance()->memoryLimit())
     );
   }
 }
