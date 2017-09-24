@@ -7,6 +7,12 @@ XP Framework Core ChangeLog
 
 * Merged #183: Remove all reference to lang.Object (@thekid)
 
+### Features
+
+* Added `util.Comparison` trait to make `lang.Object` -> `lang.Value`
+  migration easier. See issue #184
+  (@thekid)
+
 ## 9.0.0 / 2017-09-24
 
 ### Heads up!
