@@ -6,7 +6,7 @@ use lang\{
   IllegalArgumentException,
   IndexOutOfBoundsException,
   NullPointerException,
-  Object,
+  Value,
   XPException
 };
 use unittest\actions\RuntimeVersion;
@@ -108,7 +108,7 @@ class ErrorsTest extends \unittest\TestCase {
 
   #[@test, @expect(Error::class)]
   public function argument_mismatch_yield_type_exception() {
-    $f= function(Object $arg) { };
+    $f= function(Value $arg) { };
     $f('Primitive');
   }
 
