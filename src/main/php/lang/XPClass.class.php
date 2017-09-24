@@ -43,7 +43,6 @@ define('DETAIL_GENERIC',        7);
  * }
  * ``` 
  *
- * @see   xp://lang.Object#getClass
  * @see   xp://lang.XPClass#forName
  * @test  xp://net.xp_framework.unittest.reflection.XPClassTest
  * @test  xp://net.xp_framework.unittest.reflection.ClassDetailsTest
@@ -177,7 +176,7 @@ class XPClass extends Type {
    * </code>
    *
    * @param   var... args
-   * @return  lang.Object 
+   * @return  object 
    * @throws  lang.IllegalAccessException in case this class cannot be instantiated
    */
   public function newInstance($value= null) {
@@ -419,8 +418,8 @@ class XPClass extends Type {
    * Tests whether this class is assignable from a given type
    *
    * <code>
-   *   // util.Date instanceof lang.Object
-   *   XPClass::forName('lang.Object')->isAssignableFrom('util.Date');   // TRUE
+   *   // util.Date instanceof lang.Value
+   *   XPClass::forName('lang.Value')->isAssignableFrom('util.Date');   // TRUE
    * </code>
    *
    * @param   string|lang.Type $type
@@ -445,7 +444,7 @@ class XPClass extends Type {
    * 
    * var_dump($class->isInstance(new TempFile()));  // TRUE
    * var_dump($class->isInstance(new File()));      // TRUE
-   * var_dump($class->isInstance(new Object()));    // FALSE
+   * var_dump($class->isInstance(new Date()));      // FALSE
    * ```
    *
    * @param   var obj

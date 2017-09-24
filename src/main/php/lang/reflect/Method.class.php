@@ -18,8 +18,8 @@ class Method extends Routine {
    *
    * Example:
    * ```php
-   * $method= XPClass::forName('lang.Object')->getMethod('toString');
-   * $str= $method->invoke(new Object());
+   * $method= XPClass::forName('lang.Value')->getMethod('toString');
+   * $str= $method->invoke(new Date());
    * ```
    *
    * Example (passing arguments)
