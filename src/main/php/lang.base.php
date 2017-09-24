@@ -191,8 +191,8 @@ function cast($arg, $type, $nullsafe= true) {
 function is($type, $object) {
   if ('int' === $type) {
     return is_int($object);
-  } else if ('double' === $type) {
-    return is_double($object);
+  } else if ('float' === $type || 'double' === $type) {
+    return is_float($object);
   } else if ('string' === $type) {
     return is_string($object);
   } else if ('bool' === $type) {
