@@ -174,9 +174,7 @@ function __error($code, $msg, $file, $line) {
 function cast($arg, $type, $nullsafe= true) {
   if (null === $arg && $nullsafe && 0 !== strncmp($type, '?', 1)) {
     throw new \lang\ClassCastException('Cannot cast NULL to '.$type);
-  }
-
-  if ($type instanceof \lang\Type) {
+  } else if ($type instanceof \lang\Type) {
     return $type->cast($arg);
   } else {
     try {
