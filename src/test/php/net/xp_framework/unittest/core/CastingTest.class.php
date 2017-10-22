@@ -32,7 +32,7 @@ class CastingTest extends TestCase implements Runnable {
   }
 
   #[@test]
-  public function passig_null_allowed_when_nullsafe_set_to_false() {
+  public function passing_null_allowed_when_nullsafe_set_to_false() {
     $this->assertNull(cast(null, Value::class, false));
   }
 
@@ -84,5 +84,15 @@ class CastingTest extends TestCase implements Runnable {
   #[@test, @expect(ClassCastException::class), @values(['', null])]
   public function empty_or_null_name($name) {
     cast($this, $name);
+  }
+
+  #[@test, @values([null, 'test'])]
+  public function nullable_string($value) {
+    $this->assertEquals($value, cast($value, '?string'));
+  }
+
+  #[@test, @expect(ClassCastException::class)]
+  public function cannot_cast_arrays_to_nullable_string() {
+    cast([1], '?string');
   }
 }
