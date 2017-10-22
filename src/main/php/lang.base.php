@@ -169,7 +169,7 @@ function __error($code, $msg, $file, $line) {
 }
 // }}}
 
-// {{{ proto var cast (var arg, var type[, bool nullsafe= true])
+// {{{ proto var cast (var arg, var type)
 //     Casts an arg NULL-safe
 function cast($arg, $type, $nullsafe= true) {
   if (null === $arg && $nullsafe && 0 !== strncmp($type, '?', 1)) {

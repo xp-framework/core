@@ -31,6 +31,7 @@ class CastingTest extends TestCase implements Runnable {
     cast(null, Runnable::class)->run();
   }
 
+  /** @deprecated See https://github.com/xp-framework/rfc/issues/326 */
   #[@test]
   public function passing_null_allowed_when_nullsafe_set_to_false() {
     $this->assertNull(cast(null, Value::class, false));
