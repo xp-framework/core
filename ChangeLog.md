@@ -3,6 +3,11 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### RFCs
+
+* Implemented xp-framework/rfc#326: Cast and nullable types
+  (@thekid)
+
 ## 9.1.0 / 2017-09-24
 
 ### Bugfixes
