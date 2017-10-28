@@ -3,10 +3,15 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 9.2.0 / 2017-10-28
+
 ### RFCs
 
-* Implemented xp-framework/rfc#326: Cast and nullable types
-  (@thekid)
+* Implemented xp-framework/rfc#326: Cast and nullable types (@thekid)
+
+### Features
+
+* Added PHP 7.2 to test matrix (@thekid)
 
 ## 9.1.0 / 2017-09-24
 
