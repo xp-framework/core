@@ -101,12 +101,12 @@ class Type implements Value {
 
   /** Compares to another value */
   public function compareTo($value): int {
-    return $value instanceof self ? $this->name <=> $value->name : 1;
+    return $value instanceof static ? $this->name <=> $value->name : 1;
   }
 
   /** Checks for equality with another value */
   public function equals($value): bool {
-    return $value instanceof self && $this->name === $value->name;
+    return $value instanceof static && $this->name === $value->name;
   }
 
   /**
