@@ -271,7 +271,9 @@ class Type implements Value {
           $components[]= Wildcard::$ANY;
           $wildcard= true;
         } else {
-          $components[]= self::forName($arg);
+          $t= self::forName($arg);
+          $wildcard= $t instanceof WildcardType;
+          $components[]= $t;
         }
       }
       if ($wildcard) {

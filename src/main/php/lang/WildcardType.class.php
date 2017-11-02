@@ -46,26 +46,10 @@ class WildcardType extends Type {
       throw new IllegalArgumentException('Not a wildcard type: '.$name);
     }
 
-    $base= substr($name, 0, $p);
-    $components= [];
-    for ($args= substr($name, $p+ 1, -1).',', $o= 0, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
-      if (',' === $args{$i} && 0 === $brackets) {
-        $component= ltrim(substr($args, $o, $i- $o));
-        if ('?' === $component) {
-          $components[]= Wildcard::$ANY;
-        } else if (false === strpos($component, '?')) {
-          $components[]= parent::forName($component);
-        } else {
-          $components[]= self::forName($component);
-        }
-        $o= $i+ 1;
-      } else if ('<' === $args{$i}) {
-        $brackets++;
-      } else if ('>' === $args{$i}) {
-        $brackets--;
-      }
-    }
-    return new self(XPClass::forName($base), $components);
+    $t= parent::forName($name);
+    if ($t instanceof self) return $t;
+
+    throw new IllegalArgumentException($name.' is not a wildcard type');
   }
 
   /** Returns type literal */
