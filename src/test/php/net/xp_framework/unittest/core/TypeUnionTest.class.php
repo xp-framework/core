@@ -166,6 +166,14 @@ class TypeUnionTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function string_array_or_int() {
+    $this->assertEquals(
+      new TypeUnion([new ArrayType(Primitive::$STRING), Primitive::$INT]),
+      Type::forName('string[]|int')
+    );
+  }
+
+  #[@test]
   public function array_of_type_unions() {
     $this->assertEquals(
       new ArrayType(new TypeUnion([Primitive::$STRING, Primitive::$INT])),
