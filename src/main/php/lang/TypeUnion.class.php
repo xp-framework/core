@@ -75,6 +75,20 @@ class TypeUnion extends Type {
   }
 
   /**
+   * Get a type instance for a given name
+   *
+   * @param   string name
+   * @return  self
+   * @throws  lang.IllegalArgumentException if the given name does not correspond to a function type
+   */
+  public static function forName($name) {
+    $t= parent::forName($name);
+    if ($t instanceof self) return $t;
+
+    throw new IllegalArgumentException($name.' is not a union type');
+  }
+
+  /**
    * Tests whether this type is assignable from another type
    *
    * ```php
