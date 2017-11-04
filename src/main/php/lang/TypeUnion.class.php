@@ -28,28 +28,6 @@ class TypeUnion extends Type {
   /** @return lang.Type[] */
   public function types() { return $this->types; }
 
-  /**
-   * Get a type instance for a given name
-   *
-   * @param   string name
-   * @return  self
-   * @throws  lang.IllegalArgumentException if the given name is not a union
-   */
-  public static function forName($name) {
-    $types= [];
-    for ($args= $name.'|', $o= 0, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
-      if ('|' === $args{$i} && 0 === $brackets) {
-        $types[]= parent::forName(trim(substr($args, $o, $i- $o)));
-        $o= $i+ 1;
-      } else if ('(' === $args{$i}) {
-        $brackets++;
-      } else if (')' === $args{$i}) {
-        $brackets--;
-      }
-    }
-    return new self($types);
-  }
-
   /** Returns type literal */
   public function literal(): string {
     return "\xb5".implode("\xb8", array_map(function($type) { return $type->literal(); }, $this->types));
@@ -94,6 +72,20 @@ class TypeUnion extends Type {
     }
 
     throw new ClassCastException('Cannot cast to the '.$this->getName().' type from '.typeof($value)->getName());
+  }
+
+  /**
+   * Get a type instance for a given name
+   *
+   * @param   string name
+   * @return  self
+   * @throws  lang.IllegalArgumentException if the given name does not correspond to a function type
+   */
+  public static function forName($name) {
+    $t= parent::forName($name);
+    if ($t instanceof self) return $t;
+
+    throw new IllegalArgumentException($name.' is not a union type');
   }
 
   /**

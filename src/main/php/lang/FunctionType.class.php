@@ -53,34 +53,10 @@ class FunctionType extends Type {
    * @throws  lang.IllegalArgumentException if the given name does not correspond to a function type
    */
   public static function forName($name) {
-    if (0 !== strncmp($name, 'function(', 9)) {
-      throw new IllegalArgumentException('Not a function type: '.$name);
-    }
+    $t= parent::forName($name);
+    if ($t instanceof self) return $t;
 
-    if (')' === $name{9}) {
-      $args= substr($name, 10);
-      $o= strpos($args, ':');
-      $signature= [];
-    } else if ('?' === $name{9}) {
-      $args= substr($name, 11);
-      $o= strpos($args, ':');
-      $signature= null;
-    } else for ($args= substr($name, 8), $o= 0, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
-      if (':' === $args{$i} && 0 === $brackets) {
-        $signature[]= parent::forName(substr($args, $o + 1, $i- $o- 2));
-        $o= $i+ 1;
-        break;
-      } else if (',' === $args{$i} && 1 === $brackets) {
-        $signature[]= parent::forName(substr($args, $o + 1, $i- $o- 1));
-        $o= $i+ 1;
-      } else if ('(' === $args{$i}) {
-        $brackets++;
-      } else if (')' === $args{$i}) {
-        $brackets--;
-      }
-    }
-
-    return new self($signature, Type::forName(ltrim(substr($args, $o+ 1), ' ')));
+    throw new IllegalArgumentException($name.' is not a function type');
   }
 
   /** Returns type literal */

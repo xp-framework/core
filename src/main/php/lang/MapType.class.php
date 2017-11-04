@@ -36,7 +36,7 @@ class MapType extends Type {
    * Get a type instance for a given name
    *
    * @param   string name
-   * @return  lang.ArrayType
+   * @return  self
    * @throws  lang.IllegalArgumentException if the given name does not correspond to a primitive
    */
   public static function forName($name) {

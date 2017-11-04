@@ -101,12 +101,12 @@ class Type implements Value {
 
   /** Compares to another value */
   public function compareTo($value): int {
-    return $value instanceof self ? $this->name <=> $value->name : 1;
+    return $value instanceof static ? $this->name <=> $value->name : 1;
   }
 
   /** Checks for equality with another value */
   public function equals($value): bool {
-    return $value instanceof self && $this->name === $value->name;
+    return $value instanceof static && $this->name === $value->name;
   }
 
   /**
@@ -116,20 +116,64 @@ class Type implements Value {
    * @return lang.Type[] list
    */
   public static function forNames($names) {
-    $types= [];
-    for ($args= $names.',', $o= 0, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
-      if (',' === $args{$i} && 0 === $brackets) {
-        $types[]= self::forName(ltrim(substr($args, $o, $i- $o)));
-        $o= $i+ 1;
-      } else if ('<' === $args{$i}) {
-        $brackets++;
-      } else if ('>' === $args{$i}) {
-        $brackets--;
+    $r= [];
+    foreach (self::split($names, ',') as $name) {
+      $r[]= self::forName($name);
+    }
+    return $r;
+  }
+
+  /**
+   * Returns a substring between matching braces
+   *
+   * @param  string $string
+   * @param  string $char
+   * @param  int $offset
+   * @return string
+   */
+  private static function matching(&$string, $chars, $offset= 0) {
+    for ($b= 1, $o= $offset, $s= 1, $l= strlen($string); $b && (($o+= $s) < $l); $o++, $s= strcspn($string, $chars, $o)) {
+      if ($chars{0} === $string{$o}) $b++; else if ($chars{1} === $string{$o}) $b--;
+    }
+
+    if (0 === $b) {
+      $type= substr($string, $offset + 1, $o - $offset - 2);
+      $string= substr($string, $o);
+      return $type;
+    }
+
+    throw new IllegalArgumentException('Unmatched '.$chars);
+  }
+
+  /**
+   * Splits a string including handling of braces
+   *
+   * @param  string $string
+   * @param  string $char
+   * @return iterable
+   */
+  private static function split($string, $char) {
+    for ($i= 0, $l= strlen($string); $i < $l; $i++) {
+      if ('(' === $string{$i}) {
+        yield self::matching($string, '()', $i);
+        $i= 0;
+        $l= strlen($string);
+      } else {
+        $s= strcspn($string, $char.'<>', $i);
+        $t= trim(substr($string, $i, $s));
+        $n= $i + $s;
+        if ($n < $l && '<' === $string{$n}) {
+          yield $t.'<'.self::matching($string, '<>', $n).'>';
+          $i= 0;
+          $l= strlen($string);
+        } else {
+          yield trim(substr($string, $i, $s));
+          $i+= $s;
+        }
       }
     }
-    return $types;
   }
-  
+
   /**
    * Gets a type for a given name
    *
@@ -161,20 +205,12 @@ class Type implements Value {
       'HH\bool'   => 'bool'
     ];
 
-    if (0 === strlen($type)) {
+    $l= strlen($type);
+    if (0 === $l) {
       throw new IllegalStateException('Empty type');
     }
     
-    // Map well-known primitives, var and void, handle rest syntactically:
-    // * T[] is an array
-    // * [:T] is a map 
-    // * T* is a vararg
-    // * T<K, V> is a generic
-    // * D<K, V> is a generic type definition D with K and V components
-    //   except if any of K, V contains a ?, in which case it's a wild 
-    //   card type.
-    // * T1|T2 is a type union
-    // * Anything else is a qualified or unqualified class name
+    // Map well-known primitives, var, void, union types as well as nullable and soft types
     if (isset($primitives[$type])) {
       return Primitive::forName($primitives[$type]);
     } else if ('var' === $type || 'resource' === $type || 'HH\mixed' === $type) {
@@ -189,37 +225,89 @@ class Type implements Value {
       return self::$CALLABLE;
     } else if ('iterable' === $type) {
       return self::$ITERABLE;
-    } else if (0 === substr_compare($type, 'function(', 0, 9)) {
-      return FunctionType::forName($type);
-    } else if (0 === substr_compare($type, '[]', -2)) {
-      return new ArrayType(self::forName(substr($type, 0, -2)));
-    } else if (0 === substr_compare($type, '[:', 0, 2)) {
-      return new MapType(self::forName(substr($type, 2, -1)));
-    } else if ('?' === $type{0} || '@' === $type{0}) {
-      return self::forName(substr($type, 1));
-    } else if ('(' === $type{0}) {
-      return self::forName(substr($type, 1, -1));
-    } else if (0 === substr_compare($type, '*', -1)) {
-      return new ArrayType(self::forName(substr($type, 0, -1)));
-    } else if (strstr($type, '|')) {
-      return TypeUnion::forName($type);
     } else if ('HH\num' === $type) {
       return new TypeUnion([Primitive::$INT, Primitive::$FLOAT]);
     } else if ('HH\arraykey' === $type) {
       return new TypeUnion([Primitive::$INT, Primitive::$STRING]);
-    } else if (false === ($p= strpos($type, '<'))) {
+    } else if ('?' === $type{0} || '@' === $type{0}) {
+      return self::forName(substr($type, 1));
+    }
+
+    // * function(T): R is a function
+    // * [:T] is a map 
+    // * T<K, V> is a generic type definition D with K and V components
+    //   except if any of K, V contains a ?, in which case it's a wild 
+    //   card type.
+    // * Anything else is a qualified or unqualified class name
+    $p= strcspn($type, '<|[*(');
+    if ($p >= $l) {
       return XPClass::forName($type);
-    } else if (strstr($type, '?')) {
-      return WildcardType::forName($type);
-    } else {
-      $base= substr($type, 0, $p);
-      $components= self::forNames(substr($type, $p + 1, -1));
-      if ('array' === $base) {
-        return 1 === sizeof($components) ? new ArrayType($components[0]) : new MapType($components[1]);
+    } else if ('(' === $type{0}) {
+      $t= self::forName(self::matching($type, '()', 0));
+    } else if (0 === substr_compare($type, '[:', 0, 2)) {
+      $t= new MapType(self::forName(self::matching($type, '[]', 1)));
+    } else if (0 === substr_compare($type, 'function(', 0, 2)) {
+      $signature= self::matching($type, '()', 8);
+      if ('?' === $signature) {
+        $args= null;
+      } else if ('' === $signature) {
+        $args= [];
       } else {
-        return XPClass::forName($base)->newGenericType($components);
+        $args= self::forNames($signature);
+      }
+      if (false === ($p= strpos($type, ':'))) {
+        $return= null;
+      } else {
+        $return= self::forName(trim(substr($type, $p + 1)));
+        $type= '';
+      }
+      $t= new FunctionType($args, $return);
+    } else if ('<' === $type{$p}) {
+      $base= substr($type, 0, $p);
+      $components= [];
+      $wildcard= false;
+      foreach (self::split(self::matching($type, '<>', $p), ',') as $arg) {
+        if ('?' === $arg) {
+          $components[]= Wildcard::$ANY;
+          $wildcard= true;
+        } else {
+          $t= self::forName($arg);
+          $wildcard= $t instanceof WildcardType;
+          $components[]= $t;
+        }
+      }
+      if ($wildcard) {
+        $t= new WildcardType(XPClass::forName($base), $components);
+      } else if ('array' === $base) {
+        $t= 1 === sizeof($components) ? new ArrayType($components[0]) : new MapType($components[1]);
+      } else {
+        $t= XPClass::forName($base)->newGenericType($components);
+      }
+    } else {
+      $t= self::forName(trim(substr($type, 0, $p)));
+      $type= substr($type, $p);
+    }
+
+    // Suffixes and unions `T[]` is an array, `T*` is a vararg, `A|B|C` is a union
+    while ($type) {
+      if ('*' === $type{0}) {
+        $t= new ArrayType($t);
+        $type= trim(substr($type, 1));
+      } else if ('|' === $type{0}) {
+        $components= [$t];
+        foreach (self::split(substr($type, 1), '|') as $arg) {
+          $components[]= self::forName($arg);
+        }
+        return new TypeUnion($components);
+      } else if (0 === substr_compare($type, '[]', 0, 2)) {
+        $t= new ArrayType($t);
+        $type= trim(substr($type, 2));
+      } else {
+        throw new IllegalArgumentException('Invalid type suffix '.$type);
       }
     }
+
+    return $t;
   }
   
   /** Returns type literal */
