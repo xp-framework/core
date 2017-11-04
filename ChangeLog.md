@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed #186: Type union parsing (@thekid)
+
 ## 9.2.0 / 2017-10-28
 
 ### RFCs
