@@ -21,10 +21,12 @@ use lang\{Runtime, IllegalStateException, IllegalArgumentException, Value};
  *
  * As a rule of thumb: extract it from the container at the last possible location.
  *
+ * @test   xp://net.xp_framework.unittest.util.SodiumSecretTest
  * @test   xp://net.xp_framework.unittest.util.OpenSSLSecretTest
  * @test   xp://net.xp_framework.unittest.util.PlainTextSecretTest
  */
 class Secret implements Value {
+  const BACKING_SODIUM    = 0x01;
   const BACKING_OPENSSL   = 0x02;
   const BACKING_PLAINTEXT = 0x03;
 
@@ -34,7 +36,9 @@ class Secret implements Value {
   private static $decrypt = null;
 
   static function __static() {
-    if (Runtime::getInstance()->extensionAvailable('openssl')) {
+    if (extension_loaded('sodium')) {
+      self::useBacking(self::BACKING_SODIUM);
+    } else if (extension_loaded('openssl')) {
       self::useBacking(self::BACKING_OPENSSL);
     } else {
       self::useBacking(self::BACKING_PLAINTEXT);
@@ -51,8 +55,21 @@ class Secret implements Value {
    */
   public static function useBacking($type) {
     switch ($type) {
+      case self::BACKING_SODIUM: {
+        if (!extension_loaded('sodium')) {
+          throw new IllegalStateException('Backing "sodium" required but extension not available.');
+        }
+        $nonce= random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+        $key= sodium_crypto_secretbox_keygen();
+
+        return self::setBacking(
+          function($value) use ($key, $nonce) { return sodium_crypto_secretbox($value, $nonce, $key); },
+          function($value) use ($key, $nonce) { return sodium_crypto_secretbox_open($value, $nonce, $key); }
+        );
+      }
+
       case self::BACKING_OPENSSL: {
-        if (!Runtime::getInstance()->extensionAvailable('openssl')) {
+        if (!extension_loaded('openssl')) {
           throw new IllegalStateException('Backing "openssl" required but extension not available.');
         }
         $key= md5(uniqid());
