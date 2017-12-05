@@ -3,9 +3,16 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 9.3.0 / 2017-12-05
+
 ### Bugfixes
 
 * Fixed #186: Type union parsing (@thekid)
+
+### Features
+
+* Merged #188: Implement PHP 7.2 sodium extension based encryption
+  (@thekid)
 
 ## 9.2.0 / 2017-10-28
 
