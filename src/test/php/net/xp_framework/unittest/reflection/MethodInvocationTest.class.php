@@ -49,6 +49,12 @@ class MethodInvocationTest extends MethodsTest {
     $fixture->getMethod('fixture')->invoke($fixture->newInstance(), []);
   }
 
+  #[@test, @expect(TargetInvocationException::class), @action(new RuntimeVersion('>=7.0'))]
+  public function exceptions_raised_for_parameter_type_violations() {
+    $fixture= $this->type('{ public function fixture(int $i) { } }');
+    $fixture->getMethod('fixture')->invoke($fixture->newInstance(), ['abc']);
+  }
+
   #[@test, @expect(IllegalArgumentException::class)]
   public function cannot_invoke_instance_method_with_incompatible() {
     $fixture= $this->type('{ public function fixture() { } }');
