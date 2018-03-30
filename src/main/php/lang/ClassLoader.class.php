@@ -211,12 +211,12 @@ final class ClassLoader implements IClassLoader {
    * Define a forward to a given function
    *
    * @param  string $name
-   * @param  php.ReflectionParameter[] $params
+   * @param  php.ReflectionFunction $func
    * @param  string $invoke
    */
-  protected static function defineForward($name, $params, $invoke, $offset= 2) {
+  protected static function defineForward($name, $func, $invoke) {
     $pass= $sig= '';
-    foreach ($params as $param) {
+    foreach ($func->getParameters() as $param) {
       $p= $param->getName();
 
       if ($param->isVariadic()) {
@@ -234,10 +234,15 @@ final class ClassLoader implements IClassLoader {
     }
 
     $decl= 'function '.$name.'('.substr($sig, 2).')';
+
+    if ($t= $func->getReturnType()) {
+      $decl.= ': '.$t;
+    }
+
     if (null === $invoke) {
       return $decl.';';
     } else {
-      return $decl.'{'.sprintf($invoke, substr($pass, $offset)).'}';
+      return $decl.'{'.sprintf($invoke, $pass).'}';
     }
   }
 
@@ -274,12 +279,15 @@ final class ClassLoader implements IClassLoader {
         }
 
         if ($member instanceof \Closure) {
-          $bytes.= $memberAnnotations.self::defineForward(
-            $name,
-            (new \ReflectionFunction($member))->getParameters(),
-            $iface ? null : 'return self::$__func["'.$name.'"]->call($this%s);',
-            0
-          );
+          $f= new \ReflectionFunction($member);
+          if ($iface) {
+            $forward= null;
+          } else if ('void' === (string)$f->getReturnType()) {
+            $forward= 'self::$__func["'.$name.'"]->call($this%s);';
+          } else {
+            $forward= 'return self::$__func["'.$name.'"]->call($this%s);';
+          }
+          $bytes.= $memberAnnotations.self::defineForward($name, $f, $forward);
           $iface || $functions[$name]= $member;
         } else {
           $bytes.= $memberAnnotations.'public $'.$name.'= '.var_export($member, true).';';

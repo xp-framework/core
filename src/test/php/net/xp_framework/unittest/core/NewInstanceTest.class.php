@@ -405,12 +405,27 @@ class NewInstanceTest extends \unittest\TestCase {
   }
 
   #[@test, @action(new VerifyThat('processExecutionEnabled'))]
-  public function declaration_with_primitive_typehint() {
+  public function declaration_with_primitive_param_type() {
     $r= $this->runInNewRuntime('
       abstract class Base {
         public abstract function fixture(string $arg);
       }
       $instance= newinstance("Base", [], ["fixture" => function(string $arg) { return $arg; }]);
+      echo $instance->fixture("Hello");
+    ');
+    $this->assertEquals(
+      ['exitcode' => 0, 'output' => 'Hello'],
+      ['exitcode' => $r[0], 'output' => $r[1].$r[2]]
+    );
+  }
+
+  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  public function declaration_with_primitive_return_type() {
+    $r= $this->runInNewRuntime('
+      abstract class Base {
+        public abstract function fixture($arg): string;
+      }
+      $instance= newinstance("Base", [], ["fixture" => function($arg): string { return $arg; }]);
       echo $instance->fixture("Hello");
     ');
     $this->assertEquals(
@@ -466,6 +481,25 @@ class NewInstanceTest extends \unittest\TestCase {
       }
       $instance= newinstance("Base", [], ["fixture" => function(object $arg) { return "Hello"; }]);
       echo $instance->fixture($instance);
+    ');
+    $this->assertEquals(
+      ['exitcode' => 0, 'output' => 'Hello'],
+      ['exitcode' => $r[0], 'output' => $r[1].$r[2]]
+    );
+  }
+
+  #[@test, @action([
+  #  new VerifyThat('processExecutionEnabled'),
+  #  new RuntimeVersion('>=7.1')
+  #])]
+  public function declaration_with_void_return() {
+    $r= $this->runInNewRuntime('
+      abstract class Base {
+        public abstract function fixture(): void;
+      }
+      $instance= newinstance("Base", [], ["fixture" => function(): void { }]);
+      $instance->fixture($instance);
+      echo "Hello";
     ');
     $this->assertEquals(
       ['exitcode' => 0, 'output' => 'Hello'],
