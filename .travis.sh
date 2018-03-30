@@ -10,7 +10,7 @@ case $1 in
     echo
 
     case "$TRAVIS_PHP_VERSION" in
-      jit*)
+      nightly*)
         wd=$(pwd)
         git clone https://github.com/mente/php-docker-jit.git
         docker build -t php-jit php-docker-jit/
