@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 9.3.1 / 2018-03-30
+
+### Bugfixes
+
+* Fixed #191: Void return type breaks newinstance() (@thekid)
+* Fixed #190: Iterable type hint breaks newinstance() (@thekid)
+* Fixed #189: Scalar type hints break newinstance() (@thekid)
+
 ## 9.3.0 / 2017-12-05
 
 ### Bugfixes
