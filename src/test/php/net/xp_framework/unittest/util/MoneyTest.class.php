@@ -3,7 +3,9 @@
 use util\Money;
 use util\Currency;
 use lang\IllegalArgumentException;
+use unittest\actions\ExtensionAvailable;
 
+#[@action(new ExtensionAvailable('bcmath'))]
 class MoneyTest extends \unittest\TestCase {
 
   #[@test]
