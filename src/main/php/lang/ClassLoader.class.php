@@ -220,17 +220,15 @@ final class ClassLoader implements IClassLoader {
       $p= $param->getName();
 
       if ($param->isVariadic()) {
-        $sig.= ', ...$'.$p;
+        $sig.= ', '.$param->getType().'... $'.$p;
         $pass.= ', ...$'.$p;
-        continue;
       } else {
         $sig.= ', '.$param->getType().' $'.$p;
+        if ($param->isOptional()) {
+          $sig.= '= '.var_export($param->getDefaultValue(), true);
+        }
+        $pass.= ', $'.$p;
       }
-
-      if ($param->isOptional()) {
-        $sig.= '= '.var_export($param->getDefaultValue(), true);
-      }
-      $pass.= ', $'.$p;
     }
 
     $decl= 'function '.$name.'('.substr($sig, 2).')';
