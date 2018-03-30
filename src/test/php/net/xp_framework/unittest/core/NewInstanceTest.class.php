@@ -470,7 +470,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test, @action([
   #  new VerifyThat('processExecutionEnabled'),
-  #  new VerifyThat(!defined('HHVM_VERSION')),
+  #  new VerifyThat(function() { return !defined('HHVM_VERSION'); }),
   #  new RuntimeVersion('>=7.1')
   #])]
   public function declaration_with_iterable_typehint() {
@@ -507,7 +507,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test, @action([
   #  new VerifyThat('processExecutionEnabled'),
-  #  new VerifyThat(!defined('HHVM_VERSION')),
+  #  new VerifyThat(function() { return !defined('HHVM_VERSION'); }),
   #  new RuntimeVersion('>=7.1')
   #])]
   public function declaration_with_void_return() {
