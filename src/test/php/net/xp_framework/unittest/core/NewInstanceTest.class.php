@@ -390,7 +390,23 @@ class NewInstanceTest extends \unittest\TestCase {
   }
 
   #[@test, @action(new VerifyThat('processExecutionEnabled'))]
-  public function declaration_with_self_typehint() {
+  public function declaration_with_self_return_type() {
+    $r= $this->runInNewRuntime('
+      abstract class Base {
+        public abstract function fixture(): self;
+        public function greeting() { return "Hello"; }
+      }
+      $instance= newinstance("Base", [], ["fixture" => function(): \Base { return new self(); }]);
+      echo $instance->fixture()->greeting();
+    ');
+    $this->assertEquals(
+      ['exitcode' => 0, 'output' => 'Hello'],
+      ['exitcode' => $r[0], 'output' => $r[1].$r[2]]
+    );
+  }
+
+  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  public function declaration_with_self_param_type() {
     $r= $this->runInNewRuntime('
       abstract class Base {
         public abstract function fixture(self $args);
