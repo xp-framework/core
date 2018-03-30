@@ -220,7 +220,7 @@ final class ClassLoader implements IClassLoader {
       $p= $param->getName();
 
       if ($param->isVariadic()) {
-        $sig.= defined('HHVM_VERSION') ? ',... $'.$p  : ', '.$param->getType().'... $'.$p;
+        $sig.= defined('HHVM_VERSION') ? ', ... $'.$p  : ', '.$param->getType().'... $'.$p;
         $pass.= ', ...$'.$p;
       } else {
         $sig.= ', '.$param->getType().' $'.$p;
