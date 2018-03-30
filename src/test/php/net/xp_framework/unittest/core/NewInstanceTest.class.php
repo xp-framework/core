@@ -436,4 +436,22 @@ class NewInstanceTest extends \unittest\TestCase {
       ['exitcode' => $r[0], 'output' => $r[1].$r[2]]
     );
   }
+
+  #[@test, @action([
+  #  new VerifyThat('processExecutionEnabled'),
+  #  new RuntimeVersion('>=7.1')
+  #])]
+  public function declaration_with_iterable_typehint() {
+    $r= $this->runInNewRuntime('
+      abstract class Base {
+        public abstract function fixture(iterable $args);
+      }
+      $instance= newinstance("Base", [], ["fixture" => function(iterable $arg) { return "Hello"; }]);
+      echo $instance->fixture([1, 2, 3]);
+    ');
+    $this->assertEquals(
+      ['exitcode' => 0, 'output' => 'Hello'],
+      ['exitcode' => $r[0], 'output' => $r[1].$r[2]]
+    );
+  }
 }
