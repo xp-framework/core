@@ -218,19 +218,15 @@ final class ClassLoader implements IClassLoader {
     $pass= $sig= '';
     foreach ($params as $param) {
       $p= $param->getName();
-      if ($param->isArray()) {
-        $sig.= ', array $'.$p;
-      } else if ($param->isCallable()) {
-        $sig.= ', callable $'.$p;
-      } else if (null !== ($restriction= $param->getClass())) {
-        $sig.= ', \\'.$restriction->getName().' $'.$p;
-      } else if ($param->isVariadic()) {
+
+      if ($param->isVariadic()) {
         $sig.= ', ...$'.$p;
         $pass.= ', ...$'.$p;
         continue;
       } else {
-        $sig.= ', $'.$p;
+        $sig.= ', '.$param->getType().' $'.$p;
       }
+
       if ($param->isOptional()) {
         $sig.= '= '.var_export($param->getDefaultValue(), true);
       }

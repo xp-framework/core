@@ -318,7 +318,7 @@ class NewInstanceTest extends \unittest\TestCase {
   public function anonymousClassWithConstructor() {
     newinstance(Runnable::class, ['arg1'], '{
       public function __construct($arg) {
-        if ($arg != "arg1") {
+        if ($arg !== "arg1") {
           throw new \\unittest\\AssertionFailedError("equals", $arg, "arg1");
         }
       }
@@ -397,6 +397,39 @@ class NewInstanceTest extends \unittest\TestCase {
       }
       $instance= newinstance("Base", [], ["fixture" => function(\Base $args) { return "Hello"; }]);
       echo $instance->fixture($instance);
+    ');
+    $this->assertEquals(
+      ['exitcode' => 0, 'output' => 'Hello'],
+      ['exitcode' => $r[0], 'output' => $r[1].$r[2]]
+    );
+  }
+
+  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  public function declaration_with_primitive_typehint() {
+    $r= $this->runInNewRuntime('
+      abstract class Base {
+        public abstract function fixture(string $arg);
+      }
+      $instance= newinstance("Base", [], ["fixture" => function(string $arg) { return $arg; }]);
+      echo $instance->fixture("Hello");
+    ');
+    $this->assertEquals(
+      ['exitcode' => 0, 'output' => 'Hello'],
+      ['exitcode' => $r[0], 'output' => $r[1].$r[2]]
+    );
+  }
+
+  #[@test, @action([
+  #  new VerifyThat('processExecutionEnabled'),
+  #  new RuntimeVersion('>=7.2')
+  #])]
+  public function declaration_with_nullable_typehint() {
+    $r= $this->runInNewRuntime('
+      abstract class Base {
+        public abstract function fixture(string $arg);
+      }
+      $instance= newinstance("Base", [], ["fixture" => function(?string $arg) { return $arg; }]);
+      echo $instance->fixture("Hello");
     ');
     $this->assertEquals(
       ['exitcode' => 0, 'output' => 'Hello'],
