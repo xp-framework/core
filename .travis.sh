@@ -12,11 +12,12 @@ case $1 in
     case "$TRAVIS_PHP_VERSION" in
       nightly*)
         wd=$(pwd)
+        mv xp-run xp-irun
         git clone https://github.com/mente/php-docker-jit.git
         docker build -t php-jit php-docker-jit/
 
         echo "#!/bin/sh" > xp-run
-        echo "docker run --rm -v $wd:/opt/src -w /opt/src php-jit xp-run \$@" >> xp-run
+        echo "docker run --rm -v $wd:/opt/src -w /opt/src php-jit xp-irun \$@" >> xp-run
         chmod 755 xp-run
       ;;
     esac
