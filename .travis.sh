@@ -11,13 +11,14 @@ case $1 in
 
     case "$TRAVIS_PHP_VERSION" in
       nightly*)
+        printf "\033[33;1mReplacing Nightly w/ PHP.JIT\033[0m\n"
         wd=$(pwd)
         mv xp-run xp-irun
         git clone https://github.com/mente/php-docker-jit.git
-        docker build -t php-jit php-docker-jit/
+        docker build -t php:jit php-docker-jit/
 
         echo "#!/bin/sh" > xp-run
-        echo "docker run --rm -v $wd:/opt/src -w /opt/src php-jit xp-irun \$@" >> xp-run
+        echo "docker run --rm -v $wd:/opt/src -w /opt/src php:jit sh /opt/src/xp-irun \$@" >> xp-run
         chmod 755 xp-run
       ;;
     esac
