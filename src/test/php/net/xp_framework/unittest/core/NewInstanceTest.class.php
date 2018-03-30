@@ -186,7 +186,32 @@ class NewInstanceTest extends \unittest\TestCase {
         public function verify() {
           $r= newinstance("lang.Runnable", [1, 2, 3], [
             "elements" => [],
-            "__construct" => function(...$initial) { $this->elements= $initial; },
+            "__construct" => function(... $initial) { $this->elements= $initial; },
+            "run" => function() { }
+          ]);
+          echo "OK: ", implode(", ", $r->elements);
+        }
+      }
+      (new Test())->verify();
+    ');
+    $this->assertEquals(0, $r[0], 'exitcode');
+    $this->assertTrue(
+      (bool)strstr($r[1].$r[2], 'OK: 1, 2, 3'),
+      Objects::stringOf(['out' => $r[1], 'err' => $r[2]])
+    );
+  }
+
+  #[@test, @action([
+  #  new VerifyThat('processExecutionEnabled'),
+  #  new VerifyThat(function() { return !defined('HHVM_VERSION'); })
+  #])]
+  public function typed_variadic_argument_passing() {
+    $r= $this->runInNewRuntime('
+      class Test {
+        public function verify() {
+          $r= newinstance("lang.Runnable", [1, 2, 3], [
+            "elements" => [],
+            "__construct" => function(int... $initial) { $this->elements= $initial; },
             "run" => function() { }
           ]);
           echo "OK: ", implode(", ", $r->elements);
@@ -521,6 +546,39 @@ class NewInstanceTest extends \unittest\TestCase {
     ');
     $this->assertEquals(
       ['exitcode' => 0, 'output' => 'Hello'],
+      ['exitcode' => $r[0], 'output' => $r[1].$r[2]]
+    );
+  }
+
+  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  public function declaration_with_variadic() {
+    $r= $this->runInNewRuntime('
+      abstract class Base {
+        public abstract function fixture(... $args);
+      }
+      $instance= newinstance("Base", [], ["fixture" => function(... $args) { return implode(" ", $args); }]);
+      return $instance->fixture("Hello", "World");
+    ');
+    $this->assertEquals(
+      ['exitcode' => 0, 'output' => 'Hello World'],
+      ['exitcode' => $r[0], 'output' => $r[1].$r[2]]
+    );
+  }
+
+  #[@test, @action([
+  #  new VerifyThat('processExecutionEnabled'),
+  #  new VerifyThat(function() { return !defined('HHVM_VERSION'); })
+  #])]
+  public function declaration_with_typed_variadic() {
+    $r= $this->runInNewRuntime('
+      abstract class Base {
+        public abstract function fixture(string... $args);
+      }
+      $instance= newinstance("Base", [], ["fixture" => function(string... $args) { return implode(" ", $args); }]);
+      return $instance->fixture("Hello", "World");
+    ');
+    $this->assertEquals(
+      ['exitcode' => 0, 'output' => 'Hello World'],
       ['exitcode' => $r[0], 'output' => $r[1].$r[2]]
     );
   }
