@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed `newinstance()` resolving value types for parameter or return
+  types incorrectly inside namespaces
+  (@thekid)
+
 ## 9.3.1 / 2018-03-30
 
 ### Bugfixes

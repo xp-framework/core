@@ -582,4 +582,20 @@ class NewInstanceTest extends \unittest\TestCase {
       ['exitcode' => $r[0], 'output' => $r[1].$r[2]]
     );
   }
+
+  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  public function value_types_fully_qualified() {
+    $r= $this->runInNewRuntime('namespace test;
+      abstract class Base {
+        public abstract function reference(self $self): self;
+        public function toString() { return "Hello World"; }
+      }
+      $instance= newinstance(Base::class, [], ["reference" => function(Base $self): Base { return $self; }]);
+      return $instance->reference($instance)->toString();
+    ');
+    $this->assertEquals(
+      ['exitcode' => 0, 'output' => 'Hello World'],
+      ['exitcode' => $r[0], 'output' => $r[1].$r[2]]
+    );
+  }
 }
