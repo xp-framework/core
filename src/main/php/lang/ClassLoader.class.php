@@ -223,9 +223,9 @@ final class ClassLoader implements IClassLoader {
       if (null === $t) {
         $constraint= '';
       } else if ($t->isBuiltin()) {
-        $constraint= $t->getName();
+        $constraint= (string)$t;
       } else {
-        $constraint= '\\'.$t->getName();
+        $constraint= '\\'.(string)$t;
       }
 
       if ($param->isVariadic()) {
@@ -245,9 +245,9 @@ final class ClassLoader implements IClassLoader {
     if (null === $t) {
       // NOOP
     } else if ($t->isBuiltin()) {
-      $decl.= ':'.$t->getName();
+      $decl.= ':'.(string)$t;
     } else {
-      $decl.= ': \\'.$t->getName();
+      $decl.= ': \\'.(string)$t;
     }
 
     if (null === $invoke) {
