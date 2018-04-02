@@ -7,6 +7,7 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented xp-framework/rfc#329: Deprecate io.sys (@thekid)
 * Implemented xp-framework/rfc#328: IDisposable (@thekid)
 
 ### Features
