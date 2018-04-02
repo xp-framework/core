@@ -7,6 +7,10 @@ XP Framework Core ChangeLog
 
 * Implemented xp-framework/rfc#328: IDisposable (@thekid)
 
+### Features
+
+* Upgraded bundled unittest library to 9.4.1 (@thekid)
+
 ## 9.3.2 / 2018-04-02
 
 ### Bugfixes
