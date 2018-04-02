@@ -79,6 +79,8 @@ define('IPC_MSG_MAXSIZE', 16384);
  * $t[1]->start();
  * var_dump($t[0]->join(), $t[1]->join());
  * ```
+ *
+ * @deprecated See https://github.com/xp-framework/rfc/issues/329
  */
 class IPCQueue {
   public

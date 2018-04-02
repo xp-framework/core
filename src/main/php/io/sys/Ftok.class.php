@@ -19,6 +19,7 @@
  * the same name.
  * </quote>
  * 
+ * @deprecated See https://github.com/xp-framework/rfc/issues/329
  * @ext      sem
  */
 class Ftok {
