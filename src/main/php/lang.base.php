@@ -1,13 +1,5 @@
 <?php
 
-// {{{ trait xp
-trait __xp {
-
-  /** Returns the runtime class of an object */
-  public final function getClass(): \lang\XPClass { return new \lang\XPClass($this); }
-}
-// }}}
-
 // {{{ final class xp
 final class xp {
   const CLASS_FILE_EXT= '.class.php';
