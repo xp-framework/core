@@ -409,6 +409,12 @@ class import {
 }
 // }}}
 
+// {{{ interface IDisposable
+if (!interface_exists(\IDisposable::class, false)) {
+  eval('interface IDisposable { public function __dispose(); }');
+}
+// }}}
+
 // {{{ main
 error_reporting(E_ALL);
 set_error_handler('__error');
