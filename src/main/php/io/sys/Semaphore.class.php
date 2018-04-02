@@ -11,6 +11,7 @@
  *   $s->remove();
  * </code>
  *
+ * @deprecated See https://github.com/xp-framework/rfc/issues/329
  * @ext   sem
  * @see   http://www.cs.cf.ac.uk/Dave/C/node27.html#SECTION002700000000000000000
  * @see   http://www.cs.cf.ac.uk/Dave/C/node26.html#SECTION002600000000000000000

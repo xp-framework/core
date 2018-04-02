@@ -3,6 +3,7 @@
 /**
  * Represent an IPC message
  *
+ * @deprecated See https://github.com/xp-framework/rfc/issues/329
  * @see   http://de3.php.net/manual/en/ref.sem.php
  */
 class IPCMessage {
