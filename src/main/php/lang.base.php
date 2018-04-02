@@ -278,8 +278,6 @@ function newinstance($spec, $args, $def= null) {
   $n= "\xb7".(++$u);
   if (0 === strncmp($spec, 'php.', 4)) {
     $spec= substr($spec, 4);
-  } else if (false === strpos($spec, '.')) {
-    $spec= \lang\XPClass::nameOf($spec);
   }
 
   // Handle generics, PHP types and all others.

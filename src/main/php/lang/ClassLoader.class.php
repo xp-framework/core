@@ -219,11 +219,20 @@ final class ClassLoader implements IClassLoader {
     foreach ($func->getParameters() as $param) {
       $p= $param->getName();
 
+      $t= $param->getType();
+      if (null === $t) {
+        $constraint= '';
+      } else if ($t->isBuiltin()) {
+        $constraint= (string)$t;
+      } else {
+        $constraint= '\\'.(string)$t;
+      }
+
       if ($param->isVariadic()) {
-        $sig.= defined('HHVM_VERSION') ? ', ... $'.$p  : ', '.$param->getType().'... $'.$p;
+        $sig.= defined('HHVM_VERSION') ? ', ... $'.$p  : ', '.$constraint.'... $'.$p;
         $pass.= ', ...$'.$p;
       } else {
-        $sig.= ', '.$param->getType().' $'.$p;
+        $sig.= ', '.$constraint.' $'.$p;
         if ($param->isOptional()) {
           $sig.= '= '.var_export($param->getDefaultValue(), true);
         }
@@ -232,9 +241,13 @@ final class ClassLoader implements IClassLoader {
     }
 
     $decl= 'function '.$name.'('.substr($sig, 2).')';
-
-    if ($t= $func->getReturnType()) {
-      $decl.= ': '.$t;
+    $t= $func->getReturnType();
+    if (null === $t) {
+      // NOOP
+    } else if ($t->isBuiltin()) {
+      $decl.= ':'.(string)$t;
+    } else {
+      $decl.= ': \\'.(string)$t;
     }
 
     if (null === $invoke) {
