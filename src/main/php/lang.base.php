@@ -264,9 +264,12 @@ function with(... $args) {
       return $block(...$args);
     } finally {
       foreach ($args as $arg) {
-        if (!($arg instanceof \lang\Closeable)) continue;
         try {
-          $arg->close();
+          if ($arg instanceof \lang\Closeable) {
+            $arg->close();
+          } else if ($arg instanceof \IDisposable) {
+            $arg->__dispose();
+          }
         } catch (\Throwable $ignored) {
           // ...
         }
