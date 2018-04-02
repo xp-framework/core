@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### RFCs
+
+* Implemented xp-framework/rfc#328: IDisposable (@thekid)
+
 ## 9.3.2 / 2018-04-02
 
 ### Bugfixes

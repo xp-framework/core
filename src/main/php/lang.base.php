@@ -256,9 +256,12 @@ function with(... $args) {
       return $block(...$args);
     } finally {
       foreach ($args as $arg) {
-        if (!($arg instanceof \lang\Closeable)) continue;
         try {
-          $arg->close();
+          if ($arg instanceof \lang\Closeable) {
+            $arg->close();
+          } else if ($arg instanceof \IDisposable) {
+            $arg->__dispose();
+          }
         } catch (\Throwable $ignored) {
           // ...
         }
@@ -396,6 +399,12 @@ class import {
       $class::__import($scope);
     };
   }
+}
+// }}}
+
+// {{{ interface IDisposable
+if (!interface_exists(\IDisposable::class, false)) {
+  eval('interface IDisposable { public function __dispose(); }');
 }
 // }}}
 

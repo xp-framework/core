@@ -4,12 +4,13 @@ use lang\Closeable;
 use lang\ClassLoader;
 use lang\IllegalStateException;
 use net\xp_framework\unittest\Name;
+use unittest\TestCase;
 
 /**
- * Tests with() functionality
+ * Tests `with()` functionality
  */
-class WithTest extends \unittest\TestCase {
-  private static $closes, $raises;
+class WithTest extends TestCase {
+  private static $closes, $raises, $dispose;
 
   #[@beforeClass]
   public static function defineCloseableSubclasses() {
@@ -21,6 +22,10 @@ class WithTest extends \unittest\TestCase {
       private $throwable;
       public function __construct($class) { $this->throwable= $class; }
       public function close() { throw new $this->throwable("Cannot close"); }
+    }');
+    self::$dispose= ClassLoader::defineClass('_WithTest_C2', null, [\IDisposable::class], '{
+      public $disposed= false;
+      public function __dispose() { $this->disposed= true; }
     }');
   }
 
@@ -52,6 +57,15 @@ class WithTest extends \unittest\TestCase {
       // NOOP
     });
     $this->assertTrue($f->closed);
+  }
+
+  #[@test]
+  public function disposable_is_disposed_after_block() {
+    $f= self::$dispose->newInstance();
+    with ($f, function() {
+      // NOOP
+    });
+    $this->assertTrue($f->disposed);
   }
 
   #[@test]
