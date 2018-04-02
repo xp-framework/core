@@ -74,13 +74,6 @@ final class xp {
   }
   // }}}
 
-  // {{{ proto deprecated string stringOf(var arg [, string indent default ''])
-  //     Returns a string representation of the given argument
-  static function stringOf($arg, $indent= '') {
-    return \util\Objects::stringOf($arg, $indent);
-  }
-  // }}}
-
   // {{{ proto void gc([string file default null])
   //     Runs the garbage collector
   static function gc($file= null) {
