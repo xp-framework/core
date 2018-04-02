@@ -1,13 +1,5 @@
 <?php
 
-// {{{ trait xp
-trait __xp {
-
-  /** Returns the runtime class of an object */
-  public final function getClass(): \lang\XPClass { return new \lang\XPClass($this); }
-}
-// }}}
-
 // {{{ final class xp
 final class xp {
   const CLASS_FILE_EXT= '.class.php';
@@ -296,8 +288,6 @@ function newinstance($spec, $args, $def= null) {
   $n= "\xb7".(++$u);
   if (0 === strncmp($spec, 'php.', 4)) {
     $spec= substr($spec, 4);
-  } else if (false === strpos($spec, '.')) {
-    $spec= \lang\XPClass::nameOf($spec);
   }
 
   // Handle generics, PHP types and all others.

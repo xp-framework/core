@@ -7,6 +7,14 @@ XP Framework Core ChangeLog
 
 * Implemented xp-framework/rfc#328: IDisposable (@thekid)
 
+## 9.3.2 / 2018-04-02
+
+### Bugfixes
+
+* Fixed `newinstance()` resolving value types for parameter or return
+  types incorrectly inside namespaces
+  (@thekid)
+
 ## 9.3.1 / 2018-03-30
 
 ### Bugfixes
