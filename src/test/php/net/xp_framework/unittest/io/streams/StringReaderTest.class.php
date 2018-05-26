@@ -111,6 +111,7 @@ class StringReaderTest extends TestCase {
 
   #[@test, @values([
   #  [['Test', "\n"], ['Test', []]],
+  #  [['Test', "\r\n"], ['Test', []]],
   #  [['Test', "\n", 'Rest'], ['Test', ['Rest']]],
   #  [['Test', '1', '2', '3', "\n", 'Rest'], ['Test123', ['Rest']]]
   #])]
