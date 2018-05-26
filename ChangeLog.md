@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 9.4.1 / 2018-05-26
+
 ### Bugfixes
 
 * Fixed `StringReader::readLine()` calling underlying stream's `read()`
