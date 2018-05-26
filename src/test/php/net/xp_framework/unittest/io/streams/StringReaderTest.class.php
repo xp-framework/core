@@ -8,27 +8,30 @@ use lang\IllegalStateException;
 
 class StringReaderTest extends TestCase {
 
-  #[@test]
-  public function readLine() {
+  #[@test, @values(["\n", "\r", "\r\n"])]
+  public function readLine($newLine) {
     $line1= 'This is a test';
     $line2= 'Onother line!';
     
-    $stream= new StringReader(new MemoryInputStream($line1."\n".$line2));
+    $stream= new StringReader(new MemoryInputStream($line1.$newLine.$line2));
 
     $this->assertEquals($line1, $stream->readLine());
     $this->assertEquals($line2, $stream->readLine());
   }
   
-  #[@test]
-  public function readLineWithEmptyLine() {
-    $stream= new StringReader(new MemoryInputStream("\n"));
-
+  #[@test, @values(["\n", "\r", "\r\n"])]
+  public function readLineWithEmptyLine($newLine) {
+    $stream= new StringReader(new MemoryInputStream($newLine));
     $this->assertEquals('', $stream->readLine());
   }
 
-  #[@test]
-  public function readLineWithEmptyLines() {
-    $stream= new StringReader(new MemoryInputStream("\n\n\nHello\n\n"));
+  #[@test, @values([
+  #  "\n\n\nHello\n\n",
+  #  "\r\r\rHello\r\r",
+  #  "\r\n\r\n\r\nHello\r\n\r\n",
+  #])]
+  public function readLineWithEmptyLines($input) {
+    $stream= new StringReader(new MemoryInputStream($input));
 
     $this->assertEquals('', $stream->readLine());
     $this->assertEquals('', $stream->readLine());
@@ -111,6 +114,7 @@ class StringReaderTest extends TestCase {
 
   #[@test, @values([
   #  [['Test', "\n"], ['Test', []]],
+  #  [['Test', "\r"], ['Test', []]],
   #  [['Test', "\r\n"], ['Test', []]],
   #  [['Test', "\n", 'Rest'], ['Test', ['Rest']]],
   #  [['Test', '1', '2', '3', "\n", 'Rest'], ['Test123', ['Rest']]]
