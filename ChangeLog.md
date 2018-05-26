@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed `StringReader::readLine()` calling underlying stream's `read()`
+  method too often, resulting in hanging when reading from the console.
+  (@thekid)
+
 ## 9.4.0 / 2018-04-02
 
 ### RFCs

@@ -50,7 +50,7 @@ class StringReader extends Reader {
     do {
       $p= strcspn($this->buf, "\r\n");
       $l= strlen($this->buf);
-      if ($p >= $l - 1) {
+      if ($p >= $l) {
         $chunk= $this->stream->read();
         if ('' === $chunk) {
           if ('' === $this->buf) return null;

@@ -2,7 +2,9 @@
 
 use unittest\TestCase;
 use io\streams\StringReader;
+use io\streams\InputStream;
 use io\streams\MemoryInputStream;
+use lang\IllegalStateException;
 
 class StringReaderTest extends TestCase {
 
@@ -87,5 +89,41 @@ class StringReaderTest extends TestCase {
     
     $this->assertEquals('Hello World', $stream->readLine());
     $this->assertEquals(null, $stream->read());
+  }
+
+  #[@test]
+  public function readLine_calls_read_once_when_read_returns_line() {
+    $stream= new StringReader(newinstance(InputStream::class, [], [
+      'called'    => 0,
+      'available' => function() { return 1; },
+      'close'     => function() { return true; },
+      'read'      => function($limit= 8192) {
+        if ($this->called > 0) {
+          throw new IllegalStateException('Should only call read() once');
+        }
+        $this->called++;
+        return "Test\n";
+      }
+    ]));
+
+    $this->assertEquals('Test', $stream->readLine());
+  }
+
+  #[@test, @values([
+  #  [['Test', "\n"], ['Test', []]],
+  #  [['Test', "\n", 'Rest'], ['Test', ['Rest']]],
+  #  [['Test', '1', '2', '3', "\n", 'Rest'], ['Test123', ['Rest']]]
+  #])]
+  public function readLine_continues_reading_until_newline($chunks, $expected) {
+    $input= newinstance(InputStream::class, [$chunks], [
+      'chunks'      => [],
+      '__construct' => function($chunks) { $this->chunks= $chunks; },
+      'available'   => function() { return sizeof($this->chunks); },
+      'close'       => function() { $this->chunks= []; },
+      'read'        => function($limit= 8192) { return array_shift($this->chunks); }
+    ]);
+
+    $reader= new StringReader($input);
+    $this->assertEquals($expected, [$reader->readLine(), $input->chunks]);
   }
 }
