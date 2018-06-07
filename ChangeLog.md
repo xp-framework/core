@@ -7,6 +7,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged pull request #199: Add DateUtil::add() and DateUtil::subtract()
+  (@thekid)
 * Changed `io.File` to allow URIs created with `io.streams.Streams`
   (@thekid)
 * Added `io.streams.MemoryInputStream::size()` accessor (@thekid)
