@@ -166,12 +166,12 @@ class File implements Channel, Value {
    * @throws  io.IOException in case of an error
    */
   public function size(): int {
-    if (false === ($size= filesize($this->uri))) {
+    if (false === ($stat= $this->_fd ? fstat($this->_fd) : stat($this->uri))) {
       $e= new IOException('Cannot get filesize for '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
     }
-    return $size;
+    return $stat[7];
   }
   
   /**

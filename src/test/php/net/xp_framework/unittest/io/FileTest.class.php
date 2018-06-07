@@ -3,6 +3,8 @@
 use io\Folder;
 use io\File;
 use io\Path;
+use io\streams\Streams;
+use io\streams\MemoryInputStream;
 use lang\Runtime;
 use lang\IllegalArgumentException;
 
@@ -226,5 +228,18 @@ class FileTest extends \unittest\TestCase {
     $fn= $this->fileKnownToExist();
     $f= new File(new Path($fn));
     $this->assertEquals($fn, $f->getURI());
+  }
+
+  #[@test]
+  public function filesize() {
+    $fn= $this->fileKnownToExist();
+    $f= new File($fn);
+    $this->assertEquals(filesize($fn), $f->size());
+  }
+
+  #[@test]
+  public function filesize_of_fd() {
+    $f= new File(Streams::readableFd(new MemoryInputStream('Test')));
+    $this->assertEquals(4, $f->size());
   }
 }

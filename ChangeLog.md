@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 9.4.2 / 2018-06.08
+
+### Bugfixes
+
+* Fixed `io.File::size()` to work when the instance has been created with
+  a file descriptor, e.g. from `Streams::readableFd()`.
+  (@thekid)
+
 ## 9.4.1 / 2018-05-27
 
 ### Bugfixes
