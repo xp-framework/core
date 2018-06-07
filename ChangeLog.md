@@ -5,6 +5,12 @@ XP Framework Core ChangeLog
 
 ## 9.4.2 / 2018-06.08
 
+### Features
+
+* Changed `io.File` to allow URIs created with `io.streams.Streams`
+  (@thekid)
+* Added `io.streams.MemoryInputStream::size()` accessor (@thekid)
+
 ### Bugfixes
 
 * Fixed `io.File::size()` to work when the instance has been created with

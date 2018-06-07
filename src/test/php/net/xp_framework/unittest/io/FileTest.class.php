@@ -5,6 +5,7 @@ use io\File;
 use io\Path;
 use io\streams\Streams;
 use io\streams\MemoryInputStream;
+use io\streams\MemoryOutputStream;
 use lang\Runtime;
 use lang\IllegalArgumentException;
 
@@ -214,6 +215,28 @@ class FileTest extends \unittest\TestCase {
   #[@test]
   public function resSchemeExtension() {
     $this->assertEquals('txt', (new File('res://test.txt'))->getExtension());
+  }
+
+  #[@test]
+  public function readable_stream() {
+    $in= new MemoryInputStream('Test');
+    $f= new File(Streams::readableUri($in));
+    $f->open(File::READ);
+    $bytes= $f->read($in->size());
+    $f->close();
+
+    $this->assertEquals('Test', $bytes);
+  }
+
+  #[@test]
+  public function writeable_stream() {
+    $out= new MemoryOutputStream();
+    $f= new File(Streams::writeableUri($out));
+    $f->open(File::READ);
+    $f->write('Test');
+    $f->close();
+
+    $this->assertEquals('Test', $out->getBytes());
   }
 
   #[@test]

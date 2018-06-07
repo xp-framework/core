@@ -68,9 +68,14 @@ class MemoryInputStream implements InputStream, Seekable {
    *
    * @return  int
    */
-  public function tell() {
-    return $this->pos;
-  }
+  public function tell() { return $this->pos; }
+
+  /**
+   * Return size
+   *
+   * @return  int
+   */
+  public function size() { return strlen($this->bytes); }
 
   /** @return string */
   public function toString() {

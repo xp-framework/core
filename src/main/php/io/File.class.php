@@ -98,14 +98,14 @@ class File implements Channel, Value {
    * @throws  lang.IllegalArgumentException in case an invalid file name was given
    */
   public function setURI($uri) {
-    static $allowed= ['xar://*', 'php://stderr', 'php://stdout', 'php://stdin', 'res://*'];
+    static $allowed= ['xar://*', 'php://stderr', 'php://stdout', 'php://stdin', 'res://*', 'iostrr://*', 'iostrw://*'];
 
     // Check validity, handle scheme and non-scheme URIs
     $uri= (string)$uri;
     if (0 === strlen($uri) || false !== strpos($uri, "\0")) {
       throw new IllegalArgumentException('Invalid filename "'.addcslashes($uri, "\0..\17").'"');
     } else if (false !== ($s= strpos($uri, '://'))) {
-      if (!in_array($uri, $allowed) && !in_array(substr($uri, 0, 6).'*', $allowed)) {
+      if (!in_array($uri, $allowed) && !in_array(substr($uri, 0, $s + 3).'*', $allowed)) {
         throw new IllegalArgumentException('Invalid scheme URI "'.$uri.'"');
       }
       $this->uri= $uri;
