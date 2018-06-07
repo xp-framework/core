@@ -3,7 +3,7 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
-## 9.4.2 / 2018-06.08
+## 9.5.0 / 2018-06-08
 
 ### Features
 
