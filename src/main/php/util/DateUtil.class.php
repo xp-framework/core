@@ -78,11 +78,19 @@ abstract class DateUtil {
    * @return  util.Date
    */
   public static function add(Date $date, TimeSpan $span) {
-    $hdl= $date->getHandle();
-    date_time_set($hdl, $date->getHours(), $date->getMinutes(), $date->getSeconds() + $span->getSeconds());
-    return new Date($hdl);
+    return new Date($date->getTime() + $span->getSeconds());
   }
 
+  /**
+   * Subtracts a time span from a date
+   *
+   * @param   util.Date $date
+   * @param   util.TimeSpan $span
+   * @return  util.Date
+   */
+  public static function subtract(Date $date, TimeSpan $span) {
+    return new Date($date->getTime() - $span->getSeconds());
+  }
 
   /**
    * Adds a positive or negative amount of months

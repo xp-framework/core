@@ -29,6 +29,14 @@ class DateUtilTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function subtract() {
+    $this->assertEquals(
+      Date::create(2000, 1, 1, 11, 15, 11, new TimeZone('Europe/Berlin')),
+      DateUtil::subtract($this->fixture, TimeSpan::hours(1))
+    );
+  }
+
+  #[@test]
   public function addSeconds() {
     $this->assertEquals(
       Date::create(2000, 1, 1, 12, 15, 30, new TimeZone('Europe/Berlin')),
