@@ -52,7 +52,11 @@ abstract class DateUtil {
    * @return  util.Date
    */
   public static function getBeginningOfWeek(Date $date) {
-    return DateUtil::addDays(DateUtil::getMidnight($date), -$date->getDayOfWeek());
+    $hdl= $date->getHandle();
+    $dow= date_format($hdl, 'w');
+    date_date_set($hdl, $date->getYear(), $date->getMonth(), $date->getDay() - $dow);
+    date_time_set($hdl, 0, 0, 0);
+    return new Date($hdl);
   }
 
   /**
@@ -63,11 +67,10 @@ abstract class DateUtil {
    */
   public static function getEndOfWeek(Date $date) {
     $hdl= $date->getHandle();
-    date_date_set($hdl, $date->getYear(), $date->getMonth(), $date->getDay());
+    $dow= date_format($hdl, 'w');
+    date_date_set($hdl, $date->getYear(), $date->getMonth(), $date->getDay() + 6 - $dow);
     date_time_set($hdl, 23, 59, 59);
-
-    $date= new Date($hdl);
-    return DateUtil::addDays($date, 6- $date->getDayOfWeek());
+    return new Date($hdl);
   }
 
   /**
@@ -113,7 +116,9 @@ abstract class DateUtil {
    * @return  util.Date
    */
   public static function addWeeks(Date $date, $count= 1) {
-    return DateUtil::addDays($date, $count * 7);
+    $hdl= $date->getHandle();
+    date_date_set($hdl, $date->getYear(), $date->getMonth(), $date->getDay() + $count * 7);
+    return new Date($hdl);
   }
   
   /**
@@ -137,9 +142,7 @@ abstract class DateUtil {
    * @return  util.Date
    */
   public static function addHours(Date $date, $count= 1) {
-    $hdl= $date->getHandle();
-    date_time_set($hdl, $date->getHours() + $count, $date->getMinutes(), $date->getSeconds());
-    return new Date($hdl);
+    return new Date($date->getTime() + $count * 3600);
   }
   
   /**
@@ -150,9 +153,7 @@ abstract class DateUtil {
    * @return  util.Date
    */
   public static function addMinutes(Date $date, $count= 1) {
-    $hdl= $date->getHandle();
-    date_time_set($hdl, $date->getHours(), $date->getMinutes() + $count, $date->getSeconds());
-    return new Date($hdl);
+    return new Date($date->getTime() + $count * 60);
   }
 
   /**
@@ -163,9 +164,7 @@ abstract class DateUtil {
    * @return  util.Date
    */
   public static function addSeconds(Date $date, $count= 1) {
-    $hdl= $date->getHandle();
-    date_time_set($hdl, $date->getHours(), $date->getMinutes(), $date->getSeconds() + $count);
-    return new Date($hdl);
+    return new Date($date->getTime() + $count);
   }
   
   /**
