@@ -2,6 +2,7 @@
  
 use util\Date;
 use util\DateUtil;
+use util\TimeSpan;
 use util\TimeZone;
 
 /**
@@ -17,6 +18,14 @@ class DateUtilTest extends \unittest\TestCase {
    */
   public function setUp() {
     $this->fixture= Date::create(2000, 1, 1, 12, 15, 11, new TimeZone('Europe/Berlin'));
+  }
+
+  #[@test]
+  public function add() {
+    $this->assertEquals(
+      Date::create(2000, 1, 1, 13, 15, 11, new TimeZone('Europe/Berlin')),
+      DateUtil::add($this->fixture, TimeSpan::hours(1))
+    );
   }
 
   #[@test]
