@@ -394,6 +394,7 @@ class PathTest extends \unittest\TestCase {
   #  ['/var', '/var', ''], ['/usr/local', '/usr/bin', '../local'],
   #  ['C:/Windows', 'C:/', 'Windows'], ['C:\Windows', 'C:', 'Windows'],
   #  ['c:/Windows', 'C:/', 'Windows'], ['C:\Windows', 'c:', 'Windows'],
+  #  ['/home/seq/src/main/php/Test.php', '/home/compiler', '../seq/src/main/php/Test.php']
   #])]
   public function relative_to_absolute($a, $b, $result) {
     $this->assertEquals($result, (new Path($a))->relativeTo($b)->toString('/'));
