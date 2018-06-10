@@ -301,11 +301,51 @@ class PathTest extends \unittest\TestCase {
   #  ['./a', 'a'], ['././a', 'a'],
   #  ['a/./b', 'a/b'], ['a/././b', 'a/b'],
   #  ['a/../b', 'b'], ['a/../b/../c', 'c'],
-  #  ['a/..', ''], ['a/b/../..', ''],
-  #  ['..', '..'], ['../..', '../..'], ['../../a', '../../a'],
-  #  ['./..', '..'], ['./../..', '../..'], ['a/../..', '..']
+  #  ['a/..', '.'], ['a/b/../..', '.'],
+  #  ['../../a', '../../a'],
+  #  ['a/../..', '..'],
   #])]
   public function normalize($input, $result) {
+    $this->assertEquals($result, (new Path($input))->normalize()->toString('/'));
+  }
+
+  #[@test, @values([
+  #  ['.', '.'],
+  #  ['./.', '.'],
+  #  ['././.', '.'],
+  #  ['./..', '..'],
+  #  ['..', '..'],
+  #  ['../.', '..'],
+  #  ['../..', '../..'],
+  #  ['./../..', '../..'],
+  #])]
+  public function normalize_dots($input, $result) {
+    $this->assertEquals($result, (new Path($input))->normalize()->toString('/'));
+  }
+
+  #[@test, @values([
+  #  ['/', '/'],
+  #  ['/var/lib/', '/var/lib'],
+  #  ['//', '/'],
+  #  ['/.', '/'],
+  #  ['/var/lib/dpkg/..', '/var/lib'],
+  #  ['/var/lib/.', '/var/lib'],
+  #  ['C:', 'C:/'], ['C:/', 'C:/'], ['c:/', 'C:/'],
+  #  ['C:/tools', 'C:/tools'],
+  #  ['C://', 'C:/'],
+  #  ['C:/.', 'C:/'],
+  #  ['C:/tools/..', 'C:/'],
+  #  ['C:/tools/.', 'C:/tools'],
+  #])]
+  public function normalize_absolute($input, $result) {
+    $this->assertEquals($result, (new Path($input))->normalize()->toString('/'));
+  }
+
+  #[@test, @values([
+  #  ['/..', '/'], ['/../..', '/'],
+  #  ['C:/..', 'C:/'], ['C:/../..', 'C:/'],
+  #])]
+  public function normalize_dotdot_below_root($input, $result) {
     $this->assertEquals($result, (new Path($input))->normalize()->toString('/'));
   }
 
@@ -344,12 +384,18 @@ class PathTest extends \unittest\TestCase {
   #  ['xp/core', 'xp/sequence', '../core'],
   #  ['xp/core', 'stubbles/core', '../../xp/core'],
   #  ['src', 'src/test/php', '../..'], ['src/main', 'src/main/php', '..'],
+  #])]
+  public function relative_to($a, $b, $result) {
+    $this->assertEquals($result, (new Path($a))->relativeTo($b)->toString('/'));
+  }
+
+  #[@test, @values([
   #  ['/var', '/', 'var'],
   #  ['/var', '/var', ''], ['/usr/local', '/usr/bin', '../local'],
   #  ['C:/Windows', 'C:/', 'Windows'], ['C:\Windows', 'C:', 'Windows'],
-  #  ['c:/Windows', 'C:/', 'Windows'], ['C:\Windows', 'c:', 'Windows']
+  #  ['c:/Windows', 'C:/', 'Windows'], ['C:\Windows', 'c:', 'Windows'],
   #])]
-  public function relative_to($a, $b, $result) {
+  public function relative_to_absolute($a, $b, $result) {
     $this->assertEquals($result, (new Path($a))->relativeTo($b)->toString('/'));
   }
 
