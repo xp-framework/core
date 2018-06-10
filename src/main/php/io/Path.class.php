@@ -42,26 +42,22 @@ class Path implements Value {
   /**
    * Creates a new instance with a variable number of arguments
    *
-   * @param  var $base Either a string, a Path, a File, Folder or IOElement
-   * @param  var... $args Further components to be concatenated, Paths or strings.
+   * @param  string|self|io.File|io.Folder|io.collections.IOElement
+   * @param  (string|io.Path)... $args Further components to be concatenated
    */
   public function __construct($base, ... $args) {
-    if (is_array($base)) {
-      $this->path= self::pathFor($base);
-    } else {
-      array_unshift($args, $base);
-      $this->path= self::pathFor($args);
-    }
+    null === $base || array_unshift($args, $base);
+    $this->path= self::pathFor($args);
   }
 
   /**
    * Creates a new instance from an array of objects
    *
-   * @param  var[] $args
+   * @param  (string|io.Path)[] $args
    * @return self
    */
   public static function compose(array $args): self {
-    return new self($args);
+    return new self(null, ...$args);
   }
 
   /**
@@ -294,7 +290,7 @@ class Path implements Value {
    * $r= (new Path('/usr/local'))->resolve('/usr');   // "../.."
    * ```
    *
-   * @param  var $other Either a string or a path
+   * @param  string|self|io.File|io.Folder|io.collections.IOElement $arg
    * @return self
    */
   public function resolve($arg): self {
@@ -310,7 +306,7 @@ class Path implements Value {
   /**
    * Creates relative path
    *
-   * @param  var $other Either a string or a path
+   * @param  string|self|io.File|io.Folder|io.collections.IOElement $arg
    * @return self
    */
   public function relativeTo($arg): self {
@@ -333,7 +329,7 @@ class Path implements Value {
       $pb= explode(DIRECTORY_SEPARATOR, $b);
       $s= sizeof($pb);
       for ($i= 0; $i < min(sizeof($pa), $s) && $pa[$i] === $pb[$i]; $i++) { }
-      return new self(array_merge(array_fill(0, $s - $i, '..'), array_slice($pa, $i)));
+      return new self(null, ...array_merge(array_fill(0, $s - $i, '..'), array_slice($pa, $i)));
     }
   }
 
