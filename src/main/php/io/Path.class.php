@@ -1,11 +1,19 @@
 <?php namespace io;
 
-use lang\IllegalStateException;
-use lang\IllegalArgumentException;
 use io\collections\IOElement;
+use lang\IllegalArgumentException;
+use lang\IllegalStateException;
+use lang\Value;
 
-class Path implements \lang\Value {
+/**
+ * Represents a file system path
+ *
+ * @see  https://blogs.msdn.microsoft.com/jeremykuhne/2016/04/21/path-normalization/
+ * @test xp://net.xp_framework.unittest.io.PathTest
+ */
+class Path implements Value {
   const EXISTING = true;
+
   protected $path;
 
   /**
@@ -34,26 +42,22 @@ class Path implements \lang\Value {
   /**
    * Creates a new instance with a variable number of arguments
    *
-   * @param  var $base Either a string, a Path, a File, Folder or IOElement
-   * @param  var... $args Further components to be concatenated, Paths or strings.
+   * @param  string|self|io.File|io.Folder|io.collections.IOElement
+   * @param  (string|io.Path)... $args Further components to be concatenated
    */
   public function __construct($base, ... $args) {
-    if (is_array($base)) {
-      $this->path= self::pathFor($base);
-    } else {
-      array_unshift($args, $base);
-      $this->path= self::pathFor($args);
-    }
+    null === $base || array_unshift($args, $base);
+    $this->path= self::pathFor($args);
   }
 
   /**
    * Creates a new instance from an array of objects
    *
-   * @param  var[] $args
+   * @param  (string|io.Path)[] $args
    * @return self
    */
   public static function compose(array $args): self {
-    return new self($args);
+    return new self(null, ...$args);
   }
 
   /**
@@ -114,6 +118,53 @@ class Path implements \lang\Value {
       DIRECTORY_SEPARATOR === $this->path{0} ||
       2 === sscanf($this->path, '%c%[:]', $drive, $colon)
     );
+  }
+
+  /**
+   * Normalization - like realpath, but doesn't check filesystem.
+   *
+   * @param  string $path
+   * @return string
+   */
+  private static function norm0($path) {
+    $l= strlen($path);
+    if (0 === $l) {
+      return '';
+    } else if (DIRECTORY_SEPARATOR === $path{0}) {
+      $components= explode(DIRECTORY_SEPARATOR, substr($path, 1));
+      $base= DIRECTORY_SEPARATOR;
+    } else if ($l > 1 && ':' === $path{1}) {
+      $components= explode(DIRECTORY_SEPARATOR, substr($path, 3));
+      $base= strtoupper($path{0}).':'.DIRECTORY_SEPARATOR;
+    } else {
+      $components= explode(DIRECTORY_SEPARATOR, $path);
+      $base= null;
+    }
+
+    $normalized= [];
+    foreach ($components as $component) {
+      if ('' === $component || '.' === $component) {
+        // Skip
+      } else if ('..' === $component) {
+        $last= array_pop($normalized);
+        if (null === $base) {
+          if (null === $last) {
+            $normalized[]= '..';
+          } else if ('..' === $last) {
+            $normalized[]= '..';
+            $normalized[]= '..';
+          }
+        }
+      } else {
+        $normalized[]= $component;
+      }
+    }
+
+    if ($normalized) {
+      return $base.implode(DIRECTORY_SEPARATOR, $normalized);
+    } else {
+      return $base ?: '.';
+    }
   }
 
   /**
@@ -228,28 +279,7 @@ class Path implements \lang\Value {
    * it only removes redundant elements.
    */
   public function normalize(): self {
-    if (strlen($this->path) > 1 && ':' === $this->path{1}) {
-      $components= explode(DIRECTORY_SEPARATOR, substr($this->path, 3));
-      $normalized= [strtoupper($this->path{0}).':'];
-    } else {
-      $components= explode(DIRECTORY_SEPARATOR, $this->path);
-      $normalized= [];
-    }
-
-    foreach ($components as $component) {
-      if ('' === $component || '.' === $component) {
-        // Skip
-      } else if ('..' === $component && !empty($normalized)) {
-        $last= array_pop($normalized);
-        if ('..' === $last) {
-          $normalized[]= '..';
-          $normalized[]= '..';
-        }
-      } else {
-        $normalized[]= $component;
-      }
-    }
-    return self::compose($normalized);
+    return new self(self::norm0($this->path));
   }
 
   /**
@@ -260,7 +290,7 @@ class Path implements \lang\Value {
    * $r= (new Path('/usr/local'))->resolve('/usr');   // "../.."
    * ```
    *
-   * @param  var $other Either a string or a path
+   * @param  string|self|io.File|io.Folder|io.collections.IOElement $arg
    * @return self
    */
   public function resolve($arg): self {
@@ -274,24 +304,9 @@ class Path implements \lang\Value {
   }
 
   /**
-   * Returns how many parents are necessary to come from a to b
-   *
-   * @param  string $a
-   * @param  string $b
-   * @param  int
-   */
-  protected function parents($a, $b) {
-    for ($r= 0; $a !== $b; $r++) {
-      $a= dirname($a);
-      $b= dirname($b);
-    }
-    return $r;
-  }
-
-  /**
    * Creates relative path
    *
-   * @param  var $other Either a string or a path
+   * @param  string|self|io.File|io.Folder|io.collections.IOElement $arg
    * @return self
    */
   public function relativeTo($arg): self {
@@ -300,23 +315,21 @@ class Path implements \lang\Value {
       throw new IllegalArgumentException('Cannot calculate relative path from '.$this.' to '.$other);
     }
 
-    $a= $this->normalize();
-    $b= $other->normalize();
+    $a= rtrim(self::norm0($this->path), DIRECTORY_SEPARATOR);
+    $b= rtrim(self::norm0($other->path), DIRECTORY_SEPARATOR);
 
-    if ($a->path === $b->path) {
+    if ($a === $b) {
       return new self('');
-    } else if ('' === $b->path) {
-      return $a;
-    } else if (0 === substr_compare($a->path, $b->path, 0, $bl= strlen($b->path))) {
-      return new self(substr($a->path, $bl + strlen(DIRECTORY_SEPARATOR)));
-    } else if (0 === substr_compare($a->path, $b->path, 0, $al= strlen($a->path))) {
-      return self::compose(array_fill(0, substr_count($b->path, DIRECTORY_SEPARATOR, $al), '..'));
+    } else if ('.' === $b) {
+      return new self($a);
+    } else if ('' === $b) {
+      return new self(ltrim($a, DIRECTORY_SEPARATOR));
     } else {
-      $parents= $this->parents($a->path, $b->path);
-      return self::compose(array_merge(
-        array_fill(0, $parents, '..'),
-        array_slice(explode(DIRECTORY_SEPARATOR, $a->path), -$parents))
-      );
+      $pa= explode(DIRECTORY_SEPARATOR, $a);
+      $pb= explode(DIRECTORY_SEPARATOR, $b);
+      $s= sizeof($pb);
+      for ($i= 0; $i < min(sizeof($pa), $s) && $pa[$i] === $pb[$i]; $i++) { }
+      return new self(null, ...array_merge(array_fill(0, $s - $i, '..'), array_slice($pa, $i)));
     }
   }
 
