@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 9.5.1 / 2018-06-10
+
+### Bugfixes
+
+* Merged PR #200: Fix path normalization (@thekid)
+
 ## 9.5.0 / 2018-06-08
 
 ### Features
