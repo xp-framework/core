@@ -35,7 +35,7 @@ Finally, start `xp -v` to see it working:
 
 ```sh
 $ xp -v
-XP 9.5.2-dev { PHP 7.2.6 & ZE 3.2.0 } @ Windows NT SLATE 10.0 build 16299 (Windows 10) AMD64
+XP 9.5.3-dev { PHP 7.2.8 & ZE 3.2.0 } @ Windows NT SLATE 10.0 build 17134 (Windows 10) AMD64
 Copyright (c) 2001-2018 the XP group
 FileSystemCL<./src/main/php>
 FileSystemCL<./src/test/php>
