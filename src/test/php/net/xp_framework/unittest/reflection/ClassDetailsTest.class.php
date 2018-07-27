@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\reflect\ClassParser;
 use lang\ClassFormatException;
+use lang\reflect\ClassParser;
 use net\xp_framework\unittest\Name;
 
 define('APIDOC_TAG',        0x0001);
@@ -428,5 +428,25 @@ class ClassDetailsTest extends \unittest\TestCase {
       [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => [], DETAIL_ARGUMENTS => 'Test'],
       $details['class']
     );
+  }
+
+  #[@test, @values([
+  #  ['null', null], ['false', false], ['true', true],
+  #  ['0', 0], ['1', 1], ['-1', -1],
+  #  ['0x0', 0], ['0x2a', 42],
+  #  ['00', 0], ['0644', 420],
+  #  ['0.0', 0.0], ['1.5', 1.5], ['-1.5', -1.5],
+  #  ['"hello"', 'hello'], ['""', ''],
+  #  ['[1, 2, 3]', [1, 2, 3]], ['[]', []],
+  #  ['["key" => "value"]', ['key' => 'value']],
+  #])]
+  public function annotation_values($literal, $value) {
+    $details= (new ClassParser())->parseDetails('<?php
+      abstract class Test {
+        #[@test('.$literal.')]
+        public abstract function fixture();
+      }
+    ');
+    $this->assertEquals(['test' => $value], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
   }
 }

@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 9.5.2 / 2018-07-27
+
+### Bugfixes
+
+* Fixed octal and hexadecimal literals in annotations (@thekid)
+
 ## 9.5.1 / 2018-06-10
 
 ### Bugfixes
