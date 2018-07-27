@@ -7,6 +7,9 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed forward compatibility with PHP 7.3, which deprecates string search
+  with non-string needles: https://wiki.php.net/rfc/deprecations_php_7_3
+  (@thekid)
 * Fixed `Primitive::$INT->cast()` and `Primitive::$INT->newInstance()` for
   strings containing hexadecimal or octal numbers.
   (@thekid)
