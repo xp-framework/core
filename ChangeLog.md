@@ -7,6 +7,9 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed `Primitive::$INT->cast()` and `Primitive::$INT->newInstance()` for
+  strings containing hexadecimal or octal numbers.
+  (@thekid)
 * Fixed octal and hexadecimal literals in annotations (@thekid)
 
 ## 9.5.1 / 2018-06-10
