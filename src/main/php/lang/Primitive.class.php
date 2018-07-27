@@ -64,9 +64,18 @@ class Primitive extends Type {
   protected function coerce($value, $default) {
     if (!is_array($value)) switch ($this) {
       case self::$STRING: return (string)$value;
-      case self::$INT: return (int)$value;
       case self::$FLOAT: return (float)$value;
       case self::$BOOL: return (bool)$value;
+      case self::$INT:
+        if (strlen($value) < 1) {
+          return (int)$value;
+        } else if ('x' === $value{1}) {
+          return hexdec($value);
+        } else if ('0' === $value{0}) {
+          return octdec($value);
+        } else {
+          return (int)$value;
+        }
     }
 
     return $default($value);
