@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ## 9.5.3 / 2018-08-07
 
+### Bugfixes
+
 * Fixed issue #201: Casting to int: Uninitialized string offset: 1
   (@thekid)
 
