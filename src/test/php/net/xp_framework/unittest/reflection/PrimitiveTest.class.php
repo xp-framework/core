@@ -1,10 +1,10 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\TestCase;
-use lang\{Primitive, ClassCastException, IllegalArgumentException};
 use io\streams\{Streams, MemoryInputStream};
-use unittest\actions\RuntimeVersion;
+use lang\{Primitive, ClassCastException, IllegalArgumentException};
 use net\xp_framework\unittest\Name;
+use unittest\TestCase;
+use unittest\actions\RuntimeVersion;
 
 /**
  * TestCase
@@ -157,7 +157,7 @@ class PrimitiveTest extends TestCase {
   }
 
   #[@test, @values([
-  #  [0, ''], [0, 'Test'], [123, '123'], [0xFF, '0xFF'], [0755, '0755'],
+  #  [0, ''], [0, 'Test'], [2, '2'], [123, '123'], [0xFF, '0xFF'], [0755, '0755'],
   #  [0, null],
   #  [0, 0], [-1, -1],
   #  [0, 0.5],
@@ -201,7 +201,7 @@ class PrimitiveTest extends TestCase {
   }
 
   #[@test, @values([
-  #  [0, ''], [0, 'Test'], [123, '123'], [0xFF, '0xFF'], [0755, '0755'],
+  #  [0, ''], [0, 'Test'], [2, '2'], [123, '123'], [0xFF, '0xFF'], [0755, '0755'],
   #  [null, null],
   #  [0, 0], [-1, -1],
   #  [0, 0.5],
