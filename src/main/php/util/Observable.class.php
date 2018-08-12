@@ -10,7 +10,7 @@
  * class TextObserver implements \util\Observer {
  *
  *   public function update($obs, $arg= NULL) {
- *     Console::writeLine(__CLASS__, ' was notified of update in value, is now ', $obs->getValue());
+ *     Console::writeLine(self::class, ' was notified of update in value, is now ', $obs->getValue());
  *   }
  * }
  * ```

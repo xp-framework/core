@@ -1,10 +1,10 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use lang\FormatException;
+use lang\Process;
 use lang\Runtime;
 use lang\RuntimeOptions;
-use lang\Process;
 use lang\XPClass;
-use lang\FormatException;
 
 class RuntimeTest extends \unittest\TestCase {
 
@@ -77,8 +77,8 @@ class RuntimeTest extends \unittest\TestCase {
 
   #[@test]
   public function parseSettingToleratesWhitespace() {
-    $startup= Runtime::parseArguments(['-d magic_quotes_gpc=0']);
-    $this->assertEquals(['0'], $startup['options']->getSetting('magic_quotes_gpc'));
+    $startup= Runtime::parseArguments(['-d auto_globals_jit=0']);
+    $this->assertEquals(['0'], $startup['options']->getSetting('auto_globals_jit'));
   }
 
   #[@test]

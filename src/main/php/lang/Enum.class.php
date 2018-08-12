@@ -12,11 +12,11 @@ abstract class Enum implements Value {
   protected $ordinal= 0;
 
   static function __static() {
-    if (self::class === ($class= get_called_class())) return;
+    if (self::class === static::class) return;
 
     // Automatically initialize this enum's public static members
     $i= 0;
-    $c= new \ReflectionClass($class);
+    $c= new \ReflectionClass(static::class);
     foreach ($c->getProperties(\ReflectionProperty::IS_STATIC) as $prop) {
       if ($prop->isPublic()) {
         $value= $prop->getValue(null);
@@ -99,7 +99,7 @@ abstract class Enum implements Value {
    */
   public static function values() {
     $r= [];
-    $c= new \ReflectionClass(get_called_class());
+    $c= new \ReflectionClass(static::class);
     foreach ($c->getStaticProperties() as $prop) {
       if ($prop instanceof self && $c->isInstance($prop)) {
         $r[]= $prop;

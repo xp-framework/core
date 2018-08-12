@@ -34,7 +34,7 @@ class Random {
       self::$sources[self::SYSTEM]= ['bytes' => 'random_bytes', 'ints' => 'random_int'];
     }
     if (strncasecmp(PHP_OS, 'Win', 3) !== 0 && is_readable('/dev/urandom')) {
-      self::$sources[self::URANDOM]= ['bytes' => [__CLASS__, self::URANDOM], 'ints' => null];
+      self::$sources[self::URANDOM]= ['bytes' => [self::class, self::URANDOM], 'ints' => null];
     }
 
     // All of these above are secure pseudo-random sources
@@ -43,14 +43,14 @@ class Random {
     }
 
     if (function_exists('openssl_random_pseudo_bytes')) {
-      self::$sources[self::OPENSSL]= ['bytes' => [__CLASS__, self::OPENSSL], 'ints' => null];
+      self::$sources[self::OPENSSL]= ['bytes' => [self::class, self::OPENSSL], 'ints' => null];
       if (!isset(self::$sources[self::SECURE])) {
         self::$sources[self::SECURE]= &self::$sources[self::OPENSSL];
       }
     }
 
     // The Mersenne Twister algorithm is always available
-    self::$sources[self::MTRAND]= ['bytes' => [__CLASS__, self::MTRAND], 'ints' => 'mt_rand'];
+    self::$sources[self::MTRAND]= ['bytes' => [self::class, self::MTRAND], 'ints' => 'mt_rand'];
 
     self::$sources[self::BEST]= &self::$sources[key(self::$sources)];
     self::$sources[self::FAST]= &self::$sources[self::MTRAND];
