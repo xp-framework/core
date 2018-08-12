@@ -156,32 +156,32 @@ class CommandLineTest extends \unittest\TestCase {
   #[@test]
   public function quotedArgumentPartWindows() {
     $this->assertEquals(
-      ['C:/usr/bin/php', '-q', '-dinclude_path=.:/usr/share', '-dmagic_quotes_gpc=Off'],
-      CommandLine::$WINDOWS->parse('C:/usr/bin/php -q -dinclude_path=".:/usr/share" -dmagic_quotes_gpc=Off')
+      ['C:/usr/bin/php', '-q', '-dinclude_path=.:/usr/share', '-dauto_globals_jit=0'],
+      CommandLine::$WINDOWS->parse('C:/usr/bin/php -q -dinclude_path=".:/usr/share" -dauto_globals_jit=0')
     );        
   }
 
   #[@test]
   public function quotedArgumentPartUnix() {
     $this->assertEquals(
-      ['/usr/bin/php', '-q', '-dinclude_path=".:/usr/share"', '-dmagic_quotes_gpc=Off'],
-      CommandLine::$UNIX->parse('/usr/bin/php -q -dinclude_path=".:/usr/share" -dmagic_quotes_gpc=Off')
+      ['/usr/bin/php', '-q', '-dinclude_path=".:/usr/share"', '-dauto_globals_jit=0'],
+      CommandLine::$UNIX->parse('/usr/bin/php -q -dinclude_path=".:/usr/share" -dauto_globals_jit=0')
     );        
   }
 
   #[@test]
   public function quotedCommandAndArgumentPartWindows() {
     $this->assertEquals(
-      ['C:/usr/bin/php', '-q', '-dinclude_path=.:/usr/share', '-dmagic_quotes_gpc=Off'],
-      CommandLine::$WINDOWS->parse('"C:/usr/bin/php" -q -dinclude_path=".:/usr/share" -dmagic_quotes_gpc=Off')
+      ['C:/usr/bin/php', '-q', '-dinclude_path=.:/usr/share', '-dauto_globals_jit=0'],
+      CommandLine::$WINDOWS->parse('"C:/usr/bin/php" -q -dinclude_path=".:/usr/share" -dauto_globals_jit=0')
     );
   }
 
   #[@test]
   public function quotedCommandAndArgumentPartUnix() {
     $this->assertEquals(
-      ['/usr/bin/php', '-q', '-dinclude_path=".:/usr/share"', '-dmagic_quotes_gpc=Off'],
-      CommandLine::$UNIX->parse('"/usr/bin/php" -q -dinclude_path=".:/usr/share" -dmagic_quotes_gpc=Off')
+      ['/usr/bin/php', '-q', '-dinclude_path=".:/usr/share"', '-dauto_globals_jit=0'],
+      CommandLine::$UNIX->parse('"/usr/bin/php" -q -dinclude_path=".:/usr/share" -dauto_globals_jit=0')
     );
   }
 

@@ -162,11 +162,11 @@ class RuntimeOptionsTest extends \unittest\TestCase {
     $options= (new RuntimeOptions())
       ->withSwitch('q')
       ->withSwitch('n')
-      ->withSetting('enable_dl', 1)
+      ->withSetting('auto_globals_jit', 1)
       ->withSetting('extension', ['php_xsl.dll', 'php_sybase_ct.dll'])
     ;
     $this->assertArguments(
-      ['-q', '-n', '-d', 'enable_dl=1', '-d', 'extension=php_xsl.dll', '-d', 'extension=php_sybase_ct.dll'],
+      ['-q', '-n', '-d', 'auto_globals_jit=1', '-d', 'extension=php_xsl.dll', '-d', 'extension=php_sybase_ct.dll'],
       $options
     );
   }
