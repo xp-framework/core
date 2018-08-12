@@ -55,7 +55,7 @@ class ExceptionsTest extends \unittest\TestCase {
     $first= (new Throwable('Test'))->getStackTrace()[0];
     
     $this->assertEquals(
-      ['class' => __CLASS__, 'method' => __FUNCTION__],
+      ['class' => self::class, 'method' => __FUNCTION__],
       ['class' => $first->class, 'method' => $first->method]
     );
   }
