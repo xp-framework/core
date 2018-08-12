@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 9.5.4 / 2018-08-12
+
+### Features
+
+* Ensured compatibility with PHP 7.3 beta (@thekid)
+* Merged PR #202: PHP 7.4 forward compatiblity (@thekid)
+
 ## 9.5.3 / 2018-08-07
 
 ### Bugfixes
