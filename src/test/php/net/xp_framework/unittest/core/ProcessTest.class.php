@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\{PrerequisitesNotMetError, AssertionFailedError};
-use lang\{Runtime, System, Process, IllegalStateException};
 use io\IOException;
 use io\streams\{Streams, MemoryOutputStream};
+use lang\{Runtime, System, Process, IllegalStateException};
+use unittest\{PrerequisitesNotMetError, AssertionFailedError};
 
 /**
  * TestCase for Process class
@@ -219,5 +219,19 @@ class ProcessTest extends \unittest\TestCase {
     $p->in->write("\n");
     $p->close();
     $this->assertFalse($mirror->running());
+  }
+
+  #[@test]
+  public function terminate() {
+    $p= new Process($this->executable(), $this->arguments('-r', 'sleep(10);'));
+    $p->terminate();
+    $this->assertNotEquals(0, $p->close());
+  }
+
+  #[@test]
+  public function terminate_not_owned() {
+    $p= new Process($this->executable(), $this->arguments('-r', 'sleep(10);'));
+    Process::getProcessById($p->getProcessId())->terminate();
+    $this->assertNotEquals(0, $p->close());
   }
 }

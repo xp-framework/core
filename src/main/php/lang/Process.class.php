@@ -79,6 +79,10 @@ class Process {
       if (null === $this->handle) return false;
       return $this->status['running']= proc_get_status($this->handle)['running'];
     };
+    $this->status['terminate!']= function($signal) {
+      if (null === $this->handle) return false;
+      proc_terminate($this->handle, $signal);
+    };
 
     // Assign in, out and err members
     $this->in= new File($pipes[0]);
@@ -187,6 +191,9 @@ class Process {
           }
           return false;
         };
+        $self->status['terminate!']= function($signal) use($pid) {
+          exec('taskkill /F /T /PID '.$pid);
+        };
       } catch (\Throwable $e) {
         throw new IllegalStateException('Cannot find executable: '.$e->getMessage());
       }
@@ -205,6 +212,9 @@ class Process {
       $self->status['command']= strtr(file_get_contents($proc.'/cmdline'), "\0", ' ');
       $self->status['running?']= function() use($pid) {
         return file_exists('/proc/'.$pid);
+      };
+      $self->status['terminate!']= function($signal) use($pid) {
+        exec('kill -'.$signal.' '.$pid);
       };
     } else {
       try {
@@ -225,6 +235,9 @@ class Process {
       $self->status['running?']= function() use($pid) {
         exec('ps -p '.$pid, $out, $exit);
         return 0 === $exit;
+      };
+      $self->status['terminate!']= function($signal) use($pid) {
+        exec('kill -'.$signal.' '.$pid);
       };
     }
 
@@ -294,5 +307,16 @@ class Process {
       $this->exitv= $this->status['exitcode'];
     }
     return $this->exitv;
+  }
+
+  /**
+   * Kills the given process. Returns immediately, use `running()` to poll for whether
+   * the process has exited.
+   *
+   * @param  int $signal
+   * @return void
+   */
+  public function terminate($signal= 15) {
+    $this->status['terminate!']($signal);
   }
 }
