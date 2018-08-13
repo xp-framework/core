@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 9.6.0 / 2018-08-13
+
+### Features
+
+* Merged pull request #203: Implement Process::terminate() (@thekid)
+
 ## 9.5.4 / 2018-08-12
 
 ### Features
