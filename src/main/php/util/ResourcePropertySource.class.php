@@ -14,6 +14,7 @@ use lang\ResourceProvider;
  *   $properties= $src->fetch('database');
  * </code>
  *
+ * @deprecated
  * @test     xp://net.xp_framework.unittest.util.ResourcePropertySourceTest
  */
 class ResourcePropertySource implements PropertySource {

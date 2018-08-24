@@ -3,6 +3,7 @@
 /**
  * PropertySource interface
  *
+ * @deprecated
  */
 interface PropertySource {
 
