@@ -7,6 +7,7 @@ use util\{FilesystemPropertySource, Properties};
 /**
  * Testcase for util.Properties class.
  *
+ * @deprecated
  * @see   xp://util.FilesystemPropertySource
  */
 class FilesystemPropertySourceTest extends \unittest\TestCase {
