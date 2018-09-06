@@ -60,7 +60,8 @@ class TimeZoneTransition implements Value {
   /**
    * Seek to the next timezone transition
    *
-   * @throws  lang.IllegalArgumentException if timezone has no transitions
+   * @throws lang.IllegalArgumentException if timezone has no transitions
+   * @return self
    */
   public function next() {
     $ts= $this->date->getTime();
@@ -73,12 +74,14 @@ class TimeZoneTransition implements Value {
     $this->isDst= $t['isdst'];
     $this->offset= $t['offset'];
     $this->abbr= $t['abbr'];
+    return $this;
   }
 
   /**
    * Seek to the previous timezone transition
    *
-   * @throws  lang.IllegalArgumentException if timezone has no transitions
+   * @throws lang.IllegalArgumentException if timezone has no transitions
+   * @return self
    */
   public function previous() {
     $ts= $this->date->getTime();
@@ -92,6 +95,7 @@ class TimeZoneTransition implements Value {
     $this->isDst= $last['isdst'];
     $this->offset= $last['offset'];
     $this->abbr= $last['abbr'];
+    return $this;
   }
   
   /**
