@@ -135,11 +135,7 @@ class TimeZone implements Value {
    * @return  util.TimeZoneTransition
    */
   public function previousTransition(Date $date) {
-    // Include util.TimeZoneTransition as a `lightweight` dependency
-    return \lang\XPClass::forName('util.TimeZoneTransition')
-      ->getMethod('previousTransition')
-      ->invoke(null, [$this, $date])
-    ;
+    return TimeZoneTransition::previousTransition($this, $date);
   }
   
   /**
@@ -150,11 +146,7 @@ class TimeZone implements Value {
    * @return  util.TimeZoneTransition
    */
   public function nextTransition(Date $date) {
-    // Include util.TimeZoneTransition as a `lightweight` dependency
-    return \lang\XPClass::forName('util.TimeZoneTransition')
-      ->getMethod('nextTransition')
-      ->invoke(null, [$this, $date])
-    ;
+    return TimeZoneTransition::nextTransition($this, $date);
   }
 
   /**
