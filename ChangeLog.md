@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 9.7.0 / 2018-09-06
+
 ### Features
 
 * Multiple API improvements in the `util.TimeZone` class.
