@@ -48,7 +48,9 @@ abstract class Calendar {
     }
     
     $transition= TimeZoneTransition::nextTransition($tz, $date);
-    while (!$transition->isDst()) { $transition->next(); }
+    while (!$transition->isDst()) {
+      $transition= $transition->next();
+    }
     return $transition->getDate();
   }
 
@@ -66,7 +68,9 @@ abstract class Calendar {
     );
 
     $transition= TimeZoneTransition::nextTransition(new TimeZone('Europe/Berlin'), $date);
-    while ($transition->isDst()) { $transition->next(); }
+    while ($transition->isDst()) {
+      $transition= $transition->next();
+    }
     return $transition->getDate();
   }
   
