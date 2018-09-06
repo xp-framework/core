@@ -3,6 +3,17 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Multiple API improvements in the `util.TimeZoneTransition` class.
+  - Added `difference()` method to `util.TimeZoneTransition` which returns
+    the offset in the "[+-]HHMM" format.
+  - Changed `previous()` and `next()` to return the calculated transition
+    instead of returning *void*.
+  - Deprecated `getTz()` in favor of `timezone()`; and `getDate()` in favor
+    of `date()`; making the API more consistent.
+  (@thekid)
+
 ## 9.6.0 / 2018-08-13
 
 ### Features
