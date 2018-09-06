@@ -5,6 +5,12 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Multiple API improvements in the `util.TimeZone` class.
+  - Deprecated `getName()` in favor of the shorter `name()` method
+  - Deprecated `getOffset()` in favor of `difference()`; and the method
+    `getOffsetInSeconds()` in favor of `offset()`; making the *TimeZone*
+    API consistent with *TimeZoneTransition*.
+  (@thekid)
 * Multiple API improvements in the `util.TimeZoneTransition` class.
   - Added `difference()` method to `util.TimeZoneTransition` which returns
     the offset in the "[+-]HHMM" format.

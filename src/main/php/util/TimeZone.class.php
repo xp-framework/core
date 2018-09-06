@@ -7,12 +7,12 @@ use lang\{IllegalArgumentException, Value};
  *
  * ```php
  * $tz= new TimeZone('Europe/Berlin');
- * printf("Offset is %s\n", $tz->getOffset());  // -0600
+ * printf("Difference to UTC is %s\n", $tz->difference());  // +0200
  * ```
  *
- * @test    xp://net.xp_framework.unittest.util.TimeZoneTest
- * @see     php://datetime
- * @see     php://timezones
+ * @test  xp://net.xp_framework.unittest.util.TimeZoneTest
+ * @see   php://datetime
+ * @see   php://timezones
  */
 class TimeZone implements Value {
   protected $tz= null;
@@ -53,41 +53,61 @@ class TimeZone implements Value {
    *
    * @return  string name
    */
-  public function getName() {
+  public function name() {
     return timezone_name_get($this->tz);
+  }
+
+  /**
+   * Gets the name of the timezone
+   *
+   * @deprecated Use name() instead!
+   * @return  string name
+   */
+  public function getName() {
+    return $this->name();
   }
   
   /**
    * Returns a TimeZone object by a time zone abbreviation.
    *
-   * @param   string abbrev
-   * @return  util.TimeZone
+   * @param  string $abbrev
+   * @return self
    */
   public static function getByName($abbrev) {
     return new self($abbrev);
   }
   
   /**
-   * Get a timezone object for the machines local timezone.
+   * Get a timezone object for the machine's local timezone.
    *
-   * @return  util.TimeZone
+   * @return self
    */
   public static function getLocal() {
     return new self(null);
   }
 
   /**
-   * Retrieves the offset of the timezone
+   * Retrieves the differnece of the timezone
    *
-   * @return  string offset
-   */    
+   * @param  util.Date $date default NULL
+   * @return string offset
+   */
+  public function difference($date= null) {
+    $offset= timezone_offset_get($this->tz, $date instanceof Date ? $date->getHandle() : date_create('now'));
+    $h= (int)($offset / 3600);
+    $m= (int)(($offset - $h * 3600) / 60);
+    return $offset > 0 ? sprintf('+%02d%02d', $h, $m) : sprintf('-%02d%02d', -$h, -$m);
+  }
+
+  /**
+   * Offset as string
+   *
+   * @deprecated Use difference() instead
+   * @param  util.Date $date default NULL
+   * @return string offset
+   */
   public function getOffset($date= null) {
-    $offset= $this->getOffsetInSeconds($date);
-    
-    $h= intval(abs($offset) / 3600);
-    $m= (abs($offset)- ($h * 3600)) / 60;
-    
-    return sprintf('%s%02d%02d', ($offset < 0 ? '-' : '+'), $h, $m);
+    return $this->difference($date);
   }
   
   /**
@@ -100,18 +120,27 @@ class TimeZone implements Value {
   }
 
   /**
-   * Retrieves the timezone offset to GMT. Because a timezone
-   * may have different offsets when its in DST or non-DST mode,
-   * a date object must be given which is used to determine whether
-   * DST or non-DST offset should be returned.
+   * Retrieves the timezone offset to GMT. Because a timezone may have
+   * different offsets when its in DST or non-DST mode, a date object
+   * must be used to determine whether DST or non-DST offset should be
+   * returned. If no date is passed, current time is assumed.
    *
-   * If no date is passed, current time is assumed.
+   * @param  util.Date $date default NULL
+   * @return int offset
+   */
+  public function offset($date= null) {
+    return timezone_offset_get($this->tz, $date instanceof Date ? $date->getHandle() : date_create('now'));
+  }
+
+  /**
+   * Offset in seconds
    *
+   * @deprecated Use offset() instead!
    * @param   util.Date date default NULL
    * @return  int offset
-   */    
+   */
   public function getOffsetInSeconds($date= null) {
-    return timezone_offset_get($this->tz, date_create($date instanceof Date ? $date->toString() : 'now'));
+    return $this->offset($date);
   }
   
   /**

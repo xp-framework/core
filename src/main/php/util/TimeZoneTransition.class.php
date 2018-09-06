@@ -121,7 +121,7 @@ class TimeZoneTransition implements Value {
   /** @return string */
   public function difference() {
     $h= (int)($this->offset / 3600);
-    $m= $this->offset - $h * 3600;
+    $m= (int)(($this->offset - $h * 3600) / 60);
     return $this->offset > 0 ? sprintf('+%02d%02d', $h, $m) : sprintf('-%02d%02d', -$h, -$m);
   }
 
