@@ -1,7 +1,7 @@
 <?php namespace lang;
 
-use lang\reflect\{Method, Field, Constructor, Package};
 use lang\ElementNotFoundException;
+use lang\reflect\{Method, Field, Constructor, Package};
 
 define('DETAIL_ARGUMENTS',      1);
 define('DETAIL_RETURNS',        2);
@@ -175,11 +175,11 @@ class XPClass extends Type {
    *   }
    * </code>
    *
-   * @param   var... args
-   * @return  object 
+   * @param   var... $args
+   * @return  object
    * @throws  lang.IllegalAccessException in case this class cannot be instantiated
    */
-  public function newInstance($value= null) {
+  public function newInstance(... $args) {
     $reflect= $this->reflect();
     if ($reflect->isInterface()) {
       throw new IllegalAccessException('Cannot instantiate interfaces ('.$this->name.')');
@@ -189,11 +189,10 @@ class XPClass extends Type {
       throw new IllegalAccessException('Cannot instantiate abstract classes ('.$this->name.')');
     }
 
-    $args= func_get_args();
     try {
       return $reflect->newInstance(...$args);
     } catch (\ReflectionException $e) {
-      throw new IllegalAccessException($e->getMessage());
+      throw new IllegalAccessException($e->getMessage(), $e);
     }
   }
   
