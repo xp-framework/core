@@ -9,138 +9,120 @@ use lang\{Value, IllegalArgumentException};
  * @test  xp://net.xp_framework.unittest.util.TimeZoneTest
  */
 class TimeZoneTransition implements Value {
-  protected
-    $tz     = null,
-    $date   = null,
-    $isDst  = null,
-    $offset = null,
-    $abbr   = null;
+  private $tz, $date, $isDst, $offset, $abbr;
 
   /**
    * Constructor
    *
-   * @param   util.TimeZone tz
-   * @param   util.Date date
+   * @param  util.TimeZone $tz
+   * @param  util.Date $date
+   * @param  bool $isDst Whether this is daylight savings time
+   * @param  int $offset Offset in seconds
+   * @param  string $abbr Abbreviation, e.g. "CEST"
    */
-  public function __construct(TimeZone $tz, Date $date) {
+  public function __construct(TimeZone $tz, Date $date, $isDst, $offset, $abbr) {
     $this->tz= $tz;
     $this->date= $date;
+    $this->isDst= $isDst;
+    $this->offset= $offset;
+    $this->abbr= $abbr;
   }
   
   /**
    * Retrieve the next timezone transition for the timezone tz
    * after date date.
    *
-   * @param   util.TimeZone tz
-   * @param   util.Date date
-   * @return  util.TimeZoneTransition
-   * @throws  lang.IllegalArgumentException if timezone has no transitions
+   * @param  util.TimeZone $tz
+   * @param  util.Date $date
+   * @return self
+   * @throws lang.IllegalArgumentException if timezone has no transitions
    */
   public static function nextTransition(TimeZone $tz, Date $date) {
-    $t= new self($tz, $date);
-    $t->next();
-    return $t;
+    $ts= $date->getTime();
+    foreach (timezone_transitions_get($tz->getHandle()) as $t) {
+      if ($t['ts'] > $ts) {
+        return new self($tz, new Date($t['ts']), $t['isdst'], $t['offset'], $t['abbr']);
+      }
+    }
+    throw new IllegalArgumentException('Timezone '.$this->tz->getName().' does not have DST transitions.');
   }
   
   /**
    * Retrieve the previous timezone transition for the timezone tz
    * before date date.
    *
-   * @param   util.TimeZone tz
-   * @param   util.Date date
-   * @return  util.TimeZoneTransition
-   * @throws  lang.IllegalArgumentException if timezone has no transitions
+   * @param  util.TimeZone $tz
+   * @param  util.Date $date
+   * @return self
+   * @throws lang.IllegalArgumentException if timezone has no transitions
    */
   public static function previousTransition(TimeZone $tz, Date $date) {
-    $t= new self($tz, $date);
-    $t->previous();
-    return $t;
+    $ts= $date->getTime();
+    foreach (timezone_transitions_get($tz->getHandle()) as $t) {
+      if ($t['ts'] >= $ts) {
+        return new self($tz, new Date($l['ts']), $l['isdst'], $l['offset'], $l['abbr']);
+      }
+      $l= $t;
+    }
+    throw new IllegalArgumentException('Timezone '.$this->tz->getName().' does not have DST transitions.');
   }
   
   /**
-   * Seek to the next timezone transition
+   * Seek to the next timezone transition and return a new transition instance
    *
    * @throws lang.IllegalArgumentException if timezone has no transitions
    * @return self
    */
   public function next() {
-    $ts= $this->date->getTime();
-    foreach (timezone_transitions_get($this->tz->getHandle()) as $t) {
-      if ($t['ts'] > $ts) break;
-    }
-    if (!isset($t)) throw new IllegalArgumentException('Timezone '.$this->tz->getName().' does not have DST transitions.');
-    
-    $this->date= new Date($t['ts']);
-    $this->isDst= $t['isdst'];
-    $this->offset= $t['offset'];
-    $this->abbr= $t['abbr'];
-    return $this;
+    return self::nextTransition($this->tz, $this->date);
   }
 
   /**
-   * Seek to the previous timezone transition
+   * Seek to the previous timezone transition and return a new transition instance
    *
    * @throws lang.IllegalArgumentException if timezone has no transitions
    * @return self
    */
   public function previous() {
-    $ts= $this->date->getTime();
-    foreach (timezone_transitions_get($this->tz->getHandle()) as $t) {
-      if ($t['ts'] >= $ts) break;
-      $last= $t;
-    }
-    if (!isset($t)) throw new IllegalArgumentException('Timezone '.$this->tz->getName().' does not have DST transitions.');
-
-    $this->date= new Date($last['ts'], $this->date->getTimeZone());
-    $this->isDst= $last['isdst'];
-    $this->offset= $last['offset'];
-    $this->abbr= $last['abbr'];
-    return $this;
+    return self::previousTransition($this->tz, $this->date);
   }
   
   /**
-   * Get Tz
+   * Gets timezone
    *
-   * @return  util.TimeZone
+   * @deprecated Use timezone() instead!
+   * @return util.TimeZone
    */
-  public function getTz() {
-    return $this->tz;
-  }
+  public function getTz() { return $this->tz; }
 
   /**
-   * Get Date
+   * Gets date
    *
-   * @return  util.Date
+   * @deprecated Use date() instead!
+   * @return util.Date
    */
-  public function getDate() {
-    return $this->date;
-  }
+  public function getDate() { return $this->date; }
 
-  /**
-   * Get IsDst
-   *
-   * @return  bool
-   */
-  public function isDst() {
-    return $this->isDst;
-  }
+  /** @return util.TimeZone */
+  public function timezone() { return $this->tz; }
 
-  /**
-   * Get Offset
-   *
-   * @return  int
-   */
-  public function offset() {
-    return $this->offset;
-  }
+  /** @return util.Date */
+  public function date() { return $this->date; }
 
-  /**
-   * Get Abbr
-   *
-   * @return  string
-   */
-  public function abbr() {
-    return $this->abbr;
+  /** @return bool */
+  public function isDst() { return $this->isDst; }
+
+  /** @return int */
+  public function offset() { return $this->offset; }
+
+  /** @return string */
+  public function abbr() { return $this->abbr; }
+
+  /** @return string */
+  public function difference() {
+    $h= (int)($this->offset / 3600);
+    $m= $this->offset - $h * 3600;
+    return $this->offset > 0 ? sprintf('+%02d%02d', $h, $m) : sprintf('-%02d%02d', -$h, -$m);
   }
 
   /**
