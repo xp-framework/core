@@ -60,21 +60,21 @@ class MapType extends Type {
   /**
    * Returns a new instance of this object
    *
-   * @param   var value
+   * @param   var... $args
    * @return  var
    */
-  public function newInstance($value= null) {
-    if (null === $value) {
-      return [];
-    } else if (is_array($value)) {
+  public function newInstance(... $args) {
+    if (empty($args) || null === $args[0]) return [];
+
+    if (is_array($args[0])) {
       $self= [];
-      foreach ($value as $k => $element) {
+      foreach ($args[0] as $k => $element) {
         if (is_int($k)) throw new IllegalArgumentException('Cannot create instances of the '.$this->getName().' type from var[]');
         $self[$k]= $this->component->cast($element);
       }
       return $self;
     } else {
-      throw new IllegalArgumentException('Cannot create instances of the '.$this->getName().' type from '.typeof($value)->getName());
+      throw new IllegalArgumentException('Cannot create instances of the '.$this->getName().' type from '.typeof($args[0])->getName());
     }
   }
 

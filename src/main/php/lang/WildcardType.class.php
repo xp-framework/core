@@ -82,10 +82,10 @@ class WildcardType extends Type {
   /**
    * Returns a new instance of this object
    *
-   * @param   var value
+   * @param   var... $args
    * @return  var
    */
-  public function newInstance($value= null) {
+  public function newInstance(... $args) {
     throw new IllegalAccessException('Cannot instantiate wildcard types');
   }
 

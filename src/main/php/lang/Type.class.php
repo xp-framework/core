@@ -19,8 +19,12 @@ class Type implements Value {
     self::$ARRAY= eval('namespace lang; class NativeArrayType extends Type {
       static function __static() { }
       public function isInstance($value): bool { return is_array($value); }
-      public function newInstance($value= null) {
-        return null === $value ? [] : (array)$value;
+      public function newInstance(... $args) {
+        switch (sizeof($args)) {
+          case 0: return [];
+          case 1: return (array)$args[0];
+          default: return $args;
+        }
       }
       public function cast($value) {
         return null === $value ? null : (array)$value;
@@ -33,9 +37,9 @@ class Type implements Value {
     self::$OBJECT= eval('namespace lang; class NativeObjectType extends Type {
       static function __static() { }
       public function isInstance($value): bool { return is_object($value) && !$value instanceof \Closure; }
-      public function newInstance($value= null) {
-        if (is_object($value) && !$value instanceof \Closure) return clone $value;
-        throw new IllegalAccessException("Cannot instantiate ".typeof($value)->getName());
+      public function newInstance(... $args) {
+        if ($args && is_object($args[0]) && !$args[0] instanceof \Closure) return clone $args[0];
+        throw new IllegalAccessException("Cannot instantiate an object from ".($args ? typeof($args[0])->getName() : "null"));
       }
       public function cast($value) {
         if (null === $value || is_object($value) && !$value instanceof \Closure) return $value;
@@ -49,9 +53,9 @@ class Type implements Value {
     self::$CALLABLE= eval('namespace lang; class NativeCallableType extends Type {
       static function __static() { }
       public function isInstance($value): bool { return is_callable($value); }
-      public function newInstance($value= null) {
-        if (is_callable($value)) return $value;
-        throw new IllegalAccessException("Cannot instantiate callable type from ".typeof($value)->getName());
+      public function newInstance(... $args) {
+        if ($args && is_callable($args[0])) return $args[0];
+        throw new IllegalAccessException("Cannot instantiate a callable from ".($args ? typeof($args[0])->getName() : "null"));
       }
       public function cast($value) {
         if (null === $value || is_callable($value)) return $value;
@@ -65,9 +69,9 @@ class Type implements Value {
     self::$ITERABLE= eval('namespace lang; class NativeIterableType extends Type {
       static function __static() { }
       public function isInstance($value): bool { return $value instanceof \Traversable || is_array($value); }
-      public function newInstance($value= null) {
-        if ($value instanceof \Traversable || is_array($value)) return $value;
-        throw new IllegalAccessException("Cannot instantiate iterable type from ".typeof($value)->getName());
+      public function newInstance(... $args) {
+        if ($args && $args[0] instanceof \Traversable || is_array($args[0])) return $args[0];
+        throw new IllegalAccessException("Cannot instantiate an iterable from ".($args ? typeof($args[0])->getName() : "null"));
       }
       public function cast($value) {
         if (null === $value || $value instanceof \Traversable || is_array($value)) return $value;
@@ -321,11 +325,11 @@ class Type implements Value {
   /**
    * Returns a new instance of this object
    *
-   * @param  var $value
+   * @param  var... $args
    * @return var
    */
-  public function newInstance($value= null) {
-    if (self::$VAR === $this) return $value;
+  public function newInstance(... $args) {
+    if (self::$VAR === $this) return $args[0];
     throw new IllegalAccessException('Cannot instantiate '.$this->name.' type');
   }
 

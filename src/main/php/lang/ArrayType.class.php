@@ -66,22 +66,28 @@ class ArrayType extends Type {
   /**
    * Returns a new instance of this object
    *
-   * @param   var value
+   * @param   var... $args
    * @return  var
    */
-  public function newInstance($value= null) {
-    if (null === $value) {
+  public function newInstance(... $args) {
+    if (empty($args) || null === $args[0]) {
       return [];
-    } else if (is_array($value)) {
-      $self= [];
-      foreach ($value as $i => $element) {
-        if (!is_int($i)) throw new IllegalArgumentException('Cannot create instances of the '.$this->getName().' type from [:var]');
-        $self[]= $this->component->cast($element);
-      }
-      return $self;
+    } else if (1 === sizeof($args)) {
+      $array= $args[0];
     } else {
-      throw new IllegalArgumentException('Cannot create instances of the '.$this->getName().' type from '.typeof($value)->getName());
+      $array= $args;
     }
+
+    if (!is_array($array)) {
+      throw new IllegalArgumentException('Cannot create instances of the '.$this->getName().' type from '.typeof($array)->getName());
+    }
+
+    $self= [];
+    foreach ($array as $i => $element) {
+      if (!is_int($i)) throw new IllegalArgumentException('Cannot create instances of the '.$this->getName().' type from [:var]');
+      $self[]= $this->component->cast($element);
+    }
+    return $self;
   }
 
   /**

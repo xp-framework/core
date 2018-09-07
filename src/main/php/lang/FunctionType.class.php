@@ -250,10 +250,11 @@ class FunctionType extends Type {
   /**
    * Returns a new instance of this object
    *
-   * @param   var value
+   * @param   var... $args
    * @return  var
    */
-  public function newInstance($value= null) {
+  public function newInstance(... $args) {
+    $value= $args[0] ?? null;
     return $this->verified($value, function($m) use($value) { throw new IllegalArgumentException(sprintf(
       'Cannot create instances of the %s type from %s: %s',
       $this->getName(),

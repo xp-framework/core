@@ -84,11 +84,11 @@ class Primitive extends Type {
   /**
    * Returns a new instance of this object
    *
-   * @param   var value
+   * @param   var... $args
    * @return  var
    */
-  public function newInstance($value= null) {
-    return $this->coerce($value, function($value) {
+  public function newInstance(...$args) {
+    return $this->coerce($args[0] ?? null, function($value) {
       throw new IllegalArgumentException('Cannot create instances of '.$this->getName().' from '.typeof($value)->getName());
     });
   }

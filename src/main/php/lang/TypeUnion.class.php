@@ -44,10 +44,11 @@ class TypeUnion extends Type {
   /**
    * Returns a new instance of this object
    *
-   * @param   var value
+   * @param   var... $args
    * @return  var
    */
-  public function newInstance($value= null) {
+  public function newInstance(... $args) {
+    $value= $args[0] ?? null;
     foreach ($this->types as $type) {
       if ($type->isInstance($value)) return $type->newInstance($value);
     }
