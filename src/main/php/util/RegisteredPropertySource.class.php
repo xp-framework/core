@@ -5,6 +5,7 @@ use lang\IllegalArgumentException;
 /**
  * Memory-based property source
  *
+ * @deprecated
  * @test  xp://net.xp_framework.unittest.RegisteredPropertySourceTest
  */
 class RegisteredPropertySource implements PropertySource {

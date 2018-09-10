@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
+use lang\{ClassLoader, ElementNotFoundException, IllegalArgumentException};
+use unittest\actions\RuntimeVersion;
 use util\{
   FilesystemPropertySource,
   Properties,
@@ -7,13 +9,12 @@ use util\{
   PropertyManager,
   ResourcePropertySource
 };
-use lang\{ClassLoader, ElementNotFoundException, IllegalArgumentException};
-use unittest\actions\RuntimeVersion;
 new import('lang.ResourceProvider');
 
 /**
  * Tests for util.PropertyManager singleton
  *
+ * @deprecated
  * @see   xp://util.PropertyManager
  */
 class PropertyManagerTest extends \unittest\TestCase {

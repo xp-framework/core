@@ -3,10 +3,10 @@
 use unittest\TestCase;
 use util\RegisteredPropertySource;
 
-
 /**
  * Test for RegisteredPropertySource
  *
+ * @deprecated
  * @see      xp://util.RegisteredPropertySource
  */
 class RegisteredPropertySourceTest extends TestCase {

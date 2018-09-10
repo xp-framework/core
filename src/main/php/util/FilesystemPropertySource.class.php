@@ -5,6 +5,7 @@ use lang\IllegalArgumentException;
 /**
  * Filesystem-based property source
  *
+ * @deprecated
  * @test  xp://net.xp_framework.unittest.util.FilesystemPropertySourceTest
  */
 class FilesystemPropertySource implements PropertySource {

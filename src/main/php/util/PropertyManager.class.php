@@ -16,6 +16,7 @@ use lang\ElementNotFoundException;
  *   // from etc/database.ini
  * </code>
  *
+ * @deprecated
  * @test      xp://net.xp_framework.unittest.util.PropertyManagerTest
  */
 class PropertyManager {

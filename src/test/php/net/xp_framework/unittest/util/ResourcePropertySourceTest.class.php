@@ -8,6 +8,7 @@ new import('lang.ResourceProvider');
 /**
  * Test for ResourcePropertySource
  *
+ * @deprecated
  * @see      xp://util.ResourcePropertySource
  */
 class ResourcePropertySourceTest extends TestCase {
