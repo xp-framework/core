@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Merged PR #204: Deprecate `util.PropertyManager` - @thekid
+
 ## 9.7.0 / 2018-09-06
 
 ### Features
