@@ -1,8 +1,8 @@
 <?php namespace net\xp_framework\unittest\util\cmd;
 
-use util\cmd\{Console, NoInput, NoOutput};
-use lang\{Value, IllegalStateException};
 use io\streams\{MemoryInputStream, MemoryOutputStream, ConsoleOutputStream, ConsoleInputStream};
+use lang\{Value, IllegalStateException};
+use util\cmd\{Console, NoInput, NoOutput};
 
 /**
  * TestCase for the Console class
@@ -129,7 +129,7 @@ class ConsoleTest extends \unittest\TestCase {
   public function exception_from_toString() {
     try {
       Console::write(new class() implements Value {
-        public function toString() { throw new IllegalStateException("Cannot render string"); }
+        public function toString() { throw new IllegalStateException('Cannot render string'); }
         public function hashCode() { return get_class($this); }
         public function compareTo($value) { return 1; }
       });
