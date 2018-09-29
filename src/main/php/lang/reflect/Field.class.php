@@ -18,38 +18,9 @@ use lang\{
  * @see   xp://lang.XPClass
  */
 class Field implements Value {
-  private static $read, $write;
   protected $accessible= false;
   protected $_class= null;
   public $_reflect= null;
-
-  static function __static() {
-    if (defined('HHVM_VERSION_ID')) {
-      self::$read= function($class, $reflect, $instance, $public) {
-        if (null === $instance) {
-          return hphp_get_static_property($class, $reflect->name, !$public);
-        } else {
-          return hphp_get_property($instance, $class, $reflect->name);
-        }
-      };
-      self::$write= function($class, $reflect, $instance, $value, $public) {
-        if (null === $instance) {
-          return hphp_set_static_property($class, $reflect->name, $value, !$public);
-        } else {
-          return hphp_set_property($instance, $class, $reflect->name, $value);
-        }
-      };
-    } else {
-      self::$read= function($class, $reflect, $instance, $public) {
-        $public || $reflect->setAccessible(true);
-        return $reflect->getValue($instance);
-      };
-      self::$write= function($class, $reflect, $instance, $value, $public) {
-        $public || $reflect->setAccessible(true);
-        return $reflect->setValue($instance, $value);
-      };
-    }
-  }
 
   /**
    * Constructor
@@ -210,7 +181,8 @@ class Field implements Value {
     }
 
     try {
-      return (self::$read)($this->_class, $this->_reflect, $instance, $public);
+      $public || $this->_reflect->setAccessible(true);
+      return $this->_reflect->getValue($instance);
     } catch (Throwable $e) {
       throw $e;
     } catch (\Throwable $e) {
@@ -262,7 +234,8 @@ class Field implements Value {
     }
 
     try {
-      return (self::$write)($this->_class, $this->_reflect, $instance, $value, $public);
+      $public || $this->_reflect->setAccessible(true);
+      return $this->_reflect->setValue($instance, $value);
     } catch (Throwable $e) {
       throw $e;
     } catch (\Throwable $e) {
