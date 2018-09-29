@@ -113,15 +113,6 @@ class Routine implements Value {
       } else {
         return Type::forName($t);
       }
-    } else if (defined('HHVM_VERSION')) {
-      $t= $this->_reflect->getReturnTypeText() ?: 'var';
-      if ('self' === $t) {
-        return new XPClass($this->_reflect->getDeclaringClass());
-      } else if ('HH\\this' === $t) {
-        return new XPClass($this->_class);
-      } else {
-        return Type::forName($t);
-      }
     } else if ($t= $this->_reflect->getReturnType()) {
       return Type::forName((string)$t);
     } else {
@@ -137,9 +128,7 @@ class Routine implements Value {
     ) {
       return ltrim($details[DETAIL_RETURNS], '&');
     } else if ($t= $this->_reflect->getReturnType()) {
-      return str_replace('HH\\', '', $t);
-    } else if (defined('HHVM_VERSION')) {
-      return str_replace('HH\\', '', $this->_reflect->getReturnTypeText() ?: 'var');
+      return $t;
     } else {
       return 'var';
     }
