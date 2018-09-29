@@ -40,9 +40,6 @@ class ProcessTest extends \unittest\TestCase {
    * @return  string[]
    */
   private function arguments(... $args) {
-    if (defined('HHVM_VERSION')) {
-      array_unshift($args, '--php');
-    }
     return $args;
   }
 

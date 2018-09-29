@@ -1,9 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\PrerequisitesNotMetError;
-use net\xp_framework\unittest\IgnoredOnHHVM;
-use lang\Runtime;
 use lang\Process;
+use lang\Runtime;
+use unittest\PrerequisitesNotMetError;
 
 /**
  * TestCase
@@ -57,7 +56,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     return $out;
   }
 
-  #[@test, @action(new IgnoredOnHHVM())]
+  #[@test]
   public function loadLoadedLibrary() {
     $this->assertEquals(
       '+OK No exception thrown',
@@ -72,7 +71,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action(new IgnoredOnHHVM())]
+  #[@test]
   public function loadNonExistantLibrary() {
     $this->assertEquals(
       '+OK lang.ElementNotFoundException',
@@ -87,7 +86,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action(new IgnoredOnHHVM())]
+  #[@test]
   public function loadLibraryWithoutEnableDl() {
     $this->assertEquals(
       '+OK lang.IllegalAccessException',

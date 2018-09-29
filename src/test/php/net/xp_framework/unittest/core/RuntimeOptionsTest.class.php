@@ -16,9 +16,6 @@ class RuntimeOptionsTest extends \unittest\TestCase {
    * @param  lang.RuntimeOptions $actual
    */
   private function assertArguments($expected, $actual) {
-    if (defined('HHVM_VERSION')) {
-      array_unshift($expected, '--php');
-    }
     $this->assertEquals($expected, $actual->asArguments());
   }
 
