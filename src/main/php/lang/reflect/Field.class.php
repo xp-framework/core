@@ -43,8 +43,6 @@ class Field implements Value {
         $type= $details[DETAIL_RETURNS];
       } else if (isset($details[DETAIL_ANNOTATIONS]['type'])) {
         $type= $details[DETAIL_ANNOTATIONS]['type'];
-      } else if (defined('HHVM_VERSION')) {
-        $type= $this->_reflect->getTypeText() ?: 'var';
       } else {
         return Type::$VAR;
       }
@@ -65,8 +63,6 @@ class Field implements Value {
         return $details[DETAIL_RETURNS];
       } else if (isset($details[DETAIL_ANNOTATIONS]['type'])) {
         return $details[DETAIL_ANNOTATIONS]['type'];
-      } else if (defined('HHVM_VERSION')) {
-        return str_replace('HH\\', '', $this->_reflect->getTypeText()) ?: 'var';
       }
     }
     return 'var';
