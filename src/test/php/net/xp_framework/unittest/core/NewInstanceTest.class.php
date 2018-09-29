@@ -1,8 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\{Runnable, Runtime, Process, reflect\Package, ClassLoader, IllegalAccessException};
-use unittest\actions\{VerifyThat, RuntimeVersion};
 use net\xp_framework\unittest\Name;
+use unittest\actions\{VerifyThat, RuntimeVersion};
 use util\Objects;
 
 /**
@@ -201,10 +201,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action([
-  #  new VerifyThat('processExecutionEnabled'),
-  #  new VerifyThat(function() { return !defined('HHVM_VERSION'); })
-  #])]
+  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function typed_variadic_argument_passing() {
     $r= $this->runInNewRuntime('
       class Test {
