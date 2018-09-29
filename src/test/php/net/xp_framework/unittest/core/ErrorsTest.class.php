@@ -9,13 +9,13 @@ use lang\{
   Value,
   XPException
 };
+use unittest\TestCase;
 use unittest\actions\RuntimeVersion;
-use net\xp_framework\unittest\IgnoredOnHHVM;
 
 /**
  * Test the XP error handling semantics
  */
-class ErrorsTest extends \unittest\TestCase {
+class ErrorsTest extends TestCase {
 
   /**
    * Setup method. Ensures xp error registry is initially empty and
@@ -94,7 +94,7 @@ class ErrorsTest extends \unittest\TestCase {
     $a['test'];
   }
 
-  #[@test, @expect(IndexOutOfBoundsException::class), @action(new IgnoredOnHHVM())]
+  #[@test, @expect(IndexOutOfBoundsException::class)]
   public function undefined_string_offset_yields_ioobe() {
     $a= '';
     $a{0};
@@ -120,10 +120,7 @@ class ErrorsTest extends \unittest\TestCase {
     $f();
   }
 
-  #[@test, @expect(Error::class), @action([
-  #  new IgnoredOnHHVM(),
-  #  new RuntimeVersion('>=7.1.0-dev')
-  #])]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.1.0-dev'))]
   public function missing_argument_mismatch_yield_error() {
     $f= function($arg) { };
     $f();
