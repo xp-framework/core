@@ -492,7 +492,6 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test, @action([
   #  new VerifyThat('processExecutionEnabled'),
-  #  new VerifyThat(function() { return !defined('HHVM_VERSION'); }),
   #  new RuntimeVersion('>=7.1')
   #])]
   public function declaration_with_iterable_typehint() {
@@ -529,7 +528,6 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[@test, @action([
   #  new VerifyThat('processExecutionEnabled'),
-  #  new VerifyThat(function() { return !defined('HHVM_VERSION'); }),
   #  new RuntimeVersion('>=7.1')
   #])]
   public function declaration_with_void_return() {
@@ -562,10 +560,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action([
-  #  new VerifyThat('processExecutionEnabled'),
-  #  new VerifyThat(function() { return !defined('HHVM_VERSION'); })
-  #])]
+  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
   public function declaration_with_typed_variadic() {
     $r= $this->runInNewRuntime('
       abstract class Base {
