@@ -59,7 +59,8 @@ class ProcessTest extends \unittest\TestCase {
   #[@test]
   public function newInstance() {
     $p= Runtime::getInstance()->getExecutable()->newInstance(['-v']);
-    $this->assertEquals('PHP '.PHP_VERSION, $p->out->read(strlen($version)));
+    $version= 'PHP '.PHP_VERSION;
+    $this->assertEquals($version, $p->out->read(strlen($version)));
     $p->close();
   }
 
