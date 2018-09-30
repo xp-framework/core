@@ -58,13 +58,15 @@ class FileUtil {
    */
   public static function write($file, $bytes) {
     if ($file->isOpen()) {
-      return $file->write($bytes);
+      $file->seek(0, SEEK_SET);
+      $written= $file->write($bytes);
+      $file->truncate($written);
     } else {
       $file->open(File::WRITE);
       $written= $file->write($bytes);
       $file->close();
-      return $written;
     }
+    return $written;
   }
 
   /** @deprecated */

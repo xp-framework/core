@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\io;
 
 use io\streams\{Streams, MemoryInputStream, MemoryOutputStream};
-use io\{File, FileUtil};
+use io\{File, TempFile, FileUtil};
 use unittest\TestCase;
 
 /**
@@ -29,6 +29,17 @@ class FileUtilTest extends TestCase {
     $out= new MemoryOutputStream();
     FileUtil::write(new File(Streams::writeableFd($out)), 'Test');
     $this->assertEquals('Test', $out->bytes());
+  }
+
+  #[@test]
+  public function overwrite_bytes() {
+    $t= new TempFile();
+    $t->open(File::WRITE);
+    $t->write('Existing');
+    FileUtil::write($t, 'Test');
+    $t->close();
+
+    $this->assertEquals('Test', FileUtil::read($t));
   }
 
   #[@test]

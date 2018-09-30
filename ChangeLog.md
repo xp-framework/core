@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed `io.FileUtil::write()` to overwrite open files' contents instead
+  of simply appending the bytes given
+  (@thekid)
 * Fixed `io.File::truncate()` to retain the file offset on Windows, this
   way behaving the same as Unix systems.
   (@thekid)
