@@ -45,10 +45,10 @@ class FileUtil {
 
   /**
    * Set file contents. If the file was previously open, it is not closed
-   * after the bytes has been written.
+   * after the bytes have been written.
    *
    * ```php
-   * $bytes_written= FileUtil::write(new File('myfile'), 'Hello world');
+   * $written= FileUtil::write(new File('myfile'), 'Hello world');
    * ```
    *
    * @param  io.File $file
@@ -71,7 +71,7 @@ class FileUtil {
 
   /**
    * Append file contents. If the file was previously open, it is not closed
-   * after the bytes has been written.
+   * after the bytes have been written.
    *
    * @param  io.File $file
    * @param  string $bytes
