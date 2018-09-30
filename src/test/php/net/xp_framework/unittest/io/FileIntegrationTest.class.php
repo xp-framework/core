@@ -572,4 +572,14 @@ class FileIntegrationTest extends \unittest\TestCase {
 
     $this->assertEquals(4, $pos);
   }
+
+  #[@test]
+  public function writing_beyond_file_end_padds_with_zero() {
+    $this->file->open(FILE::WRITE);
+    $this->file->seek(2, SEEK_SET);
+    $this->file->write('Test');
+    $this->file->close();
+
+    $this->assertEquals("\x00\x00Test", $this->readData($this->file));
+  }
 }
