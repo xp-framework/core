@@ -5,7 +5,7 @@
  *
  * @test  xp://net.xp_framework.unittest.io.streams.MemoryOutputStreamTest
  */
-class MemoryOutputStream implements OutputStream, Seekable {
+class MemoryOutputStream implements OutputStream, Seekable, Truncation {
   protected $pos, $bytes;
 
   /** @param string $bytes */
