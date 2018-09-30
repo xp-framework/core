@@ -646,4 +646,9 @@ class File implements Channel, Value {
       $this->mode
     );
   }
+
+  /** Ensures file is closed */
+  public function __destruct() {
+    is_resource($this->_fd) && fclose($this->_fd);
+  }
 }

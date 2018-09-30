@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added destructor to file ensuring file handles are closed when `io.File`
+  are garbage-collected
+  (@thekid)
 * Added `io.TempFile::containing()` method to easily create temporary
   files and write content to them in one step
   (@thekid)

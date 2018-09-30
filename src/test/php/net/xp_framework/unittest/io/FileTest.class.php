@@ -1,13 +1,13 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use io\Folder;
 use io\File;
+use io\Folder;
 use io\Path;
-use io\streams\Streams;
 use io\streams\MemoryInputStream;
 use io\streams\MemoryOutputStream;
-use lang\Runtime;
+use io\streams\Streams;
 use lang\IllegalArgumentException;
+use lang\Runtime;
 
 /**
  * TestCase
@@ -52,11 +52,10 @@ class FileTest extends \unittest\TestCase {
 
   #[@test]
   public function hashCodesEqualForSameFileHandles() {
-    $fn= fopen($this->fileKnownToExist(), 'r');
-    $this->assertEquals(
-      (new File($fn))->hashCode(),
-      (new File($fn))->hashCode()
-    );
+    $handle= fopen($this->fileKnownToExist(), 'r');
+    $a= new File($handle);
+    $b= new File($handle);
+    $this->assertEquals($a->hashCode(), $b->hashCode());
   }
 
   #[@test]
