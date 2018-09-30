@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed `io.streams.MemoryOutputStream` to behave like files when writing
+  beyond stream end: Content is padded with `"\0"`.
+  (@thekid)
 * Fixed `io.FileUtil::write()` to overwrite open files' contents instead
   of simply appending the bytes given
   (@thekid)

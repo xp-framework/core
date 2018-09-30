@@ -21,8 +21,11 @@ class MemoryOutputStream implements OutputStream, Seekable, Truncation {
    */
   public function write($arg) {
     $l= strlen($arg);
-    if ($this->pos < strlen($this->bytes)) {
+    $length= strlen($this->bytes);
+    if ($this->pos < $length) {
       $this->bytes= substr_replace($this->bytes, $arg, $this->pos, $l);
+    } else if ($this->pos > $length) {
+      $this->bytes.= str_repeat("\x00", $this->pos - $length).$arg;
     } else {
       $this->bytes.= $arg;
     }

@@ -143,4 +143,14 @@ class MemoryOutputStreamTest extends \unittest\TestCase {
     $out->write('Ha');
     $this->assertEquals('Hallo', $out->bytes());
   }
+
+  #[@test]
+  public function writing_beyond_stream_end_padds_with_zero() {
+    $out= new MemoryOutputStream();
+    $out->seek(2, SEEK_SET);
+    $out->write('Test');
+    $out->write('!');
+
+    $this->assertEquals("\x00\x00Test!", $out->bytes());
+  }
 }

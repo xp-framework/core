@@ -578,8 +578,9 @@ class FileIntegrationTest extends \unittest\TestCase {
     $this->file->open(FILE::WRITE);
     $this->file->seek(2, SEEK_SET);
     $this->file->write('Test');
+    $this->file->write('!');
     $this->file->close();
 
-    $this->assertEquals("\x00\x00Test", $this->readData($this->file));
+    $this->assertEquals("\x00\x00Test!", $this->readData($this->file));
   }
 }
