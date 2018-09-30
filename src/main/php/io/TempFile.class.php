@@ -27,16 +27,13 @@ use lang\Environment;
  * same name. This would have to happen within the same 
  * microsecond, though, and is therefore quite unlikely.
  *
- * @see      xp://io.File
- * @see      xp://lang.Environment#tempDir
+ * @see   xp://io.File
+ * @see   xp://lang.Environment#tempDir
+ * @test  xp://net.xp_framework.unittest.io.TempFileTest
  */
 class TempFile extends File {
 
-  /**
-   * Constructor
-   *
-   * @param   string $prefix default "tmp"
-   */
+  /** @param  string $prefix default "tmp" */
   public function __construct($prefix= 'tmp') {
     parent::__construct(tempnam(Environment::tempDir(), $prefix.uniqid(microtime(true))));
   }
