@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\streams\FileInputStream;
-use io\{FileUtil, TempFile, IOException, FileNotFoundException};
+use io\{TempFile, IOException, FileNotFoundException};
 use unittest\{TestCase, PrerequisitesNotMetError};
 
 class FileInputStreamTest extends TestCase {
@@ -14,8 +14,7 @@ class FileInputStreamTest extends TestCase {
    */
   public function setUp() {
     try {
-      $this->file= new TempFile();
-      FileUtil::setContents($this->file, 'Created by FileInputStreamTest');
+      $this->file= (new TempFile())->containing('Created by FileInputStreamTest');
     } catch (IOException $e) {
       throw new PrerequisitesNotMetError('Cannot write temporary file', $e, [$this->file]);
     }
