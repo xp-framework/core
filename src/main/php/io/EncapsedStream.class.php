@@ -81,7 +81,7 @@ class EncapsedStream extends File {
    * @param   int size default 0
    * @return  bool
    */
-  public function truncate($size= 0): bool {
+  public function truncate(int $size= 0): bool {
     throw new MethodNotImplementedException('Truncation not supported');
   }
   
