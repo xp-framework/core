@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added `io.TempFile::persistent()` method to keep temporary files even
+  after they are garbage-collected
+  (@thekid)
 * Added destructor to file ensuring file handles are closed when `io.File`
   are garbage-collected
   (@thekid)

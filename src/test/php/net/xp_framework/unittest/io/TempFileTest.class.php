@@ -71,4 +71,22 @@ class TempFileTest extends TestCase {
       $t->unlink();
     }
   }
+
+  #[@test]
+  public function deleted_on_garbage_collection() {
+    $t= new TempFile();
+    $uri= $t->getURI();
+
+    $t= null; // Force garbage collection
+    $this->assertFalse(file_exists($uri));
+  }
+
+  #[@test]
+  public function kept_after_garbage_collection_if_made_persistent() {
+    $t= (new TempFile())->persistent();
+    $uri= $t->getURI();
+
+    $t= null; // Force garbage collection
+    $this->assertTrue(file_exists($uri));
+  }
 }

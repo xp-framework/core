@@ -32,6 +32,7 @@ use lang\{Environment, IllegalStateException};
  * @test  xp://net.xp_framework.unittest.io.TempFileTest
  */
 class TempFile extends File {
+  private $persistent= false;
 
   /** @param string $prefix default "tmp" */
   public function __construct($prefix= 'tmp') {
@@ -59,5 +60,21 @@ class TempFile extends File {
     }
 
     return $this;
+  }
+
+  /**
+   * Keeps this temporary file even after it gets garbage-collected.
+   *
+   * @return $this
+   */
+  public function persistent() {
+    $this->persistent= true;
+    return $this;
+  }
+
+  /** Ensures file is closed and deleted */
+  public function __destruct() {
+    parent::__destruct();
+    $this->persistent || file_exists($this->uri) && unlink($this->uri);
   }
 }
