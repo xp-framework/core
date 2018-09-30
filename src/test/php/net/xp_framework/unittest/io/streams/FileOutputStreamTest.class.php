@@ -15,8 +15,7 @@ class FileOutputStreamTest extends \unittest\TestCase {
    */
   public function setUp() {
     try {
-      $this->file= new TempFile();
-      FileUtil::write($this->file, 'Created by FileOutputStreamTest');
+      $this->file= (new TempFile())->containing('Created by FileOutputStreamTest');
     } catch (IOException $e) {
       throw new PrerequisitesNotMetError('Cannot write temporary file', $e, [$this->file]);
     }
