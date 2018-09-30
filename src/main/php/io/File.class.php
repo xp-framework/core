@@ -177,16 +177,27 @@ class File implements Channel, Value {
   /**
    * Truncate the file to the specified length
    *
-   * @param   bool TRUE if method succeeded
+   * @param   int $size Default 0
+   * @return  bool
    * @throws  io.IOException in case of an error
    */
-  public function truncate($size= 0): bool {
-    if (false === ($return= ftruncate($this->_fd, $size))) {
+  public function truncate(int $size= 0): bool {
+
+    // OS vagaries: Windows does not retain file position!
+    if (0 === strncasecmp(PHP_OS, 'WIN', 3)) {
+      $pos= ftell($this->_fd);
+      $return= ftruncate($this->_fd, $size);
+      fseek($this->_fd, $pos, SEEK_SET);
+    } else {
+      $return= ftruncate($this->_fd, $size);
+    }
+
+    if (false === $return) {
       $e= new IOException('Cannot truncate file '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
     }
-    return $return;
+    return true;
   }
 
   /**

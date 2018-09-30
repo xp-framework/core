@@ -439,4 +439,75 @@ class FileIntegrationTest extends \unittest\TestCase {
     $target->unlink();
     $this->assertTrue($exists);
   }
+
+  #[@test]
+  public function truncate_to_zero() {
+    $this->writeData($this->file, 'test');
+
+    $this->file->open(FILE::READWRITE);
+    $this->file->truncate();
+    $this->file->close();
+
+    $this->assertEquals(0, $this->file->size());
+  }
+
+  #[@test]
+  public function shorten_file_using_truncate() {
+    $this->writeData($this->file, 'test');
+
+    $this->file->open(FILE::READWRITE);
+    $this->file->truncate(3);
+    $this->file->close();
+
+    $this->assertEquals('tes', $this->readData($this->file));
+  }
+
+  #[@test]
+  public function lengthen_file_using_truncate() {
+    $this->writeData($this->file, 'test');
+
+    $this->file->open(FILE::READWRITE);
+    $this->file->truncate(5);
+    $this->file->close();
+
+    $this->assertEquals("test\x00", $this->readData($this->file));
+  }
+
+  #[@test]
+  public function writing_after_truncate() {
+    $this->writeData($this->file, 'test');
+
+    $this->file->open(FILE::READWRITE);
+    $this->file->truncate(4);
+    $this->file->write('T');
+    $this->file->close();
+
+    $this->assertEquals('Test', $this->readData($this->file));
+  }
+
+  #[@test]
+  public function writing_does_not_change_file_pointer() {
+    $this->writeData($this->file, 'test');
+
+    $this->file->open(FILE::READWRITE);
+    $this->file->seek(2, SEEK_SET);
+    $this->file->truncate(4);
+    $this->file->write('S');
+    $this->file->close();
+
+    $this->assertEquals('teSt', $this->readData($this->file));
+  }
+
+  #[@test]
+  public function writing_to_offset_larger_than_filesize() {
+    $this->writeData($this->file, 'test');
+
+    $this->file->open(FILE::READWRITE);
+    $this->file->seek(0, SEEK_END);
+    $this->file->truncate(2);
+    $this->file->write('T');
+    $this->file->close();
+
+    $this->assertEquals("te\x00\x00T", $this->readData($this->file));
+  }
 }

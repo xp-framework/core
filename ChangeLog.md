@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed `io.File::truncate()` to retain the file offset on Windows, this
+  way behaving the same as Unix systems.
+  (@thekid)
+
 ### Features
 
 * Added optional initial bytes to `io.streams.OutputStream` constructor
