@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added `io.TempFile::containing()` method to easily create temporary
+  files and write content to them in one step
+  (@thekid)
 * Merged PR #204: Deprecate `util.PropertyManager` - @thekid
 
 ## 9.7.0 / 2018-09-06

@@ -1,6 +1,6 @@
 <?php namespace io;
 
-use lang\Environment;
+use lang\{Environment, IllegalStateException};
   
 /**
  * Represents a temporary file
@@ -33,8 +33,31 @@ use lang\Environment;
  */
 class TempFile extends File {
 
-  /** @param  string $prefix default "tmp" */
+  /** @param string $prefix default "tmp" */
   public function __construct($prefix= 'tmp') {
     parent::__construct(tempnam(Environment::tempDir(), $prefix.uniqid(microtime(true))));
+  }
+
+  /**
+   * Writes the given content to this temporary file, returning this
+   * for use in a fluid manner.
+   *
+   * @param  string $contents
+   * @return self
+   * @throws io.IOException if an I/O error occurs
+   * @throws lang.IllegalStateException if the file is open
+   */
+  public function containing($contents) {
+    if (is_resource($this->_fd)) {
+      throw new IllegalStateException('Temporary file still open');
+    }
+
+    if (false === file_put_contents($this->uri, $contents)) {
+      $e= new IOException('Cannot write to temporary file '.$this->uri);
+      \xp::gc(__FILE__);
+      throw $e;
+    }
+
+    return $this;
   }
 }
