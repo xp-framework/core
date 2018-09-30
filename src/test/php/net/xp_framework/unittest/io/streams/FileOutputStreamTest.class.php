@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\streams\FileOutputStream;
-use io\{FileUtil, TempFile, IOException};
+use io\{File, FileUtil, TempFile, IOException};
 use lang\IllegalArgumentException;
 use unittest\PrerequisitesNotMetError;
 
@@ -80,6 +80,17 @@ class FileOutputStreamTest extends \unittest\TestCase {
     with ($stream= new FileOutputStream($this->file)); {
       $stream->close();
       $stream->close();
+    }
+  }
+
+  #[@test]
+  public function truncation() {
+    FileUtil::write($this->file, 'Existing');
+
+    with ($stream= new FileOutputStream($this->file, File::READWRITE)); {
+      $stream->truncate(5);
+      $this->file->close();
+      $this->assertEquals('Exist', FileUtil::read($this->file));
     }
   }
 }

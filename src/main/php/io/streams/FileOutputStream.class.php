@@ -30,6 +30,17 @@ class FileOutputStream implements OutputStream {
     $this->file->write($arg);
   }
 
+
+  /**
+   * Truncate this buffer to a given new size.
+   *
+   * @param  int $size
+   * @return void
+   */
+  public function truncate($size) {
+    $this->file->truncate($size);
+  }
+
   /**
    * Flush this buffer. A NOOP for this implementation.
    *
