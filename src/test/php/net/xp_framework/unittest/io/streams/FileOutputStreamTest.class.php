@@ -16,7 +16,7 @@ class FileOutputStreamTest extends \unittest\TestCase {
   public function setUp() {
     try {
       $this->file= new TempFile();
-      FileUtil::setContents($this->file, 'Created by FileOutputStreamTest');
+      FileUtil::write($this->file, 'Created by FileOutputStreamTest');
     } catch (IOException $e) {
       throw new PrerequisitesNotMetError('Cannot write temporary file', $e, [$this->file]);
     }
@@ -41,7 +41,7 @@ class FileOutputStreamTest extends \unittest\TestCase {
     with ($stream= new FileOutputStream($this->file), $buffer= 'Created by '.$this->name); {
       $stream->write($buffer);
       $this->file->close();
-      $this->assertEquals($buffer, FileUtil::getContents($this->file));
+      $this->assertEquals($buffer, FileUtil::read($this->file));
     }
   }
 
@@ -50,7 +50,7 @@ class FileOutputStreamTest extends \unittest\TestCase {
     with ($stream= new FileOutputStream($this->file, true)); {
       $stream->write('!');
       $this->file->close();
-      $this->assertEquals('Created by FileOutputStreamTest!', FileUtil::getContents($this->file));
+      $this->assertEquals('Created by FileOutputStreamTest!', FileUtil::read($this->file));
     }
   }
 

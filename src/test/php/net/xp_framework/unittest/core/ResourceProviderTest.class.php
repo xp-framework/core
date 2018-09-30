@@ -1,8 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use io\File;
-use io\FileUtil;
 use io\FileNotFoundException;
+use io\FileUtil;
 use lang\ResourceProvider;
 
 /**
@@ -19,11 +19,11 @@ class ResourceProviderTest extends \unittest\TestCase {
 
   #[@test]
   public function loadingAsFile() {
-    $this->assertEquals('Foobar', trim(FileUtil::getContents(new File('res://net/xp_framework/unittest/core/resourceprovider/one/Dummy.txt'))));
+    $this->assertEquals('Foobar', trim(FileUtil::read(new File('res://net/xp_framework/unittest/core/resourceprovider/one/Dummy.txt'))));
   }
 
   #[@test, @expect(FileNotFoundException::class)]
   public function loadingNonexistantFile() {
-    $this->assertEquals('Foobar', trim(FileUtil::getContents(new File('res://one/Dummy.txt'))));
+    $this->assertEquals('Foobar', trim(FileUtil::read(new File('res://one/Dummy.txt'))));
   }
 }

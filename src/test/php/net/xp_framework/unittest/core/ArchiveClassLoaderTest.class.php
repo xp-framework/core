@@ -1,8 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use io\FileUtil;
 use lang\archive\{Archive, ArchiveClassLoader};
 use lang\{ClassNotFoundException, ElementNotFoundException, XPClass};
-use io\FileUtil;
 
 /**
  * TestCase for archive class loading
@@ -80,7 +80,7 @@ class ArchiveClassLoaderTest extends \unittest\TestCase {
 
   #[@test]
   public function load_existing_resource_stream_from_archive() {
-    $contents= FileUtil::getContents($this->fixture->getResourceAsStream('test/package-info.xp'));
+    $contents= FileUtil::read($this->fixture->getResourceAsStream('test/package-info.xp'));
     $this->assertEquals('<?php', substr($contents, 0, strpos($contents, "\n")));
   }
 

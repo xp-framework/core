@@ -13,19 +13,19 @@ class FileUtil {
    * it is not closed when EOF is reached.
    *
    * ```php
-   * $str= FileUtil::getContents(new File('/etc/passwd'));
+   * $str= FileUtil::read(new File('/etc/passwd'));
    * ```
    *
-   * @param   io.File $file
-   * @return  string file contents
-   * @throws  io.IOException
-   * @throws  io.FileNotFoundException
+   * @param  io.File $file
+   * @return string file contents
+   * @throws io.IOException
+   * @throws io.FileNotFoundException
    */
-  public static function getContents($file) {
+  public static function read($file) {
     if ($file->isOpen()) {
-      $data= '';
+      $bytes= '';
       do {
-        $data.= $file->read();
+        $bytes.= $file->read();
       } while (!$file->eof());
     } else {
       clearstatcache();
@@ -33,37 +33,43 @@ class FileUtil {
       $size= $file->size();
 
       // Read until EOF. Best case scenario is that this will run exactly once.
-      $data= '';
+      $bytes= '';
       do {
-        $l= $size - strlen($data);
-        $data.= $file->read($l);
+        $l= $size - strlen($bytes);
+        $bytes.= $file->read($l);
       } while ($l > 0 && !$file->eof());
       $file->close();
     }
-    return $data;
+    return $bytes;
   }
-  
+
   /**
    * Set file contents. If the file was previously open, it is not closed
-   * after the data has been written.
+   * after the bytes has been written.
    *
    * ```php
-   * $bytes_written= FileUtil::setContents(new File('myfile'), 'Hello world');
+   * $bytes_written= FileUtil::write(new File('myfile'), 'Hello world');
    * ```
    *
-   * @param   io.File $file
-   * @param   string $data
-   * @return  int
-   * @throws  io.IOException
+   * @param  io.File $file
+   * @param  string $bytes
+   * @return int
+   * @throws io.IOException
    */
-  public static function setContents($file, $data) {
+  public static function write($file, $bytes) {
     if ($file->isOpen()) {
-      return $file->write($data);
+      return $file->write($bytes);
     } else {
       $file->open(File::WRITE);
-      $written= $file->write($data);
+      $written= $file->write($bytes);
       $file->close();
       return $written;
     }
   }
+
+  /** @deprecated */
+  public static function getContents($file) { return self::read($file); }
+
+  /** @deprecated */
+  public static function setContents($file, $bytes) { return self::write($file, $bytes); }
 }

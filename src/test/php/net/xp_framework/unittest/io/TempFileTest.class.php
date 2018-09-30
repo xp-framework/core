@@ -33,7 +33,7 @@ class TempFileTest extends TestCase {
   public function containing() {
     $t= (new TempFile())->containing('Test');
     try {
-      $this->assertEquals('Test', FileUtil::getContents($t));
+      $this->assertEquals('Test', FileUtil::read($t));
     } finally {
       $t->unlink();
     }

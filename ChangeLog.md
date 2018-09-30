@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added `read()` and `write()` methods to `io.FileUtil` as replacements
+  for `getContents()` and `setContents()`
+  (@thekid)
 * Added `io.streams.MemoryOutputStream::bytes()` method w/o *get* prefix
   (@thekid)
 * Added `io.TempFile::persistent()` method to keep temporary files even

@@ -20,7 +20,7 @@ class FilesystemPropertySourceTest extends \unittest\TestCase {
 
     // Create a temporary ini file
     $this->tempFile= new File($tempDir, 'temp.ini');
-    FileUtil::setContents($this->tempFile, "[section]\nkey=value\n");
+    FileUtil::write($this->tempFile, "[section]\nkey=value\n");
   }
 
   public function tearDown() {
