@@ -84,6 +84,27 @@ class FileOutputStreamTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function tell_initially() {
+    $stream= new FileOutputStream($this->file);
+    $this->assertEquals(0, $stream->tell());
+  }
+
+  #[@test]
+  public function tell_after_writing() {
+    $stream= new FileOutputStream($this->file);
+    $stream->write('Test');
+    $this->assertEquals(4, $stream->tell());
+  }
+
+  #[@test]
+  public function tell_after_seeking() {
+    $stream= new FileOutputStream($this->file);
+    $stream->write('Test');
+    $stream->seek(0, SEEK_SET);
+    $this->assertEquals(0, $stream->tell());
+  }
+
+  #[@test]
   public function truncation() {
     $this->file->open(File::READWRITE);
     $this->file->write('Existing');

@@ -14,6 +14,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Changed `io.streams.FileOutputStream` to implement `Seekable` interface
+  (@thekid)
 * Added `io.FileUtil::append()` to complement the `write()` method.
   (@thekid)
 * Added optional initial bytes to `io.streams.OutputStream` constructor
