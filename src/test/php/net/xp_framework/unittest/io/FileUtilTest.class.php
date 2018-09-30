@@ -64,6 +64,14 @@ class FileUtilTest extends TestCase {
     $this->assertEquals('Test', FileUtil::read($f));
   }
 
+  #[@test]
+  public function methods_can_be_used_on_instance() {
+    $f= new File(Streams::readableFd(new MemoryInputStream('Test')));
+
+    $files= new FileUtil();
+    $this->assertEquals('Test', $files->read($f));
+  }
+
   /** @deprecated */
   #[@test]
   public function get_contents() {
