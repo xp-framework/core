@@ -56,6 +56,11 @@ abstract class Streams {
         return $written;
       }
 
+      public function stream_truncate($size) {
+        parent::$streams[$this->id]->truncate($size);
+        return true;
+      }
+
       public function stream_read($count) {
         throw new IOException('Cannot read from writeable stream');
       }

@@ -106,4 +106,41 @@ class MemoryOutputStreamTest extends \unittest\TestCase {
     $out->close();
     $out->close();
   }
+
+  #[@test]
+  public function truncate_to_same_length() {
+    $out= new MemoryOutputStream('Hello');
+    $out->truncate(5);
+    $this->assertEquals('Hello', $out->bytes());
+  }
+
+  #[@test]
+  public function truncate_to_zero() {
+    $out= new MemoryOutputStream('Hello');
+    $out->truncate(0);
+    $this->assertEquals('', $out->bytes());
+  }
+
+  #[@test]
+  public function shorten_using_truncate() {
+    $out= new MemoryOutputStream('Hello');
+    $out->truncate(4);
+    $this->assertEquals('Hell', $out->bytes());
+  }
+
+  #[@test]
+  public function lengthen_using_truncate() {
+    $out= new MemoryOutputStream('Hello');
+    $out->truncate(6);
+    $this->assertEquals("Hello\x00", $out->bytes());
+  }
+
+  #[@test]
+  public function truncate_does_not_change_file_offset() {
+    $out= new MemoryOutputStream('Hello');
+    $out->seek(0, SEEK_SET);
+    $out->truncate(5);
+    $out->write('Ha');
+    $this->assertEquals('Hallo', $out->bytes());
+  }
 }

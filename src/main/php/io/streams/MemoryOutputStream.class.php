@@ -1,7 +1,7 @@
 <?php namespace io\streams;
 
 /**
- * OuputStream writes to memory, which can be retrieved via `getBytes()`
+ * OuputStream writes to memory, which can be retrieved via `bytes()`
  *
  * @test  xp://net.xp_framework.unittest.io.streams.MemoryOutputStreamTest
  */
@@ -27,6 +27,21 @@ class MemoryOutputStream implements OutputStream, Seekable {
       $this->bytes.= $arg;
     }
     $this->pos+= $l;
+  }
+
+  /**
+   * Truncate this buffer to a given new size.
+   *
+   * @param  int $size
+   * @return void
+   */
+  public function truncate($size) {
+    $length= strlen($this->bytes);
+    if ($size > $length) {
+      $this->bytes.= str_repeat("\x00", $size - $length);
+    } else if ($size < $length) {
+      $this->bytes= substr($this->bytes, 0, $size);
+    }
   }
 
   /**
