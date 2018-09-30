@@ -19,15 +19,20 @@ class MemoryOutputStreamTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function initially_empty() {
+    $this->assertEquals('', $this->out->bytes());
+  }
+
+  #[@test]
   public function writing_a_string() {
     $this->out->write('Hello');
-    $this->assertEquals('Hello', $this->out->getBytes());
+    $this->assertEquals('Hello', $this->out->bytes());
   }
 
   #[@test]
   public function writing_a_number() {
     $this->out->write(5);
-    $this->assertEquals('5', $this->out->getBytes());
+    $this->assertEquals('5', $this->out->bytes());
   }
 
   #[@test]
@@ -55,7 +60,7 @@ class MemoryOutputStreamTest extends \unittest\TestCase {
     $this->out->write('Hello');
     $this->out->seek(0, SEEK_SET);
     $this->out->write('h');
-    $this->assertEquals('hello', $this->out->getBytes());
+    $this->assertEquals('hello', $this->out->bytes());
   }
 
   #[@test]
@@ -63,7 +68,7 @@ class MemoryOutputStreamTest extends \unittest\TestCase {
     $this->out->write('Hello');
     $this->out->seek(0, SEEK_END);
     $this->out->write('!');
-    $this->assertEquals('Hello!', $this->out->getBytes());
+    $this->assertEquals('Hello!', $this->out->bytes());
   }
 
   #[@test]
@@ -71,7 +76,7 @@ class MemoryOutputStreamTest extends \unittest\TestCase {
     $this->out->write('Hello');
     $this->out->seek(-1, SEEK_END);
     $this->out->write('_');
-    $this->assertEquals('Hell_', $this->out->getBytes());
+    $this->assertEquals('Hell_', $this->out->bytes());
   }
 
   #[@test]
@@ -80,7 +85,7 @@ class MemoryOutputStreamTest extends \unittest\TestCase {
     $this->out->seek(1, SEEK_SET);
     $this->out->write('ai');
     $this->out->write('fisch');
-    $this->assertEquals('Haifisch', $this->out->getBytes());
+    $this->assertEquals('Haifisch', $this->out->bytes());
   }
 
   #[@test]

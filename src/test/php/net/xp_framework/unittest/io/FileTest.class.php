@@ -235,7 +235,7 @@ class FileTest extends \unittest\TestCase {
     $f->write('Test');
     $f->close();
 
-    $this->assertEquals('Test', $out->getBytes());
+    $this->assertEquals('Test', $out->bytes());
   }
 
   #[@test]

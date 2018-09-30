@@ -56,9 +56,13 @@ class MemoryOutputStream implements OutputStream, Seekable {
     return $this->pos;
   }
 
+  /** @return string */
+  public function bytes() { return $this->bytes; }
+
   /**
    * Retrieve stored bytes
    *
+   * @deprecated Use bytes() instead!
    * @return  string
    */
   public function getBytes() { 
@@ -82,6 +86,6 @@ class MemoryOutputStream implements OutputStream, Seekable {
 
   /** @return string */
   public function toString() {
-    return nameof($this).'(@end of '.strlen($this->bytes).' bytes)';
+    return nameof($this).'(@'.$this->pos.' of '.strlen($this->bytes).' bytes)';
   }
 }

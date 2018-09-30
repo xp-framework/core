@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added `io.streams.MemoryOutputStream::bytes()` method w/o *get* prefix
+  (@thekid)
 * Added `io.TempFile::persistent()` method to keep temporary files even
   after they are garbage-collected
   (@thekid)
