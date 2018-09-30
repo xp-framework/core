@@ -510,4 +510,66 @@ class FileIntegrationTest extends \unittest\TestCase {
 
     $this->assertEquals("te\x00\x00T", $this->readData($this->file));
   }
+
+  #[@test]
+  public function tell_after_open() {
+    $this->file->open(FILE::WRITE);
+    $pos= $this->file->tell();
+    $this->file->close();
+
+    $this->assertEquals(0, $pos);
+  }
+
+  #[@test]
+  public function tell_after_write() {
+    $this->file->open(FILE::WRITE);
+    $this->file->write('Test');
+    $pos= $this->file->tell();
+    $this->file->close();
+
+    $this->assertEquals(4, $pos);
+  }
+
+  #[@test]
+  public function tell_after_seek() {
+    $this->file->open(FILE::WRITE);
+    $this->file->write('Test');
+    $this->file->seek(2, SEEK_SET);
+    $pos= $this->file->tell();
+    $this->file->close();
+
+    $this->assertEquals(2, $pos);
+  }
+
+  #[@test]
+  public function tell_after_seek_cur() {
+    $this->file->open(FILE::WRITE);
+    $this->file->write('Test');
+    $this->file->seek(-2, SEEK_CUR);
+    $pos= $this->file->tell();
+    $this->file->close();
+
+    $this->assertEquals(2, $pos);
+  }
+
+  #[@test]
+  public function tell_after_seek_end() {
+    $this->file->open(FILE::WRITE);
+    $this->file->write('Test');
+    $this->file->seek(-1, SEEK_END);
+    $pos= $this->file->tell();
+    $this->file->close();
+
+    $this->assertEquals(3, $pos);
+  }
+
+  #[@test]
+  public function seek_beyond_file_end() {
+    $this->file->open(FILE::WRITE);
+    $this->file->seek(4, SEEK_SET);
+    $pos= $this->file->tell();
+    $this->file->close();
+
+    $this->assertEquals(4, $pos);
+  }
 }
