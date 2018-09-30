@@ -1,7 +1,7 @@
 <?php namespace io\streams;
 
-use io\IOException;
 use io\FileNotFoundException;
+use io\IOException;
 
 /**
  * Wraps I/O streams into PHP streams
@@ -31,7 +31,7 @@ abstract class Streams {
       }
 
       public function stream_write($data) {
-        throw new \io\IOException("Cannot write to readable stream");
+        throw new IOException('Cannot write to readable stream');
       }
 
       public function stream_read($count) {
@@ -57,7 +57,7 @@ abstract class Streams {
       }
 
       public function stream_read($count) {
-        throw new \io\IOException("Cannot read from writeable stream");
+        throw new IOException('Cannot read from writeable stream');
       }
 
       public function stream_flush() {
