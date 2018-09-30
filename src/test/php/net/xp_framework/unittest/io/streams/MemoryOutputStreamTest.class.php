@@ -9,88 +9,101 @@ use io\streams\MemoryOutputStream;
  * @see   xp://lang.Closeable#close
  */
 class MemoryOutputStreamTest extends \unittest\TestCase {
-  private $out;
 
-  /**
-   * Setup method. Creates the fixture.
-   */
-  public function setUp() {
-    $this->out= new MemoryOutputStream();
+  #[@test]
+  public function can_create() {
+    new MemoryOutputStream();
   }
 
   #[@test]
   public function initially_empty() {
-    $this->assertEquals('', $this->out->bytes());
+    $this->assertEquals('', (new MemoryOutputStream())->bytes());
+  }
+
+  #[@test]
+  public function initial_value() {
+    $this->assertEquals('Test', (new MemoryOutputStream('Test'))->bytes());
   }
 
   #[@test]
   public function writing_a_string() {
-    $this->out->write('Hello');
-    $this->assertEquals('Hello', $this->out->bytes());
+    $out= new MemoryOutputStream();
+    $out->write('Hello');
+    $this->assertEquals('Hello', $out->bytes());
   }
 
   #[@test]
   public function writing_a_number() {
-    $this->out->write(5);
-    $this->assertEquals('5', $this->out->bytes());
+    $out= new MemoryOutputStream();
+    $out->write(5);
+    $this->assertEquals('5', $out->bytes());
   }
 
   #[@test]
   public function tell() {
-    $this->out->write('Hello');
-    $this->assertEquals(5, $this->out->tell());
+    $out= new MemoryOutputStream('Hello');
+    $this->assertEquals(5, $out->tell());
+  }
+
+  #[@test]
+  public function tell_after_writing() {
+    $out= new MemoryOutputStream();
+    $out->write('Hello');
+    $this->assertEquals(5, $out->tell());
   }
 
   #[@test, @values([0, 1, 5])]
   public function tell_after_seeking_to_beginning_plus($offset) {
-    $this->out->write('Hello');
-    $this->out->seek($offset, SEEK_SET);
-    $this->assertEquals($offset, $this->out->tell());
+    $out= new MemoryOutputStream('Hello');
+    $out->seek($offset, SEEK_SET);
+    $this->assertEquals($offset, $out->tell());
   }
 
   #[@test, @values([0, 1, 5])]
   public function tell_after_seeking_to_end_minus($offset) {
-    $this->out->write('Hello');
-    $this->out->seek(-$offset, SEEK_END);
-    $this->assertEquals(5 - $offset, $this->out->tell());
+    $out= new MemoryOutputStream('Hello');
+    $out->seek(-$offset, SEEK_END);
+    $this->assertEquals(5 - $offset, $out->tell());
   }
 
   #[@test]
   public function replacing_character() {
-    $this->out->write('Hello');
-    $this->out->seek(0, SEEK_SET);
-    $this->out->write('h');
-    $this->assertEquals('hello', $this->out->bytes());
+    $out= new MemoryOutputStream('Hello');
+    $out->seek(0, SEEK_SET);
+    $out->write('h');
+    $this->assertEquals('hello', $out->bytes());
   }
 
   #[@test]
   public function seeking_to_end() {
-    $this->out->write('Hello');
-    $this->out->seek(0, SEEK_END);
-    $this->out->write('!');
-    $this->assertEquals('Hello!', $this->out->bytes());
+    $out= new MemoryOutputStream('Hello');
+    $out->seek(0, SEEK_END);
+    $out->write('!');
+    $this->assertEquals('Hello!', $out->bytes());
   }
 
   #[@test]
   public function seeking_to_end_minus_one() {
-    $this->out->write('Hello');
-    $this->out->seek(-1, SEEK_END);
-    $this->out->write('_');
-    $this->assertEquals('Hell_', $this->out->bytes());
+    $out= new MemoryOutputStream('Hello');
+    $out->seek(-1, SEEK_END);
+    $out->write('_');
+    $this->assertEquals('Hell_', $out->bytes());
   }
 
   #[@test]
   public function overwriting() {
-    $this->out->write('Hello');
-    $this->out->seek(1, SEEK_SET);
-    $this->out->write('ai');
-    $this->out->write('fisch');
-    $this->assertEquals('Haifisch', $this->out->bytes());
+    $out= new MemoryOutputStream();
+    $out->write('Hello');
+    $out->seek(1, SEEK_SET);
+    $out->write('ai');
+    $out->write('fisch');
+    $this->assertEquals('Haifisch', $out->bytes());
   }
 
   #[@test]
   public function closing_twice_has_no_effect() {
-    $this->out->close();
-    $this->out->close();
+    $out= new MemoryOutputStream();
+    $out->close();
+    $out->close();
   }
 }

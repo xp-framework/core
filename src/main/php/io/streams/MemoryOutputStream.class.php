@@ -6,9 +6,14 @@
  * @test  xp://net.xp_framework.unittest.io.streams.MemoryOutputStreamTest
  */
 class MemoryOutputStream implements OutputStream, Seekable {
-  protected $pos= 0;
-  protected $bytes= '';
-  
+  protected $pos, $bytes;
+
+  /** @param string $bytes */
+  public function __construct($bytes= '') {
+    $this->bytes= $bytes;
+    $this->pos= strlen($bytes);
+  }
+
   /**
    * Write a string
    *
@@ -29,8 +34,7 @@ class MemoryOutputStream implements OutputStream, Seekable {
    *
    * @return void
    */
-  public function flush() { 
-  }
+  public function flush() { }
 
   /**
    * Seek to a given offset
@@ -47,14 +51,8 @@ class MemoryOutputStream implements OutputStream, Seekable {
     }
   }
 
-  /**
-   * Return current offset
-   *
-   * @return  int
-   */
-  public function tell() {
-    return $this->pos;
-  }
+  /** @return int */
+  public function tell() { return $this->pos; }
 
   /** @return string */
   public function bytes() { return $this->bytes; }
@@ -74,15 +72,7 @@ class MemoryOutputStream implements OutputStream, Seekable {
    *
    * @return void
    */
-  public function close() {
-  }
-
-  /**
-   * Destructor.
-   */
-  public function __destruct() {
-    unset($this->bytes);
-  }
+  public function close() { }
 
   /** @return string */
   public function toString() {

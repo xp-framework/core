@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added optional initial bytes to `io.streams.OutputStream` constructor
+  (@thekid)
 * Added `read()` and `write()` methods to `io.FileUtil` as replacements
   for `getContents()` and `setContents()`
   (@thekid)
