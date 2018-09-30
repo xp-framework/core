@@ -69,6 +69,26 @@ class FileUtil {
     return $written;
   }
 
+  /**
+   * Append file contents. If the file was previously open, it is not closed
+   * after the bytes has been written.
+   *
+   * @param  io.File $file
+   * @param  string $bytes
+   * @return int
+   * @throws io.IOException
+   */
+  public static function append($file, $bytes) {
+    if ($file->isOpen()) {
+      $written= $file->write($bytes);
+    } else {
+      $file->open(File::APPEND);
+      $written= $file->write($bytes);
+      $file->close();
+    }
+    return $written;
+  }
+
   /** @deprecated */
   public static function getContents($file) { return self::read($file); }
 

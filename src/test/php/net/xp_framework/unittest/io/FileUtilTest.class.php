@@ -43,6 +43,20 @@ class FileUtilTest extends TestCase {
   }
 
   #[@test]
+  public function append_bytes() {
+    $out= new MemoryOutputStream();
+    FileUtil::append(new File(Streams::writeableFd($out)), 'Test');
+    $this->assertEquals('Test', $out->bytes());
+  }
+
+  #[@test]
+  public function append_bytes_to_existing() {
+    $out= new MemoryOutputStream('Existing');
+    FileUtil::append(new File(Streams::writeableFd($out)), 'Test');
+    $this->assertEquals('ExistingTest', $out->bytes());
+  }
+
+  #[@test]
   public function read_returns_less_than_size() {
     $f= new File(Streams::readableFd(new class('Test') extends MemoryInputStream {
       public function read($size= 4096) { return parent::read(min(1, $size)); }
