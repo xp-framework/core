@@ -57,8 +57,11 @@ abstract class Streams {
       }
 
       public function stream_truncate($size) {
-        parent::$streams[$this->id]->truncate($size);
-        return true;
+        if (parent::$streams[$this->id] instanceof Truncation) {
+          parent::$streams[$this->id]->truncate($size);
+          return true;
+        }
+        throw new IOException('Cannot truncate underlying stream');
       }
 
       public function stream_read($count) {
