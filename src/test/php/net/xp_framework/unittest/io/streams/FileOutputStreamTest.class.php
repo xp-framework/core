@@ -85,9 +85,10 @@ class FileOutputStreamTest extends \unittest\TestCase {
 
   #[@test]
   public function truncation() {
-    FileUtil::write($this->file, 'Existing');
+    $this->file->open(File::READWRITE);
+    $this->file->write('Existing');
 
-    with ($stream= new FileOutputStream($this->file, File::READWRITE)); {
+    with ($stream= new FileOutputStream($this->file)); {
       $stream->truncate(5);
       $this->file->close();
       $this->assertEquals('Exist', FileUtil::read($this->file));
