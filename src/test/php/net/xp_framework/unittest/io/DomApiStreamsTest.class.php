@@ -65,7 +65,7 @@ class DomApiStreamsTest extends \unittest\TestCase {
     // Check file contents
     $this->assertEquals(
       '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>&uuml;bercoder</title></head></html>', 
-      trim($out->getBytes())
+      trim($out->bytes())
     );
   }
 
@@ -101,7 +101,7 @@ class DomApiStreamsTest extends \unittest\TestCase {
     $this->assertEquals(
       '<?xml version="1.0"?>'."\n".
       '<root><child>&#xFC;bercoder</child></root>',
-      trim($out->getBytes())
+      trim($out->bytes())
     );
   }
 }

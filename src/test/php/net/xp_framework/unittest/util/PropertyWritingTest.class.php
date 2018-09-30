@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use util\Properties;
 use io\streams\MemoryOutputStream;
+use util\Properties;
 
 /**
  * Testcase for util.Properties class.
@@ -30,7 +30,7 @@ class PropertyWritingTest extends \unittest\TestCase {
   protected function assertSavedFixtureEquals($expected) {
     $out= new MemoryOutputStream();
     $this->fixture->store($out);
-    $this->assertEquals(preg_replace('/^ +/m', '', trim($expected)), trim($out->getBytes())); 
+    $this->assertEquals(preg_replace('/^ +/m', '', trim($expected)), trim($out->bytes())); 
   }
 
   #[@test]

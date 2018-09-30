@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use unittest\TestCase;
 use io\streams\{StreamTransfer, InputStream, OutputStream, MemoryInputStream, MemoryOutputStream};
+use unittest\TestCase;
 
 /**
  * TestCase
@@ -75,7 +75,7 @@ class StreamTransferTest extends TestCase {
     $s= new StreamTransfer(new MemoryInputStream('Hello'), $out);
     $s->transferAll();
 
-    $this->assertEquals('Hello', $out->getBytes());
+    $this->assertEquals('Hello', $out->bytes());
   }
 
   /**

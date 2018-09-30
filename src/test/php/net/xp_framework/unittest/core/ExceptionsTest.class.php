@@ -116,7 +116,7 @@ class ExceptionsTest extends \unittest\TestCase {
     $out= new MemoryOutputStream();
     $e= new Throwable('Test');
     $e->printStackTrace(Streams::writeableFd($out));
-    $this->assertEquals($e->toString(), $out->getBytes());
+    $this->assertEquals($e->toString(), $out->bytes());
   }
   
   #[@test, @expect(IllegalArgumentException::class)]

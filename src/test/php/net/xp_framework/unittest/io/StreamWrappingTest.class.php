@@ -1,8 +1,8 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use unittest\TestCase;
-use io\streams\{InputStream, MemoryInputStream, MemoryOutputStream, Streams};
 use io\IOException;
+use io\streams\{InputStream, MemoryInputStream, MemoryOutputStream, Streams};
+use unittest\TestCase;
 
 /**
  * TestCase
@@ -140,7 +140,7 @@ class StreamWrappingTest extends TestCase {
     fclose($fd);
     
     $this->assertEquals(strlen($buffer), $written);
-    $this->assertEquals($buffer, $m->getBytes());
+    $this->assertEquals($buffer, $m->bytes());
   }
 
   #[@test, @expect(IOException::class)]

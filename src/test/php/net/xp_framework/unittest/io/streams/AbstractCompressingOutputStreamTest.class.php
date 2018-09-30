@@ -1,10 +1,10 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use lang\IllegalArgumentException;
-use util\Bytes;
 use io\streams\MemoryOutputStream;
 use io\streams\OutputStream;
+use lang\IllegalArgumentException;
 use unittest\PrerequisitesNotMetError;
+use util\Bytes;
 
 /**
  * Abstract base class for all compressing output stream tests
@@ -67,7 +67,7 @@ abstract class AbstractCompressingOutputStreamTest extends \unittest\TestCase {
     $compressor= $this->newStream($out, 6);
     $compressor->write('Hello');
     $compressor->close();
-    $this->assertCompressedDataEquals($this->compress('Hello', 6), $out->getBytes());
+    $this->assertCompressedDataEquals($this->compress('Hello', 6), $out->bytes());
   }
 
   #[@test]
@@ -78,7 +78,7 @@ abstract class AbstractCompressingOutputStreamTest extends \unittest\TestCase {
     $compressor->write(' ');
     $compressor->write('World');
     $compressor->close();
-    $this->assertCompressedDataEquals($this->compress('Hello World', 6), $out->getBytes());
+    $this->assertCompressedDataEquals($this->compress('Hello World', 6), $out->bytes());
   }
 
   #[@test]
@@ -87,7 +87,7 @@ abstract class AbstractCompressingOutputStreamTest extends \unittest\TestCase {
     $compressor= $this->newStream($out, 9);
     $compressor->write('Hello');
     $compressor->close();
-    $this->assertCompressedDataEquals($this->compress('Hello', 9), $out->getBytes());
+    $this->assertCompressedDataEquals($this->compress('Hello', 9), $out->bytes());
   }
 
   #[@test]
@@ -96,7 +96,7 @@ abstract class AbstractCompressingOutputStreamTest extends \unittest\TestCase {
     $compressor= $this->newStream($out, 1);
     $compressor->write('Hello');
     $compressor->close();
-    $this->assertCompressedDataEquals($this->compress('Hello', 1), $out->getBytes());
+    $this->assertCompressedDataEquals($this->compress('Hello', 1), $out->bytes());
   }
 
   #[@test, @expect(IllegalArgumentException::class)]

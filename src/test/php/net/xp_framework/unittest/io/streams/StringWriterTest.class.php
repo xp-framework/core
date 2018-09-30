@@ -3,8 +3,8 @@
 use io\streams\{StringWriter, MemoryOutputStream};
 use lang\Value;
 use net\xp_framework\unittest\Name;
-use unittest\actions\RuntimeVersion;
 use unittest\TestCase;
+use unittest\actions\RuntimeVersion;
 
 /**
  * Test StringWriter
@@ -25,7 +25,7 @@ class StringWriterTest extends TestCase {
     with (new MemoryOutputStream(), function($out) use($bytes, $closure) {
       $fixture= new StringWriter($out);
       $closure($fixture);
-      $this->assertEquals($bytes, $out->getBytes());
+      $this->assertEquals($bytes, $out->bytes());
     });
   }
 

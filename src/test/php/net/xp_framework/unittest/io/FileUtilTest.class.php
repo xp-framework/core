@@ -1,8 +1,8 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use unittest\TestCase;
-use io\{File, FileUtil};
 use io\streams\{Streams, MemoryInputStream, MemoryOutputStream};
+use io\{File, FileUtil};
+use unittest\TestCase;
 
 /**
  * TestCase
@@ -28,7 +28,7 @@ class FileUtilTest extends TestCase {
   public function set_contents_writes_bytes() {
     $out= new MemoryOutputStream();
     FileUtil::setContents(new File(Streams::writeableFd($out)), 'Test');
-    $this->assertEquals('Test', $out->getBytes());
+    $this->assertEquals('Test', $out->bytes());
   }
 
   #[@test]

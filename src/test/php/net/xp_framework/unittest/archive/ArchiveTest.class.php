@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\archive;
 
-use lang\archive\Archive;
-use lang\{FormatException, ElementNotFoundException};
 use io\File;
 use io\streams\{Streams, MemoryInputStream, MemoryOutputStream};
+use lang\archive\Archive;
+use lang\{FormatException, ElementNotFoundException};
 
 /**
  * Base class for archive file tests
@@ -120,7 +120,7 @@ abstract class ArchiveTest extends \unittest\TestCase {
     $a->open(Archive::CREATE);
     $a->create();
     
-    $file= new File(Streams::readableFd(new MemoryInputStream($out->getBytes())));
+    $file= new File(Streams::readableFd(new MemoryInputStream($out->bytes())));
     $this->assertEntries(new Archive($file), []);
   }
 
@@ -139,7 +139,7 @@ abstract class ArchiveTest extends \unittest\TestCase {
     };
     $a->create();
 
-    $file= new File(Streams::readableFd(new MemoryInputStream($out->getBytes())));
+    $file= new File(Streams::readableFd(new MemoryInputStream($out->bytes())));
     $this->assertEntries(new Archive($file), $contents);
   }
 }
