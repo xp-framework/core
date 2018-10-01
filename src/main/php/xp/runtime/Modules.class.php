@@ -1,27 +1,28 @@
 <?php namespace xp\runtime;
 
-use lang\{Error, Environment};
+use lang\Environment;
 use lang\reflect\Module;
 
 class Modules {
   private $list= [];
   private $loaded= ['php' => true, 'xp-framework/core' => true];
-  private $vendorDir= null;
+  private $vendorDir= null, $userDir= null;
   
   /**
    * Adds a module
    *
    * @param  string $module
+   * @param  string $import
    * @return void
    */
-  public function add($module) {
-    $this->list[]= $module;
+  public function add($module, $import= null) {
+    $this->list[$module]= $import;
   }
 
   /**
-   * Returns list of all modules
+   * Returns map of all modules and their associated imports
    *
-   * @return string[]
+   * @return [:string]
    */
   public function all() { return $this->list; }
 
@@ -43,14 +44,28 @@ class Modules {
   }
 
   /**
+   * Returns user vendor directory relevant for loading module
+   *
+   * @return string
+   */
+  public function userDir() {
+    if (null === $this->userDir) {
+      $this->userDir= Environment::configDir('xp').DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR;
+    }
+    return $this->userDir;
+  }
+
+  /**
    * Requires modules
    *
    * @return void
-   * @throws lang.Error
+   * @throws xp.runtime.ModuleNotFound
    */
   public function require() {
-    foreach ($this->list as $module) {
-      $this->load($module);
+    foreach ($this->list as $module => $import) {
+      if (!$this->load($module)) {
+        throw new ModuleNotFound($module, $import);
+      }
     }
   }
 
@@ -58,16 +73,16 @@ class Modules {
    * Loads a single module
    *
    * @param  string $module
-   * @return void
-   * @throws lang.Error
+   * @return bool
    */
   public function load($module) {
-    if (!isset($this->loaded[$module]) && !Module::loaded($module)) {
-      $base= $this->vendorDir().strtr($module, '/', DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-      if (null === ($defines= json_decode(file_get_contents($base.'composer.json'), true))) {
-        throw new Error('Could not load module '.$module);
-      }
+    if (isset($this->loaded[$module]) || Module::loaded($module)) return true;
 
+    foreach ([$this->vendorDir(), $this->userDir()] as $dir) {
+      $base= $dir.strtr($module, '/', DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+      if (!is_dir($base)) continue;
+
+      $defines= json_decode(file_get_contents($base.'composer.json'), true);
       $this->loaded[$module]= true;
       foreach ($defines['autoload']['files'] as $file) {
         require($base.strtr($file, '/', DIRECTORY_SEPARATOR));
@@ -75,6 +90,9 @@ class Modules {
       foreach ($defines['require'] as $depend => $_) {
         $this->load($depend);
       }
+      return true;
     }
+
+    return false;
   }
 }
