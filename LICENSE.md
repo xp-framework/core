@@ -1,10 +1,10 @@
-XP Framework Core: LICENCE
+XP Framework Core: LICENSE
 ========================================================================
 
-The XP framework is published under the BSD licence. For reference, see
+The XP framework is published under the BSD license. For reference, see
 http://www.opensource.org/licenses/bsd-license.php
 
-This is the licence's text:
+This is the license's text:
 ```
 Copyright (c) 2001-2018, XP-Framework Team
 All rights reserved.
