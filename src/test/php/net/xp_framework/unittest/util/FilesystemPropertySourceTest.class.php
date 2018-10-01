@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use io\{File, FileUtil};
-use lang\{System, IllegalArgumentException};
+use lang\{Environment, IllegalArgumentException};
 use util\{FilesystemPropertySource, Properties};
 
 /**
@@ -11,11 +11,11 @@ use util\{FilesystemPropertySource, Properties};
  * @see   xp://util.FilesystemPropertySource
  */
 class FilesystemPropertySourceTest extends \unittest\TestCase {
-  protected $tempFile;
-  protected $fixture;
+  protected $tempFile, $fixture;
 
+  /** @return void */
   public function setUp() {
-    $tempDir= realpath(System::tempDir());
+    $tempDir= realpath(Environment::tempDir());
     $this->fixture= new FilesystemPropertySource($tempDir);
 
     // Create a temporary ini file
@@ -23,6 +23,7 @@ class FilesystemPropertySourceTest extends \unittest\TestCase {
     FileUtil::write($this->tempFile, "[section]\nkey=value\n");
   }
 
+  /** @return void */
   public function tearDown() {
     $this->tempFile->unlink();
   }
@@ -40,7 +41,7 @@ class FilesystemPropertySourceTest extends \unittest\TestCase {
   #[@test]
   public function fetch_existing_ini_file() {
     $this->assertEquals(
-      new \util\Properties($this->tempFile->getURI()),
+      new Properties($this->tempFile->getURI()),
       $this->fixture->fetch('temp')
     );
   }

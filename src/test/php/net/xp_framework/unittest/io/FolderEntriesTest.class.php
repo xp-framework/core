@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\io;
 
 use io\{Folder, Path, File, FolderEntries};
-use lang\{IllegalArgumentException, System};
+use lang\{IllegalArgumentException, Environment};
 
 class FolderEntriesTest extends \unittest\TestCase {
   private $folder;
@@ -12,7 +12,7 @@ class FolderEntriesTest extends \unittest\TestCase {
    * @return void
    */
   public function setUp() {
-    $this->folder= new Folder(System::tempDir(), md5(uniqid()).'.xp');
+    $this->folder= new Folder(Environment::tempDir(), md5(uniqid()).'.xp');
     $this->folder->exists() && $this->folder->unlink();
     $this->folder->create();
   }

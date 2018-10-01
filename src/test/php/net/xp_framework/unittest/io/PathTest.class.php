@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\io;
 
 use io\{Path, File, Folder};
-use lang\{Runtime, System, IllegalStateException, IllegalArgumentException};
+use lang\{Runtime, Environment, IllegalStateException, IllegalArgumentException};
 use unittest\actions\IsPlatform;
 
 class PathTest extends \unittest\TestCase {
@@ -191,7 +191,7 @@ class PathTest extends \unittest\TestCase {
 
   #[@test, @action(new IsPlatform('!^Win'))]
   public function links_resolved_in_realpath() {
-    $temp= System::tempDir();
+    $temp= Environment::tempDir();
     $link= new Path($temp, 'link-to-temp');
     if (false === symlink($temp, $link)) {
       $this->skip('Cannot create '.$link.' -> '.$temp);

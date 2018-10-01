@@ -2,15 +2,10 @@
 
 use io\IOException;
 use io\streams\{Streams, MemoryOutputStream};
-use lang\{Runtime, System, Process, IllegalStateException};
-use unittest\{PrerequisitesNotMetError, AssertionFailedError};
+use lang\{Runtime, Environment, Process, IllegalStateException};
+use unittest\{PrerequisitesNotMetError, AssertionFailedError, TestCase};
 
-/**
- * TestCase for Process class
- *
- * @see   xp://lang.Process
- */
-class ProcessTest extends \unittest\TestCase {
+class ProcessTest extends TestCase {
 
   /**
    * Skips tests if process execution has been disabled.
@@ -136,7 +131,7 @@ class ProcessTest extends \unittest\TestCase {
 
   #[@test, @expect(IOException::class)]
   public function runningDirectory() {
-    new Process(System::tempDir());
+    new Process(Environment::tempDir());
   }
 
   #[@test, @expect(IOException::class)]

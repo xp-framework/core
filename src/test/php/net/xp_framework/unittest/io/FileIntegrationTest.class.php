@@ -1,10 +1,10 @@
 <?php namespace net\xp_framework\unittest\io;
 
 use io\{File, Folder, IOException, FileNotFoundException};
-use lang\{System, IllegalStateException};
-use unittest\PrerequisitesNotMetError;
+use lang\{Environment, IllegalStateException};
+use unittest\{PrerequisitesNotMetError, TestCase};
 
-class FileIntegrationTest extends \unittest\TestCase {
+class FileIntegrationTest extends TestCase {
   const TESTDATA = 'Test';
 
   protected static $temp= null;
@@ -18,7 +18,7 @@ class FileIntegrationTest extends \unittest\TestCase {
    */
   #[@beforeClass]
   public static function verifyTempDir() {
-    self::$temp= System::tempDir();
+    self::$temp= Environment::tempDir();
     if (!is_writeable(self::$temp)) {
       throw new PrerequisitesNotMetError('$TEMP is not writeable', null, [self::$temp.' +w']);
     }
