@@ -21,7 +21,7 @@ XP Framework Core ChangeLog
   (@thekid)
 * Added `io.FileUtil::append()` to complement the `write()` method.
   (@thekid)
-* Added optional initial bytes to `io.streams.OutputStream` constructor
+* Added optional bytes arg to `io.streams.MemoryOutputStream` constructor
   (@thekid)
 * Added `read()` and `write()` methods to `io.FileUtil` as replacements
   for `getContents()` and `setContents()`
