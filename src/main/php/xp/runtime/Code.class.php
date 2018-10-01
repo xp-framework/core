@@ -44,7 +44,7 @@ class Code {
       $delim= strpos($this->fragment, ';');
       foreach ($this->importsIn(substr($this->fragment, 4, $delim - 4)) as $import => $module) {
         $this->imports[]= $import;
-        $module && $this->modules->add($module);
+        $module && $this->modules->add($module, $import);
       }
       $this->fragment= ltrim(substr($this->fragment, $delim + 1), "\r\n\t ");
     }

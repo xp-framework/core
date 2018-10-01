@@ -1,6 +1,7 @@
 <?php namespace xp\runtime;
 
-use lang\XPClass;
+use lang\{XPClass, Environment};
+use util\cmd\Console;
 
 /**
  * Evaluates sourcecode. Used by `xp eval` subcommand.
@@ -26,6 +27,16 @@ class Evaluate {
       $code= new Code($args[0]);
     }
 
-    return $code->run($code->fragment(), [XPClass::nameOf(self::class)] + $args);
+    try {
+      return $code->run($code->fragment(), [XPClass::nameOf(self::class)] + $args);
+    } catch (ModuleNotFound $e) {
+      Console::$err->writeLine("\033[41;1;37mError: ", $e->getMessage(), "\033[0m");
+      Console::$err->writeLinef(
+        "Try installing it via `\033[36mcomposer require -d '%s' %s\033[0m`",
+        rtrim(Environment::configDir('xp'), DIRECTORY_SEPARATOR),
+        $e->module()
+      );
+      return 127;
+    }
   }
 }
