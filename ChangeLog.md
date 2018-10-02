@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 9.8.0 / 2018-10-02
+
 ### Bugfixes
 
 * Fixed `io.streams.MemoryOutputStream` to behave like files when writing
