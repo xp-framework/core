@@ -17,15 +17,15 @@ class Evaluate {
 
     // Read sourcecode from STDIN if no further argument is given
     if (empty($args)) {
-      $code= new Code(file_get_contents('php://stdin'));
+      $code= new Code(file_get_contents('php://stdin'), '(standard input)');
     } else if ('--' === $args[0]) {
-      $code= new Code(file_get_contents('php://stdin'));
+      $code= new Code(file_get_contents('php://stdin'), '(standard input)');
     } else if (is_file($args[0])) {
-      $code= new Code(file_get_contents($args[0]));
+      $code= new Code(file_get_contents($args[0]), $args[0]);
     } else {
-      $code= new Code($args[0]);
+      $code= new Code($args[0], '(command line argument)');
     }
 
-    return $code->run($code->fragment(), [XPClass::nameOf(self::class)] + $args);
+    return $code->run([XPClass::nameOf(self::class)] + $args);
   }
 }
