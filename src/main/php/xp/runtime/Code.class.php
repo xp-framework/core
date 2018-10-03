@@ -63,7 +63,7 @@ class Code {
     }
 
     $this->fragment= rtrim(substr($input, $pos), "\r\n\t ;").';';
-    $this->line= substr_count($input, "\n", 0, $pos > $length ? $length : $pos);
+    $this->line= 0 === $pos ? 0 : substr_count($input, "\n", 0, $pos > $length ? $length : $pos);
   }
 
   /** @return string */
