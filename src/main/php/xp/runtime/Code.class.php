@@ -51,6 +51,9 @@ class Code {
   }
 
   /** @return string */
+  public function namespace() { return $this->namespace; }
+
+  /** @return string */
   public function fragment() { return $this->fragment; }
 
   /** @return string */
@@ -117,7 +120,7 @@ class Code {
    * @throws lang.Throwable
    */
   public function run($expression, $argv= []) {
-    $this->modules->require();
+    $this->modules->require($this->namespace);
 
     $argc= sizeof($argv);
     try {

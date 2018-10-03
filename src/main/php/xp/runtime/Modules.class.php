@@ -34,52 +34,58 @@ class Modules {
    */
   public function vendorDir() {
     if (null === $this->vendorDir) {
-      $composer= getcwd();
-      if (!is_dir($composer.DIRECTORY_SEPARATOR.'vendor')) {
-        $composer= getenv('COMPOSER_HOME') ?: Environment::configDir('composer', false);
+      $this->vendorDir= getcwd();
+      if (!is_dir($this->vendorDir.DIRECTORY_SEPARATOR.'vendor')) {
+        $this->vendorDir= getenv('COMPOSER_HOME') ?: Environment::configDir('composer', false);
       }
-      $this->vendorDir= $composer.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR;
     }
     return $this->vendorDir;
   }
 
   /**
-   * Returns user vendor directory relevant for loading module
+   * Returns namespaced user vendor directory relevant for loading module
    *
+   * @param  string $namespace
    * @return string
    */
-  public function userDir() {
+  public function userDir($namespace) {
     if (null === $this->userDir) {
-      $this->userDir= Environment::configDir('xp').DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR;
+      $this->userDir= Environment::configDir('xp').DIRECTORY_SEPARATOR.$namespace;
     }
     return $this->userDir;
   }
 
   /**
-   * Requires modules
+   * Requires modules in a given namespace
    *
+   * @param  string $namespace
    * @return void
    * @throws xp.runtime.ModuleNotFound
    */
-  public function require() {
+  public function require($namespace) {
     foreach ($this->list as $module => $import) {
-      if (!$this->load($module)) {
+      if (!$this->load($namespace, $module)) {
         throw new ModuleNotFound($module, $import);
       }
     }
   }
 
   /**
-   * Loads a single module
+   * Loads a single module from a given namespace
    *
+   * @param  string $namespace
    * @param  string $module
    * @return bool
    */
-  public function load($module) {
+  public function load($namespace, $module) {
     if (isset($this->loaded[$module]) || Module::loaded($module)) return true;
 
-    foreach ([$this->vendorDir(), $this->userDir()] as $dir) {
-      $base= $dir.strtr($module, '/', DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+    foreach ([$this->vendorDir(), $this->userDir($namespace)] as $dir) {
+      $base= (
+        $dir.DIRECTORY_SEPARATOR
+        .'vendor'.DIRECTORY_SEPARATOR
+        .strtr($module, '/', DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR
+      );
       if (!is_dir($base)) continue;
 
       $defines= json_decode(file_get_contents($base.'composer.json'), true);
@@ -88,7 +94,7 @@ class Modules {
         require($base.strtr($file, '/', DIRECTORY_SEPARATOR));
       }
       foreach ($defines['require'] as $depend => $_) {
-        $this->load($depend);
+        $this->load($namespace, $depend);
       }
       return true;
     }

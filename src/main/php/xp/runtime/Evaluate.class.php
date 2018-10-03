@@ -32,8 +32,8 @@ class Evaluate {
     } catch (ModuleNotFound $e) {
       Console::$err->writeLine("\033[41;1;37mError: ", $e->getMessage(), "\033[0m");
       Console::$err->writeLinef(
-        "Try installing it via `\033[36mcomposer require -d '%s' %s\033[0m`",
-        rtrim(Environment::configDir('xp'), DIRECTORY_SEPARATOR),
+        "Try installing it via `\033[36mmkdir -p '%1\$s' && composer require -d '%1\$s' %2\$s\033[0m`",
+        Environment::configDir('xp').$code->namespace(),
         $e->module()
       );
       return 127;
