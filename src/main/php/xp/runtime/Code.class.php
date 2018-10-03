@@ -93,7 +93,7 @@ class Code {
    *
    * @return self
    */
-  public function asExpression() {
+  public function withReturn() {
     $self= clone $this;
     if (!strstr($self->fragment, 'return ') && !strstr($self->fragment, 'return;')) {
       $self->fragment= 'return '.$self->fragment;

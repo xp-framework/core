@@ -36,17 +36,17 @@ class CodeTest extends \unittest\TestCase {
 
   #[@test]
   public function expression() {
-    $this->assertEquals('return "Test";', (new Code('"Test"'))->asExpression()->fragment());
+    $this->assertEquals('return "Test";', (new Code('"Test"'))->withReturn()->fragment());
   }
 
   #[@test]
   public function expression_with_semicolon() {
-    $this->assertEquals('return "Test";', (new Code('"Test";'))->asExpression()->fragment());
+    $this->assertEquals('return "Test";', (new Code('"Test";'))->withReturn()->fragment());
   }
 
   #[@test]
   public function expression_with_existing_return() {
-    $this->assertEquals('return "Test";', (new Code('return "Test";'))->asExpression()->fragment());
+    $this->assertEquals('return "Test";', (new Code('return "Test";'))->withReturn()->fragment());
   }
 
   #[@test, @values([

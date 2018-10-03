@@ -27,7 +27,7 @@ class Dump {
     }
 
     // Perform
-    $return= $code->asExpression()->run([XPClass::nameOf(self::class)] + $args);
+    $return= $code->withReturn()->run([XPClass::nameOf(self::class)] + $args);
     switch ($way) {
       case '-w': Console::writeLine($return); break;
       case '-d': var_dump($return); break;
