@@ -160,8 +160,8 @@ class CodeTest extends \unittest\TestCase {
 
   #[@test]
   public function run_without_return() {
-    $code= new Code('// NOOP');
-    $this->assertEquals(1, $code->run());
+    $code= new Code('');
+    $this->assertEquals(null, $code->run());
   }
 
   #[@test]

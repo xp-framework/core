@@ -140,7 +140,7 @@ class Code {
   public function run($argv= []) {
     $this->modules->require();
 
-    Script::$code[$this->name]= '<?php '.$this->head().str_repeat("\n", $this->line).$this->fragment;
+    Script::$code[$this->name]= '<?php '.$this->head().str_repeat("\n", $this->line).$this->fragment."\nreturn null;";
     try {
       $argc= sizeof($argv);
       return include('script://'.$this->name);
