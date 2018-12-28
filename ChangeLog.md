@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 9.8.1 / 2018-12-28
+
 ### Bugfixes
 
 * Fixed issue #210: PHP 7.4 modifiers compatiblity - @thekid
