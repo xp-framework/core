@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed issue #210: PHP 7.4 modifiers compatiblity - @thekid
+
 ### Features
 
 * Added support for [PHP 7.3](http://php.net/archive/2018.php#id2018-12-06-1)

@@ -415,12 +415,12 @@ if (!date_default_timezone_set(ini_get('date.timezone'))) {
   throw new \Exception('[xp::core] date.timezone not configured properly.', 0x3d);
 }
 
-define('MODIFIER_STATIC',       1);
-define('MODIFIER_ABSTRACT',     2);
-define('MODIFIER_FINAL',        4);
-define('MODIFIER_PUBLIC',     256);
-define('MODIFIER_PROTECTED',  512);
-define('MODIFIER_PRIVATE',   1024);
+define('MODIFIER_STATIC',    \ReflectionMethod::IS_STATIC);
+define('MODIFIER_ABSTRACT',  \ReflectionMethod::IS_ABSTRACT);
+define('MODIFIER_FINAL',     \ReflectionMethod::IS_FINAL);
+define('MODIFIER_PUBLIC',    \ReflectionMethod::IS_PUBLIC);
+define('MODIFIER_PROTECTED', \ReflectionMethod::IS_PROTECTED);
+define('MODIFIER_PRIVATE',   \ReflectionMethod::IS_PRIVATE);
 
 defined('PHP_INT_MIN') || define('PHP_INT_MIN', ~PHP_INT_MAX);
 
