@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 9.8.2 / 2019-01-01
+
+### Bugfixes
+
+* Merged PR #208: Ensure filenames and lines match up to parsed code 
+  (@thekid)
+
 ## 9.8.1 / 2018-12-28
 
 ### Bugfixes
