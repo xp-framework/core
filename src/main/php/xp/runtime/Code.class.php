@@ -9,57 +9,65 @@ use lang\Throwable;
  * @test  xp://net.xp_framework.unittest.runtime.CodeTest
  */
 class Code {
-  private $fragment;
-  private $imports= [];
-  private $modules= [];
-  private $namespace= null;
+  private $name, $fragment, $modules, $line, $imports, $namespace;
+
+  static function __static() {
+    stream_wrapper_register('script', Script::class);
+  }
 
   /**
    * Creates a new code instance
    *
    * @param  string $input
+   * @param  string $name
    */
-  public function __construct($input) {
+  public function __construct($input, $name= '(unnamed)') {
+    $this->name= $name;
+    $this->namespace= null;
+    $this->modules= new Modules();
+    $this->imports= [];
+
+    $pos= 0;
+    $length= strlen($input);
 
     // Shebang
-    if (0 === strncmp($input, '#!', 2)) {
-      $input= substr($input, strcspn($input, "\n") + 1);
+    if ($pos < $length && 0 === substr_compare($input, '#!', $pos, 2)) {
+      $pos+= strcspn($input, "\n", $pos) + 1;
     }
 
     // PHP open tags
-    if (0 === strncmp($input, '<?', 2)) {
-      $input= substr($input, strcspn($input, "\r\n\t =") + 1);
+    if ($pos < $length && 0 === substr_compare($input, '<?', $pos, 2)) {
+      $pos+= strcspn($input, "\r\n\t =", $pos) + 1;
     }
 
-    $this->fragment= trim($input, "\r\n\t ;").';';
+    // Trim whitespace on the left
+    $pos+= strspn($input, "\r\n\t ", $pos);
 
-    if (0 === strncmp($this->fragment, 'namespace', 9)) {
-      $length= strcspn($this->fragment, ';', 10);
-      $this->namespace= substr($this->fragment, 10, $length);
-      $this->fragment= ltrim(substr($this->fragment, 11 + $length), "\r\n\t ");
+    // Parse namespace declaration
+    if ($pos < $length && 0 === substr_compare($input, 'namespace', $pos, 9)) {
+      $l= strcspn($input, ';', $pos);
+      $this->namespace= substr($input, $pos + 10, $l - 10);
+      $pos+= $l + 1;
+      $pos+= strspn($input, "\r\n\t ", $pos);
     }
 
-    $this->modules= new Modules();
-    while (0 === strncmp($this->fragment, 'use ', 4)) {
-      $delim= strpos($this->fragment, ';');
-      foreach ($this->importsIn(substr($this->fragment, 4, $delim - 4)) as $import => $module) {
+    // Parse imports
+    while ($pos < $length && 0 === substr_compare($input, 'use ', $pos, 4)) {
+      $l= strcspn($input, ';', $pos);
+      foreach ($this->importsIn(substr($input, $pos + 4, $l - 4)) as $import => $module) {
         $this->imports[]= $import;
         $module && $this->modules->add($module);
       }
-      $this->fragment= ltrim(substr($this->fragment, $delim + 1), "\r\n\t ");
+      $pos+= $l + 1;
+      $pos+= strspn($input, "\r\n\t ", $pos);
     }
+
+    $this->fragment= rtrim(substr($input, $pos), "\r\n\t ;").';';
+    $this->line= 0 === $pos ? 0 : substr_count($input, "\n", 0, $pos > $length ? $length : $pos);
   }
 
   /** @return string */
   public function fragment() { return $this->fragment; }
-
-  /** @return string */
-  public function expression() {
-    return strstr($this->fragment, 'return ') || strstr($this->fragment, 'return;')
-      ? $this->fragment
-      : 'return '.$this->fragment
-    ;
-  }
 
   /** @return string[] */
   public function imports() { return $this->imports; }
@@ -77,6 +85,20 @@ class Code {
       ($this->namespace ? 'namespace '.$this->namespace.';' : '').
       (empty($this->imports) ? '' : 'use '.implode(', ', $this->imports).';')
     ;
+  }
+
+  /**
+   * Returns a new instance of this code instance, with a `return` statement
+   * inserted if necessary.
+   *
+   * @return self
+   */
+  public function withReturn() {
+    $self= clone $this;
+    if (!strstr($self->fragment, 'return ') && !strstr($self->fragment, 'return;')) {
+      $self->fragment= 'return '.$self->fragment;
+    }
+    return $self;
   }
 
   /**
@@ -111,19 +133,21 @@ class Code {
   /**
    * Runs an expression of code in the context of this code
    *
-   * @param  string $expression
    * @param  string[] $argv
    * @return int
    * @throws lang.Throwable
    */
-  public function run($expression, $argv= []) {
+  public function run($argv= []) {
     $this->modules->require();
 
-    $argc= sizeof($argv);
+    Script::$code[$this->name]= '<?php '.$this->head().str_repeat("\n", $this->line).$this->fragment."\nreturn null;";
     try {
-      return eval($this->head().$expression);
+      $argc= sizeof($argv);
+      return include('script://'.$this->name);
     } catch (\Throwable $t) {
       throw Throwable::wrap($t);
+    } finally {
+      unset(Script::$code[$this->name]);
     }
   }
 }
