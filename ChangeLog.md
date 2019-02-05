@@ -5,6 +5,10 @@ XP Framework Core ChangeLog
 
 ## 10.0.0 / ????-??-??
 
+### Heads up!
+
+* Merged PR #194: Remove deprecated XP registry - @thekid
+
 ### RFCs
 
 * Implemented xp-framework/rfc#329: Remove deprecated io.sys. See PR #197
