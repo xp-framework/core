@@ -1,10 +1,10 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use unittest\TestCase;
-use io\streams\StringReader;
 use io\streams\InputStream;
 use io\streams\MemoryInputStream;
+use io\streams\StringReader;
 use lang\IllegalStateException;
+use unittest\TestCase;
 
 class StringReaderTest extends TestCase {
 
@@ -63,6 +63,15 @@ class StringReaderTest extends TestCase {
     $stream= new StringReader(new MemoryInputStream('Hello World'));
     $this->assertEquals('Hello', $stream->read(5));
     $this->assertEquals(' ', $stream->read(1));
+    $this->assertEquals('World', $stream->readLine());
+  }
+
+  #[@test]
+  public function read_after_readLine() {
+    $stream= new StringReader(new MemoryInputStream("Hello\n\0\nWorld\n"));
+    $this->assertEquals('Hello', $stream->readLine());
+    $this->assertEquals("\0", $stream->read(1));
+    $this->assertEquals('', $stream->readLine());
     $this->assertEquals('World', $stream->readLine());
   }
 

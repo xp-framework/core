@@ -17,7 +17,6 @@ class RuntimeTest extends \unittest\TestCase {
    * @throws unittest.AssertionFailedError
    */
   private function assertArguments($expected, $actual) {
-    defined('HHVM_VERSION') && array_unshift($expected, '--php');
     $this->assertEquals($expected, $actual->asArguments());
   }
 

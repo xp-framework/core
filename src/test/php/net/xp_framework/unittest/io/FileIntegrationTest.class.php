@@ -444,7 +444,7 @@ class FileIntegrationTest extends TestCase {
   public function truncate_to_zero() {
     $this->writeData($this->file, 'test');
 
-    $this->file->open(FILE::READWRITE);
+    $this->file->open(File::READWRITE);
     $this->file->truncate();
     $this->file->close();
 
@@ -455,7 +455,7 @@ class FileIntegrationTest extends TestCase {
   public function shorten_file_using_truncate() {
     $this->writeData($this->file, 'test');
 
-    $this->file->open(FILE::READWRITE);
+    $this->file->open(File::READWRITE);
     $this->file->truncate(3);
     $this->file->close();
 
@@ -466,7 +466,7 @@ class FileIntegrationTest extends TestCase {
   public function lengthen_file_using_truncate() {
     $this->writeData($this->file, 'test');
 
-    $this->file->open(FILE::READWRITE);
+    $this->file->open(File::READWRITE);
     $this->file->truncate(5);
     $this->file->close();
 
@@ -477,7 +477,7 @@ class FileIntegrationTest extends TestCase {
   public function writing_after_truncate() {
     $this->writeData($this->file, 'test');
 
-    $this->file->open(FILE::READWRITE);
+    $this->file->open(File::READWRITE);
     $this->file->truncate(4);
     $this->file->write('T');
     $this->file->close();
@@ -489,7 +489,7 @@ class FileIntegrationTest extends TestCase {
   public function writing_does_not_change_file_pointer() {
     $this->writeData($this->file, 'test');
 
-    $this->file->open(FILE::READWRITE);
+    $this->file->open(File::READWRITE);
     $this->file->seek(2, SEEK_SET);
     $this->file->truncate(4);
     $this->file->write('S');
@@ -502,7 +502,7 @@ class FileIntegrationTest extends TestCase {
   public function writing_to_offset_larger_than_filesize() {
     $this->writeData($this->file, 'test');
 
-    $this->file->open(FILE::READWRITE);
+    $this->file->open(File::READWRITE);
     $this->file->seek(0, SEEK_END);
     $this->file->truncate(2);
     $this->file->write('T');
@@ -513,7 +513,7 @@ class FileIntegrationTest extends TestCase {
 
   #[@test]
   public function tell_after_open() {
-    $this->file->open(FILE::WRITE);
+    $this->file->open(File::WRITE);
     $pos= $this->file->tell();
     $this->file->close();
 
@@ -522,7 +522,7 @@ class FileIntegrationTest extends TestCase {
 
   #[@test]
   public function tell_after_write() {
-    $this->file->open(FILE::WRITE);
+    $this->file->open(File::WRITE);
     $this->file->write('Test');
     $pos= $this->file->tell();
     $this->file->close();
@@ -532,7 +532,7 @@ class FileIntegrationTest extends TestCase {
 
   #[@test]
   public function tell_after_seek() {
-    $this->file->open(FILE::WRITE);
+    $this->file->open(File::WRITE);
     $this->file->write('Test');
     $this->file->seek(2, SEEK_SET);
     $pos= $this->file->tell();
@@ -543,7 +543,7 @@ class FileIntegrationTest extends TestCase {
 
   #[@test]
   public function tell_after_seek_cur() {
-    $this->file->open(FILE::WRITE);
+    $this->file->open(File::WRITE);
     $this->file->write('Test');
     $this->file->seek(-2, SEEK_CUR);
     $pos= $this->file->tell();
@@ -554,7 +554,7 @@ class FileIntegrationTest extends TestCase {
 
   #[@test]
   public function tell_after_seek_end() {
-    $this->file->open(FILE::WRITE);
+    $this->file->open(File::WRITE);
     $this->file->write('Test');
     $this->file->seek(-1, SEEK_END);
     $pos= $this->file->tell();
@@ -565,7 +565,7 @@ class FileIntegrationTest extends TestCase {
 
   #[@test]
   public function seek_beyond_file_end() {
-    $this->file->open(FILE::WRITE);
+    $this->file->open(File::WRITE);
     $this->file->seek(4, SEEK_SET);
     $pos= $this->file->tell();
     $this->file->close();
@@ -575,7 +575,7 @@ class FileIntegrationTest extends TestCase {
 
   #[@test]
   public function writing_beyond_file_end_padds_with_zero() {
-    $this->file->open(FILE::WRITE);
+    $this->file->open(File::WRITE);
     $this->file->seek(2, SEEK_SET);
     $this->file->write('Test');
     $this->file->write('!');

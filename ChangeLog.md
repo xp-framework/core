@@ -3,6 +3,37 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.0.0 / ????-??-??
+
+### Heads up!
+
+* Merged PR #194: Remove deprecated XP registry - @thekid
+
+### RFCs
+
+* Implemented xp-framework/rfc#329: Remove deprecated io.sys. See PR #197
+  (@thekid)
+* Implemented xp-framework/rfc#330: Remove HHVM support. See PR #206
+  (@thekid)
+
+## 9.8.2 / 2019-01-01
+
+### Bugfixes
+
+* Merged PR #208: Ensure filenames and lines match up to parsed code 
+  (@thekid)
+
+## 9.8.1 / 2018-12-28
+
+### Bugfixes
+
+* Fixed issue #210: PHP 7.4 modifiers compatiblity - @thekid
+
+### Features
+
+* Added support for [PHP 7.3](http://php.net/archive/2018.php#id2018-12-06-1)
+  (@thekid)
+
 ## 9.8.0 / 2018-10-02
 
 ### Bugfixes

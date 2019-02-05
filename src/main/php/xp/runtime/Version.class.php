@@ -1,7 +1,7 @@
 <?php namespace xp\runtime;
 
-use util\cmd\Console;
 use lang\ClassLoader;
+use util\cmd\Console;
 
 /**
  * Displays XP version and runtime information
@@ -20,7 +20,7 @@ class Version {
   private function phpVersion() { return 'PHP/'.phpversion(); }
 
   /** @return string */
-  private function engineVersion() { return defined('HHVM_VERSION') ? 'HHVM/'.HHVM_VERSION : 'Zend/'.zend_version(); }
+  private function engineVersion() { return 'Zend/'.zend_version(); }
 
   /** @return string */
   private function osVersion() {
@@ -56,7 +56,7 @@ class Version {
         self::engineVersion(),
         php_uname()
       );
-      Console::writeLine('Copyright (c) 2001-2018 the XP group');
+      Console::writeLine('Copyright (c) 2001-2019 the XP group');
       foreach (ClassLoader::getLoaders() as $delegate) {
         Console::writeLine($delegate->toString());
       }

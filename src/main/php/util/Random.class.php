@@ -109,8 +109,7 @@ class Random {
       throw new IOException('Not a character device: /dev/urandom');
     }
 
-    // HHVM does not have stream_set_read_buffer()!
-    function_exists('stream_set_read_buffer') && stream_set_read_buffer($f, 0);
+    stream_set_read_buffer($f, 0);
     $bytes= fread($f, $limit);
     fclose($f);
     return $bytes;

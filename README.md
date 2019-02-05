@@ -4,7 +4,6 @@ XP Framework Core
 [![Build status on AppVeyor](https://ci.appveyor.com/api/projects/status/bb9gkkq1o7f6m2ns?svg=true)](https://ci.appveyor.com/project/thekid/core)
 [![BSD Licence](https://raw.githubusercontent.com/xp-framework/web/master/static/licence-bsd.png)](https://github.com/xp-framework/core/blob/master/LICENCE.md)
 [![Requires PHP 7.0+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-7_0plus.png)](http://php.net/)
-[![Supports HHVM 3.20+](https://raw.githubusercontent.com/xp-framework/web/master/static/hhvm-3_20plus.png)](http://hhvm.com/)
 [![Latest Stable Version](https://poser.pugx.org/xp-framework/core/version.png)](https://packagist.org/packages/xp-framework/core)
 
 This is the XP Framework's development checkout. 
@@ -35,8 +34,8 @@ Finally, start `xp -v` to see it working:
 
 ```sh
 $ xp -v
-XP 9.8.1-dev { PHP 7.2.10 & ZE 3.2.0 } @ Windows NT SLATE 10.0 build 17134 (Windows 10) AMD64
-Copyright (c) 2001-2018 the XP group
+XP 10.0.0-dev { PHP 7.3.1 & ZE 3.3.0 } @ Windows NT SLATE 10.0 build 17134 (Windows 10) AMD64
+Copyright (c) 2001-2019 the XP group
 FileSystemCL<./src/main/php>
 FileSystemCL<./src/test/php>
 FileSystemCL<./src/main/resources>

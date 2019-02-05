@@ -302,17 +302,10 @@ class XPClass extends Type {
    */
   public function getDeclaredFields() {
     $list= [];
-    $reflect= $this->reflect();
-    if (defined('HHVM_VERSION')) {
-      foreach ($reflect->getProperties() as $p) {
-        if ('__id' === $p->name || $p->info['class'] !== $reflect->name) continue;
-        $list[]= new Field($this->_class, $p);
-      }
-    } else {
-      foreach ($reflect->getProperties() as $p) {
-        if ('__id' === $p->name || $p->class !== $reflect->name) continue;
-        $list[]= new Field($this->_class, $p);
-      }
+    $reflect= $this->reflect()->name;
+    foreach ($reflect->getProperties() as $p) {
+      if ('__id' === $p->name || $p->class !== $reflect) continue;
+      $list[]= new Field($this->_class, $p);
     }
     return $list;
   }
@@ -661,22 +654,13 @@ class XPClass extends Type {
   public static function detailsForClass($class) {
     static $parser= null;
 
-    if (!$class) {                                              // Border case
-      return null;
-    } else if (isset(\xp::$meta[$class])) {                     // Cached
-      return \xp::$meta[$class];
-    } else if (isset(\xp::$registry[$l= 'details.'.$class])) {  // BC: Cached in registry
-      return \xp::$registry[$l];
-    }
+    if (isset(\xp::$meta[$class])) return \xp::$meta[$class];
 
     // Retrieve class' sourcecode
     $cl= self::_classLoaderFor($class);
     if (!$cl || !($bytes= $cl->loadClassBytes($class))) return null;
 
-    // Return details for specified class
-    if (!$parser) {
-      $parser= new \lang\reflect\ClassParser();
-    }
+    $parser ?? $parser= new \lang\reflect\ClassParser();
     return \xp::$meta[$class]= $parser->parseDetails($bytes, $class);
   }
 

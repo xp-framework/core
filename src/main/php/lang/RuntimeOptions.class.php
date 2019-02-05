@@ -108,7 +108,7 @@ class RuntimeOptions implements Value {
    * @return  string[]
    */
   public function asArguments() {
-    $s= defined('HHVM_VERSION') ? ['--php'] : [];
+    $s= [];
     foreach ($this->backing as $key => $value) {
       if ("\1" === $key{0}) {
         $s[]= '-'.substr($key, 1);

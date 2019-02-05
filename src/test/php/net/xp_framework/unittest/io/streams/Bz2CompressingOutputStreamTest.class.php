@@ -1,15 +1,13 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\streams\Bz2CompressingOutputStream;
-use net\xp_framework\unittest\IgnoredOnHHVM;
 
 /**
- * TestCase
+ * TestCase for BZIP2 compression
  *
- * @ext      bz2
- * @see      xp://io.streams.Bz2CompressingOutputStream
+ * @ext   bz2
+ * @see   xp://io.streams.Bz2CompressingOutputStream
  */
-#[@action(new IgnoredOnHHVM())]]
 class Bz2CompressingOutputStreamTest extends AbstractCompressingOutputStreamTest {
 
   /** @return string */

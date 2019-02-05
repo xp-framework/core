@@ -16,7 +16,7 @@
   ```sh
   $ xp version php
   ```
-* Display Engine version - HHVM or Zend
+* Display Zend Engine version
   ```sh
   $ xp version engine
   ```

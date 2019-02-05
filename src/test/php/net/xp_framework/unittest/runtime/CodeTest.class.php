@@ -36,17 +36,17 @@ class CodeTest extends \unittest\TestCase {
 
   #[@test]
   public function expression() {
-    $this->assertEquals('return "Test";', (new Code('"Test"'))->expression());
+    $this->assertEquals('return "Test";', (new Code('"Test"'))->withReturn()->fragment());
   }
 
   #[@test]
   public function expression_with_semicolon() {
-    $this->assertEquals('return "Test";', (new Code('"Test";'))->expression());
+    $this->assertEquals('return "Test";', (new Code('"Test";'))->withReturn()->fragment());
   }
 
   #[@test]
   public function expression_with_existing_return() {
-    $this->assertEquals('return "Test";', (new Code('return "Test";'))->expression());
+    $this->assertEquals('return "Test";', (new Code('return "Test";'))->withReturn()->fragment());
   }
 
   #[@test, @values([
@@ -61,20 +61,6 @@ class CodeTest extends \unittest\TestCase {
   #])]
   public function use_is_stripped_from_fragment($input) {
     $this->assertEquals('test();', (new Code($input))->fragment());
-  }
-
-  #[@test, @values([
-  #  'use util\Date; test()',
-  #  'use util\Date, util\TimeZone; test()',
-  #  'use util\Date; use util\TimeZone; test()',
-  #  'use util\{Date, TimeZone}; test()',
-  #  ' use util\Date; test()',
-  #  '<?php use util\Date; test()',
-  #  '<?php  use util\Date; test()',
-  #  "<?php\nuse util\Date; test()"
-  #])]
-  public function use_is_stripped_from_expression($input) {
-    $this->assertEquals('return test();', (new Code($input))->expression());
   }
 
   #[@test]
@@ -162,5 +148,52 @@ class CodeTest extends \unittest\TestCase {
       ['xp-forge/sequence' => 'util\data\Sequence'],
       (new Code('use util\data\Sequence from "xp-forge/sequence";'))->modules()->all()
     );
+  }
+
+  #[@test, @values([
+  #  'return "Test";',
+  #  '<?php return "Test";',
+  #  "<?php\nreturn 'Test';",
+  #  "<?php namespace test;\nreturn 'Test';",
+  #])]
+  public function run($input) {
+    $code= new Code($input);
+    $this->assertEquals('Test', $code->run());
+  }
+
+  #[@test]
+  public function run_without_return() {
+    $code= new Code('');
+    $this->assertEquals(null, $code->run());
+  }
+
+  #[@test]
+  public function code_has_access_to_argv() {
+    $code= new Code('return $argv;');
+    $this->assertEquals([1, 2, 3], $code->run([1, 2, 3]));
+  }
+
+  #[@test]
+  public function code_has_access_to_argc() {
+    $code= new Code('return $argc;');
+    $this->assertEquals(3, $code->run([1, 2, 3]));
+  }
+
+  #[@test, @values([
+  #  ['', 1],
+  #  ["<?php\n", 2],
+  #  ["<?php namespace test;\n", 2],
+  #  ["<?php namespace test;\n\nuse util\cmd\Console;\n\n", 5],
+  #])]
+  public function errors_reported_with_script_name($head, $line) {
+    $code= new Code($head.'trigger_error("Test");', 'test.script.php');
+    $code->run();
+
+    $e= ['Test' => ['class' => null, 'method' => 'trigger_error', 'cnt' => 1]];
+    try {
+      $this->assertEquals(['test.script.php' => [$line => $e]], \xp::$errors);
+    } finally {
+      \xp::gc();
+    }
   }
 }

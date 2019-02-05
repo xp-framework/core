@@ -2,7 +2,6 @@
 
 use io\streams\{MemoryInputStream, MemoryOutputStream, Streams};
 use lang\Runtime;
-use net\xp_framework\unittest\IgnoredOnHHVM;
 use unittest\PrerequisitesNotMetError;
 
 /**
@@ -11,7 +10,6 @@ use unittest\PrerequisitesNotMetError;
  * @see   php://DOMDocument
  * @see   xp://io.streams.Streams
  */
-#[@action(new IgnoredOnHHVM())]
 class DomApiStreamsTest extends \unittest\TestCase {
 
   /**
