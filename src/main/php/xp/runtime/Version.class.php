@@ -11,16 +11,16 @@ use util\cmd\Console;
 class Version {
 
   /** @return string */
-  private function xpVersion() { return 'XP/'.\xp::version(); }
+  private static function xpVersion() { return 'XP/'.\xp::version(); }
 
   /** @return string */
-  private function runnersVersion() { return 'Runners/'.getenv('XP_VERSION'); }
+  private static function runnersVersion() { return 'Runners/'.getenv('XP_VERSION'); }
 
   /** @return string */
-  private function phpVersion() { return 'PHP/'.phpversion(); }
+  private static function phpVersion() { return 'PHP/'.phpversion(); }
 
   /** @return string */
-  private function engineVersion() { return 'Zend/'.zend_version(); }
+  private static function engineVersion() { return 'Zend/'.zend_version(); }
 
   /** @return string */
   private function osVersion() {
