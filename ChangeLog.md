@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.0.0 / ????-??-??
+
+### RFCs
+
+* Implement xp-framework/rfc#330: Remove HHVM support. See PR #206
+  (@thekid)
+
 ## 9.8.2 / 2019-01-01
 
 ### Bugfixes
