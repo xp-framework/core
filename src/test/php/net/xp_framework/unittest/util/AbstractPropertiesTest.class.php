@@ -1,10 +1,10 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use util\Properties;
-use util\Hashmap;
+use lang\ElementNotFoundException;
 use lang\FormatException;
 use lang\IllegalStateException;
-use lang\ElementNotFoundException;
+use util\Hashmap;
+use util\Properties;
 
 /**
  * Testcase for util.Properties class.
@@ -224,28 +224,6 @@ abstract class AbstractPropertiesTest extends \unittest\TestCase {
   #[@test]
   public function does_not_have_non_existant_section() {
     $this->assertFalse($this->fixture('')->hasSection('nonexistant'));
-  }
-
-  /** @deprecated */
-  #[@test]
-  public function iterate_sections_with_first_and_next() {
-    $p= $this->newPropertiesFrom('
-      [section]
-      foo=bar
-
-      [next]
-      foo=bar
-
-      [empty]
-
-      [final]
-      foo=bar
-    ');
-    
-    $this->assertEquals('section', $p->getFirstSection());
-    $this->assertEquals('next', $p->getNextSection());
-    $this->assertEquals('empty', $p->getNextSection());     
-    $this->assertEquals('final', $p->getNextSection());
   }
 
   #[@test]

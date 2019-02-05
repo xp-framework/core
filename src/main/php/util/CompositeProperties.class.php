@@ -11,7 +11,6 @@ use lang\IllegalArgumentException;
 class CompositeProperties implements PropertyAccess {
   private static $NONEXISTANT;
   protected $props  = [];
-  private $sections = null;
 
   static function __static() {
 
@@ -192,37 +191,12 @@ class CompositeProperties implements PropertyAccess {
     return false;
   }
 
-  /**
-   * Retrieve first section name, set internal pointer
-   *
-   * @return  string
-   */
-  public function getFirstSection() {
-
-    // Lazy initialize - for subsequent loops
-    if (null === $this->sections) {
-      $this->sections= [];
-      foreach ($this->props as $p) {
-        $section= $p->getFirstSection();
-        while ($section) {
-          $this->sections[$section]= true;
-          $section= $p->getNextSection();
-        }
+  /** Returns sections */
+  public function sections(): \Traversable {
+    foreach ($this->props as $p) {
+      foreach ($p->sections() as $section) {
+        yield $section;
       }
     }
-
-    reset($this->sections);
-    return key($this->sections);
-  }
-
-  /**
-   * Retrieve next section name, NULL if no more sections exist
-   *
-   * @return  string
-   */
-  public function getNextSection() {
-    if (!is_array($this->sections)) return null;
-    next($this->sections);
-    return key($this->sections);
   }
 }
