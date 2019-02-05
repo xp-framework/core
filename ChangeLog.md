@@ -11,6 +11,8 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented user modules as part of xp-framework/rfc#332, see PR #207
+  (@thekid)
 * Implemented xp-framework/rfc#329: Remove deprecated io.sys. See PR #197
   (@thekid)
 * Implemented xp-framework/rfc#330: Remove HHVM support. See PR #206
