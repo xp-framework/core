@@ -7,7 +7,9 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
-* Implement xp-framework/rfc#330: Remove HHVM support. See PR #206
+* Implemented xp-framework/rfc#329: Remove deprecated io.sys. See PR #197
+  (@thekid)
+* Implemented xp-framework/rfc#330: Remove HHVM support. See PR #206
   (@thekid)
 
 ## 9.8.2 / 2019-01-01
