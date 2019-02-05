@@ -56,7 +56,7 @@ class Code {
       $l= strcspn($input, ';', $pos);
       foreach ($this->importsIn(substr($input, $pos + 4, $l - 4)) as $import => $module) {
         $this->imports[]= $import;
-        $module && $this->modules->add($module);
+        $module && $this->modules->add($module, $import);
       }
       $pos+= $l + 1;
       $pos+= strspn($input, "\r\n\t ", $pos);
@@ -65,6 +65,9 @@ class Code {
     $this->fragment= rtrim(substr($input, $pos), "\r\n\t ;").';';
     $this->line= 0 === $pos ? 0 : substr_count($input, "\n", 0, $pos > $length ? $length : $pos);
   }
+
+  /** @return string */
+  public function namespace() { return $this->namespace; }
 
   /** @return string */
   public function fragment() { return $this->fragment; }
@@ -138,7 +141,7 @@ class Code {
    * @throws lang.Throwable
    */
   public function run($argv= []) {
-    $this->modules->require();
+    $this->modules->require($this->namespace);
 
     Script::$code[$this->name]= '<?php '.$this->head().str_repeat("\n", $this->line).$this->fragment."\nreturn null;";
     try {
