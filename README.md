@@ -51,7 +51,7 @@ The XP Framework runs scripts or classes.
 Save the following sourcecode to a file called `ageindays.script.php`:
 
 ```php
-<?php namespace ageindays;
+<?php namespace examples;
 
 use util\{Date, DateUtil};
 use util\cmd\Console;
