@@ -1,7 +1,5 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use net\xp_framework\unittest\{Name, IgnoredOnHHVM};
-use unittest\actions\RuntimeVersion;
 use lang\{
   ArrayType,
   ClassFormatException,
@@ -14,6 +12,8 @@ use lang\{
   Value,
   XPClass
 };
+use net\xp_framework\unittest\Name;
+use unittest\actions\RuntimeVersion;
 
 class MethodParametersTest extends MethodsTest {
 
@@ -234,7 +234,7 @@ class MethodParametersTest extends MethodsTest {
     $this->assertEquals($expected, $this->method($declaration.' { }')->getParameter(0)->toString());
   }
 
-  #[@test, @action(new IgnoredOnHHVM())]
+  #[@test]
   public function variadic_via_syntax_with_type() {
     $param= $this->method('function fixture(string... $args) { }')->getParameter(0);
     $this->assertEquals(

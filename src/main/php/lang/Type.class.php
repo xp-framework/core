@@ -203,10 +203,6 @@ class Type implements Value {
       'float'     => 'float',
       'bool'      => 'bool',
       'boolean'   => 'bool',
-      'HH\int'    => 'int',
-      'HH\string' => 'string',
-      'HH\float'  => 'float',
-      'HH\bool'   => 'bool'
     ];
 
     $l= strlen($type);
@@ -217,9 +213,9 @@ class Type implements Value {
     // Map well-known primitives, var, void, union types as well as nullable and soft types
     if (isset($primitives[$type])) {
       return Primitive::forName($primitives[$type]);
-    } else if ('var' === $type || 'resource' === $type || 'HH\mixed' === $type) {
+    } else if ('var' === $type || 'resource' === $type) {
       return self::$VAR;
-    } else if ('void' === $type || 'HH\void' === $type || 'HH\noreturn' === $type) {
+    } else if ('void' === $type) {
       return self::$VOID;
     } else if ('array' === $type) {
       return self::$ARRAY;

@@ -302,17 +302,10 @@ class XPClass extends Type {
    */
   public function getDeclaredFields() {
     $list= [];
-    $reflect= $this->reflect();
-    if (defined('HHVM_VERSION')) {
-      foreach ($reflect->getProperties() as $p) {
-        if ('__id' === $p->name || $p->info['class'] !== $reflect->name) continue;
-        $list[]= new Field($this->_class, $p);
-      }
-    } else {
-      foreach ($reflect->getProperties() as $p) {
-        if ('__id' === $p->name || $p->class !== $reflect->name) continue;
-        $list[]= new Field($this->_class, $p);
-      }
+    $reflect= $this->reflect()->name;
+    foreach ($reflect->getProperties() as $p) {
+      if ('__id' === $p->name || $p->class !== $reflect) continue;
+      $list[]= new Field($this->_class, $p);
     }
     return $list;
   }

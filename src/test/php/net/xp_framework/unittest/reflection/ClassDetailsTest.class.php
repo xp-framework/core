@@ -290,10 +290,10 @@ class ClassDetailsTest extends \unittest\TestCase {
   #[@test]
   public function grouped_use_statements_evaluated() {
     $actual= (new ClassParser())->parseDetails('<?php namespace test;
-      use net\xp_framework\unittest\{Name, IgnoredOnHHVM};
+      use net\xp_framework\unittest\{Name, DemoTest};
 
       #[@value(new Name("test"))]
-      class Test {
+      class Test extends DemoTest {
       }
     ');
     $this->assertInstanceOf(Name::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);

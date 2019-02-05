@@ -59,12 +59,6 @@ class Parameter {
       !isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
     ) {
 
-      // ReflectionParameter::getType() *always* returns "array" on HHVM, this is 
-      // a) useless and b) inconsistent with PHP. Fall back to "var" 
-      if (defined('HHVM_VERSION') && $this->_reflect->isVariadic()) {
-        return Type::$VAR;
-      }
-
       // Cannot parse api doc, fall back to PHP native syntax. The reason for not doing
       // this the other way around is that we have "richer" information, e.g. "string[]",
       // where PHP simply knows about "arrays" (of whatever).
@@ -96,14 +90,8 @@ class Parameter {
       return ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&');
     }
 
-    // ReflectionParameter::getType() *always* returns "array" on HHVM, this is 
-    // a) useless and b) inconsistent with PHP. Fall back to "var" 
-    if (defined('HHVM_VERSION') && $this->_reflect->isVariadic()) {
-      return 'var';
-    }
-
     if ($t= $this->_reflect->getType()) {
-      return str_replace('HH\\', '', $t);
+      return $t;
     } else {
       return 'var';
     }
@@ -143,7 +131,7 @@ class Parameter {
    * @return  bool
    */
   public function isOptional() {
-    return $this->_reflect->isOptional() || (defined('HHVM_VERSION') && $this->_reflect->isVariadic());
+    return $this->_reflect->isOptional();
   }
 
   /**
@@ -172,7 +160,7 @@ class Parameter {
    * @return  var
    */
   public function getDefaultValue() {
-    if ($this->_reflect->isOptional() || (defined('HHVM_VERSION') && $this->_reflect->isVariadic())) {
+    if ($this->_reflect->isOptional()) {
       return $this->_reflect->isDefaultValueAvailable() ? $this->_reflect->getDefaultValue() : null;
     }
 

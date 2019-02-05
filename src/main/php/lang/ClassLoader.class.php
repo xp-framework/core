@@ -229,7 +229,7 @@ final class ClassLoader implements IClassLoader {
       }
 
       if ($param->isVariadic()) {
-        $sig.= defined('HHVM_VERSION') ? ', ... $'.$p  : ', '.$constraint.'... $'.$p;
+        $sig.= ', '.$constraint.'... $'.$p;
         $pass.= ', ...$'.$p;
       } else {
         $sig.= ', '.$constraint.' $'.$p;

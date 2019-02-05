@@ -1,10 +1,9 @@
 <?php namespace net\xp_framework\unittest\util;
  
-use util\Date;
-use util\TimeZone;
-use net\xp_framework\unittest\IgnoredOnHHVM;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
+use util\Date;
+use util\TimeZone;
 
 /**
  * Tests Date class
@@ -330,12 +329,12 @@ class DateTest extends \unittest\TestCase {
     Date::now();
   }
   
-  #[@test, @expect(IllegalArgumentException::class), @action(new IgnoredOnHHVM())]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function dateCreateWithAllInvalidArguments() {
     Date::create('', '', '', '', '', '');
   }
   
-  #[@test, @expect(IllegalArgumentException::class), @action(new IgnoredOnHHVM())]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function dateCreateWithInvalidArgumentsExceptTimeZone() {
     Date::create('', '', '', '', '', '', new TimeZone('UTC'));
   }
