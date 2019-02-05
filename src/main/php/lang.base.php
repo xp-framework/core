@@ -21,7 +21,6 @@ final class xp {
   public static $classpath= null;
   public static $errors= [];
   public static $meta= [];
-  public static $registry= [];
   
   // {{{ proto lang.IClassLoader findClass(string class)
   //     Finds the class loader for a class by its fully qualified name
