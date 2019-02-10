@@ -7,6 +7,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Merged PR #212: Remove deprecated getFirstSection() / getNextSection()
+  iteration (from util.Properties)
+  (@thekid)
 * Merged PR #194: Remove deprecated XP registry - @thekid
 
 ### RFCs
