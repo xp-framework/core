@@ -91,7 +91,7 @@ class PropertyManagerTest extends \unittest\TestCase {
   public function registerOverwritesExistingProperties() {
     $fixture= $this->preconfigured();
     $fixture->register('example', (new Properties())->load('[any-section]'));
-    $this->assertEquals('any-section', $fixture->getProperties('example')->getFirstSection());
+    $this->assertEquals(['any-section', 'section'], iterator_to_array($fixture->getProperties('example')->sections()));
   }
 
   #[@test]

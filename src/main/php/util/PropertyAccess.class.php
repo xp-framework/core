@@ -92,18 +92,5 @@ interface PropertyAccess {
    */
   public function hasSection($section);
 
-  /**
-   * Retrieve first section name, set internal pointer
-   *
-   * @return  string
-   */
-  public function getFirstSection();
-
-  /**
-   * Retrieve next section name, NULL if no more sections exist
-   *
-   * @return  string
-   */
-  public function getNextSection();
 }
 

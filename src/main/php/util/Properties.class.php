@@ -1,7 +1,7 @@
 <?php namespace util;
 
-use io\{IOException, File};
 use io\streams\{InputStream, OutputStream, MemoryInputStream, FileInputStream, TextReader};
+use io\{IOException, File};
 use lang\{FormatException, IllegalStateException, ElementNotFoundException};
 
 /**
@@ -216,40 +216,6 @@ class Properties implements PropertyAccess {
     foreach ($this->_data as $section => $_) {
       yield $section;
     }
-  }
-  
-  /**
-   * Get the first configuration section
-   *
-   * @deprecated Use sections() iterator instead
-   * @see     xp://util.Properties#getNextSection
-   * @return  string the first section's name
-   */
-  public function getFirstSection() {
-    $this->_load();
-    reset($this->_data);
-    return key($this->_data);
-  }
-  
-  /**
-   * Get the next configuration section
-   *
-   * Example:
-   * <code>
-   *   if ($section= $prop->getFirstSection()) do {
-   *     var_dump($section, $prop->readSection($section));
-   *   } while ($section= $prop->getNextSection());
-   * </code>
-   *
-   * @deprecated Use sections() iterator instead
-   * @see     xp://util.Properties#getFirstSection
-   * @return  var string section or FALSE if this was the last section
-   */
-  public function getNextSection() {
-    $this->_load();
-    if (false === next($this->_data)) return false;
-
-    return key($this->_data);
   }
   
   /**
