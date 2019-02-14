@@ -6,40 +6,40 @@ use net\xp_framework\unittest\Name;
 use unittest\TestCase;
 use unittest\actions\RuntimeVersion;
 
-/**
- * TestCase
- *
- * @see   xp://lang.Primitive
- */
 class PrimitiveTest extends TestCase {
 
   #[@test]
-  public function stringPrimitive() {
+  public function string_primitive() {
     $this->assertEquals(Primitive::$STRING, Primitive::forName('string'));
   }
 
   #[@test]
-  public function intPrimitive() {
+  public function int_primitive() {
     $this->assertEquals(Primitive::$INT, Primitive::forName('int'));
   }
 
   #[@test]
-  public function doublePrimitive() {
-    $this->assertEquals(Primitive::$FLOAT, Primitive::forName('double'));
+  public function float_primitive() {
+    $this->assertEquals(Primitive::$FLOAT, Primitive::forName('float'));
   }
 
   #[@test]
-  public function boolPrimitive() {
+  public function bool_primitive() {
     $this->assertEquals(Primitive::$BOOL, Primitive::forName('bool'));
   }
 
+  #[@test]
+  public function float_primitive_double_alias() {
+    $this->assertEquals(Primitive::$FLOAT, Primitive::forName('double'));
+  }
+
   #[@test, @expect(IllegalArgumentException::class)]
-  public function arrayPrimitive() {
+  public function array_primitive() {
     Primitive::forName('array');
   }
 
   #[@test, @expect(IllegalArgumentException::class)]
-  public function nonPrimitive() {
+  public function non_primitive() {
     Primitive::forName('lang.Value');
   }
 
@@ -66,42 +66,42 @@ class PrimitiveTest extends TestCase {
   }
 
   #[@test, @values(['', 'Hello'])]
-  public function isAnInstanceOfStringPrimitive($value) {
+  public function isAnInstanceOfString_primitive($value) {
     $this->assertTrue(Primitive::$STRING->isInstance($value));
   }
   
   #[@test, @values(source= 'instances', args= [['', 'Hello']])]
-  public function notInstanceOfStringPrimitive($value) {
+  public function notInstanceOfString_primitive($value) {
     $this->assertFalse(Primitive::$STRING->isInstance($value));
   }
 
   #[@test, @values([0, -1])]
-  public function isAnInstanceOfIntegerPrimitive($value) {
+  public function isAnInstanceOfInteger_primitive($value) {
     $this->assertTrue(Primitive::$INT->isInstance($value));
   }
 
   #[@test, @values(source= 'instances', args= [[0, -1]])]
-  public function notInstanceOfIntegerPrimitive($value) {
+  public function notInstanceOfInteger_primitive($value) {
     $this->assertFalse(Primitive::$INT->isInstance($value));
   }
 
   #[@test, @values([0.0, -1.5])]
-  public function isAnInstanceOfDoublePrimitive($value) {
+  public function isAnInstanceOfDouble_primitive($value) {
     $this->assertTrue(Primitive::$FLOAT->isInstance($value));
   }
 
   #[@test, @values(source= 'instances', args= [[0.0, -1.5]])]
-  public function notInstanceOfDoublePrimitive($value) {
+  public function notInstanceOfDouble_primitive($value) {
     $this->assertFalse(Primitive::$FLOAT->isInstance($value));
   }
 
   #[@test, @values([false, true])]
-  public function isAnInstanceOfBooleanPrimitive($value) {
+  public function isAnInstanceOfBoolean_primitive($value) {
     $this->assertTrue(Primitive::$BOOL->isInstance($value));
   }
 
   #[@test, @values(source= 'instances', args= [[false, true]])]
-  public function notInstanceOfBooleanPrimitive($value) {
+  public function notInstanceOfBoolean_primitive($value) {
     $this->assertFalse(Primitive::$BOOL->isInstance($value));
   }
 
