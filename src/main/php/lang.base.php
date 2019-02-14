@@ -13,7 +13,8 @@ final class xp {
     'xp'     => 'xp',
     'string' => "\xfestring",
     'int'    => "\xfeint",
-    'double' => "\xfedouble",
+    'float'  => "\xfefloat",
+    'double' => "\xfefloat",
     'bool'   => "\xfebool",
     'var'    => "var",
   ];

@@ -182,7 +182,7 @@ class Type implements Value {
    * Gets a type for a given name
    *
    * Checks for:
-   * - Primitive types (string, int, double, boolean, resource)
+   * - Primitive types (string, int, float, bool, resource)
    * - Array and map notations (array, string[], string*, [:string])
    * - Any type (var)
    * - Void type (void)
