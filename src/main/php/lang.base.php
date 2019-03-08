@@ -163,8 +163,9 @@ function __error($code, $msg, $file, $line) {
 
 // {{{ proto var cast (var arg, var type)
 //     Casts an arg NULL-safe
-function cast($arg, $type, $nullsafe= true) {
-  if (null === $arg && $nullsafe && 0 !== strncmp($type, '?', 1)) {
+function cast($arg, $type) {
+  if (null === $arg) {
+    if (0 === strncmp($type, '?', 1)) return null;
     throw new \lang\ClassCastException('Cannot cast NULL to '.$type);
   } else if ($type instanceof \lang\Type) {
     return $type->cast($arg);
