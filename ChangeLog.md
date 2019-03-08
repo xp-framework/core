@@ -7,6 +7,7 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Merged PR #214: Remove deprecated xp::stringOf() - @thekid
 * Merged PR #213: Remove "double" type in favor of "float" - @thekid
 * Merged PR #212: Remove deprecated getFirstSection() / getNextSection()
   iteration (from util.Properties)
