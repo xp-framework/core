@@ -7,6 +7,8 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Merged PR #216: Remove third & optional "nullsafe" argument to cast()
+  (@thekid)
 * Merged PR #215: Remove deprecated System class - @thekid
 * Merged PR #214: Remove deprecated xp::stringOf() - @thekid
 * Merged PR #213: Remove "double" type in favor of "float" - @thekid
