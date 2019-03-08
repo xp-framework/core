@@ -225,10 +225,6 @@ class Type implements Value {
       return self::$CALLABLE;
     } else if ('iterable' === $type) {
       return self::$ITERABLE;
-    } else if ('HH\num' === $type) {
-      return new TypeUnion([Primitive::$INT, Primitive::$FLOAT]);
-    } else if ('HH\arraykey' === $type) {
-      return new TypeUnion([Primitive::$INT, Primitive::$STRING]);
     } else if ('?' === $type{0} || '@' === $type{0}) {
       return self::forName(substr($type, 1));
     }
