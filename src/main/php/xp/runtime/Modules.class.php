@@ -3,6 +3,7 @@
 use lang\Environment;
 use lang\reflect\Module;
 
+/** @test xp://net.xp_framework.unittest.runtime.ModulesTest */
 class Modules {
   private $list= [];
   private $loaded= ['php' => true, 'xp-framework/core' => true];
@@ -77,7 +78,7 @@ class Modules {
    * @param  string $module
    * @return bool
    */
-  public function load($namespace, $module) {
+  private function load($namespace, $module) {
     if (isset($this->loaded[$module]) || Module::loaded($module)) return true;
 
     foreach ([$this->vendorDir(), $this->userDir($namespace)] as $dir) {
