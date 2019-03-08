@@ -5,6 +5,13 @@ XP Framework Core ChangeLog
 
 ## 10.0.0 / ????-??-??
 
+### Features
+
+* Added preliminary support for PHP 7.4 and PHP 8.0, both of which have
+  not yet been released yet - though running the testsuite with their
+  respective nightly builds yields *green* - see issue #211
+  (@thekid)
+
 ### Heads up!
 
 * Merged PR #216: Remove third & optional "nullsafe" argument to cast()
