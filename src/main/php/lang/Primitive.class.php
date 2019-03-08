@@ -12,11 +12,7 @@
  * @see   xp://lang.Type
  */
 class Primitive extends Type {
-  public static
-    $STRING  = null,
-    $INT     = null,
-    $FLOAT   = null,
-    $BOOL    = null;
+  public static $STRING, $INT, $FLOAT, $BOOL;
   
   static function __static() {
     self::$STRING= new self('string', '');
