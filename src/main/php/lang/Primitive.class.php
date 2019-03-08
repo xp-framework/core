@@ -5,7 +5,7 @@
  * 
  * - string
  * - int
- * - double
+ * - float
  * - bool
  *
  * @test  xp://net.xp_framework.unittest.reflection.PrimitiveTest 
@@ -15,7 +15,6 @@ class Primitive extends Type {
   public static
     $STRING  = null,
     $INT     = null,
-    $DOUBLE  = null,
     $FLOAT   = null,
     $BOOL    = null;
   
@@ -24,7 +23,6 @@ class Primitive extends Type {
     self::$INT= new self('int', 0);
     self::$FLOAT= new self('float', 0.0);
     self::$BOOL= new self('bool', false);
-    self::$DOUBLE= self::$FLOAT;  // Deprecated, kept as alias
   }
   
   /**

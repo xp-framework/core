@@ -52,8 +52,13 @@ class XpTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function literal_of_double() {
-    $this->assertEquals('þdouble', literal('double'));
+  public function literal_of_float() {
+    $this->assertEquals('þfloat', literal('float'));
+  }
+
+  #[@test]
+  public function literal_of_float_alias_double() {
+    $this->assertEquals('þfloat', literal('double'));
   }
 
   #[@test]
