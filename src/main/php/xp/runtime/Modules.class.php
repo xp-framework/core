@@ -1,7 +1,7 @@
 <?php namespace xp\runtime;
 
 use lang\reflect\Module;
-use lang\{Environment, FormatException};
+use lang\{Environment, ElementNotFoundException, FormatException};
 
 /** @test xp://net.xp_framework.unittest.runtime.ModulesTest */
 class Modules {
@@ -26,6 +26,19 @@ class Modules {
    * @return [:string]
    */
   public function all() { return $this->list; }
+
+  /**
+   * Returns version of a given module
+   *
+   * @param  string $module
+   * @return ?string
+   * @throws lang.ElementNotFoundException
+   */
+  public function version($module) {
+    if (array_key_exists($module, $this->list)) return $this->list[$module];
+
+    throw new ElementNotFoundException('No such module "'.$module.'"');
+  }
 
   /**
    * Returns composer vendor directory relevant for loading module
@@ -53,7 +66,7 @@ class Modules {
     if (null === $this->userDir) {
       $this->userDir= Environment::configDir('xp');
     }
-    return $this->userDir.DIRECTORY_SEPARATOR.$namespace;
+    return $this->userDir.strtr($namespace, ['\\' => DIRECTORY_SEPARATOR]);
   }
 
   /**

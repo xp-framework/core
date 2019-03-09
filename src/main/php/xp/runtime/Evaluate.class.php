@@ -30,12 +30,14 @@ class Evaluate {
     try {
       return $code->run([XPClass::nameOf(self::class)] + $args);
     } catch (CouldNotLoadDependencies $e) {
-      $dir= Environment::configDir('xp').strtr($code->namespace(), ['\\' => DIRECTORY_SEPARATOR]);
+      $modules= $code->modules();
+      $dir= $modules->userDir($code->namespace());
 
       Console::$err->writeLine("\033[41;1;37mError: ", $e->getMessage(), "\033[0m\n");
       Console::$err->writeLine("To install the missing dependencies, use:\n\n\033[36m  mkdir -p '", $dir, "'");
       foreach ($e->modules() as $module) {
-        Console::$err->writeLinef("  composer require -d '%s' %s", $dir, $module);
+        $version= $modules->version($module);
+        Console::$err->writeLinef("  composer require -d '%s' %s%s", $dir, $module, $version ? " '$version'" : '');
       }
       Console::$err->write("\033[0m");
       return 127;

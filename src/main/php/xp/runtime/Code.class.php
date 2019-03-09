@@ -108,7 +108,7 @@ class Code {
    * Returns types and modules used inside a `use ...` directive.
    *
    * @param  string $use
-   * @return [:string]
+   * @return [:[:string]]
    */
   private function importsIn($use) {
     if (false === ($p= strpos($use, ' from '))) {
