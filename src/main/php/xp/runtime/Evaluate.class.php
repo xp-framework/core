@@ -29,13 +29,15 @@ class Evaluate {
 
     try {
       return $code->run([XPClass::nameOf(self::class)] + $args);
-    } catch (ModuleNotFound $e) {
-      Console::$err->writeLine("\033[41;1;37mError: ", $e->getMessage(), "\033[0m");
-      Console::$err->writeLinef(
-        "Try installing it via `\033[36mmkdir -p '%1\$s' && composer require -d '%1\$s' %2\$s\033[0m`",
-        Environment::configDir('xp').strtr($code->namespace(), ['\\' => DIRECTORY_SEPARATOR]),
-        $e->module()
-      );
+    } catch (CouldNotLoadDependencies $e) {
+      $dir= Environment::configDir('xp').strtr($code->namespace(), ['\\' => DIRECTORY_SEPARATOR]);
+
+      Console::$err->writeLine("\033[41;1;37mError: ", $e->getMessage(), "\033[0m\n");
+      Console::$err->writeLine("To install the missing dependencies, use:\n\n\033[36m  mkdir -p '", $dir, "'");
+      foreach ($e->modules() as $module) {
+        Console::$err->writeLinef("  composer require -d '%s' %s", $dir, $module);
+      }
+      Console::$err->write("\033[0m");
       return 127;
     }
   }
