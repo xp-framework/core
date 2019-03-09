@@ -90,4 +90,40 @@ class ModulesTest extends TestCase {
 
     $fixture->require($namespace= 'test');
   }
+
+  #[@test, @expect(CouldNotLoadDependencies::class)]
+  public function requiring_library_with_missing_dependencies() {
+    $s= ModulesTest::structure([
+      'test' => ['vendor' => [
+        'thekid' => ['library' => [
+          'composer.json' => '{
+            "require": {
+              "perpetuum/mobile" : "^1.0"
+            }
+          }'
+        ]
+      ]]]
+    ]);
+
+    $fixture= newinstance(Modules::class, [], ['userDir' => $s]);
+    $fixture->add('thekid/library');
+
+    $fixture->require($namespace= 'test');
+  }
+
+  #[@test, @expect(CouldNotLoadDependencies::class)]
+  public function requiring_malformed_library() {
+    $s= ModulesTest::structure([
+      'test' => ['vendor' => [
+        'thekid' => ['library' => [
+          'composer.json' => 'NOT.JSON'
+        ]
+      ]]]
+    ]);
+
+    $fixture= newinstance(Modules::class, [], ['userDir' => $s]);
+    $fixture->add('thekid/library');
+
+    $fixture->require($namespace= 'test');
+  }
 }

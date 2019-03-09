@@ -1,7 +1,7 @@
 <?php namespace xp\runtime;
 
-use lang\Environment;
 use lang\reflect\Module;
+use lang\{Environment, FormatException};
 
 /** @test xp://net.xp_framework.unittest.runtime.ModulesTest */
 class Modules {
@@ -93,6 +93,10 @@ class Modules {
       if (!is_dir($base)) continue;
 
       $defines= json_decode(file_get_contents($base.'composer.json'), true);
+      if (!is_array($defines)) {
+        return new FormatException($base.'composer.json');
+      }
+
       $this->loaded[$module]= true;
       foreach ($defines['autoload']['files'] ?? [] as $file) {
         require($base.strtr($file, '/', DIRECTORY_SEPARATOR));
