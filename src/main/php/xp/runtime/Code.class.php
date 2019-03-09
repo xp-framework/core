@@ -56,7 +56,7 @@ class Code {
       $l= strcspn($input, ';', $pos);
       foreach ($this->importsIn(substr($input, $pos + 4, $l - 4)) as $import => $module) {
         $this->imports[]= $import;
-        $module && $this->modules->add($module, $import);
+        $module && $this->modules->add($module['name'], $module['version']);
       }
       $pos+= $l + 1;
       $pos+= strspn($input, "\r\n\t ", $pos);
@@ -114,8 +114,13 @@ class Code {
     if (false === ($p= strpos($use, ' from '))) {
       $module= null;
     } else {
-      $module= trim(substr($use, $p + 6), '"\'');
+      $spec= trim(substr($use, $p + 6), '"\'');
       $use= substr($use, 0, $p);
+      if (false === ($p= strrpos($spec, '@'))) {
+        $module= ['name' => $spec, 'version' => null];
+      } else {
+        $module= ['name' => substr($spec, 0, $p), 'version' => substr($spec, $p + 1)];
+      }
     }
 
     $name= strrpos($use, '\\') + 1;

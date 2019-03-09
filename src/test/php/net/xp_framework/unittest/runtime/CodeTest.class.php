@@ -145,8 +145,16 @@ class CodeTest extends \unittest\TestCase {
   #[@test]
   public function modules_for_code_with_import_from_module() {
     $this->assertEquals(
-      ['xp-forge/sequence' => 'util\data\Sequence'],
+      ['xp-forge/sequence' => null],
       (new Code('use util\data\Sequence from "xp-forge/sequence";'))->modules()->all()
+    );
+  }
+
+  #[@test]
+  public function modules_for_code_with_import_from_module_with_version() {
+    $this->assertEquals(
+      ['xp-forge/sequence' => '^8.0'],
+      (new Code('use util\data\Sequence from "xp-forge/sequence@^8.0";'))->modules()->all()
     );
   }
 
