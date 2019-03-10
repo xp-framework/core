@@ -22,28 +22,27 @@ class Files {
    * @throws io.FileNotFoundException
    */
   public static function read($file) {
-    if ($file instanceof File) {
-      if ($file->isOpen()) {
-        $bytes= '';
-        do {
-          $bytes.= $file->read();
-        } while (!$file->eof());
-      } else {
-        clearstatcache();
-        $file->open(File::READ);
-        $size= $file->size();
+    $f= $file instanceof File ? $file : new File($file);
 
-        // Read until EOF. Best case scenario is that this will run exactly once.
-        $bytes= '';
-        do {
-          $l= $size - strlen($bytes);
-          $bytes.= $file->read($l);
-        } while ($l > 0 && !$file->eof());
-        $file->close();
-      }
-      return $bytes;
+    if ($f->isOpen()) {
+      $bytes= '';
+      do {
+        $bytes.= $f->read();
+      } while (!$f->eof());
+    } else {
+      clearstatcache();
+      $f->open(File::READ);
+      $size= $f->size();
+
+      // Read until EOF. Best case scenario is that this will run exactly once.
+      $bytes= '';
+      do {
+        $l= $size - strlen($bytes);
+        $bytes.= $f->read($l);
+      } while ($l > 0 && !$f->eof());
+      $f->close();
     }
-    return self::read(new File($file));
+    return $bytes;
   }
 
   /**
@@ -60,19 +59,17 @@ class Files {
    * @throws io.IOException
    */
   public static function write($file, $bytes) {
-    if ($file instanceof File) {
-      if ($file->isOpen()) {
-        $file->seek(0, SEEK_SET);
-        $written= $file->write($bytes);
-        $file->truncate($written);
-      } else {
-        $file->open(File::WRITE);
-        $written= $file->write($bytes);
-        $file->close();
-      }
-      return $written;
+    $f= $file instanceof File ? $file : new File($file);
+    if ($f->isOpen()) {
+      $f->seek(0, SEEK_SET);
+      $written= $f->write($bytes);
+      $f->truncate($written);
+    } else {
+      $f->open(File::WRITE);
+      $written= $f->write($bytes);
+      $f->close();
     }
-    return self::write(new File($file), $bytes);
+    return $written;
   }
 
   /**
@@ -85,16 +82,14 @@ class Files {
    * @throws io.IOException
    */
   public static function append($file, $bytes) {
-    if ($file instanceof File) {
-      if ($file->isOpen()) {
-        $written= $file->write($bytes);
-      } else {
-        $file->open(File::APPEND);
-        $written= $file->write($bytes);
-        $file->close();
-      }
-      return $written;
+    $f= $file instanceof File ? $file : new File($file);
+    if ($f->isOpen()) {
+      $written= $f->write($bytes);
+    } else {
+      $f->open(File::APPEND);
+      $written= $f->write($bytes);
+      $f->close();
     }
-    return self::append(new File($file), $bytes);
+    return $written;
   }
 }
