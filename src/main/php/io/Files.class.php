@@ -13,7 +13,7 @@ class Files {
    * it is not closed when EOF is reached.
    *
    * ```php
-   * $str= Files::read(new File('/etc/passwd'));
+   * $bytes= Files::read(new File('/etc/passwd'));
    * ```
    *
    * @param  string|io.File $file
@@ -25,6 +25,7 @@ class Files {
     $f= $file instanceof File ? $file : new File($file);
 
     if ($f->isOpen()) {
+      $f->seek(0, SEEK_SET);
       $bytes= '';
       do {
         $bytes.= $f->read();
