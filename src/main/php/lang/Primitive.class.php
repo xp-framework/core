@@ -12,13 +12,15 @@
  * @see   xp://lang.Type
  */
 class Primitive extends Type {
-  public static $STRING, $INT, $FLOAT, $BOOL;
+  public static $STRING, $INT, $FLOAT, $BOOL, $DOUBLE;
   
   static function __static() {
     self::$STRING= new self('string', '');
     self::$INT= new self('int', 0);
     self::$FLOAT= new self('float', 0.0);
     self::$BOOL= new self('bool', false);
+
+    self::$DOUBLE= &self::$FLOAT; // deprecated
   }
   
   /**
