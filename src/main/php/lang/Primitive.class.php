@@ -26,9 +26,9 @@ class Primitive extends Type {
   /**
    * Get a type instance for a given name
    *
-   * @param   string name
-   * @return  lang.Type
-   * @throws  lang.IllegalArgumentException if the given name does not correspond to a primitive
+   * @param  string $name
+   * @return lang.Type
+   * @throws lang.IllegalArgumentException if the given name does not correspond to a primitive
    */
   public static function forName($name) {
     switch ($name) {
@@ -41,9 +41,7 @@ class Primitive extends Type {
   }
 
   /** Returns type literal */
-  public function literal(): string {
-    return 'þ'.$this->name;
-  }
+  public function literal(): string { return 'þ'.$this->name; }
 
   /** Determines whether the specified object is an instance of this type. */
   public function isInstance($obj): bool {
