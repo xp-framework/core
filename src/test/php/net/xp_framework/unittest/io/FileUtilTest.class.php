@@ -7,6 +7,7 @@ use unittest\TestCase;
 /**
  * TestCase
  *
+ * @deprecated Use io.Files instead
  * @see   xp://io.FileUtil
  * @see   https://github.com/xp-framework/xp-framework/pull/220
  */

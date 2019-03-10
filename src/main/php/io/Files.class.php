@@ -13,7 +13,7 @@ class Files {
    * it is not closed when EOF is reached.
    *
    * ```php
-   * $str= FileUtil::read(new File('/etc/passwd'));
+   * $str= Files::read(new File('/etc/passwd'));
    * ```
    *
    * @param  io.File $file
@@ -48,7 +48,7 @@ class Files {
    * after the bytes have been written.
    *
    * ```php
-   * $written= FileUtil::write(new File('myfile'), 'Hello world');
+   * $written= Files::write(new File('myfile'), 'Hello world');
    * ```
    *
    * @param  io.File $file
