@@ -69,7 +69,7 @@ class Parameter {
       // this the other way around is that we have "richer" information, e.g. "string[]",
       // where PHP simply knows about "arrays" (of whatever).
       if ($t= $this->_reflect->getType()) {
-        return Type::forName((string)$t);
+        return Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
       } else {
         return Type::$VAR;
       }
@@ -103,7 +103,7 @@ class Parameter {
     }
 
     if ($t= $this->_reflect->getType()) {
-      return str_replace('HH\\', '', $t);
+      return str_replace('HH\\', '', PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
     } else {
       return 'var';
     }

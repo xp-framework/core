@@ -123,7 +123,7 @@ class Routine implements Value {
         return Type::forName($t);
       }
     } else if ($t= $this->_reflect->getReturnType()) {
-      return Type::forName((string)$t);
+      return Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
     } else {
       return Type::$VAR;
     }
@@ -137,7 +137,7 @@ class Routine implements Value {
     ) {
       return ltrim($details[DETAIL_RETURNS], '&');
     } else if ($t= $this->_reflect->getReturnType()) {
-      return str_replace('HH\\', '', $t);
+      return str_replace('HH\\', '', PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
     } else if (defined('HHVM_VERSION')) {
       return str_replace('HH\\', '', $this->_reflect->getReturnTypeText() ?: 'var');
     } else {
