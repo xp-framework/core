@@ -198,8 +198,9 @@ class Path implements Value {
       } else {
         $normalized.= DIRECTORY_SEPARATOR.$component;
         if ($check) {
-          $stat= @lstat($normalized);
+          $stat= lstat($normalized);
           if (false === $stat) {
+            \xp::gc(__FILE__);
             $check= false;
           } else if (0120000 === ($stat[2] & 0120000)) {
             $normalized= readlink($normalized);

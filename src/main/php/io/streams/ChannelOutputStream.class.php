@@ -39,7 +39,7 @@ class ChannelOutputStream implements OutputStream {
    * @param   var arg
    */
   public function write($arg) { 
-    if (false === fwrite($this->fd, $arg)) {
+    if (null === $this->fd || false === fwrite($this->fd, $arg)) {
       $e= new IOException('Could not write '.strlen($arg).' bytes to '.$this->name.' channel');
       \xp::gc(__FILE__);
       throw $e;
@@ -51,7 +51,7 @@ class ChannelOutputStream implements OutputStream {
    *
    */
   public function flush() {
-    fflush($this->fd);
+    $this->fd && fflush($this->fd);
   }
 
   /**
@@ -59,7 +59,10 @@ class ChannelOutputStream implements OutputStream {
    *
    */
   public function close() {
-    fclose($this->fd);
+    if ($this->fd) {
+      fclose($this->fd);
+      $this->fd= null;
+    }
   }
 
   /**

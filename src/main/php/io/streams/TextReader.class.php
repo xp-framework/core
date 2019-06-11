@@ -91,13 +91,16 @@ class TextReader extends Reader {
     do {
       if ('' === ($chunk= $this->read0($size - $l))) break;
       $bytes.= $chunk;
-    } while (($l= @iconv_strlen($bytes, $this->charset)) < $size);
+    } while (($l= iconv_strlen($bytes, $this->charset)) < $size);
 
     if (false === $l) {
       $message= key(@\xp::$errors[__FILE__][__LINE__ - 3]);
       \xp::gc(__FILE__);
       throw new FormatException($message);
-    } else if ('' === $bytes) {
+    }
+
+    \xp::gc(__FILE__);
+    if ('' === $bytes) {
       $this->buf= null;
       return null;
     } else {

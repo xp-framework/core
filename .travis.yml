@@ -10,6 +10,10 @@ php:
   - 7.4snapshot
   - nightly
 
+matrix:
+  allow_failures:
+    - php: nightly
+
 before_script:
   - sh .travis.sh install
 

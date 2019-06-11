@@ -369,9 +369,18 @@ function typeof($arg) {
     $signature= [];
     foreach ($r->getParameters() as $param) {
       if ($param->isVariadic()) break;
-      $signature[]= \lang\Type::forName((string)$param->getType() ?: 'var');
+      if ($t= $param->getType()) {
+        $signature[]= \lang\Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+      } else {
+        $signature[]= \lang\Type::$VAR;
+      }
     }
-    return new \lang\FunctionType($signature, \lang\Type::forName((string)$r->getReturnType() ?: 'var'));
+    if ($t= $r->getReturnType()) {
+      $return= \lang\Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+    } else {
+      $return= \lang\Type::$VAR;
+    }
+    return new \lang\FunctionType($signature, $return);
   } else if (is_object($arg)) {
     return new \lang\XPClass($arg);
   } else if (is_array($arg)) {
