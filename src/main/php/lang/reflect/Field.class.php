@@ -79,8 +79,8 @@ class Field implements Value {
     $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
 
     return $details && ($key 
-      ? array_key_exists($key, (array)@$details[DETAIL_ANNOTATIONS][$name]) 
-      : array_key_exists($name, (array)@$details[DETAIL_ANNOTATIONS])
+      ? array_key_exists($key, $details[DETAIL_ANNOTATIONS][$name] ?? [])
+      : array_key_exists($name, $details[DETAIL_ANNOTATIONS] ?? [])
     );
   }
 
@@ -96,8 +96,8 @@ class Field implements Value {
     $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
 
     if (!$details || !($key 
-      ? array_key_exists($key, @$details[DETAIL_ANNOTATIONS][$name]) 
-      : array_key_exists($name, @$details[DETAIL_ANNOTATIONS])
+      ? array_key_exists($key, $details[DETAIL_ANNOTATIONS][$name] ?? []) 
+      : array_key_exists($name, $details[DETAIL_ANNOTATIONS] ?? [])
     )) {
       throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
     }

@@ -184,8 +184,8 @@ class Parameter {
     }
 
     return $details && ($key 
-      ? array_key_exists($key, (array)@$details[DETAIL_TARGET_ANNO][$n][$name]) 
-      : array_key_exists($name, (array)@$details[DETAIL_TARGET_ANNO][$n])
+      ? array_key_exists($key, $details[DETAIL_TARGET_ANNO][$n][$name] ?? [])
+      : array_key_exists($name, $details[DETAIL_TARGET_ANNO][$n] ?? [])
     );
   }
 
@@ -202,8 +202,8 @@ class Parameter {
     if (
       !($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||
       !isset($details[DETAIL_TARGET_ANNO][$n]) || !($key 
-        ? array_key_exists($key, (array)@$details[DETAIL_TARGET_ANNO][$n][$name]) 
-        : array_key_exists($name, (array)@$details[DETAIL_TARGET_ANNO][$n])
+        ? array_key_exists($key, $details[DETAIL_TARGET_ANNO][$n][$name] ?? []) 
+        : array_key_exists($name, $details[DETAIL_TARGET_ANNO][$n] ?? [])
       )
     ) {
       throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
