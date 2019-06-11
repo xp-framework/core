@@ -40,7 +40,7 @@ class ChannelInputStream implements InputStream {
    * @return  string
    */
   public function read($limit= 8192) {
-    if (false === ($bytes= fread($this->fd, $limit))) {
+    if (null === $this->fd || false === ($bytes= fread($this->fd, $limit))) {
       $e= new IOException('Could not read '.$limit.' bytes from '.$this->name.' channel');
       \xp::gc(__FILE__);
       throw $e;
@@ -54,7 +54,7 @@ class ChannelInputStream implements InputStream {
    *
    */
   public function available() {
-    return feof($this->fd) ? 0 : 1;
+    return null === $this->fd || feof($this->fd) ? 0 : 1;
   }
 
   /**
@@ -62,7 +62,10 @@ class ChannelInputStream implements InputStream {
    *
    */
   public function close() {
-    fclose($this->fd);
+    if ($this->fd) {
+      fclose($this->fd);
+      $this->fd= null;
+    }
   }
 
   /**
