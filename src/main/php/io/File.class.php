@@ -145,6 +145,7 @@ class File implements Channel, Value {
     
     $this->_fd= fopen($this->uri, $this->mode);
     if (!$this->_fd) {
+      $this->_fd= null;
       $e= new IOException('Cannot open '.$this->uri.' mode '.$this->mode);
       \xp::gc(__FILE__);
       throw $e;
@@ -182,6 +183,9 @@ class File implements Channel, Value {
    * @throws  io.IOException in case of an error
    */
   public function truncate(int $size= 0): bool {
+    if (null === $this->_fd) {
+      throw new IOException('Cannot truncate file '.$this->uri);
+    }
 
     // OS vagaries: Windows does not retain file position!
     if (0 === strncasecmp(PHP_OS, 'WIN', 3)) {
@@ -293,7 +297,7 @@ class File implements Channel, Value {
    * @throws  io.IOException in case of an error
    */
   public function readChar() {
-    if (false === ($result= fgetc($this->_fd)) && !feof($this->_fd)) {
+    if (null === $this->_fd || false === ($result= fgetc($this->_fd)) && !feof($this->_fd)) {
       $e= new IOException('Cannot read 1 byte from '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
@@ -313,7 +317,7 @@ class File implements Channel, Value {
    */
   public function gets($bytes= 4096) {
     if (0 === $bytes) return '';
-    if (false === ($result= fgets($this->_fd, $bytes)) && !feof($this->_fd)) {
+    if (null === $this->_fd || false === ($result= fgets($this->_fd, $bytes)) && !feof($this->_fd)) {
       $e= new IOException('Cannot read '.$bytes.' bytes from '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
@@ -330,7 +334,7 @@ class File implements Channel, Value {
    */
   public function read($bytes= 4096) {
     if (0 === $bytes) return '';
-    if (false === ($result= fread($this->_fd, $bytes)) && !feof($this->_fd)) {
+    if (null === $this->_fd || false === ($result= fread($this->_fd, $bytes)) && !feof($this->_fd)) {
       $e= new IOException('Cannot read '.$bytes.' bytes from '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
@@ -346,7 +350,7 @@ class File implements Channel, Value {
    * @throws  io.IOException in case of an error
    */
   public function write($string) {
-    if (!$this->_fd || false === ($result= fwrite($this->_fd, $string))) {
+    if (null === $this->_fd || false === ($result= fwrite($this->_fd, $string))) {
       $e= new IOException('Cannot write '.strlen($string).' bytes to '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
@@ -362,7 +366,7 @@ class File implements Channel, Value {
    * @throws  io.IOException in case of an error
    */
   public function writeLine($string= '') {
-    if (!$this->_fd || false === ($result= fwrite($this->_fd, $string."\n"))) {
+    if (null === $this->_fd || false === ($result= fwrite($this->_fd, $string."\n"))) {
       $e= new IOException('Cannot write '.(strlen($string)+ 1).' bytes to '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
@@ -400,7 +404,7 @@ class File implements Channel, Value {
    * @throws  io.IOException in case of an error
    */
   public function rewind() {
-    if (false === ($result= rewind($this->_fd))) {
+    if (null === $this->_fd || false === ($result= rewind($this->_fd))) {
       $e= new IOException('Cannot rewind file pointer');
       \xp::gc(__FILE__);
       throw $e;
@@ -418,7 +422,7 @@ class File implements Channel, Value {
    * @return  bool success
    */
   public function seek($position= 0, $mode= SEEK_SET) {
-    if (0 != ($result= fseek($this->_fd, $position, $mode))) {
+    if (null === $this->_fd || 0 != ($result= fseek($this->_fd, $position, $mode))) {
       $e= new IOException('Seek error, position '.$position.' in mode '.$mode);
       \xp::gc(__FILE__);
       throw $e;
@@ -433,7 +437,7 @@ class File implements Channel, Value {
    * @throws  io.IOException in case of an error
    */
   public function tell() {
-    if (false === ($result= ftell($this->_fd))) {
+    if (null === $this->_fd || false === ($result= ftell($this->_fd))) {
       $e= new IOException('Cannot retrieve file pointer\'s position');
       \xp::gc(__FILE__);
       throw $e;
@@ -463,7 +467,7 @@ class File implements Channel, Value {
    * @see     php://flock
    */
   protected function _lock($mode) {
-    if (false === flock($this->_fd, $mode)) {
+    if (null === $this->_fd || false === flock($this->_fd, $mode)) {
       $os= '';
       foreach ([
         LOCK_NB   => 'LOCK_NB',
