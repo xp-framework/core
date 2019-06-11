@@ -55,9 +55,10 @@ class ClassNotFoundException extends XPException implements ClassLoadingExceptio
    * @return string
    */
   public function compoundMessage() {
-    return
-      'Exception '.nameof($this).' ('.$this->message.") {\n    ".
-      implode("\n    ", array_map(['xp', 'stringOf'], $this->loaders))."\n  }"
-    ;
+    $s= 'Exception '.nameof($this).' ('.$this->message.") {\n";
+    foreach ($this->loaders as $loader) {
+      $s.= '  '.str_replace("\n", "\n    ", $loader->toString())."\n";
+    }
+    return $s.'}';
   }
 }
