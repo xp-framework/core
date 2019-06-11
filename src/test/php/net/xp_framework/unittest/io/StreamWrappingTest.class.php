@@ -92,14 +92,16 @@ class StreamWrappingTest extends TestCase {
   public function statNonExistingReadableUri() {
     $uri= Streams::readableUri(new MemoryInputStream(str_repeat('x', 10)));
     fclose(fopen($uri, 'r'));
-    $this->assertFalse(@stat($uri));
+    $this->assertFalse(stat($uri));
+    \xp::gc(__FILE__);
   }
 
   #[@test]
   public function statNonExistingWriteableUri() {
     $uri= Streams::writeableUri(new MemoryOutputStream());
     fclose(fopen($uri, 'w'));
-    $this->assertFalse(@stat($uri));
+    $this->assertFalse(stat($uri));
+    \xp::gc(__FILE__);
   }
 
   #[@test]
