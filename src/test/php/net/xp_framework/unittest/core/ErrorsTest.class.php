@@ -126,8 +126,14 @@ class ErrorsTest extends TestCase {
     $f();
   }
 
-  #[@test, @expect(ClassCastException::class)]
+  #[@test, @expect(ClassCastException::class), @action(new RuntimeVersion('<7.4.0-dev'))]
   public function cannot_convert_object_to_string_yields_cce() {
+    $object= new class() { };
+    $object.'String';
+  }
+
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.4.0-dev'))]
+  public function cannot_convert_object_to_string_yields_error() {
     $object= new class() { };
     $object.'String';
   }
