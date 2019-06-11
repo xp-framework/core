@@ -114,7 +114,7 @@ class Routine implements Value {
         return Type::forName($t);
       }
     } else if ($t= $this->_reflect->getReturnType()) {
-      return Type::forName((string)$t);
+      return Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
     } else {
       return Type::$VAR;
     }
@@ -128,7 +128,7 @@ class Routine implements Value {
     ) {
       return ltrim($details[DETAIL_RETURNS], '&');
     } else if ($t= $this->_reflect->getReturnType()) {
-      return $t;
+      return PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
     } else {
       return 'var';
     }
