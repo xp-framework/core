@@ -112,15 +112,13 @@ class ErrorsTest extends TestCase {
     $f('Primitive');
   }
 
-  #[@test, @expect(IllegalArgumentException::class), @action([
-  #  new RuntimeVersion('<7.1.0-dev')
-  #])]
+  #[@test, @expect(IllegalArgumentException::class), @action(new RuntimeVersion('<7.1.0-dev'))]
   public function missing_argument_mismatch_yield_iae() {
     $f= function($arg) { };
     $f();
   }
 
-  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.1.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.1.0'))]
   public function missing_argument_mismatch_yield_error() {
     $f= function($arg) { };
     $f();
@@ -132,7 +130,7 @@ class ErrorsTest extends TestCase {
     $object.'String';
   }
 
-  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.4.0-dev'))]
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.4.0'))]
   public function cannot_convert_object_to_string_yields_error() {
     $object= new class() { };
     $object.'String';
