@@ -7,6 +7,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged PR #217: New `io.Files` class replacing the ill-named *FileUtil*
+  (@thekid)
 * Added preliminary support for PHP 7.4 and PHP 8.0, both of which have
   not yet been released yet - though running the testsuite with their
   respective nightly builds yields *green* - see issue #211
