@@ -5,6 +5,7 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Added fix for reflection code raising warnings in PHP 7.4 - @thekid
 * Added fix for typeof() raising warnings in PHP 7.4 - @thekid
 
 ## 9.8.2 / 2019-01-01
