@@ -35,6 +35,13 @@ XP Framework Core ChangeLog
 * Implemented xp-framework/rfc#330: Remove HHVM support. See PR #206
   (@thekid)
 
+## 9.8.3 / 2019-06-14
+
+### Bugfixes
+
+* Added fix for reflection code raising warnings in PHP 7.4 - @thekid
+* Added fix for typeof() raising warnings in PHP 7.4 - @thekid
+
 ## 9.8.2 / 2019-01-01
 
 ### Bugfixes
