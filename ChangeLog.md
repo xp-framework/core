@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 9.8.3 / 2019-06-14
+
 ### Bugfixes
 
 * Added fix for reflection code raising warnings in PHP 7.4 - @thekid
