@@ -123,7 +123,7 @@ class Routine implements Value {
         return Type::forName($t);
       }
     } else if ($t= $this->_reflect->getReturnType()) {
-      return Type::forName((string)$t);
+      return Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
     } else {
       return Type::$VAR;
     }
@@ -137,7 +137,7 @@ class Routine implements Value {
     ) {
       return ltrim($details[DETAIL_RETURNS], '&');
     } else if ($t= $this->_reflect->getReturnType()) {
-      return str_replace('HH\\', '', $t);
+      return str_replace('HH\\', '', PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
     } else if (defined('HHVM_VERSION')) {
       return str_replace('HH\\', '', $this->_reflect->getReturnTypeText() ?: 'var');
     } else {
@@ -191,7 +191,7 @@ class Routine implements Value {
     if (!($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))) return null;
     return $details[DETAIL_COMMENT];
   }
-  
+
   /**
    * Check whether an annotation exists
    *
@@ -201,11 +201,12 @@ class Routine implements Value {
    */
   public function hasAnnotation($name, $key= null): bool {
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
-
-    return $details && ($key 
-      ? array_key_exists($key, (array)@$details[DETAIL_ANNOTATIONS][$name]) 
-      : array_key_exists($name, (array)@$details[DETAIL_ANNOTATIONS])
-    );
+    if ($key) {
+      $a= $details[DETAIL_ANNOTATIONS][$name] ?? null;
+      return is_array($a) && array_key_exists($key, $a);
+    } else {
+      return array_key_exists($name, $details[DETAIL_ANNOTATIONS] ?? []);
+    }
   }
 
   /**
@@ -218,17 +219,14 @@ class Routine implements Value {
    */
   public function getAnnotation($name, $key= null) {
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
-    if (!$details || !($key 
-      ? array_key_exists($key, @$details[DETAIL_ANNOTATIONS][$name]) 
-      : array_key_exists($name, @$details[DETAIL_ANNOTATIONS])
-    )) {
-      throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
+    if ($key) {
+      $a= $details[DETAIL_ANNOTATIONS][$name] ?? null;
+      if (is_array($a) && array_key_exists($key, $a)) return $a[$key];
+    } else {
+      if (array_key_exists($name, $details[DETAIL_ANNOTATIONS] ?? [])) return $details[DETAIL_ANNOTATIONS][$name];
     }
 
-    return ($key 
-      ? $details[DETAIL_ANNOTATIONS][$name][$key] 
-      : $details[DETAIL_ANNOTATIONS][$name]
-    );
+    throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
   }
 
   /** Retrieve whether a method has annotations */
