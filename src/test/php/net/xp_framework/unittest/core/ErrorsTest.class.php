@@ -9,8 +9,8 @@ use lang\{
   Value,
   XPException
 };
-use unittest\actions\RuntimeVersion;
 use net\xp_framework\unittest\IgnoredOnHHVM;
+use unittest\actions\RuntimeVersion;
 
 /**
  * Test the XP error handling semantics
@@ -129,8 +129,14 @@ class ErrorsTest extends \unittest\TestCase {
     $f();
   }
 
-  #[@test, @expect(ClassCastException::class)]
+  #[@test, @expect(ClassCastException::class), @action(new RuntimeVersion('<7.4.0-dev'))]
   public function cannot_convert_object_to_string_yields_cce() {
+    $object= new class() { };
+    $object.'String';
+  }
+
+  #[@test, @expect(Error::class), @action(new RuntimeVersion('>=7.4.0'))]
+  public function cannot_convert_object_to_string_yields_error() {
     $object= new class() { };
     $object.'String';
   }
