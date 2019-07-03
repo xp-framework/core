@@ -378,4 +378,9 @@ class DateTest extends \unittest\TestCase {
   public function testInvalidUnixTimestamp() {
     new Date('+1000000');
   }
+
+  #[@test]
+  public function microseconds() {
+    $this->assertEquals(393313, (new Date('2019-07-03 15:18:10.393313'))->getMicroSeconds());
+  }
 }

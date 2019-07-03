@@ -144,6 +144,9 @@ class Date implements \lang\Value {
   /** Retrieve Unix-Timestamp for this date */
   public function getTime(): int { return date_timestamp_get($this->handle); }
 
+  /** Get microseconds */
+  public function getMicroSeconds(): int { return $this->handle->format('u'); }
+
   /** Get seconds */
   public function getSeconds(): int { return $this->handle->format('s'); }
 
