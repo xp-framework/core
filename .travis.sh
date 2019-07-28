@@ -1,6 +1,6 @@
 #!/bin/sh
 
-XP_RUNNERS_URL=https://dl.bintray.com/xp-runners/generic/xp-run-master.sh
+XP_RUNNERS_URL=https://dl.bintray.com/xp-runners/generic/xp-run-snapshot-ebeca18b8af1d823a962f2cbfbb07f1c50f6acfd.sh
 
 case $1 in
   install)
