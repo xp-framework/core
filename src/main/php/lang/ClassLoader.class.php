@@ -200,10 +200,15 @@ final class ClassLoader implements IClassLoader {
   protected static function classLiteral($class) {
     if ($class instanceof XPClass) {
       return '\\'.$class->literal();
-    } else if ('\\' === $class[0]) {
+    }
+
+    $name= (string)$class;
+    if ('' === $name) {
+      throw new ClassNotFoundException('Empty class name given');
+    } else if ('\\' === $name[0]) {
       return $class;
     } else {
-      return '\\'.XPClass::forName((string)$class)->literal();
+      return '\\'.XPClass::forName($name)->literal();
     }
   }
 
