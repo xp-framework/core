@@ -77,7 +77,7 @@ class Properties implements PropertyAccess {
     while (null !== ($t= $reader->readLine())) {
       $trimmedToken= trim($t);
       if ('' === $trimmedToken) continue;                   // Empty lines
-      $c= $trimmedToken{0};
+      $c= $trimmedToken[0];
       if (';' === $c || '#' === $c) {                       // One line comments
         continue;                    
       } else if ('[' === $c) {
@@ -91,7 +91,7 @@ class Properties implements PropertyAccess {
         $value= ltrim(substr($t, $p+ 1));
         if ('' === $value) {
           // OK
-        } else if ('"' === $value{0}) {                     // Quoted strings
+        } else if ('"' === $value[0]) {                     // Quoted strings
           $quoted= substr($value, 1);
           while (false === ($p= strrpos($quoted, '"'))) {
             if (null === ($line= $reader->readLine())) break;
@@ -150,7 +150,7 @@ class Properties implements PropertyAccess {
     foreach (array_keys($this->_data) as $section) {
       $out->write('['.$section."]\n");
       foreach ($this->_data[$section] as $key => $val) {
-        if (';' == $key{0}) {
+        if (';' == $key[0]) {
           $out->write("\n; ".$val."\n");
         } else if (is_array($val)) {
           if (empty($val)) {
