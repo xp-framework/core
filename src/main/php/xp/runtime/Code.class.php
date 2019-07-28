@@ -117,7 +117,7 @@ class Code {
 
     $name= strrpos($use, '\\') + 1;
     $used= [];
-    if ('{' === $use{$name}) {
+    if ('{' === $use[$name]) {
       $namespace= substr($use, 0, $name);
       foreach (explode(',', substr($use, $name + 1, -1)) as $type) {
         $used[$namespace.trim($type)]= $module;

@@ -48,7 +48,7 @@ final class ClassLoader implements IClassLoader {
     
     // Scan include-path, setting up classloaders for each element
     foreach (\xp::$classpath as $element) {
-      if (DIRECTORY_SEPARATOR === $element{strlen($element) - 1}) {
+      if (DIRECTORY_SEPARATOR === $element[strlen($element) - 1]) {
         $cl= FileSystemClassLoader::instanceFor($element, false);
       } else {
         $cl= ArchiveClassLoader::instanceFor($element, false);
@@ -85,7 +85,7 @@ final class ClassLoader implements IClassLoader {
    * @throws  lang.ElementNotFoundException if the path cannot be found
    */
   public static function registerPath($element, $before= false) {
-    if (null === $before && '!' === $element{0}) {
+    if (null === $before && '!' === $element[0]) {
       $before= true;
       $element= substr($element, 1);
     } else {
@@ -200,7 +200,7 @@ final class ClassLoader implements IClassLoader {
   protected static function classLiteral($class) {
     if ($class instanceof XPClass) {
       return '\\'.$class->literal();
-    } else if ('\\' === $class{0}) {
+    } else if ('\\' === $class[0]) {
       return $class;
     } else {
       return '\\'.XPClass::forName((string)$class)->literal();
@@ -266,7 +266,7 @@ final class ClassLoader implements IClassLoader {
    * @return lang.XPClass
    */
   public static function defineType($spec, $declaration, $def) {
-    if ('#' === $spec{0}) {
+    if ('#' === $spec[0]) {
       $p= strrpos($spec, ' ');
       $typeAnnotations= substr($spec, 0, $p)."\n";
       $spec= substr($spec, $p+ 1);
@@ -281,7 +281,7 @@ final class ClassLoader implements IClassLoader {
       $iface= 'interface' === $declaration['kind'];
       $bytes= '';
       foreach ($def as $name => $member) {
-        if ('#' === $name{0}) {
+        if ('#' === $name[0]) {
           $p= strrpos($name, ' ');
           $memberAnnotations= substr($name, 0, $p)."\n";
           $name= substr($name, $p+ 1);

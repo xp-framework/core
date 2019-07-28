@@ -34,10 +34,10 @@ abstract class CommandLine extends Enum {
         $parts= [];
         $r= '';
         for ($i= 0, $s= strlen($cmd); $i < $s; $i++) {
-          if (' ' === $cmd{$i}) {
+          if (' ' === $cmd[$i]) {
             $parts[]= $r;
             $r= '';
-          } else if ('"' === $cmd{$i}) {
+          } else if ('"' === $cmd[$i]) {
             $q= $i+ 1;
             do {
               if (false === ($p= strpos($cmd, '"', $q))) {
@@ -58,7 +58,7 @@ abstract class CommandLine extends Enum {
             $r.= str_replace($triple, '"', substr($cmd, $i+ 1, $q- $i- 1));
             $i= $q;
           } else {
-            $r.= $cmd{$i};
+            $r.= $cmd[$i];
           }
         }
         $parts[]= $r;
@@ -101,7 +101,7 @@ abstract class CommandLine extends Enum {
           } else {
             $o+= $p+ 1;
           }
-          if ('"' === $option{0} || "'" === $option{0}) $option= substr($option, 1, -1);
+          if ('"' === $option[0] || "'" === $option[0]) $option= substr($option, 1, -1);
           $parts[]= $option;
         }
         return $parts;

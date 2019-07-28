@@ -82,7 +82,7 @@ class FileSystemClassLoader extends AbstractClassLoader {
     if (0 !== substr_compare($uri, \xp::CLASS_FILE_EXT, -strlen(\xp::CLASS_FILE_EXT))) return null;
 
     // Resolve path if not absolute
-    if ((DIRECTORY_SEPARATOR === $uri{0} || (':' === $uri{1} && '\\' === $uri{2}))) {
+    if ((DIRECTORY_SEPARATOR === $uri[0] || (':' === $uri[1] && '\\' === $uri[2]))) {
       $absolute= realpath($uri);
     } else {
       $absolute= realpath($this->path.DIRECTORY_SEPARATOR.$uri);
@@ -155,7 +155,7 @@ class FileSystemClassLoader extends AbstractClassLoader {
     $contents= [];
     if ($d= @dir($this->path.strtr($package, '.', DIRECTORY_SEPARATOR))) {
       while ($e= $d->read()) {
-        if ('.' != $e{0}) $contents[]= $e.(is_dir($d->path.DIRECTORY_SEPARATOR.$e) ? '/' : '');
+        if ('.' != $e[0]) $contents[]= $e.(is_dir($d->path.DIRECTORY_SEPARATOR.$e) ? '/' : '');
       }
       $d->close();
     }

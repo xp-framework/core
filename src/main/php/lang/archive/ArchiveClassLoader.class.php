@@ -71,7 +71,7 @@ class ArchiveClassLoader extends AbstractClassLoader {
     if (0 !== substr_compare($uri, \xp::CLASS_FILE_EXT, -strlen(\xp::CLASS_FILE_EXT))) return null;
 
     // Absolute URIs have the form "xar://containing.xar?the/classes/Name.class.php"
-    if ((DIRECTORY_SEPARATOR === $uri{0} || (':' === $uri{1} && '\\' === $uri{2}))) {
+    if ((DIRECTORY_SEPARATOR === $uri[0] || (':' === $uri[1] && '\\' === $uri[2]))) {
       return null;
     } else if (false !== ($p= strpos($uri, '?'))) {
       $archive= substr($uri, 0, $p + 1);

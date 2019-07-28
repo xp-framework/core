@@ -137,7 +137,7 @@ class Type implements Value {
    */
   private static function matching(&$string, $chars, $offset= 0) {
     for ($b= 1, $o= $offset, $s= 1, $l= strlen($string); $b && (($o+= $s) < $l); $o++, $s= strcspn($string, $chars, $o)) {
-      if ($chars{0} === $string{$o}) $b++; else if ($chars{1} === $string{$o}) $b--;
+      if ($chars[0] === $string[$o]) $b++; else if ($chars[1] === $string[$o]) $b--;
     }
 
     if (0 === $b) {
@@ -158,7 +158,7 @@ class Type implements Value {
    */
   private static function split($string, $char) {
     for ($i= 0, $l= strlen($string); $i < $l; $i++) {
-      if ('(' === $string{$i}) {
+      if ('(' === $string[$i]) {
         yield self::matching($string, '()', $i);
         $i= 0;
         $l= strlen($string);
@@ -166,7 +166,7 @@ class Type implements Value {
         $s= strcspn($string, $char.'<>', $i);
         $t= trim(substr($string, $i, $s));
         $n= $i + $s;
-        if ($n < $l && '<' === $string{$n}) {
+        if ($n < $l && '<' === $string[$n]) {
           yield $t.'<'.self::matching($string, '<>', $n).'>';
           $i= 0;
           $l= strlen($string);
@@ -233,7 +233,7 @@ class Type implements Value {
       return new TypeUnion([Primitive::$INT, Primitive::$FLOAT]);
     } else if ('HH\arraykey' === $type) {
       return new TypeUnion([Primitive::$INT, Primitive::$STRING]);
-    } else if ('?' === $type{0} || '@' === $type{0}) {
+    } else if ('?' === $type[0] || '@' === $type[0]) {
       return self::forName(substr($type, 1));
     }
 
@@ -246,7 +246,7 @@ class Type implements Value {
     $p= strcspn($type, '<|[*(');
     if ($p >= $l) {
       return XPClass::forName($type);
-    } else if ('(' === $type{0}) {
+    } else if ('(' === $type[0]) {
       $t= self::forName(self::matching($type, '()', 0));
     } else if (0 === substr_compare($type, '[:', 0, 2)) {
       $t= new MapType(self::forName(self::matching($type, '[]', 1)));
@@ -266,7 +266,7 @@ class Type implements Value {
         $type= '';
       }
       $t= new FunctionType($args, $return);
-    } else if ('<' === $type{$p}) {
+    } else if ('<' === $type[$p]) {
       $base= substr($type, 0, $p);
       $components= [];
       $wildcard= false;
@@ -294,10 +294,10 @@ class Type implements Value {
 
     // Suffixes and unions `T[]` is an array, `T*` is a vararg, `A|B|C` is a union
     while ($type) {
-      if ('*' === $type{0}) {
+      if ('*' === $type[0]) {
         $t= new ArrayType($t);
         $type= trim(substr($type, 1));
-      } else if ('|' === $type{0}) {
+      } else if ('|' === $type[0]) {
         $components= [$t];
         foreach (self::split(substr($type, 1), '|') as $arg) {
           $components[]= self::forName($arg);

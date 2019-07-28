@@ -153,18 +153,18 @@ class Runtime {
     while (null !== ($argument= array_shift($arguments))) {
       if ('' === $argument) {
         continue;
-      } else if ('-' !== $argument{0}) {
+      } else if ('-' !== $argument[0]) {
         $return['bootstrap']= trim($argument, '"\'');;
         break;
       } else if ('--' === $argument) {
         $return['bootstrap']= trim(array_shift($arguments), '"\'');
         break;
       }
-      switch ($argument{1}) {
+      switch ($argument[1]) {
         case 'q':     // quiet
         case 'n':     // No php.ini file will be used
         case 'C': {   // [cgi] Do not chdir to the script's directory
-          $return['options']->withSwitch($argument{1});
+          $return['options']->withSwitch($argument[1]);
           break;
         }
 

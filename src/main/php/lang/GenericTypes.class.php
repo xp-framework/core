@@ -298,7 +298,7 @@ class GenericTypes {
               $i++;
             }
             $i--;
-            '\\' === $rel{0} || $rel= isset($imports[$rel]) ? $imports[$rel] : $namespace.'\\'.$rel;
+            '\\' === $rel[0] || $rel= isset($imports[$rel]) ? $imports[$rel] : $namespace.'\\'.$rel;
             if (isset($annotation[$counter])) {
               $iargs= [];
               foreach (explode(',', $annotation[$counter]) as $j => $placeholder) {
