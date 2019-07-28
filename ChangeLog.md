@@ -18,6 +18,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Added fix for curly braces in offsets deprecation in PHP 7.4, see
+  https://wiki.php.net/rfc/deprecate_curly_braces_array_access
+  (@thekid)
 * Merged PR #216: Remove third & optional "nullsafe" argument to cast()
   (@thekid)
 * Merged PR #215: Remove deprecated System class - @thekid
