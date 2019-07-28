@@ -5,6 +5,11 @@ XP Framework Core ChangeLog
 
 ## 10.0.0 / ????-??-??
 
+### Bugfixes
+
+* Fix issue #220: Curly braces in offsets are now deprecated in PHP 7.4
+  (@thekid)
+
 ### Features
 
 * Merged PR #218: Add new util.Dates class superseding util.DateUtil 
@@ -18,9 +23,6 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
-* Added fix for curly braces in offsets deprecation in PHP 7.4, see
-  https://wiki.php.net/rfc/deprecate_curly_braces_array_access
-  (@thekid)
 * Merged PR #216: Remove third & optional "nullsafe" argument to cast()
   (@thekid)
 * Merged PR #215: Remove deprecated System class - @thekid
