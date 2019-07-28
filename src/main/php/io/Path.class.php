@@ -115,7 +115,7 @@ class Path implements Value {
   /** Tests whether this path is absolute, e.g. `/usr` or `C:\Windows` */
   public function isAbsolute(): bool {
     return '' !== $this->path && (
-      DIRECTORY_SEPARATOR === $this->path{0} ||
+      DIRECTORY_SEPARATOR === $this->path[0] ||
       2 === sscanf($this->path, '%c%[:]', $drive, $colon)
     );
   }
@@ -130,12 +130,12 @@ class Path implements Value {
     $l= strlen($path);
     if (0 === $l) {
       return '';
-    } else if (DIRECTORY_SEPARATOR === $path{0}) {
+    } else if (DIRECTORY_SEPARATOR === $path[0]) {
       $components= explode(DIRECTORY_SEPARATOR, substr($path, 1));
       $base= DIRECTORY_SEPARATOR;
-    } else if ($l > 1 && ':' === $path{1}) {
+    } else if ($l > 1 && ':' === $path[1]) {
       $components= explode(DIRECTORY_SEPARATOR, substr($path, 3));
-      $base= strtoupper($path{0}).':'.DIRECTORY_SEPARATOR;
+      $base= strtoupper($path[0]).':'.DIRECTORY_SEPARATOR;
     } else {
       $components= explode(DIRECTORY_SEPARATOR, $path);
       $base= null;
@@ -176,7 +176,7 @@ class Path implements Value {
    * @return string
    */
   private static function real0($path, $wd) {
-    if (DIRECTORY_SEPARATOR === $path{0}) {
+    if (DIRECTORY_SEPARATOR === $path[0]) {
       $normalized= '';
       $components= explode(DIRECTORY_SEPARATOR, substr($path, 1));
     } else if (2 === sscanf($path, '%c%*[:]', $drive)) {

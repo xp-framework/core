@@ -17,7 +17,7 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
    * @return string
    */
   private function asByte($in) {
-    return is_int($in) ? chr($in) : $in{0};
+    return is_int($in) ? chr($in) : $in[0];
   }
 
   /**

@@ -40,7 +40,7 @@ final class xp {
       // We rely on paths having been expanded including a trailing directory separator
       // character inside bootstrap(). This way, we can save testing for whether the path
       // entry is a directory with file system stat() calls.
-      if (DIRECTORY_SEPARATOR === $path{strlen($path) - 1}) {
+      if (DIRECTORY_SEPARATOR === $path[strlen($path) - 1]) {
         $f= $path.strtr($class, '.', DIRECTORY_SEPARATOR).xp::CLASS_FILE_EXT;
         $cl= 'lang.FileSystemClassLoader';
       } else {
@@ -221,12 +221,12 @@ function literal($type) {
   } else if (false !== ($p= strpos($type, '<'))) {
     $l= literal(substr($type, 0, $p))."\xb7\xb7";
     for ($args= substr($type, $p+ 1, -1).',', $o= 0, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
-      if (',' === $args{$i} && 0 === $brackets) {
+      if (',' === $args[$i] && 0 === $brackets) {
         $l.= strtr(literal(ltrim(substr($args, $o, $i- $o)))."\xb8", '\\', "\xa6");
         $o= $i+ 1;
-      } else if ('<' === $args{$i}) {
+      } else if ('<' === $args[$i]) {
         $brackets++;
-      } else if ('>' === $args{$i}) {
+      } else if ('>' === $args[$i]) {
         $brackets--;
       }
     }
