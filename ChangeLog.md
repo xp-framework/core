@@ -7,6 +7,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged PR #218: Add new util.Dates class superseding util.DateUtil 
+  (@thekid)
 * Merged PR #217: New `io.Files` class replacing the ill-named *FileUtil*
   (@thekid)
 * Added preliminary support for PHP 7.4 and PHP 8.0, both of which have
