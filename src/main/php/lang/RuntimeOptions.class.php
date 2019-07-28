@@ -110,11 +110,11 @@ class RuntimeOptions implements Value {
   public function asArguments() {
     $s= [];
     foreach ($this->backing as $key => $value) {
-      if ("\1" === $key{0}) {
+      if ("\1" === $key[0]) {
         $s[]= '-'.substr($key, 1);
-      } else if ("\0" !== $key{0}) {
+      } else if ("\0" !== $key[0]) {
         foreach ($value as $v) {
-          $s[]= '-'.$key{0};
+          $s[]= '-'.$key[0];
           $s[]= substr($key, 1).'='.$v;
         }
       }

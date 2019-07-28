@@ -267,7 +267,7 @@ function with(... $args) {
 function newinstance($spec, $args, $def= null) {
   static $u= 0;
 
-  if ('#' === $spec{0}) {
+  if ('#' === $spec[0]) {
     $p= strrpos($spec, ' ');
     $annotations= substr($spec, 0, $p).' ';
     $spec= substr($spec, $p+ 1);

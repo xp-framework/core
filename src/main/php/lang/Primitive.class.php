@@ -63,9 +63,9 @@ class Primitive extends Type {
       case self::$INT:
         if (strlen($value) <= 1) {
           return (int)$value;
-        } else if ('x' === $value{1}) {
+        } else if ('x' === $value[1]) {
           return hexdec($value);
-        } else if ('0' === $value{0}) {
+        } else if ('0' === $value[0]) {
           return octdec($value);
         } else {
           return (int)$value;

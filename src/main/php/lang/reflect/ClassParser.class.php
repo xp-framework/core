@@ -313,9 +313,9 @@ class ClassParser {
    */
   protected static function matching($text, $open, $close) {
     for ($braces= $open.$close, $i= 0, $b= 0, $s= strlen($text); $i < $s; $i+= strcspn($text, $braces, $i)) {
-      if ($text{$i} === $open) {
+      if ($text[$i] === $open) {
         $b++;
-      } else if ($text{$i} === $close) {
+      } else if ($text[$i] === $close) {
         if (0 === --$b) return $i + 1;
       }
       $i++;
@@ -338,7 +338,7 @@ class ClassParser {
     } else if (0 === strncmp($text, '(function(', 10)) {
       $p= self::matching($text, '(', ')');
       return substr($text, 0, $p).self::typeIn(substr($text, $p), $imports);
-    } else if ('[' === $text{0}) {
+    } else if ('[' === $text[0]) {
       $p= self::matching($text, '[', ']');
       return substr($text, 0, $p);
     } else if (strstr($text, '<')) {
@@ -348,7 +348,7 @@ class ClassParser {
       $type= substr($text, 0, strcspn($text, ' '));
     }
 
-    if ('\\' === $type{0}) {
+    if ('\\' === $type[0]) {
       return strtr(substr($type, 1), '\\', '.');
     } else if (isset($imports[$type])) {
       return $imports[$type];
