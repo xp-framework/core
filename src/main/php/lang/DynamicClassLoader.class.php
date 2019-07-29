@@ -253,7 +253,19 @@ class DynamicClassLoader extends AbstractClassLoader {
   public function stream_close() {
     return true;
   }
-  
+
+  /**
+   * Stream wrapper method stream_set_option
+   *
+   * @param  int $option
+   * @param  int $arg1
+   * @param  int $arg2
+   * @return bool
+   */
+  public function stream_set_option($option, $arg1, $arg2) {
+    return true;
+  }
+
   /**
    * Stream wrapper method url_stat
    *
