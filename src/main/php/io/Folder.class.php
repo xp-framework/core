@@ -75,7 +75,7 @@ class Folder implements Value {
     $i= 1;
     if ('' === $components[0]) {
       $this->uri= rtrim(realpath(DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR);
-    } else if ((strncasecmp(PHP_OS, 'Win', 3) === 0) && strlen($components[0]) > 1 && ':' === $components[0]{1}) {
+    } else if ((strncasecmp(PHP_OS, 'Win', 3) === 0) && strlen($components[0]) > 1 && ':' === $components[0][1]) {
       $this->uri= rtrim(realpath($components[0]), DIRECTORY_SEPARATOR);
     } else if ('..' === $components[0]) {
       $this->uri= rtrim(realpath('..'), DIRECTORY_SEPARATOR);

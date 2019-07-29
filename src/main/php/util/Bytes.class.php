@@ -42,7 +42,7 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
   /** Returns an iterator for use in foreach() */
   public function getIterator(): \Traversable {
     for ($offset= 0; $offset < $this->size; $offset++) {
-      $n= ord($this->buffer{$offset});
+      $n= ord($this->buffer[$offset]);
       yield $n < 128 ? $n : $n - 256;
     }
   }
@@ -58,7 +58,7 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
     if ($offset >= $this->size || $offset < 0) {
       throw new IndexOutOfBoundsException('Offset '.$offset.' out of bounds');
     }
-    $n= ord($this->buffer{$offset});
+    $n= ord($this->buffer[$offset]);
     return $n < 128 ? $n : $n - 256;
   }
 
@@ -77,7 +77,7 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
     } else if ($offset >= $this->size || $offset < 0) {
       throw new IndexOutOfBoundsException('Offset '.$offset.' out of bounds');
     } else {
-      $this->buffer{$offset}= $this->asByte($value);
+      $this->buffer[$offset]= $this->asByte($value);
     }
   }
 
