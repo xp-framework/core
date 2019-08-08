@@ -132,7 +132,7 @@ class TextReader extends Reader {
         continue;
       }
 
-      $o= ("\r" === $this->buf{$p} && "\n" === $this->buf{$p + $this->cl}) ? $this->cl * 2 : $this->cl;
+      $o= ("\r" === $this->buf[$p] && "\n" === $this->buf[$p + $this->cl]) ? $this->cl * 2 : $this->cl;
       $p-= $this->of;
       $bytes= substr($this->buf, 0, $p);
       $this->buf= substr($this->buf, $p + $o);
