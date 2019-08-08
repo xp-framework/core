@@ -49,4 +49,9 @@ class Script {
   public function stream_close() {
     // NOOP
   }
+
+  /** @return void */
+  public function stream_set_option($option, $arg1, $arg2) {
+    // NOOP
+  }
 }
