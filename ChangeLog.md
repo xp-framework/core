@@ -42,6 +42,17 @@ XP Framework Core ChangeLog
 * Implemented xp-framework/rfc#330: Remove HHVM support. See PR #206
   (@thekid)
 
+## 9.9.0 / 2019-08-09
+
+### Bugfixes
+
+* Backported from XP 10 various compatibility fixes with PHP 7.4:
+  - Fix "Trying to access array offset on value of type null"
+  - Refrain from using curly braces used for array offsets
+  - Refrain from using deprecated `ReflectionType::__toString`
+   Prevent "stream_set_option is not implemented!" warnings
+  (@thekid)
+
 ## 9.8.3 / 2019-06-14
 
 ### Bugfixes
