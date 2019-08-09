@@ -587,8 +587,8 @@ class XPClass extends Type {
     $details= self::detailsForClass($this->name);
     
     return $details && ($key 
-      ? @array_key_exists($key, @$details['class'][DETAIL_ANNOTATIONS][$name]) 
-      : @array_key_exists($name, @$details['class'][DETAIL_ANNOTATIONS])
+      ? array_key_exists($key, $details['class'][DETAIL_ANNOTATIONS][$name] ?? []) 
+      : array_key_exists($name, $details['class'][DETAIL_ANNOTATIONS] ?? [])
     );
   }
 
@@ -603,8 +603,8 @@ class XPClass extends Type {
   public function getAnnotation($name, $key= null) {
     $details= self::detailsForClass($this->name);
     if (!$details || !($key 
-      ? @array_key_exists($key, @$details['class'][DETAIL_ANNOTATIONS][$name]) 
-      : @array_key_exists($name, @$details['class'][DETAIL_ANNOTATIONS])
+      ? array_key_exists($key, $details['class'][DETAIL_ANNOTATIONS][$name] ?? []) 
+      : array_key_exists($name, $details['class'][DETAIL_ANNOTATIONS] ?? [])
     )) {
       throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
     }

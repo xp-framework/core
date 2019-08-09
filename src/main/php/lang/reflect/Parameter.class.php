@@ -188,17 +188,13 @@ class Parameter {
    */
   public function hasAnnotation($name, $key= null) {
     $n= '$'.$this->_reflect->getName();
-    if (
-      !($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||
-      !isset($details[DETAIL_TARGET_ANNO][$n])
-    ) {   // Unknown or unparseable
-      return false;
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
+    if ($key) {
+      $a= $details[DETAIL_TARGET_ANNO][$n][$name] ?? null;
+      return is_array($a) && array_key_exists($key, $a);
+    } else {
+      return array_key_exists($name, $details[DETAIL_TARGET_ANNO][$n] ?? []);
     }
-
-    return $details && ($key 
-      ? array_key_exists($key, (array)@$details[DETAIL_TARGET_ANNO][$n][$name]) 
-      : array_key_exists($name, (array)@$details[DETAIL_TARGET_ANNO][$n])
-    );
   }
 
   /**
@@ -211,20 +207,15 @@ class Parameter {
    */
   public function getAnnotation($name, $key= null) {
     $n= '$'.$this->_reflect->getName();
-    if (
-      !($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||
-      !isset($details[DETAIL_TARGET_ANNO][$n]) || !($key 
-        ? array_key_exists($key, (array)@$details[DETAIL_TARGET_ANNO][$n][$name]) 
-        : array_key_exists($name, (array)@$details[DETAIL_TARGET_ANNO][$n])
-      )
-    ) {
-      throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
+    if ($key) {
+      $a= $details[DETAIL_TARGET_ANNO][$n][$name] ?? null;
+      if (is_array($a) && array_key_exists($key, $a)) return $a[$key];
+    } else {
+      if (array_key_exists($name, $details[DETAIL_TARGET_ANNO][$n] ?? [])) return $details[DETAIL_TARGET_ANNO][$n][$name];
     }
 
-    return ($key 
-      ? $details[DETAIL_TARGET_ANNO][$n][$name][$key] 
-      : $details[DETAIL_TARGET_ANNO][$n][$name]
-    );
+    throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
   }
 
   /**
