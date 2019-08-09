@@ -62,7 +62,7 @@ class StringReader extends Reader {
         continue;
       }
 
-      $o= "\r" === $this->buf{$p} && $p < $l - 1 && "\n" === $this->buf{$p + 1} ? 2 : 1;
+      $o= "\r" === $this->buf[$p] && $p < $l - 1 && "\n" === $this->buf[$p + 1] ? 2 : 1;
       $bytes= substr($this->buf, 0, $p);
       $this->buf= substr($this->buf, $p + $o);
       break;

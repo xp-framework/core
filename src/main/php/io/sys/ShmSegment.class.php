@@ -33,7 +33,7 @@ class ShmSegment {
     $str= str_pad($name, 4, 'Z');
     $this->spot= '';
     for ($i= 0; $i < 4; $i++) {
-      $this->spot.= dechex(ord($str{$i}));
+      $this->spot.= dechex(ord($str[$i]));
     }
     $this->spot= hexdec('0x'.$this->spot);
     
