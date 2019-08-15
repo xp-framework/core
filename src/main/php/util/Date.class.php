@@ -10,7 +10,7 @@ use lang\IllegalArgumentException;
 class Date implements \lang\Value {
   const DEFAULT_FORMAT= 'Y-m-d H:i:sO';
 
-  /** @type php.DateTime */
+  /** @type DateTime */
   private $handle;
 
   /**
@@ -18,7 +18,7 @@ class Date implements \lang\Value {
    *
    * - integer - interpreted as timestamp
    * - string - parsed into a date
-   * - php.DateTime object - will be used as is
+   * - DateTime object - will be used as is
    * - NULL - creates a date representing the current instance
    *
    * Timezone assignment works through these rules:
@@ -30,7 +30,7 @@ class Date implements \lang\Value {
    * - If no timezone has been given as second parameter, the system's default
    *   timezone is used.
    *
-   * @param  int|string|php.DateTime $in
+   * @param  int|string|DateTime $in
    * @param  string $timezone default NULL string of timezone
    * @throws lang.IllegalArgumentException in case the date is unparseable
    */

@@ -2,6 +2,7 @@
 
 use lang\{Runnable, Value, CommandLine, ClassCastException};
 use unittest\TestCase;
+use util\Date;
 
 /**
  * Tests cast() functionality
@@ -89,5 +90,10 @@ class CastingTest extends TestCase implements Runnable {
   #[@test, @expect(ClassCastException::class)]
   public function cannot_cast_arrays_to_nullable_string() {
     cast([1], '?string');
+  }
+
+  #[@test]
+  public function primitive_to_single_arg_constructor() {
+    $this->assertInstanceOf(Date::class, cast('2019-08-15', Date::class));
   }
 }

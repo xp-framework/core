@@ -388,11 +388,24 @@ class XPClass extends Type {
     if (null === $value) return null;
 
     $literal= literal($this->name);
-    if ($value instanceof $literal) {
-      return $value;
-    } else {
-      throw new ClassCastException('Cannot cast '.typeof($value)->getName().' to '.$this->name);
+    if ($value instanceof $literal) return $value;
+
+    // Check for a class with a single-arg constructor with matching type
+    $reflect= $this->reflect();
+    if (
+      $reflect->isInstantiable() &&
+      ($constructor= $this->getConstructor()) &&
+      $constructor->numParameters() > 0 &&
+      $constructor->getParameter(0)->getType()->isInstance($value)
+    ) {
+      try {
+        return $reflect->newInstance($value);
+      } catch (\ReflectionException $e) {
+        throw new ClassCastException('Cannot cast '.typeof($value)->getName().' to '.$this->name, $e);
+      }
     }
+
+    throw new ClassCastException('Cannot cast '.typeof($value)->getName().' to '.$this->name);
   }
   
   /**
