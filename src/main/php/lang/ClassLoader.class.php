@@ -230,7 +230,7 @@ final class ClassLoader implements IClassLoader {
       } else if ($t->isBuiltin()) {
         $constraint= (string)$t;
       } else {
-        $constraint= '\\'.(string)$t;
+        $constraint= '\\'.(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
       }
 
       if ($param->isVariadic()) {
