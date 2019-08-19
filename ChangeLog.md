@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 9.9.1 / 2019-08-20
+
+### Bugfixes
+
+* Fixed compatibility issue with PHP 7.4 in `ClassLoader::defineForward()`
+  (@thekid)
+
 ## 9.9.0 / 2019-08-09
 
 ### Bugfixes
