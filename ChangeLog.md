@@ -42,6 +42,13 @@ XP Framework Core ChangeLog
 * Implemented xp-framework/rfc#330: Remove HHVM support. See PR #206
   (@thekid)
 
+## 9.9.1 / 2019-08-20
+
+### Bugfixes
+
+* Fixed compatibility issue with PHP 7.4 in `ClassLoader::defineForward()`
+  (@thekid)
+
 ## 9.9.0 / 2019-08-09
 
 ### Bugfixes
