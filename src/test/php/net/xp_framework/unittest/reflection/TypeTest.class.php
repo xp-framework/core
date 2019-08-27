@@ -1,7 +1,5 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use util\collections\{Vector, HashTable};
-use net\xp_framework\unittest\Name;
 use lang\{
   ArrayType,
   ClassCastException,
@@ -13,6 +11,8 @@ use lang\{
   Type,
   XPClass
 };
+use net\xp_framework\unittest\Name;
+use util\collections\{Vector, HashTable};
 
 class TypeTest extends \unittest\TestCase {
 
@@ -475,8 +475,8 @@ class TypeTest extends \unittest\TestCase {
   #  [function() { }],
   #  [function() { yield 'Test'; }]
   #])]
-  public function closures_are_not_instances_of_the_object_type_union($value) {
-    $this->assertFalse(Type::$OBJECT->isInstance($value));
+  public function closures_are_instances_of_the_object_type_union($value) {
+    $this->assertTrue(Type::$OBJECT->isInstance($value));
   }
 
   #[@test, @values([

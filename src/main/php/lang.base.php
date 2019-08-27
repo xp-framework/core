@@ -185,7 +185,7 @@ function is($type, $object) {
   } else if ('array' === $type) {
     return is_array($object);
   } else if ('object' === $type) {
-    return is_object($object) && !($object instanceof \Closure);
+    return is_object($object);
   } else if ('callable' === $type) {
     return is_callable($object);
   } else if ('iterable' === $type) {

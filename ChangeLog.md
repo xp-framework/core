@@ -23,6 +23,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Changed `object` type handling in `is()` and `Type::$OBJECT` to be
+  consistent with PHP type system, including closures and generators.
+  (@thekid)
 * Merged PR #216: Remove third & optional "nullsafe" argument to cast()
   (@thekid)
 * Merged PR #215: Remove deprecated System class - @thekid
