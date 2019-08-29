@@ -155,7 +155,7 @@ function __error($code, $msg, $file, $line) {
 //     Casts an arg NULL-safe
 function cast($arg, $type) {
   if (null === $arg) {
-    if (0 === strncmp($type, '?', 1)) return null;
+    if ('?' === $type[0]) return null;
     throw new \lang\ClassCastException('Cannot cast NULL to '.$type);
   } else if ($type instanceof \lang\Type) {
     return $type->cast($arg);
@@ -190,6 +190,8 @@ function is($type, $object) {
     return is_callable($object);
   } else if ('iterable' === $type) {
     return is_array($object) || $object instanceof \Traversable;
+  } else if ('?' === $type[0]) {
+    return null === $object || is(substr($type, 1), $object);
   } else if (0 === strncmp($type, 'function(', 9)) {
     return \lang\FunctionType::forName($type)->isInstance($object);
   } else if (0 === substr_compare($type, '[]', -2)) {

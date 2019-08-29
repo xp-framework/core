@@ -267,6 +267,11 @@ class IsTest extends \unittest\TestCase {
     $this->assertTrue(is('int|string', $val));
   }
 
+  #[@test, @values([1, null])]
+  public function nullable($val) {
+    $this->assertTrue(is('?int', $val));
+  }
+
   #[@test, @values([
   #  [function() { }],
   #  [function() { yield 'Test'; }],
