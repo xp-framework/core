@@ -7,6 +7,8 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Merged PR #224: Add missing support for nullable types to `is()`
+  (@thekid)
 * Fix issue #220: Curly braces in offsets are now deprecated in PHP 7.4
   (@thekid)
 
