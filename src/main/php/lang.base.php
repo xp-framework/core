@@ -190,6 +190,8 @@ function is($type, $object) {
     return is_callable($object);
   } else if ('iterable' === $type) {
     return is_array($object) || $object instanceof \Traversable;
+  } else if ('?' === $type[0]) {
+    return null === $object || is(substr($type, 1), $object);
   } else if (0 === strncmp($type, 'function(', 9)) {
     return \lang\FunctionType::forName($type)->isInstance($object);
   } else if (0 === substr_compare($type, '[]', -2)) {
