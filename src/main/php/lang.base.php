@@ -155,7 +155,7 @@ function __error($code, $msg, $file, $line) {
 //     Casts an arg NULL-safe
 function cast($arg, $type) {
   if (null === $arg) {
-    if (0 === strncmp($type, '?', 1)) return null;
+    if ('?' === $type[0]) return null;
     throw new \lang\ClassCastException('Cannot cast NULL to '.$type);
   } else if ($type instanceof \lang\Type) {
     return $type->cast($arg);
