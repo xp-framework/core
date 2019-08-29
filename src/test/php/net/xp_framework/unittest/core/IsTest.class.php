@@ -1,8 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\{Runnable, ClassLoader};
-use net\xp_framework\unittest\core\generics\ListOf;
 use net\xp_framework\unittest\Name;
+use net\xp_framework\unittest\core\generics\ListOf;
 
 /** Tests the is() core functionality */
 class IsTest extends \unittest\TestCase {
@@ -311,7 +311,7 @@ class IsTest extends \unittest\TestCase {
   #  [function() { }],
   #  [function() { yield 'Test'; }]
   #])]
-  public function closures_are_not_objects($val) {
-    $this->assertFalse(is('object', $val));
+  public function closures_are_objects($val) {
+    $this->assertTrue(is('object', $val));
   }
 }

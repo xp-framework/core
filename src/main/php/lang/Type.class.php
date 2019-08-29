@@ -36,13 +36,13 @@ class Type implements Value {
 
     self::$OBJECT= eval('namespace lang; class NativeObjectType extends Type {
       static function __static() { }
-      public function isInstance($value): bool { return is_object($value) && !$value instanceof \Closure; }
+      public function isInstance($value): bool { return is_object($value); }
       public function newInstance(... $args) {
-        if ($args && is_object($args[0]) && !$args[0] instanceof \Closure) return clone $args[0];
+        if ($args && is_object($args[0])) return clone $args[0];
         throw new IllegalAccessException("Cannot instantiate an object from ".($args ? typeof($args[0])->getName() : "null"));
       }
       public function cast($value) {
-        if (null === $value || is_object($value) && !$value instanceof \Closure) return $value;
+        if (null === $value || is_object($value)) return $value;
         throw new ClassCastException("Cannot cast ".typeof($value)->getName()." to the object type");
       }
       public function isAssignableFrom($type): bool {
