@@ -14,6 +14,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Implemented feature request #219, adding `util.Date::getMicroSeconds()`
+  (@thekid)
 * Merged PR #218: Add new util.Dates class superseding util.DateUtil 
   (@thekid)
 * Merged PR #217: New `io.Files` class replacing the ill-named *FileUtil*
