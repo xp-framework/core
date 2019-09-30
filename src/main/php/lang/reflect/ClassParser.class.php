@@ -427,6 +427,27 @@ class ClassParser {
           }
           break;
 
+        case T_NEW:                             // Anonymous class
+          $details['class']= [
+            DETAIL_COMMENT      => null,
+            DETAIL_ANNOTATIONS  => [],
+            DETAIL_ARGUMENTS    => null
+          ];
+          $annotations= [0 => [], 1 => []];
+          $comment= '';
+
+          $b= 0;
+          while (++$i < $s) {
+            if ('(' === $tokens[$i][0]) {
+              $b++;
+            } else if (')' === $tokens[$i][0]) {
+              if (0 === --$b) break;
+            } else if (0 === $b && ';' === $tokens[$i][0]) {
+              break;    // Abstract or interface method
+            }
+          }
+          break;
+
         case T_CLASS:
           if (isset($details['class'])) break;  // Inside class, e.g. $lookup= ['self' => self::class]
 
