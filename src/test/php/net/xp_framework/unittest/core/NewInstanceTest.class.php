@@ -115,6 +115,12 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertInstanceOf(Runnable::class, $o);
   }
 
+  #[@test]
+  public function new_abstract_class_with_single_function() {
+    $o= newinstance(BinaryOp::class, ['+'], function($a, $b) { return $a + $b; });
+    $this->assertInstanceOf(BinaryOp::class, $o);
+  }
+
   #[@test, @expect(ClassFormatException::class)]
   public function cannot_use_single_function_with_multi_method_interface() {
     newinstance(Value::class, [], function() { });

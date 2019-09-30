@@ -307,7 +307,7 @@ function newinstance($spec, $args, $def= null) {
 
   // Single-method interface support
   if ($def instanceof \Closure) {
-    $methods= (new \ReflectionClass($type))->getMethods();
+    $methods= (new \ReflectionClass($type))->getMethods(MODIFIER_ABSTRACT);
     if (1 !== sizeof($methods)) {
       throw new \lang\ClassFormatException(strtr($type, '\\', '.').' is not a single-method interface');
     }
