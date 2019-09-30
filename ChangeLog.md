@@ -20,9 +20,9 @@ XP Framework Core ChangeLog
   (@thekid)
 * Merged PR #217: New `io.Files` class replacing the ill-named *FileUtil*
   (@thekid)
-* Added preliminary support for PHP 7.4 and PHP 8.0, both of which have
-  not yet been released yet - though running the testsuite with their
-  respective nightly builds yields *green* - see issue #211
+* Added preliminary support for PHP 8.0, which has not yet been released
+  yet, though running the testsuite with its nightly builds yields *green*.
+  See issue #211
   (@thekid)
 
 ### Heads up!
@@ -42,6 +42,8 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented xp-framework/rfc#333: XP 10 release / full PHP 7.4 support
+  (@thekid)
 * Implemented user modules as part of xp-framework/rfc#332, see PR #207
   (@thekid)
 * Implemented xp-framework/rfc#329: Remove deprecated io.sys. See PR #197
