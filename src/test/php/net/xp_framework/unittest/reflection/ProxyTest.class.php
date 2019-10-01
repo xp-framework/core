@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\{XPClass, Type, ClassLoader, IllegalArgumentException, Error};
 use lang\reflect\{Proxy, InvocationHandler};
-use util\{XPIterator, Observer};
+use lang\{XPClass, Type, ClassLoader, IllegalArgumentException, Error};
 use unittest\actions\RuntimeVersion;
+use util\{XPIterator, Observer};
 
 /**
  * Tests the Proxy class
@@ -104,18 +104,13 @@ class ProxyTest extends \unittest\TestCase {
   #[@test]
   public function iteratorInterfaceIsImplemented() {
     $class= $this->proxyClassFor([$this->iteratorClass]);
-    $interfaces= $class->getInterfaces();
-    $this->assertEquals(1, sizeof($interfaces));
-    $this->assertTrue(in_array($this->iteratorClass, $interfaces)); 
+    $this->assertEquals([$this->iteratorClass], $class->getInterfaces());
   }
 
   #[@test]
   public function allInterfacesAreImplemented() {
     $class= $this->proxyClassFor([$this->iteratorClass, $this->observerClass]);
-    $interfaces= $class->getInterfaces();
-    $this->assertEquals(2, sizeof($interfaces));
-    $this->assertTrue(in_array($this->iteratorClass, $interfaces));
-    $this->assertTrue(in_array($this->observerClass, $interfaces));
+    $this->assertEquals([$this->iteratorClass, $this->observerClass], $class->getInterfaces());
   }
 
   #[@test]
