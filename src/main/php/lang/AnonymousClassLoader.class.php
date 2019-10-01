@@ -1,8 +1,6 @@
 <?php namespace lang;
 
 class AnonymousClassLoader extends AbstractClassLoader {
-  const DEVICE = 3262979129;   // crc32('lang.AnonymousClassLoader')
-
   private $file, $start, $end;
 
   public function __construct($file, $start, $end) {
