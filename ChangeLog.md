@@ -14,6 +14,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged PR #226: Support getting annotations from anonymous classes
+  (@thekid)
 * Implemented feature request #219, adding `util.Date::getMicroSeconds()`
   (@thekid)
 * Merged PR #218: Add new util.Dates class superseding util.DateUtil 
