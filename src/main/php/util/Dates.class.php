@@ -23,7 +23,7 @@ class Dates {
       return new Date($date->getTime() + $span->getSeconds());
     } else if (is_numeric($span)) {
       return new Date($date->getTime() + $span);
-    } else if ('P' === $span{0}) {
+    } else if ('P' === $span[0]) {
       return new Date($date->getHandle()->add(new \DateInterval($span)));
     } else {
       return new Date($date->getHandle()->add(\DateInterval::createFromDateString($span)));
@@ -42,7 +42,7 @@ class Dates {
       return new Date($date->getTime() - $span->getSeconds());
     } else if (is_numeric($span)) {
       return new Date($date->getTime() - $span);
-    } else if ('P' === $span{0}) {
+    } else if ('P' === $span[0]) {
       return new Date($date->getHandle()->sub(new \DateInterval($span)));
     } else {
       return new Date($date->getHandle()->sub(\DateInterval::createFromDateString($span)));
