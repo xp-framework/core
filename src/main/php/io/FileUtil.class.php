@@ -3,6 +3,7 @@
 /**
  * File utility functions
  *
+ * @deprecated Use io.Files instead
  * @see   xp://io.File
  * @test  xp://net.xp_framework.unittest.io.FileUtilTest
  */
