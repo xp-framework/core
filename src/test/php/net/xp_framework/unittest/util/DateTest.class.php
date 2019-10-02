@@ -1,10 +1,9 @@
 <?php namespace net\xp_framework\unittest\util;
  
-use util\Date;
-use util\TimeZone;
-use net\xp_framework\unittest\IgnoredOnHHVM;
 use lang\IllegalArgumentException;
 use lang\IllegalStateException;
+use util\Date;
+use util\TimeZone;
 
 /**
  * Tests Date class
@@ -330,12 +329,12 @@ class DateTest extends \unittest\TestCase {
     Date::now();
   }
   
-  #[@test, @expect(IllegalArgumentException::class), @action(new IgnoredOnHHVM())]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function dateCreateWithAllInvalidArguments() {
     Date::create('', '', '', '', '', '');
   }
   
-  #[@test, @expect(IllegalArgumentException::class), @action(new IgnoredOnHHVM())]
+  #[@test, @expect(IllegalArgumentException::class)]
   public function dateCreateWithInvalidArgumentsExceptTimeZone() {
     Date::create('', '', '', '', '', '', new TimeZone('UTC'));
   }
@@ -378,5 +377,10 @@ class DateTest extends \unittest\TestCase {
   #[@test, @expect(IllegalArgumentException::class)]
   public function testInvalidUnixTimestamp() {
     new Date('+1000000');
+  }
+
+  #[@test]
+  public function microseconds() {
+    $this->assertEquals(393313, (new Date('2019-07-03 15:18:10.393313'))->getMicroSeconds());
   }
 }
