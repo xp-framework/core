@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\XPClass;
 use lang\ElementNotFoundException;
+use lang\XPClass;
 
 /**
  * Tests the XP Framework's annotations
@@ -104,5 +104,16 @@ class AnnotationTest extends \unittest\TestCase {
       ['time' => 0.1, 'memory' => 100],
       $this->class->getMethod('testMethod')->getAnnotation('limit')
     );
+  }
+
+  #[@test]
+  public function on_anonymous_class() {
+    $c= new class() {
+
+      #[@test]
+      public function fixture() { }
+    };
+
+    $this->assertEquals(['test' => null], typeof($c)->getMethod('fixture')->getAnnotations());
   }
 }
