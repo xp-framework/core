@@ -148,7 +148,7 @@ class ClassParser {
         $type.= '.'.$tokens[$i++][1];
       }
       return $this->memberOf(XPClass::forName(substr($type, 1)), $tokens[$i], $context);
-    } else if (T_FN === $token || 'fn' === $tokens[$i][1]) {
+    } else if (T_FN === $token || T_STRING === $token && 'fn' === $tokens[$i][1]) {
       $s= sizeof($tokens);
       $b= 0;
       $code= 'function';
