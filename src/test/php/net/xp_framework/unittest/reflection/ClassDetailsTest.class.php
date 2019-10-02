@@ -417,6 +417,47 @@ class ClassDetailsTest extends \unittest\TestCase {
     );
   }
 
+  #[@test, @values([
+  #  'function() { return "Test"; }',
+  #  'fn() => "Test"',
+  #])]
+  public function closures_inside_annotations($declaration) {
+    $details= (new ClassParser())->parseDetails('<?php
+      abstract class Test {
+        #[@call('.$declaration.')]
+        public abstract function fixture();
+      }
+    ');
+    $this->assertEquals('Test', $details[1]['fixture'][DETAIL_ANNOTATIONS]['call']());
+  }
+
+  #[@test]
+  public function fn_braced_expression() {
+    $details= (new ClassParser())->parseDetails('<?php
+      abstract class Test {
+        #[@call(fn() => ord(chr(42)))]
+        public abstract function fixture();
+      }
+    ');
+    $this->assertEquals(42, $details[1]['fixture'][DETAIL_ANNOTATIONS]['call']());
+  }
+
+  #[@test, @values([
+  #  '[fn() => [1, 2, 3]]',
+  #  '[fn() => [1, 2, 3], ]',
+  #  '[fn() => [1, 2, 3], 1]',
+  #  '[fn() => [[1, [2][0], 3]][0]]',
+  #])]
+  public function fn_with_arrays($declaration) {
+    $details= (new ClassParser())->parseDetails('<?php
+      abstract class Test {
+        #[@call('.$declaration.')]
+        public abstract function fixture();
+      }
+    ');
+    $this->assertEquals([1, 2, 3], $details[1]['fixture'][DETAIL_ANNOTATIONS]['call'][0]());
+  }
+
   #[@test]
   public function field_initializer_with_class_keyword() {
     $details= (new ClassParser())->parseDetails('<?php
