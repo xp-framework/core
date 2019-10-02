@@ -14,6 +14,10 @@ use lang\{XPClass, IllegalStateException, IllegalAccessException, ElementNotFoun
  */
 class ClassParser {
 
+  static function __static() {
+    defined('T_FN') || define('T_FN', -1);
+  }
+
   /**
    * Resolves a type in a given context. Recognizes classes imported via
    * the `use` statement.
@@ -144,6 +148,67 @@ class ClassParser {
         $type.= '.'.$tokens[$i++][1];
       }
       return $this->memberOf(XPClass::forName(substr($type, 1)), $tokens[$i], $context);
+    } else if (T_FN === $token || 'fn' === $tokens[$i][1]) {
+      $s= sizeof($tokens);
+      $b= 0;
+      $code= 'function';
+      for ($i++; $i < $s; $i++) {
+        if ('(' === $tokens[$i]) {
+          $b++;
+          $code.= '(';
+        } else if (')' === $tokens[$i]) {
+          $b--;
+          $code.= ')';
+          if (0 === $b) break;
+        } else {
+          $code.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
+        }
+      }
+
+      // Translates => to return statement
+      $code.= '{ return ';
+      while ($i < $s && T_DOUBLE_ARROW !== $tokens[$i][0]) $i++;
+
+      // Parse expression
+      $b= $c= 0;
+      for ($i++; $i < $s; $i++) {
+        if ('(' === $tokens[$i]) {
+          $b++;
+          $code.= '(';
+        } else if (')' === $tokens[$i]) {
+          if (--$b < 0) break;
+          $code.= ')';
+        } else if ('[' === $tokens[$i]) {
+          $c++;
+          $code.= '[';
+        } else if (']' === $tokens[$i]) {
+          if (--$c < 0) break;
+          $code.= ']';
+        } else if (0 === $b && 0 === $c && ',' === $tokens[$i]) {
+          break;
+        } else {
+          $code.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
+        }
+      }
+      $i--;
+      $code.= '; }';
+
+      try {
+        $func= eval('return '.$code.';');
+      } catch (\ParseError $e) {
+        throw new IllegalStateException('In `'.$code.'`: '.$e->getMessage());
+      }
+      if (!($func instanceof \Closure)) {
+        if ($error= error_get_last()) {
+          set_error_handler('__error', 0);
+          trigger_error('clear_last_error');
+          restore_error_handler();
+        } else {
+          $error= ['message' => 'Syntax error'];
+        }
+        throw new IllegalStateException('In `'.$code.'`: '.ucfirst($error['message']));
+      }
+      return $func;
     } else if (T_STRING === $token) {     // constant vs. class::constant
       if (T_DOUBLE_COLON === $tokens[$i + 1][0]) {
         $i+= 2;
