@@ -14,6 +14,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged PR #227: Add support for PHP 7.4 arrow functions in annotations
+  (@thekid)
 * Merged PR #226: Support getting annotations from anonymous classes
   (@thekid)
 * Implemented feature request #219, adding `util.Date::getMicroSeconds()`
