@@ -3,6 +3,19 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 9.10.0 / 2019-10-04
+
+### Features
+
+* Backported XP 10 features for easier adoption:
+  - PHP 7.4 arrow functions in annotations (#227)
+  - Annotations from anonymous classes (#226)
+  - New `util.Date::getMicroSeconds()` (#219)
+  - New `util.Dates` class superseding util.DateUtil (#218)
+  - New `io.Files` class replacing the ill-named *FileUtil* (#217)
+  https://github.com/xp-framework/core/projects/1
+  (@thekid)
+
 ## 9.9.1 / 2019-08-20
 
 ### Bugfixes
