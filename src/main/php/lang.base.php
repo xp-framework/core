@@ -392,7 +392,13 @@ function typeof($arg) {
     }
     return new \lang\FunctionType($signature, $return);
   } else if (is_object($arg)) {
-    return new \lang\XPClass($arg);
+    $class= get_class($arg);
+    if (0 === strncmp($class, 'class@anonymous', 15)) {
+      $r= new \ReflectionObject($arg);
+      \xp::$cl[strtr($class, '\\', '.')]= 'lang.AnonymousClassLoader://'.$r->getStartLine().':'.$r->getEndLine().'@'.$r->getFileName();
+      return new \lang\XPClass($r);
+    }
+    return new \lang\XPClass($class);
   } else if (is_array($arg)) {
     return 0 === key($arg) ? \lang\ArrayType::forName('var[]') : \lang\MapType::forName('[:var]');
   } else {

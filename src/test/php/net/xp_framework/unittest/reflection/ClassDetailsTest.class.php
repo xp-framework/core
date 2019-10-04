@@ -490,4 +490,48 @@ class ClassDetailsTest extends \unittest\TestCase {
     ');
     $this->assertEquals(['test' => $value], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
   }
+
+  #[@test]
+  public function anonymous_class() {
+    $details= (new ClassParser())->parseDetails('<?php
+      new class() { }
+    ');
+    $this->assertEquals(
+      [DETAIL_COMMENT => null, DETAIL_ANNOTATIONS => [], DETAIL_ARGUMENTS => null],
+      $details['class']
+    );
+  }
+
+  #[@test]
+  public function anonymous_class_with_arguments() {
+    $details= (new ClassParser())->parseDetails('<?php
+      new class(1, 2, 3) { }
+    ');
+    $this->assertEquals(
+      [DETAIL_COMMENT => null, DETAIL_ANNOTATIONS => [], DETAIL_ARGUMENTS => null],
+      $details['class']
+    );
+  }
+
+  #[@test]
+  public function anonymous_class_member() {
+    $details= (new ClassParser())->parseDetails('<?php
+      new class() {
+        #[@test]
+        public $fixture;
+      }
+    ');
+    $this->assertEquals(['test' => null], $details[0]['fixture'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[@test]
+  public function anonymous_class_method() {
+    $details= (new ClassParser())->parseDetails('<?php
+      new class() {
+        #[@test]
+        public function fixture() { }
+      }
+    ');
+    $this->assertEquals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
+  }
 }

@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
+use lang\reflect\{Package, Constructor, TargetInvocationException};
 use lang\{
   ClassLoader,
   ClassNotFoundException,
@@ -9,7 +10,6 @@ use lang\{
   Primitive,
   XPClass
 };
-use lang\reflect\{Package, Constructor, TargetInvocationException};
 
 /**
  * Test the XPClass class, the entry point to the XP Framework's class reflection API.
@@ -168,11 +168,11 @@ class XPClassTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function getInterfaces_contains_declared_interface() {
-    $this->assertTrue(in_array(
-      XPClass::forName('lang.Runnable'),
+  public function getInterfaces_consist_of_declared_interface() {
+    $this->assertEquals(
+      [XPClass::forName('lang.Runnable')],
       $this->fixture->getInterfaces()
-    ));
+    );
   }
 
   #[@test]

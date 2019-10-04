@@ -1,8 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\ClassLoader;
-use lang\reflect\Module;
 use lang\ElementNotFoundException;
+use lang\reflect\Module;
 
 /**
  * TestCase for modules
@@ -120,7 +120,11 @@ class ModuleLoadingTest extends \unittest\TestCase {
     $this->register(new LoaderProviding([
       'module.xp' => '<?php module xp-framework/impl implements net\xp_framework\unittest\reflection\IModule { }'
     ]));
-    $this->assertTrue(in_array($cl, typeof(Module::forName('xp-framework/impl'))->getInterfaces()));
+    $interfaces= typeof(Module::forName('xp-framework/impl'))->getInterfaces();
+    foreach ($interfaces as $interface) {
+      if ($cl->equals($interface)) return;
+    }
+    $this->fail($cl->getName().' not included', $interfaces, [$cl]);
   }
 
   #[@test]
