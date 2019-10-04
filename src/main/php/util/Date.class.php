@@ -92,11 +92,15 @@ class Date implements \lang\Value {
     if ($tz) {
       date_timezone_set($date, $tz->getHandle());
     }
-         
-    if (false === @date_date_set($date, $year, $month, $day) || 
-      false === @date_time_set($date, $hour, $minute, $second)
-    ) {
-      throw new IllegalArgumentException(sprintf(
+
+    try {
+      $r= date_date_set($date, $year, $month, $day) && date_time_set($date, $hour, $minute, $second);
+    } catch (\Throwable $e) {
+      $r= false;
+    }
+
+    if (!$r) {
+      $e= new IllegalArgumentException(sprintf(
         'One or more given arguments are not valid: $year=%s, $month=%s, $day= %s, $hour=%s, $minute=%s, $second=%s',
         $year,
         $month,
@@ -105,6 +109,8 @@ class Date implements \lang\Value {
         $minute,
         $second 
       ));
+      \xp::gc(__FILE__);
+      throw $e;
     }
     
     return new self($date);
@@ -137,6 +143,9 @@ class Date implements \lang\Value {
   
   /** Retrieve Unix-Timestamp for this date */
   public function getTime(): int { return date_timestamp_get($this->handle); }
+
+  /** Get microseconds */
+  public function getMicroSeconds(): int { return $this->handle->format('u'); }
 
   /** Get seconds */
   public function getSeconds(): int { return $this->handle->format('s'); }
