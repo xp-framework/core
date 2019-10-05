@@ -40,12 +40,13 @@ abstract class Enum implements Value {
   /**
    * Returns the enumeration member uniquely identified by its name
    *
-   * @param  lang.XPClass class class object
-   * @param  string name enumeration member
+   * @param  lang.XPClass|string $type
+   * @param  string $name enumeration member
    * @return self
    * @throws lang.IllegalArgumentException in case the enum member does not exist or when the given class is not an enum
    */
-  public static function valueOf(XPClass $class, string $name): self {
+  public static function valueOf($type, string $name): self {
+    $class= $type instanceof XPClass ? $type : XPClass::forName($type);
     if (!$class->isEnum()) {
       throw new IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
     }
@@ -69,11 +70,12 @@ abstract class Enum implements Value {
   /**
    * Returns the enumeration members for a given class
    *
-   * @param  lang.XPClass class class object
+   * @param  lang.XPClass|string $type
    * @return self[]
    * @throws lang.IllegalArgumentException in case the given class is not an enum
    */
-  public static function valuesOf(XPClass $class) {
+  public static function valuesOf($type) {
+    $class= $type instanceof XPClass ? $type : XPClass::forName($type);
     if (!$class->isEnum()) {
       throw new IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
     }
