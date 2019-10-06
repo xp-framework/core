@@ -149,14 +149,22 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
+  #[@test]
+  public function valueOf_string() {
+    $this->assertEquals(
+      Coin::$penny, 
+      Enum::valueOf(Coin::class, 'penny')
+    );
+  }
+
   #[@test, @expect(IllegalArgumentException::class)]
   public function valueOfNonExistant() {
     Enum::valueOf(XPClass::forName(Coin::class), '@@DOES_NOT_EXIST@@');
   }
 
-  #[@test, @expect(Error::class)]
-  public function valueOfNonEnum7() {
-    Enum::valueOf($this, 'irrelevant');
+  #[@test, @expect(IllegalArgumentException::class)]
+  public function valueOfNonEnum() {
+    Enum::valueOf(self::class, 'irrelevant');
   }
 
   #[@test]
@@ -176,6 +184,14 @@ class EnumTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function valuesOf_string() {
+    $this->assertEquals(
+      [Coin::$penny, Coin::$nickel, Coin::$dime, Coin::$quarter],
+      Enum::valuesOf(Coin::class)
+    );
+  }
+
+  #[@test]
   public function valuesOfAbstractEnum() {
     $this->assertEquals(
       [Operation::$plus, Operation::$minus, Operation::$times, Operation::$divided_by],
@@ -183,9 +199,9 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(Error::class)]
-  public function valuesOfNonEnum7() {
-    Enum::valuesOf($this);
+  #[@test, @expect(IllegalArgumentException::class)]
+  public function valuesOfNonEnum() {
+    Enum::valuesOf(self::class);
   }
 
   #[@test]
