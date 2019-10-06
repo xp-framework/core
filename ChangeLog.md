@@ -14,6 +14,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged PR #233: Allow passing string types to `Enum::value[s]Of()`
+  (@thekid)
 * Merged PR #227: Add support for PHP 7.4 arrow functions in annotations
   (@thekid)
 * Merged PR #226: Support getting annotations from anonymous classes
