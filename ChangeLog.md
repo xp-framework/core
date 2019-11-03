@@ -14,6 +14,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged PR #234: Add new method Package::of() which returns the package
+  of a given type
+  (@thekid)
 * Merged PR #233: Allow passing string types to `Enum::value[s]Of()`
   (@thekid)
 * Merged PR #227: Add support for PHP 7.4 arrow functions in annotations
