@@ -82,4 +82,28 @@ class FieldAccessTest extends FieldsTest {
     $fixture= $this->type('{ public $fixture; }');
     $fixture->getField('fixture')->set($this, 'Test');
   }
+
+  #[@test]
+  public function read_member_from_trait() {
+    $t= $this->type('{ use Database; }');
+    $this->assertNull($t->getField('conn')->setAccessible(true)->get($t->newInstance()));
+  }
+
+  #[@test]
+  public function read_member_from_trait_via_traits() {
+    $t= $this->type('{ use Database; }');
+    $this->assertNull($t->getTraits()[1]->getField('conn')->setAccessible(true)->get($t->newInstance()));
+  }
+
+  #[@test]
+  public function write_member_from_trait() {
+    $t= $this->type('{ use Database; }');
+    $t->getField('conn')->setAccessible(true)->set($t->newInstance(), 'test://localhost');
+  }
+
+  #[@test]
+  public function write_member_from_trait_via_traits() {
+    $t= $this->type('{ use Database; }');
+    $t->getTraits()[1]->getField('conn')->setAccessible(true)->set($t->newInstance(), 'test://localhost');
+  }
 }

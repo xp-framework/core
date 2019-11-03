@@ -140,22 +140,29 @@ class Field implements Value {
    */
   public function get($instance) {
     if (null !== $instance && !($instance instanceof $this->_class)) {
-      throw new IllegalArgumentException(sprintf(
-        'Passed argument is not a %s class (%s)',
-        XPClass::nameOf($this->_class),
-        typeof($instance)->getName()
-      ));
+      if (!$this->_reflect->getDeclaringClass()->isTrait()) {
+        throw new IllegalArgumentException(sprintf(
+          'Passed argument is not a %s class (%s)',
+          XPClass::nameOf($this->_class),
+          typeof($instance)->getName()
+        ));
+      }
+
+      $target= (new \ReflectionObject($instance))->getProperty($this->_reflect->getName());
+    } else {
+      $target= $this->_reflect;
     }
+
 
     // Check modifiers. If scope is an instance of this class, allow
     // protected method invocation (which the PHP reflection API does 
     // not).
-    $m= $this->_reflect->getModifiers();
+    $m= $target->getModifiers();
     $public= $m & MODIFIER_PUBLIC;
     if (!$public && !$this->accessible) {
       $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
       $scope= $t[1]['class'] ?? ClassLoader::getDefault()->loadUri($t[0]['file'])->literal();
-      $decl= $this->_reflect->getDeclaringClass()->getName();
+      $decl= $target->getDeclaringClass()->getName();
       if ($m & MODIFIER_PROTECTED) {
         $allow= $scope === $decl || is_subclass_of($scope, $decl);
       } else {
@@ -167,15 +174,15 @@ class Field implements Value {
           'Cannot read %s %s::$%s from scope %s',
           Modifiers::stringOf($this->getModifiers()),
           $this->_class,
-          $this->_reflect->getName(),
+          $target->getName(),
           $scope
         ));
       }
     }
 
     try {
-      $public || $this->_reflect->setAccessible(true);
-      return $this->_reflect->getValue($instance);
+      $public || $target->setAccessible(true);
+      return $target->getValue($instance);
     } catch (Throwable $e) {
       throw $e;
     } catch (\Throwable $e) {
@@ -194,22 +201,28 @@ class Field implements Value {
    */
   public function set($instance, $value) {
     if (null !== $instance && !($instance instanceof $this->_class)) {
-      throw new IllegalArgumentException(sprintf(
-        'Passed argument is not a %s class (%s)',
-        XPClass::nameOf($this->_class),
-        typeof($instance)->getName()
-      ));
+      if (!$this->_reflect->getDeclaringClass()->isTrait()) {
+        throw new IllegalArgumentException(sprintf(
+          'Passed argument is not a %s class (%s)',
+          XPClass::nameOf($this->_class),
+          typeof($instance)->getName()
+        ));
+      }
+
+      $target= (new \ReflectionObject($instance))->getProperty($this->_reflect->getName());
+    } else {
+      $target= $this->_reflect;
     }
   
     // Check modifiers. If scope is an instance of this class, allow
     // protected method invocation (which the PHP reflection API does 
     // not).
-    $m= $this->_reflect->getModifiers();
+    $m= $target->getModifiers();
     $public= $m & MODIFIER_PUBLIC;
     if (!$public && !$this->accessible) {
       $t= debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
       $scope= $t[1]['class'] ?? ClassLoader::getDefault()->loadUri($t[0]['file'])->literal();
-      $decl= $this->_reflect->getDeclaringClass()->getName();
+      $decl= $target->getDeclaringClass()->getName();
       if ($m & MODIFIER_PROTECTED) {
         $allow= $scope === $decl || is_subclass_of($scope, $decl);
       } else {
@@ -220,15 +233,15 @@ class Field implements Value {
           'Cannot write %s %s::$%s from scope %s',
           Modifiers::stringOf($this->getModifiers()),
           XPClass::nameOf($this->_class),
-          $this->_reflect->getName(),
+          $target->getName(),
           $scope
         ));
       }
     }
 
     try {
-      $public || $this->_reflect->setAccessible(true);
-      return $this->_reflect->setValue($instance, $value);
+      $public || $target->setAccessible(true);
+      return $target->setValue($instance, $value);
     } catch (Throwable $e) {
       throw $e;
     } catch (\Throwable $e) {
