@@ -79,4 +79,16 @@ class MethodInvocationTest extends MethodsTest {
     $fixture= $this->type($declaration);
     $this->assertEquals('Test', $fixture->getMethod('fixture')->setAccessible(true)->invoke($fixture->newInstance(), []));
   }
+
+  #[@test]
+  public function invoke_method_from_trait() {
+    $t= $this->type('{ use Database; }');
+    $this->assertTrue($t->getMethod('connect')->invoke($t->newInstance(), ['test://localhost']));
+  }
+
+  #[@test]
+  public function invoke_method_from_trait_via_traits() {
+    $t= $this->type('{ use Database; }');
+    $this->assertTrue($t->getTraits()[1]->getMethod('connect')->invoke($t->newInstance(), ['test://localhost']));
+  }
 }

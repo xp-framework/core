@@ -43,28 +43,34 @@ class Method extends Routine {
    */
   public function invoke($obj, $args= []) {
     if (null !== $obj && !($obj instanceof $this->_class)) {
-      throw new IllegalArgumentException(sprintf(
-        'Passed argument is not a %s class (%s)',
-        XPClass::nameOf($this->_class),
-        typeof($obj)->getName()
-      ));
+      if (!$this->_reflect->getDeclaringClass()->isTrait()) {
+        throw new IllegalArgumentException(sprintf(
+          'Passed argument is not a %s class (%s)',
+          XPClass::nameOf($this->_class),
+          typeof($obj)->getName()
+        ));
+      }
+
+      $target= (new \ReflectionObject($obj))->getMethod($this->_reflect->getName());
+    } else {
+      $target= $this->_reflect;
     }
     
     // Check modifiers. If caller is an instance of this class, allow
     // protected method invocation (which the PHP reflection API does 
     // not).
-    $m= $this->_reflect->getModifiers();
+    $m= $target->getModifiers();
     if ($m & MODIFIER_ABSTRACT) {
       throw new IllegalAccessException(sprintf(
         'Cannot invoke abstract %s::%s',
         XPClass::nameOf($this->_class),
-        $this->_reflect->getName()
+        $target->getName()
       ));
     }
     $public= $m & MODIFIER_PUBLIC;
     if (!$public && !$this->accessible) {
       $t= debug_backtrace(0, 2);
-      $decl= $this->_reflect->getDeclaringClass()->getName();
+      $decl= $target->getDeclaringClass()->getName();
       if ($m & MODIFIER_PROTECTED) {
         $allow= $t[1]['class'] === $decl || is_subclass_of($t[1]['class'], $decl);
       } else {
@@ -75,17 +81,15 @@ class Method extends Routine {
           'Cannot invoke %s %s::%s from scope %s',
           Modifiers::stringOf($this->getModifiers()),
           XPClass::nameOf($this->_class),
-          $this->_reflect->getName(),
+          $target->getName(),
           $t[1]['class']
         ));
       }
     }
 
     try {
-      if (!$public) {
-        $this->_reflect->setAccessible(true);
-      }
-      return $this->_reflect->invokeArgs($obj, (array)$args);
+      $public || $target->setAccessible(true);
+      return $target->invokeArgs($obj, (array)$args);
     } catch (\lang\SystemExit $e) {
       throw $e;
     } catch (\Throwable $e) {
