@@ -1,8 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\IllegalAccessException;
-use lang\IllegalArgumentException;
 use lang\reflect\TargetInvocationException;
+use lang\{IllegalAccessException, IllegalArgumentException, XPClass};
 use unittest\actions\RuntimeVersion;
 
 class MethodInvocationTest extends MethodsTest {
@@ -90,5 +89,11 @@ class MethodInvocationTest extends MethodsTest {
   public function invoke_method_from_trait_via_traits() {
     $t= $this->type('{ use Database; }');
     $this->assertTrue($t->getTraits()[1]->getMethod('connect')->invoke($t->newInstance(), ['test://localhost']));
+  }
+
+  #[@test, @expect(IllegalArgumentException::class)]
+  public function invoke_method_from_trait_with_incompatible() {
+    $t= XPClass::forName('net.xp_framework.unittest.reflection.Database');
+    $t->getMethod('connect')->invoke($this, ['test://localhost']);
   }
 }

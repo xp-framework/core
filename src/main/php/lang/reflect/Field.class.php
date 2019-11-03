@@ -140,15 +140,24 @@ class Field implements Value {
    */
   public function get($instance) {
     if (null !== $instance && !($instance instanceof $this->_class)) {
-      if (!$this->_reflect->getDeclaringClass()->isTrait()) {
+      $d= $this->_reflect->getDeclaringClass();
+      if (!$d->isTrait()) {
         throw new IllegalArgumentException(sprintf(
           'Passed argument is not a %s class (%s)',
           XPClass::nameOf($this->_class),
-          typeof($instance)->getName()
+          nameof($instance)
         ));
       }
 
-      $target= (new \ReflectionObject($instance))->getProperty($this->_reflect->getName());
+      $o= new \ReflectionObject($instance);
+      if (!in_array($d->getName(), $o->getTraitNames())) {
+        throw new IllegalArgumentException(sprintf(
+          'Passed argument does not use the trait %s (%s)',
+          XPClass::nameOf($this->_class),
+          nameof($instance)
+        ));
+      }
+      $target= $o->getProperty($this->_reflect->getName());
     } else {
       $target= $this->_reflect;
     }
@@ -201,15 +210,24 @@ class Field implements Value {
    */
   public function set($instance, $value) {
     if (null !== $instance && !($instance instanceof $this->_class)) {
-      if (!$this->_reflect->getDeclaringClass()->isTrait()) {
+      $d= $this->_reflect->getDeclaringClass();
+      if (!$d->isTrait()) {
         throw new IllegalArgumentException(sprintf(
           'Passed argument is not a %s class (%s)',
           XPClass::nameOf($this->_class),
-          typeof($instance)->getName()
+          nameof($instance)
         ));
       }
 
-      $target= (new \ReflectionObject($instance))->getProperty($this->_reflect->getName());
+      $o= new \ReflectionObject($instance);
+      if (!in_array($d->getName(), $o->getTraitNames())) {
+        throw new IllegalArgumentException(sprintf(
+          'Passed argument does not use the trait %s (%s)',
+          XPClass::nameOf($this->_class),
+          nameof($instance)
+        ));
+      }
+      $target= $o->getProperty($this->_reflect->getName());
     } else {
       $target= $this->_reflect;
     }

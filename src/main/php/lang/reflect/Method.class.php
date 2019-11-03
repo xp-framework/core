@@ -43,15 +43,24 @@ class Method extends Routine {
    */
   public function invoke($obj, $args= []) {
     if (null !== $obj && !($obj instanceof $this->_class)) {
-      if (!$this->_reflect->getDeclaringClass()->isTrait()) {
+      $d= $this->_reflect->getDeclaringClass();
+      if (!$d->isTrait()) {
         throw new IllegalArgumentException(sprintf(
           'Passed argument is not a %s class (%s)',
           XPClass::nameOf($this->_class),
-          typeof($obj)->getName()
+          nameof($obj)
         ));
       }
 
-      $target= (new \ReflectionObject($obj))->getMethod($this->_reflect->getName());
+      $o= new \ReflectionObject($obj);
+      if (!in_array($d->getName(), $o->getTraitNames())) {
+        throw new IllegalArgumentException(sprintf(
+          'Passed argument does not use the trait %s (%s)',
+          XPClass::nameOf($this->_class),
+          nameof($obj)
+        ));
+      }
+      $target= $o->getMethod($this->_reflect->getName());
     } else {
       $target= $this->_reflect;
     }

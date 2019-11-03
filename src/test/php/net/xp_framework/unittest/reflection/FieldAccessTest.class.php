@@ -1,7 +1,6 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\IllegalAccessException;
-use lang\IllegalArgumentException;
+use lang\{IllegalAccessException, IllegalArgumentException, XPClass};
 
 class FieldAccessTest extends FieldsTest {
 
@@ -95,6 +94,12 @@ class FieldAccessTest extends FieldsTest {
     $this->assertNull($t->getTraits()[1]->getField('conn')->setAccessible(true)->get($t->newInstance()));
   }
 
+  #[@test, @expect(IllegalArgumentException::class)]
+  public function read_member_from_trait_with_incompatible() {
+    $t= XPClass::forName('net.xp_framework.unittest.reflection.Database');
+    $t->getField('conn')->setAccessible(true)->get($this);
+  }
+
   #[@test]
   public function write_member_from_trait() {
     $t= $this->type('{ use Database; }');
@@ -105,5 +110,11 @@ class FieldAccessTest extends FieldsTest {
   public function write_member_from_trait_via_traits() {
     $t= $this->type('{ use Database; }');
     $t->getTraits()[1]->getField('conn')->setAccessible(true)->set($t->newInstance(), 'test://localhost');
+  }
+
+  #[@test, @expect(IllegalArgumentException::class)]
+  public function write_member_from_trait_with_incompatible() {
+    $t= XPClass::forName('net.xp_framework.unittest.reflection.Database');
+    $t->getField('conn')->setAccessible(true)->set($this, 'test://localhost');
   }
 }
