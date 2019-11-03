@@ -216,6 +216,11 @@ class PackageTest extends \unittest\TestCase {
     $this->assertEquals(Package::forName('net.xp_framework.unittest.reflection'), Package::of(nameof($this)));
   }
 
+  #[@test]
+  public function of_typeof_this() {
+    $this->assertEquals(Package::forName('net.xp_framework.unittest.reflection'), Package::of(typeof($this)));
+  }
+
   #[@test, @expect(ElementNotFoundException::class)]
   public function of_class_from_non_existant_package() {
     Package::of('net.xp_framework.unittest.nonexistant.TestClass');

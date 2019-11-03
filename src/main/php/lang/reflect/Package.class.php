@@ -165,12 +165,12 @@ class Package implements Value {
   /**
    * Returns a Package object for a given fully qualified type name.
    *
-   * @param   string $name
+   * @param   string|lang.XPClass $type
    * @return  lang.reflect.Package
    * @throws  lang.ElementNotFoundException
    */
-  public static function of($name) {
-    $name= strtr($name, '\\', '.');
+  public static function of($type) {
+    $name= $type instanceof XPClass ? $type->getName() : strtr($type, '\\', '.');
 
     $p= new self();
     $p->name= substr($name, 0, strrpos($name, '.'));
