@@ -91,6 +91,16 @@ class MethodInvocationTest extends MethodsTest {
     $this->assertTrue($t->getTraits()[1]->getMethod('connect')->invoke($t->newInstance(), ['test://localhost']));
   }
 
+  #[@test]
+  public function invoke_method_from_trait_aliased() {
+    $t= $this->type('{
+      use Database { connect as open; }
+
+      public function connect() { return false; }
+    }');
+    $this->assertTrue($t->getTraits()[1]->getMethod('connect')->invoke($t->newInstance(), ['test://localhost']));
+  }
+
   #[@test, @expect(IllegalArgumentException::class)]
   public function invoke_method_from_trait_with_incompatible() {
     $t= XPClass::forName('net.xp_framework.unittest.reflection.Database');

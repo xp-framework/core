@@ -60,7 +60,13 @@ class Method extends Routine {
           nameof($obj)
         ));
       }
-      $target= $o->getMethod($this->_reflect->getName());
+
+      if ($aliases= $o->getTraitAliases()) {
+        $a= array_search($d->getName().'::'.$this->getName(), $aliases);
+      } else {
+        $a= null;
+      }
+      $target= $o->getMethod($a ?: $this->_reflect->getName());
     } else {
       $target= $this->_reflect;
     }
