@@ -26,7 +26,7 @@ class Package implements Value {
    * @return  string
    */
   public function getSimpleName() {
-    return substr($this->name, strrpos($this->name, '.')+ 1);
+    return substr($this->name, strrpos($this->name, '.') + 1);
   }
   
   
@@ -161,15 +161,34 @@ class Package implements Value {
 
     return self::forName($this->name.'.'.$name);
   }
-  
+
   /**
-   * Returns a Package object for a given fully qualified name.
+   * Returns a Package object for a given fully qualified type name.
    *
-   * @param   string name
+   * @param   string|lang.XPClass $type
    * @return  lang.reflect.Package
    * @throws  lang.ElementNotFoundException
    */
-  public static function forName($name) { 
+  public static function of($type) {
+    $name= $type instanceof XPClass ? $type->getName() : strtr($type, '\\', '.');
+
+    $p= new self();
+    $p->name= substr($name, 0, strrpos($name, '.'));
+
+    if (!ClassLoader::getDefault()->providesPackage($p->name)) {
+      throw new ElementNotFoundException('No classloaders provide '.$name);
+    }
+    return $p;
+  }
+
+  /**
+   * Returns a Package object for a given fully qualified package name.
+   *
+   * @param   string $name
+   * @return  lang.reflect.Package
+   * @throws  lang.ElementNotFoundException
+   */
+  public static function forName($name) {
     $p= new self();
     $p->name= rtrim($name, '.');   // Normalize
 
