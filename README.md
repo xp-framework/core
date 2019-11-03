@@ -53,10 +53,10 @@ Save the following sourcecode to a file called `ageindays.script.php`:
 ```php
 <?php namespace examples;
 
-use util\{Date, DateUtil};
+use util\{Date, Dates};
 use util\cmd\Console;
 
-$span= DateUtil::timespanBetween(new Date($argv[1]), Date::now());
+$span= Dates::diff(new Date($argv[1]), Date::now());
 Console::writeLine('Hey, you are ', $span->getDays(), ' days old');
 ```
 
@@ -72,13 +72,13 @@ Alternatively, you can put this code inside a class and give it a static *main* 
 ```php
 <?php
 
-use util\{Date, DateUtil};
 use util\cmd\Console;
+use util\{Date, Dates};
 
 class AgeInDays {
 
   public static function main(array $args): int {
-    $span= DateUtil::timespanBetween(new Date($args[0]), Date::now());
+    $span= Dates::diff(new Date($args[0]), Date::now());
     Console::writeLine('Hey, you are ', $span->getDays(), ' days old');
     return 0;
   }
