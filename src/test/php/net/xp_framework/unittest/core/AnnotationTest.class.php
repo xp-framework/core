@@ -81,6 +81,15 @@ class AnnotationTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function hashAnnotationValue() {
+    $this->assertEquals(
+      ['key' => 'value'],
+      $this->class->getMethod('hashValue')->getAnnotation('config')
+    );
+  }
+
+  /** @deprecated */
+  #[@test]
   public function keyValuePairAnnotationValue() {
     $this->assertEquals(
       ['key' => 'value'],
