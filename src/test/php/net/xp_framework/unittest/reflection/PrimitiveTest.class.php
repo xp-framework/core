@@ -70,7 +70,7 @@ class PrimitiveTest extends TestCase {
     $this->assertTrue(Primitive::$STRING->isInstance($value));
   }
   
-  #[@test, @values(source= 'instances', args= [['', 'Hello']])]
+  #[@test, @values(['source' => 'instances', 'args' => [['', 'Hello']]])]
   public function notInstanceOfString_primitive($value) {
     $this->assertFalse(Primitive::$STRING->isInstance($value));
   }
@@ -80,7 +80,7 @@ class PrimitiveTest extends TestCase {
     $this->assertTrue(Primitive::$INT->isInstance($value));
   }
 
-  #[@test, @values(source= 'instances', args= [[0, -1]])]
+  #[@test, @values(['source' => 'instances', 'args' => [[0, -1]]])]
   public function notInstanceOfInteger_primitive($value) {
     $this->assertFalse(Primitive::$INT->isInstance($value));
   }
@@ -90,7 +90,7 @@ class PrimitiveTest extends TestCase {
     $this->assertTrue(Primitive::$FLOAT->isInstance($value));
   }
 
-  #[@test, @values(source= 'instances', args= [[0.0, -1.5]])]
+  #[@test, @values(['source' => 'instances', 'args' => [[0.0, -1.5]]])]
   public function notInstanceOfDouble_primitive($value) {
     $this->assertFalse(Primitive::$FLOAT->isInstance($value));
   }
@@ -100,7 +100,7 @@ class PrimitiveTest extends TestCase {
     $this->assertTrue(Primitive::$BOOL->isInstance($value));
   }
 
-  #[@test, @values(source= 'instances', args= [[false, true]])]
+  #[@test, @values(['source' => 'instances', 'args' => [[false, true]]])]
   public function notInstanceOfBoolean_primitive($value) {
     $this->assertFalse(Primitive::$BOOL->isInstance($value));
   }

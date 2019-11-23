@@ -49,7 +49,7 @@ class DemoTest extends \unittest\TestCase {
     throw new IllegalArgumentException('');
   }
 
-  #[@test, @limit(time= 0.1)]
+  #[@test, @limit(['time' => 0.1])]
   public function timeouts() {
     usleep(200000);
   }

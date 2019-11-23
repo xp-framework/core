@@ -4,7 +4,7 @@
  * Lookup map
  *
  */
-#[@generic(self= 'V', parent= 'lang.Type, V')]
+#[@generic(['self' => 'V', 'parent' => 'lang.Type, V'])]
 class TypeLookup extends Lookup {
 
 }

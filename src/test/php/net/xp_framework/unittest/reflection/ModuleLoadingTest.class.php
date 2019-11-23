@@ -58,12 +58,12 @@ class ModuleLoadingTest extends \unittest\TestCase {
     }']));
   }
 
-  #[@test, @expect(class= ElementNotFoundException::class, withMessage= '/Missing or malformed module-info/')]
+  #[@test, @expect(['class' => ElementNotFoundException::class, 'withMessage' => '/Missing or malformed module-info/'])]
   public function empty_module_file() {
     $this->register(new LoaderProviding(['module.xp' => '']));
   }
 
-  #[@test, @expect(class= ElementNotFoundException::class, withMessage= '/Missing or malformed module-info/')]
+  #[@test, @expect(['class' => ElementNotFoundException::class, 'withMessage' => '/Missing or malformed module-info/'])]
   public function module_without_name() {
     $this->register(new LoaderProviding(['module.xp' => 'module { }']));
   }

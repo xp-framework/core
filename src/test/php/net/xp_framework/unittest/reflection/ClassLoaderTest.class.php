@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
+use lang\archive\{Archive, ArchiveClassLoader};
+use lang\reflect\Package;
 use lang\{
   ClassCastException,
   ClassDependencyException,
@@ -9,8 +11,6 @@ use lang\{
   IllegalStateException,
   XPClass
 };
-use lang\reflect\Package;
-use lang\archive\{Archive, ArchiveClassLoader};
 
 /**
  * TestCase for classloading
@@ -144,12 +144,12 @@ class ClassLoaderTest extends \unittest\TestCase {
     ClassLoader::getDefault()->loadClass('@@NON-EXISTANT@@');
   }
 
-  #[@test, @expect(class= ClassFormatException::class, withMessage= '/No types declared in .+/')]
+  #[@test, @expect(['class' => ClassFormatException::class, 'withMessage' => '/No types declared in .+/'])]
   public function loadClassFileWithoutDeclaration() {
     XPClass::forName('net.xp_framework.unittest.reflection.classes.broken.NoClass');
   }
 
-  #[@test, @expect(class= ClassFormatException::class, withMessage= '/File does not declare type `.+FalseClass`, but `.+TrueClass`/')]
+  #[@test, @expect(['class' => ClassFormatException::class, 'withMessage' => '/File does not declare type `.+FalseClass`, but `.+TrueClass`/'])]
   public function loadClassFileWithIncorrectDeclaration() {
     XPClass::forName('net.xp_framework.unittest.reflection.classes.broken.FalseClass');
   }

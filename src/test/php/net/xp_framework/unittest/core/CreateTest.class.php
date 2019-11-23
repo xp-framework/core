@@ -1,7 +1,6 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\XPClass;
-use lang\IllegalArgumentException;
+use lang\{XPClass, IllegalArgumentException};
 
 /**
  * TestCase for create() core functionality, which is used to create

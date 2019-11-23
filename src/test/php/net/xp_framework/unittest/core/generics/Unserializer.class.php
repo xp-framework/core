@@ -3,7 +3,7 @@
 /**
  * Unserializer
  */
-#[@generic(self= 'T')]
+#[@generic(['self' => 'T'])]
 class Unserializer {
 
   /**
@@ -12,7 +12,7 @@ class Unserializer {
    * @param   var $arg
    * @return  T element
    */
-  #[@generic(return= 'T')]
+  #[@generic(['return' => 'T'])]
   public function newInstance($arg= null) {
     return null === $arg ? $T->default : $T->newInstance($arg);
   }

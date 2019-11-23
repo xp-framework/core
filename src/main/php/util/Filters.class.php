@@ -13,7 +13,7 @@ use lang\{IllegalArgumentException, IllegalStateException};
  * @see  xp://util.Filter
  * @test xp://net.xp_framework.unittest.util.FiltersTest
  */
-#[@generic(self= 'T', implements= ['T'])]
+#[@generic(['self' => 'T', 'implements' => ['T']])]
 class Filters implements Filter {
   protected $list;
   protected $accept;
@@ -50,7 +50,7 @@ class Filters implements Filter {
    * @param   php.Closure $accept
    * @throws  lang.IllegalArgumentException if accept is neither a closure nor NULL
    */
-  #[@generic(params= 'util.Filter<T>[]')]
+  #[@generic(['params' => 'util.Filter<T>[]'])]
   public function __construct(array $list= [], $accept= null) {
     $this->list= $list;
     if (null === $accept) {
@@ -68,7 +68,7 @@ class Filters implements Filter {
    * @param   util.Filter<T> $filter
    * @return  self<T>
    */
-  #[@generic(params= 'util.Filter<T>', return= 'self<T>')]
+  #[@generic(['params' => 'util.Filter<T>', 'return' => 'self<T>'])]
   public function add($filter) {
     $this->list[]= $filter;
     return $this;
@@ -91,7 +91,7 @@ class Filters implements Filter {
    * @param  T $e
    * @return bool
    */
-  #[@generic(params= 'T')]
+  #[@generic(['params' => 'T'])]
   public function accept($e) {
     return $this->accept->__invoke($this->list, $e);
   }

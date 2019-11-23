@@ -1,10 +1,10 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use util\Secret;
-use lang\IllegalStateException;
 use lang\IllegalArgumentException;
-use lang\XPException;
+use lang\IllegalStateException;
 use lang\Throwable;
+use lang\XPException;
+use util\Secret;
 
 /**
  * Baseclass for test cases for security.Secret
@@ -87,7 +87,7 @@ abstract class SecretTest extends \unittest\TestCase {
     $this->assertTrue($called);
   }
 
-  #[@test, @expect(class= IllegalStateException::class, withMessage= '/An error occurred during storing the encrypted secret./')]
+  #[@test, @expect(['class' => IllegalStateException::class, 'withMessage' => '/An error occurred during storing the encrypted secret./'])]
   public function decryption_throws_exception_if_creation_has_failed() {
     $called= false;
     Secret::setBacking(function($value) {

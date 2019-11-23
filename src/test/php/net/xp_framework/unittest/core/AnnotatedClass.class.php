@@ -29,18 +29,26 @@ class AnnotatedClass {
   public function stringValue() { }
 
   /**
-   * Method annotated with an annotation with a hash value containing one
-   * key/value pair
+   * Method annotated with an annotation with a one key/value pair
    *
+   * @deprecated
    */
   #[@config(key = 'value')]
   public function keyValuePair() { }
 
   /**
+   * Method annotated with an annotation with a hash value containing one
+   * key/value pair
+   *
+   */
+  #[@config(['key' => 'value'])]
+  public function hashValue() { }
+
+  /**
    * Unittest method annotated with @test, @ignore and @limit
    *
    */
-  #[@test, @ignore, @limit(time = 0.1, memory = 100)]
+  #[@test, @ignore, @limit(['time' => 0.1, 'memory' => 100])]
   public function testMethod() { }
 
 }

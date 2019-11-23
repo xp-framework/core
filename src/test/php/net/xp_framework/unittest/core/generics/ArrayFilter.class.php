@@ -17,7 +17,7 @@
  * }
  * ```
  */
-#[@generic(self= 'T')]
+#[@generic(['self' => 'T'])]
 abstract class ArrayFilter {
   
   /**
@@ -28,7 +28,7 @@ abstract class ArrayFilter {
    * @param   T element
    * @return  bool
    */
-  #[@generic(params= 'T')]
+  #[@generic(['params' => 'T'])]
   protected abstract function accept($element);
 
   /**
@@ -37,7 +37,7 @@ abstract class ArrayFilter {
    * @param   T[] elements
    * @return  T[] filtered
    */
-  #[@generic(params= 'T[]', return= 'T[]')]
+  #[@generic(['params' => 'T[]', 'return' => 'T[]'])]
   public function filter($elements) {
     $filtered= [];
     foreach ($elements as $element) {

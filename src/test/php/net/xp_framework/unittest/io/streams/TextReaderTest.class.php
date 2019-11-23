@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use io\{Channel, IOException};
 use io\streams\{LinesIn, TextReader, InputStream, MemoryInputStream, MemoryOutputStream};
+use io\{Channel, IOException};
 use lang\{IllegalArgumentException, FormatException};
 
 /**
@@ -373,7 +373,7 @@ class TextReaderTest extends \unittest\TestCase {
     $this->assertEquals('ABC', $r->read(3));
   }
 
-  #[@test, @expect(class= IOException::class, withMessage= 'Underlying stream does not support seeking')]
+  #[@test, @expect(['class' => IOException::class, 'withMessage' => 'Underlying stream does not support seeking'])]
   public function resetUnseekable() {
     $r= new TextReader($this->unseekableStream());
     $r->reset();

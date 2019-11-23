@@ -4,7 +4,7 @@
  * Lookup map
  *
  */
-#[@generic(self= 'K, V')]
+#[@generic(['self' => 'K, V'])]
 interface IDictionary {
  
   /**
@@ -13,7 +13,7 @@ interface IDictionary {
    * @param   K key
    * @param   V value
    */
-  #[@generic(params= 'K, V')]
+  #[@generic(['params' => 'K, V'])]
   public function put($key, $value);
 
   /**
@@ -23,7 +23,7 @@ interface IDictionary {
    * @return  V value
    * @throws  util.NoSuchElementException
    */
-  #[@generic(params= 'K', return= 'V')]
+  #[@generic(['params' => 'K', 'return' => 'V'])]
   public function get($key);
 
   /**
@@ -31,6 +31,6 @@ interface IDictionary {
    *
    * @return  V[] values
    */
-  #[@generic(return= 'V[]')]
+  #[@generic(['return' => 'V[]'])]
   public function values();
 }
