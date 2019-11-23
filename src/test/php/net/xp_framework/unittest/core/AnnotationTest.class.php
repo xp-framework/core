@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\ElementNotFoundException;
-use lang\XPClass;
+use lang\{ElementNotFoundException, XPClass};
+use unittest\TestCase;
 
 /**
  * Tests the XP Framework's annotations
@@ -14,14 +14,7 @@ use lang\XPClass;
 class AnnotationTest extends \unittest\TestCase {
 
   /** @return lang.XPClass */
-  public function annotated() {
-    $class= XPClass::forName('net.xp_framework.unittest.core.AnnotatedClass');
-
-    // Trigger annotation parsing, swallowing warnings
-    $class->getAnnotations();
-    \xp::gc();
-    return $class;
-  }
+  private function annotated() { return XPClass::forName('net.xp_framework.unittest.core.AnnotatedClass'); }
 
   #[@test]
   public function setUpMethodHasNoAnnotations() {
@@ -89,15 +82,6 @@ class AnnotationTest extends \unittest\TestCase {
     $this->assertEquals(
       ['key' => 'value'],
       $this->annotated()->getMethod('hashValue')->getAnnotation('config')
-    );
-  }
-
-  /** @deprecated */
-  #[@test]
-  public function keyValuePairAnnotationValue() {
-    $this->assertEquals(
-      ['key' => 'value'],
-      $this->annotated()->getMethod('keyValuePair')->getAnnotation('config')
     );
   }
 

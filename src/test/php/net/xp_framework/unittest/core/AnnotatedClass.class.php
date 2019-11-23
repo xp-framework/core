@@ -29,14 +29,6 @@ class AnnotatedClass {
   public function stringValue() { }
 
   /**
-   * Method annotated with an annotation with a one key/value pair
-   *
-   * @deprecated
-   */
-  #[@config(key = 'value')]
-  public function keyValuePair() { }
-
-  /**
    * Method annotated with an annotation with a hash value containing one
    * key/value pair
    *

@@ -339,27 +339,9 @@ class ClassParser {
         } else if (2 === $state) {              // Inside braces of @attr(...)
           if (')' === $tokens[$i]) {
             $state= 1;
-          } else if ($i + 2 < $s && ('=' === $tokens[$i + 1] || '=' === $tokens[$i + 2])) {
-            $key= $tokens[$i][1];
-            $value= [];
-            $state= 3;
-            trigger_error('Use of deprecated annotation key/value pair "'.$key.'" in '.$place, E_USER_DEPRECATED);
           } else {
             $value= $this->valueOf($tokens, $i, $context, $imports);
           }
-        } else if (3 === $state) {              // Parsing key inside @attr(a= b, c= d)
-          if (')' === $tokens[$i]) {
-            $state= 1;
-          } else if (',' === $tokens[$i]) {
-            $key= null;
-          } else if ('=' === $tokens[$i]) {
-            $state= 4;
-          } else if (is_array($tokens[$i])) {
-            $key= $tokens[$i][1];
-          }
-        } else if (4 === $state) {              // Parsing value inside @attr(a= b, c= d)
-          $value[$key]= $this->valueOf($tokens, $i, $context, $imports);
-          $state= 3;
         }
       }
     } catch (\lang\XPException $e) {

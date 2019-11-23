@@ -201,16 +201,6 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
     );
   }
 
-  /** @deprecated */
-  #[@test]
-  public function key_value_pairs_annotation_value() {
-    $this->assertEquals(
-      [0 => ['config' => ['key' => 'value', 'times' => 5, 'disabled' => false, 'null' => null, 'list' => [1, 2]]], 1 => []],
-      $this->parse("#[@config(key = 'value', times= 5, disabled= false, null = null, list= [1, 2])]")
-    );
-    \xp::gc();
-  }
-
   #[@test]
   public function short_map_value() {
     $this->assertEquals(
