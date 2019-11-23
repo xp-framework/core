@@ -51,6 +51,9 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented xp-framework/rfc#335: Drop annotation key/value pair syntax,
+  phase 1: This syntax is now deprecated, see PR #236.
+  (@thekid)
 * Implemented xp-framework/rfc#333: XP 10 release / full PHP 7.4 support
   (@thekid)
 * Implemented user modules as part of xp-framework/rfc#332, see PR #207
