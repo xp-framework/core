@@ -6,7 +6,7 @@ use util\NoSuchElementException;
  * Lookup map
  *
  */
-#[@generic(self= 'V', parent= 'V')]
+#[@generic(['self' => 'V', 'parent' => 'V'])]
 class TypeDictionary extends AbstractTypeDictionary {
   protected $elements= [];
   
@@ -16,7 +16,7 @@ class TypeDictionary extends AbstractTypeDictionary {
    * @param   lang.Type key
    * @param   V value
    */
-  #[@generic(params= 'lang.Type, V')]
+  #[@generic(['params' => 'lang.Type, V'])]
   public function put($key, $value) {
     $offset= $key->literal();
     $this->elements[$offset]= $value;
@@ -29,7 +29,7 @@ class TypeDictionary extends AbstractTypeDictionary {
    * @return  V value
    * @throws  util.NoSuchElementException
    */
-  #[@generic(params= 'lang.Type', return= 'V')]
+  #[@generic(['params' => 'lang.Type', 'return' => 'V'])]
   public function get($key) {
     $offset= $key->literal();
     if (!isset($this->elements[$offset])) {
@@ -43,7 +43,7 @@ class TypeDictionary extends AbstractTypeDictionary {
    *
    * @return  V[] values
    */
-  #[@generic(return= 'V[]')]
+  #[@generic(['return' => 'V[]'])]
   public function values() {
     return array_values($this->elements);
   }

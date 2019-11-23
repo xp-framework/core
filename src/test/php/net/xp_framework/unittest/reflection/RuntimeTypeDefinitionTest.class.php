@@ -1,8 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\ClassLoader;
-use lang\DynamicClassLoader;
-use lang\XPClass;
+use lang\{ClassLoader, DynamicClassLoader, XPClass};
+use unittest\TestCase;
 
 /**
  * Base class for runtime type definitions
@@ -10,7 +9,7 @@ use lang\XPClass;
  * @see   xp://lang.ClassLoader
  * @see   https://github.com/xp-framework/xp-framework/issues/94
  */
-abstract class RuntimeTypeDefinitionTest extends \unittest\TestCase {
+abstract class RuntimeTypeDefinitionTest extends TestCase {
 
   /**
    * Wraps around a function which defines types, giving it unique names and
@@ -72,7 +71,7 @@ abstract class RuntimeTypeDefinitionTest extends \unittest\TestCase {
 
   #[@test]
   public function declares_passed_annotation_with_value() {
-    $this->assertEquals('/rest', $this->define(['annotations' => '#[@webservice(path= "/rest")]'])->getAnnotation('webservice', 'path'));
+    $this->assertEquals('/rest', $this->define(['annotations' => '#[@webservice(["path" => "/rest"])]'])->getAnnotation('webservice', 'path'));
   }
 
   #[@test, @values(['com.example.test.RTTDDotted', 'com\\example\\test\\RTTDNative'])]

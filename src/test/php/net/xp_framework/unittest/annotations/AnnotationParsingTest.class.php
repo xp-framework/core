@@ -1,8 +1,8 @@
 <?php namespace net\xp_framework\unittest\annotations;
 
-use net\xp_framework\unittest\annotations\fixture\Namespaced;
-use lang\reflect\ClassParser;
 use lang\ClassFormatException;
+use lang\reflect\ClassParser;
+use net\xp_framework\unittest\annotations\fixture\Namespaced;
 
 /**
  * Tests the XP Framework's annotation parsing implementation
@@ -201,12 +201,14 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
     );
   }
 
+  /** @deprecated */
   #[@test]
   public function key_value_pairs_annotation_value() {
     $this->assertEquals(
       [0 => ['config' => ['key' => 'value', 'times' => 5, 'disabled' => false, 'null' => null, 'list' => [1, 2]]], 1 => []],
       $this->parse("#[@config(key = 'value', times= 5, disabled= false, null = null, list= [1, 2])]")
     );
+    \xp::gc();
   }
 
   #[@test]
@@ -225,10 +227,10 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
         'net.xp_framework.unittest.core.SecondInterceptor',
       ]]], 1 => []],
       $this->parse("
-        #[@interceptors(classes= [
+        #[@interceptors(['classes' => [
           'net.xp_framework.unittest.core.FirstInterceptor',
           'net.xp_framework.unittest.core.SecondInterceptor',
-        ])]
+        ]])]
       ")
     );
   }
@@ -237,7 +239,7 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
   public function simple_XPath_annotation() {
     $this->assertEquals(
       [0 => ['fromXml' => ['xpath' => '/parent/child/@attribute']], 1 => []],
-      $this->parse("#[@fromXml(xpath= '/parent/child/@attribute')]")
+      $this->parse("#[@fromXml(['xpath' => '/parent/child/@attribute'])]")
     );
   }
 
@@ -245,7 +247,7 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
   public function complex_XPath_annotation() {
     $this->assertEquals(
       [0 => ['fromXml' => ['xpath' => '/parent[@attr="value"]/child[@attr1="val1" and @attr2="val2"]']], 1 => []],
-      $this->parse("#[@fromXml(xpath= '/parent[@attr=\"value\"]/child[@attr1=\"val1\" and @attr2=\"val2\"]')]")
+      $this->parse("#[@fromXml(['xpath' => '/parent[@attr=\"value\"]/child[@attr1=\"val1\" and @attr2=\"val2\"]'])]")
     );
   }
 
@@ -261,7 +263,7 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
   public function string_assigned_without_whitespace() {
     $this->assertEquals(
       [0 => ['arg' => ['name' => 'verbose', 'short' => 'v']], 1 => []],
-      $this->parse("#[@arg(name= 'verbose', short='v')]")
+      $this->parse("#[@arg(['name' => 'verbose', 'short' => 'v'])]")
     );
   }
 
@@ -269,7 +271,7 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
   public function multiple_values_with_strings_and_equal_signs() {
     $this->assertEquals(
       [0 => ['permission' => ['names' => ['rn=login, rt=config1', 'rn=login, rt=config2']]], 1 => []],
-      $this->parse("#[@permission(names= ['rn=login, rt=config1', 'rn=login, rt=config2'])]")
+      $this->parse("#[@permission(['names' => ['rn=login, rt=config1', 'rn=login, rt=config2']])]")
     );
   }
 
@@ -277,7 +279,7 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
   public function unittest_annotation() {
     $this->assertEquals(
       [0 => ['test' => NULL, 'ignore' => NULL, 'limit' => ['time' => 0.1, 'memory' => 100]], 1 => []],
-      $this->parse("#[@test, @ignore, @limit(time = 0.1, memory = 100)]")
+      $this->parse("#[@test, @ignore, @limit(['time' => 0.1, 'memory' => 100])]")
     );
   }
 
@@ -285,7 +287,7 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
   public function overloaded_annotation() {
     $this->assertEquals(
       [0 => ['overloaded' => ['signatures' => [['string'], ['string', 'string']]]], 1 => []],
-      $this->parse('#[@overloaded(signatures= [["string"], ["string", "string"]])]')
+      $this->parse('#[@overloaded(["signatures" => [["string"], ["string", "string"]]])]')
     );
   }
 
@@ -294,10 +296,10 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
     $this->assertEquals(
       [0 => ['overloaded' => ['signatures' => [['string'], ['string', 'string']]]], 1 => []],
       $this->parse(
-        "#[@overloaded(signatures= [\n".
+        "#[@overloaded(['signatures' => [\n".
         "  ['string'],\n".
         "  ['string', 'string']\n".
-        "])]"
+        "]])]"
       )
     );
   }
@@ -309,7 +311,7 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
         0 => ['webmethod' => ['verb' => 'GET', 'path' => '/greet/{name}']],
         1 => ['$name' => ['path' => null], '$greeting' => ['param' => null]]
       ],
-      $this->parse('#[@webmethod(verb= "GET", path= "/greet/{name}"), @$name: path, @$greeting: param]')
+      $this->parse('#[@webmethod(["verb" => "GET", "path" => "/greet/{name}"]), @$name: path, @$greeting: param]')
     );
   }
 
@@ -333,7 +335,7 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
   public function short_array_syntax_as_key() {
     $this->assertEquals(
       [0 => ['permissions' => ['names' => ['rn=login, rt=config', 'rn=admin, rt=config']]], 1 => []],
-      $this->parse("#[@permissions(names = ['rn=login, rt=config', 'rn=admin, rt=config'])]")
+      $this->parse("#[@permissions(['names' => ['rn=login, rt=config', 'rn=admin, rt=config']])]")
     );
   }
 
@@ -349,7 +351,7 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
   public function nested_short_array_syntax_as_key() {
     $this->assertEquals(
       [0 => ['test' => ['values' => [[1, 1], [2, 2], [3, 3]]]], 1 => []],
-      $this->parse("#[@test(values = [[1, 1], [2, 2], [3, 3]])]")
+      $this->parse("#[@test(['values' => [[1, 1], [2, 2], [3, 3]]])]")
     );
   }
 
@@ -421,7 +423,7 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
   public function class_constant_via_self_in_map() {
     $this->assertEquals(
       [0 => ['map' => ['key' => 'constant', 'value' => 'val']], 1 => []],
-      $this->parse('#[@map(key = self::CONSTANT, value = "val")]')
+      $this->parse('#[@map(["key" => self::CONSTANT, "value" => "val"])]')
     );
   }
 
@@ -429,7 +431,7 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
   public function class_constant_via_classname_in_map() {
     $this->assertEquals(
       [0 => ['map' => ['key' => 'constant', 'value' => 'val']], 1 => []],
-      $this->parse('#[@map(key = AnnotationParsingTest::CONSTANT, value = "val")]')
+      $this->parse('#[@map(["key" => AnnotationParsingTest::CONSTANT, "value" => "val"])]')
     );
   }
 
@@ -437,7 +439,7 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
   public function class_constant_via_ns_classname_in_map() {
     $this->assertEquals(
       [0 => ['map' => ['key' => 'constant', 'value' => 'val']], 1 => []],
-      $this->parse('#[@map(key = \net\xp_framework\unittest\annotations\AnnotationParsingTest::CONSTANT, value = "val")]')
+      $this->parse('#[@map(["key" => \net\xp_framework\unittest\annotations\AnnotationParsingTest::CONSTANT, "value" => "val"])]')
     );
   }
 

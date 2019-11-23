@@ -4,7 +4,7 @@
  * A filter instance decides based on the passed elements whether to
  * accept them.
  */
-#[@generic(self= 'T')]
+#[@generic(['self' => 'T'])]
 interface Filter {
 
   /**
@@ -13,6 +13,6 @@ interface Filter {
    * @param  T $e
    * @return bool
    */
-  #[@generic(params= 'T')]
+  #[@generic(['params' => 'T'])]
   public function accept($e);
 }

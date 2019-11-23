@@ -110,7 +110,7 @@ class TestClass extends AbstractTestClass implements \lang\Runnable {
    *
    * @return  int
    */
-  #[@webmethod, @security(roles= ['admin', 'god'])]
+  #[@webmethod, @security(['roles' => ['admin', 'god']])]
   public function currentTimestamp() {
     return time();
   }

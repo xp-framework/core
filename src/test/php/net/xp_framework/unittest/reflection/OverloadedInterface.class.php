@@ -11,9 +11,9 @@ interface OverloadedInterface {
    * Overloaded method.
    *
    */
-  #[@overloaded(signatures= [
+  #[@overloaded(['signatures' => [
   #  ['string'],
   #  ['string', 'string']
-  #])]
+  #]])]
   public function overloaded();
 }
