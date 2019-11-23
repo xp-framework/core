@@ -1,8 +1,8 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use util\Objects;
 use lang\Value;
 use net\xp_framework\unittest\Name;
+use util\Objects;
 
 /**
  * TestCase for Objects class
@@ -128,57 +128,57 @@ class ObjectsTest extends \unittest\TestCase {
     $this->assertFalse(Objects::equal((object)['name' => self::class], new \ReflectionClass(self::class)));
   }
 
-  #[@test, @values(source= 'valuesExcept', args= [null])]
+  #[@test, @values(['source' => 'valuesExcept', 'args' => [null]])]
   public function null_not_equal_to_other_values($val) {
     $this->assertFalse(Objects::equal(null, $val));
   }
 
-  #[@test, @values(source= 'valuesExcept', args= [false])]
+  #[@test, @values(['source' => 'valuesExcept', 'args' => [false]])]
   public function false_not_equal_to_other_values($val) {
     $this->assertFalse(Objects::equal(false, $val));
   }
 
-  #[@test, @values(source= 'valuesExcept', args= [true])]
+  #[@test, @values(['source' => 'valuesExcept', 'args' => [true]])]
   public function true_not_equal_to_other_values($val) {
     $this->assertFalse(Objects::equal(true, $val));
   }
 
-  #[@test, @values(source= 'values')]
+  #[@test, @values(['source' => 'values'])]
   public function int_not_equal_to_other_values($val) {
     $this->assertFalse(Objects::equal(6100, $val));
   }
 
-  #[@test, @values(source= 'values')]
+  #[@test, @values(['source' => 'values'])]
   public function double_not_equal_to_other_values($val) {
     $this->assertFalse(Objects::equal(6100.0, $val));
   }
 
-  #[@test, @values(source= 'values')]
+  #[@test, @values(['source' => 'values'])]
   public function string_not_equal_to_other_values($val) {
     $this->assertFalse(Objects::equal('More power', $val));
   }
 
-  #[@test, @values(source= 'values')]
+  #[@test, @values(['source' => 'values'])]
   public function array_not_equal_to_other_values($val) {
     $this->assertFalse(Objects::equal([4, 5, 6], $val));
   }
 
-  #[@test, @values(source= 'values')]
+  #[@test, @values(['source' => 'values'])]
   public function hash_not_equal_to_other_values($val) {
     $this->assertFalse(Objects::equal(['color' => 'blue'], $val));
   }
 
-  #[@test, @values(source= 'values')]
+  #[@test, @values(['source' => 'values'])]
   public function object_not_equal_to_other_values($val) {
     $this->assertFalse(Objects::equal(new class() { }, $val));
   }
 
-  #[@test, @values(source= 'values')]
+  #[@test, @values(['source' => 'values'])]
   public function string_instance_not_equal_to_other_values($val) {
     $this->assertFalse(Objects::equal(new ValueObject('Binford 6100: More Power!'), $val));
   }
 
-  #[@test, @values(source= 'values')]
+  #[@test, @values(['source' => 'values'])]
   public function value_not_equal_to_other_values($val) {
     $this->assertFalse(Objects::equal(new Name('Binford 6100: More Power!'), $val));
   }

@@ -46,7 +46,7 @@ class FilesystemPropertySourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(class= IllegalArgumentException::class, withMessage= '/No properties @@non-existant@@ found at .+/')]
+  #[@test, @expect(['class' => IllegalArgumentException::class, 'withMessage' => '/No properties @@non-existant@@ found at .+/'])]
   public function fetch_non_existant_ini_file() {
     $this->fixture->fetch('@@non-existant@@');
   }

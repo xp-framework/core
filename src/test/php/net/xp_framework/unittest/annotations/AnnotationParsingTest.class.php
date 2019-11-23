@@ -483,7 +483,10 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
     );
   }
 
-  #[@test, @expect(class= ClassFormatException::class, withMessage= '/Cannot access private static field .+AbstractAnnotationParsingTest::\$parentsInternal/')]
+  #[@test, @expect([
+  #  'class' => ClassFormatException::class,
+  #  'withMessage' => '/Cannot access private static field .+AbstractAnnotationParsingTest::\$parentsInternal/'
+  #])]
   public function parent_private_static_member() {
     $this->parse('#[@value(parent::$parentsInternal)]');
   }

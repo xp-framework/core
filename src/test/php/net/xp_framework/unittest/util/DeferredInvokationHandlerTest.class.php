@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\util;
 
+use lang\IllegalStateException;
+use lang\Runnable;
 use util\AbstractDeferredInvokationHandler;
 use util\DeferredInitializationException;
-use lang\Runnable;
-use lang\IllegalStateException;
 
 /**
  * TestCase for AbstractDeferredInvokationHandler
@@ -23,7 +23,7 @@ class DeferredInvokationHandlerTest extends \unittest\TestCase {
     $this->assertEquals($args, $handler->invoke($this, 'run', $args));
   }
 
-  #[@test, @expect(class= IllegalStateException::class, withMessage= 'Test')]
+  #[@test, @expect(['class' => IllegalStateException::class, 'withMessage' => 'Test'])]
   public function throwing_runnable_invokation() {
     $handler= new class() extends AbstractDeferredInvokationHandler {
       public function initialize() {
@@ -35,7 +35,7 @@ class DeferredInvokationHandlerTest extends \unittest\TestCase {
     $handler->invoke($this, 'run', ['Test']);
   }
 
-  #[@test, @expect(class= DeferredInitializationException::class, withMessage= 'run')]
+  #[@test, @expect(['class' => DeferredInitializationException::class, 'withMessage' => 'run'])]
   public function initialize_returns_null() {
     $handler= new class() extends AbstractDeferredInvokationHandler {
       public function initialize() {
@@ -45,7 +45,7 @@ class DeferredInvokationHandlerTest extends \unittest\TestCase {
     $handler->invoke($this, 'run', []);
   }
 
-  #[@test, @expect(class= DeferredInitializationException::class, withMessage= 'run')]
+  #[@test, @expect(['class' => DeferredInitializationException::class, 'withMessage' => 'run'])]
   public function initialize_throws_exception() {
     $handler= new class() extends AbstractDeferredInvokationHandler {
       public function initialize() {

@@ -146,7 +146,7 @@ class ProcessTest extends TestCase {
     $this->assertEquals(222, $p->close());
   }
 
-  #[@test, @expect(class= IllegalStateException::class, withMessage= '/Cannot close not-owned/')]
+  #[@test, @expect(['class' => IllegalStateException::class, 'withMessage' => '/Cannot close not-owned/'])]
   public function closingProcessByProcessId() {
     Process::getProcessById(getmypid())->close();
   }
