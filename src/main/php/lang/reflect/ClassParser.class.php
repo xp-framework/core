@@ -343,7 +343,7 @@ class ClassParser {
             $key= $tokens[$i][1];
             $value= [];
             $state= 3;
-            trigger_error('Use of deprecated annotation key/value pairs in '.$place, E_USER_DEPRECATED);
+            trigger_error('Use of deprecated annotation key/value pair "'.$key.'" in '.$place, E_USER_DEPRECATED);
           } else {
             $value= $this->valueOf($tokens, $i, $context, $imports);
           }
