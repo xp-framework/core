@@ -48,7 +48,7 @@ class AnnotatedClass {
    * Unittest method annotated with @test, @ignore and @limit
    *
    */
-  #[@test, @ignore, @limit(time = 0.1, memory = 100)]
+  #[@test, @ignore, @limit(['time' => 0.1, 'memory' => 100])]
   public function testMethod() { }
 
 }
