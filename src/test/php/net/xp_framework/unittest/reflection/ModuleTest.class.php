@@ -1,8 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\reflect\Module;
 use lang\ClassLoader;
 use lang\ElementNotFoundException;
+use lang\reflect\Module;
 
 /**
  * TestCase for modules
@@ -86,10 +86,10 @@ class ModuleTest extends \unittest\TestCase {
     $this->assertEquals($module, Module::forName($module->name()));
   }
 
-  #[@test, @expect(
-  #  class= ElementNotFoundException::class,
-  #  withMessage= 'No module "@@non-existant@@" declared'
-  #)]
+  #[@test, @expect([
+  #  'class' => ElementNotFoundException::class,
+  #  'withMessage' => 'No module "@@non-existant@@" declared'
+  #])]
   public function forName_throws_exception_when_no_module_registered() {
     Module::forName('@@non-existant@@');
   }
