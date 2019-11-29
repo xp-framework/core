@@ -1,0 +1,17 @@
+name: PHP Composer
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Install XP Runners
+      run: sh .travis.sh install
+
+    - name: Run tests
+      run: sh .travis.sh run-tests
