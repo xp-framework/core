@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.0.1 / 2019-12-01
+
+### Bugfixes
+
+* Fixed generics in PHP 8+ by using null-coalesce operator instead of the
+  error suppression operator `@`.
+  (@thekid)
+
 ## 10.0.0 / 2019-11-29
 
 ### Bugfixes
