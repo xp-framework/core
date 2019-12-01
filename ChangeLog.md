@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.0.2 / 2019-12-01
+
+### Bugfixes
+
+* Fixed `xp help` subcommand raising warnings when rendering markdown
+  (@thekid)
+
 ## 10.0.1 / 2019-12-01
 
 ### Bugfixes
