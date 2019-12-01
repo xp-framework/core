@@ -154,7 +154,7 @@ class GenericTypes {
           } else if (T_IMPLEMENTS === $tokens[$i][0]) {
             $src.= ' implements';
             $counter= 0;
-            $annotation= @$annotations['generic']['implements'];
+            $annotation= $annotations['generic']['implements'] ?? null;
             array_unshift($state, T_CLASS);
             array_unshift($state, 5);
           } else if ('{' === $tokens[$i][0]) {
@@ -168,7 +168,7 @@ class GenericTypes {
           if (T_EXTENDS === $tokens[$i][0]) {
             $src.= ' extends';
             $counter= 0;
-            $annotation= @$annotations['generic']['extends'];
+            $annotation= $annotations['generic']['extends'] ?? null;
             array_unshift($state, T_INTERFACE);
             array_unshift($state, 5);
           } else if ('{' === $tokens[$i][0]) {
