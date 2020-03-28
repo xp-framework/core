@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.0.3 / 2020-03-28
+
+### Bugfixes
+
+* Fixed *Array and string offset access syntax with curly braces is deprecated*
+  warnings inside `lang.reflect.ClassParser`
+  (@thekid)
+
 ## 10.0.2 / 2019-12-01
 
 ### Bugfixes

@@ -103,9 +103,9 @@ class ClassParser {
     } else if (T_LNUMBER === $tokens[$i][0]) {
       if (1 === strlen($tokens[$i][1])) {
         return (int)$tokens[$i][1];
-      } else if ('x' === $tokens[$i][1]{1}) {
+      } else if ('x' === $tokens[$i][1][1]) {
         return hexdec($tokens[$i][1]);
-      } else if ('0' === $tokens[$i][1]{0}) {
+      } else if ('0' === $tokens[$i][1][0]) {
         return octdec($tokens[$i][1]);
       } else {
         return (int)$tokens[$i][1];
@@ -484,8 +484,8 @@ class ClassParser {
           break;
 
         case T_COMMENT:
-          if ('#' === $tokens[$i][1]{0}) {      // Annotations, #[@test]
-            if ('[' === $tokens[$i][1]{1}) {
+          if ('#' === $tokens[$i][1][0]) {      // Annotations, #[@test]
+            if ('[' === $tokens[$i][1][1]) {
               $parsed= substr($tokens[$i][1], 2);
             } else {
               $parsed.= substr($tokens[$i][1], 1);
