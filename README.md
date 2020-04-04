@@ -64,7 +64,7 @@ Now run it:
 
 ```sh
 $ xp ageindays.script.php 1977-12-14
-Hey, you are 13724 days old
+Hey, you are 15452 days old
 ```
 
 Alternatively, you can put this code inside a class and give it a static *main* method. This way, you can use features like inheritance, trait inclusion etcetera. This time, save the code to a file called `AgeInDays.class.php`.
@@ -72,8 +72,8 @@ Alternatively, you can put this code inside a class and give it a static *main* 
 ```php
 <?php
 
-use util\cmd\Console;
 use util\{Date, Dates};
+use util\cmd\Console;
 
 class AgeInDays {
 
@@ -89,7 +89,7 @@ class AgeInDays {
 
 ```sh
 $ xp AgeInDays 1977-12-14
-Hey, you are 13724 days old
+Hey, you are 15452 days old
 ```
 
 Contributing
