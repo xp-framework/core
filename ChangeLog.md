@@ -7,7 +7,7 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
-* Added issue #241: Support PHP 7.4 property types (e.g. `private int $id`)
+* Fixed issue #241: Support PHP 7.4 property types (e.g. `private int $id`)
   See https://wiki.php.net/rfc/typed_properties_v2
   (@thekid)
 
