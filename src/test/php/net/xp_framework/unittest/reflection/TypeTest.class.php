@@ -12,9 +12,10 @@ use lang\{
   XPClass
 };
 use net\xp_framework\unittest\Name;
+use unittest\TestCase;
 use util\collections\{Vector, HashTable};
 
-class TypeTest extends \unittest\TestCase {
+class TypeTest extends TestCase {
 
   #[@test, @values(['string', '?string'])]
   public function stringType($named) {
@@ -31,7 +32,7 @@ class TypeTest extends \unittest\TestCase {
     $this->assertEquals(Primitive::$FLOAT, Type::forName($named));
   }
 
-  #[@test, @values(['bool', 'boolean', '?bool'])]
+  #[@test, @values(['bool', 'boolean', '?bool', 'false'])]
   public function boolType($named) {
     $this->assertEquals(Primitive::$BOOL, Type::forName($named));
   }

@@ -203,6 +203,7 @@ class Type implements Value {
       'float'     => 'float',
       'bool'      => 'bool',
       'boolean'   => 'bool',
+      'false'     => 'bool',
     ];
 
     $l= strlen($type);
