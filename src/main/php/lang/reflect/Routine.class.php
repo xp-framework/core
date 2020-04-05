@@ -135,6 +135,13 @@ class Routine implements Value {
     ) {
       return ltrim($details[DETAIL_RETURNS], '&');
     } else if ($t= $this->_reflect->getReturnType()) {
+      if ($t instanceof \ReflectionUnionType) {
+        $union= '';
+        foreach ($t->getTypes() as $u) {
+          $union.= '|'.$u->getName();
+        }
+        return substr($union, 1);
+      }
       return PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
     } else {
       return 'var';

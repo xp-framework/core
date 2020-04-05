@@ -3,11 +3,21 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.0.5 / 2020-04-05
+
+### Bugfixes
+
+* Added issue #241: Support PHP 7.4 property types (e.g. `private int $id`)
+  See https://wiki.php.net/rfc/typed_properties_v2
+  (@thekid)
+
 ## 10.0.4 / 2020-04-05
 
 ### Bugfixes
 
-* Fixed issue #240: Add support for PHP 8 union types - @thekid
+* Fixed issue #240: Add support for PHP 8 union types (e.g. `string|int`)
+  See https://wiki.php.net/rfc/union_types_v2
+  (@thekid)
 
 ## 10.0.3 / 2020-03-28
 
