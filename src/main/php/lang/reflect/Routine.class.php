@@ -1,6 +1,6 @@
 <?php namespace lang\reflect;
 
-use lang\{ElementNotFoundException, XPClass, Value, Type};
+use lang\{ElementNotFoundException, XPClass, Value, Type, TypeUnion};
 use util\Objects;
 
 /**
@@ -114,6 +114,13 @@ class Routine implements Value {
         return Type::forName($t);
       }
     } else if ($t= $this->_reflect->getReturnType()) {
+      if ($t instanceof \ReflectionUnionType) {
+        $union= [];
+        foreach ($t->getTypes() as $u) {
+          $union[]= Type::forName($u->getName());
+        }
+        return new TypeUnion($union);
+      }
       return Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
     } else {
       return Type::$VAR;

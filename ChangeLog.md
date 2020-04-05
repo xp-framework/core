@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.0.4 / 2020-04-05
+
+### Bugfixes
+
+* Fixed issue #240: Add support for PHP 8 union types - @thekid
+
 ## 10.0.3 / 2020-03-28
 
 ### Bugfixes
