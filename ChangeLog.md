@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Merged PR #242: Use ReflectionType API instead of deprecated isArray/isCallable
+  on parameters - for PHP 8 compatibility (see php/php-src#5209).
+  (@thekid)
+
 ## 10.0.5 / 2020-04-05
 
 ### Bugfixes
