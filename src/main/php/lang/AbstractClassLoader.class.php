@@ -102,15 +102,14 @@ abstract class AbstractClassLoader implements IClassLoader {
       \xp::gc(__FILE__);
       throw $e;
     } else if (!class_exists($name, false) && !interface_exists($name, false) && !trait_exists($name, false)) {
-      $details= XPClass::detailsForClass($class);
-      $uri= $this->classUri($class);
-      unset(\xp::$cl[$class]);
-      if (isset($details['class'])) {
-        $reflect= new \ReflectionClass($details['class'][DETAIL_ARGUMENTS]);
-        \xp::$errors[$uri][$reflect->getStartLine()]= ['' => 1];
-        $e= new ClassFormatException('File does not declare type `'.$class.'`, but `'.strtr($reflect->getName(), '\\', '.').'`');
-        \xp::gc($uri);
-        throw $e;
+      $bytes= $this->loadClassBytes($class);
+      if (preg_match('/(class|interface|trait)\s+([^ ]+)/', $bytes, $decl)) {
+        preg_match('/namespace\s+([^;]+);/', $bytes, $ns);
+        throw new ClassFormatException(sprintf(
+          'File does not declare type `%s`, but `%s`',
+          $class,
+          ($ns ? strtr($ns[1], '\\', '.').'.' : '').$decl[2]
+        ));
       } else {
         throw new ClassFormatException('Loading `'.$class.'`: No types declared in '.$this->classUri($class));
       }
