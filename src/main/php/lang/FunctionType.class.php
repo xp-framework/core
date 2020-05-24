@@ -93,9 +93,8 @@ class FunctionType extends Type {
     // Verify signature
     foreach ($signature as $i => $type) {
       if (isset($details[DETAIL_ARGUMENTS][$i])) {
-        if (0 === substr_compare($details[DETAIL_ARGUMENTS][$i], '...', -3)) {
-          return true;  // No further checks necessary
-        }
+        if (0 === substr_compare($details[DETAIL_ARGUMENTS][$i], '...', -3)) return true;  // No further checks necessary
+
         $param= Type::forName($details[DETAIL_ARGUMENTS][$i]);
         if (!$type->isAssignableFrom($param)) {
           return $false('Parameter #'.($i + 1).' not a '.$param->getName().' type: '.$type->getName());
@@ -103,21 +102,23 @@ class FunctionType extends Type {
       } else if (!isset($params[$i])) {
         return $false('No parameter #'.($i + 1));
       } else {
-        $param= $params[$i];
-        if ($param->isVariadic()) {
-          return true;  // No further checks necessary
-        } else if ($param->isArray()) {
-          if (!$type->equals(Primitive::$ARRAY) && !$type instanceof ArrayType && !$type instanceof MapType) {
-            return $false('Parameter #'.($i + 1).' not an array type: '.$type->getName());
+        if ($params[$i]->isVariadic()) return true;  // No further checks necessary
+
+        $t= $params[$i]->getType();
+        if (null === $t) continue;
+
+        if ($t instanceof \ReflectionUnionType) {
+          $union= [];
+          foreach ($t->getTypes() as $u) {
+            $union[]= Type::forName($u->getName());
           }
-        } else if ($param->isCallable()) {
-          if (!$type instanceof FunctionType) {
-            return $false('Parameter #'.($i + 1).' not a function type: '.$type->getName());
-          }
-        } else if (null !== ($class= $param->getClass())) {
-          if (!$type->isAssignableFrom(new XPClass($class))) {
-            return $false('Parameter #'.($i + 1).' not a '.$class->getName().': '.$type->getName());
-          }
+          $param= new TypeUnion($union);
+        } else {
+          $param= Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+        }
+
+        if (!$type->isAssignableFrom($param)) {
+          return $false('Parameter #'.($i + 1).' not a '.$param->getName().' type: '.$type->getName());
         }
       }
     }
@@ -168,7 +169,7 @@ class FunctionType extends Type {
       }
     } else if (is_array($arg) && 2 === sizeof($arg)) {
       return $this->verifiedMethod($arg[0], $arg[1], $false, $return);
-    } else if (method_exists($arg, '__invoke')) {
+    } else if (is_object($arg) && method_exists($arg, '__invoke')) {
       $inv= new \ReflectionMethod($arg, '__invoke');
       if ($this->verify($inv, $this->signature, $false)) {
         return $return ? $inv->getClosure($arg) : true;
@@ -282,6 +283,7 @@ class FunctionType extends Type {
   /** Tests whether this type is assignable from another type */
   public function isAssignableFrom($type): bool {
     $t= $type instanceof Type ? $type : Type::forName($type);
+    if ($t === Type::$CALLABLE) return true;
     if (!($t instanceof self) || !$this->returns->isAssignableFrom($t->returns)) return false;
     if (null === $this->signature) return true;
     if (sizeof($t->signature) !== sizeof($this->signature)) return false;
