@@ -644,6 +644,12 @@ class XPClass extends Type {
     return null;    // Internal class, e.g.
   }
 
+  /**
+   * Merge attributes
+   *
+   * @param  &[:var] $details
+   * @param  php.ReflectionClass|php.ReflectionMethod|php.ReflectionProperty $reflect
+   */
   public static function mergeAttributes(&$details, $reflect) {
     if (!self::$ATTRIBUTES) return;
 
@@ -659,9 +665,7 @@ class XPClass extends Type {
 
       $name= $attribute->getName();
       $p= strrpos($name, '\\');
-      if (false === $p) {
-        $details[$name]= $value;
-      } else if ($name[$p + 1] <= 'Z') {
+      if (false === $p || $name[$p + 1] <= 'Z') {
         $details[$name]= $value;
       } else {
         $details[substr($name, $p + 1)]= $value;

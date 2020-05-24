@@ -106,13 +106,13 @@ class AttributesTest extends TestCase {
   #[@test]
   public function inside_namespace() {
     $t= $this->type('<<Test>> class %s { }', 'com\\example');
-    $this->assertAnnotations(['com.example.Test' => null], $t);
+    $this->assertAnnotations(['com\\example\\Test' => null], $t);
   }
 
   #[@test]
   public function resolved_against_imports_inside_namespace() {
-    $t= $this->type('use unittest\Test; <<Test>> class %s { }', 'com\\example');
-    $this->assertAnnotations(['unittest.Test' => null], $t);
+    $t= $this->type('use unittest\\Test; <<Test>> class %s { }', 'com\\example');
+    $this->assertAnnotations(['unittest\\Test' => null], $t);
   }
 
   #[@test]
