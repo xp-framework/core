@@ -311,7 +311,7 @@ function newinstance($spec, $args, $def= null) {
   }
 
   if ($generic) {
-    \lang\XPClass::detailsForClass($name);
+    \lang\XPClass::detailsForClass(new \ReflectionClass($type.$n));
     xp::$meta[$name]['class'][DETAIL_GENERIC]= $generic;
   }
 
