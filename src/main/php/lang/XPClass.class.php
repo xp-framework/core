@@ -662,7 +662,7 @@ class XPClass extends Type {
       if (false === $p) {
         $details[$name]= $value;
       } else if ($name[$p + 1] <= 'Z') {
-        $details[strtr($name, '\\', '.')]= $value;
+        $details[$name]= $value;
       } else {
         $details[substr($name, $p + 1)]= $value;
       }

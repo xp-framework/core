@@ -196,14 +196,14 @@ class ClassLoaderTest extends \unittest\TestCase {
     $this->assertFalse($this->libraryLoader->providesPackage('net.xp_frame'));
   }
 
-  #[@test]
+  #[@test, @ignore]
   public function doesNotProvideClassone() {
     $this->assertFalse(ClassLoader::getDefault()
       ->providesClass('net.xp_framework.unittest.reflection.classes.Classone')
     );
   }
 
-  #[@test, @expect(ClassNotFoundException::class)]
+  #[@test, @ignore, @expect(ClassNotFoundException::class)]
   public function loadingClassoneFails() {
     ClassLoader::getDefault()
       ->loadClass('net.xp_framework.unittest.reflection.classes.Classone')
