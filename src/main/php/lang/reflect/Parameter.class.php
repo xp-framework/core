@@ -195,6 +195,7 @@ class Parameter {
   public function hasAnnotation($name, $key= null) {
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
     $r= $details[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? [];
+    XPClass::mergeAttributes($r, $this->_reflect);
 
     return $key ? array_key_exists($key, $r[$name] ?? []) : array_key_exists($name, $r);
   }
@@ -210,6 +211,7 @@ class Parameter {
   public function getAnnotation($name, $key= null) {
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
     $r= $details[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? [];
+    XPClass::mergeAttributes($r, $this->_reflect);
 
     if ($key) {
       if (array_key_exists($key, $r[$name] ?? [])) return $r[$name][$key];
@@ -227,7 +229,9 @@ class Parameter {
    */
   public function hasAnnotations() {
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
-    return !empty($details[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? []);
+    $r= $details[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? [];
+    XPClass::mergeAttributes($r, $this->_reflect);
+    return !empty($r);
   }
 
   /**
@@ -237,7 +241,9 @@ class Parameter {
    */
   public function getAnnotations() {
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
-    return $details[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? [];
+    $r= $details[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? [];
+    XPClass::mergeAttributes($r, $this->_reflect);
+    return $r;
   }
 
   /**
