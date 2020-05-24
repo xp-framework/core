@@ -11,6 +11,6 @@ abstract class MethodsTest extends \unittest\TestCase {
    * @return lang.reflect.Method
    */
   protected function method($decl, $modifiers= '') {
-    return $this->type('{ '.$decl.' }', $modifiers)->getMethod('fixture');
+    return $this->type('{ '.$decl.' }', ['modifiers' => $modifiers])->getMethod('fixture');
   }
 }

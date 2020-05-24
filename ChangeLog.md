@@ -3,10 +3,20 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Improved performance of type lookups for parameters and return types;
+  only looking at the API docs if either no type syntax is used or for
+  array types (e.g. `array` => `string[]`)
+  (@thekid)
+* Added `lang.reflect.Routine::getReturnTypeRestriction()` to be consistent
+  with parameters.
+  (@thekid)
+
 ### Bugfixes
 
-* Merged PR #242: Use ReflectionType API instead of deprecated isArray/isCallable
-  on parameters - for PHP 8 compatibility (see php/php-src#5209).
+* Merged PR #242: Use ReflectionType API instead of deprecated isArray and
+  isCallable on parameters - for PHP 8 compatibility (see php/php-src#5209).
   (@thekid)
 
 ## 10.0.5 / 2020-04-05

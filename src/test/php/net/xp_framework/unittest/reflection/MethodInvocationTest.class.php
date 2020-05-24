@@ -67,7 +67,7 @@ class MethodInvocationTest extends MethodsTest {
   #  ['{ public abstract function fixture(); }', 'abstract'],
   #])]
   public function cannot_invoke_non_public($declaration, $modifiers= '') {
-    $fixture= $this->type($declaration, $modifiers);
+    $fixture= $this->type($declaration, ['modifiers' => $modifiers]);
     $fixture->getMethod('fixture')->invoke($fixture->newInstance(), []);
   }
 

@@ -36,8 +36,8 @@ class FieldAccessTest extends FieldsTest {
   #  ['{ private $fixture; }'],
   #  ['{ protected $fixture; }']
   #])]
-  public function cannot_read_non_public($declaration, $modifiers= '') {
-    $fixture= $this->type($declaration, $modifiers);
+  public function cannot_read_non_public($declaration) {
+    $fixture= $this->type($declaration);
     $fixture->getField('fixture')->get($fixture->newInstance());
   }
 
@@ -45,8 +45,8 @@ class FieldAccessTest extends FieldsTest {
   #  ['{ private $fixture; }'],
   #  ['{ protected $fixture; }']
   #])]
-  public function cannot_write_non_public($declaration, $modifiers= '') {
-    $fixture= $this->type($declaration, $modifiers);
+  public function cannot_write_non_public($declaration) {
+    $fixture= $this->type($declaration);
     $fixture->getField('fixture')->set($fixture->newInstance(), 'Test');
   }
 

@@ -154,17 +154,17 @@ class BrokenAnnotationTest extends TestCase {
     $this->parse('#[@value(AnnotationParsingTest::$internal)]');
   }
 
-  #[@test, @expect(['class' => ClassFormatException::class, 'withMessage' => '/In `.+`: Syntax error/i'])]
+  #[@test, @expect(['class' => ClassFormatException::class, 'withMessage' => '/In `.+`: (Syntax error|Unmatched)/i'])]
   public function function_without_braces() {
     $this->parse('#[@value(function)]');
   }
 
-  #[@test, @expect(['class' => ClassFormatException::class, 'withMessage' => '/In `.+`: Syntax error/i'])]
+  #[@test, @expect(['class' => ClassFormatException::class, 'withMessage' => '/In `.+`: (Syntax error|Unmatched)/i'])]
   public function function_without_body() {
     $this->parse('#[@value(function())]');
   }
 
-  #[@test, @expect(['class' => ClassFormatException::class, 'withMessage' => '/In `.+`: Syntax error/i'])]
+  #[@test, @expect(['class' => ClassFormatException::class, 'withMessage' => '/In `.+`: (Syntax error|Unclosed)/i'])]
   public function function_without_closing_curly() {
     $this->parse('#[@value(function() {)]');
   }

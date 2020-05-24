@@ -11,6 +11,6 @@ abstract class FieldsTest extends \unittest\TestCase {
    * @return lang.reflect.Field
    */
   protected function field($decl, $modifiers= '') {
-    return $this->type('{ '.$decl.' }', $modifiers)->getField('fixture');
+    return $this->type('{ '.$decl.' }', ['modifiers' => $modifiers])->getField('fixture');
   }
 }
