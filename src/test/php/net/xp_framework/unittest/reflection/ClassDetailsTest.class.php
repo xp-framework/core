@@ -233,27 +233,6 @@ class ClassDetailsTest extends \unittest\TestCase {
     $this->assertEquals('Creates a new question', $details[1]['newQuestion'][DETAIL_COMMENT]);
   }
 
-  /** @return [:var] */
-  protected function dummyDetails() {
-    return (new ClassParser())->parseDetails('<?php
-      class DummyDetails {
-        protected $test = true;
-
-        #[@test]
-        public function test() { }
-      }
-    ?>');
-  }
-
-  #[@test]
-  public function canBeCached() {
-    with (\xp::$meta[$fixture= 'DummyDetails']= $details= $this->dummyDetails()); {
-      $actual= \lang\XPClass::detailsForClass($fixture);
-      unset(\xp::$meta[$fixture]);
-    }
-    $this->assertEquals($details, $actual);
-  }
-
   #[@test]
   public function use_statements_evaluated() {
     $actual= (new ClassParser())->parseDetails('<?php namespace test;
