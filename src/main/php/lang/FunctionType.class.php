@@ -112,9 +112,10 @@ class FunctionType extends Type {
           foreach ($t->getTypes() as $u) {
             $union[]= Type::forName($u->getName());
           }
-          return new TypeUnion($union);
+          $param= new TypeUnion($union);
+        } else {
+          $param= Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
         }
-        $param= Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
         if (!$type->isAssignableFrom($param)) {
           return $false('Parameter #'.($i + 1).' not a '.$param->getName().' type: '.$type->getName());
         }
@@ -167,7 +168,7 @@ class FunctionType extends Type {
       }
     } else if (is_array($arg) && 2 === sizeof($arg)) {
       return $this->verifiedMethod($arg[0], $arg[1], $false, $return);
-    } else if (method_exists($arg, '__invoke')) {
+    } else if (is_object($arg) && method_exists($arg, '__invoke')) {
       $inv= new \ReflectionMethod($arg, '__invoke');
       if ($this->verify($inv, $this->signature, $false)) {
         return $return ? $inv->getClosure($arg) : true;
