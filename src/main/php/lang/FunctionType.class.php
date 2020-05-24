@@ -116,6 +116,7 @@ class FunctionType extends Type {
         } else {
           $param= Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
         }
+
         if (!$type->isAssignableFrom($param)) {
           return $false('Parameter #'.($i + 1).' not a '.$param->getName().' type: '.$type->getName());
         }
@@ -282,6 +283,7 @@ class FunctionType extends Type {
   /** Tests whether this type is assignable from another type */
   public function isAssignableFrom($type): bool {
     $t= $type instanceof Type ? $type : Type::forName($type);
+    if ($t === Type::$CALLABLE) return true;
     if (!($t instanceof self) || !$this->returns->isAssignableFrom($t->returns)) return false;
     if (null === $this->signature) return true;
     if (sizeof($t->signature) !== sizeof($this->signature)) return false;
