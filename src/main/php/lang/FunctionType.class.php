@@ -93,9 +93,8 @@ class FunctionType extends Type {
     // Verify signature
     foreach ($signature as $i => $type) {
       if (isset($details[DETAIL_ARGUMENTS][$i])) {
-        if (0 === substr_compare($details[DETAIL_ARGUMENTS][$i], '...', -3)) {
-          return true;  // No further checks necessary
-        }
+        if (0 === substr_compare($details[DETAIL_ARGUMENTS][$i], '...', -3)) return true;  // No further checks necessary
+
         $param= Type::forName($details[DETAIL_ARGUMENTS][$i]);
         if (!$type->isAssignableFrom($param)) {
           return $false('Parameter #'.($i + 1).' not a '.$param->getName().' type: '.$type->getName());
@@ -103,21 +102,14 @@ class FunctionType extends Type {
       } else if (!isset($params[$i])) {
         return $false('No parameter #'.($i + 1));
       } else {
-        $param= $params[$i];
-        if ($param->isVariadic()) {
-          return true;  // No further checks necessary
-        } else if ($param->isArray()) {
-          if (!$type->equals(Primitive::$ARRAY) && !$type instanceof ArrayType && !$type instanceof MapType) {
-            return $false('Parameter #'.($i + 1).' not an array type: '.$type->getName());
-          }
-        } else if ($param->isCallable()) {
-          if (!$type instanceof FunctionType) {
-            return $false('Parameter #'.($i + 1).' not a function type: '.$type->getName());
-          }
-        } else if (null !== ($class= $param->getClass())) {
-          if (!$type->isAssignableFrom(new XPClass($class))) {
-            return $false('Parameter #'.($i + 1).' not a '.$class->getName().': '.$type->getName());
-          }
+        if ($params[$i]->isVariadic()) return true;  // No further checks necessary
+
+        $t= $params[$i]->getType();
+        if (null === $t) continue;
+
+        $param= Type::forName($t->getName());
+        if (!$type->isAssignableFrom($param)) {
+          return $false('Parameter #'.($i + 1).' not a '.$param->getName().' type: '.$type->getName());
         }
       }
     }
