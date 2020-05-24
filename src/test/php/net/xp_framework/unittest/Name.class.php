@@ -1,6 +1,8 @@
 <?php namespace net\xp_framework\unittest;
 
-class Name implements \lang\Value {
+use lang\Value;
+
+class Name implements Value {
   private $value;
 
   /** @param string $value */
@@ -8,6 +10,9 @@ class Name implements \lang\Value {
 
   /** @return string */
   public function value() { return $this->value; }
+
+  /** @return static */
+  public function copy() { return new static($this->value); }
 
   /**
    * Compares this name

@@ -8,6 +8,7 @@ use lang\{
   IllegalStateException,
   MapType,
   Primitive,
+  TypeUnion,
   Type,
   Value,
   XPClass
@@ -17,14 +18,20 @@ use unittest\actions\RuntimeVersion;
 
 class MethodParametersTest extends MethodsTest {
 
-  #[@test]
-  public function parameter_type_defaults_to_var() {
-    $this->assertEquals(Type::$VAR, $this->method('public function fixture($param) { }')->getParameter(0)->getType());
+  /**
+   * Assertion helper
+   *
+   * @param  lang.Type $expected
+   * @param  lang.reflect.Parameter $param
+   */
+  private function assertParamType($expected, $param) {
+    $this->assertEquals($expected, $param->getType(), 'type');
+    $this->assertEquals($expected->getName(), $param->getTypeName(), 'name');
   }
 
   #[@test]
-  public function parameter_typeName_defaults_to_var() {
-    $this->assertEquals('var', $this->method('public function fixture($param) { }')->getParameter(0)->getTypeName());
+  public function parameter_type_defaults_to_var() {
+    $this->assertParamType(Type::$VAR, $this->method('public function fixture($param) { }')->getParameter(0));
   }
 
   #[@test, @values([
@@ -34,23 +41,20 @@ class MethodParametersTest extends MethodsTest {
   #  ['/** @param [:int] */', new MapType(Primitive::$INT)],
   #  ['/** @param lang.Value */', new XPClass(Value::class)],
   #  ['/** @param Value */', new XPClass(Value::class)],
-  #  ['/** @param \lang\Value */', new XPClass(Value::class)]
+  #  ['/** @param \lang\Value */', new XPClass(Value::class)],
+  #  ['/** @param string|int */', new TypeUnion([Primitive::$STRING, Primitive::$INT])],
   #])]
   public function parameter_type_determined_via_apidoc($apidoc, $type) {
-    $this->assertEquals($type, $this->method($apidoc.' public function fixture($param) { }')->getParameter(0)->getType());
+    $this->assertParamType($type, $this->method($apidoc.' public function fixture($param) { }')->getParameter(0));
   }
 
   #[@test, @values([
-  #  ['/** @param var */', 'var'],
-  #  ['/** @param bool */', 'bool'],
-  #  ['/** @param string[] */', 'string[]'],
-  #  ['/** @param [:int] */', '[:int]'],
-  #  ['/** @param lang.Value */', 'lang.Value'],
-  #  ['/** @param Value */', 'lang.Value'],
-  #  ['/** @param \lang\Value */', 'lang.Value']
+  #  ['/** @param string[] */', new ArrayType(Primitive::$STRING)],
+  #  ['/** @param [:int] */', new MapType(Primitive::$INT)],
+  #  ['', Type::$ARRAY],
   #])]
-  public function parameter_typeName_determined_via_apidoc($apidoc, $type) {
-    $this->assertEquals($type, $this->method($apidoc.' public function fixture($param) { }')->getParameter(0)->getTypeName());
+  public function specific_array_type_determined_via_apidoc_if_present($apidoc, $type) {
+    $this->assertParamType($type, $this->method($apidoc.' public function fixture(array $param) { }')->getParameter(0));
   }
 
   #[@test, @values([
@@ -59,7 +63,7 @@ class MethodParametersTest extends MethodsTest {
   #  ['Value', new XPClass(Value::class)]
   #])]
   public function parameter_type_determined_via_syntax($literal, $type) {
-    $this->assertEquals($type, $this->method('public function fixture('.$literal.' $param) { }')->getParameter(0)->getType());
+    $this->assertParamType($type, $this->method('public function fixture('.$literal.' $param) { }')->getParameter(0));
   }
 
   #[@test, @action(new RuntimeVersion('>=7.0')), @values([
@@ -69,7 +73,15 @@ class MethodParametersTest extends MethodsTest {
   #  ['float', Primitive::$FLOAT]
   #])]
   public function parameter_type_determined_via_scalar_syntax($literal, $type) {
-    $this->assertEquals($type, $this->method('public function fixture('.$literal.' $param) { }')->getParameter(0)->getType());
+    $this->assertParamType($type, $this->method('public function fixture('.$literal.' $param) { }')->getParameter(0));
+  }
+
+  #[@test, @action(new RuntimeVersion('>=8.0')), @values([
+  #  ['string|int', new TypeUnion([Primitive::$STRING, Primitive::$INT])],
+  #  ['string|false', new TypeUnion([Primitive::$STRING, Primitive::$BOOL])],
+  #])]
+  public function parameter_type_determined_via_union_syntax($literal, $type) {
+    $this->assertParamType($type, $this->method('public function fixture('.$literal.' $param) { }')->getParameter(0));
   }
 
   #[@test]
@@ -78,15 +90,65 @@ class MethodParametersTest extends MethodsTest {
     $this->assertEquals($fixture, $fixture->getMethod('fixture')->getParameter(0)->getType());
   }
 
+  #[@test]
+  public function self_parameter_typeName() {
+    $fixture= $this->type('{ public function fixture(self $param) { } }');
+    $this->assertEquals('self', $fixture->getMethod('fixture')->getParameter(0)->getTypeName());
+  }
+
+  #[@test]
+  public function self_parameter_type_via_apidoc() {
+    $fixture= $this->type('{ /** @param self $param */ public function fixture($param) { } }');
+    $this->assertEquals($fixture, $fixture->getMethod('fixture')->getParameter(0)->getType());
+  }
+
+  #[@test]
+  public function self_parameter_typeName_via_apidoc() {
+    $fixture= $this->type('{ /** @param self $param */ public function fixture($param) { } }');
+    $this->assertEquals('self', $fixture->getMethod('fixture')->getParameter(0)->getTypeName());
+  }
+
+  #[@test]
+  public function parent_parameter_type() {
+    $fixture= $this->type('{ public function fixture(parent $param) { } }', [
+      'extends' => [Name::class]
+    ]);
+    $this->assertEquals($fixture->getParentclass(), $fixture->getMethod('fixture')->getParameter(0)->getType());
+  }
+
+  #[@test]
+  public function parent_parameter_typeName() {
+    $fixture= $this->type('{ public function fixture(parent $param) { } }', [
+      'extends' => [Name::class]
+    ]);
+    $this->assertEquals('parent', $fixture->getMethod('fixture')->getParameter(0)->getTypeName());
+  }
+
+  #[@test]
+  public function parent_parameter_type_via_apidoc() {
+    $fixture= $this->type('{ /** @param parent $param */ public function fixture($param) { } }', [
+      'extends' => [Name::class]
+    ]);
+    $this->assertEquals($fixture->getParentclass(), $fixture->getMethod('fixture')->getParameter(0)->getType());
+  }
+
+  #[@test]
+  public function parent_parameter_typeName_via_apidoc() {
+    $fixture= $this->type('{ /** @param parent $param */ public function fixture($param) { } }', [
+      'extends' => [Name::class]
+    ]);
+    $this->assertEquals('parent', $fixture->getMethod('fixture')->getParameter(0)->getTypeName());
+  }
+
   #[@test, @expect(ClassFormatException::class)]
   public function nonexistant_type_class_parameter() {
     $this->method('public function fixture(UnknownTypeRestriction $param) { }')->getParameter(0)->getType();
   }
 
-  #[@tes]
+  #[@test]
   public function nonexistant_name_class_parameter() {
     $this->assertEquals(
-      'net\xp_framework\unittest\reflection\UnknownTypeRestriction',
+      'net.xp_framework.unittest.reflection.UnknownTypeRestriction',
       $this->method('public function fixture(UnknownTypeRestriction $param) { }')->getParameter(0)->getTypeName()
     );
   }
@@ -107,8 +169,7 @@ class MethodParametersTest extends MethodsTest {
 
   #[@test]
   public function unrestricted_parameter_with_apidoc() {
-    $this->assertEquals(
-      null,
+    $this->assertNull(
       $this->method('/** @param lang.Value */ public function fixture($param) { }')->getParameter(0)->getTypeRestriction()
     );
   }
