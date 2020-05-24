@@ -577,12 +577,14 @@ class XPClass extends Type {
    * @return  bool
    */
   public function hasAnnotation($name, $key= null): bool {
-    $details= self::detailsForClass($this->reflect());
-    
-    return $details && ($key 
-      ? array_key_exists($key, $details['class'][DETAIL_ANNOTATIONS][$name] ?? []) 
-      : array_key_exists($name, $details['class'][DETAIL_ANNOTATIONS] ?? [])
-    );
+    $r= self::detailsForClass($this->reflect())['class'][DETAIL_ANNOTATIONS] ?? [];
+    self::mergeAttributes($r, $this->_reflect);
+
+    if ($key) {
+      return is_array($r[$name] ?? null) && array_key_exists($key, $r[$name]);
+    } else {
+      return array_key_exists($name, $r);
+    }
   }
 
   /**
@@ -594,24 +596,24 @@ class XPClass extends Type {
    * @throws  lang.ElementNotFoundException
    */
   public function getAnnotation($name, $key= null) {
-    $details= self::detailsForClass($this->reflect());
-    if (!$details || !($key 
-      ? array_key_exists($key, $details['class'][DETAIL_ANNOTATIONS][$name] ?? []) 
-      : array_key_exists($name, $details['class'][DETAIL_ANNOTATIONS] ?? [])
-    )) {
-      throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
+    $r= self::detailsForClass($this->reflect())['class'][DETAIL_ANNOTATIONS] ?? [];
+    self::mergeAttributes($r, $this->_reflect);
+
+    if ($key) {
+      if (is_array($r[$name] ?? null) && array_key_exists($key, $r[$name])) return $r[$name][$key];
+    } else {
+      if (array_key_exists($name, $r)) return $r[$name];
     }
 
-    return ($key 
-      ? $details['class'][DETAIL_ANNOTATIONS][$name][$key] 
-      : $details['class'][DETAIL_ANNOTATIONS][$name]
-    );
+    throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
   }
 
   /** Retrieve whether a method has annotations */
   public function hasAnnotations(): bool {
-    $details= self::detailsForClass($this->reflect());
-    return $details ? !empty($details['class'][DETAIL_ANNOTATIONS]) : false;
+    $r= self::detailsForClass($this->reflect())['class'][DETAIL_ANNOTATIONS] ?? [];
+    self::mergeAttributes($r, $this->_reflect);
+
+    return !empty($r);
   }
 
   /**
@@ -620,8 +622,10 @@ class XPClass extends Type {
    * @return  array annotations
    */
   public function getAnnotations() {
-    $details= self::detailsForClass($this->reflect());
-    return $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
+    $r= self::detailsForClass($this->reflect())['class'][DETAIL_ANNOTATIONS] ?? [];
+    self::mergeAttributes($r, $this->_reflect);
+
+    return $r;
   }
   
   /** Retrieve the class loader a class was loaded with */
@@ -688,16 +692,10 @@ class XPClass extends Type {
 
     // Retrieve class' sourcecode
     $cl= self::_classLoaderFor($name);
-    if (!$cl || !($bytes= $cl->loadClassBytes($name))) {
-      $r= [];
-      self::mergeAttributes($r, $class);
-      return ['class' => [DETAIL_ANNOTATIONS => $r]];
-    }
+    if (!$cl || !($bytes= $cl->loadClassBytes($name))) return [];
 
     $parser ?? $parser= new \lang\reflect\ClassParser();
-    $details= $parser->parseDetails($bytes, $name);
-    self::mergeAttributes($details['class'][DETAIL_ANNOTATIONS], $class);
-    return \xp::$meta[$name]= $details;
+    return \xp::$meta[$name]= $parser->parseDetails($bytes, $name);
   }
 
   /**
@@ -710,21 +708,14 @@ class XPClass extends Type {
    */
   public static function detailsForMethod($class, $method) {
     $details= self::detailsForClass($class);
-    if (isset($details[1][$method])) {
-      self::mergeAttributes($details[1][$method][DETAIL_ANNOTATIONS], $class->getMethod($method));
-      return $details[1][$method];
-    }
+    if (isset($details[1][$method])) return $details[1][$method];
+
     foreach ($class->getTraits() as $trait) {
       $details= self::detailsForClass($trait);
-      if (isset($details[1][$method])) {
-        self::mergeAttributes($details[1][$method][DETAIL_ANNOTATIONS], $class->getMethod($method));
-        return $details[1][$method];
-      }
+      if (isset($details[1][$method])) return $details[1][$method];
     }
 
-    $r= [];
-    self::mergeAttributes($r, $class->getMethod($method));
-    return [DETAIL_ANNOTATIONS => $r];
+    return [];
   }
 
   /**
@@ -737,21 +728,14 @@ class XPClass extends Type {
    */
   public static function detailsForField($class, $field) {
     $details= self::detailsForClass($class);
-    if (isset($details[0][$field])) {
-      self::mergeAttributes($details[1][$field][DETAIL_ANNOTATIONS], $class->getProperty($field));
-      return $details[0][$field];
-    }
+    if (isset($details[0][$field])) return $details[0][$field];
+
     foreach ($class->getTraits() as $trait) {
       $details= self::detailsForClass($trait);
-      if (isset($details[0][$field])) {
-        self::mergeAttributes($details[1][$field][DETAIL_ANNOTATIONS], $class->getProperty($field));
-        return $details[0][$field];
-      }
+      if (isset($details[0][$field])) return $details[0][$field];
     }
 
-    $r= [];
-    self::mergeAttributes($r, $class->getProperty($field));
-    return [DETAIL_ANNOTATIONS => $r];
+    return [];
   }
 
   /**

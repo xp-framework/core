@@ -259,12 +259,13 @@ class Routine implements Value {
    * @return bool
    */
   public function hasAnnotation($name, $key= null): bool {
-    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $r= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName())[DETAIL_ANNOTATIONS] ?? [];
+    XPClass::mergeAttributes($r, $this->_reflect);
+
     if ($key) {
-      $a= $details[DETAIL_ANNOTATIONS][$name] ?? null;
-      return is_array($a) && array_key_exists($key, $a);
+      return is_array($r[$name] ?? null) && array_key_exists($key, $r[$name]);
     } else {
-      return array_key_exists($name, $details[DETAIL_ANNOTATIONS] ?? []);
+      return array_key_exists($name, $r);
     }
   }
 
@@ -277,12 +278,13 @@ class Routine implements Value {
    * @throws lang.ElementNotFoundException
    */
   public function getAnnotation($name, $key= null) {
-    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $r= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName())[DETAIL_ANNOTATIONS] ?? [];
+    XPClass::mergeAttributes($r, $this->_reflect);
+
     if ($key) {
-      $a= $details[DETAIL_ANNOTATIONS][$name] ?? null;
-      if (is_array($a) && array_key_exists($key, $a)) return $a[$key];
+      if (is_array($r[$name] ?? null) && array_key_exists($key, $r[$name])) return $r[$name][$key];
     } else {
-      if (array_key_exists($name, $details[DETAIL_ANNOTATIONS] ?? [])) return $details[DETAIL_ANNOTATIONS][$name];
+      if (array_key_exists($name, $r)) return $r[$name];
     }
 
     throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
@@ -290,8 +292,9 @@ class Routine implements Value {
 
   /** Retrieve whether a method has annotations */
   public function hasAnnotations(): bool {
-    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
-    return $details ? !empty($details[DETAIL_ANNOTATIONS]) : false;
+    $r= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName())[DETAIL_ANNOTATIONS] ?? [];
+    XPClass::mergeAttributes($r, $this->_reflect);
+    return !empty($r);
   }
 
   /**
@@ -300,8 +303,9 @@ class Routine implements Value {
    * @return [:var] annotations
    */
   public function getAnnotations() {
-    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
-    return $details ? $details[DETAIL_ANNOTATIONS] : [];
+    $r= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName())[DETAIL_ANNOTATIONS] ?? [];
+    XPClass::mergeAttributes($r, $this->_reflect);
+    return $r;
   }
   
   /** 
