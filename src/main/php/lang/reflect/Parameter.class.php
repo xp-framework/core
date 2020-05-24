@@ -193,7 +193,8 @@ class Parameter {
    * @return  bool
    */
   public function hasAnnotation($name, $key= null) {
-    $r= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? [];
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
+    $r= $details[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? [];
     XPClass::mergeAttributes($r, $this->_reflect);
 
     if ($key) {
@@ -212,7 +213,8 @@ class Parameter {
    * @throws  lang.ElementNotFoundException
    */
   public function getAnnotation($name, $key= null) {
-    $r= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? [];
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
+    $r= $details[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? [];
     XPClass::mergeAttributes($r, $this->_reflect);
 
     if ($key) {
@@ -230,7 +232,8 @@ class Parameter {
    * @return  bool
    */
   public function hasAnnotations() {
-    $r= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? [];
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
+    $r= $details[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? [];
     XPClass::mergeAttributes($r, $this->_reflect);
     return !empty($r);
   }
@@ -241,7 +244,8 @@ class Parameter {
    * @return  var[] annotations
    */
   public function getAnnotations() {
-    $r= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? [];
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
+    $r= $details[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? [];
     XPClass::mergeAttributes($r, $this->_reflect);
     return $r;
   }

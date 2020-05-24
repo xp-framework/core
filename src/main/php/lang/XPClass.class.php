@@ -577,7 +577,8 @@ class XPClass extends Type {
    * @return  bool
    */
   public function hasAnnotation($name, $key= null): bool {
-    $r= self::detailsForClass($this->reflect())['class'][DETAIL_ANNOTATIONS] ?? [];
+    $details= self::detailsForClass($this->reflect());
+    $r= $details['class'][DETAIL_ANNOTATIONS] ?? [];
     self::mergeAttributes($r, $this->_reflect);
 
     if ($key) {
@@ -596,7 +597,8 @@ class XPClass extends Type {
    * @throws  lang.ElementNotFoundException
    */
   public function getAnnotation($name, $key= null) {
-    $r= self::detailsForClass($this->reflect())['class'][DETAIL_ANNOTATIONS] ?? [];
+    $details= self::detailsForClass($this->reflect());
+    $r= $details['class'][DETAIL_ANNOTATIONS] ?? [];
     self::mergeAttributes($r, $this->_reflect);
 
     if ($key) {
@@ -610,7 +612,8 @@ class XPClass extends Type {
 
   /** Retrieve whether a method has annotations */
   public function hasAnnotations(): bool {
-    $r= self::detailsForClass($this->reflect())['class'][DETAIL_ANNOTATIONS] ?? [];
+    $details= self::detailsForClass($this->reflect());
+    $r= $details['class'][DETAIL_ANNOTATIONS] ?? [];
     self::mergeAttributes($r, $this->_reflect);
 
     return !empty($r);
@@ -622,7 +625,8 @@ class XPClass extends Type {
    * @return  array annotations
    */
   public function getAnnotations() {
-    $r= self::detailsForClass($this->reflect())['class'][DETAIL_ANNOTATIONS] ?? [];
+    $details= self::detailsForClass($this->reflect());
+    $r= $details['class'][DETAIL_ANNOTATIONS] ?? [];
     self::mergeAttributes($r, $this->_reflect);
 
     return $r;

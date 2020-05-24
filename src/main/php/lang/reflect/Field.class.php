@@ -90,7 +90,8 @@ class Field implements Value {
    * @return  bool
    */
   public function hasAnnotation($name, $key= null): bool {
-    $r= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName())[DETAIL_ANNOTATIONS] ?? [];
+    $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $r= $details[DETAIL_ANNOTATIONS] ?? [];
     XPClass::mergeAttributes($r, $this->_reflect);
 
     if ($key) {
@@ -109,7 +110,8 @@ class Field implements Value {
    * @throws  lang.ElementNotFoundException
    */
   public function getAnnotation($name, $key= null) {
-    $r= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName())[DETAIL_ANNOTATIONS] ?? [];
+    $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $r= $details[DETAIL_ANNOTATIONS] ?? [];
     XPClass::mergeAttributes($r, $this->_reflect);
 
     if ($key) {
@@ -123,7 +125,8 @@ class Field implements Value {
   
   /** Retrieve whether this field has annotations */
   public function hasAnnotations(): bool {
-    $r= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName())[DETAIL_ANNOTATIONS] ?? [];
+    $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $r= $details[DETAIL_ANNOTATIONS] ?? [];
     XPClass::mergeAttributes($r, $this->_reflect);
     return !empty($r);
   }
@@ -134,7 +137,8 @@ class Field implements Value {
    * @return [:var] annotations
    */
   public function getAnnotations() {
-    $r= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName())[DETAIL_ANNOTATIONS] ?? [];
+    $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $r= $details[DETAIL_ANNOTATIONS] ?? [];
     XPClass::mergeAttributes($r, $this->_reflect);
     return $r;
   }
