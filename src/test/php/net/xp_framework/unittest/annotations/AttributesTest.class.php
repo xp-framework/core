@@ -182,8 +182,8 @@ class AttributesTest extends TestCase {
     ');
 
     $m= $t->getMethod('fixture');
-    $this->assertNull($m->getAnnotation('unittest\\Test'));
-    $this->assertEquals([new Name('A'), new Name('B')], $m->getAnnotation('unittest\\Values'));
-    $this->assertTrue($m->getAnnotation('unittest\\Expect')(new ElementNotFoundException('Test failed')));
+    $this->assertNull($m->getAnnotation('unittest.Test'));
+    $this->assertEquals([new Name('A'), new Name('B')], $m->getAnnotation('unittest.Values'));
+    $this->assertTrue($m->getAnnotation('unittest.Expect')(new ElementNotFoundException('Test failed')));
   }
 }
