@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.1.0 / 2020-05-31
+
 ### Features
 
 * Improved performance of type lookups for parameters and return types;
