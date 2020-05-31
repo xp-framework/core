@@ -193,6 +193,7 @@ class Parameter {
    * @return  bool
    */
   public function hasAnnotation($name, $key= null) {
+    $name= strtr($name, '.', '\\');
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
     $r= $details[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? [];
     XPClass::mergeAttributes($r, $this->_reflect);
@@ -213,6 +214,7 @@ class Parameter {
    * @throws  lang.ElementNotFoundException
    */
   public function getAnnotation($name, $key= null) {
+    $name= strtr($name, '.', '\\');
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
     $r= $details[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? [];
     XPClass::mergeAttributes($r, $this->_reflect);

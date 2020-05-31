@@ -577,6 +577,7 @@ class XPClass extends Type {
    * @return  bool
    */
   public function hasAnnotation($name, $key= null): bool {
+    $name= strtr($name, '.', '\\');
     $details= self::detailsForClass($this->reflect());
     $r= $details['class'][DETAIL_ANNOTATIONS] ?? [];
     self::mergeAttributes($r, $this->_reflect);
@@ -597,6 +598,7 @@ class XPClass extends Type {
    * @throws  lang.ElementNotFoundException
    */
   public function getAnnotation($name, $key= null) {
+    $name= strtr($name, '.', '\\');
     $details= self::detailsForClass($this->reflect());
     $r= $details['class'][DETAIL_ANNOTATIONS] ?? [];
     self::mergeAttributes($r, $this->_reflect);

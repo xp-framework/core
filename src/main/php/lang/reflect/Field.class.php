@@ -90,6 +90,7 @@ class Field implements Value {
    * @return  bool
    */
   public function hasAnnotation($name, $key= null): bool {
+    $name= strtr($name, '.', '\\');
     $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     $r= $details[DETAIL_ANNOTATIONS] ?? [];
     XPClass::mergeAttributes($r, $this->_reflect);
@@ -110,6 +111,7 @@ class Field implements Value {
    * @throws  lang.ElementNotFoundException
    */
   public function getAnnotation($name, $key= null) {
+    $name= strtr($name, '.', '\\');
     $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     $r= $details[DETAIL_ANNOTATIONS] ?? [];
     XPClass::mergeAttributes($r, $this->_reflect);

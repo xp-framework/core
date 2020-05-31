@@ -259,6 +259,7 @@ class Routine implements Value {
    * @return bool
    */
   public function hasAnnotation($name, $key= null): bool {
+    $name= strtr($name, '.', '\\');
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     $r= $details[DETAIL_ANNOTATIONS] ?? [];
     XPClass::mergeAttributes($r, $this->_reflect);
@@ -279,6 +280,7 @@ class Routine implements Value {
    * @throws lang.ElementNotFoundException
    */
   public function getAnnotation($name, $key= null) {
+    $name= strtr($name, '.', '\\');
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     $r= $details[DETAIL_ANNOTATIONS] ?? [];
     XPClass::mergeAttributes($r, $this->_reflect);
