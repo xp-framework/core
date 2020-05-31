@@ -293,7 +293,7 @@ class ClassParser {
    * @return  [:var]
    * @throws  lang.ClassFormatException
    */
-  public function parseAnnotations($bytes, $context, $imports= [], $line= -1, $state= 0) {
+  public function parseAnnotations($bytes, $context, $imports= [], $line= -1) {
     static $states= [
       'annotation', 'annotation name', 'annotation value',
       'annotation map key', 'annotation map value',
@@ -306,7 +306,7 @@ class ClassParser {
 
     // Parse tokens
     try {
-      for ($i= 1, $s= sizeof($tokens); $i < $s; $i++) {
+      for ($state= 0, $i= 1, $s= sizeof($tokens); $i < $s; $i++) {
         if (T_WHITESPACE === $tokens[$i][0]) {
           continue;
         } else if (0 === $state) {             // Initial state, expecting @attr or @$param: attr
