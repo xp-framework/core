@@ -15,6 +15,9 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed imports not being resolved inside annotations with functions and
+  closures as values.
+  (@thekid)
 * Merged PR #242: Use ReflectionType API instead of deprecated isArray and
   isCallable on parameters - for PHP 8 compatibility (see php/php-src#5209).
   (@thekid)

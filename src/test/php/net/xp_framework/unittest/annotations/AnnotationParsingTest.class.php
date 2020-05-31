@@ -505,4 +505,19 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
     ])]');
     $this->assertInstanceOf('Closure[]', $annotation[0]['values']);
   }
+
+  #[@test]
+  public function short_closure() {
+    $annotation= $this->parse('#[@value(fn() => true)]');
+    $this->assertInstanceOf('Closure', $annotation[0]['value']);
+  }
+
+  #[@test, @values([
+  #  '#[@value(fn() => new Name("Test"))]',
+  #  '#[@value(function() { return new Name("Test"); })]',
+  #])]
+  public function imports_in_closures($closure) {
+    $annotation= $this->parse($closure, ['Name' => 'net.xp_framework.unittest.annotations.Name']);
+    $this->assertInstanceOf(Name::class, $annotation[0]['value']());
+  }
 }

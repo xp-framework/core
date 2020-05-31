@@ -151,7 +151,11 @@ class ClassParser {
     } else if (T_FN === $token || T_STRING === $token && 'fn' === $tokens[$i][1]) {
       $s= sizeof($tokens);
       $b= 0;
-      $code= 'function';
+      $code= '';
+      foreach ($imports as $name => $qualified) {
+        $code.= 'use '.strtr($qualified, '.', '\\').' as '.$name.';';
+      }
+      $code.= 'return function';
       for ($i++; $i < $s; $i++) {
         if ('(' === $tokens[$i]) {
           $b++;
@@ -191,10 +195,10 @@ class ClassParser {
         }
       }
       $i--;
-      $code.= '; }';
+      $code.= '; };';
 
       try {
-        $func= eval('return '.$code.';');
+        $func= eval($code);
       } catch (\ParseError $e) {
         throw new IllegalStateException('In `'.$code.'`: '.$e->getMessage());
       }
@@ -238,7 +242,11 @@ class ClassParser {
       return $class->newInstance(...$args);
     } else if (T_FUNCTION === $token) {
       $b= 0;
-      $code= 'function';
+      $code= '';
+      foreach ($imports as $name => $qualified) {
+        $code.= 'use '.strtr($qualified, '.', '\\').' as '.$name.';';
+      }
+      $code.= 'return function';
       for ($i++, $s= sizeof($tokens); $i < $s; $i++) {
         if ('{' === $tokens[$i]) {
           $b++;
@@ -252,7 +260,7 @@ class ClassParser {
         }
       }
       try {
-        $func= eval('return '.$code.';');
+        $func= eval($code.';');
       } catch (\ParseError $e) {
         throw new IllegalStateException('In `'.$code.'`: '.$e->getMessage());
       }
