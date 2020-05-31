@@ -1,11 +1,17 @@
 <?php namespace net\xp_framework\unittest\annotations;
 
-use lang\{XPClass, ElementNotFoundException};
+use lang\{XPClass, DynamicClassLoader, ElementNotFoundException};
 use unittest\TestCase;
 use unittest\actions\RuntimeVersion;
 
 #[@action(new RuntimeVersion('>=8.0.0-dev'))]
 class AttributesTest extends TestCase {
+  private $cl;
+
+  /** @return void */
+  public function setUp() {
+    $this->cl= DynamicClassLoader::instanceFor(self::class);
+  }
 
   /**
    * Declares a type from source
@@ -19,11 +25,12 @@ class AttributesTest extends TestCase {
 
     $name= '__A'.(++$u);
     if (null === $namespace) {
-      eval(sprintf($source, $name));
-      return new XPClass($name);
+      $this->cl->setClassBytes($name, sprintf($source, $name));
+      return $this->cl->loadClass($name);
     } else {
-      eval('namespace '.$namespace.';'.sprintf($source, $name));
-      return new XPClass($namespace.'\\'.$name);
+      $qualified= $namespace.'.'.$name;
+      $this->cl->setClassBytes($qualified, 'namespace '.$namespace.';'.sprintf($source, $name));
+      return $this->cl->loadClass($qualified);
     }
   }
 
@@ -116,6 +123,18 @@ class AttributesTest extends TestCase {
   }
 
   #[@test]
+  public function qualified() {
+    $t= $this->type('<<annotations\\Test>> class %s { }', 'unittest');
+    $this->assertAnnotations(['unittest\\annotations\\Test' => null], $t);
+  }
+
+  #[@test]
+  public function fully_qualified() {
+    $t= $this->type('<<\\unittest\\annotations\\Test>> class %s { }', 'com\\example');
+    $this->assertAnnotations(['unittest\\annotations\\Test' => null], $t);
+  }
+
+  #[@test]
   public function lowercase_annotations_are_not_resolved() {
     $t= $this->type('<<test>> class %s { }', 'com\\example');
     $this->assertAnnotations(['test' => null], $t);
@@ -131,5 +150,40 @@ class AttributesTest extends TestCase {
   public function with_values() {
     $t= $this->type('<<Product("PHP", "8.0.0")>> class %s { }');
     $this->assertAnnotations(['Product' => ['PHP', '8.0.0']], $t);
+  }
+
+  #[@test, @values([
+  #  'Values',
+  #  'unittest\\Values',
+  #  '\\unittest\\Values',
+  #])]
+  public function with_non_static_value_inline($annotation) {
+    $t= $this->type('
+      use net\\xp_framework\\unittest\\annotations\\Name;
+      use unittest\\{Test, Values, Expect};
+      use lang\\ElementNotFoundException;
+
+      class %s {
+
+        <<Test>>
+        <<'.$annotation.'(
+          #[
+          #  new Name("A"),
+          #  new Name("B"),
+          #]
+        )>>
+        <<Expect(
+          #fn($e) => $e instanceof ElementNotFoundException && strstr($e->getMessage(), "fail");
+        )>>
+        public function fixture($value) {
+          // TBI
+        }
+      }
+    ');
+
+    $m= $t->getMethod('fixture');
+    $this->assertNull($m->getAnnotation('unittest\\Test'));
+    $this->assertEquals([new Name('A'), new Name('B')], $m->getAnnotation('unittest\\Values'));
+    $this->assertTrue($m->getAnnotation('unittest\\Expect')(new ElementNotFoundException('Test failed')));
   }
 }
