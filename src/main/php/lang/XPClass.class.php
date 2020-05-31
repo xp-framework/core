@@ -671,13 +671,11 @@ class XPClass extends Type {
         $value= $args;
       }
 
+      // Only resolve uppercase attributes
       $name= $attribute->getName();
       $p= strrpos($name, '\\');
-      if (false === $p || $name[$p + 1] <= 'Z') {
-        $details[$name]= $value;
-      } else {
-        $details[substr($name, $p + 1)]= $value;
-      }
+      $l= false === $p || $name[$p + 1] <= 'Z' ? $name : substr($name, $p + 1);
+      $details[$l] ?? $details[$l]= $value;
     }
   }
   
