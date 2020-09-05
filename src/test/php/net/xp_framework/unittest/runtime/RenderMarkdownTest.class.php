@@ -112,7 +112,7 @@ class RenderMarkdownTest extends \unittest\TestCase {
 
   #[@test, @values(['- Hello', '+ Hello', '* Hello'])]
   public function li($variation) {
-    $this->assertMarkdown('<li symbol="'.$variation{0}.'">Hello</li>', $variation);
+    $this->assertMarkdown('<li symbol="'.$variation[0].'">Hello</li>', $variation);
   }
 
   #[@test]

@@ -97,7 +97,7 @@ class ErrorsTest extends TestCase {
   #[@test, @expect(IndexOutOfBoundsException::class)]
   public function undefined_string_offset_yields_ioobe() {
     $a= '';
-    $a{0};
+    $a[0];
   }
 
   #[@test, @expect(Error::class)]
