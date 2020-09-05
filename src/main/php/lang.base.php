@@ -127,6 +127,7 @@ function __error($code, $msg, $file, $line) {
     throw new \lang\IllegalArgumentException($msg);
   } else if ((
     0 === strncmp($msg, 'Undefined offset', 16) ||
+    0 === strncmp($msg, 'Undefined array', 15) ||
     0 === strncmp($msg, 'Undefined index', 15) ||
     0 === strncmp($msg, 'Uninitialized string', 20)
   )) {
