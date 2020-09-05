@@ -137,13 +137,10 @@ class GenericTypes {
           continue;
         } else if (T_CLASS === $state[0]) {
           if (T_EXTENDS === $tokens[$i][0]) {
-            $i+= 2;
             $parent= '';
-            while ((T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0] || T_NAME_QUALIFIED === $tokens[$i][0]) && $i < $s) {
+            for ($i+= 2; $i < $s, !(';' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]); $i++) {
               $parent.= $tokens[$i][1];
-              $i++;
             }
-            $i--;
             if (isset($annotations['generic']['parent'])) {
               $xargs= [];
               foreach (explode(',', $annotations['generic']['parent']) as $j => $placeholder) {
@@ -293,7 +290,12 @@ class GenericTypes {
             continue;
           }
         } else if (5 === $state[0]) {             // Implements (class), Extends (interface)
-          if (T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0]) {
+          if ('{' === $tokens[$i]) {
+            array_shift($state);
+            array_shift($state);
+            $i--;
+            continue;
+          } else if (T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0]) {
             $rel= '';
             while ((T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0]) && $i < $s) {
               $rel.= $tokens[$i][1];
@@ -301,23 +303,26 @@ class GenericTypes {
             }
             $i--;
             '\\' === $rel[0] || $rel= isset($imports[$rel]) ? $imports[$rel] : $namespace.'\\'.$rel;
-            if (isset($annotation[$counter])) {
-              $iargs= [];
-              foreach (explode(',', $annotation[$counter]) as $j => $placeholder) {
-                $iargs[]= Type::forName(strtr(ltrim($placeholder), $placeholders));
-              }
-              $src.= '\\'.$this->newType0(new XPClass(new \ReflectionClass($rel)), $iargs);
-            } else {
-              $src.= $rel;
-            }
-            $counter++;
-            continue;
-          } else if ('{' === $tokens[$i][0]) {
-            array_shift($state);
-            array_shift($state);
-            $i--;
+          } else if (T_NAME_QUALIFIED === $tokens[$i][0]) {
+            $rel= isset($imports[$tokens[$i][1]]) ? $imports[$tokens[$i][1]] : $namespace.'\\'.$tokens[$i][1];
+          } else if (T_NAME_FULLY_QUALIFIED === $tokens[$i][0]) {
+            $rel= $tokens[$i][1];
+          } else {
+            $src.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
             continue;
           }
+
+          if (isset($annotation[$counter])) {
+            $iargs= [];
+            foreach (explode(',', $annotation[$counter]) as $j => $placeholder) {
+              $iargs[]= Type::forName(strtr(ltrim($placeholder), $placeholders));
+            }
+            $src.= '\\'.$this->newType0(new XPClass(new \ReflectionClass($rel)), $iargs);
+          } else {
+            $src.= $rel;
+          }
+          $counter++;
+          continue;
         }
                   
         $src.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
