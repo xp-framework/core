@@ -102,12 +102,11 @@ class GenericTypes {
             $src.= $tokens[$i][1].' '.$decl;
             array_unshift($state, $tokens[$i][0]);
           } else if (T_USE === $tokens[$i][0]) {
-            $i+= 2;
             $use= '';
-            while ((T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0] || T_NAME_QUALIFIED === $tokens[$i][0]) && $i < $s) {
+            for ($i+= 2; $i < $s, !(';' === $tokens[$i] || '{' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]); $i++) {
               $use.= $tokens[$i][1];
-              $i++;
             }
+
             if ('{' === $tokens[$i]) {
               $import= $use;
               $i++;
@@ -127,6 +126,9 @@ class GenericTypes {
                 }
                 $i++;
               }
+            } else if (T_AS === $tokens[++$i][0]) {
+              $imports[$tokens[$i + 2][1]]= strtr($use, '\\', '.');
+              $src.= 'use '.$use.' as '.$tokens[$i + 2][1].';';
             } else {
               $imports[substr($use, strrpos($use, '\\')+ 1)]= $use;
               $src.= 'use '.$use.';';

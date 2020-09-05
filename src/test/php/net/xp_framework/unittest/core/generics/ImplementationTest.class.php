@@ -1,10 +1,6 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
-use lang\Type;
-use lang\Primitive;
-use lang\XPClass;
-use lang\ElementNotFoundException;
-use lang\IllegalArgumentException;
+use lang\{ElementNotFoundException, IllegalArgumentException, Primitive, Type, XPClass};
 
 /**
  * TestCase for instance reflection
@@ -132,5 +128,11 @@ class ImplementationTest extends \unittest\TestCase {
   public function type_variable_available($expect, $value) {
     $fixture= create('new net.xp_framework.unittest.core.generics.Unserializer<string>');
     $this->assertEquals($expect, $fixture->newInstance($value));
+  }
+
+  #[@test, @expect(ElementNotFoundException::class)]
+  public function type_aliasing() {
+    $fixture= create('new net.xp_framework.unittest.core.generics.TypeDictionary<string>');
+    $fixture->get(typeof($this));
   }
 }
