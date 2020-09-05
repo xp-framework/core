@@ -450,12 +450,8 @@ class ClassParser {
     for ($i= 0, $s= sizeof($tokens); $i < $s; $i++) {
       switch ($tokens[$i][0]) {
         case T_NAMESPACE:
-          $i++;
-          for (
-            $i+= 2;
-            (T_NS_SEPARATOR === $tokens[$i][0] || T_STRING === $tokens[$i][0] || T_NAME_QUALIFIED === $tokens[$i][0]) && $i < $s;
-            ++$i
-          ) {
+          $namespace= '';
+          for ($i+= 2; $i < $s, !(';' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]); $i++) {
             $namespace.= $tokens[$i][1];
           }
           $namespace.= '\\';
@@ -465,11 +461,7 @@ class ClassParser {
           if (isset($details['class'])) break;  // Inside class, e.g. function() use(...) {}
 
           $type= '';
-          for (
-            $i+= 2;
-            (T_NS_SEPARATOR === $tokens[$i][0] || T_STRING === $tokens[$i][0] || T_NAME_QUALIFIED === $tokens[$i][0]) && $i < $s;
-            ++$i
-          ) {
+          for ($i+= 2; $i < $s, !(';' === $tokens[$i] || '{' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]); $i++) {
             $type.= $tokens[$i][1];
           }
 
@@ -492,9 +484,10 @@ class ClassParser {
                 $group.= $tokens[$i][1];
               }
             }
+          } else if (T_AS === $tokens[++$i][0]) {
+            $imports[$tokens[$i + 2][1]]= strtr($type, '\\', '.');
           } else {
-            $alias= (T_AS === $tokens[++$i][0]) ? $tokens[$i + 2][1] : substr($type, strrpos($type, '\\')+ 1);
-            $imports[$alias]= strtr($type, '\\', '.');
+            $imports[substr($type, strrpos($type, '\\')+ 1)]= strtr($type, '\\', '.');
           }
           break;
 
