@@ -302,9 +302,9 @@ class GenericTypes {
               $i++;
             }
             $i--;
-            '\\' === $rel[0] || $rel= isset($imports[$rel]) ? $imports[$rel] : $namespace.'\\'.$rel;
+            '\\' === $rel[0] || $rel= isset($imports[$rel]) ? $imports[$rel] : '\\'.$namespace.'\\'.$rel;
           } else if (T_NAME_QUALIFIED === $tokens[$i][0]) {
-            $rel= isset($imports[$tokens[$i][1]]) ? $imports[$tokens[$i][1]] : $namespace.'\\'.$tokens[$i][1];
+            $rel= isset($imports[$tokens[$i][1]]) ? $imports[$tokens[$i][1]] : '\\'.$namespace.'\\'.$tokens[$i][1];
           } else if (T_NAME_FULLY_QUALIFIED === $tokens[$i][0]) {
             $rel= $tokens[$i][1];
           } else {
