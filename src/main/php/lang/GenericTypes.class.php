@@ -104,7 +104,7 @@ class GenericTypes {
           } else if (T_USE === $tokens[$i][0]) {
             $i+= 2;
             $use= '';
-            while ((T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0]) && $i < $s) {
+            while ((T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0] || T_NAME_QUALIFIED === $tokens[$i][0]) && $i < $s) {
               $use.= $tokens[$i][1];
               $i++;
             }
@@ -137,7 +137,7 @@ class GenericTypes {
           if (T_EXTENDS === $tokens[$i][0]) {
             $i+= 2;
             $parent= '';
-            while ((T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0]) && $i < $s) {
+            while ((T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0] || T_NAME_QUALIFIED === $tokens[$i][0]) && $i < $s) {
               $parent.= $tokens[$i][1];
               $i++;
             }
