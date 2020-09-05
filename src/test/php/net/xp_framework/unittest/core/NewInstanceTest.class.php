@@ -242,7 +242,7 @@ class NewInstanceTest extends \unittest\TestCase {
     ');
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
-      (bool)strstr($r[1].$r[2], "error, unexpected '@'"),
+      (bool)preg_match('/syntax error, unexpected.+@/', $r[1].$r[2]),
       Objects::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
   }
