@@ -145,7 +145,7 @@ class WildcardTypeTest extends \unittest\TestCase {
   protected function unGenericInstances() {
     return [
       [[0], [-1], [6.1], [true], [false], [''], ['Test']],
-      [[], [1, 2, 3]], ['key' => 'value'],
+      [[], [1, 2, 3]], [['key' => 'value']],
       $this
     ];
   }
