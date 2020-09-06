@@ -4,7 +4,7 @@
  * Lookup map
  */
 #[@generic(['self' => 'K, V', 'implements' => ['K, V']])]
-abstract class AbstractDictionary implements IDictionary {
+abstract class AbstractDictionary implements IDictionary, Marker {
   
   /**
    * Constructor
