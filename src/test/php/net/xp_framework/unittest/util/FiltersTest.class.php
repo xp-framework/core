@@ -1,14 +1,10 @@
 <?php namespace net\xp_framework\unittest\util;
  
-use util\Filters;
-use util\Filter;
-use lang\IllegalStateException;
-use lang\IllegalArgumentException;
+use lang\{IllegalArgumentException, IllegalStateException};
+use unittest\TestCase;
+use util\{Filter, Filters};
 
-/**
- * Test Filters class
- */
-class FiltersTest extends \unittest\TestCase {
+class FiltersTest extends TestCase {
 
   /**
    * Helper method
@@ -97,7 +93,7 @@ class FiltersTest extends \unittest\TestCase {
   public function anyOf() {
     $this->assertEquals(['Hello', 'World', '!'], iterator_to_array($this->filter(['Hello', 'test', '', 'World', '!'], Filters::anyOf([
       newinstance('util.Filter<string>', [], ['accept' => function($e) { return 1 === strlen($e); }]),
-      newinstance('util.Filter<string>', [], ['accept' => function($e) { return strlen($e) > 0 && ord($e{0}) < 97; }])
+      newinstance('util.Filter<string>', [], ['accept' => function($e) { return strlen($e) > 0 && ord($e[0]) < 97; }])
     ]))));
   }
 

@@ -119,10 +119,8 @@ class GenericTypes {
                   $imports[substr($import, strrpos($import, '\\')+ 1)]= $import;
                   $src.= 'use '.$import.';';
                   break;
-                } else if (is_array($tokens[$i])) {
-                  $import.= $tokens[$i][1];
-                } else {
-                  $import.= $tokens[$i];
+                } else if (T_WHITESPACE !== $tokens[$i][0]) {
+                  $import.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
                 }
                 $i++;
               }
