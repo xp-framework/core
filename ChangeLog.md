@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Add handling for `T_NAME_FULLY_QUALIFIED` and `T_NAME_QUALIFIED` tokens
+  introduced in PHP 8 by https://wiki.php.net/rfc/namespaced_names_as_token
+  (@thekid)
+
 ## 10.1.0 / 2020-05-31
 
 ### Features

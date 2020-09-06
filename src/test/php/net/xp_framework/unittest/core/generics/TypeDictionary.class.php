@@ -1,6 +1,6 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
-use util\NoSuchElementException;
+use lang\ElementNotFoundException as NoSuchKey;
 
 /**
  * Lookup map
@@ -33,7 +33,7 @@ class TypeDictionary extends AbstractTypeDictionary {
   public function get($key) {
     $offset= $key->literal();
     if (!isset($this->elements[$offset])) {
-      throw new NoSuchElementException('No such key '.$key->toString());
+      throw new NoSuchKey('No such key '.$key->toString());
     }
     return $this->elements[$offset];
   }

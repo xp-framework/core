@@ -14,10 +14,6 @@ use lang\{XPClass, IllegalStateException, IllegalAccessException, ElementNotFoun
  */
 class ClassParser {
 
-  static function __static() {
-    defined('T_FN') || define('T_FN', -1);
-  }
-
   /**
    * Resolves a type in a given context. Recognizes classes imported via
    * the `use` statement.
@@ -148,6 +144,9 @@ class ClassParser {
         $type.= '.'.$tokens[$i++][1];
       }
       return $this->memberOf(XPClass::forName(substr($type, 1)), $tokens[$i], $context);
+    } else if (T_NAME_FULLY_QUALIFIED === $token) {
+      $type= $tokens[$i++][1];
+      return $this->memberOf(XPClass::forName($type), $tokens[++$i], $context);
     } else if (T_FN === $token || T_STRING === $token && 'fn' === $tokens[$i][1]) {
       $s= sizeof($tokens);
       $b= 0;
@@ -224,10 +223,12 @@ class ClassParser {
       }
     } else if (T_NEW === $token) {
       $type= '';
-      while ('(' !== $tokens[$i++]) {
-        if (T_STRING === $tokens[$i][0]) $type.= '.'.$tokens[$i][1];
+      $i++;
+      while ('(' !== $tokens[++$i]) {
+        $type.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
       }
-      $class= $this->resolve(substr($type, 1), $context, $imports);
+      $i++;
+      $class= $this->resolve($type, $context, $imports);
       for ($args= [], $arg= null, $s= sizeof($tokens); ; $i++) {
         if (')' === $tokens[$i]) {
           $arg && $args[]= $arg[0];
@@ -449,7 +450,8 @@ class ClassParser {
     for ($i= 0, $s= sizeof($tokens); $i < $s; $i++) {
       switch ($tokens[$i][0]) {
         case T_NAMESPACE:
-          for ($i+= 2; (T_NS_SEPARATOR === $tokens[$i][0] || T_STRING === $tokens[$i][0]) && $i < $s; $i++) {
+          $namespace= '';
+          for ($i+= 2; $i < $s, !(';' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]); $i++) {
             $namespace.= $tokens[$i][1];
           }
           $namespace.= '\\';
@@ -457,8 +459,9 @@ class ClassParser {
 
         case T_USE:
           if (isset($details['class'])) break;  // Inside class, e.g. function() use(...) {}
+
           $type= '';
-          for ($i+= 2; (T_NS_SEPARATOR === $tokens[$i][0] || T_STRING === $tokens[$i][0]) && $i < $s; $i++) {
+          for ($i+= 2; $i < $s, !(';' === $tokens[$i] || '{' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]); $i++) {
             $type.= $tokens[$i][1];
           }
 
@@ -481,9 +484,10 @@ class ClassParser {
                 $group.= $tokens[$i][1];
               }
             }
+          } else if (T_AS === $tokens[++$i][0]) {
+            $imports[$tokens[$i + 2][1]]= strtr($type, '\\', '.');
           } else {
-            $alias= (T_AS === $tokens[++$i][0]) ? $tokens[$i + 2][1] : substr($type, strrpos($type, '\\')+ 1);
-            $imports[$alias]= strtr($type, '\\', '.');
+            $imports[substr($type, strrpos($type, '\\')+ 1)]= strtr($type, '\\', '.');
           }
           break;
 
