@@ -30,6 +30,8 @@ class ClassParser {
     } else if ('parent' === $type) {
       if ($parent= XPClass::forName($context)->getParentclass()) return $parent;
       throw new IllegalStateException('Class does not have a parent');
+    } else if ('\\' === $type[0]) {
+      return new XPClass($type);
     } else if (false !== strpos($type, '.')) {
       return XPClass::forName($type);
     } else if (isset($imports[$type])) {

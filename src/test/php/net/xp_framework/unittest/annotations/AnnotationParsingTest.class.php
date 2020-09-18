@@ -367,17 +367,31 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
   public function class_instance_value() {
     $this->assertEquals(
       [0 => ['value' => new Name('hello')], 1 => []],
+      $this->parse('#[@value(new Name("hello"))]')
+    );
+  }
+
+  #[@test]
+  public function imported_class_instance_value() {
+    $this->assertEquals(
+      [0 => ['value' => new Name('hello')], 1 => []],
       $this->parse('#[@value(new Name("hello"))]', ['Name' => 'net.xp_framework.unittest.annotations.Name'])
     );
   }
 
   #[@test]
-  public function ns_class_instance_value() {
+  public function fully_qualified_class_instance_value() {
     $this->assertEquals(
       [0 => ['value' => new Name('hello')], 1 => []],
-      $this->parse('#[@value(new Name("hello"))]')
+      $this->parse('#[@value(new \net\xp_framework\unittest\annotations\Name("hello"))]')
     );
   }
+
+  #[@test]
+  public function fully_qualified_not_loaded_class() {
+    $this->parse('#[@value(new \net\xp_framework\unittest\annotations\NotLoaded())]');
+  }
+
 
   #[@test]
   public function class_constant_via_self() {
