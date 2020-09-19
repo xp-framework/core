@@ -337,7 +337,7 @@ final class ClassLoader implements IClassLoader {
     }
 
     $dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__));
-    $dyn->setClassBytes($spec, $x= sprintf(
+    $dyn->setClassBytes($spec, sprintf(
       '%s%s%s %s %s%s%s {%s%s}',
       $header,
       $typeAnnotations,
