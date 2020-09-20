@@ -8,7 +8,7 @@ XP Framework Core ChangeLog
 * Implemented first step of xp-framwwork/rfc#336 by converting PHP 8
   attributes into XP annotations: `#[Test(true)]` will beinterpreted the
   same as `#[@test(true)]`. This way, converting libraries over to the
-  new syntax can start now.
+  new syntax can start now. Implementation details in pull request #245.
   (@thekid)
 
 ### Bugfixes
