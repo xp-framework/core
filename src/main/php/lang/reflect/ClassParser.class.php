@@ -355,6 +355,10 @@ class ClassParser {
         } else if (2 === $state) {              // Inside braces of @attr(...)
           if (')' === $tokens[$i]) {
             $state= 1;
+          } else if ($i + 2 < $s && (':' === $tokens[$i + 1] || ':' === $tokens[$i + 2])) {
+            $key= $tokens[$i][1];
+            $value= [];
+            $state= 3;
           } else if ($i + 2 < $s && ('=' === $tokens[$i + 1] || '=' === $tokens[$i + 2])) {
             $key= $tokens[$i][1];
             $value= [];
@@ -368,7 +372,7 @@ class ClassParser {
             $state= 1;
           } else if (',' === $tokens[$i]) {
             $key= null;
-          } else if ('=' === $tokens[$i]) {
+          } else if ('=' === $tokens[$i] || ':' === $tokens[$i]) {
             $state= 4;
           } else if (is_array($tokens[$i])) {
             $key= $tokens[$i][1];
