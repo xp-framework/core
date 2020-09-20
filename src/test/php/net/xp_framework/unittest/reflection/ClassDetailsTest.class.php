@@ -282,6 +282,16 @@ class ClassDetailsTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function php8_attributes_converted_to_xp_annotations() {
+    $actual= (new ClassParser())->parseDetails('<?php
+      #[Value("test")]
+      class Test {
+      }
+    ');
+    $this->assertEquals(['value' => 'test'], $actual['class'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[@test]
   public function closure_use_not_evaluated() {
     (new ClassParser())->parseDetails('<?php 
       class Test {

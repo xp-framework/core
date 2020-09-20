@@ -312,12 +312,17 @@ class ClassParser {
       for ($state= 0, $i= 1, $s= sizeof($tokens); $i < $s; $i++) {
         if (T_WHITESPACE === $tokens[$i][0]) {
           continue;
-        } else if (0 === $state) {             // Initial state, expecting @attr or @$param: attr
+        } else if (0 === $state) {              // Initial state, expecting @attr or @$param: attr
           if ('@' === $tokens[$i]) {
             $annotation= $tokens[$i + 1][1];
             $param= null;
             $value= null;
             $i++;
+            $state= 1;
+          } else if (T_STRING === $tokens[$i][0]) {
+            $annotation= strtolower($tokens[$i][1]);
+            $param= null;
+            $value= null;
             $state= 1;
           } else {
             throw new IllegalStateException('Parse error: Expecting "@"');
