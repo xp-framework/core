@@ -506,6 +506,19 @@ class ClassParser {
           $comment= $tokens[$i][1];
           break;
 
+        case T_ATTRIBUTE:                       // PHP 8 attributes
+          $b= 1;
+          $parsed= '';
+          while ($i++ < $s) {
+            $parsed.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
+            if ('[' === $tokens[$i]) {
+              $b++;
+            } else if (']' === $tokens[$i]) {
+              if (0 === --$b) break;
+            }
+          }
+          break;
+
         case T_COMMENT:
           if ('#' === $tokens[$i][1][0]) {      // Annotations, #[@test]
             if ('[' === $tokens[$i][1][1]) {
