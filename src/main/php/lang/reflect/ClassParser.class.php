@@ -357,8 +357,17 @@ class ClassParser {
             $state= 1;
           } else if ($i + 2 < $s && (':' === $tokens[$i + 1] || ':' === $tokens[$i + 2])) {
             $key= $tokens[$i][1];
-            $value= [];
-            $state= 3;
+
+            if ('eval' === $key) {              // Attribute(eval: '...') vs. Attribute(name: ...)
+              while ($i++ < $s && ':' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]) { }
+              $code= $this->valueOf($tokens, $i, $context, $imports);
+              $eval= token_get_all('<?php '.$code);
+              $j= 1;
+              $value[$key]= $this->valueOf($eval, $j, $context, $imports);
+            } else {
+              $value= [];
+              $state= 3;
+            }
           } else if ($i + 2 < $s && ('=' === $tokens[$i + 1] || '=' === $tokens[$i + 2])) {
             $key= $tokens[$i][1];
             $value= [];
@@ -367,7 +376,7 @@ class ClassParser {
           } else {
             $value= $this->valueOf($tokens, $i, $context, $imports);
           }
-        } else if (3 === $state) {              // Parsing key inside @attr(a= b, c= d)
+        } else if (3 === $state) {              // Parsing key inside named arguments
           if (')' === $tokens[$i]) {
             $state= 1;
           } else if (',' === $tokens[$i]) {
@@ -377,7 +386,7 @@ class ClassParser {
           } else if (is_array($tokens[$i])) {
             $key= $tokens[$i][1];
           }
-        } else if (4 === $state) {              // Parsing value inside @attr(a= b, c= d)
+        } else if (4 === $state) {              // Parsing value inside named arguments
           $value[$key]= $this->valueOf($tokens, $i, $context, $imports);
           $state= 3;
         }

@@ -302,6 +302,16 @@ class ClassDetailsTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function php8_attributes_with_eval_argument() {
+    $actual= (new ClassParser())->parseDetails('<?php
+      #[Value(eval: "function() { return \"test\"; }")]
+      class Test {
+      }
+    ');
+    $this->assertEquals('test', $actual['class'][DETAIL_ANNOTATIONS]['value']['eval']());
+  }
+
+  #[@test]
   public function closure_use_not_evaluated() {
     (new ClassParser())->parseDetails('<?php 
       class Test {
