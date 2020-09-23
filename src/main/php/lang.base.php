@@ -305,6 +305,16 @@ function newinstance($spec, $args, $def= null) {
   } else {
     $decl= ['kind' => 'class', 'extends' => ['\\'.$type], 'implements' => [], 'use' => []];
   }
+
+  // Single-method interface support
+  if ($def instanceof \Closure) {
+    $methods= (new \ReflectionClass($type))->getMethods(MODIFIER_ABSTRACT);
+    if (1 !== sizeof($methods)) {
+      throw new \lang\ClassFormatException(strtr($type, '\\', '.').' is not a single-method interface');
+    }
+    $def= [$methods[0]->getName() => $def];
+  }
+
   $defined= \lang\ClassLoader::defineType($annotations.$name, $decl, $def);
 
   if (false === strpos($type, '\\')) {

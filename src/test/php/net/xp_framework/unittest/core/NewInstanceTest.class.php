@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\{Runnable, Runtime, Process, reflect\Package, ClassLoader, IllegalAccessException};
+use lang\reflect\Package;
+use lang\{Runnable, Runtime, Process, Value, ClassLoader, ClassFormatException, IllegalAccessException};
 use net\xp_framework\unittest\Name;
 use unittest\actions\{RuntimeVersion, VerifyThat};
 use unittest\{Action, Expect, Test, Values};
@@ -107,6 +108,23 @@ class NewInstanceTest extends \unittest\TestCase {
       'run' => function() { }
     ]);
     $this->assertInstanceOf(Runnable::class, $o);
+  }
+
+  #[Test]
+  public function new_interface_with_single_function() {
+    $o= newinstance(Runnable::class, [], function() { });
+    $this->assertInstanceOf(Runnable::class, $o);
+  }
+
+  #[Test]
+  public function new_abstract_class_with_single_function() {
+    $o= newinstance(BinaryOp::class, ['+'], function($a, $b) { return $a + $b; });
+    $this->assertInstanceOf(BinaryOp::class, $o);
+  }
+
+  #[Test, Expect(ClassFormatException::class)]
+  public function cannot_use_single_function_with_multi_method_interface() {
+    newinstance(Value::class, [], function() { });
   }
 
   #[Test]
