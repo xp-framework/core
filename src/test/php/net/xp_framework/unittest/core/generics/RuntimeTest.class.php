@@ -30,7 +30,7 @@ class RuntimeTest extends \unittest\TestCase {
   #[@test]
   public function literal() {
     $this->assertEquals(
-      'net\\xp_framework\\unittest\\core\\generics\\Lookup··şstring¸unittest¦TestCase',
+      "net\\xp_framework\\unittest\\core\\generics\\Lookup\xb7\xb7\xfestring\xb8unittest\xa6TestCase",
       typeof($this->fixture)->literal()
     );
   }
