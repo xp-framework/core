@@ -5,7 +5,7 @@ use unittest\actions\ExtensionAvailable;
 use unittest\{Action, Expect, Test, TestCase};
 use util\{Currency, Money};
 
-#[Action(new ExtensionAvailable('bcmath'))]
+#[Action(eval: 'new ExtensionAvailable("bcmath")')]
 class MoneyTest extends TestCase {
 
   #[Test]

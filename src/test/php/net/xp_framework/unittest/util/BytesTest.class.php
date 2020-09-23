@@ -11,6 +11,14 @@ use util\Bytes;
  */
 class BytesTest extends TestCase {
 
+  /** @return iterable */
+  private function comparing() {
+    yield [new Bytes('Test'), 0];
+    yield [new Bytes('T'), +3];
+    yield [new Bytes('Testing'), -3];
+    yield [null, 1];
+  }
+
   #[Test]
   public function creating_an_empty_bytes_without_supplying_parameters() {
     $this->assertEquals(0, (new Bytes())->size());
@@ -315,7 +323,7 @@ class BytesTest extends TestCase {
     $this->assertEquals($i, sizeof($c)- 1);
   }
 
-  #[Test, Values([[new Bytes('Test'), 0], [new Bytes('T'), +3], [new Bytes('Testing'), -3], [null, 1]])]
+  #[Test, Values('comparing')]
   public function compare($value, $expected) {
     $this->assertEquals($expected, (new Bytes('Test'))->compareTo($value));
   }

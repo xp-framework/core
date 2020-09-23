@@ -64,7 +64,7 @@ class TypeOfTest extends \unittest\TestCase {
     $this->assertEquals(FunctionType::forName('function(lang.Type): var'), typeof(function(Type $t, ... $a) { }));
   }
 
-  #[Test, Action(new RuntimeVersion('>=7.0'))]
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.0")')]
   public function function_with_typed_var_arg() {
     $this->assertEquals(FunctionType::forName('function(): var'), typeof(eval('return function(\lang\Type... $a) { };')));
   }
@@ -84,22 +84,22 @@ class TypeOfTest extends \unittest\TestCase {
     $this->assertEquals(new FunctionType([Type::$CALLABLE], Type::$VAR), typeof(function(callable $c) { }));
   }
 
-  #[Test, Action(new RuntimeVersion('>=7.0'))]
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.0")')]
   public function function_with_primitive_arg() {
     $this->assertEquals(FunctionType::forName('function(int): var'), typeof(eval('return function(int $a) { };')));
   }
 
-  #[Test, Action(new RuntimeVersion('>=7.0'))]
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.0")')]
   public function function_with_return_type() {
     $this->assertEquals(FunctionType::forName('function(): lang.Type'), typeof(eval('return function(): \lang\Type { };')));
   }
 
-  #[Test, Action(new RuntimeVersion('>=7.0'))]
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.0")')]
   public function function_with_primitive_return_type() {
     $this->assertEquals(FunctionType::forName('function(): int'), typeof(eval('return function(): int { };')));
   }
 
-  #[Test, Action(new RuntimeVersion('>=7.1'))]
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.1")')]
   public function function_with_void_return_type() {
     $this->assertEquals(FunctionType::forName('function(): void'), typeof(eval('return function(): void { };')));
   }

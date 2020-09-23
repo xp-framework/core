@@ -3,9 +3,16 @@
 use io\streams\{InputStream, LinesIn, MemoryInputStream, TextReader};
 use io\{File, IOException};
 use lang\IllegalArgumentException;
-use unittest\{Expect, Test, Values};
+use unittest\{Expect, Test, TestCase, Values};
 
-class LinesInTest extends \unittest\TestCase {
+class LinesInTest extends TestCase {
+
+  /** @return iterable */
+  private function iso88591Input() {
+    yield [new LinesIn("\xfc", "iso-8859-1")];
+    yield [new LinesIn(new MemoryInputStream("\xfc"), "iso-8859-1")];
+    yield [new LinesIn(new TextReader(new MemoryInputStream("\xfc"), "iso-8859-1"))];
+  }
 
   #[Test]
   public function can_create_with_string() {
@@ -51,7 +58,7 @@ class LinesInTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Values([[new LinesIn("\xFC", "iso-8859-1")], [new LinesIn(new MemoryInputStream("\xFC"), "iso-8859-1")], [new LinesIn(new TextReader(new MemoryInputStream("\xFC"), "iso-8859-1"))]])]
+  #[Test, Values('iso88591Input')]
   public function input_is_encoded_to_utf8($arg) {
     $this->assertEquals([1 => 'ü'], iterator_to_array($arg));
   }

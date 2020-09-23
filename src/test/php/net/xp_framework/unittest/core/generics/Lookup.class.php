@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use unittest\Generic;
-use util\Objects;
+use util\{Objects, NoSuchElementException};
 
 /**
  * Lookup map
@@ -36,7 +36,7 @@ class Lookup extends AbstractDictionary {
   public function get($key) {
     $offset= Objects::hashOf($key);
     if (!isset($this->elements[$offset])) {
-      throw new \util\NoSuchElementException('No such key '.Objects::stringOf($key));
+      throw new NoSuchElementException('No such key '.Objects::stringOf($key));
     }
     return $this->elements[$offset];
   }

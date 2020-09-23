@@ -35,7 +35,7 @@ class CompositePropertiesTest extends TestCase {
     new CompositeProperties([]);
   }
 
-  #[Test, Expect(Error::class)]]
+  #[Test, Expect(Error::class)]
   public function createCompositeThrowsExceptionWhenSomethingElseThenPropertiesGiven() {
     new CompositeProperties([new Properties(null), 1, new Properties(null)]);
   }

@@ -187,7 +187,7 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals($current, Path::compose($components)->asRealpath($current)->toString());
   }
 
-  #[Test, Action(new IsPlatform('!^Win'))]
+  #[Test, Action(eval: 'new IsPlatform("!^Win")')]
   public function links_resolved_in_realpath() {
     $temp= Environment::tempDir();
     $link= new Path($temp, 'link-to-temp');
@@ -253,7 +253,7 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals($parent, (new Path($child))->parent()->toString('/'));
   }
 
-  #[Test, Action(new IsPlatform('^Win'))]
+  #[Test, Action(eval: 'new IsPlatform("^Win")')]
   public function parent_of_directory_in_root() {
     $this->assertEquals('C:/', (new Path('C:/Windows'))->parent()->toString('/'));
   }
@@ -263,7 +263,7 @@ class PathTest extends \unittest\TestCase {
     $this->assertNull((new Path('/'))->parent());
   }
 
-  #[Test, Values(['C:', 'C:/', 'c:', 'C:/']), Action(new IsPlatform('^Win'))]
+  #[Test, Values(['C:', 'C:/', 'c:', 'C:/']), Action(eval: 'new IsPlatform("^Win")')]
   public function parent_of_root_windows($root) {
     $this->assertNull((new Path($root))->parent());
   }
@@ -344,17 +344,17 @@ class PathTest extends \unittest\TestCase {
     $this->assertEquals(new Path('.'), new Path('dir/..'));
   }
 
-  #[Test, Action(new IsPlatform('^Win')), Values([['\\\\remote\\file.txt', true], ['\\\\remote', true]])]
+  #[Test, Action(eval: 'new IsPlatform("^Win")'), Values([['\\\\remote\\file.txt', true], ['\\\\remote', true]])]
   public function unc_path_is_absolute() {
     $this->assertTrue((new Path('\\\\remote\file.txt'))->isAbsolute());
   }
 
-  #[Test, Action(new IsPlatform('^Win'))]
+  #[Test, Action(eval: 'new IsPlatform("^Win")')]
   public function unc_path() {
     $this->assertEquals('//remote/file.txt', (new Path('\\\\remote\file.txt'))->toString('/'));
   }
 
-  #[Test, Action(new IsPlatform('^Win'))]
+  #[Test, Action(eval: 'new IsPlatform("^Win")')]
   public function unc_path_as_base() {
     $this->assertEquals('//remote/file.txt', (new Path('\\\\remote', 'file.txt'))->toString('/'));
   }

@@ -47,17 +47,17 @@ class RandomTest extends TestCase {
     $this->assertEquals(20, (new Random(Random::FAST))->bytes(20)->size());
   }
 
-  #[Test, Action(new VerifyThat(function() {return ( function_exists('random_bytes') || function_exists('openssl_random_pseudo_bytes') );}))]
+  #[Test, Action(eval: 'new VerifyThat(function() {return ( function_exists("random_bytes") || function_exists("openssl_random_pseudo_bytes") );})')]
   public function secure_bytes() {
     $this->assertEquals(20, (new Random(Random::SECURE))->bytes(20)->size());
   }
 
-  #[Test, Action(new ExtensionAvailable('openssl'))]
+  #[Test, Action(eval: 'new ExtensionAvailable("openssl")')]
   public function openssl_bytes() {
     $this->assertEquals(20, (new Random(Random::OPENSSL))->bytes(20)->size());
   }
 
-  #[Test, Action(new VerifyThat(function() { return is_readable('/dev/urandom'); }))]
+  #[Test, Action(eval: 'new VerifyThat(function() { return is_readable("/dev/urandom"); })')]
   public function urandom_bytes() {
     $this->assertEquals(20, (new Random(Random::URANDOM))->bytes(20)->size());
   }
@@ -90,13 +90,13 @@ class RandomTest extends TestCase {
     $this->assertTrue($random >= 0 && $random <= PHP_INT_MAX);
   }
 
-  #[Test, Action(new ExtensionAvailable('openssl'))]
+  #[Test, Action(eval: 'new ExtensionAvailable("openssl")')]
   public function openssl_int() {
     $random= (new Random(Random::OPENSSL))->int(0, 10);
     $this->assertTrue($random >= 0 && $random <= 10);
   }
 
-  #[Test, Action(new VerifyThat(function() { return is_readable('/dev/urandom'); }))]
+  #[Test, Action(eval: 'new VerifyThat(function() { return is_readable("/dev/urandom"); })')]
   public function urandom_int() {
     $random= (new Random(Random::URANDOM))->int(0, 10);
     $this->assertTrue($random >= 0 && $random <= 10);
@@ -113,12 +113,12 @@ class RandomTest extends TestCase {
     (new Random())->int($min, 10);
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Action(new VerifyThat(function() {return 0x7FFFFFFF === PHP_INT_MAX;}))]
+  #[Test, Expect(IllegalArgumentException::class), Action(eval: 'new VerifyThat(function() { return 0x7FFFFFFF === PHP_INT_MAX; })')]
   public function max_cannot_be_larger_than_int_max() {
     (new Random())->int(0, PHP_INT_MAX + 1);
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Action(new VerifyThat(function() {return 0x7FFFFFFF === PHP_INT_MAX;}))]
+  #[Test, Expect(IllegalArgumentException::class), Action(eval: 'new VerifyThat(function() { return 0x7FFFFFFF === PHP_INT_MAX; })')]
   public function min_cannot_be_smaller_than_int_min() {
     (new Random())->int(PHP_INT_MIN - 1, 0);
   }

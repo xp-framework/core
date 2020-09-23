@@ -93,7 +93,7 @@ class ObjectsTest extends TestCase {
     $this->assertTrue(Objects::equal($val, $val));
   }
 
-  #[Test, Values([[new ValueObject('')], [new ValueObject('Test')]])]
+  #[Test, Values(eval: '[[new ValueObject("")], [new ValueObject("Test")]]')]
   public function objects_with_equal_methods_are_equal_to_clones_of_themselves($val) {
     $this->assertTrue(Objects::equal($val, clone $val));
   }
@@ -209,7 +209,7 @@ class ObjectsTest extends TestCase {
     $this->assertEquals($expected, Objects::compare(new ValueObject($a), new ValueObject($b)));
   }
 
-  #[Test, Values([[new ValueObject('')], [new ValueObject('Test')]])]
+  #[Test, Values(eval: '[[new ValueObject("")], [new ValueObject("Test")]]')]
   public function compare_objects_to_clones_of_themselves($val) {
     $this->assertEquals(0, Objects::compare($val, clone $val));
   }
@@ -242,9 +242,13 @@ class ObjectsTest extends TestCase {
     $this->assertEquals($expected, Objects::compare($a, $b));
   }
 
-  #[Test, Values([[null, 'null'], [true, 'true'], [false, 'false'], [-1, '-1'], [0, '0'], [1, '1'], [-1.0, '-1'], [0.0, '0'], [1.0, '1'], [6.1, '6.1'], ['', '""'], ['Test', '"Test"'], ['"Hello World"', '""Hello World""'], [[], '[]'], [[1, 2, 3], '[1, 2, 3]'], [['key' => 'value'], "[\n  key => \"value\"\n]"], [function() { }, '<function()>'], [function($a, $b) { }, '<function($a, $b)>']])]
+  #[Test, Values([[null, 'null'], [true, 'true'], [false, 'false'], [-1, '-1'], [0, '0'], [1, '1'], [-1.0, '-1'], [0.0, '0'], [1.0, '1'], [6.1, '6.1'], ['', '""'], ['Test', '"Test"'], ['"Hello World"', '""Hello World""'], [[], '[]'], [[1, 2, 3], '[1, 2, 3]'], [['key' => 'value'], "[\n  key => \"value\"\n]"]])]
   public function stringOf($val, $expected) {
     $this->assertEquals($expected, Objects::stringOf($val));
+  }
+
+  public function stringOf_function() {
+    $this->assertEquals('<function()>',  Objects::stringOf(function() { }));
   }
 
   #[Test, Values('objects')]
