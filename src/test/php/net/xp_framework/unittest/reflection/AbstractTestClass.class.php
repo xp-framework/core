@@ -8,8 +8,8 @@ use lang\{Type, Value};
  * @see      xp://net.xp_framework.unittest.reflection.ReflectionTest
  */
 abstract class AbstractTestClass {
+  #[Type(Value::class)]
   protected
-    #[Type(Value::class)]
     $inherited= null;
 
   /**

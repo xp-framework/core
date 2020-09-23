@@ -232,27 +232,27 @@ class MethodParametersTest extends MethodsTest {
     $this->assertNull($this->method('public function fixture() { }')->getParameter($offset));
   }
 
-  #[Test]
+  #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
   public function annotated_parameter() {
     $this->assertTrue($this->method("#[@\$param: test('value')]\npublic function fixture(\$param) { }")->getParameter(0)->hasAnnotations());
   }
 
-  #[Test]
+  #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
   public function parameter_annotated_with_test_has_test_annotation() {
     $this->assertTrue($this->method("#[@\$param: test('value')]\npublic function fixture(\$param) { }")->getParameter(0)->hasAnnotation('test'));
   }
 
-  #[Test]
+  #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
   public function parameter_annotated_with_test_has_no_limit_annotation() {
     $this->assertFalse($this->method("#[@\$param: test('value')]\npublic function fixture(\$param) { }")->getParameter(0)->hasAnnotation('limit'));
   }
 
-  #[Test]
+  #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
   public function annotations_of_parameter_annotated_with_test() {
     $this->assertEquals(['test' => 'value'], $this->method("#[@\$param: test('value')]\npublic function fixture(\$param) { }")->getParameter(0)->getAnnotations());
   }
 
-  #[Test]
+  #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
   public function test_annotation_of_parameter_annotated_with_test() {
     $this->assertEquals('value', $this->method("#[@\$param: test('value')]\npublic function fixture(\$param) { }")->getParameter(0)->getAnnotation('test'));
   }

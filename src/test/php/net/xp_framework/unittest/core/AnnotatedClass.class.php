@@ -33,9 +33,8 @@ class AnnotatedClass {
   /**
    * Method annotated with an annotation with a one key/value pair
    *
-   * @deprecated
    */
-  #[Config(key = 'value')]
+  #[Config(key: 'value')]
   public function keyValuePair() { }
 
   /**

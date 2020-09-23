@@ -3,7 +3,7 @@
 /**
  * Lookup map
  */
-#[Generic(self: 'K, V', implements => ['K, V'])]
+#[Generic(self: 'K, V', implements: ['K, V'])]
 abstract class AbstractDictionary implements IDictionary, Marker {
   
   /**

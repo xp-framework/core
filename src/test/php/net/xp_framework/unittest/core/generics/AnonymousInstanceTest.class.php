@@ -24,7 +24,7 @@ class AnonymousInstanceTest extends \unittest\TestCase {
 
   #[Test]
   public function anonymous_generic_with_annotations() {
-    $filter= newinstance('#[@anon] net.xp_framework.unittest.core.generics.Nullable<string>', [], []);
+    $filter= newinstance('#[Anon] net.xp_framework.unittest.core.generics.Nullable<string>', [], []);
     $this->assertTrue(typeof($filter)->hasAnnotation('anon'));
   }
 

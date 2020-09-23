@@ -12,7 +12,7 @@ class MethodAnnotationsTest extends MethodsTest {
 
   #[Test]
   public function has_annotations_when_present() {
-    $this->assertTrue($this->method("#[@test]\npublic function fixture() { }")->hasAnnotations());
+    $this->assertTrue($this->method("#[Test]\npublic function fixture() { }")->hasAnnotations());
   }
 
   #[Test]
@@ -24,7 +24,7 @@ class MethodAnnotationsTest extends MethodsTest {
   public function test_annotation() {
     $this->assertEquals(
       ['test' => null],
-      $this->method("#[@test]\npublic function fixture() { }")->getAnnotations()
+      $this->method("#[Test]\npublic function fixture() { }")->getAnnotations()
     );
   }
 
@@ -32,7 +32,7 @@ class MethodAnnotationsTest extends MethodsTest {
   public function two_annotations() {
     $this->assertEquals(
       ['test' => null, 'limit' => 20],
-      $this->method("#[@test, @limit(20)]\npublic function fixture() { }")->getAnnotations()
+      $this->method("#[Test, Limit(20)]\npublic function fixture() { }")->getAnnotations()
     );
   }
 
@@ -43,12 +43,12 @@ class MethodAnnotationsTest extends MethodsTest {
 
   #[Test]
   public function has_annotation_for_existant_annotation() {
-    $this->assertTrue($this->method("#[@test]\npublic function fixture() { }")->hasAnnotation('test'));
+    $this->assertTrue($this->method("#[Test]\npublic function fixture() { }")->hasAnnotation('test'));
   }
 
   #[Test]
   public function has_annotation_for_non_existant_annotation() {
-    $this->assertFalse($this->method("#[@test]\npublic function fixture() { }")->hasAnnotation('@@nonexistant@@'));
+    $this->assertFalse($this->method("#[Test]\npublic function fixture() { }")->hasAnnotation('@@nonexistant@@'));
   }
 
   #[Test, Expect(ElementNotFoundException::class)]
@@ -58,16 +58,16 @@ class MethodAnnotationsTest extends MethodsTest {
 
   #[Test]
   public function get_annotation_for_existant_annotation() {
-    $this->assertNull($this->method("#[@test]\npublic function fixture() { }")->getAnnotation('test'));
+    $this->assertNull($this->method("#[Test]\npublic function fixture() { }")->getAnnotation('test'));
   }
 
   #[Test]
   public function get_annotation_for_existant_annotation_with_value() {
-    $this->assertEquals(20, $this->method("#[@limit(20)]\npublic function fixture() { }")->getAnnotation('limit'));
+    $this->assertEquals(20, $this->method("#[Limit(20)]\npublic function fixture() { }")->getAnnotation('limit'));
   }
 
   #[Test, Expect(ElementNotFoundException::class)]
   public function get_annotation_for_non_existant_annotation() {
-    $this->method("#[@test]\npublic function fixture() { }")->getAnnotation('@@nonexistant@@');
+    $this->method("#[Test]\npublic function fixture() { }")->getAnnotation('@@nonexistant@@');
   }
 }

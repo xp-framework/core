@@ -76,14 +76,14 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[Test]
   public function new_class_with_annotations() {
-    $o= newinstance('#[@test] net.xp_framework.unittest.Name', ['Test']);
+    $o= newinstance('#[Test] net.xp_framework.unittest.Name', ['Test']);
     $this->assertTrue(typeof($o)->hasAnnotation('test'));
   }
 
   #[Test]
   public function new_class_with_field_annotations() {
     $o= newinstance(Name::class, ['Test'], [
-      '#[@test] fixture' => null
+      '#[Test] fixture' => null
     ]);
     $this->assertTrue(typeof($o)->getField('fixture')->hasAnnotation('test'));
   }
@@ -91,7 +91,7 @@ class NewInstanceTest extends \unittest\TestCase {
   #[Test]
   public function new_class_with_method_annotations() {
     $o= newinstance(Name::class, ['Test'], [
-      '#[@test] fixture' => function() { }
+      '#[Test] fixture' => function() { }
     ]);
     $this->assertTrue(typeof($o)->getMethod('fixture')->hasAnnotation('test'));
   }
@@ -129,7 +129,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[Test]
   public function new_interface_with_annotations() {
-    $o= newinstance('#[@test] lang.Runnable', [], [
+    $o= newinstance('#[Test] lang.Runnable', [], [
       'run' => function() { }
     ]);
     $this->assertTrue(typeof($o)->hasAnnotation('test'));
@@ -153,7 +153,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[Test]
   public function new_trait_with_annotations() {
-    $o= newinstance('#[@test] net.xp_framework.unittest.core.Named', [], [
+    $o= newinstance('#[Test] net.xp_framework.unittest.core.Named', [], [
       'run' => function() { }
     ]);
     $this->assertTrue(typeof($o)->hasAnnotation('test'));
