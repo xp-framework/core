@@ -2,7 +2,7 @@
 
 use io\{File, FileUtil};
 use lang\{Environment, IllegalArgumentException};
-use unittest\{Expect, Test};
+use unittest\{Expect, Test, TestCase};
 use util\{FilesystemPropertySource, Properties};
 
 /**
@@ -11,7 +11,7 @@ use util\{FilesystemPropertySource, Properties};
  * @deprecated
  * @see   xp://util.FilesystemPropertySource
  */
-class FilesystemPropertySourceTest extends \unittest\TestCase {
+class FilesystemPropertySourceTest extends TestCase {
   protected $tempFile, $fixture;
 
   /** @return void */
@@ -47,7 +47,7 @@ class FilesystemPropertySourceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Expect(['class' => IllegalArgumentException::class, 'withMessage' => '/No properties @@non-existant@@ found at .+/'])]
+  #[Test, Expect(class: IllegalArgumentException::class, withMessage: '/No properties @@non-existant@@ found at .+/')]
   public function fetch_non_existant_ini_file() {
     $this->fixture->fetch('@@non-existant@@');
   }

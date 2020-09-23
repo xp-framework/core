@@ -1,12 +1,12 @@
 <?php namespace net\xp_framework\unittest\util;
  
-use unittest\Test;
+use unittest\{Test, TestCase};
 use util\{Date, DateUtil, TimeSpan, TimeZone};
 
 /**
  * Test Date utility class
  */
-class DateUtilTest extends \unittest\TestCase {
+class DateUtilTest extends TestCase {
   private $fixture;
 
   /**

@@ -1,10 +1,10 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\{ClassLoader, Value};
-use unittest\{Test, Values};
+use unittest\{Test, TestCase, Values};
 use util\Comparison;
 
-class ComparisonTest extends \unittest\TestCase {
+class ComparisonTest extends TestCase {
 
   /** Creates a new fixture */
   private function newFixture(array $members): Value {

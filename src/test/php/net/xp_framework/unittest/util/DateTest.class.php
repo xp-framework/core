@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
  
 use lang\{IllegalArgumentException, IllegalStateException};
-use unittest\{Expect, Ignore, Test, Values};
+use unittest\{Expect, Ignore, Test, TestCase, Values};
 use util\{Date, TimeZone};
 
 /**
@@ -9,7 +9,7 @@ use util\{Date, TimeZone};
  *
  * @see http://www.php.net/manual/en/datetime.formats.time.php
  */
-class DateTest extends \unittest\TestCase {
+class DateTest extends TestCase {
   public
     $nowTime  = 0,
     $nowDate  = null,

@@ -3,7 +3,7 @@
 use lang\{ClassLoader, ElementNotFoundException, IllegalArgumentException};
 use unittest\actions\RuntimeVersion;
 use unittest\{Expect, Test};
-use util\;
+use util\{
   FilesystemPropertySource,
   Properties,
   PropertyAccess,

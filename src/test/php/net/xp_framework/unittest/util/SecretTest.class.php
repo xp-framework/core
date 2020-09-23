@@ -1,13 +1,13 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\{IllegalArgumentException, IllegalStateException, Throwable, XPException};
-use unittest\{Expect, Test, Values};
+use unittest\{Expect, Test, Values, TestCase};
 use util\Secret;
 
 /**
  * Baseclass for test cases for security.Secret
  */
-abstract class SecretTest extends \unittest\TestCase {
+abstract class SecretTest extends TestCase {
 
   #[Test]
   public function create() {

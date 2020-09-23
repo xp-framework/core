@@ -2,11 +2,11 @@
 
 use lang\IllegalArgumentException;
 use unittest\actions\ExtensionAvailable;
-use unittest\{Expect, Test};
+use unittest\{Action, Expect, Test, TestCase};
 use util\{Currency, Money};
 
-#[@action(new ExtensionAvailable('bcmath'))]
-class MoneyTest extends \unittest\TestCase {
+#[Action(new ExtensionAvailable('bcmath'))]
+class MoneyTest extends TestCase {
 
   #[Test]
   public function tenUsDollarsFromInt() {

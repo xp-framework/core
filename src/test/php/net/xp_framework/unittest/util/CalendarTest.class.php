@@ -1,12 +1,12 @@
 <?php namespace net\xp_framework\unittest\util;
  
-use unittest\Test;
+use unittest\{Test, TestCase};
 use util\{Calendar, Date, TimeZone};
 
 /**
  * Tests Calendar class
  */
-class CalendarTest extends \unittest\TestCase {
+class CalendarTest extends TestCase {
   public
     $nowTime  = 0,
     $nowDate  = null,

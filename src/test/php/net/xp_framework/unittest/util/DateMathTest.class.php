@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use unittest\Test;
+use unittest\{Test, TestCase};
 use util\{Date, DateMath, TimeInterval};
 
-class DateMathTest extends \unittest\TestCase {
+class DateMathTest extends TestCase {
 
   #[Test]
   public function diffSimple() {

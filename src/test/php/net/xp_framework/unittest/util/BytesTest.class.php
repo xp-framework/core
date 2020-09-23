@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\{FormatException, IllegalArgumentException, IndexOutOfBoundsException};
-use unittest\{Expect, Test, Values};
+use unittest\{Expect, Test, TestCase, Values};
 use util\Bytes;
 
 /**
@@ -9,7 +9,7 @@ use util\Bytes;
  *
  * @see   xp://util.Bytes
  */
-class BytesTest extends \unittest\TestCase {
+class BytesTest extends TestCase {
 
   #[Test]
   public function creating_an_empty_bytes_without_supplying_parameters() {

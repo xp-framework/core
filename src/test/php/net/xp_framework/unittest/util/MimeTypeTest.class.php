@@ -3,7 +3,6 @@
 use unittest\{Test, TestCase};
 use util\MimeType;
 
-
 /**
  * Test MimeType class
  *

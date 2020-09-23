@@ -2,7 +2,7 @@
 
 use lang\{Error, IllegalArgumentException};
 use unittest\actions\RuntimeVersion;
-use unittest\{Expect, Test};
+use unittest\{Expect, Test, TestCase};
 use util\{CompositeProperties, Hashmap, Properties};
 
 /**
@@ -11,7 +11,7 @@ use util\{CompositeProperties, Hashmap, Properties};
  * @see   https://github.com/xp-framework/xp-framework/issues/302
  * @see    xp://util.CompositeProperies
  */
-class CompositePropertiesTest extends \unittest\TestCase {
+class CompositePropertiesTest extends TestCase {
 
   #[Test]
   public function createCompositeSingle() {

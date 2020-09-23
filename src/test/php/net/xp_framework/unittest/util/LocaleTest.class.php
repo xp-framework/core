@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use unittest\Test;
+use unittest\{Test, TestCase};
 use util\Locale;
 
-class LocaleTest extends \unittest\TestCase {
+class LocaleTest extends TestCase {
 
   #[Test]
   public function get_default_locale() {

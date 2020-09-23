@@ -1,10 +1,10 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\IllegalArgumentException;
-use unittest\{Expect, Test};
+use unittest\{Expect, Test, TestCase};
 use util\Currency;
 
-class CurrencyTest extends \unittest\TestCase {
+class CurrencyTest extends TestCase {
 
   #[Test]
   public function get_instance_usd() {

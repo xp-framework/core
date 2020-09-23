@@ -2,7 +2,7 @@
 
 use lang\Value;
 use net\xp_framework\unittest\Name;
-use unittest\{Test, Values};
+use unittest\{Test, TestCase, Values};
 use util\Objects;
 
 /**
@@ -10,7 +10,7 @@ use util\Objects;
  *
  * @see  xp://util.Objects
  */
-class ObjectsTest extends \unittest\TestCase {
+class ObjectsTest extends TestCase {
   private static $func;
 
   static function __static() {

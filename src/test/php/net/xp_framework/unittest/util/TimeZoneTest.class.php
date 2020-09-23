@@ -1,10 +1,10 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\IllegalArgumentException;
-use unittest\{Expect, Test, Values};
+use unittest\{Expect, Test, TestCase, Values};
 use util\{Date, TimeZone};
 
-class TimeZoneTest extends \unittest\TestCase {
+class TimeZoneTest extends TestCase {
 
   #[Test]
   public function name() {

@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\{ElementNotFoundException, FormatException, IllegalStateException};
-use unittest\{Expect, Test, Values};
+use unittest\{Expect, Test, TestCase, Values};
 use util\{Hashmap, Properties};
 
 /**
@@ -9,7 +9,7 @@ use util\{Hashmap, Properties};
  *
  * @see      xp://util.Properties
  */
-abstract class AbstractPropertiesTest extends \unittest\TestCase {
+abstract class AbstractPropertiesTest extends TestCase {
 
   /** Create a new properties object from a string source */
   protected abstract function newPropertiesFrom(string $source): Properties;

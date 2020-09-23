@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use unittest\{Test, TestCase};
-use util\RegisteredPropertySource;
+use util\{RegisteredPropertySource, Properties};
 
 /**
  * Test for RegisteredPropertySource
@@ -13,7 +13,7 @@ class RegisteredPropertySourceTest extends TestCase {
   protected $fixture= null;
 
   public function setUp() {
-    $this->fixture= new RegisteredPropertySource('props', new \util\Properties(null));
+    $this->fixture= new RegisteredPropertySource('props', new Properties(null));
   }
   
   /**

@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\ClassLoader;
-use unittest\{BeforeClass, Test};
+use unittest\{BeforeClass, TestCase, Test};
 use util\{Observable, Observer};
 
 /**
@@ -9,7 +9,7 @@ use util\{Observable, Observer};
  *
  * @see  xp://util.Observable
  */
-class ObservableTest extends \unittest\TestCase {
+class ObservableTest extends TestCase {
   protected static $observable;
 
   #[BeforeClass]

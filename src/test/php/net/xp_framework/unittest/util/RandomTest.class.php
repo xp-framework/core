@@ -2,10 +2,10 @@
 
 use lang\IllegalArgumentException;
 use unittest\actions\{ExtensionAvailable, RuntimeVersion, VerifyThat};
-use unittest\{Action, Expect, Test, Values};
+use unittest\{Action, Expect, Test, TestCase, Values};
 use util\Random;
 
-class RandomTest extends \unittest\TestCase {
+class RandomTest extends TestCase {
 
   #[Test]
   public function can_create() {

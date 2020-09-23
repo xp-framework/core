@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
  
 use lang\IllegalArgumentException;
-use unittest\{Expect, Test};
+use unittest\{Expect, Test, TestCase};
 use util\Binford;
 
 /**
@@ -9,7 +9,7 @@ use util\Binford;
  *
  * @see  xp://util.Binford
  */
-class BinfordTest extends \unittest\TestCase {
+class BinfordTest extends TestCase {
   protected static $observable;
 
   #[Test]

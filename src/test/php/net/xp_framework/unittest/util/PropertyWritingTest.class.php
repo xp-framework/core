@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use io\streams\MemoryOutputStream;
-use unittest\Test;
+use unittest\{Test, TestCase};
 use util\Properties;
 
 /**
@@ -9,7 +9,7 @@ use util\Properties;
  *
  * @see      xp://util.Properties
  */
-class PropertyWritingTest extends \unittest\TestCase {
+class PropertyWritingTest extends TestCase {
   protected $fixture= null;
   
   /**

@@ -1,10 +1,10 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\ElementNotFoundException;
-use unittest\{Expect, Test, Values};
+use unittest\{Expect, Test, TestCase, Values};
 use util\Properties;
 
-class PropertyExpansionTest extends \unittest\TestCase {
+class PropertyExpansionTest extends TestCase {
 
   /**
    * Returns a fixture which expands `lookup.*` with a given expansion

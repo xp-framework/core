@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\FormatException;
-use unittest\{Expect, Test};
+use unittest\{Expect, Test, TestCase};
 use util\{Bytes, UUID};
 
 /**
@@ -9,7 +9,7 @@ use util\{Bytes, UUID};
  *
  * @see   xp://util.UUID
  */
-class UUIDTest extends \unittest\TestCase {
+class UUIDTest extends TestCase {
   protected $fixture= null;
 
   /**
