@@ -308,7 +308,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test {
       }
     ');
-    $this->assertEquals('test', $actual['class'][DETAIL_ANNOTATIONS]['value']['eval']());
+    $this->assertEquals('test', $actual['class'][DETAIL_ANNOTATIONS]['value']());
   }
 
   #[@test]

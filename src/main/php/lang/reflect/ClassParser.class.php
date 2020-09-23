@@ -363,7 +363,7 @@ class ClassParser {
               $code= $this->valueOf($tokens, $i, $context, $imports);
               $eval= token_get_all('<?php '.$code);
               $j= 1;
-              $value[$key]= $this->valueOf($eval, $j, $context, $imports);
+              $value= $this->valueOf($eval, $j, $context, $imports);
             } else {
               $value= [];
               $state= 3;
