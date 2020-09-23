@@ -9,6 +9,10 @@ XP Framework Core ChangeLog
   attributes into XP annotations: `#[Test(true)]` will beinterpreted the
   same as `#[@test(true)]`. This way, converting libraries over to the
   new syntax can start now. Implementation details in pull request #245.
+
+### Features
+
+* Added support for `mixed` type, see https://wiki.php.net/rfc/mixed_type_v2
   (@thekid)
 
 ### Bugfixes
