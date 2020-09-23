@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.2.0 / 2020-09-23
+
 ### RFCs
 
 * Merged PRs #246 and #247, rewriting the code base to PHP 8 attributes
@@ -14,6 +16,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged PR #225: Overload `newinstance` to accept closures for single-
+  method interfaces (like lang.Runnable, for instance).
+  (@thekid)
 * Added support for `mixed` type, see https://wiki.php.net/rfc/mixed_type_v2
   (@thekid)
 
