@@ -3,6 +3,11 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Added support for `mixed` type, see https://wiki.php.net/rfc/mixed_type_v2
+  (@thekid)
+
 ### Bugfixes
 
 * Fixed grouped imports when used inside generics in PHP 8.0 - @thekid

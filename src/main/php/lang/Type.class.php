@@ -214,7 +214,7 @@ class Type implements Value {
     // Map well-known primitives, var, void, union types as well as nullable and soft types
     if (isset($primitives[$type])) {
       return Primitive::forName($primitives[$type]);
-    } else if ('var' === $type || 'resource' === $type) {
+    } else if ('var' === $type || 'resource' === $type || 'mixed' === $type) {
       return self::$VAR;
     } else if ('void' === $type) {
       return self::$VOID;
