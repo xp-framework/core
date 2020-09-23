@@ -320,7 +320,7 @@ class ClassParser {
             $i++;
             $state= 1;
           } else if (T_STRING === $tokens[$i][0]) {
-            $annotation= strtolower($tokens[$i][1]);
+            $annotation= lcfirst($tokens[$i][1]);
             $param= null;
             $value= null;
             $state= 1;
