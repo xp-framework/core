@@ -11,6 +11,7 @@ use lang\{
   IllegalStateException,
   XPClass
 };
+use unittest\{Expect, Test, Values};
 
 /**
  * TestCase for classloading
@@ -63,11 +64,7 @@ class ClassLoaderTest extends \unittest\TestCase {
     ClassLoader::removeLoader($this->brokenLoader);
   }
 
-  #[@test, @values([
-  #  'net.xp_framework.unittest.reflection.classes.ClassOne',
-  #  'net.xp_framework.unittest.reflection.classes.InterfaceOne',
-  #  'net.xp_framework.unittest.reflection.classes.TraitOne'
-  #])]
+  #[Test, Values(['net.xp_framework.unittest.reflection.classes.ClassOne', 'net.xp_framework.unittest.reflection.classes.InterfaceOne', 'net.xp_framework.unittest.reflection.classes.TraitOne'])]
   public function classloader_for_types_alongside_this_class($type) {
     $this->assertEquals(
       typeof($this)->getClassLoader(),
@@ -75,7 +72,7 @@ class ClassLoaderTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function twoClassesFromSamePlace() {
     $this->assertEquals(
       XPClass::forName('net.xp_framework.unittest.reflection.classes.ClassOne')->getClassLoader(),
@@ -83,7 +80,7 @@ class ClassLoaderTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function archiveClassLoader() {
     $this->assertInstanceOf(
       ArchiveClassLoader::class,
@@ -91,7 +88,7 @@ class ClassLoaderTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function containedArchiveClassLoader() {
     $this->assertInstanceOf(
       ArchiveClassLoader::class,
@@ -99,7 +96,7 @@ class ClassLoaderTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function twoClassesFromArchive() {
     $this->assertEquals(
       XPClass::forName('net.xp_framework.unittest.reflection.classes.ClassThree')->getClassLoader(),
@@ -107,12 +104,12 @@ class ClassLoaderTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function loadClass() {
     $this->assertEquals(XPClass::forName('lang.Value'), ClassLoader::getDefault()->loadClass('lang.Value'));
   }
 
-  #[@test]
+  #[Test]
   public function findThisClass() {
     $this->assertEquals(
       typeof($this)->getClassLoader(),
@@ -120,12 +117,12 @@ class ClassLoaderTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function findNullClass() {
     $this->assertNull(ClassLoader::getDefault()->findClass(null));
   }
 
-  #[@test]
+  #[Test]
   public function initializerCalled() {
     $name= 'net.xp_framework.unittest.reflection.LoaderTestClass';
     if (class_exists(literal($name), false)) {
@@ -139,27 +136,27 @@ class ClassLoaderTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(ClassNotFoundException::class)]
+  #[Test, Expect(ClassNotFoundException::class)]
   public function loadNonExistantClass() {
     ClassLoader::getDefault()->loadClass('@@NON-EXISTANT@@');
   }
 
-  #[@test, @expect(['class' => ClassFormatException::class, 'withMessage' => '/No types declared in .+/'])]
+  #[Test, Expect(['class' => ClassFormatException::class, 'withMessage' => '/No types declared in .+/'])]
   public function loadClassFileWithoutDeclaration() {
     XPClass::forName('net.xp_framework.unittest.reflection.classes.broken.NoClass');
   }
 
-  #[@test, @expect(['class' => ClassFormatException::class, 'withMessage' => '/File does not declare type `.+FalseClass`, but `.+TrueClass`/'])]
+  #[Test, Expect(['class' => ClassFormatException::class, 'withMessage' => '/File does not declare type `.+FalseClass`, but `.+TrueClass`/'])]
   public function loadClassFileWithIncorrectDeclaration() {
     XPClass::forName('net.xp_framework.unittest.reflection.classes.broken.FalseClass');
   }
 
-  #[@test, @expect(ClassDependencyException::class)]
+  #[Test, Expect(ClassDependencyException::class)]
   public function loadClassWithBrokenDependency() {
     XPClass::forName('net.xp_framework.unittest.reflection.classes.broken.BrokenDependencyClass');
   }
 
-  #[@test]
+  #[Test]
   public function loadClassFileWithRecusionInStaticBlock() {
     with ($p= Package::forName('net.xp_framework.unittest.reflection.classes')); {
       $two= $p->loadClass('StaticRecursionTwo');
@@ -168,17 +165,17 @@ class ClassLoaderTest extends \unittest\TestCase {
     }
   }
 
-  #[@test, @expect(IllegalStateException::class)]
+  #[Test, Expect(IllegalStateException::class)]
   public function newInstance() {
     (new XPClass('DoesNotExist'))->reflect();
   }
 
-  #[@test, @expect(ClassCastException::class)]
+  #[Test, Expect(ClassCastException::class)]
   public function newInstance__PHP_Incomplete_Class() {
     new XPClass(unserialize('O:12:"DoesNotExist":0:{}'));
   }
   
-  #[@test]
+  #[Test]
   public function packageContents() {
     $this->assertEquals(
       ['net/', 'META-INF/', 'contained.xar'],
@@ -186,45 +183,45 @@ class ClassLoaderTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function providesPackage() {
     $this->assertTrue($this->libraryLoader->providesPackage('net.xp_framework'));
   }
   
-  #[@test]
+  #[Test]
   public function doesNotProvideAPackage() {
     $this->assertFalse($this->libraryLoader->providesPackage('net.xp_frame'));
   }
 
-  #[@test]
+  #[Test]
   public function doesNotProvideClassone() {
     $this->assertFalse(ClassLoader::getDefault()
       ->providesClass('net.xp_framework.unittest.reflection.classes.Classone')
     );
   }
 
-  #[@test, @expect(ClassNotFoundException::class)]
+  #[Test, Expect(ClassNotFoundException::class)]
   public function loadingClassoneFails() {
     ClassLoader::getDefault()
       ->loadClass('net.xp_framework.unittest.reflection.classes.Classone')
     ;
   }
 
-  #[@test]
+  #[Test]
   public function providesExistantUri() {
     $this->assertTrue(
       ClassLoader::getDefault()->providesUri('net/xp_framework/unittest/reflection/classes/ClassOne.class.php')
     );
   }
 
-  #[@test]
+  #[Test]
   public function doesNotProvideNonExistantUri() {
     $this->assertFalse(
       ClassLoader::getDefault()->providesUri('non/existant/Class.class.php')
     );
   }
 
-  #[@test]
+  #[Test]
   public function findExistantUri() {
     $cl= ClassLoader::getDefault();
     $this->assertEquals(
@@ -233,12 +230,12 @@ class ClassLoaderTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function cannotFindNontExistantUri() {
     $this->assertNull(ClassLoader::getDefault()->findUri('non/existant/Class.class.php'));
   }
 
-  #[@test]
+  #[Test]
   public function loadUri() {
     $this->assertEquals(
       XPClass::forName('net.xp_framework.unittest.reflection.classes.ClassOne'),
@@ -246,7 +243,7 @@ class ClassLoaderTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(ClassNotFoundException::class)]
+  #[Test, Expect(ClassNotFoundException::class)]
   public function loadNonExistantUri() {
     ClassLoader::getDefault()->loadUri('non/existant/Class.class.php');
   }

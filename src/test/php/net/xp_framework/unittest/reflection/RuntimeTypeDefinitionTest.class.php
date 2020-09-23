@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{ClassLoader, DynamicClassLoader, XPClass};
-use unittest\TestCase;
+use unittest\{Test, TestCase, Values};
 
 /**
  * Base class for runtime type definitions
@@ -39,48 +39,48 @@ abstract class RuntimeTypeDefinitionTest extends TestCase {
    */
   protected abstract function define(array $decl= [], $def= null);
 
-  #[@test]
+  #[Test]
   public function returns_XPClass_instances() {
     $this->assertInstanceOf(XPClass::class, $this->define());
   }
 
-  #[@test]
+  #[Test]
   public function classloader_of_defined_type_is_DynamicClassLoader() {
     $this->assertInstanceOf(DynamicClassLoader::class, $this->define()->getClassLoader());
   }
 
-  #[@test]
+  #[Test]
   public function package_name() {
     $this->assertEquals('net.xp_framework.unittest.reflection', $this->define()->getPackage()->getName());
   }
 
-  #[@test]
+  #[Test]
   public function default_classloader_provides_defined_type() {
     $this->assertTrue(ClassLoader::getDefault()->providesClass($this->define()->getName()));
   }
 
-  #[@test]
+  #[Test]
   public function default_classloader_provides_packaged_of_defined_type() {
     $this->assertTrue(ClassLoader::getDefault()->providesPackage($this->define()->getPackage()->getName()));
   }
 
-  #[@test]
+  #[Test]
   public function declares_passed_annotation() {
     $this->assertTrue($this->define(['annotations' => '#[@test]'])->hasAnnotation('test'));
   }
 
-  #[@test]
+  #[Test]
   public function declares_passed_annotation_with_value() {
     $this->assertEquals('/rest', $this->define(['annotations' => '#[@webservice(["path" => "/rest"])]'])->getAnnotation('webservice', 'path'));
   }
 
-  #[@test, @values(['com.example.test.RTTDDotted', 'com\\example\\test\\RTTDNative'])]
+  #[Test, Values(['com.example.test.RTTDDotted', 'com\\example\\test\\RTTDNative'])]
   public function type_with_package_is_declared_inside_namespace($name) {
     $name.= typeof($this)->getSimpleName().$name;
     $this->assertEquals('com\\example\\test\\', substr($this->define(['name' => $name])->literal(), 0, 17));
   }
 
-  #[@test]
+  #[Test]
   public function type_without_package_is_declared_globally() {
     $name= typeof($this)->getSimpleName().'RTTDGlobal';
     $this->assertEquals($name, $this->define(['name' => $name])->literal());

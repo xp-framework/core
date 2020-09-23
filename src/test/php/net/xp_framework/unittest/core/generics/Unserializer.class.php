@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
+use lang\Generic;
+
 /**
  * Unserializer
  */
@@ -12,7 +14,7 @@ class Unserializer {
    * @param   var $arg
    * @return  T element
    */
-  #[@generic(['return' => 'T'])]
+  #[Generic(['return' => 'T'])]
   public function newInstance($arg= null) {
     return null === $arg ? $T->default : $T->newInstance($arg);
   }

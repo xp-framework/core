@@ -2,7 +2,8 @@
 
 use lang\{ClassLoader, ElementNotFoundException, IllegalArgumentException};
 use unittest\actions\RuntimeVersion;
-use util\{
+use unittest\{Expect, Test};
+use util\;
   FilesystemPropertySource,
   Properties,
   PropertyAccess,
@@ -47,19 +48,19 @@ class PropertyManagerTest extends \unittest\TestCase {
     return $f;
   }
 
-  #[@test]
+  #[Test]
   public function isSingleton() {
     $this->assertTrue(PropertyManager::getInstance() === PropertyManager::getInstance());
   }
   
-  #[@test]
+  #[Test]
   public function testCanAcquireNewInstance() {
     $instance= $this->fixture();
     $this->assertInstanceOf(PropertyManager::class, $instance);
     $this->assertFalse($instance === $this->fixture());
   }
   
-  #[@test]
+  #[Test]
   public function registerProperties() {
     $fixture= $this->fixture();
     $this->assertFalse($fixture->hasProperties('props'));
@@ -68,17 +69,17 @@ class PropertyManagerTest extends \unittest\TestCase {
     $this->assertTrue($fixture->hasProperties('props'));
   }
   
-  #[@test]
+  #[Test]
   public function hasConfiguredSourceProperties() {
     $this->assertTrue($this->preconfigured()->hasProperties('example'));
   }
   
-  #[@test]
+  #[Test]
   public function doesNotHaveConfiguredSourceProperties() {
     $this->assertFalse($this->preconfigured()->hasProperties('does-not-exist'));
   }
   
-  #[@test]
+  #[Test]
   public function getPropertiesReturnsSameObjectIfExactlyOneAvailable() {
     $fixture= $this->preconfigured();
     $this->assertEquals(
@@ -87,40 +88,40 @@ class PropertyManagerTest extends \unittest\TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function registerOverwritesExistingProperties() {
     $fixture= $this->preconfigured();
     $fixture->register('example', (new Properties())->load('[any-section]'));
     $this->assertEquals(['any-section', 'section'], iterator_to_array($fixture->getProperties('example')->sections()));
   }
 
-  #[@test]
+  #[Test]
   public function getProperties() {
     $prop= $this->preconfigured()->getProperties('example');
     $this->assertInstanceOf(PropertyAccess::class, $prop);
     $this->assertEquals('value', $prop->readString('section', 'key'));
   }
 
-  #[@test]
+  #[Test]
   public function prependSource() {
     $path= new FilesystemPropertySource('.');
     $this->assertEquals($path, $this->fixture()->prependSource($path));
   }
 
-  #[@test]
+  #[Test]
   public function appendSource() {
     $path= new FilesystemPropertySource('.');
     $this->assertEquals($path, $this->fixture()->appendSource($path));
   }
 
-  #[@test]
+  #[Test]
   public function hasSource() {
     $path= new FilesystemPropertySource(__DIR__.'/..');
     $fixture= $this->fixture();
     $this->assertFalse($fixture->hasSource($path));
   }
 
-  #[@test]
+  #[Test]
   public function hasAppendedSource() {
     $path= new FilesystemPropertySource(__DIR__.'/..');
     $fixture= $this->fixture();
@@ -128,14 +129,14 @@ class PropertyManagerTest extends \unittest\TestCase {
     $this->assertTrue($fixture->hasSource($path));
   }
 
-  #[@test]
+  #[Test]
   public function removeSource() {
     $path= new FilesystemPropertySource(__DIR__.'/..');
     $fixture= $this->fixture();
     $this->assertFalse($fixture->removeSource($path));
   }
 
-  #[@test]
+  #[Test]
   public function removeAppendedSource() {
     $path= new FilesystemPropertySource(__DIR__.'/..');
     $fixture= $this->fixture();
@@ -144,7 +145,7 @@ class PropertyManagerTest extends \unittest\TestCase {
     $this->assertFalse($fixture->hasSource($path));
   }
 
-  #[@test]
+  #[Test]
   public function getPropertiesFromSecondSource() {
     $fixture= $this->preconfigured();
     $fixture->appendSource(new ResourcePropertySource('net/xp_framework/unittest/'));
@@ -152,12 +153,12 @@ class PropertyManagerTest extends \unittest\TestCase {
     $this->assertEquals('value', $fixture->getProperties('example')->readString('section', 'key'));
   }
 
-  #[@test]
+  #[Test]
   public function getSourcesInitiallyEmpty() {
     $this->assertEquals([],  $this->fixture()->getSources());
   }
 
-  #[@test]
+  #[Test]
   public function getSourcesAfterAppendingOne() {
     $path= new FilesystemPropertySource('.');
     $fixture= $this->fixture();
@@ -165,7 +166,7 @@ class PropertyManagerTest extends \unittest\TestCase {
     $this->assertEquals([$path], $fixture->getSources());
   }
 
-  #[@test]
+  #[Test]
   public function getSourcesAfterPrependingOne() {
     $path= new FilesystemPropertySource('.');
     $fixture= $this->fixture();
@@ -173,7 +174,7 @@ class PropertyManagerTest extends \unittest\TestCase {
     $this->assertEquals([$path], $fixture->getSources());
   }
 
-  #[@test]
+  #[Test]
   public function getCompositeProperties() {
     $fixture= $this->preconfigured();
 
@@ -192,7 +193,7 @@ dynamic-value=whatever'));
     $this->assertEquals('whatever', $prop->readString('section', 'dynamic-value'));
   }
 
-  #[@test]
+  #[Test]
   public function memoryPropertiesAlwaysHavePrecendenceInCompositeProperties() {
     $fixture= $this->preconfigured();
 
@@ -203,7 +204,7 @@ key="overwritten value"'));
     $this->assertEquals('overwritten value', $fixture->getProperties('example')->readString('section', 'key'));
   }
 
-  #[@test]
+  #[Test]
   public function appendingSourcesOnlyAddsNewSources() {
     $fixture= $this->fixture();
     $fixture->appendSource(new ResourcePropertySource(self::RESOURCE_PATH));
@@ -212,7 +213,7 @@ key="overwritten value"'));
     $this->assertInstanceOf(Properties::class, $fixture->getProperties('example'));
   }
 
-  #[@test]
+  #[Test]
   public function getExistantProperties() {
     $p= $this->preconfigured()->getProperties('example');
     $this->assertInstanceOf(Properties::class, $p);
@@ -220,12 +221,12 @@ key="overwritten value"'));
 
   }
 
-  #[@test, @expect(ElementNotFoundException::class)]
+  #[Test, Expect(ElementNotFoundException::class)]
   public function getNonExistantProperties() {
     $this->preconfigured()->getProperties('does-not-exist');
   }
 
-  #[@test]
+  #[Test]
   public function setSource() {
     $fixture= $this->fixture();
     $fixture->setSources([]);
@@ -233,7 +234,7 @@ key="overwritten value"'));
     $this->assertEquals([], $fixture->getSources());
   }
 
-  #[@test]
+  #[Test]
   public function setSingleSource() {
     $source= new FilesystemPropertySource('.');
     $fixture= $this->fixture();
@@ -242,7 +243,7 @@ key="overwritten value"'));
     $this->assertEquals([$source], $fixture->getSources());
   }
 
-  #[@test]
+  #[Test]
   public function setSources() {
     $one= new FilesystemPropertySource('.');
     $two= new FilesystemPropertySource('..');
@@ -253,7 +254,7 @@ key="overwritten value"'));
     $this->assertEquals([$one, $two], $fixture->getSources());
   }
 
-  #[@test]
+  #[Test]
   public function setIllegalSourceKeepsPreviousStateAndThrowsException() {
     $one= new FilesystemPropertySource('.');
 
@@ -267,7 +268,7 @@ key="overwritten value"'));
     $this->assertEquals([], $fixture->getSources());
   }
 
-  #[@test]
+  #[Test]
   public function passEmptySourcesResetsList() {
     $one= new FilesystemPropertySource('.');
 

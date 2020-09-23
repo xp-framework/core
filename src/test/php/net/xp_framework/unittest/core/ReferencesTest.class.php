@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\ClassLoader;
+use unittest\Test;
 
 /**
  * References test.
@@ -48,7 +49,7 @@ class ReferencesTest extends \unittest\TestCase {
     $this->assertTrue($a === $b);
   }
 
-  #[@test]
+  #[Test]
   public function singletonInstance() {
     $s1= AnonymousSingleton::getInstance();
     $s2= AnonymousSingleton::getInstance();
@@ -70,7 +71,7 @@ class ReferencesTest extends \unittest\TestCase {
     return $registry[$key];
   }
   
-  #[@test]
+  #[Test]
   public function returnNewObject() {
     $object= AnonymousFactory::factory();
     $value= ReferencesTest::registry('list', $r= NULL);
@@ -78,7 +79,7 @@ class ReferencesTest extends \unittest\TestCase {
     $this->assertReference($object, $value);
   }    
 
-  #[@test]
+  #[Test]
   public function returnNewObjectViaMethodInvoke() {
     $class= \lang\XPClass::forName('net.xp_framework.unittest.core.AnonymousFactory');
     $factory= $class->getMethod('factory');
@@ -88,7 +89,7 @@ class ReferencesTest extends \unittest\TestCase {
     $this->assertReference($object, $value);
   }
   
-  #[@test]
+  #[Test]
   public function returnNewObjectViaNewInstance() {
     $object= AnonymousNewInstanceFactory::factory();
     $value= ReferencesTest::registry('list', $r= NULL);

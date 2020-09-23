@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
+use unittest\Generic;
 use util\Objects;
 
 /**
@@ -9,7 +10,7 @@ use util\Objects;
 class Lookup extends AbstractDictionary {
   protected $size;
 
-  #[@generic(['var' => '[:V]'])]
+  #[Generic(['var' => '[:V]'])]
   protected $elements= [];
   
   /**
@@ -18,7 +19,7 @@ class Lookup extends AbstractDictionary {
    * @param   K key
    * @param   V value
    */
-  #[@generic(['params' => 'K, V'])]
+  #[Generic(['params' => 'K, V'])]
   public function put($key, $value) {
     $this->elements[Objects::hashOf($key)]= $value;
     $this->size= sizeof($this->elements);
@@ -31,7 +32,7 @@ class Lookup extends AbstractDictionary {
    * @return  V value
    * @throws  util.NoSuchElementException
    */
-  #[@generic(['params' => 'K', 'return' => 'V'])]
+  #[Generic(['params' => 'K', 'return' => 'V'])]
   public function get($key) {
     $offset= Objects::hashOf($key);
     if (!isset($this->elements[$offset])) {
@@ -45,7 +46,7 @@ class Lookup extends AbstractDictionary {
    *
    * @return  V[] values
    */
-  #[@generic(['return' => 'V[]'])]
+  #[Generic(['return' => 'V[]'])]
   public function values() {
     return array_values($this->elements);
   }

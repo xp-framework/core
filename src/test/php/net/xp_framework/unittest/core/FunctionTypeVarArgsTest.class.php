@@ -1,9 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use lang\{ClassLoader, FunctionType, Type};
 use unittest\actions\RuntimeVersion;
-use lang\FunctionType;
-use lang\Type;
-use lang\ClassLoader;
+use unittest\{Test, Values};
 
 class FunctionTypeVarArgsTest extends \unittest\TestCase {
   private static $compiled= [];
@@ -27,42 +26,22 @@ class FunctionTypeVarArgsTest extends \unittest\TestCase {
     return [$class, 'fixture'];
   }
 
-  #[@test, @values([
-  #  [new FunctionType(null, Type::$VAR)],
-  #  [new FunctionType([], Type::$VAR)],
-  #  [new FunctionType([Type::$VAR], Type::$VAR)],
-  #  [new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR)]
-  #])]
+  #[Test, Values([[new FunctionType(null, Type::$VAR)], [new FunctionType([], Type::$VAR)], [new FunctionType([Type::$VAR], Type::$VAR)], [new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR)]])]
   public function single_vararg_parameter_via_syntax($type) {
     $this->assertTrue($type->isInstance($this->compile('... $args')));
   }
 
-  #[@test, @values([
-  #  [new FunctionType(null, Type::$VAR)],
-  #  [new FunctionType([], Type::$VAR)],
-  #  [new FunctionType([Type::$VAR], Type::$VAR)],
-  #  [new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR)]
-  #])]
+  #[Test, Values([[new FunctionType(null, Type::$VAR)], [new FunctionType([], Type::$VAR)], [new FunctionType([Type::$VAR], Type::$VAR)], [new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR)]])]
   public function single_vararg_parameter_via_apidoc($type) {
     $this->assertTrue($type->isInstance($this->compile('', ['@param  var... $args]'])));
   }
 
-  #[@test, @values([
-  #  [new FunctionType(null, Type::$VAR)],
-  #  [new FunctionType([Type::$ARRAY], Type::$VAR)],
-  #  [new FunctionType([Type::$ARRAY, Type::$VAR], Type::$VAR)],
-  #  [new FunctionType([Type::$ARRAY, Type::$VAR, Type::$VAR], Type::$VAR)]
-  #])]
+  #[Test, Values([[new FunctionType(null, Type::$VAR)], [new FunctionType([Type::$ARRAY], Type::$VAR)], [new FunctionType([Type::$ARRAY, Type::$VAR], Type::$VAR)], [new FunctionType([Type::$ARRAY, Type::$VAR, Type::$VAR], Type::$VAR)]])]
   public function array_parameter_followed_by_vararg_parameter_via_syntax($type) {
     $this->assertTrue($type->isInstance($this->compile('array $tokens, ... $args')));
   }
 
-  #[@test, @values([
-  #  [new FunctionType(null, Type::$VAR)],
-  #  [new FunctionType([Type::$ARRAY], Type::$VAR)],
-  #  [new FunctionType([Type::$ARRAY, Type::$VAR], Type::$VAR)],
-  #  [new FunctionType([Type::$ARRAY, Type::$VAR, Type::$VAR], Type::$VAR)]
-  #])]
+  #[Test, Values([[new FunctionType(null, Type::$VAR)], [new FunctionType([Type::$ARRAY], Type::$VAR)], [new FunctionType([Type::$ARRAY, Type::$VAR], Type::$VAR)], [new FunctionType([Type::$ARRAY, Type::$VAR, Type::$VAR], Type::$VAR)]])]
   public function array_parameter_followed_by_vararg_parameter_via_apidoc($type) {
     $this->assertTrue($type->isInstance($this->compile('array $tokens', ['@param  var[] $tokens', '@param var... $args'])));
   }

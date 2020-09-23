@@ -1,10 +1,9 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\ClassLoader;
-use lang\archive\Archive;
-use lang\archive\ArchiveClassLoader;
-use lang\ElementNotFoundException;
 use io\File;
+use lang\archive\{Archive, ArchiveClassLoader};
+use lang\{ClassLoader, ElementNotFoundException};
+use unittest\{Expect, Test};
 
 class ResourcesTest extends \unittest\TestCase {
   private $cl;
@@ -36,7 +35,7 @@ class ResourcesTest extends \unittest\TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function findResource() {
     $this->assertInstanceOf(
       ArchiveClassLoader::class,
@@ -44,12 +43,12 @@ class ResourcesTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function getResource() {
     $this->assertManifestFile(ClassLoader::getDefault()->getResource('META-INF/manifest.ini'));
   }
 
-  #[@test]
+  #[Test]
   public function getResourceAsStream() {
     $stream= ClassLoader::getDefault()->getResourceAsStream('META-INF/manifest.ini');
     $this->assertInstanceOf(File::class, $stream);
@@ -58,12 +57,12 @@ class ResourcesTest extends \unittest\TestCase {
     $stream->close();
   }
 
-  #[@test, @expect(ElementNotFoundException::class)]
+  #[Test, Expect(ElementNotFoundException::class)]
   public function nonExistantResource() {
     ClassLoader::getDefault()->getResource('::DOES-NOT-EXIST::');
   }
 
-  #[@test, @expect(ElementNotFoundException::class)]
+  #[Test, Expect(ElementNotFoundException::class)]
   public function nonExistantResourceStream() {
     ClassLoader::getDefault()->getResourceAsStream('::DOES-NOT-EXIST::');
   }

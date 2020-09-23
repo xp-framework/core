@@ -1,7 +1,8 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use util\Properties;
 use lang\ElementNotFoundException;
+use unittest\{Expect, Test, Values};
+use util\Properties;
 
 class PropertyExpansionTest extends \unittest\TestCase {
 
@@ -18,25 +19,25 @@ class PropertyExpansionTest extends \unittest\TestCase {
     ;
   }
 
-  #[@test]
+  #[Test]
   public function closure_lookup() {
     $prop= $this->newFixture(function($name) { return strtolower($name); });
     $this->assertEquals('test', $prop->readString('section', 'test'));
   }
 
-  #[@test]
+  #[Test]
   public function callable_lookup() {
     $prop= $this->newFixture('strtolower');
     $this->assertEquals('test', $prop->readString('section', 'test'));
   }
 
-  #[@test]
+  #[Test]
   public function map_lookup() {
     $prop= $this->newFixture(['TEST' => 'test']);
     $this->assertEquals('test', $prop->readString('section', 'test'));
   }
 
-  #[@test]
+  #[Test]
   public function arrayaccess_lookup() {
     $prop= $this->newFixture(new class implements \ArrayAccess {
       function offsetExists($key) { return true; }
@@ -47,7 +48,7 @@ class PropertyExpansionTest extends \unittest\TestCase {
     $this->assertEquals('test', $prop->readString('section', 'test'));
   }
 
-  #[@test, @expect(ElementNotFoundException::class), @values([null, false])]
+  #[Test, Expect(ElementNotFoundException::class), Values([null, false])]
   public function non_existant_lookup($return) {
     $this->newFixture(function($name) use($return) { return $return; })->readString('section', 'test');
   }

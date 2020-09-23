@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\{Runnable, Value, CommandLine, ClassCastException};
-use unittest\TestCase;
+use lang\{ClassCastException, CommandLine, Runnable, Value};
+use unittest\{Expect, Test, TestCase, Values};
 
 /**
  * Tests cast() functionality
@@ -13,7 +13,7 @@ class CastingTest extends TestCase implements Runnable {
     // Intentionally empty
   }
 
-  #[@test]
+  #[Test]
   public function newinstance() {
     $runnable= new class() implements Runnable {
       public function run() { return 'Test'; }
@@ -21,72 +21,72 @@ class CastingTest extends TestCase implements Runnable {
     $this->assertEquals('Test', cast($runnable, Runnable::class)->run());
   }
 
-  #[@test, @expect(ClassCastException::class)]
+  #[Test, Expect(ClassCastException::class)]
   public function null() {
     cast(null, Value::class);
   }
 
-  #[@test, @expect(ClassCastException::class)]
+  #[Test, Expect(ClassCastException::class)]
   public function is_nullsafe_per_default() {
     cast(null, Runnable::class)->run();
   }
 
-  #[@test]
+  #[Test]
   public function thisClass() {
     $this->assertTrue($this === cast($this, typeof($this)));
   }
 
-  #[@test]
+  #[Test]
   public function thisClassName() {
     $this->assertTrue($this === cast($this, nameof($this)));
   }
 
-  #[@test]
+  #[Test]
   public function thisClassLiteral() {
     $this->assertTrue($this === cast($this, self::class));
   }
 
-  #[@test]
+  #[Test]
   public function runnableInterface() {
     $this->assertTrue($this === cast($this, Runnable::class));
   }
 
-  #[@test]
+  #[Test]
   public function parentClass() {
     $this->assertTrue($this === cast($this, TestCase::class));
   }
 
-  #[@test]
+  #[Test]
   public function selfClass() {
     $this->assertTrue($this === cast($this, self::class));
   }
 
-  #[@test, @expect(ClassCastException::class)]
+  #[Test, Expect(ClassCastException::class)]
   public function unrelated() {
     cast($this, CommandLine::class);
   }
 
-  #[@test, @expect(ClassCastException::class)]
+  #[Test, Expect(ClassCastException::class)]
   public function nonExistant() {
     cast($this, '@@NON_EXISTANT_CLASS@@');
   }
 
-  #[@test, @expect(ClassCastException::class)]
+  #[Test, Expect(ClassCastException::class)]
   public function primitive() {
     cast('primitive', Value::class);
   }
 
-  #[@test, @expect(ClassCastException::class), @values(['', null])]
+  #[Test, Expect(ClassCastException::class), Values(['', null])]
   public function empty_or_null_name($name) {
     cast($this, $name);
   }
 
-  #[@test, @values([null, 'test'])]
+  #[Test, Values([null, 'test'])]
   public function nullable_string($value) {
     $this->assertEquals($value, cast($value, '?string'));
   }
 
-  #[@test, @expect(ClassCastException::class)]
+  #[Test, Expect(ClassCastException::class)]
   public function cannot_cast_arrays_to_nullable_string() {
     cast([1], '?string');
   }

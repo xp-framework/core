@@ -1,8 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use unittest\TestCase;
-use io\streams\BufferedInputStream;
-use io\streams\MemoryInputStream;
+use io\streams\{BufferedInputStream, MemoryInputStream};
+use unittest\{Test, TestCase, Values};
 
 /**
  * Unit tests for streams API
@@ -26,19 +25,19 @@ class BufferedInputStreamTest extends TestCase {
     $this->in= new BufferedInputStream($this->mem, 10);
   }
 
-  #[@test]
+  #[Test]
   public function readAll() {
     $this->assertEquals(self::BUFFER, $this->in->read(strlen(self::BUFFER)));
     $this->assertEquals(0, $this->in->available());
   }
 
-  #[@test]
+  #[Test]
   public function readChunk() {
     $this->assertEquals('Hello', $this->in->read(5));
     $this->assertEquals(5, $this->in->available());      // Five buffered bytes
   }
   
-  #[@test]
+  #[Test]
   public function readChunks() {
     $this->assertEquals('Hello', $this->in->read(5));
     $this->assertEquals(5, $this->in->available());      // Five buffered bytes
@@ -46,19 +45,19 @@ class BufferedInputStreamTest extends TestCase {
     $this->assertNotEquals(0, $this->in->available());   // Buffer completely empty, but underlying stream has bytes
   }
 
-  #[@test]
+  #[Test]
   public function closingTwiceHasNoEffect() {
     $this->in->close();
     $this->in->close();
   }
 
-  #[@test]
+  #[Test]
   public function readSize() {
     $this->assertEquals('Hello Worl', $this->in->read(10));
     $this->assertEquals(strlen(self::BUFFER) - 10, $this->in->available());
   }
 
-  #[@test, @values([1, 5, 10, 11])]
+  #[Test, Values([1, 5, 10, 11])]
   public function pushBack($count) {
     $chunk= $this->in->read($count);
     $this->in->pushBack($chunk);

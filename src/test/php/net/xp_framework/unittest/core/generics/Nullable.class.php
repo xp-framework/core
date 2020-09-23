@@ -1,7 +1,9 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
+use lang\Generic;
+
 /** Nullable value */
-#[@generic(['self' => 'T'])]
+#[Generic(['self' => 'T'])]
 class Nullable {
   protected $value;
 
@@ -10,7 +12,7 @@ class Nullable {
    *
    * @param   T value
    */
-  #[@generic(['params' => 'T'])]
+  #[Generic(['params' => 'T'])]
   public function __construct($value= null) {
     $this->value= $value;
   }
@@ -30,7 +32,7 @@ class Nullable {
    * @param   T value
    * @return  self this instance
    */
-  #[@generic(['params' => 'T'])]
+  #[Generic(['params' => 'T'])]
   public function set($value= null) {
     $this->value= $value;
     return $this;
@@ -41,7 +43,7 @@ class Nullable {
    *
    * @return  T value
    */
-  #[@generic(['return' => 'T'])]
+  #[Generic(['return' => 'T'])]
   public function get() {
     return $this->value;
   }

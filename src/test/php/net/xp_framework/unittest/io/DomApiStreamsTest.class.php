@@ -2,7 +2,7 @@
 
 use io\streams\{MemoryInputStream, MemoryOutputStream, Streams};
 use lang\Runtime;
-use unittest\PrerequisitesNotMetError;
+use unittest\{PrerequisitesNotMetError, Test};
 
 /**
  * TestCase
@@ -27,7 +27,7 @@ class DomApiStreamsTest extends \unittest\TestCase {
    * Test DOMDocument::loadHTMLFile()
    *
    */
-  #[@test]
+  #[Test]
   public function usableInLoadHTMLFile() {
     $dom= new \DOMDocument();
     $this->assertTrue($dom->loadHTMLFile(Streams::readableUri(new MemoryInputStream(trim('
@@ -48,7 +48,7 @@ class DomApiStreamsTest extends \unittest\TestCase {
    * Test DOMDocument::saveHTMLFile()
    *
    */
-  #[@test]
+  #[Test]
   public function usableInSaveHTMLFile() {
     $out= new MemoryOutputStream();
 
@@ -71,7 +71,7 @@ class DomApiStreamsTest extends \unittest\TestCase {
    * Test DOMDocument::load()
    *
    */
-  #[@test]
+  #[Test]
   public function usableInLoad() {
     $dom= new \DOMDocument();
     $this->assertTrue($dom->load(Streams::readableUri(new MemoryInputStream(trim('
@@ -86,7 +86,7 @@ class DomApiStreamsTest extends \unittest\TestCase {
    * Test DOMDocument::save()
    *
    */
-  #[@test]
+  #[Test]
   public function usableInSave() {
     $out= new MemoryOutputStream();
 

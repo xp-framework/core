@@ -1,139 +1,140 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\{Runnable, ClassLoader};
+use lang\{ClassLoader, Runnable};
 use net\xp_framework\unittest\Name;
 use net\xp_framework\unittest\core\generics\ListOf;
+use unittest\{Test, Values};
 
 /** Tests the is() core functionality */
 class IsTest extends \unittest\TestCase {
 
-  #[@test]
+  #[Test]
   public function string_array() {
     $this->assertTrue(is('string[]', ['Hello']));
   }
 
-  #[@test]
+  #[Test]
   public function var_array() {
     $this->assertFalse(is('string[]', ['Hello', 1, true]));
   }
 
-  #[@test]
+  #[Test]
   public function int_array() {
     $this->assertTrue(is('int[]', [1, 2, 3]));
   }
 
-  #[@test]
+  #[Test]
   public function mapIsNotAnInt_array() {
     $this->assertFalse(is('int[]', ['one' => 1, 'two' => 2]));
   }
 
-  #[@test]
+  #[Test]
   public function intIsNotAnInt_array() {
     $this->assertFalse(is('int[]', 1));
   }
 
-  #[@test]
+  #[Test]
   public function thisIsNotAnInt_array() {
     $this->assertFalse(is('int[]', $this));
   }
 
-  #[@test]
+  #[Test]
   public function emptyArrayIsAnInt_array() {
     $this->assertTrue(is('int[]', []));
   }
 
-  #[@test]
+  #[Test]
   public function object_array() {
     $this->assertTrue(is('net.xp_framework.unittest.Name[]', [new Name('test'), new Name('test'), new Name('test')]));
   }
 
-  #[@test]
+  #[Test]
   public function objectArrayWithnull() {
     $this->assertFalse(is('net.xp_framework.unittest.Name[]', [new Name('test'), new Name('test'), null]));
   }
 
-  #[@test]
+  #[Test]
   public function stringMap() {
     $this->assertTrue(is('[:string]', ['greet' => 'Hello', 'whom' => 'World']));
   }
 
-  #[@test]
+  #[Test]
   public function intMap() {
     $this->assertTrue(is('[:int]', ['greet' => 1, 'whom' => 2]));
   }
 
-  #[@test]
+  #[Test]
   public function intArrayIsNotAnIntMap() {
     $this->assertFalse(is('[:int]', [1, 2, 3]));
   }
 
-  #[@test]
+  #[Test]
   public function intIsNotAnIntMap() {
     $this->assertFalse(is('[:int]', 1));
   }
 
-  #[@test]
+  #[Test]
   public function thisIsNotAnIntMap() {
     $this->assertFalse(is('[:int]', $this));
   }
 
-  #[@test]
+  #[Test]
   public function emptyArrayIsAnIntMap() {
     $this->assertTrue(is('[:int]', []));
   }
 
-  #[@test]
+  #[Test]
   public function stringPrimitive() {
     $this->assertTrue(is('string', 'Hello'));
   }
 
-  #[@test]
+  #[Test]
   public function nullNotAStringPrimitive() {
     $this->assertFalse(is('string', null));
   }
 
-  #[@test]
+  #[Test]
   public function boolPrimitive() {
     $this->assertTrue(is('bool', true));
   }
 
-  #[@test]
+  #[Test]
   public function nullNotABoolPrimitive() {
     $this->assertFalse(is('bool', null));
   }
 
-  #[@test]
+  #[Test]
   public function doublePrimitive() {
     $this->assertTrue(is('double', 0.0));
   }
 
-  #[@test]
+  #[Test]
   public function nullNotADoublePrimitive() {
     $this->assertFalse(is('double', null));
   }
 
-  #[@test]
+  #[Test]
   public function intPrimitive() {
     $this->assertTrue(is('int', 0));
   }
 
-  #[@test]
+  #[Test]
   public function nullNotAnIntPrimitive() {
     $this->assertFalse(is('int', null));
   }
 
-  #[@test]
+  #[Test]
   public function undefinedClassName() {
     $this->assertFalse(class_exists('Undefined_Class', false));
     $this->assertFalse(is('Undefined_Class', new class() { }));
   }
 
-  #[@test]
+  #[Test]
   public function fullyQualifiedClassName() {
     $this->assertTrue(is('lang.Value', new Name('test')));
   }
 
-  #[@test]
+  #[Test]
   public function interfaces() {
     ClassLoader::defineClass(
       'net.xp_framework.unittest.core.RunnableImpl', 
@@ -153,17 +154,17 @@ class IsTest extends \unittest\TestCase {
     $this->assertFalse(is('lang.Runnable', new class() { }));
   }
 
-  #[@test]
+  #[Test]
   public function aStringVectorIsIsItself() {
     $this->assertTrue(is('net.xp_framework.unittest.core.generics.ListOf<string>', create('new net.xp_framework.unittest.core.generics.ListOf<string>')));
   }
 
-  #[@test]
+  #[Test]
   public function aVectorIsNotAStringVector() {
     $this->assertFalse(is('net.xp_framework.unittest.core.generics.ListOf<string>', new ListOf()));
   }
 
-  #[@test]
+  #[Test]
   public function aStringVectorIsNotAVector() {
     $this->assertFalse(is(
       'net.xp_framework.unittest.core.generics.ListOf',
@@ -171,7 +172,7 @@ class IsTest extends \unittest\TestCase {
     ));
   }
 
-  #[@test]
+  #[Test]
   public function anIntVectorIsNotAStringVector() {
     $this->assertFalse(is(
       'net.xp_framework.unittest.core.generics.ListOf<string>',
@@ -179,7 +180,7 @@ class IsTest extends \unittest\TestCase {
     ));
   }
 
-  #[@test]
+  #[Test]
   public function aVectorOfIntVectorsIsItself() {
     $this->assertTrue(is(
       'net.xp_framework.unittest.core.generics.ListOf<net.xp_framework.unittest.core.generics.ListOf<int>>',
@@ -187,7 +188,7 @@ class IsTest extends \unittest\TestCase {
     ));
   }
 
-  #[@test]
+  #[Test]
   public function aVectorOfIntVectorsIsNotAVectorOfStringVectors() {
     $this->assertFalse(is(
       'net.xp_framework.unittest.core.generics.ListOf<Vector<string>>',
@@ -195,7 +196,7 @@ class IsTest extends \unittest\TestCase {
     ));
   }
  
-  #[@test]
+  #[Test]
   public function anIntVectorIsNotAnUndefinedGeneric() {
     $this->assertFalse(is('Undefined_Class<string>', create('new net.xp_framework.unittest.core.generics.ListOf<int>')));
   }
@@ -209,17 +210,17 @@ class IsTest extends \unittest\TestCase {
     ];
   }
 
-  #[@test, @values('genericDictionaries')]
+  #[Test, Values('genericDictionaries')]
   public function wildcard_check_for_type_parameters($value) {
     $this->assertTrue(is('net.xp_framework.unittest.core.generics.Lookup<?, ?>', $value));
   }
 
-  #[@test, @values('genericDictionaries')]
+  #[Test, Values('genericDictionaries')]
   public function wildcard_check_for_type_parameter_with_super_type($value) {
     $this->assertTrue(is('net.xp_framework.unittest.core.generics.IDictionary<?, ?>', $value));
   }
 
-  #[@test]
+  #[Test]
   public function wildcard_check_for_single_type_parameter_generic() {
     $this->assertTrue(is(
       'net.xp_framework.unittest.core.generics.ListOf<net.xp_framework.unittest.core.generics.ListOf<?>>',
@@ -227,7 +228,7 @@ class IsTest extends \unittest\TestCase {
     ));
   }
 
-  #[@test]
+  #[Test]
   public function wildcard_check_for_type_parameters_partial() {
     $this->assertTrue(is(
       'net.xp_framework.unittest.core.generics.Lookup<string, ?>',
@@ -235,87 +236,64 @@ class IsTest extends \unittest\TestCase {
     ));
   }
 
-  #[@test]
+  #[Test]
   public function wildcard_check_for_newinstance() {
     $this->assertTrue(is('util.Filter<?>', newinstance('util.Filter<string>', [], [
       'accept' => function($e) { return true; }
     ])));
   }
 
-  #[@test]
+  #[Test]
   public function function_type() {
     $this->assertTrue(is('function(): var', function() { }));
   }
 
-  #[@test]
+  #[Test]
   public function function_type_returning_array() {
     $this->assertTrue(is('function(): var[]', function() { }));
   }
 
-  #[@test]
+  #[Test]
   public function braced_function_type() {
     $this->assertTrue(is('(function(): var)', function() { }));
   }
 
-  #[@test]
+  #[Test]
   public function array_of_function_type() {
     $this->assertTrue(is('(function(): var)[]', [function() { }]));
   }
 
-  #[@test, @values([1, 'Test'])]
+  #[Test, Values([1, 'Test'])]
   public function type_union($val) {
     $this->assertTrue(is('int|string', $val));
   }
 
-  #[@test, @values([1, null])]
+  #[Test, Values([1, null])]
   public function nullable($val) {
     $this->assertTrue(is('?int', $val));
   }
 
-  #[@test, @values([
-  #  [function() { }],
-  #  [function() { yield 'Test'; }],
-  #  ['strlen'],
-  #  ['xp::gc'],
-  #  [['xp', 'gc']],
-  #  [[new Name('test'), 'toString']]
-  #])]
+  #[Test, Values([[function() { }], [function() { yield 'Test'; }], ['strlen'], ['xp::gc'], [['xp', 'gc']], [[new Name('test'), 'toString']]])]
   public function is_callable($val) {
     $this->assertTrue(is('callable', $val));
   }
 
-  #[@test, @values([
-  #  [[]],
-  #  [[1, 2, 3]],
-  #  [['key' => 'value']],
-  #])]
+  #[Test, Values([[[]], [[1, 2, 3]], [['key' => 'value']],])]
   public function is_array($val) {
     $this->assertTrue(is('array', $val));
   }
 
-  #[@test, @values([
-  #  [[]],
-  #  [[1, 2, 3]],
-  #  [['key' => 'value']],
-  #  [new \ArrayObject([])],
-  #  [new \ArrayIterator([])]
-  #])]
+  #[Test, Values([[[]], [[1, 2, 3]], [['key' => 'value']], [new \ArrayObject([])], [new \ArrayIterator([])]])]
   public function is_iterable($val) {
     $this->assertTrue(is('iterable', $val));
   }
 
-  #[@test, @values([
-  #  [new Name('test')],
-  #  [new \ArrayObject([])]
-  #])]
+  #[Test, Values([[new Name('test')], [new \ArrayObject([])]])]
   public function is_object($val) {
     $this->assertTrue(is('object', $val));
   }
 
-  #[@test, @values([
-  #  [function() { }],
-  #  [function() { yield 'Test'; }]
-  #])]
+  #[Test, Values([[function() { }], [function() { yield 'Test'; }]])]
   public function closures_are_objects($val) {
     $this->assertTrue(is('object', $val));
   }

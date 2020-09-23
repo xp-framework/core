@@ -1,14 +1,14 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
-use lang\Primitive;
-use lang\XPClass;
+use lang\{Primitive, XPClass};
+use unittest\{Test, TestCase};
 
 /**
  * TestCase for instance reflection
  *
  * @see   xp://net.xp_framework.unittest.core.generics.Lookup
  */
-class InstanceReflectionTest extends \unittest\TestCase {
+class InstanceReflectionTest extends TestCase {
   private $fixture;
   
   /**
@@ -20,7 +20,7 @@ class InstanceReflectionTest extends \unittest\TestCase {
     $this->fixture= create('new net.xp_framework.unittest.core.generics.Lookup<string, unittest.TestCase>()');
   }
 
-  #[@test]
+  #[Test]
   public function nameof() {
     $this->assertEquals(
       'net.xp_framework.unittest.core.generics.Lookup<string,unittest.TestCase>',
@@ -28,7 +28,7 @@ class InstanceReflectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function nameOfClass() {
     $this->assertEquals(
       'net.xp_framework.unittest.core.generics.Lookup<string,unittest.TestCase>', 
@@ -36,7 +36,7 @@ class InstanceReflectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function simpleNameOfClass() {
     $this->assertEquals(
       'Lookup<string,unittest.TestCase>', 
@@ -44,7 +44,7 @@ class InstanceReflectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function reflectedNameOfClass() {
     $this->assertEquals(
       "net\\xp_framework\\unittest\\core\\generics\\Lookup\xb7\xb7\xfestring\xb8unittest\xa6TestCase",
@@ -52,17 +52,17 @@ class InstanceReflectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function instanceIsGeneric() {
     $this->assertTrue(typeof($this->fixture)->isGeneric());
   }
 
-  #[@test]
+  #[Test]
   public function instanceIsNoGenericDefinition() {
     $this->assertFalse(typeof($this->fixture)->isGenericDefinition());
   }
 
-  #[@test]
+  #[Test]
   public function genericDefinition() {
     $this->assertEquals(
       XPClass::forName('net.xp_framework.unittest.core.generics.Lookup'),
@@ -70,7 +70,7 @@ class InstanceReflectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function genericArguments() {
     $this->assertEquals(
       [Primitive::$STRING, XPClass::forName('unittest.TestCase')],
@@ -78,7 +78,7 @@ class InstanceReflectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function elementFieldType() {
     $this->assertEquals(
       '[:unittest.TestCase]',
@@ -86,7 +86,7 @@ class InstanceReflectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function putParameters() {
     $params= typeof($this->fixture)->getMethod('put')->getParameters();
     $this->assertEquals(2, sizeof($params));
@@ -94,7 +94,7 @@ class InstanceReflectionTest extends \unittest\TestCase {
     $this->assertEquals(XPClass::forName('unittest.TestCase'), $params[1]->getType());
   }
 
-  #[@test]
+  #[Test]
   public function getReturnType() {
     $this->assertEquals(
       'unittest.TestCase',
@@ -102,7 +102,7 @@ class InstanceReflectionTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function valuesReturnType() {
     $this->assertEquals(
       'unittest.TestCase[]',

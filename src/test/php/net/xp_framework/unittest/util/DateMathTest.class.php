@@ -1,12 +1,11 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use util\TimeInterval;
-use util\DateMath;
-use util\Date;
+use unittest\Test;
+use util\{Date, DateMath, TimeInterval};
 
 class DateMathTest extends \unittest\TestCase {
 
-  #[@test]
+  #[Test]
   public function diffSimple() {
     $this->assertEquals(
       0,
@@ -14,7 +13,7 @@ class DateMathTest extends \unittest\TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function diffYesterday() {
     $this->assertEquals(
       -1,
@@ -22,7 +21,7 @@ class DateMathTest extends \unittest\TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function diffTomorrow() {
     $this->assertEquals(
       1,
@@ -30,7 +29,7 @@ class DateMathTest extends \unittest\TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function diffMidnightToMidnight() {
     $this->assertEquals(
       0,
@@ -38,7 +37,7 @@ class DateMathTest extends \unittest\TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function diffOneSecond() {
     $this->assertEquals(
       1,
@@ -46,7 +45,7 @@ class DateMathTest extends \unittest\TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function diffleapYear() {
     $this->assertEquals(
       2,
@@ -54,7 +53,7 @@ class DateMathTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function diffWithTimezoneOffsets() {
     $this->assertEquals(
       0,
@@ -62,7 +61,7 @@ class DateMathTest extends \unittest\TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function diffTimezoneIndependence() {
     $this->assertEquals(
       0,
@@ -70,7 +69,7 @@ class DateMathTest extends \unittest\TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function diffDayInForeignTimezone() {
     $this->assertEquals(
       1,
@@ -78,7 +77,7 @@ class DateMathTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function diffMonthInForeignTimezone() {
     $this->assertEquals(
       1,
@@ -86,7 +85,7 @@ class DateMathTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function diffYearInForeignTimezone() {
     $this->assertEquals(
       1,
@@ -94,7 +93,7 @@ class DateMathTest extends \unittest\TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function diffOneYear() {
     $this->assertEquals(
       365,
@@ -102,7 +101,7 @@ class DateMathTest extends \unittest\TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function diffOneLeapYear() {
     $this->assertEquals(
       366,
@@ -110,14 +109,14 @@ class DateMathTest extends \unittest\TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function yearDiff() {
     $this->assertEquals(0, DateMath::diff(TimeInterval::$YEAR, new Date('2007-01-01'), new Date('2007-12-31')));
     $this->assertEquals(1, DateMath::diff(TimeInterval::$YEAR, new Date('2007-01-01'), new Date('2008-01-01')));
     $this->assertEquals(-1, DateMath::diff(TimeInterval::$YEAR, new Date('2007-01-01'), new Date('2006-12-31')));
   }
 
-  #[@test]
+  #[Test]
   public function monthDiff() {
     $this->assertEquals(0, DateMath::diff(TimeInterval::$MONTH, new Date('2004-01-01'), new Date('2004-01-31')));
     $this->assertEquals(1, DateMath::diff(TimeInterval::$MONTH, new Date('2004-02-29'), new Date('2004-03-01')));
@@ -125,7 +124,7 @@ class DateMathTest extends \unittest\TestCase {
     $this->assertEquals(-1, DateMath::diff(TimeInterval::$MONTH, new Date('2007-01-01'), new Date('2006-12-31')));
   }
   
-  #[@test]
+  #[Test]
   public function hourDiff() {
     $this->assertEquals(0, DateMath::diff(TimeInterval::$HOURS, new Date('2007-08-12 12:00:00'), new Date('2007-08-12 12:59:59')));
     $this->assertEquals(1, DateMath::diff(TimeInterval::$HOURS, new Date('2007-08-12 12:00:00'), new Date('2007-08-12 13:00:00')));

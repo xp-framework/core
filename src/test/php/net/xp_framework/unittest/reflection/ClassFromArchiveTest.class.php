@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\IClassLoader;
 use io\TempFile;
+use lang\IClassLoader;
 use lang\archive\{Archive, ArchiveClassLoader};
 
 /**

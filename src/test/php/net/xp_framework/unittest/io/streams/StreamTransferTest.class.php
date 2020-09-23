@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use io\streams\{StreamTransfer, InputStream, OutputStream, MemoryInputStream, MemoryOutputStream};
-use unittest\TestCase;
+use io\streams\{InputStream, MemoryInputStream, MemoryOutputStream, OutputStream, StreamTransfer};
+use unittest\{Test, TestCase};
 
 /**
  * TestCase
@@ -68,7 +68,7 @@ class StreamTransferTest extends TestCase {
    * Test
    *
    */
-  #[@test]
+  #[Test]
   public function dataTransferred() {
     $out= new MemoryOutputStream();
 
@@ -82,7 +82,7 @@ class StreamTransferTest extends TestCase {
    * Test
    *
    */
-  #[@test]
+  #[Test]
   public function nothingAvailableAfterTransfer() {
     $in= new MemoryInputStream('Hello');
 
@@ -97,7 +97,7 @@ class StreamTransferTest extends TestCase {
    *
    * @see   xp://lang.Closeable#close
    */
-  #[@test]
+  #[Test]
   public function closingTwice() {
     $s= new StreamTransfer(new MemoryInputStream('Hello'), new MemoryOutputStream());
     $s->close();
@@ -108,7 +108,7 @@ class StreamTransferTest extends TestCase {
    * Test close() method
    *
    */
-  #[@test]
+  #[Test]
   public function close() {
     $in= $this->closeableInputStream();
     $out= $this->closeableOutputStream();
@@ -121,7 +121,7 @@ class StreamTransferTest extends TestCase {
    * Test close() and exceptions
    *
    */
-  #[@test]
+  #[Test]
   public function closingOutputFails() {
     $in= $this->closeableInputStream();
     $out= $this->uncloseableOutputStream();
@@ -140,7 +140,7 @@ class StreamTransferTest extends TestCase {
    * Test close() and exceptions
    *
    */
-  #[@test]
+  #[Test]
   public function closingInputFails() {
     $in= $this->uncloseableInputStream();
     $out= $this->closeableOutputStream();
@@ -159,7 +159,7 @@ class StreamTransferTest extends TestCase {
    * Test close() and exceptions
    *
    */
-  #[@test]
+  #[Test]
   public function closingInputAndOutputFails() {
     $in= $this->uncloseableInputStream();
     $out= $this->uncloseableOutputStream();

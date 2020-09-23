@@ -1,12 +1,13 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use io\streams\{Streams, MemoryOutputStream};
-use lang\{Throwable, Error, XPException, XPClass, IllegalArgumentException};
+use io\streams\{MemoryOutputStream, Streams};
+use lang\{Error, IllegalArgumentException, Throwable, XPClass, XPException};
 use unittest\actions\RuntimeVersion;
+use unittest\{Action, Expect, Test};
 
 class ExceptionsTest extends \unittest\TestCase {
 
-  #[@test]
+  #[Test]
   public function noException() {
     try {
       // Nothing
@@ -15,7 +16,7 @@ class ExceptionsTest extends \unittest\TestCase {
     }
   }
 
-  #[@test]
+  #[Test]
   public function thrownExceptionCaught() {
     try {
       throw new Throwable('Test');
@@ -28,7 +29,7 @@ class ExceptionsTest extends \unittest\TestCase {
     $this->fail('Thrown Exception not caught');
   }
 
-  #[@test]
+  #[Test]
   public function multipleCatches() {
     try {
       throw new XPException('Test');
@@ -43,14 +44,14 @@ class ExceptionsTest extends \unittest\TestCase {
     $this->fail('Thrown Exception not caught');
   }
 
-  #[@test]
+  #[Test]
   public function exceptions_have_non_empty_stracktraces() {
     $trace= (new Throwable('Test'))->getStackTrace();
     $this->assertInstanceOf('lang.StackTraceElement[]', $trace);
     $this->assertNotEquals(0, sizeof($trace));
   }
 
-  #[@test]
+  #[Test]
   public function first_frame_contains_this_class_and_method() {
     $first= (new Throwable('Test'))->getStackTrace()[0];
     
@@ -60,18 +61,18 @@ class ExceptionsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function an_exception_equals_itself() {
     $e= new Throwable('Test');
     $this->assertEquals($e, $e);
   }
 
-  #[@test]
+  #[Test]
   public function all_exceptions_are_unique() {
     $this->assertNotEquals(new Throwable('Test'), new Throwable('Test'));
   }
 
-  #[@test]
+  #[Test]
   public function exceptions_hashcodes_are_also_unique() {
     $this->assertNotEquals(
       (new Throwable('Test'))->hashCode(),
@@ -79,23 +80,23 @@ class ExceptionsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function message() {
     $this->assertEquals('Test', (new Throwable('Test'))->getMessage());
   }
 
-  #[@test]
+  #[Test]
   public function cause() {
     $cause= new Throwable('Cause');
     $this->assertEquals($cause, (new Throwable('Test', $cause))->getCause());
   }
 
-  #[@test]
+  #[Test]
   public function cause_is_optional() {
     $this->assertNull((new Throwable('Test'))->getCause());
   }
 
-  #[@test]
+  #[Test]
   public function cause_can_be_modified() {
     $cause= new Throwable('Cause');
     $e= new Throwable('Test');
@@ -103,7 +104,7 @@ class ExceptionsTest extends \unittest\TestCase {
     $this->assertEquals($cause, $e->getCause());
   }
 
-  #[@test]
+  #[Test]
   public function compoundMessage() {
     $this->assertEquals(
       'Exception lang.Throwable (Test)', 
@@ -111,7 +112,7 @@ class ExceptionsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function printStackTrace() {
     $out= new MemoryOutputStream();
     $e= new Throwable('Test');
@@ -119,35 +120,35 @@ class ExceptionsTest extends \unittest\TestCase {
     $this->assertEquals($e->toString(), $out->bytes());
   }
   
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function withCause_must_be_a_throwable() {
     new XPException('Message', 'Anything...');
   }
 
-  #[@test]
+  #[Test]
   public function wrap_xp_exceptions() {
     $e= new XPException('Test');
     $this->assertEquals($e, Throwable::wrap($e));
   }
 
-  #[@test]
+  #[Test]
   public function wrap_php5_exceptions() {
     $e= new \Exception('Test');
     $this->assertInstanceOf(XPException::class, Throwable::wrap($e));
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.0.0'))]
+  #[Test, Action(new RuntimeVersion('>=7.0.0'))]
   public function wrap_php7_exceptions() {
     $e= new \TypeError('Test');
     $this->assertInstanceOf(Error::class, Throwable::wrap($e));
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function wrap_non_exceptions() {
     Throwable::wrap($this);
   }
 
-  #[@test]
+  #[Test]
   public function wrapping_native_exceptions_adds_stacktrace_with_file_and_line() {
     $first= Throwable::wrap(new \Exception('Test'))->getStackTrace()[0];
     $this->assertEquals([__FILE__, __LINE__ - 1], [$first->file, $first->line]);

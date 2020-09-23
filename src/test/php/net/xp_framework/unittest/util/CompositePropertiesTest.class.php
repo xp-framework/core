@@ -1,8 +1,9 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use lang\{IllegalArgumentException, Error};
+use lang\{Error, IllegalArgumentException};
 use unittest\actions\RuntimeVersion;
-use util\{Properties, Hashmap, CompositeProperties};
+use unittest\{Expect, Test};
+use util\{CompositeProperties, Hashmap, Properties};
 
 /**
  * Test CompositeProperties
@@ -12,34 +13,34 @@ use util\{Properties, Hashmap, CompositeProperties};
  */
 class CompositePropertiesTest extends \unittest\TestCase {
 
-  #[@test]
+  #[Test]
   public function createCompositeSingle() {
     $c= new CompositeProperties([new Properties('')]);
     $this->assertEquals(1, $c->length());
   }
 
-  #[@test]
+  #[Test]
   public function createCompositeDual() {
     $c= new CompositeProperties([new Properties('a.ini'), new Properties('b.ini')]);
     $this->assertEquals(2, $c->length());
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function createCompositeThrowsExceptionWhenNoArgumentGiven() {
     new CompositeProperties();
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function createEmptyCompositeThrowsException() {
     new CompositeProperties([]);
   }
 
-  #[@test, @expect(Error::class)]]
+  #[Test, Expect(Error::class)]]
   public function createCompositeThrowsExceptionWhenSomethingElseThenPropertiesGiven() {
     new CompositeProperties([new Properties(null), 1, new Properties(null)]);
   }
 
-  #[@test]
+  #[Test]
   public function addOtherProperties() {
     $c= new CompositeProperties([new Properties(null)]);
     $this->assertEquals(1, $c->length());
@@ -48,7 +49,7 @@ class CompositePropertiesTest extends \unittest\TestCase {
     $this->assertEquals(2, $c->length());
   }
 
-  #[@test]
+  #[Test]
   public function addingIdenticalPropertiesIsIdempotent() {
     $p= new Properties('');
     $c= new CompositeProperties([$p]);
@@ -58,7 +59,7 @@ class CompositePropertiesTest extends \unittest\TestCase {
     $this->assertEquals(1, $c->length());
   }
 
-  #[@test]
+  #[Test]
   public function addingEqualPropertiesIsIdempotent() {
     $c= new CompositeProperties([(new Properties())->load("[section]\na=b\nb=c")]);
     $this->assertEquals(1, $c->length());
@@ -110,152 +111,152 @@ anotherkey="is there, too"
     return $c;
   }
 
-  #[@test]
+  #[Test]
   public function readStringUsesFirstProperties() {
     $this->assertEquals('string...', $this->fixture()->readString('section', 'str'));
   }
 
-  #[@test]
+  #[Test]
   public function readStringUsesSecondPropertiesWhenFirstEmpty() {
     $this->assertEquals('Another thing', $this->fixture()->readString('section', 'str2'));
   }
 
-  #[@test]
+  #[Test]
   public function readStringReturnsDefaultOnNoOccurrance() {
     $this->assertEquals('Hello World', $this->fixture()->readString('section', 'non-existant-key', 'Hello World'));
   }
 
-  #[@test]
+  #[Test]
   public function readStringDefaultForDefault() {
     $this->assertEquals('', $this->fixture()->readString('section', 'non-existant-key'));
   }
 
-  #[@test]
+  #[Test]
   public function readBooleanUsesFirst() {
     $this->assertEquals(true, $this->fixture()->readBool('section', 'b1'));
   }
 
-  #[@test]
+  #[Test]
   public function readBooleanUsesSecondIfFirstUnset() {
     $this->assertEquals(false, $this->fixture()->readBool('section', 'b2'));
   }
 
-  #[@test]
+  #[Test]
   public function readBooleanUsesDefaultOnNoOccurrance() {
     $this->assertEquals(true, $this->fixture()->readBool('section', 'non-existant-key', true));
   }
 
-  #[@test]
+  #[Test]
   public function readBooleanUsesFalseForDefaultOnNoOccurrance() {
     $this->assertEquals(false, $this->fixture()->readBool('section', 'b3'));
   }
 
-  #[@test]
+  #[Test]
   public function readArrayUsesFirst() {
     $this->assertEquals(['foo', 'bar'], $this->fixture()->readArray('section', 'arr1'));
   }
 
-  #[@test]
+  #[Test]
   public function readArrayUsesSecondIfFirstUnset() {
     $this->assertEquals(['foo', 'bar', 'baz'], $this->fixture()->readArray('section', 'arr2'));
   }
 
-  #[@test]
+  #[Test]
   public function readArrayUsesDefaultOnNoOccurrance() {
     $this->assertEquals([1, 2, 3], $this->fixture()->readArray('section', 'non-existant-key', [1, 2, 3]));
   }
 
-  #[@test]
+  #[Test]
   public function readArrayUsesEmptyArrayDefaultOnNoOccurrance() {
     $this->assertEquals([], $this->fixture()->readArray('section', 'non-existant-key'));
   }
 
-  #[@test]
+  #[Test]
   public function readArrayDoesNotAddArrayElements() {
     $this->assertEquals(['foo'], $this->fixture()->readArray('section', 'arr3'));
   }
 
-  #[@test]
+  #[Test]
   public function readMapUsesFirst() {
     $this->assertEquals(['a' => 'b', 'b' => 'c'], $this->fixture()->readMap('section', 'hash1'));
   }
 
-  #[@test]
+  #[Test]
   public function readMapUsesSecondIfFirstUnset() {
     $this->assertEquals(['b' => 'null'], $this->fixture()->readMap('section', 'hash2'));
   }
 
-  #[@test]
+  #[Test]
   public function readMapUsesDefaultOnNoOccurrance() {
     $this->assertEquals('Hello.', $this->fixture()->readMap('section', 'hash3', 'Hello.'));
   }
 
-  #[@test]
+  #[Test]
   public function readMapUsesNullForDefaultOnNoOccurrance() {
     $this->assertEquals(null, $this->fixture()->readMap('section', 'hash3'));
   }
 
-  #[@test]
+  #[Test]
   public function readIntegerUsesFirst() {
     $this->assertEquals(5, $this->fixture()->readInteger('section', 'int1'));
   }
 
-  #[@test]
+  #[Test]
   public function readIntegerUsesSecondIfFirstUnset() {
     $this->assertEquals(4, $this->fixture()->readInteger('section', 'int2'));
   }
 
-  #[@test]
+  #[Test]
   public function readIntegerUsesDefaultOnNoOccurrance() {
     $this->assertEquals(-1, $this->fixture()->readInteger('section', 'non-existant-key', -1));
   }
 
-  #[@test]
+  #[Test]
   public function readIntegerUsesZeroForDefaultOnNoOccurrance() {
     $this->assertEquals(0, $this->fixture()->readInteger('section', 'non-existant-key'));
   }
 
-  #[@test]
+  #[Test]
   public function readFloatUsesFirst() {
     $this->assertEquals(0.5, $this->fixture()->readFloat('section', 'float1'));
   }
 
-  #[@test]
+  #[Test]
   public function readFloatUsesSecondIfFirstUnset() {
     $this->assertEquals(4.99999999, $this->fixture()->readFloat('section', 'float2'));
   }
 
-  #[@test]
+  #[Test]
   public function readFloatUsesDefaultOnNoOccurrance() {
     $this->assertEquals(-1.0, $this->fixture()->readFloat('section', 'non-existant-key', -1.0));
   }
 
-  #[@test]
+  #[Test]
   public function readFloatUsesZeroDefaultOnNoOccurrance() {
     $this->assertEquals(0.0, $this->fixture()->readFloat('section', 'non-existant-key'));
   }
 
-  #[@test]
+  #[Test]
   public function readRangeUsesFirst() {
     $this->assertEquals([1, 2, 3], $this->fixture()->readRange('section', 'range1'));
   }
 
-  #[@test]
+  #[Test]
   public function readRangeUsesSecondIfFirstUnset() {
     $this->assertEquals([99, 100], $this->fixture()->readRange('section', 'range2'));
   }
 
-  #[@test]
+  #[Test]
   public function readRangeUsesDefaultOnNoOccurrance() {
     $this->assertEquals([1, 2, 3], $this->fixture()->readRange('section', 'non-existant-key', [1, 2, 3]));
   }
 
-  #[@test]
+  #[Test]
   public function readRangeUsesEmptyArrayForDefaultOnNoOccurrance() {
     $this->assertEquals([], $this->fixture()->readRange('section', 'non-existant-key'));
   }
 
-  #[@test]
+  #[Test]
   public function readSection() {
     $this->assertEquals(
       ['key' => 'value', 'anotherkey' => 'is there, too'],
@@ -263,32 +264,32 @@ anotherkey="is there, too"
     );
   }
 
-  #[@test]
+  #[Test]
   public function readSectionThatDoesNotExistReturnsDefault() {
     $this->assertEquals(['default' => 'value'], $this->fixture()->readSection('doesnotexist', ['default' => 'value']));
   }
 
-  #[@test]
+  #[Test]
   public function readSectionThatDoesNotExistReturnsEmptyArrayPerDefault() {
     $this->assertEquals([], $this->fixture()->readSection('doesnotexist'));
   }
 
-  #[@test]
+  #[Test]
   public function readEmptySectionOverridesDefault() {
     $this->assertEquals([], $this->fixture()->readSection('empty', ['default' => 'value']));
   }
 
-  #[@test]
+  #[Test]
   public function sectionFromMultipleSourcesExists() {
     $this->assertEquals(true, $this->fixture()->hasSection('section'));
   }
 
-  #[@test]
+  #[Test]
   public function sectionFromSingleSourceExists() {
     $this->assertEquals(true, $this->fixture()->hasSection('secondsection'));
   }
 
-  #[@test]
+  #[Test]
   public function nonexistantSectionDoesNotExist() {
     $this->assertEquals(false, $this->fixture()->hasSection('any'));
   }

@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use util\Secret;
 use unittest\actions\ExtensionAvailable;
+use util\Secret;
 
 /**
  * Testcase for openssl backed security.Secret implementation

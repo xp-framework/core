@@ -1,9 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
  
-use util\Date;
-use util\DateUtil;
-use util\TimeSpan;
-use util\TimeZone;
+use unittest\Test;
+use util\{Date, DateUtil, TimeSpan, TimeZone};
 
 /**
  * Test Date utility class
@@ -20,7 +18,7 @@ class DateUtilTest extends \unittest\TestCase {
     $this->fixture= Date::create(2000, 1, 1, 12, 15, 11, new TimeZone('Europe/Berlin'));
   }
 
-  #[@test]
+  #[Test]
   public function add() {
     $this->assertEquals(
       Date::create(2000, 1, 1, 13, 15, 11, new TimeZone('Europe/Berlin')),
@@ -28,7 +26,7 @@ class DateUtilTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function subtract() {
     $this->assertEquals(
       Date::create(2000, 1, 1, 11, 15, 11, new TimeZone('Europe/Berlin')),
@@ -36,7 +34,7 @@ class DateUtilTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function addSeconds() {
     $this->assertEquals(
       Date::create(2000, 1, 1, 12, 15, 30, new TimeZone('Europe/Berlin')),
@@ -44,7 +42,7 @@ class DateUtilTest extends \unittest\TestCase {
     );
   }
     
-  #[@test]
+  #[Test]
   public function addMinutes() {
     $this->assertEquals(
       Date::create(2000, 1, 1, 12, 44, 11, new TimeZone('Europe/Berlin')),
@@ -52,7 +50,7 @@ class DateUtilTest extends \unittest\TestCase {
     );
   }
     
-  #[@test]
+  #[Test]
   public function addHours() {
     $this->assertEquals(
       Date::create(2000, 1, 1, 13, 15, 11, new TimeZone('Europe/Berlin')),
@@ -60,7 +58,7 @@ class DateUtilTest extends \unittest\TestCase {
     );
   }
     
-  #[@test]
+  #[Test]
   public function addDays() {
     $this->assertEquals(
       Date::create(2000, 1, 2, 12, 15, 11, new TimeZone('Europe/Berlin')),
@@ -68,7 +66,7 @@ class DateUtilTest extends \unittest\TestCase {
     );
   }
     
-  #[@test]
+  #[Test]
   public function addMonths() {
     $this->assertEquals(
       Date::create(2000, 2, 1, 12, 15, 11, new TimeZone('Europe/Berlin')),
@@ -76,7 +74,7 @@ class DateUtilTest extends \unittest\TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function addNegativeSeconds() {
     $this->assertEquals(
       Date::create(2000, 1, 1, 12, 14, 52, new TimeZone('Europe/Berlin')),
@@ -84,7 +82,7 @@ class DateUtilTest extends \unittest\TestCase {
     );
   }
     
-  #[@test]
+  #[Test]
   public function addNegativeMinutes() {
     $this->assertEquals(
       Date::create(2000, 1, 1, 11, 46, 11, new TimeZone('Europe/Berlin')),
@@ -92,7 +90,7 @@ class DateUtilTest extends \unittest\TestCase {
     );
   }
     
-  #[@test]
+  #[Test]
   public function addNegativeHours() {
     $this->assertEquals(
       Date::create(2000, 1, 1, 11, 15, 11, new TimeZone('Europe/Berlin')),
@@ -100,7 +98,7 @@ class DateUtilTest extends \unittest\TestCase {
     );
   }
     
-  #[@test]
+  #[Test]
   public function addNegativeDays() {
     $this->assertEquals(
       Date::create(1999, 12, 31, 12, 15, 11, new TimeZone('Europe/Berlin')),
@@ -108,7 +106,7 @@ class DateUtilTest extends \unittest\TestCase {
     );
   }
     
-  #[@test]
+  #[Test]
   public function addNegativeMonths() {
     $this->assertEquals(
       Date::create(1999, 12, 1, 12, 15, 11, new TimeZone('Europe/Berlin')),
@@ -116,7 +114,7 @@ class DateUtilTest extends \unittest\TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function testLeapYear() {
     $date= Date::create(2000, 2, 1, 0, 0, 0);
     
@@ -131,7 +129,7 @@ class DateUtilTest extends \unittest\TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function testNonLeapYear() {
     $date= Date::create(1999, 2, 1, 0, 0, 0, new TimeZone('Europe/Berlin'));
     
@@ -146,14 +144,14 @@ class DateUtilTest extends \unittest\TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function comparison() {
     $this->assertTrue(DateUtil::compare(new Date('1977-12-14'), new Date('1980-05-28')) < 0, 'a < b') &&
     $this->assertTrue(DateUtil::compare(new Date('1980-05-28'), new Date('1977-12-14')) > 0, 'a > b') &&
     $this->assertTrue(DateUtil::compare(new Date('1980-05-28'), new Date('1980-05-28')) == 0, 'a == b');
   }
 
-  #[@test]
+  #[Test]
   public function sorting() {
     $list= [
       new Date('1977-12-14'),
@@ -167,7 +165,7 @@ class DateUtilTest extends \unittest\TestCase {
     $this->assertEquals(new Date('2002-02-21'), $list[2], 'offset 2');
   }
   
-  #[@test]
+  #[Test]
   public function testBeginAndEndOfWeek() {
     $this->assertEquals(
       Date::create(2007, 1, 14, 0, 0, 0),
@@ -179,7 +177,7 @@ class DateUtilTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function testMoveToTimezone() {
     $copy= clone $this->fixture;
     $tz= new TimeZone('Australia/Sydney');
@@ -187,7 +185,7 @@ class DateUtilTest extends \unittest\TestCase {
     $this->assertEquals($this->fixture, DateUtil::moveToTimeZone($copy, $tz));
   }
   
-  #[@test]
+  #[Test]
   public function testSetTimezone() {
     $this->assertEquals(
       Date::create(2000, 1, 1, 17, 15, 11, new TimeZone('GMT')),

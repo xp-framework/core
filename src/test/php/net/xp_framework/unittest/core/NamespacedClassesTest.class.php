@@ -1,8 +1,9 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\reflect\Package;
-use util\collections\Vector;
 use net\xp_framework\unittest\Name;
+use unittest\{BeforeClass, Test};
+use util\collections\Vector;
 
 /**
  * TestCase for XP Framework's namespaces support
@@ -15,12 +16,12 @@ use net\xp_framework\unittest\Name;
 class NamespacedClassesTest extends \unittest\TestCase {
   protected static $package;
 
-  #[@beforeClass]
+  #[BeforeClass]
   public static function initializePackage() {
     self::$package= Package::forName('net.xp_framework.unittest.core');
   }
 
-  #[@test]
+  #[Test]
   public function namespacedClassLiteral() {
     $this->assertEquals(
       NamespacedClass::class, 
@@ -28,7 +29,7 @@ class NamespacedClassesTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function packageOfNamespacedClass() {
     $this->assertEquals(
       Package::forName('net.xp_framework.unittest.core'),
@@ -36,7 +37,7 @@ class NamespacedClassesTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function namespacedClassUsingUnqualified() {
     $this->assertInstanceOf(
       Name::class,
@@ -44,7 +45,7 @@ class NamespacedClassesTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function namespacedClassUsingQualified() {
     $this->assertInstanceOf(
       NamespacedClass::class,
@@ -52,7 +53,7 @@ class NamespacedClassesTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function namespacedClassUsingQualifiedUnloaded() {
     $this->assertInstanceOf(
       UnloadedNamespacedClass::class,
@@ -60,13 +61,13 @@ class NamespacedClassesTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function newInstanceOnNamespacedClass() {
     $i= new class() extends NamespacedClass {};
     $this->assertInstanceOf(NamespacedClass::class, $i);
   }
 
-  #[@test]
+  #[Test]
   public function packageOfNewInstancedNamespacedClass() {
     $i= newinstance(NamespacedClass::class, []);
     $this->assertEquals(
@@ -75,7 +76,7 @@ class NamespacedClassesTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function generics() {
     $v= create('new net.xp_framework.unittest.core.generics.Nullable<net.xp_framework.unittest.core.NamespacedClass>');
     $this->assertTrue(typeof($v)->isGeneric());
