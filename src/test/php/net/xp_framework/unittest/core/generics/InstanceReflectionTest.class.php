@@ -46,10 +46,9 @@ class InstanceReflectionTest extends \unittest\TestCase {
 
   #[@test]
   public function reflectedNameOfClass() {
-    $class= typeof($this->fixture);
     $this->assertEquals(
-      'net\xp_framework\unittest\core\generics\Lookup··şstring¸unittest¦TestCase', 
-      literal($class->getName())
+      "net\\xp_framework\\unittest\\core\\generics\\Lookup\xb7\xb7\xfestring\xb8unittest\xa6TestCase",
+      typeof($this->fixture)->literal()
     );
   }
 
