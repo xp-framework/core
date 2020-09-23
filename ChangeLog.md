@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Merged PRs #246 and #247, rewriting the code base to PHP 8 attributes
+  (@thekid)
 * Implemented first step of xp-framwwork/rfc#336 by converting PHP 8
   attributes into XP annotations: `#[Test(true)]` will beinterpreted the
   same as `#[@test(true)]`. This way, converting libraries over to the
