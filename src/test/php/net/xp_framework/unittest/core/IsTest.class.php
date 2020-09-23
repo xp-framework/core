@@ -3,10 +3,41 @@
 use lang\{ClassLoader, Runnable};
 use net\xp_framework\unittest\Name;
 use net\xp_framework\unittest\core\generics\ListOf;
-use unittest\{Test, Values};
+use unittest\{Test, TestCase, Values};
 
 /** Tests the is() core functionality */
-class IsTest extends \unittest\TestCase {
+class IsTest extends TestCase {
+
+  /** @return iterable */
+  private function callables() {
+    yield [function() { }];
+    yield [function() { yield 'Test'; }];
+    yield ['strlen'];
+    yield ['xp::gc'];
+    yield [['xp', 'gc']];
+    yield [[new Name('test'), 'toString']];
+  }
+
+  /** @return iterable */
+  private function iterables() {
+    yield [[]];
+    yield [[1, 2, 3]];
+    yield [['key' => 'value']];
+    yield [new \ArrayObject([])];
+    yield [new \ArrayIterator([])];
+  }
+
+  /** @return iterable */
+  private function objects() {
+    yield [new Name('test')];
+    yield [new \ArrayObject([])];
+  }
+  /** @return iterable */
+  private function functions() {
+    yield [function() { }];
+    yield [function() { yield 'Test'; }];
+  }
+
 
   #[Test]
   public function string_array() {
@@ -273,7 +304,7 @@ class IsTest extends \unittest\TestCase {
     $this->assertTrue(is('?int', $val));
   }
 
-  #[Test, Values([[function() { }], [function() { yield 'Test'; }], ['strlen'], ['xp::gc'], [['xp', 'gc']], [[new Name('test'), 'toString']]])]
+  #[Test, Values('callables')]
   public function is_callable($val) {
     $this->assertTrue(is('callable', $val));
   }
@@ -283,17 +314,17 @@ class IsTest extends \unittest\TestCase {
     $this->assertTrue(is('array', $val));
   }
 
-  #[Test, Values([[[]], [[1, 2, 3]], [['key' => 'value']], [new \ArrayObject([])], [new \ArrayIterator([])]])]
+  #[Test, Values('iterables')]
   public function is_iterable($val) {
     $this->assertTrue(is('iterable', $val));
   }
 
-  #[Test, Values([[new Name('test')], [new \ArrayObject([])]])]
+  #[Test, Values('objects')]
   public function is_object($val) {
     $this->assertTrue(is('object', $val));
   }
 
-  #[Test, Values([[function() { }], [function() { yield 'Test'; }]])]
+  #[Test, Values('functions')]
   public function closures_are_objects($val) {
     $this->assertTrue(is('object', $val));
   }

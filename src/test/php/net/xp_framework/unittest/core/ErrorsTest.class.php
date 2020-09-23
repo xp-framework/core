@@ -112,25 +112,25 @@ class ErrorsTest extends TestCase {
     $f('Primitive');
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Action(new RuntimeVersion('<7.1.0-dev'))]
+  #[Test, Expect(IllegalArgumentException::class), Action(eval: 'new RuntimeVersion("<7.1.0-dev")')]
   public function missing_argument_mismatch_yield_iae() {
     $f= function($arg) { };
     $f();
   }
 
-  #[Test, Expect(Error::class), Action(new RuntimeVersion('>=7.1.0'))]
+  #[Test, Expect(Error::class), Action(eval: 'new RuntimeVersion(">=7.1.0")')]
   public function missing_argument_mismatch_yield_error() {
     $f= function($arg) { };
     $f();
   }
 
-  #[Test, Expect(ClassCastException::class), Action(new RuntimeVersion('<7.4.0-dev'))]
+  #[Test, Expect(ClassCastException::class), Action(eval: 'new RuntimeVersion("<7.4.0-dev")')]
   public function cannot_convert_object_to_string_yields_cce() {
     $object= new class() { };
     $object.'String';
   }
 
-  #[Test, Expect(Error::class), Action(new RuntimeVersion('>=7.4.0'))]
+  #[Test, Expect(Error::class), Action(eval: 'new RuntimeVersion(">=7.4.0")')]
   public function cannot_convert_object_to_string_yields_error() {
     $object= new class() { };
     $object.'String';

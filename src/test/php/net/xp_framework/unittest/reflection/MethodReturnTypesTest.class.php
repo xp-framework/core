@@ -18,6 +18,32 @@ class MethodReturnTypesTest extends MethodsTest {
     $this->assertEquals($expected->getName(), $method->getReturnTypeName(), 'name');
   }
 
+  /** @return iterable */
+  private function types() {
+    yield ['void', Type::$VOID];
+    yield ['var', Type::$VAR];
+    yield ['bool', Primitive::$BOOL];
+    yield ['string[]', new ArrayType(Primitive::$STRING)];
+    yield ['[:int]', new MapType(Primitive::$INT)];
+    yield ['lang.Value', new XPClass(Value::class)];
+    yield ['Value', new XPClass(Value::class)];
+    yield ['\\lang\\Value', new XPClass(Value::class)];
+  }
+
+  /** @return iterable */
+  private function arrays() {
+    yield ['string[]', new ArrayType(Primitive::$STRING)];
+    yield ['[:int]', new MapType(Primitive::$INT)];
+  }
+
+  /** @return iterable */
+  private function restrictions() {
+    yield ['string', Primitive::$STRING];
+    yield ['array', Type::$ARRAY];
+    yield ['\lang\Value', new XPClass(Value::class)];
+    yield ['Value', new XPClass(Value::class)];
+  }
+
   #[Test]
   public function return_type_defaults_to_var() {
     $this->assertReturnType(Type::$VAR, $this->method('public function fixture() { }'));
@@ -44,30 +70,39 @@ class MethodReturnTypesTest extends MethodsTest {
     );
   }
 
-  #[Test, Values([['/** @return void */', Type::$VOID], ['/** @return var */', Type::$VAR], ['/** @return bool */', Primitive::$BOOL], ['/** @return string[] */', new ArrayType(Primitive::$STRING)], ['/** @return [:int] */', new MapType(Primitive::$INT)], ['/** @return lang.Value */', new XPClass(Value::class)], ['/** @return Value */', new XPClass(Value::class)], ['/** @return \lang\Value */', new XPClass(Value::class)], ['/** @return string|int */', new TypeUnion([Primitive::$STRING, Primitive::$INT])],])]
-  public function return_type_determined_via_apidoc($apidoc, $type) {
-    $this->assertReturnType($type, $this->method($apidoc.' public function fixture() { }'));
+  #[Test, Values('types')]
+  public function return_type_determined_via_apidoc($declaration, $type) {
+    $this->assertReturnType(
+      $type,
+      $this->method('/** @return '.$declaration.' */ public function fixture() { }')
+    );
   }
 
-  #[Test, Action(new RuntimeVersion('>=7.0')), Values([['string', Primitive::$STRING], ['array', Type::$ARRAY], ['\lang\Value', new XPClass(Value::class)], ['Value', new XPClass(Value::class)]])]
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.0")'), Values('restrictions')]
   public function return_type_determined_via_syntax($literal, $type) {
     $this->assertReturnType($type, $this->method('public function fixture(): '.$literal.' { }'));
   }
 
-  #[Test, Action([new RuntimeVersion('>=7.1')])]
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.1")')]
   public function void_return_type() {
     $fixture= $this->type('{ public function fixture(): void { } }');
     $this->assertEquals(Type::$VOID, $fixture->getMethod('fixture')->getReturnType());
   }
 
-  #[Test, Action(new RuntimeVersion('>=8.0')), Values([['string|int', new TypeUnion([Primitive::$STRING, Primitive::$INT])], ['string|false', new TypeUnion([Primitive::$STRING, Primitive::$BOOL])],])]
-  public function return_type_determined_via_union_syntax($literal, $type) {
-    $this->assertReturnType($type, $this->method('public function fixture(): '.$literal.' { }'));
+  #[Test, Action(eval: 'new RuntimeVersion(">=8.0")'), Values([['string|int'], ['string|false']])]
+  public function return_type_determined_via_union_syntax($literal) {
+    $this->assertReturnType(
+      TypeUnion::forName($literal),
+      $this->method('public function fixture(): '.$literal.' { }')
+    );
   }
 
-  #[Test, Values([['/** @return string[] */', new ArrayType(Primitive::$STRING)], ['/** @return [:int] */', new MapType(Primitive::$INT)], ['', Type::$ARRAY],])]
-  public function specific_array_type_determined_via_apidoc_if_present($apidoc, $type) {
-    $this->assertReturnType($type, $this->method($apidoc.' public function fixture(): array { }'));
+  #[Test, Values('arrays')]
+  public function specific_array_type_determined_via_apidoc_if_present($declaration, $type) {
+    $this->assertReturnType(
+      $type,
+      $this->method('/** @return '.$declaration.' */ public function fixture(): array { }')
+    );
   }
 
   #[Test]

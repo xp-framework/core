@@ -31,6 +31,20 @@ class MethodParametersTest extends MethodsTest {
     yield ['\\lang\\Value', new XPClass(Value::class)];
   }
 
+  /** @return iterable */
+  private function arrays() {
+    yield ['string[]', new ArrayType(Primitive::$STRING)];
+    yield ['[:int]', new MapType(Primitive::$INT)];
+  }
+
+  /** @return iterable */
+  private function restrictions() {
+    yield ['\lang\Value', new XPClass(Value::class)];
+    yield ['\net\xp_framework\unittest\Name', new XPClass(Name::class)];
+    yield ['array', Type::$ARRAY];
+    yield ['callable', Type::$CALLABLE];
+  }
+
   /**
    * Assertion helper
    *
@@ -55,24 +69,36 @@ class MethodParametersTest extends MethodsTest {
     );
   }
 
-  #[Test, Values([['/** @param string[] */', new ArrayType(Primitive::$STRING)], ['/** @param [:int] */', new MapType(Primitive::$INT)], ['', Type::$ARRAY],])]
-  public function specific_array_type_determined_via_apidoc_if_present($apidoc, $type) {
-    $this->assertParamType($type, $this->method($apidoc.' public function fixture(array $param) { }')->getParameter(0));
+  #[Test, Values('arrays')]
+  public function specific_array_type_determined_via_apidoc_if_present($declaration, $type) {
+    $this->assertParamType(
+      $type,
+      $this->method('/** @param '.$declaration.' */ public function fixture(array $param) { }')->getParameter(0)
+    );
   }
 
-  #[Test, Values([['\lang\Value', new XPClass(Value::class)], ['\net\xp_framework\unittest\Name', new XPClass(Name::class)], ['Value', new XPClass(Value::class)]])]
+  #[Test, Values([['\lang\Value', Value::class], ['\net\xp_framework\unittest\Name', Name::class], ['Value', Value::class]])]
   public function parameter_type_determined_via_syntax($literal, $type) {
-    $this->assertParamType($type, $this->method('public function fixture('.$literal.' $param) { }')->getParameter(0));
+    $this->assertParamType(
+      new XPClass($type),
+      $this->method('public function fixture('.$literal.' $param) { }')->getParameter(0)
+    );
   }
 
-  #[Test, Action(new RuntimeVersion('>=7.0')), Values([['string', Primitive::$STRING], ['int', Primitive::$INT], ['bool', Primitive::$BOOL], ['float', Primitive::$FLOAT]])]
-  public function parameter_type_determined_via_scalar_syntax($literal, $type) {
-    $this->assertParamType($type, $this->method('public function fixture('.$literal.' $param) { }')->getParameter(0));
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.0")'), Values([['string'], ['int'], ['bool'], ['float']])]
+  public function parameter_type_determined_via_scalar_syntax($literal) {
+    $this->assertParamType(
+      Primitive::forName($literal),
+      $this->method('public function fixture('.$literal.' $param) { }')->getParameter(0)
+    );
   }
 
-  #[Test, Action(new RuntimeVersion('>=8.0')), Values([['string|int', new TypeUnion([Primitive::$STRING, Primitive::$INT])], ['string|false', new TypeUnion([Primitive::$STRING, Primitive::$BOOL])],])]
-  public function parameter_type_determined_via_union_syntax($literal, $type) {
-    $this->assertParamType($type, $this->method('public function fixture('.$literal.' $param) { }')->getParameter(0));
+  #[Test, Action(eval: 'new RuntimeVersion(">=8.0")'), Values([['string|int'], ['string|false']])]
+  public function parameter_type_determined_via_union_syntax($literal) {
+    $this->assertParamType(
+      TypeUnion::forName($literal),
+      $this->method('public function fixture('.$literal.' $param) { }')->getParameter(0)
+    );
   }
 
   #[Test]
@@ -165,9 +191,12 @@ class MethodParametersTest extends MethodsTest {
     );
   }
 
-  #[Test, Values([['\lang\Value', new XPClass(Value::class)], ['\net\xp_framework\unittest\Name', new XPClass(Name::class)], ['array', Type::$ARRAY], ['callable', Type::$CALLABLE]])]
+  #[Test, Values('restrictions')]
   public function type_restriction_determined_via_syntax($literal, $type) {
-    $this->assertEquals($type, $this->method('public function fixture('.$literal.' $param) { }')->getParameter(0)->getTypeRestriction());
+    $this->assertEquals(
+      $type,
+      $this->method('public function fixture('.$literal.' $param) { }')->getParameter(0)->getTypeRestriction()
+    );
   }
 
   #[Test, Expect(ClassFormatException::class)]

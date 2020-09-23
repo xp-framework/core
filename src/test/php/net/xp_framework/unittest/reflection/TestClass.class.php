@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\{Security, Type, Webmethod};
+use lang\{Type, Runnable};
+use unittest\Test;
 use util\Date;
 use util\collections\{HashTable, Vector};
 
@@ -9,10 +10,10 @@ use util\collections\{HashTable, Vector};
  *
  * @see    xp://net.xp_framework.unittest.reflection.ReflectionTest
  */
-#[@test('Annotation')]
-class TestClass extends AbstractTestClass implements \lang\Runnable {
+#[Test('Annotation')]
+class TestClass extends AbstractTestClass implements Runnable {
 
-  #[Type('util.Date')]
+  #[Type(Date::class)]
   public $date   = null;
 
   /** @var [:object] */

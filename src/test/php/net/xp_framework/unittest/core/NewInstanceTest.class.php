@@ -180,7 +180,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals($this, newinstance($base->getName(), [$this], [])->test);
   }
 
-  #[Test, Action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function variadic_argument_passing() {
     $r= $this->runInNewRuntime('
       class Test {
@@ -202,7 +202,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function typed_variadic_argument_passing() {
     $r= $this->runInNewRuntime('
       class Test {
@@ -224,7 +224,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function missingMethodImplementationFatals() {
     $r= $this->runInNewRuntime('
       newinstance("lang.Runnable", [], "{}");
@@ -236,7 +236,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function syntaxErrorFatals() {
     $r= $this->runInNewRuntime('
       newinstance("lang.Runnable", [], "{ @__SYNTAX ERROR__@ }");
@@ -248,7 +248,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function missingClassFatals() {
     $r= $this->runInNewRuntime('
       newinstance("lang.NonExistantClass", [], "{}");
@@ -260,7 +260,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function notPreviouslyDefinedClassIsLoaded() {
     $r= $this->runInNewRuntime('
       if (isset(xp::$cl["lang.Runnable"])) {
@@ -365,7 +365,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals('Test', $instance->getTest());
   }
 
-  #[Test, Action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function declaration_with_array_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -380,7 +380,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function declaration_with_callable_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -395,7 +395,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function declaration_with_class_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -412,7 +412,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function declaration_with_self_return_type() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -428,7 +428,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function declaration_with_self_param_type() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -443,7 +443,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function declaration_with_primitive_param_type() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -458,7 +458,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function declaration_with_primitive_return_type() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -473,7 +473,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action([new VerifyThat('processExecutionEnabled'), new RuntimeVersion('>=7.2')])]
+  #[Test, Action(eval: '[new VerifyThat("processExecutionEnabled"), new RuntimeVersion(">=7.2")]')]
   public function declaration_with_nullable_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -488,7 +488,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action([new VerifyThat('processExecutionEnabled'), new RuntimeVersion('>=7.1')])]
+  #[Test, Action(eval: '[new VerifyThat("processExecutionEnabled"), new RuntimeVersion(">=7.1")]')]
   public function declaration_with_iterable_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -503,7 +503,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action([new VerifyThat('processExecutionEnabled'), new RuntimeVersion('>=7.2')])]
+  #[Test, Action(eval: '[new VerifyThat("processExecutionEnabled"), new RuntimeVersion(">=7.2")]')]
   public function declaration_with_object_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -518,7 +518,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action([new VerifyThat('processExecutionEnabled'), new RuntimeVersion('>=7.1')])]
+  #[Test, Action(eval: '[new VerifyThat("processExecutionEnabled"), new RuntimeVersion(">=7.1")]')]
   public function declaration_with_void_return() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -534,7 +534,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function declaration_with_variadic() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -549,7 +549,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function declaration_with_typed_variadic() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -564,7 +564,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function value_types_fully_qualified() {
     $r= $this->runInNewRuntime('namespace test;
       abstract class Base {

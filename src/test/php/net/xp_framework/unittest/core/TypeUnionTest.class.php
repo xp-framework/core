@@ -15,32 +15,52 @@ use unittest\{Expect, Test, TestCase, Values};
 
 class TypeUnionTest extends TestCase {
 
-  /** @return var[][] */
+  /** @return iterable */
   private function instances() {
-    return [
-      [1, 'an int'],
-      ['Test', 'a string']
-    ];
+    yield [1, 'an int'];
+    yield ['Test', 'a string'];
   }
 
-  /** @return var[][] */
+  /** @return iterable */
   private function instancesAndNull() {
-    return array_merge([[null, 'null']], $this->instances());
+    yield [null, 'null'];
+    yield from $this->instances();
   }
 
-  /** @return var[][] */
+  /** @return iterable */
   private function notInstances() {
-    return [
-      [1.0, 'a double'],
-      [true, 'a boolean'],
-      [[], 'an array'],
-      [$this, 'an object']
-    ];
+    yield [1.0, 'a double'];
+    yield [true, 'a boolean'];
+    yield [[], 'an array'];
+    yield [$this, 'an object'];
   }
 
-  /** @return var[][] */
+  /** @return iterable */
   private function notInstancesAndNull() {
-    return array_merge([[null, 'null']], $this->notInstances());
+    yield [null, 'null'];
+    yield from $this->notInstances();
+  }
+
+  /** @return iterable */
+  private function isAssignable() {
+    yield [Primitive::$INT];
+    yield [Primitive::$STRING];
+    yield [new XPClass(self::class)];
+    yield [new TypeUnion([Primitive::$STRING, Primitive::$INT])];
+    yield [new TypeUnion([Primitive::$STRING, Primitive::$INT, new XPClass(self::class)])];
+  }
+
+  /** @return iterable */
+  private function notAssignable() {
+    yield [Type::$VAR];
+    yield [Type::$VOID];
+    yield [Primitive::$BOOL];
+    yield [new TypeUnion([Primitive::$STRING, Primitive::$BOOL])];
+    yield [new TypeUnion([Primitive::$STRING, Primitive::$INT, new XPClass(Type::class)])];
+    yield [new ArrayType(Type::$VAR)];
+    yield [new MapType(Type::$VAR)];
+    yield [new FunctionType([], Type::$VAR)];
+    yield [new XPClass(Type::class)];
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
@@ -122,13 +142,13 @@ class TypeUnionTest extends TestCase {
     );
   }
 
-  #[Test, Values([[Primitive::$INT], [Primitive::$STRING], [new XPClass(self::class)], [new TypeUnion([Primitive::$STRING, Primitive::$INT])], [new TypeUnion([Primitive::$STRING, Primitive::$INT, new XPClass(self::class)])]])]
+  #[Test, Values('isAssignable')]
   public function is_assignable_from($type) {
     $union= new TypeUnion([Primitive::$STRING, Primitive::$INT, typeof($this)]);
     $this->assertTrue($union->isAssignableFrom($type));
   }
 
-  #[Test, Values([[Type::$VAR], [Type::$VOID], [Primitive::$BOOL], [new TypeUnion([Primitive::$STRING, Primitive::$BOOL])], [new TypeUnion([Primitive::$STRING, Primitive::$INT, new XPClass(Type::class)])], [new ArrayType(Type::$VAR)], [new MapType(Type::$VAR)], [new FunctionType([], Type::$VAR)], [new XPClass(Type::class)]])]
+  #[Test, Values('notAssignable')]
   public function is_not_assignable_from($type) {
     $union= new TypeUnion([Primitive::$STRING, Primitive::$INT, typeof($this)]);
     $this->assertFalse($union->isAssignableFrom($type));

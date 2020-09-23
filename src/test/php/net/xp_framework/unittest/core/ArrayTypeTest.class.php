@@ -13,6 +13,19 @@ use unittest\{Expect, Test, Values, TestCase};
 
 class ArrayTypeTest extends TestCase {
 
+  /** @return iterable */
+  private function nonArrayValues() {
+    yield [0];
+    yield [-1];
+    yield [0.5];
+    yield [''];
+    yield ['Test'];
+    yield [true];
+    yield [false];
+    yield [false];
+    yield [['key' => 'color', 'value' => 'price']];
+  }
+
   #[Test]
   public function typeForName() {
     $this->assertInstanceOf(ArrayType::class, Type::forName('string[]'));
@@ -118,7 +131,7 @@ class ArrayTypeTest extends TestCase {
     $this->assertEquals($expected, ArrayType::forName('string[]')->newInstance($value));
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Values([0, -1, 0.5, '', 'Test', new Name('test'), true, false, [['key' => 'color', 'value' => 'price']]])]
+  #[Test, Expect(IllegalArgumentException::class), Values('nonArrayValues')]
   public function newInstance_raises_exceptions_for_non_arrays($value) {
     ArrayType::forName('var[]')->newInstance($value);
   }
@@ -128,7 +141,7 @@ class ArrayTypeTest extends TestCase {
     $this->assertEquals($expected, ArrayType::forName('string[]')->cast($value));
   }
 
-  #[Test, Expect(ClassCastException::class), Values([0, -1, 0.5, '', 'Test', new Name('test'), true, false, [['key' => 'color', 'value' => 'price']]])]
+  #[Test, Expect(ClassCastException::class), Values('nonArrayValues')]
   public function cast_raises_exceptions_for_non_arrays($value) {
     ArrayType::forName('var[]')->cast($value);
   }

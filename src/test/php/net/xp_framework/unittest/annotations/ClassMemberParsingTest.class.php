@@ -2,14 +2,14 @@
 
 use lang\XPClass;
 use net\xp_framework\unittest\annotations\fixture\Namespaced;
-use unittest\{Test, Values};
+use unittest\{Test, TestCase, Values};
 
 /**
  * Tests the XP Framework's annotation parsing implementation
  *
  * @see   https://github.com/xp-framework/xp-framework/pull/328
  */
-class ClassMemberParsingTest extends \unittest\TestCase {
+class ClassMemberParsingTest extends TestCase {
   const CONSTANT = 'local';
   protected static $value = 'static';
 
@@ -18,7 +18,7 @@ class ClassMemberParsingTest extends \unittest\TestCase {
     $this->assertEquals('local', $value);
   }
 
-  #[Test, Values([new Name(self::CONSTANT)])]
+  #[Test, Values(eval: '[new Name(self::CONSTANT)]')]
   public function class_constant_via_self_inside_new($value) {
     $this->assertEquals(new Name('local'), $value);
   }
@@ -43,22 +43,22 @@ class ClassMemberParsingTest extends \unittest\TestCase {
     $this->assertEquals('namespaced', $value);
   }
 
-  #[Test, Values([self::$value])]
+  #[Test, Values(eval: '[self::$value]')]
   public function static_member_via_self($value) {
     $this->assertEquals('static', $value);
   }
 
-  #[Test, Values([new Name(self::$value)])]
+  #[Test, Values(eval: '[new Name(self::$value)]')]
   public function static_member_via_self_inside_new($value) {
     $this->assertEquals(new Name('static'), $value);
   }
 
-  #[Test, Values([ClassMemberParsingTest::$value])]
+  #[Test, Values(eval: '[ClassMemberParsingTest::$value]')]
   public function static_member_via_unqualified_current($value) {
     $this->assertEquals('static', $value);
   }
 
-  #[Test, Values([\net\xp_framework\unittest\annotations\ClassMemberParsingTest::$value])]
+  #[Test, Values(eval: '[\net\xp_framework\unittest\annotations\ClassMemberParsingTest::$value]')]
   public function static_member_via_fully_qualified_current($value) {
     $this->assertEquals('static', $value);
   }

@@ -17,6 +17,24 @@ use util\collections\{HashTable, Vector};
 
 class TypeTest extends TestCase {
 
+  /** @return iterable */
+  private function callables() {
+    yield ['strlen'];
+    yield ['xp::gc'];
+    yield [['xp', 'gc']];
+    yield [[new Name('test'), 'compareTo']];
+    yield [function() { }];
+  }
+
+  /** @return iterable */
+  private function iterables() {
+    yield [[]];
+    yield [[1, 2, 3]];
+    yield [['key' => 'value']];
+    yield [new \ArrayObject(['hello', 'world'])];
+    yield [new \ArrayIterator(['hello', 'world'])];
+  }
+
   #[Test, Values(['string', '?string'])]
   public function stringType($named) {
     $this->assertEquals(Primitive::$STRING, Type::forName($named));
@@ -316,12 +334,12 @@ class TypeTest extends TestCase {
     $this->assertEquals([], Type::$ARRAY->newInstance());
   }
 
-  #[Test, Values([Type::$ARRAY, new ArrayType('var'), new MapType('var')])]
+  #[Test, Values(eval: '[Type::$ARRAY, new ArrayType("var"), new MapType("var")]')]
   public function array_type_union_isAssignableFrom_arrays($type) {
     $this->assertTrue(Type::$ARRAY->isAssignableFrom($type));
   }
 
-  #[Test, Values([Primitive::$INT, Type::$VOID, new FunctionType([], Type::$VAR)])]
+  #[Test, Values(eval: '[Primitive::$INT, Type::$VOID, new FunctionType([], Type::$VAR)]')]
   public function array_type_union_is_not_assignable_from($type) {
     $this->assertFalse(Type::$ARRAY->isAssignableFrom($type));
   }
@@ -341,17 +359,17 @@ class TypeTest extends TestCase {
     $this->assertEquals(null, Type::$ARRAY->cast(null));
   }
 
-  #[Test, Values([['strlen'], ['xp::gc'], [['xp', 'gc']], [[new Name('test'), 'compareTo']], [function() { }]])]
+  #[Test, Values('callables')]
   public function callable_type_union_isInstance($value) {
     $this->assertTrue(Type::$CALLABLE->isInstance($value));
   }
 
-  #[Test, Values([['strlen'], ['xp::gc'], [['xp', 'gc']], [[new Name('test'), 'compareTo']], [function() { }]])]
+  #[Test, Values('callables')]
   public function callable_type_union_newInstance($value) {
     $this->assertEquals($value, Type::$CALLABLE->newInstance($value));
   }
 
-  #[Test, Values([[null], ['strlen'], ['xp::gc'], [['xp', 'gc']], [[new Name('test'), 'compareTo']], [function() { }]])]
+  #[Test, Values('callables')]
   public function callable_type_union_cast($value) {
     $this->assertEquals($value, Type::$CALLABLE->cast($value));
   }
@@ -361,12 +379,17 @@ class TypeTest extends TestCase {
     $this->assertEquals(null, Type::$CALLABLE->cast(null));
   }
 
-  #[Test, Values([Type::$CALLABLE, new FunctionType([], Type::$VAR)])]
-  public function callable_type_union_isAssignableFrom_functions($type) {
-    $this->assertTrue(Type::$CALLABLE->isAssignableFrom($type));
+  #[Test]
+  public function callable_type_union_isAssignableFrom_callable() {
+    $this->assertTrue(Type::$CALLABLE->isAssignableFrom(Type::$CALLABLE));
   }
 
-  #[Test, Values([Primitive::$INT, Type::$VOID, new ArrayType('var'), new MapType('var')])]
+  #[Test]
+  public function callable_type_union_isAssignableFrom_functions() {
+    $this->assertTrue(Type::$CALLABLE->isAssignableFrom(new FunctionType([], Type::$VAR)));
+  }
+
+  #[Test, Values(eval: '[Primitive::$INT, Type::$VOID, new ArrayType("var"), new MapType("var")]')]
   public function callable_type_union_is_not_assignable_from($type) {
     $this->assertFalse(Type::$CALLABLE->isAssignableFrom($type));
   }
@@ -376,7 +399,7 @@ class TypeTest extends TestCase {
     $this->assertFalse(Type::$CALLABLE->isAssignableFrom(typeof($this)));
   }
 
-  #[Test, Values([[[]], [[1, 2, 3]], [['key' => 'value']], [new \ArrayObject(['hello', 'world'])], [new \ArrayIterator(['hello', 'world'])]])]
+  #[Test, Values('iterables')]
   public function iterable_type_union_isInstance($value) {
     $this->assertTrue(Type::$ITERABLE->isInstance($value));
   }
@@ -387,32 +410,36 @@ class TypeTest extends TestCase {
     $this->assertTrue(Type::$ITERABLE->isInstance($gen()));
   }
 
-  #[Test, Values([[[]], [[1, 2, 3]], [['key' => 'value']], [new \ArrayObject(['hello', 'world'])], [new \ArrayIterator(['hello', 'world'])]])]
+  #[Test, Values('iterables')]
   public function iterable_type_union_newInstance($value) {
     $this->assertEquals($value, Type::$ITERABLE->newInstance($value));
   }
 
-  #[Test, Values([[null], [[]], [[1, 2, 3]], [['key' => 'value']], [new \ArrayObject(['hello', 'world'])], [new \ArrayIterator(['hello', 'world'])]])]
+  #[Test, Values('iterables')]
   public function iterable_type_union_cast($value) {
     $this->assertEquals($value, Type::$ITERABLE->cast($value));
   }
 
-  #[Test, Values([[new Name('test')], [new \ArrayObject([])]])]
+  #[Test]
+  public function iterable_type_union_cast_null() {
+    $this->assertNull(Type::$ITERABLE->cast(null));
+  }
+  #[Test, Values(eval: '[[new Name("test")], [new \ArrayObject([])]]')]
   public function object_type_union_isInstance($value) {
     $this->assertTrue(Type::$OBJECT->isInstance($value));
   }
 
-  #[Test, Values([[function() { }], [function() { yield 'Test'; }]])]
+  #[Test, Values(eval: '[[function() { }], [function() { yield "Test"; }]]')]
   public function closures_are_instances_of_the_object_type_union($value) {
     $this->assertTrue(Type::$OBJECT->isInstance($value));
   }
 
-  #[Test, Values([[null], [new Name('test')], [new \ArrayObject([])]])]
+  #[Test, Values(eval: '[[null], [new Name("test")], [new \ArrayObject([])]]')]
   public function object_type_union_cast($value) {
     $this->assertEquals($value, Type::$OBJECT->cast($value));
   }
 
-  #[Test, Values([[new Name('test')], [new \ArrayObject([])],])]
+  #[Test, Values(eval: '[[new Name("test")], [new \ArrayObject([])]]')]
   public function object_type_union_newInstance($value) {
     $this->assertInstanceOf(typeof($value), Type::$OBJECT->newInstance($value));
   }
@@ -427,7 +454,7 @@ class TypeTest extends TestCase {
     $this->assertTrue(Type::$OBJECT->isAssignableFrom(typeof($this)));
   }
 
-  #[Test, Values([Primitive::$INT, Type::$VOID, Type::$VAR, new ArrayType('var'), new MapType('var')])]
+  #[Test, Values(eval: '[Primitive::$INT, Type::$VOID, new ArrayType("var"), new MapType("var")]')]
   public function object_type_union_is_not_assignable_from($type) {
     $this->assertFalse(Type::$OBJECT->isAssignableFrom($type));
   }

@@ -124,7 +124,7 @@ class FunctionTypeTest extends TestCase {
     ));
   }
 
-  #[Test, Values([[function() { }], [function($a) { }], [function($a, $b) { }], [function(array $a, callable $b, \lang\Value $c, $d, $e= false) { }]])]
+  #[Test, Values(eval: '[[function() { }], [function($a) { }], [function($a, $b) { }], [function(array $a, callable $b, \lang\Value $c, $d, $e= false) { }]]')]
   public function function_with_no_args_is_instance_of_null_signature_function_type($value) {
     $this->assertTrue((new FunctionType(null, Type::$VAR))->isInstance($value));
   }
@@ -186,7 +186,7 @@ class FunctionTypeTest extends TestCase {
     $this->assertFalse($type->isInstance(['lang.XPClass', 'non-existant']));
   }
 
-  #[Test, Values([[Primitive::$STRING], [Type::$VAR]])]
+  #[Test, Values(eval: '[[Primitive::$STRING], [Type::$VAR]]')]
   public function array_referencing_instance_method_is_instance($return) {
     $this->assertTrue((new FunctionType([], $return))->isInstance([$this, 'getName']));
   }
@@ -229,7 +229,23 @@ class FunctionTypeTest extends TestCase {
     $this->assertNull((new FunctionType([Type::$VAR], Type::$VAR))->cast(null));
   }
 
-  #[Test, Expect(ClassCastException::class), Values([0, -1, 0.5, true, false, '', 'Test', [[]], [['key' => 'value']], [['non-existant', 'method']], [['lang.XPClass', 'non-existant']], [[null, 'method']], [[new Name('test'), 'non-existant']]])]
+  private function nonFunctions() {  
+    yield [0];
+    yield [-1];
+    yield [0.5];
+    yield [true];
+    yield [false];
+    yield [''];
+    yield ['Test'];
+    yield [[]];
+    yield [['key' => 'value']];
+    yield [['non-existant', 'method']];
+    yield [['lang.XPClass', 'non-existant']];
+    yield [[null, 'method']];
+    yield [[new Name('test'), 'non-existant']];
+  }
+
+  #[Test, Expect(ClassCastException::class), Values('nonFunctions')]
   public function cannot_cast_this($value) {
     (new FunctionType([Type::$VAR], Type::$VAR))->cast($value);
   }
@@ -271,7 +287,7 @@ class FunctionTypeTest extends TestCase {
     (new FunctionType([Type::$VAR, Type::$VAR], Type::$VAR))->newInstance('strlen');
   }
 
-  #[Test, Values([[Primitive::$STRING], [Type::$VAR]])]
+  #[Test, Values(eval: '[[Primitive::$STRING], [Type::$VAR]]')]
   public function array_referencing_instance_method_works_for_newinstance($return) {
     (new FunctionType([], $return))->newInstance([$this, 'getName']);
   }
@@ -340,7 +356,7 @@ class FunctionTypeTest extends TestCase {
     (new FunctionType([], Primitive::$VOID))->newInstance([$this, 'getName']);
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Values([null, 0, -1, 0.5, true, false, '', 'Test', [[]], [['key' => 'value']], [['non-existant', 'method']], [['lang.XPClass', 'non-existant']], [[null, 'method']], [[new Name('test'), 'non-existant']]])]
+  #[Test, Expect(IllegalArgumentException::class), Values('nonFunctions')]
   public function cannot_create_instances_from($value) {
     (new FunctionType([], Type::$VAR))->newInstance($value);
   }
@@ -363,7 +379,7 @@ class FunctionTypeTest extends TestCase {
     $this->assertFalse($type->isAssignableFrom(new FunctionType([], Type::$VOID)));
   }
 
-  #[Test, Values([[[]], [[Type::$VAR]], [[Type::$VAR, Type::$VAR]]])]
+  #[Test, Values(eval: '[[[]], [[Type::$VAR]], [[Type::$VAR, Type::$VAR]]]')]
   public function can_assign_to_wildcard_function($signature) {
     $type= new FunctionType(null, Type::$VAR);
     $this->assertTrue($type->isAssignableFrom(new FunctionType($signature, Type::$VAR)));
@@ -400,7 +416,7 @@ class FunctionTypeTest extends TestCase {
     $this->assertEquals('string', $t->invoke($f, [Primitive::$STRING]));
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Values([null, 0, -1, 0.5, true, false, '', 'Test', [[]], [['key' => 'value']], [['non-existant', 'method']], [['lang.XPClass', 'non-existant']], [[null, 'method']], [[new Name('Test'), 'non-existant']], function() { }])]
+  #[Test, Expect(IllegalArgumentException::class), Values('nonFunctions')]
   public function invoke_not_instance($value) {
     $t= new FunctionType([XPClass::forName('lang.Type')], Primitive::$STRING);
     $t->invoke($value);

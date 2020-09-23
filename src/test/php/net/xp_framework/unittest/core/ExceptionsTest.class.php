@@ -3,9 +3,9 @@
 use io\streams\{MemoryOutputStream, Streams};
 use lang\{Error, IllegalArgumentException, Throwable, XPClass, XPException};
 use unittest\actions\RuntimeVersion;
-use unittest\{Action, Expect, Test};
+use unittest\{Action, Expect, Test, TestCase};
 
-class ExceptionsTest extends \unittest\TestCase {
+class ExceptionsTest extends TestCase {
 
   #[Test]
   public function noException() {
@@ -137,7 +137,7 @@ class ExceptionsTest extends \unittest\TestCase {
     $this->assertInstanceOf(XPException::class, Throwable::wrap($e));
   }
 
-  #[Test, Action(new RuntimeVersion('>=7.0.0'))]
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.0.0")')]
   public function wrap_php7_exceptions() {
     $e= new \TypeError('Test');
     $this->assertInstanceOf(Error::class, Throwable::wrap($e));

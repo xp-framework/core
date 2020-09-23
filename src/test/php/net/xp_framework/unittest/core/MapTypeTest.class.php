@@ -14,6 +14,20 @@ use unittest\{Expect, Test, TestCase, Values};
 
 class MapTypeTest extends TestCase {
 
+  /** @return iterable */
+  private function nonMapValues() {
+    yield [0];
+    yield [-1];
+    yield [0.5];
+    yield [''];
+    yield ['Test'];
+    yield [true];
+    yield [false];
+    yield [false];
+    yield [[1, 2, 3]];
+  }
+
+
   #[Test]
   public function typeForName() {
     $this->assertInstanceOf(MapType::class, Type::forName('[:string]'));
@@ -142,8 +156,8 @@ class MapTypeTest extends TestCase {
     $this->assertEquals($expected, MapType::forName('[:string]')->newInstance($value));
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Values([0, -1, 0.5, '', 'Test', new Name('test'), true, false, [[0, 1, 2]]])]
-  public function newInstance_raises_exceptions_for_non_arrays($value) {
+  #[Test, Expect(IllegalArgumentException::class), Values('nonMapValues')]
+  public function newInstance_raises_exceptions_for_non_maps($value) {
     MapType::forName('var[]')->newInstance($value);
   }
 
@@ -152,8 +166,8 @@ class MapTypeTest extends TestCase {
     $this->assertEquals($expected, MapType::forName('[:string]')->cast($value));
   }
 
-  #[Test, Expect(ClassCastException::class), Values([0, -1, 0.5, '', 'Test', new Name('test'), true, false, [[0, 1, 2]]])]
-  public function cast_raises_exceptions_for_non_arrays($value) {
+  #[Test, Expect(ClassCastException::class), Values('nonMapValues')]
+  public function cast_raises_exceptions_for_non_maps($value) {
     MapType::forName('[:var]')->cast($value);
   }
 

@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use lang\{ElementNotFoundException, IllegalArgumentException, Primitive, Type, XPClass};
-use unittest\{Expect, Ignore, Test, Values};
+use unittest\{Expect, Ignore, Test, TestCase, Values};
 
 /**
  * TestCase for instance reflection
@@ -9,7 +9,7 @@ use unittest\{Expect, Ignore, Test, Values};
  * @see   xp://net.xp_framework.unittest.core.generics.TypeDictionary
  * @see   xp://net.xp_framework.unittest.core.generics.TypeLookup
  */
-class ImplementationTest extends \unittest\TestCase {
+class ImplementationTest extends TestCase {
 
   /**
    * Locate interface by a given name

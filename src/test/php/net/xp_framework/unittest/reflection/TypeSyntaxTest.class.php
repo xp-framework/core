@@ -29,7 +29,7 @@ class TypeSyntaxTest extends TestCase {
     return ClassLoader::defineType(self::class.'Method'.(++$id), self::$spec, '{'.$source.'}')->getMethod('fixture');
   }
 
-  #[Test, Action(new RuntimeVersion('>=7.4'))]
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.4")')]
   public function primitive_type() {
     $d= $this->field('private string $fixture;');
     $this->assertEquals(Primitive::$STRING, $d->getType());
@@ -50,21 +50,21 @@ class TypeSyntaxTest extends TestCase {
     $this->assertEquals('string', $d->getParameter(0)->getTypeName());
   }
 
-  #[Test, Action(new RuntimeVersion('>=8.0'))]
+  #[Test, Action(eval: 'new RuntimeVersion(">=8.0")')]
   public function union_type() {
     $d= $this->field('private string|int $fixture;');
     $this->assertEquals(new TypeUnion([Primitive::$STRING, Primitive::$INT]), $d->getType());
     $this->assertEquals('string|int', $d->getTypeName());
   }
 
-  #[Test, Action(new RuntimeVersion('>=8.0'))]
+  #[Test, Action(eval: 'new RuntimeVersion(">=8.0")')]
   public function return_union_type() {
     $d= $this->method('function fixture(): string|int { return "Test"; }');
     $this->assertEquals(new TypeUnion([Primitive::$STRING, Primitive::$INT]), $d->getReturnType());
     $this->assertEquals('string|int', $d->getReturnTypeName());
   }
 
-  #[Test, Action(new RuntimeVersion('>=8.0'))]
+  #[Test, Action(eval: 'new RuntimeVersion(">=8.0")')]
   public function parameter_union_type() {
     $d= $this->method('function fixture(string|int $name) { }');
     $this->assertEquals(new TypeUnion([Primitive::$STRING, Primitive::$INT]), $d->getParameter(0)->getType());

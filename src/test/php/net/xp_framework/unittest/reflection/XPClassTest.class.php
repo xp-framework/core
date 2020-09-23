@@ -10,14 +10,14 @@ use lang\{
   Primitive,
   XPClass
 };
-use unittest\{Expect, Test, Values};
+use unittest\{Expect, Test, TestCase, Values};
 
 /**
  * Test the XPClass class, the entry point to the XP Framework's class reflection API.
  *
  * @see  xp://lang.XPClass
  */
-class XPClassTest extends \unittest\TestCase {
+class XPClassTest extends TestCase {
   private $fixture;
 
   /** @return void */
@@ -88,9 +88,14 @@ class XPClassTest extends \unittest\TestCase {
     $this->assertFalse(typeof($this)->isAssignableFrom($this->fixture));
   }
 
-  #[Test, Values(['int', 'double', 'string', 'bool', Primitive::$INT, Primitive::$FLOAT, Primitive::$STRING, Primitive::$BOOL])]
-  public function fixture_is_not_assignable_from_primitive($name) {
+  #[Test, Values(['int', 'double', 'string', 'bool'])]
+  public function fixture_is_not_assignable_from_primitive_name($name) {
     $this->assertFalse($this->fixture->isAssignableFrom($name));
+  }
+
+  #[Test, Values(['int', 'double', 'string', 'bool'])]
+  public function fixture_is_not_assignable_from_primitive_object($name) {
+    $this->assertFalse($this->fixture->isAssignableFrom(Primitive::forName($name)));
   }
 
   #[Test, Expect(ClassNotFoundException::class)]

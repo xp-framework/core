@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use io\{File, FileUtil};
+use unittest\actions\ExtensionAvailable;
 use unittest\{BeforeClass, Test, TestCase};
 use xml\DomXSLProcessor;
 new import('lang.ResourceProvider');
@@ -10,7 +11,7 @@ new import('lang.ResourceProvider');
  *
  * @see   xp://lang.ResourceProvider
  */
-#[@action(new \unittest\actions\ExtensionAvailable('xsl'))]
+#[Action(eval: 'new ExtensionAvailable("xsl")')]
 class ResourceProviderXslIntegrationTest extends TestCase {
 
   /**
