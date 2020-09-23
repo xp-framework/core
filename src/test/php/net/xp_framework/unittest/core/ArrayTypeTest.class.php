@@ -1,6 +1,5 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use net\xp_framework\unittest\Name;
 use lang\{
   ArrayType,
   ClassCastException,
@@ -9,146 +8,145 @@ use lang\{
   Type,
   XPClass
 };
+use net\xp_framework\unittest\Name;
+use unittest\{Expect, Test, Values, TestCase};
 
-class ArrayTypeTest extends \unittest\TestCase {
+class ArrayTypeTest extends TestCase {
 
-  #[@test]
+  /** @return iterable */
+  private function nonArrayValues() {
+    yield [0];
+    yield [-1];
+    yield [0.5];
+    yield [''];
+    yield ['Test'];
+    yield [true];
+    yield [false];
+    yield [false];
+    yield [['key' => 'color', 'value' => 'price']];
+  }
+
+  #[Test]
   public function typeForName() {
     $this->assertInstanceOf(ArrayType::class, Type::forName('string[]'));
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function arrayTypeForName() {
     ArrayType::forName('string');
   }
 
-  #[@test]
+  #[Test]
   public function newArrayTypeWithString() {
     $this->assertEquals(ArrayType::forName('int[]'), new ArrayType('int'));
   }
 
-  #[@test]
+  #[Test]
   public function newArrayTypeWithTypeInstance() {
     $this->assertEquals(ArrayType::forName('int[]'), new ArrayType(Primitive::$INT));
   }
 
-  #[@test]
+  #[Test]
   public function stringComponentType() {
     $this->assertEquals(Primitive::$STRING, ArrayType::forName('string[]')->componentType());
   }
 
-  #[@test]
+  #[Test]
   public function objectComponentType() {
     $this->assertEquals(XPClass::forName('net.xp_framework.unittest.Name'), ArrayType::forName('net.xp_framework.unittest.Name[]')->componentType());
   }
 
-  #[@test]
+  #[Test]
   public function varComponentType() {
     $this->assertEquals(Type::$VAR, ArrayType::forName('var[]')->componentType());
   }
 
-  #[@test]
+  #[Test]
   public function isInstance() {
     $this->assertInstanceOf(ArrayType::forName('string[]'), ['Hello', 'World']);
   }
 
-  #[@test]
+  #[Test]
   public function isInstanceOfName() {
     $this->assertInstanceOf('string[]', ['Hello', 'World']);
   }
 
-  #[@test]
+  #[Test]
   public function intArrayIsNotAnInstanceOfStringArray() {
     $this->assertFalse(ArrayType::forName('string[]')->isInstance([1, 2]));
   }
 
-  #[@test]
+  #[Test]
   public function mapIsNotAnInstanceOfArray() {
     $this->assertFalse(ArrayType::forName('var[]')->isInstance(['Hello' => 'World']));
   }
 
-  #[@test]
+  #[Test]
   public function stringArrayAssignableFromStringArray() {
     $this->assertTrue(ArrayType::forName('string[]')->isAssignableFrom('string[]'));
   }
 
-  #[@test]
+  #[Test]
   public function stringArrayAssignableFromStringArrayType() {
     $this->assertTrue(ArrayType::forName('string[]')->isAssignableFrom(ArrayType::forName('string[]')));
   }
 
-  #[@test]
+  #[Test]
   public function stringArrayNotAssignableFromIntType() {
     $this->assertFalse(ArrayType::forName('string[]')->isAssignableFrom(Primitive::$INT));
   }
 
-  #[@test]
+  #[Test]
   public function stringArrayNotAssignableFromClassType() {
     $this->assertFalse(ArrayType::forName('string[]')->isAssignableFrom(typeof($this)));
   }
 
-  #[@test]
+  #[Test]
   public function stringArrayNotAssignableFromString() {
     $this->assertFalse(ArrayType::forName('string[]')->isAssignableFrom('string'));
   }
 
-  #[@test]
+  #[Test]
   public function stringArrayNotAssignableFromStringMap() {
     $this->assertFalse(ArrayType::forName('string[]')->isAssignableFrom('[:string]'));
   }
 
-  #[@test]
+  #[Test]
   public function stringArrayNotAssignableFromVar() {
     $this->assertFalse(ArrayType::forName('string[]')->isAssignableFrom('var'));
   }
 
-  #[@test]
+  #[Test]
   public function stringArrayNotAssignableFromVoid() {
     $this->assertFalse(ArrayType::forName('string[]')->isAssignableFrom('void'));
   }
 
-  #[@test]
+  #[Test]
   public function varArrayAssignableFromIntArray() {
     $this->assertFalse(ArrayType::forName('var[]')->isAssignableFrom('int[]'));
   }
 
-  #[@test, @values([
-  #  [[], null],
-  #  [[], []], [['Test'], ['Test']],
-  #  [['0', '1', '2'], [0, 1, 2]],
-  #  [['a', 'b', 'c'], ['a', 'b', 'c']]
-  #])]
+  #[Test, Values([[[], null], [[], []], [['Test'], ['Test']], [['0', '1', '2'], [0, 1, 2]], [['a', 'b', 'c'], ['a', 'b', 'c']]])]
   public function newInstance($expected, $value) {
     $this->assertEquals($expected, ArrayType::forName('string[]')->newInstance($value));
   }
 
-  #[@test, @expect(IllegalArgumentException::class), @values([
-  #  0, -1, 0.5, '', 'Test', new Name('test'), true, false,
-  #  [['key' => 'color', 'value' => 'price']]
-  #])]
+  #[Test, Expect(IllegalArgumentException::class), Values('nonArrayValues')]
   public function newInstance_raises_exceptions_for_non_arrays($value) {
     ArrayType::forName('var[]')->newInstance($value);
   }
 
-  #[@test, @values([
-  #  [null, null],
-  #  [[], []], [['Test'], ['Test']],
-  #  [['0', '1', '2'], [0, 1, 2]],
-  #  [['a', 'b', 'c'], ['a', 'b', 'c']]
-  #])]
+  #[Test, Values([[null, null], [[], []], [['Test'], ['Test']], [['0', '1', '2'], [0, 1, 2]], [['a', 'b', 'c'], ['a', 'b', 'c']]])]
   public function cast($expected, $value) {
     $this->assertEquals($expected, ArrayType::forName('string[]')->cast($value));
   }
 
-  #[@test, @expect(ClassCastException::class), @values([
-  #  0, -1, 0.5, '', 'Test', new Name('test'), true, false,
-  #  [['key' => 'color', 'value' => 'price']]
-  #])]
+  #[Test, Expect(ClassCastException::class), Values('nonArrayValues')]
   public function cast_raises_exceptions_for_non_arrays($value) {
     ArrayType::forName('var[]')->cast($value);
   }
 
-  #[@test]
+  #[Test]
   public function instances_created_with_strings_and_instances_are_equal() {
     $this->assertEquals(new ArrayType('string'), new ArrayType(Primitive::$STRING));
   }

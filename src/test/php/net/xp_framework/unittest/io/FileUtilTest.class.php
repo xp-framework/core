@@ -1,8 +1,8 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use io\streams\{Streams, MemoryInputStream, MemoryOutputStream};
+use io\streams\{MemoryInputStream, MemoryOutputStream, Streams};
 use io\{File, FileUtil};
-use unittest\TestCase;
+use unittest\{Test, TestCase};
 
 /**
  * TestCase
@@ -13,47 +13,47 @@ use unittest\TestCase;
  */
 class FileUtilTest extends TestCase {
 
-  #[@test]
+  #[Test]
   public function read() {
     $f= new File(Streams::readableFd(new MemoryInputStream('Test')));
     $this->assertEquals('Test', FileUtil::read($f));
   }
 
-  #[@test]
+  #[Test]
   public function write_returns_number_of_written_bytes() {
     $f= new File(Streams::writeableFd(new MemoryOutputStream()));
     $this->assertEquals(4, FileUtil::write($f, 'Test'));
   }
 
-  #[@test]
+  #[Test]
   public function write_bytes() {
     $out= new MemoryOutputStream();
     FileUtil::write(new File(Streams::writeableFd($out)), 'Test');
     $this->assertEquals('Test', $out->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function overwrite_bytes() {
     $out= new MemoryOutputStream('Existing');
     FileUtil::write(new File(Streams::writeableFd($out)), 'Test');
     $this->assertEquals('Test', $out->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function append_bytes() {
     $out= new MemoryOutputStream();
     FileUtil::append(new File(Streams::writeableFd($out)), 'Test');
     $this->assertEquals('Test', $out->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function append_bytes_to_existing() {
     $out= new MemoryOutputStream('Existing');
     FileUtil::append(new File(Streams::writeableFd($out)), 'Test');
     $this->assertEquals('ExistingTest', $out->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function read_returns_less_than_size() {
     $f= new File(Streams::readableFd(new class('Test') extends MemoryInputStream {
       public function read($size= 4096) { return parent::read(min(1, $size)); }
@@ -61,7 +61,7 @@ class FileUtilTest extends TestCase {
     $this->assertEquals('Test', FileUtil::read($f));
   }
 
-  #[@test]
+  #[Test]
   public function methods_can_be_used_on_instance() {
     $f= new File(Streams::readableFd(new MemoryInputStream('Test')));
 
@@ -70,14 +70,14 @@ class FileUtilTest extends TestCase {
   }
 
   /** @deprecated */
-  #[@test]
+  #[Test]
   public function get_contents() {
     $f= new File(Streams::readableFd(new MemoryInputStream('Test')));
     $this->assertEquals('Test', FileUtil::getContents($f));
   }
 
   /** @deprecated */
-  #[@test]
+  #[Test]
   public function set_contents() {
     $f= new File(Streams::writeableFd(new MemoryOutputStream()));
     $this->assertEquals(4, FileUtil::setContents($f, 'Test'));

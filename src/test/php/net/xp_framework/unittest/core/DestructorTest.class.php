@@ -1,9 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
-/**
- * Tests destructor functionality
- */
-class DestructorTest extends \unittest\TestCase {
+use unittest\{Test, TestCase};
+
+class DestructorTest extends TestCase {
   private $destroyed= [];
   private $destroyable;
     
@@ -18,7 +17,7 @@ class DestructorTest extends \unittest\TestCase {
     $this->destroyed[$this->destroyable->hashCode()]= 0;
   }
 
-  #[@test]
+  #[Test]
   public function deleteCallsDestructor() {
     $hash= $this->destroyable->hashCode();
     unset($this->destroyable);

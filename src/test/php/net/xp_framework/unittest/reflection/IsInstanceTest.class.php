@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\{XPClass, Runnable};
+use lang\{Runnable, XPClass};
+use unittest\Test;
 
 /**
  * TestCase
@@ -9,34 +10,34 @@ use lang\{XPClass, Runnable};
  */
 class IsInstanceTest extends \unittest\TestCase {
 
-  #[@test]
+  #[Test]
   public function this_is_an_instance_of_testcase() {
     $this->assertTrue(XPClass::forName('unittest.TestCase')->isInstance($this));
   }
 
-  #[@test]
+  #[Test]
   public function this_is_an_instance_of_this_class() {
     $this->assertTrue(typeof($this)->isInstance($this));
   }
  
-  #[@test]
+  #[Test]
   public function primitive_string_is_not_value() {
     $this->assertFalse(XPClass::forName('lang.Value')->isInstance('Hello'));
   }
 
-  #[@test]
+  #[Test]
   public function this_is_a_value() {
     $this->assertTrue(XPClass::forName('lang.Value')->isInstance($this));
   }
 
-  #[@test]
+  #[Test]
   public function new_interface_instance_is_rsunnable() {
     $this->assertTrue(XPClass::forName('lang.Runnable')->isInstance(new class() implements Runnable {
       public function run() { }
     }));
   }
 
-  #[@test]
+  #[Test]
   public function null_is_not_a_value() {
     $this->assertFalse(XPClass::forName('lang.Value')->isInstance(null));
   }

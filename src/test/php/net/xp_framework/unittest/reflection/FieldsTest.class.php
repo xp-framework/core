@@ -1,6 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-abstract class FieldsTest extends \unittest\TestCase {
+use unittest\TestCase;
+
+abstract class FieldsTest extends TestCase {
   use TypeDefinition;
 
   /**
@@ -11,6 +13,6 @@ abstract class FieldsTest extends \unittest\TestCase {
    * @return lang.reflect.Field
    */
   protected function field($decl, $modifiers= '') {
-    return $this->type('{ '.$decl.' }', $modifiers)->getField('fixture');
+    return $this->type('{ '.$decl.' }', ['modifiers' => $modifiers])->getField('fixture');
   }
 }

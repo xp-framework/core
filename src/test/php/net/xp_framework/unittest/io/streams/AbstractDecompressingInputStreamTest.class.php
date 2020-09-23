@@ -1,9 +1,8 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
+use io\streams\{InputStream, MemoryInputStream};
+use unittest\{PrerequisitesNotMetError, Test};
 use util\Bytes;
-use io\streams\MemoryInputStream;
-use io\streams\InputStream;
-use unittest\PrerequisitesNotMetError;
 
 /**
  * Abstract base class for all compressing output stream tests
@@ -45,7 +44,7 @@ abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
     }
   }
 
-  #[@test]
+  #[Test]
   public function single_read() {
     $in= new MemoryInputStream($this->compress('Hello', 6));
     $decompressor= $this->newStream($in);
@@ -54,7 +53,7 @@ abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
     $this->assertEquals('Hello', $chunk);
   }
 
-  #[@test]
+  #[Test]
   public function multiple_reads() {
     $in= new MemoryInputStream($this->compress('Hello World', 6));
     $decompressor= $this->newStream($in);
@@ -67,7 +66,7 @@ abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
     $this->assertEquals('World', $chunk3);
   }
 
-  #[@test]
+  #[Test]
   public function highest_level() {
     $in= new MemoryInputStream($this->compress('Hello', 9));
     $decompressor= $this->newStream($in);
@@ -76,7 +75,7 @@ abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
     $this->assertEquals('Hello', $chunk);
   }
 
-  #[@test]
+  #[Test]
   public function lowest_level() {
     $in= new MemoryInputStream($this->compress('Hello', 1));
     $decompressor= $this->newStream($in);
@@ -85,13 +84,13 @@ abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
     $this->assertEquals('Hello', $chunk);
   }
 
-  #[@test]
+  #[Test]
   public function closing_right_after_creation() {
     $decompressor= $this->newStream(new MemoryInputStream($this->compress('Hello', 1)));
     $decompressor->close();
   }
 
-  #[@test]
+  #[Test]
   public function closing_twice_has_no_effect() {
     $decompressor= $this->newStream(new MemoryInputStream($this->compress('Hello', 1)));
     $decompressor->close();

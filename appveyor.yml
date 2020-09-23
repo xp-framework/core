@@ -14,7 +14,7 @@ init:
 install:
   - if exist .\xp (set CACHED=1) else (mkdir .\xp)
   - if %CACHED%==0 cd .\xp
-  - if %CACHED%==0 curl -fsS -o php.zip https://windows.php.net/downloads/releases/archives/php-7.2.3-Win32-VC15-x64.zip
+  - if %CACHED%==0 curl -fsS -o php.zip https://windows.php.net/downloads/releases/archives/php-7.3.10-nts-Win32-VC15-x64.zip
   - if %CACHED%==0 appveyor DownloadFile https://getcomposer.org/composer.phar
   - if %CACHED%==0 appveyor DownloadFile https://bintray.com/artifact/download/xp-runners/windows/xp-runners_master.zip -FileName xp.zip
   - if %CACHED%==0 7z x php.zip -y

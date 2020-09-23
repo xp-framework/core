@@ -1,7 +1,8 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use io\{Folder, Path, File, FolderEntries};
-use lang\{IllegalArgumentException, Environment};
+use io\{File, Folder, FolderEntries, Path};
+use lang\{Environment, IllegalArgumentException};
+use unittest\{Expect, Test, Values};
 
 class FolderEntriesTest extends \unittest\TestCase {
   private $folder;
@@ -26,42 +27,42 @@ class FolderEntriesTest extends \unittest\TestCase {
     $this->folder->exists() && $this->folder->unlink();
   }
 
-  #[@test]
+  #[Test]
   public function can_create_with_folder() {
     new FolderEntries($this->folder);
   }
 
-  #[@test]
+  #[Test]
   public function can_create_with_uri() {
     new FolderEntries($this->folder->getURI());
   }
 
-  #[@test]
+  #[Test]
   public function can_create_with_reference_to_current_directory() {
     new FolderEntries('.');
   }
 
-  #[@test]
+  #[Test]
   public function can_create_with_reference_to_parent_directory() {
     new FolderEntries('..');
   }
 
-  #[@test]
+  #[Test]
   public function can_create_with_path() {
     new FolderEntries(new Path($this->folder));
   }
 
-  #[@test, @expect(IllegalArgumentException::class), @values([null, ''])]
+  #[Test, Expect(IllegalArgumentException::class), Values([null, ''])]
   public function cannot_create_from_empty_name($value) {
     new FolderEntries($value);
   }
 
-  #[@test]
+  #[Test]
   public function entries_iteration_for_empty_folder() {
     $this->assertEquals([], iterator_to_array(new FolderEntries($this->folder)));
   }
 
-  #[@test]
+  #[Test]
   public function entries_iteration_with_one_file() {
     (new File($this->folder, 'one'))->touch();
 
@@ -71,7 +72,7 @@ class FolderEntriesTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function entries_iteration_with_files_and_directories() {
     (new File($this->folder, 'one'))->touch();
     (new Folder($this->folder, 'two'))->create();
@@ -82,7 +83,7 @@ class FolderEntriesTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function entries_reiteration() {
     (new File($this->folder, 'one'))->touch();
     (new File($this->folder, 'two'))->touch();
@@ -95,12 +96,12 @@ class FolderEntriesTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function named() {
     $this->assertEquals(new Path($this->folder, 'test'), (new FolderEntries($this->folder))->named('test'));
   }
 
-  #[@test]
+  #[Test]
   public function named_dot() {
     $this->assertEquals(new Path($this->folder), (new FolderEntries($this->folder))->named('.'));
   }

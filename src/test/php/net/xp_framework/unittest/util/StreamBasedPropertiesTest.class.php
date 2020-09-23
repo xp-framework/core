@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use util\Properties;
 use io\streams\MemoryInputStream;
+use util\Properties;
 
 /**
  * Testcase for util.Properties class.

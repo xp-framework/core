@@ -1,8 +1,8 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\streams\FileInputStream;
-use io\{TempFile, IOException, FileNotFoundException};
-use unittest\{TestCase, PrerequisitesNotMetError};
+use io\{FileNotFoundException, IOException, TempFile};
+use unittest\{Expect, PrerequisitesNotMetError, Test, TestCase};
 
 class FileInputStreamTest extends TestCase {
   private $file;
@@ -34,7 +34,7 @@ class FileInputStreamTest extends TestCase {
     }
   }
   
-  #[@test]
+  #[Test]
   public function reading() {
     with (new FileInputStream($this->file), function($stream) {
       $this->assertEquals('Created by ', $stream->read(11));
@@ -43,7 +43,7 @@ class FileInputStreamTest extends TestCase {
     });
   }
 
-  #[@test]
+  #[Test]
   public function seeking() {
     with (new FileInputStream($this->file), function($stream) {
       $this->assertEquals(0, $stream->tell());
@@ -53,7 +53,7 @@ class FileInputStreamTest extends TestCase {
     });
   }
 
-  #[@test]
+  #[Test]
   public function availability() {
     with (new FileInputStream($this->file), function($stream) {
       $this->assertNotEquals(0, $stream->available());
@@ -62,7 +62,7 @@ class FileInputStreamTest extends TestCase {
     });
   }
 
-  #[@test]
+  #[Test]
   public function delete() {
     with (new FileInputStream($this->file), function($stream) {
       $this->assertTrue($this->file->isOpen());
@@ -71,12 +71,12 @@ class FileInputStreamTest extends TestCase {
     });
   }
 
-  #[@test, @expect(FileNotFoundException::class)]
+  #[Test, Expect(FileNotFoundException::class)]
   public function nonExistantFile() {
     new FileInputStream('::NON-EXISTANT::');
   }
 
-  #[@test, @expect(IOException::class)]
+  #[Test, Expect(IOException::class)]
   public function readingAfterClose() {
     with (new FileInputStream($this->file), function($stream) {
       $stream->close();
@@ -84,7 +84,7 @@ class FileInputStreamTest extends TestCase {
     });
   }
 
-  #[@test, @expect(IOException::class)]
+  #[Test, Expect(IOException::class)]
   public function availableAfterClose() {
     with (new FileInputStream($this->file), function($stream) {
       $stream->close();
@@ -92,7 +92,7 @@ class FileInputStreamTest extends TestCase {
     });
   }
 
-  #[@test]
+  #[Test]
   public function doubleClose() {
     with (new FileInputStream($this->file), function($stream) {
       $stream->close();

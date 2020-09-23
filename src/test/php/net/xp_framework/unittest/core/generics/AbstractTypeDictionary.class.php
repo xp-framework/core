@@ -3,7 +3,7 @@
 /**
  * Lookup map
  */
-#[@generic(self= 'V', implements= ['lang.Type, V'])]
+#[@generic(['self' => 'V', 'implements' => ['lang.Type, V']])]
 abstract class AbstractTypeDictionary implements IDictionary {
 
 }

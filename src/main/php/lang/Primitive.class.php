@@ -35,13 +35,13 @@ class Primitive extends Type {
       case 'string': return self::$STRING;
       case 'int': return self::$INT;
       case 'float': case 'double': return self::$FLOAT;
-      case 'bool': return self::$BOOL;
+      case 'bool': case 'false': return self::$BOOL;
       default: throw new IllegalArgumentException('Not a primitive: '.$name);
     }
   }
 
   /** Returns type literal */
-  public function literal(): string { return 'þ'.$this->name; }
+  public function literal(): string { return "\xfe".$this->name; }
 
   /** Determines whether the specified object is an instance of this type. */
   public function isInstance($obj): bool {

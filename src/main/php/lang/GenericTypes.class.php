@@ -102,12 +102,11 @@ class GenericTypes {
             $src.= $tokens[$i][1].' '.$decl;
             array_unshift($state, $tokens[$i][0]);
           } else if (T_USE === $tokens[$i][0]) {
-            $i+= 2;
             $use= '';
-            while ((T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0]) && $i < $s) {
+            for ($i+= 2; $i < $s, !(';' === $tokens[$i] || '{' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]); $i++) {
               $use.= $tokens[$i][1];
-              $i++;
             }
+
             if ('{' === $tokens[$i]) {
               $import= $use;
               $i++;
@@ -120,13 +119,14 @@ class GenericTypes {
                   $imports[substr($import, strrpos($import, '\\')+ 1)]= $import;
                   $src.= 'use '.$import.';';
                   break;
-                } else if (is_array($tokens[$i])) {
-                  $import.= $tokens[$i][1];
-                } else {
-                  $import.= $tokens[$i];
+                } else if (T_WHITESPACE !== $tokens[$i][0]) {
+                  $import.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
                 }
                 $i++;
               }
+            } else if (T_AS === $tokens[++$i][0]) {
+              $imports[$tokens[$i + 2][1]]= strtr($use, '\\', '.');
+              $src.= 'use '.$use.' as '.$tokens[$i + 2][1].';';
             } else {
               $imports[substr($use, strrpos($use, '\\')+ 1)]= $use;
               $src.= 'use '.$use.';';
@@ -135,13 +135,10 @@ class GenericTypes {
           continue;
         } else if (T_CLASS === $state[0]) {
           if (T_EXTENDS === $tokens[$i][0]) {
-            $i+= 2;
             $parent= '';
-            while ((T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0]) && $i < $s) {
+            for ($i+= 2; $i < $s, !(';' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]); $i++) {
               $parent.= $tokens[$i][1];
-              $i++;
             }
-            $i--;
             if (isset($annotations['generic']['parent'])) {
               $xargs= [];
               foreach (explode(',', $annotations['generic']['parent']) as $j => $placeholder) {
@@ -154,7 +151,7 @@ class GenericTypes {
           } else if (T_IMPLEMENTS === $tokens[$i][0]) {
             $src.= ' implements';
             $counter= 0;
-            $annotation= @$annotations['generic']['implements'];
+            $annotation= $annotations['generic']['implements'] ?? null;
             array_unshift($state, T_CLASS);
             array_unshift($state, 5);
           } else if ('{' === $tokens[$i][0]) {
@@ -168,7 +165,7 @@ class GenericTypes {
           if (T_EXTENDS === $tokens[$i][0]) {
             $src.= ' extends';
             $counter= 0;
-            $annotation= @$annotations['generic']['extends'];
+            $annotation= $annotations['generic']['extends'] ?? null;
             array_unshift($state, T_INTERFACE);
             array_unshift($state, 5);
           } else if ('{' === $tokens[$i][0]) {
@@ -291,31 +288,39 @@ class GenericTypes {
             continue;
           }
         } else if (5 === $state[0]) {             // Implements (class), Extends (interface)
-          if (T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0]) {
+          if ('{' === $tokens[$i]) {
+            array_shift($state);
+            array_shift($state);
+            $i--;
+            continue;
+          } else if (T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0]) {
             $rel= '';
             while ((T_STRING === $tokens[$i][0] || T_NS_SEPARATOR === $tokens[$i][0]) && $i < $s) {
               $rel.= $tokens[$i][1];
               $i++;
             }
             $i--;
-            '\\' === $rel[0] || $rel= isset($imports[$rel]) ? $imports[$rel] : $namespace.'\\'.$rel;
-            if (isset($annotation[$counter])) {
-              $iargs= [];
-              foreach (explode(',', $annotation[$counter]) as $j => $placeholder) {
-                $iargs[]= Type::forName(strtr(ltrim($placeholder), $placeholders));
-              }
-              $src.= '\\'.$this->newType0(new XPClass(new \ReflectionClass($rel)), $iargs);
-            } else {
-              $src.= $rel;
-            }
-            $counter++;
-            continue;
-          } else if ('{' === $tokens[$i][0]) {
-            array_shift($state);
-            array_shift($state);
-            $i--;
+            '\\' === $rel[0] || $rel= isset($imports[$rel]) ? $imports[$rel] : '\\'.$namespace.'\\'.$rel;
+          } else if (T_NAME_QUALIFIED === $tokens[$i][0]) {
+            $rel= isset($imports[$tokens[$i][1]]) ? $imports[$tokens[$i][1]] : '\\'.$namespace.'\\'.$tokens[$i][1];
+          } else if (T_NAME_FULLY_QUALIFIED === $tokens[$i][0]) {
+            $rel= $tokens[$i][1];
+          } else {
+            $src.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
             continue;
           }
+
+          if (isset($annotation[$counter])) {
+            $iargs= [];
+            foreach (explode(',', $annotation[$counter]) as $j => $placeholder) {
+              $iargs[]= Type::forName(strtr(ltrim($placeholder), $placeholders));
+            }
+            $src.= '\\'.$this->newType0(new XPClass(new \ReflectionClass($rel)), $iargs);
+          } else {
+            $src.= $rel;
+          }
+          $counter++;
+          continue;
         }
                   
         $src.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];

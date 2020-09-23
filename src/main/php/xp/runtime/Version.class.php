@@ -56,7 +56,7 @@ class Version {
         self::engineVersion(),
         php_uname()
       );
-      Console::writeLine('Copyright (c) 2001-2019 the XP group');
+      Console::writeLine('Copyright (c) 2001-', date('Y'), ' the XP group');
       foreach (ClassLoader::getLoaders() as $delegate) {
         Console::writeLine($delegate->toString());
       }

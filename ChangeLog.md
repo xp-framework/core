@@ -3,7 +3,88 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
-## 10.0.0 / ????-??-??
+### RFCs
+
+* Merged PRs #246 and #247, rewriting the code base to PHP 8 attributes
+  (@thekid)
+* Implemented first step of xp-framwwork/rfc#336 by converting PHP 8
+  attributes into XP annotations: `#[Test(true)]` will beinterpreted the
+  same as `#[@test(true)]`. This way, converting libraries over to the
+  new syntax can start now. Implementation details in pull request #245.
+
+### Features
+
+* Added support for `mixed` type, see https://wiki.php.net/rfc/mixed_type_v2
+  (@thekid)
+
+### Bugfixes
+
+* Fixed grouped imports when used inside generics in PHP 8.0 - @thekid
+* Add handling for `T_NAME_FULLY_QUALIFIED` and `T_NAME_QUALIFIED` tokens
+  introduced in PHP 8 by https://wiki.php.net/rfc/namespaced_names_as_token
+  (@thekid)
+
+## 10.1.0 / 2020-05-31
+
+### Features
+
+* Improved performance of type lookups for parameters and return types;
+  only looking at the API docs if either no type syntax is used or for
+  array types (e.g. `array` => `string[]`)
+  (@thekid)
+* Added `lang.reflect.Routine::getReturnTypeRestriction()` to be consistent
+  with parameters.
+  (@thekid)
+
+### Bugfixes
+
+* Fixed imports not being resolved inside annotations with functions and
+  closures as values.
+  (@thekid)
+* Merged PR #242: Use ReflectionType API instead of deprecated isArray and
+  isCallable on parameters - for PHP 8 compatibility (see php/php-src#5209).
+  (@thekid)
+
+## 10.0.5 / 2020-04-05
+
+### Bugfixes
+
+* Fixed issue #241: Support PHP 7.4 property types (e.g. `private int $id`)
+  See https://wiki.php.net/rfc/typed_properties_v2
+  (@thekid)
+
+## 10.0.4 / 2020-04-05
+
+### Bugfixes
+
+* Fixed issue #240: Add support for PHP 8 union types (e.g. `string|int`)
+  See https://wiki.php.net/rfc/union_types_v2
+  (@thekid)
+
+## 10.0.3 / 2020-03-28
+
+### Bugfixes
+
+* Fixed *Array and string offset access syntax with curly braces is deprecated*
+  warnings inside `lang.reflect.ClassParser`
+  (@thekid)
+
+## 10.0.2 / 2019-12-01
+
+### Bugfixes
+
+* Fixed `xp help` subcommand raising warnings when rendering markdown
+  (@thekid)
+
+## 10.0.1 / 2019-12-01
+
+### Bugfixes
+
+* Fixed generics in PHP 8+ by using null-coalesce operator instead of the
+  error suppression operator `@`.
+  (@thekid)
+
+## 10.0.0 / 2019-11-29
 
 ### Bugfixes
 
@@ -14,15 +95,24 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged PR #234: Add new method Package::of() which returns the package
+  of a given type
+  (@thekid)
+* Merged PR #233: Allow passing string types to `Enum::value[s]Of()`
+  (@thekid)
+* Merged PR #227: Add support for PHP 7.4 arrow functions in annotations
+  (@thekid)
+* Merged PR #226: Support getting annotations from anonymous classes
+  (@thekid)
 * Implemented feature request #219, adding `util.Date::getMicroSeconds()`
   (@thekid)
 * Merged PR #218: Add new util.Dates class superseding util.DateUtil 
   (@thekid)
 * Merged PR #217: New `io.Files` class replacing the ill-named *FileUtil*
   (@thekid)
-* Added preliminary support for PHP 7.4 and PHP 8.0, both of which have
-  not yet been released yet - though running the testsuite with their
-  respective nightly builds yields *green* - see issue #211
+* Added preliminary support for PHP 8.0, which has not yet been released
+  yet, though running the testsuite with its nightly builds yields *green*.
+  See issue #211
   (@thekid)
 
 ### Heads up!
@@ -42,11 +132,29 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented xp-framework/rfc#335: Drop annotation key/value pair syntax,
+  phase 1: This syntax is now deprecated, see PR #236.
+  (@thekid)
+* Implemented xp-framework/rfc#333: XP 10 release / full PHP 7.4 support
+  (@thekid)
 * Implemented user modules as part of xp-framework/rfc#332, see PR #207
   (@thekid)
 * Implemented xp-framework/rfc#329: Remove deprecated io.sys. See PR #197
   (@thekid)
 * Implemented xp-framework/rfc#330: Remove HHVM support. See PR #206
+  (@thekid)
+
+## 9.10.0 / 2019-10-04
+
+### Features
+
+* Backported XP 10 features for easier adoption:
+  - PHP 7.4 arrow functions in annotations (#227)
+  - Annotations from anonymous classes (#226)
+  - New `util.Date::getMicroSeconds()` (#219)
+  - New `util.Dates` class superseding util.DateUtil (#218)
+  - New `io.Files` class replacing the ill-named *FileUtil* (#217)
+  https://github.com/xp-framework/core/projects/1
   (@thekid)
 
 ## 9.9.1 / 2019-08-20

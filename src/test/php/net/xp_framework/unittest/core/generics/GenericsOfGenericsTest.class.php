@@ -1,13 +1,15 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
+use unittest\{Test, TestCase};
+
 /**
  * TestCase for generic behaviour at runtime.
  *
  * @see   xp://net.xp_framework.unittest.core.generics.ListOf
  */
-class GenericsOfGenericsTest extends \unittest\TestCase {
+class GenericsOfGenericsTest extends TestCase {
   
-  #[@test]
+  #[Test]
   public function listOfListOfStringsReflection() {
     $l= create('new net.xp_framework.unittest.core.generics.ListOf<net.xp_framework.unittest.core.generics.ListOf<string>>');
     
@@ -25,7 +27,7 @@ class GenericsOfGenericsTest extends \unittest\TestCase {
     }
   }
 
-  #[@test]
+  #[Test]
   public function lookupOfListOfStringsReflection() {
     $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, net.xp_framework.unittest.core.generics.ListOf<string>>');
     
@@ -44,7 +46,7 @@ class GenericsOfGenericsTest extends \unittest\TestCase {
     }
   }
 
-  #[@test]
+  #[Test]
   public function lookupOfLookupOfStringsReflection() {
     $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, net.xp_framework.unittest.core.generics.Lookup<string, lang.Value>>');
     

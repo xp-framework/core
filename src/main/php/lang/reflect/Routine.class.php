@@ -1,6 +1,6 @@
 <?php namespace lang\reflect;
 
-use lang\{ElementNotFoundException, XPClass, Value, Type};
+use lang\{ElementNotFoundException, XPClass, Value, Type, TypeUnion};
 use util\Objects;
 
 /**
@@ -101,36 +101,106 @@ class Routine implements Value {
     return $this->_reflect->getNumberOfParameters();
   }
 
-  /** Retrieve return type */
-  public function getReturnType(): Type {
-    if (
-      ($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))
-      && isset($details[DETAIL_RETURNS])
-    ) {
-      $t= ltrim($details[DETAIL_RETURNS], '&');
-      if ('self' === $t) {
-        return new XPClass($this->_reflect->getDeclaringClass());
-      } else {
-        return Type::forName($t);
-      }
-    } else if ($t= $this->_reflect->getReturnType()) {
-      return Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+  /**
+   * Resolve name, handling `static`, `self` and `parent`.
+   *
+   * @param  string $name
+   * @return lang.Type
+   */
+  private function resolve($name) {
+    if ('static' === $name) {
+      return new XPClass($this->_class);
+    } if ('self' === $name) {
+      return new XPClass($this->_reflect->getDeclaringClass());
+    } else if ('parent' === $name) {
+      return new XPClass($this->_reflect->getDeclaringClass()->getParentClass());
     } else {
-      return Type::$VAR;
+      return Type::forName($name);
     }
+  }
+
+  /**
+   * Get return type.
+   *
+   * @return  lang.Type
+   * @throws  lang.ClassFormatException if the restriction cannot be resolved
+   */
+  public function getReturnType(): Type {
+    $t= $this->getReturnTypeRestriction();
+
+    if (null === $t) {
+      // Check for type in api documentation
+      $t= Type::$VAR;
+    } else if (Type::$ARRAY === $t) {
+      // Check for more specific type, e.g. `string[]` in api documentation
+    } else {
+      return $t;
+    }
+
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $r= $details[DETAIL_RETURNS] ?? null;
+    return null === $r ? $t : $this->resolve(rtrim(ltrim($r, '&'), '.'));
   }
 
   /** Retrieve return type name */
   public function getReturnTypeName(): string {
-    if (
-      ($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))
-      && isset($details[DETAIL_RETURNS])
-    ) {
-      return ltrim($details[DETAIL_RETURNS], '&');
-    } else if ($t= $this->_reflect->getReturnType()) {
-      return PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
+    static $map= [
+      'mixed'   => 'var',
+      'false'   => 'bool',
+      'boolean' => 'bool',
+      'double'  => 'float',
+      'integer' => 'int',
+    ];
+
+    $t= $this->_reflect->getReturnType();
+    if (null === $t) {
+      // Check for type in api documentation
+      $name= 'var';
+    } else if ($t instanceof \ReflectionUnionType) {
+      $union= '';
+      foreach ($t->getTypes() as $component) {
+        $name= $component->getName();
+        $union.= '|'.($map[$name] ?? strtr($name, '\\', '.'));
+      }
+      return substr($union, 1);
+    } else if ('array' === ($name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString())) {
+      // Check for more specific type, e.g. `string[]` in api documentation
     } else {
-      return 'var';
+      return $map[$name] ?? strtr($name, '\\', '.');
+    }
+
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $r= $details[DETAIL_RETURNS] ?? null;
+    return null === $r ? $name : rtrim(ltrim($r, '&'), '.');
+  }
+
+  /**
+   * Get return type restriction.
+   *
+   * @return  lang.Type or NULL if there is no restriction
+   * @throws  lang.ClassFormatException if the restriction cannot be resolved
+   */
+  public function getReturnTypeRestriction() {
+    $t= $this->_reflect->getReturnType();
+    if (null === $t) return null;
+
+    try {
+      if ($t instanceof \ReflectionUnionType) {
+        $union= [];
+        foreach ($t->getTypes() as $component) {
+          $union[]= $this->resolve($component->getName());
+        }
+        return new TypeUnion($union);
+      } else {
+        return $this->resolve(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+      }
+    } catch (ClassLoadingException $e) {
+      throw new ClassFormatException(sprintf(
+        'Typehint for %s::%s()\'s return type cannot be resolved: %s',
+        strtr($this->_class, '\\', '.'),
+        $this->_reflect->getName(),
+        $e->getMessage()
+      ));
     }
   }
 

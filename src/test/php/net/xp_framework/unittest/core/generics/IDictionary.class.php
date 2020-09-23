@@ -1,10 +1,8 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
-/**
- * Lookup map
- *
- */
-#[@generic(self= 'K, V')]
+use lang\Generic;
+
+#[Generic(['self' => 'K, V'])]
 interface IDictionary {
  
   /**
@@ -13,7 +11,7 @@ interface IDictionary {
    * @param   K key
    * @param   V value
    */
-  #[@generic(params= 'K, V')]
+  #[Generic(['params' => 'K, V'])]
   public function put($key, $value);
 
   /**
@@ -23,7 +21,7 @@ interface IDictionary {
    * @return  V value
    * @throws  util.NoSuchElementException
    */
-  #[@generic(params= 'K', return= 'V')]
+  #[Generic(['params' => 'K', 'return' => 'V'])]
   public function get($key);
 
   /**
@@ -31,6 +29,6 @@ interface IDictionary {
    *
    * @return  V[] values
    */
-  #[@generic(return= 'V[]')]
+  #[Generic(['return' => 'V[]'])]
   public function values();
 }

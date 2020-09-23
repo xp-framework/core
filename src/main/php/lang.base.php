@@ -127,6 +127,7 @@ function __error($code, $msg, $file, $line) {
     throw new \lang\IllegalArgumentException($msg);
   } else if ((
     0 === strncmp($msg, 'Undefined offset', 16) ||
+    0 === strncmp($msg, 'Undefined array', 15) ||
     0 === strncmp($msg, 'Undefined index', 15) ||
     0 === strncmp($msg, 'Uninitialized string', 20)
   )) {
@@ -394,7 +395,13 @@ function typeof($arg) {
     }
     return new \lang\FunctionType($signature, $return);
   } else if (is_object($arg)) {
-    return new \lang\XPClass($arg);
+    $class= get_class($arg);
+    if (0 === strncmp($class, 'class@anonymous', 15)) {
+      $r= new \ReflectionObject($arg);
+      \xp::$cl[strtr($class, '\\', '.')]= 'lang.AnonymousClassLoader://'.$r->getStartLine().':'.$r->getEndLine().'@'.$r->getFileName();
+      return new \lang\XPClass($r);
+    }
+    return new \lang\XPClass($class);
   } else if (is_array($arg)) {
     return 0 === key($arg) ? \lang\ArrayType::forName('var[]') : \lang\MapType::forName('[:var]');
   } else {
@@ -435,6 +442,11 @@ define('MODIFIER_PROTECTED', \ReflectionMethod::IS_PROTECTED);
 define('MODIFIER_PRIVATE',   \ReflectionMethod::IS_PRIVATE);
 
 defined('PHP_INT_MIN') || define('PHP_INT_MIN', ~PHP_INT_MAX);
+
+defined('T_FN') || define('T_FN', -346);
+defined('T_ATTRIBUTE') || define('T_ATTRIBUTE', -383);
+defined('T_NAME_FULLY_QUALIFIED') || define('T_NAME_FULLY_QUALIFIED', -312);
+defined('T_NAME_QUALIFIED') || define('T_NAME_QUALIFIED', -314);
 
 xp::$loader= new xp();
 

@@ -3,8 +3,8 @@
 /**
  * Lookup map
  */
-#[@generic(self= 'K, V', implements= ['K, V'])]
-abstract class AbstractDictionary implements IDictionary {
+#[@generic(['self' => 'K, V', 'implements' => ['K, V']])]
+abstract class AbstractDictionary implements IDictionary, Marker {
   
   /**
    * Constructor

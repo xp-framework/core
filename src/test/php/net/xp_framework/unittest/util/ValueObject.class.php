@@ -1,6 +1,8 @@
 <?php namespace net\xp_framework\unittest\util;
 
-class ValueObject implements \lang\Value {
+use lang\Value;
+
+class ValueObject implements Value {
   private $value;
 
   /** @param string $value */

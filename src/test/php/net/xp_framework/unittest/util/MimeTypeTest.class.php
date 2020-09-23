@@ -1,8 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
  
-use unittest\TestCase;
+use unittest\{Test, TestCase};
 use util\MimeType;
-
 
 /**
  * Test MimeType class
@@ -14,7 +13,7 @@ class MimeTypeTest extends TestCase {
   /**
    * Tests getByFilename()
    */
-  #[@test]
+  #[Test]
   public function text_file() {
     $this->assertEquals('text/plain', MimeType::getByFilename('test.txt'));
   }
@@ -22,7 +21,7 @@ class MimeTypeTest extends TestCase {
   /**
    * Tests getByFilename()
    */
-  #[@test]
+  #[Test]
   public function html_file() {
     $this->assertEquals('text/html', MimeType::getByFilename('test.html'));
   }
@@ -30,7 +29,7 @@ class MimeTypeTest extends TestCase {
   /**
    * Tests getByFilename()
    */
-  #[@test]
+  #[Test]
   public function uppercase_extension() {
     $this->assertEquals('text/html', MimeType::getByFilename('test.HTML'));
   }
@@ -38,7 +37,7 @@ class MimeTypeTest extends TestCase {
   /**
    * Tests getByFilename()
    */
-  #[@test]
+  #[Test]
   public function single_extension() {
     $this->assertEquals('application/x-gunzip', MimeType::getByFilename('test.gz'));
   }
@@ -46,7 +45,7 @@ class MimeTypeTest extends TestCase {
   /**
    * Tests getByFilename()
    */
-  #[@test]
+  #[Test]
   public function double_extension() {
     $this->assertEquals('application/x-tar-gz', MimeType::getByFilename('test.tar.gz'));
   }

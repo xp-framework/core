@@ -1,12 +1,13 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
-use util\NoSuchElementException;
+use lang\ElementNotFoundException as NoSuchKey;
+use lang\Generic;
 
 /**
  * Lookup map
  *
  */
-#[@generic(self= 'V', parent= 'V')]
+#[Generic(['self' => 'V', 'parent' => 'V'])]
 class TypeDictionary extends AbstractTypeDictionary {
   protected $elements= [];
   
@@ -16,7 +17,7 @@ class TypeDictionary extends AbstractTypeDictionary {
    * @param   lang.Type key
    * @param   V value
    */
-  #[@generic(params= 'lang.Type, V')]
+  #[Generic(['params' => 'lang.Type, V'])]
   public function put($key, $value) {
     $offset= $key->literal();
     $this->elements[$offset]= $value;
@@ -29,11 +30,11 @@ class TypeDictionary extends AbstractTypeDictionary {
    * @return  V value
    * @throws  util.NoSuchElementException
    */
-  #[@generic(params= 'lang.Type', return= 'V')]
+  #[Generic(['params' => 'lang.Type', 'return' => 'V'])]
   public function get($key) {
     $offset= $key->literal();
     if (!isset($this->elements[$offset])) {
-      throw new NoSuchElementException('No such key '.$key->toString());
+      throw new NoSuchKey('No such key '.$key->toString());
     }
     return $this->elements[$offset];
   }
@@ -43,7 +44,7 @@ class TypeDictionary extends AbstractTypeDictionary {
    *
    * @return  V[] values
    */
-  #[@generic(return= 'V[]')]
+  #[Generic(['return' => 'V[]'])]
   public function values() {
     return array_values($this->elements);
   }

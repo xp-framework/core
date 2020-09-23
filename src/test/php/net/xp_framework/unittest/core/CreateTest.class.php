@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\XPClass;
-use lang\IllegalArgumentException;
+use lang\{IllegalArgumentException, XPClass};
+use unittest\{Expect, Test};
 
 /**
  * TestCase for create() core functionality, which is used to create
@@ -11,7 +11,7 @@ use lang\IllegalArgumentException;
  */
 class CreateTest extends \unittest\TestCase {
 
-  #[@test]
+  #[Test]
   public function create_with_all_qualified_names() {
     $h= create('new net.xp_framework.unittest.core.generics.Lookup<net.xp_framework.unittest.Name, net.xp_framework.unittest.Name>');
     $this->assertEquals(
@@ -20,13 +20,13 @@ class CreateTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function create_can_be_used_with_type_variables() {
     $T= XPClass::forName('net.xp_framework.unittest.Name');
     $this->assertEquals([$T], typeof(create("new net.xp_framework.unittest.core.generics.ListOf<$T>"))->genericArguments());
   }
 
-  #[@test]
+  #[Test]
   public function create_invokes_constructor() {
     $this->assertEquals(
       $this,
@@ -34,7 +34,7 @@ class CreateTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function create_raises_exception_when_non_generic_given() {
     create('new net.xp_framework.unittest.Name<string>');
   }

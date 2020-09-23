@@ -1,10 +1,12 @@
 <?php namespace util;
 
+use lang\Generic;
+
 /**
  * A filter instance decides based on the passed elements whether to
  * accept them.
  */
-#[@generic(self= 'T')]
+#[Generic(self: 'T')]
 interface Filter {
 
   /**
@@ -13,6 +15,6 @@ interface Filter {
    * @param  T $e
    * @return bool
    */
-  #[@generic(params= 'T')]
+  #[Generic(params: 'T')]
   public function accept($e);
 }

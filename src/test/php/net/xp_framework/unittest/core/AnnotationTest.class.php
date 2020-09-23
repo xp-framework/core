@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\XPClass;
-use lang\ElementNotFoundException;
+use lang\{ElementNotFoundException, XPClass};
+use unittest\{Expect, Test, Values};
 
 /**
  * Tests the XP Framework's annotations
@@ -12,97 +12,121 @@ use lang\ElementNotFoundException;
  * @see   rfc://0016
  */
 class AnnotationTest extends \unittest\TestCase {
-  private $class;
 
-  /** @return void */
-  public function setUp() {
-    $this->class= XPClass::forName('net.xp_framework.unittest.core.AnnotatedClass');
+  /** @return lang.XPClass */
+  public function annotated() {
+    $class= XPClass::forName('net.xp_framework.unittest.core.AnnotatedClass');
+
+    // Trigger annotation parsing, swallowing warnings
+    $class->getAnnotations();
+    \xp::gc();
+    return $class;
   }
 
-  #[@test]
+  #[Test]
   public function setUpMethodHasNoAnnotations() {
     $this->assertFalse(typeof($this)->getMethod('setUp')->hasAnnotations());
   }
 
-  #[@test]
+  #[Test]
   public function thisMethodHasAnnotations() {
     $this->assertTrue(typeof($this)->getMethod('thisMethodHasAnnotations')->hasAnnotations());
   }
 
-  #[@test]
+  #[Test]
   public function simpleAnnotationExists() {
-    $this->assertTrue($this->class->getMethod('simple')->hasAnnotation('simple'));
+    $this->assertTrue($this->annotated()->getMethod('simple')->hasAnnotation('simple'));
   }
 
-  #[@test]
+  #[Test]
   public function simpleAnnotationValue() {
-    $this->assertEquals(null, $this->class->getMethod('simple')->getAnnotation('simple'));
+    $this->assertEquals(null, $this->annotated()->getMethod('simple')->getAnnotation('simple'));
   }
 
-  #[@test, @expect(ElementNotFoundException::class)]
+  #[Test, Expect(ElementNotFoundException::class)]
   public function getAnnotationForMethodWithout() {
     typeof($this)->getMethod('setUp')->getAnnotation('any');
   }
 
-  #[@test]
+  #[Test]
   public function hasAnnotationForMethodWithout() {
     $this->assertFalse(typeof($this)->getMethod('setUp')->hasAnnotation('any'));
   }
   
-  #[@test, @expect(ElementNotFoundException::class)]
+  #[Test, Expect(ElementNotFoundException::class)]
   public function getNonExistantAnnotation() {
-    $this->class->getMethod('simple')->getAnnotation('doesnotexist');
+    $this->annotated()->getMethod('simple')->getAnnotation('doesnotexist');
   }
 
-  #[@test]
+  #[Test]
   public function hasNonExistantAnnotation() {
-    $this->assertFalse($this->class->getMethod('simple')->hasAnnotation('doesnotexist'));
+    $this->assertFalse($this->annotated()->getMethod('simple')->hasAnnotation('doesnotexist'));
   }
 
-  #[@test, @values(['one', 'two', 'three'])]
+  #[Test, Values(['one', 'two', 'three'])]
   public function multipleAnnotationsExist($annotation) {
-    $this->assertTrue($this->class->getMethod('multiple')->hasAnnotation($annotation));
+    $this->assertTrue($this->annotated()->getMethod('multiple')->hasAnnotation($annotation));
   }
 
-  #[@test]
+  #[Test]
   public function multipleAnnotationsReturnedAsList() {
     $this->assertEquals(
       ['one' => null, 'two' => null, 'three' => null],
-      $this->class->getMethod('multiple')->getAnnotations()
+      $this->annotated()->getMethod('multiple')->getAnnotations()
     );
   }
 
-  #[@test]
+  #[Test]
   public function stringAnnotationValue() {
     $this->assertEquals(
       'String value',
-      $this->class->getMethod('stringValue')->getAnnotation('strval')
+      $this->annotated()->getMethod('stringValue')->getAnnotation('strval')
     );
   }
 
-  #[@test]
+  #[Test]
+  public function hashAnnotationValue() {
+    $this->assertEquals(
+      ['key' => 'value'],
+      $this->annotated()->getMethod('hashValue')->getAnnotation('config')
+    );
+  }
+
+  /** @deprecated */
+  #[Test]
   public function keyValuePairAnnotationValue() {
     $this->assertEquals(
       ['key' => 'value'],
-      $this->class->getMethod('keyValuePair')->getAnnotation('config')
+      $this->annotated()->getMethod('keyValuePair')->getAnnotation('config')
     );
   }
 
-  #[@test]
+  #[Test]
   public function testMethodHasTestAnnotation() {
-    $this->assertTrue($this->class->getMethod('testMethod')->hasAnnotation('test'));
+    $this->assertTrue($this->annotated()->getMethod('testMethod')->hasAnnotation('test'));
   }
 
-  #[@test]
+  #[Test]
   public function testMethodHasIgnoreAnnotation() {
-    $this->assertTrue($this->class->getMethod('testMethod')->hasAnnotation('ignore'));
+    $this->assertTrue($this->annotated()->getMethod('testMethod')->hasAnnotation('ignore'));
   }
 
-  #[@test]
+  #[Test]
   public function testMethodsLimitAnnotation() {
     $this->assertEquals(
       ['time' => 0.1, 'memory' => 100],
-      $this->class->getMethod('testMethod')->getAnnotation('limit')
+      $this->annotated()->getMethod('testMethod')->getAnnotation('limit')
     );
+  }
+
+  #[Test]
+  public function on_anonymous_class() {
+    $c= new class() {
+
+      #[Test]
+      public function fixture() { }
+    };
+
+    $this->assertEquals(['test' => null], typeof($c)->getMethod('fixture')->getAnnotations());
   }
 }

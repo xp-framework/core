@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use unittest\TestCase;
 use io\streams\MemoryInputStream;
+use unittest\{Test, TestCase};
 
 class MemoryInputStreamTest extends TestCase {
   const BUFFER= 'Hello World, how are you doing?';
@@ -20,7 +20,7 @@ class MemoryInputStreamTest extends TestCase {
    * Test reading all
    *
    */
-  #[@test]
+  #[Test]
   public function readAll() {
     $this->assertEquals(self::BUFFER, $this->in->read(strlen(self::BUFFER)));
     $this->assertEquals(0, $this->in->available());
@@ -30,7 +30,7 @@ class MemoryInputStreamTest extends TestCase {
    * Test reading a five byte chunk
    *
    */
-  #[@test]
+  #[Test]
   public function readChunk() {
     $this->assertEquals('Hello', $this->in->read(5));
     $this->assertEquals(strlen(self::BUFFER)- 5, $this->in->available());
@@ -41,7 +41,7 @@ class MemoryInputStreamTest extends TestCase {
    *
    * @see   xp://lang.Closeable#close
    */
-  #[@test]
+  #[Test]
   public function closingTwice() {
     $this->in->close();
     $this->in->close();

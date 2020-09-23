@@ -6,6 +6,7 @@ use lang\{
   IllegalAccessException,
   IllegalArgumentException,
   Type,
+  TypeUnion,
   Value,
   XPClass,
   XPException
@@ -38,22 +39,26 @@ class Field implements Value {
   
   /** Gets field type */
   public function getType(): Type {
-    if ($details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName())) {
-      if (isset($details[DETAIL_RETURNS])) {
-        $type= $details[DETAIL_RETURNS];
-      } else if (isset($details[DETAIL_ANNOTATIONS]['type'])) {
-        $type= $details[DETAIL_ANNOTATIONS]['type'];
-      } else {
-        return Type::$VAR;
-      }
+    $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
 
-      if ('self' === $type) {
-        return new XPClass($this->_reflect->getDeclaringClass());
-      } else {
-        return Type::forName($type);
+    if (isset($details[DETAIL_RETURNS])) {
+      $type= $details[DETAIL_RETURNS];
+    } else if (isset($details[DETAIL_ANNOTATIONS]['type'])) {
+      $type= $details[DETAIL_ANNOTATIONS]['type'];
+    } else if (PHP_VERSION_ID >= 70400 && ($t= $this->_reflect->getType())) {
+      if ($t instanceof \ReflectionUnionType) {
+        $union= [];
+        foreach ($t->getTypes() as $u) {
+          $union[]= Type::forName($u->getName());
+        }
+        return new TypeUnion($union);
       }
+      return Type::forName($t->getName());
+    } else {
+      return Type::$VAR;
     }
-    return Type::$VAR;
+
+    return 'self' === $type ? new XPClass($this->_reflect->getDeclaringClass()) : Type::forName($type);
   }
 
   /** Gets field type's name */
@@ -63,6 +68,15 @@ class Field implements Value {
         return $details[DETAIL_RETURNS];
       } else if (isset($details[DETAIL_ANNOTATIONS]['type'])) {
         return $details[DETAIL_ANNOTATIONS]['type'];
+      } else if (PHP_VERSION_ID >= 70400 && ($t= $this->_reflect->getType())) {
+        if ($t instanceof \ReflectionUnionType) {
+          $union= '';
+          foreach ($t->getTypes() as $u) {
+            $union.= '|'.$u->getName();
+          }
+          return substr($union, 1);
+        }
+        return $t->getName();
       }
     }
     return 'var';

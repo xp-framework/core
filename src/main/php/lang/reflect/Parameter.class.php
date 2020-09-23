@@ -1,6 +1,6 @@
 <?php namespace lang\reflect;
 
-use lang\{ElementNotFoundException, ClassFormatException, XPClass, Type};
+use lang\{ElementNotFoundException, ClassLoadingException, ClassFormatException, XPClass, Type, TypeUnion};
 use util\Objects;
 
 /**
@@ -37,64 +37,79 @@ class Parameter {
   }
 
   /**
-   * Get parameter's type.
+   * Resolve name, handling `self` and `parent` (`static` is only for return
+   * types, see https://wiki.php.net/rfc/static_return_type#allowed_positions).
    *
-   * @return  lang.Type
+   * @param  string $name
+   * @return lang.Type
    */
-  public function getType() {
-    try {
-      if ($c= $this->_reflect->getClass()) return new XPClass($c);
-    } catch (\ReflectionException $e) {
-      throw new ClassFormatException(sprintf(
-        'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',
-        strtr($this->_details[0], '\\', '.'),
-        $this->_details[1],
-        $this->_reflect->getName(),
-        $e->getMessage()
-      ));
-    }
-
-    if (
-      !($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||
-      !isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
-    ) {
-
-      // Cannot parse api doc, fall back to PHP native syntax. The reason for not doing
-      // this the other way around is that we have "richer" information, e.g. "string[]",
-      // where PHP simply knows about "arrays" (of whatever).
-      if ($t= $this->_reflect->getType()) {
-        return Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
-      } else {
-        return Type::$VAR;
-      }
-    }
-
-    $t= rtrim(ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&'), '.');
-    if ('self' === $t) {
-      return new XPClass($this->_details[0]);
+  private function resolve($name) {
+    if ('self' === $name) {
+      return new XPClass($this->_reflect->getDeclaringClass());
+    } else if ('parent' === $name) {
+      return new XPClass($this->_reflect->getDeclaringClass()->getParentClass());
     } else {
-      return Type::forName($t);
+      return Type::forName($name);
     }
   }
 
   /**
    * Get parameter's type.
    *
-   * @return  string
+   * @return lang.Type
+   * @throws  lang.ClassFormatException if the restriction cannot be resolved
    */
-  public function getTypeName() {
-    if (
-      ($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]))
-      && isset($details[DETAIL_ARGUMENTS][$this->_details[2]])
-    ) {
-      return ltrim($details[DETAIL_ARGUMENTS][$this->_details[2]], '&');
+  public function getType() {
+    $t= $this->getTypeRestriction();
+
+    if (null === $t) {
+      // Check for type in api documentation
+      $t= Type::$VAR;
+    } else if (Type::$ARRAY === $t) {
+      // Check for more specific type, e.g. `string[]` in api documentation
+    } else {
+      return $t;
     }
 
-    if ($t= $this->_reflect->getType()) {
-      return PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
+    $r= $details[DETAIL_ARGUMENTS][$this->_details[2]] ?? null;
+    return null === $r ? $t : $this->resolve(rtrim(ltrim($r, '&'), '.'));
+  }
+
+  /**
+   * Get parameter's type name
+   *
+   * @return string
+   */
+  public function getTypeName() {
+    static $map= [
+      'mixed'   => 'var',
+      'false'   => 'bool',
+      'boolean' => 'bool',
+      'double'  => 'float',
+      'integer' => 'int',
+    ];
+
+    $t= $this->_reflect->getType();
+    if (null === $t) {
+      // Check for type in api documentation
+      $name= 'var';
+    } else if ($t instanceof \ReflectionUnionType) {
+      $union= '';
+      foreach ($t->getTypes() as $component) {
+        $name= $component->getName();
+        $union.= '|'.($map[$name] ?? strtr($name, '\\', '.'));
+      }
+      return substr($union, 1);
+    } else if ('array' === ($name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString())) {
+      // Check for more specific type, e.g. `string[]` in api documentation
     } else {
-      return 'var';
+      return $map[$name] ?? strtr($name, '\\', '.');
     }
+
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
+    $r= $details[DETAIL_ARGUMENTS][$this->_details[2]] ?? null;
+    return null === $r ? $name : rtrim(ltrim($r, '&'), '.');
   }
 
   /**
@@ -104,17 +119,20 @@ class Parameter {
    * @throws  lang.ClassFormatException if the restriction cannot be resolved
    */
   public function getTypeRestriction() {
+    $t= $this->_reflect->getType();
+    if (null === $t) return null;
+
     try {
-      if ($this->_reflect->isArray()) {
-        return Type::$ARRAY;
-      } else if ($this->_reflect->isCallable()) {
-        return Type::$CALLABLE;
-      } else if ($c= $this->_reflect->getClass()) {
-        return new XPClass($c);
+      if ($t instanceof \ReflectionUnionType) {
+        $union= [];
+        foreach ($t->getTypes() as $component) {
+          $union[]= $this->resolve($component->getName());
+        }
+        return new TypeUnion($union);
       } else {
-        return null;
+        return $this->resolve(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
       }
-    } catch (\ReflectionException $e) {
+    } catch (ClassLoadingException $e) {
       throw new ClassFormatException(sprintf(
         'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',
         strtr($this->_details[0], '\\', '.'),
@@ -175,14 +193,10 @@ class Parameter {
    * @return  bool
    */
   public function hasAnnotation($name, $key= null) {
-    $n= '$'.$this->_reflect->getName();
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
-    if ($key) {
-      $a= $details[DETAIL_TARGET_ANNO][$n][$name] ?? null;
-      return is_array($a) && array_key_exists($key, $a);
-    } else {
-      return array_key_exists($name, $details[DETAIL_TARGET_ANNO][$n] ?? []);
-    }
+    $r= $details[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? [];
+
+    return $key ? array_key_exists($key, $r[$name] ?? []) : array_key_exists($name, $r);
   }
 
   /**
@@ -194,13 +208,13 @@ class Parameter {
    * @throws  lang.ElementNotFoundException
    */
   public function getAnnotation($name, $key= null) {
-    $n= '$'.$this->_reflect->getName();
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
+    $r= $details[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? [];
+
     if ($key) {
-      $a= $details[DETAIL_TARGET_ANNO][$n][$name] ?? null;
-      if (is_array($a) && array_key_exists($key, $a)) return $a[$key];
+      if (array_key_exists($key, $r[$name] ?? [])) return $r[$name][$key];
     } else {
-      if (array_key_exists($name, $details[DETAIL_TARGET_ANNO][$n] ?? [])) return $details[DETAIL_TARGET_ANNO][$n][$name];
+      if (array_key_exists($name, $r)) return $r[$name];
     }
 
     throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
@@ -212,14 +226,8 @@ class Parameter {
    * @return  bool
    */
   public function hasAnnotations() {
-    $n= '$'.$this->_reflect->getName();
-    if (
-      !($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||
-      !isset($details[DETAIL_TARGET_ANNO][$n])
-    ) {   // Unknown or unparseable
-      return false;
-    }
-    return $details ? !empty($details[DETAIL_TARGET_ANNO][$n]) : false;
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
+    return !empty($details[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? []);
   }
 
   /**
@@ -228,16 +236,10 @@ class Parameter {
    * @return  var[] annotations
    */
   public function getAnnotations() {
-    $n= '$'.$this->_reflect->getName();
-    if (
-      !($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1])) ||
-      !isset($details[DETAIL_TARGET_ANNO][$n])
-    ) {   // Unknown or unparseable
-      return [];
-    }
-    return $details[DETAIL_TARGET_ANNO][$n];
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
+    return $details[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()] ?? [];
   }
-  
+
   /**
    * Creates a string representation
    *

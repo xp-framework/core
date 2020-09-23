@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use lang\IllegalArgumentException;
+use unittest\{Expect, Test};
 
 /**
  * TestCase for generic behaviour at runtime.
@@ -9,7 +10,7 @@ use lang\IllegalArgumentException;
  */
 class ArrayTest extends \unittest\TestCase {
 
-  #[@test]
+  #[Test]
   public function primitiveStringArrayValue() {
     $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, string[]>', [
       'this' => [$this->name]
@@ -17,21 +18,21 @@ class ArrayTest extends \unittest\TestCase {
     $this->assertEquals([$this->name], $l->get('this'));
   }
 
-  #[@test]
+  #[Test]
   public function primitiveStringArrayKey() {
     $l= create('new net.xp_framework.unittest.core.generics.Lookup<string[], unittest.TestCase>');
     $l->put(['this'], $this);
     $this->assertEquals($this, $l->get(['this']));
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function stringToArrayOfStringInvalid() {
     create('new net.xp_framework.unittest.core.generics.Lookup<string, string[]>')
       ->put('greeting', ['Hello', 'World', '!!!', 1])
     ;
   }
 
-  #[@test]
+  #[Test]
   public function stringToArrayOfStringMultiple() {
     $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, string[]>', [
       'colors' => ['red', 'green', 'blue'],
@@ -41,7 +42,7 @@ class ArrayTest extends \unittest\TestCase {
     $this->assertEquals(['PHP', 'Java', 'C#'], $l->get('names'));
   }
  
-  #[@test]
+  #[Test]
   public function arrayOfStringToStringMultiple() {
     $l= create('new net.xp_framework.unittest.core.generics.Lookup<string[], string>');
     $l->put(['red', 'green', 'blue'], 'colors');

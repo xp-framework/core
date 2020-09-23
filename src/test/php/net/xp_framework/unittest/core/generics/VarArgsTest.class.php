@@ -1,15 +1,16 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use lang\IllegalArgumentException;
+use unittest\{Expect, Test, TestCase};
 
 /**
  * TestCase for generic construction behaviour at runtime.
  *
  * @see   xp://net.xp_framework.unittest.core.generics.ListOf
  */
-class VarArgsTest extends \unittest\TestCase {
+class VarArgsTest extends TestCase {
 
-  #[@test]
+  #[Test]
   public function withArguments() {
     $this->assertEquals(
       ['Hello', 'World'],
@@ -17,7 +18,7 @@ class VarArgsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function withoutArguments() {
     $this->assertEquals(
       [],
@@ -25,12 +26,12 @@ class VarArgsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function withIncorrectArguments() {
     create('new net.xp_framework.unittest.core.generics.ListOf<string>', 'Hello', 1);
   }
 
-  #[@test]
+  #[Test]
   public function withAllOf() {
     $this->assertEquals(
       ['Hello', 'World'],
