@@ -2,7 +2,8 @@
 
 use lang\reflect\ClassParser;
 use lang\{ClassFormatException, XPClass};
-use unittest\{Expect, Test, TestCase};
+use unittest\actions\RuntimeVersion;
+use unittest\{Action, Expect, Test, TestCase};
 
 /**
  * Tests the XP Framework's annotations
@@ -23,7 +24,7 @@ class BrokenAnnotationTest extends TestCase {
     return (new ClassParser())->parseAnnotations($input, nameof($this));
   }
 
-  #[Test, Expect(['class' => ClassFormatException::class, 'withMessage' => '/Unterminated annotation/'])]
+  #[Test, Action(eval: 'new RuntimeVersion("<8.0")'), Expect(['class' => ClassFormatException::class, 'withMessage' => '/Unterminated annotation/'])]
   public function no_ending_bracket() {
     XPClass::forName('net.xp_framework.unittest.annotations.NoEndingBracket')->getAnnotations();
   }
