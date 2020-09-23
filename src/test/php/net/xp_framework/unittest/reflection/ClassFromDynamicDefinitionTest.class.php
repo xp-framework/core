@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{DynamicClassLoader, IClassLoader};
+use unittest\{Ignore, Test};
 
 /**
  * TestCase for classloading
@@ -58,12 +59,12 @@ class ClassFromDynamicDefinitionTest extends ClassFromUriTest {
     };
   }
 
-  #[@test]
+  #[Test]
   public function provides_a_relative_path_in_root() {
     $this->assertTrue($this->fixture->providesUri('dyn://CLT1'));
   }
 
-  #[@test]
+  #[Test]
   public function load_from_a_relative_path_in_root() {
     $this->assertEquals(
       $this->fixture->loadClass('CLT1'),
@@ -71,7 +72,7 @@ class ClassFromDynamicDefinitionTest extends ClassFromUriTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function from_a_relative_path() {
     $this->assertEquals(
       $this->fixture->loadClass('net.xp_framework.unittest.reflection.CLT2'),
@@ -79,23 +80,23 @@ class ClassFromDynamicDefinitionTest extends ClassFromUriTest {
     );
   }
 
-  #[@test, @ignore('Not applicablle for DynamicClassLoader\'s URIs')]
+  #[Test, Ignore('Not applicablle for DynamicClassLoader\'s URIs')]
   public function from_a_relative_path_with_dot() {
   }
 
-  #[@test, @ignore('Not applicablle for DynamicClassLoader\'s URIs')]
+  #[Test, Ignore('Not applicablle for DynamicClassLoader\'s URIs')]
   public function from_a_relative_path_with_dot_dot() {
   }
 
-  #[@test, @ignore('Not applicablle for DynamicClassLoader\'s URIs')]
+  #[Test, Ignore('Not applicablle for DynamicClassLoader\'s URIs')]
   public function from_a_relative_path_with_multiple_directory_separators() {
   }
 
-  #[@test, @ignore('Not applicablle for DynamicClassLoader\'s URIs')]
+  #[Test, Ignore('Not applicablle for DynamicClassLoader\'s URIs')]
   public function from_an_absolute_path_in_root() {
   }
 
-  #[@test, @ignore('Not applicablle for DynamicClassLoader\'s URIs')]
+  #[Test, Ignore('Not applicablle for DynamicClassLoader\'s URIs')]
   public function from_an_absolute_path() {
   }
 }

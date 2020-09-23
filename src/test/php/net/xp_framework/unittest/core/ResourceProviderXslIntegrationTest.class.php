@@ -1,8 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use io\File;
-use io\FileUtil;
-use unittest\TestCase;
+use io\{File, FileUtil};
+use unittest\actions\ExtensionAvailable;
+use unittest\{BeforeClass, Test, TestCase};
 use xml\DomXSLProcessor;
 new import('lang.ResourceProvider');
 
@@ -11,13 +11,13 @@ new import('lang.ResourceProvider');
  *
  * @see   xp://lang.ResourceProvider
  */
-#[@action(new \unittest\actions\ExtensionAvailable('xsl'))]
+#[Action(eval: 'new ExtensionAvailable("xsl")')]
 class ResourceProviderXslIntegrationTest extends TestCase {
 
   /**
    * Skips tests if XML Module is not loaded
    */
-  #[@beforeClass]
+  #[BeforeClass]
   public static function verifyXSLExtensionLoaded() {
     if (!class_exists('xml\DomXSLProcessor')) {
       throw new \unittest\PrerequisitesNotMetError('XML Module not available', NULL, ['loaded']);
@@ -30,7 +30,7 @@ class ResourceProviderXslIntegrationTest extends TestCase {
    * will be properly resolved.
    *
    */
-  #[@test]
+  #[Test]
   public function fileAsXslFile() {
     $proc= new DomXSLProcessor();
     $style= new \DOMDocument();
@@ -54,7 +54,7 @@ class ResourceProviderXslIntegrationTest extends TestCase {
    * faulty behavior will be automatically detected some 
    * time in the future.
    */
-  #[@test]
+  #[Test]
   public function fileAsXslFileWithRelativeIncludeDoesNotWork() {
     $t= NULL;
     $proc= new DomXSLProcessor();

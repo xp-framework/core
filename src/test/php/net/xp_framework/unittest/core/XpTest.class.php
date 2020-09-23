@@ -1,21 +1,23 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use unittest\{Test, TestCase};
+
 /**
  * Tests the <xp> functions
  */
-class XpTest extends \unittest\TestCase {
+class XpTest extends TestCase {
 
-  #[@test]
+  #[Test]
   public function version() {
     $this->assertEquals(3, sscanf(\xp::version(), '%d.%d.%d', $series, $major, $minor));
   }
 
-  #[@test]
+  #[Test]
   public function no_error_here() {
     $this->assertNull(\xp::errorAt(__FILE__));
   }
 
-  #[@test]
+  #[Test]
   public function triggered_error_at_file() {
     trigger_error('Test');
     $this->assertEquals(
@@ -25,7 +27,7 @@ class XpTest extends \unittest\TestCase {
     \xp::gc();
   }
 
-  #[@test]
+  #[Test]
   public function triggered_error_at_file_and_line() {
     trigger_error('Test');
     $this->assertEquals(
@@ -35,7 +37,7 @@ class XpTest extends \unittest\TestCase {
     \xp::gc();
   }
 
-  #[@test]
+  #[Test]
   public function gc() {
     trigger_error('Test');
     $this->assertEquals(
@@ -46,57 +48,57 @@ class XpTest extends \unittest\TestCase {
     $this->assertEquals([], \xp::$errors);
   }
 
-  #[@test]
+  #[Test]
   public function literal_of_int() {
     $this->assertEquals("\xfeint", literal('int'));
   }
 
-  #[@test]
+  #[Test]
   public function literal_of_float() {
     $this->assertEquals("\xfefloat", literal('float'));
   }
 
-  #[@test]
+  #[Test]
   public function literal_of_float_alias_double() {
     $this->assertEquals("\xfefloat", literal('double'));
   }
 
-  #[@test]
+  #[Test]
   public function literal_of_string() {
     $this->assertEquals("\xfestring", literal('string'));
   }
 
-  #[@test]
+  #[Test]
   public function literal_of_bool() {
     $this->assertEquals("\xfebool", literal('bool'));
   }
 
-  #[@test]
+  #[Test]
   public function literal_of_var() {
     $this->assertEquals('var', literal('var'));
   }
 
-  #[@test]
+  #[Test]
   public function literal_of_int_array() {
     $this->assertEquals("\xa6\xfeint", literal('int[]'));
   }
 
-  #[@test]
+  #[Test]
   public function literal_of_int_map() {
     $this->assertEquals("\xbb\xfeint", literal('[:int]'));
   }
 
-  #[@test]
+  #[Test]
   public function literal_of_generic_list_of_int() {
     $this->assertEquals("List\xb7\xb7\xfeint", literal('List<int>'));
   }
 
-  #[@test]
+  #[Test]
   public function literal_of_value() {
     $this->assertEquals(Value::class, literal('net.xp_framework.unittest.core.Value'));
   }
 
-  #[@test]
+  #[Test]
   public function literal_of_this() {
     $this->assertEquals(self::class, literal(nameof($this)));
   }

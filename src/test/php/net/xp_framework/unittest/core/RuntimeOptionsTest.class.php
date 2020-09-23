@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\RuntimeOptions;
+use unittest\Test;
 
 /**
  * TestCase
@@ -19,7 +20,7 @@ class RuntimeOptionsTest extends \unittest\TestCase {
     $this->assertEquals($expected, $actual->asArguments());
   }
 
-  #[@test]
+  #[Test]
   public function switchAccessors() {
     $options= new RuntimeOptions();
     $this->assertFalse($options->getSwitch('q'));
@@ -27,19 +28,19 @@ class RuntimeOptionsTest extends \unittest\TestCase {
     $this->assertTrue($options->getSwitch('q'));
   }
 
-  #[@test]
+  #[Test]
   public function getSetting() {
     $options= new RuntimeOptions();
     $this->assertNull($options->getSetting('enable_dl'));
   }
 
-  #[@test]
+  #[Test]
   public function getSettingWithDefault() {
     $options= new RuntimeOptions();
     $this->assertEquals(0, $options->getSetting('enable_dl', 0));
   }
 
-  #[@test]
+  #[Test]
   public function settingAccessors() {
     $options= new RuntimeOptions();
     $this->assertNull($options->getSetting('memory_limit'));
@@ -47,7 +48,7 @@ class RuntimeOptionsTest extends \unittest\TestCase {
     $this->assertEquals(['128M'], $options->getSetting('memory_limit'));
   }
 
-  #[@test]
+  #[Test]
   public function settingAccessorsStringOverload() {
     $options= new RuntimeOptions();
     $this->assertNull($options->getSetting('memory_limit'));
@@ -55,7 +56,7 @@ class RuntimeOptionsTest extends \unittest\TestCase {
     $this->assertEquals(['128M'], $options->getSetting('memory_limit'));
   }
 
-  #[@test]
+  #[Test]
   public function addSetting() {
     $options= new RuntimeOptions();
     $options->withSetting('extension', 'php_xsl.dll', true);
@@ -66,7 +67,7 @@ class RuntimeOptionsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function overwritingSetting() {
     $options= new RuntimeOptions();
     $options->withSetting('extension', 'php_xsl.dll');
@@ -77,7 +78,7 @@ class RuntimeOptionsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function removeSetting() {
     $options= new RuntimeOptions();
     $options->withSetting('encoding', 'utf-8');
@@ -85,59 +86,59 @@ class RuntimeOptionsTest extends \unittest\TestCase {
     $this->assertNull($options->getSetting('encoding'));
   }
 
-  #[@test]
+  #[Test]
   public function chainingSwitch() {
     $options= new RuntimeOptions();
     $this->assertTrue($options === $options->withSwitch('q'));
   }
 
-  #[@test]
+  #[Test]
   public function chainingSetting() {
     $options= new RuntimeOptions();
     $this->assertTrue($options === $options->withSetting('enable_dl', 0));
   }
 
-  #[@test]
+  #[Test]
   public function getClassPath() {
     $options= new RuntimeOptions();
     $this->assertEquals([], $options->getClassPath());
   }
 
-  #[@test]
+  #[Test]
   public function withClassPath() {
     $options= new RuntimeOptions();
     $options->withClassPath(['/opt/xp/lib/mysql-1.0.0.xar']);
     $this->assertEquals(['/opt/xp/lib/mysql-1.0.0.xar'], $options->getClassPath());
   }
 
-  #[@test]
+  #[Test]
   public function withClassPathOverload() {
     $options= new RuntimeOptions();
     $options->withClassPath('/opt/xp/lib/mysql-1.0.0.xar');
     $this->assertEquals(['/opt/xp/lib/mysql-1.0.0.xar'], $options->getClassPath());
   }
 
-  #[@test]
+  #[Test]
   public function argumentsOnEmptyOptions() {
     $options= new RuntimeOptions();
     $this->assertArguments([], $options);
   }
 
-  #[@test]
+  #[Test]
   public function argumentsWithSwitch() {
     $options= new RuntimeOptions(); 
     $options->withSwitch('q');
     $this->assertArguments(['-q'], $options);
   }
 
-  #[@test]
+  #[Test]
   public function argumentsWithSetting() {
     $options= new RuntimeOptions(); 
     $options->withSetting('enable_dl', 0);
     $this->assertArguments(['-d', 'enable_dl=0'], $options);
   }
 
-  #[@test]
+  #[Test]
   public function argumentsWithMultiSetting() {
     $options= new RuntimeOptions(); 
     $options->withSetting('extension', ['php_xsl.dll', 'php_sybase_ct.dll']);
@@ -147,14 +148,14 @@ class RuntimeOptionsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function argumentsWithEmptyMultiSetting() {
     $options= new RuntimeOptions(); 
     $options->withSetting('extension', []);
     $this->assertArguments([], $options);
   }
 
-  #[@test]
+  #[Test]
   public function arguments() {
     $options= (new RuntimeOptions())
       ->withSwitch('q')
@@ -168,7 +169,7 @@ class RuntimeOptionsTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function classPathDoesntAppearInArguments() {
     $options= new RuntimeOptions(); 
     $options->withClassPath('/opt/xp/lib/mysql-1.0.0.xar');

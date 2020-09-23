@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\{Runtime, RuntimeOptions, Process};
-use unittest\PrerequisitesNotMetError;
+use lang\{Process, Runtime, RuntimeOptions};
+use unittest\{BeforeClass, PrerequisitesNotMetError, Test};
 use util\Objects;
 
 /**
@@ -12,7 +12,7 @@ class BootstrapTest extends \unittest\TestCase {
   /**
    * Skips tests if process execution has been disabled.
    */
-  #[@beforeClass]
+  #[BeforeClass]
   public static function verifyProcessExecutionEnabled() {
     if (Process::$DISABLED) {
       throw new PrerequisitesNotMetError('Process execution disabled', null, ['enabled']);
@@ -53,17 +53,17 @@ class BootstrapTest extends \unittest\TestCase {
     $this->assertEquals(255, $r[0], 'exitcode');
   }    
   
-  #[@test]
+  #[Test]
   public function fatalsForEmptyTimezone() {
     $this->runWithTz('');
   }
 
-  #[@test]
+  #[Test]
   public function fatalsForInvalidTimezone() {
     $this->runWithTz('Foo/bar');
   }
 
-  #[@test]
+  #[Test]
   public function fatalsForNonExistingPaths() {
     $r= $this->runWith(Runtime::getInstance()->startupOptions()->withClassPath('/does-not-exist'));
     $this->assertEquals(255, $r[0], 'exitcode');
@@ -73,7 +73,7 @@ class BootstrapTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function fatalsForNonExistingXars() {
     $r= $this->runWith(Runtime::getInstance()->startupOptions()->withClassPath('/does-not-exist.xar'));
     $this->assertEquals(255, $r[0], 'exitcode');

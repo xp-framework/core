@@ -1,10 +1,10 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use io\streams\{StringWriter, MemoryOutputStream};
+use io\streams\{MemoryOutputStream, StringWriter};
 use lang\Value;
 use net\xp_framework\unittest\Name;
-use unittest\TestCase;
 use unittest\actions\RuntimeVersion;
+use unittest\{Test, TestCase, Values};
 
 /**
  * Test StringWriter
@@ -52,42 +52,42 @@ class StringWriterTest extends TestCase {
     ];
   }
 
-  #[@test, @values('values')]
+  #[Test, Values('values')]
   public function write($expected, $value) {
     $this->assertWritten($expected, function($fixture) use($value) {
       $fixture->write($value);
     });
   }
 
-  #[@test]
+  #[Test]
   public function write_supports_var_args() {
     $this->assertWritten('1two3four', function($fixture) {
       $fixture->write(1, 'two', 3.0, new Name('four'));
     });
   }
 
-  #[@test]
+  #[Test]
   public function writef() {
     $this->assertWritten('Some string: test, some int: 6100', function($fixture) {
       $fixture->writef('Some string: %s, some int: %d', 'test', 6100);
     });
   }
 
-  #[@test, @values('values')]
+  #[Test, Values('values')]
   public function writeLine($expected, $value) {
     $this->assertWritten($expected."\n", function($fixture) use($value) {
       $fixture->writeLine($value);
     });
   }
 
-  #[@test]
+  #[Test]
   public function writeLine_supports_var_args() {
     $this->assertWritten("1two3four\n", function($fixture) {
       $fixture->writeLine(1, 'two', 3.0, new Name('four'));
     });
   }
 
-  #[@test]
+  #[Test]
   public function writeLinef() {
     $this->assertWritten("Some string: test, some int: 6100\n", function($fixture) {
       $fixture->writeLinef('Some string: %s, some int: %d', 'test', 6100);

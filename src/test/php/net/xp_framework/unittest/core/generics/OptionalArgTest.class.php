@@ -1,28 +1,30 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
+use unittest\{Test, TestCase};
+
 /**
  * TestCase for generic behaviour at runtime.
  *
  * @see   xp://net.xp_framework.unittest.core.generics.Nullable
  */
-class OptionalArgTest extends \unittest\TestCase {
+class OptionalArgTest extends TestCase {
 
-  #[@test]
+  #[Test]
   public function create_with_value() {
     $this->assertEquals($this, create('new net.xp_framework.unittest.core.generics.Nullable<unittest.TestCase>', $this)->get());
   }
 
-  #[@test]
+  #[Test]
   public function create_with_null() {
     $this->assertFalse(create('new net.xp_framework.unittest.core.generics.Nullable<unittest.TestCase>', null)->hasValue());
   }
 
-  #[@test]
+  #[Test]
   public function set_value() {
     $this->assertEquals($this, create('new net.xp_framework.unittest.core.generics.Nullable<unittest.TestCase>', $this)->set($this)->get());
   }
 
-  #[@test]
+  #[Test]
   public function set_null() {
     $this->assertFalse(create('new net.xp_framework.unittest.core.generics.Nullable<unittest.TestCase>', $this)->set(null)->hasValue());
   }

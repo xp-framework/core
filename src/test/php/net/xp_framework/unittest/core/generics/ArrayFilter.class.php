@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
+use lang\Generic;
+
 /**
  * Generic array filter
  *
@@ -17,7 +19,7 @@
  * }
  * ```
  */
-#[@generic(['self' => 'T'])]
+#[Generic(['self' => 'T'])]
 abstract class ArrayFilter {
   
   /**
@@ -28,7 +30,7 @@ abstract class ArrayFilter {
    * @param   T element
    * @return  bool
    */
-  #[@generic(['params' => 'T'])]
+  #[Generic(['params' => 'T'])]
   protected abstract function accept($element);
 
   /**
@@ -37,7 +39,7 @@ abstract class ArrayFilter {
    * @param   T[] elements
    * @return  T[] filtered
    */
-  #[@generic(['params' => 'T[]', 'return' => 'T[]'])]
+  #[Generic(['params' => 'T[]', 'return' => 'T[]'])]
   public function filter($elements) {
     $filtered= [];
     foreach ($elements as $element) {

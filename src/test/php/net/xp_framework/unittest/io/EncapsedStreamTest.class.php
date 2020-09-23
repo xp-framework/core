@@ -1,8 +1,9 @@
 <?php namespace net\xp_framework\unittest\io;
 
+use io\streams\{MemoryInputStream, Streams};
 use io\{EncapsedStream, File};
-use io\streams\{Streams, MemoryInputStream};
 use lang\{IllegalAccessException, IllegalStateException};
+use unittest\{Expect, Test};
 
 class EncapsedStreamTest extends \unittest\TestCase {
     
@@ -19,73 +20,73 @@ class EncapsedStreamTest extends \unittest\TestCase {
     );
   }
   
-  #[@test, @expect(IllegalStateException::class)]
+  #[Test, Expect(IllegalStateException::class)]
   public function file_given_must_be_open() {
     new EncapsedStream(new File('irrelevant.txt'), 0, 0);
   }
   
-  #[@test]
+  #[Test]
   public function open_for_reading() {
     $this->newStream()->open(File::READ);
   }
 
-  #[@test, @expect(IllegalAccessException::class)]
+  #[Test, Expect(IllegalAccessException::class)]
   public function cannot_open_for_writing() {
     $this->newStream()->open(File::WRITE);
   }
   
-  #[@test]
+  #[Test]
   public function read() {
     $this->assertEquals('Test', $this->newStream('"Test"', 1, 4)->read());
   }
 
-  #[@test]
+  #[Test]
   public function readChar() {
     $this->assertEquals('T', $this->newStream('"Test"', 1, 4)->readChar());
   }
 
-  #[@test]
+  #[Test]
   public function readLine_with_line_ending() {
     $this->assertEquals('Test', $this->newStream("@Test\n", 1, 4)->readLine());
   }
 
-  #[@test]
+  #[Test]
   public function readLine_with_no_line_ending() {
     $this->assertEquals('Test', $this->newStream('@Test!', 1, 4)->readLine());
   }
 
-  #[@test]
+  #[Test]
   public function gets_with_line_ending() {
     $this->assertEquals('Test', $this->newStream("@Test\n", 1, 4)->gets());
   }
 
-  #[@test]
+  #[Test]
   public function gets_with_no_line_ending() {
     $this->assertEquals('Test', $this->newStream('@Test!', 1, 4)->gets());
   }
   
-  #[@test]
+  #[Test]
   public function seek() {
     $fixture= $this->newStream('1234567890', 1, 8);
     $fixture->seek(6);
     $this->assertEquals('89', $fixture->read());
   }
   
-  #[@test]
+  #[Test]
   public function eof_after_seeking() {
     $fixture= $this->newStream('1234567890', 1, 8);
     $fixture->seek(6);
     $this->assertFalse($fixture->eof());
   }
 
-  #[@test]
+  #[Test]
   public function eof_after_seeking_until_end() {
     $fixture= $this->newStream('1234567890', 1, 8);
     $fixture->seek(8);
     $this->assertTrue($fixture->eof());
   }
   
-  #[@test]
+  #[Test]
   public function reading_lines_using_readLine() {
     $lines= "Line 1\nLine 2\nLine 3\nLine 4\n";
     $oneLine= strlen("Line *\n");
@@ -96,7 +97,7 @@ class EncapsedStreamTest extends \unittest\TestCase {
     $this->assertEquals(false, $fixture->readLine());
   }  
 
-  #[@test]
+  #[Test]
   public function reading_lines_using_gets() {
     $lines= "Line 1\nLine 2\nLine 3\nLine 4\n";
     $oneLine= strlen("Line *\n");

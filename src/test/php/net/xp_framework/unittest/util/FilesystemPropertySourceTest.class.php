@@ -2,6 +2,7 @@
 
 use io\{File, FileUtil};
 use lang\{Environment, IllegalArgumentException};
+use unittest\{Expect, Test, TestCase};
 use util\{FilesystemPropertySource, Properties};
 
 /**
@@ -10,7 +11,7 @@ use util\{FilesystemPropertySource, Properties};
  * @deprecated
  * @see   xp://util.FilesystemPropertySource
  */
-class FilesystemPropertySourceTest extends \unittest\TestCase {
+class FilesystemPropertySourceTest extends TestCase {
   protected $tempFile, $fixture;
 
   /** @return void */
@@ -28,17 +29,17 @@ class FilesystemPropertySourceTest extends \unittest\TestCase {
     $this->tempFile->unlink();
   }
 
-  #[@test]
+  #[Test]
   public function provides_existing_ini_file() {
     $this->assertTrue($this->fixture->provides('temp'));
   }
 
-  #[@test]
+  #[Test]
   public function does_not_provide_non_existant_ini_file() {
     $this->assertFalse($this->fixture->provides('@@non-existant@@'));
   }
 
-  #[@test]
+  #[Test]
   public function fetch_existing_ini_file() {
     $this->assertEquals(
       new Properties($this->tempFile->getURI()),
@@ -46,7 +47,7 @@ class FilesystemPropertySourceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(['class' => IllegalArgumentException::class, 'withMessage' => '/No properties @@non-existant@@ found at .+/'])]
+  #[Test, Expect(class: IllegalArgumentException::class, withMessage: '/No properties @@non-existant@@ found at .+/')]
   public function fetch_non_existant_ini_file() {
     $this->fixture->fetch('@@non-existant@@');
   }

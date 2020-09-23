@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use lang\{ElementNotFoundException, IllegalArgumentException, Primitive, Type, XPClass};
+use unittest\{Expect, Ignore, Test, TestCase, Values};
 
 /**
  * TestCase for instance reflection
@@ -8,7 +9,7 @@ use lang\{ElementNotFoundException, IllegalArgumentException, Primitive, Type, X
  * @see   xp://net.xp_framework.unittest.core.generics.TypeDictionary
  * @see   xp://net.xp_framework.unittest.core.generics.TypeLookup
  */
-class ImplementationTest extends \unittest\TestCase {
+class ImplementationTest extends TestCase {
 
   /**
    * Locate interface by a given name
@@ -25,7 +26,7 @@ class ImplementationTest extends \unittest\TestCase {
     throw new ElementNotFoundException('Class '.$class->getName().' does not implement '.$name);
   }
 
-  #[@test]
+  #[Test]
   public function typeDictionaryInstance() {
     $fixture= create('new net.xp_framework.unittest.core.generics.TypeDictionary<string>');
     $this->assertEquals(
@@ -34,7 +35,7 @@ class ImplementationTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function typeDictionaryPutMethodKeyParameter() {
     $fixture= create('new net.xp_framework.unittest.core.generics.TypeDictionary<string>');
     $this->assertEquals(
@@ -43,7 +44,7 @@ class ImplementationTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @ignore('Needs implementation change to copy all methods')]
+  #[Test, Ignore('Needs implementation change to copy all methods')]
   public function abstractTypeDictionaryPutMethodKeyParameter() {
     $fixture= Type::forName('net.xp_framework.unittest.core.generics.AbstractTypeDictionary<string>');
     $this->assertEquals(
@@ -52,19 +53,19 @@ class ImplementationTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function put() {
     $fixture= create('new net.xp_framework.unittest.core.generics.TypeDictionary<string>');
     $fixture->put(Primitive::$STRING, 'string');
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function putInvalid() {
     $fixture= create('new net.xp_framework.unittest.core.generics.TypeDictionary<string>');
     $fixture->put($this, 'string');
   }
 
-  #[@test]
+  #[Test]
   public function typeDictionaryInstanceInterface() {
     $fixture= create('new net.xp_framework.unittest.core.generics.TypeDictionary<string>');
     $this->assertEquals(
@@ -73,7 +74,7 @@ class ImplementationTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function typeDictionaryClass() {
     $fixture= Type::forName('net.xp_framework.unittest.core.generics.TypeDictionary');
     $this->assertEquals(
@@ -82,7 +83,7 @@ class ImplementationTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function abstractTypeDictionaryClass() {
     $fixture= Type::forName('net.xp_framework.unittest.core.generics.AbstractTypeDictionary');
     $this->assertEquals(
@@ -91,7 +92,7 @@ class ImplementationTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function dictionaryInterfaceDefinition() {
     $fixture= Type::forName('net.xp_framework.unittest.core.generics.AbstractTypeDictionary');
     $this->assertEquals(
@@ -100,7 +101,7 @@ class ImplementationTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function dictionaryInterface() {
     $fixture= Type::forName('net.xp_framework.unittest.core.generics.AbstractTypeDictionary<string>');
     $this->assertEquals(
@@ -109,14 +110,14 @@ class ImplementationTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function closed() {
     $this->assertNull(
       Type::forName('net.xp_framework.unittest.core.generics.ListOf<string>')->getParentclass()
     );
   }
 
-  #[@test]
+  #[Test]
   public function partiallyClosed() {
     $this->assertEquals(
       Type::forName('net.xp_framework.unittest.core.generics.Lookup<lang.Type, string>'),
@@ -124,13 +125,13 @@ class ImplementationTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @values([['', null], ['1', 1], ['Test', 'Test']])]
+  #[Test, Values([['', null], ['1', 1], ['Test', 'Test']])]
   public function type_variable_available($expect, $value) {
     $fixture= create('new net.xp_framework.unittest.core.generics.Unserializer<string>');
     $this->assertEquals($expect, $fixture->newInstance($value));
   }
 
-  #[@test, @expect(ElementNotFoundException::class)]
+  #[Test, Expect(ElementNotFoundException::class)]
   public function type_aliasing() {
     $fixture= create('new net.xp_framework.unittest.core.generics.TypeDictionary<string>');
     $fixture->get(typeof($this));

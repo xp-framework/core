@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
  
 use lang\{IllegalArgumentException, IllegalStateException};
-use unittest\TestCase;
+use unittest\{Expect, Test, TestCase, Values};
 use util\{Filter, Filters};
 
 class FiltersTest extends TestCase {
@@ -24,7 +24,7 @@ class FiltersTest extends TestCase {
     return [[Filters::$ALL], [Filters::$ANY], [Filters::$NONE]];
   }
 
-  #[@test, @values('accepting')]
+  #[Test, Values('accepting')]
   public function can_create($accepting) {
     create('new util.Filters<int>',
       [newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }])],
@@ -32,12 +32,12 @@ class FiltersTest extends TestCase {
     );
   }
 
-  #[@test, @values('accepting')]
+  #[Test, Values('accepting')]
   public function can_create_with_empty_filters($accepting) {
     create('new util.Filters<int>', [], $accepting);
   }
 
-  #[@test]
+  #[Test]
   public function can_create_with_empty_acceptor() {
     create('new util.Filters<int>',
       [newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }])],
@@ -45,26 +45,26 @@ class FiltersTest extends TestCase {
     );
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function constructor_raises_exception_when_neither_null_nor_closure_given_for_accepting() {
     create('new util.Filters<int>', [], 'callback');
   }
 
-  #[@test]
+  #[Test]
   public function add_filter() {
     $filters= create('new util.Filters<int>', [], Filters::$ALL);
     $filters->add(newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }]));
     $this->assertTrue($filters->accept(2));
   }
 
-  #[@test]
+  #[Test]
   public function set_accepting() {
     $filters= create('new util.Filters<int>', [newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }])]);
     $filters->accepting(Filters::$ALL);
     $this->assertTrue($filters->accept(2));
   }
 
-  #[@test]
+  #[Test]
   public function fluent_interface() {
     $this->assertTrue(create('new util.Filters<int>')
       ->add(newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }]))
@@ -73,7 +73,7 @@ class FiltersTest extends TestCase {
     );
   }
 
-  #[@test, @expect(IllegalStateException::class)]
+  #[Test, Expect(IllegalStateException::class)]
   public function accept_called_without_accepting_function_set() {
     create('new util.Filters<int>')
       ->add(newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }]))
@@ -81,7 +81,7 @@ class FiltersTest extends TestCase {
     ;
   }
 
-  #[@test]
+  #[Test]
   public function allOf() {
     $this->assertEquals([2, 3], iterator_to_array($this->filter([1, 2, 3, 4], Filters::allOf([
       newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }]),
@@ -89,7 +89,7 @@ class FiltersTest extends TestCase {
     ]))));
   }
 
-  #[@test]
+  #[Test]
   public function anyOf() {
     $this->assertEquals(['Hello', 'World', '!'], iterator_to_array($this->filter(['Hello', 'test', '', 'World', '!'], Filters::anyOf([
       newinstance('util.Filter<string>', [], ['accept' => function($e) { return 1 === strlen($e); }]),
@@ -97,7 +97,7 @@ class FiltersTest extends TestCase {
     ]))));
   }
 
-  #[@test]
+  #[Test]
   public function noneOf() {
     $this->assertEquals(['index.html'], iterator_to_array($this->filter(['file.txt', 'index.html', 'test.php'], Filters::noneOf([
       newinstance('util.Filter<string>', [], ['accept' => function($e) { return strstr($e, 'test'); }]),

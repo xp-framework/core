@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use io\{TempFile, IOException};
+use io\{IOException, TempFile};
+use unittest\{Expect, Test};
 use util\Properties;
 
 /**
@@ -17,24 +18,24 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
     return (new Properties())->load((new TempFile())->containing($source));
   }
 
-  #[@test]
+  #[Test]
   public function from_resource() {
     $prop= new Properties(typeof($this)->getPackage()->getResourceAsStream('example.ini')->getURI());
     $this->assertEquals('value', $prop->readString('section', 'key'));
   }
 
-  #[@test, @expect(IOException::class)]
+  #[Test, Expect(IOException::class)]
   public function throws_error_when_reading() {
     $p= new Properties('@@does-not-exist.ini@@');
     $p->readString('section', 'key');
   }
 
-  #[@test]
+  #[Test]
   public function properties_from_same_file_are_equal() {
     $this->assertEquals(new Properties('a.ini'), new Properties('a.ini'));
   }
 
-  #[@test]
+  #[Test]
   public function properties_from_different_file_are_not_equal() {
     $this->assertNotEquals(new Properties('a.ini'), new Properties('b.ini'));
   }

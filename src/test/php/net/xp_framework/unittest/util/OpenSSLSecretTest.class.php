@@ -1,12 +1,13 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use util\Secret;
+use unittest\Action;
 use unittest\actions\ExtensionAvailable;
+use util\Secret;
 
 /**
  * Testcase for openssl backed security.Secret implementation
  */
-#[@action(new ExtensionAvailable('openssl'))]
+#[Action(eval: 'new ExtensionAvailable("openssl")')]
 class OpenSSLSecretTest extends SecretTest {
 
   /**

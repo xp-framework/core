@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use io\streams\BufferedOutputStream;
-use io\streams\MemoryOutputStream;
+use io\streams\{BufferedOutputStream, MemoryOutputStream};
+use unittest\Test;
 
 /**
  * Unit tests for streams API
@@ -22,39 +22,39 @@ class BufferedOutputStreamTest extends \unittest\TestCase {
     $this->out= new BufferedOutputStream($this->mem, 10);
   }
 
-  #[@test]
+  #[Test]
   public function doNotFillBuffer() {
     $this->out->write('Hello');
     $this->assertEquals('', $this->mem->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function fillBuffer() {
     $this->out->write(str_repeat('*', 10));
     $this->assertEquals('', $this->mem->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function overFlowBuffer() {
     $this->out->write('A long string that will fill the buffer');
     $this->assertEquals('A long string that will fill the buffer', $this->mem->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function flushed() {
     $this->out->write('Hello');
     $this->out->flush();
     $this->assertEquals('Hello', $this->mem->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function flushedOnClose() {
     $this->out->write('Hello');
     $this->out->close();
     $this->assertEquals('Hello', $this->mem->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function flushedOnDestruction() {
     $this->out->write('Hello');
     unset($this->out);

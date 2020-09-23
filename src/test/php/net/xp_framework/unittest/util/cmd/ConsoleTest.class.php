@@ -1,7 +1,8 @@
 <?php namespace net\xp_framework\unittest\util\cmd;
 
-use io\streams\{MemoryInputStream, MemoryOutputStream, ConsoleOutputStream, ConsoleInputStream};
-use lang\{Value, IllegalStateException};
+use io\streams\{ConsoleInputStream, ConsoleOutputStream, MemoryInputStream, MemoryOutputStream};
+use lang\{IllegalStateException, Value};
+use unittest\{Test, Values};
 use util\cmd\{Console, NoInput, NoOutput};
 
 /**
@@ -30,30 +31,26 @@ class ConsoleTest extends \unittest\TestCase {
     Console::$err->redirect($this->original[2]);
   }
 
-  #[@test]
+  #[Test]
   public function read() {
     Console::$in->redirect(new MemoryInputStream('.'));
     $this->assertEquals('.', Console::read());
   }
 
-  #[@test, @values([
-  #  "Hello\nHallo",
-  #  "Hello\rHallo",
-  #  "Hello\r\nHallo",
-  #])]
+  #[Test, Values(["Hello\nHallo", "Hello\rHallo", "Hello\r\nHallo",])]
   public function readLine($variation) {
     Console::$in->redirect(new MemoryInputStream($variation));
     $this->assertEquals('Hello', Console::readLine());
     $this->assertEquals('Hallo', Console::readLine());
   }
 
-  #[@test]
+  #[Test]
   public function read_from_standard_input() {
     Console::$in->redirect(new MemoryInputStream('.'));
     $this->assertEquals('.', Console::$in->read(1));
   }
  
-  #[@test]
+  #[Test]
   public function readLine_from_standard_input() {
     Console::$in->redirect(new MemoryInputStream("Hello\nHallo\nOla"));
     $this->assertEquals('Hello', Console::$in->readLine());
@@ -61,49 +58,49 @@ class ConsoleTest extends \unittest\TestCase {
     $this->assertEquals('Ola', Console::$in->readLine());
   }
  
-  #[@test]
+  #[Test]
   public function write() {
     Console::write('.');
     $this->assertEquals('.', $this->streams[1]->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function write_multiple() {
     Console::write('.', 'o', 'O', '0');
     $this->assertEquals('.oO0', $this->streams[1]->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function write_int() {
     Console::write(1);
     $this->assertEquals('1', $this->streams[1]->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function write_true() {
     Console::write(true);
     $this->assertEquals('true', $this->streams[1]->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function write_false() {
     Console::write(false);
     $this->assertEquals('false', $this->streams[1]->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function write_float() {
     Console::write(1.5);
     $this->assertEquals('1.5', $this->streams[1]->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function write_an_array() {
     Console::write([1, 2, 3]);
     $this->assertEquals('[1, 2, 3]', $this->streams[1]->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function write_a_map() {
     Console::write(['key' => 'value', 'color' => 'blue']);
     $this->assertEquals(
@@ -115,7 +112,7 @@ class ConsoleTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function write_an_object() {
     Console::write(new class() implements Value {
       public function toString() { return 'Hello'; }
@@ -125,7 +122,7 @@ class ConsoleTest extends \unittest\TestCase {
     $this->assertEquals('Hello', $this->streams[1]->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function exception_from_toString() {
     try {
       Console::write(new class() implements Value {
@@ -139,67 +136,67 @@ class ConsoleTest extends \unittest\TestCase {
     }
   }
 
-  #[@test]
+  #[Test]
   public function write_to_standard_out() {
     Console::$out->write('.');
     $this->assertEquals('.', $this->streams[1]->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function write_to_standard_error() {
     Console::$err->write('.');
     $this->assertEquals('.', $this->streams[2]->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function writef() {
     Console::writef('Hello "%s"', 'Timm');
     $this->assertEquals('Hello "Timm"', $this->streams[1]->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function writef_to_standard_out() {
     Console::$out->writef('Hello "%s"', 'Timm');
     $this->assertEquals('Hello "Timm"', $this->streams[1]->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function writef_to_standard_error() {
     Console::$err->writef('Hello "%s"', 'Timm');
     $this->assertEquals('Hello "Timm"', $this->streams[2]->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function writeLine() {
     Console::writeLine('.');
     $this->assertEquals(".\n", $this->streams[1]->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function writeLine_to_standard_out() {
     Console::$out->writeLine('.');
     $this->assertEquals(".\n", $this->streams[1]->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function writeLine_to_standard_error() {
     Console::$err->writeLine('.');
     $this->assertEquals(".\n", $this->streams[2]->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function writeLinef() {
     Console::writeLinef('Hello %s', 'World');
     $this->assertEquals("Hello World\n", $this->streams[1]->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function writeLinef_to_standard_out() {
     Console::$out->writeLinef('Hello %s', 'World');
     $this->assertEquals("Hello World\n", $this->streams[1]->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function writeLinef_to_standard_error() {
     Console::$err->writeLinef('Hello %s', 'World');
     $this->assertEquals("Hello World\n", $this->streams[2]->bytes());
@@ -225,7 +222,7 @@ class ConsoleTest extends \unittest\TestCase {
     }
   }
 
-  #[@test]
+  #[Test]
   public function initialize_on_console() {
     $this->initialize(true, function() {
       $this->assertInstanceOf(ConsoleInputStream::class, Console::$in->stream());
@@ -234,7 +231,7 @@ class ConsoleTest extends \unittest\TestCase {
     });
   }
 
-  #[@test]
+  #[Test]
   public function initialize_without_console() {
     $this->initialize(false, function() {
       $this->assertNull(Console::$in->stream());

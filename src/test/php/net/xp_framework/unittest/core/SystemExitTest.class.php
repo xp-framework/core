@@ -1,8 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\System;
-use lang\ClassLoader;
-use lang\SystemExit;
+use lang\{ClassLoader, System, SystemExit};
+use unittest\{BeforeClass, Test};
 
 /**
  * TestCase for System exit
@@ -12,7 +11,7 @@ use lang\SystemExit;
 class SystemExitTest extends \unittest\TestCase {
   protected static $exiterClass;
 
-  #[@beforeClass]
+  #[BeforeClass]
   public static function defineExiterClass() {
     self::$exiterClass= ClassLoader::defineClass('net.xp_framework.unittest.core.Exiter', null, [], '{
       public function __construct() { throw new \lang\SystemExit(0); }
@@ -20,32 +19,32 @@ class SystemExitTest extends \unittest\TestCase {
     }');
   }
 
-  #[@test]
+  #[Test]
   public function noStack() {
     $this->assertEquals([], (new SystemExit(0))->getStackTrace());
   }
 
-  #[@test]
+  #[Test]
   public function zeroExitCode() {
     $this->assertEquals(0, (new SystemExit(0))->getCode());
   }
 
-  #[@test]
+  #[Test]
   public function nonZeroExitCode() {
     $this->assertEquals(1, (new SystemExit(1))->getCode());
   }
 
-  #[@test]
+  #[Test]
   public function noMessage() {
     $this->assertEquals('', (new SystemExit(0))->getMessage());
   }
   
-  #[@test]
+  #[Test]
   public function message() {
     $this->assertEquals('Hello', (new SystemExit(1, 'Hello'))->getMessage());
   }
   
-  #[@test]
+  #[Test]
   public function invoke() {
     try {
       self::$exiterClass->getMethod('doExit')->invoke(NULL);
@@ -55,7 +54,7 @@ class SystemExitTest extends \unittest\TestCase {
     }
   }
 
-  #[@test]
+  #[Test]
   public function construct() {
     try {
       self::$exiterClass->newInstance();
@@ -65,7 +64,7 @@ class SystemExitTest extends \unittest\TestCase {
     }
   }
 
-  #[@test]
+  #[Test]
   public function systemExit() {
     try {
       \lang\Runtime::halt();
@@ -75,7 +74,7 @@ class SystemExitTest extends \unittest\TestCase {
     }
   }
 
-  #[@test]
+  #[Test]
   public function systemExitWithNonZeroExitCode() {
     try {
       \lang\Runtime::halt(127);

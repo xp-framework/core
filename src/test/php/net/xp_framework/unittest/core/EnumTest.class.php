@@ -1,8 +1,9 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\reflect\Modifiers;
-use lang\{XPClass, Enum, Error, IllegalArgumentException, CloneNotSupportedException};
+use lang\{CloneNotSupportedException, Enum, Error, IllegalArgumentException, XPClass};
 use unittest\actions\RuntimeVersion;
+use unittest\{Expect, Test};
 
 /**
  * TestCase for enumerations
@@ -44,53 +45,53 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function coinIsAnEnums() {
     $this->assertTrue(XPClass::forName(Coin::class)->isEnum());
   }
   
-  #[@test]
+  #[Test]
   public function operationIsAnEnums() {
     $this->assertTrue(XPClass::forName(Operation::class)->isEnum());
   }
 
-  #[@test]
+  #[Test]
   public function thisIsNotAnEnum() {
     $this->assertFalse(typeof($this)->isEnum());
   }
 
-  #[@test]
+  #[Test]
   public function enumBaseClassIsAbstract() {
     $this->assertAbstract(XPClass::forName(Enum::class)->getModifiers());
   }
 
-  #[@test]
+  #[Test]
   public function operationEnumIsAbstract() {
     $this->assertAbstract(XPClass::forName(Operation::class)->getModifiers());
   }
 
-  #[@test]
+  #[Test]
   public function coinEnumIsNotAbstract() {
     $this->assertNotAbstract(XPClass::forName(Coin::class)->getModifiers());
   }
 
-  #[@test]
+  #[Test]
   public function coinMemberAreSameClass() {
     $this->assertInstanceOf(Coin::class, Coin::$penny);
   }
 
-  #[@test]
+  #[Test]
   public function operationMembersAreSubclasses() {
     $this->assertInstanceOf(Operation::class, Operation::$plus);
   }
 
-  #[@test]
+  #[Test]
   public function enumMembersAreNotAbstract() {
     $this->assertNotAbstract(typeof(Coin::$penny)->getModifiers());
     $this->assertNotAbstract(typeof(Operation::$plus)->getModifiers());
   }
 
-  #[@test]
+  #[Test]
   public function coinValues() {
     $this->assertEquals(
       [Coin::$penny, Coin::$nickel, Coin::$dime, Coin::$quarter],
@@ -98,7 +99,7 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function operationValues() {
     $this->assertEquals(
       [Operation::$plus, Operation::$minus, Operation::$times, Operation::$divided_by],
@@ -106,42 +107,42 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function pennyCoinClass() {
     $this->assertInstanceOf(Coin::class, Coin::$penny);
   }
 
-  #[@test]
+  #[Test]
   public function nickelCoinName() {
     $this->assertEquals('nickel', Coin::$nickel->name());
   }
 
-  #[@test]
+  #[Test]
   public function nickelCoinValue() {
     $this->assertEquals(2, Coin::$nickel->value());
   }
 
-  #[@test]
+  #[Test]
   public function stringRepresentation() {
     $this->assertEquals('dime', Coin::$dime->toString());
   }
 
-  #[@test]
+  #[Test]
   public function sameCoinsAreEqual() {
     $this->assertEquals(Coin::$quarter, Coin::$quarter);
   }
 
-  #[@test]
+  #[Test]
   public function differentCoinsAreNotEqual() {
     $this->assertNotEquals(Coin::$penny, Coin::$quarter);
   }
 
-  #[@test, @expect(CloneNotSupportedException::class)]
+  #[Test, Expect(CloneNotSupportedException::class)]
   public function enumMembersAreNotCloneable() {
     clone Coin::$penny;
   }
 
-  #[@test]
+  #[Test]
   public function valueOf() {
     $this->assertEquals(
       Coin::$penny, 
@@ -149,7 +150,7 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function valueOf_string() {
     $this->assertEquals(
       Coin::$penny, 
@@ -157,17 +158,17 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function valueOfNonExistant() {
     Enum::valueOf(XPClass::forName(Coin::class), '@@DOES_NOT_EXIST@@');
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function valueOfNonEnum() {
     Enum::valueOf(self::class, 'irrelevant');
   }
 
-  #[@test]
+  #[Test]
   public function valueOfAbstractEnum() {
     $this->assertEquals(
       Operation::$plus, 
@@ -175,7 +176,7 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function valuesOf() {
     $this->assertEquals(
       [Coin::$penny, Coin::$nickel, Coin::$dime, Coin::$quarter],
@@ -183,7 +184,7 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function valuesOf_string() {
     $this->assertEquals(
       [Coin::$penny, Coin::$nickel, Coin::$dime, Coin::$quarter],
@@ -191,7 +192,7 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function valuesOfAbstractEnum() {
     $this->assertEquals(
       [Operation::$plus, Operation::$minus, Operation::$times, Operation::$divided_by],
@@ -199,32 +200,32 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function valuesOfNonEnum() {
     Enum::valuesOf(self::class);
   }
 
-  #[@test]
+  #[Test]
   public function plusOperation() {
     $this->assertEquals(2, Operation::$plus->evaluate(1, 1));
   }
 
-  #[@test]
+  #[Test]
   public function minusOperation() {
     $this->assertEquals(0, Operation::$minus->evaluate(1, 1));
   }
 
-  #[@test]
+  #[Test]
   public function timesOperation() {
     $this->assertEquals(21, Operation::$times->evaluate(7, 3));
   }
 
-  #[@test]
+  #[Test]
   public function dividedByOperation() {
     $this->assertEquals(5, Operation::$divided_by->evaluate(10, 2));
   }
   
-  #[@test]
+  #[Test]
   public function staticMemberNotInEnumValuesOf() {
     $this->assertEquals(
       [Profiling::$INSTANCE, Profiling::$EXTENSION],
@@ -232,7 +233,7 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function staticMemberNotInValues() {
     $this->assertEquals(
       [Profiling::$INSTANCE, Profiling::$EXTENSION],
@@ -240,12 +241,12 @@ class EnumTest extends \unittest\TestCase {
     );
   }
   
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function staticMemberNotWithEnumValueOf() {
     Enum::valueOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'), 'fixture');
   }
 
-  #[@test]
+  #[Test]
   public function staticEnumMemberNotInEnumValuesOf() {
     Profiling::$fixture= Coin::$penny;
     $this->assertEquals(
@@ -255,7 +256,7 @@ class EnumTest extends \unittest\TestCase {
     Profiling::$fixture= null;
   }
 
-  #[@test]
+  #[Test]
   public function staticEnumMemberNotInValues() {
     Profiling::$fixture= Coin::$penny;
     $this->assertEquals(
@@ -265,7 +266,7 @@ class EnumTest extends \unittest\TestCase {
     Profiling::$fixture= null;
   }
 
-  #[@test]
+  #[Test]
   public function staticObjectMemberNotInEnumValuesOf() {
     Profiling::$fixture= $this;
     $this->assertEquals(
@@ -275,7 +276,7 @@ class EnumTest extends \unittest\TestCase {
     Profiling::$fixture= null;
   }
 
-  #[@test]
+  #[Test]
   public function staticObjectMemberNotInValues() {
     Profiling::$fixture= $this;
     $this->assertEquals(
@@ -285,7 +286,7 @@ class EnumTest extends \unittest\TestCase {
     Profiling::$fixture= null;
   }
 
-  #[@test]
+  #[Test]
   public function staticPrimitiveMemberNotInEnumValuesOf() {
     Profiling::$fixture= [$this, $this->name];
     $this->assertEquals(
@@ -295,7 +296,7 @@ class EnumTest extends \unittest\TestCase {
     Profiling::$fixture= null;
   }
 
-  #[@test]
+  #[Test]
   public function staticPrimitiveMemberNotInValues() {
     Profiling::$fixture= [$this, $this->name];
     $this->assertEquals(
@@ -305,7 +306,7 @@ class EnumTest extends \unittest\TestCase {
     Profiling::$fixture= null;
   }
 
-  #[@test]
+  #[Test]
   public function enumValuesMethodProvided() {
     $this->assertEquals(
       [Weekday::$MON, Weekday::$TUE, Weekday::$WED, Weekday::$THU, Weekday::$FRI, Weekday::$SAT, Weekday::$SUN],
@@ -313,7 +314,7 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function enumValueInitializedToDeclaration() {
     $this->assertEquals(1, Weekday::$MON->ordinal());
   }

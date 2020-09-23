@@ -2,6 +2,7 @@
 
 use lang\StackTraceElement;
 use net\xp_framework\unittest\Name;
+use unittest\Test;
 
 /**
  * Tests for the StackTraceElement class
@@ -19,25 +20,25 @@ class StackTraceElementTest extends \unittest\TestCase {
     return new StackTraceElement('Test.class.php', self::class, __FUNCTION__, 1, $args, 'Test');
   }
 
-  #[@test]
+  #[Test]
   public function can_create() {
     new StackTraceElement('file', 'class', 'method', 1, [], 'Message');
   }
 
-  #[@test]
+  #[Test]
   public function is_equal_to_itself() {
     $a= new StackTraceElement('file', 'class', 'method', 1, [], 'Message');
     $this->assertEquals($a, $a);
   }
 
-  #[@test]
+  #[Test]
   public function two_identical_stacktraceelements_are_equal() {
     $a= new StackTraceElement('file', 'class', 'method', 1, [], 'Message');
     $b= new StackTraceElement('file', 'class', 'method', 1, [], 'Message');
     $this->assertEquals($a, $b);
   }
 
-  #[@test]
+  #[Test]
   public function to_string() {
     $this->assertEquals(
       self::NEW_FIXTURE_METHOD."() [line 1 of Test.class.php] Test\n",
@@ -45,7 +46,7 @@ class StackTraceElementTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function to_string_with_array_arg() {
     $this->assertEquals(
       self::NEW_FIXTURE_METHOD."(array[3]) [line 1 of Test.class.php] Test\n",
@@ -53,7 +54,7 @@ class StackTraceElementTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function to_string_with_empty_array_arg() {
     $this->assertEquals(
       self::NEW_FIXTURE_METHOD."(array[0]) [line 1 of Test.class.php] Test\n",
@@ -61,7 +62,7 @@ class StackTraceElementTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function to_string_with_string_arg() {
     $this->assertEquals(
       self::NEW_FIXTURE_METHOD."((0x5)'Hello') [line 1 of Test.class.php] Test\n",
@@ -69,7 +70,7 @@ class StackTraceElementTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function to_string_with_long_string_arg() {
     $str= str_repeat('*', 0x80);
     $this->assertEquals(
@@ -78,7 +79,7 @@ class StackTraceElementTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function to_string_with_string_with_newline_arg() {
     $str= "Hello\nWorld";
     $this->assertEquals(
@@ -87,7 +88,7 @@ class StackTraceElementTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function to_string_with_string_with_nul_arg() {
     $str= "Hello\0";
     $this->assertEquals(
@@ -96,7 +97,7 @@ class StackTraceElementTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function to_string_with_int_arg() {
     $this->assertEquals(
       self::NEW_FIXTURE_METHOD."(6100) [line 1 of Test.class.php] Test\n",
@@ -104,7 +105,7 @@ class StackTraceElementTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function to_string_with_double_arg() {
     $this->assertEquals(
       self::NEW_FIXTURE_METHOD."(-1.5) [line 1 of Test.class.php] Test\n",
@@ -112,7 +113,7 @@ class StackTraceElementTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function to_string_with_bool_true_arg() {
     $this->assertEquals(
       self::NEW_FIXTURE_METHOD."(1) [line 1 of Test.class.php] Test\n",
@@ -120,7 +121,7 @@ class StackTraceElementTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function to_string_with_bool_false_arg() {
     $this->assertEquals(
       self::NEW_FIXTURE_METHOD."() [line 1 of Test.class.php] Test\n",
@@ -128,7 +129,7 @@ class StackTraceElementTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function to_string_with_null_arg() {
     $this->assertEquals(
       self::NEW_FIXTURE_METHOD."(NULL) [line 1 of Test.class.php] Test\n",
@@ -136,7 +137,7 @@ class StackTraceElementTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function to_string_with_object_arg() {
     $this->assertEquals(
       self::NEW_FIXTURE_METHOD."(net.xp_framework.unittest.Name{}) [line 1 of Test.class.php] Test\n",
@@ -144,7 +145,7 @@ class StackTraceElementTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function to_string_with_two_args() {
     $this->assertEquals(
       self::NEW_FIXTURE_METHOD."((0x5)'Hello', 2) [line 1 of Test.class.php] Test\n",
@@ -152,7 +153,7 @@ class StackTraceElementTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function to_string_with_resource_arg() {
     $fd= fopen(__FILE__, 'r');
     $string= $this->newFixtureWith([$fd])->toString();
@@ -165,7 +166,7 @@ class StackTraceElementTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function to_string_with_function_arg() {
     $this->assertEquals(
       self::NEW_FIXTURE_METHOD."(function()) [line 1 of Test.class.php] Test\n",

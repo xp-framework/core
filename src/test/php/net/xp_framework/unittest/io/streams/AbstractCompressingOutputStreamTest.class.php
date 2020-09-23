@@ -1,9 +1,8 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use io\streams\MemoryOutputStream;
-use io\streams\OutputStream;
+use io\streams\{MemoryOutputStream, OutputStream};
 use lang\IllegalArgumentException;
-use unittest\PrerequisitesNotMetError;
+use unittest\{Expect, PrerequisitesNotMetError, Test};
 use util\Bytes;
 
 /**
@@ -61,7 +60,7 @@ abstract class AbstractCompressingOutputStreamTest extends \unittest\TestCase {
     }
   }
 
-  #[@test]
+  #[Test]
   public function singleWrite() {
     $out= new MemoryOutputStream();
     $compressor= $this->newStream($out, 6);
@@ -70,7 +69,7 @@ abstract class AbstractCompressingOutputStreamTest extends \unittest\TestCase {
     $this->assertCompressedDataEquals($this->compress('Hello', 6), $out->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function multipeWrites() {
     $out= new MemoryOutputStream();
     $compressor= $this->newStream($out, 6);
@@ -81,7 +80,7 @@ abstract class AbstractCompressingOutputStreamTest extends \unittest\TestCase {
     $this->assertCompressedDataEquals($this->compress('Hello World', 6), $out->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function highestLevel() {
     $out= new MemoryOutputStream();
     $compressor= $this->newStream($out, 9);
@@ -90,7 +89,7 @@ abstract class AbstractCompressingOutputStreamTest extends \unittest\TestCase {
     $this->assertCompressedDataEquals($this->compress('Hello', 9), $out->bytes());
   }
 
-  #[@test]
+  #[Test]
   public function lowestLevel() {
     $out= new MemoryOutputStream();
     $compressor= $this->newStream($out, 1);
@@ -99,23 +98,23 @@ abstract class AbstractCompressingOutputStreamTest extends \unittest\TestCase {
     $this->assertCompressedDataEquals($this->compress('Hello', 1), $out->bytes());
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function levelTooHigh() {
     $this->newStream(new MemoryOutputStream() , 10);
   }
  
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function levelTooLow() {
     $this->newStream(new MemoryOutputStream(), -1);
   }
 
-  #[@test]
+  #[Test]
   public function closingRightAfterCreation() {
     $compressor= $this->newStream(new MemoryOutputStream(), 1);
     $compressor->close();
   }
 
-  #[@test]
+  #[Test]
   public function closingTwice() {
     $compressor= $this->newStream(new MemoryOutputStream(), 1);
     $compressor->close();

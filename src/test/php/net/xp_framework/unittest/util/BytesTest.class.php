@@ -1,33 +1,32 @@
 <?php namespace net\xp_framework\unittest\util;
 
+use lang\{FormatException, IllegalArgumentException, IndexOutOfBoundsException};
+use unittest\{Expect, Test, TestCase, Values};
 use util\Bytes;
-use lang\FormatException;
-use lang\IllegalArgumentException;
-use lang\IndexOutOfBoundsException;
 
 /**
  * TestCase for Bytes class
  *
  * @see   xp://util.Bytes
  */
-class BytesTest extends \unittest\TestCase {
+class BytesTest extends TestCase {
 
-  #[@test]
+  #[Test]
   public function creating_an_empty_bytes_without_supplying_parameters() {
     $this->assertEquals(0, (new Bytes())->size());
   }
 
-  #[@test]
+  #[Test]
   public function creating_an_empty_bytes_from_an_empty_string() {
     $this->assertEquals(0, (new Bytes(''))->size());
   }
 
-  #[@test]
+  #[Test]
   public function creating_an_empty_bytes_from_an_empty_array() {
     $this->assertEquals(0, (new Bytes([]))->size());
   }
 
-  #[@test]
+  #[Test]
   public function fromString() {
     $b= new Bytes('abcd');
     $this->assertEquals(4, $b->size());
@@ -37,7 +36,7 @@ class BytesTest extends \unittest\TestCase {
     $this->assertEquals(100, $b[3]);
   }
 
-  #[@test]
+  #[Test]
   public function fromIntegerArray() {
     $b= new Bytes([97, 98, 99, 100]);
     $this->assertEquals(4, $b->size());
@@ -47,7 +46,7 @@ class BytesTest extends \unittest\TestCase {
     $this->assertEquals(100, $b[3]);
   }
  
-  #[@test]
+  #[Test]
   public function fromCharArray() {
     $b= new Bytes(['a', 'b', 'c', 'd']);
     $this->assertEquals(4, $b->size());
@@ -57,7 +56,7 @@ class BytesTest extends \unittest\TestCase {
     $this->assertEquals(100, $b[3]);
   }
 
-  #[@test]
+  #[Test]
   public function fromByteArray() {
     $b= new Bytes([97, 98, 99, 100]);
     $this->assertEquals(4, $b->size());
@@ -67,12 +66,12 @@ class BytesTest extends \unittest\TestCase {
     $this->assertEquals(100, $b[3]);
   }
  
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function illegalConstructorArgument() {
     new Bytes(1);
   }
 
-  #[@test]
+  #[Test]
   public function sizeChangesAfterAppending() {
     $b= new Bytes();
     $this->assertEquals(0, $b->size());
@@ -80,7 +79,7 @@ class BytesTest extends \unittest\TestCase {
     $this->assertEquals(1, $b->size());
   }
 
-  #[@test]
+  #[Test]
   public function sizeChangesAfterRemoving() {
     $b= new Bytes("\0");
     $this->assertEquals(1, $b->size());
@@ -88,7 +87,7 @@ class BytesTest extends \unittest\TestCase {
     $this->assertEquals(0, $b->size());
   }
 
-  #[@test]
+  #[Test]
   public function sizeDoesNotChangeWhenSetting() {
     $b= new Bytes("\0");
     $this->assertEquals(1, $b->size());
@@ -96,73 +95,73 @@ class BytesTest extends \unittest\TestCase {
     $this->assertEquals(1, $b->size());
   }
 
-  #[@test]
+  #[Test]
   public function appendInteger() {
     $b= new Bytes();
     $b[]= 1;
     $this->assertEquals(1, $b[0]);
   }
 
-  #[@test]
+  #[Test]
   public function appendChar() {
     $b= new Bytes();
     $b[]= "\1";
     $this->assertEquals(1, $b[0]);
   }
 
-  #[@test]
+  #[Test]
   public function appendByte() {
     $b= new Bytes();
     $b[]= 1;
     $this->assertEquals(1, $b[0]);
   }
 
-  #[@test]
+  #[Test]
   public function setInteger() {
     $b= new Bytes("\1\2");
     $b[0]= 3;
     $this->assertEquals(3, $b[0]);
   }
 
-  #[@test]
+  #[Test]
   public function setChar() {
     $b= new Bytes("\1\2");
     $b[0]= "\3";
     $this->assertEquals(3, $b[0]);
   }
 
-  #[@test]
+  #[Test]
   public function setByte() {
     $b= new Bytes("\1\2");
     $b[0]= 3;
     $this->assertEquals(3, $b[0]);
   }
 
-  #[@test, @expect(IndexOutOfBoundsException::class)]
+  #[Test, Expect(IndexOutOfBoundsException::class)]
   public function setNegative() {
     $b= new Bytes('negative');
     $b[-1]= 3;
   }
 
-  #[@test, @expect(IndexOutOfBoundsException::class)]
+  #[Test, Expect(IndexOutOfBoundsException::class)]
   public function setPastEnd() {
     $b= new Bytes('ends');
     $b[5]= 3;
   }
 
-  #[@test, @expect(IndexOutOfBoundsException::class)]
+  #[Test, Expect(IndexOutOfBoundsException::class)]
   public function getNegative() {
     $b= new Bytes('negative');
     $read= $b[-1];
   }
 
-  #[@test, @expect(IndexOutOfBoundsException::class)]
+  #[Test, Expect(IndexOutOfBoundsException::class)]
   public function getPastEnd() {
     $b= new Bytes('ends');
     $read= $b[5];
   }
 
-  #[@test]
+  #[Test]
   public function testingOffsets() {
     $b= new Bytes('GIF89a');
     $this->assertFalse(isset($b[-1]), 'offset -1');
@@ -171,40 +170,40 @@ class BytesTest extends \unittest\TestCase {
     $this->assertFalse(isset($b[6]), 'offset 6');
   }
 
-  #[@test]
+  #[Test]
   public function removingFromBeginning() {
     $b= new Bytes('GIF89a');
     unset($b[0]);
     $this->assertEquals(new Bytes('IF89a'), $b);
   }
 
-  #[@test]
+  #[Test]
   public function removingFromEnd() {
     $b= new Bytes('GIF89a');
     unset($b[5]);
     $this->assertEquals(new Bytes('GIF89'), $b);
   }
 
-  #[@test]
+  #[Test]
   public function removingInBetween() {
     $b= new Bytes('GIF89a');
     unset($b[3]);
     $this->assertEquals(new Bytes('GIF9a'), $b);
   }
 
-  #[@test, @expect(IndexOutOfBoundsException::class)]
+  #[Test, Expect(IndexOutOfBoundsException::class)]
   public function removingNegative() {
     $b= new Bytes('negative');
     unset($b[-1]);
   }
 
-  #[@test, @expect(IndexOutOfBoundsException::class)]
+  #[Test, Expect(IndexOutOfBoundsException::class)]
   public function removingPastEnd() {
     $b= new Bytes('ends');
     unset($b[5]);
   }
 
-  #[@test]
+  #[Test]
   public function binarySafeBeginning() {
     $b= new Bytes(["\0", 'A', 'B']);
     $this->assertEquals(0, $b[0]);
@@ -212,7 +211,7 @@ class BytesTest extends \unittest\TestCase {
     $this->assertEquals(66, $b[2]);
   }
 
-  #[@test]
+  #[Test]
   public function binarySafeInBetween() {
     $b= new Bytes(['A', "\0", 'B']);
     $this->assertEquals(65, $b[0]);
@@ -220,7 +219,7 @@ class BytesTest extends \unittest\TestCase {
     $this->assertEquals(66, $b[2]);
   }
 
-  #[@test]
+  #[Test]
   public function binarySafeInEnd() {
     $b= new Bytes(['A', 'B', "\0"]);
     $this->assertEquals(65, $b[0]);
@@ -228,7 +227,7 @@ class BytesTest extends \unittest\TestCase {
     $this->assertEquals(0, $b[2]);
   }
 
-  #[@test]
+  #[Test]
   public function abcBytesToString() {
     $this->assertEquals(
       'util.Bytes(6)@{@ ABC!}', 
@@ -236,7 +235,7 @@ class BytesTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function controlCharsToString() {
     $this->assertEquals(
       'util.Bytes(32)@{'.
@@ -249,7 +248,7 @@ class BytesTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function umlautsToString() {
     $this->assertEquals(
       'util.Bytes(9)@{A\303\244O\303\266U\303\274}', 
@@ -257,7 +256,7 @@ class BytesTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function stringCasting() {
     $this->assertEquals('Hello', (string)new Bytes('Hello'));
   }
@@ -268,7 +267,7 @@ class BytesTest extends \unittest\TestCase {
    *
    * @see     php://unpack
    */
-  #[@test]
+  #[Test]
   public function unpackUnsignedLong() {
     $r= unpack('Nnumber', new Bytes("\000\000\003\350"));
     $this->assertEquals(1000, $r['number']);
@@ -280,19 +279,19 @@ class BytesTest extends \unittest\TestCase {
    *
    * @see     php://pack
    */
-  #[@test]
+  #[Test]
   public function packUnsignedLong() {
     $this->assertEquals(new Bytes("\000\000\003\350"), new Bytes(pack('N', 1000)));
   }
 
-  #[@test]
+  #[Test]
   public function worksWithEchoStatement() {
     ob_start();
     echo new Bytes('ü');
     $this->assertEquals('ü', ob_get_clean());
   }
 
-  #[@test]
+  #[Test]
   public function integerArrayToBytes() {
     $b= new Bytes([228, 246, 252]);
     $this->assertEquals(-28, $b[0]);
@@ -300,13 +299,13 @@ class BytesTest extends \unittest\TestCase {
     $this->assertEquals(-4, $b[2]);
   }
 
-  #[@test]
+  #[Test]
   public function byteArrayToBytes() {
     $b= new Bytes([-28]);
     $this->assertEquals(-28, $b[0]);
   }
 
-  #[@test]
+  #[Test]
   public function iteration() {
     $c= ['H', "\303", "\244", 'l', 'l', 'o'];
     $b= new Bytes($c);
@@ -316,12 +315,7 @@ class BytesTest extends \unittest\TestCase {
     $this->assertEquals($i, sizeof($c)- 1);
   }
 
-  #[@test, @values([
-  #  [new Bytes('Test'), 0],
-  #  [new Bytes('T'), +3],
-  #  [new Bytes('Testing'), -3],
-  #  [null, 1]
-  #])]
+  #[Test, Values([[new Bytes('Test'), 0], [new Bytes('T'), +3], [new Bytes('Testing'), -3], [null, 1]])]
   public function compare($value, $expected) {
     $this->assertEquals($expected, (new Bytes('Test'))->compareTo($value));
   }

@@ -1,9 +1,10 @@
 <?php namespace net\xp_framework\unittest\archive;
 
 use io\File;
-use io\streams\{Streams, MemoryInputStream, MemoryOutputStream};
+use io\streams\{MemoryInputStream, MemoryOutputStream, Streams};
 use lang\archive\Archive;
-use lang\{FormatException, ElementNotFoundException};
+use lang\{ElementNotFoundException, FormatException};
+use unittest\{Expect, Test};
 
 /**
  * Base class for archive file tests
@@ -58,62 +59,62 @@ abstract class ArchiveTest extends \unittest\TestCase {
     return new File(Streams::readableFd(new MemoryInputStream($header[$version].str_repeat("\0", 248))));
   }
 
-  #[@test, @expect(FormatException::class)]
+  #[Test, Expect(FormatException::class)]
   public function open_non_archive() {
     $a= new Archive($this->file(0));
     $a->open(Archive::READ);
   }
 
-  #[@test]
+  #[Test]
   public function version_equals_stream_version() {
     $a= new Archive($this->file($this->version()));
     $a->open(Archive::READ);
     $this->assertEquals($this->version(), $a->version);
   }
 
-  #[@test]
+  #[Test]
   public function version_equals_resource_version() {
     $a= new Archive($this->resource('v'.$this->version().'.xar'));
     $a->open(Archive::READ);
     $this->assertEquals($this->version(), $a->version);
   }
 
-  #[@test]
+  #[Test]
   public function contains_non_existant() {
     $a= new Archive($this->file($this->version()));
     $a->open(Archive::READ);
     $this->assertFalse($a->contains('DOES-NOT-EXIST'));
   }
 
-  #[@test, @expect(ElementNotFoundException::class)]
+  #[Test, Expect(ElementNotFoundException::class)]
   public function extract_non_existant() {
     $a= new Archive($this->file($this->version()));
     $a->open(Archive::READ);
     $a->extract('DOES-NOT-EXIST');
   }
 
-  #[@test]
+  #[Test]
   public function entries_for_empty_archive_are_an_empty_array() {
     $a= new Archive($this->file($this->version()));
     $a->open(Archive::READ);
     $this->assertEntries($a, []);
   }
 
-  #[@test]
+  #[Test]
   public function contains_existant() {
     $a= new Archive($this->resource('v'.$this->version().'.xar'));
     $a->open(Archive::READ);
     $this->assertTrue($a->contains('contained.txt'));
   }
 
-  #[@test]
+  #[Test]
   public function entries_contain_file() {
     $a= new Archive($this->resource('v'.$this->version().'.xar'));
     $a->open(Archive::READ);
     $this->assertEntries($a, ['contained.txt' => "This file is contained in an archive!\n"]);
   }
 
-  #[@test]
+  #[Test]
   public function creating_empty_archive() {
     $out= new MemoryOutputStream();
     $a= new Archive(new File(Streams::writeableFd($out)));
@@ -124,7 +125,7 @@ abstract class ArchiveTest extends \unittest\TestCase {
     $this->assertEntries(new Archive($file), []);
   }
 
-  #[@test]
+  #[Test]
   public function creating_archive() {
     $contents= [
       'lang/Type.class.php'      => '<?php class Type { }',

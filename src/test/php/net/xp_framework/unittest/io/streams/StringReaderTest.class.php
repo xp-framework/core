@@ -1,26 +1,24 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use io\streams\InputStream;
-use io\streams\MemoryInputStream;
-use io\streams\StringReader;
+use io\streams\{InputStream, MemoryInputStream, StringReader};
 use lang\IllegalStateException;
-use unittest\TestCase;
+use unittest\{Test, TestCase, Values};
 
 class StringReaderTest extends TestCase {
 
-  #[@test, @values(["\n", "\r", "\r\n"])]
+  #[Test, Values(["\n", "\r", "\r\n"])]
   public function read_empty_line($newLine) {
     $stream= new StringReader(new MemoryInputStream($newLine));
     $this->assertEquals('', $stream->readLine());
   }
 
-  #[@test]
+  #[Test]
   public function read_single_line() {
     $stream= new StringReader(new MemoryInputStream($line= 'This is a test'));
     $this->assertEquals($line, $stream->readLine());
   }
 
-  #[@test, @values(["\n", "\r", "\r\n"])]
+  #[Test, Values(["\n", "\r", "\r\n"])]
   public function read_lines($newLine) {
     $line1= 'This is a test';
     $line2= 'Another line!';
@@ -30,11 +28,7 @@ class StringReaderTest extends TestCase {
     $this->assertEquals($line2, $stream->readLine());
   }
 
-  #[@test, @values([
-  #  "\n\n\nHello\n\n",
-  #  "\r\r\rHello\r\r",
-  #  "\r\n\r\n\r\nHello\r\n\r\n",
-  #])]
+  #[Test, Values(["\n\n\nHello\n\n", "\r\r\rHello\r\r", "\r\n\r\n\r\nHello\r\n\r\n",])]
   public function read_lines_with_empty_lines_inbetween($input) {
     $stream= new StringReader(new MemoryInputStream($input));
     $this->assertEquals('', $stream->readLine());
@@ -44,13 +38,13 @@ class StringReaderTest extends TestCase {
     $this->assertEquals('', $stream->readLine());
   }
   
-  #[@test]
+  #[Test]
   public function read_line_with_zero() {
     $stream= new StringReader(new MemoryInputStream($line= 'Line containing 0 characters'));
     $this->assertEquals($line, $stream->readLine());
   }
 
-  #[@test]
+  #[Test]
   public function read() {
     $stream= new StringReader(new MemoryInputStream('Hello World'));
     $this->assertEquals('Hello', $stream->read(5));
@@ -58,7 +52,7 @@ class StringReaderTest extends TestCase {
     $this->assertEquals('World', $stream->read(5));
   }
 
-  #[@test]
+  #[Test]
   public function readLine_after_reading() {
     $stream= new StringReader(new MemoryInputStream('Hello World'));
     $this->assertEquals('Hello', $stream->read(5));
@@ -66,7 +60,7 @@ class StringReaderTest extends TestCase {
     $this->assertEquals('World', $stream->readLine());
   }
 
-  #[@test]
+  #[Test]
   public function read_after_readLine() {
     $stream= new StringReader(new MemoryInputStream("Hello\n\0\nWorld\n"));
     $this->assertEquals('Hello', $stream->readLine());
@@ -75,41 +69,41 @@ class StringReaderTest extends TestCase {
     $this->assertEquals('World', $stream->readLine());
   }
 
-  #[@test]
+  #[Test]
   public function read_all() {
     $stream= new StringReader(new MemoryInputStream('Hello World'));
     $this->assertEquals('Hello World', $stream->read());
   }
 
-  #[@test]
+  #[Test]
   public function read_after_reading_all() {
     $stream= new StringReader(new MemoryInputStream('Hello World'));
     $this->assertEquals('Hello World', $stream->read());
     $this->assertNull($stream->read());
   }
 
-  #[@test]
+  #[Test]
   public function readLine_after_reading_all() {
     $stream= new StringReader(new MemoryInputStream('Hello World'));
     $this->assertEquals('Hello World', $stream->read());
     $this->assertNull($stream->readLine());
   }
 
-  #[@test, @values(["Hello World\n", "Hello World"])]
+  #[Test, Values(["Hello World\n", "Hello World"])]
   public function readLine_after_reading_all_lines($input) {
     $stream= new StringReader(new MemoryInputStream($input));
     $this->assertEquals('Hello World', $stream->readLine());
     $this->assertNull($stream->readLine());
   }
 
-  #[@test, @values(["Hello World\n", "Hello World"])]
+  #[Test, Values(["Hello World\n", "Hello World"])]
   public function read_after_reading_all_lines($input) {
     $stream= new StringReader(new MemoryInputStream($input));
     $this->assertEquals('Hello World', $stream->readLine());
     $this->assertNull($stream->read());
   }
 
-  #[@test]
+  #[Test]
   public function readLine_calls_read_once_when_read_returns_line() {
     $stream= new StringReader(newinstance(InputStream::class, [], [
       'called'    => 0,
@@ -127,13 +121,7 @@ class StringReaderTest extends TestCase {
     $this->assertEquals('Test', $stream->readLine());
   }
 
-  #[@test, @values([
-  #  [['Test', "\n"], ['Test', []]],
-  #  [['Test', "\r"], ['Test', []]],
-  #  [['Test', "\r\n"], ['Test', []]],
-  #  [['Test', "\n", 'Rest'], ['Test', ['Rest']]],
-  #  [['Test', '1', '2', '3', "\n", 'Rest'], ['Test123', ['Rest']]]
-  #])]
+  #[Test, Values([[['Test', "\n"], ['Test', []]], [['Test', "\r"], ['Test', []]], [['Test', "\r\n"], ['Test', []]], [['Test', "\n", 'Rest'], ['Test', ['Rest']]], [['Test', '1', '2', '3', "\n", 'Rest'], ['Test123', ['Rest']]]])]
   public function readLine_continues_reading_until_newline($chunks, $expected) {
     $input= newinstance(InputStream::class, [$chunks], [
       'chunks'      => [],
