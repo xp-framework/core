@@ -6,7 +6,7 @@ use util\Objects;
 /**
  * Lookup map
  */
-#[@generic(['self' => 'K, V', 'parent' => 'K, V'])]
+#[Generic(self: 'K, V', parent: 'K, V')]
 class Lookup extends AbstractDictionary {
   protected $size;
 
@@ -19,7 +19,7 @@ class Lookup extends AbstractDictionary {
    * @param   K key
    * @param   V value
    */
-  #[Generic(['params' => 'K, V'])]
+  #[Generic(params: 'K, V')]
   public function put($key, $value) {
     $this->elements[Objects::hashOf($key)]= $value;
     $this->size= sizeof($this->elements);
@@ -32,7 +32,7 @@ class Lookup extends AbstractDictionary {
    * @return  V value
    * @throws  util.NoSuchElementException
    */
-  #[Generic(['params' => 'K', 'return' => 'V'])]
+  #[Generic(params: 'K', return: 'V')]
   public function get($key) {
     $offset= Objects::hashOf($key);
     if (!isset($this->elements[$offset])) {
@@ -46,7 +46,7 @@ class Lookup extends AbstractDictionary {
    *
    * @return  V[] values
    */
-  #[Generic(['return' => 'V[]'])]
+  #[Generic(return: 'V[]')]
   public function values() {
     return array_values($this->elements);
   }

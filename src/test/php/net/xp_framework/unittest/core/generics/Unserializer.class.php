@@ -2,10 +2,7 @@
 
 use lang\Generic;
 
-/**
- * Unserializer
- */
-#[@generic(['self' => 'T'])]
+#[Generic(self: 'T')]
 class Unserializer {
 
   /**
@@ -14,7 +11,7 @@ class Unserializer {
    * @param   var $arg
    * @return  T element
    */
-  #[Generic(['return' => 'T'])]
+  #[Generic(return: 'T')]
   public function newInstance($arg= null) {
     return null === $arg ? $T->default : $T->newInstance($arg);
   }

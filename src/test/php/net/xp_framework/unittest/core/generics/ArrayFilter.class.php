@@ -19,7 +19,7 @@ use lang\Generic;
  * }
  * ```
  */
-#[Generic(['self' => 'T'])]
+#[Generic(self: 'T')]
 abstract class ArrayFilter {
   
   /**
@@ -30,7 +30,7 @@ abstract class ArrayFilter {
    * @param   T element
    * @return  bool
    */
-  #[Generic(['params' => 'T'])]
+  #[Generic(params: 'T')]
   protected abstract function accept($element);
 
   /**
@@ -39,7 +39,7 @@ abstract class ArrayFilter {
    * @param   T[] elements
    * @return  T[] filtered
    */
-  #[Generic(['params' => 'T[]', 'return' => 'T[]'])]
+  #[Generic(params: 'T[]', return: 'T[]')]
   public function filter($elements) {
     $filtered= [];
     foreach ($elements as $element) {

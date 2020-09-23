@@ -2,7 +2,7 @@
 
 use lang\Generic;
 
-#[Generic(['self' => 'T'])]
+#[Generic(self: 'T')]
 class ListOf {
   public $elements= [];
 
@@ -11,7 +11,7 @@ class ListOf {
    *
    * @param   T... initial
    */
-  #[Generic(['params' => 'T...'])]
+  #[Generic(params: 'T...')]
   public function __construct(... $args) {
     $this->elements= $args;
   }
@@ -22,7 +22,7 @@ class ListOf {
    * @param   T... elements
    * @return  net.xp_framework.unittest.core.generics.List self
    */
-  #[Generic(['params' => 'T...'])]
+  #[Generic(params: 'T...')]
   public function withAll(... $args) {
     $this->elements= array_merge($this->elements, $args);
     return $this;
@@ -33,7 +33,7 @@ class ListOf {
    *
    * @return  T[] elements
    */
-  #[Generic(['return' => 'T[]'])]
+  #[Generic(return: 'T[]')]
   public function elements() {
     return $this->elements;
   }

@@ -3,7 +3,7 @@
 use lang\Generic;
 
 /** Nullable value */
-#[Generic(['self' => 'T'])]
+#[Generic(self: 'T')]
 class Nullable {
   protected $value;
 
@@ -12,7 +12,7 @@ class Nullable {
    *
    * @param   T value
    */
-  #[Generic(['params' => 'T'])]
+  #[Generic(params: 'T')]
   public function __construct($value= null) {
     $this->value= $value;
   }
@@ -32,7 +32,7 @@ class Nullable {
    * @param   T value
    * @return  self this instance
    */
-  #[Generic(['params' => 'T'])]
+  #[Generic(params: 'T')]
   public function set($value= null) {
     $this->value= $value;
     return $this;
@@ -43,7 +43,7 @@ class Nullable {
    *
    * @return  T value
    */
-  #[Generic(['return' => 'T'])]
+  #[Generic(return: 'T')]
   public function get() {
     return $this->value;
   }

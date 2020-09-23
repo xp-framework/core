@@ -2,7 +2,7 @@
 
 use lang\Generic;
 
-#[Generic(['self' => 'K, V'])]
+#[Generic(self: 'K, V')]
 interface IDictionary {
  
   /**
@@ -11,7 +11,7 @@ interface IDictionary {
    * @param   K key
    * @param   V value
    */
-  #[Generic(['params' => 'K, V'])]
+  #[Generic(params: 'K, V')]
   public function put($key, $value);
 
   /**
@@ -21,7 +21,7 @@ interface IDictionary {
    * @return  V value
    * @throws  util.NoSuchElementException
    */
-  #[Generic(['params' => 'K', 'return' => 'V'])]
+  #[Generic(params: 'K', return: 'V')]
   public function get($key);
 
   /**
@@ -29,6 +29,6 @@ interface IDictionary {
    *
    * @return  V[] values
    */
-  #[Generic(['return' => 'V[]'])]
+  #[Generic(return: 'V[]')]
   public function values();
 }
