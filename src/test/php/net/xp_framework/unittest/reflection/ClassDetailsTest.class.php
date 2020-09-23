@@ -282,6 +282,36 @@ class ClassDetailsTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function php8_attributes_converted_to_xp_annotations() {
+    $actual= (new ClassParser())->parseDetails('<?php
+      #[Value("test")]
+      class Test {
+      }
+    ');
+    $this->assertEquals(['value' => 'test'], $actual['class'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[@test]
+  public function php8_attributes_with_named_arguments() {
+    $actual= (new ClassParser())->parseDetails('<?php
+      #[Expect(class: \net\xp_framework\unittest\Name::class)]
+      class Test {
+      }
+    ');
+    $this->assertEquals(['expect' => ['class' => Name::class]], $actual['class'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[@test]
+  public function php8_attributes_with_eval_argument() {
+    $actual= (new ClassParser())->parseDetails('<?php
+      #[Value(eval: "function() { return \"test\"; }")]
+      class Test {
+      }
+    ');
+    $this->assertEquals('test', $actual['class'][DETAIL_ANNOTATIONS]['value']());
+  }
+
+  #[@test]
   public function closure_use_not_evaluated() {
     (new ClassParser())->parseDetails('<?php 
       class Test {

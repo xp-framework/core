@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### RFCs
+
+* Implemented first step of xp-framwwork/rfc#336 by converting PHP 8
+  attributes into XP annotations: `#[Test(true)]` will beinterpreted the
+  same as `#[@test(true)]`. This way, converting libraries over to the
+  new syntax can start now. Implementation details in pull request #245.
+
 ### Features
 
 * Added support for `mixed` type, see https://wiki.php.net/rfc/mixed_type_v2
