@@ -70,4 +70,12 @@ class MethodAnnotationsTest extends MethodsTest {
   public function get_annotation_for_non_existant_annotation() {
     $this->method("#[Test]\npublic function fixture() { }")->getAnnotation('@@nonexistant@@');
   }
+
+  #[Test]
+  public function parameter_annotation() {
+    $this->assertTrue($this->method("public function fixture(\n#[Inject]\n\$arg) { }")
+      ->getParameter(0)
+      ->hasAnnotation('inject')
+    );
+  }
 }

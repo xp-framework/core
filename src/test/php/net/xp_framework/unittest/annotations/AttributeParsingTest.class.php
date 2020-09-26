@@ -30,13 +30,14 @@ class AttributeParsingTest extends AbstractAnnotationParsingTest {
     ]));
   }
 
-  #[Test]
-  public function no_value() {
+  #[Test, Values(['#[Hello]', '#[Hello()]'])]
+  public function no_value($declaration) {
     $this->assertEquals(
       [0 => ['hello' => null], 1 => []],
-      $this->parse("#[Hello]")
+      $this->parse($declaration)
     );
   }
+
 
   #[Test]
   public function sq_string_value() {

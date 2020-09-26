@@ -639,6 +639,27 @@ class ClassParser {
                 break;
             }
           }
+
+          $b= 0;
+          $parsed= null;
+          while (++$i < $s) {
+            if ('(' === $tokens[$i][0]) {
+              $b++;
+            } else if (')' === $tokens[$i][0]) {
+              if (0 === --$b) break;
+            } else if (T_COMMENT === $tokens[$i][0]) {
+              $parsed= $tokens[$i][1];
+            } else if (T_VARIABLE === $tokens[$i][0] && null !== $parsed) {
+              $details[1][$m][DETAIL_TARGET_ANNO][$tokens[$i][1]]= $this->parseAnnotations(
+                $parsed,
+                $context,
+                $imports,
+                $tokens[$i][2] ?? -1
+              )[0];
+              $parsed= null;
+            }
+          }
+
           $b= 0;
           while (++$i < $s) {
             if ('{' === $tokens[$i][0]) {

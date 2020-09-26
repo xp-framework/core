@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Added support for PHP 8 parameter attributes - @thekid
+
 ## 10.2.0 / 2020-09-23
 
 ### RFCs
