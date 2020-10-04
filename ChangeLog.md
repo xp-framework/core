@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.3.0 / 2020-10-04
+
 ### Features
 
 * Added support for PHP 8 parameter attributes - @thekid
@@ -14,7 +16,7 @@ XP Framework Core ChangeLog
 * Merged PRs #246 and #247, rewriting the code base to PHP 8 attributes
   (@thekid)
 * Implemented first step of xp-framwwork/rfc#336 by converting PHP 8
-  attributes into XP annotations: `#[Test(true)]` will beinterpreted the
+  attributes into XP annotations: `#[Test(true)]` will be interpreted the
   same as `#[@test(true)]`. This way, converting libraries over to the
   new syntax can start now. Implementation details in pull request #245.
 
