@@ -649,6 +649,17 @@ class ClassParser {
               if (0 === --$b) break;
             } else if (T_COMMENT === $tokens[$i][0]) {
               $parsed= $tokens[$i][1];
+            } else if (T_ATTRIBUTE === $tokens[$i][0]) {
+              $e= 1;
+              $parsed= '';
+              while ($i++ < $s) {
+                $parsed.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
+                if ('[' === $tokens[$i]) {
+                  $e++;
+                } else if (']' === $tokens[$i]) {
+                  if (0 === --$e) break;
+                }
+              }
             } else if (T_VARIABLE === $tokens[$i][0] && null !== $parsed) {
               $details[1][$m][DETAIL_TARGET_ANNO][$tokens[$i][1]]= $this->parseAnnotations(
                 $parsed,

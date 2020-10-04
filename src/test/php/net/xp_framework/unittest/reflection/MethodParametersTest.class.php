@@ -258,6 +258,35 @@ class MethodParametersTest extends MethodsTest {
   }
 
   #[Test]
+  public function parameters_with_attribute() {
+    $method= $this->method('
+      #[Get]
+      public function fixture(
+        $user,
+        #[Param]
+        $sort,
+        #[Param("max")]
+        $limit,
+        #[Param, Optional]
+        $order= "asc"
+      ) { }'
+    );
+    $r= [];
+    foreach ($method->getParameters() as $param) {
+      $r[$param->getName()]= $param->getAnnotations();
+    }
+    $this->assertEquals(
+      [
+        'user'  => [],
+        'sort'  => ['param' => null],
+        'limit' => ['param' => 'max'],
+        'order' => ['param' => null, 'optional' => null]
+      ],
+      $r
+    );
+  }
+
+  #[Test]
   public function un_annotated_parameter_has_no_annotations() {
     $this->assertFalse($this->method('public function fixture($param) { }')->getParameter(0)->hasAnnotations());
   }
