@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.3.1 / 2020-10-06
+
+### Bugfixes
+
+* Fixed *strspn(): Argument #3 ($offset) must be contained in argument #1
+  ($str))* warnings, which started appearing in PHP 8.0.0, RC 1.
+  (@thekid)
+
 ## 10.3.0 / 2020-10-04
 
 ### Features
