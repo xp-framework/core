@@ -247,7 +247,8 @@ class TimeSpan implements Value {
   public function format($format) {
     $return= '';
     $o= 0; $l= strlen($format);
-    while (false !== ($p= strcspn($format, '%', $o))) {
+    while ($o < $l) {
+      $p= strcspn($format, '%', $o);
       $return.= substr($format, $o, $p);
       if (($o+= $p+ 2) <= $l) {
         switch ($format[$o - 1]) {
