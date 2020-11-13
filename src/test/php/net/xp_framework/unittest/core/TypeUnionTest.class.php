@@ -188,7 +188,7 @@ class TypeUnionTest extends TestCase {
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
-  public function php8_native_union() {
+  public function php8_native_union_type() {
     $f= eval('return new class() { public function fixture(int|string $arg) { } };');
     $this->assertEquals(
       (new TypeUnion([Primitive::$INT, Primitive::$STRING])),

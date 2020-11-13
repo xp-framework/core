@@ -2,12 +2,9 @@
 
 use lang\{ArrayType, FunctionType, MapType, Primitive, Type, XPClass};
 use unittest\actions\RuntimeVersion;
-use unittest\{Action, Test};
+use unittest\{Action, Test, TestCase};
 
-/**
- * Tests typeof() functionality
- */
-class TypeOfTest extends \unittest\TestCase {
+class TypeOfTest extends TestCase {
 
   #[Test]
   public function null() {
@@ -102,5 +99,10 @@ class TypeOfTest extends \unittest\TestCase {
   #[Test, Action(eval: 'new RuntimeVersion(">=7.1")')]
   public function function_with_void_return_type() {
     $this->assertEquals(FunctionType::forName('function(): void'), typeof(eval('return function(): void { };')));
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
+  public function php8_native_union_type() {
+    $this->assertEquals(FunctionType::forName('function(string|int): var'), typeof(eval('return function(string|int $a) { };')));
   }
 }

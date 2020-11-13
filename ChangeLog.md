@@ -5,6 +5,7 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed issue #248: PHP 8 native type union causes error - @thekid
 * Fixed `string|int` type union not being equal to `int|string` - @thekid
 
 ## 10.3.1 / 2020-10-06

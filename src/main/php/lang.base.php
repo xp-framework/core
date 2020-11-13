@@ -383,7 +383,15 @@ function typeof($arg) {
     foreach ($r->getParameters() as $param) {
       if ($param->isVariadic()) break;
       if ($t= $param->getType()) {
-        $signature[]= \lang\Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+        if ($t instanceof \ReflectionUnionType) {
+          $union= [];
+          foreach ($t->getTypes() as $c) {
+            $union[]= \lang\Type::forName(PHP_VERSION_ID >= 70100 ? $c->getName() : $c->__toString());
+          }
+          $signature[]= new \lang\TypeUnion($union);
+        } else {
+          $signature[]= \lang\Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+        }
       } else {
         $signature[]= \lang\Type::$VAR;
       }
