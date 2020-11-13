@@ -11,7 +11,8 @@ use lang\{
   TypeUnion,
   XPClass
 };
-use unittest\{Expect, Test, TestCase, Values};
+use unittest\actions\RuntimeVersion;
+use unittest\{Expect, Test, TestCase, Values, Action};
 
 class TypeUnionTest extends TestCase {
 
@@ -183,6 +184,15 @@ class TypeUnionTest extends TestCase {
     $this->assertEquals(
       "\xb5\xfestring\xb8\xfeint",
       (new TypeUnion([Primitive::$STRING, Primitive::$INT]))->literal()
+    );
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
+  public function php8_native_union() {
+    $f= eval('return new class() { public function fixture(int|string $arg) { } };');
+    $this->assertEquals(
+      (new TypeUnion([Primitive::$INT, Primitive::$STRING])),
+      typeof($f)->getMethod('fixture')->getParameter(0)->getType()
     );
   }
 }
