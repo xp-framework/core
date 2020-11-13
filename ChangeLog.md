@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.3.2 / 2020-11-13
+
 ### Bugfixes
 
 * Fixed issue #248: PHP 8 native type union causes error - @thekid
