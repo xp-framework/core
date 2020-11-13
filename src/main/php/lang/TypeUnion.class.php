@@ -128,4 +128,29 @@ class TypeUnion extends Type {
       return false;
     }
   }
+
+  /**
+   * Returns a sorted list of the given types' names.
+   *
+   * @param  parent[] $types
+   * @return string[]
+   */
+  private function sorted($types) {
+    $n= [];
+    foreach ($types as $type) {
+      $n[]= $type->name;
+    }
+    sort($n);
+    return $n;
+  }
+
+  /** Compares to another value */
+  public function compareTo($value): int {
+    return $value instanceof self ? $this->sorted($this->types) <=> $this->sorted($value->types) : 1;
+  }
+
+  /** Checks for equality with another value */
+  public function equals($value): bool {
+    return $value instanceof static && $this->sorted($this->types) === $this->sorted($value->types);
+  }
 }

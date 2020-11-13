@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed `string|int` type union not being equal to `int|string` - @thekid
+
 ## 10.3.1 / 2020-10-06
 
 ### Bugfixes

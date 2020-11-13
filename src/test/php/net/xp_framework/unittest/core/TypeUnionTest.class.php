@@ -78,7 +78,7 @@ class TypeUnionTest extends TestCase {
     new TypeUnion([Primitive::$STRING, Primitive::$INT]);
   }
 
-  #[Test, Values(['string|int', 'string | int'])]
+  #[Test, Values(['string|int', 'string | int', 'int|string'])]
   public function forName($literal) {
     $this->assertEquals(
       new TypeUnion([Primitive::$STRING, Primitive::$INT]),
