@@ -14,7 +14,7 @@ matrix:
     - php: master
 
 before_script:
-  - sh .github/worflows/ci.sh install
+  - sh .github/workflows/ci.sh install
 
 script:
-  - sh .github/worflows/ci.sh run-tests
+  - sh .github/workflows/ci.sh run-tests
