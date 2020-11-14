@@ -7,6 +7,7 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Updated bundled test library - fixing PHP 8 compatibility - @thekid
 * Fixed issue #248: PHP 8 native type union causes error - @thekid
 * Fixed `string|int` type union not being equal to `int|string` - @thekid
 
