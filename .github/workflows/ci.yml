@@ -16,7 +16,6 @@ jobs:
       matrix:
         php-versions: ['7.0', '7.1', '7.2', 7.3', '7.4', '8.0']
         os: [ubuntu-latest, windows-latest, macOS-latest]
-        dependencies: ['install', 'update --prefer-lowest', 'update']
 
     steps:
     - name: Configure git
@@ -40,7 +39,7 @@ jobs:
       run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
     - name: Install dependencies
-      run: sh ci.sh install
+      run: sh .github/workflows/ci.sh install
 
     - name: Run test suite
-      run: sh ci.sh run-tests
+      run: sh .github/workflows/ci.sh run-tests
