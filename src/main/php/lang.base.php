@@ -386,7 +386,7 @@ function typeof($arg) {
         if ($t instanceof \ReflectionUnionType) {
           $union= [];
           foreach ($t->getTypes() as $c) {
-            $union[]= \lang\Type::forName(PHP_VERSION_ID >= 70100 ? $c->getName() : $c->__toString());
+            $union[]= \lang\Type::forName($c->getName());
           }
           $signature[]= new \lang\TypeUnion($union);
         } else {
@@ -397,7 +397,15 @@ function typeof($arg) {
       }
     }
     if ($t= $r->getReturnType()) {
-      $return= \lang\Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+      if ($t instanceof \ReflectionUnionType) {
+        $union= [];
+        foreach ($t->getTypes() as $c) {
+          $union[]= \lang\Type::forName($c->getName());
+        }
+        $return= new \lang\TypeUnion($union);
+      } else {
+        $return= \lang\Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+      }
     } else {
       $return= \lang\Type::$VAR;
     }
