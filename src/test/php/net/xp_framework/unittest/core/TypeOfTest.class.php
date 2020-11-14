@@ -102,7 +102,12 @@ class TypeOfTest extends TestCase {
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
-  public function php8_native_union_type() {
+  public function php8_native_union_param_type() {
     $this->assertEquals(FunctionType::forName('function(string|int): var'), typeof(eval('return function(string|int $a) { };')));
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
+  public function php8_native_union_return_type() {
+    $this->assertEquals(FunctionType::forName('function(): string|int'), typeof(eval('return function(): string|int { };')));
   }
 }
