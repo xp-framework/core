@@ -14,7 +14,7 @@ matrix:
     - php: master
 
 before_script:
-  - sh .travis.sh install
+  - sh .github/worflows/ci.sh install
 
 script:
-  - sh .travis.sh run-tests
+  - sh .github/worflows/ci.sh run-tests
