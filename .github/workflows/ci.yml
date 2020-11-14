@@ -35,9 +35,6 @@ jobs:
     - name: Setup Problem Matchers for PHP
       run: echo "::add-matcher::${{ runner.tool_cache }}/php.json"
 
-    - name: Setup Problem Matchers for PHPUnit
-      run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-
     - name: Install dependencies
       run: sh .github/workflows/ci.sh install
 
