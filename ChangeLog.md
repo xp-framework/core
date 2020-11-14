@@ -3,7 +3,7 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
-## 10.3.2 / 2020-11-13
+## 10.3.2 / 2020-11-14
 
 ### Bugfixes
 
