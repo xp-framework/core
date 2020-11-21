@@ -15,7 +15,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   /** @return bool */
   protected function processExecutionEnabled() {
-    return !Process::$DISABLED;
+    return !Process::$DISABLED && !strstr(php_uname('v'), 'Windows Server 2016');
   }
 
   /**
@@ -266,7 +266,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Ignore('https://github.com/xp-framework/core/pull/251'), Action(eval: 'new VerifyThat("processExecutionEnabled")')]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function missingClassFatals() {
     $r= $this->runInNewRuntime('
       newinstance("lang.NonExistantClass", [], "{}");

@@ -18,6 +18,9 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     if (Process::$DISABLED) {
       throw new PrerequisitesNotMetError('Process execution disabled', null, ['enabled']);
     }
+    if (strstr(php_uname('v'), 'Windows Server 2016')) {
+      throw new PrerequisitesNotMetError('Process execution bug on Windows Server 2016', null, ['enabled']);
+    }
   }
 
   /**
