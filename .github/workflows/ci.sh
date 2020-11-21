@@ -17,7 +17,7 @@ case $1 in
     echo test.xar > test.pth
     for class in `grep class src/test/config/unittest/core.ini | cut -d '"' -f 2` ; do
       printf "\033[33;1mTesting %s\033[0m\n" $class
-      sh xp-run xp.unittest.Runner $file || echo "Fail!"
+      sh xp-run xp.unittest.Runner $class || echo "Fail!"
     done
     result=0
     for file in `ls -1 src/test/config/unittest/*.ini`; do
