@@ -3,6 +3,7 @@
 use lang\reflect\TargetInvocationException;
 use lang\{ArrayType, ClassCastException, FunctionType, IllegalArgumentException, MapType, Primitive, Type, XPClass};
 use net\xp_framework\unittest\Name;
+use unittest\actions\VerifyThat;
 use unittest\{Expect, Test, TestCase, Values};
 
 class FunctionTypeTest extends TestCase {
@@ -271,7 +272,7 @@ class FunctionTypeTest extends TestCase {
     $this->assertEquals('Test', $value());
   }
 
-  #[Test]
+  #[Test, Action(eval: 'new VerifyThat(fn() => !extension_loaded("xdebug"))')]
   public function create_instances_from_string_referencing_builtin() {
     $value= (new FunctionType([Primitive::$STRING], Type::$VAR))->newInstance('strlen');
     $this->assertEquals(4, $value('Test'));
