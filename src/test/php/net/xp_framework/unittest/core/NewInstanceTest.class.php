@@ -15,7 +15,7 @@ class NewInstanceTest extends \unittest\TestCase {
 
   /** @return bool */
   protected function processExecutionEnabled() {
-    return !Process::$DISABLED;
+    return !Process::$DISABLED && !strstr(php_uname('v'), 'Windows Server 2016');
   }
 
   /**
