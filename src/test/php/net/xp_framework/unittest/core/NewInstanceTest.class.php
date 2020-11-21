@@ -266,7 +266,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
+  #[Test, Ignore('https://github.com/xp-framework/core/pull/251'), Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function missingClassFatals() {
     $r= $this->runInNewRuntime('
       newinstance("lang.NonExistantClass", [], "{}");

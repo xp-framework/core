@@ -85,7 +85,7 @@ class ProcessTest extends TestCase {
     $this->assertEquals(2, $p->exitValue());
   }
 
-  #[Test]
+  #[Test, Ignore('https://github.com/xp-framework/core/pull/251')]
   public function stdIn() {
     $p= new Process($this->executable(), ['-r', 'fprintf(STDOUT, fread(STDIN, 0xFF));']);
     $p->in->write('IN');
@@ -95,7 +95,7 @@ class ProcessTest extends TestCase {
     $this->assertEquals('IN', $out);
   }
 
-  #[Test]
+  #[Test, Ignore('https://github.com/xp-framework/core/pull/251')]
   public function stdOut() {
     $p= new Process($this->executable(), ['-r', 'fprintf(STDOUT, "OUT");']);
     $out= $p->out->read();
@@ -103,7 +103,7 @@ class ProcessTest extends TestCase {
     $this->assertEquals('OUT', $out);
   }
 
-  #[Test]
+  #[Test, Ignore('https://github.com/xp-framework/core/pull/251')]
   public function stdErr() {
     $p= new Process($this->executable(), ['-r', 'fprintf(STDERR, "ERR");']);
     $err= $p->err->read();

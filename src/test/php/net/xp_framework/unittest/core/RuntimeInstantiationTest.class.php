@@ -119,7 +119,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     ');
   }
 
-  #[Test]
+  #[Test, Ignore('https://github.com/xp-framework/core/pull/251')]
   public function shutdownHookRunOnScriptEnd() {
     $this->assertEquals(
       '+OK exiting, +OK Shutdown hook run',
@@ -135,7 +135,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     );
   }
 
-  #[Test]
+  #[Test, Ignore('https://github.com/xp-framework/core/pull/251')]
   public function shutdownHookRunOnNormalExit() {
     $this->assertEquals(
       '+OK exiting, +OK Shutdown hook run',
@@ -152,7 +152,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     );
   }
 
-  #[Test]
+  #[Test, Ignore('https://github.com/xp-framework/core/pull/251')]
   public function shutdownHookRunOnFatal() {
     $out= $this->runInNewRuntime(Runtime::getInstance()->startupOptions(), '
       Runtime::getInstance()->addShutdownHook(newinstance("lang.Runnable", [], "{
@@ -169,7 +169,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     $this->assertEquals('+OK Shutdown hook run', substr($out, -21), $out);
   }
 
-  #[Test]
+  #[Test, Ignore('https://github.com/xp-framework/core/pull/251')]
   public function shutdownHookRunOnUncaughtException() {
     $out= $this->runInNewRuntime(Runtime::getInstance()->startupOptions(), '
       Runtime::getInstance()->addShutdownHook(newinstance("lang.Runnable", [], "{
