@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\ElementNotFoundException;
+use unittest\actions\VerifyThat;
 use unittest\{Expect, Test, TestCase, Values};
 use util\Properties;
 
@@ -25,7 +26,7 @@ class PropertyExpansionTest extends TestCase {
     $this->assertEquals('test', $prop->readString('section', 'test'));
   }
 
-  #[Test]
+  #[Test, Action(eval: 'new VerifyThat(fn() => !extension_loaded("xdebug"))')]
   public function callable_lookup() {
     $prop= $this->newFixture('strtolower');
     $this->assertEquals('test', $prop->readString('section', 'test'));
