@@ -15,12 +15,12 @@ case $1 in
 
   run-tests)
     echo test.xar > test.pth
-    for class in `grep class src/test/config/unittest/core.ini | cut -d '"' -f 2` ; do
+    for class in `grep ^class src/test/config/unittest/core.ini | cut -d '"' -f 2` ; do
       printf "\033[33;1mTesting %s\033[0m\n" $class
       sh xp-run xp.unittest.Runner $class || echo "Fail!"
     done
     result=0
-    for file in `ls -1 src/test/config/unittest/*.ini`; do
+    for file in `ls -1 src/test/config/unittest/*.ini | grep -v core.ini` ; do
       printf "\033[33;1mTesting %s\033[0m\n" $file
       sh xp-run xp.unittest.Runner $file || result=1
       echo
