@@ -382,34 +382,9 @@ function typeof($arg) {
     $signature= [];
     foreach ($r->getParameters() as $param) {
       if ($param->isVariadic()) break;
-      if ($t= $param->getType()) {
-        if ($t instanceof \ReflectionUnionType) {
-          $union= [];
-          foreach ($t->getTypes() as $c) {
-            $union[]= \lang\Type::forName($c->getName());
-          }
-          $signature[]= new \lang\TypeUnion($union);
-        } else {
-          $signature[]= \lang\Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
-        }
-      } else {
-        $signature[]= \lang\Type::$VAR;
-      }
+      $signature[]= \lang\Type::forReflect($param->getType(), \lang\Type::$VAR);
     }
-    if ($t= $r->getReturnType()) {
-      if ($t instanceof \ReflectionUnionType) {
-        $union= [];
-        foreach ($t->getTypes() as $c) {
-          $union[]= \lang\Type::forName($c->getName());
-        }
-        $return= new \lang\TypeUnion($union);
-      } else {
-        $return= \lang\Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
-      }
-    } else {
-      $return= \lang\Type::$VAR;
-    }
-    return new \lang\FunctionType($signature, $return);
+    return new \lang\FunctionType($signature, \lang\Type::forReflect($r->getReturnType(), \lang\Type::$VAR));
   } else if (is_object($arg)) {
     $class= get_class($arg);
     if (0 === strncmp($class, 'class@anonymous', 15)) {
