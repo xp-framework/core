@@ -211,8 +211,8 @@ class Type implements Value {
       return $default;
     } else if ($r instanceof \ReflectionUnionType) {
       $union= [];
-      foreach ($t->getTypes() as $c) {
-        $union[]= self::reflect($c);
+      foreach ($r->getTypes() as $c) {
+        $union[]= self::forReflect($c);
       }
       return new TypeUnion($union);
     } else if ($r instanceof \ReflectionNamedType) {
