@@ -15,7 +15,7 @@ XP Framework Core ChangeLog
   (@thekid)
 * Added new method `lang.Type::resolve()` to correctly resolve types in
   a given context. Adds support for `array<self>` and others for return
-  and parameter types
+  and parameter types, see PR #252
   (@thekid)
 
 ## 10.3.3 / 2020-11-22
