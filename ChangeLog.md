@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.3.3 / 2020-11-22
+
 ### Bugfixes
 
 * Fixed *static* return type being shadowed by `self` type restriction
