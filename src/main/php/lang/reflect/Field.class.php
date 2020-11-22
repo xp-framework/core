@@ -36,50 +36,83 @@ class Field implements Value {
 
   /** Get field's name */
   public function getName(): string { return $this->_reflect->getName(); }
-  
+
+  /**
+   * Resolution resolve handling `self` and `parent` (`static` is only for return
+   * types, see https://wiki.php.net/rfc/static_return_type#allowed_positions).
+   *
+   * @return [:(function(string): lang.Type)]
+   */
+  private function resolve() {
+    return [
+      'self'   => function() { return new XPClass($this->_reflect->getDeclaringClass()); },
+      'parent' => function() { return new XPClass($this->_reflect->getDeclaringClass()->getParentClass()); },
+    ];
+  }
+
   /** Gets field type */
   public function getType(): Type {
-    $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $t= PHP_VERSION_ID >= 70400 ? $this->_reflect->getType() : null;
+    if (null === $t) {
 
-    if (isset($details[DETAIL_RETURNS])) {
-      $type= $details[DETAIL_RETURNS];
-    } else if (isset($details[DETAIL_ANNOTATIONS]['type'])) {
-      $type= $details[DETAIL_ANNOTATIONS]['type'];
-    } else if (PHP_VERSION_ID >= 70400 && ($t= $this->_reflect->getType())) {
-      if ($t instanceof \ReflectionUnionType) {
-        $union= [];
-        foreach ($t->getTypes() as $u) {
-          $union[]= Type::forName($u->getName());
-        }
-        return new TypeUnion($union);
+      // Check for type in api documentation, defaulting to `var`
+      $t= Type::$VAR;
+    } else if ($t instanceof \ReflectionUnionType) {
+      $union= [];
+      foreach ($t->getTypes() as $component) {
+        $union[]= Type::resolve($component->getName(), $this->resolve());
       }
-      return Type::forName($t->getName());
+      return new TypeUnion($union);
     } else {
-      return Type::$VAR;
+      $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
+
+      // Check array for more specific types, e.g. `string[]` in api documentation
+      if ('array' === $name) {
+        $t= Type::$ARRAY;
+      } else {
+        return Type::resolve($name, $this->resolve());
+      }
     }
 
-    return 'self' === $type ? new XPClass($this->_reflect->getDeclaringClass()) : Type::forName($type);
+    $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $f= $details[DETAIL_RETURNS] ?? $details[DETAIL_ANNOTATIONS]['type'] ?? null;
+    return null === $f ? $t : Type::resolve(rtrim(ltrim($f, '&'), '.'), $this->resolve());
   }
 
   /** Gets field type's name */
   public function getTypeName(): string {
-    if ($details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName())) {
-      if (isset($details[DETAIL_RETURNS])) {
-        return $details[DETAIL_RETURNS];
-      } else if (isset($details[DETAIL_ANNOTATIONS]['type'])) {
-        return $details[DETAIL_ANNOTATIONS]['type'];
-      } else if (PHP_VERSION_ID >= 70400 && ($t= $this->_reflect->getType())) {
-        if ($t instanceof \ReflectionUnionType) {
-          $union= '';
-          foreach ($t->getTypes() as $u) {
-            $union.= '|'.$u->getName();
-          }
-          return substr($union, 1);
-        }
-        return $t->getName();
+    static $map= [
+      'mixed'   => 'var',
+      'false'   => 'bool',
+      'boolean' => 'bool',
+      'double'  => 'float',
+      'integer' => 'int',
+    ];
+
+    $t= PHP_VERSION_ID >= 70400 ? $this->_reflect->getType() : null;
+    if (null === $t) {
+
+      // Check for type in api documentation
+      $name= 'var';
+    } else if ($t instanceof \ReflectionUnionType) {
+      $union= '';
+      foreach ($t->getTypes() as $component) {
+        $name= $component->getName();
+        $union.= '|'.($map[$name] ?? strtr($name, '\\', '.'));
+      }
+      return substr($union, 1);
+    } else {
+      $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
+
+      // Check array for more specific types, e.g. `string[]` in api documentation
+      if ('array' !== $name) {
+        return $map[$name] ?? strtr($name, '\\', '.');
       }
     }
-    return 'var';
+
+    $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $f= $details[DETAIL_RETURNS] ?? $details[DETAIL_ANNOTATIONS]['type'] ?? null;
+    return null === $f ? $name : rtrim(ltrim($f, '&'), '.');
   }
 
   /**

@@ -102,6 +102,7 @@ class Parameter {
 
     $t= $this->_reflect->getType();
     if (null === $t) {
+
       // Check for type in api documentation
       $name= 'var';
     } else if ($t instanceof \ReflectionUnionType) {
