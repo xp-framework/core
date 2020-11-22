@@ -48,4 +48,9 @@ class NullableTypeTest extends TestCase {
   public function cannot_cast_objects() {
     Type::forName('?string')->cast(new Name('Test'));
   }
+
+  #[Test, Expect(ClassCastException::class)]
+  public function cannot_cast_arrays() {
+    Type::forName('?string')->cast([1, 2, 3]);
+  }
 }
