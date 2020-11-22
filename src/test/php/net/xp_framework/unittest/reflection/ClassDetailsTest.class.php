@@ -152,6 +152,12 @@ class ClassDetailsTest extends \unittest\TestCase {
   }
 
   #[Test]
+  public function braced_function_type() {
+    $details= $this->parseComment('/** @param  (function(): int) param1 */');
+    $this->assertEquals('(function(): int)', $details[DETAIL_ARGUMENTS][0]);
+  }
+
+  #[Test]
   public function array_of_functions() {
     $details= $this->parseComment('/** @param  (function(): int)[] param1 */');
     $this->assertEquals('(function(): int)[]', $details[DETAIL_ARGUMENTS][0]);

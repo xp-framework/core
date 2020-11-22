@@ -3,6 +3,11 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed braced function return types, e.g. `@return (function(): int)`
+  (@thekid)
+
 ## 10.3.2 / 2020-11-14
 
 ### Bugfixes

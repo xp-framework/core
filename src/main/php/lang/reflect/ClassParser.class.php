@@ -443,7 +443,7 @@ class ClassParser {
       $type= substr($text, 0, strcspn($text, ' '));
     }
 
-    if ('\\' === $type[0]) {
+    if ('\\' === ($type[0] ?? null)) {
       return strtr(substr($type, 1), '\\', '.');
     } else if (isset($imports[$type])) {
       return $imports[$type];
