@@ -226,7 +226,9 @@ class Type implements Value {
       return self::$CALLABLE;
     } else if ('iterable' === $type) {
       return self::$ITERABLE;
-    } else if ('?' === $type[0] || '@' === $type[0]) {
+    } else if ('?' === $type[0]) {
+      return new NullableType(self::forName(substr($type, 1)));
+    } else if ('@' === $type[0]) {
       return self::forName(substr($type, 1));
     }
 
