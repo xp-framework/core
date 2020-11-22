@@ -5,6 +5,11 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed *static* return type being shadowed by `self` type restriction
+  (@thekid)
+* Fixed specific function types being shadowed when a `callable` type
+  restriction is present
+  (@thekid)
 * Fixed braced function return types, e.g. `@return (function(): int)`
   (@thekid)
 

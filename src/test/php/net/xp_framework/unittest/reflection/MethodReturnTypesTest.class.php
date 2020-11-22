@@ -1,6 +1,6 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\{ArrayType, MapType, Primitive, Type, TypeUnion, Value, XPClass};
+use lang\{ArrayType, MapType, FunctionType, Primitive, Type, TypeUnion, Value, XPClass};
 use net\xp_framework\unittest\Name;
 use unittest\actions\RuntimeVersion;
 use unittest\{Action, Test, Values};
@@ -40,6 +40,7 @@ class MethodReturnTypesTest extends MethodsTest {
   private function restrictions() {
     yield ['string', Primitive::$STRING];
     yield ['array', Type::$ARRAY];
+    yield ['callable', Type::$CALLABLE];
     yield ['\lang\Value', new XPClass(Value::class)];
     yield ['Value', new XPClass(Value::class)];
   }
@@ -106,6 +107,14 @@ class MethodReturnTypesTest extends MethodsTest {
   }
 
   #[Test]
+  public function specific_callable_type_determined_via_apidoc_if_present() {
+    $this->assertReturnType(
+      new FunctionType([], Primitive::$STRING),
+      $this->method('/** @return (function(): string) */ public function fixture(): callable { }')
+    );
+  }
+
+  #[Test]
   public function special_self_return_type_via_apidoc() {
     $fixture= $this->type('{ /** @return self */ public function fixture() { } }');
     $this->assertEquals($fixture, $fixture->getMethod('fixture')->getReturnType());
@@ -148,5 +157,25 @@ class MethodReturnTypesTest extends MethodsTest {
   #[Test, Values([['/** @return static */', 'static'], ['/** @return self */', 'self'], ['/** @return parent */', 'parent'],])]
   public function special_typeName_determined_via_apidoc($apidoc, $type) {
     $this->assertEquals($type, $this->method($apidoc.' public function fixture() { }')->getReturnTypeName());
+  }
+
+  #[Test]
+  public function apidoc_supersedes_self_type_restriction() {
+    $base= $this->type('{ /** @return static */ public function fixture(): self { } }');
+    $fixture= $this->type('{ /* inherited with apidoc */ }', ['extends' => [$base]]);
+    $method= $fixture->getMethod('fixture');
+
+    $this->assertEquals($fixture, $method->getReturnType(), 'type');
+    $this->assertEquals('static', $method->getReturnTypeName(), 'name');
+  }
+
+  #[Test]
+  public function self_type_restriction_inheritance() {
+    $base= $this->type('{ public function fixture(): self { } }');
+    $fixture= $this->type('{ /* inherited without apidoc */ }', ['extends' => [$base]]);
+    $method= $fixture->getMethod('fixture');
+
+    $this->assertEquals($base, $method->getReturnType(), 'type');
+    $this->assertEquals('self', $method->getReturnTypeName(), 'name');
   }
 }

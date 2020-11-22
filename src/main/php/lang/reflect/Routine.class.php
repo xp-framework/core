@@ -126,15 +126,31 @@ class Routine implements Value {
    * @throws  lang.ClassFormatException if the restriction cannot be resolved
    */
   public function getReturnType(): Type {
-    $t= $this->getReturnTypeRestriction();
-
+    $t= $this->_reflect->getReturnType();
     if (null === $t) {
-      // Check for type in api documentation
+
+      // Check for type in api documentation, defaulting to `var`
       $t= Type::$VAR;
-    } else if (Type::$ARRAY === $t) {
-      // Check for more specific type, e.g. `string[]` in api documentation
+    } else if ($t instanceof \ReflectionUnionType) {
+      $union= [];
+      foreach ($t->getTypes() as $component) {
+        $union[]= $this->resolve($component->getName());
+      }
+      return new TypeUnion($union);
     } else {
-      return $t;
+      $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
+
+      // Check array, self and callable for more specific types, e.g. `string[]`,
+      // `static` or `function(): string` in api documentation
+      if ('array' === $name) {
+        $t= Type::$ARRAY;
+      } else if ('callable' === $name) {
+        $t= Type::$CALLABLE;
+      } else if ('self' === $name) {
+        $t= new XPClass($this->_reflect->getDeclaringClass());
+      } else {
+        return $this->resolve($name);
+      }
     }
 
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
@@ -163,10 +179,14 @@ class Routine implements Value {
         $union.= '|'.($map[$name] ?? strtr($name, '\\', '.'));
       }
       return substr($union, 1);
-    } else if ('array' === ($name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString())) {
-      // Check for more specific type, e.g. `string[]` in api documentation
     } else {
-      return $map[$name] ?? strtr($name, '\\', '.');
+      $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
+
+      // Check array, self and callable for more specific types, e.g. `string[]`,
+      // `static` or `function(): string` in api documentation
+      if ('array' !== $name && 'callable' !== $name && 'self' !== $name) {
+        return $map[$name] ?? strtr($name, '\\', '.');
+      }
     }
 
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
