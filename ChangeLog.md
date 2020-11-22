@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.4.0 / 2020-11-22
+
 ### Features
 
 * Added `lang.reflect.Field::getTypeRestriction()` which is consistent
