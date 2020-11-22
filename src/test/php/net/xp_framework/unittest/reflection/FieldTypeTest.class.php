@@ -80,4 +80,14 @@ class FieldTypeTest extends FieldsTest {
     $this->assertEquals('string[]', $fixture->getField('fixture')->getTypeName());
     $this->assertEquals(new ArrayType(Primitive::$STRING), $fixture->getField('fixture')->getType());
   }
+
+  #[Test]
+  public function untyped_restriction() {
+    $this->assertNull($this->field('public $fixture;')->getTypeRestriction());
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.4")')]
+  public function typed_restriction() {
+    $this->assertEquals(Primitive::$STRING, $this->field('public string $fixture;')->getTypeRestriction());
+  }
 }

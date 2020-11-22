@@ -116,6 +116,37 @@ class Field implements Value {
   }
 
   /**
+   * Get parameter's type restriction.
+   *
+   * @return  lang.Type or NULL if there is no restriction
+   * @throws  lang.ClassNotFoundException if the restriction cannot be resolved
+   */
+  public function getTypeRestriction() {
+    $t= PHP_VERSION_ID >= 70400 ? $this->_reflect->getType() : null;
+    if (null === $t) return null;
+
+    try {
+      if ($t instanceof \ReflectionUnionType) {
+        $union= [];
+        foreach ($t->getTypes() as $component) {
+          $union[]= Type::resolve($component->getName(), $this->resolve());
+        }
+        return new TypeUnion($union);
+      } else {
+        return Type::resolve(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString(), $this->resolve());
+      }
+    } catch (ClassLoadingException $e) {
+      throw new ClassNotFoundException(sprintf(
+        'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',
+        strtr($this->_details[0], '\\', '.'),
+        $this->_details[1],
+        $this->_reflect->getName(),
+        $e->getMessage()
+      ));
+    }
+  }
+
+  /**
    * Check whether an annotation exists
    *
    * @param   string name
