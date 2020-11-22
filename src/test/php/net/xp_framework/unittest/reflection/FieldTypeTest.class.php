@@ -1,7 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{ArrayType, MapType, Primitive, Type, Value, XPClass};
-use unittest\{Test, Values};
+use unittest\actions\RuntimeVersion;
+use unittest\{Action, Test, Values};
 
 class FieldTypeTest extends FieldsTest {
 
@@ -54,8 +55,39 @@ class FieldTypeTest extends FieldsTest {
   }
 
   #[Test]
-  public function self_type() {
+  public function self_type_via_apidoc() {
     $fixture= $this->type('{ /** @type self */ public $fixture; }');
+    $this->assertEquals('self', $fixture->getField('fixture')->getTypeName());
     $this->assertEquals($fixture, $fixture->getField('fixture')->getType());
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.4")')]
+  public function self_type_via_syntax() {
+    $fixture= $this->type('{ public self $fixture; }');
+    $this->assertEquals('self', $fixture->getField('fixture')->getTypeName());
+    $this->assertEquals($fixture, $fixture->getField('fixture')->getType());
+  }
+
+  #[Test]
+  public function array_of_self_type() {
+    $fixture= $this->type('{ /** @type array<self> */ public $fixture; }');
+    $this->assertEquals(new ArrayType($fixture), $fixture->getField('fixture')->getType());
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.4")')]
+  public function specific_array_type_determined_via_apidoc() {
+    $fixture= $this->type('{ /** @type string[] */ public array $fixture; }');
+    $this->assertEquals('string[]', $fixture->getField('fixture')->getTypeName());
+    $this->assertEquals(new ArrayType(Primitive::$STRING), $fixture->getField('fixture')->getType());
+  }
+
+  #[Test]
+  public function untyped_restriction() {
+    $this->assertNull($this->field('public $fixture;')->getTypeRestriction());
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.4")')]
+  public function typed_restriction() {
+    $this->assertEquals(Primitive::$STRING, $this->field('public string $fixture;')->getTypeRestriction());
   }
 }

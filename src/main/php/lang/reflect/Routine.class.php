@@ -102,21 +102,16 @@ class Routine implements Value {
   }
 
   /**
-   * Resolve name, handling `static`, `self` and `parent`.
+   * Resolution resolve handling `static`, `self` and `parent`.
    *
-   * @param  string $name
-   * @return lang.Type
+   * @return [:(function(string): lang.Type)]
    */
-  private function resolve($name) {
-    if ('static' === $name) {
-      return new XPClass($this->_class);
-    } if ('self' === $name) {
-      return new XPClass($this->_reflect->getDeclaringClass());
-    } else if ('parent' === $name) {
-      return new XPClass($this->_reflect->getDeclaringClass()->getParentClass());
-    } else {
-      return Type::forName($name);
-    }
+  private function resolve() {
+    return [
+      'static' => function() { return new XPClass($this->_class); },
+      'self'   => function() { return new XPClass($this->_reflect->getDeclaringClass()); },
+      'parent' => function() { return new XPClass($this->_reflect->getDeclaringClass()->getParentClass()); },
+    ];
   }
 
   /**
@@ -134,7 +129,7 @@ class Routine implements Value {
     } else if ($t instanceof \ReflectionUnionType) {
       $union= [];
       foreach ($t->getTypes() as $component) {
-        $union[]= $this->resolve($component->getName());
+        $union[]= Type::resolve($component->getName(), $this->resolve());
       }
       return new TypeUnion($union);
     } else {
@@ -149,13 +144,13 @@ class Routine implements Value {
       } else if ('self' === $name) {
         $t= new XPClass($this->_reflect->getDeclaringClass());
       } else {
-        return $this->resolve($name);
+        return Type::resolve($name, $this->resolve());
       }
     }
 
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     $r= $details[DETAIL_RETURNS] ?? null;
-    return null === $r ? $t : $this->resolve(rtrim(ltrim($r, '&'), '.'));
+    return null === $r ? $t : Type::resolve(rtrim(ltrim($r, '&'), '.'), $this->resolve());
   }
 
   /** Retrieve return type name */
@@ -208,11 +203,11 @@ class Routine implements Value {
       if ($t instanceof \ReflectionUnionType) {
         $union= [];
         foreach ($t->getTypes() as $component) {
-          $union[]= $this->resolve($component->getName());
+          $union[]= Type::forName($component->getName(), $this->resolve());
         }
         return new TypeUnion($union);
       } else {
-        return $this->resolve(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+        return Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString(), $this->resolve());
       }
     } catch (ClassLoadingException $e) {
       throw new ClassFormatException(sprintf(
