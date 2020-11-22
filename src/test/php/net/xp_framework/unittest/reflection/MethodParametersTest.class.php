@@ -2,7 +2,7 @@
 
 use lang\{
   ArrayType,
-  ClassFormatException,
+  ClassNotFoundException,
   ElementNotFoundException,
   FunctionType,
   IllegalStateException,
@@ -74,6 +74,14 @@ class MethodParametersTest extends MethodsTest {
     $this->assertParamType(
       $type,
       $this->method('/** @param '.$declaration.' */ public function fixture(array $param) { }')->getParameter(0)
+    );
+  }
+
+  #[Test]
+  public function specific_callable_type_determined_via_apidoc_if_present() {
+    $this->assertParamType(
+      new FunctionType([], Primitive::$STRING),
+      $this->method('/** @param (function(): string) */ public function fixture(callable $param) { }')->getParameter(0)
     );
   }
 
@@ -163,7 +171,7 @@ class MethodParametersTest extends MethodsTest {
     $this->assertEquals('parent', $fixture->getMethod('fixture')->getParameter(0)->getTypeName());
   }
 
-  #[Test, Expect(ClassFormatException::class)]
+  #[Test, Expect(ClassNotFoundException::class)]
   public function nonexistant_type_class_parameter() {
     $this->method('public function fixture(UnknownTypeRestriction $param) { }')->getParameter(0)->getType();
   }
@@ -205,7 +213,7 @@ class MethodParametersTest extends MethodsTest {
     );
   }
 
-  #[Test, Expect(ClassFormatException::class)]
+  #[Test, Expect(ClassNotFoundException::class)]
   public function nonexistant_restriction_class_parameter() {
     $this->method('public function fixture(UnknownTypeRestriction $param) { }')->getParameter(0)->getTypeRestriction();
   }
