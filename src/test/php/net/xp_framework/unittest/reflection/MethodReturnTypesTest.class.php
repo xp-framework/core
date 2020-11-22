@@ -154,6 +154,12 @@ class MethodReturnTypesTest extends MethodsTest {
     $this->assertEquals($fixture, $fixture->getMethod('copy')->getReturnType());
   }
 
+  #[Test, Action(eval: 'new RuntimeVersion(">=8.0")')]
+  public function special_statuc_return_type_via_syntax() {
+    $fixture= $this->type('{ public function fixture(): static { } }');
+    $this->assertEquals($fixture, $fixture->getMethod('fixture')->getReturnType());
+  }
+
   #[Test, Values([['/** @return static */', 'static'], ['/** @return self */', 'self'], ['/** @return parent */', 'parent'],])]
   public function special_typeName_determined_via_apidoc($apidoc, $type) {
     $this->assertEquals($type, $this->method($apidoc.' public function fixture() { }')->getReturnTypeName());
