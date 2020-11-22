@@ -179,6 +179,29 @@ class Type implements Value {
   }
 
   /**
+   * Gets a type for a given reflection instance
+   *
+   * @param  php.ReflectionType $r
+   * @param  var $default
+   * @return self
+   */
+  public static function forReflect($r, $default= null) {
+    if (null === $r) {
+      return $default;
+    } else if ($r instanceof \ReflectionUnionType) {
+      $union= [];
+      foreach ($t->getTypes() as $c) {
+        $union[]= self::reflect($c);
+      }
+      return new TypeUnion($union);
+    } else if ($r instanceof \ReflectionNamedType) {
+      return $r->allowsNull() ? new NullableType($r->getName()) : self::forName($r->getName());
+    } else {
+      return self::forName($r->__toString());
+    }
+  }
+
+  /**
    * Gets a type for a given name
    *
    * Checks for:
