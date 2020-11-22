@@ -1,6 +1,6 @@
 <?php namespace lang\reflect;
 
-use lang\{ElementNotFoundException, ClassLoadingException, ClassFormatException, XPClass, Type, TypeUnion};
+use lang\{ElementNotFoundException, ClassLoadingException, ClassNotFoundException, XPClass, Type, TypeUnion};
 use util\Objects;
 
 /**
@@ -37,20 +37,16 @@ class Parameter {
   }
 
   /**
-   * Resolve name, handling `self` and `parent` (`static` is only for return
+   * Resolution resolve handling `self` and `parent` (`static` is only for return
    * types, see https://wiki.php.net/rfc/static_return_type#allowed_positions).
    *
-   * @param  string $name
-   * @return lang.Type
+   * @return [:(function(string): lang.Type)]
    */
-  private function resolve($name) {
-    if ('self' === $name) {
-      return new XPClass($this->_reflect->getDeclaringClass());
-    } else if ('parent' === $name) {
-      return new XPClass($this->_reflect->getDeclaringClass()->getParentClass());
-    } else {
-      return Type::forName($name);
-    }
+  private function resolve() {
+    return [
+      'self'   => function() { return new XPClass($this->_reflect->getDeclaringClass()); },
+      'parent' => function() { return new XPClass($this->_reflect->getDeclaringClass()->getParentClass()); },
+    ];
   }
 
   /**
@@ -60,20 +56,34 @@ class Parameter {
    * @throws  lang.ClassFormatException if the restriction cannot be resolved
    */
   public function getType() {
-    $t= $this->getTypeRestriction();
-
+    $t= $this->_reflect->getType();
     if (null === $t) {
-      // Check for type in api documentation
+
+      // Check for type in api documentation, defaulting to `var`
       $t= Type::$VAR;
-    } else if (Type::$ARRAY === $t) {
-      // Check for more specific type, e.g. `string[]` in api documentation
+    } else if ($t instanceof \ReflectionUnionType) {
+      $union= [];
+      foreach ($t->getTypes() as $component) {
+        $union[]= Type::resolve($component->getName(), $this->resolve());
+      }
+      return new TypeUnion($union);
     } else {
-      return $t;
+      $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
+
+      // Check array and callable for more specific types, e.g. `string[]` or
+      // `function(): string` in api documentation
+      if ('array' === $name) {
+        $t= Type::$ARRAY;
+      } else if ('callable' === $name) {
+        $t= Type::$CALLABLE;
+      } else {
+        return Type::resolve($name, $this->resolve());
+      }
     }
 
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
     $r= $details[DETAIL_ARGUMENTS][$this->_details[2]] ?? null;
-    return null === $r ? $t : $this->resolve(rtrim(ltrim($r, '&'), '.'));
+    return null === $r ? $t : Type::resolve(rtrim(ltrim($r, '&'), '.'), $this->resolve());
   }
 
   /**
@@ -92,6 +102,7 @@ class Parameter {
 
     $t= $this->_reflect->getType();
     if (null === $t) {
+
       // Check for type in api documentation
       $name= 'var';
     } else if ($t instanceof \ReflectionUnionType) {
@@ -101,10 +112,14 @@ class Parameter {
         $union.= '|'.($map[$name] ?? strtr($name, '\\', '.'));
       }
       return substr($union, 1);
-    } else if ('array' === ($name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString())) {
-      // Check for more specific type, e.g. `string[]` in api documentation
     } else {
-      return $map[$name] ?? strtr($name, '\\', '.');
+      $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
+
+      // Check array and callable for more specific types, e.g. `string[]` or
+      // `function(): string` in api documentation
+      if ('array' !== $name && 'callable' !== $name) {
+        return $map[$name] ?? strtr($name, '\\', '.');
+      }
     }
 
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
@@ -116,7 +131,7 @@ class Parameter {
    * Get parameter's type restriction.
    *
    * @return  lang.Type or NULL if there is no restriction
-   * @throws  lang.ClassFormatException if the restriction cannot be resolved
+   * @throws  lang.ClassNotFoundException if the restriction cannot be resolved
    */
   public function getTypeRestriction() {
     $t= $this->_reflect->getType();
@@ -126,14 +141,14 @@ class Parameter {
       if ($t instanceof \ReflectionUnionType) {
         $union= [];
         foreach ($t->getTypes() as $component) {
-          $union[]= $this->resolve($component->getName());
+          $union[]= Type::resolve($component->getName(), $this->resolve());
         }
         return new TypeUnion($union);
       } else {
-        return $this->resolve(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+        return Type::resolve(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString(), $this->resolve());
       }
     } catch (ClassLoadingException $e) {
-      throw new ClassFormatException(sprintf(
+      throw new ClassNotFoundException(sprintf(
         'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',
         strtr($this->_details[0], '\\', '.'),
         $this->_details[1],

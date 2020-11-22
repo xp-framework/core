@@ -2,7 +2,7 @@
 
 use lang\{
   ArrayType,
-  ClassFormatException,
+  ClassNotFoundException,
   ElementNotFoundException,
   FunctionType,
   IllegalStateException,
@@ -77,6 +77,14 @@ class MethodParametersTest extends MethodsTest {
     );
   }
 
+  #[Test]
+  public function specific_callable_type_determined_via_apidoc_if_present() {
+    $this->assertParamType(
+      new FunctionType([], Primitive::$STRING),
+      $this->method('/** @param (function(): string) */ public function fixture(callable $param) { }')->getParameter(0)
+    );
+  }
+
   #[Test, Values([['\lang\Value', Value::class], ['\net\xp_framework\unittest\Name', Name::class], ['Value', Value::class]])]
   public function parameter_type_determined_via_syntax($literal, $type) {
     $this->assertParamType(
@@ -126,6 +134,12 @@ class MethodParametersTest extends MethodsTest {
   }
 
   #[Test]
+  public function array_of_self_parameter_type_via_apidoc() {
+    $fixture= $this->type('{ /** @param array<self> */ public function fixture($list) { } }');
+    $this->assertEquals(new ArrayType($fixture), $fixture->getMethod('fixture')->getParameter(0)->getType());
+  }
+
+  #[Test]
   public function parent_parameter_type() {
     $fixture= $this->type('{ public function fixture(parent $param) { } }', [
       'extends' => [Name::class]
@@ -157,7 +171,7 @@ class MethodParametersTest extends MethodsTest {
     $this->assertEquals('parent', $fixture->getMethod('fixture')->getParameter(0)->getTypeName());
   }
 
-  #[Test, Expect(ClassFormatException::class)]
+  #[Test, Expect(ClassNotFoundException::class)]
   public function nonexistant_type_class_parameter() {
     $this->method('public function fixture(UnknownTypeRestriction $param) { }')->getParameter(0)->getType();
   }
@@ -199,7 +213,7 @@ class MethodParametersTest extends MethodsTest {
     );
   }
 
-  #[Test, Expect(ClassFormatException::class)]
+  #[Test, Expect(ClassNotFoundException::class)]
   public function nonexistant_restriction_class_parameter() {
     $this->method('public function fixture(UnknownTypeRestriction $param) { }')->getParameter(0)->getTypeRestriction();
   }
