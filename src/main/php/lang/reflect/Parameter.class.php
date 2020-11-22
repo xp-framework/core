@@ -37,20 +37,17 @@ class Parameter {
   }
 
   /**
-   * Resolve name, handling `self` and `parent` (`static` is only for return
+   * Resolution resolve handling `self` and `parent` (`static` is only for return
    * types, see https://wiki.php.net/rfc/static_return_type#allowed_positions).
    *
-   * @param  string $name
-   * @return lang.Type
+   * @return [:(function(string): lang.Type)]
    */
-  private function resolve($name) {
-    if ('self' === $name) {
-      return new XPClass($this->_reflect->getDeclaringClass());
-    } else if ('parent' === $name) {
-      return new XPClass($this->_reflect->getDeclaringClass()->getParentClass());
-    } else {
-      return Type::forName($name);
-    }
+  private function resolve() {
+    return [
+      'static' => function() { return new XPClass($this->_class); },
+      'self'   => function() { return new XPClass($this->_reflect->getDeclaringClass()); },
+      'parent' => function() { return new XPClass($this->_reflect->getDeclaringClass()->getParentClass()); },
+    ];
   }
 
   /**
@@ -73,7 +70,7 @@ class Parameter {
 
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
     $r= $details[DETAIL_ARGUMENTS][$this->_details[2]] ?? null;
-    return null === $r ? $t : $this->resolve(rtrim(ltrim($r, '&'), '.'));
+    return null === $r ? $t : Type::resolve(rtrim(ltrim($r, '&'), '.'), $this->resolve());
   }
 
   /**
@@ -126,11 +123,11 @@ class Parameter {
       if ($t instanceof \ReflectionUnionType) {
         $union= [];
         foreach ($t->getTypes() as $component) {
-          $union[]= $this->resolve($component->getName());
+          $union[]= Type::resolve($component->getName(), $this->resolve());
         }
         return new TypeUnion($union);
       } else {
-        return $this->resolve(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+        return Type::resolve(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString(), $this->resolve());
       }
     } catch (ClassLoadingException $e) {
       throw new ClassFormatException(sprintf(

@@ -155,7 +155,7 @@ class MethodReturnTypesTest extends MethodsTest {
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0")')]
-  public function special_statuc_return_type_via_syntax() {
+  public function special_static_return_type_via_syntax() {
     $fixture= $this->type('{ public function fixture(): static { } }');
     $this->assertEquals($fixture, $fixture->getMethod('fixture')->getReturnType());
   }
@@ -183,5 +183,11 @@ class MethodReturnTypesTest extends MethodsTest {
 
     $this->assertEquals($base, $method->getReturnType(), 'type');
     $this->assertEquals('self', $method->getReturnTypeName(), 'name');
+  }
+
+  #[Test]
+  public function array_of_special_self_type() {
+    $fixture= $this->type('{ /** @return array<self> */ public function fixture() { } }');
+    $this->assertEquals(new ArrayType($fixture), $fixture->getMethod('fixture')->getReturnType());
   }
 }

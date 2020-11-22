@@ -126,6 +126,12 @@ class MethodParametersTest extends MethodsTest {
   }
 
   #[Test]
+  public function array_of_self_parameter_type_via_apidoc() {
+    $fixture= $this->type('{ /** @param array<self> */ public function fixture($list) { } }');
+    $this->assertEquals(new ArrayType($fixture), $fixture->getMethod('fixture')->getParameter(0)->getType());
+  }
+
+  #[Test]
   public function parent_parameter_type() {
     $fixture= $this->type('{ public function fixture(parent $param) { } }', [
       'extends' => [Name::class]

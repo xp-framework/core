@@ -9,6 +9,7 @@
  */
 class Type implements Value {
   public static $VAR, $VOID, $ARRAY, $OBJECT, $CALLABLE, $ITERABLE;
+  private static $named= [];
   public $name;
   public $default;
 
@@ -81,6 +82,25 @@ class Type implements Value {
         return $type instanceof self;
       }
     } return new NativeIterableType("iterable", null);');
+
+    self::$named= [
+      'string'    => Primitive::$STRING,
+      'int'       => Primitive::$INT,
+      'integer'   => Primitive::$INT,
+      'double'    => Primitive::$FLOAT,
+      'float'     => Primitive::$FLOAT,
+      'bool'      => Primitive::$BOOL,
+      'boolean'   => Primitive::$BOOL,
+      'false'     => Primitive::$BOOL,
+      'var'       => self::$VAR,
+      'resource'  => self::$VAR,
+      'mixed'     => self::$VAR,
+      'void'      => self::$VOID,
+      'array'     => self::$ARRAY,
+      'object'    => self::$OBJECT,
+      'callable'  => self::$CALLABLE,
+      'iterable'  => self::$ITERABLE
+    ];
   }
 
   /**
@@ -117,12 +137,13 @@ class Type implements Value {
    * Creates a type list from a given string
    *
    * @param  string $names
+   * @param  [:(function(string): self)] $context
    * @return lang.Type[] list
    */
-  public static function forNames($names) {
+  public static function forNames($names, $context= []) {
     $r= [];
     foreach (self::split($names, ',') as $name) {
-      $r[]= self::forName($name);
+      $r[]= self::resolve($name, $context);
     }
     return $r;
   }
@@ -191,44 +212,35 @@ class Type implements Value {
    * - Anything else will be passed to XPClass::forName()
    *
    * @param  string $type
-   * @return lang.Type
+   * @return self
    * @throws lang.IllegalStateException if type is empty
    */
   public static function forName($type) {
-    static $primitives= [
-      'string'    => 'string',
-      'int'       => 'int',
-      'integer'   => 'int',
-      'double'    => 'float',
-      'float'     => 'float',
-      'bool'      => 'bool',
-      'boolean'   => 'bool',
-      'false'     => 'bool',
-    ];
+    return self::resolve($type, []);
+  }
 
-    $l= strlen($type);
-    if (0 === $l) {
+  /**
+   * Resolves type name
+   *
+   * @param  string $type
+   * @param  [:(function(string): self)] $context
+   * @return self
+   * @throws lang.IllegalStateException if type is empty
+   */
+  public static function resolve($type, $context= []) {
+    if (0 === ($l= strlen($type))) {
       throw new IllegalStateException('Empty type');
     }
-    
-    // Map well-known primitives, var, void, union types as well as nullable and soft types
-    if (isset($primitives[$type])) {
-      return Primitive::forName($primitives[$type]);
-    } else if ('var' === $type || 'resource' === $type || 'mixed' === $type) {
-      return self::$VAR;
-    } else if ('void' === $type) {
-      return self::$VOID;
-    } else if ('array' === $type) {
-      return self::$ARRAY;
-    } else if ('object' === $type) {
-      return self::$OBJECT;
-    } else if ('callable' === $type) {
-      return self::$CALLABLE;
-    } else if ('iterable' === $type) {
-      return self::$ITERABLE;
-    } else if ('?' === $type[0] || '@' === $type[0]) {
-      return self::forName(substr($type, 1));
+
+    // Map well-known named types - see static constructor for list
+    if ('?' === $type[0] || '@' === $type[0]) {
+      return self::resolve(substr($type, 1), $context);
+    } else if (isset(self::$named[$type])) {
+      return self::$named[$type];
     }
+
+    // Check contextual resolver function
+    if (isset($context[$type])) return $context[$type]();
 
     // * function(T): R is a function
     // * [:T] is a map 
@@ -240,22 +252,22 @@ class Type implements Value {
     if ($p >= $l) {
       return XPClass::forName($type);
     } else if ('(' === $type[0]) {
-      $t= self::forName(self::matching($type, '()', 0));
+      $t= self::resolve(self::matching($type, '()', 0), $context);
     } else if (0 === substr_compare($type, '[:', 0, 2)) {
-      $t= new MapType(self::forName(self::matching($type, '[]', 1)));
-    } else if (0 === substr_compare($type, 'function(', 0, 2)) {
+      $t= new MapType(self::resolve(self::matching($type, '[]', 1), $context));
+    } else if (0 === substr_compare($type, 'function(', 0, 9)) {
       $signature= self::matching($type, '()', 8);
       if ('?' === $signature) {
         $args= null;
       } else if ('' === $signature) {
         $args= [];
       } else {
-        $args= self::forNames($signature);
+        $args= self::forNames($signature, $context);
       }
       if (false === ($p= strpos($type, ':'))) {
         $return= null;
       } else {
-        $return= self::forName(trim(substr($type, $p + 1)));
+        $return= self::resolve(trim(substr($type, $p + 1)), $context);
         $type= '';
       }
       $t= new FunctionType($args, $return);
@@ -268,7 +280,7 @@ class Type implements Value {
           $components[]= Wildcard::$ANY;
           $wildcard= true;
         } else {
-          $t= self::forName($arg);
+          $t= self::resolve($arg, $context);
           $wildcard= $t instanceof WildcardType;
           $components[]= $t;
         }
@@ -281,7 +293,7 @@ class Type implements Value {
         $t= XPClass::forName($base)->newGenericType($components);
       }
     } else {
-      $t= self::forName(trim(substr($type, 0, $p)));
+      $t= self::resolve(trim(substr($type, 0, $p)), $context);
       $type= substr($type, $p);
     }
 
@@ -293,7 +305,7 @@ class Type implements Value {
       } else if ('|' === $type[0]) {
         $components= [$t];
         foreach (self::split(substr($type, 1), '|') as $arg) {
-          $components[]= self::forName($arg);
+          $components[]= self::resolve($arg, $context);
         }
         return new TypeUnion($components);
       } else if (0 === substr_compare($type, '[]', 0, 2)) {
