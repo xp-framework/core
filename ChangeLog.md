@@ -5,6 +5,13 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added `lang.reflect.Field::getTypeRestriction()` which is consistent
+  with the API exposed by method parameter and return types
+  (@thekid)
+* Made field, method parameter and return types consistent in that they
+  check for native type syntax before checking meta information except
+  for when that may yield a more specific type.
+  (@thekid)
 * Added new method `lang.Type::resolve()` to correctly resolve types in
   a given context. Adds support for `array<self>` and others for return
   and parameter types.
