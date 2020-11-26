@@ -3,6 +3,26 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.5.0 / 2020-11-26
+
+### Features
+
+* Added support for PHP 8.0, see issue #211:
+  - Support PHP 8 attributes in all PHP 7 versions *if* written without
+    line breaks, adding special `eval` key to support non-static scalar
+    expressions.
+  - Add support for union types for return and parameter types
+  - Add forward- and backward compatible handling for various type-
+    checking related changes
+  - Verified support with PHP 8.0.0 on Windows and Linux
+  (@thekid)
+
+### Bugfixes
+
+* Fixed `util.Random` class to use `openssl_random_pseudo_bytes()`
+  instead `uniqid()` for creating an IV.
+  (@thekid)
+
 ## 10.4.0 / 2020-11-22
 
 ### Features
