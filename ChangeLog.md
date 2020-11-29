@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.5.1 / 2020-11-29
+
 ### Bugfixes
 
 * Fixed issue #254: Warning raised inside `newinstance()` in PHP 7.4+ when
