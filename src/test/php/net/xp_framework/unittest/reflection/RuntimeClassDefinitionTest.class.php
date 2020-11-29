@@ -1,7 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{ClassLoader, ClassNotFoundException, Runnable, Throwable, XPClass};
-use unittest\{Expect, Test, Values};
+use unittest\actions\RuntimeVersion;
+use unittest\{Action, Expect, Test, Values};
 
 /**
  * TestCase for lang.ClassLoader::defineClass()
@@ -128,5 +129,26 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
     $class= $this->define([], ['fixture' => function($a, $b) { return [$this, $a, $b]; }]);
     $instance= $class->newInstance();
     $this->assertEquals([$instance, 1, 2], $class->getMethod('fixture')->invoke($instance, [1, 2]));
+  }
+
+  #[Test]
+  public function closure_with_string_parameter_type() {
+    $class= $this->define([], ['fixture' => function(string $a) { return $a; }]);
+    $instance= $class->newInstance();
+    $this->assertEquals('1', $class->getMethod('fixture')->invoke($instance, [1]));
+  }
+
+  #[Test]
+  public function closure_with_string_return_type() {
+    $class= $this->define([], ['fixture' => function($a): string { return $a; }]);
+    $instance= $class->newInstance();
+    $this->assertEquals('1', $class->getMethod('fixture')->invoke($instance, [1]));
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.1")')]
+  public function closure_with_void_return_type() {
+    $class= $this->define([], ['fixture' => function($a): void { }]);
+    $instance= $class->newInstance();
+    $this->assertNull($class->getMethod('fixture')->invoke($instance, [1]));
   }
 }

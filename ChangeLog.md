@@ -3,6 +3,11 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed issue #254: Warning raised inside `newinstance()` in PHP 7.4+ when
+  using parameter or return type hints.
+
 ## 10.5.0 / 2020-11-26
 
 ### Features
