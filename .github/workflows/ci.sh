@@ -1,6 +1,6 @@
 #!/bin/sh
 
-XP_RUNNERS_URL=https://dl.bintray.com/xp-runners/generic/xp-run-8.2.1.sh
+XP_RUNNERS_URL=https://dl.bintray.com/xp-runners/generic/xp-run-8.2.2.sh
 
 case $1 in
   install)
