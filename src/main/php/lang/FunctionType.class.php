@@ -78,7 +78,17 @@ class FunctionType extends Type {
    * @return var
    */
   protected function verify($r, $signature, $false, $class= null) {
-    $details= $class ? XPClass::detailsForMethod($class, $r->getName()) : null;
+    if ($class) {
+      $details= XPClass::detailsForMethod($class, $r->getName());
+      $resolve= [
+        'static' => function() use($class) { return new XPClass($class); },
+        'self'   => function() use($class) { return new XPClass($class); },
+        'parent' => function() use($class) { return new XPClass($class->getParentClass()); },
+      ];
+    } else {
+      $details= null;
+      $resolve= [];
+    }
 
     $t= $r->getReturnType();
     if (null === $t) {
@@ -86,11 +96,11 @@ class FunctionType extends Type {
     } else if ($t instanceof \ReflectionUnionType) {
       $union= [];
       foreach ($t->getTypes() as $c) {
-        $union[]= Type::forName($c->getName());
+        $union[]= Type::resolve($c->getName(), $resolve);
       }
       $returns= new TypeUnion($union);
     } else {
-      $returns= Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+      $returns= Type::resolve(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString(), $resolve);
     }
 
     // Verify return type
@@ -122,11 +132,11 @@ class FunctionType extends Type {
         if ($t instanceof \ReflectionUnionType) {
           $union= [];
           foreach ($t->getTypes() as $u) {
-            $union[]= Type::forName($u->getName());
+            $union[]= Type::resolve($u->getName(), $resolve);
           }
           $param= new TypeUnion($union);
         } else {
-          $param= Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+          $param= Type::resolve(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString(), $resolve);
         }
 
         if (!$type->isAssignableFrom($param)) {

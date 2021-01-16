@@ -7,6 +7,9 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Handle `self`, `static` and `parent` return and parameter types inside
+  `lang.FunctionType::isInstance()`.
+  (@thekid)
 * Fixed issue #255: Function return types not taken into account - @thekid
 
 ## 10.5.1 / 2020-11-29
