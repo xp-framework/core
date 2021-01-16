@@ -5,6 +5,7 @@
  *
  * @see    xp://lang.XPClass
  * @see    xp://lang.Primitive
+ * @test   xp://net.xp_framework.unittest.core.TypeResolveTest
  * @test   xp://net.xp_framework.unittest.reflection.TypeTest 
  */
 class Type implements Value {
@@ -250,7 +251,10 @@ class Type implements Value {
     // * Anything else is a qualified or unqualified class name
     $p= strcspn($type, '<|[*(');
     if ($p >= $l) {
-      return XPClass::forName($type);
+      return (isset($context['*']) && strcspn($type, '.\\') === strlen($type))
+        ? $context['*']($type)
+        : XPClass::forName($type)
+      ;
     } else if ('(' === $type[0]) {
       $t= self::resolve(self::matching($type, '()', 0), $context);
     } else if (0 === substr_compare($type, '[:', 0, 2)) {
@@ -286,11 +290,11 @@ class Type implements Value {
         }
       }
       if ($wildcard) {
-        $t= new WildcardType(XPClass::forName($base), $components);
+        $t= new WildcardType(self::resolve($base, $context), $components);
       } else if ('array' === $base) {
         $t= 1 === sizeof($components) ? new ArrayType($components[0]) : new MapType($components[1]);
       } else {
-        $t= XPClass::forName($base)->newGenericType($components);
+        $t= self::resolve($base, $context)->newGenericType($components);
       }
     } else {
       $t= self::resolve(trim(substr($type, 0, $p)), $context);
