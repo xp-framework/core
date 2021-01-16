@@ -458,4 +458,24 @@ class TypeTest extends TestCase {
   public function object_type_union_is_not_assignable_from($type) {
     $this->assertFalse(Type::$OBJECT->isAssignableFrom($type));
   }
+
+  #[Test, Values(eval: '[[function() { }, true], [function(int $arg) { }, false]]')]
+  public function function_parameter_count($fixture, $expected) {
+    $this->assertEquals($expected, Type::forName('function(): var')->isInstance($fixture));
+  }
+
+  #[Test, Values(eval: '[[function() { }, true], [function(int $arg) { }, true]]')]
+  public function function_parameter_placeholder($fixture, $expected) {
+    $this->assertEquals($expected, Type::forName('function(?): var')->isInstance($fixture));
+  }
+
+  #[Test, Values(eval: '[[function(string $arg) { }, true], [function(int $arg) { }, false]]')]
+  public function function_parameter_type($fixture, $expected) {
+    $this->assertEquals($expected, Type::forName('function(string): var')->isInstance($fixture));
+  }
+
+  #[Test, Values(eval: '[[function(): string { }, true], [function(): int { }, false]]')]
+  public function function_return_type($fixture, $expected) {
+    $this->assertEquals($expected, Type::forName('function(): string')->isInstance($fixture));
+  }
 }

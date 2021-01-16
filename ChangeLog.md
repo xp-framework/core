@@ -3,12 +3,19 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.5.2 / 2021-01-16
+
+### Bugfixes
+
+* Fixed issue #255: Function return types not taken into account - @thekid
+
 ## 10.5.1 / 2020-11-29
 
 ### Bugfixes
 
 * Fixed issue #254: Warning raised inside `newinstance()` in PHP 7.4+ when
   using parameter or return type hints.
+  (@thekid)
 
 ## 10.5.0 / 2020-11-26
 

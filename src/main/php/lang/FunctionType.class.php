@@ -79,11 +79,23 @@ class FunctionType extends Type {
    */
   protected function verify($r, $signature, $false, $class= null) {
     $details= $class ? XPClass::detailsForMethod($class, $r->getName()) : null;
-    if (isset($details[DETAIL_RETURNS])) {
-      $returns= Type::forName($details[DETAIL_RETURNS]);
-      if (!$this->returns->equals($returns) && !$this->returns->isAssignableFrom($returns)) {
-        return $false('Return type mismatch, expecting '.$this->returns->getName().', have '.$returns->getName());
+
+    $t= $r->getReturnType();
+    if (null === $t) {
+      $returns= isset($details[DETAIL_RETURNS]) ? Type::forName($details[DETAIL_RETURNS]) : null;
+    } else if ($t instanceof \ReflectionUnionType) {
+      $union= [];
+      foreach ($t->getTypes() as $c) {
+        $union[]= Type::forName($c->getName());
       }
+      $returns= new TypeUnion($union);
+    } else {
+      $returns= Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+    }
+
+    // Verify return type
+    if ($returns && !$this->returns->equals($returns) && !$this->returns->isAssignableFrom($returns)) {
+      return $false('Return type mismatch, expecting '.$this->returns->getName().', have '.$returns->getName());
     }
 
     if (null === $signature) return true;
