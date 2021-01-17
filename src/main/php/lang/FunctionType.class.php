@@ -90,22 +90,11 @@ class FunctionType extends Type {
       $resolve= [];
     }
 
-    $t= $r->getReturnType();
-    if (null === $t) {
-      $returns= isset($details[DETAIL_RETURNS]) ? Type::forName($details[DETAIL_RETURNS]) : null;
-    } else if ($t instanceof \ReflectionUnionType) {
-      $union= [];
-      foreach ($t->getTypes() as $c) {
-        if ('null' !== ($name= $c->getName())) {
-          $union[]= Type::resolve($name, $resolve);
-        }
-      }
-      $returns= new TypeUnion($union);
-    } else {
-      $returns= Type::resolve(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString(), $resolve);
-    }
-
     // Verify return type
+    $returns= Type::forReflect($r->getReturnType(), null, $resolve) ?? (isset($details[DETAIL_RETURNS])
+      ? Type::forName($details[DETAIL_RETURNS])
+      : null
+    );
     if ($returns && !$this->returns->equals($returns) && !$this->returns->isAssignableFrom($returns)) {
       return $false('Return type mismatch, expecting '.$this->returns->getName().', have '.$returns->getName());
     }
@@ -128,20 +117,8 @@ class FunctionType extends Type {
       } else {
         if ($params[$i]->isVariadic()) return true;  // No further checks necessary
 
-        $t= $params[$i]->getType();
-        if (null === $t) continue;
-
-        if ($t instanceof \ReflectionUnionType) {
-          $union= [];
-          foreach ($t->getTypes() as $c) {
-            if ('null' !== ($name= $c->getName())) {
-              $union[]= Type::resolve($name, $resolve);
-            }
-          }
-          $param= new TypeUnion($union);
-        } else {
-          $param= Type::resolve(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString(), $resolve);
-        }
+        $param= Type::forReflect($params[$i]->getType(), null, $resolve);
+        if (null === $param) continue;
 
         if (!$type->isAssignableFrom($param)) {
           return $false('Parameter #'.($i + 1).' not a '.$param->getName().' type: '.$type->getName());
