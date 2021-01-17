@@ -240,9 +240,6 @@ class Type implements Value {
       return self::$named[$type];
     }
 
-    // Check contextual resolver function
-    if (isset($context[$type])) return $context[$type]();
-
     // * function(T): R is a function
     // * [:T] is a map 
     // * T<K, V> is a generic type definition D with K and V components
@@ -250,11 +247,11 @@ class Type implements Value {
     //   card type.
     // * Anything else is a qualified or unqualified class name
     $p= strcspn($type, '<|[*(');
-    if ($p >= $l) {
-      return (isset($context['*']) && strcspn($type, '.\\') === strlen($type))
+    if ($p === $l) {
+      return isset($context[$type]) ? $context[$type]() : ((isset($context['*']) && strcspn($type, '.\\') === $l)
         ? $context['*']($type)
         : XPClass::forName($type)
-      ;
+      );
     } else if ('(' === $type[0]) {
       $t= self::resolve(self::matching($type, '()', 0), $context);
     } else if (0 === substr_compare($type, '[:', 0, 2)) {
