@@ -22,7 +22,7 @@ the following one-liner:
 
 ```sh
 $ cd ~/bin
-$ curl -sSL https://bintray.com/artifact/download/xp-runners/generic/setup-8.1.7.sh | sh
+$ curl -sSL https://bintray.com/artifact/download/xp-runners/generic/setup-8.3.0.sh | sh
 ```
 
 ### Using it
@@ -36,8 +36,8 @@ Finally, start `xp -v` to see it working:
 
 ```sh
 $ xp -v
-XP 10.3.4-dev { PHP/7.4.12 & Zend/3.4.0 } @ Windows NT SURFACE 10.0 build 19042 (Windows 10) AMD64
-Copyright (c) 2001-2020 the XP group
+XP 10.5.4-dev { PHP/8.0.0 & Zend/4.0.0 } @ Windows NT SURFACE 10.0 build 19042 (Windows 10) AMD64
+Copyright (c) 2001-2021 the XP group
 FileSystemCL<./src/main/php>
 FileSystemCL<./src/test/php>
 FileSystemCL<./src/main/resources>

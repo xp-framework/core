@@ -78,12 +78,36 @@ class FunctionType extends Type {
    * @return var
    */
   protected function verify($r, $signature, $false, $class= null) {
-    $details= $class ? XPClass::detailsForMethod($class, $r->getName()) : null;
-    if (isset($details[DETAIL_RETURNS])) {
-      $returns= Type::forName($details[DETAIL_RETURNS]);
-      if (!$this->returns->equals($returns) && !$this->returns->isAssignableFrom($returns)) {
-        return $false('Return type mismatch, expecting '.$this->returns->getName().', have '.$returns->getName());
+    if ($class) {
+      $details= XPClass::detailsForMethod($class, $r->getName());
+      $resolve= [
+        'static' => function() use($class) { return new XPClass($class); },
+        'self'   => function() use($class) { return new XPClass($class); },
+        'parent' => function() use($class) { return new XPClass($class->getParentClass()); },
+      ];
+    } else {
+      $details= null;
+      $resolve= [];
+    }
+
+    $t= $r->getReturnType();
+    if (null === $t) {
+      $returns= isset($details[DETAIL_RETURNS]) ? Type::forName($details[DETAIL_RETURNS]) : null;
+    } else if ($t instanceof \ReflectionUnionType) {
+      $union= [];
+      foreach ($t->getTypes() as $c) {
+        if ('null' !== ($name= $c->getName())) {
+          $union[]= Type::resolve($name, $resolve);
+        }
       }
+      $returns= new TypeUnion($union);
+    } else {
+      $returns= Type::resolve(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString(), $resolve);
+    }
+
+    // Verify return type
+    if ($returns && !$this->returns->equals($returns) && !$this->returns->isAssignableFrom($returns)) {
+      return $false('Return type mismatch, expecting '.$this->returns->getName().', have '.$returns->getName());
     }
 
     if (null === $signature) return true;
@@ -109,12 +133,14 @@ class FunctionType extends Type {
 
         if ($t instanceof \ReflectionUnionType) {
           $union= [];
-          foreach ($t->getTypes() as $u) {
-            $union[]= Type::forName($u->getName());
+          foreach ($t->getTypes() as $c) {
+            if ('null' !== ($name= $c->getName())) {
+              $union[]= Type::resolve($name, $resolve);
+            }
           }
           $param= new TypeUnion($union);
         } else {
-          $param= Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+          $param= Type::resolve(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString(), $resolve);
         }
 
         if (!$type->isAssignableFrom($param)) {

@@ -5,6 +5,57 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged PR #256: Make it possible to pass a default resolver (`*`) to
+  `Type::resolve()`
+  (@thekid)
+
+## 10.5.3 / 2021-01-17
+
+### Bugfixes
+
+* Fixed issue #257: Nullable union types - @thekid
+
+## 10.5.2 / 2021-01-16
+
+### Bugfixes
+
+* Handle `self`, `static` and `parent` return and parameter types inside
+  `lang.FunctionType::isInstance()`.
+  (@thekid)
+* Fixed issue #255: Function return types not taken into account - @thekid
+
+## 10.5.1 / 2020-11-29
+
+### Bugfixes
+
+* Fixed issue #254: Warning raised inside `newinstance()` in PHP 7.4+ when
+  using parameter or return type hints.
+  (@thekid)
+
+## 10.5.0 / 2020-11-26
+
+### Features
+
+* Added support for PHP 8.0, see issue #211:
+  - Support PHP 8 attributes in all PHP 7 versions *if* written without
+    line breaks, adding special `eval` key to support non-static scalar
+    expressions.
+  - Add support for union types for return and parameter types
+  - Add forward- and backward compatible handling for various type-
+    checking related changes
+  - Verified support with PHP 8.0.0 on Windows and Linux
+  (@thekid)
+
+### Bugfixes
+
+* Fixed `util.Random` class to use `openssl_random_pseudo_bytes()`
+  instead `uniqid()` for creating an IV.
+  (@thekid)
+
+## 10.4.0 / 2020-11-22
+
+### Features
+
 * Added `lang.reflect.Field::getTypeRestriction()` which is consistent
   with the API exposed by method parameter and return types. This adds
   support for PHP 7.4 property types.
