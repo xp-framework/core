@@ -92,4 +92,14 @@ class NullableType extends Type {
     $t= $type instanceof Type ? $type : Type::forName($type);
     return $t instanceof self && $t->underlying->isAssignableFrom($this->underlying);
   }
+
+  /** Compares to another value */
+  public function compareTo($value): int {
+    return $value instanceof self ? $this->underlying->compareTo($value->underlying) : 1;
+  }
+
+  /** Checks for equality with another value */
+  public function equals($value): bool {
+    return $value instanceof self && $this->underlying->equals($value->underlying);
+  }
 }

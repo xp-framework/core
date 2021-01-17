@@ -127,13 +127,7 @@ class Routine implements Value {
       // Check for type in api documentation, defaulting to `var`
       $t= Type::$VAR;
     } else if ($t instanceof \ReflectionUnionType) {
-      $union= [];
-      foreach ($t->getTypes() as $component) {
-        if ('null' !== ($name= $component->getName())) {
-          $union[]= Type::resolve($name, $this->resolve());
-        }
-      }
-      return new TypeUnion($union);
+      return Type::forReflect($t, null, $this->resolve());
     } else {
       $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
 

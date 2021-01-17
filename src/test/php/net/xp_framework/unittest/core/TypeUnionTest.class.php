@@ -9,7 +9,8 @@ use lang\{
   Primitive,
   Type,
   TypeUnion,
-  XPClass
+  XPClass,
+  NullableType
 };
 use unittest\actions\RuntimeVersion;
 use unittest\{Expect, Test, TestCase, Values, Action};
@@ -191,7 +192,7 @@ class TypeUnionTest extends TestCase {
   public function php8_native_union_type() {
     $f= eval('return new class() { public function fixture(int|string $arg) { } };');
     $this->assertEquals(
-      (new TypeUnion([Primitive::$INT, Primitive::$STRING])),
+      new TypeUnion([Primitive::$INT, Primitive::$STRING]),
       typeof($f)->getMethod('fixture')->getParameter(0)->getType()
     );
   }
@@ -200,7 +201,7 @@ class TypeUnionTest extends TestCase {
   public function php8_native_nullable_union_type() {
     $f= eval('return new class() { public function fixture(int|string|null $arg) { } };');
     $this->assertEquals(
-      (new TypeUnion([Primitive::$INT, Primitive::$STRING])),
+      new NullableType(new TypeUnion([Primitive::$INT, Primitive::$STRING])),
       typeof($f)->getMethod('fixture')->getParameter(0)->getType()
     );
   }

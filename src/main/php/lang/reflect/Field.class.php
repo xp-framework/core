@@ -58,13 +58,7 @@ class Field implements Value {
       // Check for type in api documentation, defaulting to `var`
       $t= Type::$VAR;
     } else if ($t instanceof \ReflectionUnionType) {
-      $union= [];
-      foreach ($t->getTypes() as $component) {
-        if ('null' !== ($name= $component->getName())) {
-          $union[]= Type::resolve($name, $this->resolve());
-        }
-      }
-      return new TypeUnion($union);
+      return Type::forReflect($t, null, $this->resolve());
     } else {
       $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
 
@@ -119,7 +113,7 @@ class Field implements Value {
   }
 
   /**
-   * Get parameter's type restriction.
+   * Get field's type restriction.
    *
    * @return  lang.Type or NULL if there is no restriction
    * @throws  lang.ClassNotFoundException if the restriction cannot be resolved
