@@ -1,6 +1,6 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\{ArrayType, MapType, FunctionType, Primitive, Type, TypeUnion, Value, NullableType, XPClass};
+use lang\{ArrayType, MapType, FunctionType, Primitive, Type, TypeUnion, Value, Nullable, XPClass};
 use net\xp_framework\unittest\Name;
 use unittest\actions\RuntimeVersion;
 use unittest\{Action, Test, Values};
@@ -93,7 +93,7 @@ class MethodReturnTypesTest extends MethodsTest {
   #[Test, Action(eval: 'new RuntimeVersion(">=7.1")')]
   public function nullable_return_type() {
     $fixture= $this->type('{ public function fixture(): ?string { } }');
-    $this->assertReturnType(new NullableType(Primitive::$STRING), $fixture->getMethod('fixture'));
+    $this->assertReturnType(new Nullable(Primitive::$STRING), $fixture->getMethod('fixture'));
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0")'), Values([['string|int'], ['string|false']])]

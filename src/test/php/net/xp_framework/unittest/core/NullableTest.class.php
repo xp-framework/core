@@ -1,10 +1,10 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\{Type, NullableType, IllegalArgumentException, ClassCastException};
+use lang\{Type, Nullable, IllegalArgumentException, ClassCastException};
 use net\xp_framework\unittest\Name;
 use unittest\{Expect, Test, TestCase, Values};
 
-class NullableTypeTest extends TestCase {
+class NullableTest extends TestCase {
 
   /** @return iterable */
   private function instances() {
@@ -26,12 +26,12 @@ class NullableTypeTest extends TestCase {
 
   #[Test]
   public function type_factory() {
-    $this->assertInstanceOf(NullableType::class, Type::forName('?string'));
+    $this->assertInstanceOf(Nullable::class, Type::forName('?string'));
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
   public function non_nullable_type_passed_to_factory() {
-    NullableType::forName('string');
+    Nullable::forName('string');
   }
 
   #[Test, Values('instances')]

@@ -1,6 +1,6 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\{Type, Primitive, ArrayType, MapType, XPClass, NullableType, ClassNotFoundException};
+use lang\{Type, Primitive, ArrayType, MapType, XPClass, Nullable, ClassNotFoundException};
 use net\xp_framework\unittest\core\generics\Lookup;
 use unittest\{Test, Values, TestCase};
 
@@ -29,7 +29,7 @@ class TypeResolveTest extends TestCase {
 
   #[Test]
   public function resolve_nullable() {
-    $this->assertEquals(new NullableType(Primitive::$STRING), Type::resolve('?string', $this->context));
+    $this->assertEquals(new Nullable(Primitive::$STRING), Type::resolve('?string', $this->context));
   }
 
   #[Test]

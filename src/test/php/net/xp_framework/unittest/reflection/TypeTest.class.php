@@ -2,7 +2,7 @@
 
 use lang\{
   ArrayType,
-  NullableType,
+  Nullable,
   ClassCastException,
   FunctionType,
   IllegalAccessException,
@@ -98,7 +98,7 @@ class TypeTest extends TestCase {
 
   #[Test]
   public function nullableOfString() {
-    $this->assertEquals(NullableType::forName('?string'), Type::forName('?string'));
+    $this->assertEquals(Nullable::forName('?string'), Type::forName('?string'));
   }
 
   #[Test, Values(['net.xp_framework.unittest.Name', '\net\xp_framework\unittest\Name', Name::class])]

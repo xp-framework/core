@@ -242,7 +242,7 @@ class Type implements Value {
     } else {
       $t= self::resolve(PHP_VERSION_ID >= 70100 ? $r->getName() : $r->__toString(), $context);
     }
-    return $r->allowsNull() ? new NullableType($t) : $t;
+    return $r->allowsNull() ? new Nullable($t) : $t;
   }
 
   /**
@@ -260,7 +260,7 @@ class Type implements Value {
     
     // Map well-known named types - see static constructor for list
     if ('?' === $type[0]) {
-      return new NullableType(self::resolve(substr($type, 1), $context));
+      return new Nullable(self::resolve(substr($type, 1), $context));
     } else if (isset(self::$named[$type])) {
       return self::$named[$type];
     }

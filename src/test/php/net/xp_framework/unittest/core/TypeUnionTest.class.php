@@ -10,7 +10,7 @@ use lang\{
   Type,
   TypeUnion,
   XPClass,
-  NullableType
+  Nullable
 };
 use unittest\actions\RuntimeVersion;
 use unittest\{Expect, Test, TestCase, Values, Action};
@@ -219,7 +219,7 @@ class TypeUnionTest extends TestCase {
   public function php8_native_nullable_union_type() {
     $f= eval('return new class() { public function fixture(int|string|null $arg) { } };');
     $this->assertEquals(
-      new NullableType(new TypeUnion([Primitive::$INT, Primitive::$STRING])),
+      new Nullable(new TypeUnion([Primitive::$INT, Primitive::$STRING])),
       typeof($f)->getMethod('fixture')->getParameter(0)->getType()
     );
   }

@@ -11,7 +11,7 @@ use lang\{
   TypeUnion,
   Type,
   Value,
-  NullableType,
+  Nullable,
   XPClass
 };
 use net\xp_framework\unittest\Name;
@@ -106,7 +106,7 @@ class MethodParametersTest extends MethodsTest {
   public function nullable_parameter_type() {
     $fixture= $this->type('{ public function fixture(?string $arg) { } }');
     $this->assertParamType(
-      new NullableType(Primitive::$STRING),
+      new Nullable(Primitive::$STRING),
       $fixture->getMethod('fixture')->getParameter(0)
     );
   }

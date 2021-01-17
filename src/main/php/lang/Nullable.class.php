@@ -4,9 +4,9 @@
  * Represents nullable types
  *
  * @see   xp://lang.Type
- * @test  xp://net.xp_framework.unittest.core.NullableTypeTest
+ * @test  xp://net.xp_framework.unittest.core.NullableTest
  */
-class NullableType extends Type {
+class Nullable extends Type {
   private $underlying;
 
   static function __static() { }
