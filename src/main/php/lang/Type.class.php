@@ -5,6 +5,7 @@
  *
  * @see    xp://lang.XPClass
  * @see    xp://lang.Primitive
+ * @test   xp://net.xp_framework.unittest.core.TypeResolveTest
  * @test   xp://net.xp_framework.unittest.reflection.TypeTest 
  */
 class Type implements Value {
@@ -233,14 +234,11 @@ class Type implements Value {
     }
 
     // Map well-known named types - see static constructor for list
-    if ('?' === $type[0] || '@' === $type[0]) {
+    if ('?' === $type[0]) {
       return self::resolve(substr($type, 1), $context);
     } else if (isset(self::$named[$type])) {
       return self::$named[$type];
     }
-
-    // Check contextual resolver function
-    if (isset($context[$type])) return $context[$type]();
 
     // * function(T): R is a function
     // * [:T] is a map 
@@ -249,8 +247,11 @@ class Type implements Value {
     //   card type.
     // * Anything else is a qualified or unqualified class name
     $p= strcspn($type, '<|[*(');
-    if ($p >= $l) {
-      return XPClass::forName($type);
+    if ($p === $l) {
+      return isset($context[$type]) ? $context[$type]() : ((isset($context['*']) && strcspn($type, '.\\') === $l)
+        ? $context['*']($type)
+        : XPClass::forName($type)
+      );
     } else if ('(' === $type[0]) {
       $t= self::resolve(self::matching($type, '()', 0), $context);
     } else if (0 === substr_compare($type, '[:', 0, 2)) {
@@ -286,11 +287,11 @@ class Type implements Value {
         }
       }
       if ($wildcard) {
-        $t= new WildcardType(XPClass::forName($base), $components);
+        $t= new WildcardType(self::resolve($base, $context), $components);
       } else if ('array' === $base) {
         $t= 1 === sizeof($components) ? new ArrayType($components[0]) : new MapType($components[1]);
       } else {
-        $t= XPClass::forName($base)->newGenericType($components);
+        $t= self::resolve($base, $context)->newGenericType($components);
       }
     } else {
       $t= self::resolve(trim(substr($type, 0, $p)), $context);
