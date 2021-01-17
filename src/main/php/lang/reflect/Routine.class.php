@@ -199,21 +199,8 @@ class Routine implements Value {
    * @throws  lang.ClassFormatException if the restriction cannot be resolved
    */
   public function getReturnTypeRestriction() {
-    $t= $this->_reflect->getReturnType();
-    if (null === $t) return null;
-
     try {
-      if ($t instanceof \ReflectionUnionType) {
-        $union= [];
-        foreach ($t->getTypes() as $component) {
-          if ('null' !== ($name= $component->getName())) {
-            $union[]= Type::resolve($name, $this->resolve());
-          }
-        }
-        return new TypeUnion($union);
-      } else {
-        return Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString(), $this->resolve());
-      }
+      return Type::forReflect($this->_reflect->getReturnType(), null, $this->resolve());
     } catch (ClassLoadingException $e) {
       throw new ClassFormatException(sprintf(
         'Typehint for %s::%s()\'s return type cannot be resolved: %s',

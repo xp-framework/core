@@ -137,21 +137,8 @@ class Parameter {
    * @throws  lang.ClassNotFoundException if the restriction cannot be resolved
    */
   public function getTypeRestriction() {
-    $t= $this->_reflect->getType();
-    if (null === $t) return null;
-
     try {
-      if ($t instanceof \ReflectionUnionType) {
-        $union= [];
-        foreach ($t->getTypes() as $component) {
-          if ('null' !== ($name= $component->getName())) {
-            $union[]= Type::resolve($name, $this->resolve());
-          }
-        }
-        return new TypeUnion($union);
-      } else {
-        return Type::resolve(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString(), $this->resolve());
-      }
+      return Type::forReflect($this->_reflect->getType(), null, $this->resolve());
     } catch (ClassLoadingException $e) {
       throw new ClassNotFoundException(sprintf(
         'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',
