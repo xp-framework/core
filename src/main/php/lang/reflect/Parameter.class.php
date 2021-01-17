@@ -53,28 +53,15 @@ class Parameter {
    * Get parameter's type.
    *
    * @return lang.Type
-   * @throws  lang.ClassFormatException if the restriction cannot be resolved
+   * @throws lang.ClassFormatException if the restriction cannot be resolved
    */
   public function getType() {
-    $t= $this->_reflect->getType();
-    if (null === $t) {
-
-      // Check for type in api documentation, defaulting to `var`
-      $t= Type::$VAR;
-    } else if ($t instanceof \ReflectionUnionType) {
-      return Type::forReflect($t, null, $this->resolve());
-    } else {
-      $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
-      $t= Type::forReflect($t, null, $this->resolve());
-
-      // Check array and callable for more specific types, e.g. `string[]` or
-      // `function(): string` in api documentation
-      if ('array' !== $name && 'callable' !== $name) return $t;
-    }
-
-    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
-    $r= $details[DETAIL_ARGUMENTS][$this->_details[2]] ?? null;
-    return null === $r ? $t : Type::resolve(rtrim(ltrim($r, '&'), '.'), $this->resolve());
+    $api= function() {
+      $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
+      $r= $details[DETAIL_ARGUMENTS][$this->_details[2]] ?? null;
+      return $r ? rtrim(ltrim($r, '&'), '.') : null;
+    };
+    return Type::forReflect($this->_reflect->getType(), $api, $this->resolve()) ?? Type::$VAR;
   }
 
   /**

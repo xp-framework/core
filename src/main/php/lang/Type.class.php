@@ -224,13 +224,15 @@ class Type implements Value {
    * Gets a type for a given reflection instance
    *
    * @param  php.ReflectionType $r
-   * @param  var $default
+   * @param  ?function(): ?string $api
    * @param  [:(function(string): self)] $context
-   * @return self
+   * @return ?self
    */
-  public static function forReflect($r, $default= null, $context= []) {
+  public static function forReflect($r, $api= null, $context= []) {
     if (null === $r) {
-      return $default;
+
+      // Check for type in api documentation
+      return $api && ($s= $api()) ? self::resolve($s, $context) : null;
     } else if ($r instanceof \ReflectionUnionType) {
       $union= [];
       foreach ($r->getTypes() as $c) {
@@ -240,7 +242,14 @@ class Type implements Value {
       }
       $t= new TypeUnion($union);
     } else {
-      $t= self::resolve(PHP_VERSION_ID >= 70100 ? $r->getName() : $r->__toString(), $context);
+      $name= PHP_VERSION_ID >= 70100 ? $r->getName() : $r->__toString();
+
+      // Check array, self and callable for more specific types, e.g. `string[]`,
+      // `static` or `function(): string` in api documentation
+      if ($api && ('array' === $name || 'callable' === $name || 'self' === $name) && ($s= $api())) {
+        return self::resolve($s, $context);
+      }
+      $t= self::resolve($name, $context);
     }
     return $r->allowsNull() ? new Nullable($t) : $t;
   }

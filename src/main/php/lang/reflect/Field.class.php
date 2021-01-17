@@ -52,24 +52,13 @@ class Field implements Value {
 
   /** Gets field type */
   public function getType(): Type {
+    $api= function() {
+      $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+      $r= $details[DETAIL_RETURNS] ?? $details[DETAIL_ANNOTATIONS]['type'] ?? null;
+      return $r ? ltrim($r, '&') : null;
+    };
     $t= PHP_VERSION_ID >= 70400 ? $this->_reflect->getType() : null;
-    if (null === $t) {
-
-      // Check for type in api documentation, defaulting to `var`
-      $t= Type::$VAR;
-    } else if ($t instanceof \ReflectionUnionType) {
-      return Type::forReflect($t, null, $this->resolve());
-    } else {
-      $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
-      $t= Type::forReflect($t, null, $this->resolve());
-
-      // Check array for more specific types, e.g. `string[]` in api documentation
-      if ('array' !== $name) return $t;
-    }
-
-    $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
-    $f= $details[DETAIL_RETURNS] ?? $details[DETAIL_ANNOTATIONS]['type'] ?? null;
-    return null === $f ? $t : Type::resolve(rtrim(ltrim($f, '&'), '.'), $this->resolve());
+    return Type::forReflect($t, $api, $this->resolve()) ?? Type::$VAR;
   }
 
   /** Gets field type's name */

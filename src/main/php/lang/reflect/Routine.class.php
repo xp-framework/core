@@ -121,25 +121,12 @@ class Routine implements Value {
    * @throws  lang.ClassFormatException if the restriction cannot be resolved
    */
   public function getReturnType(): Type {
-    $t= $this->_reflect->getReturnType();
-    if (null === $t) {
-
-      // Check for type in api documentation, defaulting to `var`
-      $t= Type::$VAR;
-    } else if ($t instanceof \ReflectionUnionType) {
-      return Type::forReflect($t, null, $this->resolve());
-    } else {
-      $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
-      $t= Type::forReflect($t, null, $this->resolve());
-
-      // Check array, self and callable for more specific types, e.g. `string[]`,
-      // `static` or `function(): string` in api documentation
-      if ('array' !== $name && 'self' !== $name && 'callable' !== $name) return $t;
-    }
-
-    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
-    $r= $details[DETAIL_RETURNS] ?? null;
-    return null === $r ? $t : Type::resolve(rtrim(ltrim($r, '&'), '.'), $this->resolve());
+    $api= function() {
+      $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+      $r= $details[DETAIL_RETURNS] ?? null;
+      return $r ? ltrim($r, '&') : null;
+    };
+    return Type::forReflect($this->_reflect->getReturnType(), $api, $this->resolve()) ?? Type::$VAR;
   }
 
   /** Retrieve return type name */
