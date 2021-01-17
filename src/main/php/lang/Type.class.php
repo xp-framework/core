@@ -224,7 +224,7 @@ class Type implements Value {
    * Gets a type for a given reflection instance
    *
    * @param  php.ReflectionType $r
-   * @param  ?function(): ?string $api
+   * @param  ?function(?bool): ?string $api
    * @param  [:(function(string): self)] $context
    * @return ?self
    */
@@ -232,7 +232,7 @@ class Type implements Value {
     if (null === $r) {
 
       // Check for type in api documentation
-      return $api && ($s= $api()) ? self::resolve($s, $context) : null;
+      return $api && ($s= $api(false)) ? self::resolve($s, $context) : null;
     } else if ($r instanceof \ReflectionUnionType) {
       $union= [];
       foreach ($r->getTypes() as $c) {
@@ -246,7 +246,7 @@ class Type implements Value {
 
       // Check array, self and callable for more specific types, e.g. `string[]`,
       // `static` or `function(): string` in api documentation
-      if ($api && ('array' === $name || 'callable' === $name || 'self' === $name) && ($s= $api())) {
+      if ($api && ('array' === $name || 'callable' === $name || 'self' === $name) && ($s= $api(true))) {
         return self::resolve($s, $context);
       }
       $t= self::resolve($name, $context);
