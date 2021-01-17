@@ -386,7 +386,9 @@ function typeof($arg) {
         if ($t instanceof \ReflectionUnionType) {
           $union= [];
           foreach ($t->getTypes() as $c) {
-            $union[]= \lang\Type::forName($c->getName());
+            if ('null' !== ($name= $c->getName())) {
+              $union[]= \lang\Type::forName($name);
+            }
           }
           $signature[]= new \lang\TypeUnion($union);
         } else {
@@ -400,7 +402,9 @@ function typeof($arg) {
       if ($t instanceof \ReflectionUnionType) {
         $union= [];
         foreach ($t->getTypes() as $c) {
-          $union[]= \lang\Type::forName($c->getName());
+          if ('null' !== ($name= $c->getName())) {
+            $union[]= \lang\Type::forName($name);
+          }
         }
         $return= new \lang\TypeUnion($union);
       } else {
