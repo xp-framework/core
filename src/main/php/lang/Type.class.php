@@ -234,7 +234,7 @@ class Type implements Value {
     }
 
     // Map well-known named types - see static constructor for list
-    if ('?' === $type[0] || '@' === $type[0]) {
+    if ('?' === $type[0]) {
       return self::resolve(substr($type, 1), $context);
     } else if (isset(self::$named[$type])) {
       return self::$named[$type];
