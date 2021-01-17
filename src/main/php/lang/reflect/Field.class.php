@@ -61,13 +61,10 @@ class Field implements Value {
       return Type::forReflect($t, null, $this->resolve());
     } else {
       $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
+      $t= Type::forReflect($t, null, $this->resolve());
 
       // Check array for more specific types, e.g. `string[]` in api documentation
-      if ('array' === $name) {
-        $t= Type::$ARRAY;
-      } else {
-        return Type::resolve($name, $this->resolve());
-      }
+      if ('array' !== $name) return $t;
     }
 
     $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());

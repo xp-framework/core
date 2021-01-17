@@ -65,16 +65,11 @@ class Parameter {
       return Type::forReflect($t, null, $this->resolve());
     } else {
       $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
+      $t= Type::forReflect($t, null, $this->resolve());
 
       // Check array and callable for more specific types, e.g. `string[]` or
       // `function(): string` in api documentation
-      if ('array' === $name) {
-        $t= Type::$ARRAY;
-      } else if ('callable' === $name) {
-        $t= Type::$CALLABLE;
-      } else {
-        return Type::resolve($name, $this->resolve());
-      }
+      if ('array' !== $name && 'callable' !== $name) return $t;
     }
 
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
@@ -98,6 +93,7 @@ class Parameter {
 
     $t= $this->_reflect->getType();
     if (null === $t) {
+      $nullable= '';
 
       // Check for type in api documentation
       $name= 'var';
@@ -113,18 +109,19 @@ class Parameter {
       }
       return $nullable.substr($union, 1);
     } else {
+      $nullable= $t->allowsNull() ? '?' : '';
       $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
 
       // Check array and callable for more specific types, e.g. `string[]` or
       // `function(): string` in api documentation
       if ('array' !== $name && 'callable' !== $name) {
-        return $map[$name] ?? strtr($name, '\\', '.');
+        return $nullable.($map[$name] ?? strtr($name, '\\', '.'));
       }
     }
 
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
     $r= $details[DETAIL_ARGUMENTS][$this->_details[2]] ?? null;
-    return null === $r ? $name : rtrim(ltrim($r, '&'), '.');
+    return null === $r ? $nullable.$name : rtrim(ltrim($r, '&'), '.');
   }
 
   /**
