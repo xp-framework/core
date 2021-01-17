@@ -64,7 +64,9 @@ class Parameter {
     } else if ($t instanceof \ReflectionUnionType) {
       $union= [];
       foreach ($t->getTypes() as $component) {
-        $union[]= Type::resolve($component->getName(), $this->resolve());
+        if ('null' !== ($name= $component->getName())) {
+          $union[]= Type::resolve($name, $this->resolve());
+        }
       }
       return new TypeUnion($union);
     } else {
@@ -108,8 +110,9 @@ class Parameter {
     } else if ($t instanceof \ReflectionUnionType) {
       $union= '';
       foreach ($t->getTypes() as $component) {
-        $name= $component->getName();
-        $union.= '|'.($map[$name] ?? strtr($name, '\\', '.'));
+        if ('null' !== ($name= $component->getName())) {
+          $union.= '|'.($map[$name] ?? strtr($name, '\\', '.'));
+        }
       }
       return substr($union, 1);
     } else {
@@ -141,7 +144,9 @@ class Parameter {
       if ($t instanceof \ReflectionUnionType) {
         $union= [];
         foreach ($t->getTypes() as $component) {
-          $union[]= Type::resolve($component->getName(), $this->resolve());
+          if ('null' !== ($name= $component->getName())) {
+            $union[]= Type::resolve($name, $this->resolve());
+          }
         }
         return new TypeUnion($union);
       } else {

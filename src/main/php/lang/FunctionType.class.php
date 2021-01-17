@@ -96,7 +96,9 @@ class FunctionType extends Type {
     } else if ($t instanceof \ReflectionUnionType) {
       $union= [];
       foreach ($t->getTypes() as $c) {
-        $union[]= Type::resolve($c->getName(), $resolve);
+        if ('null' !== ($name= $c->getName())) {
+          $union[]= Type::resolve($name, $resolve);
+        }
       }
       $returns= new TypeUnion($union);
     } else {
@@ -131,8 +133,10 @@ class FunctionType extends Type {
 
         if ($t instanceof \ReflectionUnionType) {
           $union= [];
-          foreach ($t->getTypes() as $u) {
-            $union[]= Type::resolve($u->getName(), $resolve);
+          foreach ($t->getTypes() as $c) {
+            if ('null' !== ($name= $c->getName())) {
+              $union[]= Type::resolve($name, $resolve);
+            }
           }
           $param= new TypeUnion($union);
         } else {

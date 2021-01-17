@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.5.3 / 2021-01-17
+
+### Bugfixes
+
+* Fixed issue #257: Nullable union types - @thekid
+
 ## 10.5.2 / 2021-01-16
 
 ### Bugfixes

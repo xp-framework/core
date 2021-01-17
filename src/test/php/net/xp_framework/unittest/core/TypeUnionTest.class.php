@@ -195,4 +195,13 @@ class TypeUnionTest extends TestCase {
       typeof($f)->getMethod('fixture')->getParameter(0)->getType()
     );
   }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
+  public function php8_native_nullable_union_type() {
+    $f= eval('return new class() { public function fixture(int|string|null $arg) { } };');
+    $this->assertEquals(
+      (new TypeUnion([Primitive::$INT, Primitive::$STRING])),
+      typeof($f)->getMethod('fixture')->getParameter(0)->getType()
+    );
+  }
 }
