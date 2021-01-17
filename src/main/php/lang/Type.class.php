@@ -233,20 +233,16 @@ class Type implements Value {
       return $default;
     } else if ($r instanceof \ReflectionUnionType) {
       $union= [];
-      $nullable= false;
       foreach ($r->getTypes() as $c) {
-        if ('null' === ($name= $c->getName())) {
-          $nullable= true;
-        } else {
+        if ('null' !== ($name= $c->getName())) {
           $union[]= self::resolve($name, $context);
         }
       }
       $t= new TypeUnion($union);
     } else {
-      $nullable= $r->allowsNull();
       $t= self::resolve(PHP_VERSION_ID >= 70100 ? $r->getName() : $r->__toString(), $context);
     }
-    return $nullable ? new NullableType($t) : $t; 
+    return $r->allowsNull() ? new NullableType($t) : $t;
   }
 
   /**

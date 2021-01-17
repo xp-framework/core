@@ -92,12 +92,15 @@ class Field implements Value {
       $name= 'var';
     } else if ($t instanceof \ReflectionUnionType) {
       $union= '';
+      $nullable= '';
       foreach ($t->getTypes() as $component) {
-        if ('null' !== ($name= $component->getName())) {
+        if ('null' === ($name= $component->getName())) {
+          $nullable= '?';
+        } else {
           $union.= '|'.($map[$name] ?? strtr($name, '\\', '.'));
         }
       }
-      return substr($union, 1);
+      return $nullable.substr($union, 1);
     } else {
       $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
 
