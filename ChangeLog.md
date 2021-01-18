@@ -5,6 +5,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged PR #253: Add support for nullable types (via `lang.Nullable`)
+  (@thekid)
 * Merged PR #256: Make it possible to pass a default resolver (`*`) to
   `Type::resolve()`
   (@thekid)
