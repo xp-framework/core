@@ -91,7 +91,7 @@ class FunctionType extends Type {
     }
 
     // Verify return type
-    $returns= Type::forReflect($r->getReturnType(), null, $resolve) ?? (isset($details[DETAIL_RETURNS])
+    $returns= Type::resolve($r->getReturnType(), $resolve) ?? (isset($details[DETAIL_RETURNS])
       ? Type::forName($details[DETAIL_RETURNS])
       : null
     );
@@ -117,7 +117,7 @@ class FunctionType extends Type {
       } else {
         if ($params[$i]->isVariadic()) return true;  // No further checks necessary
 
-        $param= Type::forReflect($params[$i]->getType(), null, $resolve);
+        $param= Type::resolve($params[$i]->getType(), $resolve);
         if (null === $param) continue;
 
         if (!$type->isAssignableFrom($param)) {

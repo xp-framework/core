@@ -58,7 +58,7 @@ class Field implements Value {
       return $r ? ltrim($r, '&') : null;
     };
     $t= PHP_VERSION_ID >= 70400 ? $this->_reflect->getType() : null;
-    return Type::forReflect($t, $api, $this->resolve()) ?? Type::$VAR;
+    return Type::resolve($t, $this->resolve(), $api) ?? Type::$VAR;
   }
 
   /** Gets field type's name */
@@ -109,7 +109,7 @@ class Field implements Value {
    */
   public function getTypeRestriction() {
     try {
-      return Type::forReflect(PHP_VERSION_ID >= 70400 ? $this->_reflect->getType() : null, null, $this->resolve());
+      return Type::resolve(PHP_VERSION_ID >= 70400 ? $this->_reflect->getType() : null, $this->resolve());
     } catch (ClassLoadingException $e) {
       throw new ClassNotFoundException(sprintf(
         'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',

@@ -382,9 +382,9 @@ function typeof($arg) {
     $signature= [];
     foreach ($r->getParameters() as $param) {
       if ($param->isVariadic()) break;
-      $signature[]= \lang\Type::forReflect($param->getType()) ?? \lang\Type::$VAR;
+      $signature[]= \lang\Type::resolve($param->getType()) ?? \lang\Type::$VAR;
     }
-    return new \lang\FunctionType($signature, \lang\Type::forReflect($r->getReturnType()) ?? \lang\Type::$VAR);
+    return new \lang\FunctionType($signature, \lang\Type::resolve($r->getReturnType()) ?? \lang\Type::$VAR);
   } else if (is_object($arg)) {
     $class= get_class($arg);
     if (0 === strncmp($class, 'class@anonymous', 15)) {

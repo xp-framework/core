@@ -61,7 +61,7 @@ class Parameter {
       $r= $details[DETAIL_ARGUMENTS][$this->_details[2]] ?? null;
       return $r ? rtrim(ltrim($r, '&'), '.') : null;
     };
-    return Type::forReflect($this->_reflect->getType(), $api, $this->resolve()) ?? Type::$VAR;
+    return Type::resolve($this->_reflect->getType(), $this->resolve(), $api) ?? Type::$VAR;
   }
 
   /**
@@ -119,7 +119,7 @@ class Parameter {
    */
   public function getTypeRestriction() {
     try {
-      return Type::forReflect($this->_reflect->getType(), null, $this->resolve());
+      return Type::resolve($this->_reflect->getType(), $this->resolve());
     } catch (ClassLoadingException $e) {
       throw new ClassNotFoundException(sprintf(
         'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',

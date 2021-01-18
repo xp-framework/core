@@ -126,7 +126,7 @@ class Routine implements Value {
       $r= $details[DETAIL_RETURNS] ?? null;
       return $r ? ltrim($r, '&') : null;
     };
-    return Type::forReflect($this->_reflect->getReturnType(), $api, $this->resolve()) ?? Type::$VAR;
+    return Type::resolve($this->_reflect->getReturnType(), $this->resolve(), $api) ?? Type::$VAR;
   }
 
   /** Retrieve return type name */
@@ -180,7 +180,7 @@ class Routine implements Value {
    */
   public function getReturnTypeRestriction() {
     try {
-      return Type::forReflect($this->_reflect->getReturnType(), null, $this->resolve());
+      return Type::resolve($this->_reflect->getReturnType(), $this->resolve());
     } catch (ClassLoadingException $e) {
       throw new ClassFormatException(sprintf(
         'Typehint for %s::%s()\'s return type cannot be resolved: %s',
