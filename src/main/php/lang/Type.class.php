@@ -135,21 +135,6 @@ class Type implements Value {
   }
 
   /**
-   * Creates a type list from a given string
-   *
-   * @param  string $names
-   * @param  [:(function(string): self)] $context
-   * @return lang.Type[] list
-   */
-  public static function forNames($names, $context= []) {
-    $r= [];
-    foreach (self::split($names, ',') as $name) {
-      $r[]= self::resolve($name, $context);
-    }
-    return $r;
-  }
-
-  /**
    * Returns a substring between matching braces
    *
    * @param  string $string
@@ -198,6 +183,21 @@ class Type implements Value {
         }
       }
     }
+  }
+
+  /**
+   * Creates a type list from a given string
+   *
+   * @param  string $names
+   * @param  [:(function(string): self)] $context
+   * @return self[]
+   */
+  public static function forNames($names, $context= []) {
+    $r= [];
+    foreach (self::split($names, ',') as $name) {
+      $r[]= self::named($name, $context);
+    }
+    return $r;
   }
 
   /**
