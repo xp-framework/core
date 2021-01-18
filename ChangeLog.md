@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.6.0 / 2021-01-18
+
 ### Features
 
 * Merged PR #253: Add support for nullable types (via `lang.Nullable`)
