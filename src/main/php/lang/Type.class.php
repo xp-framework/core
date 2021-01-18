@@ -201,23 +201,53 @@ class Type implements Value {
   }
 
   /**
-   * Gets a type for a given name
-   *
-   * Checks for:
-   * - Primitive types (string, int, float, bool, resource)
-   * - Array and map notations (array, string[], string*, [:string])
-   * - Any type (var)
-   * - Void type (void)
-   * - Function types
-   * - Generic notations (util.collections.HashTable<string, lang.Value>)
-   * - Anything else will be passed to XPClass::forName()
+   * Resolves type name
    *
    * @param  string $type
    * @return self
    * @throws lang.IllegalStateException if type is empty
    */
   public static function forName($type) {
-    return self::resolve($type, []);
+    if (0 === strlen($type)) throw new IllegalStateException('Empty type');
+    return self::named($type, []);
+  }
+
+  /**
+   * Resolves a type
+   *
+   * @param  ?string|php.ReflectionType $type
+   * @param  [:(function(string): self)] $context
+   * @param  ?function(?bool): ?string $api
+   * @return ?self
+   */
+  public static function resolve($type, $context= [], $api= null) {
+    if (null === $type) {
+
+      // Check for type in api documentation
+      return $api && ($s= $api(false)) ? self::named($s, $context) : null;
+    } else if ($type instanceof \ReflectionUnionType) {
+      $union= [];
+      foreach ($type->getTypes() as $c) {
+        if ('null' !== ($name= $c->getName())) {
+          $union[]= self::named($name, $context);
+        }
+      }
+      $t= new TypeUnion($union);
+    } else if ($type instanceof \ReflectionType) {
+      $name= PHP_VERSION_ID >= 70100 ? $type->getName() : $type->__toString();
+
+      // Check array, self and callable for more specific types, e.g. `string[]`,
+      // `static` or `function(): string` in api documentation
+      if ($api && ('array' === $name || 'callable' === $name || 'self' === $name) && ($s= $api(true))) {
+        return self::named($s, $context);
+      }
+      $t= self::named($name, $context);
+    } else {
+
+      // BC with 10.4 / 10.5: delegate resolve(string, ?) -> named()
+      return self::named($type, $context);
+    }
+    return $type->allowsNull() ? new Nullable($t) : $t;
   }
 
   /**
@@ -226,19 +256,10 @@ class Type implements Value {
    * @param  string $type
    * @param  [:(function(string): self)] $context
    * @return self
-   * @throws lang.IllegalStateException if type is empty
    */
-  public static function resolve($type, $context= []) {
-    if (0 === ($l= strlen($type))) {
-      throw new IllegalStateException('Empty type');
-    }
-
-    // Map well-known named types - see static constructor for list
-    if ('?' === $type[0]) {
-      return self::resolve(substr($type, 1), $context);
-    } else if (isset(self::$named[$type])) {
-      return self::$named[$type];
-    }
+  public static function named($name, $context) {
+    if ('?' === $name[0]) return new Nullable(self::named(substr($name, 1), $context));
+    if ($t= self::$named[$name] ?? null) return $t;
 
     // * function(T): R is a function
     // * [:T] is a map 
@@ -246,18 +267,19 @@ class Type implements Value {
     //   except if any of K, V contains a ?, in which case it's a wild 
     //   card type.
     // * Anything else is a qualified or unqualified class name
-    $p= strcspn($type, '<|[*(');
+    $l= strlen($name);
+    $p= strcspn($name, '<|[*(');
     if ($p === $l) {
-      return isset($context[$type]) ? $context[$type]() : ((isset($context['*']) && strcspn($type, '.\\') === $l)
-        ? $context['*']($type)
-        : XPClass::forName($type)
+      return isset($context[$name]) ? $context[$name]() : ((isset($context['*']) && strcspn($name, '.\\') === $l)
+        ? $context['*']($name)
+        : XPClass::forName($name)
       );
-    } else if ('(' === $type[0]) {
-      $t= self::resolve(self::matching($type, '()', 0), $context);
-    } else if (0 === substr_compare($type, '[:', 0, 2)) {
-      $t= new MapType(self::resolve(self::matching($type, '[]', 1), $context));
-    } else if (0 === substr_compare($type, 'function(', 0, 9)) {
-      $signature= self::matching($type, '()', 8);
+    } else if ('(' === $name[0]) {
+      $t= self::named(self::matching($name, '()', 0), $context);
+    } else if (0 === substr_compare($name, '[:', 0, 2)) {
+      $t= new MapType(self::named(self::matching($name, '[]', 1), $context));
+    } else if (0 === substr_compare($name, 'function(', 0, 9)) {
+      $signature= self::matching($name, '()', 8);
       if ('?' === $signature) {
         $args= null;
       } else if ('' === $signature) {
@@ -265,55 +287,55 @@ class Type implements Value {
       } else {
         $args= self::forNames($signature, $context);
       }
-      if (false === ($p= strpos($type, ':'))) {
+      if (false === ($p= strpos($name, ':'))) {
         $return= null;
       } else {
-        $return= self::resolve(trim(substr($type, $p + 1)), $context);
-        $type= '';
+        $return= self::named(trim(substr($name, $p + 1)), $context);
+        $name= '';
       }
       $t= new FunctionType($args, $return);
-    } else if ('<' === $type[$p]) {
-      $base= substr($type, 0, $p);
+    } else if ('<' === $name[$p]) {
+      $base= substr($name, 0, $p);
       $components= [];
       $wildcard= false;
-      foreach (self::split(self::matching($type, '<>', $p), ',') as $arg) {
+      foreach (self::split(self::matching($name, '<>', $p), ',') as $arg) {
         if ('?' === $arg) {
           $components[]= Wildcard::$ANY;
           $wildcard= true;
         } else {
-          $t= self::resolve($arg, $context);
+          $t= self::named($arg, $context);
           $wildcard= $t instanceof WildcardType;
           $components[]= $t;
         }
       }
       if ($wildcard) {
-        $t= new WildcardType(self::resolve($base, $context), $components);
+        $t= new WildcardType(self::named($base, $context), $components);
       } else if ('array' === $base) {
         $t= 1 === sizeof($components) ? new ArrayType($components[0]) : new MapType($components[1]);
       } else {
-        $t= self::resolve($base, $context)->newGenericType($components);
+        $t= self::named($base, $context)->newGenericType($components);
       }
     } else {
-      $t= self::resolve(trim(substr($type, 0, $p)), $context);
-      $type= substr($type, $p);
+      $t= self::named(trim(substr($name, 0, $p)), $context);
+      $name= substr($name, $p);
     }
 
     // Suffixes and unions `T[]` is an array, `T*` is a vararg, `A|B|C` is a union
-    while ($type) {
-      if ('*' === $type[0]) {
+    while ($name) {
+      if ('*' === $name[0]) {
         $t= new ArrayType($t);
-        $type= trim(substr($type, 1));
-      } else if ('|' === $type[0]) {
+        $name= trim(substr($name, 1));
+      } else if ('|' === $name[0]) {
         $components= [$t];
-        foreach (self::split(substr($type, 1), '|') as $arg) {
-          $components[]= self::resolve($arg, $context);
+        foreach (self::split(substr($name, 1), '|') as $arg) {
+          $components[]= self::named($arg, $context);
         }
         return new TypeUnion($components);
-      } else if (0 === substr_compare($type, '[]', 0, 2)) {
+      } else if (0 === substr_compare($name, '[]', 0, 2)) {
         $t= new ArrayType($t);
-        $type= trim(substr($type, 2));
+        $name= trim(substr($name, 2));
       } else {
-        throw new IllegalArgumentException('Invalid type suffix '.$type);
+        throw new IllegalArgumentException('Invalid type suffix '.$name);
       }
     }
 

@@ -121,38 +121,12 @@ class Routine implements Value {
    * @throws  lang.ClassFormatException if the restriction cannot be resolved
    */
   public function getReturnType(): Type {
-    $t= $this->_reflect->getReturnType();
-    if (null === $t) {
-
-      // Check for type in api documentation, defaulting to `var`
-      $t= Type::$VAR;
-    } else if ($t instanceof \ReflectionUnionType) {
-      $union= [];
-      foreach ($t->getTypes() as $component) {
-        if ('null' !== ($name= $component->getName())) {
-          $union[]= Type::resolve($name, $this->resolve());
-        }
-      }
-      return new TypeUnion($union);
-    } else {
-      $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
-
-      // Check array, self and callable for more specific types, e.g. `string[]`,
-      // `static` or `function(): string` in api documentation
-      if ('array' === $name) {
-        $t= Type::$ARRAY;
-      } else if ('callable' === $name) {
-        $t= Type::$CALLABLE;
-      } else if ('self' === $name) {
-        $t= new XPClass($this->_reflect->getDeclaringClass());
-      } else {
-        return Type::resolve($name, $this->resolve());
-      }
-    }
-
-    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
-    $r= $details[DETAIL_RETURNS] ?? null;
-    return null === $r ? $t : Type::resolve(rtrim(ltrim($r, '&'), '.'), $this->resolve());
+    $api= function() {
+      $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+      $r= $details[DETAIL_RETURNS] ?? null;
+      return $r ? ltrim($r, '&') : null;
+    };
+    return Type::resolve($this->_reflect->getReturnType(), $this->resolve(), $api) ?? Type::$VAR;
   }
 
   /** Retrieve return type name */
@@ -167,29 +141,35 @@ class Routine implements Value {
 
     $t= $this->_reflect->getReturnType();
     if (null === $t) {
+      $nullable= '';
+
       // Check for type in api documentation
       $name= 'var';
     } else if ($t instanceof \ReflectionUnionType) {
       $union= '';
+      $nullable= '';
       foreach ($t->getTypes() as $component) {
-        if ('null' !== ($name= $component->getName())) {
+        if ('null' === ($name= $component->getName())) {
+          $nullable= '?';
+        } else {
           $union.= '|'.($map[$name] ?? strtr($name, '\\', '.'));
         }
       }
-      return substr($union, 1);
+      return $nullable.substr($union, 1);
     } else {
+      $nullable= $t->allowsNull() ? '?' : '';
       $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
 
       // Check array, self and callable for more specific types, e.g. `string[]`,
       // `static` or `function(): string` in api documentation
       if ('array' !== $name && 'callable' !== $name && 'self' !== $name) {
-        return $map[$name] ?? strtr($name, '\\', '.');
+        return $nullable.($map[$name] ?? strtr($name, '\\', '.'));
       }
     }
 
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
     $r= $details[DETAIL_RETURNS] ?? null;
-    return null === $r ? $name : rtrim(ltrim($r, '&'), '.');
+    return null === $r ? $nullable.$name : rtrim(ltrim($r, '&'), '.');
   }
 
   /**
@@ -199,21 +179,8 @@ class Routine implements Value {
    * @throws  lang.ClassFormatException if the restriction cannot be resolved
    */
   public function getReturnTypeRestriction() {
-    $t= $this->_reflect->getReturnType();
-    if (null === $t) return null;
-
     try {
-      if ($t instanceof \ReflectionUnionType) {
-        $union= [];
-        foreach ($t->getTypes() as $component) {
-          if ('null' !== ($name= $component->getName())) {
-            $union[]= Type::resolve($name, $this->resolve());
-          }
-        }
-        return new TypeUnion($union);
-      } else {
-        return Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString(), $this->resolve());
-      }
+      return Type::resolve($this->_reflect->getReturnType(), $this->resolve());
     } catch (ClassLoadingException $e) {
       throw new ClassFormatException(sprintf(
         'Typehint for %s::%s()\'s return type cannot be resolved: %s',

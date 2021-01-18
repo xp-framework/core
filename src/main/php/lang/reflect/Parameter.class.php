@@ -53,39 +53,15 @@ class Parameter {
    * Get parameter's type.
    *
    * @return lang.Type
-   * @throws  lang.ClassFormatException if the restriction cannot be resolved
+   * @throws lang.ClassFormatException if the restriction cannot be resolved
    */
   public function getType() {
-    $t= $this->_reflect->getType();
-    if (null === $t) {
-
-      // Check for type in api documentation, defaulting to `var`
-      $t= Type::$VAR;
-    } else if ($t instanceof \ReflectionUnionType) {
-      $union= [];
-      foreach ($t->getTypes() as $component) {
-        if ('null' !== ($name= $component->getName())) {
-          $union[]= Type::resolve($name, $this->resolve());
-        }
-      }
-      return new TypeUnion($union);
-    } else {
-      $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
-
-      // Check array and callable for more specific types, e.g. `string[]` or
-      // `function(): string` in api documentation
-      if ('array' === $name) {
-        $t= Type::$ARRAY;
-      } else if ('callable' === $name) {
-        $t= Type::$CALLABLE;
-      } else {
-        return Type::resolve($name, $this->resolve());
-      }
-    }
-
-    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
-    $r= $details[DETAIL_ARGUMENTS][$this->_details[2]] ?? null;
-    return null === $r ? $t : Type::resolve(rtrim(ltrim($r, '&'), '.'), $this->resolve());
+    $api= function() {
+      $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
+      $r= $details[DETAIL_ARGUMENTS][$this->_details[2]] ?? null;
+      return $r ? rtrim(ltrim($r, '&'), '.') : null;
+    };
+    return Type::resolve($this->_reflect->getType(), $this->resolve(), $api) ?? Type::$VAR;
   }
 
   /**
@@ -104,30 +80,35 @@ class Parameter {
 
     $t= $this->_reflect->getType();
     if (null === $t) {
+      $nullable= '';
 
       // Check for type in api documentation
       $name= 'var';
     } else if ($t instanceof \ReflectionUnionType) {
       $union= '';
+      $nullable= '';
       foreach ($t->getTypes() as $component) {
-        if ('null' !== ($name= $component->getName())) {
+        if ('null' === ($name= $component->getName())) {
+          $nullable= '?';
+        } else {
           $union.= '|'.($map[$name] ?? strtr($name, '\\', '.'));
         }
       }
-      return substr($union, 1);
+      return $nullable.substr($union, 1);
     } else {
+      $nullable= $t->allowsNull() ? '?' : '';
       $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
 
       // Check array and callable for more specific types, e.g. `string[]` or
       // `function(): string` in api documentation
       if ('array' !== $name && 'callable' !== $name) {
-        return $map[$name] ?? strtr($name, '\\', '.');
+        return $nullable.($map[$name] ?? strtr($name, '\\', '.'));
       }
     }
 
     $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
     $r= $details[DETAIL_ARGUMENTS][$this->_details[2]] ?? null;
-    return null === $r ? $name : rtrim(ltrim($r, '&'), '.');
+    return null === $r ? $nullable.$name : rtrim(ltrim($r, '&'), '.');
   }
 
   /**
@@ -137,21 +118,8 @@ class Parameter {
    * @throws  lang.ClassNotFoundException if the restriction cannot be resolved
    */
   public function getTypeRestriction() {
-    $t= $this->_reflect->getType();
-    if (null === $t) return null;
-
     try {
-      if ($t instanceof \ReflectionUnionType) {
-        $union= [];
-        foreach ($t->getTypes() as $component) {
-          if ('null' !== ($name= $component->getName())) {
-            $union[]= Type::resolve($name, $this->resolve());
-          }
-        }
-        return new TypeUnion($union);
-      } else {
-        return Type::resolve(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString(), $this->resolve());
-      }
+      return Type::resolve($this->_reflect->getType(), $this->resolve());
     } catch (ClassLoadingException $e) {
       throw new ClassNotFoundException(sprintf(
         'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',

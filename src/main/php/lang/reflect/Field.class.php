@@ -52,33 +52,13 @@ class Field implements Value {
 
   /** Gets field type */
   public function getType(): Type {
+    $api= function() {
+      $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+      $r= $details[DETAIL_RETURNS] ?? $details[DETAIL_ANNOTATIONS]['type'] ?? null;
+      return $r ? ltrim($r, '&') : null;
+    };
     $t= PHP_VERSION_ID >= 70400 ? $this->_reflect->getType() : null;
-    if (null === $t) {
-
-      // Check for type in api documentation, defaulting to `var`
-      $t= Type::$VAR;
-    } else if ($t instanceof \ReflectionUnionType) {
-      $union= [];
-      foreach ($t->getTypes() as $component) {
-        if ('null' !== ($name= $component->getName())) {
-          $union[]= Type::resolve($name, $this->resolve());
-        }
-      }
-      return new TypeUnion($union);
-    } else {
-      $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
-
-      // Check array for more specific types, e.g. `string[]` in api documentation
-      if ('array' === $name) {
-        $t= Type::$ARRAY;
-      } else {
-        return Type::resolve($name, $this->resolve());
-      }
-    }
-
-    $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
-    $f= $details[DETAIL_RETURNS] ?? $details[DETAIL_ANNOTATIONS]['type'] ?? null;
-    return null === $f ? $t : Type::resolve(rtrim(ltrim($f, '&'), '.'), $this->resolve());
+    return Type::resolve($t, $this->resolve(), $api) ?? Type::$VAR;
   }
 
   /** Gets field type's name */
@@ -98,12 +78,15 @@ class Field implements Value {
       $name= 'var';
     } else if ($t instanceof \ReflectionUnionType) {
       $union= '';
+      $nullable= '';
       foreach ($t->getTypes() as $component) {
-        if ('null' !== ($name= $component->getName())) {
+        if ('null' === ($name= $component->getName())) {
+          $nullable= '?';
+        } else {
           $union.= '|'.($map[$name] ?? strtr($name, '\\', '.'));
         }
       }
-      return substr($union, 1);
+      return $nullable.substr($union, 1);
     } else {
       $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
 
@@ -119,27 +102,14 @@ class Field implements Value {
   }
 
   /**
-   * Get parameter's type restriction.
+   * Get field's type restriction.
    *
    * @return  lang.Type or NULL if there is no restriction
    * @throws  lang.ClassNotFoundException if the restriction cannot be resolved
    */
   public function getTypeRestriction() {
-    $t= PHP_VERSION_ID >= 70400 ? $this->_reflect->getType() : null;
-    if (null === $t) return null;
-
     try {
-      if ($t instanceof \ReflectionUnionType) {
-        $union= [];
-        foreach ($t->getTypes() as $component) {
-          if ('null' !== ($name= $component->getName())) {
-            $union[]= Type::resolve($name, $this->resolve());
-          }
-        }
-        return new TypeUnion($union);
-      } else {
-        return Type::resolve(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString(), $this->resolve());
-      }
+      return Type::resolve(PHP_VERSION_ID >= 70400 ? $this->_reflect->getType() : null, $this->resolve());
     } catch (ClassLoadingException $e) {
       throw new ClassNotFoundException(sprintf(
         'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',

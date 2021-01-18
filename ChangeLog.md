@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Merged PR #256: Make it possible to pass a default resolver (`*`) to
+  `Type::resolve()`
+  (@thekid)
+
 ## 10.5.3 / 2021-01-17
 
 ### Bugfixes

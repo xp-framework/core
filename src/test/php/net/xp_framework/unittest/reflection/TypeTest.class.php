@@ -2,6 +2,7 @@
 
 use lang\{
   ArrayType,
+  Nullable,
   ClassCastException,
   FunctionType,
   IllegalAccessException,
@@ -35,22 +36,22 @@ class TypeTest extends TestCase {
     yield [new \ArrayIterator(['hello', 'world'])];
   }
 
-  #[Test, Values(['string', '?string'])]
+  #[Test, Values(['string'])]
   public function stringType($named) {
     $this->assertEquals(Primitive::$STRING, Type::forName($named));
   }
 
-  #[Test, Values(['int', 'integer', '?int'])]
+  #[Test, Values(['int', 'integer'])]
   public function intType($named) {
     $this->assertEquals(Primitive::$INT, Type::forName($named));
   }
 
-  #[Test, Values(['double', 'float', '?float'])]
+  #[Test, Values(['double', 'float'])]
   public function doubleType($named) {
     $this->assertEquals(Primitive::$FLOAT, Type::forName($named));
   }
 
-  #[Test, Values(['bool', 'boolean', '?bool', 'false'])]
+  #[Test, Values(['bool', 'boolean', 'false'])]
   public function boolType($named) {
     $this->assertEquals(Primitive::$BOOL, Type::forName($named));
   }
@@ -65,22 +66,22 @@ class TypeTest extends TestCase {
     $this->assertEquals(Type::$VAR, Type::forName('var'));
   }
 
-  #[Test, Values(['array', '?array'])]
+  #[Test, Values(['array'])]
   public function arrayTypeUnion($named) {
     $this->assertEquals(Type::$ARRAY, Type::forName($named));
   }
 
-  #[Test, Values(['callable', '?callable'])]
+  #[Test, Values(['callable'])]
   public function callableTypeUnion($named) {
     $this->assertEquals(Type::$CALLABLE, Type::forName($named));
   }
 
-  #[Test, Values(['iterable', '?iterable'])]
+  #[Test, Values(['iterable'])]
   public function iterableTypeUnion($named) {
     $this->assertEquals(Type::$ITERABLE, Type::forName($named));
   }
 
-  #[Test, Values(['object', '?object'])]
+  #[Test, Values(['object'])]
   public function objectTypeUnion($named) {
     $this->assertEquals(Type::$OBJECT, Type::forName($named));
   }
@@ -95,7 +96,12 @@ class TypeTest extends TestCase {
     $this->assertEquals(MapType::forName('[:string]'), Type::forName('[:string]'));
   }
 
-  #[Test, Values(['net.xp_framework.unittest.Name', '?net.xp_framework.unittest.Name', '\net\xp_framework\unittest\Name', Name::class])]
+  #[Test]
+  public function nullableOfString() {
+    $this->assertEquals(Nullable::forName('?string'), Type::forName('?string'));
+  }
+
+  #[Test, Values(['net.xp_framework.unittest.Name', '\net\xp_framework\unittest\Name', Name::class])]
   public function objectType($name) {
     $this->assertEquals(XPClass::forName('net.xp_framework.unittest.Name'), Type::forName($name));
   }
