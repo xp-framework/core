@@ -208,7 +208,7 @@ class Type implements Value {
    * @throws lang.IllegalStateException if type is empty
    */
   public static function forName($type) {
-    if (0 === strlen($type)) throw new IllegalStateException('Empty type');
+    if (0 === strlen($type ?? '')) throw new IllegalStateException('Empty type');
     return self::named($type, []);
   }
 
