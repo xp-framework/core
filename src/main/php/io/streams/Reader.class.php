@@ -92,7 +92,7 @@ abstract class Reader implements InputStreamReader, Closeable, Value {
    * @return string
    */
   protected function read0($size) {
-    $len= $size - strlen($this->buf);
+    $len= $size - strlen($this->buf ?? '');
     if ($len > 0) {
       $bytes= $this->buf.$this->stream->read($len);
       $this->buf= '';
