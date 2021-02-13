@@ -119,7 +119,7 @@ abstract class Environment {
 
     if (!$home) {
       $base= getenv('APPDATA');
-      $dir= ucfirst($named);
+      $dir= ucfirst($named ?? '');
     } else if (self::xdgCompliant()) {
       $base= getenv('XDG_CONFIG_HOME') ?: $home.DIRECTORY_SEPARATOR.'.config';
       $dir= $named;
