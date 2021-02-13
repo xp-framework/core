@@ -315,7 +315,7 @@ class XPClassTest extends TestCase {
     $this->assertTrue($this->fixture->hasConstant($name));
   }
 
-  #[Test, Values(['DOES_NOT_EXIST', '', null])]
+  #[Test, Values(['DOES_NOT_EXIST', ''])]
   public function hasConstant_returns_false_for_non_existing_constant($name) {
     $this->assertFalse($this->fixture->hasConstant($name));
   }
@@ -325,7 +325,7 @@ class XPClassTest extends TestCase {
     $this->assertEquals('XP Framework', $this->fixture->getConstant('CONSTANT_STRING'));
   }
 
-  #[Test, Expect(ElementNotFoundException::class), Values(['DOES_NOT_EXIST', '', null])]
+  #[Test, Expect(ElementNotFoundException::class), Values(['DOES_NOT_EXIST', ''])]
   public function getConstant_throws_exception_if_constant_doesnt_exist($name) {
     $this->fixture->getConstant($name);
   }
