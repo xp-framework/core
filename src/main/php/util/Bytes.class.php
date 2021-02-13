@@ -28,7 +28,7 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
    */
   public function __construct($initial= null) {
     if (null === $initial) {
-      // Intentionally empty
+      $this->buffer= '';
     } else if (is_array($initial)) {
       $this->buffer= implode('', array_map([$this, 'asByte'], $initial));
     } else if (is_string($initial)) {
