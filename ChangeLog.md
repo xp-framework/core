@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.6.1 / 2021-02-13
+
+### Bugfixes
+
+* Fixed issue #258: PHP 8.1 passing null to scalar arguments deprecated
+  See https://wiki.php.net/rfc/deprecate_null_to_scalar_internal_arg
+  (@thekid)
+
 ## 10.6.0 / 2021-01-18
 
 ### Features
