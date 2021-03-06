@@ -320,7 +320,7 @@ class MethodParametersTest extends MethodsTest {
     $this->assertEquals([], $this->method('public function fixture($param) { }')->getParameter(0)->getAnnotations());
   }
 
-  #[Test, Expect(['class' => ElementNotFoundException::class, 'withMessage' => 'Annotation "test" does not exist'])]
+  #[Test, Expect(class: ElementNotFoundException::class, withMessage: 'Annotation "test" does not exist')]
   public function cannot_get_test_annotation_for_un_annotated_parameter() {
     $this->method('public function fixture($param) { }')->getParameter(0)->getAnnotation('test');
   }
@@ -335,7 +335,7 @@ class MethodParametersTest extends MethodsTest {
     $this->assertTrue($this->method('public function fixture($param= true) { }')->getParameter(0)->isOptional());
   }
 
-  #[Test, Expect(['class' => IllegalStateException::class, 'withMessage' => 'Parameter "param" has no default value'])]
+  #[Test, Expect(class: IllegalStateException::class, withMessage: 'Parameter "param" has no default value')]
   public function required_parameter_does_not_have_default_value() {
     $this->method('public function fixture($param) { }')->getParameter(0)->getDefaultValue();
   }
