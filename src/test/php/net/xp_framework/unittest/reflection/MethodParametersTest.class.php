@@ -320,7 +320,7 @@ class MethodParametersTest extends MethodsTest {
     $this->assertEquals([], $this->method('public function fixture($param) { }')->getParameter(0)->getAnnotations());
   }
 
-  #[Test, Expect(['class' => ElementNotFoundException::class, 'withMessage' => 'Annotation "test" does not exist'])]
+  #[Test, Expect(class: ElementNotFoundException::class, withMessage: 'Annotation "test" does not exist')]
   public function cannot_get_test_annotation_for_un_annotated_parameter() {
     $this->method('public function fixture($param) { }')->getParameter(0)->getAnnotation('test');
   }
@@ -335,7 +335,7 @@ class MethodParametersTest extends MethodsTest {
     $this->assertTrue($this->method('public function fixture($param= true) { }')->getParameter(0)->isOptional());
   }
 
-  #[Test, Expect(['class' => IllegalStateException::class, 'withMessage' => 'Parameter "param" has no default value'])]
+  #[Test, Expect(class: IllegalStateException::class, withMessage: 'Parameter "param" has no default value')]
   public function required_parameter_does_not_have_default_value() {
     $this->method('public function fixture($param) { }')->getParameter(0)->getDefaultValue();
   }
@@ -343,6 +343,19 @@ class MethodParametersTest extends MethodsTest {
   #[Test]
   public function optional_parameters_default_value() {
     $this->assertEquals(true, $this->method('public function fixture($param= true) { }')->getParameter(0)->getDefaultValue());
+  }
+
+  #[Test]
+  public function default_annotation_may_supply_default_value() {
+    $method= $this->method('public function fixture($param= null) { }');
+
+    // Directly modify meta information for this test's purpose
+    // See https://github.com/xp-framework/compiler/pull/104#issuecomment-791924395
+    \xp::$meta[$method->getDeclaringClass()->getName()][1][$method->getName()]= [
+      DETAIL_TARGET_ANNO => ['$param' => ['default' => $this]]
+    ];
+
+    $this->assertEquals($this, $method->getParameter(0)->getDefaultValue());
   }
 
   #[Test]

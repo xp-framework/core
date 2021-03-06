@@ -1,6 +1,6 @@
 <?php namespace lang\reflect;
 
-use lang\{ElementNotFoundException, ClassLoadingException, ClassNotFoundException, XPClass, Type, TypeUnion};
+use lang\{ElementNotFoundException, IllegalStateException, ClassLoadingException, ClassNotFoundException, XPClass, Type, TypeUnion};
 use util\Objects;
 
 /**
@@ -160,17 +160,24 @@ class Parameter {
   }
 
   /**
-   * Get default value.
+   * Get default value. Additionally checks `default` annotation for NULL defaults.
    *
    * @throws  lang.IllegalStateException in case this argument is not optional
    * @return  var
    */
   public function getDefaultValue() {
     if ($this->_reflect->isOptional()) {
-      return $this->_reflect->isDefaultValueAvailable() ? $this->_reflect->getDefaultValue() : null;
+      if (!$this->_reflect->isDefaultValueAvailable()) return null;
+
+      $value= $this->_reflect->getDefaultValue();
+      if (null === $value) {
+        $class= strtr($this->_reflect->getDeclaringClass()->getName(), '\\', '.');
+        return \xp::$meta[$class][1][$this->_details[1]][DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()]['default'] ?? null;
+      }
+      return $value;
     }
 
-    throw new \lang\IllegalStateException('Parameter "'.$this->_reflect->getName().'" has no default value');
+    throw new IllegalStateException('Parameter "'.$this->_reflect->getName().'" has no default value');
   }
 
   /**
