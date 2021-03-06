@@ -104,12 +104,6 @@ class ProcessResolveTest extends TestCase {
     Process::resolve('/@@non-existant@@');
   }
 
-  #[Test, Action(eval: 'new IsPlatform("!(WIN|ANDROID)")')]
-  public function resolveFullyQualifiedOnPosix() {
-    $fq= '/bin/ls';
-    $this->assertEquals($fq, Process::resolve($fq));
-  }
-
   #[Test, Action(eval: 'new IsPlatform("ANDROID")')]
   public function resolveFullyQualifiedOnAndroid() {
     $fq= getenv('ANDROID_ROOT').'/framework/core.jar';
@@ -117,7 +111,12 @@ class ProcessResolveTest extends TestCase {
   }
 
   #[Test, Action(eval: 'new IsPlatform("!(WIN|ANDROID)")')]
+  public function resolveFullyQualifiedOnPosix() {
+    $this->assertTrue(in_array(Process::resolve('/bin/ls'), ['/usr/bin/ls', '/bin/ls']));
+  }
+
+  #[Test, Action(eval: 'new IsPlatform("!(WIN|ANDROID)")')]
   public function resolve() {
-    $this->assertEquals('/bin/ls', Process::resolve('ls'));
+    $this->assertTrue(in_array(Process::resolve('ls'), ['/usr/bin/ls', '/bin/ls']));
   }
 }
