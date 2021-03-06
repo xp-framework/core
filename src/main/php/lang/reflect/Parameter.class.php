@@ -171,8 +171,8 @@ class Parameter {
 
       $value= $this->_reflect->getDefaultValue();
       if (null === $value) {
-        $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_details[1]);
-        return $details[DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()]['default'] ?? null;
+        $class= strtr($this->_reflect->getDeclaringClass()->getName(), '\\', '.');
+        return \xp::$meta[$class][1][$this->_details[1]][DETAIL_TARGET_ANNO]['$'.$this->_reflect->getName()]['default'] ?? null;
       }
       return $value;
     }
