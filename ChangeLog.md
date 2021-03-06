@@ -3,6 +3,18 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.7.0 / 2021-03-06
+
+### Features
+
+* Merged PR #259: Support reflective access to non-constant expressions
+  for parameter defaults
+  (@thekid)
+
+### Bugfixes
+
+* Fixed issue #260: Failed tests on Ubuntu 20.04 - @thekid
+
 ## 10.6.1 / 2021-02-13
 
 ### Bugfixes
