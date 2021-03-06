@@ -346,6 +346,19 @@ class MethodParametersTest extends MethodsTest {
   }
 
   #[Test]
+  public function default_annotation_may_supply_default_value() {
+    $method= $this->method('public function fixture($param= null) { }');
+
+    // Directly modify meta information for this test's purpose
+    // See https://github.com/xp-framework/compiler/pull/104#issuecomment-791924395
+    \xp::$meta[$method->getDeclaringClass()->getName()][1][$method->getName()]= [
+      DETAIL_TARGET_ANNO => ['$param' => ['default' => $this]]
+    ];
+
+    $this->assertEquals($this, $method->getParameter(0)->getDefaultValue());
+  }
+
+  #[Test]
   public function vararg_parameters_default_value() {
     $this->assertEquals(null, $this->method('public function fixture(... $param) { }')->getParameter(0)->getDefaultValue());
   }
