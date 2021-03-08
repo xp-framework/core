@@ -36,7 +36,7 @@ class ClassParser {
       return XPClass::forName($type);
     } else if (isset($imports[$type])) {
       return XPClass::forName($imports[$type]);
-    } else if (class_exists($type, false) || interface_exists($type, false)) {
+    } else if (class_exists($type, false) || interface_exists($type, false) || trait_exists($type, false) || enum_exists($type, false)) {
       return new XPClass($type);
     } else if (false !== ($p= strrpos($context, '.'))) {
       return XPClass::forName(substr($context, 0, $p + 1).$type);

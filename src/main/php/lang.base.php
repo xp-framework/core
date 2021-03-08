@@ -412,9 +412,14 @@ class import {
 }
 // }}}
 
-// {{{ interface IDisposable
-if (!interface_exists(\IDisposable::class, false)) {
-  eval('interface IDisposable { public function __dispose(); }');
+// {{{ PHP 8.1 enums
+if (!function_exists('enum_exists')) {
+  interface UnitEnum { }
+  interface BackedEnum extends UnitEnum { }
+
+  function enum_exists($name, $load) {
+    return class_exists($name, $load) && $name instanceof \UnitEnum;
+  }
 }
 // }}}
 
