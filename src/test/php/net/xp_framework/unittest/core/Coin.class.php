@@ -3,7 +3,7 @@
 /**
  * Coin enumeration
  */
-class Coin extends \lang\Enum {
+class Coin extends \lang\XPEnum {
   public static
     $penny,
     $nickel,

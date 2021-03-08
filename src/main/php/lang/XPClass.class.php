@@ -471,7 +471,7 @@ class XPClass extends Type {
    * @return  bool
    */
   public function isEnum(): bool {
-    return class_exists(Enum::class, false) && $this->reflect()->isSubclassOf(Enum::class);
+    return class_exists(XPEnum::class, false) && $this->reflect()->isSubclassOf(XPEnum::class);
   }
 
   /**

@@ -7,7 +7,7 @@
  * @see   http://news.xp-framework.net/article/207/2007/07/29/
  * @test  xp://net.xp_framework.unittest.core.EnumTest
  */
-abstract class Enum implements Value {
+abstract class XPEnum implements Value {
   public $name= '';
   protected $ordinal= 0;
 
@@ -48,7 +48,7 @@ abstract class Enum implements Value {
   public static function valueOf($type, string $name): self {
     $class= $type instanceof XPClass ? $type : XPClass::forName($type);
     if (!$class->isEnum()) {
-      throw new IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
+      throw new IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.XPEnum>');
     }
 
     if ($class->isSubclassOf(self::class)) {

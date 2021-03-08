@@ -3,7 +3,7 @@
 /**
  * Operation enumeration
  */
-abstract class Operation extends \lang\Enum {
+abstract class Operation extends \lang\XPEnum {
   public static
     $plus,
     $minus,

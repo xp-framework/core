@@ -23,7 +23,7 @@
  * @see      xp://lang.Process
  * @test     xp://net.xp_framework.unittest.core.CommandLineTest
  */
-abstract class CommandLine extends Enum {
+abstract class CommandLine extends XPEnum {
   public static $WINDOWS, $UNIX;
 
   static function __static() {

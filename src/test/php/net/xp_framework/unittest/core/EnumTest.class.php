@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\reflect\Modifiers;
-use lang\{CloneNotSupportedException, Enum, Error, IllegalArgumentException, XPClass};
+use lang\{CloneNotSupportedException, Error, IllegalArgumentException, XPEnum, XPClass};
 use unittest\actions\RuntimeVersion;
 use unittest\{Expect, Test};
 
@@ -62,7 +62,7 @@ class EnumTest extends \unittest\TestCase {
 
   #[Test]
   public function enumBaseClassIsAbstract() {
-    $this->assertAbstract(XPClass::forName(Enum::class)->getModifiers());
+    $this->assertAbstract(XPClass::forName(XPEnum::class)->getModifiers());
   }
 
   #[Test]
@@ -146,7 +146,7 @@ class EnumTest extends \unittest\TestCase {
   public function valueOf() {
     $this->assertEquals(
       Coin::$penny, 
-      Enum::valueOf(XPClass::forName(Coin::class), 'penny')
+      XPEnum::valueOf(XPClass::forName(Coin::class), 'penny')
     );
   }
 
@@ -154,25 +154,25 @@ class EnumTest extends \unittest\TestCase {
   public function valueOf_string() {
     $this->assertEquals(
       Coin::$penny, 
-      Enum::valueOf(Coin::class, 'penny')
+      XPEnum::valueOf(Coin::class, 'penny')
     );
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
   public function valueOfNonExistant() {
-    Enum::valueOf(XPClass::forName(Coin::class), '@@DOES_NOT_EXIST@@');
+    XPEnum::valueOf(XPClass::forName(Coin::class), '@@DOES_NOT_EXIST@@');
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
   public function valueOfNonEnum() {
-    Enum::valueOf(self::class, 'irrelevant');
+    XPEnum::valueOf(self::class, 'irrelevant');
   }
 
   #[Test]
   public function valueOfAbstractEnum() {
     $this->assertEquals(
       Operation::$plus, 
-      Enum::valueOf(XPClass::forName(Operation::class), 'plus')
+      XPEnum::valueOf(XPClass::forName(Operation::class), 'plus')
     );
   }
 
@@ -180,7 +180,7 @@ class EnumTest extends \unittest\TestCase {
   public function valuesOf() {
     $this->assertEquals(
       [Coin::$penny, Coin::$nickel, Coin::$dime, Coin::$quarter],
-      Enum::valuesOf(XPClass::forName(Coin::class))
+      XPEnum::valuesOf(XPClass::forName(Coin::class))
     );
   }
 
@@ -188,7 +188,7 @@ class EnumTest extends \unittest\TestCase {
   public function valuesOf_string() {
     $this->assertEquals(
       [Coin::$penny, Coin::$nickel, Coin::$dime, Coin::$quarter],
-      Enum::valuesOf(Coin::class)
+      XPEnum::valuesOf(Coin::class)
     );
   }
 
@@ -196,13 +196,13 @@ class EnumTest extends \unittest\TestCase {
   public function valuesOfAbstractEnum() {
     $this->assertEquals(
       [Operation::$plus, Operation::$minus, Operation::$times, Operation::$divided_by],
-      Enum::valuesOf(XPClass::forName(Operation::class))
+      XPEnum::valuesOf(XPClass::forName(Operation::class))
     );
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
   public function valuesOfNonEnum() {
-    Enum::valuesOf(self::class);
+    XPEnum::valuesOf(self::class);
   }
 
   #[Test]
@@ -229,7 +229,7 @@ class EnumTest extends \unittest\TestCase {
   public function staticMemberNotInEnumValuesOf() {
     $this->assertEquals(
       [Profiling::$INSTANCE, Profiling::$EXTENSION],
-      Enum::valuesOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'))
+      XPEnum::valuesOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'))
     );
   }
 
@@ -243,7 +243,7 @@ class EnumTest extends \unittest\TestCase {
   
   #[Test, Expect(IllegalArgumentException::class)]
   public function staticMemberNotWithEnumValueOf() {
-    Enum::valueOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'), 'fixture');
+    XPEnum::valueOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'), 'fixture');
   }
 
   #[Test]
@@ -251,7 +251,7 @@ class EnumTest extends \unittest\TestCase {
     Profiling::$fixture= Coin::$penny;
     $this->assertEquals(
       [Profiling::$INSTANCE, Profiling::$EXTENSION],
-      Enum::valuesOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'))
+      XPEnum::valuesOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'))
     );
     Profiling::$fixture= null;
   }
@@ -271,7 +271,7 @@ class EnumTest extends \unittest\TestCase {
     Profiling::$fixture= $this;
     $this->assertEquals(
       [Profiling::$INSTANCE, Profiling::$EXTENSION],
-      Enum::valuesOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'))
+      XPEnum::valuesOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'))
     );
     Profiling::$fixture= null;
   }
@@ -291,7 +291,7 @@ class EnumTest extends \unittest\TestCase {
     Profiling::$fixture= [$this, $this->name];
     $this->assertEquals(
       [Profiling::$INSTANCE, Profiling::$EXTENSION],
-      Enum::valuesOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'))
+      XPEnum::valuesOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'))
     );
     Profiling::$fixture= null;
   }
