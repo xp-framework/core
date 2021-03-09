@@ -1,9 +1,11 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use lang\XPEnum;
+
 /**
  * Weekday enumeration
  */
-class Weekday extends \lang\Enum {
+class Weekday extends XPEnum {
   public static $MON= 1, $TUE, $WED, $THU, $FRI, $SAT, $SUN;
 
   // These properties verify the automatic initialization doesn't choke on
