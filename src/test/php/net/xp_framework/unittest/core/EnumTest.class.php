@@ -3,19 +3,20 @@
 use lang\reflect\Modifiers;
 use lang\{CloneNotSupportedException, Enum, Error, IllegalArgumentException, XPClass, ClassLoader};
 use unittest\actions\{RuntimeVersion, VerifyThat};
-use unittest\{Action, Expect, Test};
+use unittest\{Action, Expect, Test, TestCase};
 
 /**
  * TestCase for enumerations
  *
- * @see   xp://net.xp_framework.unittest.core.Coin
- * @see   xp://net.xp_framework.unittest.core.Operation
- * @see   xp://net.xp_framework.unittest.core.Weekday
- * @see   xp://lang.Enum
- * @see   xp://lang.XPClass#isEnum
- * @see   http://xp-framework.net/rfc/0132
+ * @see  net.xp_framework.unittest.core.Coin
+ * @see  net.xp_framework.unittest.core.Operation
+ * @see  net.xp_framework.unittest.core.Weekday
+ * @see  net.xp_framework.unittest.core.SortOrder
+ * @see  lang.Enum
+ * @see  lang.XPClass#isEnum
+ * @see  https://github.com/xp-framework/rfc/issues/132
  */
-class EnumTest extends \unittest\TestCase {
+class EnumTest extends TestCase {
 
   /**
    * Asserts given modifiers contain abstract
