@@ -562,8 +562,7 @@ class ClassParser {
         case T_CLASS:
           if (isset($details['class'])) break;  // Inside class, e.g. $lookup= ['self' => self::class]
 
-        case T_INTERFACE:
-        case T_TRAIT:
+        case T_INTERFACE: case T_TRAIT: case T_ENUM:
           if ($parsed) {
             $annotations= $this->parseAnnotations($parsed, $context, $imports, $tokens[$i][2] ?? -1);
             $parsed= '';

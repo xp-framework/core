@@ -339,4 +339,9 @@ class EnumTest extends \unittest\TestCase {
   public function enum_value_initialized_to_declaration() {
     $this->assertEquals(1, Weekday::$MON->ordinal());
   }
+
+  #[Test, Action(eval: 'new VerifyThat(fn() => class_exists("ReflectionEnum", false))')]
+  public function annotations_on_sortorder_enum() {
+    $this->assertEquals(['usedBy' => self::class], XPClass::forName(SortOrder::class)->getAnnotations());
+  }
 }
