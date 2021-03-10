@@ -158,6 +158,14 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
+  #[Test, Action(eval: 'new VerifyThat(fn() => class_exists("ReflectionEnum", false))')]
+  public function valueOf_sortorder_enum() {
+    $this->assertEquals(
+      SortOrder::ASC,
+      Enum::valueOf(SortOrder::class, 'ASC')
+    );
+  }
+
   #[Test, Expect(IllegalArgumentException::class)]
   public function valueOf_nonexistant() {
     Enum::valueOf(XPClass::forName(Coin::class), '@@DOES_NOT_EXIST@@');
@@ -201,7 +209,7 @@ class EnumTest extends \unittest\TestCase {
   }
 
   #[Test, Action(eval: 'new VerifyThat(fn() => class_exists("ReflectionEnum", false))')]
-  public function valuesOf_sortorder_() {
+  public function valuesOf_sortorder_enum() {
     $this->assertEquals(
       [SortOrder::ASC, SortOrder::DESC],
       Enum::valuesOf(XPClass::forName(SortOrder::class))
