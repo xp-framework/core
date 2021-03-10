@@ -46,19 +46,19 @@ abstract class Enum implements Value {
    * @throws lang.IllegalArgumentException in case the enum member does not exist or when the given class is not an enum
    */
   public static function valueOf($type, string $name) {
-    $class= $type instanceof XPClass ? $type : XPClass::forName($type);
+    $reflect= $type instanceof XPClass ? $type->reflect() : XPClass::forName($type)->reflect();
 
-    if ($class->isSubclassOf(self::class)) {
-      $prop= $class->reflect()->getStaticPropertyValue($name, null);
-      if ($class->isInstance($prop)) return $prop;
-    } else if ($class->isSubclassOf(\UnitEnum::class)) {
-      $case= $class->hasConstant($name) ? $class->getConstant($name) : $class->reflect()->getStaticPropertyValue($name, null);
-      if ($class->isInstance($case)) return $case;
+    if ($reflect->isSubclassOf(self::class)) {
+      $prop= $reflect->getStaticPropertyValue($name, null);
+      if ($prop instanceof self && $reflect->isInstance($prop)) return $prop;
+    } else if ($reflect->isSubclassOf(\UnitEnum::class)) {
+      $case= $reflect->getConstant($name) ? : $reflect->getStaticPropertyValue($name, null);
+      if ($case instanceof \UnitEnum && $reflect->isInstance($case)) return $case;
     } else {
       throw new IllegalArgumentException('Argument class must be an enum');
     }
 
-    throw new IllegalArgumentException('Not an enum member "'.$name.'" in '.$class->getName());
+    throw new IllegalArgumentException('Not an enum member "'.$name.'" in '.strtr($reflect->getName(), '\\', '.'));
   }
 
   /**
@@ -69,16 +69,16 @@ abstract class Enum implements Value {
    * @throws lang.IllegalArgumentException in case the given class is not an enum
    */
   public static function valuesOf($type) {
-    $class= $type instanceof XPClass ? $type : XPClass::forName($type);
+    $reflect= $type instanceof XPClass ? $type->reflect() : XPClass::forName($type)->reflect();
 
-    if ($class->isSubclassOf(self::class)) {
+    if ($reflect->isSubclassOf(self::class)) {
       $r= [];
-      foreach ($class->reflect()->getStaticProperties() as $prop) {
-        $class->isInstance($prop) && $r[]= $prop;
+      foreach ($reflect->getStaticProperties() as $prop) {
+        $prop instanceof self && $reflect->isInstance($prop) && $r[]= $prop;
       }
       return $r;
-    } else if ($class->isSubclassOf(\UnitEnum::class)) {
-      return $class->getMethod('cases')->invoke(null);
+    } else if ($reflect->isSubclassOf(\UnitEnum::class)) {
+      return $reflect->getMethod('cases')->invoke(null);
     }
 
     throw new IllegalArgumentException('Argument class must be an enum');
