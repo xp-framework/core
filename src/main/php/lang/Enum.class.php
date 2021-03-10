@@ -49,21 +49,16 @@ abstract class Enum implements Value {
     $class= $type instanceof XPClass ? $type : XPClass::forName($type);
 
     if ($class->isSubclassOf(self::class)) {
-      try {
-        $prop= $class->reflect()->getStaticPropertyValue($name);
-        if ($class->isInstance($prop)) return $prop;
-      } catch (\ReflectionException $e) {
-        throw new IllegalArgumentException($e->getMessage());
-      }
-
-      throw new IllegalArgumentException('Not an enum member "'.$name.'" in '.$class->getName());
+      $prop= $class->reflect()->getStaticPropertyValue($name, null);
+      if ($class->isInstance($prop)) return $prop;
     } else if ($class->isSubclassOf(\UnitEnum::class)) {
-      if ($class->hasConstant($name)) return $class->getConstant($name);
-
-      throw new IllegalArgumentException('Not such case "'.$name.'" in '.$class->getName());
+      $case= $class->hasConstant($name) ? $class->getConstant($name) : $class->reflect()->getStaticPropertyValue($name, null);
+      if ($class->isInstance($case)) return $case;
+    } else {
+      throw new IllegalArgumentException('Argument class must be an enum');
     }
 
-    throw new IllegalArgumentException('Argument class must be an enum');
+    throw new IllegalArgumentException('Not an enum member "'.$name.'" in '.$class->getName());
   }
 
   /**
