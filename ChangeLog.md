@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed issue #262: xar command - compile error - @thekid
+
 ## 10.7.0 / 2021-03-06
 
 ### Features
