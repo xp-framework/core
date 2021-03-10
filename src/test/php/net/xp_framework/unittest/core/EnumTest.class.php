@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\reflect\Modifiers;
-use lang\{CloneNotSupportedException, Enum, Error, IllegalArgumentException, XPClass};
-use unittest\actions\RuntimeVersion;
-use unittest\{Expect, Test};
+use lang\{CloneNotSupportedException, Enum, Error, IllegalArgumentException, XPClass, ClassLoader};
+use unittest\actions\{RuntimeVersion, VerifyThat};
+use unittest\{Action, Expect, Test};
 
 /**
  * TestCase for enumerations
@@ -53,6 +53,11 @@ class EnumTest extends \unittest\TestCase {
   #[Test]
   public function operationIsAnEnums() {
     $this->assertTrue(XPClass::forName(Operation::class)->isEnum());
+  }
+
+  #[Test, Action(eval: 'new VerifyThat(fn() => class_exists("ReflectionEnum", false))')]
+  public function sortorder_is_enum() {
+    $this->assertTrue(XPClass::forName(SortOrder::class)->isEnum());
   }
 
   #[Test]
