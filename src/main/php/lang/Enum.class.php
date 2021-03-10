@@ -81,7 +81,7 @@ abstract class Enum implements Value {
       return $class->getMethod('cases')->invoke(null);
     }
 
-    throw new IllegalArgumentException('Argument class must be enum');
+    throw new IllegalArgumentException('Argument class must be an enum');
   }
 
   /**
