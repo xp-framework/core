@@ -85,7 +85,7 @@ abstract class AbstractClassLoader implements IClassLoader {
       // If class was declared, but loading threw an exception it means
       // a "soft" dependency, one that is only required at runtime, was
       // not loaded, the class itself has been declared.
-      if (class_exists($name, false) || interface_exists($name, false) || trait_exists($name, false)) {
+      if (class_exists($name, false) || interface_exists($name, false) || trait_exists($name, false) || enum_exists($name, false)) {
         throw new ClassDependencyException($class, [$this], $e);
       }
 
@@ -101,7 +101,8 @@ abstract class AbstractClassLoader implements IClassLoader {
       $e= new ClassNotFoundException($class, [$this]);
       \xp::gc(__FILE__);
       throw $e;
-    } else if (!class_exists($name, false) && !interface_exists($name, false) && !trait_exists($name, false)) {
+    } else if (!class_exists($name, false) && !interface_exists($name, false) && !trait_exists($name, false) && !enum_exists($name, false)) {
+      \xp::gc(__FILE__);
       $bytes= $this->loadClassBytes($class);
       if (preg_match('/(class|interface|trait)\s+([^ ]+)/', $bytes, $decl)) {
         preg_match('/namespace\s+([^;]+);/', $bytes, $ns);

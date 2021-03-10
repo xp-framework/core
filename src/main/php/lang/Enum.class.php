@@ -45,11 +45,8 @@ abstract class Enum implements Value {
    * @return self
    * @throws lang.IllegalArgumentException in case the enum member does not exist or when the given class is not an enum
    */
-  public static function valueOf($type, string $name): self {
+  public static function valueOf($type, string $name) {
     $class= $type instanceof XPClass ? $type : XPClass::forName($type);
-    if (!$class->isEnum()) {
-      throw new IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
-    }
 
     if ($class->isSubclassOf(self::class)) {
       try {
@@ -58,13 +55,15 @@ abstract class Enum implements Value {
       } catch (\ReflectionException $e) {
         throw new IllegalArgumentException($e->getMessage());
       }
-    } else {
-      if ($class->reflect()->hasConstant($name)) {
-        $t= ClassLoader::defineClass($class->getName().'Enum', self::class, []);
-        return $t->newInstance($class->reflect()->getConstant($name), $name);
-      }
+
+      throw new IllegalArgumentException('Not an enum member "'.$name.'" in '.$class->getName());
+    } else if ($class->isSubclassOf(\UnitEnum::class)) {
+      if ($class->hasConstant($name)) return $class->getConstant($name);
+
+      throw new IllegalArgumentException('Not such case "'.$name.'" in '.$class->getName());
     }
-    throw new IllegalArgumentException('No such member "'.$name.'" in '.$class->getName());
+
+    throw new IllegalArgumentException('Argument class must be an enum');
   }
 
   /**
@@ -76,22 +75,18 @@ abstract class Enum implements Value {
    */
   public static function valuesOf($type) {
     $class= $type instanceof XPClass ? $type : XPClass::forName($type);
-    if (!$class->isEnum()) {
-      throw new IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
-    }
 
-    $r= [];
     if ($class->isSubclassOf(self::class)) {
+      $r= [];
       foreach ($class->reflect()->getStaticProperties() as $prop) {
         $class->isInstance($prop) && $r[]= $prop;
       }
-    } else {
-      $t= ClassLoader::defineClass($class->getName().'Enum', self::class, []);
-      foreach ($class->reflect()->getMethod('getValues')->invoke(null) as $name => $ordinal) {
-        $r[]= $t->newInstance($ordinal, $name);
-      }
+      return $r;
+    } else if ($class->isSubclassOf(\UnitEnum::class)) {
+      return $class->getMethod('cases')->invoke(null);
     }
-    return $r;
+
+    throw new IllegalArgumentException('Argument class must be enum');
   }
 
   /**

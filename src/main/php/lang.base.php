@@ -418,6 +418,17 @@ if (!interface_exists(\IDisposable::class, false)) {
 }
 // }}}
 
+// {{{ PHP 8.1 enums
+if (!function_exists('enum_exists')) {
+  interface UnitEnum { }
+  interface BackedEnum extends UnitEnum { }
+
+  function enum_exists($name, $load) {
+    return class_exists($name, $load) && $name instanceof \UnitEnum;
+  }
+}
+// }}}
+
 // {{{ main
 error_reporting(E_ALL);
 set_error_handler('__error');
@@ -438,6 +449,7 @@ defined('T_FN') || define('T_FN', -346);
 defined('T_ATTRIBUTE') || define('T_ATTRIBUTE', -383);
 defined('T_NAME_FULLY_QUALIFIED') || define('T_NAME_FULLY_QUALIFIED', -312);
 defined('T_NAME_QUALIFIED') || define('T_NAME_QUALIFIED', -314);
+defined('T_ENUM') || define('T_ENUM', -369);
 
 xp::$loader= new xp();
 

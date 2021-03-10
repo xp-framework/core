@@ -36,7 +36,7 @@ class ClassParser {
       return XPClass::forName($type);
     } else if (isset($imports[$type])) {
       return XPClass::forName($imports[$type]);
-    } else if (class_exists($type, false) || interface_exists($type, false)) {
+    } else if (class_exists($type, false) || interface_exists($type, false) || trait_exists($type, false) || enum_exists($type, false)) {
       return new XPClass($type);
     } else if (false !== ($p= strrpos($context, '.'))) {
       return XPClass::forName(substr($context, 0, $p + 1).$type);
@@ -562,8 +562,7 @@ class ClassParser {
         case T_CLASS:
           if (isset($details['class'])) break;  // Inside class, e.g. $lookup= ['self' => self::class]
 
-        case T_INTERFACE:
-        case T_TRAIT:
+        case T_INTERFACE: case T_TRAIT: case T_ENUM:
           if ($parsed) {
             $annotations= $this->parseAnnotations($parsed, $context, $imports, $tokens[$i][2] ?? -1);
             $parsed= '';

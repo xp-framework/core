@@ -57,7 +57,7 @@ class GenericTypes {
     $qname= $base->name.'<'.substr($qc, 1).'>';
 
     // Create class if it doesn't exist yet
-    if (!class_exists($name, false) && !interface_exists($name, false)) {
+    if (!class_exists($name, false) && !interface_exists($name, false) && !trait_exists($name, false) && !enum_exists($name, false)) {
       $meta= \xp::$meta[$base->name];
 
       // Parse placeholders into a lookup map

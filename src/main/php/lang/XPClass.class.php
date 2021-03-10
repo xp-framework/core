@@ -471,7 +471,8 @@ class XPClass extends Type {
    * @return  bool
    */
   public function isEnum(): bool {
-    return class_exists(Enum::class, false) && $this->reflect()->isSubclassOf(Enum::class);
+    $r= $this->reflect();
+    return $r->isSubclassOf(Enum::class) || $r->isSubclassOf(\UnitEnum::class);
   }
 
   /**
@@ -800,7 +801,7 @@ class XPClass extends Type {
       $name= strtr($resolved, '\\', '.');
     }
 
-    if (class_exists($resolved, false) || interface_exists($resolved, false) || trait_exists($resolved, false)) {
+    if (class_exists($resolved, false) || interface_exists($resolved, false) || trait_exists($resolved, false) || enum_exists($resolved, false)) {
       return new self($resolved);
     } else if (null === $classloader) {
       return ClassLoader::getDefault()->loadClass($name);
