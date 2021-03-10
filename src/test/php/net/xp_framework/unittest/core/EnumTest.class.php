@@ -200,6 +200,14 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
+  #[Test, Action(eval: 'new VerifyThat(fn() => class_exists("ReflectionEnum", false))')]
+  public function valuesOf_sortorder_() {
+    $this->assertEquals(
+      [SortOrder::ASC, SortOrder::DESC],
+      Enum::valuesOf(XPClass::forName(SortOrder::class))
+    );
+  }
+
   #[Test, Expect(IllegalArgumentException::class)]
   public function valuesOf_non_enum() {
     Enum::valuesOf(self::class);

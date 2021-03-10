@@ -48,7 +48,7 @@ abstract class Enum implements Value {
   public static function valueOf($type, string $name): self {
     $class= $type instanceof XPClass ? $type : XPClass::forName($type);
     if (!$class->isEnum()) {
-      throw new IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
+      throw new IllegalArgumentException('Argument class must be an enum');
     }
 
     if ($class->isSubclassOf(self::class)) {
@@ -76,22 +76,17 @@ abstract class Enum implements Value {
    */
   public static function valuesOf($type) {
     $class= $type instanceof XPClass ? $type : XPClass::forName($type);
-    if (!$class->isEnum()) {
-      throw new IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
-    }
-
-    $r= [];
     if ($class->isSubclassOf(self::class)) {
+      $r= [];
       foreach ($class->reflect()->getStaticProperties() as $prop) {
         $class->isInstance($prop) && $r[]= $prop;
       }
+      return $r;
+    } else if ($class->isSubclassOf(\UnitEnum::class)) {
+      return $class->getMethod('cases')->invoke(null);
     } else {
-      $t= ClassLoader::defineClass($class->getName().'Enum', self::class, []);
-      foreach ($class->reflect()->getMethod('getValues')->invoke(null) as $name => $ordinal) {
-        $r[]= $t->newInstance($ordinal, $name);
-      }
+      throw new IllegalArgumentException('Argument class must be enum');
     }
-    return $r;
   }
 
   /**
