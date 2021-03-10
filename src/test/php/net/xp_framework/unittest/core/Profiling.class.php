@@ -3,7 +3,7 @@
 /**
  * Profiling enumeration
  */
-class Profiling extends \lang\XPEnum {
+class Profiling extends \lang\Enum {
   public static $INSTANCE;
   public static $EXTENSION;
 

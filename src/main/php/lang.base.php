@@ -418,6 +418,17 @@ if (!interface_exists(\IDisposable::class, false)) {
 }
 // }}}
 
+// {{{ PHP 8.1 enums
+if (!function_exists('enum_exists')) {
+  interface UnitEnum { }
+  interface BackedEnum extends UnitEnum { }
+
+  function enum_exists($name, $load) {
+    return class_exists($name, $load) && $name instanceof \UnitEnum;
+  }
+}
+// }}}
+
 // {{{ main
 error_reporting(E_ALL);
 set_error_handler('__error');
@@ -467,15 +478,4 @@ spl_autoload_register(function($class) {
     return true;
   }
 });
-
-if (!function_exists('enum_exists')) {
-  interface UnitEnum { }
-  interface BackedEnum extends UnitEnum { }
-
-  function enum_exists($name, $load) {
-    return class_exists($name, $load) && $name instanceof \UnitEnum;
-  }
-
-  class_alias(\lang\XPEnum::class, \lang\Enum::class);
-}
 // }}}
