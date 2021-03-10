@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Merged PR #261, adding forward compatibility with PHP 8.1 enumerations.
+  Adds `enum_exists()` as well as `UnitEnum` and `BackedEnum` interfaces,
+  see https://wiki.php.net/rfc/enumerations
+  (@thekid)
+
 ### Bugfixes
 
 * Fixed issue #262: xar command - compile error - @thekid
