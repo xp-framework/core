@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.8.0 / 2021-03-10
+
 ### Features
 
 * Merged PR #261, adding forward compatibility with PHP 8.1 enumerations.
