@@ -15,6 +15,11 @@ abstract class SecretTest extends TestCase {
   }
 
   #[Test]
+  public function create_with_null() {
+    new Secret(null);
+  }
+
+  #[Test]
   public function create_from_function_return_value() {
     $f= function() { return 'payload'; };
     new Secret($f());

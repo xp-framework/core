@@ -124,7 +124,7 @@ class Secret implements Value {
    */
   protected function update(&$characters) {
     try {
-      self::$store[$this->id]= self::$encrypt->__invoke($characters);
+      self::$store[$this->id]= self::$encrypt->__invoke((string)$characters);
     } catch (\Throwable $e) {
       // This intentionally catches *ALL* exceptions, in order not to fail
       // and produce a stacktrace (containing arguments on the stack that were)
@@ -134,7 +134,7 @@ class Secret implements Value {
       \xp::gc();
     }
 
-    $characters= str_repeat('*', strlen($characters));
+    $characters= str_repeat('*', null === $characters ? 16 : strlen($characters));
     $characters= null;
   }
 

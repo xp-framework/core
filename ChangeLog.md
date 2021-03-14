@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.8.1 / 2021-03-14
+
+### Bugfixes
+
+* Fixed issue #263: Warnings in util.Secret with PHP 8.1 - @thekid
+
 ## 10.8.0 / 2021-03-10
 
 ### Features
