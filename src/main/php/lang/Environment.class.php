@@ -14,7 +14,7 @@ abstract class Environment {
    * @return bool
    */
   private static function xdgCompliant() {
-    foreach ($_ENV as $name => $value) {
+    foreach ($_SERVER as $name => $value) {
       if (0 === strncmp($name, 'XDG_', 4)) return true;
     }
     return false;
@@ -29,15 +29,15 @@ abstract class Environment {
    * @return  [:string]
    */
   public static function variables($filter= null) {
-    if (null === $filter) return $_ENV;
+    if (null === $filter) return $_SERVER;
 
     $r= [];
     if (is_array($filter)) {
       foreach ($filter as $name) {
-        isset($_ENV[$name]) && $r[$name]= $_ENV[$name];
+        isset($_SERVER[$name]) && $r[$name]= $_SERVER[$name];
       }
     } else {
-      foreach ($_ENV as $name => $value) {
+      foreach ($_SERVER as $name => $value) {
         preg_match($filter, $name) && $r[$name]= $value;
       }
     }
@@ -82,10 +82,10 @@ abstract class Environment {
     foreach ($variables as $name => $value) {
       if (null === $value) {
         putenv($name);
-        unset($_ENV[$name]);
+        unset($_SERVER[$name]);
       } else {
         putenv($name.'='.$value);
-        $_ENV[$name]= $value;
+        $_SERVER[$name]= $value;
       }
     }
   }

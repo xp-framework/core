@@ -9,7 +9,7 @@ class EnvironmentTest extends \unittest\TestCase {
   #[BeforeClass]
   public static function clearXDG() {
     $remove= [];
-    foreach ($_ENV as $variable => $value) {
+    foreach ($_SERVER as $variable => $value) {
       if (0 === strncmp('XDG_', $variable, 4)) $remove[$variable]= null;
     }
     self::$set= new EnvironmentSet($remove);
