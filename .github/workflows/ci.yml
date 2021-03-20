@@ -31,7 +31,7 @@ jobs:
       with:
         php-version: ${{ matrix.php-versions }}
         extensions: com_dotnet
-        ini-values: date.timezone=Europe/Berlin
+        ini-values: date.timezone=Europe/Berlin variables_order=EGPCS
 
     - name: Setup Problem Matchers for PHP
       run: echo "::add-matcher::${{ runner.tool_cache }}/php.json"
