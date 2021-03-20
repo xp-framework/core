@@ -3,11 +3,19 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.9.0 / 2021-03-20
+
 ### Features
 
 * Generated `util.MimeType` from the media type database over at
   https://github.com/jshttp/mime-db, which in turn consists of lists
   compiled from IANA registrations, Apache and Nginx. See issue #264
+  (@thekid)
+
+### Bugfixes
+
+* Fixed issue #265: Environment::variables() empty on certain environments
+  by replacing `$_ENV` by `$_SERVER`, see PR #266
   (@thekid)
 
 ## 10.8.1 / 2021-03-14
