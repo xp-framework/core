@@ -21,10 +21,10 @@ class EnvironmentSet implements \lang\Closeable {
       $this->original[$name]= getenv($name);
       if (null === $value) {
         putenv($name);
-        unset($_ENV[$name]);
+        unset($_SERVER[$name]);
       } else {
         putenv($name.'='.$value);
-        $_ENV[$name]= $value;
+        $_SERVER[$name]= $value;
       }
     }
   }
@@ -34,10 +34,10 @@ class EnvironmentSet implements \lang\Closeable {
     foreach ($this->original as $name => $value) {
       if (false === $value) {
         putenv($name);
-        unset($_ENV[$name]);
+        unset($_SERVER[$name]);
       } else {
         putenv($name.'='.$value);
-        $_ENV[$name]= $value;
+        $_SERVER[$name]= $value;
       }
     }
   }
