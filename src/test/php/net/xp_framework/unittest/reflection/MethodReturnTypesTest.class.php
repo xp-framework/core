@@ -187,7 +187,7 @@ class MethodReturnTypesTest extends MethodsTest {
     $this->assertEquals('static', $method->getReturnTypeName(), 'name');
   }
 
-  #[Test]
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.1")')]
   public function apidoc_supersedes_void_type_restriction() {
     $method= $this->type('{ /** @return never */ public function fixture(): void { exit(); } }')->getMethod('fixture');
 
