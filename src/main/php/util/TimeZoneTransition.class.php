@@ -44,7 +44,7 @@ class TimeZoneTransition implements Value {
         return new self($tz, new Date($t['ts']), $t['isdst'], $t['offset'], $t['abbr']);
       }
     }
-    throw new IllegalArgumentException('Timezone '.$this->tz->getName().' does not have DST transitions.');
+    throw new IllegalArgumentException('Timezone '.$tz->getName().' does not have DST transitions.');
   }
   
   /**
@@ -64,7 +64,7 @@ class TimeZoneTransition implements Value {
       }
       $l= $t;
     }
-    throw new IllegalArgumentException('Timezone '.$this->tz->getName().' does not have DST transitions.');
+    throw new IllegalArgumentException('Timezone '.$tz->getName().' does not have DST transitions.');
   }
   
   /**
