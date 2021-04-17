@@ -160,9 +160,9 @@ class Routine implements Value {
       $nullable= $t->allowsNull() ? '?' : '';
       $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
 
-      // Check array, self and callable for more specific types, e.g. `string[]`,
-      // `static` or `function(): string` in api documentation
-      if ('array' !== $name && 'callable' !== $name && 'self' !== $name) {
+      // Check array, self, void and callable for more specific types, e.g. `string[]`,
+      // `static`, `never` or `function(): string` in api documentation
+      if ('array' !== $name && 'callable' !== $name && 'self' !== $name && 'void' !== $name) {
         return $nullable.($map[$name] ?? strtr($name, '\\', '.'));
       }
     }
