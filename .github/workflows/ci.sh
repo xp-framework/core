@@ -1,6 +1,6 @@
 #!/bin/sh
 
-XP_RUNNERS_URL=https://dl.bintray.com/xp-runners/generic/xp-run-8.4.0.sh
+XP_RUNNERS_URL=https://baltocdn.com/xp-framework/xp-runners/distribution/downloads/i/installer/setup-8.5.0.sh
 
 case $1 in
   install)
