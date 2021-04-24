@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.9.1 / 2021-04-24
+
+### Bugfixes
+
+* Make XP work when *iconv* extension is not available but *mbstring*
+  is, offering a degraded and not 100% compatible experience, see #270
+  (@thekid)
+
 ## 10.9.0 / 2021-03-20
 
 ### Features
