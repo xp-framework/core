@@ -436,6 +436,17 @@ if (!date_default_timezone_set(ini_get('date.timezone'))) {
   throw new \Exception('[xp::core] date.timezone not configured properly.', 0x3d);
 }
 
+// If iconv is not available but mbstring is, create snap-in replacements
+if (!defined('ICONV_IMPL')) {
+  function iconv($from, $to, $str) {
+    return mb_convert_encoding($str, $to ?: 'utf-8', $from ?: 'utf-8');
+  }
+
+  function iconv_strlen($str, $charset) {
+    return mb_strlen($str, $charset ?: 'utf-8');
+  }
+}
+
 define('MODIFIER_STATIC',    \ReflectionMethod::IS_STATIC);
 define('MODIFIER_ABSTRACT',  \ReflectionMethod::IS_ABSTRACT);
 define('MODIFIER_FINAL',     \ReflectionMethod::IS_FINAL);
