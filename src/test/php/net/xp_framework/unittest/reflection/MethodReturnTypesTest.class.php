@@ -90,7 +90,7 @@ class MethodReturnTypesTest extends MethodsTest {
     $this->assertReturnType(Type::$VOID, $fixture->getMethod('fixture'));
   }
 
-  #[Test, Ignore('php/php-src#6761 not yet merged'), Action(eval: 'new RuntimeVersion(">=8.1")')]
+  #[Test, Action(eval: 'new RuntimeVersion(">=8.1")')]
   public function never_return_type() {
     $fixture= $this->type('{ public function fixture(): never { exit(); } }');
     $this->assertReturnType(Type::$NEVER, $fixture->getMethod('fixture'));
