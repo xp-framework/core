@@ -9,7 +9,7 @@
  * @test   xp://net.xp_framework.unittest.reflection.TypeTest 
  */
 class Type implements Value {
-  public static $VAR, $VOID, $ARRAY, $OBJECT, $CALLABLE, $ITERABLE;
+  public static $VAR, $VOID, $NEVER, $ARRAY, $OBJECT, $CALLABLE, $ITERABLE;
   private static $named= [];
   public $name;
   public $default;
@@ -17,6 +17,7 @@ class Type implements Value {
   static function __static() {
     self::$VAR= new self('var', null);
     self::$VOID= new self('void', null);
+    self::$NEVER= new self('never', null);
 
     self::$ARRAY= eval('namespace lang; class NativeArrayType extends Type {
       static function __static() { }
@@ -97,6 +98,7 @@ class Type implements Value {
       'resource'  => self::$VAR,
       'mixed'     => self::$VAR,
       'void'      => self::$VOID,
+      'never'     => self::$NEVER,
       'array'     => self::$ARRAY,
       'object'    => self::$OBJECT,
       'callable'  => self::$CALLABLE,
@@ -221,6 +223,8 @@ class Type implements Value {
    * @return ?self
    */
   public static function resolve($type, $context= [], $api= null) {
+    static $specify= ['array' => 1, 'callable' => 1, 'self' => 1, 'void' => 1];
+
     if (null === $type) {
 
       // Check for type in api documentation
@@ -236,11 +240,9 @@ class Type implements Value {
     } else if ($type instanceof \ReflectionType) {
       $name= PHP_VERSION_ID >= 70100 ? $type->getName() : $type->__toString();
 
-      // Check array, self and callable for more specific types, e.g. `string[]`,
-      // `static` or `function(): string` in api documentation
-      if ($api && ('array' === $name || 'callable' === $name || 'self' === $name) && ($s= $api(true))) {
-        return self::named($s, $context);
-      }
+      // Check array, self, void and callable for more specific types, e.g. `string[]`,
+      // `static`, `never` or `function(): string` in api documentation
+      if ($api && isset($specify[$name]) && ($s= $api(true))) return self::named($s, $context);
       $t= self::named($name, $context);
     } else {
 
