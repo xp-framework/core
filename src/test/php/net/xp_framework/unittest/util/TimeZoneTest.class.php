@@ -1,7 +1,8 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\IllegalArgumentException;
-use unittest\{Expect, Test, TestCase, Values};
+use unittest\actions\RuntimeVersion;
+use unittest\{Action, Expect, Test, TestCase, Values};
 use util\{Date, TimeZone};
 
 class TimeZoneTest extends TestCase {
@@ -39,7 +40,7 @@ class TimeZoneTest extends TestCase {
     );
   }
   
-  #[Test]
+  #[Test, Action(eval: 'new RuntimeVersion("<8.1.0-dev")')]
   public function previousTransition() {
     $transition= (new TimeZone('Europe/Berlin'))->previousTransition(new Date('2007-08-23'));
     $this->assertEquals(true, $transition->isDst());
@@ -48,7 +49,7 @@ class TimeZoneTest extends TestCase {
     $this->assertEquals(new Date('2007-03-25 02:00:00 Europe/Berlin'), $transition->date());
   }
   
-  #[Test]
+  #[Test, Action(eval: 'new RuntimeVersion("<8.1.0-dev")')]
   public function previousPreviousTransition() {
     $transition= (new TimeZone('Europe/Berlin'))->previousTransition(new Date('2007-08-23'));
     $previous= $transition->previous();
@@ -58,7 +59,7 @@ class TimeZoneTest extends TestCase {
     $this->assertEquals(new Date('2006-10-29 02:00:00 Europe/Berlin'), $previous->date());
   }
 
-  #[Test]
+  #[Test, Action(eval: 'new RuntimeVersion("<8.1.0-dev")')]
   public function previousNextTransition() {
     $transition= (new TimeZone('Europe/Berlin'))->previousTransition(new Date('2007-08-23'));
     $next= $transition->next();
@@ -68,7 +69,7 @@ class TimeZoneTest extends TestCase {
     $this->assertEquals(new Date('2007-10-28 02:00:00 Europe/Berlin'), $next->date());
   }
 
-  #[Test]
+  #[Test, Action(eval: 'new RuntimeVersion("<8.1.0-dev")')]
   public function nextTransition() {
     $transition= (new TimeZone('Europe/Berlin'))->nextTransition(new Date('2007-08-23'));
     $this->assertEquals(false, $transition->isDst());

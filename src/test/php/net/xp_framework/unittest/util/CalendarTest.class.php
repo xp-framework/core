@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
  
-use unittest\{Test, TestCase};
+use unittest\actions\RuntimeVersion;
+use unittest\{Test, Action, TestCase};
 use util\{Calendar, Date, TimeZone};
 
 /**
@@ -85,7 +86,7 @@ class CalendarTest extends TestCase {
    *
    * @see     xp://util.Calendar
    */
-  #[Test]
+  #[Test, Action(eval: 'new RuntimeVersion("<8.1.0-dev")')]
   public function testCalendarDSTBegin() {
     $this->assertDateEquals('2003-03-30T01:00:00+00:00', Calendar::dstBegin(2003), 'dstbegin');
   }
@@ -96,7 +97,7 @@ class CalendarTest extends TestCase {
    *
    * @see     xp://util.Calendar
    */
-  #[Test]
+  #[Test, Action(eval: 'new RuntimeVersion("<8.1.0-dev")')]
   public function testCalendarDSTBeginByDate() {
     $this->assertDateEquals('2003-03-30T01:00:00+00:00', Calendar::dstBegin(new Date('2003-11-11 22:22:22 Europe/Berlin'), CAL_DST_EU), 'dstbegin');
     $this->assertDateEquals('2003-03-30T01:00:00+00:00', Calendar::dstBegin(new Date('2003-11-11 22:22:22 Europe/Berlin'), CAL_DST_US), 'dstbegin');
@@ -107,7 +108,7 @@ class CalendarTest extends TestCase {
    *
    * @see     xp://util.Calendar
    */
-  #[Test]
+  #[Test, Action(eval: 'new RuntimeVersion("<8.1.0-dev")')]
   public function testCalendarDSTBeginUS() {
     $this->assertDateEquals('2003-04-06T07:00:00+00:00', Calendar::dstBegin(2003, CAL_DST_US), 'dstbegin');
   }
@@ -117,7 +118,7 @@ class CalendarTest extends TestCase {
    *
    * @see     xp://util.Calendar
    */
-  #[Test]
+  #[Test, Action(eval: 'new RuntimeVersion("<8.1.0-dev")')]
   public function testCalendarDSTEnd() {
     $this->assertDateEquals('2003-10-26T01:00:00+00:00', Calendar::dstEnd(2003), 'dstend');
   }
