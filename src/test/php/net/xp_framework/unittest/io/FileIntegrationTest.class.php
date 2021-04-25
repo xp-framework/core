@@ -367,10 +367,6 @@ class FileIntegrationTest extends TestCase {
       $target->unlink();
       
       $this->assertEquals($data, $read);
-      
-      // FIXME I don't think io.File should be updating its URI when 
-      // move() is called. Because it does, this assertion fails!
-      // $this->assertFalse($this->file->exists()); 
     }
   }
 
@@ -387,10 +383,6 @@ class FileIntegrationTest extends TestCase {
       $target->unlink();
 
       $this->assertEquals($data, $read);
-      
-      // FIXME I don't think io.File should be updating its URI when 
-      // move() is called. Because it does, this assertion fails!
-      // $this->assertFalse($this->file->exists()); 
     }
   }
 
