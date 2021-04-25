@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Merged PR #267: Support PHP 8.1 `never` type in reflection - @thekid
+
 ## 10.9.1 / 2021-04-24
 
 ### Bugfixes
