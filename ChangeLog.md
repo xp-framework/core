@@ -3,8 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.10.0 / 2021-04-25
+
 ### Features
 
+* Merged PR #271: Pass NULL to Properties::expanding() to ignore expansion
+  (@thekid)
 * Merged PR #267: Support PHP 8.1 `never` type in reflection - @thekid
 
 ## 10.9.1 / 2021-04-24
