@@ -49,6 +49,12 @@ class PropertyExpansionTest extends TestCase {
     $this->assertEquals('test', $prop->readString('section', 'test'));
   }
 
+  #[Test]
+  public function null_lookup_ignores_missing_expansion() {
+    $prop= $this->newFixture(null);
+    $this->assertEquals('', $prop->readString('section', 'test'));
+  }
+
   #[Test, Expect(ElementNotFoundException::class), Values([null, false])]
   public function non_existant_lookup($return) {
     $this->newFixture(function($name) use($return) { return $return; })->readString('section', 'test');
