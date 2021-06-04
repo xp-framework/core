@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\{Environment, IllegalArgumentException, IllegalStateException};
-use unittest\{AfterClass, BeforeClass, Expect, Test, Values};
+use unittest\{AfterClass, BeforeClass, Expect, Test, TestCase, Values};
 
-class EnvironmentTest extends \unittest\TestCase {
+class EnvironmentTest extends TestCase {
   private static $set;
 
   #[BeforeClass]
