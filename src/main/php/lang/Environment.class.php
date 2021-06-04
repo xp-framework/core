@@ -117,11 +117,10 @@ abstract class Environment {
    * and parent directories with `.` and `..`, the user's home directory with
    * `~` and use `%USERPROFILE%` and `%APPDATA%` on Windows.
    *
-   * @param  string $dir
-   * @param  ?string $platform Use NULL to detect
-   * @return string
+   * Platform accepts one of the values returned from `platform()` or NULL
+   * to use the platform we're currently operating on.
    */
-  public static function path($dir= '.', $platform= null): string {
+  public static function path(string $dir= '.', $platform= null): string {
     if ('.' === $dir || '..' === $dir) return $dir; // Short-circuit well-known names
 
     // Based on platform, define shorthands for replacements
