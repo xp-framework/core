@@ -194,16 +194,16 @@ class Process {
             return false;
           };
         } else {
-          exec('wmic process where handle='.$pid.' get ExecutablePath,CommandLine /format:list 2>NUL', $out, $r);
-          if (0 !== $r) {
-            throw new IllegalStateException(implode(' ', $out));
-          }
-
+          exec('wmic process where handle='.$pid.' get ExecutablePath,CommandLine /format:list 2>&1', $out, $r);
           $p= [];
           foreach ($out as $line) {
             if (2 === sscanf($line, "%[^=]=%[^\r]", $key, $value)) {
               $p[$key]= $value;
             }
+          }
+
+          if (0 !== $r || !isset($p['ExecutablePath'])) {
+            throw new IllegalStateException(implode(' ', $out));
           }
 
           if (null === $exe) $self->status['exe']= $p['ExecutablePath'];
