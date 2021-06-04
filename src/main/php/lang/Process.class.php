@@ -168,6 +168,7 @@ class Process {
     // Determine executable and command line:
     // * On Windows, use Windows Management Instrumentation API - see
     //   http://en.wikipedia.org/wiki/Windows_Management_Instrumentation
+    //   via com_dotnet, falling back to the "wmic" command line tool.
     //
     // * On systems with a /proc filesystem, use information from /proc/self
     //   See http://en.wikipedia.org/wiki/Procfs. Before relying on it, 
@@ -180,17 +181,38 @@ class Process {
     //   purposes)
     if (strncasecmp(PHP_OS, 'Win', 3) === 0) {
       try {
-        $c= new \Com('winmgmts://./root/cimv2');
-        $p= $c->get('Win32_Process.Handle="'.$pid.'"');
-        if (null === $exe) $self->status['exe']= $p->executablePath;
-        $self->status['command']= $p->commandLine;
-        $self->status['running?']= function() use($c, $pid) {
-          $p= $c->execQuery('select * from Win32_Process where Handle="'.$pid.'"');
-          foreach ($p as $result) {
-            return true;
+        if (class_exists(\Com::class)) {
+          $c= new \Com('winmgmts://./root/cimv2');
+          $p= $c->get('Win32_Process.Handle="'.$pid.'"');
+          if (null === $exe) $self->status['exe']= $p->executablePath;
+          $self->status['command']= $p->commandLine;
+          $self->status['running?']= function() use($c, $pid) {
+            $p= $c->execQuery('select * from Win32_Process where Handle="'.$pid.'"');
+            foreach ($p as $result) {
+              return true;
+            }
+            return false;
+          };
+        } else {
+          exec('wmic process where handle='.$pid.' get ExecutablePath,CommandLine /format:list 2>NUL', $out, $r);
+          if (0 !== $r) {
+            throw new IllegalStateException(implode(' ', $out));
           }
-          return false;
-        };
+
+          $p= [];
+          foreach ($out as $line) {
+            if (2 === sscanf($line, "%[^=]=%[^\r]", $key, $value)) {
+              $p[$key]= $value;
+            }
+          }
+
+          if (null === $exe) $self->status['exe']= $p['ExecutablePath'];
+          $self->status['command']= $p['CommandLine'];
+          $self->status['running?']= function() use($pid) {
+            exec('wmic process where handle='.$pid.' get Handle 2>NUL', $out);
+            return in_array($pid, $out);
+          };
+        }
         $self->status['terminate!']= function($signal) use($pid) {
           exec('taskkill /F /T /PID '.$pid);
         };
