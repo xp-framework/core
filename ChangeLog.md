@@ -3,6 +3,16 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.11.0 / 2021-06-04
+
+### Features
+
+* Merged PR #273: Fall back to `wmic` command line tool if `com_dotnet`
+  extension is not loaded
+  (@thekid)
+* Merged PR #272: Add `Environment::platform()` and `Environment::path()`
+  (@thekid)
+
 ## 10.10.0 / 2021-04-25
 
 ### Features
