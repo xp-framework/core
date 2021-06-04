@@ -109,6 +109,57 @@ class EnvironmentTest extends \unittest\TestCase {
     });
   }
 
+  #[Test]
+  public function platform() {
+    $this->assertNotEquals('', Environment::platform());
+  }
+
+  #[Test]
+  public function current_path() {
+    $this->assertEquals('.', Environment::path());
+  }
+
+  #[Test, Values(['.', '..'])]
+  public function well_known_path($dotted) {
+    $this->assertEquals($dotted, Environment::path($dotted));
+  }
+
+  #[Test, Values([['Windows', '.\\file'], ['Linux', './file'], ['Cygwin', './file'], ['Darwin', './file']])]
+  public function path_without_directory($platform, $expected) {
+    $this->assertEquals($expected, Environment::path('file', $platform));
+  }
+
+  #[Test, Values([['Windows', '.\\file'], ['Linux', './file'], ['Cygwin', './file'], ['Darwin', './file']])]
+  public function inside_current_path($platform, $expected) {
+    $this->assertEquals($expected, Environment::path(getcwd().'/file', $platform));
+  }
+
+  #[Test, Values([['Windows', '..\\file'], ['Linux', '../file'], ['Cygwin', '../file'], ['Darwin', '../file']])]
+  public function inside_parent_path($platform, $expected) {
+    $this->assertEquals($expected, Environment::path(dirname(getcwd()).'/file', $platform));
+  }
+
+  #[Test, Values(['Linux', 'Cygwin', 'Darwin'])]
+  public function home_path($platform) {
+    with (new EnvironmentSet(['HOME' => '/home/test']), function() use($platform) {
+      $this->assertEquals('~/file', Environment::path('/home/test/file', $platform));
+    });
+  }
+
+  #[Test, Values([['Windows', '%USERPROFILE%\\file'], ['Cygwin', '$USERPROFILE/file']])]
+  public function windows_userprofile_path($platform, $expected) {
+    with (new EnvironmentSet(['USERPROFILE' => 'C:/Users/test']), function() use($platform, $expected) {
+      $this->assertEquals($expected, Environment::path('C:/Users/test/file', $platform));
+    });
+  }
+
+  #[Test, Values([['Windows', '%APPDATA%\\file'], ['Cygwin', '$APPDATA/file']])]
+  public function windows_appdata_path($platform, $expected) {
+    with (new EnvironmentSet(['APPDATA' => 'C:/Users/test/AppData/Roaming']), function() use($platform, $expected) {
+      $this->assertEquals($expected, Environment::path('C:/Users/test/AppData/Roaming/file', $platform));
+    });
+  }
+
   #[Test, Values([[['TEMP' => 'tmp', 'TMP' => null, 'TMPDIR' => null, 'TEMPDIR' => null]], [['TEMP' => null, 'TMP' => 'tmp', 'TMPDIR' => null, 'TEMPDIR' => null]], [['TEMP' => null, 'TMP' => null, 'TMPDIR' => 'tmp', 'TEMPDIR' => null]], [['TEMP' => null, 'TMP' => null, 'TMPDIR' => null, 'TEMPDIR' => 'tmp']]])]
   public function temp_dir_via_variables($environment) {
     with (new EnvironmentSet($environment), function() {

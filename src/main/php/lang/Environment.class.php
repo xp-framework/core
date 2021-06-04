@@ -91,6 +91,79 @@ abstract class Environment {
   }
 
   /**
+   * Returns the platform we're currently operating on, which is one of:
+   *
+   * - Windows
+   * - Linux
+   * - Darwin ("Mac OS")
+   * - BSD
+   * - Solaris
+   * - Cygwin
+   * - Unknown
+   * 
+   * Same as the constant `PHP_OS_FAMILY` but handles Cygwin and also works
+   * for PHP 7.0 and 7.1, where this constant does not exist yet.
+   */
+  public static function platform(): string {
+    $family= defined('PHP_OS_FAMILY') ? PHP_OS_FAMILY : PHP_OS;
+    return 'Windows' === $family || 'WINNT' === $family
+      ? getenv('HOME') ? 'Cygwin' : 'Windows'
+      : $family
+    ;
+  }
+
+  /**
+   * Returns a path for display for a given directory. Will replace current
+   * and parent directories with `.` and `..`, the user's home directory with
+   * `~` and use `%USERPROFILE%` and `%APPDATA%` on Windows.
+   *
+   * @param  string $dir
+   * @param  ?string $platform Use NULL to detect
+   * @return string
+   */
+  public static function path($dir= '.', $platform= null): string {
+    if ('.' === $dir || '..' === $dir) return $dir; // Short-circuit well-known names
+
+    // Based on platform, define shorthands for replacements
+    $cwd= getcwd();
+    $replace= [$cwd => '.', dirname($cwd) => '..'];
+    switch ($platform ?? self::platform()) {
+      case 'Windows':
+        $separator= '\\';
+        $replace+= [getenv('APPDATA') => '%APPDATA%', getenv('USERPROFILE') => '%USERPROFILE%'];
+        break;
+
+      case 'Cygwin':
+        $separator= '/';
+        $replace+= [getenv('HOME') => '~', getenv('APPDATA') => '$APPDATA', getenv('USERPROFILE') => '$USERPROFILE'];
+        break;
+
+      default:
+        $separator= '/';
+        $replace+= [getenv('HOME') => '~'];
+        break;
+    }
+
+    // Short-circuit paths without directory
+    if (strcspn($dir, '/\\') === strlen($dir)) return '.'.$separator.$dir;
+
+    // Compare expanded paths against replace using case-insensitivity on Windows
+    $prefix= 0 === strncasecmp(PHP_OS, 'Win', 3) ? 'stripos' : 'strpos';
+    $expand= function($path) {
+      return realpath($path) ?: rtrim(strtr($path, '/\\', DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR);
+    };
+
+    $path= $expand($dir);
+    foreach ($replace as $base => $with) {
+      if (0 === $prefix($path, $expand($base))) {
+        $path= $with.substr($path, strlen($base));
+        break;
+      }
+    }
+    return strtr($path, DIRECTORY_SEPARATOR, $separator);
+  }
+
+  /**
    * Retrieve location of temporary directory. This method looks at the 
    * environment variables TEMP, TMP, TMPDIR and TEMPDIR and, if these 
    * cannot be found, uses PHP's builtin functionality.
