@@ -82,22 +82,21 @@ abstract class Objects {
       $protect[$hash]= true;
       if (0 === $key= key($val)) {
         $r= '';
-        foreach ($val as $val) {
-          $r.= ', '.self::stringOf($val, $indent);
+        foreach ($val as $value) {
+          $r.= ', '.self::stringOf($value, $indent);
         }
-        unset($protect[$hash]);
-        return '['.substr($r, 2).']';
+        $r= '['.substr($r, 2).']';
       } else if (1 === sizeof($val)) {
-        unset($protect[$hash]);
-        return '['.$key.' => '.self::stringOf($val[$key], $indent.'  ').']';
+        $r= '['.$key.' => '.self::stringOf($val[$key], $indent.'  ').']';
       } else {
         $r= "[\n";
         foreach ($val as $key => $val) {
           $r.= $indent.'  '.$key.' => '.self::stringOf($val, $indent.'  ')."\n";
         }
-        unset($protect[$hash]);
-        return $r.$indent.']';
+        $r.= $indent.']';
       }
+      unset($protect[$hash]);
+      return $r;
     } else if ($val instanceof \Closure) {
       $sig= '';
       $f= new \ReflectionFunction($val);
