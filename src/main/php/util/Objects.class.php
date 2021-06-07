@@ -34,8 +34,7 @@ abstract class Objects {
       return $a->compareTo($b);
     } else if (is_array($a)) {
       if (!is_array($b)) return 1;
-      if (sizeof($a) < sizeof($b)) return -1;
-      if (sizeof($a) > sizeof($b)) return 1;
+      if (0 !== $r= sizeof($a) <=> sizeof($b)) return $r;
       foreach ($a as $key => $val) {
         if (!array_key_exists($key, $b)) return 1;
         if (0 !== $r= self::compare($val, $b[$key])) return $r;
@@ -81,13 +80,16 @@ abstract class Objects {
       $hash= print_r($val, true);
       if (isset($protect[$hash])) return '->{:recursion:}';
       $protect[$hash]= true;
-      if (0 === key($val)) {
+      if (0 === $key= key($val)) {
         $r= '';
         foreach ($val as $val) {
           $r.= ', '.self::stringOf($val, $indent);
         }
         unset($protect[$hash]);
         return '['.substr($r, 2).']';
+      } else if (1 === sizeof($val)) {
+        unset($protect[$hash]);
+        return '['.$key.' => '.self::stringOf($val[$key], $indent.'  ').']';
       } else {
         $r= "[\n";
         foreach ($val as $key => $val) {
