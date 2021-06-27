@@ -462,8 +462,6 @@ define('DETAIL_ANNOTATIONS', 5);
 define('DETAIL_TARGET_ANNO', 6);
 define('DETAIL_GENERIC',     7);
 
-defined('PHP_INT_MIN') || define('PHP_INT_MIN', ~PHP_INT_MAX);
-
 defined('T_FN') || define('T_FN', -346);
 defined('T_ATTRIBUTE') || define('T_ATTRIBUTE', -383);
 defined('T_NAME_FULLY_QUALIFIED') || define('T_NAME_FULLY_QUALIFIED', -312);
