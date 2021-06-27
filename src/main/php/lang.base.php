@@ -454,6 +454,14 @@ define('MODIFIER_PUBLIC',    \ReflectionMethod::IS_PUBLIC);
 define('MODIFIER_PROTECTED', \ReflectionMethod::IS_PROTECTED);
 define('MODIFIER_PRIVATE',   \ReflectionMethod::IS_PRIVATE);
 
+define('DETAIL_ARGUMENTS',   1);
+define('DETAIL_RETURNS',     2);
+define('DETAIL_THROWS',      3);
+define('DETAIL_COMMENT',     4);
+define('DETAIL_ANNOTATIONS', 5);
+define('DETAIL_TARGET_ANNO', 6);
+define('DETAIL_GENERIC',     7);
+
 defined('PHP_INT_MIN') || define('PHP_INT_MIN', ~PHP_INT_MAX);
 
 defined('T_FN') || define('T_FN', -346);

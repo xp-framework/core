@@ -2,14 +2,6 @@
 
 use lang\ElementNotFoundException;
 use lang\reflect\{Method, Field, Constructor, Package};
-
-define('DETAIL_ARGUMENTS',      1);
-define('DETAIL_RETURNS',        2);
-define('DETAIL_THROWS',         3);
-define('DETAIL_COMMENT',        4);
-define('DETAIL_ANNOTATIONS',    5);
-define('DETAIL_TARGET_ANNO',    6);
-define('DETAIL_GENERIC',        7);
  
 /**
  * Represents classes. Every instance of an XP class has a method
