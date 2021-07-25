@@ -295,9 +295,9 @@ class XPClass extends Type {
    */
   public function getDeclaredFields() {
     $list= [];
-    $reflect= $this->reflect()->name;
+    $reflect= $this->reflect();
     foreach ($reflect->getProperties() as $p) {
-      if ('__id' === $p->name || $p->class !== $reflect) continue;
+      if ('__id' === $p->name || $p->class !== $reflect->name) continue;
       $list[]= new Field($this->_class, $p);
     }
     return $list;

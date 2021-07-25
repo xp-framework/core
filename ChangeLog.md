@@ -5,6 +5,7 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Fixed `lang.XPClass::getDeclaredFields()` throwing an exception - @thekid
 * Fixed issue #276: PHP 8.1: offset* / getIterator signature. Made codebase
   compatible with PHP 8.1 (*while keeping PHP 7 support!*) by adding the
   `#[ReturnTypeWillChange]` in relevant places.
