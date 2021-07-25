@@ -1,5 +1,6 @@
 <?php namespace io;
 
+use Traversable, IteratorAggregate;
 use lang\IllegalArgumentException;
 
 /**
@@ -8,7 +9,7 @@ use lang\IllegalArgumentException;
  * @test  xp://net.xp_framework.unittest.io.FolderEntriesTest
  * @see   xp://io.Folder#entries
  */
-class FolderEntries implements \IteratorAggregate {
+class FolderEntries implements IteratorAggregate {
   private $base;
   private $handle= null;
 
@@ -31,7 +32,7 @@ class FolderEntries implements \IteratorAggregate {
   }
 
   /** Iterate over all entries */
-  public function getIterator(): \Traversable {
+  public function getIterator(): Traversable {
     if (null === $this->handle) {
       if (!is_resource($handle= opendir($this->base->asFolder()->getURI()))) {
         $e= new IOException('Cannot open folder '.$this->base);

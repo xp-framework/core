@@ -1,5 +1,6 @@
 <?php namespace util;
 
+use ReturnTypeWillChange, ArrayAccess, IteratorAggregate, Traversable;
 use lang\{IndexOutOfBoundsException, IllegalArgumentException, Value};
 
 /**
@@ -7,7 +8,7 @@ use lang\{IndexOutOfBoundsException, IllegalArgumentException, Value};
  *
  * @test  xp://net.xp_framework.unittest.util.BytesTest
  */
-class Bytes implements Value, \ArrayAccess, \IteratorAggregate {
+class Bytes implements Value, ArrayAccess, IteratorAggregate {
   private $buffer, $size;
   
   /**
@@ -40,7 +41,7 @@ class Bytes implements Value, \ArrayAccess, \IteratorAggregate {
   }
 
   /** Returns an iterator for use in foreach() */
-  public function getIterator(): \Traversable {
+  public function getIterator(): Traversable {
     for ($offset= 0; $offset < $this->size; $offset++) {
       $n= ord($this->buffer[$offset]);
       yield $n < 128 ? $n : $n - 256;

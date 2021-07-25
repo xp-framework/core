@@ -1,17 +1,18 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use ReturnTypesWillChange;
 use lang\reflect\Package;
 use lang\{Runnable, Runtime, Process, Value, ClassLoader, ClassFormatException, IllegalAccessException};
 use net\xp_framework\unittest\Name;
 use unittest\actions\{RuntimeVersion, VerifyThat};
-use unittest\{Action, Expect, Test, Values};
+use unittest\{Action, Expect, Test, Values, TestCase};
 use util\Objects;
 
 /**
  * TestCase for newinstance() functionality. Some tests are skipped if
  * process execution has been disabled.
  */
-class NewInstanceTest extends \unittest\TestCase {
+class NewInstanceTest extends TestCase {
 
   /** @return bool */
   protected function processExecutionEnabled() {
