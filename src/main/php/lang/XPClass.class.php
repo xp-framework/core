@@ -277,13 +277,20 @@ class XPClass extends Type {
   /**
    * Retrieve a list of all member variables
    *
-   * @return  lang.reflect.Field[]
+   * @return lang.reflect.Field[]
    */
   public function getFields() {
+    $reflect= $this->reflect();
+
     $f= [];
-    foreach ($this->reflect()->getProperties() as $p) {
+    foreach ($reflect->getProperties() as $p) {
       if ('__id' === $p->name) continue;
       $f[]= new Field($this->_class, $p);
+    }
+    if ($virtual= $reflect->getConstant('__VIRTUAL')) {
+      foreach ($virtual[0] as $name => $meta) {
+        $f[]= new Field($this->_class, new VirtualProperty($reflect, $name, $meta));
+      }
     }
     return $f;
   }
@@ -291,40 +298,53 @@ class XPClass extends Type {
   /**
    * Retrieve a list of member variables declared in this class
    *
-   * @return  lang.reflect.Field[]
+   * @return lang.reflect.Field[]
    */
   public function getDeclaredFields() {
-    $list= [];
-    $reflect= $this->reflect()->name;
+    $reflect= $this->reflect();
+
+    $f= [];
     foreach ($reflect->getProperties() as $p) {
-      if ('__id' === $p->name || $p->class !== $reflect) continue;
-      $list[]= new Field($this->_class, $p);
+      if ('__id' === $p->name || $p->class !== $reflect->name) continue;
+      $f[]= new Field($this->_class, $p);
     }
-    return $list;
+    if ($virtual= $reflect->getConstant('__VIRTUAL')) {
+      foreach ($virtual[0] as $name => $meta) {
+        $f[]= new Field($this->_class, new VirtualProperty($reflect, $name, $meta));
+      }
+    }
+    return $f;
   }
 
   /**
    * Retrieve a field by a specified name.
    *
-   * @param   string name
-   * @return  lang.reflect.Field
-   * @throws  lang.ElementNotFoundException
+   * @param  string $name
+   * @return lang.reflect.Field
+   * @throws lang.ElementNotFoundException
    */
   public function getField($name): Field {
-    if ($this->hasField($name)) {
-      return new Field($this->_class, $this->reflect()->getProperty($name));
+    $reflect= $this->reflect();
+    if ($reflect->hasProperty($name)) {
+      return new Field($this->_class, $reflect->getProperty($name));
+    } else if (($virtual= $reflect->getConstant('__VIRTUAL')) && isset($virtual[0][$name])) {
+      return new Field($this->_class, new VirtualProperty($reflect, $name, $virtual[0][$name]));
     }
+
     throw new ElementNotFoundException('No such field "'.$name.'" in class '.$this->name);
   }
   
   /**
-   * Checks whether this class has a field named "$field" or not.
+   * Checks whether this class has a field with a given name
    *
-   * @param   string field the fields's name
-   * @return  bool TRUE if field exists
+   * @param  string $name
+   * @return bool TRUE if field exists
    */
-  public function hasField($field): bool {
-    return '__id' == $field ? false : $this->reflect()->hasProperty($field);
+  public function hasField($name): bool {
+    return '__id' === $name ? false : ($reflect= $this->reflect()) &&
+      $reflect->hasProperty($name) ||
+      ($virtual= $reflect->getConstant('__VIRTUAL')) && isset($virtual[0][$name])
+    ;
   }
 
   /**
