@@ -1,5 +1,7 @@
 <?php namespace lang;
 
+use ReflectionProperty, ReflectionType, ReflectionClass, ReturnTypeWillChange;
+
 /**
  * Virtual properties
  *
@@ -9,7 +11,7 @@
  * @see  https://www.php.net/language.oop5.overloading#object.set
  * @see  https://docs.phpdoc.org/latest/guide/references/phpdoc/tags/property.html
  */
-class VirtualProperty extends \ReflectionProperty {
+class VirtualProperty extends ReflectionProperty {
   private $_class, $_name, $_meta;
 
   /**
@@ -25,25 +27,25 @@ class VirtualProperty extends \ReflectionProperty {
     $this->_meta= $meta;
   }
 
-  /** @return string */
-  public function getName() { return $this->_name; }
+  /** Gets name */
+  public function getName(): string { return $this->_name; }
 
-  /** @return int */
-  public function getModifiers() { return $this->_meta[0]; }
+  /** Gets modifiers */
+  public function getModifiers(): int { return $this->_meta[0]; }
 
-  /** @return \ReflectionType */
-  public function getType() {
-    return new class($this->_meta[1]) extends \ReflectionType {
+  /** Gets type */
+  public function getType(): ReflectionType {
+    return new class($this->_meta[1]) extends ReflectionType {
       private $_name;
       public function __construct($name) { $this->_name= $name; }
-      public function getName() { return $this->_name; }
-      public function allowsNull() { return false; }
+      public function getName(): string { return $this->_name; }
+      public function allowsNull(): bool { return false; }
       public function __toString() { return $this->_name; }
     };
   }
 
-  /** @return \ReflectionClass */
-  public function getDeclaringClass() { return $this->_class; }
+  /** Gets declaring class */
+  public function getDeclaringClass(): ReflectionClass { return $this->_class; }
 
   /**
    * Sets accessible flag
@@ -51,6 +53,7 @@ class VirtualProperty extends \ReflectionProperty {
    * @param  bool $flag
    * @return void
    */
+  #[ReturnTypeWillChange]
   public function setAccessible($flag) { /* NOOP */ }
 
   /**
@@ -59,6 +62,7 @@ class VirtualProperty extends \ReflectionProperty {
    * @param  ?object $instance
    * @return var
    */
+  #[ReturnTypeWillChange]
   public function getValue($instance= null) {
     return $instance->__get($this->_name);
   }
@@ -70,6 +74,7 @@ class VirtualProperty extends \ReflectionProperty {
    * @param  var $value
    * @return void
    */
+  #[ReturnTypeWillChange]
   public function setValue($instance= null, $value= null) {
     $instance->__set($this->_name, $value);
   }
