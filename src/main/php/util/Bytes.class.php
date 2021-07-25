@@ -1,13 +1,13 @@
 <?php namespace util;
 
-use lang\{IndexOutOfBoundsException, IllegalArgumentException};
+use lang\{IndexOutOfBoundsException, IllegalArgumentException, Value};
 
 /**
  * Represents a list of bytes
  *
  * @test  xp://net.xp_framework.unittest.util.BytesTest
  */
-class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
+class Bytes implements Value, \ArrayAccess, \IteratorAggregate {
   private $buffer, $size;
   
   /**
@@ -54,6 +54,7 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
    * @return int 
    * @throws lang.IndexOutOfBoundsException if offset does not exist
    */
+  #[ReturnTypeWillChange]
   public function offsetGet($offset) {
     if ($offset >= $this->size || $offset < 0) {
       throw new IndexOutOfBoundsException('Offset '.$offset.' out of bounds');
@@ -70,6 +71,7 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
    * @throws lang.IllegalArgumentException if key is neither numeric (set) nor NULL (add)
    * @throws  lang.IndexOutOfBoundsException if key does not exist
    */
+  #[ReturnTypeWillChange]
   public function offsetSet($offset, $value) {
     if (null === $offset) {
       $this->buffer.= $this->asByte($value);
@@ -87,6 +89,7 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
    * @param  int $offset
    * @return bool
    */
+  #[ReturnTypeWillChange]
   public function offsetExists($offset) {
     return ($offset >= 0 && $offset < $this->size);
   }
@@ -97,6 +100,7 @@ class Bytes implements \lang\Value, \ArrayAccess, \IteratorAggregate {
    * @param  int $offset
    * @throws lang.IndexOutOfBoundsException if offset does not exist
    */
+  #[ReturnTypeWillChange]
   public function offsetUnset($offset) {
     if ($offset >= $this->size || $offset < 0) {
       throw new IndexOutOfBoundsException('Offset '.$offset.' out of bounds');
