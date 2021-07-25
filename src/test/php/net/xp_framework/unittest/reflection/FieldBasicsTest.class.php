@@ -68,4 +68,38 @@ class FieldBasicsTest extends FieldsTest {
   public function trait_field_type() {
     $this->assertEquals('int', $this->type()->getField('NOT_INSTANCE')->getTypeName());
   }
+
+  #[Test]
+  public function all_fields() {
+    $fixture= $this->type('{ public $a= "Test", $b; }', [
+      'use' => []
+    ]);
+    $this->assertEquals(
+      ['a', 'b'],
+      array_map(function($f) { return $f->getName(); }, $fixture->getFields())
+    );
+  }
+
+  #[Test]
+  public function all_fields_include_base_class() {
+    $fixture= $this->type('{ public $declared= "Test"; public function getDate() { return null; }}', [
+      'use'     => [],
+      'extends' => [AbstractTestClass::class]
+    ]);
+    $this->assertEquals(
+      ['declared', 'inherited'],
+      array_map(function($f) { return $f->getName(); }, $fixture->getFields())
+    );
+  }
+
+  #[Test]
+  public function declared_fields() {
+    $fixture= $this->type('{ public $a= "Test", $b; }', [
+      'use' => []
+    ]);
+    $this->assertEquals(
+      ['a', 'b'],
+      array_map(function($f) { return $f->getName(); }, $fixture->getDeclaredFields())
+    );
+  }
 }

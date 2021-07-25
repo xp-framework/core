@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\util;
 
+use ReturnTypeWillChange;
 use lang\ElementNotFoundException;
 use unittest\actions\VerifyThat;
 use unittest\{Expect, Test, TestCase, Values};
@@ -41,9 +42,17 @@ class PropertyExpansionTest extends TestCase {
   #[Test]
   public function arrayaccess_lookup() {
     $prop= $this->newFixture(new class implements \ArrayAccess {
+
+      #[ReturnTypeWillChange]
       function offsetExists($key) { return true; }
+
+      #[ReturnTypeWillChange]
       function offsetGet($key) { return 'test'; }
+
+      #[ReturnTypeWillChange]
       function offsetSet($key, $value) { /* Not implemented */ }
+
+      #[ReturnTypeWillChange]
       function offsetUnset($key) { /* Not implemented */ }
     });
     $this->assertEquals('test', $prop->readString('section', 'test'));

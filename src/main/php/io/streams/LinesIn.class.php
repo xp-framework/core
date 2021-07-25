@@ -1,5 +1,6 @@
 <?php namespace io\streams;
 
+use Traversable, IteratorAggregate;
 use lang\IllegalArgumentException;
 
 /**
@@ -9,7 +10,7 @@ use lang\IllegalArgumentException;
  * @see   xp://io.streams.Reader#lines
  * @test  xp://net.xp_framework.unittest.io.streams.LinesInTest
  */
-class LinesIn implements \IteratorAggregate {
+class LinesIn implements IteratorAggregate {
   private $reader, $reset;
 
   /**
@@ -30,7 +31,7 @@ class LinesIn implements \IteratorAggregate {
   }
 
   /** Iterate over the lines */
-  public function getIterator(): \Traversable {
+  public function getIterator(): Traversable {
     if ($this->reset && !$this->reader->atBeginning()) {
       $this->reader->reset();
     }
