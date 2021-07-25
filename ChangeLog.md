@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.11.1 / 2021-07-25
+
 ### Bugfixes
 
 * Fixed `lang.XPClass::getDeclaredFields()` throwing an exception - @thekid
