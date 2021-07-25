@@ -33,9 +33,12 @@ class VirtualProperty extends \ReflectionProperty {
 
   /** @return \ReflectionType */
   public function getType() {
-    return new class($this->_meta[1]) extends \ReflectionNamedType {
-      public function __construct($name) { $this->name= $name; }
-      public function getName() { return $this->name; }
+    return new class($this->_meta[1]) extends \ReflectionType {
+      private $_name;
+      public function __construct($name) { $this->_name= $name; }
+      public function getName() { return $this->_name; }
+      public function allowsNull() { return false; }
+      public function __toString() { return $this->_name; }
     };
   }
 

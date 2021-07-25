@@ -1,16 +1,16 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\IllegalAccessException;
+use lang\{IllegalAccessException, Primitive};
 use unittest\{Assert, Before, Expect, Test};
 
 class VirtualMembersTest {
-  use TypeDefinition;
+  use TypeDefinition { type as declare; }
 
   private $property;
 
   #[Before]
   public function fixtures() {
-    $this->property= $this->type('{
+    $this->property= $this->declare('{
       const __VIRTUAL= [["field" => [MODIFIER_PRIVATE, "string"]]]; 
 
       private $backing= ["field" => null];
@@ -38,6 +38,21 @@ class VirtualMembersTest {
       'private string '.$this->property->getName().'::$field',
       $this->property->getField('field')->toString()
     );
+  }
+
+  #[Test]
+  public function type() {
+    Assert::equals(Primitive::$STRING, $this->property->getField('field')->getType());
+  }
+
+  #[Test]
+  public function type_name() {
+    Assert::equals('string', $this->property->getField('field')->getTypeName());
+  }
+
+  #[Test]
+  public function type_restriction() {
+    Assert::equals(Primitive::$STRING, $this->property->getField('field')->getTypeRestriction());
   }
 
   #[Test, Expect(IllegalAccessException::class)]

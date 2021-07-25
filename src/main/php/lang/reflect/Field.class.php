@@ -57,7 +57,8 @@ class Field implements Value {
       $r= $details[DETAIL_RETURNS] ?? $details[DETAIL_ANNOTATIONS]['type'] ?? null;
       return $r ? ltrim($r, '&') : null;
     };
-    $t= PHP_VERSION_ID >= 70400 ? $this->_reflect->getType() : null;
+
+    $t= PHP_VERSION_ID >= 70400 || '' === $this->_reflect->name ? $this->_reflect->getType() : null;
     return Type::resolve($t, $this->resolve(), $api) ?? Type::$VAR;
   }
 
@@ -71,7 +72,7 @@ class Field implements Value {
       'integer' => 'int',
     ];
 
-    $t= PHP_VERSION_ID >= 70400 ? $this->_reflect->getType() : null;
+    $t= PHP_VERSION_ID >= 70400 || '' === $this->_reflect->name ? $this->_reflect->getType() : null;
     if (null === $t) {
 
       // Check for type in api documentation
@@ -109,7 +110,7 @@ class Field implements Value {
    */
   public function getTypeRestriction() {
     try {
-      return Type::resolve(PHP_VERSION_ID >= 70400 ? $this->_reflect->getType() : null, $this->resolve());
+      return Type::resolve(PHP_VERSION_ID >= 70400 || '' === $this->_reflect->name ? $this->_reflect->getType() : null, $this->resolve());
     } catch (ClassLoadingException $e) {
       throw new ClassNotFoundException(sprintf(
         'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',
