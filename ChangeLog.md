@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed issue #276: PHP 8.1: offset* / getIterator signature. Made codebase
+  compatible with PHP 8.1 (*while keeping PHP 7 support!*) by adding the
+  `#[ReturnTypeWillChange]` in relevant places.
+  (@thekid)
+
 ## 10.11.0 / 2021-06-04
 
 ### Features
@@ -25,7 +32,7 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
-* Make XP work when *iconv* extension is not available but *mbstring*
+* Made XP work when *iconv* extension is not available but *mbstring*
   is, offering a degraded and not 100% compatible experience, see #270
   (@thekid)
 
