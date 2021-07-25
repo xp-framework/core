@@ -305,7 +305,10 @@ class NewInstanceTest extends \unittest\TestCase {
 
   #[Test, Values(['php.IteratorAggregate', 'IteratorAggregate'])]
   public function packageOfNewInstancedPHPClass($class) {
-    $i= newinstance($class, [], '{ public function getIterator() { /* Empty */ }}');
+    $i= newinstance($class, [], '{
+      #[ReturnTypeWillChange]
+      public function getIterator() { /* Empty */ }
+    }');
     $this->assertEquals(
       Package::forName(''),
       typeof($i)->getPackage()
