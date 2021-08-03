@@ -15,22 +15,22 @@ class TypeIntersectionTest extends TestCase {
   /** @return Countable&Traversable */
   private function intersection() {
     return new class() implements \Countable, \IteratorAggregate {
-      public function count() { return 0; }
-      public function getIterator() { while (false) yield; }
+      public function count(): int { return 0; }
+      public function getIterator(): \Traversable { while (false) yield; }
     };
   }
 
   /** @return Countable */
   private function countable() {
     return new class() implements \Countable {
-      public function count() { return 0; }
+      public function count(): int { return 0; }
     };
   }
 
   /** @return Traversable */
   private function traversable() {
     return new class() implements \IteratorAggregate {
-      public function getIterator() { while (false) yield; }
+      public function getIterator(): \Traversable { while (false) yield; }
     };
   }
 
