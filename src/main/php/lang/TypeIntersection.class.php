@@ -112,7 +112,6 @@ class TypeIntersection extends Type {
 
     $assignableFrom= function($type) {
       foreach ($this->types as $compare) {
-        echo $type, " isAssignableFrom ", $compare, "\n";
         if ($type->isAssignableFrom($compare)) return true;
       }
       return false;
