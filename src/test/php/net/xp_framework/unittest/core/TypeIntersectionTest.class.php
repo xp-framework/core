@@ -114,28 +114,22 @@ class TypeIntersectionTest extends TestCase {
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.1.0-dev")')]
   public function php81_native_intersection_field_type() {
-    $f= eval('return new class() { public Countable&Traversable $fixture; };');
-    $this->assertEquals(
-      new TypeIntersection($this->types),
-      typeof($f)->getField('fixture')->getType()
-    );
+    $f= typeof(eval('return new class() { public Countable&Traversable $fixture; };'))->getField('fixture');
+    $this->assertEquals(new TypeIntersection($this->types), $f->getType());
+    $this->assertEquals('Countable&Traversable', $f->getTypeName());
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.1.0-dev")')]
   public function php81_native_intersection_param_type() {
-    $f= eval('return new class() { public function fixture(Countable&Traversable $arg) { } };');
-    $this->assertEquals(
-      new TypeIntersection($this->types),
-      typeof($f)->getMethod('fixture')->getParameter(0)->getType()
-    );
+    $m= typeof(eval('return new class() { public function fixture(Countable&Traversable $arg) { } };'))->getMethod('fixture');
+    $this->assertEquals(new TypeIntersection($this->types), $m->getParameter(0)->getType());
+    $this->assertEquals('Countable&Traversable', $m->getParameter(0)->getTypeName());
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.1.0-dev")')]
   public function php81_native_intersection_return_type() {
-    $f= eval('return new class() { public function fixture(): Countable&Traversable { } };');
-    $this->assertEquals(
-      new TypeIntersection($this->types),
-      typeof($f)->getMethod('fixture')->getReturnType()
-    );
+    $m= typeof(eval('return new class() { public function fixture(): Countable&Traversable { } };'))->getMethod('fixture');
+    $this->assertEquals(new TypeIntersection($this->types), $m->getReturnType());
+    $this->assertEquals('Countable&Traversable', $m->getReturnTypeName());
   }
 }
