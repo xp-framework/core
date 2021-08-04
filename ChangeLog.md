@@ -7,6 +7,12 @@ XP Framework Core ChangeLog
 
 * Merged PR #277: Add support for PHP 8.1 intersection types - @thekid
 
+### Bugfixes
+
+* Fixed parsing `use` statements with multiple imports separated by commas,
+  e.g. `use ArrayObject, Traversable;`.
+  (@thekid)
+
 ## 10.11.1 / 2021-07-25
 
 ### Bugfixes

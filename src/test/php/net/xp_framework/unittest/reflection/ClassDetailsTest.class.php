@@ -5,9 +5,6 @@ use lang\reflect\ClassParser;
 use net\xp_framework\unittest\Name;
 use unittest\{Call, Expect, Fixture, Test, Value, Values};
 
-define('APIDOC_TAG',        0x0001);
-define('APIDOC_VALUE',      0x0002);
-
 /**
  * Tests the class details gathering internals
  *
@@ -286,6 +283,30 @@ class ClassDetailsTest extends \unittest\TestCase {
       }
     ');
     $this->assertInstanceOf(Name::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
+  }
+
+  #[Test]
+  public function global_use_statement_evaluated() {
+    $actual= (new ClassParser())->parseDetails('<?php namespace test;
+      use ArrayObject;
+
+      #[Value(new ArrayObject([]))]
+      class Test {
+      }
+    ');
+    $this->assertInstanceOf(\ArrayObject::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
+  }
+
+  #[Test]
+  public function multiple_global_use_statements_evaluated() {
+    $actual= (new ClassParser())->parseDetails('<?php namespace test;
+      use Traversable, ArrayObject;
+
+      #[Value(new ArrayObject([]))]
+      class Test {
+      }
+    ');
+    $this->assertInstanceOf(\ArrayObject::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
   }
 
   #[Test]

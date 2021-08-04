@@ -480,35 +480,40 @@ class ClassParser {
         case T_USE:
           if (isset($details['class'])) break;  // Inside class, e.g. function() use(...) {}
 
-          $type= '';
-          for ($i+= 2; $i < $s, !(';' === $tokens[$i] || '{' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]); $i++) {
-            $type.= $tokens[$i][1];
-          }
-
-          // use lang\{Type, Primitive as P}
-          if ('{' === $tokens[$i]) {
-            $alias= null;
-            $group= '';
-            for ($i+= 1; $i < $s; $i++) {
-              if (',' === $tokens[$i]) {
-                $imports[$alias ? $alias : $group]= strtr($type.$group, '\\', '.');
-                $alias= null;
-                $group= '';
-              } else if ('}' === $tokens[$i]) {
-                $imports[$alias ? $alias : $group]= strtr($type.$group, '\\', '.');
-                break;
-              } else if (T_AS === $tokens[$i][0]) {
-                $i+= 2;
-                $alias= $tokens[$i][1];
-              } else if (T_WHITESPACE !== $tokens[$i][0]) {
-                $group.= $tokens[$i][1];
-              }
+          do {
+            $type= '';
+            for ($i+= 2; $i < $s, !(';' === $tokens[$i] || '{' === $tokens[$i] || ',' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]); $i++) {
+              $type.= $tokens[$i][1];
             }
-          } else if (T_AS === $tokens[++$i][0]) {
-            $imports[$tokens[$i + 2][1]]= strtr($type, '\\', '.');
-          } else {
-            $imports[substr($type, strrpos($type, '\\')+ 1)]= strtr($type, '\\', '.');
-          }
+
+            // use lang\{Type, Primitive as P}
+            if ('{' === $tokens[$i]) {
+              $alias= null;
+              $group= '';
+              for ($i+= 1; $i < $s; $i++) {
+                if (',' === $tokens[$i]) {
+                  $imports[$alias ? $alias : $group]= strtr($type.$group, '\\', '.');
+                  $alias= null;
+                  $group= '';
+                } else if ('}' === $tokens[$i]) {
+                  $i++;
+                  $imports[$alias ? $alias : $group]= strtr($type.$group, '\\', '.');
+                  break;
+                } else if (T_AS === $tokens[$i][0]) {
+                  $i+= 2;
+                  $alias= $tokens[$i][1];
+                } else if (T_WHITESPACE !== $tokens[$i][0]) {
+                  $group.= $tokens[$i][1];
+                }
+              }
+            } else if (T_AS === $tokens[$i + 1][0]) {
+              $i+= 3;
+              $imports[$tokens[$i][1]]= strtr($type, '\\', '.');
+            } else {
+              $p= strrpos($type, '\\');
+              $imports[false === $p ? $type : substr($type, $p + 1)]= strtr($type, '\\', '.');
+            }
+          } while (',' === $tokens[$i]);
           break;
 
         case T_DOC_COMMENT:
