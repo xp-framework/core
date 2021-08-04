@@ -237,6 +237,12 @@ class Type implements Value {
         }
       }
       $t= new TypeUnion($union);
+    } else if ($type instanceof \ReflectionIntersectionType) {
+      $intersection= [];
+      foreach ($type->getTypes() as $c) {
+        $intersection[]= self::named($c->getName(), $context);
+      }
+      $t= new TypeIntersection($intersection);
     } else if ($type instanceof \ReflectionType) {
       $name= PHP_VERSION_ID >= 70100 ? $type->getName() : $type->__toString();
 

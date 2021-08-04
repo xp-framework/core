@@ -2,7 +2,8 @@
 
 use lang\{Type, TypeIntersection, XPClass, IllegalArgumentException, ClassCastException};
 use net\xp_framework\unittest\Name;
-use unittest\{Expect, Test, TestCase, Values};
+use unittest\actions\RuntimeVersion;
+use unittest\{Action, Expect, Test, TestCase, Values};
 
 class TypeIntersectionTest extends TestCase {
   private $types;
@@ -109,5 +110,32 @@ class TypeIntersectionTest extends TestCase {
   #[Test, Values(['Traversable&Countable', 'Countable&Traversable', 'Countable&IteratorAggregate', 'Countable&Traversable&ArrayAccess'])]
   public function is_assignable_from($type) {
     $this->assertTrue(TypeIntersection::forName($type)->isAssignableFrom(new TypeIntersection($this->types)));
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=8.1.0-dev")')]
+  public function php81_native_intersection_field_type() {
+    $f= eval('return new class() { public Countable&Traversable $fixture; };');
+    $this->assertEquals(
+      new TypeIntersection($this->types),
+      typeof($f)->getField('fixture')->getType()
+    );
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=8.1.0-dev")')]
+  public function php81_native_intersection_param_type() {
+    $f= eval('return new class() { public function fixture(Countable&Traversable $arg) { } };');
+    $this->assertEquals(
+      new TypeIntersection($this->types),
+      typeof($f)->getMethod('fixture')->getParameter(0)->getType()
+    );
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=8.1.0-dev")')]
+  public function php81_native_intersection_return_type() {
+    $f= eval('return new class() { public function fixture(): Countable&Traversable { } };');
+    $this->assertEquals(
+      new TypeIntersection($this->types),
+      typeof($f)->getMethod('fixture')->getReturnType()
+    );
   }
 }
