@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Merged PR #277: Add support for PHP 8.1 intersection types - @thekid
+
 ## 10.11.1 / 2021-07-25
 
 ### Bugfixes
