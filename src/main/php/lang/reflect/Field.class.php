@@ -87,6 +87,13 @@ class Field implements Value {
         }
       }
       return $nullable.substr($union, 1);
+    } else if ($t instanceof \ReflectionIntersectionType) {
+      $intersection= '';
+      foreach ($t->getTypes() as $component) {
+        $name= $component->getName();
+        $intersection.= '&'.($map[$name] ?? strtr($name, '\\', '.'));
+      }
+      return substr($intersection, 1);
     } else {
       $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
 

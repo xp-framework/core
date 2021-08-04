@@ -237,6 +237,12 @@ class Type implements Value {
         }
       }
       $t= new TypeUnion($union);
+    } else if ($type instanceof \ReflectionIntersectionType) {
+      $intersection= [];
+      foreach ($type->getTypes() as $c) {
+        $intersection[]= self::named($c->getName(), $context);
+      }
+      $t= new TypeIntersection($intersection);
     } else if ($type instanceof \ReflectionType) {
       $name= PHP_VERSION_ID >= 70100 ? $type->getName() : $type->__toString();
 
@@ -270,7 +276,7 @@ class Type implements Value {
     //   card type.
     // * Anything else is a qualified or unqualified class name
     $l= strlen($name);
-    $p= strcspn($name, '<|[*(');
+    $p= strcspn($name, '<&|[*(');
     if ($p === $l) {
       return isset($context[$name]) ? $context[$name]() : ((isset($context['*']) && strcspn($name, '.\\') === $l)
         ? $context['*']($name)
@@ -333,6 +339,12 @@ class Type implements Value {
           $components[]= self::named($arg, $context);
         }
         return new TypeUnion($components);
+      } else if ('&' === $name[0]) {
+        $components= [$t];
+        foreach (self::split(substr($name, 1), '&') as $arg) {
+          $components[]= self::named($arg, $context);
+        }
+        return new TypeIntersection($components);
       } else if (0 === substr_compare($name, '[]', 0, 2)) {
         $t= new ArrayType($t);
         $name= trim(substr($name, 2));

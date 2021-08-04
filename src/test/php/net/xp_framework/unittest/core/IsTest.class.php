@@ -328,4 +328,9 @@ class IsTest extends TestCase {
   public function closures_are_objects($val) {
     $this->assertTrue(is('object', $val));
   }
+
+  #[Test]
+  public function type_intersection() {
+    $this->assertTrue(is('Countable&Traversable', new \ArrayObject([])));
+  }
 }
