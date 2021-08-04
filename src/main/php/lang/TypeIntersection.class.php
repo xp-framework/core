@@ -97,6 +97,10 @@ class TypeIntersection extends Type {
    * ```php
    * $t= TypeIntersection::forName('Countable&Traversable');
    *
+   * // It's assignable from types that are subclasses or implementations of
+   * // all types in this intersection.
+   * $intersection->isAssignableFrom('ArrayObject')                  // TRUE
+   *
    * // It's assignable to intersections if the intersection consists completely
    * // of types assignable to types in this intersection.
    * $intersection->isAssignableFrom('Countable&Traversable')        // TRUE
@@ -108,18 +112,23 @@ class TypeIntersection extends Type {
    */
   public function isAssignableFrom($from): bool {
     $t= $from instanceof Type ? $from : Type::forName($from);
-    if (!($t instanceof self)) return false;
-
-    $assignableFrom= function($type) {
-      foreach ($this->types as $compare) {
-        if ($type->isAssignableFrom($compare)) return true;
+    if ($t instanceof self) {
+      $assignableFrom= function($type) {
+        foreach ($this->types as $compare) {
+          if ($type->isAssignableFrom($compare)) return true;
+        }
+        return false;
+      };
+      foreach ($t->types as $type) {
+        if (!$assignableFrom($type)) return false;
       }
-      return false;
-    };
-    foreach ($t->types as $type) {
-      if (!$assignableFrom($type)) return false;
-    } 
-    return true;
+      return true;
+    } else {
+      foreach ($this->types as $type) {
+        if (!$type->isAssignableFrom($t)) return false;
+      }
+      return true;
+    }
   }
 
   /**

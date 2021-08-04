@@ -108,8 +108,13 @@ class TypeIntersectionTest extends TestCase {
   }
 
   #[Test, Values(['Traversable&Countable', 'Countable&Traversable', 'Countable&IteratorAggregate', 'Countable&Traversable&ArrayAccess'])]
-  public function is_assignable_from($type) {
+  public function is_assignable_from_intersection($type) {
     $this->assertTrue(TypeIntersection::forName($type)->isAssignableFrom(new TypeIntersection($this->types)));
+  }
+
+  #[Test, Values(['ArrayObject', 'SplFixedArray'])]
+  public function is_assignable_from_class($type) {
+    $this->assertTrue((new TypeIntersection($this->types))->isAssignableFrom($type));
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.1.0-dev")')]
