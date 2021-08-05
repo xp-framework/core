@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use Countable;
 use lang\{Type, Primitive, ArrayType, MapType, XPClass, Nullable, ClassNotFoundException};
 use net\xp_framework\unittest\core\generics\Lookup;
 use unittest\{Test, Values, TestCase};
@@ -65,6 +66,11 @@ class TypeResolveTest extends TestCase {
   #[Test]
   public function resolve_without_namespace() {
     $this->assertEquals(new XPClass(self::class), Type::named('TypeResolveTest', $this->context));
+  }
+
+  #[Test]
+  public function resolve_absolute_name() {
+    $this->assertEquals(new XPClass(Countable::class), Type::named('\\Countable', $this->context));
   }
 
   #[Test, Expect(class: ClassNotFoundException::class, withMessage: '/NonExistant/')]

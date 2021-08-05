@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.12.1 / 2021-08-05
+
+### Bugfixes
+
+* Prevent resolving types returned by the PHP reflection API by calling
+  the `*` context function - they already come resolved.
+  (@thekid)
+
 ## 10.12.0 / 2021-08-04
 
 ### Features

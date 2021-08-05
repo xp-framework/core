@@ -230,6 +230,7 @@ class Type implements Value {
       // Check for type in api documentation
       return $api && ($s= $api(false)) ? self::named($s, $context) : null;
     } else if ($type instanceof \ReflectionUnionType) {
+      unset($context['*']);
       $union= [];
       foreach ($type->getTypes() as $c) {
         if ('null' !== ($name= $c->getName())) {
@@ -238,6 +239,7 @@ class Type implements Value {
       }
       $t= new TypeUnion($union);
     } else if ($type instanceof \ReflectionIntersectionType) {
+      unset($context['*']);
       $intersection= [];
       foreach ($type->getTypes() as $c) {
         $intersection[]= self::named($c->getName(), $context);
@@ -249,6 +251,8 @@ class Type implements Value {
       // Check array, self, void and callable for more specific types, e.g. `string[]`,
       // `static`, `never` or `function(): string` in api documentation
       if ($api && isset($specify[$name]) && ($s= $api(true))) return self::named($s, $context);
+
+      unset($context['*']);
       $t= self::named($name, $context);
     } else {
 
