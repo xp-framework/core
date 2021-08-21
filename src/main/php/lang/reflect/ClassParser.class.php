@@ -251,7 +251,7 @@ class ClassParser {
       }
       $code.= 'return function';
       for ($i++, $s= sizeof($tokens); $i < $s; $i++) {
-        if ('{' === $tokens[$i]) {
+        if ('{' === $tokens[$i] || T_CURLY_OPEN === $tokens[$i][0]) {
           $b++;
           $code.= '{';
         } else if ('}' === $tokens[$i]) {
@@ -677,11 +677,11 @@ class ClassParser {
 
           $b= 0;
           while (++$i < $s) {
-            if ('{' === $tokens[$i][0]) {
+            if ('{' === $tokens[$i] || T_CURLY_OPEN === $tokens[$i][0]) {
               $b++;
-            } else if ('}' === $tokens[$i][0]) {
+            } else if ('}' === $tokens[$i]) {
               if (0 === --$b) break;
-            } else if (0 === $b && ';' === $tokens[$i][0]) {
+            } else if (0 === $b && ';' === $tokens[$i]) {
               break;    // Abstract or interface method
             }
           }

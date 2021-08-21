@@ -3,6 +3,15 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.12.2 / 2021-08-21
+
+### Bugfixes
+
+* Fixed class parser when encountering double-quoted strings containing
+  variables in the *complex (curly) syntay*, e.g. `"runtime-{$name}"`,
+  see https://www.php.net/manual/en/language.types.string.php
+  (@thekid)
+
 ## 10.12.1 / 2021-08-05
 
 ### Bugfixes

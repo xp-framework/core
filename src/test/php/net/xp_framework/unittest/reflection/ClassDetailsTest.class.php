@@ -542,4 +542,33 @@ class ClassDetailsTest extends \unittest\TestCase {
     ');
     $this->assertEquals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
   }
+
+  #[Test]
+  public function new_after_curly_open_in_string() {
+    $details= (new ClassParser())->parseDetails('<?php
+      /** Comment */
+      class Test {
+        private $name;
+
+        public function run() {
+          $name= "{$this->name}.txt";
+          new File($name);
+        }
+      }
+    ');
+    $this->assertEquals(
+      [DETAIL_COMMENT => 'Comment', DETAIL_ANNOTATIONS => [], DETAIL_ARGUMENTS => 'Test'],
+      $details['class']
+    );
+  }
+
+  #[Test]
+  public function annotation_with_curly_open_in_string() {
+    $details= (new ClassParser())->parseDetails('<?php
+      #[Run(function($name) { return "{$name}.txt"; })]
+      class Test {
+      }
+    ');
+    $this->assertEquals('test.txt', $details['class'][DETAIL_ANNOTATIONS]['run']('test'));
+  }
 }
