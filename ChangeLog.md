@@ -3,6 +3,15 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.12.3 / 2021-08-21
+
+### Bugfixes
+
+* Fixed error *date.timezone not configured properly* when running on AWS.
+  Their default value for the `TZ` environment variable is `:UTC`, which
+  PHP fails to recognize as a valid timezone (*while `UTC` works*).
+  (@thekid)
+
 ## 10.12.2 / 2021-08-21
 
 ### Bugfixes

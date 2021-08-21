@@ -42,32 +42,24 @@ class BootstrapTest extends \unittest\TestCase {
     return [$exitv, $out, $err];
   }
 
-  /**
-   * Helper to run bootstrapping with given tz
-   *
-   * @param   string tz
-   */
-  protected function runWithTz($tz) {
+  #[Test, Values(['Europe/Berlin', 'UTC', ':UTC'])]
+  public function valid_timezone($tz) {
+    $r= $this->runWith(Runtime::getInstance()->startupOptions()->withSetting('date.timezone', $tz));
+    $this->assertEquals([1, '', ''], $r);
+  }
+
+  #[Test, Values(['', 'Foo/Bar'])]
+  public function invalid_timezone($tz) {
     $r= $this->runWith(Runtime::getInstance()->startupOptions()->withSetting('date.timezone', $tz));
     $this->assertTrue(
       (bool)strstr($r[1].$r[2], '[xp::core] date.timezone not configured properly.'),
       Objects::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
     $this->assertEquals(255, $r[0], 'exitcode');
-  }    
-  
-  #[Test]
-  public function fatalsForEmptyTimezone() {
-    $this->runWithTz('');
   }
 
   #[Test]
-  public function fatalsForInvalidTimezone() {
-    $this->runWithTz('Foo/bar');
-  }
-
-  #[Test]
-  public function fatalsForNonExistingPaths() {
+  public function fatals_for_non_existant_class_path() {
     $r= $this->runWith(Runtime::getInstance()->startupOptions()->withClassPath('/does-not-exist'));
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
@@ -77,7 +69,7 @@ class BootstrapTest extends \unittest\TestCase {
   }
 
   #[Test]
-  public function fatalsForNonExistingXars() {
+  public function fatals_for_non_existant_xar() {
     $r= $this->runWith(Runtime::getInstance()->startupOptions()->withClassPath('/does-not-exist.xar'));
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
