@@ -425,7 +425,7 @@ if (!function_exists('enum_exists')) {
   interface UnitEnum { }
   interface BackedEnum extends UnitEnum { }
 
-  function enum_exists($name, $load) {
+  function enum_exists($name, $load= true) {
     return class_exists($name, $load) && $name instanceof \UnitEnum;
   }
 }

@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.12.4 / 2021-08-22
+
+### Bugfixes
+
+* Fixed bug xp-framework/reflection#13: *Too few arguments to function
+  enum_exists()*
+  (@thkid)
+
 ## 10.12.3 / 2021-08-21
 
 ### Bugfixes
