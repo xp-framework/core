@@ -286,10 +286,10 @@ class XPClass extends Type {
     do {
 
       // If meta information is already loaded, use property arguments
-      if ($meta= &\xp::$meta[self::nameOf($reflect->name)][0] ?? null) {
+      if ($meta= \xp::$meta[self::nameOf($reflect->name)][0] ?? null) {
         foreach ($meta as $name => $property) {
-          if ($property[DETAIL_ARGUMENTS]) {
-            $r[$name]= [$property[DETAIL_ARGUMENTS][0], $property[DETAIL_RETURNS]];
+          if ($arg= $property[DETAIL_ARGUMENTS] ?? null) {
+            $r[$name]= [$arg[0], $property[DETAIL_RETURNS]];
           }
         }
         continue;
@@ -358,7 +358,7 @@ class XPClass extends Type {
     $reflect= $this->reflect();
     if ($reflect->hasProperty($name)) {
       return new Field($this->_class, $reflect->getProperty($name));
-    } else if ($meta= ($this->virtual($reflect)[$name] ?? null)) {
+    } else if ($meta= $this->virtual($reflect)[$name] ?? null) {
       return new Field($this->_class, new VirtualProperty($reflect, $name, $meta));
     }
 
