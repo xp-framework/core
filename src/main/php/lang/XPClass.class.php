@@ -289,7 +289,7 @@ class XPClass extends Type {
       if ($meta= \xp::$meta[self::nameOf($reflect->name)][0] ?? null) {
         foreach ($meta as $name => $property) {
           if ($arg= $property[DETAIL_ARGUMENTS] ?? null) {
-            $r[$name]= [$arg[0], $property[DETAIL_RETURNS]];
+            $r[$name]= [(int)$arg[0], $property[DETAIL_RETURNS] ?? 'mixed'];
           }
         }
         continue;
