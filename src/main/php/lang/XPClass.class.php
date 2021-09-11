@@ -273,6 +273,29 @@ class XPClass extends Type {
     }
     throw new ElementNotFoundException('No constructor in class '.$this->name);
   }
+
+  /**
+   * Returns virtual properties
+   *
+   * @param  ReflectionClass $reflect
+   * @param  bool $parents
+   * @return [:var][]
+   */
+  private function virtual($reflect, $parents= true) {
+    $r= [];
+    do {
+      $comment= $reflect->getDocComment();
+      if (null === $comment) break;
+
+      preg_match_all('/@property(\-read|\-write)? ([^ ]+) \$([^ ]+)/', $comment, $matches, PREG_SET_ORDER);
+      $r= [];
+      foreach ($matches as $match) {
+        $r[$match[3]]= ['-read' === $match[1] ? MODIFIER_READONLY : 0, $match[2]];
+      }
+    } while ($reflect= $reflect->getParentclass());
+
+    return $r;
+  }
   
   /**
    * Retrieve a list of all member variables
@@ -287,10 +310,8 @@ class XPClass extends Type {
       if ('__id' === $p->name) continue;
       $f[]= new Field($this->_class, $p);
     }
-    if ($virtual= $reflect->getConstant('__VIRTUAL')) {
-      foreach ($virtual[0] as $name => $meta) {
-        $f[]= new Field($this->_class, new VirtualProperty($reflect, $name, $meta));
-      }
+    foreach ($this->virtual($reflect) as $name => $meta) {
+      $f[]= new Field($this->_class, new VirtualProperty($reflect, $name, $meta));
     }
     return $f;
   }
@@ -308,10 +329,8 @@ class XPClass extends Type {
       if ('__id' === $p->name || $p->class !== $reflect->name) continue;
       $f[]= new Field($this->_class, $p);
     }
-    if ($virtual= $reflect->getConstant('__VIRTUAL')) {
-      foreach ($virtual[0] as $name => $meta) {
-        $f[]= new Field($this->_class, new VirtualProperty($reflect, $name, $meta));
-      }
+    foreach ($this->virtual($reflect, false) as $name => $meta) {
+      $f[]= new Field($this->_class, new VirtualProperty($reflect, $name, $meta));
     }
     return $f;
   }
@@ -327,8 +346,8 @@ class XPClass extends Type {
     $reflect= $this->reflect();
     if ($reflect->hasProperty($name)) {
       return new Field($this->_class, $reflect->getProperty($name));
-    } else if (($virtual= $reflect->getConstant('__VIRTUAL')) && isset($virtual[0][$name])) {
-      return new Field($this->_class, new VirtualProperty($reflect, $name, $virtual[0][$name]));
+    } else if ($meta= ($this->virtual($reflect)[$name] ?? null)) {
+      return new Field($this->_class, new VirtualProperty($reflect, $name, $meta));
     }
 
     throw new ElementNotFoundException('No such field "'.$name.'" in class '.$this->name);
@@ -343,7 +362,7 @@ class XPClass extends Type {
   public function hasField($name): bool {
     return '__id' === $name ? false : ($reflect= $this->reflect()) &&
       $reflect->hasProperty($name) ||
-      ($virtual= $reflect->getConstant('__VIRTUAL')) && isset($virtual[0][$name])
+      isset($this->virtual($reflect)[$name])
     ;
   }
 

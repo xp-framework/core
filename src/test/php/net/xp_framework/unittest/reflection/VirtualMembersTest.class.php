@@ -1,73 +1,57 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\{IllegalAccessException, Primitive};
+use lang\{IllegalAccessException, Primitive, XPClass};
 use unittest\{Assert, Before, Expect, Test};
 
 class VirtualMembersTest {
-  use TypeDefinition { type as declare; }
-
   private $property;
 
   #[Before]
   public function fixtures() {
-    $this->property= $this->declare('{
-      const __VIRTUAL= [["field" => [MODIFIER_PRIVATE, "string"]]]; 
-
-      private $backing= ["field" => null];
-
-      public function __get($name) {
-        return isset(self::__VIRTUAL[0][$name]) ? $this->backing[$name] : null;
-      }
-
-      public function __set($name, $value) {
-        if (isset(self::__VIRTUAL[0][$name])) {
-          $this->backing[$name]= $value;
-        }
-      }
-    }', ['use' => []]);
+    $this->property= XPClass::forName('net.xp_framework.unittest.reflection.WithReadonly');
   }
 
   #[Test]
   public function exists() {
-    Assert::true($this->property->hasField('field'));
+    Assert::true($this->property->hasField('prop'));
   }
 
   #[Test]
   public function string_representation() {
     Assert::equals(
-      'private string '.$this->property->getName().'::$field',
-      $this->property->getField('field')->toString()
+      'public readonly string '.$this->property->getName().'::$prop',
+      $this->property->getField('prop')->toString()
     );
   }
 
   #[Test]
   public function type() {
-    Assert::equals(Primitive::$STRING, $this->property->getField('field')->getType());
+    Assert::equals(Primitive::$STRING, $this->property->getField('prop')->getType());
   }
 
   #[Test]
   public function type_name() {
-    Assert::equals('string', $this->property->getField('field')->getTypeName());
+    Assert::equals('string', $this->property->getField('prop')->getTypeName());
   }
 
   #[Test]
   public function type_restriction() {
-    Assert::equals(Primitive::$STRING, $this->property->getField('field')->getTypeRestriction());
+    Assert::equals(Primitive::$STRING, $this->property->getField('prop')->getTypeRestriction());
   }
 
   #[Test, Expect(IllegalAccessException::class)]
   public function cannot_access_by_default() {
-    $this->property->getField('field')->get($this->property->newInstance());
+    $this->property->getField('prop')->get($this->property->newInstance());
   }
 
   #[Test]
   public function initial_value() {
-    Assert::null($this->property->getField('field')->setAccessible(true)->get($this->property->newInstance()));
+    Assert::null($this->property->getField('prop')->setAccessible(true)->get($this->property->newInstance()));
   }
 
   #[Test]
   public function get_set_roundtrip() {
-    with ($this->property->getField('field')->setAccessible(true), $this->property->newInstance(), function($field, $instance) {
+    with ($this->property->getField('prop')->setAccessible(true), $this->property->newInstance(), function($field, $instance) {
       $field->set($instance, [$this]);
       Assert::equals([$this], $field->get($instance));
     });
@@ -76,7 +60,7 @@ class VirtualMembersTest {
   #[Test]
   public function included_in_all_fields() {
     Assert::equals(
-      ['backing', 'field'],
+      ['__readonly', 'prop'],
       array_map(function($f) { return $f->getName(); }, $this->property->getFields())
     );
   }
@@ -84,7 +68,7 @@ class VirtualMembersTest {
   #[Test]
   public function included_in_all_declared_fields() {
     Assert::equals(
-      ['backing', 'field'],
+      ['__readonly', 'prop'],
       array_map(function($f) { return $f->getName(); }, $this->property->getDeclaredFields())
     );
   }
