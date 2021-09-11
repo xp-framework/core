@@ -102,10 +102,10 @@ class VirtualProperty extends ReflectionProperty {
   /**
    * Checks whether a property is initialized.
    *
-   * @param  ?object $object
+   * @param  ?object $instance
    * @return bool
    */
-  public function isInitialized($object= null): bool {
+  public function isInitialized($instance= null): bool {
     return null !== $instance->__get($this->_name);
   }
 
