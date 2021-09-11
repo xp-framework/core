@@ -304,7 +304,7 @@ class XPClass extends Type {
       foreach ($matches as $match) {
         $r[$match[3]]= ['-read' === $match[1] ? MODIFIER_READONLY : 0, $match[2]];
       }
-    } while ($reflect= $reflect->getParentclass());
+    } while ($parents && ($reflect= $reflect->getParentclass()));
 
     return $r;
   }
