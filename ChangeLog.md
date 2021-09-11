@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.13.0 / ????-??-??
+
+### Features
+
+* Merged PR #278: Add support for PHP 8.1 readonly properties - @thekid
+
 ## 10.12.4 / 2021-08-22
 
 ### Bugfixes
