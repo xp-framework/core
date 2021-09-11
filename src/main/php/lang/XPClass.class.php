@@ -299,7 +299,7 @@ class XPClass extends Type {
       $comment= $reflect->getDocComment();
       if (null === $comment) continue;
 
-      preg_match_all('/@property(\-read|\-write)? ([^ ]+) \$([^ ]+)/', $comment, $matches, PREG_SET_ORDER);
+      preg_match_all('/@property(\-read|\-write)? (.+) \$([^ ]+)/', $comment, $matches, PREG_SET_ORDER);
       $r= [];
       foreach ($matches as $match) {
         $r[$match[3]]= ['-read' === $match[1] ? MODIFIER_READONLY : 0, $match[2]];
