@@ -33,6 +33,9 @@ class VirtualProperty extends ReflectionProperty {
   /** Gets modifiers */
   public function getModifiers(): int { return $this->_meta[0]; }
 
+  /** Gets doc comment */
+  public function getDocComment() { return false; }
+
   /** Gets type */
   public function getType(): ReflectionType {
     return new class($this->_meta[1]) extends ReflectionType {
