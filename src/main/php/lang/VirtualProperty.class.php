@@ -50,6 +50,9 @@ class VirtualProperty extends ReflectionProperty {
   /** Gets declaring class */
   public function getDeclaringClass(): ReflectionClass { return $this->_class; }
 
+  /** Returns whether this property is public */
+  public function isPublic(): bool { return MODIFIER_PUBLIC === ($this->_meta[0] & MODIFIER_PUBLIC); }
+
   /**
    * Sets accessible flag
    *
