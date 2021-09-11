@@ -72,6 +72,16 @@ abstract class Modifiers {
   }
 
   /**
+   * Returns TRUE when the given modifiers include the readonly modifier.
+   *
+   * @param   int m modifiers bitfield
+   * @return  bool
+   */
+  public static function isReadonly($m) {
+    return MODIFIER_READONLY == ($m & MODIFIER_READONLY);
+  }
+
+  /**
    * Retrieves modifier names as an array. The order in which the 
    * modifiers are returned is the following:
    *
@@ -93,6 +103,7 @@ abstract class Modifiers {
     if ($m & MODIFIER_STATIC) $names[]= 'static';
     if ($m & MODIFIER_ABSTRACT) $names[]= 'abstract';
     if ($m & MODIFIER_FINAL) $names[]= 'final';
+    if ($m & MODIFIER_READONLY) $names[]= 'readonly';
     return $names;
   }
 

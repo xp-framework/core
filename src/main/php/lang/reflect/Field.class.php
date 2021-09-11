@@ -291,6 +291,8 @@ class Field implements Value {
       return $this->_reflect->setValue($instance, $value);
     } catch (Throwable $e) {
       throw $e;
+    } catch (\Error $e) {
+      throw new IllegalAccessException($e->getMessage(), $e); // PHP 8.1 raises errors when modifying readonly properties
     } catch (\Throwable $e) {
       throw new XPException($e->getMessage());
     }
