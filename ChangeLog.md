@@ -9,6 +9,12 @@ XP Framework Core ChangeLog
 
 * Merged PR #278: Add support for PHP 8.1 readonly properties - @thekid
 
+### RFCs
+
+* Implemented xp-framework/rfc#340: Virtual properties reflection. See
+  PR #275 for implementation details.
+  (@thekid)
+
 ## 10.12.4 / 2021-08-22
 
 ### Bugfixes
