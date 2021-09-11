@@ -5,6 +5,9 @@ use ReflectionProperty, ReflectionType, ReflectionClass, ReturnTypeWillChange;
 /**
  * Virtual properties
  *
+ * Note the "name" and "class" members are not available as they cannot
+ * be assigned in inherited classes.
+ *
  * @test net.xp_framework.unittest.reflection.VirtualMembersTest
  * @see  https://github.com/xp-framework/rfc/issues/340
  * @see  https://www.php.net/language.oop5.overloading#object.get
@@ -127,5 +130,28 @@ class VirtualProperty extends ReflectionProperty {
   #[ReturnTypeWillChange]
   public function setValue($instance= null, $value= null) {
     $instance->__set($this->_name, $value);
+  }
+
+  /**
+   * Compares to property instances
+   *
+   * @param  \ReflectionProperty $a
+   * @param  \ReflectionProperty $b
+   * @return int
+   */
+  public static function compare($a, $b) {
+    if ($a instanceof self && $b instanceof self) {
+      $r= $a->_class <=> $b->_class;
+      return 0 === $r ? $a->_name <=> $b->_name : $r;
+    } else if ($a instanceof self) {
+      $r= $a->_class <=> $b->class;
+      return 0 === $r ? $a->_name <=> $b->name : $r;
+    } else if ($b instanceof self) {
+      $r= $a->class <=> $b->_class;
+      return 0 === $r ? $a->name <=> $b->_name : $r;
+    } else {
+      $r= $a->class <=> $b->class;
+      return 0 === $r ? $a->name <=> $b->name : $r;
+    }
   }
 }
