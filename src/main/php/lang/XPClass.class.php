@@ -308,7 +308,7 @@ class XPClass extends Type {
 
     return $r;
   }
-  
+
   /**
    * Retrieve a list of all member variables
    *
