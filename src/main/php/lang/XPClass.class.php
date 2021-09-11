@@ -284,8 +284,20 @@ class XPClass extends Type {
   private function virtual($reflect, $parents= true) {
     $r= [];
     do {
+
+      // If meta information is already loaded, use property arguments
+      if ($meta= &\xp::$meta[self::nameOf($reflect->name)][0] ?? null) {
+        foreach ($meta as $name => $property) {
+          if ($property[DETAIL_ARGUMENTS]) {
+            $r[$name]= [$property[DETAIL_ARGUMENTS][0], $property[DETAIL_RETURNS]];
+          }
+        }
+        continue;
+      }
+
+      // Parse doc comment
       $comment= $reflect->getDocComment();
-      if (null === $comment) break;
+      if (null === $comment) continue;
 
       preg_match_all('/@property(\-read|\-write)? ([^ ]+) \$([^ ]+)/', $comment, $matches, PREG_SET_ORDER);
       $r= [];
