@@ -203,6 +203,8 @@ function is($type, $object) {
     return \lang\FunctionType::forName(substr($type, 1, -1))->isInstance($object);
   } else if (strstr($type, '|')) {
     return \lang\TypeUnion::forName($type)->isInstance($object);
+  } else if (strstr($type, '&')) {
+    return \lang\TypeIntersection::forName($type)->isInstance($object);
   } else if (strstr($type, '?')) {
     return \lang\WildcardType::forName($type)->isInstance($object);
   } else {
@@ -423,7 +425,7 @@ if (!function_exists('enum_exists')) {
   interface UnitEnum { }
   interface BackedEnum extends UnitEnum { }
 
-  function enum_exists($name, $load) {
+  function enum_exists($name, $load= true) {
     return class_exists($name, $load) && $name instanceof \UnitEnum;
   }
 }
@@ -432,7 +434,7 @@ if (!function_exists('enum_exists')) {
 // {{{ main
 error_reporting(E_ALL);
 set_error_handler('__error');
-if (!date_default_timezone_set(ini_get('date.timezone'))) {
+if (!date_default_timezone_set(ltrim(ini_get('date.timezone'), ':'))) {
   throw new \Exception('[xp::core] date.timezone not configured properly.', 0x3d);
 }
 
@@ -453,6 +455,7 @@ define('MODIFIER_FINAL',     \ReflectionMethod::IS_FINAL);
 define('MODIFIER_PUBLIC',    \ReflectionMethod::IS_PUBLIC);
 define('MODIFIER_PROTECTED', \ReflectionMethod::IS_PROTECTED);
 define('MODIFIER_PRIVATE',   \ReflectionMethod::IS_PRIVATE);
+define('MODIFIER_READONLY',  128); // PHP 8.1: \ReflectionProperty::IS_READONLY
 
 define('DETAIL_ARGUMENTS',   1);
 define('DETAIL_RETURNS',     2);

@@ -114,4 +114,14 @@ class ModifiersTest extends \unittest\TestCase {
   public function staticModifierNames() {
     $this->assertEquals(['public', 'static'], Modifiers::namesOf(MODIFIER_STATIC));
   }
+
+  #[Test]
+  public function readonlyModifier() {
+    $this->assertTrue(Modifiers::isReadonly(MODIFIER_READONLY));
+  }
+
+  #[Test]
+  public function readonlyModifierNames() {
+    $this->assertEquals(['public', 'readonly'], Modifiers::namesOf(MODIFIER_READONLY));
+  }
 }

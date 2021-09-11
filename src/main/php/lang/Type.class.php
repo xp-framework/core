@@ -230,6 +230,7 @@ class Type implements Value {
       // Check for type in api documentation
       return $api && ($s= $api(false)) ? self::named($s, $context) : null;
     } else if ($type instanceof \ReflectionUnionType) {
+      unset($context['*']);
       $union= [];
       foreach ($type->getTypes() as $c) {
         if ('null' !== ($name= $c->getName())) {
@@ -237,12 +238,21 @@ class Type implements Value {
         }
       }
       $t= new TypeUnion($union);
+    } else if ($type instanceof \ReflectionIntersectionType) {
+      unset($context['*']);
+      $intersection= [];
+      foreach ($type->getTypes() as $c) {
+        $intersection[]= self::named($c->getName(), $context);
+      }
+      $t= new TypeIntersection($intersection);
     } else if ($type instanceof \ReflectionType) {
       $name= PHP_VERSION_ID >= 70100 ? $type->getName() : $type->__toString();
 
       // Check array, self, void and callable for more specific types, e.g. `string[]`,
       // `static`, `never` or `function(): string` in api documentation
       if ($api && isset($specify[$name]) && ($s= $api(true))) return self::named($s, $context);
+
+      unset($context['*']);
       $t= self::named($name, $context);
     } else {
 
@@ -270,7 +280,7 @@ class Type implements Value {
     //   card type.
     // * Anything else is a qualified or unqualified class name
     $l= strlen($name);
-    $p= strcspn($name, '<|[*(');
+    $p= strcspn($name, '<&|[*(');
     if ($p === $l) {
       return isset($context[$name]) ? $context[$name]() : ((isset($context['*']) && strcspn($name, '.\\') === $l)
         ? $context['*']($name)
@@ -333,6 +343,12 @@ class Type implements Value {
           $components[]= self::named($arg, $context);
         }
         return new TypeUnion($components);
+      } else if ('&' === $name[0]) {
+        $components= [$t];
+        foreach (self::split(substr($name, 1), '&') as $arg) {
+          $components[]= self::named($arg, $context);
+        }
+        return new TypeIntersection($components);
       } else if (0 === substr_compare($name, '[]', 0, 2)) {
         $t= new ArrayType($t);
         $name= trim(substr($name, 2));

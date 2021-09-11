@@ -5,9 +5,6 @@ use lang\reflect\ClassParser;
 use net\xp_framework\unittest\Name;
 use unittest\{Call, Expect, Fixture, Test, Value, Values};
 
-define('APIDOC_TAG',        0x0001);
-define('APIDOC_VALUE',      0x0002);
-
 /**
  * Tests the class details gathering internals
  *
@@ -289,6 +286,30 @@ class ClassDetailsTest extends \unittest\TestCase {
   }
 
   #[Test]
+  public function global_use_statement_evaluated() {
+    $actual= (new ClassParser())->parseDetails('<?php namespace test;
+      use ArrayObject;
+
+      #[Value(new ArrayObject([]))]
+      class Test {
+      }
+    ');
+    $this->assertInstanceOf(\ArrayObject::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
+  }
+
+  #[Test]
+  public function multiple_global_use_statements_evaluated() {
+    $actual= (new ClassParser())->parseDetails('<?php namespace test;
+      use Traversable, ArrayObject;
+
+      #[Value(new ArrayObject([]))]
+      class Test {
+      }
+    ');
+    $this->assertInstanceOf(\ArrayObject::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
+  }
+
+  #[Test]
   public function php8_attributes_converted_to_xp_annotations() {
     $actual= (new ClassParser())->parseDetails('<?php
       #[Value("test")]
@@ -520,5 +541,34 @@ class ClassDetailsTest extends \unittest\TestCase {
       }
     ');
     $this->assertEquals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[Test]
+  public function new_after_curly_open_in_string() {
+    $details= (new ClassParser())->parseDetails('<?php
+      /** Comment */
+      class Test {
+        private $name;
+
+        public function run() {
+          $name= "{$this->name}.txt";
+          new File($name);
+        }
+      }
+    ');
+    $this->assertEquals(
+      [DETAIL_COMMENT => 'Comment', DETAIL_ANNOTATIONS => [], DETAIL_ARGUMENTS => 'Test'],
+      $details['class']
+    );
+  }
+
+  #[Test]
+  public function annotation_with_curly_open_in_string() {
+    $details= (new ClassParser())->parseDetails('<?php
+      #[Run(function($name) { return "{$name}.txt"; })]
+      class Test {
+      }
+    ');
+    $this->assertEquals('test.txt', $details['class'][DETAIL_ANNOTATIONS]['run']('test'));
   }
 }

@@ -3,6 +3,58 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.13.0 / ????-??-??
+
+### Features
+
+* Merged PR #278: Add support for PHP 8.1 readonly properties - @thekid
+
+## 10.12.4 / 2021-08-22
+
+### Bugfixes
+
+* Fixed bug xp-framework/reflection#13: *Too few arguments to function
+  enum_exists()*
+  (@thkid)
+
+## 10.12.3 / 2021-08-21
+
+### Bugfixes
+
+* Fixed error *date.timezone not configured properly* when running on AWS.
+  Their default value for the `TZ` environment variable is `:UTC`, which
+  PHP fails to recognize as a valid timezone (*while `UTC` works*).
+  (@thekid)
+
+## 10.12.2 / 2021-08-21
+
+### Bugfixes
+
+* Fixed class parser when encountering double-quoted strings containing
+  variables in the *complex (curly) syntay*, e.g. `"runtime-{$name}"`,
+  see https://www.php.net/manual/en/language.types.string.php
+  (@thekid)
+
+## 10.12.1 / 2021-08-05
+
+### Bugfixes
+
+* Prevent resolving types returned by the PHP reflection API by calling
+  the `*` context function - they already come resolved.
+  (@thekid)
+
+## 10.12.0 / 2021-08-04
+
+### Features
+
+* Merged PR #277: Add support for PHP 8.1 intersection types - @thekid
+
+### Bugfixes
+
+* Fixed parsing `use` statements with multiple imports separated by commas,
+  e.g. `use ArrayObject, Traversable;`.
+  (@thekid)
+
 ## 10.11.1 / 2021-07-25
 
 ### Bugfixes

@@ -12,6 +12,7 @@ use lang\{
   XPClass,
   Nullable
 };
+use net\xp_framework\unittest\Name;
 use unittest\actions\RuntimeVersion;
 use unittest\{Expect, Test, TestCase, Values, Action};
 
@@ -240,5 +241,22 @@ class TypeUnionTest extends TestCase {
   public function php8_native_nullable_union_return_type_name() {
     $f= eval('return new class() { public function fixture(): int|string|null { } };');
     $this->assertEquals('?', typeof($f)->getMethod('fixture')->getReturnTypeName()[0]);
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
+  public function php8_native_union_with_self() {
+    $t= typeof(eval('
+      namespace net\xp_framework\unittest;
+
+      use Countable;
+
+      return new class() {
+        public self|Name|Countable|\ArrayObject $fixture;
+      };'
+    ));
+    $this->assertEquals(
+      new TypeUnion([$t, new XPClass(Name::class), new XPClass(\Countable::class), new XPClass(\ArrayObject::class)]),
+      $t->getField('fixture')->getType()
+    );
   }
 }
