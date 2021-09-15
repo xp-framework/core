@@ -43,8 +43,6 @@ class Help {
    * @return int
    */
   public static function main(array $args) {
-    $command= null;
-
     if (empty($args)) {
       $class= new XPClass(self::class);
       $source= $class->getClassLoader();
@@ -57,7 +55,7 @@ class Help {
       }
       $markdown= $source->getResource($resource);
     } else {
-      $class= $args[0];
+      $class= strtr($args[0], '\\', '.');
       if (null === ($source= ClassLoader::getDefault()->findClass($class))) {
         Console::$err->writeLine('No class named ', $class);
         return 2;
