@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.13.1 / 2021-09-15
+
+### Bugfixes
+
+* Fixed `lang.Environment::variables()` to return the complete environment
+  even if the php.ini setting *variables_order* does not include `S`.
+  (@thekid)
+
 ## 10.13.0 / 2021-09-12
 
 ### Features
