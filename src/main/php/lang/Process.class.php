@@ -114,7 +114,7 @@ class Process {
     clearstatcache();
 
     // PATHEXT is in form ".{EXT}[;.{EXT}[;...]]"
-    $extensions= [''] + explode(PATH_SEPARATOR, getenv('PATHEXT'));
+    $extensions= array_merge([''], explode(PATH_SEPARATOR, getenv('PATHEXT')));
     $paths= explode(PATH_SEPARATOR, getenv('PATH'));
 
     foreach ((array)$commands as $command) {
