@@ -1,18 +1,18 @@
 <?php namespace lang;
 
-use io\File;
+use io\{File, IOException};
 
 /**
  * Process
  *
  * Example (get uptime information on a *NIX system)
- * <code>
- *   $p= new Process('uptime');
- *   $uptime= $p->out->readLine();
- *   $p->close();
+ * ```php
+ * $p= new Process('uptime');
+ * $uptime= $p->out->readLine();
+ * $p->close();
  *
- *   var_dump($uptime);
- * </code>
+ * var_dump($uptime);
+ * ```
  *
  * @test  xp://net.xp_framework.unittest.core.ProcessResolveTest
  * @test  xp://net.xp_framework.unittest.core.ProcessTest
@@ -56,19 +56,19 @@ class Process {
 
     // Verify
     if (self::$DISABLED) {
-      throw new \io\IOException('Process execution has been disabled');
+      throw new IOException('Process execution has been disabled');
     }
 
     // Check whether the given command is executable.
     $binary= self::resolve($command);
     if (!is_file($binary) || !is_executable($binary)) {
-      throw new \io\IOException('Command "'.$binary.'" is not an executable file');
+      throw new IOException('Command "'.$binary.'" is not an executable file');
     }
 
     // Open process
     $cmd= CommandLine::forName(PHP_OS)->compose($binary, $arguments);
     if (!is_resource($this->handle= proc_open($cmd, $spec, $pipes, $cwd, $env, ['bypass_shell' => true]))) {
-      throw new \io\IOException('Could not execute "'.$cmd.'"');
+      throw new IOException('Could not execute "'.$cmd.'"');
     }
 
     $this->status= proc_get_status($this->handle);
@@ -106,43 +106,46 @@ class Process {
   /**
    * Resolve path for a command
    *
-   * @param   string command
+   * @param   string|string[] commands
    * @return  string executable
    * @throws  io.IOException in case the command could not be found or is not an executable
    */
-  public static function resolve(string $command): string {
-  
-    // Short-circuit this
-    if ('' === $command) throw new \io\IOException('Empty command not resolveable');
-    
+  public static function resolve($commands): string {
+    clearstatcache();
+
     // PATHEXT is in form ".{EXT}[;.{EXT}[;...]]"
     $extensions= [''] + explode(PATH_SEPARATOR, getenv('PATHEXT'));
-    clearstatcache();
+    $paths= explode(PATH_SEPARATOR, getenv('PATH'));
+
+    foreach ((array)$commands as $command) {
   
-    // If the command is in fully qualified form and refers to a file
-    // that does not exist (e.g. "C:\DoesNotExist.exe", "\DoesNotExist.com"
-    // or /usr/bin/doesnotexist), do not attempt to search for it.
-    if ((DIRECTORY_SEPARATOR === $command[0]) || ((strncasecmp(PHP_OS, 'Win', 3) === 0) && 
-      strlen($command) > 1 && (':' === $command[1] || '/' === $command[0])
-    )) {
-      foreach ($extensions as $ext) {
-        $q= $command.$ext;
-        if (file_exists($q) && !is_dir($q)) return realpath($q);
+      // Short-circuit this
+      if ('' === $command) throw new IOException('Empty command not resolveable');
+    
+      // If the command is in fully qualified form and refers to a file
+      // that does not exist (e.g. "C:\DoesNotExist.exe", "\DoesNotExist.com"
+      // or /usr/bin/doesnotexist), do not attempt to search for it.
+      if ((DIRECTORY_SEPARATOR === $command[0]) || ((strncasecmp(PHP_OS, 'Win', 3) === 0) && 
+        strlen($command) > 1 && (':' === $command[1] || '/' === $command[0])
+      )) {
+        foreach ($extensions as $ext) {
+          $q= $command.$ext;
+          if (file_exists($q) && !is_dir($q)) return realpath($q);
+        }
+        continue;
       }
-      throw new \io\IOException('"'.$command.'" does not exist');
+
+      // Check the PATH environment setting for possible locations of the 
+      // executable if its name is not a fully qualified path name.
+      foreach ($paths as $path) {
+        foreach ($extensions as $ext) {
+          $q= $path.DIRECTORY_SEPARATOR.$command.$ext;
+          if (file_exists($q) && !is_dir($q)) return realpath($q);
+        }
+      }
     }
 
-    // Check the PATH environment setting for possible locations of the 
-    // executable if its name is not a fully qualified path name.
-    $paths= explode(PATH_SEPARATOR, getenv('PATH'));
-    foreach ($paths as $path) {
-      foreach ($extensions as $ext) {
-        $q= $path.DIRECTORY_SEPARATOR.$command.$ext;
-        if (file_exists($q) && !is_dir($q)) return realpath($q);
-      }
-    }
-    
-    throw new \io\IOException('Could not find "'.$command.'" in path');
+    throw new IOException('Could not find '.implode(', ', (array)$commands).' in path');
   }
 
   /**
@@ -251,7 +254,7 @@ class Process {
         if (0 !== $exit) {
           throw new IllegalStateException('Cannot find executable: '.implode('', $out));
         }
-      } catch (\io\IOException $e) {
+      } catch (IOException $e) {
         throw new IllegalStateException($e->getMessage());
       }
       $self->status['running?']= function() use($pid) {

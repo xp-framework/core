@@ -119,4 +119,14 @@ class ProcessResolveTest extends TestCase {
   public function resolve() {
     $this->assertTrue(in_array(Process::resolve('ls'), ['/usr/bin/ls', '/bin/ls']));
   }
+
+  #[Test, Action(eval: 'new IsPlatform("WIN")')]
+  public function resolveCommandLineInterpreter() {
+    $this->assertTrue(is_executable(Process::resolve(['command.com', 'cmd.exe'])));
+  }
+
+  #[Test, Action(eval: 'new IsPlatform("!(WIN|ANDROID)")')]
+  public function resolveUnixShell() {
+    $this->assertTrue(is_executable(Process::resolve(['zsh', 'bash', 'dash', 'sh'])));
+  }
 }
