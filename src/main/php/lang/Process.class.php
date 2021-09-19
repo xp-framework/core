@@ -107,10 +107,11 @@ class Process {
    * Resolve path for a command
    *
    * @param   string|string[] commands
-   * @return  string executable
+   * @param   bool optional Controls whether to return NULL or raise exceptions
+   * @return  ?string executable
    * @throws  io.IOException in case the command could not be found or is not an executable
    */
-  public static function resolve($commands): string {
+  public static function resolve($commands, $optional= false) {
     clearstatcache();
 
     // PATHEXT is in form ".{EXT}[;.{EXT}[;...]]"
@@ -145,6 +146,7 @@ class Process {
       }
     }
 
+    if ($optional) return null;
     throw new IOException('Could not find '.implode(', ', (array)$commands).' in path');
   }
 

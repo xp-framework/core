@@ -104,6 +104,11 @@ class ProcessResolveTest extends TestCase {
     Process::resolve('/@@non-existant@@');
   }
 
+  #[Test]
+  public function resolveNonExistantOptionally() {
+    $this->assertNull(Process::resolve('/@@non-existant@@', true));
+  }
+
   #[Test, Action(eval: 'new IsPlatform("ANDROID")')]
   public function resolveFullyQualifiedOnAndroid() {
     $fq= getenv('ANDROID_ROOT').'/framework/core.jar';
