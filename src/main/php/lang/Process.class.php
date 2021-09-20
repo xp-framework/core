@@ -30,9 +30,11 @@ class Process {
   private $status= [];
 
   public static $DISABLED;
+  private static $WINDOWS;
 
   static function __static() {
     self::$DISABLED= (bool)strstr(ini_get('disable_functions'), 'proc_open');
+    self::$WINDOWS= 0 === strncasecmp(PHP_OS, 'Win', 3);
   }
 
   /**
@@ -61,7 +63,7 @@ class Process {
 
     // Check whether the given command is executable.
     $binary= self::resolve($command);
-    if (!is_file($binary) || !is_executable($binary)) {
+    if (!is_executable($binary)) {
       throw new \io\IOException('Command "'.$binary.'" is not an executable file');
     }
 
@@ -104,6 +106,47 @@ class Process {
   }
 
   /**
+   * Locate commands using PATH (and PATHEXT) environment variables.
+   *
+   * @param  string|string[] $commands
+   * @return iterable
+   */
+  public static function locate($commands) {
+    clearstatcache();
+
+    // PATHEXT is in form ".{EXT}[;.{EXT}[;...]]"
+    $extensions= array_merge(explode(PATH_SEPARATOR, getenv('PATHEXT')), ['']);
+    $paths= explode(PATH_SEPARATOR, getenv('PATH'));
+
+    foreach ((array)$commands as $command) {
+      if ('' === $command) continue;
+
+      // If the command is in fully qualified form and refers to a file
+      // that does not exist (e.g. "C:\DoesNotExist.exe", "\DoesNotExist.com"
+      // or /usr/bin/doesnotexist), do not attempt to search for it.
+      if (
+        DIRECTORY_SEPARATOR === $command[0] ||
+        self::$WINDOWS && strlen($command) > 1 && (':' === $command[1] || '/' === $command[0])
+      ) {
+        foreach ($extensions as $ext) {
+          $q= $command.$ext;
+          if (is_file($q)) yield $command => realpath($q);
+        }
+        continue;
+      }
+
+      // Check the PATH environment setting for possible locations of the 
+      // executable if its name is not a fully qualified path name.
+      foreach ($paths as $path) {
+        foreach ($extensions as $ext) {
+          $q= $path.DIRECTORY_SEPARATOR.$command.$ext;
+          if (is_file($q)) yield $command => realpath($q);
+        }
+      }
+    }
+  }
+
+  /**
    * Resolve path for a command
    *
    * @param   string command
@@ -111,38 +154,12 @@ class Process {
    * @throws  io.IOException in case the command could not be found or is not an executable
    */
   public static function resolve(string $command): string {
-  
-    // Short-circuit this
-    if ('' === $command) throw new \io\IOException('Empty command not resolveable');
-    
-    // PATHEXT is in form ".{EXT}[;.{EXT}[;...]]"
-    $extensions= [''] + explode(PATH_SEPARATOR, getenv('PATHEXT'));
-    clearstatcache();
-  
-    // If the command is in fully qualified form and refers to a file
-    // that does not exist (e.g. "C:\DoesNotExist.exe", "\DoesNotExist.com"
-    // or /usr/bin/doesnotexist), do not attempt to search for it.
-    if ((DIRECTORY_SEPARATOR === $command[0]) || ((strncasecmp(PHP_OS, 'Win', 3) === 0) && 
-      strlen($command) > 1 && (':' === $command[1] || '/' === $command[0])
-    )) {
-      foreach ($extensions as $ext) {
-        $q= $command.$ext;
-        if (file_exists($q) && !is_dir($q)) return realpath($q);
-      }
-      throw new \io\IOException('"'.$command.'" does not exist');
-    }
+    if (null !== ($resolved= self::locate($command)->current())) return $resolved;   
 
-    // Check the PATH environment setting for possible locations of the 
-    // executable if its name is not a fully qualified path name.
-    $paths= explode(PATH_SEPARATOR, getenv('PATH'));
-    foreach ($paths as $path) {
-      foreach ($extensions as $ext) {
-        $q= $path.DIRECTORY_SEPARATOR.$command.$ext;
-        if (file_exists($q) && !is_dir($q)) return realpath($q);
-      }
-    }
-    
-    throw new \io\IOException('Could not find "'.$command.'" in path');
+    throw new \io\IOException('' === $command
+      ? 'Empty command not resolveable'
+      : 'Could not find "'.$command.'" in path'
+    );
   }
 
   /**
@@ -179,7 +196,7 @@ class Process {
     //   /bin/ps to retrieve the command line (please note unfortunately any
     //   quote signs have been lost and it can thus be only used for display
     //   purposes)
-    if (strncasecmp(PHP_OS, 'Win', 3) === 0) {
+    if (self::$WINDOWS) {
       try {
         if (class_exists(\Com::class)) {
           $c= new \Com('winmgmts://./root/cimv2');

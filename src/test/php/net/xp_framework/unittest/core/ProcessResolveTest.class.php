@@ -119,4 +119,22 @@ class ProcessResolveTest extends TestCase {
   public function resolve() {
     $this->assertTrue(in_array(Process::resolve('ls'), ['/usr/bin/ls', '/bin/ls']));
   }
+
+  #[Test, Action(eval: 'new IsPlatform("WIN")')]
+  public function locate_multiple_windows() {
+    $result= [];
+    foreach (Process::locate(['explorer', 'winver']) as $command => $resolved) {
+      $result[$command]= is_executable($resolved);
+    }
+    $this->assertEquals(['explorer' => true, 'winver' => true], $result);
+  }
+
+  #[Test, Action(eval: 'new IsPlatform("!(WIN|ANDROID)")')]
+  public function locate_multiple_posix() {
+    $result= [];
+    foreach (Process::locate(['ls', 'ln']) as $command => $resolved) {
+      $result[$command]= is_executable($resolved);
+    }
+    $this->assertEquals(['ls' => true, 'ln' => true], $result);
+  }
 }
