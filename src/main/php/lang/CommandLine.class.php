@@ -47,7 +47,7 @@ abstract class CommandLine extends Enum {
                 break;
               }
               $q= $p;
-              if ($triple === substr($cmd, $q, 3)) {
+              if (0 === substr_compare($cmd, $triple, $q, 3)) {
                 false === ($p= strpos($cmd, $triple, $q+= 3)) || $q= $p + 3;
                 continue;
               }
