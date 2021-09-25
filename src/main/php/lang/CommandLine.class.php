@@ -25,7 +25,7 @@
  */
 abstract class CommandLine extends Enum {
   public static $WINDOWS, $UNIX;
-  private static $PATH;
+  protected static $PATH;
 
   static function __static() {
     self::$WINDOWS= new class(0, 'WINDOWS') extends CommandLine {
