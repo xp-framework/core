@@ -109,6 +109,7 @@ class Process {
   /**
    * Resolve path for a command
    *
+   * @deprecated Use lang.CommandLine::resolve() instead!
    * @param   string command
    * @return  string executable
    * @throws  io.IOException in case the command is empty or could not be found
