@@ -1,18 +1,18 @@
 <?php namespace lang;
 
-use io\File;
+use io\{File, IOException};
 
 /**
  * Process
  *
  * Example (get uptime information on a *NIX system)
- * <code>
- *   $p= new Process('uptime');
- *   $uptime= $p->out->readLine();
- *   $p->close();
+ * ```php
+ * $p= new Process('uptime');
+ * $uptime= $p->out->readLine();
+ * $p->close();
  *
- *   var_dump($uptime);
- * </code>
+ * var_dump($uptime);
+ * ```
  *
  * @test  xp://net.xp_framework.unittest.core.ProcessResolveTest
  * @test  xp://net.xp_framework.unittest.core.ProcessTest
@@ -56,9 +56,9 @@ class Process {
 
     // Short-circuit
     if ('' === $command) {
-      throw new \io\IOException('Empty command not resolveable');
+      throw new IOException('Empty command not resolveable');
     } else if (self::$DISABLED) {
-      throw new \io\IOException('Process execution has been disabled');
+      throw new IOException('Process execution has been disabled');
     }
 
     $cmd= CommandLine::forName(PHP_OS);
@@ -67,7 +67,7 @@ class Process {
       // Resolved binary, try creating a process from it
       $exec= $cmd->compose($binary, $arguments);
       if (!is_resource($this->handle= proc_open($exec, $spec, $pipes, $cwd, $env, ['bypass_shell' => true]))) {
-        throw new \io\IOException('Could not execute "'.$exec.'"');
+        throw new IOException('Could not execute "'.$exec.'"');
       }
 
       $this->status= proc_get_status($this->handle);
@@ -90,7 +90,7 @@ class Process {
       return;
     }
 
-    throw new \io\IOException('Could not find "'.$command.'" in path');
+    throw new IOException('Could not find "'.$command.'" in path');
   }
 
   /**
@@ -119,7 +119,7 @@ class Process {
       return $executable;
     }
 
-    throw new \io\IOException('' === $command
+    throw new IOException('' === $command
       ? 'Empty command not resolveable'
       : 'Could not find "'.$command.'" in path'
     );
@@ -231,7 +231,7 @@ class Process {
         if (0 !== $exit) {
           throw new IllegalStateException('Cannot find executable: '.implode('', $out));
         }
-      } catch (\io\IOException $e) {
+      } catch (IOException $e) {
         throw new IllegalStateException($e->getMessage());
       }
       $self->status['running?']= function() use($pid) {
