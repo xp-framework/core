@@ -64,8 +64,7 @@ abstract class CommandLine extends Enum {
 
         $dot= strrpos($command, '.') > 0;
         if (false === strpos($command, '\\') && false === strpos($command, '/')) {
-          parent::$PATH ?? parent::$PATH= explode(';', getenv('PATH'));
-          foreach (parent::$PATH as $path) {
+          foreach (parent::$PATH ?? parent::$PATH= explode(';', getenv('PATH')) as $path) {
             foreach ($dot ? [''] : ['.com', '.exe'] as $ext) {
               $q= $path.'\\'.$command.$ext;
               is_executable($q) && yield realpath($q);
