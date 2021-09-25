@@ -295,9 +295,9 @@ class Process {
       throw new IllegalStateException('Cannot close not-owned process #'.$this->status['pid']);
     }
     if (null !== $this->handle) {
-      $this->in->isOpen() && $this->in->close();
-      $this->out->isOpen() && $this->out->close();
-      $this->err->isOpen() && $this->err->close();
+      $this->in && $this->in->isOpen() && $this->in->close();
+      $this->out && $this->out->isOpen() && $this->out->close();
+      $this->err && $this->err->isOpen() && $this->err->close();
       $this->exitv= proc_close($this->handle);
       $this->handle= null;
     }
