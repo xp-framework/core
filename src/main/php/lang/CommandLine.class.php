@@ -29,8 +29,6 @@ abstract class CommandLine extends Enum {
 
   static function __static() {
     self::$WINDOWS= new class(0, 'WINDOWS') extends CommandLine {
-      private static $EXT;
-
       static function __static() { }
 
       public function parse($cmd) {
@@ -73,15 +71,15 @@ abstract class CommandLine extends Enum {
         if ('' === $command) return;
 
         $dot= strrpos($command, '.') > 0;
-        if ('\\' === $command[0] || '/' === $command[0] || 2 === sscanf($command, '%c%[:]', $drive, $colon)) {
-          foreach ($dot ? [''] : self::$EXT ?? self::$EXT= explode(';', getenv('PATHEXT')) as $ext) {
+        if ('.' === $command[0] || '\\' === $command[0] || '/' === $command[0] || 2 === sscanf($command, '%c%[:]', $drive, $colon)) {
+          foreach ($dot ? [''] : ['.com', '.exe'] as $ext) {
             $q= $command.$ext;
             is_file($q) && is_executable($q) && yield realpath($q);
           }
         } else {
           parent::$PATH ?? parent::$PATH= explode(';', getenv('PATH'));
           foreach (parent::$PATH as $path) {
-            foreach ($dot ? [''] : self::$EXT ?? self::$EXT= explode(';', getenv('PATHEXT')) as $ext) {
+            foreach ($dot ? [''] : ['.com', '.exe'] as $ext) {
               $q= $path.'\\'.$command.$ext;
               is_file($q) && is_executable($q) && yield realpath($q);
             }
@@ -135,7 +133,7 @@ abstract class CommandLine extends Enum {
       public function resolve($command) {
         if ('' === $command) {
           // NOOP
-        } else if ('/' === $command[0]) {
+        } else if ('.' === $command[0] || '/' === $command[0]) {
           is_file($command) && yield realpath($command);
         } else {
           foreach (parent::$PATH ?? parent::$PATH= explode(PATH_SEPARATOR, getenv('PATH')) as $path) {
