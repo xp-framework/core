@@ -62,6 +62,7 @@ abstract class CommandLine extends Enum {
       public function resolve($command) {
         if ('' === $command) return;
 
+        clearstatcache();
         $dot= strrpos($command, '.') > 0;
         if (strlen($command) === strcspn($command, '/\\')) {
           foreach (parent::$PATH ?? parent::$PATH= explode(';', getenv('PATH')) as $path) {
@@ -122,9 +123,10 @@ abstract class CommandLine extends Enum {
       }
 
       public function resolve($command) {
-        if ('' === $command) {
-          // NOOP
-        } else if (false === strpos($command, DIRECTORY_SEPARATOR)) {
+        if ('' === $command) return;
+
+        clearstatcache();
+        if (false === strpos($command, DIRECTORY_SEPARATOR)) {
           foreach (parent::$PATH ?? parent::$PATH= explode(PATH_SEPARATOR, getenv('PATH')) as $path) {
             $q= rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$command;
             is_file($q) && is_executable($q) && yield $q;
