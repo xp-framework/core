@@ -309,6 +309,7 @@ class Process {
     if (!$this->status['owner']) {
       throw new IllegalStateException('Cannot close not-owned process #'.$this->status['pid']);
     }
+
     if (null !== $this->handle) {
       $this->in && $this->in->isOpen() && $this->in->close();
       $this->out && $this->out->isOpen() && $this->out->close();
@@ -317,9 +318,8 @@ class Process {
       $this->handle= null;
     }
     
-    // If the process wasn't running when we entered this method,
-    // determine the exitcode from the previous proc_get_status()
-    // call.
+    // If the process wasn't running when we entered this method, determine
+    // the exitcode from the previous proc_get_status() call.
     if (!$this->status['running']) {
       $this->exitv= $this->status['exitcode'];
     }
