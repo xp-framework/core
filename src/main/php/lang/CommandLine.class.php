@@ -74,14 +74,14 @@ abstract class CommandLine extends Enum {
         if ('.' === $command[0] || '\\' === $command[0] || '/' === $command[0] || 2 === sscanf($command, '%c%[:]', $drive, $colon)) {
           foreach ($dot ? [''] : ['.com', '.exe'] as $ext) {
             $q= $command.$ext;
-            is_file($q) && is_executable($q) && yield realpath($q);
+            is_executable($q) && yield realpath($q);
           }
         } else {
           parent::$PATH ?? parent::$PATH= explode(';', getenv('PATH'));
           foreach (parent::$PATH as $path) {
             foreach ($dot ? [''] : ['.com', '.exe'] as $ext) {
               $q= $path.'\\'.$command.$ext;
-              is_file($q) && is_executable($q) && yield realpath($q);
+              is_executable($q) && yield realpath($q);
             }
           }
         }
