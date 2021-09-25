@@ -54,40 +54,43 @@ class Process {
     // For `new self()` used in getProcessById()
     if (null === $command) return;
 
-    // Verify
-    if (self::$DISABLED) {
+    // Short-circuit
+    if ('' === $command) {
+      throw new \io\IOException('Empty command not resolveable');
+    } else if (self::$DISABLED) {
       throw new \io\IOException('Process execution has been disabled');
     }
 
-    // Check whether the given command is executable.
-    $binary= self::resolve($command);
-    if (!is_file($binary) || !is_executable($binary)) {
-      throw new \io\IOException('Command "'.$binary.'" is not an executable file');
+    $cmd= CommandLine::forName(PHP_OS);
+    foreach ($cmd->resolve($command) as $binary) {
+
+      // Resolved binary, try creating a process from it
+      $exec= $cmd->compose($binary, $arguments);
+      if (!is_resource($this->handle= proc_open($exec, $spec, $pipes, $cwd, $env, ['bypass_shell' => true]))) {
+        throw new \io\IOException('Could not execute "'.$exec.'"');
+      }
+
+      $this->status= proc_get_status($this->handle);
+      $this->status['exe']= $binary;
+      $this->status['arguments']= $arguments;
+      $this->status['owner']= true;
+      $this->status['running?']= function() {
+        if (null === $this->handle) return false;
+        return $this->status['running']= proc_get_status($this->handle)['running'];
+      };
+      $this->status['terminate!']= function($signal) {
+        if (null === $this->handle) return false;
+        proc_terminate($this->handle, $signal);
+      };
+
+      // Assign in, out and err members
+      $this->in= isset($pipes[0]) ? new File($pipes[0]) : null;
+      $this->out= isset($pipes[1]) ? new File($pipes[1]) : null;
+      $this->err= isset($pipes[2]) ? new File($pipes[2]) : null;
+      return;
     }
 
-    // Open process
-    $cmd= CommandLine::forName(PHP_OS)->compose($binary, $arguments);
-    if (!is_resource($this->handle= proc_open($cmd, $spec, $pipes, $cwd, $env, ['bypass_shell' => true]))) {
-      throw new \io\IOException('Could not execute "'.$cmd.'"');
-    }
-
-    $this->status= proc_get_status($this->handle);
-    $this->status['exe']= $binary;
-    $this->status['arguments']= $arguments;
-    $this->status['owner']= true;
-    $this->status['running?']= function() {
-      if (null === $this->handle) return false;
-      return $this->status['running']= proc_get_status($this->handle)['running'];
-    };
-    $this->status['terminate!']= function($signal) {
-      if (null === $this->handle) return false;
-      proc_terminate($this->handle, $signal);
-    };
-
-    // Assign in, out and err members
-    $this->in= new File($pipes[0]);
-    $this->out= new File($pipes[1]);
-    $this->err= new File($pipes[2]);
+    throw new \io\IOException('Could not find "'.$command.'" in path');
   }
 
   /**
@@ -108,41 +111,17 @@ class Process {
    *
    * @param   string command
    * @return  string executable
-   * @throws  io.IOException in case the command could not be found or is not an executable
+   * @throws  io.IOException in case the command is empty or could not be found
    */
   public static function resolve(string $command): string {
-  
-    // Short-circuit this
-    if ('' === $command) throw new \io\IOException('Empty command not resolveable');
-    
-    // PATHEXT is in form ".{EXT}[;.{EXT}[;...]]"
-    $extensions= [''] + explode(PATH_SEPARATOR, getenv('PATHEXT'));
-    clearstatcache();
-  
-    // If the command is in fully qualified form and refers to a file
-    // that does not exist (e.g. "C:\DoesNotExist.exe", "\DoesNotExist.com"
-    // or /usr/bin/doesnotexist), do not attempt to search for it.
-    if ((DIRECTORY_SEPARATOR === $command[0]) || ((strncasecmp(PHP_OS, 'Win', 3) === 0) && 
-      strlen($command) > 1 && (':' === $command[1] || '/' === $command[0])
-    )) {
-      foreach ($extensions as $ext) {
-        $q= $command.$ext;
-        if (file_exists($q) && !is_dir($q)) return realpath($q);
-      }
-      throw new \io\IOException('"'.$command.'" does not exist');
+    foreach (CommandLine::forName(PHP_OS)->resolve($command) as $executable) {
+      return $executable;
     }
 
-    // Check the PATH environment setting for possible locations of the 
-    // executable if its name is not a fully qualified path name.
-    $paths= explode(PATH_SEPARATOR, getenv('PATH'));
-    foreach ($paths as $path) {
-      foreach ($extensions as $ext) {
-        $q= $path.DIRECTORY_SEPARATOR.$command.$ext;
-        if (file_exists($q) && !is_dir($q)) return realpath($q);
-      }
-    }
-    
-    throw new \io\IOException('Could not find "'.$command.'" in path');
+    throw new \io\IOException('' === $command
+      ? 'Empty command not resolveable'
+      : 'Could not find "'.$command.'" in path'
+    );
   }
 
   /**
