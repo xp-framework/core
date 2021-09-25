@@ -130,7 +130,7 @@ abstract class CommandLine extends Enum {
             is_file($q) && is_executable($q) && yield realpath($q);
           }
         } else {
-          is_file($command) && is_executable($q) && yield realpath($command);
+          is_file($command) && is_executable($command) && yield realpath($command);
         }
       }
 
