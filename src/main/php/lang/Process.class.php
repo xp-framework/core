@@ -73,7 +73,6 @@ class Process {
         } else if ('redirect' === $descriptor[0]) {
           $exec.= ' '.$n.'>&'.$descriptor[1];
           $options['bypass_shell']= false;
-          $spec[$n]= ['pipe', 'w'];
         } else if ('null' === $descriptor[0]) {
           $spec[$n]= ['file', CommandLine::$WINDOWS === $cmd ? 'NUL' : '/dev/null', 'w'];
         }
