@@ -65,7 +65,7 @@ class Process {
     foreach ($cmd->resolve($command) as $binary) {
 
       // Resolved binary, try creating a process from it
-      $exec= $cmd->compose($binary, $arguments);
+      $exec= $cmd->compose(realpath($binary), $arguments);
       if (!is_resource($this->handle= proc_open($exec, $spec, $pipes, $cwd, $env, ['bypass_shell' => true]))) {
         throw new IOException('Could not execute "'.$exec.'"');
       }
@@ -116,7 +116,7 @@ class Process {
    */
   public static function resolve(string $command): string {
     foreach (CommandLine::forName(PHP_OS)->resolve($command) as $executable) {
-      return $executable;
+      return realpath($executable);
     }
 
     throw new IOException('' === $command

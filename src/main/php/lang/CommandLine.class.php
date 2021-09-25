@@ -66,14 +66,14 @@ abstract class CommandLine extends Enum {
         if (strlen($command) === strcspn($command, '/\\')) {
           foreach (parent::$PATH ?? parent::$PATH= explode(';', getenv('PATH')) as $path) {
             foreach ($dot ? [''] : ['.com', '.exe'] as $ext) {
-              $q= $path.'\\'.$command.$ext;
-              is_executable($q) && yield realpath($q);
+              $q= rtrim($path, '\\').'\\'.$command.$ext;
+              is_executable($q) && yield $q;
             }
           }
         } else {
           foreach ($dot ? [''] : ['.com', '.exe'] as $ext) {
             $q= $command.$ext;
-            is_executable($q) && yield realpath($q);
+            is_executable($q) && yield $q;
           }
         }
       }
@@ -126,11 +126,11 @@ abstract class CommandLine extends Enum {
           // NOOP
         } else if (false === strpos($command, DIRECTORY_SEPARATOR)) {
           foreach (parent::$PATH ?? parent::$PATH= explode(PATH_SEPARATOR, getenv('PATH')) as $path) {
-            $q= $path.DIRECTORY_SEPARATOR.$command;
-            is_file($q) && is_executable($q) && yield realpath($q);
+            $q= rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$command;
+            is_file($q) && is_executable($q) && yield $q;
           }
         } else {
-          is_file($command) && is_executable($command) && yield realpath($command);
+          is_file($command) && is_executable($command) && yield $command;
         }
       }
 
