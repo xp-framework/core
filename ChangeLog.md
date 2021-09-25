@@ -3,6 +3,16 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.14.0 / ????-??-??
+
+### Features
+
+* Merged PR #281: Add `lang.CommandLine::resolve()`. This method resolves
+  given commands against the system path and returns all found executables,
+  much like Windows' `where` or POSIX' `which -a` commands. It supersedes
+  *lang.Process::resolve()*, which becomes deprecated.
+  (@thekid)
+
 ## 10.13.1 / 2021-09-15
 
 ### Bugfixes
