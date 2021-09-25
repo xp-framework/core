@@ -25,10 +25,14 @@
  */
 abstract class CommandLine extends Enum {
   public static $WINDOWS, $UNIX;
+  private static $PATH;
 
   static function __static() {
     self::$WINDOWS= new class(0, 'WINDOWS') extends CommandLine {
+      private static $EXT;
+
       static function __static() { }
+
       public function parse($cmd) {
         static $triple= '"""';
         $parts= [];
@@ -64,13 +68,33 @@ abstract class CommandLine extends Enum {
         $parts[]= $r;
         return $parts;
       }
-      
+
+      public function resolve($command) {
+        if ('' === $command) return;
+
+        $dot= strrpos($command, '.') > 0;
+        if ('\\' === $command[0] || '/' === $command[0] || 2 === sscanf($command, '%c%[:]', $drive, $colon)) {
+          foreach ($dot ? [''] : self::$EXT ?? self::$EXT= explode(';', getenv('PATHEXT')) as $ext) {
+            $q= $command.$ext;
+            is_file($q) && is_executable($q) && yield realpath($q);
+          }
+        } else {
+          parent::$PATH ?? parent::$PATH= explode(';', getenv('PATH'));
+          foreach (parent::$PATH as $path) {
+            foreach ($dot ? [''] : self::$EXT ?? self::$EXT= explode(';', getenv('PATHEXT')) as $ext) {
+              $q= $path.'\\'.$command.$ext;
+              is_file($q) && is_executable($q) && yield realpath($q);
+            }
+          }
+        }
+      }
+
       protected function quote($arg) {
         $l= strlen($arg);
         if ($l && strcspn($arg, '" ') >= $l) return $arg;
         return '"'.str_replace('"', '"""', $arg).'"';
       }
-      
+
       public function compose($command, $arguments= []) {
         $cmd= $this->quote($command);
         foreach ($arguments as $arg) {
@@ -81,6 +105,7 @@ abstract class CommandLine extends Enum {
     };
     self::$UNIX= new class(1, 'UNIX') extends CommandLine {
       static function __static() { }
+
       public function parse($cmd) {
         $parts= [];
         $o= 0;
@@ -106,13 +131,26 @@ abstract class CommandLine extends Enum {
         }
         return $parts;
       }
-      
+
+      public function resolve($command) {
+        if ('' === $command) {
+          // NOOP
+        } else if ('/' === $command[0]) {
+          is_file($command) && yield realpath($command);
+        } else {
+          foreach (parent::$PATH ?? parent::$PATH= explode(PATH_SEPARATOR, getenv('PATH')) as $path) {
+            $q= $path.DIRECTORY_SEPARATOR.$command;
+            is_file($q) && is_executable($q) && yield realpath($q);
+          }
+        }
+      }
+
       protected function quote($arg) {
         $l= strlen($arg);
         if ($l && strcspn($arg, "&;`\'\"|*?~<>^()[]{}\$ ") >= $l) return $arg;
         return "'".str_replace("'", "'\\''", $arg)."'";
       }
-      
+
       public function compose($command, $arguments= []) {
         $cmd= $this->quote($command);
         foreach ($arguments as $arg) {
@@ -145,6 +183,14 @@ abstract class CommandLine extends Enum {
    * @return  string[] parts
    */
   public abstract function parse($cmd);
+
+  /**
+   * Resolve a command
+   *
+   * @param  string command
+   * @return iterable
+   */
+  public abstract function resolve($command);
   
   /**
    * Build command line from a command and - optionally - arguments
