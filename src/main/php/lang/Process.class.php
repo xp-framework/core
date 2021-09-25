@@ -42,16 +42,10 @@ class Process {
    * @param   string[] arguments default []
    * @param   string cwd default NULL the working directory
    * @param   [:string] default NULL the environment
+   * @param   var[] descriptors
    * @throws  io.IOException in case the command could not be executed
    */
-  public function __construct($command= null, $arguments= [], $cwd= null, $env= null) {
-    static $spec= [
-      0 => ['pipe', 'r'],  // stdin
-      1 => ['pipe', 'w'],  // stdout
-      2 => ['pipe', 'w']   // stderr
-    ];
-
-    // For `new self()` used in getProcessById()
+  public function __construct($command= null, $arguments= [], $cwd= null, $env= null, $descriptors= null) {
     if (null === $command) return;
 
     // Short-circuit
@@ -64,10 +58,29 @@ class Process {
     $cmd= CommandLine::forName(PHP_OS);
     foreach ($cmd->resolve($command) as $binary) {
       $binary= realpath($binary);
-
-      // Resolved binary, try creating a process from it
       $exec= $cmd->compose($binary, $arguments);
-      if (!is_resource($this->handle= proc_open($exec, $spec, $pipes, $cwd, $env, ['bypass_shell' => true]))) {
+      $options= ['bypass_shell' => true];
+
+      // Default descriptor spec to map STDIN to a pipe to read from and STDOUT and STDERR to
+      // pipes the process will write to. This can be overwritten by the descriptors argument.
+      //
+      // Rewrite ['redirect', n] and ['null'] arguments for PHP versions <= 7.4.0, see
+      // https://github.com/php/php-src/commit/6285bb52faf407b07e71497723d13a1b08821352
+      $spec= [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']];
+      foreach ((array)$descriptors as $n => $descriptor) {
+        if (PHP_VERSION_ID >= 70400 || !is_array($descriptor)) {
+          $spec[$n]= $descriptor;
+        } else if ('redirect' === $descriptor[0]) {
+          $exec.= ' '.$n.'>&'.$descriptor[1];
+          $options['bypass_shell']= false;
+          $spec[$n]= ['pipe', 'w'];
+        } else if ('null' === $descriptor[0]) {
+          $spec[$n]= ['file', CommandLine::$WINDOWS === $cmd ? 'NUL' : '/dev/null', 'w'];
+        }
+      }
+
+      // Try creating a process from the given arguments and descriptors
+      if (!is_resource($this->handle= proc_open($exec, $spec, $pipes, $cwd, $env, $options))) {
         throw new IOException('Could not execute "'.$exec.'"');
       }
 
@@ -100,11 +113,12 @@ class Process {
    * @param   string[] arguments default []
    * @param   string cwd default NULL the working directory
    * @param   [:string] default NULL the environment
+   * @param   var[] descriptors
    * @return  self
    * @throws  io.IOException in case the command could not be executed
    */
-  public function newInstance($arguments= [], $cwd= null, $env= null): self {
-    return new self($this->status['exe'], $arguments, $cwd, $env);
+  public function newInstance($arguments= [], $cwd= null, $env= null, $descriptors= null): self {
+    return new self($this->status['exe'], $arguments, $cwd, $env, $descriptors);
   }
 
   /**

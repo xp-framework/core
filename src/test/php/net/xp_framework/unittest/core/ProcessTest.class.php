@@ -114,6 +114,22 @@ class ProcessTest extends TestCase {
     $this->assertEquals('ERR', $err);
   }
 
+  #[Test]
+  public function stderr_redirected_to_stdout() {
+    $p= new Process($this->executable(), ['-r', 'fprintf(STDERR, "ERR");'], null, null, [2 => ['redirect', 1]]);
+    $out= $p->out->read();
+    $p->close();
+    $this->assertEquals('ERR', $out);
+  }
+
+  #[Test]
+  public function stderr_redirected_to_null() {
+    $p= new Process($this->executable(), ['-r', 'fprintf(STDERR, "ERR"); fprintf(STDOUT, "OK");'], null, null, [2 => ['null']]);
+    $out= $p->out->read();
+    $p->close();
+    $this->assertEquals('OK', $out);
+  }
+
   #[Test, Expect(IOException::class)]
   public function runningNonExistantFile() {
     new Process(':FILE_DOES_NOT_EXIST:');
