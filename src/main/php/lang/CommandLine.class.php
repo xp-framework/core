@@ -1,11 +1,7 @@
 <?php namespace lang;
 
 /**
- * Handles command line quoting
- *
- * Composing a command line
- * ------------------------
- * Handled by the <tt>compose</tt> method.
+ * Handles command line parsing, quoting and composing.
  *
  * For Windows
  * ~~~~~~~~~~~
@@ -20,8 +16,8 @@
  *   a backslash. So: he said: 'Hello' will become the following:
  *   'he said: '\''Hello'\''
  *
- * @see      xp://lang.Process
- * @test     xp://net.xp_framework.unittest.core.CommandLineTest
+ * @see   lang.Process
+ * @test  net.xp_framework.unittest.core.CommandLineTest
  */
 abstract class CommandLine extends Enum {
   public static $WINDOWS, $UNIX;
@@ -159,8 +155,8 @@ abstract class CommandLine extends Enum {
    * Returns the command line implementation for the given operating 
    * system.
    *
-   * @param   string os operating system name, e.g. PHP_OS
-   * @return  lang.CommandLine
+   * @param  string $os operating system name, e.g. PHP_OS
+   * @return self
    */
   public static function forName(string $os): self {
     if (0 === strncasecmp($os, 'Win', 3)) {
@@ -173,15 +169,15 @@ abstract class CommandLine extends Enum {
   /**
    * Parse command line
    *
-   * @param   string cmd
-   * @return  string[] parts
+   * @param  string $line
+   * @return string[] parts
    */
-  public abstract function parse($cmd);
+  public abstract function parse($line);
 
   /**
    * Resolve a command
    *
-   * @param  string command
+   * @param  string $command
    * @return iterable
    */
   public abstract function resolve($command);
@@ -189,9 +185,9 @@ abstract class CommandLine extends Enum {
   /**
    * Build command line from a command and - optionally - arguments
    *
-   * @param   string command
-   * @param   string[] arguments default []
-   * @return  string
+   * @param  string $command
+   * @param  string[] $arguments default []
+   * @return string
    */
   public abstract function compose($command, $arguments= []);
 }
