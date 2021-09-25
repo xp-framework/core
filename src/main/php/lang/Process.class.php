@@ -38,12 +38,12 @@ class Process {
   /**
    * Constructor
    *
-   * @param   string command default NULL
-   * @param   string[] arguments default []
-   * @param   string cwd default NULL the working directory
-   * @param   [:string] default NULL the environment
-   * @param   var[] descriptors
-   * @throws  io.IOException in case the command could not be executed
+   * @param  string $command default NULL
+   * @param  string[] $arguments default []
+   * @param  ?string $cwd default NULL the working directory
+   * @param  ?[:string] $env default NULL the environment
+   * @param  ?var[] descriptors
+   * @throws io.IOException in case the command could not be executed
    */
   public function __construct($command= null, $arguments= [], $cwd= null, $env= null, $descriptors= null) {
     if (null === $command) return;
@@ -109,12 +109,12 @@ class Process {
   /**
    * Create a new instance of this process.
    *
-   * @param   string[] arguments default []
-   * @param   string cwd default NULL the working directory
-   * @param   [:string] default NULL the environment
-   * @param   var[] descriptors
-   * @return  self
-   * @throws  io.IOException in case the command could not be executed
+   * @param  string[] $arguments default []
+   * @param  ?string $cwd default NULL the working directory
+   * @param  ?[:string] $env default NULL the environment
+   * @param  ?var[] $descriptors
+   * @return self
+   * @throws io.IOException in case the command could not be executed
    */
   public function newInstance($arguments= [], $cwd= null, $env= null, $descriptors= null): self {
     return new self($this->status['exe'], $arguments, $cwd, $env, $descriptors);
@@ -124,9 +124,9 @@ class Process {
    * Resolve path for a command
    *
    * @deprecated Use lang.CommandLine::resolve() instead!
-   * @param   string command
-   * @return  string executable
-   * @throws  io.IOException in case the command is empty or could not be found
+   * @param  string $command
+   * @return string $executable
+   * @throws io.IOException in case the command is empty or could not be found
    */
   public static function resolve(string $command): string {
     foreach (CommandLine::forName(PHP_OS)->resolve($command) as $executable) {
@@ -142,10 +142,10 @@ class Process {
   /**
    * Get a process by process ID
    *
-   * @param   int pid process id
-   * @param   string exe
-   * @return  self
-   * @throws  lang.IllegalStateException
+   * @param  int $pid process id
+   * @param  ?string $exe
+   * @return self
+   * @throws lang.IllegalStateException
    */
   public static function getProcessById($pid, $exe= null): self {
     $self= new self();
@@ -273,7 +273,7 @@ class Process {
   /**
    * Get command line arguments
    *
-   * @return  string[]
+   * @return string[]
    */
   public function getArguments() {
     if (null === $this->status['arguments']) {
@@ -301,8 +301,8 @@ class Process {
   /**
    * Close this process
    *
-   * @return  int exit value of process
-   * @throws  lang.IllegalStateException if process is not owned
+   * @return int exit value of process
+   * @throws lang.IllegalStateException if process is not owned
    */
   public function close(): int {
     if (!$this->status['owner']) {
