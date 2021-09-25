@@ -48,16 +48,12 @@ abstract class CommandLine extends Enum {
               }
               $q= $p;
               if ($triple === substr($cmd, $q, 3)) {
-                if (false === ($p= strpos($cmd, $triple, $q+ 3))) {
-                  $q= $q+ 3;
-                  continue;
-                }
-                $q= $p+ 3;
+                false === ($p= strpos($cmd, $triple, $q+= 3)) || $q= $p + 3;
                 continue;
               }
               break;
             } while ($q < $s);
-            $r.= str_replace($triple, '"', substr($cmd, $i+ 1, $q- $i- 1));
+            $r.= str_replace($triple, '"', substr($cmd, $i + 1, $q - $i - 1));
             $i= $q;
           } else {
             $r.= $cmd[$i];
