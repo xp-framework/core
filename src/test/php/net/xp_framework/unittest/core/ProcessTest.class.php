@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use io\IOException;
 use io\streams\{MemoryOutputStream, Streams};
+use io\{IOException, TempFile};
 use lang\{Environment, IllegalStateException, Process, Runtime};
-use unittest\{AssertionFailedError, BeforeClass, Expect, PrerequisitesNotMetError, Test, TestCase};
+use unittest\{AssertionFailedError, BeforeClass, Expect, PrerequisitesNotMetError, Test, Values, TestCase};
 
 class ProcessTest extends TestCase {
 
@@ -89,7 +89,7 @@ class ProcessTest extends TestCase {
   }
 
   #[Test]
-  public function stdIn() {
+  public function stdin_stdout_roundtrip() {
     $p= new Process($this->executable(), ['-r', 'fprintf(STDOUT, fread(STDIN, 0xFF));']);
     $p->in->write('IN');
     $p->in->close();
@@ -98,17 +98,17 @@ class ProcessTest extends TestCase {
     $this->assertEquals('IN', $out);
   }
 
-  #[Test]
-  public function stdOut() {
-    $p= new Process($this->executable(), ['-r', 'fprintf(STDOUT, "OUT");']);
+  #[Test, Values([[null], [[1 => ['pipe', 'w']]]])]
+  public function reading_from_stdout($descriptors) {
+    $p= new Process($this->executable(), ['-r', 'fprintf(STDOUT, "OUT");'], null, null, $descriptors);
     $out= $p->out->read();
     $p->close();
     $this->assertEquals('OUT', $out);
   }
 
-  #[Test]
-  public function stdErr() {
-    $p= new Process($this->executable(), ['-r', 'fprintf(STDERR, "ERR");']);
+  #[Test, Values([[null], [[2 => ['pipe', 'w']]]])]
+  public function reading_from_stderr($descriptors) {
+    $p= new Process($this->executable(), ['-r', 'fprintf(STDERR, "ERR");'], null, null, $descriptors);
     $err= $p->err->read();
     $p->close();
     $this->assertEquals('ERR', $err);
@@ -128,6 +128,39 @@ class ProcessTest extends TestCase {
     $out= $p->out->read();
     $p->close();
     $this->assertEquals('OK', $out);
+  }
+
+  #[Test]
+  public function stderr_redirected_to_file() {
+    $err= new TempFile();
+
+    $p= new Process($this->executable(), ['-r', 'fprintf(STDERR, "ERR");'], null, null, [2 => ['file', $err->getURI(), 'w']]);
+    $p->close();
+
+    try {
+      $err->open(TempFile::READ);
+      $this->assertEquals('ERR', $err->read(3));
+    } finally {
+      $err->close();
+      $err->unlink();
+    }
+  }
+
+  #[Test]
+  public function stderr_redirected_to_file_handle() {
+    $err= new TempFile();
+    $err->open(TempFile::READWRITE);
+
+    $p= new Process($this->executable(), ['-r', 'fprintf(STDERR, "ERR");'], null, null, [2 => $err->getHandle()]);
+    $p->close();
+
+    try {
+      $err->seek(0, SEEK_SET);
+      $this->assertEquals('ERR', $err->read(3));
+    } finally {
+      $err->close();
+      $err->unlink();
+    }
   }
 
   #[Test, Expect(IOException::class)]

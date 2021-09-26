@@ -75,6 +75,8 @@ class Process {
           $options['bypass_shell']= false;
         } else if ('null' === $descriptor[0]) {
           $spec[$n]= ['file', CommandLine::$WINDOWS === $cmd ? 'NUL' : '/dev/null', 'w'];
+        } else {
+          $spec[$n]= $descriptor;
         }
       }
 
