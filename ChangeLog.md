@@ -7,6 +7,10 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged PR #282: Allow overwriting descriptors passed to proc_open() in
+  `lang.Process` constructor and `newInstance()`. This can be used for
+  redirection or passing through standard I/O.
+  (@thekid)
 * Merged PR #281: Add `lang.CommandLine::resolve()`. This method resolves
   given commands against the system path and returns all found executables,
   much like Windows' `where` or POSIX' `which -a` commands. It supersedes
