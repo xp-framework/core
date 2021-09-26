@@ -80,6 +80,12 @@ class Process {
         }
       }
 
+      // For non-Windows systems, use `exec` to replace the extra /bin/sh between this and the
+      // executed process, see https://www.php.net/manual/de/function.proc-get-status.php#93382
+      if (CommandLine::$WINDOWS !== $cmd && $options['bypass_shell']) {
+        $exec= 'exec '.$exec;
+      }
+
       // Try creating a process from the given arguments and descriptors
       if (!is_resource($this->handle= proc_open($exec, $spec, $pipes, $cwd, $env, $options))) {
         throw new IOException('Could not execute "'.$exec.'"');
