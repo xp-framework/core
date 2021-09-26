@@ -226,6 +226,16 @@ class ProcessTest extends TestCase {
   }
 
   #[Test]
+  public function executed_process_is_direct_child_of_this_process() {
+    $p= new Process($this->executable(), ['-r', 'echo getmypid();']);
+    $ppid= (int)$p->out->read();
+    $cpid= $p->getProcessId();
+    $p->close();
+
+    $this->assertEquals($cpid, $ppid);
+  }
+
+  #[Test]
   public function new_process_is_running() {
     $p= new Process($this->executable(), ['-r', 'fgets(STDIN, 8192);']);
     $this->assertTrue($p->running());
