@@ -42,10 +42,10 @@ class Process {
    * @param  string[] $arguments default []
    * @param  ?string $cwd default NULL the working directory
    * @param  ?[:string] $env default NULL the environment
-   * @param  ?var[] descriptors
+   * @param  var[] descriptors
    * @throws io.IOException in case the command could not be executed
    */
-  public function __construct($command= null, $arguments= [], $cwd= null, $env= null, $descriptors= null) {
+  public function __construct($command= null, $arguments= [], $cwd= null, $env= null, $descriptors= []) {
     if (null === $command) return;
 
     // Short-circuit
@@ -67,7 +67,7 @@ class Process {
       // Rewrite ['redirect', n] and ['null'] arguments for PHP versions <= 7.4.0, see
       // https://github.com/php/php-src/commit/6285bb52faf407b07e71497723d13a1b08821352
       $spec= [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']];
-      foreach ((array)$descriptors as $n => $descriptor) {
+      foreach ($descriptors as $n => $descriptor) {
         if (PHP_VERSION_ID >= 70400 || !is_array($descriptor)) {
           $spec[$n]= $descriptor;
         } else if ('redirect' === $descriptor[0]) {
@@ -120,11 +120,11 @@ class Process {
    * @param  string[] $arguments default []
    * @param  ?string $cwd default NULL the working directory
    * @param  ?[:string] $env default NULL the environment
-   * @param  ?var[] $descriptors
+   * @param  var[] $descriptors
    * @return self
    * @throws io.IOException in case the command could not be executed
    */
-  public function newInstance($arguments= [], $cwd= null, $env= null, $descriptors= null): self {
+  public function newInstance($arguments= [], $cwd= null, $env= null, $descriptors= []): self {
     return new self($this->status['exe'], $arguments, $cwd, $env, $descriptors);
   }
 

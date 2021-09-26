@@ -98,7 +98,7 @@ class ProcessTest extends TestCase {
     $this->assertEquals('IN', $out);
   }
 
-  #[Test, Values([[null], [[1 => ['pipe', 'w']]]])]
+  #[Test, Values([[[]], [[1 => ['pipe', 'w']]]])]
   public function reading_from_stdout($descriptors) {
     $p= new Process($this->executable(), ['-r', 'fprintf(STDOUT, "OUT");'], null, null, $descriptors);
     $out= $p->out->read();
@@ -106,7 +106,7 @@ class ProcessTest extends TestCase {
     $this->assertEquals('OUT', $out);
   }
 
-  #[Test, Values([[null], [[2 => ['pipe', 'w']]]])]
+  #[Test, Values([[[]], [[2 => ['pipe', 'w']]]])]
   public function reading_from_stderr($descriptors) {
     $p= new Process($this->executable(), ['-r', 'fprintf(STDERR, "ERR");'], null, null, $descriptors);
     $err= $p->err->read();
