@@ -62,6 +62,11 @@ abstract class CommandLine extends Enum {
       public function resolve($command) {
         if ('' === $command) return;
 
+        // Unquote string if necessary
+        if ('"' === $command[0]) {
+          $command= str_replace('"""', '"', substr($command, 1, -1));
+        }
+
         clearstatcache();
         $dot= strrpos($command, '.') > 0;
         if (strlen($command) === strcspn($command, '/\\')) {
@@ -124,6 +129,13 @@ abstract class CommandLine extends Enum {
 
       public function resolve($command) {
         if ('' === $command) return;
+
+        // Unquote string if necessary
+        if ("'" === $command[0]) {
+          $command= str_replace("'\\''", "'", substr($command, 1, -1));
+        } else if ('"' === $command[0]) {
+          $command= str_replace('\\"', '"', substr($command, 1, -1));
+        }
 
         clearstatcache();
         if (false === strpos($command, DIRECTORY_SEPARATOR)) {

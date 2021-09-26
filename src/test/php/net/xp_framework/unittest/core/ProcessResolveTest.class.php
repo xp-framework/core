@@ -115,6 +115,16 @@ class ProcessResolveTest extends TestCase {
     $this->assertTrue(in_array(Process::resolve('/bin/ls'), ['/usr/bin/ls', '/bin/ls']));
   }
 
+  #[Test, Value(['"ls"', "'ls'"]), Action(eval: 'new IsPlatform("!(WIN|ANDROID)")')]
+  public function resolveQuotedOnPosix($command) {
+    $this->assertTrue(in_array(Process::resolve($command), ['/usr/bin/ls', '/bin/ls']));
+  }
+
+  #[Test, Action(eval: 'new IsPlatform("WIN")')]
+  public function resolveQuotedOnWindows() {
+    $this->assertTrue(is_executable(Process::resolve('"explorer"')));
+  }
+
   #[Test, Action(eval: 'new IsPlatform("!(WIN|ANDROID)")')]
   public function resolve() {
     $this->assertTrue(in_array(Process::resolve('ls'), ['/usr/bin/ls', '/bin/ls']));
