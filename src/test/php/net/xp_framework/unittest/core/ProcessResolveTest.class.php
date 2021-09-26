@@ -115,7 +115,7 @@ class ProcessResolveTest extends TestCase {
     $this->assertTrue(in_array(Process::resolve('/bin/ls'), ['/usr/bin/ls', '/bin/ls']));
   }
 
-  #[Test, Value(['"ls"', "'ls'"]), Action(eval: 'new IsPlatform("!(WIN|ANDROID)")')]
+  #[Test, Values(['"ls"', "'ls'"]), Action(eval: 'new IsPlatform("!(WIN|ANDROID)")')]
   public function resolveQuotedOnPosix($command) {
     $this->assertTrue(in_array(Process::resolve($command), ['/usr/bin/ls', '/bin/ls']));
   }
