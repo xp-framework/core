@@ -38,20 +38,14 @@ class Process {
   /**
    * Constructor
    *
-   * @param   string command default NULL
-   * @param   string[] arguments default []
-   * @param   string cwd default NULL the working directory
-   * @param   [:string] default NULL the environment
-   * @throws  io.IOException in case the command could not be executed
+   * @param  string $command default NULL
+   * @param  string[] $arguments default []
+   * @param  ?string $cwd default NULL the working directory
+   * @param  ?[:string] $env default NULL the environment
+   * @param  ?var[] descriptors
+   * @throws io.IOException in case the command could not be executed
    */
-  public function __construct($command= null, $arguments= [], $cwd= null, $env= null) {
-    static $spec= [
-      0 => ['pipe', 'r'],  // stdin
-      1 => ['pipe', 'w'],  // stdout
-      2 => ['pipe', 'w']   // stderr
-    ];
-
-    // For `new self()` used in getProcessById()
+  public function __construct($command= null, $arguments= [], $cwd= null, $env= null, $descriptors= null) {
     if (null === $command) return;
 
     // Short-circuit
@@ -64,10 +58,36 @@ class Process {
     $cmd= CommandLine::forName(PHP_OS);
     foreach ($cmd->resolve($command) as $binary) {
       $binary= realpath($binary);
-
-      // Resolved binary, try creating a process from it
       $exec= $cmd->compose($binary, $arguments);
-      if (!is_resource($this->handle= proc_open($exec, $spec, $pipes, $cwd, $env, ['bypass_shell' => true]))) {
+      $options= ['bypass_shell' => true];
+
+      // Default descriptor spec to map STDIN to a pipe to read from and STDOUT and STDERR to
+      // pipes the process will write to. This can be overwritten by the descriptors argument.
+      //
+      // Rewrite ['redirect', n] and ['null'] arguments for PHP versions <= 7.4.0, see
+      // https://github.com/php/php-src/commit/6285bb52faf407b07e71497723d13a1b08821352
+      $spec= [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']];
+      foreach ((array)$descriptors as $n => $descriptor) {
+        if (PHP_VERSION_ID >= 70400 || !is_array($descriptor)) {
+          $spec[$n]= $descriptor;
+        } else if ('redirect' === $descriptor[0]) {
+          $exec.= ' '.$n.'>&'.$descriptor[1];
+          $options['bypass_shell']= false;
+        } else if ('null' === $descriptor[0]) {
+          $spec[$n]= ['file', CommandLine::$WINDOWS === $cmd ? 'NUL' : '/dev/null', 'w'];
+        } else {
+          $spec[$n]= $descriptor;
+        }
+      }
+
+      // For non-Windows systems, use `exec` to replace the extra /bin/sh between this and the
+      // executed process, see https://www.php.net/manual/de/function.proc-get-status.php#93382
+      if (CommandLine::$WINDOWS !== $cmd && $options['bypass_shell']) {
+        $exec= 'exec '.$exec;
+      }
+
+      // Try creating a process from the given arguments and descriptors
+      if (!is_resource($this->handle= proc_open($exec, $spec, $pipes, $cwd, $env, $options))) {
         throw new IOException('Could not execute "'.$exec.'"');
       }
 
@@ -97,23 +117,24 @@ class Process {
   /**
    * Create a new instance of this process.
    *
-   * @param   string[] arguments default []
-   * @param   string cwd default NULL the working directory
-   * @param   [:string] default NULL the environment
-   * @return  self
-   * @throws  io.IOException in case the command could not be executed
+   * @param  string[] $arguments default []
+   * @param  ?string $cwd default NULL the working directory
+   * @param  ?[:string] $env default NULL the environment
+   * @param  ?var[] $descriptors
+   * @return self
+   * @throws io.IOException in case the command could not be executed
    */
-  public function newInstance($arguments= [], $cwd= null, $env= null): self {
-    return new self($this->status['exe'], $arguments, $cwd, $env);
+  public function newInstance($arguments= [], $cwd= null, $env= null, $descriptors= null): self {
+    return new self($this->status['exe'], $arguments, $cwd, $env, $descriptors);
   }
 
   /**
    * Resolve path for a command
    *
    * @deprecated Use lang.CommandLine::resolve() instead!
-   * @param   string command
-   * @return  string executable
-   * @throws  io.IOException in case the command is empty or could not be found
+   * @param  string $command
+   * @return string $executable
+   * @throws io.IOException in case the command is empty or could not be found
    */
   public static function resolve(string $command): string {
     foreach (CommandLine::forName(PHP_OS)->resolve($command) as $executable) {
@@ -129,10 +150,10 @@ class Process {
   /**
    * Get a process by process ID
    *
-   * @param   int pid process id
-   * @param   string exe
-   * @return  self
-   * @throws  lang.IllegalStateException
+   * @param  int $pid process id
+   * @param  ?string $exe
+   * @return self
+   * @throws lang.IllegalStateException
    */
   public static function getProcessById($pid, $exe= null): self {
     $self= new self();
@@ -260,7 +281,7 @@ class Process {
   /**
    * Get command line arguments
    *
-   * @return  string[]
+   * @return string[]
    */
   public function getArguments() {
     if (null === $this->status['arguments']) {
@@ -288,13 +309,14 @@ class Process {
   /**
    * Close this process
    *
-   * @return  int exit value of process
-   * @throws  lang.IllegalStateException if process is not owned
+   * @return int exit value of process
+   * @throws lang.IllegalStateException if process is not owned
    */
   public function close(): int {
     if (!$this->status['owner']) {
       throw new IllegalStateException('Cannot close not-owned process #'.$this->status['pid']);
     }
+
     if (null !== $this->handle) {
       $this->in && $this->in->isOpen() && $this->in->close();
       $this->out && $this->out->isOpen() && $this->out->close();
@@ -303,9 +325,8 @@ class Process {
       $this->handle= null;
     }
     
-    // If the process wasn't running when we entered this method,
-    // determine the exitcode from the previous proc_get_status()
-    // call.
+    // If the process wasn't running when we entered this method, determine
+    // the exitcode from the previous proc_get_status() call.
     if (!$this->status['running']) {
       $this->exitv= $this->status['exitcode'];
     }
