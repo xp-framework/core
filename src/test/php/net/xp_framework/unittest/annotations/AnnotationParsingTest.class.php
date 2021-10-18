@@ -29,9 +29,13 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
    * @return  [:var]
    */
   protected function parse($input, $imports= []) {
-    return (new ClassParser())->parseAnnotations($input, nameof($this), array_merge($imports, [
-      'Namespaced' => 'net.xp_framework.unittest.annotations.fixture.Namespaced'
-    ]));
+    try {
+      return (new ClassParser())->parseAnnotations($input, nameof($this), array_merge($imports, [
+        'Namespaced' => 'net.xp_framework.unittest.annotations.fixture.Namespaced'
+      ]));
+    } finally {
+      \xp::gc(); // Strip deprecation warning
+    }
   }
 
   #[Test]

@@ -319,6 +319,7 @@ class ClassParser {
             $value= null;
             $i++;
             $state= 1;
+            trigger_error('XP annotation syntax is deprecated in '.$context, E_USER_DEPRECATED);
           } else if (T_STRING === $tokens[$i][0]) {
             $annotation= lcfirst($tokens[$i][1]);
             $param= null;
