@@ -30,7 +30,11 @@ class BrokenAnnotationTest extends TestCase {
 
   #[Test, Action(eval: 'new RuntimeVersion("<8.0")'), Expect(['class' => ClassFormatException::class, 'withMessage' => '/Unterminated annotation/'])]
   public function no_ending_bracket() {
-    XPClass::forName('net.xp_framework.unittest.annotations.NoEndingBracket')->getAnnotations();
+    try {
+      XPClass::forName('net.xp_framework.unittest.annotations.NoEndingBracket')->getAnnotations();
+    } finally {
+      \xp::gc(); // Strip deprecation warning
+    }
   }
 
   #[Test, Expect(['class' => ClassFormatException::class, 'withMessage' => '/Parse error/'])]
