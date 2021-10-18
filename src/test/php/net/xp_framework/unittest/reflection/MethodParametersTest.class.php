@@ -256,29 +256,40 @@ class MethodParametersTest extends MethodsTest {
     $this->assertNull($this->method('public function fixture() { }')->getParameter($offset));
   }
 
+  /** @return lang.reflect.Parameter */
+  private function annotatedParameter() {
+    try {
+      $p= $this->method("#[@\$param: test('value')]\npublic function fixture(\$param) { }")->getParameter(0);
+      $p->getAnnotations();
+      return $p;
+    } finally {
+      \xp::gc(); // Strip deprecation warnings
+    }
+  }
+
   #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
   public function annotated_parameter() {
-    $this->assertTrue($this->method("#[@\$param: test('value')]\npublic function fixture(\$param) { }")->getParameter(0)->hasAnnotations());
+    $this->assertTrue($this->annotatedParameter()->hasAnnotations());
   }
 
   #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
   public function parameter_annotated_with_test_has_test_annotation() {
-    $this->assertTrue($this->method("#[@\$param: test('value')]\npublic function fixture(\$param) { }")->getParameter(0)->hasAnnotation('test'));
+    $this->assertTrue($this->annotatedParameter()->hasAnnotation('test'));
   }
 
   #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
   public function parameter_annotated_with_test_has_no_limit_annotation() {
-    $this->assertFalse($this->method("#[@\$param: test('value')]\npublic function fixture(\$param) { }")->getParameter(0)->hasAnnotation('limit'));
+    $this->assertFalse($this->annotatedParameter()->hasAnnotation('limit'));
   }
 
   #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
   public function annotations_of_parameter_annotated_with_test() {
-    $this->assertEquals(['test' => 'value'], $this->method("#[@\$param: test('value')]\npublic function fixture(\$param) { }")->getParameter(0)->getAnnotations());
+    $this->assertEquals(['test' => 'value'], $this->annotatedParameter()->getAnnotations());
   }
 
   #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
   public function test_annotation_of_parameter_annotated_with_test() {
-    $this->assertEquals('value', $this->method("#[@\$param: test('value')]\npublic function fixture(\$param) { }")->getParameter(0)->getAnnotation('test'));
+    $this->assertEquals('value', $this->annotatedParameter()->getAnnotation('test'));
   }
 
   #[Test]
