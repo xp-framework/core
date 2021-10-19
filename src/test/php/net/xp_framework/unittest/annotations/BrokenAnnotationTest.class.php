@@ -21,12 +21,20 @@ class BrokenAnnotationTest extends TestCase {
    * @return  [:var]
    */
   protected function parse($input) {
-    return (new ClassParser())->parseAnnotations($input, nameof($this));
+    try {
+      return (new ClassParser())->parseAnnotations($input, nameof($this));
+    } finally {
+      \xp::gc(); // Strip deprecation warning
+    }
   }
 
   #[Test, Action(eval: 'new RuntimeVersion("<8.0")'), Expect(['class' => ClassFormatException::class, 'withMessage' => '/Unterminated annotation/'])]
   public function no_ending_bracket() {
-    XPClass::forName('net.xp_framework.unittest.annotations.NoEndingBracket')->getAnnotations();
+    try {
+      XPClass::forName('net.xp_framework.unittest.annotations.NoEndingBracket')->getAnnotations();
+    } finally {
+      \xp::gc(); // Strip deprecation warning
+    }
   }
 
   #[Test, Expect(['class' => ClassFormatException::class, 'withMessage' => '/Parse error/'])]
