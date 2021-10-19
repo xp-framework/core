@@ -7,6 +7,8 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Merged PR #292: Remove deprecated reader and writer methods from io.streams
+  (@thekid)
 * Removed deprecated lang.Primitive::$DOUBLE (replaced by `FLOAT`)
   (@thekid)
 * Merged PR #291: Remove io.FileUtil - replaced by the `io.Files` class
