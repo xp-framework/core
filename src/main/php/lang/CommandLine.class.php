@@ -1,11 +1,7 @@
 <?php namespace lang;
 
 /**
- * Handles command line quoting
- *
- * Composing a command line
- * ------------------------
- * Handled by the <tt>compose</tt> method.
+ * Handles command line parsing, quoting and composing.
  *
  * For Windows
  * ~~~~~~~~~~~
@@ -20,15 +16,17 @@
  *   a backslash. So: he said: 'Hello' will become the following:
  *   'he said: '\''Hello'\''
  *
- * @see      xp://lang.Process
- * @test     xp://net.xp_framework.unittest.core.CommandLineTest
+ * @see   lang.Process
+ * @test  net.xp_framework.unittest.core.CommandLineTest
  */
 abstract class CommandLine extends Enum {
   public static $WINDOWS, $UNIX;
+  protected static $PATH;
 
   static function __static() {
     self::$WINDOWS= new class(0, 'WINDOWS') extends CommandLine {
       static function __static() { }
+
       public function parse($cmd) {
         static $triple= '"""';
         $parts= [];
@@ -45,17 +43,13 @@ abstract class CommandLine extends Enum {
                 break;
               }
               $q= $p;
-              if ($triple === substr($cmd, $q, 3)) {
-                if (false === ($p= strpos($cmd, $triple, $q+ 3))) {
-                  $q= $q+ 3;
-                  continue;
-                }
-                $q= $p+ 3;
+              if (0 === substr_compare($cmd, $triple, $q, 3)) {
+                false === ($p= strpos($cmd, $triple, $q+= 3)) || $q= $p + 3;
                 continue;
               }
               break;
             } while ($q < $s);
-            $r.= str_replace($triple, '"', substr($cmd, $i+ 1, $q- $i- 1));
+            $r.= str_replace($triple, '"', substr($cmd, $i + 1, $q - $i - 1));
             $i= $q;
           } else {
             $r.= $cmd[$i];
@@ -64,13 +58,38 @@ abstract class CommandLine extends Enum {
         $parts[]= $r;
         return $parts;
       }
-      
+
+      public function resolve($command) {
+        if ('' === $command) return;
+
+        // Unquote string if necessary
+        if ('"' === $command[0]) {
+          $command= str_replace('"""', '"', substr($command, 1, -1));
+        }
+
+        clearstatcache();
+        $dot= strrpos($command, '.') > 0;
+        if (strlen($command) === strcspn($command, '/\\')) {
+          foreach (parent::$PATH ?? parent::$PATH= explode(';', getenv('PATH')) as $path) {
+            foreach ($dot ? [''] : ['.com', '.exe'] as $ext) {
+              $q= rtrim($path, '\\').'\\'.$command.$ext;
+              is_executable($q) && yield $q;
+            }
+          }
+        } else {
+          foreach ($dot ? [''] : ['.com', '.exe'] as $ext) {
+            $q= $command.$ext;
+            is_executable($q) && yield $q;
+          }
+        }
+      }
+
       protected function quote($arg) {
         $l= strlen($arg);
         if ($l && strcspn($arg, '" ') >= $l) return $arg;
         return '"'.str_replace('"', '"""', $arg).'"';
       }
-      
+
       public function compose($command, $arguments= []) {
         $cmd= $this->quote($command);
         foreach ($arguments as $arg) {
@@ -81,6 +100,7 @@ abstract class CommandLine extends Enum {
     };
     self::$UNIX= new class(1, 'UNIX') extends CommandLine {
       static function __static() { }
+
       public function parse($cmd) {
         $parts= [];
         $o= 0;
@@ -106,13 +126,34 @@ abstract class CommandLine extends Enum {
         }
         return $parts;
       }
-      
+
+      public function resolve($command) {
+        if ('' === $command) return;
+
+        // Unquote string if necessary
+        if ("'" === $command[0]) {
+          $command= str_replace("'\\''", "'", substr($command, 1, -1));
+        } else if ('"' === $command[0]) {
+          $command= str_replace('\\"', '"', substr($command, 1, -1));
+        }
+
+        clearstatcache();
+        if (false === strpos($command, DIRECTORY_SEPARATOR)) {
+          foreach (parent::$PATH ?? parent::$PATH= explode(PATH_SEPARATOR, getenv('PATH')) as $path) {
+            $q= rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$command;
+            is_file($q) && is_executable($q) && yield $q;
+          }
+        } else {
+          is_file($command) && is_executable($command) && yield $command;
+        }
+      }
+
       protected function quote($arg) {
         $l= strlen($arg);
         if ($l && strcspn($arg, "&;`\'\"|*?~<>^()[]{}\$ ") >= $l) return $arg;
         return "'".str_replace("'", "'\\''", $arg)."'";
       }
-      
+
       public function compose($command, $arguments= []) {
         $cmd= $this->quote($command);
         foreach ($arguments as $arg) {
@@ -127,8 +168,8 @@ abstract class CommandLine extends Enum {
    * Returns the command line implementation for the given operating 
    * system.
    *
-   * @param   string os operating system name, e.g. PHP_OS
-   * @return  lang.CommandLine
+   * @param  string $os operating system name, e.g. PHP_OS
+   * @return self
    */
   public static function forName(string $os): self {
     if (0 === strncasecmp($os, 'Win', 3)) {
@@ -141,17 +182,25 @@ abstract class CommandLine extends Enum {
   /**
    * Parse command line
    *
-   * @param   string cmd
-   * @return  string[] parts
+   * @param  string $line
+   * @return string[] parts
    */
-  public abstract function parse($cmd);
+  public abstract function parse($line);
+
+  /**
+   * Resolve a command
+   *
+   * @param  string $command
+   * @return iterable
+   */
+  public abstract function resolve($command);
   
   /**
    * Build command line from a command and - optionally - arguments
    *
-   * @param   string command
-   * @param   string[] arguments default []
-   * @return  string
+   * @param  string $command
+   * @param  string[] $arguments default []
+   * @return string
    */
   public abstract function compose($command, $arguments= []);
 }

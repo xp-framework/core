@@ -61,7 +61,7 @@ class Runner {
         $options= 0;
         $offset= $i;
         for ($o= 0; $o < strlen($args[$i]); $o++) {
-          switch ($args[$i]{$o}) {
+          switch ($args[$i][$o]) {
             case 'c': 
               self::setOperation($operation, 'create'); 
               $std= 'php://stdout';

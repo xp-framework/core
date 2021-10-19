@@ -1,7 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
+use lang\{Error, IllegalArgumentException, Value};
 use unittest\actions\RuntimeVersion;
-use lang\{Error, Value, IllegalArgumentException};
+use unittest\{Expect, Test};
 
 /**
  * Test type hints.
@@ -25,7 +26,7 @@ class TypeHintsTest extends \unittest\TestCase {
   protected function nullable(Value $o= null) { return $o; }
 
 
-  #[@test]
+  #[Test]
   public function pass_an_object() {
     $o= new class() implements Value {
       public function toString() { return 'Test'; }
@@ -35,17 +36,17 @@ class TypeHintsTest extends \unittest\TestCase {
     $this->assertEquals($o, $this->pass($o));
   }
 
-  #[@test, @expect(Error::class)]
+  #[Test, Expect(Error::class)]
   public function pass_a_primitive() {
     $this->pass(1);
   }
 
-  #[@test, @expect(Error::class)]
+  #[Test, Expect(Error::class)]
   public function pass_null() {
     $this->pass(null);
   }
 
-  #[@test]
+  #[Test]
   public function pass_object_to_nullable() {
     $o= new class() implements Value {
       public function toString() { return 'Test'; }
@@ -55,13 +56,13 @@ class TypeHintsTest extends \unittest\TestCase {
     $this->assertEquals($o, $this->nullable($o));
   }
 
-  #[@test, @expect(Error::class)]
+  #[Test, Expect(Error::class)]
   public function pass_a_primitive_to_nullable() {
     $this->nullable(1);
   }
 
 
-  #[@test]
+  #[Test]
   public function pass_null_to_nullable() {
     $this->assertEquals(null, $this->nullable(null));
   }

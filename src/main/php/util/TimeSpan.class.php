@@ -5,8 +5,8 @@ use lang\{Value, IllegalArgumentException, IllegalStateException};
 /**
  * Represents a span of time
  *
- * @see   xp://util.DateUtil#timespanBetween
- * @test  xp://net.xp_framework.unittest.util.TimeSpanTest
+ * @see   util.Dates::diff()
+ * @test  net.xp_framework.unittest.util.TimeSpanTest
  */
 class TimeSpan implements Value {
   protected $_seconds = 0;
@@ -247,7 +247,8 @@ class TimeSpan implements Value {
   public function format($format) {
     $return= '';
     $o= 0; $l= strlen($format);
-    while (false !== ($p= strcspn($format, '%', $o))) {
+    while ($o < $l) {
+      $p= strcspn($format, '%', $o);
       $return.= substr($format, $o, $p);
       if (($o+= $p+ 2) <= $l) {
         switch ($format[$o - 1]) {

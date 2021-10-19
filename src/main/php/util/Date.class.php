@@ -45,7 +45,7 @@ class Date implements \lang\Value {
       date_timezone_set($this->handle, $timezone ? $timezone->getHandle() : timezone_open(date_default_timezone_get()));
     } else {
       try {
-        $this->handle= $timezone ? new \DateTime($in, $timezone->getHandle()) : new \DateTime($in);
+        $this->handle= $timezone ? new \DateTime($in ?? 'now', $timezone->getHandle()) : new \DateTime($in ?? 'now');
       } catch (\Throwable $e) {
         throw new IllegalArgumentException('Given argument is neither a timestamp nor a well-formed timestring: '.Objects::stringOf($in));
       }

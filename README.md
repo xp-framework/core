@@ -1,9 +1,11 @@
 XP Framework Core
 =================
-[![Build Status on TravisCI](https://secure.travis-ci.org/xp-framework/core.png)](http://travis-ci.org/xp-framework/core)
+[![Build status on GitHub](https://github.com/xp-framework/core/workflows/Tests/badge.svg)](https://github.com/xp-framework/core/actions)
+[![Build status on TravisCI](https://secure.travis-ci.org/xp-framework/core.png)](http://travis-ci.org/xp-framework/core)
 [![Build status on AppVeyor](https://ci.appveyor.com/api/projects/status/bb9gkkq1o7f6m2ns?svg=true)](https://ci.appveyor.com/project/thekid/core)
 [![BSD License](https://raw.githubusercontent.com/xp-framework/web/master/static/licence-bsd.png)](https://github.com/xp-framework/core/blob/master/LICENSE.md)
-[![Requires PHP 7.0+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-7_0plus.png)](http://php.net/)
+[![Requires PHP 7.0+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-7_0plus.svg)](http://php.net/)
+[![Supports PHP 8.0+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-8_0plus.svg)](http://php.net/)
 [![Latest Stable Version](https://poser.pugx.org/xp-framework/core/version.png)](https://packagist.org/packages/xp-framework/core)
 
 This is the XP Framework's development checkout. 
@@ -20,7 +22,7 @@ the following one-liner:
 
 ```sh
 $ cd ~/bin
-$ curl -sSL https://bintray.com/artifact/download/xp-runners/generic/setup-8.1.7.sh | sh
+$ curl -sSL https://baltocdn.com/xp-framework/xp-runners/distribution/downloads/i/installer/setup-8.5.3.sh | sh
 ```
 
 ### Using it
@@ -34,8 +36,8 @@ Finally, start `xp -v` to see it working:
 
 ```sh
 $ xp -v
-XP 10.0.0-dev { PHP/7.4.0RC6 & Zend/3.4.0-dev } @ Windows NT SLATE 10.0 build 18362 (Windows 10) AMD64
-Copyright (c) 2001-2019 the XP group
+XP 11.0.0-dev { PHP/8.0.11 & Zend/4.0.11 } @ Windows NT SURFACE 10.0 build 22000 (Windows 10) AMD64
+Copyright (c) 2001-2021 the XP group
 FileSystemCL<./src/main/php>
 FileSystemCL<./src/test/php>
 FileSystemCL<./src/main/resources>
@@ -64,7 +66,7 @@ Now run it:
 
 ```sh
 $ xp ageindays.script.php 1977-12-14
-Hey, you are 13724 days old
+Hey, you are 15452 days old
 ```
 
 Alternatively, you can put this code inside a class and give it a static *main* method. This way, you can use features like inheritance, trait inclusion etcetera. This time, save the code to a file called `AgeInDays.class.php`.
@@ -72,8 +74,8 @@ Alternatively, you can put this code inside a class and give it a static *main* 
 ```php
 <?php
 
-use util\cmd\Console;
 use util\{Date, Dates};
+use util\cmd\Console;
 
 class AgeInDays {
 
@@ -89,7 +91,7 @@ class AgeInDays {
 
 ```sh
 $ xp AgeInDays 1977-12-14
-Hey, you are 13724 days old
+Hey, you are 15452 days old
 ```
 
 Contributing

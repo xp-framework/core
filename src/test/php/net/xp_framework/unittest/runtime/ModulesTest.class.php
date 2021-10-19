@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\runtime;
 
-use io\{Folder, File, FileUtil};
+use io\{File, Files, Folder};
 use lang\Environment;
-use unittest\TestCase;
-use xp\runtime\{Modules, CouldNotLoadDependencies};
+use unittest\{AfterClass, Expect, Test, TestCase};
+use xp\runtime\{CouldNotLoadDependencies, Modules};
 
 class ModulesTest extends TestCase {
   private static $cleanup= [];
@@ -21,25 +21,25 @@ class ModulesTest extends TestCase {
       if (is_array($definition)) {
         self::create(new Folder($f, $name), $definition);
       } else {
-        FileUtil::write(new File($f, $name), $definition);
+        Files::write(new File($f, $name), $definition);
       }
     }
     return $f;
   }
 
-  #[@afterClass]
+  #[AfterClass]
   public static function cleanup() {
     foreach (self::$cleanup as $folder) {
       $folder->unlink();
     }
   }
 
-  #[@test]
+  #[Test]
   public function can_create() {
     new Modules();
   }
 
-  #[@test]
+  #[Test]
   public function adding_a_module() {
     $fixture= new Modules();
     $fixture->add('xp-forge/sequence', '^8.0');
@@ -47,7 +47,7 @@ class ModulesTest extends TestCase {
     $this->assertEquals(['xp-forge/sequence' => '^8.0'], $fixture->all());
   }
 
-  #[@test]
+  #[Test]
   public function requiring_core_works() {
     $fixture= new Modules();
     $fixture->add('xp-framework/core');
@@ -55,7 +55,7 @@ class ModulesTest extends TestCase {
     $fixture->require($namespace= 'test');
   }
 
-  #[@test]
+  #[Test]
   public function requiring_php_works() {
     $fixture= new Modules();
     $fixture->add('php', PHP_VERSION);
@@ -63,7 +63,7 @@ class ModulesTest extends TestCase {
     $fixture->require($namespace= 'test');
   }
 
-  #[@test, @expect(CouldNotLoadDependencies::class)]
+  #[Test, Expect(CouldNotLoadDependencies::class)]
   public function requiring_non_existant() {
     $fixture= new Modules();
     $fixture->add('perpetuum/mobile');
@@ -71,7 +71,7 @@ class ModulesTest extends TestCase {
     $fixture->require($namespace= 'test');
   }
 
-  #[@test]
+  #[Test]
   public function requiring_existing_library() {
     $s= ModulesTest::structure([
       'test' => ['vendor' => [
@@ -91,7 +91,7 @@ class ModulesTest extends TestCase {
     $fixture->require($namespace= 'test');
   }
 
-  #[@test, @expect(CouldNotLoadDependencies::class)]
+  #[Test, Expect(CouldNotLoadDependencies::class)]
   public function requiring_library_with_missing_dependencies() {
     $s= ModulesTest::structure([
       'test' => ['vendor' => [
@@ -111,7 +111,7 @@ class ModulesTest extends TestCase {
     $fixture->require($namespace= 'test');
   }
 
-  #[@test, @expect(CouldNotLoadDependencies::class)]
+  #[Test, Expect(CouldNotLoadDependencies::class)]
   public function requiring_malformed_library() {
     $s= ModulesTest::structure([
       'test' => ['vendor' => [

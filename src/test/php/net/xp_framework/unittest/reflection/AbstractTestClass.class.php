@@ -1,13 +1,15 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
+use lang\{Type, Value};
+
 /**
  * Abstract base class
  *
  * @see      xp://net.xp_framework.unittest.reflection.ReflectionTest
  */
 abstract class AbstractTestClass {
+  #[Type(Value::class)]
   protected
-    #[@type('lang.Value')]
     $inherited= null;
 
   /**

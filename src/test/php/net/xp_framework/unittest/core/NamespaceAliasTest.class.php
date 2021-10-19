@@ -1,14 +1,14 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\ClassLoader;
-use unittest\TestCase;
+use unittest\{Test, TestCase};
 
 /**
  * Tests the XP Framework's optional namespace support
  */
 class NamespaceAliasTest extends TestCase {
 
-  #[@test]
+  #[Test]
   public function defined_class_exists() {
     ClassLoader::defineClass(
       'net.xp_framework.unittest.core.NamespaceAliasClassFixture', 
@@ -19,7 +19,7 @@ class NamespaceAliasTest extends TestCase {
     $this->assertTrue(class_exists('net\xp_framework\unittest\core\NamespaceAliasClassFixture', false));
   }
 
-  #[@test]
+  #[Test]
   public function defined_interface_exists() {
     ClassLoader::defineInterface(
       'net.xp_framework.unittest.core.NamespaceAliasInterfaceFixture', 
@@ -29,19 +29,19 @@ class NamespaceAliasTest extends TestCase {
     $this->assertTrue(interface_exists('net\xp_framework\unittest\core\NamespaceAliasInterfaceFixture', false));
   }
 
-  #[@test]
+  #[Test]
   public function autoloaded_class_exists() {
     new NamespaceAliasAutoloadedFixture();              // Triggers autoloader
     $this->assertTrue(class_exists('net\xp_framework\unittest\core\NamespaceAliasAutoloadedFixture', false));
   }
 
-  #[@test]
+  #[Test]
   public function autoloaded_namespaced_class_exists() {
     new NamespaceAliasAutoloadedNamespacedFixture();    // Triggers autoloader
     $this->assertTrue(class_exists('net\xp_framework\unittest\core\NamespaceAliasAutoloadedNamespacedFixture', false));
   }
 
-  #[@test]
+  #[Test]
   public function autoloaded_fq_class_exists() {
     new NamespaceAliasAutoloadedFQFixture();            // Triggers autoloader
     $this->assertTrue(class_exists('net\xp_framework\unittest\core\NamespaceAliasAutoloadedFQFixture', false));

@@ -1,5 +1,3 @@
-dist: trusty
-
 language: php
 
 php:
@@ -7,15 +5,16 @@ php:
   - 7.1
   - 7.2
   - 7.3
+  - 7.4
   - 7.4snapshot
-  - nightly
+  - master
 
 matrix:
   allow_failures:
-    - php: nightly
+    - php: master
 
 before_script:
-  - sh .travis.sh install
+  - sh .github/workflows/ci.sh install
 
 script:
-  - sh .travis.sh run-tests
+  - sh .github/workflows/ci.sh run-tests

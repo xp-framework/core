@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use io\{File, Folder};
-use lang\{IClassLoader, Environment, FileSystemClassLoader};
+use lang\{Environment, FileSystemClassLoader, IClassLoader};
 
 /**
  * TestCase for classloading

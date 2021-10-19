@@ -1,10 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\XPClass;
-use lang\Throwable;
-use lang\Runnable;
-use lang\ClassLoader;
-use lang\ClassNotFoundException;
+use lang\{ClassLoader, ClassNotFoundException, Runnable, Throwable, XPClass};
+use unittest\actions\RuntimeVersion;
+use unittest\{Action, Expect, Test, Values};
 
 /**
  * TestCase for lang.ClassLoader::defineClass()
@@ -33,17 +31,17 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function given_parent_is_inherited() {
     $this->assertTrue($this->define(['parent' => Throwable::class])->isSubclassOf(Throwable::class));
   }
 
-  #[@test]
+  #[Test]
   public function given_parent_class_is_inherited() {
     $this->assertTrue($this->define(['parent' => XPClass::forName(Throwable::class)])->isSubclassOf(Throwable::class));
   }
 
-  #[@test]
+  #[Test]
   public function given_interface_is_implemented() {
     $class= $this->define(['interfaces' => [Runnable::class]], '{
       public function run() { } 
@@ -52,7 +50,7 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
     $this->assertTrue($class->isSubclassOf(Runnable::class));
   }
 
-  #[@test]
+  #[Test]
   public function given_interface_class_is_implemented() {
     $class= $this->define(['interfaces' => [XPClass::forName(Runnable::class)]], '{
       public function run() { } 
@@ -61,29 +59,29 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
     $this->assertTrue($class->isSubclassOf(Runnable::class));
   }
 
-  #[@test]
+  #[Test]
   public function field_exists() {
     $class= $this->define([], '{ public $fixture= null; }');
     $this->assertTrue($class->hasField('fixture'));
   }
 
-  #[@test]
+  #[Test]
   public function method_exists() {
     $class= $this->define([], '{ public function fixture() { } }');
     $this->assertTrue($class->hasMethod('fixture'));
   }
 
-  #[@test]
+  #[Test]
   public function parents_method_exists() {
     $this->assertTrue($this->define(['parent' => Throwable::class])->hasMethod('toString'));
   }
 
-  #[@test]
+  #[Test]
   public function parents_field_exists() {
     $this->assertTrue($this->define(['parent' => Throwable::class])->hasField('message'));
   }
 
-  #[@test]
+  #[Test]
   public function static_initializer_is_invoked() {
     $class= $this->define([], '{
       public static $initializerCalled= false;
@@ -92,48 +90,65 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
     $this->assertTrue($class->getField('initializerCalled')->get(null));
   }
 
-  #[@test, @expect(ClassNotFoundException::class)]
+  #[Test, Expect(ClassNotFoundException::class)]
   public function cannot_define_class_with_non_existant_parent() {
     $this->define(['parent' => '@@nonexistant@@']);
   }
 
-  #[@test, @expect(ClassNotFoundException::class), @values([
-  #  [['@@nonexistant@@']],
-  #  [[Runnable::class, '@@nonexistant@@']],
-  #  [['@@nonexistant@@', Runnable::class]]
-  #])]
+  #[Test, Expect(ClassNotFoundException::class), Values([[['@@nonexistant@@']], [[Runnable::class, '@@nonexistant@@']], [['@@nonexistant@@', Runnable::class]]])]
   public function cannot_define_class_with_non_existant_interface($list) {
     $this->define(['interfaces' => $list]);
   }
 
-  #[@test, @expect(ClassNotFoundException::class)]
+  #[Test, Expect(ClassNotFoundException::class)]
   public function cannot_define_class_with_null_interface() {
     $this->define(['interfaces' => [null]]);
   }
 
-  #[@test]
+  #[Test]
   public function closure_map_style_declaring_field() {
     $class= $this->define([], ['fixture' => null]);
     $this->assertTrue($class->hasField('fixture'));
   }
 
-  #[@test]
+  #[Test]
   public function closure_map_style_declaring_method() {
     $class= $this->define([], ['fixture' => function() { }]);
     $this->assertTrue($class->hasMethod('fixture'));
   }
 
-  #[@test]
+  #[Test]
   public function closure_map_field_access() {
     $class= $this->define([], ['fixture' => 'Test']);
     $instance= $class->newInstance();
     $this->assertEquals('Test', $class->getField('fixture')->get($instance));
   }
 
-  #[@test]
+  #[Test]
   public function closure_map_method_invocation() {
     $class= $this->define([], ['fixture' => function($a, $b) { return [$this, $a, $b]; }]);
     $instance= $class->newInstance();
     $this->assertEquals([$instance, 1, 2], $class->getMethod('fixture')->invoke($instance, [1, 2]));
+  }
+
+  #[Test]
+  public function closure_with_string_parameter_type() {
+    $class= $this->define([], ['fixture' => function(string $a) { return $a; }]);
+    $instance= $class->newInstance();
+    $this->assertEquals('1', $class->getMethod('fixture')->invoke($instance, [1]));
+  }
+
+  #[Test]
+  public function closure_with_string_return_type() {
+    $class= $this->define([], ['fixture' => function($a): string { return $a; }]);
+    $instance= $class->newInstance();
+    $this->assertEquals('1', $class->getMethod('fixture')->invoke($instance, [1]));
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.1")')]
+  public function closure_with_void_return_type() {
+    $class= $this->define([], ['fixture' => function($a): void { }]);
+    $instance= $class->newInstance();
+    $this->assertNull($class->getMethod('fixture')->invoke($instance, [1]));
   }
 }

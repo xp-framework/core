@@ -3,7 +3,396 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
-## 10.0.0 / ????-??-??
+## 11.0.0 / ????-??-??
+
+### Heads up!
+
+* Merged PR #291: Remove io.FileUtil - replaced by the `io.Files` class
+  (@thekid)
+* Merged PR #290: Remove util.PropertyManager - replaced by libraries such
+  as `xp-forge/inject`
+  (@thekid)
+* Merged PR #289: Remove util.DateUtil and util.DateMath - replaced by
+  the `util.Dates` class
+  (@thekid)
+* Merged PR #288: Remove util.Calendar class - superseded by the timezone
+  aware API by `util.TimeZoneTransition`
+  (@thekid)
+* Merged PR #287: Remove util.Component and util.Visitor - these classes
+  were unused
+  (@thekid)
+* Merged PR #286: Remove util.Configurable and util.ConfigurationException,
+  unused except for the anti-pattern class `rdbms.ConnectionManager`.
+  (@thekid)
+* Renamed `master` branch to `main` - @thekid
+
+### RFCs
+
+* Implemented 2nd part of xp-framework/rfc#336: Deprecating XP annotation
+  syntax. This will raise *E_USER_DEPRECATED* warnings, see PR #284
+  (@thekid)
+
+## 10.14.0 / 2021-09-26
+
+### Features
+
+* Merged PR #282: Allow overwriting descriptors passed to proc_open() in
+  `lang.Process` constructor and `newInstance()`. This can be used for
+  redirection or passing through standard I/O.
+  (@thekid)
+* Merged PR #281: Add `lang.CommandLine::resolve()`. This method resolves
+  given commands against the system path and returns all found executables,
+  much like Windows' `where` or POSIX' `which -a` commands. It supersedes
+  *lang.Process::resolve()*, which becomes deprecated.
+  (@thekid)
+
+## 10.13.1 / 2021-09-15
+
+### Bugfixes
+
+* Fixed `lang.Environment::variables()` to return the complete environment
+  even if the php.ini setting *variables_order* does not include `S`.
+  (@thekid)
+
+## 10.13.0 / 2021-09-12
+
+### Features
+
+* Merged PR #278: Add support for PHP 8.1 readonly properties - @thekid
+
+### RFCs
+
+* Implemented xp-framework/rfc#340: Virtual properties reflection. See
+  PR #275 for implementation details.
+  (@thekid)
+
+## 10.12.4 / 2021-08-22
+
+### Bugfixes
+
+* Fixed bug xp-framework/reflection#13: *Too few arguments to function
+  enum_exists()*
+  (@thkid)
+
+## 10.12.3 / 2021-08-21
+
+### Bugfixes
+
+* Fixed error *date.timezone not configured properly* when running on AWS.
+  Their default value for the `TZ` environment variable is `:UTC`, which
+  PHP fails to recognize as a valid timezone (*while `UTC` works*).
+  (@thekid)
+
+## 10.12.2 / 2021-08-21
+
+### Bugfixes
+
+* Fixed class parser when encountering double-quoted strings containing
+  variables in the *complex (curly) syntay*, e.g. `"runtime-{$name}"`,
+  see https://www.php.net/manual/en/language.types.string.php
+  (@thekid)
+
+## 10.12.1 / 2021-08-05
+
+### Bugfixes
+
+* Prevent resolving types returned by the PHP reflection API by calling
+  the `*` context function - they already come resolved.
+  (@thekid)
+
+## 10.12.0 / 2021-08-04
+
+### Features
+
+* Merged PR #277: Add support for PHP 8.1 intersection types - @thekid
+
+### Bugfixes
+
+* Fixed parsing `use` statements with multiple imports separated by commas,
+  e.g. `use ArrayObject, Traversable;`.
+  (@thekid)
+
+## 10.11.1 / 2021-07-25
+
+### Bugfixes
+
+* Fixed `lang.XPClass::getDeclaredFields()` throwing an exception - @thekid
+* Fixed issue #276: PHP 8.1: offset* / getIterator signature. Made codebase
+  compatible with PHP 8.1 (*while keeping PHP 7 support!*) by adding the
+  `#[ReturnTypeWillChange]` in relevant places.
+  (@thekid)
+
+## 10.11.0 / 2021-06-04
+
+### Features
+
+* Merged PR #273: Fall back to `wmic` command line tool if `com_dotnet`
+  extension is not loaded
+  (@thekid)
+* Merged PR #272: Add `Environment::platform()` and `Environment::path()`
+  (@thekid)
+
+## 10.10.0 / 2021-04-25
+
+### Features
+
+* Merged PR #271: Pass NULL to Properties::expanding() to ignore expansion
+  (@thekid)
+* Merged PR #267: Support PHP 8.1 `never` type in reflection - @thekid
+
+## 10.9.1 / 2021-04-24
+
+### Bugfixes
+
+* Made XP work when *iconv* extension is not available but *mbstring*
+  is, offering a degraded and not 100% compatible experience, see #270
+  (@thekid)
+
+## 10.9.0 / 2021-03-20
+
+### Features
+
+* Generated `util.MimeType` from the media type database over at
+  https://github.com/jshttp/mime-db, which in turn consists of lists
+  compiled from IANA registrations, Apache and Nginx. See issue #264
+  (@thekid)
+
+### Bugfixes
+
+* Fixed issue #265: Environment::variables() empty on certain environments
+  by replacing `$_ENV` by `$_SERVER`, see PR #266
+  (@thekid)
+
+## 10.8.1 / 2021-03-14
+
+### Bugfixes
+
+* Fixed issue #263: Warnings in util.Secret with PHP 8.1 - @thekid
+
+## 10.8.0 / 2021-03-10
+
+### Features
+
+* Merged PR #261, adding forward compatibility with PHP 8.1 enumerations.
+  Adds `enum_exists()` as well as `UnitEnum` and `BackedEnum` interfaces,
+  see https://wiki.php.net/rfc/enumerations
+  (@thekid)
+
+### Bugfixes
+
+* Fixed issue #262: xar command - compile error - @thekid
+
+## 10.7.0 / 2021-03-06
+
+### Features
+
+* Merged PR #259: Support reflective access to non-constant expressions
+  for parameter defaults
+  (@thekid)
+
+### Bugfixes
+
+* Fixed issue #260: Failed tests on Ubuntu 20.04 - @thekid
+
+## 10.6.1 / 2021-02-13
+
+### Bugfixes
+
+* Fixed issue #258: PHP 8.1 passing null to scalar arguments deprecated
+  See https://wiki.php.net/rfc/deprecate_null_to_scalar_internal_arg
+  (@thekid)
+
+## 10.6.0 / 2021-01-18
+
+### Features
+
+* Merged PR #253: Add support for nullable types (via `lang.Nullable`)
+  (@thekid)
+* Merged PR #256: Make it possible to pass a default resolver (`*`) to
+  `Type::resolve()`
+  (@thekid)
+
+## 10.5.3 / 2021-01-17
+
+### Bugfixes
+
+* Fixed issue #257: Nullable union types - @thekid
+
+## 10.5.2 / 2021-01-16
+
+### Bugfixes
+
+* Handle `self`, `static` and `parent` return and parameter types inside
+  `lang.FunctionType::isInstance()`.
+  (@thekid)
+* Fixed issue #255: Function return types not taken into account - @thekid
+
+## 10.5.1 / 2020-11-29
+
+### Bugfixes
+
+* Fixed issue #254: Warning raised inside `newinstance()` in PHP 7.4+ when
+  using parameter or return type hints.
+  (@thekid)
+
+## 10.5.0 / 2020-11-26
+
+### Features
+
+* Added support for PHP 8.0, see issue #211:
+  - Support PHP 8 attributes in all PHP 7 versions *if* written without
+    line breaks, adding special `eval` key to support non-static scalar
+    expressions.
+  - Add support for union types for return and parameter types
+  - Add forward- and backward compatible handling for various type-
+    checking related changes
+  - Verified support with PHP 8.0.0 on Windows and Linux
+  (@thekid)
+
+### Bugfixes
+
+* Fixed `util.Random` class to use `openssl_random_pseudo_bytes()`
+  instead `uniqid()` for creating an IV.
+  (@thekid)
+
+## 10.4.0 / 2020-11-22
+
+### Features
+
+* Added `lang.reflect.Field::getTypeRestriction()` which is consistent
+  with the API exposed by method parameter and return types. This adds
+  support for PHP 7.4 property types.
+  (@thekid)
+* Made field, method parameter and return types consistent in that they
+  check for native type syntax before checking meta information except
+  for when that may yield a more specific type
+  (@thekid)
+* Added new method `lang.Type::resolve()` to correctly resolve types in
+  a given context. Adds support for `array<self>` and others for return
+  and parameter types, see PR #252
+  (@thekid)
+
+## 10.3.3 / 2020-11-22
+
+### Bugfixes
+
+* Fixed *static* return type being shadowed by `self` type restriction
+  (@thekid)
+* Fixed specific function types being shadowed when a `callable` type
+  restriction is present
+  (@thekid)
+* Fixed braced function return types, e.g. `@return (function(): int)`
+  (@thekid)
+
+## 10.3.2 / 2020-11-14
+
+### Bugfixes
+
+* Updated bundled test library - fixing PHP 8 compatibility - @thekid
+* Fixed issue #248: PHP 8 native type union causes error - @thekid
+* Fixed `string|int` type union not being equal to `int|string` - @thekid
+
+## 10.3.1 / 2020-10-06
+
+### Bugfixes
+
+* Fixed *strspn(): Argument #3 ($offset) must be contained in argument #1
+  ($str))* warnings, which started appearing in PHP 8.0.0, RC 1.
+  (@thekid)
+
+## 10.3.0 / 2020-10-04
+
+### Features
+
+* Added support for PHP 8 parameter attributes - @thekid
+
+## 10.2.0 / 2020-09-23
+
+### RFCs
+
+* Merged PRs #246 and #247, rewriting the code base to PHP 8 attributes
+  (@thekid)
+* Implemented first step of xp-framwwork/rfc#336 by converting PHP 8
+  attributes into XP annotations: `#[Test(true)]` will be interpreted the
+  same as `#[@test(true)]`. This way, converting libraries over to the
+  new syntax can start now. Implementation details in pull request #245.
+
+### Features
+
+* Merged PR #225: Overload `newinstance` to accept closures for single-
+  method interfaces (like lang.Runnable, for instance).
+  (@thekid)
+* Added support for `mixed` type, see https://wiki.php.net/rfc/mixed_type_v2
+  (@thekid)
+
+### Bugfixes
+
+* Fixed grouped imports when used inside generics in PHP 8.0 - @thekid
+* Add handling for `T_NAME_FULLY_QUALIFIED` and `T_NAME_QUALIFIED` tokens
+  introduced in PHP 8 by https://wiki.php.net/rfc/namespaced_names_as_token
+  (@thekid)
+
+## 10.1.0 / 2020-05-31
+
+### Features
+
+* Improved performance of type lookups for parameters and return types;
+  only looking at the API docs if either no type syntax is used or for
+  array types (e.g. `array` => `string[]`)
+  (@thekid)
+* Added `lang.reflect.Routine::getReturnTypeRestriction()` to be consistent
+  with parameters.
+  (@thekid)
+
+### Bugfixes
+
+* Fixed imports not being resolved inside annotations with functions and
+  closures as values.
+  (@thekid)
+* Merged PR #242: Use ReflectionType API instead of deprecated isArray and
+  isCallable on parameters - for PHP 8 compatibility (see php/php-src#5209).
+  (@thekid)
+
+## 10.0.5 / 2020-04-05
+
+### Bugfixes
+
+* Fixed issue #241: Support PHP 7.4 property types (e.g. `private int $id`)
+  See https://wiki.php.net/rfc/typed_properties_v2
+  (@thekid)
+
+## 10.0.4 / 2020-04-05
+
+### Bugfixes
+
+* Fixed issue #240: Add support for PHP 8 union types (e.g. `string|int`)
+  See https://wiki.php.net/rfc/union_types_v2
+  (@thekid)
+
+## 10.0.3 / 2020-03-28
+
+### Bugfixes
+
+* Fixed *Array and string offset access syntax with curly braces is deprecated*
+  warnings inside `lang.reflect.ClassParser`
+  (@thekid)
+
+## 10.0.2 / 2019-12-01
+
+### Bugfixes
+
+* Fixed `xp help` subcommand raising warnings when rendering markdown
+  (@thekid)
+
+## 10.0.1 / 2019-12-01
+
+### Bugfixes
+
+* Fixed generics in PHP 8+ by using null-coalesce operator instead of the
+  error suppression operator `@`.
+  (@thekid)
+
+## 10.0.0 / 2019-11-29
 
 ### Bugfixes
 

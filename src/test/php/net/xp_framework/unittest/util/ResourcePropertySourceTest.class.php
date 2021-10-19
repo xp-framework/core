@@ -1,8 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use unittest\TestCase;
-use util\Properties;
-use util\ResourcePropertySource;
+use unittest\{Test, TestCase};
+use util\{Properties, ResourcePropertySource};
 new import('lang.ResourceProvider');
 
 /**
@@ -22,7 +21,7 @@ class ResourcePropertySourceTest extends TestCase {
    * Test
    *
    */
-  #[@test]
+  #[Test]
   public function doesNotHaveProperty() {
     $this->assertFalse($this->fixture->provides('non-existent'));
   }
@@ -31,7 +30,7 @@ class ResourcePropertySourceTest extends TestCase {
    * Test
    *
    */
-  #[@test]
+  #[Test]
   public function hasProperty() {
     $this->assertTrue($this->fixture->provides('example'));
   }
@@ -41,7 +40,7 @@ class ResourcePropertySourceTest extends TestCase {
    *
    * Relies on a file "example.ini" existing parallel to this class
    */
-  #[@test]
+  #[Test]
   public function returnsProperties() {
     $this->assertEquals('value', $this->fixture->fetch('example')->readString('section', 'key'));
   }
@@ -50,7 +49,7 @@ class ResourcePropertySourceTest extends TestCase {
    * Test
    *
    */
-  #[@test]
+  #[Test]
   public function sourcesAreEqual() {
     $p1= new ResourcePropertySource('net/xp_framework/unittest/util');
     $p2= new ResourcePropertySource('net/xp_framework/unittest/util');
@@ -63,7 +62,7 @@ class ResourcePropertySourceTest extends TestCase {
    *
    * Relies on a file "example.ini" existing parallel to this class
    */
-  #[@test]
+  #[Test]
   public function propertiesFromSameResourceAreEqual() {
     $p1= new ResourcePropertySource('net/xp_framework/unittest/util');
     $p2= new ResourcePropertySource('net/xp_framework/unittest/util');

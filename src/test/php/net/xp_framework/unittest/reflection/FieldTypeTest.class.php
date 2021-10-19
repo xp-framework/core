@@ -1,71 +1,93 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\{Type, Primitive, ArrayType, MapType, XPClass, Value};
+use lang\{ArrayType, MapType, Primitive, Type, Value, XPClass};
+use unittest\actions\RuntimeVersion;
+use unittest\{Action, Test, Values};
 
 class FieldTypeTest extends FieldsTest {
 
-  #[@test]
+  /** @return iterable */
+  private function types() {
+    yield ['void', Type::$VOID];
+    yield ['var', Type::$VAR];
+    yield ['bool', Primitive::$BOOL];
+    yield ['string[]', new ArrayType(Primitive::$STRING)];
+    yield ['[:int]', new MapType(Primitive::$INT)];
+    yield ['lang.Value', new XPClass(Value::class)];
+    yield ['\\lang\\Value', new XPClass(Value::class)];
+  }
+
+  #[Test]
   public function untyped() {
     $this->assertEquals(Type::$VAR, $this->field('public $fixture;')->getType());
   }
 
-  #[@test, @values([
-  #  ['/** @var void */', Type::$VOID],
-  #  ['/** @var var */', Type::$VAR],
-  #  ['/** @var bool */', Primitive::$BOOL],
-  #  ['/** @var string[] */', new ArrayType(Primitive::$STRING)],
-  #  ['/** @var [:int] */', new MapType(Primitive::$INT)],
-  #  ['/** @var lang.Value */', new XPClass(Value::class)],
-  #  ['/** @var Value */', new XPClass(Value::class)],
-  #  ['/** @var \lang\Value */', new XPClass(Value::class)]
-  #])]
-  public function field_type_determined_via_var_tag($apidoc, $type) {
-    $this->assertEquals($type, $this->field($apidoc.' public $fixture;')->getType());
+  #[Test, Values('types')]
+  public function field_type_determined_via_var_tag($declaration, $type) {
+    $this->assertEquals(
+      $type,
+      $this->field('/** @var '.$declaration.' */ public $fixture;')->getType()
+    );
   }
 
-  #[@test, @values([
-  #  ['/** @var void */', 'void'],
-  #  ['/** @var var */', 'var'],
-  #  ['/** @var bool */', 'bool'],
-  #  ['/** @var string[] */', 'string[]'],
-  #  ['/** @var [:int] */', '[:int]'],
-  #  ['/** @var lang.Value */', 'lang.Value'],
-  #  ['/** @var Value */', 'lang.Value'],
-  #  ['/** @var \lang\Value */', 'lang.Value']
-  #])]
-  public function field_typeName_determined_via_var_tag($apidoc, $type) {
-    $this->assertEquals($type, $this->field($apidoc.' public $fixture;')->getTypeName());
+  #[Test, Values('types')]
+  public function field_typeName_determined_via_var_tag($declaration, $type) {
+    $this->assertEquals(
+      $type->getName(),
+      $this->field('/** @var '.$declaration.' */ public $fixture;')->getTypeName()
+    );
   }
 
-  #[@test, @values([
-  #  ['/** @type void */', Type::$VOID],
-  #  ['/** @type var */', Type::$VAR],
-  #  ['/** @type bool */', Primitive::$BOOL],
-  #  ['/** @type string[] */', new ArrayType(Primitive::$STRING)],
-  #  ['/** @type [:int] */', new MapType(Primitive::$INT)],
-  #  ['/** @type lang.Value */', new XPClass(Value::class)],
-  #  ['/** @type Value */', new XPClass(Value::class)],
-  #  ['/** @type \lang\Value */', new XPClass(Value::class)]
-  #])]
-  public function field_type_determined_via_type_tag($apidoc, $type) {
-    $this->assertEquals($type, $this->field($apidoc.' public $fixture;')->getType());
+  #[Test, Values('types')]
+  public function field_type_determined_via_type_tag($declaration, $type) {
+    $this->assertEquals(
+      $type,
+      $this->field('/** @type '.$declaration.' */ public $fixture;')->getType()
+    );
   }
 
-  #[@test, @values([
-  #  ['#[@type("void")]', Type::$VOID],
-  #  ['#[@type("var")]', Type::$VAR],
-  #  ['#[@type("bool")]', Primitive::$BOOL],
-  #  ['#[@type("string[]")]', new ArrayType(Primitive::$STRING)],
-  #  ['#[@type("[:int]")]', new MapType(Primitive::$INT)],
-  #  ['#[@type("lang.Value")]', new XPClass(Value::class)]
-  #])]
-  public function field_type_determined_via_annotation($apidoc, $type) {
-    $this->assertEquals($type, $this->field($apidoc."\npublic \$fixture;")->getType());
+  #[Test, Values('types')]
+  public function field_type_determined_via_annotation($declaration, $type) {
+    $this->assertEquals(
+      $type,
+      $this->field('#[Type("'.$declaration.'")]'."\n".'public $fixture;')->getType()
+    );
   }
 
-  #[@test]
-  public function self_type() {
+  #[Test]
+  public function self_type_via_apidoc() {
     $fixture= $this->type('{ /** @type self */ public $fixture; }');
+    $this->assertEquals('self', $fixture->getField('fixture')->getTypeName());
     $this->assertEquals($fixture, $fixture->getField('fixture')->getType());
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.4")')]
+  public function self_type_via_syntax() {
+    $fixture= $this->type('{ public self $fixture; }');
+    $this->assertEquals('self', $fixture->getField('fixture')->getTypeName());
+    $this->assertEquals($fixture, $fixture->getField('fixture')->getType());
+  }
+
+  #[Test]
+  public function array_of_self_type() {
+    $fixture= $this->type('{ /** @type array<self> */ public $fixture; }');
+    $this->assertEquals(new ArrayType($fixture), $fixture->getField('fixture')->getType());
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.4")')]
+  public function specific_array_type_determined_via_apidoc() {
+    $fixture= $this->type('{ /** @type string[] */ public array $fixture; }');
+    $this->assertEquals('string[]', $fixture->getField('fixture')->getTypeName());
+    $this->assertEquals(new ArrayType(Primitive::$STRING), $fixture->getField('fixture')->getType());
+  }
+
+  #[Test]
+  public function untyped_restriction() {
+    $this->assertNull($this->field('public $fixture;')->getTypeRestriction());
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.4")')]
+  public function typed_restriction() {
+    $this->assertEquals(Primitive::$STRING, $this->field('public string $fixture;')->getTypeRestriction());
   }
 }

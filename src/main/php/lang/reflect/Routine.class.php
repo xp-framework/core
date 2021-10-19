@@ -1,6 +1,6 @@
 <?php namespace lang\reflect;
 
-use lang\{ElementNotFoundException, XPClass, Value, Type};
+use lang\{ElementNotFoundException, XPClass, Value, Type, TypeUnion};
 use util\Objects;
 
 /**
@@ -101,36 +101,100 @@ class Routine implements Value {
     return $this->_reflect->getNumberOfParameters();
   }
 
-  /** Retrieve return type */
+  /**
+   * Resolution resolve handling `static`, `self` and `parent`.
+   *
+   * @return [:(function(string): lang.Type)]
+   */
+  private function resolve() {
+    return [
+      'static' => function() { return new XPClass($this->_class); },
+      'self'   => function() { return new XPClass($this->_reflect->getDeclaringClass()); },
+      'parent' => function() { return new XPClass($this->_reflect->getDeclaringClass()->getParentClass()); },
+    ];
+  }
+
+  /**
+   * Get return type.
+   *
+   * @return  lang.Type
+   * @throws  lang.ClassFormatException if the restriction cannot be resolved
+   */
   public function getReturnType(): Type {
-    if (
-      ($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))
-      && isset($details[DETAIL_RETURNS])
-    ) {
-      $t= ltrim($details[DETAIL_RETURNS], '&');
-      if ('self' === $t) {
-        return new XPClass($this->_reflect->getDeclaringClass());
-      } else {
-        return Type::forName($t);
-      }
-    } else if ($t= $this->_reflect->getReturnType()) {
-      return Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
-    } else {
-      return Type::$VAR;
-    }
+    $api= function() {
+      $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+      $r= $details[DETAIL_RETURNS] ?? null;
+      return $r ? ltrim($r, '&') : null;
+    };
+    return Type::resolve($this->_reflect->getReturnType(), $this->resolve(), $api) ?? Type::$VAR;
   }
 
   /** Retrieve return type name */
   public function getReturnTypeName(): string {
-    if (
-      ($details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName()))
-      && isset($details[DETAIL_RETURNS])
-    ) {
-      return ltrim($details[DETAIL_RETURNS], '&');
-    } else if ($t= $this->_reflect->getReturnType()) {
-      return PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
+    static $map= [
+      'mixed'   => 'var',
+      'false'   => 'bool',
+      'boolean' => 'bool',
+      'double'  => 'float',
+      'integer' => 'int',
+    ];
+
+    $t= $this->_reflect->getReturnType();
+    if (null === $t) {
+      $nullable= '';
+
+      // Check for type in api documentation
+      $name= 'var';
+    } else if ($t instanceof \ReflectionUnionType) {
+      $union= '';
+      $nullable= '';
+      foreach ($t->getTypes() as $component) {
+        if ('null' === ($name= $component->getName())) {
+          $nullable= '?';
+        } else {
+          $union.= '|'.($map[$name] ?? strtr($name, '\\', '.'));
+        }
+      }
+      return $nullable.substr($union, 1);
+    } else if ($t instanceof \ReflectionIntersectionType) {
+      $intersection= '';
+      foreach ($t->getTypes() as $component) {
+        $name= $component->getName();
+        $intersection.= '&'.($map[$name] ?? strtr($name, '\\', '.'));
+      }
+      return ($t->allowsNull() ? '?' : '').substr($intersection, 1);
     } else {
-      return 'var';
+      $nullable= $t->allowsNull() ? '?' : '';
+      $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
+
+      // Check array, self, void and callable for more specific types, e.g. `string[]`,
+      // `static`, `never` or `function(): string` in api documentation
+      if ('array' !== $name && 'callable' !== $name && 'self' !== $name && 'void' !== $name) {
+        return $nullable.($map[$name] ?? strtr($name, '\\', '.'));
+      }
+    }
+
+    $details= XPClass::detailsForMethod($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $r= $details[DETAIL_RETURNS] ?? null;
+    return null === $r ? $nullable.$name : rtrim(ltrim($r, '&'), '.');
+  }
+
+  /**
+   * Get return type restriction.
+   *
+   * @return  lang.Type or NULL if there is no restriction
+   * @throws  lang.ClassFormatException if the restriction cannot be resolved
+   */
+  public function getReturnTypeRestriction() {
+    try {
+      return Type::resolve($this->_reflect->getReturnType(), $this->resolve());
+    } catch (ClassLoadingException $e) {
+      throw new ClassFormatException(sprintf(
+        'Typehint for %s::%s()\'s return type cannot be resolved: %s',
+        strtr($this->_class, '\\', '.'),
+        $this->_reflect->getName(),
+        $e->getMessage()
+      ));
     }
   }
 

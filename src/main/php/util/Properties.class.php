@@ -40,17 +40,20 @@ class Properties implements PropertyAccess {
   }
 
   /**
-   * Add expansion `${kind.X}` with a given expansion function `f(X)`
+   * Add expansion `${kind.X}` with a given expansion function `f(X)`. Pass NULL
+   * as expansion to ignore any expansions of this type.
    *
    * @param  string $kind
-   * @param  [:var]|function(string): string $expansion
+   * @param  ?[:var]|function(string): string $expansion
    * @return self
    */
   public function expanding($kind, $expansion) {
     $this->expansion= $this->expansion ?: clone self::$env;
 
-    if ($expansion instanceof \ArrayAccess || (is_array($expansion) && 0 !== key($expansion))) {
-      $func= function($name) use($expansion) { return isset($expansion[$name]) ? $expansion[$name] : null; };
+    if (null === $expansion) {
+      $func= function($name) { return ''; };
+    } else if ($expansion instanceof \ArrayAccess || (is_array($expansion) && 0 !== key($expansion))) {
+      $func= function($name) use($expansion) { return $expansion[$name] ?? null; };
     } else {
       $func= cast($expansion, 'function(string): string');
     }

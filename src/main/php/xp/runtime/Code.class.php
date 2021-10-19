@@ -59,7 +59,7 @@ class Code {
         $module && $this->modules->add($module['name'], $module['version']);
       }
       $pos+= $l + 1;
-      $pos+= strspn($input, "\r\n\t ", $pos);
+      if ($pos < $length) $pos+= strspn($input, "\r\n\t ", $pos);
     }
 
     $this->fragment= rtrim(substr($input, $pos), "\r\n\t ;").';';

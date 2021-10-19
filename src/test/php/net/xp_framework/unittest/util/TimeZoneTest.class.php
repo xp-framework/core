@@ -1,53 +1,37 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\IllegalArgumentException;
-use util\Date;
-use util\TimeZone;
+use unittest\{Expect, Test, TestCase, Values};
+use util\{Date, TimeZone};
 
-class TimeZoneTest extends \unittest\TestCase {
+class TimeZoneTest extends TestCase {
 
-  #[@test]
+  #[Test]
   public function name() {
     $this->assertEquals('Europe/Berlin', (new TimeZone('Europe/Berlin'))->name());
   }
 
-  #[@test, @values([
-  #  ['Europe/Berlin', '2007-08-21', 7200],
-  #  ['Australia/Adelaide', '2007-01-21', 37800],
-  #  ['America/New_York', '2007-08-21', -14400]
-  #])]
+  #[Test, Values([['Europe/Berlin', '2007-08-21', 7200], ['Australia/Adelaide', '2007-01-21', 37800], ['America/New_York', '2007-08-21', -14400]])]
   public function offset_daylight($tz, $date, $offset) {
     $this->assertEquals($offset, (new TimeZone($tz))->offset(new Date($date)));
   }
 
-  #[@test, @values([
-  #  ['Europe/Berlin', '2007-01-21', 3600],
-  #  ['Australia/Adelaide', '2007-08-21', 34200],
-  #  ['America/New_York', '2007-01-21', -18000]
-  #])]
+  #[Test, Values([['Europe/Berlin', '2007-01-21', 3600], ['Australia/Adelaide', '2007-08-21', 34200], ['America/New_York', '2007-01-21', -18000]])]
   public function offset_standard($tz, $date, $offset) {
     $this->assertEquals($offset, (new TimeZone($tz))->offset(new Date($date)));
   }
 
-  #[@test, @values([
-  #  ['Europe/Berlin', '2007-08-21', '+0200'],
-  #  ['Australia/Adelaide', '2007-01-21', '+1030'],
-  #  ['America/New_York', '2007-08-21', '-0400']
-  #])]
+  #[Test, Values([['Europe/Berlin', '2007-08-21', '+0200'], ['Australia/Adelaide', '2007-01-21', '+1030'], ['America/New_York', '2007-08-21', '-0400']])]
   public function difference_daylight($tz, $date, $diff) {
     $this->assertEquals($diff, (new TimeZone($tz))->difference(new Date($date)));
   }
 
-  #[@test, @values([
-  #  ['Europe/Berlin', '2007-01-21', '+0100'],
-  #  ['Australia/Adelaide', '2007-08-21', '+0930'],
-  #  ['America/New_York', '2007-01-21', '-0500']
-  #])]
+  #[Test, Values([['Europe/Berlin', '2007-01-21', '+0100'], ['Australia/Adelaide', '2007-08-21', '+0930'], ['America/New_York', '2007-01-21', '-0500']])]
   public function difference_standard($tz, $date, $diff) {
     $this->assertEquals($diff, (new TimeZone($tz))->difference(new Date($date)));
   }
 
-  #[@test]
+  #[Test]
   public function translate() {
     $this->assertEquals(
       new Date('2006-12-31 14:00:00 Europe/Berlin'),
@@ -55,7 +39,7 @@ class TimeZoneTest extends \unittest\TestCase {
     );
   }
   
-  #[@test]
+  #[Test]
   public function previousTransition() {
     $transition= (new TimeZone('Europe/Berlin'))->previousTransition(new Date('2007-08-23'));
     $this->assertEquals(true, $transition->isDst());
@@ -64,7 +48,7 @@ class TimeZoneTest extends \unittest\TestCase {
     $this->assertEquals(new Date('2007-03-25 02:00:00 Europe/Berlin'), $transition->date());
   }
   
-  #[@test]
+  #[Test]
   public function previousPreviousTransition() {
     $transition= (new TimeZone('Europe/Berlin'))->previousTransition(new Date('2007-08-23'));
     $previous= $transition->previous();
@@ -74,7 +58,7 @@ class TimeZoneTest extends \unittest\TestCase {
     $this->assertEquals(new Date('2006-10-29 02:00:00 Europe/Berlin'), $previous->date());
   }
 
-  #[@test]
+  #[Test]
   public function previousNextTransition() {
     $transition= (new TimeZone('Europe/Berlin'))->previousTransition(new Date('2007-08-23'));
     $next= $transition->next();
@@ -84,7 +68,7 @@ class TimeZoneTest extends \unittest\TestCase {
     $this->assertEquals(new Date('2007-10-28 02:00:00 Europe/Berlin'), $next->date());
   }
 
-  #[@test]
+  #[Test]
   public function nextTransition() {
     $transition= (new TimeZone('Europe/Berlin'))->nextTransition(new Date('2007-08-23'));
     $this->assertEquals(false, $transition->isDst());
@@ -93,51 +77,51 @@ class TimeZoneTest extends \unittest\TestCase {
     $this->assertEquals(new Date('2007-10-28 02:00:00 Europe/Berlin'), $transition->date());
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function unknownTimeZone() {
     new TimeZone('UNKNOWN');
   }
 
   /** @deprecated */
-  #[@test]
+  #[Test]
   public function name_getter() {
     $this->assertEquals('Europe/Berlin', (new TimeZone('Europe/Berlin'))->getName());
   }
 
   /** @deprecated */
-  #[@test]
+  #[Test]
   public function offsetDST() {
     $this->assertEquals('+0200', (new TimeZone('Europe/Berlin'))->getOffset(new Date('2007-08-21')));
   }
 
   /** @deprecated */
-  #[@test]
+  #[Test]
   public function offsetNoDST() {
     $this->assertEquals('+0100', (new TimeZone('Europe/Berlin'))->getOffset(new Date('2007-01-21')));
   }
 
   /** @deprecated */
-  #[@test]
+  #[Test]
   public function offsetWithHalfHourDST() {
     // Australia/Adelaide is +10:30 in DST
     $this->assertEquals('+1030', (new TimeZone('Australia/Adelaide'))->getOffset(new Date('2007-01-21')));
   }
 
   /** @deprecated */
-  #[@test]
+  #[Test]
   public function offsetWithHalfHourNoDST() {
     // Australia/Adelaide is +09:30 in non-DST
     $this->assertEquals('+0930', (new TimeZone('Australia/Adelaide'))->getOffset(new Date('2007-08-21')));
   }
 
   /** @deprecated */
-  #[@test]
+  #[Test]
   public function offsetInSecondsDST() {
     $this->assertEquals(7200, (new TimeZone('Europe/Berlin'))->getOffsetInSeconds(new Date('2007-08-21')));
   }
 
   /** @deprecated */
-  #[@test]
+  #[Test]
   public function offsetInSecondsNoDST() {
     $this->assertEquals(3600, (new TimeZone('Europe/Berlin'))->getOffsetInSeconds(new Date('2007-01-21')));
   }

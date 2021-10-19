@@ -45,26 +45,20 @@ abstract class Enum implements Value {
    * @return self
    * @throws lang.IllegalArgumentException in case the enum member does not exist or when the given class is not an enum
    */
-  public static function valueOf($type, string $name): self {
-    $class= $type instanceof XPClass ? $type : XPClass::forName($type);
-    if (!$class->isEnum()) {
-      throw new IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
+  public static function valueOf($type, string $name) {
+    $reflect= $type instanceof XPClass ? $type->reflect() : XPClass::forName($type)->reflect();
+
+    if ($reflect->isSubclassOf(self::class)) {
+      $prop= $reflect->getStaticPropertyValue($name, null);
+      if ($prop instanceof self && $reflect->isInstance($prop)) return $prop;
+    } else if ($reflect->isSubclassOf(\UnitEnum::class)) {
+      $case= $reflect->getConstant($name) ? : $reflect->getStaticPropertyValue($name, null);
+      if ($case instanceof \UnitEnum && $reflect->isInstance($case)) return $case;
+    } else {
+      throw new IllegalArgumentException('Argument class must be an enum');
     }
 
-    if ($class->isSubclassOf(self::class)) {
-      try {
-        $prop= $class->reflect()->getStaticPropertyValue($name);
-        if ($class->isInstance($prop)) return $prop;
-      } catch (\ReflectionException $e) {
-        throw new IllegalArgumentException($e->getMessage());
-      }
-    } else {
-      if ($class->reflect()->hasConstant($name)) {
-        $t= ClassLoader::defineClass($class->getName().'Enum', self::class, []);
-        return $t->newInstance($class->reflect()->getConstant($name), $name);
-      }
-    }
-    throw new IllegalArgumentException('No such member "'.$name.'" in '.$class->getName());
+    throw new IllegalArgumentException('Not an enum member "'.$name.'" in '.strtr($reflect->getName(), '\\', '.'));
   }
 
   /**
@@ -75,23 +69,19 @@ abstract class Enum implements Value {
    * @throws lang.IllegalArgumentException in case the given class is not an enum
    */
   public static function valuesOf($type) {
-    $class= $type instanceof XPClass ? $type : XPClass::forName($type);
-    if (!$class->isEnum()) {
-      throw new IllegalArgumentException('Argument class must be lang.XPClass<? extends lang.Enum>');
+    $reflect= $type instanceof XPClass ? $type->reflect() : XPClass::forName($type)->reflect();
+
+    if ($reflect->isSubclassOf(self::class)) {
+      $r= [];
+      foreach ($reflect->getStaticProperties() as $prop) {
+        $prop instanceof self && $reflect->isInstance($prop) && $r[]= $prop;
+      }
+      return $r;
+    } else if ($reflect->isSubclassOf(\UnitEnum::class)) {
+      return $reflect->getMethod('cases')->invoke(null);
     }
 
-    $r= [];
-    if ($class->isSubclassOf(self::class)) {
-      foreach ($class->reflect()->getStaticProperties() as $prop) {
-        $class->isInstance($prop) && $r[]= $prop;
-      }
-    } else {
-      $t= ClassLoader::defineClass($class->getName().'Enum', self::class, []);
-      foreach ($class->reflect()->getMethod('getValues')->invoke(null) as $name => $ordinal) {
-        $r[]= $t->newInstance($ordinal, $name);
-      }
-    }
-    return $r;
+    throw new IllegalArgumentException('Argument class must be an enum');
   }
 
   /**

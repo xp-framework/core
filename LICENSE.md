@@ -6,7 +6,7 @@ http://www.opensource.org/licenses/bsd-license.php
 
 This is the license's text:
 ```
-Copyright (c) 2001-2019, XP-Framework Team
+Copyright (c) 2001-2021, XP-Framework Team
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

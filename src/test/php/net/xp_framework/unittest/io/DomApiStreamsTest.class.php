@@ -2,7 +2,7 @@
 
 use io\streams\{MemoryInputStream, MemoryOutputStream, Streams};
 use lang\Runtime;
-use unittest\PrerequisitesNotMetError;
+use unittest\{PrerequisitesNotMetError, Test};
 
 /**
  * TestCase
@@ -27,7 +27,7 @@ class DomApiStreamsTest extends \unittest\TestCase {
    * Test DOMDocument::loadHTMLFile()
    *
    */
-  #[@test]
+  #[Test]
   public function usableInLoadHTMLFile() {
     $dom= new \DOMDocument();
     $this->assertTrue($dom->loadHTMLFile(Streams::readableUri(new MemoryInputStream(trim('
@@ -48,7 +48,7 @@ class DomApiStreamsTest extends \unittest\TestCase {
    * Test DOMDocument::saveHTMLFile()
    *
    */
-  #[@test]
+  #[Test]
   public function usableInSaveHTMLFile() {
     $out= new MemoryOutputStream();
 
@@ -56,13 +56,13 @@ class DomApiStreamsTest extends \unittest\TestCase {
     $dom= new \DOMDocument();
     $dom->appendChild($dom->createElement('html'))
       ->appendChild($dom->createElement('head'))
-      ->appendChild($dom->createElement('title', 'übercoder'))
+      ->appendChild($dom->createElement('title', 'Ubercoder'))
     ;
     $dom->saveHTMLFile(Streams::writeableUri($out));
     
     // Check file contents
     $this->assertEquals(
-      '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>&uuml;bercoder</title></head></html>', 
+      '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Ubercoder</title></head></html>', 
       trim($out->bytes())
     );
   }
@@ -71,7 +71,7 @@ class DomApiStreamsTest extends \unittest\TestCase {
    * Test DOMDocument::load()
    *
    */
-  #[@test]
+  #[Test]
   public function usableInLoad() {
     $dom= new \DOMDocument();
     $this->assertTrue($dom->load(Streams::readableUri(new MemoryInputStream(trim('
@@ -86,7 +86,7 @@ class DomApiStreamsTest extends \unittest\TestCase {
    * Test DOMDocument::save()
    *
    */
-  #[@test]
+  #[Test]
   public function usableInSave() {
     $out= new MemoryOutputStream();
 

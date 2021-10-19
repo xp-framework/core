@@ -1,20 +1,22 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\reflect\Modifiers;
-use lang\{XPClass, Enum, Error, IllegalArgumentException, CloneNotSupportedException};
-use unittest\actions\RuntimeVersion;
+use lang\{CloneNotSupportedException, Enum, Error, IllegalArgumentException, XPClass, ClassLoader};
+use unittest\actions\{RuntimeVersion, VerifyThat};
+use unittest\{Action, Expect, Test, TestCase};
 
 /**
  * TestCase for enumerations
  *
- * @see   xp://net.xp_framework.unittest.core.Coin
- * @see   xp://net.xp_framework.unittest.core.Operation
- * @see   xp://net.xp_framework.unittest.core.Weekday
- * @see   xp://lang.Enum
- * @see   xp://lang.XPClass#isEnum
- * @see   http://xp-framework.net/rfc/0132
+ * @see  net.xp_framework.unittest.core.Coin
+ * @see  net.xp_framework.unittest.core.Operation
+ * @see  net.xp_framework.unittest.core.Weekday
+ * @see  net.xp_framework.unittest.core.SortOrder
+ * @see  lang.Enum
+ * @see  lang.XPClass#isEnum
+ * @see  https://github.com/xp-framework/rfc/issues/132
  */
-class EnumTest extends \unittest\TestCase {
+class EnumTest extends TestCase {
 
   /**
    * Asserts given modifiers contain abstract
@@ -44,104 +46,104 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
-  public function coinIsAnEnums() {
+  #[Test]
+  public function coin_is_an_enum() {
     $this->assertTrue(XPClass::forName(Coin::class)->isEnum());
   }
   
-  #[@test]
-  public function operationIsAnEnums() {
+  #[Test]
+  public function operation_is_an_enum() {
     $this->assertTrue(XPClass::forName(Operation::class)->isEnum());
   }
 
-  #[@test]
-  public function thisIsNotAnEnum() {
+  #[Test, Action(eval: 'new VerifyThat(fn() => class_exists("ReflectionEnum", false))')]
+  public function sortorder_is_an_enum() {
+    $this->assertTrue(XPClass::forName(SortOrder::class)->isEnum());
+  }
+
+  #[Test]
+  public function this_is_not_an_enum() {
     $this->assertFalse(typeof($this)->isEnum());
   }
 
-  #[@test]
-  public function enumBaseClassIsAbstract() {
+  #[Test]
+  public function enum_base_class_is_abstract() {
     $this->assertAbstract(XPClass::forName(Enum::class)->getModifiers());
   }
 
-  #[@test]
-  public function operationEnumIsAbstract() {
+  #[Test]
+  public function operation_enum_is_abstract() {
     $this->assertAbstract(XPClass::forName(Operation::class)->getModifiers());
   }
 
-  #[@test]
-  public function coinEnumIsNotAbstract() {
+  #[Test]
+  public function coin_enum_is_not_abstract() {
     $this->assertNotAbstract(XPClass::forName(Coin::class)->getModifiers());
   }
 
-  #[@test]
-  public function coinMemberAreSameClass() {
+  #[Test]
+  public function coin_member_is_instance_of_coin() {
     $this->assertInstanceOf(Coin::class, Coin::$penny);
   }
 
-  #[@test]
-  public function operationMembersAreSubclasses() {
+  #[Test]
+  public function operation_member_is_instance_of_operation() {
     $this->assertInstanceOf(Operation::class, Operation::$plus);
   }
 
-  #[@test]
-  public function enumMembersAreNotAbstract() {
+  #[Test]
+  public function enum_members_are_not_abstract() {
     $this->assertNotAbstract(typeof(Coin::$penny)->getModifiers());
     $this->assertNotAbstract(typeof(Operation::$plus)->getModifiers());
   }
 
-  #[@test]
-  public function coinValues() {
+  #[Test]
+  public function coin_values() {
     $this->assertEquals(
       [Coin::$penny, Coin::$nickel, Coin::$dime, Coin::$quarter],
       Coin::values()
     );
   }
 
-  #[@test]
-  public function operationValues() {
+  #[Test]
+  public function operation_values() {
     $this->assertEquals(
       [Operation::$plus, Operation::$minus, Operation::$times, Operation::$divided_by],
       Operation::values()
     );
   }
 
-  #[@test]
-  public function pennyCoinClass() {
-    $this->assertInstanceOf(Coin::class, Coin::$penny);
-  }
-
-  #[@test]
-  public function nickelCoinName() {
+  #[Test]
+  public function nickel_coin_name() {
     $this->assertEquals('nickel', Coin::$nickel->name());
   }
 
-  #[@test]
-  public function nickelCoinValue() {
+  #[Test]
+  public function nickel_coin_value() {
     $this->assertEquals(2, Coin::$nickel->value());
   }
 
-  #[@test]
-  public function stringRepresentation() {
+  #[Test]
+  public function string_representation() {
     $this->assertEquals('dime', Coin::$dime->toString());
   }
 
-  #[@test]
-  public function sameCoinsAreEqual() {
+  #[Test]
+  public function same_coins_are_equal() {
     $this->assertEquals(Coin::$quarter, Coin::$quarter);
   }
 
-  #[@test]
-  public function differentCoinsAreNotEqual() {
+  #[Test]
+  public function different_coins_are_not_equal() {
     $this->assertNotEquals(Coin::$penny, Coin::$quarter);
   }
 
-  #[@test, @expect(CloneNotSupportedException::class)]
-  public function enumMembersAreNotCloneable() {
+  #[Test, Expect(CloneNotSupportedException::class)]
+  public function enum_members_cannot_be_cloned() {
     clone Coin::$penny;
   }
 
-  #[@test]
+  #[Test]
   public function valueOf() {
     $this->assertEquals(
       Coin::$penny, 
@@ -149,7 +151,7 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function valueOf_string() {
     $this->assertEquals(
       Coin::$penny, 
@@ -157,25 +159,38 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
-  public function valueOfNonExistant() {
+  #[Test, Action(eval: 'new VerifyThat(fn() => class_exists("ReflectionEnum", false))')]
+  public function valueOf_sortorder_enum() {
+    $this->assertEquals(
+      SortOrder::ASC,
+      Enum::valueOf(SortOrder::class, 'ASC')
+    );
+  }
+
+  #[Test, Expect(IllegalArgumentException::class), Action(eval: 'new VerifyThat(fn() => class_exists("ReflectionEnum", false))')]
+  public function valueOf_nonexistant_sortorder_enum() {
+    Enum::valueOf(SortOrder::class, 'ESC');
+  }
+
+  #[Test, Expect(IllegalArgumentException::class)]
+  public function valueOf_nonexistant() {
     Enum::valueOf(XPClass::forName(Coin::class), '@@DOES_NOT_EXIST@@');
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
-  public function valueOfNonEnum() {
+  #[Test, Expect(IllegalArgumentException::class)]
+  public function valueOf_non_enum() {
     Enum::valueOf(self::class, 'irrelevant');
   }
 
-  #[@test]
-  public function valueOfAbstractEnum() {
+  #[Test]
+  public function valueOf_abstract_enum() {
     $this->assertEquals(
       Operation::$plus, 
       Enum::valueOf(XPClass::forName(Operation::class), 'plus')
     );
   }
 
-  #[@test]
+  #[Test]
   public function valuesOf() {
     $this->assertEquals(
       [Coin::$penny, Coin::$nickel, Coin::$dime, Coin::$quarter],
@@ -183,7 +198,7 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function valuesOf_string() {
     $this->assertEquals(
       [Coin::$penny, Coin::$nickel, Coin::$dime, Coin::$quarter],
@@ -191,62 +206,70 @@ class EnumTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
-  public function valuesOfAbstractEnum() {
+  #[Test]
+  public function valuesOf_abstract_enum() {
     $this->assertEquals(
       [Operation::$plus, Operation::$minus, Operation::$times, Operation::$divided_by],
       Enum::valuesOf(XPClass::forName(Operation::class))
     );
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
-  public function valuesOfNonEnum() {
+  #[Test, Action(eval: 'new VerifyThat(fn() => class_exists("ReflectionEnum", false))')]
+  public function valuesOf_sortorder_enum() {
+    $this->assertEquals(
+      [SortOrder::ASC, SortOrder::DESC],
+      Enum::valuesOf(XPClass::forName(SortOrder::class))
+    );
+  }
+
+  #[Test, Expect(IllegalArgumentException::class)]
+  public function valuesOf_non_enum() {
     Enum::valuesOf(self::class);
   }
 
-  #[@test]
-  public function plusOperation() {
+  #[Test]
+  public function plus_operation() {
     $this->assertEquals(2, Operation::$plus->evaluate(1, 1));
   }
 
-  #[@test]
-  public function minusOperation() {
+  #[Test]
+  public function minus_operation() {
     $this->assertEquals(0, Operation::$minus->evaluate(1, 1));
   }
 
-  #[@test]
-  public function timesOperation() {
+  #[Test]
+  public function times_operation() {
     $this->assertEquals(21, Operation::$times->evaluate(7, 3));
   }
 
-  #[@test]
-  public function dividedByOperation() {
+  #[Test]
+  public function dividedBy_operation() {
     $this->assertEquals(5, Operation::$divided_by->evaluate(10, 2));
   }
   
-  #[@test]
-  public function staticMemberNotInEnumValuesOf() {
+  #[Test]
+  public function static_member_not_in_enum_valuesOf() {
     $this->assertEquals(
       [Profiling::$INSTANCE, Profiling::$EXTENSION],
       Enum::valuesOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'))
     );
   }
 
-  #[@test]
-  public function staticMemberNotInValues() {
+  #[Test]
+  public function static_member_not_in_values() {
     $this->assertEquals(
       [Profiling::$INSTANCE, Profiling::$EXTENSION],
       Profiling::values()
     );
   }
   
-  #[@test, @expect(IllegalArgumentException::class)]
-  public function staticMemberNotWithEnumValueOf() {
+  #[Test, Expect(IllegalArgumentException::class)]
+  public function static_member_not_acceptable_in_valueOf() {
     Enum::valueOf(XPClass::forName('net.xp_framework.unittest.core.Profiling'), 'fixture');
   }
 
-  #[@test]
-  public function staticEnumMemberNotInEnumValuesOf() {
+  #[Test]
+  public function static_member_with_enum_type_not_in_enum_valuesOf() {
     Profiling::$fixture= Coin::$penny;
     $this->assertEquals(
       [Profiling::$INSTANCE, Profiling::$EXTENSION],
@@ -255,8 +278,8 @@ class EnumTest extends \unittest\TestCase {
     Profiling::$fixture= null;
   }
 
-  #[@test]
-  public function staticEnumMemberNotInValues() {
+  #[Test]
+  public function static_member_with_enum_type_not_in_enum_values() {
     Profiling::$fixture= Coin::$penny;
     $this->assertEquals(
       [Profiling::$INSTANCE, Profiling::$EXTENSION],
@@ -265,8 +288,8 @@ class EnumTest extends \unittest\TestCase {
     Profiling::$fixture= null;
   }
 
-  #[@test]
-  public function staticObjectMemberNotInEnumValuesOf() {
+  #[Test]
+  public function static_object_member_not_in_enum_valuesOf() {
     Profiling::$fixture= $this;
     $this->assertEquals(
       [Profiling::$INSTANCE, Profiling::$EXTENSION],
@@ -275,8 +298,8 @@ class EnumTest extends \unittest\TestCase {
     Profiling::$fixture= null;
   }
 
-  #[@test]
-  public function staticObjectMemberNotInValues() {
+  #[Test]
+  public function static_object_member_not_in_enum_values() {
     Profiling::$fixture= $this;
     $this->assertEquals(
       [Profiling::$INSTANCE, Profiling::$EXTENSION],
@@ -285,8 +308,8 @@ class EnumTest extends \unittest\TestCase {
     Profiling::$fixture= null;
   }
 
-  #[@test]
-  public function staticPrimitiveMemberNotInEnumValuesOf() {
+  #[Test]
+  public function static_primitive_member_not_in_enum_valuesOf() {
     Profiling::$fixture= [$this, $this->name];
     $this->assertEquals(
       [Profiling::$INSTANCE, Profiling::$EXTENSION],
@@ -295,8 +318,8 @@ class EnumTest extends \unittest\TestCase {
     Profiling::$fixture= null;
   }
 
-  #[@test]
-  public function staticPrimitiveMemberNotInValues() {
+  #[Test]
+  public function static_primitive_member_not_in_enum_values() {
     Profiling::$fixture= [$this, $this->name];
     $this->assertEquals(
       [Profiling::$INSTANCE, Profiling::$EXTENSION],
@@ -305,16 +328,21 @@ class EnumTest extends \unittest\TestCase {
     Profiling::$fixture= null;
   }
 
-  #[@test]
-  public function enumValuesMethodProvided() {
+  #[Test]
+  public function enum_values_method() {
     $this->assertEquals(
       [Weekday::$MON, Weekday::$TUE, Weekday::$WED, Weekday::$THU, Weekday::$FRI, Weekday::$SAT, Weekday::$SUN],
       Weekday::values()
     );
   }
 
-  #[@test]
-  public function enumValueInitializedToDeclaration() {
+  #[Test]
+  public function enum_value_initialized_to_declaration() {
     $this->assertEquals(1, Weekday::$MON->ordinal());
+  }
+
+  #[Test, Action(eval: 'new VerifyThat(fn() => class_exists("ReflectionEnum", false))')]
+  public function annotations_on_sortorder_enum() {
+    $this->assertEquals(['usedBy' => self::class], XPClass::forName(SortOrder::class)->getAnnotations());
   }
 }

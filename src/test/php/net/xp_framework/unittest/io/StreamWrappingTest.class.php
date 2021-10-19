@@ -2,7 +2,7 @@
 
 use io\IOException;
 use io\streams\{InputStream, MemoryInputStream, MemoryOutputStream, Streams};
-use unittest\TestCase;
+use unittest\{Expect, Test, TestCase, Values};
 
 /**
  * TestCase
@@ -11,7 +11,7 @@ use unittest\TestCase;
  */
 class StreamWrappingTest extends TestCase {
 
-  #[@test]
+  #[Test]
   public function read_using_fread() {
     $buffer= 'Hello World';
     $m= new MemoryInputStream($buffer);
@@ -23,7 +23,7 @@ class StreamWrappingTest extends TestCase {
     $this->assertEquals($buffer, $read);
   }
 
-  #[@test]
+  #[Test]
   public function read_using_fgets() {
     $buffer= 'Hello World';
     $m= new MemoryInputStream($buffer);
@@ -35,7 +35,7 @@ class StreamWrappingTest extends TestCase {
     $this->assertEquals($buffer, $read);
   }
 
-  #[@test]
+  #[Test]
   public function read_using_fgets_including_newline() {
     $buffer= "Hello World\n";
     $m= new MemoryInputStream($buffer);
@@ -47,7 +47,7 @@ class StreamWrappingTest extends TestCase {
     $this->assertEquals($buffer, $read);
   }
 
-  #[@test]
+  #[Test]
   public function endOfFile() {
     $fd= Streams::readableFd(new MemoryInputStream(str_repeat('x', 10)));
     $this->assertFalse(feof($fd), 'May not be at EOF directly after opening');
@@ -61,7 +61,7 @@ class StreamWrappingTest extends TestCase {
     fclose($fd);
   }
 
-  #[@test]
+  #[Test]
   public function fstat() {
     $fd= Streams::readableFd(new MemoryInputStream(str_repeat('x', 10)));
     $stat= fstat($fd);
@@ -74,21 +74,21 @@ class StreamWrappingTest extends TestCase {
     fclose($fd);
   }
 
-  #[@test]
+  #[Test]
   public function statExistingReadableUri() {
     $uri= Streams::readableUri(new MemoryInputStream(str_repeat('x', 10)));
     $stat= stat($uri);
     $this->assertEquals(0, $stat['size']);
   }
 
-  #[@test]
+  #[Test]
   public function statExistingWriteableUri() {
     $uri= Streams::writeableUri(new MemoryOutputStream());
     $stat= stat($uri);
     $this->assertEquals(0, $stat['size']);
   }
 
-  #[@test]
+  #[Test]
   public function statNonExistingReadableUri() {
     $uri= Streams::readableUri(new MemoryInputStream(str_repeat('x', 10)));
     fclose(fopen($uri, 'r'));
@@ -96,7 +96,7 @@ class StreamWrappingTest extends TestCase {
     \xp::gc(__FILE__);
   }
 
-  #[@test]
+  #[Test]
   public function statNonExistingWriteableUri() {
     $uri= Streams::writeableUri(new MemoryOutputStream());
     fclose(fopen($uri, 'w'));
@@ -104,7 +104,7 @@ class StreamWrappingTest extends TestCase {
     \xp::gc(__FILE__);
   }
 
-  #[@test]
+  #[Test]
   public function tellFromReadable() {
     $fd= Streams::readableFd(new MemoryInputStream(str_repeat('x', 10)));
     $this->assertEquals(0, ftell($fd));
@@ -118,7 +118,7 @@ class StreamWrappingTest extends TestCase {
     fclose($fd);
   }
 
-  #[@test]
+  #[Test]
   public function tellFromWriteable() {
     $fd= Streams::writeableFd(new MemoryOutputStream());
     $this->assertEquals(0, ftell($fd));
@@ -132,7 +132,7 @@ class StreamWrappingTest extends TestCase {
     fclose($fd);
   }
 
-  #[@test]
+  #[Test]
   public function writing() {
     $buffer= 'Hello World';
     $m= new MemoryOutputStream();
@@ -145,24 +145,24 @@ class StreamWrappingTest extends TestCase {
     $this->assertEquals($buffer, $m->bytes());
   }
 
-  #[@test, @expect(IOException::class)]
+  #[Test, Expect(IOException::class)]
   public function reading_from_writeable_fd_raises_exception() {
     $fd= Streams::writeableFd(new MemoryOutputStream());
     fread($fd, 1024);
   }
 
-  #[@test, @expect(IOException::class)]
+  #[Test, Expect(IOException::class)]
   public function writing_to_readable_fd_raises_exception() {
     $fd= Streams::readableFd(new MemoryInputStream(''));
     fwrite($fd, 1024);
   }
 
-  #[@test, @values(['', 'Hello', "Hello\nWorld\n"])]
+  #[Test, Values(['', 'Hello', "Hello\nWorld\n"])]
   public function readAll($value) {
     $this->assertEquals($value, Streams::readAll(new MemoryInputStream($value)));
   }
 
-  #[@test, @expect(IOException::class)]
+  #[Test, Expect(IOException::class)]
   public function readAll_propagates_exception() {
     Streams::readAll(new class() implements InputStream {
       public function read($limit= 8192) { throw new IOException('FAIL'); }
@@ -171,7 +171,7 @@ class StreamWrappingTest extends TestCase {
     });
   }
 
-  #[@test]
+  #[Test]
   public function read_while_not_eof() {
     $fd= Streams::readableFd(new MemoryInputStream(str_repeat('x', 1024)));
     $l= [];
@@ -183,7 +183,7 @@ class StreamWrappingTest extends TestCase {
     $this->assertEquals([128, 128, 128, 128, 128, 128, 128, 128], $l);
   }
 
-  #[@test, @values([0, 10, 10485760])]
+  #[Test, Values([0, 10, 10485760])]
   public function file_get_contents($length) {
     $data= str_repeat('x', $length);
     $this->assertEquals(
@@ -192,7 +192,7 @@ class StreamWrappingTest extends TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function is_file() {
     $this->assertTrue(is_file(Streams::readableUri(new MemoryInputStream('Hello'))));
   }

@@ -1,7 +1,7 @@
 <?php namespace xp\runtime;
 
-use util\cmd\Console;
 use lang\{XPClass, ClassLoader};
+use util\cmd\Console;
 
 /**
  * Shows help
@@ -43,13 +43,11 @@ class Help {
    * @return int
    */
   public static function main(array $args) {
-    $command= null;
-
     if (empty($args)) {
       $class= new XPClass(self::class);
       $source= $class->getClassLoader();
       $markdown= $class->getComment();
-    } else if ('@' === $args[0]{0}) {
+    } else if ('@' === $args[0][0]) {
       $resource= substr($args[0], 1);
       if (null === ($source= ClassLoader::getDefault()->findResource($resource))) {
         Console::$err->writeLine('No help topic named ', $resource);
@@ -57,7 +55,7 @@ class Help {
       }
       $markdown= $source->getResource($resource);
     } else {
-      $class= $args[0];
+      $class= strtr($args[0], '\\', '.');
       if (null === ($source= ClassLoader::getDefault()->findClass($class))) {
         Console::$err->writeLine('No class named ', $class);
         return 2;

@@ -1,10 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\FormatException;
-use lang\Process;
-use lang\Runtime;
-use lang\RuntimeOptions;
-use lang\XPClass;
+use lang\{FormatException, Process, Runtime, RuntimeOptions, XPClass};
+use unittest\{Expect, Test};
 
 class RuntimeTest extends \unittest\TestCase {
 
@@ -20,86 +17,86 @@ class RuntimeTest extends \unittest\TestCase {
     $this->assertEquals($expected, $actual->asArguments());
   }
 
-  #[@test]
+  #[Test]
   public function getExecutable() {
     $exe= Runtime::getInstance()->getExecutable();
     $this->assertInstanceOf(Process::class, $exe);
     $this->assertEquals(getmypid(), $exe->getProcessId());
   }
 
-  #[@test]
+  #[Test]
   public function standardExtensionAvailable() {
     $this->assertTrue(Runtime::getInstance()->extensionAvailable('standard'));
   }
 
-  #[@test]
+  #[Test]
   public function nonExistantExtension() {
     $this->assertFalse(Runtime::getInstance()->extensionAvailable(':DOES-NOT-EXIST"'));
   }
  
-  #[@test]
+  #[Test]
   public function startupOptions() {
     $startup= Runtime::getInstance()->startupOptions();
     $this->assertInstanceOf(RuntimeOptions::class, $startup);
   }
 
-  #[@test]
+  #[Test]
   public function modifiedStartupOptions() {
     $startup= Runtime::getInstance()->startupOptions();
     $modified= Runtime::getInstance()->startupOptions()->withSwitch('n');
     $this->assertNotEquals($startup, $modified);
   }
 
-  #[@test]
+  #[Test]
   public function bootstrapScript() {
     $bootstrap= Runtime::getInstance()->bootstrapScript();
     $this->assertNotEquals(null, $bootstrap);
   }
 
-  #[@test]
+  #[Test]
   public function certainBootstrapScript() {
     $bootstrap= Runtime::getInstance()->bootstrapScript('class');
     $this->assertEquals('class-main.php', strstr($bootstrap, 'class-main.php'), $bootstrap);
   }
 
-  #[@test]
+  #[Test]
   public function mainClass() {
     $main= Runtime::getInstance()->mainClass();
     $this->assertInstanceOf(XPClass::class, $main);
   }
 
-  #[@test]
+  #[Test]
   public function parseSetting() {
     $startup= Runtime::parseArguments(['-denable_dl=0']);
     $this->assertEquals(['0'], $startup['options']->getSetting('enable_dl'));
   }
 
-  #[@test]
+  #[Test]
   public function parseSettingToleratesWhitespace() {
     $startup= Runtime::parseArguments(['-d auto_globals_jit=0']);
     $this->assertEquals(['0'], $startup['options']->getSetting('auto_globals_jit'));
   }
 
-  #[@test]
+  #[Test]
   public function doubleDashEndsOptions() {
     $startup= Runtime::parseArguments(['-q', '--', 'tools/xar.php']);
     $this->assertArguments(['-q'], $startup['options']);
     $this->assertEquals('tools/xar.php', $startup['bootstrap']);
   }
 
-  #[@test]
+  #[Test]
   public function scriptEndsOptions() {
     $startup= Runtime::parseArguments(['-q', 'tools/xar.php']);
     $this->assertArguments(['-q'], $startup['options']);
     $this->assertEquals('tools/xar.php', $startup['bootstrap']);
   }
 
-  #[@test, @expect(FormatException::class)]
+  #[Test, Expect(FormatException::class)]
   public function parseUnknownSwtich() {
     Runtime::parseArguments(['-@']);
   }
 
-  #[@test]
+  #[Test]
   public function parseMultiSetting() {
     $startup= Runtime::parseArguments([
       '-dextension=php_xsl.dll', 
@@ -111,13 +108,13 @@ class RuntimeTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function parseSwitch() {
     $startup= Runtime::parseArguments(['-q']);
     $this->assertTrue($startup['options']->getSwitch('q'));
   }
 
-  #[@test]
+  #[Test]
   public function memoryUsage() {
     $this->assertEquals(
       \lang\Primitive::$INT, 
@@ -125,7 +122,7 @@ class RuntimeTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function peakMemoryUsage() {
     $this->assertEquals(
       \lang\Primitive::$INT, 
@@ -133,7 +130,7 @@ class RuntimeTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function memoryLimit() {
     $this->assertEquals(
       \lang\Primitive::$INT,

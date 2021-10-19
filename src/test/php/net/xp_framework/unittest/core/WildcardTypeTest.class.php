@@ -12,15 +12,16 @@ use lang\{
   WildcardType,
   XPClass
 };
+use unittest\{Expect, Test, Values, TestCase};
 
-class WildcardTypeTest extends \unittest\TestCase {
+class WildcardTypeTest extends TestCase {
 
-  #[@test]
+  #[Test]
   public function can_create() {
     new WildcardType(XPClass::forName('net.xp_framework.unittest.core.generics.Nullable'), [Wildcard::$ANY]);
   }
 
-  #[@test]
+  #[Test]
   public function name_accessor_produces_string_form() {
     $this->assertEquals(
       'net.xp_framework.unittest.core.generics.Nullable<?>',
@@ -28,33 +29,26 @@ class WildcardTypeTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function base_accessor_returns_base() {
     $base= XPClass::forName('net.xp_framework.unittest.core.generics.Nullable');
     $components= [Wildcard::$ANY];
     $this->assertEquals($base, (new WildcardType($base, $components))->base());
   }
 
-  #[@test]
+  #[Test]
   public function components_accessor_returns_components() {
     $base= XPClass::forName('net.xp_framework.unittest.core.generics.Nullable');
     $components= [Wildcard::$ANY];
     $this->assertEquals($components, (new WildcardType($base, $components))->components());
   }
 
-  #[@test, @expect(IllegalArgumentException::class), @values([
-  #  'net.xp_framework.unittest.core.generics.Nullable',
-  #  'int',
-  #  'string[]',
-  #  '[:lang.Value]',
-  #  'net.xp_framework.unittest.core.generics.Nullable<bool>',
-  #  '?', '??', 'string?'
-  #])]
+  #[Test, Expect(IllegalArgumentException::class), Values(['net.xp_framework.unittest.core.generics.Nullable', 'int', 'string[]', '[:lang.Value]', 'net.xp_framework.unittest.core.generics.Nullable<bool>', '?', '??', 'string?'])]
   public function forName_raises_exception_for_non_wildcard_types($type) {
     WildcardType::forName($type);
   }
 
-  #[@test]
+  #[Test]
   public function forName_parsed_base_type_with_one_wildcard() {
     $this->assertEquals(
       XPClass::forName('net.xp_framework.unittest.core.generics.Nullable'),
@@ -62,7 +56,7 @@ class WildcardTypeTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function forName_parsed_base_type_with_two_wildcards() {
     $this->assertEquals(
       XPClass::forName('net.xp_framework.unittest.core.generics.Lookup'),
@@ -70,7 +64,7 @@ class WildcardTypeTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function forName_parsed_components_with_one_wildcard() {
     $this->assertEquals(
       [Wildcard::$ANY],
@@ -78,7 +72,7 @@ class WildcardTypeTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function forName_parsed_components_with_two_wildcards() {
     $this->assertEquals(
       [Wildcard::$ANY, Wildcard::$ANY],
@@ -86,7 +80,7 @@ class WildcardTypeTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function forName_parsed_components_with_one_bound_and_one_wildcard() {
     $this->assertEquals(
       [Primitive::$STRING, Wildcard::$ANY],
@@ -94,7 +88,7 @@ class WildcardTypeTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function forName_parsed_nested_wildcard_type() {
     $this->assertEquals(
       [new WildcardType(XPClass::forName('net.xp_framework.unittest.core.generics.Lookup'), [Wildcard::$ANY, Wildcard::$ANY])],
@@ -102,7 +96,7 @@ class WildcardTypeTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function forName_parsed_deeply_nested_wildcard_type() {
     $this->assertEquals(
       [new WildcardType(XPClass::forName('net.xp_framework.unittest.core.generics.Nullable'), [
@@ -145,107 +139,107 @@ class WildcardTypeTest extends \unittest\TestCase {
   protected function unGenericInstances() {
     return [
       [[0], [-1], [6.1], [true], [false], [''], ['Test']],
-      [[], [1, 2, 3]], ['key' => 'value'],
+      [[], [1, 2, 3]], [['key' => 'value']],
       $this
     ];
   }
 
-  #[@test, @values('nullableOfAny')]
+  #[Test, Values('nullableOfAny')]
   public function generic_vectors_are_instances_of_vector_of_any($value) {
     $this->assertTrue(WildcardType::forName('net.xp_framework.unittest.core.generics.Nullable<?>')->isInstance($value->newInstance()));
   }
 
-  #[@test, @values('nullableOfAny')]
+  #[Test, Values('nullableOfAny')]
   public function generic_vectors_are_assignable_to_vector_of_any($value) {
     $this->assertTrue(WildcardType::forName('net.xp_framework.unittest.core.generics.Nullable<?>')->isAssignableFrom($value));
   }
 
-  #[@test, @values('nullableOfAny')]
+  #[Test, Values('nullableOfAny')]
   public function generic_vectors_can_be_cast_to_vector_of_any($value) {
     $instance= $value->newInstance();
     $this->assertEquals($instance, WildcardType::forName('net.xp_framework.unittest.core.generics.Nullable<?>')->cast($instance));
   }
 
-  #[@test, @values('hashTableOfAny')]
+  #[Test, Values('hashTableOfAny')]
   public function generic_hashtables_are_not_instances_of_vector_of_any($value) {
     $this->assertFalse(WildcardType::forName('net.xp_framework.unittest.core.generics.Nullable<?>')->isInstance($value->newInstance()));
   }
 
-  #[@test, @values('hashTableOfAny')]
+  #[Test, Values('hashTableOfAny')]
   public function generic_hashtables_are_not_assignable_to_vector_of_any($value) {
     $this->assertFalse(WildcardType::forName('net.xp_framework.unittest.core.generics.Nullable<?>')->isAssignableFrom($value));
   }
 
-  #[@test, @expect(ClassCastException::class), @values('hashTableOfAny')]
+  #[Test, Expect(ClassCastException::class), Values('hashTableOfAny')]
   public function generic_hashtables_cannot_be_cast_to_vector_of_any($value) {
     WildcardType::forName('net.xp_framework.unittest.core.generics.Nullable<?>')->cast($value->newInstance());
   }
 
-  #[@test, @values('unGenericInstances')]
+  #[Test, Values('unGenericInstances')]
   public function ungeneric_instances_are_not_instances_of_vector_of_any($value) {
     $this->assertFalse(WildcardType::forName('net.xp_framework.unittest.core.generics.Nullable<?>')->isInstance($value));
   }
 
-  #[@test, @values('unGenericTypes')]
+  #[Test, Values('unGenericTypes')]
   public function ungeneric_instances_are_not_assignable_to_vector_of_any($value) {
     $this->assertFalse(WildcardType::forName('net.xp_framework.unittest.core.generics.Nullable<?>')->isAssignableFrom($value));
   }
 
-  #[@test, @expect(ClassCastException::class), @values('unGenericInstances')]
+  #[Test, Expect(ClassCastException::class), Values('unGenericInstances')]
   public function ungeneric_instancess_cannot_be_cast_to_vector_of_any($value) {
     WildcardType::forName('net.xp_framework.unittest.core.generics.Nullable<?>')->cast($value);
   }
 
-  #[@test, @values('hashTableOfAny')]
+  #[Test, Values('hashTableOfAny')]
   public function generic_hashtables_are_instances_of_hash_of_any_any($value) {
     $this->assertTrue(WildcardType::forName('net.xp_framework.unittest.core.generics.Lookup<?, ?>')->isInstance($value->newInstance()));
   }
 
-  #[@test, @values('hashTableOfAny')]
+  #[Test, Values('hashTableOfAny')]
   public function generic_hashtables_are_assignable_to_of_hash_of_any_any($value) {
     $this->assertTrue(WildcardType::forName('net.xp_framework.unittest.core.generics.Lookup<?, ?>')->isAssignableFrom($value));
   }
 
-  #[@test, @values('hashTableOfAny')]
+  #[Test, Values('hashTableOfAny')]
   public function generic_hashtables_are_instances_of_map_of_any_any($value) {
     $this->assertTrue(WildcardType::forName('net.xp_framework.unittest.core.generics.IDictionary<?, ?>')->isInstance($value->newInstance()));
   }
 
-  #[@test, @values('hashTableOfAny')]
+  #[Test, Values('hashTableOfAny')]
   public function generic_hashtables_are_assignable_to_of_map_of_any_any($value) {
     $this->assertTrue(WildcardType::forName('net.xp_framework.unittest.core.generics.IDictionary<?, ?>')->isAssignableFrom($value));
   }
 
-  #[@test, @values('nullableOfAny')]
+  #[Test, Values('nullableOfAny')]
   public function generic_vectors_are_not_instances_of_hash_of_any_any($value) {
     $this->assertFalse(WildcardType::forName('net.xp_framework.unittest.core.generics.Lookup<?, ?>')->isInstance($value->newInstance()));
   }
 
-  #[@test, @values('nullableOfAny')]
+  #[Test, Values('nullableOfAny')]
   public function generic_vectors_are_not_assignable_to_hash_of_any_any($value) {
     $this->assertFalse(WildcardType::forName('net.xp_framework.unittest.core.generics.Lookup<?, ?>')->isAssignableFrom($value));
   }
 
-  #[@test, @values('unGenericInstances')]
+  #[Test, Values('unGenericInstances')]
   public function ungeneric_instances_are_not_instances_of_hash_of_any_any($value) {
     $this->assertFalse(WildcardType::forName('net.xp_framework.unittest.core.generics.Lookup<?, ?>')->isInstance($value));
   }
 
-  #[@test]
+  #[Test]
   public function hash_table_of_string_Value_is_not_instance_of_hash_of_int_any() {
     $this->assertFalse(WildcardType::forName('net.xp_framework.unittest.core.generics.Lookup<int, ?>')->isInstance(
       create('new net.xp_framework.unittest.core.generics.Lookup<string, lang.Value>')
     ));
   }
 
-  #[@test]
+  #[Test]
   public function hash_table_of_string_Value_is_assignable_top_hash_of_int_any() {
     $this->assertFalse(WildcardType::forName('net.xp_framework.unittest.core.generics.Lookup<int, ?>')->isAssignableFrom(
       Type::forName('net.xp_framework.unittest.core.generics.Lookup<string, lang.Value>')
     ));
   }
 
-  #[@test]
+  #[Test]
   public function lang_Type_forName_parsed_base_type_with_one_wildcard() {
     $this->assertEquals(
       new WildcardType(XPClass::forName('net.xp_framework.unittest.core.generics.Nullable'), [Wildcard::$ANY]),
@@ -253,7 +247,7 @@ class WildcardTypeTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @expect(IllegalAccessException::class)]
+  #[Test, Expect(IllegalAccessException::class)]
   public function wildcard_types_cannot_be_instantiated() {
     Type::forName('net.xp_framework.unittest.core.generics.Nullable<?>')->newInstance();
   }

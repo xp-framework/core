@@ -20,7 +20,7 @@ class TextWriter extends Writer {
    */
   public function __construct($arg, $charset= \xp::ENCODING) {
     parent::__construct($arg);
-    $this->charset= $charset;    
+    $this->charset= (string)$charset;
   }
 
   /**

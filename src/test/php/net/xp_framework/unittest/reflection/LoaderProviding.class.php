@@ -1,8 +1,6 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\IClassLoader;
-use lang\ElementNotFoundException;
-use lang\MethodNotImplementedException;
+use lang\{ElementNotFoundException, IClassLoader, MethodNotImplementedException};
 
 /**
  * A class loader dummy providing elements supplied to its constructor.

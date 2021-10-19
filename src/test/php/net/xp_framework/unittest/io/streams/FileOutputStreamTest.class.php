@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\streams\FileOutputStream;
-use io\{File, FileUtil, TempFile, IOException};
+use io\{File, Files, IOException, TempFile};
 use lang\IllegalArgumentException;
-use unittest\PrerequisitesNotMetError;
+use unittest\{Expect, PrerequisitesNotMetError, Test};
 
 class FileOutputStreamTest extends \unittest\TestCase {
   private $file;
@@ -35,25 +35,25 @@ class FileOutputStreamTest extends \unittest\TestCase {
     }
   }
 
-  #[@test]
+  #[Test]
   public function writing() {
     with ($stream= new FileOutputStream($this->file), $buffer= 'Created by '.$this->name); {
       $stream->write($buffer);
       $this->file->close();
-      $this->assertEquals($buffer, FileUtil::read($this->file));
+      $this->assertEquals($buffer, Files::read($this->file));
     }
   }
 
-  #[@test]
+  #[Test]
   public function appending() {
     with ($stream= new FileOutputStream($this->file, true)); {
       $stream->write('!');
       $this->file->close();
-      $this->assertEquals('Created by FileOutputStreamTest!', FileUtil::read($this->file));
+      $this->assertEquals('Created by FileOutputStreamTest!', Files::read($this->file));
     }
   }
 
-  #[@test]
+  #[Test]
   public function delete() {
     with ($stream= new FileOutputStream($this->file)); {
       $this->assertTrue($this->file->isOpen());
@@ -62,12 +62,12 @@ class FileOutputStreamTest extends \unittest\TestCase {
     }
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function given_an_invalid_file_an_exception_is_raised() {
     new FileOutputStream('');
   }
 
-  #[@test, @expect(IOException::class)]
+  #[Test, Expect(IOException::class)]
   public function cannot_write_after_closing() {
     with ($stream= new FileOutputStream($this->file)); {
       $stream->close();
@@ -75,7 +75,7 @@ class FileOutputStreamTest extends \unittest\TestCase {
     }
   }
 
-  #[@test]
+  #[Test]
   public function calling_close_twice_has_no_effect() {
     with ($stream= new FileOutputStream($this->file)); {
       $stream->close();
@@ -83,20 +83,20 @@ class FileOutputStreamTest extends \unittest\TestCase {
     }
   }
 
-  #[@test]
+  #[Test]
   public function tell_initially() {
     $stream= new FileOutputStream($this->file);
     $this->assertEquals(0, $stream->tell());
   }
 
-  #[@test]
+  #[Test]
   public function tell_after_writing() {
     $stream= new FileOutputStream($this->file);
     $stream->write('Test');
     $this->assertEquals(4, $stream->tell());
   }
 
-  #[@test]
+  #[Test]
   public function tell_after_seeking() {
     $stream= new FileOutputStream($this->file);
     $stream->write('Test');
@@ -104,7 +104,7 @@ class FileOutputStreamTest extends \unittest\TestCase {
     $this->assertEquals(0, $stream->tell());
   }
 
-  #[@test]
+  #[Test]
   public function truncation() {
     $this->file->open(File::READWRITE);
     $this->file->write('Existing');
@@ -112,7 +112,7 @@ class FileOutputStreamTest extends \unittest\TestCase {
     with ($stream= new FileOutputStream($this->file)); {
       $stream->truncate(5);
       $this->file->close();
-      $this->assertEquals('Exist', FileUtil::read($this->file));
+      $this->assertEquals('Exist', Files::read($this->file));
     }
   }
 }

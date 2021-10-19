@@ -127,6 +127,7 @@ function __error($code, $msg, $file, $line) {
     throw new \lang\IllegalArgumentException($msg);
   } else if ((
     0 === strncmp($msg, 'Undefined offset', 16) ||
+    0 === strncmp($msg, 'Undefined array', 15) ||
     0 === strncmp($msg, 'Undefined index', 15) ||
     0 === strncmp($msg, 'Uninitialized string', 20)
   )) {
@@ -202,6 +203,8 @@ function is($type, $object) {
     return \lang\FunctionType::forName(substr($type, 1, -1))->isInstance($object);
   } else if (strstr($type, '|')) {
     return \lang\TypeUnion::forName($type)->isInstance($object);
+  } else if (strstr($type, '&')) {
+    return \lang\TypeIntersection::forName($type)->isInstance($object);
   } else if (strstr($type, '?')) {
     return \lang\WildcardType::forName($type)->isInstance($object);
   } else {
@@ -304,6 +307,16 @@ function newinstance($spec, $args, $def= null) {
   } else {
     $decl= ['kind' => 'class', 'extends' => ['\\'.$type], 'implements' => [], 'use' => []];
   }
+
+  // Single-method interface support
+  if ($def instanceof \Closure) {
+    $methods= (new \ReflectionClass($type))->getMethods(MODIFIER_ABSTRACT);
+    if (1 !== sizeof($methods)) {
+      throw new \lang\ClassFormatException(strtr($type, '\\', '.').' is not a single-method interface');
+    }
+    $def= [$methods[0]->getName() => $def];
+  }
+
   $defined= \lang\ClassLoader::defineType($annotations.$name, $decl, $def);
 
   if (false === strpos($type, '\\')) {
@@ -371,18 +384,9 @@ function typeof($arg) {
     $signature= [];
     foreach ($r->getParameters() as $param) {
       if ($param->isVariadic()) break;
-      if ($t= $param->getType()) {
-        $signature[]= \lang\Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
-      } else {
-        $signature[]= \lang\Type::$VAR;
-      }
+      $signature[]= \lang\Type::resolve($param->getType()) ?? \lang\Type::$VAR;
     }
-    if ($t= $r->getReturnType()) {
-      $return= \lang\Type::forName(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
-    } else {
-      $return= \lang\Type::$VAR;
-    }
-    return new \lang\FunctionType($signature, $return);
+    return new \lang\FunctionType($signature, \lang\Type::resolve($r->getReturnType()) ?? \lang\Type::$VAR);
   } else if (is_object($arg)) {
     $class= get_class($arg);
     if (0 === strncmp($class, 'class@anonymous', 15)) {
@@ -416,11 +420,33 @@ if (!interface_exists(\IDisposable::class, false)) {
 }
 // }}}
 
+// {{{ PHP 8.1 enums
+if (!function_exists('enum_exists')) {
+  interface UnitEnum { }
+  interface BackedEnum extends UnitEnum { }
+
+  function enum_exists($name, $load= true) {
+    return class_exists($name, $load) && $name instanceof \UnitEnum;
+  }
+}
+// }}}
+
 // {{{ main
 error_reporting(E_ALL);
 set_error_handler('__error');
-if (!date_default_timezone_set(ini_get('date.timezone'))) {
+if (!date_default_timezone_set(ltrim(ini_get('date.timezone'), ':'))) {
   throw new \Exception('[xp::core] date.timezone not configured properly.', 0x3d);
+}
+
+// If iconv is not available but mbstring is, create snap-in replacements
+if (!defined('ICONV_IMPL')) {
+  function iconv($from, $to, $str) {
+    return mb_convert_encoding($str, $to ?: 'utf-8', $from ?: 'utf-8');
+  }
+
+  function iconv_strlen($str, $charset) {
+    return mb_strlen($str, $charset ?: 'utf-8');
+  }
 }
 
 define('MODIFIER_STATIC',    \ReflectionMethod::IS_STATIC);
@@ -429,8 +455,21 @@ define('MODIFIER_FINAL',     \ReflectionMethod::IS_FINAL);
 define('MODIFIER_PUBLIC',    \ReflectionMethod::IS_PUBLIC);
 define('MODIFIER_PROTECTED', \ReflectionMethod::IS_PROTECTED);
 define('MODIFIER_PRIVATE',   \ReflectionMethod::IS_PRIVATE);
+define('MODIFIER_READONLY',  128); // PHP 8.1: \ReflectionProperty::IS_READONLY
 
-defined('PHP_INT_MIN') || define('PHP_INT_MIN', ~PHP_INT_MAX);
+define('DETAIL_ARGUMENTS',   1);
+define('DETAIL_RETURNS',     2);
+define('DETAIL_THROWS',      3);
+define('DETAIL_COMMENT',     4);
+define('DETAIL_ANNOTATIONS', 5);
+define('DETAIL_TARGET_ANNO', 6);
+define('DETAIL_GENERIC',     7);
+
+defined('T_FN') || define('T_FN', -346);
+defined('T_ATTRIBUTE') || define('T_ATTRIBUTE', -383);
+defined('T_NAME_FULLY_QUALIFIED') || define('T_NAME_FULLY_QUALIFIED', -312);
+defined('T_NAME_QUALIFIED') || define('T_NAME_QUALIFIED', -314);
+defined('T_ENUM') || define('T_ENUM', -369);
 
 xp::$loader= new xp();
 

@@ -1,19 +1,22 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\{Runnable, Runtime, Process, reflect\Package, ClassLoader, IllegalAccessException};
+use ReturnTypesWillChange;
+use lang\reflect\Package;
+use lang\{Runnable, Runtime, Process, Value, ClassLoader, ClassFormatException, IllegalAccessException};
 use net\xp_framework\unittest\Name;
-use unittest\actions\{VerifyThat, RuntimeVersion};
+use unittest\actions\{RuntimeVersion, VerifyThat};
+use unittest\{Action, Expect, Test, Values, TestCase};
 use util\Objects;
 
 /**
  * TestCase for newinstance() functionality. Some tests are skipped if
  * process execution has been disabled.
  */
-class NewInstanceTest extends \unittest\TestCase {
+class NewInstanceTest extends TestCase {
 
   /** @return bool */
   protected function processExecutionEnabled() {
-    return !Process::$DISABLED;
+    return !Process::$DISABLED && !strstr(php_uname('v'), 'Windows Server 2016');
   }
 
   /**
@@ -38,25 +41,25 @@ class NewInstanceTest extends \unittest\TestCase {
     });
   }
   
-  #[@test]
+  #[Test]
   public function new_class_with_empty_body() {
     $o= newinstance(Name::class, ['Test']);
     $this->assertInstanceOf(Name::class, $o);
   }
 
-  #[@test]
+  #[Test]
   public function new_class_with_empty_body_as_string() {
     $o= newinstance(Name::class, ['Test'], '{}');
     $this->assertInstanceOf(Name::class, $o);
   }
 
-  #[@test]
+  #[Test]
   public function new_class_with_empty_body_as_closuremap() {
     $o= newinstance(Name::class, ['Test'], []);
     $this->assertInstanceOf(Name::class, $o);
   }
 
-  #[@test]
+  #[Test]
   public function new_class_with_member_as_string() {
     $o= newinstance(Name::class, ['Test'], '{
       public $test= "Test";
@@ -64,7 +67,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals('Test', $o->test);
   }
 
-  #[@test]
+  #[Test]
   public function new_class_with_member_as_closuremap() {
     $o= newinstance(Name::class, ['Test'], [
       'test' => 'Test'
@@ -72,35 +75,35 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals('Test', $o->test);
   }
 
-  #[@test]
+  #[Test]
   public function new_class_with_annotations() {
-    $o= newinstance('#[@test] net.xp_framework.unittest.Name', ['Test']);
+    $o= newinstance('#[Test] net.xp_framework.unittest.Name', ['Test']);
     $this->assertTrue(typeof($o)->hasAnnotation('test'));
   }
 
-  #[@test]
+  #[Test]
   public function new_class_with_field_annotations() {
     $o= newinstance(Name::class, ['Test'], [
-      '#[@test] fixture' => null
+      '#[Test] fixture' => null
     ]);
     $this->assertTrue(typeof($o)->getField('fixture')->hasAnnotation('test'));
   }
 
-  #[@test]
+  #[Test]
   public function new_class_with_method_annotations() {
     $o= newinstance(Name::class, ['Test'], [
-      '#[@test] fixture' => function() { }
+      '#[Test] fixture' => function() { }
     ]);
     $this->assertTrue(typeof($o)->getMethod('fixture')->hasAnnotation('test'));
   }
 
-  #[@test]
+  #[Test]
   public function new_interface_with_body_as_string() {
     $o= newinstance(Runnable::class, [], '{ public function run() { } }');
     $this->assertInstanceOf(Runnable::class, $o);
   }
 
-  #[@test]
+  #[Test]
   public function new_interface_with_body_as_closuremap() {
     $o= newinstance(Runnable::class, [], [
       'run' => function() { }
@@ -108,15 +111,32 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertInstanceOf(Runnable::class, $o);
   }
 
-  #[@test]
+  #[Test]
+  public function new_interface_with_single_function() {
+    $o= newinstance(Runnable::class, [], function() { });
+    $this->assertInstanceOf(Runnable::class, $o);
+  }
+
+  #[Test]
+  public function new_abstract_class_with_single_function() {
+    $o= newinstance(BinaryOp::class, ['+'], function($a, $b) { return $a + $b; });
+    $this->assertInstanceOf(BinaryOp::class, $o);
+  }
+
+  #[Test, Expect(ClassFormatException::class)]
+  public function cannot_use_single_function_with_multi_method_interface() {
+    newinstance(Value::class, [], function() { });
+  }
+
+  #[Test]
   public function new_interface_with_annotations() {
-    $o= newinstance('#[@test] lang.Runnable', [], [
+    $o= newinstance('#[Test] lang.Runnable', [], [
       'run' => function() { }
     ]);
     $this->assertTrue(typeof($o)->hasAnnotation('test'));
   }
 
-  #[@test]
+  #[Test]
   public function new_trait_with_body_as_string() {
     $o= newinstance(Named::class, ['Test'], '{
       public function __construct($name) { $this->name= $name; }
@@ -124,7 +144,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals('Test', $o->name());
   }
 
-  #[@test]
+  #[Test]
   public function new_trait_with_body_as_closuremap() {
     $o= newinstance(Named::class, ['Test'], [
       '__construct' => function($name) { $this->name= $name; }
@@ -132,21 +152,21 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals('Test', $o->name());
   }
 
-  #[@test]
+  #[Test]
   public function new_trait_with_annotations() {
-    $o= newinstance('#[@test] net.xp_framework.unittest.core.Named', [], [
+    $o= newinstance('#[Test] net.xp_framework.unittest.core.Named', [], [
       'run' => function() { }
     ]);
     $this->assertTrue(typeof($o)->hasAnnotation('test'));
   }
 
-  #[@test]
+  #[Test]
   public function new_trait_with_constructor() {
     $o= newinstance(ListOf::class, [[1, 2, 3]], []);
     $this->assertEquals([1, 2, 3], $o->elements());
   }
 
-  #[@test]
+  #[Test]
   public function arguments_are_passed_to_constructor() {
     $instance= newinstance(Name::class, [$this], '{
       public $test= null;
@@ -157,7 +177,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals($this, $instance->test);
   }
 
-  #[@test]
+  #[Test]
   public function arguments_are_passed_to_constructor_in_closuremap() {
     $instance= newinstance(Name::class, [$this], [
       'test' => null,
@@ -168,7 +188,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals($this, $instance->test);
   }
 
-  #[@test]
+  #[Test]
   public function arguments_are_passed_to_base_constructor_in_closuremap() {
     $base= ClassLoader::defineClass(nameof($this).'_BaseFixture', Name::class, [], [
       'test' => null,
@@ -179,7 +199,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals($this, newinstance($base->getName(), [$this], [])->test);
   }
 
-  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function variadic_argument_passing() {
     $r= $this->runInNewRuntime('
       class Test {
@@ -201,7 +221,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function typed_variadic_argument_passing() {
     $r= $this->runInNewRuntime('
       class Test {
@@ -223,7 +243,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function missingMethodImplementationFatals() {
     $r= $this->runInNewRuntime('
       newinstance("lang.Runnable", [], "{}");
@@ -235,19 +255,19 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function syntaxErrorFatals() {
     $r= $this->runInNewRuntime('
       newinstance("lang.Runnable", [], "{ @__SYNTAX ERROR__@ }");
     ');
     $this->assertEquals(255, $r[0], 'exitcode');
     $this->assertTrue(
-      (bool)strstr($r[1].$r[2], "error, unexpected '@'"),
+      (bool)preg_match('/syntax error, unexpected.+@/', $r[1].$r[2]),
       Objects::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
   }
 
-  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function missingClassFatals() {
     $r= $this->runInNewRuntime('
       newinstance("lang.NonExistantClass", [], "{}");
@@ -259,7 +279,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function notPreviouslyDefinedClassIsLoaded() {
     $r= $this->runInNewRuntime('
       if (isset(xp::$cl["lang.Runnable"])) {
@@ -275,7 +295,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function packageOfNewInstancedClass() {
     $i= newinstance(Name::class, ['Test'], '{}');
     $this->assertEquals(
@@ -284,16 +304,19 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @values(['php.IteratorAggregate', 'IteratorAggregate'])]
+  #[Test, Values(['php.IteratorAggregate', 'IteratorAggregate'])]
   public function packageOfNewInstancedPHPClass($class) {
-    $i= newinstance($class, [], '{ public function getIterator() { /* Empty */ }}');
+    $i= newinstance($class, [], '{
+      #[ReturnTypeWillChange]
+      public function getIterator() { /* Empty */ }
+    }');
     $this->assertEquals(
       Package::forName(''),
       typeof($i)->getPackage()
     );
   }
 
-  #[@test, @values(['net.xp_framework.unittest.core.NamespacedClass', NamespacedClass::class])]
+  #[Test, Values(['net.xp_framework.unittest.core.NamespacedClass', NamespacedClass::class])]
   public function packageOfNewInstancedNamespacedClass($class) {
     $i= newinstance($class, [], '{}');
     $this->assertEquals(
@@ -302,7 +325,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function packageOfNewInstancedNamespacedInterface() {
     $i= newinstance(NamespacedInterface::class, [], '{}');
     $this->assertEquals(
@@ -311,7 +334,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function className() {
     $instance= newinstance(Name::class, ['Test'], '{ }');
     $n= nameof($instance);
@@ -322,21 +345,21 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function anonymousClassWithoutConstructor() {
     newinstance(Runnable::class, [], '{
       public function run() {}
     }');
   }
 
-  #[@test, @expect(IllegalAccessException::class)]
+  #[Test, Expect(IllegalAccessException::class)]
   public function anonymousClassWithoutConstructorRaisesWhenArgsGiven() {
     newinstance(Runnable::class, ['arg1'], '{
       public function run() {}
     }');
   }
 
-  #[@test]
+  #[Test]
   public function anonymousClassWithConstructor() {
     newinstance(Runnable::class, ['arg1'], '{
       public function __construct($arg) {
@@ -348,7 +371,7 @@ class NewInstanceTest extends \unittest\TestCase {
     }');
   }
 
-  #[@test]
+  #[Test]
   public function this_can_be_accessed() {
     $instance= newinstance(Name::class, ['Test'], [
       'test'    => null,
@@ -364,7 +387,7 @@ class NewInstanceTest extends \unittest\TestCase {
     $this->assertEquals('Test', $instance->getTest());
   }
 
-  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function declaration_with_array_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -379,7 +402,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function declaration_with_callable_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -394,7 +417,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function declaration_with_class_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -411,7 +434,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function declaration_with_self_return_type() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -427,7 +450,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function declaration_with_self_param_type() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -442,7 +465,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function declaration_with_primitive_param_type() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -457,7 +480,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function declaration_with_primitive_return_type() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -472,10 +495,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action([
-  #  new VerifyThat('processExecutionEnabled'),
-  #  new RuntimeVersion('>=7.2')
-  #])]
+  #[Test, Action(eval: '[new VerifyThat("processExecutionEnabled"), new RuntimeVersion(">=7.2")]')]
   public function declaration_with_nullable_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -490,10 +510,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action([
-  #  new VerifyThat('processExecutionEnabled'),
-  #  new RuntimeVersion('>=7.1')
-  #])]
+  #[Test, Action(eval: '[new VerifyThat("processExecutionEnabled"), new RuntimeVersion(">=7.1")]')]
   public function declaration_with_iterable_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -508,10 +525,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action([
-  #  new VerifyThat('processExecutionEnabled'),
-  #  new RuntimeVersion('>=7.2')
-  #])]
+  #[Test, Action(eval: '[new VerifyThat("processExecutionEnabled"), new RuntimeVersion(">=7.2")]')]
   public function declaration_with_object_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -526,10 +540,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action([
-  #  new VerifyThat('processExecutionEnabled'),
-  #  new RuntimeVersion('>=7.1')
-  #])]
+  #[Test, Action(eval: '[new VerifyThat("processExecutionEnabled"), new RuntimeVersion(">=7.1")]')]
   public function declaration_with_void_return() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -545,7 +556,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function declaration_with_variadic() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -560,7 +571,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function declaration_with_typed_variadic() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -575,7 +586,7 @@ class NewInstanceTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @action(new VerifyThat('processExecutionEnabled'))]
+  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
   public function value_types_fully_qualified() {
     $r= $this->runInNewRuntime('namespace test;
       abstract class Base {

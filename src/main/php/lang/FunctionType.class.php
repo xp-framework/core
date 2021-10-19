@@ -78,12 +78,25 @@ class FunctionType extends Type {
    * @return var
    */
   protected function verify($r, $signature, $false, $class= null) {
-    $details= $class ? XPClass::detailsForMethod($class, $r->getName()) : null;
-    if (isset($details[DETAIL_RETURNS])) {
-      $returns= Type::forName($details[DETAIL_RETURNS]);
-      if (!$this->returns->equals($returns) && !$this->returns->isAssignableFrom($returns)) {
-        return $false('Return type mismatch, expecting '.$this->returns->getName().', have '.$returns->getName());
-      }
+    if ($class) {
+      $details= XPClass::detailsForMethod($class, $r->getName());
+      $resolve= [
+        'static' => function() use($class) { return new XPClass($class); },
+        'self'   => function() use($class) { return new XPClass($class); },
+        'parent' => function() use($class) { return new XPClass($class->getParentClass()); },
+      ];
+    } else {
+      $details= null;
+      $resolve= [];
+    }
+
+    // Verify return type
+    $returns= Type::resolve($r->getReturnType(), $resolve) ?? (isset($details[DETAIL_RETURNS])
+      ? Type::forName($details[DETAIL_RETURNS])
+      : null
+    );
+    if ($returns && !$this->returns->equals($returns) && !$this->returns->isAssignableFrom($returns)) {
+      return $false('Return type mismatch, expecting '.$this->returns->getName().', have '.$returns->getName());
     }
 
     if (null === $signature) return true;
@@ -93,9 +106,8 @@ class FunctionType extends Type {
     // Verify signature
     foreach ($signature as $i => $type) {
       if (isset($details[DETAIL_ARGUMENTS][$i])) {
-        if (0 === substr_compare($details[DETAIL_ARGUMENTS][$i], '...', -3)) {
-          return true;  // No further checks necessary
-        }
+        if (0 === substr_compare($details[DETAIL_ARGUMENTS][$i], '...', -3)) return true;  // No further checks necessary
+
         $param= Type::forName($details[DETAIL_ARGUMENTS][$i]);
         if (!$type->isAssignableFrom($param)) {
           return $false('Parameter #'.($i + 1).' not a '.$param->getName().' type: '.$type->getName());
@@ -103,21 +115,13 @@ class FunctionType extends Type {
       } else if (!isset($params[$i])) {
         return $false('No parameter #'.($i + 1));
       } else {
-        $param= $params[$i];
-        if ($param->isVariadic()) {
-          return true;  // No further checks necessary
-        } else if ($param->isArray()) {
-          if (!$type->equals(Primitive::$ARRAY) && !$type instanceof ArrayType && !$type instanceof MapType) {
-            return $false('Parameter #'.($i + 1).' not an array type: '.$type->getName());
-          }
-        } else if ($param->isCallable()) {
-          if (!$type instanceof FunctionType) {
-            return $false('Parameter #'.($i + 1).' not a function type: '.$type->getName());
-          }
-        } else if (null !== ($class= $param->getClass())) {
-          if (!$type->isAssignableFrom(new XPClass($class))) {
-            return $false('Parameter #'.($i + 1).' not a '.$class->getName().': '.$type->getName());
-          }
+        if ($params[$i]->isVariadic()) return true;  // No further checks necessary
+
+        $param= Type::resolve($params[$i]->getType(), $resolve);
+        if (null === $param) continue;
+
+        if (!$type->isAssignableFrom($param)) {
+          return $false('Parameter #'.($i + 1).' not a '.$param->getName().' type: '.$type->getName());
         }
       }
     }
@@ -168,7 +172,7 @@ class FunctionType extends Type {
       }
     } else if (is_array($arg) && 2 === sizeof($arg)) {
       return $this->verifiedMethod($arg[0], $arg[1], $false, $return);
-    } else if (method_exists($arg, '__invoke')) {
+    } else if (is_object($arg) && method_exists($arg, '__invoke')) {
       $inv= new \ReflectionMethod($arg, '__invoke');
       if ($this->verify($inv, $this->signature, $false)) {
         return $return ? $inv->getClosure($arg) : true;
@@ -282,6 +286,7 @@ class FunctionType extends Type {
   /** Tests whether this type is assignable from another type */
   public function isAssignableFrom($type): bool {
     $t= $type instanceof Type ? $type : Type::forName($type);
+    if ($t === Type::$CALLABLE) return true;
     if (!($t instanceof self) || !$this->returns->isAssignableFrom($t->returns)) return false;
     if (null === $this->signature) return true;
     if (sizeof($t->signature) !== sizeof($this->signature)) return false;

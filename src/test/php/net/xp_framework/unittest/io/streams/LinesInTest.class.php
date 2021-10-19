@@ -1,54 +1,55 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
+use io\streams\{InputStream, LinesIn, MemoryInputStream, TextReader};
 use io\{File, IOException};
-use io\streams\{TextReader, LinesIn, InputStream, MemoryInputStream};
 use lang\IllegalArgumentException;
+use unittest\{Expect, Test, TestCase, Values};
 
-class LinesInTest extends \unittest\TestCase {
+class LinesInTest extends TestCase {
 
-  #[@test]
+  /** @return iterable */
+  private function iso88591Input() {
+    yield [new LinesIn("\xfc", "iso-8859-1")];
+    yield [new LinesIn(new MemoryInputStream("\xfc"), "iso-8859-1")];
+    yield [new LinesIn(new TextReader(new MemoryInputStream("\xfc"), "iso-8859-1"))];
+  }
+
+  #[Test]
   public function can_create_with_string() {
     new LinesIn('');
   }
 
-  #[@test]
+  #[Test]
   public function can_create_with_stream() {
     new LinesIn(new MemoryInputStream(''));
   }
 
-  #[@test]
+  #[Test]
   public function can_create_with_channel() {
     new LinesIn(new File(__FILE__));
   }
 
-  #[@test]
+  #[Test]
   public function can_create_with_reader() {
     new LinesIn(new TextReader(new MemoryInputStream(''), 'utf-8'));
   }
 
-  #[@test, @expect(IllegalArgumentException::class)]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function raises_exception_for_incorrect_constructor_argument() {
     new LinesIn(null);
   }
 
-  #[@test, @values([
-  #  ["Line 1", [1 => 'Line 1']],
-  #  ["Line 1\n", [1 => 'Line 1']],
-  #  ["Line 1\nLine 2", [1 => 'Line 1', 2 => 'Line 2']],
-  #  ["Line 1\nLine 2\n", [1 => 'Line 1', 2 => 'Line 2']],
-  #  ["Line 1\n\nLine 3\n", [1 => 'Line 1', 2 => '', 3 => 'Line 3']],
-  #  ["Line 1\n\n\nLine 4\n", [1 => 'Line 1', 2 => '', 3 => '', 4 => 'Line 4']]
-  #])]
+  #[Test, Values([["Line 1", [1 => 'Line 1']], ["Line 1\n", [1 => 'Line 1']], ["Line 1\nLine 2", [1 => 'Line 1', 2 => 'Line 2']], ["Line 1\nLine 2\n", [1 => 'Line 1', 2 => 'Line 2']], ["Line 1\n\nLine 3\n", [1 => 'Line 1', 2 => '', 3 => 'Line 3']], ["Line 1\n\n\nLine 4\n", [1 => 'Line 1', 2 => '', 3 => '', 4 => 'Line 4']]])]
   public function iterating_lines($input, $lines) {
     $this->assertEquals($lines, iterator_to_array(new LinesIn($input)));
   }
 
-  #[@test]
+  #[Test]
   public function iterating_empty_input_returns_empty_array() {
     $this->assertEquals([], iterator_to_array(new LinesIn('')));
   }
 
-  #[@test]
+  #[Test]
   public function can_iterate_twice_on_seekable() {
     $fixture= new LinesIn("A\nB");
     $this->assertEquals(
@@ -57,16 +58,12 @@ class LinesInTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @values([
-  #  [new LinesIn("\xFC", "iso-8859-1")],
-  #  [new LinesIn(new MemoryInputStream("\xFC"), "iso-8859-1")],
-  #  [new LinesIn(new TextReader(new MemoryInputStream("\xFC"), "iso-8859-1"))]
-  #])]
+  #[Test, Values('iso88591Input')]
   public function input_is_encoded_to_utf8($arg) {
     $this->assertEquals([1 => 'ü'], iterator_to_array($arg));
   }
 
-  #[@test]
+  #[Test]
   public function can_only_iterate_unseekable_once() {
     $fixture= new LinesIn(new class() implements InputStream {
       public $bytes = "A\nB\n";

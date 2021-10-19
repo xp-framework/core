@@ -1,0 +1,43 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  tests:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    name: PHP ${{ matrix.php-versions }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.php-versions == '8.1' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: ['7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1']
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+    - name: Configure git
+      if: runner.os == 'Windows'
+      run: git config --system core.autocrlf false; git config --system core.eol lf
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set up PHP ${{ matrix.php-versions }}
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: com_dotnet
+        ini-values: date.timezone=Europe/Berlin
+
+    - name: Setup Problem Matchers for PHP
+      run: echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+
+    - name: Install dependencies
+      run: sh .github/workflows/ci.sh install
+
+    - name: Run test suite
+      run: sh .github/workflows/ci.sh run-tests

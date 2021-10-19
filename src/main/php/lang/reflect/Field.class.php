@@ -6,6 +6,7 @@ use lang\{
   IllegalAccessException,
   IllegalArgumentException,
   Type,
+  TypeUnion,
   Value,
   XPClass,
   XPException
@@ -35,37 +36,97 @@ class Field implements Value {
 
   /** Get field's name */
   public function getName(): string { return $this->_reflect->getName(); }
-  
+
+  /**
+   * Resolution resolve handling `self` and `parent` (`static` is only for return
+   * types, see https://wiki.php.net/rfc/static_return_type#allowed_positions).
+   *
+   * @return [:(function(string): lang.Type)]
+   */
+  private function resolve() {
+    return [
+      'self'   => function() { return new XPClass($this->_reflect->getDeclaringClass()); },
+      'parent' => function() { return new XPClass($this->_reflect->getDeclaringClass()->getParentClass()); },
+    ];
+  }
+
   /** Gets field type */
   public function getType(): Type {
-    if ($details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName())) {
-      if (isset($details[DETAIL_RETURNS])) {
-        $type= $details[DETAIL_RETURNS];
-      } else if (isset($details[DETAIL_ANNOTATIONS]['type'])) {
-        $type= $details[DETAIL_ANNOTATIONS]['type'];
-      } else {
-        return Type::$VAR;
-      }
+    $api= function() {
+      $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+      $r= $details[DETAIL_RETURNS] ?? $details[DETAIL_ANNOTATIONS]['type'] ?? null;
+      return $r ? ltrim($r, '&') : null;
+    };
 
-      if ('self' === $type) {
-        return new XPClass($this->_reflect->getDeclaringClass());
-      } else {
-        return Type::forName($type);
-      }
-    }
-    return Type::$VAR;
+    $t= PHP_VERSION_ID >= 70400 || '' === $this->_reflect->name ? $this->_reflect->getType() : null;
+    return Type::resolve($t, $this->resolve(), $api) ?? Type::$VAR;
   }
 
   /** Gets field type's name */
   public function getTypeName(): string {
-    if ($details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName())) {
-      if (isset($details[DETAIL_RETURNS])) {
-        return $details[DETAIL_RETURNS];
-      } else if (isset($details[DETAIL_ANNOTATIONS]['type'])) {
-        return $details[DETAIL_ANNOTATIONS]['type'];
+    static $map= [
+      'mixed'   => 'var',
+      'false'   => 'bool',
+      'boolean' => 'bool',
+      'double'  => 'float',
+      'integer' => 'int',
+    ];
+
+    $t= PHP_VERSION_ID >= 70400 || '' === $this->_reflect->name ? $this->_reflect->getType() : null;
+    if (null === $t) {
+
+      // Check for type in api documentation
+      $name= 'var';
+    } else if ($t instanceof \ReflectionUnionType) {
+      $union= '';
+      $nullable= '';
+      foreach ($t->getTypes() as $component) {
+        if ('null' === ($name= $component->getName())) {
+          $nullable= '?';
+        } else {
+          $union.= '|'.($map[$name] ?? strtr($name, '\\', '.'));
+        }
+      }
+      return $nullable.substr($union, 1);
+    } else if ($t instanceof \ReflectionIntersectionType) {
+      $intersection= '';
+      foreach ($t->getTypes() as $component) {
+        $name= $component->getName();
+        $intersection.= '&'.($map[$name] ?? strtr($name, '\\', '.'));
+      }
+      return substr($intersection, 1);
+    } else {
+      $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
+
+      // Check array for more specific types, e.g. `string[]` in api documentation
+      if ('array' !== $name) {
+        return $map[$name] ?? strtr($name, '\\', '.');
       }
     }
-    return 'var';
+
+    $details= XPClass::detailsForField($this->_reflect->getDeclaringClass(), $this->_reflect->getName());
+    $f= $details[DETAIL_RETURNS] ?? $details[DETAIL_ANNOTATIONS]['type'] ?? null;
+    return null === $f ? $name : rtrim(ltrim($f, '&'), '.');
+  }
+
+  /**
+   * Get field's type restriction.
+   *
+   * @return  lang.Type or NULL if there is no restriction
+   * @throws  lang.ClassNotFoundException if the restriction cannot be resolved
+   */
+  public function getTypeRestriction() {
+    try {
+      return Type::resolve(PHP_VERSION_ID >= 70400 || '' === $this->_reflect->name ? $this->_reflect->getType() : null, $this->resolve());
+    } catch (ClassLoadingException $e) {
+      throw new ClassNotFoundException(sprintf(
+        'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',
+        strtr($this->_details[0], '\\', '.'),
+        $this->_details[1],
+        $this->_reflect->getName(),
+        $e->getMessage()
+      ));
+    }
   }
 
   /**
@@ -231,6 +292,8 @@ class Field implements Value {
       return $this->_reflect->setValue($instance, $value);
     } catch (Throwable $e) {
       throw $e;
+    } catch (\Error $e) {
+      throw new IllegalAccessException($e->getMessage(), $e); // PHP 8.1 raises errors when modifying readonly properties
     } catch (\Throwable $e) {
       throw new XPException($e->getMessage());
     }

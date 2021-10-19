@@ -228,7 +228,7 @@ final class ClassLoader implements IClassLoader {
       if (null === $t) {
         $constraint= '';
       } else if ($t->isBuiltin()) {
-        $constraint= (string)$t;
+        $constraint= (PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
       } else {
         $constraint= '\\'.(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
       }
@@ -250,9 +250,9 @@ final class ClassLoader implements IClassLoader {
     if (null === $t) {
       // NOOP
     } else if ($t->isBuiltin()) {
-      $decl.= ':'.(string)$t;
+      $decl.= ':'.(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
     } else {
-      $decl.= ': \\'.(string)$t;
+      $decl.= ': \\'.(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
     }
 
     if (null === $invoke) {
@@ -298,10 +298,13 @@ final class ClassLoader implements IClassLoader {
           $f= new \ReflectionFunction($member);
           if ($iface) {
             $forward= null;
-          } else if ('void' === (string)$f->getReturnType()) {
-            $forward= 'self::$__func["'.$name.'"]->call($this%s);';
           } else {
-            $forward= 'return self::$__func["'.$name.'"]->call($this%s);';
+            $t= $f->getReturnType();
+            if (null !== $t && 'void' === (PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString())) {
+              $forward= 'self::$__func["'.$name.'"]->call($this%s);';
+            } else {
+              $forward= 'return self::$__func["'.$name.'"]->call($this%s);';
+            }
           }
           $bytes.= $memberAnnotations.self::defineForward($name, $f, $forward);
           $iface || $functions[$name]= $member;
@@ -337,7 +340,7 @@ final class ClassLoader implements IClassLoader {
     }
 
     $dyn= self::registerLoader(DynamicClassLoader::instanceFor(__METHOD__));
-    $dyn->setClassBytes($spec, $x= sprintf(
+    $dyn->setClassBytes($spec, sprintf(
       '%s%s%s %s %s%s%s {%s%s}',
       $header,
       $typeAnnotations,

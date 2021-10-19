@@ -1,18 +1,19 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
+use lang\{Type, Runnable};
+use unittest\Test;
 use util\Date;
-use util\collections\HashTable;
-use util\collections\Vector;
+use util\collections\{HashTable, Vector};
 
 /**
  * Test class
  *
  * @see    xp://net.xp_framework.unittest.reflection.ReflectionTest
  */
-#[@test('Annotation')]
-class TestClass extends AbstractTestClass implements \lang\Runnable {
+#[Test('Annotation')]
+class TestClass extends AbstractTestClass implements Runnable {
 
-  #[@type('util.Date')]
+  #[Type(Date::class)]
   public $date   = null;
 
   /** @var [:object] */
@@ -110,7 +111,7 @@ class TestClass extends AbstractTestClass implements \lang\Runnable {
    *
    * @return  int
    */
-  #[@webmethod, @security(['roles' => ['admin', 'god']])]
+  #[Webmethod, Security(['roles' => ['admin', 'god']])]
   public function currentTimestamp() {
     return time();
   }

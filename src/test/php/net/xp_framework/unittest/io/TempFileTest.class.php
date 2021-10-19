@@ -1,45 +1,45 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use io\{TempFile, FileUtil, IOException};
+use io\{Files, IOException, TempFile};
 use lang\{Environment, IllegalStateException};
-use unittest\TestCase;
+use unittest\{Test, TestCase};
 
 class TempFileTest extends TestCase {
 
-  #[@test]
+  #[Test]
   public function can_create() {
     new TempFile();
   }
 
-  #[@test]
+  #[Test]
   public function uses_tempdir() {
     $t= new TempFile();
     $this->assertEquals(realpath(Environment::tempDir()), realpath($t->getPath()));
   }
 
-  #[@test]
+  #[Test]
   public function filename_begins_with_prefix() {
     $t= new TempFile('pre');
     $this->assertEquals('pre', substr($t->getFileName(), 0, 3));
   }
 
-  #[@test]
+  #[Test]
   public function default_prefix() {
     $t= new TempFile();
     $this->assertEquals('tmp', substr($t->getFileName(), 0, 3));
   }
 
-  #[@test]
+  #[Test]
   public function containing() {
     $t= (new TempFile())->containing('Test');
     try {
-      $this->assertEquals('Test', FileUtil::read($t));
+      $this->assertEquals('Test', Files::read($t));
     } finally {
       $t->unlink();
     }
   }
 
-  #[@test]
+  #[Test]
   public function containing_raises_error_when_file_cannot_be_written() {
     $t= new TempFile();
     $t->touch();
@@ -56,7 +56,7 @@ class TempFileTest extends TestCase {
     }
   }
 
-  #[@test]
+  #[Test]
   public function containing_raises_error_when_file_is_open() {
     $t= new TempFile();
     $t->open(TempFile::WRITE);
@@ -72,7 +72,7 @@ class TempFileTest extends TestCase {
     }
   }
 
-  #[@test]
+  #[Test]
   public function deleted_on_garbage_collection() {
     $t= new TempFile();
     $uri= $t->getURI();
@@ -81,7 +81,7 @@ class TempFileTest extends TestCase {
     $this->assertFalse(file_exists($uri));
   }
 
-  #[@test]
+  #[Test]
   public function kept_after_garbage_collection_if_made_persistent() {
     $t= (new TempFile())->persistent();
     $uri= $t->getURI();

@@ -9,7 +9,7 @@
     "php" : ">=7.0.0"
   },
   "suggest" : {
-    "php" : ">=7.3.0"
+    "php" : ">=8.0.0"
   },
   "autoload" : {
     "files" : ["src/main/php/__xp.php", "src/main/resources/autoload.php"]

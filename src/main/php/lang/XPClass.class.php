@@ -2,14 +2,6 @@
 
 use lang\ElementNotFoundException;
 use lang\reflect\{Method, Field, Constructor, Package};
-
-define('DETAIL_ARGUMENTS',      1);
-define('DETAIL_RETURNS',        2);
-define('DETAIL_THROWS',         3);
-define('DETAIL_COMMENT',        4);
-define('DETAIL_ANNOTATIONS',    5);
-define('DETAIL_TARGET_ANNO',    6);
-define('DETAIL_GENERIC',        7);
  
 /**
  * Represents classes. Every instance of an XP class has a method
@@ -281,17 +273,57 @@ class XPClass extends Type {
     }
     throw new ElementNotFoundException('No constructor in class '.$this->name);
   }
-  
+
+  /**
+   * Returns virtual properties
+   *
+   * @param  ReflectionClass $reflect
+   * @param  bool $parents
+   * @return [:var][]
+   */
+  private function virtual($reflect, $parents= true) {
+    $r= [];
+    do {
+
+      // If meta information is already loaded, use property arguments
+      if ($meta= \xp::$meta[self::nameOf($reflect->name)][0] ?? null) {
+        foreach ($meta as $name => $property) {
+          if ($arg= $property[DETAIL_ARGUMENTS] ?? null) {
+            $r[$name]= [(int)$arg[0], $property[DETAIL_RETURNS] ?? 'mixed'];
+          }
+        }
+        continue;
+      }
+
+      // Parse doc comment
+      $comment= $reflect->getDocComment();
+      if (null === $comment) continue;
+
+      preg_match_all('/@property(\-read|\-write)? (.+) \$([^ ]+)/', $comment, $matches, PREG_SET_ORDER);
+      $r= [];
+      foreach ($matches as $match) {
+        $r[$match[3]]= ['-read' === $match[1] ? MODIFIER_READONLY : 0, $match[2]];
+      }
+    } while ($parents && ($reflect= $reflect->getParentclass()));
+
+    return $r;
+  }
+
   /**
    * Retrieve a list of all member variables
    *
-   * @return  lang.reflect.Field[]
+   * @return lang.reflect.Field[]
    */
   public function getFields() {
+    $reflect= $this->reflect();
+
     $f= [];
-    foreach ($this->reflect()->getProperties() as $p) {
+    foreach ($reflect->getProperties() as $p) {
       if ('__id' === $p->name) continue;
       $f[]= new Field($this->_class, $p);
+    }
+    foreach ($this->virtual($reflect) as $name => $meta) {
+      $f[]= new Field($this->_class, new VirtualProperty($reflect, $name, $meta));
     }
     return $f;
   }
@@ -299,40 +331,51 @@ class XPClass extends Type {
   /**
    * Retrieve a list of member variables declared in this class
    *
-   * @return  lang.reflect.Field[]
+   * @return lang.reflect.Field[]
    */
   public function getDeclaredFields() {
-    $list= [];
-    $reflect= $this->reflect()->name;
+    $reflect= $this->reflect();
+
+    $f= [];
     foreach ($reflect->getProperties() as $p) {
-      if ('__id' === $p->name || $p->class !== $reflect) continue;
-      $list[]= new Field($this->_class, $p);
+      if ('__id' === $p->name || $p->class !== $reflect->name) continue;
+      $f[]= new Field($this->_class, $p);
     }
-    return $list;
+    foreach ($this->virtual($reflect, false) as $name => $meta) {
+      $f[]= new Field($this->_class, new VirtualProperty($reflect, $name, $meta));
+    }
+    return $f;
   }
 
   /**
    * Retrieve a field by a specified name.
    *
-   * @param   string name
-   * @return  lang.reflect.Field
-   * @throws  lang.ElementNotFoundException
+   * @param  string $name
+   * @return lang.reflect.Field
+   * @throws lang.ElementNotFoundException
    */
   public function getField($name): Field {
-    if ($this->hasField($name)) {
-      return new Field($this->_class, $this->reflect()->getProperty($name));
+    $reflect= $this->reflect();
+    if ($reflect->hasProperty($name)) {
+      return new Field($this->_class, $reflect->getProperty($name));
+    } else if ($meta= $this->virtual($reflect)[$name] ?? null) {
+      return new Field($this->_class, new VirtualProperty($reflect, $name, $meta));
     }
+
     throw new ElementNotFoundException('No such field "'.$name.'" in class '.$this->name);
   }
   
   /**
-   * Checks whether this class has a field named "$field" or not.
+   * Checks whether this class has a field with a given name
    *
-   * @param   string field the fields's name
-   * @return  bool TRUE if field exists
+   * @param  string $name
+   * @return bool TRUE if field exists
    */
-  public function hasField($field): bool {
-    return '__id' == $field ? false : $this->reflect()->hasProperty($field);
+  public function hasField($name): bool {
+    return '__id' === $name ? false : ($reflect= $this->reflect()) &&
+      $reflect->hasProperty($name) ||
+      isset($this->virtual($reflect)[$name])
+    ;
   }
 
   /**
@@ -471,7 +514,8 @@ class XPClass extends Type {
    * @return  bool
    */
   public function isEnum(): bool {
-    return class_exists(Enum::class, false) && $this->reflect()->isSubclassOf(Enum::class);
+    $r= $this->reflect();
+    return $r->isSubclassOf(Enum::class) || $r->isSubclassOf(\UnitEnum::class);
   }
 
   /**
@@ -800,7 +844,7 @@ class XPClass extends Type {
       $name= strtr($resolved, '\\', '.');
     }
 
-    if (class_exists($resolved, false) || interface_exists($resolved, false) || trait_exists($resolved, false)) {
+    if (class_exists($resolved, false) || interface_exists($resolved, false) || trait_exists($resolved, false) || enum_exists($resolved, false)) {
       return new self($resolved);
     } else if (null === $classloader) {
       return ClassLoader::getDefault()->loadClass($name);

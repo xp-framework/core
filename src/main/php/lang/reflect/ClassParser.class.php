@@ -14,10 +14,6 @@ use lang\{XPClass, IllegalStateException, IllegalAccessException, ElementNotFoun
  */
 class ClassParser {
 
-  static function __static() {
-    defined('T_FN') || define('T_FN', -1);
-  }
-
   /**
    * Resolves a type in a given context. Recognizes classes imported via
    * the `use` statement.
@@ -34,11 +30,13 @@ class ClassParser {
     } else if ('parent' === $type) {
       if ($parent= XPClass::forName($context)->getParentclass()) return $parent;
       throw new IllegalStateException('Class does not have a parent');
+    } else if ('\\' === $type[0]) {
+      return new XPClass($type);
     } else if (false !== strpos($type, '.')) {
       return XPClass::forName($type);
     } else if (isset($imports[$type])) {
       return XPClass::forName($imports[$type]);
-    } else if (class_exists($type, false) || interface_exists($type, false)) {
+    } else if (class_exists($type, false) || interface_exists($type, false) || trait_exists($type, false) || enum_exists($type, false)) {
       return new XPClass($type);
     } else if (false !== ($p= strrpos($context, '.'))) {
       return XPClass::forName(substr($context, 0, $p + 1).$type);
@@ -103,9 +101,9 @@ class ClassParser {
     } else if (T_LNUMBER === $tokens[$i][0]) {
       if (1 === strlen($tokens[$i][1])) {
         return (int)$tokens[$i][1];
-      } else if ('x' === $tokens[$i][1]{1}) {
+      } else if ('x' === $tokens[$i][1][1]) {
         return hexdec($tokens[$i][1]);
-      } else if ('0' === $tokens[$i][1]{0}) {
+      } else if ('0' === $tokens[$i][1][0]) {
         return octdec($tokens[$i][1]);
       } else {
         return (int)$tokens[$i][1];
@@ -148,10 +146,17 @@ class ClassParser {
         $type.= '.'.$tokens[$i++][1];
       }
       return $this->memberOf(XPClass::forName(substr($type, 1)), $tokens[$i], $context);
+    } else if (T_NAME_FULLY_QUALIFIED === $token) {
+      $type= $tokens[$i++][1];
+      return $this->memberOf(XPClass::forName($type), $tokens[++$i], $context);
     } else if (T_FN === $token || T_STRING === $token && 'fn' === $tokens[$i][1]) {
       $s= sizeof($tokens);
       $b= 0;
-      $code= 'function';
+      $code= '';
+      foreach ($imports as $name => $qualified) {
+        $code.= 'use '.strtr($qualified, '.', '\\').' as '.$name.';';
+      }
+      $code.= 'return function';
       for ($i++; $i < $s; $i++) {
         if ('(' === $tokens[$i]) {
           $b++;
@@ -191,10 +196,10 @@ class ClassParser {
         }
       }
       $i--;
-      $code.= '; }';
+      $code.= '; };';
 
       try {
-        $func= eval('return '.$code.';');
+        $func= eval($code);
       } catch (\ParseError $e) {
         throw new IllegalStateException('In `'.$code.'`: '.$e->getMessage());
       }
@@ -220,10 +225,12 @@ class ClassParser {
       }
     } else if (T_NEW === $token) {
       $type= '';
-      while ('(' !== $tokens[$i++]) {
-        if (T_STRING === $tokens[$i][0]) $type.= '.'.$tokens[$i][1];
+      $i++;
+      while ('(' !== $tokens[++$i]) {
+        $type.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
       }
-      $class= $this->resolve(substr($type, 1), $context, $imports);
+      $i++;
+      $class= $this->resolve($type, $context, $imports);
       for ($args= [], $arg= null, $s= sizeof($tokens); ; $i++) {
         if (')' === $tokens[$i]) {
           $arg && $args[]= $arg[0];
@@ -238,9 +245,13 @@ class ClassParser {
       return $class->newInstance(...$args);
     } else if (T_FUNCTION === $token) {
       $b= 0;
-      $code= 'function';
+      $code= '';
+      foreach ($imports as $name => $qualified) {
+        $code.= 'use '.strtr($qualified, '.', '\\').' as '.$name.';';
+      }
+      $code.= 'return function';
       for ($i++, $s= sizeof($tokens); $i < $s; $i++) {
-        if ('{' === $tokens[$i]) {
+        if ('{' === $tokens[$i] || T_CURLY_OPEN === $tokens[$i][0]) {
           $b++;
           $code.= '{';
         } else if ('}' === $tokens[$i]) {
@@ -252,7 +263,7 @@ class ClassParser {
         }
       }
       try {
-        $func= eval('return '.$code.';');
+        $func= eval($code.';');
       } catch (\ParseError $e) {
         throw new IllegalStateException('In `'.$code.'`: '.$e->getMessage());
       }
@@ -301,12 +312,18 @@ class ClassParser {
       for ($state= 0, $i= 1, $s= sizeof($tokens); $i < $s; $i++) {
         if (T_WHITESPACE === $tokens[$i][0]) {
           continue;
-        } else if (0 === $state) {             // Initial state, expecting @attr or @$param: attr
+        } else if (0 === $state) {              // Initial state, expecting @attr or @$param: attr
           if ('@' === $tokens[$i]) {
             $annotation= $tokens[$i + 1][1];
             $param= null;
             $value= null;
             $i++;
+            $state= 1;
+            trigger_error('XP annotation syntax is deprecated in '.$place, E_USER_DEPRECATED);
+          } else if (T_STRING === $tokens[$i][0]) {
+            $annotation= lcfirst($tokens[$i][1]);
+            $param= null;
+            $value= null;
             $state= 1;
           } else {
             throw new IllegalStateException('Parse error: Expecting "@"');
@@ -339,9 +356,35 @@ class ClassParser {
         } else if (2 === $state) {              // Inside braces of @attr(...)
           if (')' === $tokens[$i]) {
             $state= 1;
+          } else if ($i + 2 < $s && (':' === $tokens[$i + 1] || ':' === $tokens[$i + 2])) {
+            $key= $tokens[$i][1];
+
+            if ('eval' === $key) {              // Attribute(eval: '...') vs. Attribute(name: ...)
+              while ($i++ < $s && ':' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]) { }
+              $code= $this->valueOf($tokens, $i, $context, $imports);
+              $eval= token_get_all('<?php '.$code);
+              $j= 1;
+              $value= $this->valueOf($eval, $j, $context, $imports);
+            } else {
+              $value= [];
+              $state= 3;
+            }
           } else {
             $value= $this->valueOf($tokens, $i, $context, $imports);
           }
+        } else if (3 === $state) {              // Parsing key inside named arguments
+          if (')' === $tokens[$i]) {
+            $state= 1;
+          } else if (',' === $tokens[$i]) {
+            $key= null;
+          } else if ('=' === $tokens[$i] || ':' === $tokens[$i]) {
+            $state= 4;
+          } else if (is_array($tokens[$i])) {
+            $key= $tokens[$i][1];
+          }
+        } else if (4 === $state) {              // Parsing value inside named arguments
+          $value[$key]= $this->valueOf($tokens, $i, $context, $imports);
+          $state= 3;
         }
       }
     } catch (\lang\XPException $e) {
@@ -396,7 +439,7 @@ class ClassParser {
       $type= substr($text, 0, strcspn($text, ' '));
     }
 
-    if ('\\' === $type[0]) {
+    if ('\\' === ($type[0] ?? null)) {
       return strtr(substr($type, 1), '\\', '.');
     } else if (isset($imports[$type])) {
       return $imports[$type];
@@ -423,7 +466,8 @@ class ClassParser {
     for ($i= 0, $s= sizeof($tokens); $i < $s; $i++) {
       switch ($tokens[$i][0]) {
         case T_NAMESPACE:
-          for ($i+= 2; (T_NS_SEPARATOR === $tokens[$i][0] || T_STRING === $tokens[$i][0]) && $i < $s; $i++) {
+          $namespace= '';
+          for ($i+= 2; $i < $s, !(';' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]); $i++) {
             $namespace.= $tokens[$i][1];
           }
           $namespace.= '\\';
@@ -431,43 +475,63 @@ class ClassParser {
 
         case T_USE:
           if (isset($details['class'])) break;  // Inside class, e.g. function() use(...) {}
-          $type= '';
-          for ($i+= 2; (T_NS_SEPARATOR === $tokens[$i][0] || T_STRING === $tokens[$i][0]) && $i < $s; $i++) {
-            $type.= $tokens[$i][1];
-          }
 
-          // use lang\{Type, Primitive as P}
-          if ('{' === $tokens[$i]) {
-            $alias= null;
-            $group= '';
-            for ($i+= 1; $i < $s; $i++) {
-              if (',' === $tokens[$i]) {
-                $imports[$alias ? $alias : $group]= strtr($type.$group, '\\', '.');
-                $alias= null;
-                $group= '';
-              } else if ('}' === $tokens[$i]) {
-                $imports[$alias ? $alias : $group]= strtr($type.$group, '\\', '.');
-                break;
-              } else if (T_AS === $tokens[$i][0]) {
-                $i+= 2;
-                $alias= $tokens[$i][1];
-              } else if (T_WHITESPACE !== $tokens[$i][0]) {
-                $group.= $tokens[$i][1];
-              }
+          do {
+            $type= '';
+            for ($i+= 2; $i < $s, !(';' === $tokens[$i] || '{' === $tokens[$i] || ',' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]); $i++) {
+              $type.= $tokens[$i][1];
             }
-          } else {
-            $alias= (T_AS === $tokens[++$i][0]) ? $tokens[$i + 2][1] : substr($type, strrpos($type, '\\')+ 1);
-            $imports[$alias]= strtr($type, '\\', '.');
-          }
+
+            // use lang\{Type, Primitive as P}
+            if ('{' === $tokens[$i]) {
+              $alias= null;
+              $group= '';
+              for ($i+= 1; $i < $s; $i++) {
+                if (',' === $tokens[$i]) {
+                  $imports[$alias ? $alias : $group]= strtr($type.$group, '\\', '.');
+                  $alias= null;
+                  $group= '';
+                } else if ('}' === $tokens[$i]) {
+                  $i++;
+                  $imports[$alias ? $alias : $group]= strtr($type.$group, '\\', '.');
+                  break;
+                } else if (T_AS === $tokens[$i][0]) {
+                  $i+= 2;
+                  $alias= $tokens[$i][1];
+                } else if (T_WHITESPACE !== $tokens[$i][0]) {
+                  $group.= $tokens[$i][1];
+                }
+              }
+            } else if (T_AS === $tokens[$i + 1][0]) {
+              $i+= 3;
+              $imports[$tokens[$i][1]]= strtr($type, '\\', '.');
+            } else {
+              $p= strrpos($type, '\\');
+              $imports[false === $p ? $type : substr($type, $p + 1)]= strtr($type, '\\', '.');
+            }
+          } while (',' === $tokens[$i]);
           break;
 
         case T_DOC_COMMENT:
           $comment= $tokens[$i][1];
           break;
 
+        case T_ATTRIBUTE:                       // PHP 8 attributes
+          $b= 1;
+          $parsed= '';
+          while ($i++ < $s) {
+            $parsed.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
+            if ('[' === $tokens[$i]) {
+              $b++;
+            } else if (']' === $tokens[$i]) {
+              if (0 === --$b) break;
+            }
+          }
+          break;
+
         case T_COMMENT:
-          if ('#' === $tokens[$i][1]{0}) {      // Annotations, #[@test]
-            if ('[' === $tokens[$i][1]{1}) {
+          if ('#' === $tokens[$i][1][0]) {      // Annotations, #[@test]
+            if ('[' === $tokens[$i][1][1]) {
               $parsed= substr($tokens[$i][1], 2);
             } else {
               $parsed.= substr($tokens[$i][1], 1);
@@ -499,8 +563,7 @@ class ClassParser {
         case T_CLASS:
           if (isset($details['class'])) break;  // Inside class, e.g. $lookup= ['self' => self::class]
 
-        case T_INTERFACE:
-        case T_TRAIT:
+        case T_INTERFACE: case T_TRAIT: case T_ENUM:
           if ($parsed) {
             $annotations= $this->parseAnnotations($parsed, $context, $imports, $tokens[$i][2] ?? -1);
             $parsed= '';
@@ -576,13 +639,45 @@ class ClassParser {
                 break;
             }
           }
+
+          $b= 0;
+          $parsed= null;
+          while (++$i < $s) {
+            if ('(' === $tokens[$i][0]) {
+              $b++;
+            } else if (')' === $tokens[$i][0]) {
+              if (0 === --$b) break;
+            } else if (T_COMMENT === $tokens[$i][0]) {
+              $parsed= $tokens[$i][1];
+            } else if (T_ATTRIBUTE === $tokens[$i][0]) {
+              $e= 1;
+              $parsed= '';
+              while ($i++ < $s) {
+                $parsed.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
+                if ('[' === $tokens[$i]) {
+                  $e++;
+                } else if (']' === $tokens[$i]) {
+                  if (0 === --$e) break;
+                }
+              }
+            } else if (T_VARIABLE === $tokens[$i][0] && null !== $parsed) {
+              $details[1][$m][DETAIL_TARGET_ANNO][$tokens[$i][1]]= $this->parseAnnotations(
+                $parsed,
+                $context,
+                $imports,
+                $tokens[$i][2] ?? -1
+              )[0];
+              $parsed= null;
+            }
+          }
+
           $b= 0;
           while (++$i < $s) {
-            if ('{' === $tokens[$i][0]) {
+            if ('{' === $tokens[$i] || T_CURLY_OPEN === $tokens[$i][0]) {
               $b++;
-            } else if ('}' === $tokens[$i][0]) {
+            } else if ('}' === $tokens[$i]) {
               if (0 === --$b) break;
-            } else if (0 === $b && ';' === $tokens[$i][0]) {
+            } else if (0 === $b && ';' === $tokens[$i]) {
               break;    // Abstract or interface method
             }
           }

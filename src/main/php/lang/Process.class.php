@@ -1,18 +1,18 @@
 <?php namespace lang;
 
-use io\File;
+use io\{File, IOException};
 
 /**
  * Process
  *
  * Example (get uptime information on a *NIX system)
- * <code>
- *   $p= new Process('uptime');
- *   $uptime= $p->out->readLine();
- *   $p->close();
+ * ```php
+ * $p= new Process('uptime');
+ * $uptime= $p->out->readLine();
+ * $p->close();
  *
- *   var_dump($uptime);
- * </code>
+ * var_dump($uptime);
+ * ```
  *
  * @test  xp://net.xp_framework.unittest.core.ProcessResolveTest
  * @test  xp://net.xp_framework.unittest.core.ProcessTest
@@ -38,120 +38,122 @@ class Process {
   /**
    * Constructor
    *
-   * @param   string command default NULL
-   * @param   string[] arguments default []
-   * @param   string cwd default NULL the working directory
-   * @param   [:string] default NULL the environment
-   * @throws  io.IOException in case the command could not be executed
+   * @param  string $command default NULL
+   * @param  string[] $arguments default []
+   * @param  ?string $cwd default NULL the working directory
+   * @param  ?[:string] $env default NULL the environment
+   * @param  var[] descriptors
+   * @throws io.IOException in case the command could not be executed
    */
-  public function __construct($command= null, $arguments= [], $cwd= null, $env= null) {
-    static $spec= [
-      0 => ['pipe', 'r'],  // stdin
-      1 => ['pipe', 'w'],  // stdout
-      2 => ['pipe', 'w']   // stderr
-    ];
-
-    // For `new self()` used in getProcessById()
+  public function __construct($command= null, $arguments= [], $cwd= null, $env= null, $descriptors= []) {
     if (null === $command) return;
 
-    // Verify
-    if (self::$DISABLED) {
-      throw new \io\IOException('Process execution has been disabled');
+    // Short-circuit
+    if ('' === $command) {
+      throw new IOException('Empty command not resolveable');
+    } else if (self::$DISABLED) {
+      throw new IOException('Process execution has been disabled');
     }
 
-    // Check whether the given command is executable.
-    $binary= self::resolve($command);
-    if (!is_file($binary) || !is_executable($binary)) {
-      throw new \io\IOException('Command "'.$binary.'" is not an executable file');
+    $cmd= CommandLine::forName(PHP_OS);
+    foreach ($cmd->resolve($command) as $binary) {
+      $binary= realpath($binary);
+      $exec= $cmd->compose($binary, $arguments);
+      $options= ['bypass_shell' => true];
+
+      // Default descriptor spec to map STDIN to a pipe to read from and STDOUT and STDERR to
+      // pipes the process will write to. This can be overwritten by the descriptors argument.
+      //
+      // Rewrite ['redirect', n] and ['null'] arguments for PHP versions <= 7.4.0, see
+      // https://github.com/php/php-src/commit/6285bb52faf407b07e71497723d13a1b08821352
+      $spec= [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']];
+      foreach ($descriptors as $n => $descriptor) {
+        if (PHP_VERSION_ID >= 70400 || !is_array($descriptor)) {
+          $spec[$n]= $descriptor;
+        } else if ('redirect' === $descriptor[0]) {
+          $exec.= ' '.$n.'>&'.$descriptor[1];
+          $options['bypass_shell']= false;
+        } else if ('null' === $descriptor[0]) {
+          $spec[$n]= ['file', CommandLine::$WINDOWS === $cmd ? 'NUL' : '/dev/null', 'w'];
+        } else {
+          $spec[$n]= $descriptor;
+        }
+      }
+
+      // For non-Windows systems, use `exec` to replace the extra /bin/sh between this and the
+      // executed process, see https://www.php.net/manual/de/function.proc-get-status.php#93382
+      if (CommandLine::$WINDOWS !== $cmd && $options['bypass_shell']) {
+        $exec= 'exec '.$exec;
+      }
+
+      // Try creating a process from the given arguments and descriptors
+      if (!is_resource($this->handle= proc_open($exec, $spec, $pipes, $cwd, $env, $options))) {
+        throw new IOException('Could not execute "'.$exec.'"');
+      }
+
+      $this->status= proc_get_status($this->handle);
+      $this->status['exe']= $binary;
+      $this->status['arguments']= $arguments;
+      $this->status['owner']= true;
+      $this->status['running?']= function() {
+        if (null === $this->handle) return false;
+        return $this->status['running']= proc_get_status($this->handle)['running'];
+      };
+      $this->status['terminate!']= function($signal) {
+        if (null === $this->handle) return false;
+        proc_terminate($this->handle, $signal);
+      };
+
+      // Assign in, out and err members
+      $this->in= isset($pipes[0]) ? new File($pipes[0]) : null;
+      $this->out= isset($pipes[1]) ? new File($pipes[1]) : null;
+      $this->err= isset($pipes[2]) ? new File($pipes[2]) : null;
+      return;
     }
 
-    // Open process
-    $cmd= CommandLine::forName(PHP_OS)->compose($binary, $arguments);
-    if (!is_resource($this->handle= proc_open($cmd, $spec, $pipes, $cwd, $env, ['bypass_shell' => true]))) {
-      throw new \io\IOException('Could not execute "'.$cmd.'"');
-    }
-
-    $this->status= proc_get_status($this->handle);
-    $this->status['exe']= $binary;
-    $this->status['arguments']= $arguments;
-    $this->status['owner']= true;
-    $this->status['running?']= function() {
-      if (null === $this->handle) return false;
-      return $this->status['running']= proc_get_status($this->handle)['running'];
-    };
-    $this->status['terminate!']= function($signal) {
-      if (null === $this->handle) return false;
-      proc_terminate($this->handle, $signal);
-    };
-
-    // Assign in, out and err members
-    $this->in= new File($pipes[0]);
-    $this->out= new File($pipes[1]);
-    $this->err= new File($pipes[2]);
+    throw new IOException('Could not find "'.$command.'" in path');
   }
 
   /**
    * Create a new instance of this process.
    *
-   * @param   string[] arguments default []
-   * @param   string cwd default NULL the working directory
-   * @param   [:string] default NULL the environment
-   * @return  self
-   * @throws  io.IOException in case the command could not be executed
+   * @param  string[] $arguments default []
+   * @param  ?string $cwd default NULL the working directory
+   * @param  ?[:string] $env default NULL the environment
+   * @param  var[] $descriptors
+   * @return self
+   * @throws io.IOException in case the command could not be executed
    */
-  public function newInstance($arguments= [], $cwd= null, $env= null): self {
-    return new self($this->status['exe'], $arguments, $cwd, $env);
+  public function newInstance($arguments= [], $cwd= null, $env= null, $descriptors= []): self {
+    return new self($this->status['exe'], $arguments, $cwd, $env, $descriptors);
   }
 
   /**
    * Resolve path for a command
    *
-   * @param   string command
-   * @return  string executable
-   * @throws  io.IOException in case the command could not be found or is not an executable
+   * @deprecated Use lang.CommandLine::resolve() instead!
+   * @param  string $command
+   * @return string $executable
+   * @throws io.IOException in case the command is empty or could not be found
    */
   public static function resolve(string $command): string {
-  
-    // Short-circuit this
-    if ('' === $command) throw new \io\IOException('Empty command not resolveable');
-    
-    // PATHEXT is in form ".{EXT}[;.{EXT}[;...]]"
-    $extensions= [''] + explode(PATH_SEPARATOR, getenv('PATHEXT'));
-    clearstatcache();
-  
-    // If the command is in fully qualified form and refers to a file
-    // that does not exist (e.g. "C:\DoesNotExist.exe", "\DoesNotExist.com"
-    // or /usr/bin/doesnotexist), do not attempt to search for it.
-    if ((DIRECTORY_SEPARATOR === $command[0]) || ((strncasecmp(PHP_OS, 'Win', 3) === 0) && 
-      strlen($command) > 1 && (':' === $command[1] || '/' === $command[0])
-    )) {
-      foreach ($extensions as $ext) {
-        $q= $command.$ext;
-        if (file_exists($q) && !is_dir($q)) return realpath($q);
-      }
-      throw new \io\IOException('"'.$command.'" does not exist');
+    foreach (CommandLine::forName(PHP_OS)->resolve($command) as $executable) {
+      return realpath($executable);
     }
 
-    // Check the PATH environment setting for possible locations of the 
-    // executable if its name is not a fully qualified path name.
-    $paths= explode(PATH_SEPARATOR, getenv('PATH'));
-    foreach ($paths as $path) {
-      foreach ($extensions as $ext) {
-        $q= $path.DIRECTORY_SEPARATOR.$command.$ext;
-        if (file_exists($q) && !is_dir($q)) return realpath($q);
-      }
-    }
-    
-    throw new \io\IOException('Could not find "'.$command.'" in path');
+    throw new IOException('' === $command
+      ? 'Empty command not resolveable'
+      : 'Could not find "'.$command.'" in path'
+    );
   }
 
   /**
    * Get a process by process ID
    *
-   * @param   int pid process id
-   * @param   string exe
-   * @return  self
-   * @throws  lang.IllegalStateException
+   * @param  int $pid process id
+   * @param  ?string $exe
+   * @return self
+   * @throws lang.IllegalStateException
    */
   public static function getProcessById($pid, $exe= null): self {
     $self= new self();
@@ -168,6 +170,7 @@ class Process {
     // Determine executable and command line:
     // * On Windows, use Windows Management Instrumentation API - see
     //   http://en.wikipedia.org/wiki/Windows_Management_Instrumentation
+    //   via com_dotnet, falling back to the "wmic" command line tool.
     //
     // * On systems with a /proc filesystem, use information from /proc/self
     //   See http://en.wikipedia.org/wiki/Procfs. Before relying on it, 
@@ -180,17 +183,38 @@ class Process {
     //   purposes)
     if (strncasecmp(PHP_OS, 'Win', 3) === 0) {
       try {
-        $c= new \Com('winmgmts://./root/cimv2');
-        $p= $c->get('Win32_Process.Handle="'.$pid.'"');
-        if (null === $exe) $self->status['exe']= $p->executablePath;
-        $self->status['command']= $p->commandLine;
-        $self->status['running?']= function() use($c, $pid) {
-          $p= $c->execQuery('select * from Win32_Process where Handle="'.$pid.'"');
-          foreach ($p as $result) {
-            return true;
+        if (class_exists(\Com::class)) {
+          $c= new \Com('winmgmts://./root/cimv2');
+          $p= $c->get('Win32_Process.Handle="'.$pid.'"');
+          if (null === $exe) $self->status['exe']= $p->executablePath;
+          $self->status['command']= $p->commandLine;
+          $self->status['running?']= function() use($c, $pid) {
+            $p= $c->execQuery('select * from Win32_Process where Handle="'.$pid.'"');
+            foreach ($p as $result) {
+              return true;
+            }
+            return false;
+          };
+        } else {
+          exec('wmic process where handle='.$pid.' get ExecutablePath,CommandLine /format:list 2>&1', $out, $r);
+          $p= [];
+          foreach ($out as $line) {
+            if (2 === sscanf($line, "%[^=]=%[^\r]", $key, $value)) {
+              $p[$key]= $value;
+            }
           }
-          return false;
-        };
+
+          if (0 !== $r || !isset($p['ExecutablePath'])) {
+            throw new IllegalStateException(implode(' ', $out));
+          }
+
+          if (null === $exe) $self->status['exe']= $p['ExecutablePath'];
+          $self->status['command']= $p['CommandLine'];
+          $self->status['running?']= function() use($pid) {
+            exec('wmic process where handle='.$pid.' get Handle 2>NUL', $out);
+            return in_array($pid, $out);
+          };
+        }
         $self->status['terminate!']= function($signal) use($pid) {
           exec('taskkill /F /T /PID '.$pid);
         };
@@ -229,7 +253,7 @@ class Process {
         if (0 !== $exit) {
           throw new IllegalStateException('Cannot find executable: '.implode('', $out));
         }
-      } catch (\io\IOException $e) {
+      } catch (IOException $e) {
         throw new IllegalStateException($e->getMessage());
       }
       $self->status['running?']= function() use($pid) {
@@ -257,7 +281,7 @@ class Process {
   /**
    * Get command line arguments
    *
-   * @return  string[]
+   * @return string[]
    */
   public function getArguments() {
     if (null === $this->status['arguments']) {
@@ -285,24 +309,24 @@ class Process {
   /**
    * Close this process
    *
-   * @return  int exit value of process
-   * @throws  lang.IllegalStateException if process is not owned
+   * @return int exit value of process
+   * @throws lang.IllegalStateException if process is not owned
    */
   public function close(): int {
     if (!$this->status['owner']) {
       throw new IllegalStateException('Cannot close not-owned process #'.$this->status['pid']);
     }
+
     if (null !== $this->handle) {
-      $this->in->isOpen() && $this->in->close();
-      $this->out->isOpen() && $this->out->close();
-      $this->err->isOpen() && $this->err->close();
+      $this->in && $this->in->isOpen() && $this->in->close();
+      $this->out && $this->out->isOpen() && $this->out->close();
+      $this->err && $this->err->isOpen() && $this->err->close();
       $this->exitv= proc_close($this->handle);
       $this->handle= null;
     }
     
-    // If the process wasn't running when we entered this method,
-    // determine the exitcode from the previous proc_get_status()
-    // call.
+    // If the process wasn't running when we entered this method, determine
+    // the exitcode from the previous proc_get_status() call.
     if (!$this->status['running']) {
       $this->exitv= $this->status['exitcode'];
     }

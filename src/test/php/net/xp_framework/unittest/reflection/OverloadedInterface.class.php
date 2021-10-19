@@ -1,5 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
+use lang\Overloaded;
+
 /**
  * Interface with overloaded methods
  *
@@ -11,9 +13,6 @@ interface OverloadedInterface {
    * Overloaded method.
    *
    */
-  #[@overloaded(['signatures' => [
-  #  ['string'],
-  #  ['string', 'string']
-  #]])]
+  #[Overloaded(signatures: [['string'], ['string', 'string']])]
   public function overloaded();
 }

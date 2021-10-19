@@ -1,105 +1,118 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\{Primitive, Type, XPClass, ArrayType, MapType, FunctionType};
+use lang\{ArrayType, FunctionType, MapType, Primitive, Type, XPClass};
 use unittest\actions\RuntimeVersion;
+use unittest\{Action, Test, TestCase};
 
-/**
- * Tests typeof() functionality
- */
-class TypeOfTest extends \unittest\TestCase {
+class TypeOfTest extends TestCase {
 
-  #[@test]
+  #[Test]
   public function null() {
     $this->assertEquals(Type::$VOID, typeof(null));
   }
 
-  #[@test]
+  #[Test]
   public function this() {
     $this->assertEquals(new XPClass(self::class), typeof($this));
   }
 
-  #[@test]
+  #[Test]
   public function native() {
     $this->assertEquals(new XPClass(\ArrayObject::class), typeof(new \ArrayObject([])));
   }
 
-  #[@test]
+  #[Test]
   public function string() {
     $this->assertEquals(Primitive::$STRING, typeof($this->name));
   }
 
-  #[@test]
+  #[Test]
   public function intArray() {
     $this->assertEquals(ArrayType::forName('var[]'), typeof([1, 2, 3]));
   }
 
-  #[@test]
+  #[Test]
   public function intMap() {
     $this->assertEquals(MapType::forName('[:var]'), typeof(['one' => 1, 'two' => 2, 'three' => 3]));
   }
 
-  #[@test]
+  #[Test]
   public function function_without_arg() {
     $this->assertEquals(FunctionType::forName('function(): var'), typeof(function() { }));
   }
 
-  #[@test]
+  #[Test]
   public function function_with_arg() {
     $this->assertEquals(FunctionType::forName('function(var): var'), typeof(function($a) { }));
   }
 
-  #[@test]
+  #[Test]
   public function function_with_args() {
     $this->assertEquals(FunctionType::forName('function(var, var): var'), typeof(function($a, $b) { }));
   }
 
-  #[@test]
+  #[Test]
   public function function_with_var_arg() {
     $this->assertEquals(FunctionType::forName('function(): var'), typeof(function(... $a) { }));
   }
 
-  #[@test]
+  #[Test]
   public function function_with_normal_and_var_arg() {
     $this->assertEquals(FunctionType::forName('function(lang.Type): var'), typeof(function(Type $t, ... $a) { }));
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.0'))]
+  #[Test]
   public function function_with_typed_var_arg() {
     $this->assertEquals(FunctionType::forName('function(): var'), typeof(eval('return function(\lang\Type... $a) { };')));
   }
 
-  #[@test]
+  #[Test]
   public function function_with_class_hint() {
     $this->assertEquals(FunctionType::forName('function(lang.Type): var'), typeof(function(Type $t) { }));
   }
 
-  #[@test]
+  #[Test]
   public function function_with_array_hint() {
     $this->assertEquals(new FunctionType([Type::$ARRAY], Type::$VAR), typeof(function(array $a) { }));
   }
 
-  #[@test]
+  #[Test]
   public function function_with_callable_hint() {
     $this->assertEquals(new FunctionType([Type::$CALLABLE], Type::$VAR), typeof(function(callable $c) { }));
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.0'))]
+  #[Test]
   public function function_with_primitive_arg() {
     $this->assertEquals(FunctionType::forName('function(int): var'), typeof(eval('return function(int $a) { };')));
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.0'))]
+  #[Test]
   public function function_with_return_type() {
     $this->assertEquals(FunctionType::forName('function(): lang.Type'), typeof(eval('return function(): \lang\Type { };')));
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.0'))]
+  #[Test]
   public function function_with_primitive_return_type() {
     $this->assertEquals(FunctionType::forName('function(): int'), typeof(eval('return function(): int { };')));
   }
 
-  #[@test, @action(new RuntimeVersion('>=7.1'))]
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.1")')]
+  public function function_with_nullable_return_type() {
+    $this->assertEquals(FunctionType::forName('function(): ?string'), typeof(eval('return function(): ?string { };')));
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=7.1")')]
   public function function_with_void_return_type() {
     $this->assertEquals(FunctionType::forName('function(): void'), typeof(eval('return function(): void { };')));
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
+  public function php8_native_union_param_type() {
+    $this->assertEquals(FunctionType::forName('function(string|int): var'), typeof(eval('return function(string|int $a) { };')));
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
+  public function php8_native_union_return_type() {
+    $this->assertEquals(FunctionType::forName('function(): string|int'), typeof(eval('return function(): string|int { };')));
   }
 }

@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
-use io\streams\ChannelOutputStream;
-use io\streams\ChannelInputStream;
 use io\IOException;
+use io\streams\{ChannelInputStream, ChannelOutputStream};
 use lang\Runnable;
+use unittest\{Expect, Test};
 
 /**
  * TestCase
@@ -13,42 +13,42 @@ use lang\Runnable;
  */
 class ChannelStreamTest extends \unittest\TestCase {
 
-  #[@test, @expect(IOException::class)]
+  #[Test, Expect(IOException::class)]
   public function invalidOutputChannelName() {
     new ChannelOutputStream('@@invalid@@');
   }
 
-  #[@test, @expect(IOException::class)]
+  #[Test, Expect(IOException::class)]
   public function invalidInputChannelName() {
     new ChannelInputStream('@@invalid@@');
   }
   
-  #[@test, @expect(IOException::class)]
+  #[Test, Expect(IOException::class)]
   public function stdinIsNotAnOutputStream() {
     new ChannelOutputStream('stdin');
   }
 
-  #[@test, @expect(IOException::class)]
+  #[Test, Expect(IOException::class)]
   public function inputIsNotAnOutputStream() {
     new ChannelOutputStream('input');
   }
 
-  #[@test, @expect(IOException::class)]
+  #[Test, Expect(IOException::class)]
   public function stdoutIsNotAnInputStream() {
     new ChannelInputStream('stdout');
   }
 
-  #[@test, @expect(IOException::class)]
+  #[Test, Expect(IOException::class)]
   public function stderrIsNotAnInputStream() {
     new ChannelInputStream('stderr');
   }
 
-  #[@test, @expect(IOException::class)]
+  #[Test, Expect(IOException::class)]
   public function outputIsNotAnInputStream() {
     new ChannelInputStream('outpit');
   }
 
-  #[@test, @expect(IOException::class)]
+  #[Test, Expect(IOException::class)]
   public function writeToClosedChannel() {
     ChannelWrapper::capture(new class() implements Runnable {
       public function run() {
@@ -59,7 +59,7 @@ class ChannelStreamTest extends \unittest\TestCase {
     });
   }
 
-  #[@test, @expect(IOException::class)]
+  #[Test, Expect(IOException::class)]
   public function readingFromClosedChannel() {
     ChannelWrapper::capture(new class() implements Runnable {
       public function run() {
@@ -70,7 +70,7 @@ class ChannelStreamTest extends \unittest\TestCase {
     });
   }
 
-  #[@test]
+  #[Test]
   public function output() {
     $r= ChannelWrapper::capture(new class() implements Runnable {
       public function run() {
@@ -81,7 +81,7 @@ class ChannelStreamTest extends \unittest\TestCase {
     $this->assertEquals('+OK Hello', $r['output']);
   }
 
-  #[@test]
+  #[Test]
   public function stdout() {
     $r= ChannelWrapper::capture(new class() implements Runnable {
       public function run() {
@@ -92,7 +92,7 @@ class ChannelStreamTest extends \unittest\TestCase {
     $this->assertEquals('+OK Hello', $r['stdout']);
   }
 
-  #[@test]
+  #[Test]
   public function stderr() {
     $r= ChannelWrapper::capture(new class() implements Runnable {
       public function run() {
@@ -103,7 +103,7 @@ class ChannelStreamTest extends \unittest\TestCase {
     $this->assertEquals('+OK Hello', $r['stderr']);
   }
 
-  #[@test]
+  #[Test]
   public function stdin() {
     $r= ChannelWrapper::capture(new class() implements Runnable {
       public function run() {
@@ -117,7 +117,7 @@ class ChannelStreamTest extends \unittest\TestCase {
     $this->assertEquals('+OK Piped input', $r['stdout']);
   }
 
-  #[@test]
+  #[Test]
   public function input() {
     $r= ChannelWrapper::capture(new class() implements Runnable {
       public function run() {

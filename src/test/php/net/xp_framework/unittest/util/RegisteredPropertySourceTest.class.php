@@ -1,7 +1,8 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use unittest\TestCase;
-use util\RegisteredPropertySource;
+use io\streams\MemoryInputStream;
+use unittest\{Test, TestCase};
+use util\{RegisteredPropertySource, Properties};
 
 /**
  * Test for RegisteredPropertySource
@@ -13,14 +14,14 @@ class RegisteredPropertySourceTest extends TestCase {
   protected $fixture= null;
 
   public function setUp() {
-    $this->fixture= new RegisteredPropertySource('props', new \util\Properties(null));
+    $this->fixture= new RegisteredPropertySource('props', new Properties(null));
   }
   
   /**
    * Test
    *
    */
-  #[@test]
+  #[Test]
   public function doesNotHaveAnyProperties() {
     $this->assertFalse($this->fixture->provides('properties'));
   }
@@ -29,7 +30,7 @@ class RegisteredPropertySourceTest extends TestCase {
    * Test
    *
    */
-  #[@test]
+  #[Test]
   public function hasRegisteredProperty() {
     $this->assertTrue($this->fixture->provides('props'));
   }
@@ -38,9 +39,9 @@ class RegisteredPropertySourceTest extends TestCase {
    * Test
    *
    */
-  #[@test]
+  #[Test]
   public function returnsRegisteredProperties() {
-    $p= new \util\Properties(null);
+    $p= new Properties(null);
     $m= new RegisteredPropertySource('name', $p);
 
     $this->assertTrue($p === $m->fetch('name'));
@@ -50,10 +51,10 @@ class RegisteredPropertySourceTest extends TestCase {
    * Test
    *
    */
-  #[@test]
+  #[Test]
   public function equalsReturnsFalseForDifferingName() {
-    $p1= new RegisteredPropertySource('name1', new \util\Properties(null));
-    $p2= new RegisteredPropertySource('name2', new \util\Properties(null));
+    $p1= new RegisteredPropertySource('name1', new Properties(null));
+    $p2= new RegisteredPropertySource('name2', new Properties(null));
 
     $this->assertNotEquals($p1, $p2);
   }
@@ -62,10 +63,10 @@ class RegisteredPropertySourceTest extends TestCase {
    * Test
    *
    */
-  #[@test]
+  #[Test]
   public function equalsReturnsFalseForDifferingProperties() {
-    $p1= new RegisteredPropertySource('name1', new \util\Properties(null));
-    $p2= new RegisteredPropertySource('name1', \util\Properties::fromString('[section]'));
+    $p1= new RegisteredPropertySource('name1', new Properties(null));
+    $p2= new RegisteredPropertySource('name1', (new Properties(null))->load(new MemoryInputStream('[section]')));
 
     $this->assertNotEquals($p1, $p2);
   }
@@ -74,10 +75,10 @@ class RegisteredPropertySourceTest extends TestCase {
    * Test
    *
    */
-  #[@test]
+  #[Test]
   public function equalsReturnsTrueForSameInnerPropertiesAndName() {
-    $p1= new RegisteredPropertySource('name1', \util\Properties::fromString('[section]'));
-    $p2= new RegisteredPropertySource('name1', \util\Properties::fromString('[section]'));
+    $p1= new RegisteredPropertySource('name1', (new Properties(null))->load(new MemoryInputStream('[section]')));
+    $p2= new RegisteredPropertySource('name1', (new Properties(null))->load(new MemoryInputStream('[section]')));
 
     $this->assertEquals($p1, $p2);
   }

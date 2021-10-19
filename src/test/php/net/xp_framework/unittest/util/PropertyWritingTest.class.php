@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use io\streams\MemoryOutputStream;
+use unittest\{Test, TestCase};
 use util\Properties;
 
 /**
@@ -8,7 +9,7 @@ use util\Properties;
  *
  * @see      xp://util.Properties
  */
-class PropertyWritingTest extends \unittest\TestCase {
+class PropertyWritingTest extends TestCase {
   protected $fixture= null;
   
   /**
@@ -33,7 +34,7 @@ class PropertyWritingTest extends \unittest\TestCase {
     $this->assertEquals(preg_replace('/^ +/m', '', trim($expected)), trim($out->bytes())); 
   }
 
-  #[@test]
+  #[Test]
   public function string() {
     $this->fixture->writeString('section', 'key', 'value');
     $this->assertSavedFixtureEquals('
@@ -42,7 +43,7 @@ class PropertyWritingTest extends \unittest\TestCase {
     ');
   }
 
-  #[@test]
+  #[Test]
   public function emptyString() {
     $this->fixture->writeString('section', 'key', '');
     $this->assertSavedFixtureEquals('
@@ -51,7 +52,7 @@ class PropertyWritingTest extends \unittest\TestCase {
     ');
   }
 
-  #[@test]
+  #[Test]
   public function integer() {
     $this->fixture->writeInteger('section', 'key', 1);
     $this->assertSavedFixtureEquals('
@@ -60,7 +61,7 @@ class PropertyWritingTest extends \unittest\TestCase {
     ');
   }
 
-  #[@test]
+  #[Test]
   public function float() {
     $this->fixture->writeFloat('section', 'key', 1.5);
     $this->assertSavedFixtureEquals('
@@ -69,7 +70,7 @@ class PropertyWritingTest extends \unittest\TestCase {
     ');
   }
 
-  #[@test]
+  #[Test]
   public function boolTrue() {
     $this->fixture->writeFloat('section', 'key', true);
     $this->assertSavedFixtureEquals('
@@ -78,7 +79,7 @@ class PropertyWritingTest extends \unittest\TestCase {
     ');
   }
 
-  #[@test]
+  #[Test]
   public function boolFalse() {
     $this->fixture->writeFloat('section', 'key', false);
     $this->assertSavedFixtureEquals('
@@ -87,7 +88,7 @@ class PropertyWritingTest extends \unittest\TestCase {
     ');
   }
 
-  #[@test]
+  #[Test]
   public function intArray() {
     $this->fixture->writeArray('section', 'key', [1, 2, 3]);
     $this->assertSavedFixtureEquals('
@@ -98,7 +99,7 @@ class PropertyWritingTest extends \unittest\TestCase {
     ');
   }
 
-  #[@test]
+  #[Test]
   public function emptyArray() {
     $this->fixture->writeArray('section', 'key', []);
     $this->assertSavedFixtureEquals('
@@ -107,7 +108,7 @@ class PropertyWritingTest extends \unittest\TestCase {
     ');
   }
 
-  #[@test]
+  #[Test]
   public function mapOneElement() {
     $this->fixture->writeMap('section', 'key', ['color' => 'green']);
     $this->assertSavedFixtureEquals('
@@ -116,7 +117,7 @@ class PropertyWritingTest extends \unittest\TestCase {
     ');
   }
 
-  #[@test]
+  #[Test]
   public function mapTwoElements() {
     $this->fixture->writeMap('section', 'key', ['color' => 'green', 'size' => 'L']);
     $this->assertSavedFixtureEquals('
@@ -126,7 +127,7 @@ class PropertyWritingTest extends \unittest\TestCase {
     ');
   }
 
-  #[@test]
+  #[Test]
   public function emptyMap() {
     $this->fixture->writeMap('section', 'key', []);
     $this->assertSavedFixtureEquals('
@@ -135,7 +136,7 @@ class PropertyWritingTest extends \unittest\TestCase {
     ');
   }
 
-  #[@test]
+  #[Test]
   public function comment() {
     $this->fixture->writeComment('section', 'Hello');
     $this->assertSavedFixtureEquals('
@@ -145,7 +146,7 @@ class PropertyWritingTest extends \unittest\TestCase {
     ');
   }
 
-  #[@test]
+  #[Test]
   public function comments() {
     $this->fixture->writeComment('section', 'Hello');
     $this->fixture->writeComment('section', 'World');

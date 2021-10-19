@@ -1,8 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\Process;
-use lang\Runtime;
-use unittest\PrerequisitesNotMetError;
+use lang\{Process, Runtime};
+use unittest\{BeforeClass, Ignore, PrerequisitesNotMetError, Test, Values};
 
 /**
  * TestCase
@@ -14,10 +13,13 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
   /**
    * Skips tests if process execution has been disabled.
    */
-  #[@beforeClass]
+  #[BeforeClass]
   public static function verifyProcessExecutionEnabled() {
     if (Process::$DISABLED) {
       throw new PrerequisitesNotMetError('Process execution disabled', null, ['enabled']);
+    }
+    if (strstr(php_uname('v'), 'Windows Server 2016')) {
+      throw new PrerequisitesNotMetError('Process execution bug on Windows Server 2016', null, ['enabled']);
     }
   }
 
@@ -56,7 +58,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     return $out;
   }
 
-  #[@test]
+  #[Test]
   public function loadLoadedLibrary() {
     $this->assertEquals(
       '+OK No exception thrown',
@@ -71,7 +73,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function loadNonExistantLibrary() {
     $this->assertEquals(
       '+OK lang.ElementNotFoundException',
@@ -86,7 +88,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function loadLibraryWithoutEnableDl() {
     $this->assertEquals(
       '+OK lang.IllegalAccessException',
@@ -101,7 +103,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     );
   }
 
-  #[@test, @ignore('Enable and edit library name to something loadable to see information')]
+  #[Test, Ignore('Enable and edit library name to something loadable to see information')]
   public function displayInformation() {
     echo $this->runInNewRuntime(Runtime::getInstance()->startupOptions()->withSetting('enable_dl', 1), '
       try {
@@ -113,14 +115,14 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     ');
   }
 
-  #[@test, @ignore('Enable to see information')]
+  #[Test, Ignore('Enable to see information')]
   public function displayCmdLineEnvironment() {
     echo $this->runInNewRuntime(Runtime::getInstance()->startupOptions(), '
       echo getenv("XP_CMDLINE");
     ');
   }
 
-  #[@test]
+  #[Test]
   public function shutdownHookRunOnScriptEnd() {
     $this->assertEquals(
       '+OK exiting, +OK Shutdown hook run',
@@ -136,7 +138,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function shutdownHookRunOnNormalExit() {
     $this->assertEquals(
       '+OK exiting, +OK Shutdown hook run',
@@ -153,7 +155,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     );
   }
 
-  #[@test]
+  #[Test]
   public function shutdownHookRunOnFatal() {
     $out= $this->runInNewRuntime(Runtime::getInstance()->startupOptions(), '
       Runtime::getInstance()->addShutdownHook(newinstance("lang.Runnable", [], "{
@@ -170,7 +172,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     $this->assertEquals('+OK Shutdown hook run', substr($out, -21), $out);
   }
 
-  #[@test]
+  #[Test]
   public function shutdownHookRunOnUncaughtException() {
     $out= $this->runInNewRuntime(Runtime::getInstance()->startupOptions(), '
       Runtime::getInstance()->addShutdownHook(newinstance("lang.Runnable", [], "{
@@ -186,10 +188,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     $this->assertEquals('+OK Shutdown hook run', substr($out, -21), $out);
   }
 
-  #[@test, @values([
-  #  [[], '1: xp.runtime.Evaluate'],
-  #  [['test'], '2: xp.runtime.Evaluate test']
-  #])]
+  #[Test, Values([[[], '1: xp.runtime.Evaluate'], [['test'], '2: xp.runtime.Evaluate test']])]
   public function pass_arguments($args, $expected) {
     $out= $this->runInNewRuntime(
       Runtime::getInstance()->startupOptions(),
@@ -200,10 +199,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     $this->assertEquals($expected, $out);
   }
 
-  #[@test, @values([
-  #  [['mysql+x://test@127.0.0.1/test'], '2: xp.runtime.Evaluate mysql+x://test@127.0.0.1/test'],
-  #  [['über', '€uro'], '3: xp.runtime.Evaluate über €uro']
-  #])]
+  #[Test, Values([[['mysql+x://test@127.0.0.1/test'], '2: xp.runtime.Evaluate mysql+x://test@127.0.0.1/test'], [['über', '€uro'], '3: xp.runtime.Evaluate über €uro']])]
   public function pass_arguments_which_need_encoding($args, $expected) {
     $out= $this->runInNewRuntime(
       Runtime::getInstance()->startupOptions(),

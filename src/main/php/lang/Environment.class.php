@@ -14,7 +14,7 @@ abstract class Environment {
    * @return bool
    */
   private static function xdgCompliant() {
-    foreach ($_ENV as $name => $value) {
+    foreach (PHP_VERSION_ID >= 70100 ? getenv() : $_SERVER as $name => $value) {
       if (0 === strncmp($name, 'XDG_', 4)) return true;
     }
     return false;
@@ -29,15 +29,16 @@ abstract class Environment {
    * @return  [:string]
    */
   public static function variables($filter= null) {
-    if (null === $filter) return $_ENV;
+    $variables= PHP_VERSION_ID >= 70100 ? getenv() : $_SERVER;
+    if (null === $filter) return $variables;
 
     $r= [];
     if (is_array($filter)) {
       foreach ($filter as $name) {
-        isset($_ENV[$name]) && $r[$name]= $_ENV[$name];
+        isset($variables[$name]) && $r[$name]= $variables[$name];
       }
     } else {
-      foreach ($_ENV as $name => $value) {
+      foreach ($variables as $name => $value) {
         preg_match($filter, $name) && $r[$name]= $value;
       }
     }
@@ -82,12 +83,84 @@ abstract class Environment {
     foreach ($variables as $name => $value) {
       if (null === $value) {
         putenv($name);
-        unset($_ENV[$name]);
+        unset($_SERVER[$name]);
       } else {
         putenv($name.'='.$value);
-        $_ENV[$name]= $value;
+        $_SERVER[$name]= $value;
       }
     }
+  }
+
+  /**
+   * Returns the platform we're currently operating on, which is one of:
+   *
+   * - Windows
+   * - Linux
+   * - Darwin ("Mac OS")
+   * - BSD
+   * - Solaris
+   * - Cygwin
+   * - Unknown
+   * 
+   * Same as the constant `PHP_OS_FAMILY` but handles Cygwin and also works
+   * for PHP 7.0 and 7.1, where this constant does not exist yet.
+   */
+  public static function platform(): string {
+    $family= defined('PHP_OS_FAMILY') ? PHP_OS_FAMILY : PHP_OS;
+    return 'Windows' === $family || 'WINNT' === $family
+      ? getenv('HOME') ? 'Cygwin' : 'Windows'
+      : $family
+    ;
+  }
+
+  /**
+   * Returns a path for display for a given directory. Will replace current
+   * and parent directories with `.` and `..`, the user's home directory with
+   * `~` and use `%USERPROFILE%` and `%APPDATA%` on Windows.
+   *
+   * Platform accepts one of the values returned from `platform()` or NULL
+   * to use the platform we're currently operating on.
+   */
+  public static function path(string $dir= '.', string $platform= null): string {
+    if ('.' === $dir || '..' === $dir) return $dir; // Short-circuit well-known names
+
+    // Based on platform, define shorthands for replacements
+    $cwd= getcwd();
+    $replace= [$cwd => '.', dirname($cwd) => '..'];
+    switch ($platform ?? self::platform()) {
+      case 'Windows':
+        $separator= '\\';
+        $replace+= [getenv('APPDATA') => '%APPDATA%', getenv('USERPROFILE') => '%USERPROFILE%'];
+        break;
+
+      case 'Cygwin':
+        $separator= '/';
+        $replace+= [getenv('HOME') => '~', getenv('APPDATA') => '$APPDATA', getenv('USERPROFILE') => '$USERPROFILE'];
+        break;
+
+      default:
+        $separator= '/';
+        $replace+= [getenv('HOME') => '~'];
+        break;
+    }
+
+    // Short-circuit paths without directory
+    if (strcspn($dir, '/\\') === strlen($dir)) return '.'.$separator.$dir;
+
+    // Compare expanded paths against replace using case-insensitivity on Windows
+    $prefix= 0 === strncasecmp(PHP_OS, 'Win', 3) ? 'stripos' : 'strpos';
+    $expand= function($path) {
+      return realpath($path) ?: rtrim(strtr($path, '/\\', DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR);
+    };
+
+    $path= $expand($dir);
+    foreach ($replace as $base => $with) {
+      if (0 === $prefix($path, $expand($base))) {
+        $path= $with.substr($path, strlen($base));
+        break;
+      }
+    }
+    return strtr($path, DIRECTORY_SEPARATOR, $separator);
   }
 
   /**
@@ -114,12 +187,12 @@ abstract class Environment {
    *
    * Pass NULL to retrieve configuration base directory
    */
-  public static function configDir(string $named= null, $home= null): string {
+  public static function configDir(string $named= null, string $home= null): string {
     $home ?? $home= getenv('HOME');
 
     if (!$home) {
       $base= getenv('APPDATA');
-      $dir= ucfirst($named);
+      $dir= ucfirst($named ?? '');
     } else if (self::xdgCompliant()) {
       $base= getenv('XDG_CONFIG_HOME') ?: $home.DIRECTORY_SEPARATOR.'.config';
       $dir= $named;
