@@ -151,13 +151,8 @@ class ClassLoaderTest extends \unittest\TestCase {
     XPClass::forName('net.xp_framework.unittest.reflection.classes.broken.FalseClass');
   }
 
-  #[Test, Expect(ClassDependencyException::class)]
-  public function loadClassWithBrokenDependency() {
-    XPClass::forName('net.xp_framework.unittest.reflection.classes.broken.BrokenDependencyClass');
-  }
-
   #[Test]
-  public function loadClassFileWithRecusionInStaticBlock() {
+  public function loadClassFileWithRecursionInStaticBlock() {
     with ($p= Package::forName('net.xp_framework.unittest.reflection.classes')); {
       $two= $p->loadClass('StaticRecursionTwo');
       $one= $p->loadClass('StaticRecursionOne');
