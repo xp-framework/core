@@ -47,26 +47,6 @@ class TextWriter extends Writer {
   }
 
   /**
-   * Sets newLine property's bytes
-   *
-   * @deprecated Use withNewLine() instead
-   * @param   string newLine
-   */
-  public function setNewLine($newLine) {
-    $this->newLine= $newLine;
-  }
-  
-  /**
-   * Gets newLine property's bytes
-   *
-   * @deprecated Use newLine() instead
-   * @return  string newLine
-   */
-  public function getNewLine() {
-    return $this->newLine;
-  }
-
-  /**
    * Writes text
    *
    * @param  string $text

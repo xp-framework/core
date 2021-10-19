@@ -36,14 +36,6 @@ abstract class Writer implements OutputStreamWriter, Closeable, Value {
   /**
    * Returns the underlying stream
    *
-   * @deprecated Use stream() instead
-   * @return  io.streams.OutputStream stream
-   */
-  public function getStream() { return $this->stream; }
-
-  /**
-   * Returns the underlying stream
-   *
    * @return  io.streams.OutputStream stream
    */
   public function stream() { return $this->stream; }

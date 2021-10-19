@@ -11,17 +11,6 @@ use util\Objects;
 class StringWriter extends Writer {
 
   /**
-   * Return underlying output stream
-   *
-   * @deprecated Use redirect() instead
-   * @param  io.streams.OutputStream stream
-   * @return void
-   */
-  public function setStream(OutputStream $stream) {
-    $this->redirect($stream);
-  }
-
-  /**
    * Writes text
    *
    * @param  string $text
