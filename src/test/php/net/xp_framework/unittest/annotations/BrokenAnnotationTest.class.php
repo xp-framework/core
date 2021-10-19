@@ -87,31 +87,6 @@ class BrokenAnnotationTest extends TestCase {
     $this->parse('#[@ignore([1 ,, 2])]');
   }
 
-  /** @deprecated */
-  #[Test]
-  public function missing_ending_bracket_in_key_value_pairs() {
-    try {
-      $this->parse("#[@attribute(key= 'value']");
-      $this->fail('No exception raised', null, ClassFormatException::class);
-    } catch (ClassFormatException $expected) {
-      \xp::gc();
-      $this->assertTrue((bool)preg_match('/Unterminated annotation map key/', $expected->getMessage()), $expected->getMessage());
-    }
-  }
-
-  /** @deprecated */
-  #[Test]
-  public function malformed_short_array_inside_key_value_pairs() {
-    try {
-      $this->parse('#[@ignore(name= [1 ,, 2])]');
-      \xp::gc();
-      $this->fail('No exception raised', null, ClassFormatException::class);
-    } catch (ClassFormatException $expected) {
-      \xp::gc();
-      $this->assertTrue((bool)preg_match('/Malformed array/', $expected->getMessage()), $expected->getMessage());
-    }
-  }
-
   #[Test, Expect(['class' => ClassFormatException::class, 'withMessage' => '/Malformed array/'])]
   public function malformed_short_array_no_commas() {
     $this->parse('#[@ignore([1 2])]');

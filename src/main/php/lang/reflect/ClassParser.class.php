@@ -369,11 +369,6 @@ class ClassParser {
               $value= [];
               $state= 3;
             }
-          } else if ($i + 2 < $s && ('=' === $tokens[$i + 1] || '=' === $tokens[$i + 2])) {
-            $key= $tokens[$i][1];
-            $value= [];
-            $state= 3;
-            trigger_error('Use of deprecated annotation key/value pair "'.$key.'" in '.$place, E_USER_DEPRECATED);
           } else {
             $value= $this->valueOf($tokens, $i, $context, $imports);
           }
