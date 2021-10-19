@@ -7,6 +7,7 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Merged PR #293: Remove deprecated timezone methods - @thekid
 * Removed deprecated `io.streams.MemoryInputStream::getBytes()` method
   (@thekid)
 * Merged PR #292: Remove deprecated reader and writer methods from io.streams
