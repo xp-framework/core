@@ -5,6 +5,10 @@ XP Framework Core ChangeLog
 
 ## 11.0.0 / ????-??-??
 
+### Heads up!
+
+* Renamed `master` branch to `main` - @thekid
+
 ## 10.14.0 / 2021-09-26
 
 ### Features
