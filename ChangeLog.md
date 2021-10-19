@@ -7,6 +7,8 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Removed deprecated lang.Primitive::$DOUBLE (replaced by `FLOAT`)
+  (@thekid)
 * Merged PR #291: Remove io.FileUtil - replaced by the `io.Files` class
   (@thekid)
 * Merged PR #290: Remove util.PropertyManager - replaced by libraries such
