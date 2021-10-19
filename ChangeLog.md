@@ -7,6 +7,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Merged PR #290: Remove util.PropertyManager - replaced by libraries such
+  as `xp-forge/inject`
+  (@thekid)
 * Merged PR #289: Remove util.DateUtil and util.DateMath - replaced by
   the `util.Dates` class
   (@thekid)
