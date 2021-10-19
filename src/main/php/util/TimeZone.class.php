@@ -58,16 +58,6 @@ class TimeZone implements Value {
   }
 
   /**
-   * Gets the name of the timezone
-   *
-   * @deprecated Use name() instead!
-   * @return  string name
-   */
-  public function getName() {
-    return $this->name();
-  }
-  
-  /**
    * Returns a TimeZone object by a time zone abbreviation.
    *
    * @param  string $abbrev
@@ -100,17 +90,6 @@ class TimeZone implements Value {
   }
 
   /**
-   * Offset as string
-   *
-   * @deprecated Use difference() instead
-   * @param  util.Date $date default NULL
-   * @return string offset
-   */
-  public function getOffset($date= null) {
-    return $this->difference($date);
-  }
-  
-  /**
    * Retrieve whether the timezone does have DST/non-DST mode
    *
    * @return  bool
@@ -132,17 +111,6 @@ class TimeZone implements Value {
     return timezone_offset_get($this->tz, $date instanceof Date ? $date->getHandle() : date_create('now'));
   }
 
-  /**
-   * Offset in seconds
-   *
-   * @deprecated Use offset() instead!
-   * @param   util.Date date default NULL
-   * @return  int offset
-   */
-  public function getOffsetInSeconds($date= null) {
-    return $this->offset($date);
-  }
-  
   /**
    * Translates a date from one timezone to a date of this timezone.
    * The value of the date is not changed by this operation.

@@ -87,22 +87,6 @@ class TimeZoneTransition implements Value {
     return self::previousTransition($this->tz, $this->date);
   }
   
-  /**
-   * Gets timezone
-   *
-   * @deprecated Use timezone() instead!
-   * @return util.TimeZone
-   */
-  public function getTz() { return $this->tz; }
-
-  /**
-   * Gets date
-   *
-   * @deprecated Use date() instead!
-   * @return util.Date
-   */
-  public function getDate() { return $this->date; }
-
   /** @return util.TimeZone */
   public function timezone() { return $this->tz; }
 
