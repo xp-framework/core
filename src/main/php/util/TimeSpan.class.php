@@ -5,8 +5,8 @@ use lang\{Value, IllegalArgumentException, IllegalStateException};
 /**
  * Represents a span of time
  *
- * @see   xp://util.DateUtil#timespanBetween
- * @test  xp://net.xp_framework.unittest.util.TimeSpanTest
+ * @see   util.Dates::diff()
+ * @test  net.xp_framework.unittest.util.TimeSpanTest
  */
 class TimeSpan implements Value {
   protected $_seconds = 0;
