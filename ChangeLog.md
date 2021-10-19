@@ -7,6 +7,15 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Merge PR #288: Remove util.Calendar class - superseded by the timezone
+  aware API by `util.TimeZoneTransition`
+  (@thekid)
+* Merge PR #287: Remove util.Component and util.Visitor - these classes
+  were unused
+  (@thekid)
+* Merge PR #286: Remove util.Configurable and util.ConfigurationException,
+  unused except for the anti-pattern class `rdbms.ConnectionManager`.
+  (@thekid)
 * Renamed `master` branch to `main` - @thekid
 
 ## 10.14.0 / 2021-09-26
