@@ -81,48 +81,4 @@ class TimeZoneTest extends TestCase {
   public function unknownTimeZone() {
     new TimeZone('UNKNOWN');
   }
-
-  /** @deprecated */
-  #[Test]
-  public function name_getter() {
-    $this->assertEquals('Europe/Berlin', (new TimeZone('Europe/Berlin'))->getName());
-  }
-
-  /** @deprecated */
-  #[Test]
-  public function offsetDST() {
-    $this->assertEquals('+0200', (new TimeZone('Europe/Berlin'))->getOffset(new Date('2007-08-21')));
-  }
-
-  /** @deprecated */
-  #[Test]
-  public function offsetNoDST() {
-    $this->assertEquals('+0100', (new TimeZone('Europe/Berlin'))->getOffset(new Date('2007-01-21')));
-  }
-
-  /** @deprecated */
-  #[Test]
-  public function offsetWithHalfHourDST() {
-    // Australia/Adelaide is +10:30 in DST
-    $this->assertEquals('+1030', (new TimeZone('Australia/Adelaide'))->getOffset(new Date('2007-01-21')));
-  }
-
-  /** @deprecated */
-  #[Test]
-  public function offsetWithHalfHourNoDST() {
-    // Australia/Adelaide is +09:30 in non-DST
-    $this->assertEquals('+0930', (new TimeZone('Australia/Adelaide'))->getOffset(new Date('2007-08-21')));
-  }
-
-  /** @deprecated */
-  #[Test]
-  public function offsetInSecondsDST() {
-    $this->assertEquals(7200, (new TimeZone('Europe/Berlin'))->getOffsetInSeconds(new Date('2007-08-21')));
-  }
-
-  /** @deprecated */
-  #[Test]
-  public function offsetInSecondsNoDST() {
-    $this->assertEquals(3600, (new TimeZone('Europe/Berlin'))->getOffsetInSeconds(new Date('2007-01-21')));
-  }
 }
