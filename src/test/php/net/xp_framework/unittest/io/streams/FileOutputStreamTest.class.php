@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\streams\FileOutputStream;
-use io\{File, FileUtil, IOException, TempFile};
+use io\{File, Files, IOException, TempFile};
 use lang\IllegalArgumentException;
 use unittest\{Expect, PrerequisitesNotMetError, Test};
 
@@ -40,7 +40,7 @@ class FileOutputStreamTest extends \unittest\TestCase {
     with ($stream= new FileOutputStream($this->file), $buffer= 'Created by '.$this->name); {
       $stream->write($buffer);
       $this->file->close();
-      $this->assertEquals($buffer, FileUtil::read($this->file));
+      $this->assertEquals($buffer, Files::read($this->file));
     }
   }
 
@@ -49,7 +49,7 @@ class FileOutputStreamTest extends \unittest\TestCase {
     with ($stream= new FileOutputStream($this->file, true)); {
       $stream->write('!');
       $this->file->close();
-      $this->assertEquals('Created by FileOutputStreamTest!', FileUtil::read($this->file));
+      $this->assertEquals('Created by FileOutputStreamTest!', Files::read($this->file));
     }
   }
 
@@ -112,7 +112,7 @@ class FileOutputStreamTest extends \unittest\TestCase {
     with ($stream= new FileOutputStream($this->file)); {
       $stream->truncate(5);
       $this->file->close();
-      $this->assertEquals('Exist', FileUtil::read($this->file));
+      $this->assertEquals('Exist', Files::read($this->file));
     }
   }
 }

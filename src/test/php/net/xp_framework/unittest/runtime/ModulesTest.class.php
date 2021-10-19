@@ -1,6 +1,6 @@
 <?php namespace net\xp_framework\unittest\runtime;
 
-use io\{File, FileUtil, Folder};
+use io\{File, Files, Folder};
 use lang\Environment;
 use unittest\{AfterClass, Expect, Test, TestCase};
 use xp\runtime\{CouldNotLoadDependencies, Modules};
@@ -21,7 +21,7 @@ class ModulesTest extends TestCase {
       if (is_array($definition)) {
         self::create(new Folder($f, $name), $definition);
       } else {
-        FileUtil::write(new File($f, $name), $definition);
+        Files::write(new File($f, $name), $definition);
       }
     }
     return $f;

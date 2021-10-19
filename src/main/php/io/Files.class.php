@@ -3,8 +3,8 @@
 /**
  * File utility functions
  *
- * @see   xp://io.File
- * @test  xp://net.xp_framework.unittest.io.FileUtilTest
+ * @see   io.File
+ * @test  net.xp_framework.unittest.io.FilesTest
  */
 class Files {
 

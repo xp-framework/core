@@ -1,6 +1,6 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use io\{File, FileUtil};
+use io\{File, Files};
 use lang\{Environment, IllegalArgumentException};
 use unittest\{Expect, Test, TestCase};
 use util\{FilesystemPropertySource, Properties};
@@ -21,7 +21,7 @@ class FilesystemPropertySourceTest extends TestCase {
 
     // Create a temporary ini file
     $this->tempFile= new File($tempDir, 'temp.ini');
-    FileUtil::write($this->tempFile, "[section]\nkey=value\n");
+    Files::write($this->tempFile, "[section]\nkey=value\n");
   }
 
   /** @return void */
