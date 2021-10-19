@@ -7,6 +7,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Merged PR #295: Remove lang.Thread and lang.IllegalThreadStateException,
+  these were Un\*x only, wrapping *ext/pcntl* library functions
+  (@thekid)
 * Merged PR #294: Remove resource provider and import facility - @thekid
 * Merged PR #293: Remove deprecated timezone methods - @thekid
 * Removed deprecated `io.streams.MemoryInputStream::getBytes()` method
