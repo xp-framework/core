@@ -1,6 +1,6 @@
 <?php namespace net\xp_framework\unittest\io;
 
-use io\{FileUtil, IOException, TempFile};
+use io\{Files, IOException, TempFile};
 use lang\{Environment, IllegalStateException};
 use unittest\{Test, TestCase};
 
@@ -33,7 +33,7 @@ class TempFileTest extends TestCase {
   public function containing() {
     $t= (new TempFile())->containing('Test');
     try {
-      $this->assertEquals('Test', FileUtil::read($t));
+      $this->assertEquals('Test', Files::read($t));
     } finally {
       $t->unlink();
     }

@@ -1,7 +1,7 @@
 <?php namespace lang\archive;
  
+use io\{EncapsedStream, Files, File};
 use lang\{ElementNotFoundException, Value};
-use io\{EncapsedStream, FileUtil, File};
 
 /**
  * Archives contain a collection of classes.
@@ -59,7 +59,7 @@ class Archive implements Value {
    * @param   io.File file
    */
   public function addFile($id, $file) {
-    $bytes= FileUtil::getContents($file);
+    $bytes= Files::read($file);
     $this->_index[$id]= [strlen($bytes), -1, $bytes];
   }
   

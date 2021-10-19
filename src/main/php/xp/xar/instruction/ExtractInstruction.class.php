@@ -1,8 +1,8 @@
 <?php namespace xp\xar\instruction;
 
-use xp\xar\Options;
-use io\{File, FileUtil, Folder};
+use io\{File, Files, Folder};
 use lang\archive\Archive;
+use xp\xar\Options;
 
 /**
  * Extract Instruction
@@ -58,7 +58,7 @@ class ExtractInstruction extends AbstractInstruction {
         $dir= new Folder(str_replace('/', DIRECTORY_SEPARATOR, dirname($entry)));
         if (!$dir->exists()) { $dir->create(); }
         
-        FileUtil::setContents($f, $data);
+        Files::write($f, $data);
       }
       
       $this->options & Options::VERBOSE && $this->out->writeLinef('%10s %s', number_format(strlen($data), 0, false, '.'), $entry);

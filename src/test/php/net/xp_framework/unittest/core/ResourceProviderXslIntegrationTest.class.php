@@ -1,6 +1,5 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use io\{File, FileUtil};
 use unittest\actions\ExtensionAvailable;
 use unittest\{BeforeClass, Test, TestCase};
 use xml\DomXSLProcessor;

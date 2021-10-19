@@ -6,7 +6,7 @@
  * @see   io.File
  * @test  net.xp_framework.unittest.io.FilesTest
  */
-abstract class Files {
+class Files {
 
   /**
    * Retrieve file contents as a string. If the file was previously open,
