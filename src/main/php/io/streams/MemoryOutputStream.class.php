@@ -76,16 +76,6 @@ class MemoryOutputStream implements OutputStream, Seekable, Truncation {
   public function bytes() { return $this->bytes; }
 
   /**
-   * Retrieve stored bytes
-   *
-   * @deprecated Use bytes() instead!
-   * @return  string
-   */
-  public function getBytes() { 
-    return $this->bytes;
-  }
-
-  /**
    * Close this output stream.
    *
    * @return void

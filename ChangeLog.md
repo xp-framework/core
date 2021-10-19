@@ -7,6 +7,8 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Removed deprecated `io.streams.MemoryInputStream::getBytes()` method
+  (@thekid)
 * Merged PR #292: Remove deprecated reader and writer methods from io.streams
   (@thekid)
 * Removed deprecated lang.Primitive::$DOUBLE (replaced by `FLOAT`)
