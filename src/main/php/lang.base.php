@@ -403,17 +403,6 @@ function typeof($arg) {
 }
 // }}}
 
-// {{{ class import
-class import {
-  function __construct($str) {
-    $class= xp::$loader->loadClass0($str);
-    xp::$cli[]= function($scope) use ($class) {
-      $class::__import($scope);
-    };
-  }
-}
-// }}}
-
 // {{{ interface IDisposable
 if (!interface_exists(\IDisposable::class, false)) {
   eval('interface IDisposable { public function __dispose(); }');
@@ -490,13 +479,5 @@ spl_autoload_register(function($class) {
   if (null === $cl) return false;
   $cl->loadClass0($name);
   return true;
-});
-spl_autoload_register(function($class) {
-  if (false === strrpos($class, '\\import')) {
-    return false;
-  } else {
-    class_alias('import', $class);
-    return true;
-  }
 });
 // }}}
