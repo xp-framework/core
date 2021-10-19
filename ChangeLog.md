@@ -28,6 +28,9 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented 2nd part of xp-framework/rfc#335: Drop annotation key/value
+  pair syntax, see PR #237. Use PHP 8 named arguments instead!
+  (@thekid)
 * Implemented 2nd part of xp-framework/rfc#336: Deprecating XP annotation
   syntax. This will raise *E_USER_DEPRECATED* warnings, see PR #284
   (@thekid)
