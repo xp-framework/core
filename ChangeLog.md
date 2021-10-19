@@ -26,6 +26,12 @@ XP Framework Core ChangeLog
   (@thekid)
 * Renamed `master` branch to `main` - @thekid
 
+### RFCs
+
+* Implemented 2nd part of xp-framework/rfc#336: Deprecating XP annotation
+  syntax. This will raise *E_USER_DEPRECATED* warnings, see PR #284
+  (@thekid)
+
 ## 10.14.0 / 2021-09-26
 
 ### Features
