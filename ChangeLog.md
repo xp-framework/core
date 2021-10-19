@@ -7,6 +7,7 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Merged PR #294: Remove resource provider and import facility - @thekid
 * Merged PR #293: Remove deprecated timezone methods - @thekid
 * Removed deprecated `io.streams.MemoryInputStream::getBytes()` method
   (@thekid)
