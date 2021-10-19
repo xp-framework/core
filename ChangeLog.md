@@ -7,6 +7,8 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Merged PR #291: Remove io.FileUtil - replaced by the `io.Files` class
+  (@thekid)
 * Merged PR #290: Remove util.PropertyManager - replaced by libraries such
   as `xp-forge/inject`
   (@thekid)
