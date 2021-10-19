@@ -9,17 +9,6 @@
 class StringReader extends Reader {
 
   /**
-   * Set underlying input stream
-   *
-   * @deprecated Use redirect() instead
-   * @param  io.streams.InputStream $stream
-   * @return void
-   */
-  public function setStream(InputStream $stream) {
-    $this->redirect($stream);
-  }
-
-  /**
    * Read a number of bytes. Returns NULL if no more data is available.
    *
    * @param   int size default 8192

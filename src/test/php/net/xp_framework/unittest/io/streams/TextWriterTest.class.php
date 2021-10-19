@@ -75,20 +75,13 @@ class TextWriterTest extends \unittest\TestCase {
 
   #[Test]
   public function unixLineSeparatorIsDefault() {
-    $this->assertEquals("\n", $this->newWriter()->getNewLine());
-  }
-
-  #[Test]
-  public function setNewLine() {
-    $w= $this->newWriter();
-    $w->setNewLine("\r");
-    $this->assertEquals("\r", $w->getNewLine());
+    $this->assertEquals("\n", $this->newWriter()->newLine());
   }
 
   #[Test]
   public function withNewLine() {
     $w= $this->newWriter()->withNewLine("\r");
-    $this->assertEquals("\r", $w->getNewLine());
+    $this->assertEquals("\r", $w->newLine());
   }
 
   #[Test]

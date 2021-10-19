@@ -45,14 +45,6 @@ abstract class Reader implements InputStreamReader, Closeable, Value {
   /**
    * Returns the underlying stream
    *
-   * @deprecated Use stream() instead
-   * @return  io.streams.InputStream stream
-   */
-  public function getStream() { return $this->stream; }
-
-  /**
-   * Returns the underlying stream
-   *
    * @return  io.streams.InputStream stream
    */
   public function stream() { return $this->stream; }
