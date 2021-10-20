@@ -58,63 +58,6 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
     return $out;
   }
 
-  #[Test]
-  public function loadLoadedLibrary() {
-    $this->assertEquals(
-      '+OK No exception thrown',
-      $this->runInNewRuntime(Runtime::getInstance()->startupOptions()->withSetting('enable_dl', 1), '
-        try {
-          Runtime::getInstance()->loadLibrary("standard");
-          echo "+OK No exception thrown";
-        } catch (\lang\Throwable $e) {
-          echo "-ERR ".nameof($e);
-        }
-      ')
-    );
-  }
-
-  #[Test]
-  public function loadNonExistantLibrary() {
-    $this->assertEquals(
-      '+OK lang.ElementNotFoundException',
-      $this->runInNewRuntime(Runtime::getInstance()->startupOptions()->withSetting('enable_dl', 1), '
-        try {
-          Runtime::getInstance()->loadLibrary(":DOES-NOT-EXIST");
-          echo "-ERR No exception thrown";
-        } catch (\lang\ElementNotFoundException $e) {
-          echo "+OK ".nameof($e);
-        }
-      ')
-    );
-  }
-
-  #[Test]
-  public function loadLibraryWithoutEnableDl() {
-    $this->assertEquals(
-      '+OK lang.IllegalAccessException',
-      $this->runInNewRuntime(Runtime::getInstance()->startupOptions()->withSetting('enable_dl', 0), '
-        try {
-          Runtime::getInstance()->loadLibrary("irrelevant");
-          echo "-ERR No exception thrown";
-        } catch (\lang\IllegalAccessException $e) {
-          echo "+OK ".nameof($e);
-        }
-      ')
-    );
-  }
-
-  #[Test, Ignore('Enable and edit library name to something loadable to see information')]
-  public function displayInformation() {
-    echo $this->runInNewRuntime(Runtime::getInstance()->startupOptions()->withSetting('enable_dl', 1), '
-      try {
-        $r= Runtime::getInstance()->loadLibrary("xsl");
-        echo "+OK: ", $r ? "Loaded" : "Compiled";
-      } catch (\lang\Throwable $e) {
-        echo "-ERR ".$e->toString();
-      }
-    ');
-  }
-
   #[Test, Ignore('Enable to see information')]
   public function displayCmdLineEnvironment() {
     echo $this->runInNewRuntime(Runtime::getInstance()->startupOptions(), '

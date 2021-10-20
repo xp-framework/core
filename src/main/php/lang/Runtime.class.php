@@ -31,50 +31,6 @@ class Runtime {
   }
   
   /**
-   * Loads a dynamic library.
-   *
-   * @see     php://dl
-   * @param   string name
-   * @return  bool TRUE if the library was loaded, FALSE if it was already loaded
-   * @throws  lang.IllegalAccessException in case library loading is prohibited
-   * @throws  lang.ElementNotFoundException in case the library does not exist
-   * @throws  lang.RuntimeError in case dl() fails
-   */
-  public function loadLibrary($name) {
-    if (extension_loaded($name)) return false;
-  
-    // dl() will fatal if any of these are set - prevent this
-    if (!(bool)ini_get('enable_dl') || (bool)ini_get('safe_mode')) {
-      throw new IllegalAccessException(sprintf(
-        'Loading libraries not permitted by system configuration [enable_dl= %s, safe_mode= %s]',
-        ini_get('enable_dl'),
-        ini_get('safe_mode')
-      ));
-    }
-    
-    // Qualify filename
-    $path= rtrim(realpath(ini_get('extension_dir')), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-    $filename= $name.'.'.PHP_SHLIB_SUFFIX;
-    
-    // Try php_<name>.<ext>, <name>.<ext>      
-    if (file_exists($lib= $path.'php_'.$filename)) {
-      // E.g. php_sybase_ct.dll
-    } else if (file_exists($lib= $path.$filename)) {
-      // E.g. sybase_ct.so
-    } else {
-      throw new ElementNotFoundException('Cannot find library "'.$name.'" in "'.$path.'"');
-    }
-    
-    // Found library, try to load it. dl() expects given argument to not contain
-    // a path and will fail with "Temporary module name should contain only 
-    // filename" if it does.
-    if (!dl(basename($lib))) {
-      throw new RuntimeError('dl() failed for '.$lib);
-    }
-    return true;
-  }
-
-  /**
    * Returns the total amount of memory available to the runtime. If there
    * is no limit zero will be returned.
    *
