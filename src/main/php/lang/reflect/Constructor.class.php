@@ -1,7 +1,7 @@
 <?php namespace lang\reflect;
 
-use lang\{Type, XPClass};
 use lang\IllegalAccessException;
+use lang\{Type, XPClass};
 
 /**
  * Represents a class' constructor
@@ -68,8 +68,6 @@ class Constructor extends Routine {
       $this->_reflect->setAccessible(true);
       $this->_reflect->invokeArgs($instance, $args);
       return $instance;
-    } catch (\lang\SystemExit $e) {
-      throw $e;
     } catch (\Throwable $e) {
       throw new TargetInvocationException(XPClass::nameOf($this->_class).'::<init>', $e);
     }
