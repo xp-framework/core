@@ -65,6 +65,12 @@ the next step of phasing out XP annotation syntax in favor of PHP 8's
   syntax. This will raise *E_USER_DEPRECATED* warnings, see PR #284
   (@thekid)
 
+## 10.15.0 / 2021-10-21
+
+### Features
+
+* Merged PR #301: Add new util.ClassPathPropertySource - @thekid
+
 ## 10.14.0 / 2021-09-26
 
 ### Features
