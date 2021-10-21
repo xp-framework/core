@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.15.0 / 2021-10-21
+
+### Features
+
+* Merged PR #301: Add new util.ClassPathPropertySource - @thekid
+
 ## 10.14.0 / 2021-09-26
 
 ### Features
