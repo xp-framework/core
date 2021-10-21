@@ -1,17 +1,17 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use io\{File, Files};
-use lang\{Environment, IllegalArgumentException};
+use lang\{Environment, IllegalArgumentException, FileSystemClassLoader};
 use unittest\{Expect, Test, TestCase};
-use util\{FilesystemPropertySource, Properties};
+use util\{ClassPathPropertySource, Properties};
 
-class FilesystemPropertySourceTest extends TestCase {
+class ClassPathPropertySourceTest extends TestCase {
   protected $tempFile, $fixture;
 
   /** @return void */
   public function setUp() {
     $tempDir= realpath(Environment::tempDir());
-    $this->fixture= new FilesystemPropertySource($tempDir);
+    $this->fixture= new ClassPathPropertySource(null, new FileSystemClassLoader($tempDir));
 
     // Create a temporary ini file
     $this->tempFile= new File($tempDir, 'temp.ini');
@@ -36,8 +36,8 @@ class FilesystemPropertySourceTest extends TestCase {
   #[Test]
   public function fetch_existing_ini_file() {
     $this->assertEquals(
-      new Properties($this->tempFile->getURI()),
-      $this->fixture->fetch('temp')
+      ['key' => 'value'],
+      $this->fixture->fetch('temp')->readSection('section')
     );
   }
 

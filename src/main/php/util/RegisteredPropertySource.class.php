@@ -5,8 +5,7 @@ use lang\IllegalArgumentException;
 /**
  * Memory-based property source
  *
- * @deprecated
- * @test  xp://net.xp_framework.unittest.RegisteredPropertySourceTest
+ * @test  net.xp_framework.unittest.RegisteredPropertySourceTest
  */
 class RegisteredPropertySource implements PropertySource {
   protected $name, $prop;
@@ -39,8 +38,9 @@ class RegisteredPropertySource implements PropertySource {
    * @return util.PropertyAccess
    */
   public function fetch($name) {
-    if ($name !== $this->name)
+    if ($name !== $this->name) {
       throw new IllegalArgumentException('Access to property source under wrong name "'.$name.'"');
+    }
 
     return $this->prop;
   }
@@ -51,7 +51,7 @@ class RegisteredPropertySource implements PropertySource {
    * @return string
    */
   public function hashCode() {
-    return md5($this->name.serialize($this->prop));
+    return 'RP'.md5($this->name.serialize($this->prop));
   }
 
   /**
@@ -61,9 +61,6 @@ class RegisteredPropertySource implements PropertySource {
    * @return bool
    */
   public function equals($cmp) {
-    return $cmp instanceof self &&
-      $cmp->name === $this->name &&
-      $this->prop->equals($cmp->prop)
-    ;
+    return $cmp instanceof self && $cmp->name === $this->name && $this->prop->equals($cmp->prop);
   }
 }
