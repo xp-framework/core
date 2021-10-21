@@ -7,6 +7,7 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Merged PR #298: Remove Runtime::halt() and SystemExit - @thekid
 * Merged PR #274: Compact maps with a single key/value pair into one line
   (@thekid)
 * Merged PR #297: Remove generic application and service exceptions
