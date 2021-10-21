@@ -5,6 +5,7 @@ use lang\{IllegalArgumentException, ClassLoader};
 /**
  * Class path-based property source
  *
+ * @test  net.xp_framework.unittest.ClassPathPropertySourceTest
  */
 class ClassPathPropertySource implements PropertySource {
   protected $root, $loader;
@@ -27,7 +28,7 @@ class ClassPathPropertySource implements PropertySource {
    * @return  bool
    */
   public function provides($name) {
-    return $this->loader->providesResource($this->root.'/'.$name.'.ini');
+    return $this->loader->providesResource((null === $this->root ? '' : $this->root.'/').$name.'.ini');
   }
 
   /**
@@ -38,12 +39,18 @@ class ClassPathPropertySource implements PropertySource {
    * @throws  lang.IllegalArgumentException if property requested is not available
    */
   public function fetch($name) {
-    if (!$this->provides($name)) {
-      throw new IllegalArgumentException('No properties '.$name.' found at '.$this->root);
+    $resource= (null === $this->root ? '' : $this->root.'/').$name.'.ini';
+    if (!$this->loader->providesResource($resource)) {
+      throw new IllegalArgumentException(sprintf(
+        'No properties %s found at %s%s',
+        $name,
+        null === $this->root ? '' : $this->root.' @ ',
+        $this->loader->toString()
+      ));
     }
 
     $p= new Properties();
-    $p->load($this->loader->getResourceAsStream($this->root.'/'.$name.'.ini'));
+    $p->load($this->loader->getResourceAsStream($resource));
     return $p;
   }
 
