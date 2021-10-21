@@ -7,6 +7,8 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Merged PR #297: Remove generic application and service exceptions
+  (@thekid)
 * Merged PR #296: Remove lang.Runtime::loadLibrary() - @thekid
 * Merged PR #295: Remove lang.Thread and lang.IllegalThreadStateException,
   these were Un\*x only, wrapping *ext/pcntl* library functions
