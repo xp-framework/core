@@ -34,8 +34,7 @@ abstract class Objects {
       return $a->compareTo($b);
     } else if (is_array($a)) {
       if (!is_array($b)) return 1;
-      if (sizeof($a) < sizeof($b)) return -1;
-      if (sizeof($a) > sizeof($b)) return 1;
+      if (0 !== $r= sizeof($a) <=> sizeof($b)) return $r;
       foreach ($a as $key => $val) {
         if (!array_key_exists($key, $b)) return 1;
         if (0 !== $r= self::compare($val, $b[$key])) return $r;
@@ -81,21 +80,23 @@ abstract class Objects {
       $hash= print_r($val, true);
       if (isset($protect[$hash])) return '->{:recursion:}';
       $protect[$hash]= true;
-      if (0 === key($val)) {
+      if (0 === $key= key($val)) {
         $r= '';
-        foreach ($val as $val) {
-          $r.= ', '.self::stringOf($val, $indent);
+        foreach ($val as $value) {
+          $r.= ', '.self::stringOf($value, $indent);
         }
-        unset($protect[$hash]);
-        return '['.substr($r, 2).']';
+        $r= '['.substr($r, 2).']';
+      } else if (1 === sizeof($val)) {
+        $r= '['.$key.' => '.self::stringOf($val[$key], $indent.'  ').']';
       } else {
         $r= "[\n";
         foreach ($val as $key => $val) {
           $r.= $indent.'  '.$key.' => '.self::stringOf($val, $indent.'  ')."\n";
         }
-        unset($protect[$hash]);
-        return $r.$indent.']';
+        $r.= $indent.']';
       }
+      unset($protect[$hash]);
+      return $r;
     } else if ($val instanceof \Closure) {
       $sig= '';
       $f= new \ReflectionFunction($val);

@@ -242,11 +242,22 @@ class ObjectsTest extends TestCase {
     $this->assertEquals($expected, Objects::compare($a, $b));
   }
 
-  #[Test, Values([[null, 'null'], [true, 'true'], [false, 'false'], [-1, '-1'], [0, '0'], [1, '1'], [-1.0, '-1'], [0.0, '0'], [1.0, '1'], [6.1, '6.1'], ['', '""'], ['Test', '"Test"'], ['"Hello World"', '""Hello World""'], [[], '[]'], [[1, 2, 3], '[1, 2, 3]'], [['key' => 'value'], "[\n  key => \"value\"\n]"]])]
+  #[Test, Values([[null, 'null'], [true, 'true'], [false, 'false'], [-1, '-1'], [0, '0'], [1, '1'], [-1.0, '-1'], [0.0, '0'], [1.0, '1'], [6.1, '6.1'], ['', '""'], ['Test', '"Test"'], ['"Hello World"', '""Hello World""'], [[], '[]'], [[1, 2, 3], '[1, 2, 3]']])]
   public function stringOf($val, $expected) {
     $this->assertEquals($expected, Objects::stringOf($val));
   }
 
+  #[Test]
+  public function stringOf_single_pair_map() {
+    $this->assertEquals("[key => \"value\"]", Objects::stringOf(['key' => 'value']));
+  }
+
+  #[Test]
+  public function stringOf_map() {
+    $this->assertEquals("[\n  a => 1\n  b => 2\n]", Objects::stringOf(['a' => 1, 'b' => 2]));
+  }
+
+  #[Test]
   public function stringOf_function() {
     $this->assertEquals('<function()>',  Objects::stringOf(function() { }));
   }
