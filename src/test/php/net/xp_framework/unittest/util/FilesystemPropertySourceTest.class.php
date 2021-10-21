@@ -5,12 +5,6 @@ use lang\{Environment, IllegalArgumentException};
 use unittest\{Expect, Test, TestCase};
 use util\{FilesystemPropertySource, Properties};
 
-/**
- * Testcase for util.Properties class.
- *
- * @deprecated
- * @see   xp://util.FilesystemPropertySource
- */
 class FilesystemPropertySourceTest extends TestCase {
   protected $tempFile, $fixture;
 
