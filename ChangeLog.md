@@ -3,7 +3,7 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
-## 11.0.0 / ????-??-??
+## 11.0.0 / 2021-10-21
 
 This major release cleans up deprecated and unused features, and takes
 the next step of phasing out XP annotation syntax in favor of PHP 8's
