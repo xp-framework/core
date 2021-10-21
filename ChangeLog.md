@@ -5,14 +5,24 @@ XP Framework Core ChangeLog
 
 ## 11.0.0 / ????-??-??
 
+This major release cleans up deprecated and unused features, and takes
+the next step of phasing out XP annotation syntax in favor of PHP 8's
+native attributes.
+
 ### Heads up!
 
-* Merged PR #298: Remove Runtime::halt() and SystemExit - @thekid
+* Merged PR #298: Remove Runtime::halt() and SystemExit - functionality
+  was never used in any library
+  (@thekid)
 * Merged PR #274: Compact maps with a single key/value pair into one line
   (@thekid)
-* Merged PR #297: Remove generic application and service exceptions
+* Merged PR #297: Remove generic application and service exceptions, these
+  classes we unused.
   (@thekid)
-* Merged PR #296: Remove lang.Runtime::loadLibrary() - @thekid
+* Merged PR #296: Remove lang.Runtime::loadLibrary() - the PHP function
+  `dl()` has been regarded more or less deprecated and has been removed
+  from various SAPIs in the past, see https://www.php.net/dl
+  (@thekid)
 * Merged PR #295: Remove lang.Thread and lang.IllegalThreadStateException,
   these were Un\*x only, wrapping *ext/pcntl* library functions
   (@thekid)
