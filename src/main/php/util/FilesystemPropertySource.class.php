@@ -5,12 +5,10 @@ use lang\IllegalArgumentException;
 /**
  * Filesystem-based property source
  *
- * @deprecated
- * @test  xp://net.xp_framework.unittest.util.FilesystemPropertySourceTest
+ * @test  net.xp_framework.unittest.util.FilesystemPropertySourceTest
  */
 class FilesystemPropertySource implements PropertySource {
   protected $root;
-  protected $cache= [];
 
   /**
    * Constructor
@@ -28,7 +26,6 @@ class FilesystemPropertySource implements PropertySource {
    * @return  bool
    */
   public function provides($name) {
-    if (isset($this->cache[$name])) return true;
     return file_exists($this->root.DIRECTORY_SEPARATOR.$name.'.ini');
   }
 
@@ -44,11 +41,7 @@ class FilesystemPropertySource implements PropertySource {
       throw new IllegalArgumentException('No properties '.$name.' found at '.$this->root);
     }
 
-    if (!isset($this->cache[$name])) {
-      $this->cache[$name]= new Properties($this->root.DIRECTORY_SEPARATOR.$name.'.ini');
-    }
-    
-    return $this->cache[$name];
+    return new Properties($this->root.DIRECTORY_SEPARATOR.$name.'.ini')
   }
 
   /**
@@ -57,7 +50,7 @@ class FilesystemPropertySource implements PropertySource {
    * @return  string
    */
   public function hashCode() {
-    return md5($this->root);
+    return 'FS'.md5($this->root);
   }
 
   /**
