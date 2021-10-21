@@ -41,7 +41,7 @@ class FilesystemPropertySource implements PropertySource {
       throw new IllegalArgumentException('No properties '.$name.' found at '.$this->root);
     }
 
-    return new Properties($this->root.DIRECTORY_SEPARATOR.$name.'.ini')
+    return new Properties($this->root.DIRECTORY_SEPARATOR.$name.'.ini');
   }
 
   /**
