@@ -11,6 +11,9 @@ the next step of phasing out XP annotation syntax in favor of PHP 8's
 
 ### Heads up!
 
+* Merged PR #299: Remove xp::errorAt(). If necessary, access the static
+  `xp::$errors` map directly
+  (@thekid)
 * Merged PR #298: Remove Runtime::halt() and SystemExit - functionality
   was never used in any library
   (@thekid)
