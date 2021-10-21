@@ -7,6 +7,8 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Merged PR #274: Compact maps with a single key/value pair into one line
+  (@thekid)
 * Merged PR #297: Remove generic application and service exceptions
   (@thekid)
 * Merged PR #296: Remove lang.Runtime::loadLibrary() - @thekid
