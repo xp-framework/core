@@ -85,17 +85,6 @@ final class xp {
   }
   // }}}
 
-  // {{{ proto var errorAt(string file [, int line])
-  //     Returns errors that occured at the specified position or null
-  static function errorAt($file, $line= -1) {
-    if ($line < 0) {    // If no line is given, check for an error in the file
-      return xp::$errors[$file] ?? null;
-    } else {            // Otherwise, check for an error in the file on a certain line
-      return xp::$errors[$file][$line] ?? null;
-    }
-  }
-  // }}}
-  
   // {{{ proto string version()
   //     Retrieves current XP version
   static function version() {

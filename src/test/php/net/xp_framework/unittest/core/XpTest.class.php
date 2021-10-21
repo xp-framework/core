@@ -2,39 +2,11 @@
 
 use unittest\{Test, TestCase};
 
-/**
- * Tests the <xp> functions
- */
 class XpTest extends TestCase {
 
   #[Test]
   public function version() {
     $this->assertEquals(3, sscanf(\xp::version(), '%d.%d.%d', $series, $major, $minor));
-  }
-
-  #[Test]
-  public function no_error_here() {
-    $this->assertNull(\xp::errorAt(__FILE__));
-  }
-
-  #[Test]
-  public function triggered_error_at_file() {
-    trigger_error('Test');
-    $this->assertEquals(
-      [__LINE__ - 2 => ['Test' => ['class' => NULL, 'method' => 'trigger_error', 'cnt' => 1]]],
-      \xp::errorAt(__FILE__)
-    );
-    \xp::gc();
-  }
-
-  #[Test]
-  public function triggered_error_at_file_and_line() {
-    trigger_error('Test');
-    $this->assertEquals(
-      ['Test' => ['class' => NULL, 'method' => 'trigger_error', 'cnt' => 1]],
-      \xp::errorAt(__FILE__, __LINE__ - 3)
-    );
-    \xp::gc();
   }
 
   #[Test]
