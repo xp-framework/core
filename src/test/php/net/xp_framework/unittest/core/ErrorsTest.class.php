@@ -57,24 +57,24 @@ class ErrorsTest extends TestCase {
 
   #[Test]
   public function errorAt_given_a_file_without_error() {
-    $this->assertFalse((bool)\xp::errorAt(__FILE__));
+    $this->assertFalse(isset(\xp::$errors[__FILE__]));
   }
 
   #[Test]
   public function errorAt_given_a_file_with_error() {
     trigger_error('Test error');
-    $this->assertTrue((bool)\xp::errorAt(__FILE__));
+    $this->assertTrue(isset(\xp::$errors[__FILE__]));
   }
 
   #[Test]
   public function errorAt_given_a_file_and_line_without_error() {
-    $this->assertFalse((bool)\xp::errorAt(__FILE__, __LINE__ - 1));
+    $this->assertFalse(isset(\xp::$errors[__FILE__][__LINE__ - 1]));
   }
 
   #[Test]
   public function errorAt_given_a_file_and_line_with_error() {
     trigger_error('Test error');
-    $this->assertTrue((bool)\xp::errorAt(__FILE__, __LINE__ - 1));
+    $this->assertTrue(isset(\xp::$errors[__FILE__][__LINE__ - 1]));
   }
 
   #[Test, Expect(NullPointerException::class)]

@@ -386,7 +386,7 @@ class File implements Channel, Value {
    */
   public function eof() {
     $result= feof($this->_fd);
-    if (\xp::errorAt(__FILE__, __LINE__ - 1)) {
+    if (isset(\xp::$errors[__FILE__][__LINE__ - 1])) {
       $e= new IOException('Cannot determine eof of '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
