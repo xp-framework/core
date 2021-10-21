@@ -6,7 +6,6 @@ use lang\archive\ArchiveClassLoader;
  * Represents the runtime - that is, the PHP binary executing the
  * current process.
  *
- * @test  xp://net.xp_framework.unittest.core.SystemExitTest
  * @test  xp://net.xp_framework.unittest.core.RuntimeTest
  */
 class Runtime {
@@ -85,17 +84,6 @@ class Runtime {
     return $r;
   }
   
-  /**
-   * Stops execution by raising a SystemExit
-   *
-   * @see     xp://lang.SystemExit
-   * @param   int code default 0
-   * @param   string message default NULL
-   */
-  public static function halt($code= 0, $message= null) {
-    throw new SystemExit($code, $message);
-  }
-
   /**
    * Parse command line, stopping at first argument without "-"
    * or at "--" (php [options] -- [args...])

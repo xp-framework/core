@@ -314,8 +314,6 @@ class FunctionType extends Type {
     )); });
     try {
       return $closure(...$args);
-    } catch (SystemExit $e) {
-      throw $e;
     } catch (Throwable $e) {
       throw new \lang\reflect\TargetInvocationException($this->getName(), $e);
     }

@@ -86,8 +86,6 @@ class Method extends Routine {
         $this->_reflect->setAccessible(true);
       }
       return $this->_reflect->invokeArgs($obj, (array)$args);
-    } catch (\lang\SystemExit $e) {
-      throw $e;
     } catch (\Throwable $e) {
       throw new TargetInvocationException(XPClass::nameOf($this->_class).'::'.$this->_reflect->getName(), $e);
     }
