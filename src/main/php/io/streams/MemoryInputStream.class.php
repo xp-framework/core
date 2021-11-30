@@ -3,7 +3,7 @@
 /**
  * InputStream that reads from a given string.
  *
- * @test  xp://net.xp_framework.unittest.io.streams.MemoryInputStreamTest
+ * @test  net.xp_framework.unittest.io.streams.MemoryInputStreamTest
  */
 class MemoryInputStream implements InputStream, Seekable {
   protected $pos= 0;
@@ -12,17 +12,17 @@ class MemoryInputStream implements InputStream, Seekable {
   /**
    * Constructor
    *
-   * @param   string $bytes
+   * @param  string $bytes
    */
   public function __construct($bytes) {
-    $this->bytes= $bytes;
+    $this->bytes= (string)$bytes;
   }
 
   /**
    * Read a string
    *
-   * @param   int $limit default 8192
-   * @return  string
+   * @param  int $limit default 8192
+   * @return string
    */
   public function read($limit= 8192) {
     $chunk= substr($this->bytes, $this->pos, $limit);
@@ -45,15 +45,14 @@ class MemoryInputStream implements InputStream, Seekable {
    *
    * @return void
    */
-  public function close() {
-  }
+  public function close() { }
   
   /**
    * Seek to a given offset
    *
-   * @param   int $offset
-   * @param   int $whence default SEEK_SET (one of SEEK_[SET|CUR|END])
-   * @throws  io.IOException in case of error
+   * @param  int $offset
+   * @param  int $whence default SEEK_SET (one of SEEK_[SET|CUR|END])
+   * @throws io.IOException in case of error
    */
   public function seek($offset, $whence= SEEK_SET) {
     switch ($whence) {
@@ -66,14 +65,14 @@ class MemoryInputStream implements InputStream, Seekable {
   /**
    * Return current offset
    *
-   * @return  int
+   * @return int
    */
   public function tell() { return $this->pos; }
 
   /**
    * Return size
    *
-   * @return  int
+   * @return int
    */
   public function size() { return strlen($this->bytes); }
 

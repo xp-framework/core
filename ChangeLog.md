@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Cast given argument to string in `io.streams.MemoryInputStream`. Passing
+  *null* will no longer yield warnings in PHP 8.1
+  (@thekid)
+
 ## 11.0.0 / 2021-10-21
 
 This major release cleans up deprecated and unused features, and takes
