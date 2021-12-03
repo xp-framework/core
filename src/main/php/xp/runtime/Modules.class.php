@@ -115,6 +115,34 @@ class Modules {
         require($base.strtr($file, '/', DIRECTORY_SEPARATOR));
       }
 
+      // See https://www.php-fig.org/psr/psr-0/: Underscores special case, e.g.
+      // name\space\Class_Name => name/space/Class/Name.php
+      foreach ($defines['autoload']['psr-0'] ?? [] as $prefix => $source) {
+        $path= $base.strtr($source, '/', DIRECTORY_SEPARATOR);
+        spl_autoload_register(function($class) use($prefix, $path) {
+          if (0 !== strncmp($class, $prefix, strlen($prefix))) return false;
+
+          if ($p= strrpos($class, '\\')) {
+            $path.= strtr(substr($class, 0, $p + 1), '\\', DIRECTORY_SEPARATOR);
+            $class= substr($class, $p + 1);
+          }
+
+          require $path.strtr($class, '_', DIRECTORY_SEPARATOR).'.php';
+        });
+      }
+
+      // See https://www.php-fig.org/psr/psr-4/: Prefix is stripped, e.g.
+      // name\space\Class_Name with prefix "name" => space/Class_Name.php
+      foreach ($defines['autoload']['psr-4'] ?? [] as $prefix => $source) {
+        $path= $base.strtr($source, '/', DIRECTORY_SEPARATOR);
+        spl_autoload_register(function($class) use($prefix, $path) {
+          $l= strlen($prefix);
+          if (0 !== strncmp($class, $prefix, $l)) return false;
+
+          require $path.substr(strtr($class, '\\', DIRECTORY_SEPARATOR), $l).'.php';
+        });
+      }
+
       $errors= [];
       foreach ($defines['require'] as $dependency => $version) {
         if ($e= $this->load($namespace, $dependency, $version)) $errors[$dependency]= $e;
