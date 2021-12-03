@@ -11,6 +11,9 @@ class CouldNotLoadDependencies extends XPException {
     $this->errors= $errors;
   }
 
-  /** Returns module modules */
+  /** Returns errors */
+  public function errors(): array { return $this->errors; }
+
+  /** Returns modules */
   public function modules(): array { return array_keys($this->errors); }
 }

@@ -33,7 +33,12 @@ class Evaluate {
       $modules= $code->modules();
       $dir= $modules->userDir($code->namespace());
 
-      Console::$err->writeLine("\033[41;1;37mError: ", $e->getMessage(), "\033[0m\n");
+      Console::$err->writeLine("\033[41;1;37mCould not load script dependencies:\033[0m");
+      foreach ($e->errors() as $module => $error) {
+        Console::$err->writeLine('> ', $module, ': ', $error);
+      }
+      Console::$err->writeLine();
+
       Console::$err->writeLine("To install the missing dependencies, use:\n\n\033[36mmkdir -p '", $dir, "'");
       foreach ($e->modules() as $module) {
         $version= $modules->version($module);
