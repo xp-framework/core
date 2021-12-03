@@ -145,7 +145,14 @@ class Modules {
 
       $errors= [];
       foreach ($defines['require'] as $dependency => $version) {
-        if ($e= $this->load($namespace, $dependency, $version)) $errors[$dependency]= $e;
+
+        // PHP extensions vs. userland dependencies
+        if (0 === strncmp($dependency, 'ext-', 4)) {
+          $extension= substr($dependency, 4);
+          extension_loaded($extension) || $errors[$dependency]= new ExtensionNotLoaded($extension);
+        } else {
+          if ($e= $this->load($namespace, $dependency, $version)) $errors[$dependency]= $e;
+        }
       }
       return $errors ? new CouldNotLoadDependencies($errors) : null;
     }
