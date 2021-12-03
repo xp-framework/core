@@ -125,7 +125,7 @@ class Modules {
       // See https://www.php-fig.org/psr/psr-0/: Underscores special case, e.g.
       // name\space\Class_Name => name/space/Class/Name.php
       foreach ($defines['autoload']['psr-0'] ?? [] as $prefix => $source) {
-        $path= $base.strtr($source, '/', DIRECTORY_SEPARATOR);
+        $path= $base.rtrim(strtr($source, '/', DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
         spl_autoload_register(function($class) use($prefix, $path) {
           if (0 !== strncmp($class, $prefix, strlen($prefix))) return false;
 
