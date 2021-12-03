@@ -63,6 +63,14 @@ class ModulesTest extends TestCase {
     $fixture->require($namespace= 'test');
   }
 
+  #[Test]
+  public function requiring_extension_works() {
+    $fixture= new Modules();
+    $fixture->add('ext-standard', '*');
+
+    $fixture->require($namespace= 'test');
+  }
+
   #[Test, Expect(CouldNotLoadDependencies::class)]
   public function requiring_non_existant() {
     $fixture= new Modules();
@@ -91,18 +99,30 @@ class ModulesTest extends TestCase {
     $fixture->require($namespace= 'test');
   }
 
-  #[Test, Expect(CouldNotLoadDependencies::class)]
-  public function requiring_library_with_missing_dependencies() {
+  #[Test, Values([['"ext-standard": "*"'], ['"php": ">=7.0"']])]
+  public function requiring_library_with($dependency) {
     $s= ModulesTest::structure([
       'test' => ['vendor' => [
         'thekid' => ['library' => [
-          'composer.json' => '{
-            "require": {
-              "perpetuum/mobile" : "^1.0"
-            }
-          }'
-        ]
-      ]]]
+          'composer.json' => '{"require": {'.$dependency.'} }'
+        ]]
+      ]]
+    ]);
+
+    $fixture= newinstance(Modules::class, [], ['userDir' => $s]);
+    $fixture->add('thekid/library');
+
+    $fixture->require($namespace= 'test');
+  }
+
+  #[Test, Expect(CouldNotLoadDependencies::class), Values([['"perpetuum/mobile": "^1.0"'], ['"ext-magic": "*"']])]
+  public function requiring_library_with_missing($dependency) {
+    $s= ModulesTest::structure([
+      'test' => ['vendor' => [
+        'thekid' => ['library' => [
+          'composer.json' => '{"require": {'.$dependency.'} }'
+        ]]
+      ]]
     ]);
 
     $fixture= newinstance(Modules::class, [], ['userDir' => $s]);
