@@ -151,7 +151,7 @@ class Modules {
       }
 
       $errors= [];
-      foreach ($defines['require'] as $dependency => $version) {
+      foreach ($defines['require'] ?? [] as $dependency => $version) {
         if ($e= $this->load($namespace, $dependency, $version)) $errors[$dependency]= $e;
       }
       return $errors ? new CouldNotLoadDependencies($errors) : null;
