@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\runtime;
 
 use io\{File, Files, Folder};
-use lang\Environment;
+use lang\{Environment, XPClass};
 use unittest\{AfterClass, Expect, Test, TestCase};
 use xp\runtime\{CouldNotLoadDependencies, Modules};
 
@@ -95,8 +95,35 @@ class ModulesTest extends TestCase {
 
     $fixture= newinstance(Modules::class, [], ['userDir' => $s]);
     $fixture->add('thekid/library');
-
     $fixture->require($namespace= 'test');
+  }
+
+  #[Test, Values([['"test\\\\": "src/"'], ['"test\\\\": "src"'], ['"test": "src/"'], ['"test": "src"']])]
+  public function requiring_library_with_psr4($definition) {
+    $class= 'PSR4'.crc32($definition);
+    $s= ModulesTest::structure([
+      'test' => ['vendor' => [
+        'thekid' => ['library' => [
+          'composer.json' => '{"autoload": {"psr-4": {'.$definition.'} } }',
+          'src' => [
+            "{$class}.php" => "<?php namespace test; class {$class} {
+              public static function loaded() { return true; }
+            }"
+          ]
+        ]]
+      ]]
+    ]);
+
+    $fixture= newinstance(Modules::class, [], ['userDir' => $s]);
+    $fixture->add('thekid/library');
+    $fixture->require($namespace= 'test');
+
+    try {
+      $this->assertTrue((new XPClass("test\\{$class}"))->getMethod('loaded')->invoke(null));
+    } finally {
+      $loaders= spl_autoload_functions();
+      spl_autoload_unregister($loaders[sizeof($loaders) - 1]);
+    }
   }
 
   #[Test, Values([['"ext-standard": "*"'], ['"php": ">=7.0"']])]
@@ -111,7 +138,6 @@ class ModulesTest extends TestCase {
 
     $fixture= newinstance(Modules::class, [], ['userDir' => $s]);
     $fixture->add('thekid/library');
-
     $fixture->require($namespace= 'test');
   }
 

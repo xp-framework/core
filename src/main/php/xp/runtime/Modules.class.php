@@ -141,7 +141,7 @@ class Modules {
       // See https://www.php-fig.org/psr/psr-4/: Prefix is stripped, e.g.
       // name\space\Class_Name with prefix "name" => space/Class_Name.php
       foreach ($defines['autoload']['psr-4'] ?? [] as $prefix => $source) {
-        $path= $base.strtr($source, '/', DIRECTORY_SEPARATOR);
+        $path= $base.rtrim(strtr($source, '/', DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
         spl_autoload_register(function($class) use($prefix, $path) {
           $l= strlen($prefix);
           if (0 !== strncmp($class, $prefix, $l)) return false;
