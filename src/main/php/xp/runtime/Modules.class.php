@@ -150,6 +150,15 @@ class Modules {
         });
       }
 
+      // See https://getcomposer.org/doc/04-schema.md#classmap. Classmaps
+      // are generated for libraries and all of their dependencies, ensure
+      // we only it load once.
+      if (isset($defines['autoload']['classmap'])) {
+        if (is_array($map= require_once $base.'../../composer/autoload_classmap.php')) {
+          spl_autoload_register(function($class) use($map) { isset($map[$class]) && require $map[$class]; });
+        }
+      }
+
       $errors= [];
       foreach ($defines['require'] ?? [] as $dependency => $version) {
         if ($e= $this->load($namespace, $dependency, $version)) $errors[$dependency]= $e;
