@@ -86,7 +86,7 @@ class Code {
   public function head() {
     return
       ($this->namespace ? 'namespace '.$this->namespace.';' : '').
-      (empty($this->imports) ? '' : 'use '.implode(', ', $this->imports).';')
+      (empty($this->imports) ? '' : 'use '.implode('; use ', $this->imports).';')
     ;
   }
 
