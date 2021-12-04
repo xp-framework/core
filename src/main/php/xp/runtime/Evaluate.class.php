@@ -7,7 +7,27 @@ use util\cmd\Console;
  * Evaluates sourcecode. Used by `xp eval` subcommand.
  */
 class Evaluate {
-  
+
+  /**
+   * Shows nested cause of an error
+   *
+   * @param  lang.Throwable $error
+   * @param  string $indent
+   * @return string
+   */
+  private static function cause($error, $indent= '') {
+    if (!($error instanceof CouldNotLoadDependencies)) return $error->getMessage();
+
+    $cause= $error->errors();
+    if (1 === sizeof($cause)) return $error->getMessage().' > '.self::cause(current($cause));
+
+    $r= $error->getMessage().": {\n";
+    foreach ($error->errors() as $module => $chained) {
+      $r.= '  '.str_replace("\n", "\n  ".$indent, self::cause($chained, $indent.'  '))."\n";
+    }
+    return $indent.$r.'}';
+  }
+
   /**
    * Main
    *
@@ -35,7 +55,7 @@ class Evaluate {
 
       Console::$err->writeLine("\033[41;1;37mCould not load script dependencies:\033[0m");
       foreach ($e->errors() as $module => $error) {
-        Console::$err->writeLine('> ', $module, ': ', $error);
+        Console::$err->writeLine('> ', $module, ': ', self::cause($error));
       }
       Console::$err->writeLine();
 
