@@ -119,7 +119,7 @@ class Modules {
 
       $this->loaded[$module]= true;
       foreach ($defines['autoload']['files'] ?? [] as $file) {
-        require($base.strtr($file, '/', DIRECTORY_SEPARATOR));
+        require $base.strtr($file, '/', DIRECTORY_SEPARATOR);
       }
 
       // See https://www.php-fig.org/psr/psr-0/: Underscores special case, e.g.
