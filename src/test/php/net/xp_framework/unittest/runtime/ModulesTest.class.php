@@ -126,7 +126,7 @@ class ModulesTest extends TestCase {
     }
   }
 
-  #[Test, Values([['"test\\\\": "src/"'], ['"test\\\\": "src"'], ['"test": "src/"'], ['"test": "src"']])]
+  #[Test, Values([['"test\\\\": "src/"'], ['"test\\\\": "src"'], ['"test": "src/"'], ['"test": "src"'], ['"test\\\\": ["lib", "src"]']])]
   public function requiring_library_with_psr0_underscore($definition) {
     $class= 'PSR0U'.crc32($definition);
     $s= ModulesTest::structure([
@@ -154,7 +154,7 @@ class ModulesTest extends TestCase {
     }
   }
 
-  #[Test, Values([['"test\\\\": "src/"'], ['"test\\\\": "src"'], ['"test": "src/"'], ['"test": "src"']])]
+  #[Test, Values([['"test\\\\": "src/"'], ['"test\\\\": "src"'], ['"test": "src/"'], ['"test": "src"'], ['"test\\\\": ["lib", "src"]']])]
   public function requiring_library_with_psr4($definition) {
     $class= 'PSR4'.crc32($definition);
     $s= ModulesTest::structure([

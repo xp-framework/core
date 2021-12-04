@@ -124,31 +124,43 @@ class Modules {
 
       // See https://www.php-fig.org/psr/psr-0/: Underscores special case, e.g.
       // name\space\Class_Name => name/space/Class/Name.php
-      foreach ($defines['autoload']['psr-0'] ?? [] as $prefix => $source) {
-        $path= $base.rtrim(strtr($source, '/', DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-        spl_autoload_register(function($class) use($prefix, $path) {
+      foreach ($defines['autoload']['psr-0'] ?? [] as $prefix => $sources) {
+        $paths= [];
+        foreach ((array)$sources as $source) {
+          $paths[]= $base.rtrim(strtr($source, '/', DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+        }
+        spl_autoload_register(function($class) use($prefix, $paths) {
           if (0 !== strncmp($class, $prefix, strlen($prefix))) return false;
 
           if ($p= strrpos($class, '\\')) {
-            $path.= strtr(substr($class, 0, $p + 1), '\\', DIRECTORY_SEPARATOR);
+            $namespace= strtr(substr($class, 0, $p + 1), '\\', DIRECTORY_SEPARATOR);
             $class= substr($class, $p + 1);
+          } else {
+            $namespace= '';
           }
 
-          $f= $path.strtr($class, '_', DIRECTORY_SEPARATOR).'.php';
-          is_file($f) && require $f;
+          foreach ($paths as $path) {
+            $f= $path.$namespace.strtr($class, '_', DIRECTORY_SEPARATOR).'.php';
+            if (is_file($f)) return require $f;
+          }
         });
       }
 
       // See https://www.php-fig.org/psr/psr-4/: Prefix is stripped, e.g.
       // name\space\Class_Name with prefix "name" => space/Class_Name.php
-      foreach ($defines['autoload']['psr-4'] ?? [] as $prefix => $source) {
-        $path= $base.rtrim(strtr($source, '/', DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-        spl_autoload_register(function($class) use($prefix, $path) {
+      foreach ($defines['autoload']['psr-4'] ?? [] as $prefix => $sources) {
+        $paths= [];
+        foreach ((array)$sources as $source) {
+          $paths[]= $base.rtrim(strtr($source, '/', DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+        }
+        spl_autoload_register(function($class) use($prefix, $paths) {
           $l= strlen($prefix);
           if (0 !== strncmp($class, $prefix, $l)) return false;
 
-          $f= $path.substr(strtr($class, '\\', DIRECTORY_SEPARATOR), $l).'.php';
-          is_file($f) && require $f;
+          foreach ($paths as $path) {
+            $f= $path.substr(strtr($class, '\\', DIRECTORY_SEPARATOR), $l).'.php';
+            if (is_file($f)) return require $f;
+          }
         });
       }
 
