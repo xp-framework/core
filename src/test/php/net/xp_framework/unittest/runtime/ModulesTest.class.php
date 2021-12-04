@@ -182,6 +182,36 @@ class ModulesTest extends TestCase {
     }
   }
 
+  #[Test]
+  public function requiring_library_with_classmap() {
+    $s= ModulesTest::structure([
+      'test' => ['vendor' => [
+        'composer' => ['autoload_classmap.php' => '<?php
+          return ["test\\Test" => dirname(dirname(__FILE__))."/thekid/library/src/Test.php"];'
+        ],
+        'thekid' => ['library' => [
+          'composer.json' => '{"autoload": {"classmap": ["src/"] } }',
+          'src' => [
+            "Test.php" => "<?php namespace test; class Test{
+              public static function loaded() { return true; }
+            }"
+          ]
+        ]]
+      ]]
+    ]);
+
+    $fixture= newinstance(Modules::class, [], ['userDir' => $s]);
+    $fixture->add('thekid/library');
+    $fixture->require($namespace= 'test');
+
+    try {
+      $this->assertTrue((new XPClass("test\\Test"))->getMethod('loaded')->invoke(null));
+    } finally {
+      $loaders= spl_autoload_functions();
+      spl_autoload_unregister($loaders[sizeof($loaders) - 1]);
+    }
+  }
+
   #[Test, Values([['"ext-standard": "*"'], ['"php": ">=7.0"']])]
   public function requiring_library_with($dependency) {
     $s= ModulesTest::structure([
