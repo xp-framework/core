@@ -134,7 +134,8 @@ class Modules {
             $class= substr($class, $p + 1);
           }
 
-          require $path.strtr($class, '_', DIRECTORY_SEPARATOR).'.php';
+          $f= $path.strtr($class, '_', DIRECTORY_SEPARATOR).'.php';
+          is_file($f) && require $f;
         });
       }
 
@@ -146,7 +147,8 @@ class Modules {
           $l= strlen($prefix);
           if (0 !== strncmp($class, $prefix, $l)) return false;
 
-          require $path.substr(strtr($class, '\\', DIRECTORY_SEPARATOR), $l).'.php';
+          $f= $path.substr(strtr($class, '\\', DIRECTORY_SEPARATOR), $l).'.php';
+          is_file($f) && require $f;
         });
       }
 
