@@ -99,8 +99,8 @@ class ModulesTest extends TestCase {
   }
 
   #[Test, Values([['"test\\\\": "src/"'], ['"test\\\\": "src"'], ['"test": "src/"'], ['"test": "src"']])]
-  public function requiring_library_with_psr0($definition) {
-    $class= 'PSR0'.crc32($definition);
+  public function requiring_library_with_psr0_default($definition) {
+    $class= 'PSR0D'.crc32($definition);
     $s= ModulesTest::structure([
       'test' => ['vendor' => [
         'thekid' => ['library' => [
@@ -120,6 +120,34 @@ class ModulesTest extends TestCase {
 
     try {
       $this->assertTrue((new XPClass("test\\{$class}"))->getMethod('loaded')->invoke(null));
+    } finally {
+      $loaders= spl_autoload_functions();
+      spl_autoload_unregister($loaders[sizeof($loaders) - 1]);
+    }
+  }
+
+  #[Test, Values([['"test\\\\": "src/"'], ['"test\\\\": "src"'], ['"test": "src/"'], ['"test": "src"']])]
+  public function requiring_library_with_psr0_underscore($definition) {
+    $class= 'PSR0U'.crc32($definition);
+    $s= ModulesTest::structure([
+      'test' => ['vendor' => [
+        'thekid' => ['library' => [
+          'composer.json' => '{"autoload": {"psr-0": {'.$definition.'} } }',
+          'src' => ['test' => ['Impl' => [
+            "{$class}.php" => "<?php namespace test; class Impl_{$class} {
+              public static function loaded() { return true; }
+            }"
+          ]]]
+        ]]
+      ]]
+    ]);
+
+    $fixture= newinstance(Modules::class, [], ['userDir' => $s]);
+    $fixture->add('thekid/library');
+    $fixture->require($namespace= 'test');
+
+    try {
+      $this->assertTrue((new XPClass("test\\Impl_{$class}"))->getMethod('loaded')->invoke(null));
     } finally {
       $loaders= spl_autoload_functions();
       spl_autoload_unregister($loaders[sizeof($loaders) - 1]);
