@@ -97,7 +97,7 @@ class CodeTest extends \unittest\TestCase {
 
   #[Test, Values(['use util\Date, util\TimeZone; test()', 'use util\Date; use util\TimeZone; test()', 'use util\{Date, TimeZone}; test()', "use util\Date;\nuse util\TimeZone;\ntest()"])]
   public function head_with_multiple_imports($input) {
-    $this->assertEquals('use util\Date, util\TimeZone;', (new Code($input))->head());
+    $this->assertEquals('use util\Date; use util\TimeZone;', (new Code($input))->head());
   }
 
   #[Test]
