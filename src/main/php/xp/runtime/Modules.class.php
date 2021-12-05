@@ -59,14 +59,16 @@ class Modules {
   /**
    * Returns namespaced user vendor directory relevant for loading module
    *
-   * @param  string $namespace
+   * @param  ?string $namespace
    * @return string
    */
   public function userDir($namespace) {
-    if (null === $this->userDir) {
-      $this->userDir= Environment::configDir('xp');
-    }
-    return $this->userDir.strtr($namespace, ['\\' => DIRECTORY_SEPARATOR]);
+    $this->userDir ?? $this->userDir= Environment::configDir('xp');
+
+    return null === $namespace
+      ? $this->userDir
+      : $this->userDir.strtr($namespace, ['\\' => DIRECTORY_SEPARATOR])
+    ;
   }
 
   /**
