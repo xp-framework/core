@@ -1,6 +1,6 @@
 <?php namespace xp\runtime;
 
-use lang\Throwable;
+use lang\{Throwable, ClassNotFoundException};
 
 /**
  * Wrap code passed in from the command line.
@@ -148,6 +148,8 @@ class Code {
   public function run($argv= []) {
     $this->modules->require($this->namespace);
 
+    $f= function($class) { throw new ClassNotFoundException(strtr($class, '\\', '.')); };
+    spl_autoload_register($f);
     Script::$code[$this->name]= '<?php '.$this->head().str_repeat("\n", $this->line).$this->fragment."\nreturn null;";
     try {
       $argc= sizeof($argv);
@@ -155,6 +157,7 @@ class Code {
     } catch (\Throwable $t) {
       throw Throwable::wrap($t);
     } finally {
+      spl_autoload_unregister($f);
       unset(Script::$code[$this->name]);
     }
   }

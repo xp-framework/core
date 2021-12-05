@@ -1,11 +1,9 @@
 <?php namespace xp\runtime;
 
-use lang\{XPClass, Environment};
+use lang\{XPClass, ClassNotFoundException, Environment};
 use util\cmd\Console;
 
-/**
- * Evaluates sourcecode. Used by `xp eval` subcommand.
- */
+/** Evaluates sourcecode. Used by `xp eval` subcommand */
 class Evaluate {
   
   /**
@@ -29,15 +27,25 @@ class Evaluate {
 
     try {
       return $code->run([XPClass::nameOf(self::class)] + $args);
+    } catch (ClassNotFoundException $e) {
+      $dir= $code->modules()->userDir($code->namespace());
+      $t= $e->getStackTrace()[0];
+
+      Console::$err->writeLine("\033[41;1;37m", $e->getMessage(), " @ {$t->file}:{$t->line}\033[0m\n");
+      Console::$err->writeLine("To ensure all dependencies are up-to-date, use:\n\033[36m");
+      Console::$err->writeLinef("composer update -d '{$dir}'");
+      Console::$err->write("\033[0m");
+      return 255;
     } catch (CouldNotLoadDependencies $e) {
       $modules= $code->modules();
-      $dir= $modules->userDir($code->namespace());
+      $dir= $code->modules()->userDir($code->namespace());
 
-      Console::$err->writeLine("\033[41;1;37mError: ", $e->getMessage(), "\033[0m\n");
-      Console::$err->writeLine("To install the missing dependencies, use:\n\n\033[36mmkdir -p '", $dir, "'");
+      Console::$err->writeLine("\033[41;1;37m", $e->getMessage(), "\033[0m\n");
+      Console::$err->writeLine("To install the missing dependencies, use:\n\033[36m");
+      Console::$err->writeLine("mkdir -p '{$dir}'");
       foreach ($e->modules() as $module) {
         $version= $modules->version($module);
-        Console::$err->writeLinef("composer require -d '%s' %s%s", $dir, $module, $version ? " '$version'" : '');
+        Console::$err->writeLine("composer require -d '{$dir}' {$module}", $version ? " '{$version}'" : '');
       }
       Console::$err->write("\033[0m");
       return 127;

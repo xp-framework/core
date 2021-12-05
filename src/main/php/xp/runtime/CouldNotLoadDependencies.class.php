@@ -3,14 +3,14 @@
 use lang\XPException;
 
 class CouldNotLoadDependencies extends XPException {
-  private $errors;
+  private $modules;
 
   /** Creates a new instance */
-  public function __construct(array $errors) {
-    parent::__construct('Could not load modules '.implode(', ', array_keys($errors)));
-    $this->errors= $errors;
+  public function __construct(array $modules) {
+    parent::__construct('Could not load modules '.implode(', ', $modules));
+    $this->modules= $modules;
   }
 
-  /** Returns module modules */
-  public function modules(): array { return array_keys($this->errors); }
+  /** Returns modules */
+  public function modules(): array { return $this->modules; }
 }
