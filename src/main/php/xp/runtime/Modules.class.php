@@ -97,6 +97,10 @@ class Modules {
   private function load($namespace, $module, $version= null) {
     if (isset($this->loaded[$module]) || Module::loaded($module)) return null;
 
+    if (0 === strncmp($module, 'ext-', 4)) {
+      return extension_loaded(substr($module, 4)) ? null : new ModuleNotFound($module);
+    }
+
     foreach ([$this->vendorDir(), $this->userDir($namespace)] as $dir) {
       $base= (
         $dir.DIRECTORY_SEPARATOR
@@ -112,11 +116,11 @@ class Modules {
 
       $this->loaded[$module]= true;
       foreach ($defines['autoload']['files'] ?? [] as $file) {
-        require($base.strtr($file, '/', DIRECTORY_SEPARATOR));
+        require_once $base.strtr($file, '/', DIRECTORY_SEPARATOR);
       }
 
       $errors= [];
-      foreach ($defines['require'] as $dependency => $version) {
+      foreach ($defines['require'] ?? [] as $dependency => $version) {
         if ($e= $this->load($namespace, $dependency, $version)) $errors[$dependency]= $e;
       }
       return $errors ? new CouldNotLoadDependencies($errors) : null;
