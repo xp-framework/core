@@ -299,23 +299,25 @@ class UUID implements \lang\Value {
     return $value instanceof self ? $this->hashCode() <=> $value->hashCode() : 1;
   }
 
-  /**
-   * Serialization callback
-   *
-   * @return  string[]
-   */
+  /** @deprecated Replaced by __serialize() for PHP 7.4+ */
   public function __sleep() {
     $this->value= $this->hashCode();    // Invent "value" member
     return ['value'];
   }
-
-  /**
-   * Deserialization callback
-   *
-   * @return void
-   */
+  
+  /** @deprecated Replaced by __unserialize() for PHP 7.4+ */
   public function __wakeup() {
     $this->populate($this->value);
     unset($this->value);
+  }
+
+  /** @return [:string] */
+  public function __serialize() {
+    return ['value' => $this->hashCode()];
+  }
+  
+  /** @param [:string] $data */
+  public function __unserialize($data) {
+    $this->populate($data['value']);
   }
 }
