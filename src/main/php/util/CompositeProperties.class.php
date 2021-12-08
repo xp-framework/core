@@ -44,7 +44,6 @@ class CompositeProperties implements PropertyAccess {
     }
 
     $this->props[]= $a;
-    $this->sections= null;
   }
 
   /**
