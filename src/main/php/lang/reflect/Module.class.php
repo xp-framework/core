@@ -11,6 +11,8 @@ class Module implements Value {
   public static $INCOMPLETE= false;
   public static $registered= [];
 
+  private $name, $classLoader;
+
   /**
    * Creates a new module
    *
