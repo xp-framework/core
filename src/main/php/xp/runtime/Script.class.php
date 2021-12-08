@@ -3,6 +3,7 @@
 class Script {
   public static $code= [];
   private $stream, $offset;
+  public $context;
 
   /**
    * Opens path
