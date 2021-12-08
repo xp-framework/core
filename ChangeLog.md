@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added preliminary PHP 8.2 support by fixing various issues throughout
+  the code base. Compatibility is tracked in issue #304
+  (@thekid)
 * Cast given argument to string in `io.streams.MemoryInputStream`. Passing
   *null* will no longer yield warnings in PHP 8.1
   (@thekid)
