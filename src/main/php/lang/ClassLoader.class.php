@@ -347,9 +347,9 @@ final class ClassLoader implements IClassLoader {
       $declaration['modifiers'] ?? '',
       $declaration['kind'],
       $name,
-      $declaration['extends'] ? ' extends '.implode(', ', array_map('self::classLiteral', $declaration['extends'])) : '',
-      $declaration['implements'] ? ' implements '.implode(', ', array_map('self::classLiteral', $declaration['implements'])) : '',
-      $declaration['use'] ? ' use '.implode(', ', array_map('self::classLiteral', $declaration['use'])).';' : '',
+      $declaration['extends'] ? ' extends '.implode(', ', array_map([self::class, 'classLiteral'], $declaration['extends'])) : '',
+      $declaration['implements'] ? ' implements '.implode(', ', array_map([self::class, 'classLiteral'], $declaration['implements'])) : '',
+      $declaration['use'] ? ' use '.implode(', ', array_map([self::class, 'classLiteral'], $declaration['use'])).';' : '',
       $bytes
     ));
     $cl= $dyn->loadClass($spec);
