@@ -146,7 +146,16 @@ class Code {
    * @throws lang.Throwable
    */
   public function run($argv= []) {
-    $this->modules->require($this->namespace);
+
+    // Defer requiring modules until class loading time - if XP runners
+    // have already done this for us, we'll not do this twice. See this
+    // pull request: https://github.com/xp-runners/reference/pull/85
+    spl_autoload_register($defer= function($class) use(&$defer) {
+      $this->modules->require($this->namespace);
+
+      spl_autoload_unregister($defer);
+      spl_autoload_call($class);
+    });
 
     Script::$code[$this->name]= '<?php '.$this->head().str_repeat("\n", $this->line).$this->fragment."\nreturn null;";
     try {
@@ -155,6 +164,7 @@ class Code {
     } catch (\Throwable $t) {
       throw Throwable::wrap($t);
     } finally {
+      spl_autoload_unregister($defer);
       unset(Script::$code[$this->name]);
     }
   }
