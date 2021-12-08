@@ -3,8 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.1.0 / 2021-12-08
+
 ### Features
 
+* Improved script loading performance by deferring requiring modules until
+  class loading time. See xp-runners/reference#85
+  (@thekid)
 * Added preliminary PHP 8.2 support by fixing various issues throughout
   the code base. Compatibility is tracked in issue #304
   (@thekid)
