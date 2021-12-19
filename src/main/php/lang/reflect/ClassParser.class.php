@@ -611,17 +611,17 @@ class ClassParser {
             DETAIL_ARGUMENTS    => [],
             DETAIL_RETURNS      => null,
             DETAIL_THROWS       => [],
-            DETAIL_COMMENT      => trim(preg_replace('/\n\s+\* ?/', "\n", "\n".substr(
+            DETAIL_COMMENT      => trim(preg_replace(['/\n\s+\* ?/', '/¶/'], "\n", "\n".substr(
               $comment, 
               4,                              // "/**\n"
-              strpos($comment, '* @')- 2      // position of first details token
+              max(strpos($comment, ' | @') - 4, strpos($comment, '* @') - 2)
             ))),
             DETAIL_ANNOTATIONS  => $annotations[0],
             DETAIL_TARGET_ANNO  => $annotations[1]
           ];
           $annotations= [0 => [], 1 => []];
           $matches= null;
-          preg_match_all('/@([a-z]+)\s*([^\r\n]+)?/', $comment, $matches, PREG_SET_ORDER);
+          preg_match_all('/@([a-z]+)\s*([^\r\n\|]+)?/', $comment, $matches, PREG_SET_ORDER);
           $comment= '';
           $arg= 0;
           foreach ($matches as $match) {

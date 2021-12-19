@@ -173,6 +173,24 @@ class ClassDetailsTest extends \unittest\TestCase {
   }
 
   #[Test]
+  public function compact_notation_with_comment() {
+    $details= $this->parseComment('/** Returns something | @return int */');
+    $this->assertEquals(['Returns something', 'int'], [$details[DETAIL_COMMENT], $details[DETAIL_RETURNS]]);
+  }
+
+  #[Test]
+  public function compact_notation_with_multiline_comment() {
+    $details= $this->parseComment('/** Exits¶Sets code 2 | @return int */');
+    $this->assertEquals(["Exits\nSets code 2", 'int'], [$details[DETAIL_COMMENT], $details[DETAIL_RETURNS]]);
+  }
+
+  #[Test]
+  public function compact_notation_with_two_parameters() {
+    $details= $this->parseComment('/** @param string | @param int */');
+    $this->assertEquals(['string', 'int'], $details[DETAIL_ARGUMENTS]);
+  }
+
+  #[Test]
   public function throwsList() {
     $details= $this->parseComment('
       /**
