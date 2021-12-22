@@ -320,13 +320,34 @@ class ClassParser {
             $i++;
             $state= 1;
             trigger_error('XP annotation syntax is deprecated in '.$place, E_USER_DEPRECATED);
+          } else if (']' === $tokens[$i]) {     // Handle situations with trailing comma
+            $annotations[0][$annotation]= $value;
+            return $annotations;
+          } else if (T_NAME_FULLY_QUALIFIED === $tokens[$i][0] || T_NAME_QUALIFIED === $tokens[$i][0]) {
+            $annotation= lcfirst(substr($tokens[$i][1], strrpos($tokens[$i][1], '\\') + 1));
+            $param= null;
+            $value= null;
+            $state= 1;
           } else if (T_STRING === $tokens[$i][0]) {
-            $annotation= lcfirst($tokens[$i][1]);
+            do {
+              $type= $tokens[$i++][1];
+            } while (T_NS_SEPARATOR === $tokens[$i++][0]);
+            $i-= 2;
+            $annotation= lcfirst($type);
+            $param= null;
+            $value= null;
+            $state= 1;
+          } else if (T_NS_SEPARATOR === $tokens[$i][0]) {
+            do {
+              $type= $tokens[++$i][1];
+            } while (T_NS_SEPARATOR === $tokens[++$i][0]);
+            $i-= 1;
+            $annotation= lcfirst($type);
             $param= null;
             $value= null;
             $state= 1;
           } else {
-            throw new IllegalStateException('Parse error: Expecting "@"');
+            throw new IllegalStateException('Parse error: Expecting "@", have '.(is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i]));
           }
         } else if (1 === $state) {              // Inside attribute, check for values
           if ('(' === $tokens[$i]) {
@@ -351,7 +372,7 @@ class ClassParser {
           } else if (T_STRING === $tokens[$i][0]) {
             $annotation= $tokens[$i][1];
           } else {
-            throw new IllegalStateException('Parse error: Expecting either "(", "," or "]"');
+            throw new IllegalStateException('Parse error: Expecting either "(", "," or "]", have '.(is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i]));
           }
         } else if (2 === $state) {              // Inside braces of @attr(...)
           if (')' === $tokens[$i]) {

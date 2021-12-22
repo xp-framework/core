@@ -320,6 +320,16 @@ class ClassDetailsTest extends \unittest\TestCase {
   }
 
   #[Test]
+  public function php8_attributes_with_trailing_comma() {
+    $actual= (new ClassParser())->parseDetails('<?php
+      #[Test, Value("test"),]
+      class Test {
+      }
+    ');
+    $this->assertEquals(['test' => null, 'value' => 'test'], $actual['class'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[Test]
   public function php8_attributes_with_named_arguments() {
     $actual= (new ClassParser())->parseDetails('<?php
       #[Expect(class: \net\xp_framework\unittest\Name::class)]
@@ -337,6 +347,26 @@ class ClassDetailsTest extends \unittest\TestCase {
       }
     ');
     $this->assertEquals('test', $actual['class'][DETAIL_ANNOTATIONS]['value']());
+  }
+
+  #[Test]
+  public function absolute_compound_php8_attributes() {
+    $actual= (new ClassParser())->parseDetails('<?php
+      #[\unittest\annotations\Test]
+      class Test {
+      }
+    ');
+    $this->assertEquals(['test' => null], $actual['class'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[Test]
+  public function relative_compound_php8_attributes() {
+    $actual= (new ClassParser())->parseDetails('<?php
+      #[unittest\annotations\Test]
+      class Test {
+      }
+    ');
+    $this->assertEquals(['test' => null], $actual['class'][DETAIL_ANNOTATIONS]);
   }
 
   #[Test]
