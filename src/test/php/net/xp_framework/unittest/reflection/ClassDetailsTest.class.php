@@ -329,9 +329,11 @@ class ClassDetailsTest extends \unittest\TestCase {
     $this->assertEquals(['test' => null, 'value' => 'test'], $actual['class'][DETAIL_ANNOTATIONS]);
   }
 
-  #[Test, Values(['\net\xp_framework\unittest\Name', 'unittest\Name'])]
+  #[Test, Values(['\net\xp_framework\unittest\Name', 'unittest\Name', 'Name'])]
   public function php8_attributes_with_named_arguments($name) {
     $actual= (new ClassParser())->parseDetails('<?php namespace net\xp_framework;
+      use net\xp_framework\unittest\Name;
+
       #[Expect(class: '.$name.'::class)]
       class Test {
       }
@@ -459,6 +461,19 @@ class ClassDetailsTest extends \unittest\TestCase {
       }
     ');
     $this->assertEquals(['test' => null], $details[0]['fixture'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[Test, Values(['\net\xp_framework\unittest\Name', 'unittest\Name', 'Name'])]
+  public function annotation_with_reference_to($parent) {
+    $details= (new ClassParser())->parseDetails('<?php namespace net\xp_framework;
+      use net\xp_framework\unittest\Name;
+
+      class Test extends '.$parent.' {
+        #[Fixture(new parent("Test"))]
+        public function fixture() { }
+      }'
+    );
+    $this->assertEquals(['fixture' => new Name('Test')], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
   }
 
   #[Test, Expect(['class' => ClassFormatException::class, 'withMessage' => '/Class does not have a parent/'])]

@@ -622,7 +622,12 @@ class ClassParser {
           } else if (T_NAME_QUALIFIED === $tokens[$i + 2][0]) {
             $context['parent']= $context['namespace'].$tokens[$i + 2][1];
           } else if (T_STRING === $tokens[$i + 2][0]) {
-            $context['parent']= $imports[$tokens[$i + 2][1]] ?? $context['namespace'].$tokens[$i + 2][1];
+            $parent= $tokens[$i + 2][1];
+            while (T_NS_SEPARATOR === $tokens[$i + 3][0]) {
+              $parent.= '\\'.$tokens[$i + 4][1];
+              $i+= 2;
+            }
+            $context['parent']= $imports[$parent] ?? $context['namespace'].$parent;
           } else {
             $context['parent']= '';
             while (T_NS_SEPARATOR === $tokens[$i + 2][0]) {
