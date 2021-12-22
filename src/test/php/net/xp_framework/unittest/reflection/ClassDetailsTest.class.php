@@ -467,8 +467,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test {
         #[Fixture(new parent())]
         public function fixture() { }
-      }',
-      Name::class
+      }'
     );
   }
 
