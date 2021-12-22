@@ -217,14 +217,19 @@ class ClassParser {
         throw new IllegalStateException('In `'.$code.'`: '.ucfirst($error['message']));
       }
       return $func;
-    } else if (T_STRING === $token) {     // constant vs. class::constant
+    } else if (T_STRING === $token) {     // constant vs. class::constant vs. qualified\Name
+      $type= $tokens[$i][1];
+      while (T_NS_SEPARATOR === $tokens[$i + 1][0]) {
+        $type.= '\\'.$tokens[$i + 2][1];
+        $i+= 2;
+      }
       if (T_DOUBLE_COLON === $tokens[$i + 1][0]) {
         $i+= 2;
-        return $this->memberOf($this->resolve($tokens[$i - 2][1], $context, $imports), $tokens[$i], $context);
-      } else if (defined($tokens[$i][1])) {
-        return constant($tokens[$i][1]);
+        return $this->memberOf($this->resolve($type, $context, $imports), $tokens[$i], $context);
+      } else if (defined($type)) {
+        return constant($type);
       } else {
-        throw new ElementNotFoundException('Undefined constant "'.$tokens[$i][1].'"');
+        throw new ElementNotFoundException('Undefined constant "'.$type.'"');
       }
     } else if (T_NEW === $token) {
       $type= '';
