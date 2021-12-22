@@ -618,9 +618,11 @@ class ClassParser {
 
         case T_EXTENDS:
           if (T_NAME_FULLY_QUALIFIED === $tokens[$i + 2][0]) {
-            $context['parent']= $tokens[$i + 2][0];
-          } else if (T_NAME_QUALIFIED === $tokens[$i + 2][0] || T_STRING === $tokens[$i + 2][0]) {
-            $context['parent']= $context['namespace'].$tokens[$i + 2][0];
+            $context['parent']= $tokens[$i + 2][1];
+          } else if (T_NAME_QUALIFIED === $tokens[$i + 2][0]) {
+            $context['parent']= $context['namespace'].$tokens[$i + 2][1];
+          } else if (T_STRING === $tokens[$i + 2][0]) {
+            $context['parent']= $imports[$tokens[$i + 2][1]] ?? $context['namespace'].$tokens[$i + 2][1];
           } else {
             $context['parent']= '';
             while (T_NS_SEPARATOR === $tokens[$i + 2][0]) {
