@@ -38,8 +38,8 @@ class ClassParser {
       return XPClass::forName($imports[$type]);
     } else if (class_exists($type, false) || interface_exists($type, false) || trait_exists($type, false) || enum_exists($type, false)) {
       return new XPClass($type);
-    } else if (false !== ($p= strrpos($context['self'], '.'))) {
-      return XPClass::forName(substr($context['self'], 0, $p + 1).$type);
+    } else if (false !== strrpos($context['self'], '.')) {
+      return XPClass::forName($context['namespace'].$type);
     } else {
       throw new IllegalStateException('Cannot resolve '.$type);
     }
@@ -151,7 +151,7 @@ class ClassParser {
       return $this->memberOf(XPClass::forName($type), $tokens[++$i], $context);
     } else if (T_NAME_QUALIFIED === $token) {
       $type= $tokens[$i++][1];
-      return $this->memberOf(XPClass::forName(substr($context['self'], 0, strrpos($context['self'], '.')).'.'.$type), $tokens[++$i], $context);
+      return $this->memberOf(XPClass::forName($context['namespace'].$type), $tokens[++$i], $context);
     } else if (T_FN === $token || T_STRING === $token && 'fn' === $tokens[$i][1]) {
       $s= sizeof($tokens);
       $b= 0;
@@ -298,7 +298,7 @@ class ClassParser {
    * Parses annotation string
    *
    * @param   string bytes
-   * @param   string context the class name
+   * @param   [:string] context
    * @return  [:string] imports
    * @param   int line 
    * @return  [:var]
@@ -310,6 +310,13 @@ class ClassParser {
       'annotation map key', 'annotation map value',
       'multi-value'
     ];
+
+    // BC when class name is passed for context
+    if (is_string($context)) {
+      $parent= get_parent_class(strtr($context, '.', '\\'));
+      $namespace= false === ($p= strrpos($context, '.')) ? '' : substr($context, 0, $p + 1);
+      $context= ['self' => $context, 'parent' => $parent ? strtr($parent, '\\', '.') : null, 'namespace' => $namespace];
+    }
 
     $tokens= token_get_all('<?php '.trim($bytes, "[# \t\n\r"));
     $annotations= [0 => [], 1 => []];
@@ -488,9 +495,8 @@ class ClassParser {
     $annotations= [0 => [], 1 => []];
     $imports= [];
     $comment= '';
-    $namespace= '';
     $parsed= '';
-    $context= ['self' => null, 'parent' => null];
+    $context= ['namespace' => '', 'self' => null, 'parent' => null];
     $tokens= token_get_all($bytes);
     for ($i= 0, $s= sizeof($tokens); $i < $s; $i++) {
       switch ($tokens[$i][0]) {
@@ -499,7 +505,7 @@ class ClassParser {
           for ($i+= 2; $i < $s, !(';' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]); $i++) {
             $namespace.= $tokens[$i][1];
           }
-          $namespace.= '\\';
+          $context['namespace']= strtr($namespace, '\\', '.').'.';
           break;
 
         case T_USE:
@@ -593,7 +599,7 @@ class ClassParser {
           if (isset($details['class'])) break;  // Inside class, e.g. $lookup= ['self' => self::class]
 
         case T_INTERFACE: case T_TRAIT: case T_ENUM:
-          $context['self']= strtr($namespace, '\\', '.').$tokens[$i + 2][1];
+          $context['self']= $context['namespace'].$tokens[$i + 2][1];
           if ($parsed) {
             $annotations= $this->parseAnnotations($parsed, $context, $imports, $tokens[$i][2] ?? -1);
             $parsed= '';
@@ -614,7 +620,7 @@ class ClassParser {
           if (T_NAME_FULLY_QUALIFIED === $tokens[$i + 2][0]) {
             $context['parent']= $tokens[$i + 2][0];
           } else if (T_NAME_QUALIFIED === $tokens[$i + 2][0] || T_STRING === $tokens[$i + 2][0]) {
-            $context['parent']= substr($context['self'], 0, strrpos($context['self'], '.')).$tokens[$i + 2][0];
+            $context['parent']= $context['namespace'].$tokens[$i + 2][0];
           } else {
             $context['parent']= '';
             while (T_NS_SEPARATOR === $tokens[$i + 2][0]) {
