@@ -38,7 +38,7 @@ class ClassDetailsTest extends \unittest\TestCase {
   public function parses($kind) {
     $details= (new ClassParser())->parseDetails('<?php '.$kind.' Test { }');
     $this->assertEquals(
-      [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => [], DETAIL_ARGUMENTS => 'Test'],
+      [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => []],
       $details['class']
     );
   }
@@ -329,10 +329,10 @@ class ClassDetailsTest extends \unittest\TestCase {
     $this->assertEquals(['test' => null, 'value' => 'test'], $actual['class'][DETAIL_ANNOTATIONS]);
   }
 
-  #[Test]
-  public function php8_attributes_with_named_arguments() {
-    $actual= (new ClassParser())->parseDetails('<?php
-      #[Expect(class: \net\xp_framework\unittest\Name::class)]
+  #[Test, Values(['\net\xp_framework\unittest\Name', 'unittest\Name'])]
+  public function php8_attributes_with_named_arguments($name) {
+    $actual= (new ClassParser())->parseDetails('<?php namespace net\xp_framework;
+      #[Expect(class: '.$name.'::class)]
       class Test {
       }
     ');
@@ -476,11 +476,13 @@ class ClassDetailsTest extends \unittest\TestCase {
   public function field_initializer_with_class_keyword() {
     $details= (new ClassParser())->parseDetails('<?php
       class Test {
+
+        /** Property */
         private $classes= [self::class, parent::class];
       }
     ');
     $this->assertEquals(
-      [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => [], DETAIL_ARGUMENTS => 'Test'],
+      [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => []],
       $details['class']
     );
   }
@@ -587,7 +589,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       }
     ');
     $this->assertEquals(
-      [DETAIL_COMMENT => 'Comment', DETAIL_ANNOTATIONS => [], DETAIL_ARGUMENTS => 'Test'],
+      [DETAIL_COMMENT => 'Comment', DETAIL_ANNOTATIONS => []],
       $details['class']
     );
   }

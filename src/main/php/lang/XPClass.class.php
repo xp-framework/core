@@ -1,7 +1,7 @@
 <?php namespace lang;
 
 use lang\ElementNotFoundException;
-use lang\reflect\{Method, Field, Constructor, Package};
+use lang\reflect\{Method, Field, Constructor, Package, ClassParser};
  
 /**
  * Represents classes. Every instance of an XP class has a method
@@ -702,8 +702,8 @@ class XPClass extends Type {
     $cl= self::_classLoaderFor($class);
     if (!$cl || !($bytes= $cl->loadClassBytes($class))) return null;
 
-    $parser ?? $parser= new \lang\reflect\ClassParser();
-    return \xp::$meta[$class]= $parser->parseDetails($bytes, $class);
+    $parser ?? $parser= new ClassParser();
+    return \xp::$meta[$class]= $parser->parseDetails($bytes);
   }
 
   /**

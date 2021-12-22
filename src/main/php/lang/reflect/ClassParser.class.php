@@ -149,6 +149,9 @@ class ClassParser {
     } else if (T_NAME_FULLY_QUALIFIED === $token) {
       $type= $tokens[$i++][1];
       return $this->memberOf(XPClass::forName($type), $tokens[++$i], $context);
+    } else if (T_NAME_QUALIFIED === $token) {
+      $type= $tokens[$i++][1];
+      return $this->memberOf(XPClass::forName(substr($context, 0, strrpos($context, '.')).'.'.$type), $tokens[++$i], $context);
     } else if (T_FN === $token || T_STRING === $token && 'fn' === $tokens[$i][1]) {
       $s= sizeof($tokens);
       $b= 0;
@@ -473,16 +476,16 @@ class ClassParser {
    * Parse details from a given input string
    *
    * @param   string bytes
-   * @param   string context default ''
    * @return  [:var] details
    */
-  public function parseDetails($bytes, $context= '') {
+  public function parseDetails($bytes) {
     $details= [[], []];
     $annotations= [0 => [], 1 => []];
     $imports= [];
     $comment= '';
     $namespace= '';
     $parsed= '';
+    $context= null;
     $tokens= token_get_all($bytes);
     for ($i= 0, $s= sizeof($tokens); $i < $s; $i++) {
       switch ($tokens[$i][0]) {
@@ -585,6 +588,7 @@ class ClassParser {
           if (isset($details['class'])) break;  // Inside class, e.g. $lookup= ['self' => self::class]
 
         case T_INTERFACE: case T_TRAIT: case T_ENUM:
+          $context= strtr($namespace, '\\', '.').$tokens[$i + 2][1];
           if ($parsed) {
             $annotations= $this->parseAnnotations($parsed, $context, $imports, $tokens[$i][2] ?? -1);
             $parsed= '';
@@ -595,8 +599,7 @@ class ClassParser {
               4,                              // "/**\n"
               strpos($comment, '* @')- 2      // position of first details token
             ))),
-            DETAIL_ANNOTATIONS  => $annotations[0],
-            DETAIL_ARGUMENTS    => $namespace.$tokens[$i + 2][1]
+            DETAIL_ANNOTATIONS  => $annotations[0]
           ];
           $annotations= [0 => [], 1 => []];
           $comment= '';
