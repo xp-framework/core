@@ -29,11 +29,12 @@ class ClassParser {
       return strtr(substr($tokens[$i][1], 1), '\\', '.');
     } else if (T_NS_SEPARATOR === $tokens[$i][0]) {
       $type= '';
-      while (T_NS_SEPARATOR === $tokens[$i][0]) {
+      do {
         $type.= '.'.$tokens[$i + 1][1];
         $i+= 2;
-      }
-      $i-= 1;
+      } while (T_NS_SEPARATOR === $tokens[$i][0]);
+
+      $i--; // Position at the last T_STRING token
       return substr($type, 1);
     } else if (T_NAME_QUALIFIED === $tokens[$i][0]) {
       return $context['namespace'].strtr($tokens[$i][1], '\\', '.');
