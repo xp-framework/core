@@ -24,7 +24,7 @@ class ClassParser {
    * @return string
    * @throws lang.IllegalStateException
    */
-  protected function typeOf($tokens, &$i, $context, $imports) {
+  protected function type($tokens, &$i, $context, $imports) {
     if (T_NAME_FULLY_QUALIFIED === $tokens[$i][0]) {
       return strtr(substr($tokens[$i][1], 1), '\\', '.');
     } else if (T_NS_SEPARATOR === $tokens[$i][0]) {
@@ -63,40 +63,6 @@ class ClassParser {
   }
 
   /**
-   * Resolves a class member, which is either a field, a class constant
-   * or the `ClassName::class` syntax, which returns the class' literal.
-   *
-   * @param  lang.XPClass $class
-   * @param  var[] $token A token as returned by `token_get_all()`
-   * @param  [:string] $context
-   * @return var
-   */
-  protected function memberOf($class, $token, $context) {
-    if (T_VARIABLE === $token[0]) {
-      $field= $class->getField(substr($token[1], 1));
-      $m= $field->getModifiers();
-      if ($m & MODIFIER_PUBLIC) {
-        return $field->get(null);
-      } else if (($m & MODIFIER_PROTECTED) && $class->isAssignableFrom($context['self'])) {
-        return $field->setAccessible(true)->get(null);
-      } else if (($m & MODIFIER_PRIVATE) && $class->getName() === $context['self']) {
-        return $field->setAccessible(true)->get(null);
-      } else {
-        throw new IllegalAccessException(sprintf(
-          'Cannot access %s field %s::$%s',
-          implode(' ', Modifiers::namesOf($m)),
-          $class->getName(),
-          $field->getName()
-        ));
-      }
-    } else if (T_CLASS === $token[0]) {
-      return $class->literal();
-    } else {
-      return $class->getConstant($token[1]);
-    }
-  }
-
-  /**
    * Parses a single value, recursively, if necessary
    *
    * @param  var[] $tokens
@@ -105,14 +71,14 @@ class ClassParser {
    * @param  [:string] $imports
    * @return var
    */
-  protected function valueOf($tokens, &$i, $context, $imports) {
+  protected function value($tokens, &$i, $context, $imports) {
     $token= $tokens[$i][0];
     if ('-' === $token) {
       $i++;
-      return -1 * $this->valueOf($tokens, $i, $context, $imports);
+      return -1 * $this->value($tokens, $i, $context, $imports);
     } else if ('+' === $token) {
       $i++;
-      return +1 * $this->valueOf($tokens, $i, $context, $imports);
+      return +1 * $this->value($tokens, $i, $context, $imports);
     } else if (T_CONSTANT_ENCAPSED_STRING === $token) {
       return eval('return '.$tokens[$i][1].';');
     } else if (T_LNUMBER === $tokens[$i][0]) {
@@ -151,7 +117,7 @@ class ClassParser {
           continue;
         } else {
           if ($element) throw new IllegalStateException('Parse error: Malformed array - missing comma');
-          $element= [$this->valueOf($tokens, $i, $context, $imports)];
+          $element= [$this->value($tokens, $i, $context, $imports)];
         }
       }
       return $value;
@@ -224,7 +190,7 @@ class ClassParser {
       return $func;
     } else if (T_NEW === $token) {
       $i+= 2;
-      $class= XPClass::forName($this->typeOf($tokens, $i, $context, $imports));
+      $class= XPClass::forName($this->type($tokens, $i, $context, $imports));
 
       $i+= 2;
       for ($args= [], $arg= null, $s= sizeof($tokens); ; $i++) {
@@ -235,7 +201,7 @@ class ClassParser {
           $args[]= $arg[0];
           $arg= null;
         } else if (T_WHITESPACE !== $tokens[$i][0]) {
-          $arg= [$this->valueOf($tokens, $i, $context, $imports)];
+          $arg= [$this->value($tokens, $i, $context, $imports)];
         }
       }
       return $class->newInstance(...$args);
@@ -278,9 +244,30 @@ class ClassParser {
       if (defined($tokens[$i][1])) return constant($tokens[$i][1]);
       throw new ElementNotFoundException('Undefined constant "'.$tokens[$i][1].'"');
     } else {
-      $type= $this->typeOf($tokens, $i, $context, $imports);
+      $class= XPClass::forName($this->type($tokens, $i, $context, $imports));
       $i+= 2;
-      return $this->memberOf(XPClass::forName($type), $tokens[$i], $context);
+      if (T_VARIABLE === $tokens[$i][0]) {
+        $field= $class->getField(substr($tokens[$i][1], 1));
+        $m= $field->getModifiers();
+        if ($m & MODIFIER_PUBLIC) {
+          return $field->get(null);
+        } else if (($m & MODIFIER_PROTECTED) && $class->isAssignableFrom($context['self'])) {
+          return $field->setAccessible(true)->get(null);
+        } else if (($m & MODIFIER_PRIVATE) && $class->getName() === $context['self']) {
+          return $field->setAccessible(true)->get(null);
+        } else {
+          throw new IllegalAccessException(sprintf(
+            'Cannot access %s field %s::$%s',
+            implode(' ', Modifiers::namesOf($m)),
+            $class->getName(),
+            $field->getName()
+          ));
+        }
+      } else if (T_CLASS === $tokens[$i][0]) {
+        return $class->literal();
+      } else {
+        return $class->getConstant($tokens[$i][1]);
+      }
     }
   }
 
@@ -329,7 +316,7 @@ class ClassParser {
             $annotations[0][$annotation]= $value;
             return $annotations;
           } else {
-            $type= $this->typeOf($tokens, $i, $context, $imports);
+            $type= $this->type($tokens, $i, $context, $imports);
             $annotation= lcfirst(false === ($p= strrpos($type, '.')) ? $type : substr($type, $p + 1));
             $param= null;
             $value= null;
@@ -368,16 +355,16 @@ class ClassParser {
 
             if ('eval' === $key) {              // Attribute(eval: '...') vs. Attribute(name: ...)
               while ($i++ < $s && ':' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]) { }
-              $code= $this->valueOf($tokens, $i, $context, $imports);
+              $code= $this->value($tokens, $i, $context, $imports);
               $eval= token_get_all('<?php '.$code);
               $j= 1;
-              $value= $this->valueOf($eval, $j, $context, $imports);
+              $value= $this->value($eval, $j, $context, $imports);
             } else {
               $value= [];
               $state= 3;
             }
           } else {
-            $value= $this->valueOf($tokens, $i, $context, $imports);
+            $value= $this->value($tokens, $i, $context, $imports);
           }
         } else if (3 === $state) {              // Parsing key inside named arguments
           if (')' === $tokens[$i]) {
@@ -390,7 +377,7 @@ class ClassParser {
             $key= $tokens[$i][1];
           }
         } else if (4 === $state) {              // Parsing value inside named arguments
-          $value[$key]= $this->valueOf($tokens, $i, $context, $imports);
+          $value[$key]= $this->value($tokens, $i, $context, $imports);
           $state= 3;
         }
       }
@@ -589,7 +576,7 @@ class ClassParser {
 
         case T_EXTENDS:
           $i+= 2;
-          $context['parent']= $this->typeOf($tokens, $i, $context, $imports);
+          $context['parent']= $this->type($tokens, $i, $context, $imports);
           break;
 
         case T_VARIABLE:                      // Have a member variable
