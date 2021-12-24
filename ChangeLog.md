@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.1.1 / 2021-12-24
+
 ### Bugfixes
 
 * Merged PR #306: Fix qualified annotation names. This includes support
