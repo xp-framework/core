@@ -22,7 +22,7 @@ the following one-liner:
 
 ```sh
 $ cd ~/bin
-$ curl -sSL https://baltocdn.com/xp-framework/xp-runners/distribution/downloads/i/installer/setup-8.5.3.sh | sh
+$ curl -sSL https://baltocdn.com/xp-framework/xp-runners/distribution/downloads/i/installer/setup-8.6.1.sh | sh
 ```
 
 ### Using it
@@ -36,7 +36,7 @@ Finally, start `xp -v` to see it working:
 
 ```sh
 $ xp -v
-XP 10.15.1-dev { PHP/8.0.11 & Zend/4.0.11 } @ Windows NT SURFACE 10.0 build 22000 (Windows 10) AMD64
+XP 10.15.2-dev { PHP/8.0.14 & Zend/4.0.14 } @ Windows NT SURFACE 10.0 build 22000 (Windows 10) AMD64
 Copyright (c) 2001-2021 the XP group
 FileSystemCL<./src/main/php>
 FileSystemCL<./src/test/php>
