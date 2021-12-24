@@ -252,9 +252,9 @@ class ClassDetailsTest extends \unittest\TestCase {
   #[Test]
   public function use_statements_with_alias_evaluated() {
     $actual= (new ClassParser())->parseDetails('<?php namespace test;
-      use net\xp_framework\unittest\Name as Value;
+      use net\xp_framework\unittest\Name as Named;
 
-      #[Value(new Value("test"))]
+      #[Value(new Named("test"))]
       class Test {
       }
     ');

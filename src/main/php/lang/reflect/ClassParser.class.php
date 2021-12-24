@@ -140,18 +140,6 @@ class ClassParser {
       return $value;
     } else if ('"' === $token || T_ENCAPSED_AND_WHITESPACE === $token) {
       throw new IllegalStateException('Parse error: Unterminated string');
-    } else if (T_NS_SEPARATOR === $token) {
-      $type= '';
-      while (T_NS_SEPARATOR === $tokens[$i++][0]) {
-        $type.= '.'.$tokens[$i++][1];
-      }
-      return $this->memberOf(XPClass::forName(substr($type, 1)), $tokens[$i], $context);
-    } else if (T_NAME_FULLY_QUALIFIED === $token) {
-      $type= $tokens[$i++][1];
-      return $this->memberOf(XPClass::forName($type), $tokens[++$i], $context);
-    } else if (T_NAME_QUALIFIED === $token) {
-      $type= $tokens[$i++][1];
-      return $this->memberOf(XPClass::forName($context['namespace'].$type), $tokens[++$i], $context);
     } else if (T_FN === $token || T_STRING === $token && 'fn' === $tokens[$i][1]) {
       $s= sizeof($tokens);
       $b= 0;
@@ -217,20 +205,6 @@ class ClassParser {
         throw new IllegalStateException('In `'.$code.'`: '.ucfirst($error['message']));
       }
       return $func;
-    } else if (T_STRING === $token) {     // constant vs. class::constant vs. qualified\Name
-      $type= $tokens[$i][1];
-      while (T_NS_SEPARATOR === $tokens[$i + 1][0]) {
-        $type.= '\\'.$tokens[$i + 2][1];
-        $i+= 2;
-      }
-      if (T_DOUBLE_COLON === $tokens[$i + 1][0]) {
-        $i+= 2;
-        return $this->memberOf($this->resolve($type, $context, $imports), $tokens[$i], $context);
-      } else if (defined($type)) {
-        return constant($type);
-      } else {
-        throw new ElementNotFoundException('Undefined constant "'.$type.'"');
-      }
     } else if (T_NEW === $token) {
       $type= '';
       $i++;
@@ -286,6 +260,45 @@ class ClassParser {
         throw new IllegalStateException('In `'.$code.'`: '.ucfirst($error['message']));
       }
       return $func;
+    } else if (T_STRING === $token && T_NS_SEPARATOR !== $tokens[$i + 1][0] && T_DOUBLE_COLON !== $tokens[$i + 1][0]) {
+      if (defined($tokens[$i][1])) return constant($tokens[$i][1]);
+      throw new ElementNotFoundException('Undefined constant "'.$tokens[$i][1].'"');
+    } else {
+      $type= $this->typeOf($tokens, $i, $context, $imports);
+      $i+= 2;
+      return $this->memberOf(XPClass::forName($type), $tokens[$i], $context);
+    }
+  }
+
+  /**
+   * Parses a type
+   *
+   * @param  var[] $tokens
+   * @param  int $i
+   * @param  [:string] $context
+   * @param  [:string] $imports
+   * @return string
+   */
+  protected function typeOf($tokens, &$i, $context, $imports) {
+    if (T_NAME_FULLY_QUALIFIED === $tokens[$i][0]) {
+      return strtr(substr($tokens[$i][1], 1), '\\', '.');
+    } else if (T_NS_SEPARATOR === $tokens[$i][0]) {
+      $type= '';
+      while (T_NS_SEPARATOR === $tokens[$i][0]) {
+        $type.= '.'.$tokens[$i + 1][1];
+        $i+= 2;
+      }
+      $i-= 1;
+      return substr($type, 1);
+    } else if (T_NAME_QUALIFIED === $tokens[$i][0]) {
+      return $context['namespace'].strtr($tokens[$i][1], '\\', '.');
+    } else if (T_STRING === $tokens[$i][0]) {
+      $type= $tokens[$i][1];
+      while (T_NS_SEPARATOR === $tokens[$i + 1][0]) {
+        $type.= '.'.$tokens[$i + 2][1];
+        $i+= 2;
+      }
+      return $context[$type] ?? $imports[$type] ?? $context['namespace'].$type;
     } else {
       throw new IllegalStateException(sprintf(
         'Parse error: Unexpected %s',
@@ -338,31 +351,12 @@ class ClassParser {
           } else if (']' === $tokens[$i]) {     // Handle situations with trailing comma
             $annotations[0][$annotation]= $value;
             return $annotations;
-          } else if (T_NAME_FULLY_QUALIFIED === $tokens[$i][0] || T_NAME_QUALIFIED === $tokens[$i][0]) {
-            $annotation= lcfirst(substr($tokens[$i][1], strrpos($tokens[$i][1], '\\') + 1));
-            $param= null;
-            $value= null;
-            $state= 1;
-          } else if (T_STRING === $tokens[$i][0]) {
-            do {
-              $type= $tokens[$i++][1];
-            } while (T_NS_SEPARATOR === $tokens[$i++][0]);
-            $i-= 2;
-            $annotation= lcfirst($type);
-            $param= null;
-            $value= null;
-            $state= 1;
-          } else if (T_NS_SEPARATOR === $tokens[$i][0]) {
-            do {
-              $type= $tokens[++$i][1];
-            } while (T_NS_SEPARATOR === $tokens[++$i][0]);
-            $i-= 1;
-            $annotation= lcfirst($type);
-            $param= null;
-            $value= null;
-            $state= 1;
           } else {
-            throw new IllegalStateException('Parse error: Expecting "@", have '.(is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i]));
+            $type= $this->typeOf($tokens, $i, $context, $imports);
+            $annotation= lcfirst(false === ($p= strrpos($type, '.')) ? $type : substr($type, $p + 1));
+            $param= null;
+            $value= null;
+            $state= 1;
           }
         } else if (1 === $state) {              // Inside attribute, check for values
           if ('(' === $tokens[$i]) {
@@ -617,24 +611,8 @@ class ClassParser {
           break;
 
         case T_EXTENDS:
-          if (T_NAME_FULLY_QUALIFIED === $tokens[$i + 2][0]) {
-            $context['parent']= $tokens[$i + 2][1];
-          } else if (T_NAME_QUALIFIED === $tokens[$i + 2][0]) {
-            $context['parent']= $context['namespace'].$tokens[$i + 2][1];
-          } else if (T_STRING === $tokens[$i + 2][0]) {
-            $parent= $tokens[$i + 2][1];
-            while (T_NS_SEPARATOR === $tokens[$i + 3][0]) {
-              $parent.= '\\'.$tokens[$i + 4][1];
-              $i+= 2;
-            }
-            $context['parent']= $imports[$parent] ?? $context['namespace'].$parent;
-          } else {
-            $context['parent']= '';
-            while (T_NS_SEPARATOR === $tokens[$i + 2][0]) {
-              $context['parent'].= '\\'.$tokens[$i + 3][1];
-              $i+= 2;
-            }
-          }
+          $i+= 2;
+          $context['parent']= $this->typeOf($tokens, $i, $context, $imports);
           break;
 
         case T_VARIABLE:                      // Have a member variable
