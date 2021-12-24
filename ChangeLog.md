@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Merged PR #306: Fix qualified annotation names. This includes support
+  for trailing commas in grouped annotations.
+  (@thekid)
+
 ## 11.1.0 / 2021-12-08
 
 ### Features
