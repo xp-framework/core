@@ -39,8 +39,9 @@ class ClassParser {
       return $context['namespace'].strtr($tokens[$i][1], '\\', '.');
     } else if (T_STRING === $tokens[$i][0]) {
       $type= $tokens[$i][1];
-      if ('self' === $type) return $context['self'];
-      if ('parent' === $type) {
+      if ('self' === $type) {
+        return $context['self'];
+      } else if ('parent' === $type) {
         if (isset($context['parent'])) return $context['parent'];
         throw new IllegalStateException('Class does not have a parent');
       }
@@ -50,6 +51,8 @@ class ClassParser {
         $i+= 2;
       }
       return $imports[$type] ?? $context['namespace'].$type;
+    } else if (T_STATIC === $tokens[$i][0]) {
+      return $context['self'];
     } else {
       throw new IllegalStateException(sprintf(
         'Parse error: Unexpected %s',
