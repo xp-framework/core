@@ -85,6 +85,14 @@ the next step of phasing out XP annotation syntax in favor of PHP 8's
   syntax. This will raise *E_USER_DEPRECATED* warnings, see PR #284
   (@thekid)
 
+## 10.15.1 / 2021-12-24
+
+### Bugfixes
+
+* Backported PR #306 from XP 11: Correctly support qualified annotation
+  names and trailing commas in grouped annotations
+  (@thekid)
+
 ## 10.15.0 / 2021-10-21
 
 ### Features
