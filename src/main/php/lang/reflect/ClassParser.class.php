@@ -15,33 +15,46 @@ use lang\{XPClass, IllegalStateException, IllegalAccessException, ElementNotFoun
 class ClassParser {
 
   /**
-   * Resolves a type in a given context. Recognizes classes imported via
-   * the `use` statement.
+   * Parses and resolves a type
    *
-   * @param  string $type
+   * @param  var[] $tokens
+   * @param  int $i
    * @param  [:string] $context
    * @param  [:string] $imports
-   * @return lang.XPClass
+   * @return string
    * @throws lang.IllegalStateException
    */
-  protected function resolve($type, $context, $imports) {
-    if ('self' === $type) {
-      return XPClass::forName($context['self']);
-    } else if ('parent' === $type) {
-      if (isset($context['parent'])) return XPClass::forName($context['parent']);
-      throw new IllegalStateException('Class does not have a parent');
-    } else if ('\\' === $type[0]) {
-      return new XPClass($type);
-    } else if (false !== strpos($type, '.')) {
-      return XPClass::forName($type);
-    } else if (isset($imports[$type])) {
-      return XPClass::forName($imports[$type]);
-    } else if (class_exists($type, false) || interface_exists($type, false) || trait_exists($type, false) || enum_exists($type, false)) {
-      return new XPClass($type);
-    } else if (false !== strrpos($context['self'], '.')) {
-      return XPClass::forName($context['namespace'].$type);
+  protected function typeOf($tokens, &$i, $context, $imports) {
+    if (T_NAME_FULLY_QUALIFIED === $tokens[$i][0]) {
+      return strtr(substr($tokens[$i][1], 1), '\\', '.');
+    } else if (T_NS_SEPARATOR === $tokens[$i][0]) {
+      $type= '';
+      while (T_NS_SEPARATOR === $tokens[$i][0]) {
+        $type.= '.'.$tokens[$i + 1][1];
+        $i+= 2;
+      }
+      $i-= 1;
+      return substr($type, 1);
+    } else if (T_NAME_QUALIFIED === $tokens[$i][0]) {
+      return $context['namespace'].strtr($tokens[$i][1], '\\', '.');
+    } else if (T_STRING === $tokens[$i][0]) {
+      $type= $tokens[$i][1];
+      if ('self' === $type) return $context['self'];
+      if ('parent' === $type) {
+        if (isset($context['parent'])) return $context['parent'];
+        throw new IllegalStateException('Class does not have a parent');
+      }
+
+      while (T_NS_SEPARATOR === $tokens[$i + 1][0]) {
+        $type.= '.'.$tokens[$i + 2][1];
+        $i+= 2;
+      }
+      return $imports[$type] ?? $context['namespace'].$type;
     } else {
-      throw new IllegalStateException('Cannot resolve '.$type);
+      throw new IllegalStateException(sprintf(
+        'Parse error: Unexpected %s',
+        is_array($tokens[$i]) ? token_name($tokens[$i][0]) : '"'.$tokens[$i].'"'
+      ));
     }
   }
 
@@ -206,13 +219,10 @@ class ClassParser {
       }
       return $func;
     } else if (T_NEW === $token) {
-      $type= '';
-      $i++;
-      while ('(' !== $tokens[++$i]) {
-        $type.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
-      }
-      $i++;
-      $class= $this->resolve($type, $context, $imports);
+      $i+= 2;
+      $class= XPClass::forName($this->typeOf($tokens, $i, $context, $imports));
+
+      $i+= 2;
       for ($args= [], $arg= null, $s= sizeof($tokens); ; $i++) {
         if (')' === $tokens[$i]) {
           $arg && $args[]= $arg[0];
@@ -267,43 +277,6 @@ class ClassParser {
       $type= $this->typeOf($tokens, $i, $context, $imports);
       $i+= 2;
       return $this->memberOf(XPClass::forName($type), $tokens[$i], $context);
-    }
-  }
-
-  /**
-   * Parses a type
-   *
-   * @param  var[] $tokens
-   * @param  int $i
-   * @param  [:string] $context
-   * @param  [:string] $imports
-   * @return string
-   */
-  protected function typeOf($tokens, &$i, $context, $imports) {
-    if (T_NAME_FULLY_QUALIFIED === $tokens[$i][0]) {
-      return strtr(substr($tokens[$i][1], 1), '\\', '.');
-    } else if (T_NS_SEPARATOR === $tokens[$i][0]) {
-      $type= '';
-      while (T_NS_SEPARATOR === $tokens[$i][0]) {
-        $type.= '.'.$tokens[$i + 1][1];
-        $i+= 2;
-      }
-      $i-= 1;
-      return substr($type, 1);
-    } else if (T_NAME_QUALIFIED === $tokens[$i][0]) {
-      return $context['namespace'].strtr($tokens[$i][1], '\\', '.');
-    } else if (T_STRING === $tokens[$i][0]) {
-      $type= $tokens[$i][1];
-      while (T_NS_SEPARATOR === $tokens[$i + 1][0]) {
-        $type.= '.'.$tokens[$i + 2][1];
-        $i+= 2;
-      }
-      return $context[$type] ?? $imports[$type] ?? $context['namespace'].$type;
-    } else {
-      throw new IllegalStateException(sprintf(
-        'Parse error: Unexpected %s',
-        is_array($tokens[$i]) ? token_name($token) : '"'.$tokens[$i].'"'
-      ));
     }
   }
 
