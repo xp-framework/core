@@ -39,21 +39,6 @@ class BrokenAnnotationTest extends TestCase {
     $this->parse('#[@attribute("value)]');
   }
 
-  #[Test, Expect(['class' => ClassFormatException::class, 'withMessage' => '/Expecting "@"/'])]
-  public function missing_annotation_after_comma_and_value() {
-    $this->parse('#[@ignore("Test"), ]');
-  }
-
-  #[Test, Expect(['class' => ClassFormatException::class, 'withMessage' => '/Expecting "@"/'])]
-  public function missing_annotation_after_comma() {
-    $this->parse('#[@ignore, ]');
-  }
-
-  #[Test, Expect(['class' => ClassFormatException::class, 'withMessage' => '/Expecting "@"/'])]
-  public function missing_annotation_after_second_comma() {
-    $this->parse('#[@ignore, @test, ]');
-  }
-
   #[Test, Expect(['class' => ClassFormatException::class, 'withMessage' => '/Parse error: Unterminated string/'])]
   public function unterminated_dq_string() {
     $this->parse('#[@ignore("Test)]');

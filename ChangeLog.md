@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.15.1 / 2021-12-24
+
+### Bugfixes
+
+* Backported PR #306 from XP 11: Correctly support qualified annotation
+  names and trailing commas in grouped annotations
+  (@thekid)
+
 ## 10.15.0 / 2021-10-21
 
 ### Features

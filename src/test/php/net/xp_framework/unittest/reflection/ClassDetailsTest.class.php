@@ -38,7 +38,7 @@ class ClassDetailsTest extends \unittest\TestCase {
   public function parses($kind) {
     $details= (new ClassParser())->parseDetails('<?php '.$kind.' Test { }');
     $this->assertEquals(
-      [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => [], DETAIL_ARGUMENTS => 'Test'],
+      [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => []],
       $details['class']
     );
   }
@@ -252,9 +252,9 @@ class ClassDetailsTest extends \unittest\TestCase {
   #[Test]
   public function use_statements_with_alias_evaluated() {
     $actual= (new ClassParser())->parseDetails('<?php namespace test;
-      use net\xp_framework\unittest\Name as Value;
+      use net\xp_framework\unittest\Name as Named;
 
-      #[Value(new Value("test"))]
+      #[Value(new Named("test"))]
       class Test {
       }
     ');
@@ -320,9 +320,21 @@ class ClassDetailsTest extends \unittest\TestCase {
   }
 
   #[Test]
-  public function php8_attributes_with_named_arguments() {
+  public function php8_attributes_with_trailing_comma() {
     $actual= (new ClassParser())->parseDetails('<?php
-      #[Expect(class: \net\xp_framework\unittest\Name::class)]
+      #[Test, Value("test"),]
+      class Test {
+      }
+    ');
+    $this->assertEquals(['test' => null, 'value' => 'test'], $actual['class'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[Test, Values(['\net\xp_framework\unittest\Name', 'unittest\Name', 'Name'])]
+  public function php8_attributes_with_named_arguments($name) {
+    $actual= (new ClassParser())->parseDetails('<?php namespace net\xp_framework;
+      use net\xp_framework\unittest\Name;
+
+      #[Expect(class: '.$name.'::class)]
       class Test {
       }
     ');
@@ -337,6 +349,26 @@ class ClassDetailsTest extends \unittest\TestCase {
       }
     ');
     $this->assertEquals('test', $actual['class'][DETAIL_ANNOTATIONS]['value']());
+  }
+
+  #[Test]
+  public function absolute_compound_php8_attributes() {
+    $actual= (new ClassParser())->parseDetails('<?php
+      #[\unittest\annotations\Test]
+      class Test {
+      }
+    ');
+    $this->assertEquals(['test' => null], $actual['class'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[Test]
+  public function relative_compound_php8_attributes() {
+    $actual= (new ClassParser())->parseDetails('<?php
+      #[unittest\annotations\Test]
+      class Test {
+      }
+    ');
+    $this->assertEquals(['test' => null], $actual['class'][DETAIL_ANNOTATIONS]);
   }
 
   #[Test]
@@ -431,14 +463,26 @@ class ClassDetailsTest extends \unittest\TestCase {
     $this->assertEquals(['test' => null], $details[0]['fixture'][DETAIL_ANNOTATIONS]);
   }
 
+  #[Test, Values(['\net\xp_framework\unittest\Name', 'unittest\Name', 'Name'])]
+  public function annotation_with_reference_to($parent) {
+    $details= (new ClassParser())->parseDetails('<?php namespace net\xp_framework;
+      use net\xp_framework\unittest\Name;
+
+      class Test extends '.$parent.' {
+        #[Fixture(new parent("Test"))]
+        public function fixture() { }
+      }'
+    );
+    $this->assertEquals(['fixture' => new Name('Test')], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
+  }
+
   #[Test, Expect(['class' => ClassFormatException::class, 'withMessage' => '/Class does not have a parent/'])]
   public function annotation_with_parent_reference_in_parentless_class() {
     (new ClassParser())->parseDetails('<?php
       class Test {
         #[Fixture(new parent())]
         public function fixture() { }
-      }',
-      Name::class
+      }'
     );
   }
 
@@ -446,11 +490,13 @@ class ClassDetailsTest extends \unittest\TestCase {
   public function field_initializer_with_class_keyword() {
     $details= (new ClassParser())->parseDetails('<?php
       class Test {
+
+        /** Property */
         private $classes= [self::class, parent::class];
       }
     ');
     $this->assertEquals(
-      [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => [], DETAIL_ARGUMENTS => 'Test'],
+      [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => []],
       $details['class']
     );
   }
@@ -557,7 +603,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       }
     ');
     $this->assertEquals(
-      [DETAIL_COMMENT => 'Comment', DETAIL_ANNOTATIONS => [], DETAIL_ARGUMENTS => 'Test'],
+      [DETAIL_COMMENT => 'Comment', DETAIL_ANNOTATIONS => []],
       $details['class']
     );
   }
