@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.1.2 / 2022-01-05
+
+### Bugfixes
+
+* Fixed `lang.reflect.Parameter::getDefaultValue()` to parse parameter
+  annotations correctly
+  (@thekid)
+
 ## 11.1.1 / 2021-12-24
 
 ### Bugfixes
