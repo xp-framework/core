@@ -3,7 +3,7 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
-## 11.1.2 / 2022-01-05
+## 11.1.2 / 2022-01-22
 
 ### Bugfixes
 
