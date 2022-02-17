@@ -34,8 +34,9 @@ class BrDecompressingInputStream implements InputStream {
    */
   public function read($limit= 8192) {
     $bytes= brotli_uncompress_add($this->handle, $this->in->read($limit), BROTLI_PROCESS);
-    if ($this->in->available()) {
+    if (!$this->in->available()) {
       $bytes.= brotli_uncompress_add($this->handle, '', BROTLI_FINISH);
+      $this->handle= null;
     }
     return $bytes;
   }
@@ -57,8 +58,6 @@ class BrDecompressingInputStream implements InputStream {
    */
   public function close() {
     if ($this->handle) {
-
-      // The brotli extension does not seem to have a problem when invoking this twice
       brotli_uncompress_add($this->handle, '', BROTLI_FINISH);
       $this->handle= null;
     }
