@@ -148,12 +148,12 @@ class FileSystemClassLoader extends AbstractClassLoader {
   /**
    * Get package contents
    *
-   * @param   string package
-   * @return  string[] filenames
+   * @param  ?string $package
+   * @return string[]
    */
   public function packageContents($package) {
     $contents= [];
-    $path= $this->path.strtr($package, '.', DIRECTORY_SEPARATOR);
+    $path= null === $package ? $this->path : $this->path.strtr($package, '.', DIRECTORY_SEPARATOR);
     if (is_dir($path)) {
       $d= dir($path);
       while ($e= $d->read()) {
