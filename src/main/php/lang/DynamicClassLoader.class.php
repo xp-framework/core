@@ -128,8 +128,8 @@ class DynamicClassLoader extends AbstractClassLoader {
   /**
    * Get package contents
    *
-   * @param   string package
-   * @return  string[] filenames
+   * @param  ?string $package
+   * @return string[]
    */
   public function packageContents($package) {
     return [];
