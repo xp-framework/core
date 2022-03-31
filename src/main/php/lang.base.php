@@ -434,6 +434,7 @@ define('MODIFIER_PUBLIC',    \ReflectionMethod::IS_PUBLIC);
 define('MODIFIER_PROTECTED', \ReflectionMethod::IS_PROTECTED);
 define('MODIFIER_PRIVATE',   \ReflectionMethod::IS_PRIVATE);
 define('MODIFIER_READONLY',  128); // PHP 8.1: \ReflectionProperty::IS_READONLY
+define('MODIFIER_SEALED',    256); // PHP 8.2: \ReflectionClass::IS_SEALED
 
 define('DETAIL_ARGUMENTS',   1);
 define('DETAIL_RETURNS',     2);

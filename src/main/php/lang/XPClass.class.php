@@ -607,7 +607,10 @@ class XPClass extends Type {
     $m & \ReflectionClass::IS_EXPLICIT_ABSTRACT && $r |= MODIFIER_ABSTRACT;
     $m & \ReflectionClass::IS_IMPLICIT_ABSTRACT && $r |= MODIFIER_ABSTRACT;
     $m & \ReflectionClass::IS_FINAL && $r |= MODIFIER_FINAL;
-    
+
+    // TODO: \ReflectionClass::IS_SEALED once PR is merged
+    if ($this->hasAnnotation('sealed')) $r |= MODIFIER_SEALED;
+
     return $r;
   }
 
@@ -757,6 +760,36 @@ class XPClass extends Type {
       $creator= new GenericTypes();
     }
     return $creator->newType($this, $arguments);
+  }
+
+  /**
+   * Returns subclasses of this sealed class
+   *
+   * @return  self[]
+   * @throws  lang.IllegalStateException if this class is not a sealed definition
+   */
+  public function sealedSubclasses() {
+    if (!$this->isSealedDefinition()) {
+      throw new IllegalStateException('Class '.$this->name.' is not a sealed definition');
+    }
+
+    // TODO: Check for ReflectionClass::getPermittedClasses() once PR is merged
+    $classes= [];
+    foreach ($this->getAnnotation('sealed') as $name) {
+      $classes[]= new self($name);
+    }
+    return $classes;
+  }
+
+  /**
+   * Returns whether this class is a sealed definition
+   *
+   * @return  bool
+   */
+  public function isSealedDefinition(): bool {
+
+    // TODO: Check for ReflectionClass::isSealed() once PR is merged
+    return $this->hasAnnotation('sealed');
   }
 
   /**

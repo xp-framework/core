@@ -82,6 +82,16 @@ abstract class Modifiers {
   }
 
   /**
+   * Returns TRUE when the given modifiers include the sealed modifier.
+   *
+   * @param  int $m
+   * @return bool
+   */
+  public static function isSealed($m) {
+    return MODIFIER_SEALED === ($m & MODIFIER_SEALED);
+  }
+
+  /**
    * Retrieves modifier names as an array. The order in which the 
    * modifiers are returned is the following:
    *
@@ -99,6 +109,7 @@ abstract class Modifiers {
       case MODIFIER_PROTECTED: $names[]= 'protected'; break;
       case MODIFIER_PUBLIC: default: $names[]= 'public'; break;
     }
+    if ($m & MODIFIER_SEALED) $names[]= 'sealed';
     if ($m & MODIFIER_STATIC) $names[]= 'static';
     if ($m & MODIFIER_ABSTRACT) $names[]= 'abstract';
     if ($m & MODIFIER_FINAL) $names[]= 'final';
