@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Replaced *strcmp()* with the `<=>` operator in the `util.Bytes` and
+  `io.Path` classes, removing function call overhead
+  (@thekid)
+
 ## 11.1.2 / 2022-01-22
 
 ### Bugfixes

@@ -124,7 +124,7 @@ class Bytes implements Value, ArrayAccess, IteratorAggregate {
 
   /** Returns whether a given object is equal to this object */
   public function compareTo($value): int {
-    return $value instanceof self ? strcmp($this->buffer, $value->buffer) : 1;
+    return $value instanceof self ? $this->buffer <=> $value->buffer : 1;
   }
 
   /** Returns a string representation of this bytes */

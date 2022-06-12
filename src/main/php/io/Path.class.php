@@ -350,7 +350,7 @@ class Path implements Value {
 
   /** Returns whether this path instance is equal to a given object */
   public function compareTo($value): int {
-    return $value instanceof self ? strcmp($this->normalize()->path, $value->normalize()->path) : 1;
+    return $value instanceof self ? $this->normalize()->path <=> $value->normalize()->path : 1;
   }
 
   /** String casts */

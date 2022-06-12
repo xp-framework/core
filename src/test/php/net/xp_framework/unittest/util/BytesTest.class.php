@@ -14,8 +14,8 @@ class BytesTest extends TestCase {
   /** @return iterable */
   private function comparing() {
     yield [new Bytes('Test'), 0];
-    yield [new Bytes('T'), +3];
-    yield [new Bytes('Testing'), -3];
+    yield [new Bytes('T'), 1];
+    yield [new Bytes('Testing'), -1];
     yield [null, 1];
   }
 
