@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Merged PR #309: Use *AES-128-CBC* instead of *DES* (in `util.Secret`);
+  the latter is considered legacy
+  (@thekid)
 * Fixed compatibility with PHP 8.2 for invalid timezones. PHP now reverts
   to `UTC` and displays a startup warning if the timezone name is unknown.
   (@thekid)
