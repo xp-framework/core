@@ -56,9 +56,9 @@ class TypeTest extends TestCase {
     $this->assertEquals(Primitive::$BOOL, Type::forName($named));
   }
 
-  #[Test]
-  public function voidType() {
-    $this->assertEquals(Type::$VOID, Type::forName('void'));
+  #[Test, Values(['void', 'null'])]
+  public function voidType($named) {
+    $this->assertEquals(Type::$VOID, Type::forName($named));
   }
 
   #[Test]

@@ -99,6 +99,7 @@ class Type implements Value {
       'resource'  => self::$VAR,
       'mixed'     => self::$VAR,
       'void'      => self::$VOID,
+      'null'      => self::$VOID,
       'never'     => self::$NEVER,
       'array'     => self::$ARRAY,
       'object'    => self::$OBJECT,
