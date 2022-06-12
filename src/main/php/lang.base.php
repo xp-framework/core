@@ -412,7 +412,7 @@ if (!function_exists('enum_exists')) {
 // {{{ main
 error_reporting(E_ALL);
 set_error_handler('__error');
-if (!date_default_timezone_set(ltrim(ini_get('date.timezone'), ':'))) {
+if (!date_default_timezone_set(ltrim(get_cfg_var('date.timezone'), ':'))) {
   throw new \Exception('[xp::core] date.timezone not configured properly.', 0x3d);
 }
 

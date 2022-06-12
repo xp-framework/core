@@ -23,13 +23,14 @@ class BootstrapTest extends \unittest\TestCase {
   }
 
   /**
-   * Create a new runtime
+   * Run given code in a new runtime
    *
-   * @param   lang.RuntimeOptions $options
-   * @return  var[] an array with three elements: exitcode, stdout and stderr contents
+   * @param  lang.RuntimeOptions $options
+   * @param  string $code
+   * @return var[] an array with three elements: exitcode, stdout and stderr contents
    */
-  protected function runWith(RuntimeOptions $options) {
-    with ($out= $err= '', $p= Runtime::getInstance()->newInstance($options, 'class', 'xp.runtime.Evaluate', ['return 1;'])); {
+  protected function runWith(RuntimeOptions $options, $code= 'return 1;') {
+    with ($out= $err= '', $p= Runtime::getInstance()->newInstance($options, 'class', 'xp.runtime.Evaluate', [$code])); {
       $p->in->close();
 
       // Read output
@@ -42,10 +43,20 @@ class BootstrapTest extends \unittest\TestCase {
     return [$exitv, $out, $err];
   }
 
-  #[Test, Values(['Europe/Berlin', 'UTC', ':UTC'])]
+  #[Test, Values(['Europe/Berlin', 'UTC'])]
   public function valid_timezone($tz) {
     $r= $this->runWith(Runtime::getInstance()->startupOptions()->withSetting('date.timezone', $tz));
     $this->assertEquals([1, '', ''], $r);
+  }
+
+  #[Test]
+  public function leading_colon_stripped_from_timezone() {
+    $r= $this->runWith(Runtime::getInstance()->startupOptions()->withSetting('date.timezone', ':UTC'), 'echo "TZ=", date_default_timezone_get();');
+    $this->assertTrue(
+      (bool)strstr($r[1].$r[2], 'TZ=UTC'),
+      Objects::stringOf(['out' => $r[1], 'err' => $r[2]])
+    );
+    $this->assertEquals(0, $r[0], 'exitcode');
   }
 
   #[Test, Values(['', 'Foo/Bar'])]
