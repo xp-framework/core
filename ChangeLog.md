@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.2.0 / 2022-06-12
+
 ### Bugfixes
 
 * Merged PR #309: Use *AES-128-CBC* instead of *DES* (in `util.Secret`);
