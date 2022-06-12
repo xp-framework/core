@@ -94,6 +94,7 @@ class Type implements Value {
       'bool'      => Primitive::$BOOL,
       'boolean'   => Primitive::$BOOL,
       'false'     => Primitive::$BOOL,
+      'true'      => Primitive::$BOOL,
       'var'       => self::$VAR,
       'resource'  => self::$VAR,
       'mixed'     => self::$VAR,

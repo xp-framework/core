@@ -51,7 +51,7 @@ class TypeTest extends TestCase {
     $this->assertEquals(Primitive::$FLOAT, Type::forName($named));
   }
 
-  #[Test, Values(['bool', 'boolean', 'false'])]
+  #[Test, Values(['bool', 'boolean', 'false', 'true'])]
   public function boolType($named) {
     $this->assertEquals(Primitive::$BOOL, Type::forName($named));
   }

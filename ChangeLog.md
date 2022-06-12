@@ -14,6 +14,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added PHP 8.2 `true` type, see https://wiki.php.net/rfc/true-type
+  (@thekid)
 * Replaced *strcmp()* with the `<=>` operator in the `util.Bytes` and
   `io.Path` classes, removing function call overhead
   (@thekid)
