@@ -73,11 +73,11 @@ class Secret implements Value {
           throw new IllegalStateException('Backing "openssl" required but extension not available.');
         }
         $key= md5(uniqid());
-        $iv= openssl_random_pseudo_bytes(openssl_cipher_iv_length('des'));
+        $iv= openssl_random_pseudo_bytes(openssl_cipher_iv_length('AES-128-CBC'));
 
         return self::setBacking(
-          function($value) use ($key, $iv) { return openssl_encrypt($value, 'DES', $key,  0, $iv); },
-          function($value) use ($key, $iv) { return openssl_decrypt($value, 'DES', $key,  0, $iv); }
+          function($value) use ($key, $iv) { return openssl_encrypt($value, 'AES-128-CBC', $key,  0, $iv); },
+          function($value) use ($key, $iv) { return openssl_decrypt($value, 'AES-128-CBC', $key,  0, $iv); }
         );
       }
 
