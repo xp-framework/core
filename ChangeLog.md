@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed compatibility with PHP 8.2 for invalid timezones. PHP now reverts
+  to `UTC` and displays a startup warning if the timezone name is unknown.
+  (@thekid)
+
 ### Features
 
 * Replaced *strcmp()* with the `<=>` operator in the `util.Bytes` and
