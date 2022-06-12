@@ -50,31 +50,34 @@ class TimeZoneTest extends TestCase {
   
   #[Test]
   public function previousPreviousTransition() {
-    $transition= (new TimeZone('Europe/Berlin'))->previousTransition(new Date('2007-08-23'));
+    $tz= new TimeZone('Europe/Berlin');
+    $transition= $tz->previousTransition(new Date('2007-08-23'));
     $previous= $transition->previous();
     $this->assertFalse($previous->isDst());
     $this->assertEquals('CET', $previous->abbr());
     $this->assertEquals('+0100', $previous->difference());
-    $this->assertEquals(new Date('2006-10-29 02:00:00 Europe/Berlin'), $previous->date());
+    $this->assertEquals(new Date('2006-10-29 02:00:00', $tz), $previous->date());
   }
 
   #[Test]
   public function previousNextTransition() {
-    $transition= (new TimeZone('Europe/Berlin'))->previousTransition(new Date('2007-08-23'));
+    $tz= new TimeZone('Europe/Berlin');
+    $transition= $tz->previousTransition(new Date('2007-08-23'));
     $next= $transition->next();
     $this->assertFalse($next->isDst());
     $this->assertEquals('CET', $next->abbr());
     $this->assertEquals('+0100', $next->difference());
-    $this->assertEquals(new Date('2007-10-28 02:00:00 Europe/Berlin'), $next->date());
+    $this->assertEquals(new Date('2007-10-28 02:00:00', $tz), $next->date());
   }
 
   #[Test]
   public function nextTransition() {
-    $transition= (new TimeZone('Europe/Berlin'))->nextTransition(new Date('2007-08-23'));
+    $tz= new TimeZone('Europe/Berlin');
+    $transition= $tz->nextTransition(new Date('2007-08-23'));
     $this->assertEquals(false, $transition->isDst());
     $this->assertEquals('CET', $transition->abbr());
     $this->assertEquals('+0100', $transition->difference());
-    $this->assertEquals(new Date('2007-10-28 02:00:00 Europe/Berlin'), $transition->date());
+    $this->assertEquals(new Date('2007-10-28 02:00:00', $tz), $transition->date());
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
