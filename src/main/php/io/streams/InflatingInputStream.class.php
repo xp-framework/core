@@ -1,13 +1,18 @@
 <?php namespace io\streams;
 
+use lang\Value;
+use util\Comparison;
+
 /**
  * InputStream that inflates 
  *
  * @ext   zlib
- * @test  xp://net.xp_framework.unittest.io.streams.InflatingInputStreamTest
+ * @test  net.xp_framework.unittest.io.streams.InflatingInputStreamTest
  */
-class InflatingInputStream implements InputStream {
-  protected $in = null;
+class InflatingInputStream implements InputStream, Value {
+  use Comparison;
+
+  protected $in;
   
   /**
    * Constructor

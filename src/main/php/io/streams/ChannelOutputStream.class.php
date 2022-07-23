@@ -1,16 +1,20 @@
 <?php namespace io\streams;
 
 use io\IOException;
+use lang\Value;
+use util\Comparison;
 
 /**
  * Output stream that writes to one of the "stdout", "stderr", "output"
  * channels provided as PHP input/output streams.
  *
- * @test  xp://net.xp_framework.unittest.io.streams.ChannelStreamTest
+ * @test  net.xp_framework.unittest.io.streams.ChannelStreamTest
  * @see   php://wrappers
- * @see   xp://io.streams.ChannelInputStream
+ * @see   io.streams.ChannelInputStream
  */
-class ChannelOutputStream implements OutputStream {
+class ChannelOutputStream implements OutputStream, Value {
+  use Comparison;
+
   protected
     $name = null,
     $fd   = null;

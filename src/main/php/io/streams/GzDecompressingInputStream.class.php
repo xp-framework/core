@@ -1,6 +1,8 @@
 <?php namespace io\streams;
 
 use io\IOException;
+use lang\Value;
+use util\Comparison;
 
 /**
  * InputStream that decompresses data compressed using GZIP encoding.
@@ -9,7 +11,9 @@ use io\IOException;
  * @see   rfc://1952
  * @test  xp://net.xp_framework.unittest.io.streams.GzDecompressingInputStreamTest
  */
-class GzDecompressingInputStream implements InputStream {
+class GzDecompressingInputStream implements InputStream, Value {
+  use Comparison;
+
   private $in, $header;
   public static $wrapped= [];
 
@@ -20,7 +24,7 @@ class GzDecompressingInputStream implements InputStream {
       public $context = null;
       
       public function stream_open($path, $mode, $options, $opened_path) {
-        $this->st= \io\streams\GzDecompressingInputStream::$wrapped[$path];
+        $this->st= GzDecompressingInputStream::$wrapped[$path];
         $this->id= $path;
         return true;
       }
@@ -51,7 +55,7 @@ class GzDecompressingInputStream implements InputStream {
       
       public function stream_close() {
         $this->st->close();
-        unset(\io\streams\GzDecompressingInputStream::$wrapped[$this->id]);
+        unset(GzDecompressingInputStream::$wrapped[$this->id]);
       }
     }));
   }

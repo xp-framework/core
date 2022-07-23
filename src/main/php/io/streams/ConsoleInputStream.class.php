@@ -1,5 +1,8 @@
 <?php namespace io\streams;
 
+use lang\Value;
+use util\Comparison;
+
 /**
  * InputStream that reads from the console
  *
@@ -8,7 +11,9 @@
  * $in= new ConsoleInputStream(STDIN);
  * ```
  */
-class ConsoleInputStream implements InputStream {
+class ConsoleInputStream implements InputStream, Value {
+  use Comparison;
+
   private $descriptor, $close;
   
   /**

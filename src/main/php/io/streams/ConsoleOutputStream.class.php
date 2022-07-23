@@ -1,5 +1,8 @@
 <?php namespace io\streams;
 
+use lang\Value;
+use util\Comparison;
+
 /**
  * OuputStream that writes to the console
  *
@@ -9,7 +12,9 @@
  * $err= new ConsoleOutputStream(STDERR);
  * ```
  */
-class ConsoleOutputStream implements OutputStream {
+class ConsoleOutputStream implements OutputStream, Value {
+  use Comparison;
+
   private $descriptor, $close;
   
   /**

@@ -1,16 +1,20 @@
 <?php namespace io\streams;
 
 use io\IOException;
+use lang\Value;
+use util\Comparison;
 
 /**
  * Input stream that reads from one of the "stdin", "input" channels
  * provided as PHP input/output streams.
  *
- * @test  xp://net.xp_framework.unittest.io.streams.ChannelStreamTest
+ * @test  net.xp_framework.unittest.io.streams.ChannelStreamTest
  * @see   php://wrappers
- * @see   xp://io.streams.ChannelOutputStream
+ * @see   io.streams.ChannelOutputStream
  */
-class ChannelInputStream implements InputStream {
+class ChannelInputStream implements InputStream, Value {
+  use Comparison;
+
   protected
     $name = null,
     $fd   = null;
