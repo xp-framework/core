@@ -26,8 +26,8 @@ class ChannelOutputStream implements OutputStream, Value {
    */
   public function __construct($arg) {
     if ('stdout' === $arg || 'stderr' === $arg || 'output' === $arg) {
-      if (!($this->fd= fopen('php://'.$arg, 'rb'))) {
-        throw new IOException('Could not open '.$arg.' channel for reading');
+      if (!($this->fd= fopen('php://'.$arg, 'wb'))) {
+        throw new IOException('Could not open '.$arg.' channel for writing');
       }
     } else if (is_resource($arg)) {
       $this->fd= $arg;
