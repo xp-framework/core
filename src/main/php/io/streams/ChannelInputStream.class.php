@@ -15,10 +15,8 @@ use util\Comparison;
 class ChannelInputStream implements InputStream, Value {
   use Comparison;
 
-  protected
-    $name = null,
-    $fd   = null;
-  
+  protected $fd, $name;
+
   /**
    * Constructor
    *
@@ -29,6 +27,7 @@ class ChannelInputStream implements InputStream, Value {
       if (!($this->fd= fopen('php://'.$arg, 'rb'))) {
         throw new IOException('Could not open '.$arg.' channel for reading');
       }
+      $this->name= $arg;
     } else if (is_resource($arg)) {
       $this->fd= $arg;
       $this->name= '#'.(int)$arg;

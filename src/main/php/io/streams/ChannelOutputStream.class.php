@@ -15,9 +15,7 @@ use util\Comparison;
 class ChannelOutputStream implements OutputStream, Value {
   use Comparison;
 
-  protected
-    $name = null,
-    $fd   = null;
+  protected $fd, $name;
 
   /**
    * Constructor
@@ -29,6 +27,7 @@ class ChannelOutputStream implements OutputStream, Value {
       if (!($this->fd= fopen('php://'.$arg, 'wb'))) {
         throw new IOException('Could not open '.$arg.' channel for writing');
       }
+      $this->name= $arg;
     } else if (is_resource($arg)) {
       $this->fd= $arg;
       $this->name= '#'.(int)$arg;
