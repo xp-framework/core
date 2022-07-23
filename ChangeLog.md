@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.3.0 / 2022-07-23
+
+### Features
+
+* Merged PR #311: Make all InputStream & OutputStream implementations
+  implement Value, implementing #310.
+  (@thekid)
+
 ## 11.2.0 / 2022-06-12
 
 ### Bugfixes
