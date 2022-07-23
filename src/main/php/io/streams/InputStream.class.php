@@ -1,15 +1,15 @@
 <?php namespace io\streams;
 
-/**
- * An InputStream can be read from
- */
-interface InputStream extends \lang\Closeable {
+use lang\Closeable;
+
+/** An InputStream can be read from */
+interface InputStream extends Closeable {
 
   /**
    * Read a string
    *
-   * @param   int limit default 8192
-   * @return  string
+   * @param  int $limit
+   * @return string
    */
   public function read($limit= 8192);
 

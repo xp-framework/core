@@ -1,9 +1,9 @@
 <?php namespace io\streams;
 
-/**
- * An OuputStream can be written to
- */
-interface OutputStream extends \lang\Closeable {
+use lang\Closeable;
+
+/** An OuputStream can be written to */
+interface OutputStream extends Closeable {
 
   /**
    * Write a string
