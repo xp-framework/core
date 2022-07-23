@@ -130,4 +130,16 @@ class ChannelStreamTest extends \unittest\TestCase {
     }, ['input' => '+OK Piped input']);      
     $this->assertEquals('+OK Piped input', $r['stdout']);
   }
+
+  #[Test]
+  public function input_name() {
+    $s= new ChannelInputStream('input');
+    $this->assertEquals('io.streams.ChannelInputStream(channel=input)', $s->toString());
+  }
+
+  #[Test]
+  public function output_name() {
+    $s= new ChannelOutputStream('output');
+    $this->assertEquals('io.streams.ChannelOutputStream(channel=output)', $s->toString());
+  }
 }

@@ -1,11 +1,16 @@
 <?php namespace io\streams;
 
+use lang\Value;
+use util\Comparison;
+
 /**
  * OuputStream writes to memory, which can be retrieved via `bytes()`
  *
- * @test  xp://net.xp_framework.unittest.io.streams.MemoryOutputStreamTest
+ * @test  net.xp_framework.unittest.io.streams.MemoryOutputStreamTest
  */
-class MemoryOutputStream implements OutputStream, Seekable, Truncation {
+class MemoryOutputStream implements OutputStream, Seekable, Truncation, Value {
+  use Comparison;
+
   protected $pos, $bytes;
 
   /** @param string $bytes */

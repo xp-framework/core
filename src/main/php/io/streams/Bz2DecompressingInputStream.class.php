@@ -1,23 +1,29 @@
 <?php namespace io\streams;
 
+use io\IOException;
+use lang\Value;
+use util\Comparison;
+
 /**
  * InputStream that decompresses 
  *
  * @ext   bz2
- * @test  xp://net.xp_framework.unittest.io.streams.Bz2DecompressingInputStreamTest
+ * @test  net.xp_framework.unittest.io.streams.Bz2DecompressingInputStreamTest
  */
-class Bz2DecompressingInputStream implements InputStream {
-  protected $in = null;
+class Bz2DecompressingInputStream implements InputStream, Value {
+  use Comparison;
+
+  protected $in;
   
   /**
    * Constructor
    *
-   * @param   io.streams.InputStream in
+   * @param  io.streams.InputStream $in
    */
   public function __construct(InputStream $in) {
     $this->in= Streams::readableFd($in);
     if (!stream_filter_append($this->in, 'bzip2.decompress', STREAM_FILTER_READ)) {
-      throw new \io\IOException('Could not append stream filter');
+      throw new IOException('Could not append stream filter');
     }
   }
 

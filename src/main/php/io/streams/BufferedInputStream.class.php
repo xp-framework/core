@@ -1,19 +1,24 @@
 <?php namespace io\streams;
 
+use lang\Value;
+use util\Comparison;
+
 /**
  * Buffered InputStream
+ *
+ * @test  net.xp_framework.unittest.io.streams.BufferedInputStreamTest
  */
-class BufferedInputStream implements InputStream {
-  protected 
-    $in   = null,
-    $buf  = '',
-    $size = 0;
+class BufferedInputStream implements InputStream, Value {
+  use Comparison;
+
+  protected $in, $size;
+  protected $buf= '';
 
   /**
    * Constructor
    *
-   * @param   io.streams.InputStream in
-   * @param   int size default 512
+   * @param  io.streams.InputStream $in
+   * @param  int $size
    */
   public function __construct($in, $size= 512) {
     $this->in= $in;
@@ -61,6 +66,7 @@ class BufferedInputStream implements InputStream {
    * @return void
    */
   public function close() {
+    // NOOP
   }
 
   /** @return string */

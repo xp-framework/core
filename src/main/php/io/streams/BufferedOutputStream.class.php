@@ -1,16 +1,21 @@
 <?php namespace io\streams;
 
+use lang\Value;
+use util\Comparison;
+
 /**
  * OuputStream that writes to another OutputStream but buffers the
  * results internally. This means not every single byte passed to
  * write() will be written.
+ * 
+ * @test  net.xp_framework.unittest.io.streams.BufferedOutputStreamTest
  */
-class BufferedOutputStream implements OutputStream {
-  protected 
-    $out  = null,
-    $buf  = '',
-    $size = 0;
-  
+class BufferedOutputStream implements OutputStream, Value {
+  use Comparison;
+
+  protected $out, $size;
+  protected $buf= '';
+
   /**
    * Constructor
    *

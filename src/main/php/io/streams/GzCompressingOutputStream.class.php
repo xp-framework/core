@@ -1,5 +1,8 @@
 <?php namespace io\streams;
 
+use lang\Value;
+use util\Comparison;
+
 /**
  * OuputStream that compresses content using GZIP encoding. Data
  * produced with this stream can be read with the "gunzip" command
@@ -9,7 +12,9 @@
  * @see   rfc://1952
  * @test  xp://net.xp_framework.unittest.io.streams.GzCompressingOutputStreamTest
  */
-class GzCompressingOutputStream implements OutputStream {
+class GzCompressingOutputStream implements OutputStream, Value {
+  use Comparison;
+
   protected $out= null;
   protected $md= null;
   protected $length= null;

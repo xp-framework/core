@@ -1,12 +1,17 @@
 <?php namespace io\streams;
 
+use lang\Value;
+use util\Comparison;
+
 /**
  * OuputStream that deflates 
  *
  * @ext   zlib
- * @test  xp://net.xp_framework.unittest.io.streams.DeflatingOutputStreamTest
+ * @test  net.xp_framework.unittest.io.streams.DeflatingOutputStreamTest
  */
-class DeflatingOutputStream implements OutputStream {
+class DeflatingOutputStream implements OutputStream, Value {
+  use Comparison;
+
   protected $out= null;
   
   /**

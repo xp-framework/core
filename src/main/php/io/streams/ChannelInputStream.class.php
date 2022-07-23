@@ -1,20 +1,22 @@
 <?php namespace io\streams;
 
 use io\IOException;
+use lang\Value;
+use util\Comparison;
 
 /**
  * Input stream that reads from one of the "stdin", "input" channels
  * provided as PHP input/output streams.
  *
- * @test  xp://net.xp_framework.unittest.io.streams.ChannelStreamTest
+ * @test  net.xp_framework.unittest.io.streams.ChannelStreamTest
  * @see   php://wrappers
- * @see   xp://io.streams.ChannelOutputStream
+ * @see   io.streams.ChannelOutputStream
  */
-class ChannelInputStream implements InputStream {
-  protected
-    $name = null,
-    $fd   = null;
-  
+class ChannelInputStream implements InputStream, Value {
+  use Comparison;
+
+  protected $fd, $name;
+
   /**
    * Constructor
    *
@@ -25,6 +27,7 @@ class ChannelInputStream implements InputStream {
       if (!($this->fd= fopen('php://'.$arg, 'rb'))) {
         throw new IOException('Could not open '.$arg.' channel for reading');
       }
+      $this->name= $arg;
     } else if (is_resource($arg)) {
       $this->fd= $arg;
       $this->name= '#'.(int)$arg;

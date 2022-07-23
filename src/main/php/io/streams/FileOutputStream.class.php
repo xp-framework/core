@@ -1,13 +1,17 @@
 <?php namespace io\streams;
 
 use io\File;
+use lang\Value;
+use util\Comparison;
 
 /**
  * OuputStream that writes to files
  *
  * @test  xp://net.xp_framework.unittest.io.streams.FileOutputStreamTest
  */
-class FileOutputStream implements OutputStream, Seekable, Truncation {
+class FileOutputStream implements OutputStream, Seekable, Truncation, Value {
+  use Comparison;
+
   protected $file;
   
   /**

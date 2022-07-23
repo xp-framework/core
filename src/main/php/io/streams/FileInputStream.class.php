@@ -1,13 +1,17 @@
 <?php namespace io\streams;
 
 use io\File;
+use lang\Value;
+use util\Comparison;
 
 /**
  * InputStream that reads from a file
  *
  * @test     xp://net.xp_framework.unittest.io.streams.FileInputStreamTest
  */
-class FileInputStream implements InputStream, Seekable {
+class FileInputStream implements InputStream, Seekable, Value {
+  use Comparison;
+
   protected $file;
   
   /**

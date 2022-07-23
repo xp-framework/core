@@ -1,11 +1,16 @@
 <?php namespace io\streams;
 
+use lang\Value;
+use util\Comparison;
+
 /**
  * InputStream that reads from a given string.
  *
  * @test  net.xp_framework.unittest.io.streams.MemoryInputStreamTest
  */
-class MemoryInputStream implements InputStream, Seekable {
+class MemoryInputStream implements InputStream, Seekable, Value {
+  use Comparison;
+
   protected $pos= 0;
   protected $bytes;
 

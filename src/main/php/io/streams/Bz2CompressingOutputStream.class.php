@@ -1,30 +1,37 @@
 <?php namespace io\streams;
 
+use io\IOException;
+use lang\{Value, IllegalArgumentException};
+use util\Comparison;
+
 /**
  * OuputStream that compresses content using bzip2
  *
  * @ext   bz2
  * @test  xp://net.xp_framework.unittest.io.streams.Bz2CompressingOutputStreamTest
  */
-class Bz2CompressingOutputStream implements OutputStream {
-  protected $out= null;
+class Bz2CompressingOutputStream implements OutputStream, Value {
+  use Comparison;
+
+  protected $out;
   
   /**
    * Constructor
    *
-   * @param   io.streams.OutputStream out
-   * @param   int level default 6
-   * @throws  lang.IllegalArgumentException if the level is not between 0 and 9
+   * @param  io.streams.OutputStream $out
+   * @param  int $level
+   * @throws lang.IllegalArgumentException if the level is not between 0 and 9
    */
   public function __construct(OutputStream $out, $level= 6) {
     if ($level < 0 || $level > 9) {
-      throw new \lang\IllegalArgumentException('Level '.$level.' out of range [0..9]');
+      throw new IllegalArgumentException('Level '.$level.' out of range [0..9]');
     }
+
     $this->out= Streams::writeableFd($out);
     if (!stream_filter_append($this->out, 'bzip2.compress', STREAM_FILTER_WRITE, ['blocks' => $level])) {
       fclose($this->out);
       $this->out= null;
-      throw new \io\IOException('Could not append stream filter');
+      throw new IOException('Could not append stream filter');
     }
   }
   

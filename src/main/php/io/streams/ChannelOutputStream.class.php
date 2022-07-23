@@ -1,19 +1,21 @@
 <?php namespace io\streams;
 
 use io\IOException;
+use lang\Value;
+use util\Comparison;
 
 /**
  * Output stream that writes to one of the "stdout", "stderr", "output"
  * channels provided as PHP input/output streams.
  *
- * @test  xp://net.xp_framework.unittest.io.streams.ChannelStreamTest
+ * @test  net.xp_framework.unittest.io.streams.ChannelStreamTest
  * @see   php://wrappers
- * @see   xp://io.streams.ChannelInputStream
+ * @see   io.streams.ChannelInputStream
  */
-class ChannelOutputStream implements OutputStream {
-  protected
-    $name = null,
-    $fd   = null;
+class ChannelOutputStream implements OutputStream, Value {
+  use Comparison;
+
+  protected $fd, $name;
 
   /**
    * Constructor
@@ -22,9 +24,10 @@ class ChannelOutputStream implements OutputStream {
    */
   public function __construct($arg) {
     if ('stdout' === $arg || 'stderr' === $arg || 'output' === $arg) {
-      if (!($this->fd= fopen('php://'.$arg, 'rb'))) {
-        throw new IOException('Could not open '.$arg.' channel for reading');
+      if (!($this->fd= fopen('php://'.$arg, 'wb'))) {
+        throw new IOException('Could not open '.$arg.' channel for writing');
       }
+      $this->name= $arg;
     } else if (is_resource($arg)) {
       $this->fd= $arg;
       $this->name= '#'.(int)$arg;
