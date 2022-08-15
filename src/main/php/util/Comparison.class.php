@@ -31,8 +31,9 @@ trait Comparison {
    */
   public function compareTo($value) {
     if ($value instanceof self) {
+      $compare= (array)$value;
       foreach ((array)$this as $key => $val) {
-        if (0 !== $r= Objects::compare($val, $value->{$key})) return $r;
+        if (0 !== $r= Objects::compare($val, $compare[$key])) return $r;
       }
       return 0;
     }
