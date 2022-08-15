@@ -268,6 +268,14 @@ class ObjectsTest extends TestCase {
   }
 
   #[Test]
+  public function stringOf_calls_toString_on_plain_objects() {
+    $val= new class() {
+      public function toString() { return 'Test'; }
+    };
+    $this->assertEquals($val->toString(), Objects::stringOf($val));
+  }
+
+  #[Test]
   public function stringOf_resource() {
     $this->assertTrue((bool)preg_match('/resource\(type= stream, id= [0-9]+\)/', Objects::stringOf(STDIN)));
   }
@@ -331,16 +339,13 @@ class ObjectsTest extends TestCase {
   }
 
   #[Test]
-  public function toString_calling_xp_stringOf_does_not_loop_forever() {
+  public function toString_calling_stringOf_does_not_loop_forever() {
     $test= new class() implements Value {
       public function toString() { return Objects::stringOf($this); }
       public function hashCode() { return 1; }
       public function compareTo($value) { return 1; }
     };
-    $this->assertEquals(
-      nameof($test)." {\n}",
-      Objects::stringOf($test)
-    );
+    $this->assertEquals('->{:recursion:}', Objects::stringOf($test));
   }
 
   #[Test]

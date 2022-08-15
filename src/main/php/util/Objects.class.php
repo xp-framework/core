@@ -108,12 +108,17 @@ abstract class Objects {
       $hash= spl_object_hash($val);
       if (isset($protect[$hash])) return '->{:recursion:}';
       $protect[$hash]= true;
-      $r= nameof($val)." {\n";
-      foreach ((array)$val as $key => $value) {
-        $r.= $indent.'  '.$key.' => '.self::stringOf($value, $indent.'  ')."\n";
+      if (method_exists($val, 'toString')) {
+        $r= str_replace("\n", "\n".$indent, $val->toString());
+      } else {
+        $r= nameof($val)." {\n";
+        foreach ((array)$val as $key => $value) {
+          $r.= $indent.'  '.$key.' => '.self::stringOf($value, $indent.'  ')."\n";
+        }
+        $r.= $indent.'}';
       }
       unset($protect[$hash]);
-      return $r.$indent.'}';
+      return $r;
     } else if (is_resource($val)) {
       return 'resource(type= '.get_resource_type($val).', id= '.(int)$val.')';
     }
