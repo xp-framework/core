@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.3.1 / 2022-08-15
+
+### Bugfixes
+
+* Fixed *Cannot access property starting with "\0")* in util.Comparison
+  (@thekid)
+
 ## 11.3.0 / 2022-07-23
 
 ### Features

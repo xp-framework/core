@@ -59,4 +59,14 @@ class ComparisonTest extends TestCase {
   public function compareTo_any_other($value) {
     $this->assertEquals(1, $this->newFixture([])->compareTo($this));
   }
+
+  #[Test]
+  public function compare_objects_with_private_members() {
+    $object= new class() implements Value {
+      use Comparison;
+      private $member= 1;
+      public function toString() { return nameof($this).'<'.$this->member.'>'; }
+    };
+    $this->assertEquals(0, $object->compareTo($object));
+  }
 }
