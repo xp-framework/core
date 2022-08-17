@@ -3,6 +3,15 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.4.0 / 2022-08-17
+
+### Features
+
+* Merged PR #314: Delay expansion of values in property files until values
+  are read. This fixes potential information disclosure problems in string
+  representations of `util.Property` instances, see #312.
+  (@thekid)
+
 ## 11.3.1 / 2022-08-15
 
 ### Bugfixes
