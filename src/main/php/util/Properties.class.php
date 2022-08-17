@@ -229,9 +229,10 @@ class Properties implements PropertyAccess, Value {
    */
   public function readSection($name, $default= []) {
     $this->_load();
-    $expansion= $this->expansion ?? self::$env;
+    if (null === ($value= $this->_data[$name] ?? null)) return $default;
 
-    return $expansion->in($this->_data[$name] ?? null) ?? $default;
+    $expansion= $this->expansion ?? self::$env;
+    return $expansion->in($value);
   }
   
   /**
@@ -244,10 +245,10 @@ class Properties implements PropertyAccess, Value {
    */ 
   public function readString($section, $key, $default= '') {
     $this->_load();
-    if (!isset($this->_data[$section][$key])) return $default;
+    if (null === ($value= $this->_data[$section][$key] ?? null)) return $default;
 
     $expansion= $this->expansion ?? self::$env;
-    return $expansion->in($this->_data[$section][$key]);
+    return $expansion->in($value);
   }
   
   /**
