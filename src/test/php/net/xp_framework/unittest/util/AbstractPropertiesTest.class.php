@@ -350,4 +350,14 @@ abstract class AbstractPropertiesTest extends TestCase {
     putenv('TEST');
     $this->assertEquals(['key' => 'this'], $value);
   }
+
+  #[Test]
+  public function compare_by_data() {
+    $p1= $this->fixture('key=value');
+    $p2= $this->fixture('key=value');
+    $p3= $this->fixture('test=this');
+
+    $this->assertEquals($p1, $p2);
+    $this->assertNotEquals($p1, $p3);
+  }
 }
