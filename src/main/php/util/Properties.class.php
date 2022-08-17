@@ -2,7 +2,7 @@
 
 use io\streams\{InputStream, OutputStream, MemoryInputStream, FileInputStream, TextReader};
 use io\{IOException, File};
-use lang\{FormatException, IllegalStateException, ElementNotFoundException};
+use lang\{FormatException, IllegalStateException, Value};
 
 /**
  * An interface to property-files (aka "ini-files")
@@ -25,7 +25,7 @@ use lang\{FormatException, IllegalStateException, ElementNotFoundException};
  * @test    xp://net.xp_framework.unittest.util.FileBasedPropertiesTest
  * @see     php://parse_ini_file
  */
-class Properties implements PropertyAccess {
+class Properties implements PropertyAccess, Value {
   private static $env;
   public $_file, $_data;
   private $expansion= null;
@@ -519,16 +519,28 @@ class Properties implements PropertyAccess {
     unset($this->_data[$section][$key]);
   }
 
+  /**
+   * Comparison
+   *
+   * @param  var $value
+   * @return int
+   */
+  public function compareTo($value) {
+    if ($value instanceof self) {
+
+      // If based on files, and both base on the same file, then they're equal
+      if (null === $this->_data && null === $value->_data) {
+        return $this->_file <=> $value->_file;
+      } else {
+        return Objects::compare($this->_data, $value->_data);
+      }
+    }
+    return 1;
+  }
+
   /** Check if is equal to other object */
   public function equals($cmp): bool {
-    if (!$cmp instanceof self) return false;
-
-    // If based on files, and both base on the same file, then they're equal
-    if (null === $this->_data && null === $cmp->_data) {
-      return $this->_file === $cmp->_file;
-    } else {
-      return Objects::equal($this->_data, $cmp->_data);
-    }
+    return 0 === $this->compareTo($cmp);
   }
 
   /** Creates hashcode */
