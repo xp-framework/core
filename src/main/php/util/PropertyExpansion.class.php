@@ -36,10 +36,12 @@ class PropertyExpansion {
   /**
    * Expand strings
    *
-   * @param  string $string
+   * @param  ?string|array $value
    * @return string
    */
-  public function in($string) {
+  public function in($value) {
+    if (null === $value) return null;
+
     return preg_replace_callback(
       '/\$\{([^.}]*)\.([^}|]*)(?:\|([^}]*))?\}/',
       function($match) {
@@ -50,7 +52,7 @@ class PropertyExpansion {
         $f= $this->impl[$match[1]];
         return $f($match[2], $match[3] ?? null);
       },
-      $string
+      $value
     );
   }
 }
