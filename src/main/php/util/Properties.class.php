@@ -1,7 +1,7 @@
 <?php namespace util;
 
-use io\streams\{InputStream, OutputStream, MemoryInputStream, FileInputStream, TextReader};
-use io\{IOException, File};
+use io\File;
+use io\streams\{FileInputStream, OutputStream, TextReader};
 use lang\{FormatException, IllegalStateException, Value};
 
 /**
