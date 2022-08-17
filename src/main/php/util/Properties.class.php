@@ -229,7 +229,7 @@ class Properties implements PropertyAccess, Value {
    */
   public function readSection($name, $default= []) {
     $this->_load();
-    $expansion= $this->expansion ?: self::$env;
+    $expansion= $this->expansion ?? self::$env;
 
     return $expansion->in($this->_data[$name] ?? null) ?? $default;
   }
@@ -246,7 +246,7 @@ class Properties implements PropertyAccess, Value {
     $this->_load();
     if (!isset($this->_data[$section][$key])) return $default;
 
-    $expansion= $this->expansion ?: self::$env;
+    $expansion= $this->expansion ?? self::$env;
     return $expansion->in($this->_data[$section][$key]);
   }
   
@@ -260,20 +260,22 @@ class Properties implements PropertyAccess, Value {
    */
   public function readArray($section, $key, $default= []) {
     $this->_load();
-    if (!isset($this->_data[$section][$key])) return $default;
+    if (null === ($value= $this->_data[$section][$key] ?? null)) return $default;
 
     // New: key[]="a" or key[0]="a"
     // Old: key="" (an empty array) or key="a|b|c"
-    $expansion= $this->expansion ?: self::$env;
-    if (is_array($this->_data[$section][$key])) {
-      return $expansion->in($this->_data[$section][$key]);
+    $expansion= $this->expansion ?? self::$env;
+    if ('' === $value) {
+      return [];
+    } else if (is_array($value)) {
+      return $expansion->in($value);
     } else {
-      return '' === $this->_data[$section][$key] ? [] : $expansion->in(explode('|', $this->_data[$section][$key]));
+      return $expansion->in(explode('|', $value));
     }
   }
 
   /**
-   * Read a value as maop
+   * Read a value as map
    *
    * @param   string section
    * @param   string key
@@ -282,18 +284,18 @@ class Properties implements PropertyAccess, Value {
    */
   public function readMap($section, $key, $default= null) {
     $this->_load();
-    if (!isset($this->_data[$section][$key])) return $default;
+    if (null === ($value= $this->_data[$section][$key] ?? null)) return $default;
 
     // New: key[color]="green" and key[make]="model"
     // Old: key="color:green|make:model"
-    $expansion= $this->expansion ?: self::$env;
-    if (is_array($this->_data[$section][$key])) {
-      return $expansion->in($this->_data[$section][$key]);
-    } else if ('' === $this->_data[$section][$key]) {
+    $expansion= $this->expansion ?? self::$env;
+    if ('' === $value) {
       return [];
+    } else if (is_array($value)) {
+      return $expansion->in($value);
     } else {
       $return= [];
-      foreach (explode('|', $this->_data[$section][$key]) as $val) {
+      foreach (explode('|', $value) as $val) {
         if (strstr($val, ':')) {
           list($k, $v)= explode(':', $val, 2);
           $return[$k]= $expansion->in($v);
@@ -315,10 +317,10 @@ class Properties implements PropertyAccess, Value {
    */
   public function readRange($section, $key, $default= []) {
     $this->_load();
-    if (!isset($this->_data[$section][$key])) return $default;
+    if (null === ($value= $this->_data[$section][$key] ?? null)) return $default;
 
-    $expansion= $this->expansion ?: self::$env;
-    if (2 === sscanf($expansion->in($this->_data[$section][$key]), '%d..%d', $min, $max)) {
+    $expansion= $this->expansion ?? self::$env;
+    if (2 === sscanf($expansion->in($value), '%d..%d', $min, $max)) {
       return range($min, $max);
     } else {
       return [];
@@ -335,10 +337,10 @@ class Properties implements PropertyAccess, Value {
    */ 
   public function readInteger($section, $key, $default= 0) {
     $this->_load();
-    if (!isset($this->_data[$section][$key])) return $default;
+    if (null === ($value= $this->_data[$section][$key] ?? null)) return $default;
 
-    $expansion= $this->expansion ?: self::$env;
-    return (int)$expansion->in($this->_data[$section][$key]);
+    $expansion= $this->expansion ?? self::$env;
+    return (int)$expansion->in($value);
   }
 
   /**
@@ -351,10 +353,10 @@ class Properties implements PropertyAccess, Value {
    */ 
   public function readFloat($section, $key, $default= 0.0) {
     $this->_load();
-    if (!isset($this->_data[$section][$key])) return $default;
+    if (null === ($value= $this->_data[$section][$key] ?? null)) return $default;
 
-    $expansion= $this->expansion ?: self::$env;
-    return (float)$expansion->in($this->_data[$section][$key]);
+    $expansion= $this->expansion ?? self::$env;
+    return (float)$expansion->in($value);
   }
 
   /**
@@ -366,17 +368,13 @@ class Properties implements PropertyAccess, Value {
    * @return  bool TRUE, when key is 1, 'on', 'yes' or 'true', FALSE otherwise
    */ 
   public function readBool($section, $key, $default= false) {
-    $this->_load();
-    if (!isset($this->_data[$section][$key])) return $default;
+    static $true= ['1' => 1, 'yes' => 1, 'true' => 1, 'on' => 1];
 
-    $expansion= $this->expansion ?: self::$env;
-    $v= $expansion->in($this->_data[$section][$key]);
-    return (
-      '1' === $v ||
-      0   === strncasecmp('yes', $v, 3) ||
-      0   === strncasecmp('true', $v, 4) ||
-      0   === strncasecmp('on', $v, 2)
-    );
+    $this->_load();
+    if (null === ($value= $this->_data[$section][$key] ?? null)) return $default;
+
+    $expansion= $this->expansion ?? self::$env;
+    return isset($true[strtolower($expansion->in($value))]);
   }
   
   /**
