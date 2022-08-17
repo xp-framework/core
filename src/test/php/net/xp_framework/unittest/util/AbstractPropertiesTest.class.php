@@ -303,7 +303,7 @@ abstract class AbstractPropertiesTest extends TestCase {
 
   #[Test, Expect(FormatException::class)]
   public function resolve_unsupported_type() {
-    $this->fixture('test=${not.supported}');
+    $this->fixture('test=${not.supported}')->readString('section', 'test');
   }
 
   #[Test]
@@ -317,7 +317,7 @@ abstract class AbstractPropertiesTest extends TestCase {
   #[Test, Expect(ElementNotFoundException::class)]
   public function resolve_non_existant_environment_variable() {
     putenv('TEST');
-    $this->fixture('test=${env.TEST}');
+    $this->fixture('test=${env.TEST}')->readString('section', 'test');
   }
 
   #[Test]
@@ -325,5 +325,29 @@ abstract class AbstractPropertiesTest extends TestCase {
     putenv('TEST');
     $value= $this->fixture('test=${env.TEST|this}')->readString('section', 'test');
     $this->assertEquals('this', $value);
+  }
+
+  #[Test]
+  public function resolve_with_sections() {
+    putenv('TEST=this');
+    $value= $this->fixture('test=${env.TEST}')->readSection('section');
+    putenv('TEST');
+    $this->assertEquals(['test' => 'this'], $value);
+  }
+
+  #[Test]
+  public function resolve_with_arrays() {
+    putenv('TEST=this');
+    $value= $this->fixture('test[]=${env.TEST}')->readArray('section', 'test');
+    putenv('TEST');
+    $this->assertEquals(['this'], $value);
+  }
+
+  #[Test]
+  public function resolve_with_maps() {
+    putenv('TEST=this');
+    $value= $this->fixture('test[key]=${env.TEST}')->readMap('section', 'test');
+    putenv('TEST');
+    $this->assertEquals(['key' => 'this'], $value);
   }
 }

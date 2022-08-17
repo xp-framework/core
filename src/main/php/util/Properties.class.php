@@ -73,7 +73,6 @@ class Properties implements PropertyAccess {
    */
   public function load($in, $charset= null): self {
     $reader= new TextReader($in, $charset);
-    $expansion= $this->expansion ?: self::$env;
     $this->_data= [];
     $section= null;
 
@@ -100,12 +99,12 @@ class Properties implements PropertyAccess {
             if (null === ($line= $reader->readLine())) break;
             $quoted.= "\n".$line;
           }
-          $value= $expansion->in(substr($quoted, 0, $p));
+          $value= substr($quoted, 0, $p);
         } else {        // unquoted string
           if (false !== ($p= strpos($value, ';'))) {        // Comments at end of line
             $value= substr($value, 0, $p);
           }
-          $value= $expansion->in(rtrim($value));
+          $value= rtrim($value);
         }
 
         // Arrays and maps: key[], key[0], key[assoc]
@@ -230,7 +229,9 @@ class Properties implements PropertyAccess {
    */
   public function readSection($name, $default= []) {
     $this->_load();
-    return $this->_data[$name] ?? $default;
+    $expansion= $this->expansion ?: self::$env;
+
+    return $expansion->in($this->_data[$name] ?? null) ?? $default;
   }
   
   /**
@@ -243,7 +244,10 @@ class Properties implements PropertyAccess {
    */ 
   public function readString($section, $key, $default= '') {
     $this->_load();
-    return $this->_data[$section][$key] ?? $default;
+    if (!isset($this->_data[$section][$key])) return $default;
+
+    $expansion= $this->expansion ?: self::$env;
+    return $expansion->in($this->_data[$section][$key]);
   }
   
   /**
@@ -256,15 +260,15 @@ class Properties implements PropertyAccess {
    */
   public function readArray($section, $key, $default= []) {
     $this->_load();
+    if (!isset($this->_data[$section][$key])) return $default;
 
     // New: key[]="a" or key[0]="a"
     // Old: key="" (an empty array) or key="a|b|c"
-    if (!isset($this->_data[$section][$key])) {
-      return $default;
-    } else if (is_array($this->_data[$section][$key])) {
-      return $this->_data[$section][$key];
+    $expansion= $this->expansion ?: self::$env;
+    if (is_array($this->_data[$section][$key])) {
+      return $expansion->in($this->_data[$section][$key]);
     } else {
-      return '' == $this->_data[$section][$key] ? [] : explode('|', $this->_data[$section][$key]);
+      return '' === $this->_data[$section][$key] ? [] : $expansion->in(explode('|', $this->_data[$section][$key]));
     }
   }
 
@@ -278,13 +282,13 @@ class Properties implements PropertyAccess {
    */
   public function readMap($section, $key, $default= null) {
     $this->_load();
+    if (!isset($this->_data[$section][$key])) return $default;
 
     // New: key[color]="green" and key[make]="model"
     // Old: key="color:green|make:model"
-    if (!isset($this->_data[$section][$key])) {
-      return $default;
-    } else if (is_array($this->_data[$section][$key])) {
-      return $this->_data[$section][$key];
+    $expansion= $this->expansion ?: self::$env;
+    if (is_array($this->_data[$section][$key])) {
+      return $expansion->in($this->_data[$section][$key]);
     } else if ('' === $this->_data[$section][$key]) {
       return [];
     } else {
@@ -292,9 +296,9 @@ class Properties implements PropertyAccess {
       foreach (explode('|', $this->_data[$section][$key]) as $val) {
         if (strstr($val, ':')) {
           list($k, $v)= explode(':', $val, 2);
-          $return[$k]= $v;
+          $return[$k]= $expansion->in($v);
         } else {
-          $return[]= $val;
+          $return[]= $expansion->in($val);
         } 
       }
       return $return;
@@ -312,7 +316,9 @@ class Properties implements PropertyAccess {
   public function readRange($section, $key, $default= []) {
     $this->_load();
     if (!isset($this->_data[$section][$key])) return $default;
-    if (2 === sscanf($this->_data[$section][$key], '%d..%d', $min, $max)) {
+
+    $expansion= $this->expansion ?: self::$env;
+    if (2 === sscanf($expansion->in($this->_data[$section][$key]), '%d..%d', $min, $max)) {
       return range($min, $max);
     } else {
       return [];
@@ -329,10 +335,10 @@ class Properties implements PropertyAccess {
    */ 
   public function readInteger($section, $key, $default= 0) {
     $this->_load();
-    return isset($this->_data[$section][$key])
-      ? intval($this->_data[$section][$key])
-      : $default
-    ;
+    if (!isset($this->_data[$section][$key])) return $default;
+
+    $expansion= $this->expansion ?: self::$env;
+    return (int)$expansion->in($this->_data[$section][$key]);
   }
 
   /**
@@ -345,10 +351,10 @@ class Properties implements PropertyAccess {
    */ 
   public function readFloat($section, $key, $default= 0.0) {
     $this->_load();
-    return isset($this->_data[$section][$key])
-      ? (float)$this->_data[$section][$key]
-      : $default
-    ;
+    if (!isset($this->_data[$section][$key])) return $default;
+
+    $expansion= $this->expansion ?: self::$env;
+    return (float)$expansion->in($this->_data[$section][$key]);
   }
 
   /**
@@ -362,11 +368,14 @@ class Properties implements PropertyAccess {
   public function readBool($section, $key, $default= false) {
     $this->_load();
     if (!isset($this->_data[$section][$key])) return $default;
+
+    $expansion= $this->expansion ?: self::$env;
+    $v= $expansion->in($this->_data[$section][$key]);
     return (
-      '1' === $this->_data[$section][$key] ||
-      0   === strncasecmp('yes', $this->_data[$section][$key], 3) ||
-      0   === strncasecmp('true', $this->_data[$section][$key], 4) ||
-      0   === strncasecmp('on', $this->_data[$section][$key], 2)
+      '1' === $v ||
+      0   === strncasecmp('yes', $v, 3) ||
+      0   === strncasecmp('true', $v, 4) ||
+      0   === strncasecmp('on', $v, 2)
     );
   }
   
