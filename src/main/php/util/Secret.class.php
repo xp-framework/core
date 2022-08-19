@@ -1,6 +1,7 @@
 <?php namespace util;
 
-use lang\{Runtime, IllegalStateException, IllegalArgumentException, Value};
+use Closure;
+use lang\{IllegalStateException, IllegalArgumentException, Value};
 
 /**
  * Secret provides a reasonable secure storage for security-sensistive
@@ -21,9 +22,9 @@ use lang\{Runtime, IllegalStateException, IllegalArgumentException, Value};
  *
  * As a rule of thumb: extract it from the container at the last possible location.
  *
- * @test   xp://net.xp_framework.unittest.util.SodiumSecretTest
- * @test   xp://net.xp_framework.unittest.util.OpenSSLSecretTest
- * @test   xp://net.xp_framework.unittest.util.PlainTextSecretTest
+ * @test  net.xp_framework.unittest.util.SodiumSecretTest
+ * @test  net.xp_framework.unittest.util.OpenSSLSecretTest
+ * @test  net.xp_framework.unittest.util.PlainTextSecretTest
  */
 class Secret implements Value {
   const BACKING_SODIUM    = 0x01;
@@ -101,7 +102,7 @@ class Secret implements Value {
    * @param  callable $decrypt
    * @return void
    */
-  public static function setBacking(\Closure $encrypt, \Closure $decrypt) {
+  public static function setBacking(Closure $encrypt, Closure $decrypt) {
     self::$encrypt= $encrypt;
     self::$decrypt= $decrypt;
   }
@@ -113,16 +114,6 @@ class Secret implements Value {
    */
   public function __construct($characters) {
     $this->id= uniqid(microtime(true));
-    $this->update($characters);
-  }
-
-  /**
-   * Update with given characters
-   *
-   * @param  string $characters
-   * @return void
-   */
-  protected function update(&$characters) {
     try {
       self::$store[$this->id]= self::$encrypt->__invoke((string)$characters);
     } catch (\Throwable $e) {
