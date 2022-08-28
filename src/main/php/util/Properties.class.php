@@ -229,10 +229,14 @@ class Properties implements PropertyAccess, Value {
    */
   public function readSection($name, $default= []) {
     $this->_load();
-    if (null === ($value= $this->_data[$name] ?? null)) return $default;
+    if (null === ($section= $this->_data[$name] ?? null)) return $default;
 
     $expansion= $this->expansion ?? self::$env;
-    return $expansion->in($value);
+    $r= [];
+    foreach ($section as $name => $value) {
+      $r[$name]= $expansion->in($value);
+    }
+    return $r;
   }
   
   /**
