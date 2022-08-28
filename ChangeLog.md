@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.4.1 / 2022-08-28
+
+### Bugfixes
+
+* Fixed issue #315: Array to string conversion when reading property file
+  sections with arrays or maps
+  (@thekid)
+
 ## 11.4.0 / 2022-08-17
 
 ### Features
