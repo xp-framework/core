@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use Countable;
-use lang\{Type, Primitive, ArrayType, MapType, XPClass, Nullable, ClassNotFoundException};
+use lang\{Type, Primitive, ArrayType, MapType, XPClass, Nullable, ClassNotFoundException, TypeUnion};
 use net\xp_framework\unittest\core\generics\Lookup;
 use unittest\{Test, Values, TestCase};
 
@@ -91,6 +91,22 @@ class TypeResolveTest extends TestCase {
     $this->assertEquals(
       Type::forName('net.xp_framework.unittest.core.generics.Lookup<string, ?>'),
       Type::named('Lookup<string, ?>', $this->context)
+    );
+  }
+
+  #[Test]
+  public function resolve_union() {
+    $this->assertEquals(
+      new TypeUnion([Primitive::$STRING, Primitive::$INT]),
+      Type::named('int|string', $this->context)
+    );
+  }
+
+  #[Test]
+  public function resolve_nullable_union() {
+    $this->assertEquals(
+      new Nullable(new TypeUnion([Primitive::$STRING, Primitive::$INT])),
+      Type::named('int|string|null', $this->context)
     );
   }
 }

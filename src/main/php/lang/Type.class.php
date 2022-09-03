@@ -344,6 +344,10 @@ class Type implements Value {
         foreach (self::split(substr($name, 1), '|') as $arg) {
           $components[]= self::named($arg, $context);
         }
+        if ($p= array_search(Type::$VOID, $components)) {
+          unset($components[$p]);
+          return new Nullable(new TypeUnion(array_values($components)));
+        }
         return new TypeUnion($components);
       } else if ('&' === $name[0]) {
         $components= [$t];
