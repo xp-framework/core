@@ -1,6 +1,6 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\{ClassLoader, Primitive, TypeUnion};
+use lang\{ClassLoader, Primitive, Nullable, TypeUnion};
 use unittest\actions\RuntimeVersion;
 use unittest\{Action, Test, TestCase};
 
@@ -55,6 +55,13 @@ class TypeSyntaxTest extends TestCase {
     $d= $this->field('private string|int $fixture;');
     $this->assertEquals(new TypeUnion([Primitive::$STRING, Primitive::$INT]), $d->getType());
     $this->assertEquals('string|int', $d->getTypeName());
+  }
+
+  #[Test, Action(eval: 'new RuntimeVersion(">=8.0")')]
+  public function nullable_union_type() {
+    $d= $this->field('private string|int|null $fixture;');
+    $this->assertEquals(new Nullable(new TypeUnion([Primitive::$STRING, Primitive::$INT])), $d->getType());
+    $this->assertEquals('?string|int', $d->getTypeName());
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0")')]
