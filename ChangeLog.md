@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.4.2 / 2022-09-03
+
+### Bugfixes
+
+* Merged PR #316: Make Type::named() consistent with reflection for nullable
+  union types, see https://wiki.php.net/rfc/union_types_v2#nullable_union_types
+  (@thekid)
+
 ## 11.4.1 / 2022-08-28
 
 ### Bugfixes
