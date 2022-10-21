@@ -87,7 +87,7 @@ abstract class Objects {
         }
         $r= '['.substr($r, 2).']';
       } else if (1 === sizeof($val)) {
-        $r= '['.$key.' => '.self::stringOf($val[$key], $indent.'  ').']';
+        $r= '['.$key.' => '.self::stringOf($val[$key], $indent).']';
       } else {
         $r= "[\n";
         foreach ($val as $key => $val) {

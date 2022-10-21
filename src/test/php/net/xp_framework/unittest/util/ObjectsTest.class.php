@@ -253,6 +253,11 @@ class ObjectsTest extends TestCase {
   }
 
   #[Test]
+  public function stringOf_single_pair_map_with_indentation() {
+    $this->assertEquals("[key => [\n  a => 1\n  b => 2\n]]", Objects::stringOf(['key' => ['a' => 1, 'b' => 2]]));
+  }
+
+  #[Test]
   public function stringOf_map() {
     $this->assertEquals("[\n  a => 1\n  b => 2\n]", Objects::stringOf(['a' => 1, 'b' => 2]));
   }

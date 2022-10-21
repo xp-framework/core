@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed issue #317: Single-pair map indentation - @thekid
+
 ## 11.4.2 / 2022-09-03
 
 ### Bugfixes
