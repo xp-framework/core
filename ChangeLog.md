@@ -3,6 +3,11 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed possible *Undefined array key* exceptions in `lang.GenericTypes`
+  (@thekid)
+
 ## 11.4.3 / 2022-10-21
 
 ### Bugfixes
