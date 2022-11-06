@@ -31,6 +31,17 @@ class FolderEntries implements IteratorAggregate {
     return new Path($this->base, $name);
   }
 
+  /**
+   * Iterates over all entries matching a given pattern
+   *
+   * @see  https://www.php.net/glob
+   */
+  public function matching(string $pattern): iterable {
+    foreach (glob(rtrim($this->base, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$pattern, GLOB_NOSORT | GLOB_BRACE) as $match) {
+      yield basename($match) => new Path($match);
+    }
+  }
+
   /** Iterate over all entries */
   public function getIterator(): Traversable {
     if (null === $this->handle) {

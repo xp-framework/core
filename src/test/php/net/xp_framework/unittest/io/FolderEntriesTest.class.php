@@ -105,4 +105,41 @@ class FolderEntriesTest extends \unittest\TestCase {
   public function named_dot() {
     $this->assertEquals(new Path($this->folder), (new FolderEntries($this->folder))->named('.'));
   }
+
+  #[Test]
+  public function entries_matching() {
+    (new File($this->folder, 'a.txt'))->touch();
+    (new File($this->folder, 'b.txt'))->touch();
+    (new File($this->folder, 'not-found'))->touch();
+
+    $this->assertEquals(
+      ['a.txt' => new Path($this->folder, 'a.txt'), 'b.txt' => new Path($this->folder, 'b.txt')],
+      iterator_to_array((new FolderEntries($this->folder))->matching('*.txt'))
+    );
+  }
+
+  #[Test]
+  public function entries_matching_ignores_hidden_files() {
+    (new File($this->folder, '.hidden.txt'))->touch();
+
+    $this->assertEquals([], iterator_to_array((new FolderEntries($this->folder))->matching('*.txt')));
+  }
+
+  #[Test]
+  public function entries_matching_is_case_sensitive() {
+    (new File($this->folder, 'C.TXT'))->touch();
+
+    $this->assertEquals([], iterator_to_array((new FolderEntries($this->folder))->matching('*.txt')));
+  }
+
+  #[Test]
+  public function entries_matching_supports_braces() {
+    (new File($this->folder, 'a.txt'))->touch();
+    (new File($this->folder, 'C.TXT'))->touch();
+
+    $this->assertEquals(
+      ['a.txt' => new Path($this->folder, 'a.txt'), 'C.TXT' => new Path($this->folder, 'C.TXT')],
+      iterator_to_array((new FolderEntries($this->folder))->matching('*.{txt,TXT}'))
+    );
+  }
 }
