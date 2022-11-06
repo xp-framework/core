@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.4.6 / 2022-11-06
+
+### Bugfixes
+
+* Make parsing generic definitions more robust against when not using
+  whitespace between parent class name and class body
+  (@thekid)
+
 ## 11.4.5 / 2022-11-06
 
 ### Bugfixes
