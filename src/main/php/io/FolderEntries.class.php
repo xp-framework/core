@@ -6,8 +6,8 @@ use lang\IllegalArgumentException;
 /**
  * Folder entries provides an iterable view of the files inside a given folder
  *
- * @test  xp://net.xp_framework.unittest.io.FolderEntriesTest
- * @see   xp://io.Folder#entries
+ * @test  net.xp_framework.unittest.io.FolderEntriesTest
+ * @see   io.Folder#entries
  */
 class FolderEntries implements IteratorAggregate {
   private $base;
@@ -36,7 +36,7 @@ class FolderEntries implements IteratorAggregate {
    *
    * @see  https://www.php.net/glob
    */
-  public function matching(string $pattern): iterable {
+  public function matching(string $pattern): Traversable {
     foreach (glob(rtrim($this->base, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$pattern, GLOB_NOSORT | GLOB_BRACE) as $match) {
       yield basename($match) => new Path($match);
     }
