@@ -136,9 +136,10 @@ class GenericTypes {
         } else if (T_CLASS === $state[0]) {
           if (T_EXTENDS === $tokens[$i][0]) {
             $parent= '';
-            for ($i+= 2; $i < $s, !(';' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]); $i++) {
+            for ($i+= 2; $i < $s, !('{' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]); $i++) {
               $parent.= $tokens[$i][1];
             }
+            $i--;
             if (isset($annotations['generic']['parent'])) {
               $xargs= [];
               foreach (Type::split($annotations['generic']['parent']) as $j => $placeholder) {
