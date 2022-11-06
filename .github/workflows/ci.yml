@@ -24,7 +24,7 @@ jobs:
       run: git config --system core.autocrlf false; git config --system core.eol lf
 
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up PHP ${{ matrix.php-versions }}
       uses: shivammathur/setup-php@v2
