@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.4.5 / 2022-11-06
+
 ### Bugfixes
 
 * Fixed generic function types such as `function(T, T): int` - @thekid
