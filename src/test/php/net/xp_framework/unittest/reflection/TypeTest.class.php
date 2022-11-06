@@ -36,6 +36,22 @@ class TypeTest extends TestCase {
     yield [new \ArrayIterator(['hello', 'world'])];
   }
 
+  /** @return iterable */
+  private function names() {
+    yield ['int, string', ['int', 'string']];
+    yield ['int|string, string', ['int|string', 'string']];
+    yield ['int|(function(int, string)), string', ['int|(function(int, string))', 'string']];
+    yield ['Set<T>, string', ['Set<T>', 'string']];
+    yield ['Map<K, V>, string', ['Map<K, V>', 'string']];
+    yield ['function(int): string, string', ['function(int): string', 'string']];
+    yield ['(function(int, string)), string', ['(function(int, string))', 'string']];
+    yield ['(function(Set<T>, string)), string', ['(function(Set<T>, string))', 'string']];
+    yield ['(function(int, string))[], string', ['(function(int, string))[]', 'string']];
+    yield ['Filter<T>[], string', ['Filter<T>[]', 'string']];
+    yield ['Filter<Set<T>>, string', ['Filter<Set<T>>', 'string']];
+    yield ['Filter<function(int): string>[], string', ['Filter<function(int): string>[]', 'string']];
+  }
+
   #[Test, Values(['string'])]
   public function stringType($named) {
     $this->assertEquals(Primitive::$STRING, Type::forName($named));
@@ -483,5 +499,10 @@ class TypeTest extends TestCase {
   #[Test, Values(eval: '[[function(): string { }, true], [function(): int { }, false]]')]
   public function function_return_type($fixture, $expected) {
     $this->assertEquals($expected, Type::forName('function(): string')->isInstance($fixture));
+  }
+
+  #[Test, Values('names')]
+  public function split($names, $expected) {
+    $this->assertEquals($expected, iterator_to_array(Type::split($names, ',')));
   }
 }

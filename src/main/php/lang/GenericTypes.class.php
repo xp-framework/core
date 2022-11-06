@@ -33,7 +33,7 @@ class GenericTypes {
       throw new IllegalStateException('Class '.$base->name.' is not a generic definition');
     }
     $components= [];
-    foreach (explode(',', $annotations['generic']['self']) as $cs => $name) {
+    foreach (Type::split($annotations['generic']['self']) as $cs => $name) {
       $components[]= ltrim($name);
     }
     $cs++;
@@ -141,7 +141,7 @@ class GenericTypes {
             }
             if (isset($annotations['generic']['parent'])) {
               $xargs= [];
-              foreach (explode(',', $annotations['generic']['parent']) as $j => $placeholder) {
+              foreach (Type::split($annotations['generic']['parent']) as $j => $placeholder) {
                 $xargs[]= Type::forName(strtr(ltrim($placeholder), $placeholders));
               }
               $src.= ' extends \\'.$this->newType0($base->getParentClass(), $xargs);
@@ -223,8 +223,8 @@ class GenericTypes {
               $meta[1][$m][DETAIL_RETURNS]= strtr($annotations[0]['generic']['return'], $placeholders);
             }
             if (isset($annotations[0]['generic']['params'])) {
-              foreach (explode(',', $annotations[0]['generic']['params']) as $j => $placeholder) {
-                if ('' !== ($replaced= strtr(ltrim($placeholder), $placeholders))) {
+              foreach (Type::split($annotations[0]['generic']['params']) as $j => $placeholder) {
+                if ('' !== ($replaced= strtr($placeholder, $placeholders))) {
                   $meta[1][$m][DETAIL_ARGUMENTS][$j]= $replaced;
                 }
               }
@@ -242,8 +242,8 @@ class GenericTypes {
             }
             if (isset($annotations[0]['generic']['params'])) {
               $generic= [];
-              foreach (explode(',', $annotations[0]['generic']['params']) as $j => $placeholder) {
-                if ('' === ($replaced= strtr(ltrim($placeholder), $placeholders))) {
+              foreach (Type::split($annotations[0]['generic']['params']) as $j => $placeholder) {
+                if ('' === ($replaced= strtr($placeholder, $placeholders))) {
                   $generic[$j]= null;
                 } else {
                   $meta[1][$m][DETAIL_ARGUMENTS][$j]= $replaced;
@@ -312,7 +312,7 @@ class GenericTypes {
 
           if (isset($annotation[$counter])) {
             $iargs= [];
-            foreach (explode(',', $annotation[$counter]) as $j => $placeholder) {
+            foreach (Type::split($annotation[$counter]) as $j => $placeholder) {
               $iargs[]= Type::forName(strtr(ltrim($placeholder), $placeholders));
             }
             $src.= '\\'.$this->newType0(new XPClass(new \ReflectionClass($rel)), $iargs);

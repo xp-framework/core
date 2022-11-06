@@ -161,30 +161,35 @@ class Type implements Value {
   }
 
   /**
-   * Splits a string including handling of braces
+   * Splits a string including handling of braces, generics and array suffixes
    *
    * @param  string $string
    * @param  string $char
    * @return iterable
    */
-  private static function split($string, $char) {
+  public static function split($string, $char= ',') {
     for ($i= 0, $l= strlen($string); $i < $l; $i++) {
-      if ('(' === $string[$i]) {
-        yield self::matching($string, '()', $i);
+      $type= '';
+
+      next: $s= strcspn($string, $char.'<>()', $i);
+      $type.= ltrim(substr($string, $i, $s), ' ');
+      $i+= $s;
+      if ('<' === ($string[$i] ?? null)) {
+        $type.= '<'.self::matching($string, '<>', $i).'>';
         $i= 0;
         $l= strlen($string);
+      } else if ('(' === ($string[$i] ?? null)) {
+        $type.= '('.self::matching($string, '()', $i).')';
+        $i= 0;
+        $l= strlen($string);
+        if (':' === ($string[0] ?? null)) goto next;
+      }
+
+      if ('[' === ($string[$i] ?? null)) {
+        yield $type.'[]';
+        $i+= 2;
       } else {
-        $s= strcspn($string, $char.'<>', $i);
-        $t= trim(substr($string, $i, $s));
-        $n= $i + $s;
-        if ($n < $l && '<' === $string[$n]) {
-          yield $t.'<'.self::matching($string, '<>', $n).'>';
-          $i= 0;
-          $l= strlen($string);
-        } else {
-          yield trim(substr($string, $i, $s));
-          $i+= $s;
-        }
+        yield $type;
       }
     }
   }
@@ -198,7 +203,7 @@ class Type implements Value {
    */
   public static function forNames($names, $context= []) {
     $r= [];
-    foreach (self::split($names, ',') as $name) {
+    foreach (self::split($names) as $name) {
       $r[]= self::named($name, $context);
     }
     return $r;
@@ -312,7 +317,7 @@ class Type implements Value {
       $base= substr($name, 0, $p);
       $components= [];
       $wildcard= false;
-      foreach (self::split(self::matching($name, '<>', $p), ',') as $arg) {
+      foreach (self::split(self::matching($name, '<>', $p)) as $arg) {
         if ('?' === $arg) {
           $components[]= Wildcard::$ANY;
           $wildcard= true;
