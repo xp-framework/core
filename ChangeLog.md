@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.4.7 / 2022-12-03
+
 ### Bugfixes
 
 * Fixed parsing generic definitions with string interpolations - @thekid
