@@ -3,11 +3,15 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed parsing generic definitions with string interpolations - @thekid
+
 ## 11.4.6 / 2022-11-06
 
 ### Bugfixes
 
-* Make parsing generic definitions more robust against when not using
+* Made parsing generic definitions more robust against when not using
   whitespace between parent class name and class body
   (@thekid)
 

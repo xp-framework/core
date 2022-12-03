@@ -279,7 +279,7 @@ class GenericTypes {
             continue;
           }
         } else if (4 === $state[0]) {             // Method body
-          if ('{' === $tokens[$i][0]) {
+          if ('{' === $tokens[$i][0] || T_CURLY_OPEN === $tokens[$i][0]) {
             $braces++;
           } else if ('}' === $tokens[$i][0]) {
             $braces--;
