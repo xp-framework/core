@@ -1,7 +1,6 @@
 XP Framework Core
 =================
 [![Build status on GitHub](https://github.com/xp-framework/core/workflows/Tests/badge.svg)](https://github.com/xp-framework/core/actions)
-[![Build status on TravisCI](https://secure.travis-ci.org/xp-framework/core.png)](http://travis-ci.org/xp-framework/core)
 [![Build status on AppVeyor](https://ci.appveyor.com/api/projects/status/bb9gkkq1o7f6m2ns?svg=true)](https://ci.appveyor.com/project/thekid/core)
 [![BSD License](https://raw.githubusercontent.com/xp-framework/web/master/static/licence-bsd.png)](https://github.com/xp-framework/core/blob/master/LICENSE.md)
 [![Requires PHP 7.0+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-7_0plus.svg)](http://php.net/)
