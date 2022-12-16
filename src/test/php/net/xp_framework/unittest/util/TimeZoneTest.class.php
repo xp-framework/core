@@ -40,7 +40,7 @@ class TimeZoneTest extends TestCase {
   }
   
   #[Test]
-  public function previousTransition() {
+  public function previous_transition() {
     $transition= (new TimeZone('Europe/Berlin'))->previousTransition(new Date('2007-08-23'));
     $this->assertEquals(true, $transition->isDst());
     $this->assertEquals('CEST', $transition->abbr());
@@ -49,7 +49,7 @@ class TimeZoneTest extends TestCase {
   }
   
   #[Test]
-  public function previousPreviousTransition() {
+  public function previous_previous_transition() {
     $tz= new TimeZone('Europe/Berlin');
     $transition= $tz->previousTransition(new Date('2007-08-23'));
     $previous= $transition->previous();
@@ -60,7 +60,7 @@ class TimeZoneTest extends TestCase {
   }
 
   #[Test]
-  public function previousNextTransition() {
+  public function previous_next_transition() {
     $tz= new TimeZone('Europe/Berlin');
     $transition= $tz->previousTransition(new Date('2007-08-23'));
     $next= $transition->next();
@@ -71,7 +71,7 @@ class TimeZoneTest extends TestCase {
   }
 
   #[Test]
-  public function nextTransition() {
+  public function next_transition() {
     $tz= new TimeZone('Europe/Berlin');
     $transition= $tz->nextTransition(new Date('2007-08-23'));
     $this->assertEquals(false, $transition->isDst());
@@ -83,5 +83,29 @@ class TimeZoneTest extends TestCase {
   #[Test, Expect(IllegalArgumentException::class)]
   public function unknownTimeZone() {
     new TimeZone('UNKNOWN');
+  }
+
+  #[Test]
+  public function name_used_as_hashcode() {
+    $this->assertEquals(
+      'Europe/Berlin',
+      TimeZone::getByName('Europe/Berlin')->hashCode()
+    );
+  }
+
+  #[Test]
+  public function string_representation() {
+    $this->assertEquals(
+      'util.TimeZone("Europe/Berlin")',
+      TimeZone::getByName('Europe/Berlin')->toString()
+    );
+  }
+
+  #[Test, Values([['Europe/Berlin', 0], ['Europe/Paris', -1], ['America/New_York', 1]])]
+  public function compare_to($name, $expected) {
+    $this->assertEquals(
+      $expected,
+      TimeZone::getByName('Europe/Berlin')->compareTo(TimeZone::getByName($name))
+    );
   }
 }
