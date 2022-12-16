@@ -185,7 +185,7 @@ class TimeZone implements Value {
    * @return int
    */
   public function compareTo($value) {
-    return $value instanceof self ? $this->getName() <=> $value->getName() : 1;
+    return $value instanceof self ? $this->name() <=> $value->name() : 1;
   }
 
   /**
@@ -194,7 +194,7 @@ class TimeZone implements Value {
    * @return string
    */
   public function hashCode() {
-    return $this->getName();
+    return $this->name();
   }
 
   /**
@@ -203,6 +203,6 @@ class TimeZone implements Value {
    * @return string
    */
   public function toString() {
-    return nameof($this).' ("'.$this->getName().'" / '.$this->getOffset().')';
+    return nameof($this).' ("'.$this->name().'" / '.$this->offset().')';
   }
 }
