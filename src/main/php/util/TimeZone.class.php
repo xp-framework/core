@@ -203,6 +203,6 @@ class TimeZone implements Value {
    * @return string
    */
   public function toString() {
-    return nameof($this).' ("'.$this->name().'" / '.$this->offset().')';
+    return nameof($this).'("'.$this->name().'")';
   }
 }

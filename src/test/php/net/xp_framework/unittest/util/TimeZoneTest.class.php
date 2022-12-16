@@ -40,7 +40,7 @@ class TimeZoneTest extends TestCase {
   }
   
   #[Test]
-  public function previousTransition() {
+  public function previous_transition() {
     $transition= (new TimeZone('Europe/Berlin'))->previousTransition(new Date('2007-08-23'));
     $this->assertEquals(true, $transition->isDst());
     $this->assertEquals('CEST', $transition->abbr());
@@ -49,32 +49,35 @@ class TimeZoneTest extends TestCase {
   }
   
   #[Test]
-  public function previousPreviousTransition() {
-    $transition= (new TimeZone('Europe/Berlin'))->previousTransition(new Date('2007-08-23'));
+  public function previous_previous_transition() {
+    $tz= new TimeZone('Europe/Berlin');
+    $transition= $tz->previousTransition(new Date('2007-08-23'));
     $previous= $transition->previous();
     $this->assertFalse($previous->isDst());
     $this->assertEquals('CET', $previous->abbr());
     $this->assertEquals('+0100', $previous->difference());
-    $this->assertEquals(new Date('2006-10-29 02:00:00 Europe/Berlin'), $previous->date());
+    $this->assertEquals(new Date('2006-10-29 02:00:00'), $previous->date());
   }
 
   #[Test]
-  public function previousNextTransition() {
-    $transition= (new TimeZone('Europe/Berlin'))->previousTransition(new Date('2007-08-23'));
+  public function previous_next_transition() {
+    $tz= new TimeZone('Europe/Berlin');
+    $transition= $tz->previousTransition(new Date('2007-08-23'));
     $next= $transition->next();
     $this->assertFalse($next->isDst());
     $this->assertEquals('CET', $next->abbr());
     $this->assertEquals('+0100', $next->difference());
-    $this->assertEquals(new Date('2007-10-28 02:00:00 Europe/Berlin'), $next->date());
+    $this->assertEquals(new Date('2007-10-28 02:00:00'), $next->date());
   }
 
   #[Test]
-  public function nextTransition() {
-    $transition= (new TimeZone('Europe/Berlin'))->nextTransition(new Date('2007-08-23'));
+  public function next_transition() {
+    $tz= new TimeZone('Europe/Berlin');
+    $transition= $tz->nextTransition(new Date('2007-08-23'));
     $this->assertEquals(false, $transition->isDst());
     $this->assertEquals('CET', $transition->abbr());
     $this->assertEquals('+0100', $transition->difference());
-    $this->assertEquals(new Date('2007-10-28 02:00:00 Europe/Berlin'), $transition->date());
+    $this->assertEquals(new Date('2007-10-28 02:00:00'), $transition->date());
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
@@ -124,5 +127,29 @@ class TimeZoneTest extends TestCase {
   #[Test]
   public function offsetInSecondsNoDST() {
     $this->assertEquals(3600, (new TimeZone('Europe/Berlin'))->getOffsetInSeconds(new Date('2007-01-21')));
+  }
+
+  #[Test]
+  public function name_used_as_hashcode() {
+    $this->assertEquals(
+      'Europe/Berlin',
+      TimeZone::getByName('Europe/Berlin')->hashCode()
+    );
+  }
+
+  #[Test]
+  public function string_representation() {
+    $this->assertEquals(
+      'util.TimeZone("Europe/Berlin")',
+      TimeZone::getByName('Europe/Berlin')->toString()
+    );
+  }
+
+  #[Test, Values([['Europe/Berlin', 0], ['Europe/Paris', -1], ['America/New_York', 1]])]
+  public function compare_to($name, $expected) {
+    $this->assertEquals(
+      $expected,
+      TimeZone::getByName('Europe/Berlin')->compareTo(TimeZone::getByName($name))
+    );
   }
 }
