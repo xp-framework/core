@@ -92,10 +92,17 @@ class TimeZone implements Value {
   /**
    * Retrieve whether the timezone does have DST/non-DST mode
    *
-   * @return  bool
+   * @param  ?int $year
+   * @return bool
    */
-  public function hasDst() {
-    return (bool)sizeof(timezone_transitions_get($this->tz));
+  public function hasDst($year= null) {
+    $year ?? $year= idate('Y');
+    $t= timezone_transitions_get($this->tz, gmmktime(0, 0, 0, 1, 1, $year), gmmktime(0, 0, 0, 1, 1, $year + 1));
+
+    // Without DST: [2022-01-01 => UTC]
+    // With DST   : [2022-01-01 => CET, 2022-03-27 => CEST, 2022-10-30 => CET]
+    // With 2*DST : [1945-01-01 => CET, 1945-04-02 => CEST, 1945-05-24 => CEMT, 1945-09-24 => CEST, 1945-11-18 => CET]
+    return sizeof($t) > 1;
   }
 
   /**
