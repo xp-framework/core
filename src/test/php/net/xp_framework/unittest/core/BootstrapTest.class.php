@@ -61,7 +61,7 @@ class BootstrapTest extends \unittest\TestCase {
 
   #[Test, Values(['', 'Foo/Bar'])]
   public function invalid_timezone($tz) {
-    $r= $this->runWith(Runtime::getInstance()->startupOptions()->withSetting('date.timezone', $tz));
+    $r= $this->runWith(Runtime::getInstance()->startupOptions()->withSetting('date.timezone', $tz), 'new \util\Date();');
     $this->assertTrue(
       (bool)strstr($r[1].$r[2], '[xp::core] date.timezone not configured properly.'),
       Objects::stringOf(['out' => $r[1], 'err' => $r[2]])
