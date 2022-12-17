@@ -5,7 +5,7 @@ use lang\{IllegalArgumentException, IllegalStateException, Value};
 /**
  * The class Date represents a specific instant in time.
  *
- * @test  xp://net.xp_framework.unittest.util.DateTest
+ * @test  net.xp_framework.unittest.util.DateTest
  */
 class Date implements Value {
   const DEFAULT_FORMAT= 'Y-m-d H:i:sO';
@@ -36,8 +36,8 @@ class Date implements Value {
    * - If no timezone has been given as second parameter, the system's default
    *   timezone is used.
    *
-   * @param  int|string|php.DateTime $in
-   * @param  string $timezone default NULL string of timezone
+   * @param  ?int|string|php.DateTime $in
+   * @param  util.TimeZone $timezone default NULL string of timezone
    * @throws lang.IllegalArgumentException in case the date is unparseable
    */
   public function __construct($in= null, TimeZone $timezone= null) {
