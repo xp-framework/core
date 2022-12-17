@@ -3,6 +3,21 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Merged PR #322: Defer date.timezone checks until the util.Date class is
+  used, making XP core functionality unrelated to dates useable even if
+  no timezone is set.
+  (@thekid)
+
+### Bugfixes
+
+* Merged PR #321: Fix `util.TimeZone::hasDst()`, which was broken in
+  multiple regards
+  (@thekid)
+* Fixed issue #320: Call to undefined method `util.TimeZone::getName()`
+  (@thekid)
+
 ## 11.4.7 / 2022-12-03
 
 ### Bugfixes
