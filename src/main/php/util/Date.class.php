@@ -50,9 +50,7 @@ class Date implements Value {
       $this->handle= date_create('@'.$in);
       date_timezone_set($this->handle, $timezone ? $timezone->getHandle() : timezone_open(date_default_timezone_get()));
     } else {
-      try {
-        $this->handle= $timezone ? new \DateTime($in ?? 'now', $timezone->getHandle()) : new \DateTime($in ?? 'now');
-      } catch (\Throwable $e) {
+      if (false === ($this->handle= date_create($in ?? 'now', $timezone ? $timezone->getHandle() : null))) {
         throw new IllegalArgumentException('Given argument is neither a timestamp nor a well-formed timestring: '.Objects::stringOf($in));
       }
     }
