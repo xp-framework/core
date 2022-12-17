@@ -47,7 +47,7 @@ class Date implements Value {
       
       // Specially mark timestamps for parsing (we assume here that strings
       // containing only digits are timestamps)
-      $this->handle= date_create('@'.$in, timezone_open('UTC'));
+      $this->handle= date_create('@'.$in);
       date_timezone_set($this->handle, $timezone ? $timezone->getHandle() : timezone_open(date_default_timezone_get()));
     } else {
       try {
