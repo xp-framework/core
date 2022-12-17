@@ -85,6 +85,11 @@ class TimeZoneTest extends TestCase {
     new TimeZone('UNKNOWN');
   }
 
+  #[Test, Values([['Europe/Berlin', 2022, true], ['Europe/Berlin', 1977, false], ['Europe/Berlin', 1945, true], ['Atlantic/Reykjavik', 2022, false], ['UTC', 2022, false]])]
+  public function has_dst($name, $year, $expected) {
+    $this->assertEquals($expected, TimeZone::getByName($name)->hasDst($year));
+  }
+
   #[Test]
   public function name_used_as_hashcode() {
     $this->assertEquals(
