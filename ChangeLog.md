@@ -3,8 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.5.0 / 2022-12-17
+
 ### Features
 
+* Made some minor performance optimizations to `util.Date` constructor
+  (@thekid)
 * Merged PR #322: Defer date.timezone checks until the util.Date class is
   used, making XP core functionality unrelated to dates useable even if
   no timezone is set.
