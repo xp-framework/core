@@ -1,17 +1,23 @@
 <?php namespace util;
 
-use lang\IllegalArgumentException;
+use lang\{IllegalArgumentException, IllegalStateException, Value};
 
 /**
  * The class Date represents a specific instant in time.
  *
  * @test  xp://net.xp_framework.unittest.util.DateTest
  */
-class Date implements \lang\Value {
+class Date implements Value {
   const DEFAULT_FORMAT= 'Y-m-d H:i:sO';
 
   /** @type php.DateTime */
   private $handle;
+
+  static function __static() {
+    if (!date_default_timezone_set(ltrim(get_cfg_var('date.timezone'), ':'))) {
+      throw new IllegalStateException('[xp::core] date.timezone not configured properly.');
+    }
+  }
 
   /**
    * Constructor. Creates a new date object through either a
