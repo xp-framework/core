@@ -22,47 +22,47 @@ class XpTest extends TestCase {
 
   #[Test]
   public function literal_of_int() {
-    $this->assertEquals("\xfeint", literal('int'));
+    $this->assertEquals("int", literal('int'));
   }
 
   #[Test]
   public function literal_of_float() {
-    $this->assertEquals("\xfefloat", literal('float'));
+    $this->assertEquals("float", literal('float'));
   }
 
   #[Test]
   public function literal_of_float_alias_double() {
-    $this->assertEquals("\xfefloat", literal('double'));
+    $this->assertEquals("float", literal('double'));
   }
 
   #[Test]
   public function literal_of_string() {
-    $this->assertEquals("\xfestring", literal('string'));
+    $this->assertEquals("string", literal('string'));
   }
 
   #[Test]
   public function literal_of_bool() {
-    $this->assertEquals("\xfebool", literal('bool'));
+    $this->assertEquals("bool", literal('bool'));
   }
 
   #[Test]
   public function literal_of_var() {
-    $this->assertEquals('var', literal('var'));
+    $this->assertEquals('mixed', literal('var'));
   }
 
   #[Test]
   public function literal_of_int_array() {
-    $this->assertEquals("\xa6\xfeint", literal('int[]'));
+    $this->assertEquals("int\x91\x92", literal('int[]'));
   }
 
   #[Test]
   public function literal_of_int_map() {
-    $this->assertEquals("\xbb\xfeint", literal('[:int]'));
+    $this->assertEquals("\x91\x95int\x92", literal('[:int]'));
   }
 
   #[Test]
   public function literal_of_generic_list_of_int() {
-    $this->assertEquals("List\xb7\xb7\xfeint", literal('List<int>'));
+    $this->assertEquals("List\xabint\xbb", literal('List<int>'));
   }
 
   #[Test]

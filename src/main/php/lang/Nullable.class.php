@@ -30,7 +30,7 @@ class Nullable extends Type {
   public function underlyingType(): Type { return $this->underlying; }
 
   /** Returns type literal */
-  public function literal(): string { return "\xac".$this->underlying->literal(); }
+  public function literal(): string { return "\xbf".$this->underlying->literal(); }
 
   /**
    * Get a type instance for a given name

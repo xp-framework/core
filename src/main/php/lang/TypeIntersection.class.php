@@ -30,7 +30,7 @@ class TypeIntersection extends Type {
 
   /** Returns type literal */
   public function literal(): string {
-    return "\xb5".implode("\xb9", array_map(function($type) { return $type->literal(); }, $this->types));
+    return implode("\x86", array_map(function($type) { return $type->literal(); }, $this->types));
   }
 
   /** Determines whether the specified object is an instance of this type */

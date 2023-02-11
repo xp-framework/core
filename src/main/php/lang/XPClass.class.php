@@ -745,18 +745,13 @@ class XPClass extends Type {
   /**
    * Reflectively creates a new type
    *
-   * @param   lang.Type[] arguments
+   * @param   string|lang.Type[] $arguments
    * @return  lang.XPClass
    * @throws  lang.IllegalStateException if this class is not a generic definition
    * @throws  lang.IllegalArgumentException if number of arguments does not match components
    */
   public function newGenericType($arguments) {
-    static $creator= null;
-
-    if (!$creator) {
-      $creator= new GenericTypes();
-    }
-    return $creator->newType($this, $arguments);
+    return GenericTypes::newType($this, $arguments);
   }
 
   /**

@@ -47,7 +47,7 @@ class InstanceReflectionTest extends TestCase {
   #[Test]
   public function reflectedNameOfClass() {
     $this->assertEquals(
-      "net\\xp_framework\\unittest\\core\\generics\\Lookup\xb7\xb7\xfestring\xb8unittest\xa6TestCase",
+      "net\\xp_framework\\unittest\\core\\generics\\Lookup\xabstring\xb8unittest\x98TestCase\xbb",
       typeof($this->fixture)->literal()
     );
   }

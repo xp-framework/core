@@ -39,7 +39,7 @@ class Primitive extends Type {
   }
 
   /** Returns type literal */
-  public function literal(): string { return "\xfe".$this->name; }
+  public function literal(): string { return $this->name; }
 
   /** Determines whether the specified object is an instance of this type. */
   public function isInstance($obj): bool {

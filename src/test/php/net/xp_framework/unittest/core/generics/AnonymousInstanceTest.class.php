@@ -31,7 +31,7 @@ class AnonymousInstanceTest extends \unittest\TestCase {
   #[Test]
   public function class_name_contains_argument() {
     $name= nameof(newinstance('net.xp_framework.unittest.core.generics.Nullable<lang.Value>', []));
-    $this->assertEquals("net.xp_framework.unittest.core.generics.Nullable\xb7\xb7lang\xa6Value", substr($name, 0, strrpos($name, "\xb7")), $name);
+    $this->assertEquals("net.xp_framework.unittest.core.generics.Nullable\xablang\x98Value\xbb", substr($name, 0, strrpos($name, "\xb7")), $name);
   }
 
   #[Test]
@@ -41,7 +41,7 @@ class AnonymousInstanceTest extends \unittest\TestCase {
     }');
     $n= nameof($instance);
     $this->assertEquals(
-      "net.xp_framework.unittest.core.generics.ArrayFilter\xb7\xb7lang\xa6Value",
+      "net.xp_framework.unittest.core.generics.ArrayFilter\xablang\x98Value\xbb",
       substr($n, 0, strrpos($n, "\xb7")),
       $n
     );

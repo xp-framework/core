@@ -30,7 +30,7 @@ class TypeUnion extends Type {
 
   /** Returns type literal */
   public function literal(): string {
-    return "\xb5".implode("\xb8", array_map(function($type) { return $type->literal(); }, $this->types));
+    return implode("\xa6", array_map(function($type) { return $type->literal(); }, $this->types));
   }
 
   /** Determines whether the specified object is an instance of this type */

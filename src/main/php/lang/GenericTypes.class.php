@@ -3,29 +3,49 @@
 /**
  * Generate generic runtime types.
  *
- * @test  xp://net.xp_framework.unittest.core.generics.GenericTypesTest
+ * @test  net.xp_framework.unittest.core.generics.GenericTypesTest
  */
 class GenericTypes {
 
   /**
    * Creates a generic type
    *
-   * @param   lang.XPClass base
-   * @param   lang.Type[] arguments
-   * @return  lang.XPClass created type
+   * @param   lang.XPClass $base
+   * @param   string|lang.Type[] $arguments
+   * @return  lang.XPClass
    */
-  public function newType(XPClass $base, array $arguments) {
-    return new XPClass(new \ReflectionClass($this->newType0($base, $arguments)));
+  public static function newType(XPClass $base, $arguments) {
+    return new XPClass(new \ReflectionClass(self::newType0($base, $arguments)));
   }
 
   /**
-   * Creates a generic type
+   * Creates a generic type and returns created type's literal
    *
-   * @param   lang.XPClass base
-   * @param   lang.Type[] arguments
-   * @return  string created type's literal
+   * @param   lang.XPClass $base
+   * @param   string|lang.Type[] $arguments
+   * @return  string
    */
-  public function newType0($base, $arguments) {
+  public static function newType0($base, $arguments) {
+    static $literals= [
+      "\xb8" => ',',
+      "\xab" => '<',
+      "\xbb" => '>',
+      "\x9a" => '(',
+      "\x9b" => ')',
+      "\x91" => '[',
+      "\x92" => ']',
+      "\x98" => '\\',
+      "\xbf" => '?',
+      "\x95" => ':',
+      "\x86" => '&',
+      "\xa6" => '|',
+    ];
+
+    if (is_string($arguments)) {
+      $types= Type::forNames(strtr($arguments, $literals));
+    } else {
+      $types= $arguments;
+    }
 
     // Verify
     $annotations= $base->getAnnotations();
@@ -37,23 +57,23 @@ class GenericTypes {
       $components[]= ltrim($name);
     }
     $cs++;
-    if ($cs !== sizeof($arguments)) {
+    if ($cs !== sizeof($types)) {
       throw new IllegalArgumentException(sprintf(
         'Class %s expects %d component(s) <%s>, %d argument(s) given',
         $base->name,
         $cs,
         implode(', ', $components),
-        sizeof($arguments)
+        sizeof($types)
       ));
     }
   
     // Compose names
     $cn= $qc= '';
-    foreach ($arguments as $typearg) {
-      $cn.= '¸'.strtr($typearg->literal(), '\\', '¦');
+    foreach ($types as $typearg) {
+      $cn.= "\xb8".strtr($typearg->literal(), '\\', "\x98");
       $qc.= ','.$typearg->getName();
     }
-    $name= $base->literal().'··'.substr($cn, 1);
+    $name= $base->literal()."\xab".substr($cn, 1)."\xbb";
     $qname= $base->name.'<'.substr($qc, 1).'>';
 
     // Create class if it doesn't exist yet
@@ -63,7 +83,7 @@ class GenericTypes {
       // Parse placeholders into a lookup map
       $placeholders= [];
       foreach ($components as $i => $component) {
-        $placeholders[$component]= $arguments[$i]->getName();
+        $placeholders[$component]= $types[$i]->getName();
       }
 
       // Work on sourcecode
@@ -98,7 +118,7 @@ class GenericTypes {
           if (T_ABSTRACT === $tokens[$i][0] || T_FINAL === $tokens[$i][0]) {
             $src.= $tokens[$i][1].' ';
           } else if (T_CLASS === $tokens[$i][0] || T_INTERFACE === $tokens[$i][0]) {
-            $meta['class'][DETAIL_GENERIC]= [$base->name, $arguments];
+            $meta['class'][DETAIL_GENERIC]= [$base->name, $types];
             $src.= $tokens[$i][1].' '.$decl;
             array_unshift($state, $tokens[$i][0]);
           } else if (T_USE === $tokens[$i][0]) {
@@ -145,7 +165,7 @@ class GenericTypes {
               foreach (Type::split($annotations['generic']['parent']) as $j => $placeholder) {
                 $xargs[]= Type::forName(strtr(ltrim($placeholder), $placeholders));
               }
-              $src.= ' extends \\'.$this->newType0($base->getParentClass(), $xargs);
+              $src.= ' extends \\'.self::newType0($base->getParentClass(), $xargs);
             } else {
               $src.= ' extends '.$parent;
             }
@@ -316,7 +336,7 @@ class GenericTypes {
             foreach (Type::split($annotation[$counter]) as $j => $placeholder) {
               $iargs[]= Type::forName(strtr(ltrim($placeholder), $placeholders));
             }
-            $src.= '\\'.$this->newType0(new XPClass(new \ReflectionClass($rel)), $iargs);
+            $src.= '\\'.self::newType0(new XPClass(new \ReflectionClass($rel)), $iargs);
           } else {
             $src.= $rel;
           }
@@ -332,7 +352,7 @@ class GenericTypes {
       eval($src);
       if ($initialize) {
         foreach ($components as $i => $component) {
-          $name::$__generic[$component]= $arguments[$i];
+          $name::$__generic[$component]= $types[$i];
         }
         method_exists($name, '__static') && $name::__static();
       }

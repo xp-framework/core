@@ -11,12 +11,12 @@ final class xp {
   public static $cn= ['xp' => '<xp>'];
   public static $sn= [
     'xp'     => 'xp',
-    'string' => "\xfestring",
-    'int'    => "\xfeint",
-    'float'  => "\xfefloat",
-    'double' => "\xfefloat",
-    'bool'   => "\xfebool",
-    'var'    => "var",
+    'string' => 'string',
+    'int'    => 'int',
+    'float'  => 'float',
+    'double' => 'float',
+    'bool'   => 'bool',
+    'var'    => 'mixed',
   ];
   public static $loader= null;
   public static $classpath= null;
@@ -208,15 +208,11 @@ function is($type, $object) {
 function literal($type) {
   if (isset(\xp::$sn[$type])) {
     return \xp::$sn[$type];
-  } else if ('[]' === substr($type, -2)) {
-    return "\xa6".literal(substr($type, 0, -2));
-  } else if ('[:' === substr($type, 0, 2)) {
-    return "\xbb".literal(substr($type, 2, -1));
   } else if (false !== ($p= strpos($type, '<'))) {
-    $l= literal(substr($type, 0, $p))."\xb7\xb7";
-    for ($args= substr($type, $p+ 1, -1).',', $o= 0, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
+    $l= literal(substr($type, 0, $p))."\xab";
+    for ($args= substr($type, $p + 1, -1).',', $o= 0, $brackets= 0, $i= 0, $s= strlen($args); $i < $s; $i++) {
       if (',' === $args[$i] && 0 === $brackets) {
-        $l.= strtr(literal(ltrim(substr($args, $o, $i- $o)))."\xb8", '\\', "\xa6");
+        $l.= strtr(literal(ltrim(substr($args, $o, $i - $o)))."\xb8", '\\', "\x98");
         $o= $i+ 1;
       } else if ('<' === $args[$i]) {
         $brackets++;
@@ -224,11 +220,20 @@ function literal($type) {
         $brackets--;
       }
     }
-    return substr($l, 0, -1);
+    return substr($l, 0, -1)."\xbb";
   } else if (0 === strncmp($type, 'php.', 4)) {
     return substr($type, 4);
   } else {
-    return strtr($type, '.', '\\');
+    return strtr($type, [
+      '.' => '\\',
+      '[' => "\x91",
+      ']' => "\x92",
+      '(' => "\x91",
+      ')' => "\x92",
+      ':' => "\x95",
+      '&' => "\x86",
+      '|' => "\xa6",
+    ]);
   }
 }
 // }}}
@@ -339,7 +344,7 @@ function create($spec, ... $args) {
   // BC: Wrap IllegalStateExceptions into IllegalArgumentExceptions
   $class= \lang\XPClass::forName(strstr($base, '.') ? $base : \lang\XPClass::nameOf($base));
   try {
-    return $class->newGenericType($typeargs)->newInstance(...$args);
+    return \lang\GenericTypes::newType($class, $typeargs)->newInstance(...$args);
   } catch (\lang\IllegalStateException $e) {
     throw new \lang\IllegalArgumentException($e->getMessage());
   } catch (ReflectionException $e) {
@@ -460,10 +465,14 @@ if (isset($GLOBALS['paths'])) {
 set_include_path(rtrim(implode(PATH_SEPARATOR, xp::$classpath), PATH_SEPARATOR));
 
 spl_autoload_register(function($class) {
-  $name= strtr($class, '\\', '.');
-  $cl= xp::$loader->findClass($name);
-  if (null === $cl) return false;
-  $cl->loadClass0($name);
-  return true;
+  if (false === ($p= strpos($class, "\xab"))) {
+    $name= strtr($class, '\\', '.');
+    $cl= xp::$loader->findClass($name);
+    return $cl ? $cl->loadClass0($name) && true : false;
+  } else {
+    $base= strtr(substr($class, 0, $p), '\\', '.');
+    $cl= xp::$loader->findClass($base);
+    return $cl ? \lang\GenericTypes::newType0($cl->loadClass($base), substr($class, $p + 1, -1)) && true : false;
+  }
 });
 // }}}

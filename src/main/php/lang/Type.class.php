@@ -370,7 +370,7 @@ class Type implements Value {
 
     return $t;
   }
-  
+
   /** Returns type literal */
   public function literal(): string { return $this->name; }
 

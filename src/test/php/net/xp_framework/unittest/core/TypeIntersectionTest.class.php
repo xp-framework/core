@@ -76,6 +76,11 @@ class TypeIntersectionTest extends TestCase {
   }
 
   #[Test]
+  public function literal() {
+    $this->assertEquals("Countable\x86Traversable", (new TypeIntersection($this->types))->literal());
+  }
+
+  #[Test]
   public function is_instance() {
     $this->assertTrue((new TypeIntersection($this->types))->isInstance($this->intersection()));
   }

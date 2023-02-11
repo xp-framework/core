@@ -29,6 +29,14 @@ class FunctionTypeTest extends TestCase {
   }
 
   #[Test]
+  public function literal() {
+    $this->assertEquals(
+      "function\x9astring\x9b\x95void",
+      (new FunctionType([Primitive::$STRING], Type::$VOID))->literal()
+    );
+  }
+
+  #[Test]
   public function a_function_accepting_one_string_arg_and_returning_a_string() {
     $this->assertEquals(
       new FunctionType([Primitive::$STRING], Primitive::$STRING),

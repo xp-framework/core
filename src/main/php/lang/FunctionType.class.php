@@ -62,7 +62,7 @@ class FunctionType extends Type {
   /** Returns type literal */
   public function literal(): string {
     return sprintf(
-      "\xaa%s\xbb%s",
+      "function\x9a%s\x9b\x95%s",
       null === $this->signature ? "\xbf" : implode("\xb8", array_map(function($e) { return $e->literal(); }, $this->signature)),
       $this->returns->literal()
     );

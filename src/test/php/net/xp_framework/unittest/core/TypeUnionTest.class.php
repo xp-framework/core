@@ -184,7 +184,7 @@ class TypeUnionTest extends TestCase {
   #[Test]
   public function literal() {
     $this->assertEquals(
-      "\xb5\xfestring\xb8\xfeint",
+      "string\xa6int",
       (new TypeUnion([Primitive::$STRING, Primitive::$INT]))->literal()
     );
   }
