@@ -358,10 +358,12 @@ class ClassParser {
               $code= $this->value($tokens, $i, $context, $imports);
               if (is_string($code)) {
                 $eval= token_get_all('<?php '.$code);
-              } else if (1 === sizeof($code)) {
+              } else if (1 !== sizeof($code)) {
+                throw new IllegalStateException('Unexpected "," in eval');
+              } else if (0 === key($code)) {
                 $eval= token_get_all('<?php '.current($code));
               } else {
-                throw new IllegalStateException('Unexpected "," in eval');
+                $eval= token_get_all('<?php [\''.strtr(key($code), ["'" => "\\'"]).'\'=>'.current($code).']');
               }
 
               $j= 1;
