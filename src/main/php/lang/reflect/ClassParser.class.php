@@ -355,8 +355,22 @@ class ClassParser {
 
             if ('eval' === $key) {              // Attribute(eval: '...') vs. Attribute(name: ...)
               while ($i++ < $s && ':' === $tokens[$i] || T_WHITESPACE === $tokens[$i][0]) { }
+
               $code= $this->value($tokens, $i, $context, $imports);
-              $eval= token_get_all('<?php '.$code);
+              if (is_string($code)) {
+                $eval= token_get_all('<?php '.$code);
+              } else if (is_string(key($code))) {
+                $pairs= '';
+                foreach ($code as $named => $expr) {
+                  $pairs.= "'".strtr($named, ["'" => "\\'"])."'=>{$expr},";
+                }
+                $eval= token_get_all('<?php ['.$pairs.']');
+              } else if (1 !== sizeof($code)) {
+                throw new IllegalStateException('Unexpected "," in eval');
+              } else {
+                $eval= token_get_all('<?php '.current($code));
+              }
+
               $j= 1;
               $value= $this->value($eval, $j, $context, $imports);
             } else {
