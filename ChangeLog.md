@@ -3,6 +3,15 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.6.0 / 2023-06-03
+
+### Features
+
+* Merged PR #324: Support `eval` array notation inside attributes. Together
+  with xp-framework/reflection#35, this is a prerequisite for extracting
+  reflection code as proposed by xp-framework/rfc#338.
+  (@thekid)
+
 ## 11.5.0 / 2022-12-17
 
 ### Features
