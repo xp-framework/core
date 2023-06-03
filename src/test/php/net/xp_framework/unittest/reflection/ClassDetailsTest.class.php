@@ -372,6 +372,16 @@ class ClassDetailsTest extends \unittest\TestCase {
   }
 
   #[Test]
+  public function php8_attributes_with_multiple_named_array_eval_arguments() {
+    $actual= (new ClassParser())->parseDetails('<?php
+      #[Value(eval: ["one" => "1", "two" => "2"])]
+      class Test {
+      }
+    ');
+    $this->assertEquals(['one' => 1, 'two' => 2], $actual['class'][DETAIL_ANNOTATIONS]['value']);
+  }
+
+  #[Test]
   public function absolute_compound_php8_attributes() {
     $actual= (new ClassParser())->parseDetails('<?php
       #[\unittest\annotations\Test]
