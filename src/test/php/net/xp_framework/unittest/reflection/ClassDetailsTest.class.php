@@ -352,6 +352,16 @@ class ClassDetailsTest extends \unittest\TestCase {
   }
 
   #[Test]
+  public function php8_attributes_with_array_eval_argument() {
+    $actual= (new ClassParser())->parseDetails('<?php
+      #[Value(eval: ["function() { return \"test\"; }"])]
+      class Test {
+      }
+    ');
+    $this->assertEquals('test', $actual['class'][DETAIL_ANNOTATIONS]['value']());
+  }
+
+  #[Test]
   public function absolute_compound_php8_attributes() {
     $actual= (new ClassParser())->parseDetails('<?php
       #[\unittest\annotations\Test]
@@ -369,6 +379,24 @@ class ClassDetailsTest extends \unittest\TestCase {
       }
     ');
     $this->assertEquals(['test' => null], $actual['class'][DETAIL_ANNOTATIONS]);
+  }
+
+  #[Test, Expect(class: ClassFormatException::class, withMessage: 'Unexpected ","')]
+  public function php8_attributes_cannot_have_multiple_arguments() {
+    (new ClassParser())->parseDetails('<?php
+      #[Value(1, 2)]
+      class Test {
+      }
+    ');
+  }
+
+  #[Test, Expect(class: ClassFormatException::class, withMessage: 'Unexpected "," in eval')]
+  public function array_eval_cannot_have_multiple_arguments() {
+    (new ClassParser())->parseDetails('<?php
+      #[Value(eval: ["1", "2"])]
+      class Test {
+      }
+    ');
   }
 
   #[Test]
