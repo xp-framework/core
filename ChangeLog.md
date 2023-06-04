@@ -217,6 +217,25 @@ the next step of phasing out XP annotation syntax in favor of PHP 8's
   syntax. This will raise *E_USER_DEPRECATED* warnings, see PR #284
   (@thekid)
 
+## 10.16.0 / 2023-06-04
+
+### Features
+
+* Backported #324 from XP 11: Support eval array notation inside attributes.
+  See https://github.com/xp-framework/compiler/pull/169#discussion_r1216367152
+  (@thekid)
+
+### Bugfixes
+
+* Backported #321 from XP 11: ix util.TimeZone::hasDst(), which was broken in
+  multiple regards
+  (@thekid)
+* Backported #320 from XP 11: Call to undefined method util.TimeZone::getName()
+  (@thekid)
+* Backported #309 from XP 11: Use AES-128-CBC instead of DES (in util.Secret);
+  the latter is considered legacy
+  (@thekid)
+
 ## 10.15.1 / 2021-12-24
 
 ### Bugfixes
