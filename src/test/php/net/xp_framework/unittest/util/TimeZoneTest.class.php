@@ -56,7 +56,7 @@ class TimeZoneTest extends TestCase {
     $this->assertFalse($previous->isDst());
     $this->assertEquals('CET', $previous->abbr());
     $this->assertEquals('+0100', $previous->difference());
-    $this->assertEquals(new Date('2006-10-29 02:00:00'), $previous->date());
+    $this->assertEquals(new Date('2006-10-29 02:00:00', $tz), $previous->date());
   }
 
   #[Test]
@@ -67,7 +67,7 @@ class TimeZoneTest extends TestCase {
     $this->assertFalse($next->isDst());
     $this->assertEquals('CET', $next->abbr());
     $this->assertEquals('+0100', $next->difference());
-    $this->assertEquals(new Date('2007-10-28 02:00:00'), $next->date());
+    $this->assertEquals(new Date('2007-10-28 02:00:00', $tz), $next->date());
   }
 
   #[Test]
@@ -77,7 +77,7 @@ class TimeZoneTest extends TestCase {
     $this->assertEquals(false, $transition->isDst());
     $this->assertEquals('CET', $transition->abbr());
     $this->assertEquals('+0100', $transition->difference());
-    $this->assertEquals(new Date('2007-10-28 02:00:00'), $transition->date());
+    $this->assertEquals(new Date('2007-10-28 02:00:00', $tz), $transition->date());
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
@@ -128,7 +128,7 @@ class TimeZoneTest extends TestCase {
   public function offsetInSecondsNoDST() {
     $this->assertEquals(3600, (new TimeZone('Europe/Berlin'))->getOffsetInSeconds(new Date('2007-01-21')));
   }
-  
+
   #[Test, Values([['Europe/Berlin', 2022, true], ['Europe/Berlin', 1977, false], ['Europe/Berlin', 1945, true], ['Atlantic/Reykjavik', 2022, false], ['Atlantic/Reykjavik', 1966, true], ['UTC', 2022, false]])]
   public function has_dst($name, $year, $expected) {
     $this->assertEquals($expected, TimeZone::getByName($name)->hasDst($year));
