@@ -13,6 +13,11 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
+* Backported #321 from XP 11: ix util.TimeZone::hasDst(), which was broken in
+  multiple regards
+  (@thekid)
+* Backported #320 from XP 11: Call to undefined method util.TimeZone::getName()
+  (@thekid)
 * Backported #309 from XP 11: Use AES-128-CBC instead of DES (in util.Secret);
   the latter is considered legacy
   (@thekid)
