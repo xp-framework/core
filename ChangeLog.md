@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 10.16.0 / 2023-06-03
+
+### Features
+
+* Backported #324 from XP 11: Support eval array notation inside attributes.
+  See https://github.com/xp-framework/compiler/pull/169#discussion_r1216367152
+  (@thekid)
+
 ## 10.15.1 / 2021-12-24
 
 ### Bugfixes
