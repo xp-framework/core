@@ -11,6 +11,12 @@ XP Framework Core ChangeLog
   See https://github.com/xp-framework/compiler/pull/169#discussion_r1216367152
   (@thekid)
 
+### Bugfixes
+
+* Backported #309 from XP 11: Use AES-128-CBC instead of DES (in util.Secret);
+  the latter is considered legacy
+  (@thekid)
+
 ## 10.15.1 / 2021-12-24
 
 ### Bugfixes
