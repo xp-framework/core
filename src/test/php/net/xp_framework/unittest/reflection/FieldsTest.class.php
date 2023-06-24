@@ -1,8 +1,5 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\Assert;
-use unittest\TestCase;
-
 abstract class FieldsTest {
   use TypeDefinition;
 

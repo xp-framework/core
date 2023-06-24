@@ -3,8 +3,7 @@
 use io\File;
 use lang\archive\{Archive, ArchiveClassLoader};
 use lang\{ClassLoader, ElementNotFoundException};
-use unittest\Assert;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
 class ResourcesTest {
   private $cl;

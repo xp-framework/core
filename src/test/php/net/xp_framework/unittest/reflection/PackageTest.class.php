@@ -3,8 +3,7 @@
 use lang\archive\{Archive, ArchiveClassLoader};
 use lang\reflect\Package;
 use lang\{ClassLoader, ElementNotFoundException, IllegalArgumentException, XPClass};
-use unittest\Assert;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 use util\Objects;
 
 /**

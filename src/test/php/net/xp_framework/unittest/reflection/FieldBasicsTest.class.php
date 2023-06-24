@@ -2,8 +2,7 @@
 
 use lang\ElementNotFoundException;
 use lang\reflect\Field;
-use unittest\Assert;
-use unittest\{Expect, Test, Values};
+use unittest\{Assert, Expect, Test, Values};
 
 class FieldBasicsTest extends FieldsTest {
 

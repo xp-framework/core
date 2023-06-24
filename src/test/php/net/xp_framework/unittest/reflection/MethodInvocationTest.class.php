@@ -2,9 +2,8 @@
 
 use lang\reflect\TargetInvocationException;
 use lang\{IllegalAccessException, IllegalArgumentException};
-use unittest\Assert;
 use unittest\actions\RuntimeVersion;
-use unittest\{Action, Expect, Test, Values};
+use unittest\{Assert, Action, Expect, Test, Values};
 
 class MethodInvocationTest extends MethodsTest {
 

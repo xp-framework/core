@@ -1,13 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{Type, Value};
-use unittest\Assert;
 
-/**
- * Abstract base class
- *
- * @see      xp://net.xp_framework.unittest.reflection.ReflectionTest
- */
 abstract class AbstractTestClass {
   #[Type(Value::class)]
   protected

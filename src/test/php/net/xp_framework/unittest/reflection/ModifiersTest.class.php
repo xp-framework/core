@@ -1,14 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\reflect\Modifiers;
-use unittest\Assert;
-use unittest\Test;
+use unittest\{Assert, Test};
 
-/**
- * Test the XP reflection API's Modifiers utility class
- *
- * @see   xp://lang.reflect.Modifiers
- */
 class ModifiersTest {
 
   #[Test]

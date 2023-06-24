@@ -2,14 +2,8 @@
 
 use lang\reflect\Module;
 use lang\{ClassLoader, ElementNotFoundException};
-use unittest\Assert;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase for modules
- *
- * @see   xp://lang.ClassLoader
- */
 class ModuleTest {
   private $cl;
   private $registered= [];

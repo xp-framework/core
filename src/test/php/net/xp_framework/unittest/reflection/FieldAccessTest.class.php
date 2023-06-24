@@ -1,9 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{IllegalAccessException, IllegalArgumentException};
-use unittest\Assert;
 use unittest\actions\RuntimeVersion;
-use unittest\{Action, Expect, Test, Values};
+use unittest\{Assert, Action, Expect, Test, Values};
 
 class FieldAccessTest extends FieldsTest {
 

@@ -3,11 +3,6 @@
 use lang\{ClassNotFoundException, MethodNotImplementedException};
 use unittest\{After, Assert, Before, Expect, Test};
 
-/**
- * TestCase for resolving classes from URIs using the `loadUri()` method.
- *
- * @see  xp://net.xp_framework.unittest.reflection.ClassFromFileSystemTest
- */
 abstract class ClassFromUriTest {
   protected static $base;
   protected $fixture;

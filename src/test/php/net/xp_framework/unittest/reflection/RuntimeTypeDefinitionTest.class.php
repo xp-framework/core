@@ -1,15 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{ClassLoader, DynamicClassLoader, XPClass};
-use unittest\Assert;
-use unittest\{Test, TestCase, Values};
+use unittest\{Assert, Test, Values};
 
-/**
- * Base class for runtime type definitions
- *
- * @see   xp://lang.ClassLoader
- * @see   https://github.com/xp-framework/xp-framework/issues/94
- */
 abstract class RuntimeTypeDefinitionTest {
 
   /**

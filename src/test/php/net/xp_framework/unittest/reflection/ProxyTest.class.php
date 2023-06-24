@@ -2,9 +2,8 @@
 
 use lang\reflect\{InvocationHandler, Proxy};
 use lang\{ClassLoader, Error, IllegalArgumentException, Type, XPClass};
-use unittest\Assert;
 use unittest\actions\RuntimeVersion;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 use util\{Observer, XPIterator};
 
 /**

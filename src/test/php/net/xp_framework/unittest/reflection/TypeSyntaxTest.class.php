@@ -1,9 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{ClassLoader, Nullable, Primitive, TypeUnion};
-use unittest\Assert;
 use unittest\actions\RuntimeVersion;
-use unittest\{Action, Test, TestCase};
+use unittest\{Assert, Action, Test, TestCase};
 
 class TypeSyntaxTest {
   private static $spec= ['kind' => 'class', 'extends' => null, 'implements' => [], 'use' => []];

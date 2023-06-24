@@ -1,7 +1,6 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\Assert;
-use unittest\Test;
+use unittest\{Assert, Test};
 
 class MethodModifiersTest extends MethodsTest {
 

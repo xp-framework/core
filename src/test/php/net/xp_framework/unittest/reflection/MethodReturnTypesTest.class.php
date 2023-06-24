@@ -2,9 +2,8 @@
 
 use lang\{ArrayType, FunctionType, MapType, Nullable, Primitive, Type, TypeUnion, Value, XPClass};
 use net\xp_framework\unittest\Name;
-use unittest\Assert;
 use unittest\actions\RuntimeVersion;
-use unittest\{Action, Test, Values};
+use unittest\{Assert, Action, Test, Values};
 
 class MethodReturnTypesTest extends MethodsTest {
 

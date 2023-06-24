@@ -1,4 +1,5 @@
 <?php namespace net\xp_framework\unittest\reflection;
+
 /** @property-read string $prop */
 class WithReadonly {
   private $__readonly= ['prop' => null];

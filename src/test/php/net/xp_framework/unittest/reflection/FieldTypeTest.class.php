@@ -1,9 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{ArrayType, MapType, Primitive, Type, Value, XPClass};
-use unittest\Assert;
 use unittest\actions\RuntimeVersion;
-use unittest\{Action, Test, Values};
+use unittest\{Assert, Action, Test, Values};
 
 class FieldTypeTest extends FieldsTest {
 

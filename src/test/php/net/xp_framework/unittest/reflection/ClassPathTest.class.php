@@ -3,11 +3,6 @@
 use lang\{ClassLoader, ElementNotFoundException};
 use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase for classloading
- *
- * @see    xp://lang.ClassLoader#registerPath
- */
 class ClassPathTest {
   protected $registered= [];
 

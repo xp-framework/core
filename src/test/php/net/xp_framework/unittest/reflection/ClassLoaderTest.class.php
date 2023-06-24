@@ -13,20 +13,6 @@ use lang\{
 };
 use unittest\{Assert, Expect, Test, Values};
 
-/**
- * TestCase for classloading
- *
- * Makes use of the following classes in the package
- * net.xp_framework.unittest.reflection.classes:
- *
- * - ClassOne, ClassTwo - exist in the same directory as this class
- * - ClassThree, ClassFour - exist in "lib/three-and-four.xar"
- * - ClassFive - exists in "contained.xar" within "lib/three-and-four.xar"
- *
- * @see   xp://lang.ClassLoader
- * @see   xp://lang.XPClass#getClassLoader
- * @see   https://github.com/xp-framework/xp-framework/pull/235
- */
 class ClassLoaderTest {
   protected
     $libraryLoader   = null,

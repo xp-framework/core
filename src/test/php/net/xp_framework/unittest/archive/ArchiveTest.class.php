@@ -4,22 +4,14 @@ use io\File;
 use io\streams\{MemoryInputStream, MemoryOutputStream, Streams};
 use lang\archive\Archive;
 use lang\{ElementNotFoundException, FormatException};
-use unittest\Assert;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
-/**
- * Base class for archive file tests
- *
- * @see  xp://net.xp_framework.unittest.archive.ArchiveV1Test
- * @see  xp://net.xp_framework.unittest.archive.ArchiveV2Test
- * @see   xp://lang.archive.Archive
- */
 abstract class ArchiveTest {
   
   /**
    * Returns the xar version to test
    *
-   * @return  int
+   * @return int
    */
   protected abstract function version();
 

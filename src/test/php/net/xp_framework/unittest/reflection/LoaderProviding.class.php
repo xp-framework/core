@@ -2,11 +2,6 @@
 
 use lang\{ElementNotFoundException, IClassLoader, MethodNotImplementedException};
 
-/**
- * A class loader dummy providing elements supplied to its constructor.
- *
- * @see   xp://net.xp_framework.unittest.reflection.ModuleTest
- */
 class LoaderProviding implements IClassLoader {
   protected $resources;
 

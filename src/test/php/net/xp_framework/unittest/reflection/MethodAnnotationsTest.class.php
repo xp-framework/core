@@ -1,8 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\ElementNotFoundException;
-use unittest\Assert;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
 class MethodAnnotationsTest extends MethodsTest {
 

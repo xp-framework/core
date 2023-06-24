@@ -1,14 +1,8 @@
 <?php namespace net\xp_framework\unittest\archive;
 
 use lang\archive\Archive;
-use unittest\Assert;
-use unittest\Test;
+use unittest\{Assert, Test};
 
-/**
- * Unittest v2 XARs
- *
- * @see  xp://net.xp_framework.unittest.archive.ArchiveTest
- */
 class ArchiveV2Test extends ArchiveTest {
 
   /** @return int */

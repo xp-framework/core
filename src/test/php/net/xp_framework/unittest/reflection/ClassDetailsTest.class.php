@@ -3,16 +3,8 @@
 use lang\ClassFormatException;
 use lang\reflect\ClassParser;
 use net\xp_framework\unittest\Name;
-use unittest\Assert;
-use unittest\{Call, Expect, Fixture, Test, Value, Values};
+use unittest\{Assert, Call, Expect, Fixture, Test, Value, Values};
 
-/**
- * Tests the class details gathering internals
- *
- * @see  xp://lang.XPClass#detailsForClass
- * @see  https://github.com/xp-framework/xp-framework/issues/230
- * @see  https://github.com/xp-framework/xp-framework/issues/270
- */
 class ClassDetailsTest {
 
   /**

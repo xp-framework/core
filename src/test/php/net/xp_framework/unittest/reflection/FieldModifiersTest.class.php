@@ -1,8 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\Assert;
 use unittest\actions\RuntimeVersion;
-use unittest\{Action, Test};
+use unittest\{Assert, Action, Test};
 
 class FieldModifiersTest extends FieldsTest {
 

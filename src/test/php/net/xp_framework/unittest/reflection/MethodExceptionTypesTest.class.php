@@ -1,8 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{IllegalAccessException, IllegalArgumentException, XPClass};
-use unittest\Assert;
-use unittest\{Test, Values};
+use unittest\{Assert, Test, Values};
 
 class MethodExceptionTypesTest extends MethodsTest {
 

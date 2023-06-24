@@ -1,20 +1,16 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{ClassLoader, ClassNotFoundException, Closeable, Runnable, XPClass};
-use unittest\Assert;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase for lang.ClassLoader::defineInterface()
- */
 class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
 
   /**
    * This `define()` implementation creates interfaces
    *
-   * @param   [:var] $decl
-   * @param   var $def
-   * @return  lang.XPClass
+   * @param  [:var] $decl
+   * @param  var $def
+   * @return lang.XPClass
    */
   protected function define(array $decl= [], $def= null) {
     return $this->defineType(

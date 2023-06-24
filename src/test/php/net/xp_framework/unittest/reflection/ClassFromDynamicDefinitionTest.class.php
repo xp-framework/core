@@ -1,14 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{DynamicClassLoader, IClassLoader};
-use unittest\Assert;
-use unittest\{Ignore, Test};
+use unittest\{Assert, Ignore, Test};
 
-/**
- * TestCase for classloading
- *
- * @see  xp://lang.DynamicClassLoader#loadUri
- */
 class ClassFromDynamicDefinitionTest extends ClassFromUriTest {
 
   /** Creates fixture */
