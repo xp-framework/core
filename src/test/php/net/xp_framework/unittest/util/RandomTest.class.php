@@ -47,7 +47,7 @@ class RandomTest extends TestCase {
     $this->assertEquals(20, (new Random(Random::FAST))->bytes(20)->size());
   }
 
-  #[Test, Action(eval: 'new VerifyThat(function() { return (function_exists("random_bytes") || function_exists("openssl_random_pseudo_bytes"));})')]
+  #[Test]
   public function secure_bytes() {
     $this->assertEquals(20, (new Random(Random::SECURE))->bytes(20)->size());
   }
