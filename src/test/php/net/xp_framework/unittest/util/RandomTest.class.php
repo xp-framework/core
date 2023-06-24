@@ -62,9 +62,11 @@ class RandomTest extends TestCase {
     $this->assertEquals(20, (new Random(Random::URANDOM))->bytes(20)->size());
   }
 
+  /** @deprecated */
   #[Test]
   public function mtrand_bytes() {
     $this->assertEquals(20, (new Random(Random::MTRAND))->bytes(20)->size());
+    \xp::gc();
   }
 
   #[Test, Expect(IllegalArgumentException::class), Values([-1, 0])]
@@ -102,10 +104,12 @@ class RandomTest extends TestCase {
     $this->assertTrue($random >= 0 && $random <= 10);
   }
 
+  /** @deprecated */
   #[Test]
   public function mtrand_int() {
     $random= (new Random(Random::MTRAND))->int(0, 10);
     $this->assertTrue($random >= 0 && $random <= 10);
+    \xp::gc();
   }
 
   #[Test, Expect(IllegalArgumentException::class), Values([10, 11])]

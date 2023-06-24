@@ -43,9 +43,6 @@ class Random {
     if (function_exists('openssl_random_pseudo_bytes')) {
       self::$sources[self::OPENSSL]= ['bytes' => [self::class, self::OPENSSL], 'ints' => null];
     }
-
-    // The Mersenne Twister algorithm is always available but deprecated
-    self::$sources[self::MTRAND]= ['bytes' => [self::class, self::MTRAND], 'ints' => 'mt_rand'];
   }
 
   /**
@@ -60,6 +57,12 @@ class Random {
       if (isset(self::$sources[$source])) {
         $this->bytes= self::$sources[$source]['bytes'];
         $this->ints= self::$sources[$source]['ints'] ?: [$this, 'random'];
+        $this->source= $source;
+        return;
+      } else if (self::MTRAND === $source) {
+        trigger_error('MT19937 is deprecated', E_USER_DEPRECATED);
+        $this->bytes= [self::class, self::MTRAND];
+        $this->ints= 'mt_rand';
         $this->source= $source;
         return;
       }
