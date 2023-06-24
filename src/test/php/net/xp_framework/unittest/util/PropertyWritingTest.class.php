@@ -4,11 +4,6 @@ use io\streams\MemoryOutputStream;
 use unittest\{Assert, Test};
 use util\Properties;
 
-/**
- * Testcase for util.Properties class.
- *
- * @see      xp://util.Properties
- */
 class PropertyWritingTest {
   
   /** @return util.Properties */

@@ -1,7 +1,5 @@
 <?php namespace net\xp_framework\unittest\core\generics;
-/**
- * Lookup map
- */
+
 #[Generic(self: 'K, V', implements: ['K, V'])]
 abstract class AbstractDictionary implements IDictionary, Marker {
   

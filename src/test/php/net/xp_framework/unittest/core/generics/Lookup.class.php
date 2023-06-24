@@ -3,9 +3,6 @@
 use unittest\Generic;
 use util\{NoSuchElementException, Objects};
 
-/**
- * Lookup map
- */
 #[Generic(self: 'K, V', parent: 'K, V')]
 class Lookup extends AbstractDictionary {
   protected $size;

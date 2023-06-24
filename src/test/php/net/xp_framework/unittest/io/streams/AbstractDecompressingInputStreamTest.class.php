@@ -1,14 +1,9 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\streams\{InputStream, MemoryInputStream};
-use unittest\Assert;
-use unittest\{PrerequisitesNotMetError, Test};
+use unittest\{Assert, PrerequisitesNotMetError, Test};
 use util\Bytes;
 
-/**
- * Abstract base class for all compressing output stream tests
- *
- */
 abstract class AbstractDecompressingInputStreamTest {
 
   /**

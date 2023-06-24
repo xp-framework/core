@@ -2,13 +2,9 @@
 
 use io\streams\{MemoryOutputStream, OutputStream};
 use lang\IllegalArgumentException;
-use unittest\Assert;
-use unittest\{Expect, PrerequisitesNotMetError, Test};
+use unittest\{Assert, Expect, PrerequisitesNotMetError, Test};
 use util\Bytes;
 
-/**
- * Abstract base class for all compressing output stream tests
- */
 abstract class AbstractCompressingOutputStreamTest {
 
   /**

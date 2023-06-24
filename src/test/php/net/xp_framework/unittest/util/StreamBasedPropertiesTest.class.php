@@ -1,14 +1,8 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use io\streams\MemoryInputStream;
-use unittest\Assert;
 use util\Properties;
 
-/**
- * Testcase for util.Properties class.
- *
- * @see   xp://net.xp_framework.unittest.util.AbstractPropertiesTest
- */
 class StreamBasedPropertiesTest extends AbstractPropertiesTest {
 
   /**

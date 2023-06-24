@@ -12,11 +12,6 @@ use lang\{
 };
 use unittest\{Assert, Expect, Test, Values};
 
-/**
- * Test the XPClass class, the entry point to the XP Framework's class reflection API.
- *
- * @see  xp://lang.XPClass
- */
 class XPClassTest {
   private $fixture;
 

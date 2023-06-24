@@ -10,18 +10,10 @@ use lang\{
   XPException
 };
 use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Action, Expect, Test};
+use unittest\{Assert, Before, Action, Expect, Test};
 
-/**
- * Test the XP error handling semantics
- */
 class ErrorsTest {
 
-  /**
-   * Setup method. Ensures xp error registry is initially empty and
-   * that the error reporting level is set to E_ALL (which is done
-   * in lang.base.php).
-   */
   #[Before]
   public function setUp() {
     Assert::equals(E_ALL, error_reporting(), 'Error reporting level not E_ALL');

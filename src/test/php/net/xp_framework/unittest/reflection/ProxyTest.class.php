@@ -6,11 +6,6 @@ use unittest\actions\RuntimeVersion;
 use unittest\{Assert, Expect, Test};
 use util\{Observer, XPIterator};
 
-/**
- * Tests the Proxy class
- *
- * @see   xp://lang.reflect.Proxy
- */
 class ProxyTest {
   protected $handler, $iteratorClass, $observerClass;
 

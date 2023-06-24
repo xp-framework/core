@@ -1,17 +1,9 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use io\{IOException, TempFile};
-use unittest\Assert;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 use util\Properties;
 
-/**
- * Testcase for util.Properties class.
- *
- * @see   xp://net.xp_framework.unittest.util.AbstractPropertiesTest
- * @see   xp://util.Properties#fromFile
- * @test  xp://net.xp_framework.unittest.util.FilesystemPropertySourceTest
- */
 class FileBasedPropertiesTest extends AbstractPropertiesTest {
 
   /** Create a new properties object from a string source */

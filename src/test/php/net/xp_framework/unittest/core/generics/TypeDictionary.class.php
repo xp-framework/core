@@ -3,10 +3,6 @@
 use lang\ElementNotFoundException as NoSuchKey;
 use lang\Generic;
 
-/**
- * Lookup map
- *
- */
 #[Generic(self: 'V', parent: 'V')]
 class TypeDictionary extends AbstractTypeDictionary {
   protected $elements= [];
