@@ -308,7 +308,7 @@ class UUID implements Value {
   }
 
   /** @return string */
-  public function toString() { return $this->hashCode(); }
+  public function __toString() { return $this->hashCode(); }
 
   /** @return [:string] */
   public function __serialize() { return ['value' => $this->hashCode()]; }
