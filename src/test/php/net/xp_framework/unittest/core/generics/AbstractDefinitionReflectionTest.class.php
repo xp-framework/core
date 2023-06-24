@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use lang\{IllegalArgumentException, Primitive, XPClass};
+use unittest\Assert;
 use unittest\{Expect, Test};
 
 /**
@@ -8,7 +9,7 @@ use unittest\{Expect, Test};
  *
  * @see   xp://net.xp_framework.unittest.core.generics.Lookup
  */
-abstract class AbstractDefinitionReflectionTest extends \unittest\TestCase {
+abstract class AbstractDefinitionReflectionTest {
   protected $fixture= null;
 
   /**
@@ -28,23 +29,24 @@ abstract class AbstractDefinitionReflectionTest extends \unittest\TestCase {
   /**
    * Creates fixture, a Lookup class
    */  
+  #[Before]
   public function setUp() {
     $this->fixture= $this->fixtureClass();
   }
 
   #[Test]
   public function isAGenericDefinition() {
-    $this->assertTrue($this->fixture->isGenericDefinition());
+    Assert::true($this->fixture->isGenericDefinition());
   }
 
   #[Test]
   public function isNotAGeneric() {
-    $this->assertFalse($this->fixture->isGeneric());
+    Assert::false($this->fixture->isGeneric());
   }
 
   #[Test]
   public function components() {
-    $this->assertEquals(['K', 'V'], $this->fixture->genericComponents());
+    Assert::equals(['K', 'V'], $this->fixture->genericComponents());
   }
 
   #[Test]
@@ -53,13 +55,13 @@ abstract class AbstractDefinitionReflectionTest extends \unittest\TestCase {
       Primitive::$STRING, 
       XPClass::forName('unittest.TestCase')
     ]);
-    $this->assertTrue($t->isGeneric());
+    Assert::true($t->isGeneric());
   }
 
   #[Test]
   public function newLookupWithStringAndTestCase() {
     $arguments= [Primitive::$STRING, XPClass::forName('unittest.TestCase')];
-    $this->assertEquals(
+    Assert::equals(
       $arguments, 
       $this->fixture->newGenericType($arguments)->genericArguments()
     );
@@ -68,7 +70,7 @@ abstract class AbstractDefinitionReflectionTest extends \unittest\TestCase {
   #[Test]
   public function newLookupWithStringAndObject() {
     $arguments= [Primitive::$STRING, XPClass::forName('lang.Value')];
-    $this->assertEquals(
+    Assert::equals(
       $arguments, 
       $this->fixture->newGenericType($arguments)->genericArguments()
     );
@@ -76,7 +78,7 @@ abstract class AbstractDefinitionReflectionTest extends \unittest\TestCase {
 
   #[Test]
   public function classesFromReflectionAndCreateAreEqual() {
-    $this->assertEquals(
+    Assert::equals(
       typeof($this->fixtureInstance()),
       $this->fixture->newGenericType([
         Primitive::$STRING, 
@@ -87,7 +89,7 @@ abstract class AbstractDefinitionReflectionTest extends \unittest\TestCase {
 
   #[Test]
   public function classesCreatedWithDifferentTypesAreNotEqual() {
-    $this->assertNotEquals(
+    Assert::notEquals(
       $this->fixture->newGenericType([Primitive::$STRING, XPClass::forName('lang.Value')]),
       $this->fixture->newGenericType([Primitive::$STRING, XPClass::forName('unittest.TestCase')])
     );
@@ -115,7 +117,7 @@ abstract class AbstractDefinitionReflectionTest extends \unittest\TestCase {
       ->newGenericType([$this->fixture])
       ->getMethod('accept')
     ;
-    $this->assertEquals(
+    Assert::equals(
       $this->fixture,
       $abstractMethod->getParameter(0)->getType()
     );

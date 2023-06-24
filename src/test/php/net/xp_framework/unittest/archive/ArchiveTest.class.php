@@ -4,6 +4,7 @@ use io\File;
 use io\streams\{MemoryInputStream, MemoryOutputStream, Streams};
 use lang\archive\Archive;
 use lang\{ElementNotFoundException, FormatException};
+use unittest\Assert;
 use unittest\{Expect, Test};
 
 /**
@@ -13,7 +14,7 @@ use unittest\{Expect, Test};
  * @see  xp://net.xp_framework.unittest.archive.ArchiveV2Test
  * @see   xp://lang.archive.Archive
  */
-abstract class ArchiveTest extends \unittest\TestCase {
+abstract class ArchiveTest {
   
   /**
    * Returns the xar version to test
@@ -41,7 +42,7 @@ abstract class ArchiveTest extends \unittest\TestCase {
       $actual[$key]= $a->extract($key);
     }
     $a->close();
-    $this->assertEquals($entries, $actual);
+    Assert::equals($entries, $actual);
   }
   
   /**
@@ -69,21 +70,21 @@ abstract class ArchiveTest extends \unittest\TestCase {
   public function version_equals_stream_version() {
     $a= new Archive($this->file($this->version()));
     $a->open(Archive::READ);
-    $this->assertEquals($this->version(), $a->version);
+    Assert::equals($this->version(), $a->version);
   }
 
   #[Test]
   public function version_equals_resource_version() {
     $a= new Archive($this->resource('v'.$this->version().'.xar'));
     $a->open(Archive::READ);
-    $this->assertEquals($this->version(), $a->version);
+    Assert::equals($this->version(), $a->version);
   }
 
   #[Test]
   public function contains_non_existant() {
     $a= new Archive($this->file($this->version()));
     $a->open(Archive::READ);
-    $this->assertFalse($a->contains('DOES-NOT-EXIST'));
+    Assert::false($a->contains('DOES-NOT-EXIST'));
   }
 
   #[Test, Expect(ElementNotFoundException::class)]
@@ -104,7 +105,7 @@ abstract class ArchiveTest extends \unittest\TestCase {
   public function contains_existant() {
     $a= new Archive($this->resource('v'.$this->version().'.xar'));
     $a->open(Archive::READ);
-    $this->assertTrue($a->contains('contained.txt'));
+    Assert::true($a->contains('contained.txt'));
   }
 
   #[Test]

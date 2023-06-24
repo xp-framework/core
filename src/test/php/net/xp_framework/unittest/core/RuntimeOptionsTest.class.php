@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\RuntimeOptions;
+use unittest\Assert;
 use unittest\Test;
 
 /**
@@ -8,7 +9,7 @@ use unittest\Test;
  *
  * @see    xp://lang.RuntimeOptions
  */
-class RuntimeOptionsTest extends \unittest\TestCase {
+class RuntimeOptionsTest {
 
   /**
    * Assertion helper for `asArguments()` calls.
@@ -17,43 +18,43 @@ class RuntimeOptionsTest extends \unittest\TestCase {
    * @param  lang.RuntimeOptions $actual
    */
   private function assertArguments($expected, $actual) {
-    $this->assertEquals($expected, $actual->asArguments());
+    Assert::equals($expected, $actual->asArguments());
   }
 
   #[Test]
   public function switchAccessors() {
     $options= new RuntimeOptions();
-    $this->assertFalse($options->getSwitch('q'));
+    Assert::false($options->getSwitch('q'));
     $options->withSwitch('q');
-    $this->assertTrue($options->getSwitch('q'));
+    Assert::true($options->getSwitch('q'));
   }
 
   #[Test]
   public function getSetting() {
     $options= new RuntimeOptions();
-    $this->assertNull($options->getSetting('enable_dl'));
+    Assert::null($options->getSetting('enable_dl'));
   }
 
   #[Test]
   public function getSettingWithDefault() {
     $options= new RuntimeOptions();
-    $this->assertEquals(0, $options->getSetting('enable_dl', 0));
+    Assert::equals(0, $options->getSetting('enable_dl', 0));
   }
 
   #[Test]
   public function settingAccessors() {
     $options= new RuntimeOptions();
-    $this->assertNull($options->getSetting('memory_limit'));
+    Assert::null($options->getSetting('memory_limit'));
     $options->withSetting('memory_limit', ['128M']);
-    $this->assertEquals(['128M'], $options->getSetting('memory_limit'));
+    Assert::equals(['128M'], $options->getSetting('memory_limit'));
   }
 
   #[Test]
   public function settingAccessorsStringOverload() {
     $options= new RuntimeOptions();
-    $this->assertNull($options->getSetting('memory_limit'));
+    Assert::null($options->getSetting('memory_limit'));
     $options->withSetting('memory_limit', '128M');
-    $this->assertEquals(['128M'], $options->getSetting('memory_limit'));
+    Assert::equals(['128M'], $options->getSetting('memory_limit'));
   }
 
   #[Test]
@@ -61,7 +62,7 @@ class RuntimeOptionsTest extends \unittest\TestCase {
     $options= new RuntimeOptions();
     $options->withSetting('extension', 'php_xsl.dll', true);
     $options->withSetting('extension', 'php_sybase_ct.dll', true);
-    $this->assertEquals(
+    Assert::equals(
       ['php_xsl.dll', 'php_sybase_ct.dll'],
       $options->getSetting('extension')
     );
@@ -72,7 +73,7 @@ class RuntimeOptionsTest extends \unittest\TestCase {
     $options= new RuntimeOptions();
     $options->withSetting('extension', 'php_xsl.dll');
     $options->withSetting('extension', 'php_sybase_ct.dll');
-    $this->assertEquals(
+    Assert::equals(
       ['php_sybase_ct.dll'],
       $options->getSetting('extension')
     );
@@ -83,39 +84,39 @@ class RuntimeOptionsTest extends \unittest\TestCase {
     $options= new RuntimeOptions();
     $options->withSetting('encoding', 'utf-8');
     $options->withSetting('encoding', null);
-    $this->assertNull($options->getSetting('encoding'));
+    Assert::null($options->getSetting('encoding'));
   }
 
   #[Test]
   public function chainingSwitch() {
     $options= new RuntimeOptions();
-    $this->assertTrue($options === $options->withSwitch('q'));
+    Assert::true($options === $options->withSwitch('q'));
   }
 
   #[Test]
   public function chainingSetting() {
     $options= new RuntimeOptions();
-    $this->assertTrue($options === $options->withSetting('enable_dl', 0));
+    Assert::true($options === $options->withSetting('enable_dl', 0));
   }
 
   #[Test]
   public function getClassPath() {
     $options= new RuntimeOptions();
-    $this->assertEquals([], $options->getClassPath());
+    Assert::equals([], $options->getClassPath());
   }
 
   #[Test]
   public function withClassPath() {
     $options= new RuntimeOptions();
     $options->withClassPath(['/opt/xp/lib/mysql-1.0.0.xar']);
-    $this->assertEquals(['/opt/xp/lib/mysql-1.0.0.xar'], $options->getClassPath());
+    Assert::equals(['/opt/xp/lib/mysql-1.0.0.xar'], $options->getClassPath());
   }
 
   #[Test]
   public function withClassPathOverload() {
     $options= new RuntimeOptions();
     $options->withClassPath('/opt/xp/lib/mysql-1.0.0.xar');
-    $this->assertEquals(['/opt/xp/lib/mysql-1.0.0.xar'], $options->getClassPath());
+    Assert::equals(['/opt/xp/lib/mysql-1.0.0.xar'], $options->getClassPath());
   }
 
   #[Test]

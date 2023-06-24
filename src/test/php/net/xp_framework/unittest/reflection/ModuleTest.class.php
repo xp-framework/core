@@ -2,6 +2,7 @@
 
 use lang\reflect\Module;
 use lang\{ClassLoader, ElementNotFoundException};
+use unittest\Assert;
 use unittest\{Expect, Test};
 
 /**
@@ -9,7 +10,7 @@ use unittest\{Expect, Test};
  *
  * @see   xp://lang.ClassLoader
  */
-class ModuleTest extends \unittest\TestCase {
+class ModuleTest {
   private $cl;
   private $registered= [];
 
@@ -23,6 +24,7 @@ class ModuleTest extends \unittest\TestCase {
   }
 
   /** @return void */
+  #[After]
   public function tearDown() {
     foreach ($this->registered as $module) {
       Module::remove($module);
@@ -30,6 +32,7 @@ class ModuleTest extends \unittest\TestCase {
   }
 
   /** @return void */
+  #[Before]
   public function setUp() {
     $this->cl= ClassLoader::getDefault();
   }
@@ -41,27 +44,27 @@ class ModuleTest extends \unittest\TestCase {
 
   #[Test]
   public function name() {
-    $this->assertEquals('xp-framework/test', (new Module('xp-framework/test', $this->cl))->name());
+    Assert::equals('xp-framework/test', (new Module('xp-framework/test', $this->cl))->name());
   }
 
   #[Test]
   public function classLoader() {
-    $this->assertEquals($this->cl, (new Module('xp-framework/test', $this->cl))->classLoader());
+    Assert::equals($this->cl, (new Module('xp-framework/test', $this->cl))->classLoader());
   }
 
   #[Test]
   public function equals_same() {
-    $this->assertEquals(new Module('xp-framework/test', $this->cl), new Module('xp-framework/test', $this->cl));
+    Assert::equals(new Module('xp-framework/test', $this->cl), new Module('xp-framework/test', $this->cl));
   }
 
   #[Test]
   public function does_not_equal_module_with_different_name() {
-    $this->assertNotEquals(new Module('xp-framework/a', $this->cl), new Module('xp-framework/b', $this->cl));
+    Assert::notEquals(new Module('xp-framework/a', $this->cl), new Module('xp-framework/b', $this->cl));
   }
 
   #[Test]
   public function string_representation() {
-    $this->assertEquals(
+    Assert::equals(
       'lang.reflect.Module<xp-framework/test@lang.ClassLoader>',
       (new Module('xp-framework/test', $this->cl))->toString()
     );
@@ -69,21 +72,21 @@ class ModuleTest extends \unittest\TestCase {
 
   #[Test]
   public function loaded_returns_false_when_no_module_registered() {
-    $this->assertFalse(Module::loaded('@@non-existant@@'));
+    Assert::false(Module::loaded('@@non-existant@@'));
   }
 
   #[Test]
   public function loaded_returns_true_for_register_module() {
     $module= new Module('xp-framework/loaded1', $this->cl);
     $this->register($module);
-    $this->assertTrue(Module::loaded($module->name()));
+    Assert::true(Module::loaded($module->name()));
   }
 
   #[Test]
   public function forName_returns_registered_module() {
     $module= new Module('xp-framework/loaded2', $this->cl);
     $this->register($module);
-    $this->assertEquals($module, Module::forName($module->name()));
+    Assert::equals($module, Module::forName($module->name()));
   }
 
   #[Test, Expect(['class' => ElementNotFoundException::class, 'withMessage' => 'No module "@@non-existant@@" declared'])]
@@ -96,6 +99,6 @@ class ModuleTest extends \unittest\TestCase {
     $module= new Module('xp-framework/loaded1', $this->cl);
     Module::register($module);
     Module::remove($module);
-    $this->assertFalse(Module::loaded($module->name()));
+    Assert::false(Module::loaded($module->name()));
   }
 }

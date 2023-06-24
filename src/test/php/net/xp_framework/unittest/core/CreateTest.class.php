@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\{IllegalArgumentException, XPClass};
+use unittest\Assert;
 use unittest\{Expect, Test};
 
 /**
@@ -9,12 +10,12 @@ use unittest\{Expect, Test};
  * 
  * @see   http://news.xp-framework.net/article/184/2007/05/06/
  */
-class CreateTest extends \unittest\TestCase {
+class CreateTest {
 
   #[Test]
   public function create_with_all_qualified_names() {
     $h= create('new net.xp_framework.unittest.core.generics.Lookup<net.xp_framework.unittest.Name, net.xp_framework.unittest.Name>');
-    $this->assertEquals(
+    Assert::equals(
       [XPClass::forName('net.xp_framework.unittest.Name'), XPClass::forName('net.xp_framework.unittest.Name')], 
       typeof($h)->genericArguments()
     );
@@ -23,14 +24,14 @@ class CreateTest extends \unittest\TestCase {
   #[Test]
   public function create_can_be_used_with_type_variables() {
     $T= XPClass::forName('net.xp_framework.unittest.Name');
-    $this->assertEquals([$T], typeof(create("new net.xp_framework.unittest.core.generics.ListOf<$T>"))->genericArguments());
+    Assert::equals([$T], typeof(create("new net.xp_framework.unittest.core.generics.ListOf<$T>"))->genericArguments());
   }
 
   #[Test]
   public function create_invokes_constructor() {
-    $this->assertEquals(
+    Assert::equals(
       $this,
-      create('new net.xp_framework.unittest.core.generics.ListOf<unittest.TestCase>', $this)->elements()[0]
+      create('new net.xp_framework.unittest.core.generics.ListOf<net.xp_framework.unittest.core.CreateTest>', $this)->elements()[0]
     );
   }
 

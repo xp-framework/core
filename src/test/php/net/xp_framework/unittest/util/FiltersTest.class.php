@@ -1,10 +1,11 @@
 <?php namespace net\xp_framework\unittest\util;
- 
+
 use lang\{IllegalArgumentException, IllegalStateException};
+use unittest\Assert;
 use unittest\{Expect, Test, TestCase, Values};
 use util\{Filter, Filters};
 
-class FiltersTest extends TestCase {
+class FiltersTest {
 
   /**
    * Helper method
@@ -54,19 +55,19 @@ class FiltersTest extends TestCase {
   public function add_filter() {
     $filters= create('new util.Filters<int>', [], Filters::$ALL);
     $filters->add(newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }]));
-    $this->assertTrue($filters->accept(2));
+    Assert::true($filters->accept(2));
   }
 
   #[Test]
   public function set_accepting() {
     $filters= create('new util.Filters<int>', [newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }])]);
     $filters->accepting(Filters::$ALL);
-    $this->assertTrue($filters->accept(2));
+    Assert::true($filters->accept(2));
   }
 
   #[Test]
   public function fluent_interface() {
-    $this->assertTrue(create('new util.Filters<int>')
+    Assert::true(create('new util.Filters<int>')
       ->add(newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }]))
       ->accepting(Filters::$ALL)
       ->accept(2)
@@ -83,7 +84,7 @@ class FiltersTest extends TestCase {
 
   #[Test]
   public function allOf() {
-    $this->assertEquals([2, 3], iterator_to_array($this->filter([1, 2, 3, 4], Filters::allOf([
+    Assert::equals([2, 3], iterator_to_array($this->filter([1, 2, 3, 4], Filters::allOf([
       newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }]),
       newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e < 4; }])
     ]))));
@@ -91,7 +92,7 @@ class FiltersTest extends TestCase {
 
   #[Test]
   public function anyOf() {
-    $this->assertEquals(['Hello', 'World', '!'], iterator_to_array($this->filter(['Hello', 'test', '', 'World', '!'], Filters::anyOf([
+    Assert::equals(['Hello', 'World', '!'], iterator_to_array($this->filter(['Hello', 'test', '', 'World', '!'], Filters::anyOf([
       newinstance('util.Filter<string>', [], ['accept' => function($e) { return 1 === strlen($e); }]),
       newinstance('util.Filter<string>', [], ['accept' => function($e) { return strlen($e) > 0 && ord($e[0]) < 97; }])
     ]))));
@@ -99,7 +100,7 @@ class FiltersTest extends TestCase {
 
   #[Test]
   public function noneOf() {
-    $this->assertEquals(['index.html'], iterator_to_array($this->filter(['file.txt', 'index.html', 'test.php'], Filters::noneOf([
+    Assert::equals(['index.html'], iterator_to_array($this->filter(['file.txt', 'index.html', 'test.php'], Filters::noneOf([
       newinstance('util.Filter<string>', [], ['accept' => function($e) { return strstr($e, 'test'); }]),
       newinstance('util.Filter<string>', [], ['accept' => function($e) { return strstr($e, '.txt'); }])
     ]))));

@@ -3,6 +3,7 @@
 use io\IOException;
 use io\streams\{ChannelInputStream, ChannelOutputStream};
 use lang\Runnable;
+use unittest\Assert;
 use unittest\{Expect, Test};
 
 /**
@@ -11,7 +12,7 @@ use unittest\{Expect, Test};
  * @see      xp://io.streams.ChannelOutputStream
  * @see      xp://io.streams.ChannelInputStream
  */
-class ChannelStreamTest extends \unittest\TestCase {
+class ChannelStreamTest {
 
   #[Test, Expect(IOException::class)]
   public function invalidOutputChannelName() {
@@ -78,7 +79,7 @@ class ChannelStreamTest extends \unittest\TestCase {
         $s->write("+OK Hello");
       }
     });
-    $this->assertEquals('+OK Hello', $r['output']);
+    Assert::equals('+OK Hello', $r['output']);
   }
 
   #[Test]
@@ -89,7 +90,7 @@ class ChannelStreamTest extends \unittest\TestCase {
         $s->write("+OK Hello");
       }
     });
-    $this->assertEquals('+OK Hello', $r['stdout']);
+    Assert::equals('+OK Hello', $r['stdout']);
   }
 
   #[Test]
@@ -100,7 +101,7 @@ class ChannelStreamTest extends \unittest\TestCase {
         $s->write("+OK Hello");
       }
     });
-    $this->assertEquals('+OK Hello', $r['stderr']);
+    Assert::equals('+OK Hello', $r['stderr']);
   }
 
   #[Test]
@@ -114,7 +115,7 @@ class ChannelStreamTest extends \unittest\TestCase {
         }
       }
     }, ['stdin' => '+OK Piped input']);
-    $this->assertEquals('+OK Piped input', $r['stdout']);
+    Assert::equals('+OK Piped input', $r['stdout']);
   }
 
   #[Test]
@@ -128,18 +129,18 @@ class ChannelStreamTest extends \unittest\TestCase {
         }
       }
     }, ['input' => '+OK Piped input']);      
-    $this->assertEquals('+OK Piped input', $r['stdout']);
+    Assert::equals('+OK Piped input', $r['stdout']);
   }
 
   #[Test]
   public function input_name() {
     $s= new ChannelInputStream('input');
-    $this->assertEquals('io.streams.ChannelInputStream(channel=input)', $s->toString());
+    Assert::equals('io.streams.ChannelInputStream(channel=input)', $s->toString());
   }
 
   #[Test]
   public function output_name() {
     $s= new ChannelOutputStream('output');
-    $this->assertEquals('io.streams.ChannelOutputStream(channel=output)', $s->toString());
+    Assert::equals('io.streams.ChannelOutputStream(channel=output)', $s->toString());
   }
 }

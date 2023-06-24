@@ -14,9 +14,9 @@ use lang\{
 };
 use net\xp_framework\unittest\Name;
 use unittest\actions\RuntimeVersion;
-use unittest\{Expect, Test, TestCase, Values, Action};
+use unittest\{Assert, Action, Expect, Test, TestCase, Values};
 
-class TypeUnionTest extends TestCase {
+class TypeUnionTest {
 
   /** @return iterable */
   private function instances() {
@@ -83,7 +83,7 @@ class TypeUnionTest extends TestCase {
 
   #[Test, Values(['string|int', 'string | int', 'int|string'])]
   public function forName($literal) {
-    $this->assertEquals(
+    Assert::equals(
       new TypeUnion([Primitive::$STRING, Primitive::$INT]),
       TypeUnion::forName($literal)
     );
@@ -91,7 +91,7 @@ class TypeUnionTest extends TestCase {
 
   #[Test, Values(['string|int', 'string | int', '(string|int)', '(string | int)'])]
   public function forName_from_Type_class($literal) {
-    $this->assertEquals(
+    Assert::equals(
       new TypeUnion([Primitive::$STRING, Primitive::$INT]),
       Type::forName($literal)
     );
@@ -100,22 +100,22 @@ class TypeUnionTest extends TestCase {
   #[Test]
   public function types() {
     $types= [Primitive::$STRING, Primitive::$INT];
-    $this->assertEquals($types, (new TypeUnion($types))->types());
+    Assert::equals($types, (new TypeUnion($types))->types());
   }
 
   #[Test, Values('instances')]
   public function is_instance_of_a_string_int_union($value) {
-    $this->assertTrue((new TypeUnion([Primitive::$STRING, Primitive::$INT]))->isInstance($value));
+    Assert::true((new TypeUnion([Primitive::$STRING, Primitive::$INT]))->isInstance($value));
   }
 
   #[Test, Values('notInstancesAndNull')]
   public function is_not_instance_of_a_string_int_union($value) {
-    $this->assertFalse((new TypeUnion([Primitive::$STRING, Primitive::$INT]))->isInstance($value));
+    Assert::false((new TypeUnion([Primitive::$STRING, Primitive::$INT]))->isInstance($value));
   }
 
   #[Test, Values('instances')]
   public function new_instance_of_a_string_int_union($value) {
-    $this->assertEquals(
+    Assert::equals(
       $value,
       (new TypeUnion([Primitive::$STRING, Primitive::$INT]))->newInstance($value)
     );
@@ -123,7 +123,7 @@ class TypeUnionTest extends TestCase {
 
   #[Test, Expect(IllegalArgumentException::class), Values('notInstancesAndNull')]
   public function cannot_create_instances_of_a_string_int_union($value) {
-    $this->assertEquals(
+    Assert::equals(
       $value,
       (new TypeUnion([Primitive::$STRING, Primitive::$INT]))->newInstance($value)
     );
@@ -131,7 +131,7 @@ class TypeUnionTest extends TestCase {
 
   #[Test, Values('instancesAndNull')]
   public function cast_to_a_string_int_union($value) {
-    $this->assertEquals(
+    Assert::equals(
       $value,
       (new TypeUnion([Primitive::$STRING, Primitive::$INT]))->cast($value)
     );
@@ -139,7 +139,7 @@ class TypeUnionTest extends TestCase {
 
   #[Test, Expect(ClassCastException::class), Values('notInstances')]
   public function cannot_cast_to_a_string_int_union($value) {
-    $this->assertEquals(
+    Assert::equals(
       $value,
       (new TypeUnion([Primitive::$STRING, Primitive::$INT]))->cast($value)
     );
@@ -148,18 +148,18 @@ class TypeUnionTest extends TestCase {
   #[Test, Values('isAssignable')]
   public function is_assignable_from($type) {
     $union= new TypeUnion([Primitive::$STRING, Primitive::$INT, typeof($this)]);
-    $this->assertTrue($union->isAssignableFrom($type));
+    Assert::true($union->isAssignableFrom($type));
   }
 
   #[Test, Values('notAssignable')]
   public function is_not_assignable_from($type) {
     $union= new TypeUnion([Primitive::$STRING, Primitive::$INT, typeof($this)]);
-    $this->assertFalse($union->isAssignableFrom($type));
+    Assert::false($union->isAssignableFrom($type));
   }
 
   #[Test]
   public function string_or_int_array() {
-    $this->assertEquals(
+    Assert::equals(
       new TypeUnion([Primitive::$STRING, new ArrayType(Primitive::$INT)]),
       Type::forName('string|int[]')
     );
@@ -167,7 +167,7 @@ class TypeUnionTest extends TestCase {
 
   #[Test]
   public function string_array_or_int() {
-    $this->assertEquals(
+    Assert::equals(
       new TypeUnion([new ArrayType(Primitive::$STRING), Primitive::$INT]),
       Type::forName('string[]|int')
     );
@@ -175,7 +175,7 @@ class TypeUnionTest extends TestCase {
 
   #[Test]
   public function array_of_type_unions() {
-    $this->assertEquals(
+    Assert::equals(
       new ArrayType(new TypeUnion([Primitive::$STRING, Primitive::$INT])),
       Type::forName('(string|int)[]')
     );
@@ -183,7 +183,7 @@ class TypeUnionTest extends TestCase {
 
   #[Test]
   public function literal() {
-    $this->assertEquals(
+    Assert::equals(
       "\xb5\xfestring\xb8\xfeint",
       (new TypeUnion([Primitive::$STRING, Primitive::$INT]))->literal()
     );
@@ -192,7 +192,7 @@ class TypeUnionTest extends TestCase {
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
   public function php8_native_union_field_type() {
     $f= eval('return new class() { public int|string $fixture; };');
-    $this->assertEquals(
+    Assert::equals(
       new TypeUnion([Primitive::$INT, Primitive::$STRING]),
       typeof($f)->getField('fixture')->getType()
     );
@@ -201,7 +201,7 @@ class TypeUnionTest extends TestCase {
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
   public function php8_native_union_param_type() {
     $f= eval('return new class() { public function fixture(int|string $arg) { } };');
-    $this->assertEquals(
+    Assert::equals(
       new TypeUnion([Primitive::$INT, Primitive::$STRING]),
       typeof($f)->getMethod('fixture')->getParameter(0)->getType()
     );
@@ -210,7 +210,7 @@ class TypeUnionTest extends TestCase {
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
   public function php8_native_union_return_type() {
     $f= eval('return new class() { public function fixture(): int|string { } };');
-    $this->assertEquals(
+    Assert::equals(
       new TypeUnion([Primitive::$INT, Primitive::$STRING]),
       typeof($f)->getMethod('fixture')->getReturnType()
     );
@@ -219,7 +219,7 @@ class TypeUnionTest extends TestCase {
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
   public function php8_native_nullable_union_type() {
     $f= eval('return new class() { public function fixture(int|string|null $arg) { } };');
-    $this->assertEquals(
+    Assert::equals(
       new Nullable(new TypeUnion([Primitive::$INT, Primitive::$STRING])),
       typeof($f)->getMethod('fixture')->getParameter(0)->getType()
     );
@@ -228,19 +228,19 @@ class TypeUnionTest extends TestCase {
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
   public function php8_native_nullable_union_field_type_name() {
     $f= eval('return new class() { public int|string|null $fixture; };');
-    $this->assertEquals('?', typeof($f)->getField('fixture')->getTypeName()[0]);
+    Assert::equals('?', typeof($f)->getField('fixture')->getTypeName()[0]);
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
   public function php8_native_nullable_union_param_type_name() {
     $f= eval('return new class() { public function fixture(int|string|null $arg) { } };');
-    $this->assertEquals('?', typeof($f)->getMethod('fixture')->getParameter(0)->getTypeName()[0]);
+    Assert::equals('?', typeof($f)->getMethod('fixture')->getParameter(0)->getTypeName()[0]);
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
   public function php8_native_nullable_union_return_type_name() {
     $f= eval('return new class() { public function fixture(): int|string|null { } };');
-    $this->assertEquals('?', typeof($f)->getMethod('fixture')->getReturnTypeName()[0]);
+    Assert::equals('?', typeof($f)->getMethod('fixture')->getReturnTypeName()[0]);
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
@@ -254,7 +254,7 @@ class TypeUnionTest extends TestCase {
         public self|Name|Countable|\ArrayObject $fixture;
       };'
     ));
-    $this->assertEquals(
+    Assert::equals(
       new TypeUnion([$t, new XPClass(Name::class), new XPClass(\Countable::class), new XPClass(\ArrayObject::class)]),
       $t->getField('fixture')->getType()
     );

@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\{Type, Runnable};
+use lang\{Runnable, Type};
+use unittest\Assert;
 use unittest\Test;
 use util\Date;
 use util\collections\{HashTable, Vector};

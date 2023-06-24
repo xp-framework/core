@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use unittest\Generic;
-use util\{Objects, NoSuchElementException};
+use util\{NoSuchElementException, Objects};
 
 /**
  * Lookup map

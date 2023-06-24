@@ -1,12 +1,13 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\ClassLoader;
+use unittest\Assert;
 use unittest\Test;
 
 /**
  * References test.
  */
-class ReferencesTest extends \unittest\TestCase {
+class ReferencesTest {
 
   static function __static() {
     
@@ -46,7 +47,7 @@ class ReferencesTest extends \unittest\TestCase {
    * @throws  unittest.AssertionFailedError
    */
   protected function assertReference($a, $b) {
-    $this->assertTrue($a === $b);
+    Assert::true($a === $b);
   }
 
   #[Test]

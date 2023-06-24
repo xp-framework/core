@@ -1,10 +1,11 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\{ClassLoader, Primitive, Nullable, TypeUnion};
+use lang\{ClassLoader, Nullable, Primitive, TypeUnion};
+use unittest\Assert;
 use unittest\actions\RuntimeVersion;
 use unittest\{Action, Test, TestCase};
 
-class TypeSyntaxTest extends TestCase {
+class TypeSyntaxTest {
   private static $spec= ['kind' => 'class', 'extends' => null, 'implements' => [], 'use' => []];
 
   /**
@@ -32,49 +33,49 @@ class TypeSyntaxTest extends TestCase {
   #[Test, Action(eval: 'new RuntimeVersion(">=7.4")')]
   public function primitive_type() {
     $d= $this->field('private string $fixture;');
-    $this->assertEquals(Primitive::$STRING, $d->getType());
-    $this->assertEquals('string', $d->getTypeName());
+    Assert::equals(Primitive::$STRING, $d->getType());
+    Assert::equals('string', $d->getTypeName());
   }
 
   #[Test]
   public function return_primitive_type() {
     $d= $this->method('function fixture(): string { return "Test"; }');
-    $this->assertEquals(Primitive::$STRING, $d->getReturnType());
-    $this->assertEquals('string', $d->getReturnTypeName());
+    Assert::equals(Primitive::$STRING, $d->getReturnType());
+    Assert::equals('string', $d->getReturnTypeName());
   }
 
   #[Test]
   public function parameter_primitive_type() {
     $d= $this->method('function fixture(string $name) { }');
-    $this->assertEquals(Primitive::$STRING, $d->getParameter(0)->getType());
-    $this->assertEquals('string', $d->getParameter(0)->getTypeName());
+    Assert::equals(Primitive::$STRING, $d->getParameter(0)->getType());
+    Assert::equals('string', $d->getParameter(0)->getTypeName());
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0")')]
   public function union_type() {
     $d= $this->field('private string|int $fixture;');
-    $this->assertEquals(new TypeUnion([Primitive::$STRING, Primitive::$INT]), $d->getType());
-    $this->assertEquals('string|int', $d->getTypeName());
+    Assert::equals(new TypeUnion([Primitive::$STRING, Primitive::$INT]), $d->getType());
+    Assert::equals('string|int', $d->getTypeName());
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0")')]
   public function nullable_union_type() {
     $d= $this->field('private string|int|null $fixture;');
-    $this->assertEquals(new Nullable(new TypeUnion([Primitive::$STRING, Primitive::$INT])), $d->getType());
-    $this->assertEquals('?string|int', $d->getTypeName());
+    Assert::equals(new Nullable(new TypeUnion([Primitive::$STRING, Primitive::$INT])), $d->getType());
+    Assert::equals('?string|int', $d->getTypeName());
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0")')]
   public function return_union_type() {
     $d= $this->method('function fixture(): string|int { return "Test"; }');
-    $this->assertEquals(new TypeUnion([Primitive::$STRING, Primitive::$INT]), $d->getReturnType());
-    $this->assertEquals('string|int', $d->getReturnTypeName());
+    Assert::equals(new TypeUnion([Primitive::$STRING, Primitive::$INT]), $d->getReturnType());
+    Assert::equals('string|int', $d->getReturnTypeName());
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0")')]
   public function parameter_union_type() {
     $d= $this->method('function fixture(string|int $name) { }');
-    $this->assertEquals(new TypeUnion([Primitive::$STRING, Primitive::$INT]), $d->getParameter(0)->getType());
-    $this->assertEquals('string|int', $d->getParameter(0)->getTypeName());
+    Assert::equals(new TypeUnion([Primitive::$STRING, Primitive::$INT]), $d->getParameter(0)->getType());
+    Assert::equals('string|int', $d->getParameter(0)->getTypeName());
   }
 }

@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use io\streams\MemoryInputStream;
+use unittest\Assert;
 use util\Properties;
 
 /**

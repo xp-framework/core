@@ -4,16 +4,9 @@ use unittest\Action;
 use unittest\actions\ExtensionAvailable;
 use util\Secret;
 
-/**
- * Testcase for openssl backed security.Secret implementation
- */
 #[Action(eval: 'new ExtensionAvailable("openssl")')]
 class OpenSSLSecretTest extends SecretTest {
 
-  /**
-   * Use OPENSSL backing
-   */
-  public function setUp() {
-    Secret::useBacking(Secret::BACKING_OPENSSL);
-  }
+  /** @return int */
+  protected function backing() { return Secret::BACKING_OPENSSL; }
 }

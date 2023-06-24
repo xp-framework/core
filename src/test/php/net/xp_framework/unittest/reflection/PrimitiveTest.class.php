@@ -3,34 +3,35 @@
 use io\streams\{MemoryInputStream, Streams};
 use lang\{ClassCastException, IllegalArgumentException, Primitive};
 use net\xp_framework\unittest\Name;
+use unittest\Assert;
 use unittest\actions\RuntimeVersion;
 use unittest\{Expect, Test, TestCase, Values};
 
-class PrimitiveTest extends TestCase {
+class PrimitiveTest {
 
   #[Test]
   public function string_primitive() {
-    $this->assertEquals(Primitive::$STRING, Primitive::forName('string'));
+    Assert::equals(Primitive::$STRING, Primitive::forName('string'));
   }
 
   #[Test]
   public function int_primitive() {
-    $this->assertEquals(Primitive::$INT, Primitive::forName('int'));
+    Assert::equals(Primitive::$INT, Primitive::forName('int'));
   }
 
   #[Test]
   public function float_primitive() {
-    $this->assertEquals(Primitive::$FLOAT, Primitive::forName('float'));
+    Assert::equals(Primitive::$FLOAT, Primitive::forName('float'));
   }
 
   #[Test]
   public function bool_primitive() {
-    $this->assertEquals(Primitive::$BOOL, Primitive::forName('bool'));
+    Assert::equals(Primitive::$BOOL, Primitive::forName('bool'));
   }
 
   #[Test]
   public function float_primitive_double_alias() {
-    $this->assertEquals(Primitive::$FLOAT, Primitive::forName('double'));
+    Assert::equals(Primitive::$FLOAT, Primitive::forName('double'));
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
@@ -67,122 +68,122 @@ class PrimitiveTest extends TestCase {
 
   #[Test, Values(['', 'Hello'])]
   public function isAnInstanceOfString_primitive($value) {
-    $this->assertTrue(Primitive::$STRING->isInstance($value));
+    Assert::true(Primitive::$STRING->isInstance($value));
   }
   
   #[Test, Values(['source' => 'instances', 'args' => [['', 'Hello']]])]
   public function notInstanceOfString_primitive($value) {
-    $this->assertFalse(Primitive::$STRING->isInstance($value));
+    Assert::false(Primitive::$STRING->isInstance($value));
   }
 
   #[Test, Values([0, -1])]
   public function isAnInstanceOfInteger_primitive($value) {
-    $this->assertTrue(Primitive::$INT->isInstance($value));
+    Assert::true(Primitive::$INT->isInstance($value));
   }
 
   #[Test, Values(['source' => 'instances', 'args' => [[0, -1]]])]
   public function notInstanceOfInteger_primitive($value) {
-    $this->assertFalse(Primitive::$INT->isInstance($value));
+    Assert::false(Primitive::$INT->isInstance($value));
   }
 
   #[Test, Values([0.0, -1.5])]
   public function isAnInstanceOfDouble_primitive($value) {
-    $this->assertTrue(Primitive::$FLOAT->isInstance($value));
+    Assert::true(Primitive::$FLOAT->isInstance($value));
   }
 
   #[Test, Values(['source' => 'instances', 'args' => [[0.0, -1.5]]])]
   public function notInstanceOfDouble_primitive($value) {
-    $this->assertFalse(Primitive::$FLOAT->isInstance($value));
+    Assert::false(Primitive::$FLOAT->isInstance($value));
   }
 
   #[Test, Values([false, true])]
   public function isAnInstanceOfBoolean_primitive($value) {
-    $this->assertTrue(Primitive::$BOOL->isInstance($value));
+    Assert::true(Primitive::$BOOL->isInstance($value));
   }
 
   #[Test, Values(['source' => 'instances', 'args' => [[false, true]]])]
   public function notInstanceOfBoolean_primitive($value) {
-    $this->assertFalse(Primitive::$BOOL->isInstance($value));
+    Assert::false(Primitive::$BOOL->isInstance($value));
   }
 
   #[Test]
   public function stringIsAssignableFromString() {
-    $this->assertTrue(Primitive::$STRING->isAssignableFrom('string'));
+    Assert::true(Primitive::$STRING->isAssignableFrom('string'));
   }
 
   #[Test]
   public function stringIsAssignableFromStringType() {
-    $this->assertTrue(Primitive::$STRING->isAssignableFrom(Primitive::$STRING));
+    Assert::true(Primitive::$STRING->isAssignableFrom(Primitive::$STRING));
   }
 
   #[Test]
   public function stringIsNotAssignableFromIntType() {
-    $this->assertFalse(Primitive::$STRING->isAssignableFrom(Primitive::$INT));
+    Assert::false(Primitive::$STRING->isAssignableFrom(Primitive::$INT));
   }
 
   #[Test]
   public function stringIsNotAssignableFromClassType() {
-    $this->assertFalse(Primitive::$STRING->isAssignableFrom(typeof($this)));
+    Assert::false(Primitive::$STRING->isAssignableFrom(typeof($this)));
   }
 
   #[Test]
   public function stringIsNotAssignableFromStringArray() {
-    $this->assertFalse(Primitive::$STRING->isAssignableFrom('string[]'));
+    Assert::false(Primitive::$STRING->isAssignableFrom('string[]'));
   }
 
   #[Test]
   public function stringIsNotAssignableFromStringMap() {
-    $this->assertFalse(Primitive::$STRING->isAssignableFrom('[:string]'));
+    Assert::false(Primitive::$STRING->isAssignableFrom('[:string]'));
   }
 
   #[Test]
   public function stringIsNotAssignableFromVar() {
-    $this->assertFalse(Primitive::$STRING->isAssignableFrom('var'));
+    Assert::false(Primitive::$STRING->isAssignableFrom('var'));
   }
 
   #[Test]
   public function stringIsNotAssignableFromVoid() {
-    $this->assertFalse(Primitive::$STRING->isAssignableFrom('void'));
+    Assert::false(Primitive::$STRING->isAssignableFrom('void'));
   }
 
   #[Test, Values([['', ''], ['Test', 'Test'], ['', null], ['0', 0], ['-1', -1], ['0.5', 0.5], ['', false], ['1', true]])]
   public function newInstance_of_string($expected, $value) {
-    $this->assertEquals($expected, Primitive::$STRING->newInstance($value));
+    Assert::equals($expected, Primitive::$STRING->newInstance($value));
   }
 
   #[Test, Values([[0, ''], [0, 'Test'], [2, '2'], [123, '123'], [0xFF, '0xFF'], [0755, '0755'], [0, null], [0, 0], [-1, -1], [0, 0.5], [0, false], [1, true]])]
   public function newInstance_of_int($expected, $value) {
-    $this->assertEquals($expected, Primitive::$INT->newInstance($value));
+    Assert::equals($expected, Primitive::$INT->newInstance($value));
   }
 
   #[Test, Values([[0.0, ''], [0.0, 'Test'], [123.0, '123'], [0.0, '0xFF'], [755.0, '0755'], [0.0, null], [0.0, 0], [-1.0, -1], [0.5, 0.5], [0.0, false]])]
   public function newInstance_of_double($expected, $value) {
-    $this->assertEquals($expected, Primitive::$FLOAT->newInstance($value));
+    Assert::equals($expected, Primitive::$FLOAT->newInstance($value));
   }
 
   #[Test, Values([[false, ''], [true, 'Test'], [false, null], [false, 0], [true, -1], [true, 0.5], [false, false], [true, true]])]
   public function newInstance_of_bool($expected, $value) {
-    $this->assertEquals($expected, Primitive::$BOOL->newInstance($value));
+    Assert::equals($expected, Primitive::$BOOL->newInstance($value));
   }
 
   #[Test, Values([['', ''], ['Test', 'Test'], [null, null], ['0', 0], ['-1', -1], ['0.5', 0.5], ['', false], ['1', true]])]
   public function cast_of_string($expected, $value) {
-    $this->assertEquals($expected, Primitive::$STRING->cast($value));
+    Assert::equals($expected, Primitive::$STRING->cast($value));
   }
 
   #[Test, Values([[0, ''], [0, 'Test'], [2, '2'], [123, '123'], [0xFF, '0xFF'], [0755, '0755'], [null, null], [0, 0], [-1, -1], [0, 0.5], [0, false], [1, true]])]
   public function cast_of_int($expected, $value) {
-    $this->assertEquals($expected, Primitive::$INT->cast($value));
+    Assert::equals($expected, Primitive::$INT->cast($value));
   }
 
   #[Test, Values([[0.0, ''], [0.0, 'Test'], [123.0, '123'], [0.0, '0xFF'], [755.0, '0755'], [null, null], [0.0, 0], [-1.0, -1], [0.5, 0.5], [0.0, false]])]
   public function cast_of_double($expected, $value) {
-    $this->assertEquals($expected, Primitive::$FLOAT->cast($value));
+    Assert::equals($expected, Primitive::$FLOAT->cast($value));
   }
 
   #[Test, Values([[false, ''], [true, 'Test'], [null, null], [false, 0], [true, -1], [true, 0.5], [false, false], [true, true]])]
   public function cast_of_bool($expected, $value) {
-    $this->assertEquals($expected, Primitive::$BOOL->cast($value));
+    Assert::equals($expected, Primitive::$BOOL->cast($value));
   }
 
   #[Test, Expect(IllegalArgumentException::class), Values(['int', 'double', 'bool', 'string'])]

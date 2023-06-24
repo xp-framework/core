@@ -3,6 +3,7 @@
 use lang\archive\{Archive, ArchiveClassLoader};
 use lang\reflect\Package;
 use lang\{ClassLoader, ElementNotFoundException, IllegalArgumentException, XPClass};
+use unittest\Assert;
 use unittest\{Expect, Test};
 use util\Objects;
 
@@ -11,7 +12,7 @@ use util\Objects;
  *
  * @see   xp://lang.reflect.Package
  */
-class PackageTest extends \unittest\TestCase {
+class PackageTest {
   protected static
     $testClasses= [
       'ClassOne', 'ClassTwo', 'RecursionOne', 'RecursionTwo', 'InterfaceOne',
@@ -28,6 +29,7 @@ class PackageTest extends \unittest\TestCase {
    *
    * @return void
    */
+  #[Before]
   public function setUp() {
     $this->libraryLoader= ClassLoader::registerLoader(new ArchiveClassLoader(new Archive((new XPClass(self::class))
       ->getPackage()
@@ -42,13 +44,14 @@ class PackageTest extends \unittest\TestCase {
    *
    * @return void
    */
+  #[After]
   public function tearDown() {
     ClassLoader::removeLoader($this->libraryLoader);
   }
 
   #[Test]
   public function packageName() {
-    $this->assertEquals(
+    Assert::equals(
       'net.xp_framework.unittest.reflection.classes', 
       Package::forName('net.xp_framework.unittest.reflection.classes')->getName()
     );
@@ -63,13 +66,13 @@ class PackageTest extends \unittest\TestCase {
   public function providesTestClasses() {
     $p= Package::forName('net.xp_framework.unittest.reflection.classes');
     foreach (self::$testClasses as $name) {
-      $this->assertTrue($p->providesClass($name), $name);
+      Assert::true($p->providesClass($name), $name);
     }
   }
 
   #[Test]
   public function loadClassByName() {
-    $this->assertEquals(
+    Assert::equals(
       XPClass::forName('net.xp_framework.unittest.reflection.classes.ClassOne'),
       Package::forName('net.xp_framework.unittest.reflection.classes')->loadClass('ClassOne')
     );
@@ -77,7 +80,7 @@ class PackageTest extends \unittest\TestCase {
 
   #[Test]
   public function loadClassByQualifiedName() {
-    $this->assertEquals(
+    Assert::equals(
       XPClass::forName('net.xp_framework.unittest.reflection.classes.ClassThree'),
       Package::forName('net.xp_framework.unittest.reflection.classes')->loadClass('net.xp_framework.unittest.reflection.classes.ClassThree')
     );
@@ -90,7 +93,7 @@ class PackageTest extends \unittest\TestCase {
 
   #[Test]
   public function classPackage() {
-    $this->assertEquals(
+    Assert::equals(
       Package::forName('net.xp_framework.unittest.reflection.classes'),
       XPClass::forName('net.xp_framework.unittest.reflection.classes.ClassOne')->getPackage()
     );
@@ -99,7 +102,7 @@ class PackageTest extends \unittest\TestCase {
   #[Test]
   public function fileSystemClassPackageProvided() {
     $class= XPClass::forName('net.xp_framework.unittest.reflection.classes.ClassOne');
-    $this->assertTrue($class
+    Assert::true($class
       ->getClassLoader()
       ->providesPackage($class->getPackage()->getName())
     );
@@ -108,7 +111,7 @@ class PackageTest extends \unittest\TestCase {
   #[Test]
   public function archiveClassPackageProvided() {
     $class= XPClass::forName('net.xp_framework.unittest.reflection.classes.ClassThree');
-    $this->assertTrue($class
+    Assert::true($class
       ->getClassLoader()
       ->providesPackage($class->getPackage()->getName())
     );
@@ -116,16 +119,16 @@ class PackageTest extends \unittest\TestCase {
 
   #[Test]
   public function doesNotProvideNonExistantClass() {
-    $this->assertFalse(Package::forName('net.xp_framework.unittest.reflection.classes')->providesClass('@@non-existant-class@@'));
+    Assert::false(Package::forName('net.xp_framework.unittest.reflection.classes')->providesClass('@@non-existant-class@@'));
   }
 
   #[Test]
   public function getTestClassNames() {
     $base= 'net.xp_framework.unittest.reflection.classes';
     $names= Package::forName($base)->getClassNames();
-    $this->assertEquals(sizeof(self::$testClasses), sizeof($names), Objects::stringOf($names));
+    Assert::equals(sizeof(self::$testClasses), sizeof($names), Objects::stringOf($names));
     foreach ($names as $name) {
-      $this->assertTrue(
+      Assert::true(
         in_array(substr($name, strlen($base)+ 1), self::$testClasses), 
         $name
       );
@@ -136,9 +139,9 @@ class PackageTest extends \unittest\TestCase {
   public function getTestClasses() {
     $base= 'net.xp_framework.unittest.reflection.classes';
     $classes= Package::forName($base)->getClasses();
-    $this->assertEquals(sizeof(self::$testClasses), sizeof($classes), Objects::stringOf($classes));
+    Assert::equals(sizeof(self::$testClasses), sizeof($classes), Objects::stringOf($classes));
     foreach ($classes as $class) {
-      $this->assertTrue(
+      Assert::true(
         in_array(substr($class->getName(), strlen($base)+ 1), self::$testClasses), 
         $class->getName()
       );
@@ -149,9 +152,9 @@ class PackageTest extends \unittest\TestCase {
   public function getPackageNames() {
     $base= 'net.xp_framework.unittest.reflection';
     $names= Package::forName($base)->getPackageNames();
-    $this->assertEquals(sizeof(self::$testPackages), sizeof($names), Objects::stringOf($names));
+    Assert::equals(sizeof(self::$testPackages), sizeof($names), Objects::stringOf($names));
     foreach ($names as $name) {
-      $this->assertTrue(
+      Assert::true(
         in_array(substr($name, strlen($base)+ 1), self::$testPackages), 
         $name
       );
@@ -162,9 +165,9 @@ class PackageTest extends \unittest\TestCase {
   public function getPackages() {
     $base= 'net.xp_framework.unittest.reflection';
     $packages= Package::forName($base)->getPackages();
-    $this->assertEquals(sizeof(self::$testPackages), sizeof($packages), Objects::stringOf($packages));
+    Assert::equals(sizeof(self::$testPackages), sizeof($packages), Objects::stringOf($packages));
     foreach ($packages as $package) {
-      $this->assertTrue(
+      Assert::true(
         in_array(substr($package->getName(), strlen($base)+ 1), self::$testPackages), 
         $package->getName()
       );
@@ -173,7 +176,7 @@ class PackageTest extends \unittest\TestCase {
 
   #[Test]
   public function loadPackageByName() {
-    $this->assertEquals(
+    Assert::equals(
       Package::forName('net.xp_framework.unittest.reflection.classes'),
       Package::forName('net.xp_framework.unittest.reflection')->getPackage('classes')
     );
@@ -181,7 +184,7 @@ class PackageTest extends \unittest\TestCase {
 
   #[Test]
   public function loadPackageByQualifiedName() {
-    $this->assertEquals(
+    Assert::equals(
       Package::forName('net.xp_framework.unittest.reflection.classes'),
       Package::forName('net.xp_framework.unittest.reflection')->getPackage('net.xp_framework.unittest.reflection.classes')
     );
@@ -194,14 +197,14 @@ class PackageTest extends \unittest\TestCase {
 
   #[Test]
   public function thisPackageHasNoComment() {
-    $this->assertNull(
+    Assert::null(
       Package::forName('net.xp_framework.unittest.reflection')->getComment()
     );
   }
 
   #[Test]
   public function libPackageComment() {
-    $this->assertEquals(
+    Assert::equals(
       'Fixture libraries for package reflection tests',
       trim(Package::forName('net.xp_framework.unittest.reflection.lib')->getComment())
     );
@@ -209,17 +212,17 @@ class PackageTest extends \unittest\TestCase {
 
   #[Test]
   public function of_class() {
-    $this->assertEquals(Package::forName('net.xp_framework.unittest.reflection'), Package::of(self::class));
+    Assert::equals(Package::forName('net.xp_framework.unittest.reflection'), Package::of(self::class));
   }
 
   #[Test]
   public function of_nameof_this() {
-    $this->assertEquals(Package::forName('net.xp_framework.unittest.reflection'), Package::of(nameof($this)));
+    Assert::equals(Package::forName('net.xp_framework.unittest.reflection'), Package::of(nameof($this)));
   }
 
   #[Test]
   public function of_typeof_this() {
-    $this->assertEquals(Package::forName('net.xp_framework.unittest.reflection'), Package::of(typeof($this)));
+    Assert::equals(Package::forName('net.xp_framework.unittest.reflection'), Package::of(typeof($this)));
   }
 
   #[Test, Expect(ElementNotFoundException::class)]

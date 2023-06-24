@@ -1,18 +1,20 @@
 <?php namespace net\xp_framework\unittest;
 
 use lang\IllegalArgumentException;
+use unittest\Assert;
 use unittest\{Expect, Ignore, Limit, PrerequisitesNotMetError, Test};
 
 /**
  * Shows different test scenarios
  */
-class DemoTest extends \unittest\TestCase {
+class DemoTest {
 
   /**
    * Setup method
    *
    * @return void
    */
+  #[Before]
   public function setUp() {
     if ('alwaysSkipped' === $this->name) {
       throw new PrerequisitesNotMetError('Skipping', null, $this->name);
@@ -21,7 +23,7 @@ class DemoTest extends \unittest\TestCase {
 
   #[Test]
   public function alwaysSucceeds() {
-    $this->assertTrue(true);
+    Assert::true(true);
   }
 
   #[Test, Ignore('Ignored')]
@@ -36,7 +38,7 @@ class DemoTest extends \unittest\TestCase {
 
   #[Test]
   public function alwaysFails() {
-    $this->assertTrue(false);
+    Assert::true(false);
   }
 
   #[Test, Expect(IllegalArgumentException::class)]

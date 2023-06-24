@@ -2,6 +2,7 @@
 
 use lang\reflect\ClassParser;
 use lang\{ClassFormatException, XPClass};
+use unittest\Assert;
 use unittest\actions\RuntimeVersion;
 use unittest\{Action, Expect, Test, TestCase};
 
@@ -12,7 +13,7 @@ use unittest\{Action, Expect, Test, TestCase};
  * @see   https://github.com/xp-framework/xp-framework/pull/328
  * @see   https://github.com/xp-framework/xp-framework/issues/313
  */
-class BrokenAnnotationTest extends TestCase {
+class BrokenAnnotationTest {
 
   /**
    * Helper

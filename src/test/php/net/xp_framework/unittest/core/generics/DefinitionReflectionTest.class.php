@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
+use unittest\Assert;
 /**
  * TestCase for definition reflection
  *

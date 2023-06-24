@@ -2,6 +2,7 @@
 
 use lang\ElementNotFoundException;
 use lang\reflect\Field;
+use unittest\Assert;
 use unittest\{Expect, Test, Values};
 
 class FieldBasicsTest extends FieldsTest {
@@ -9,27 +10,27 @@ class FieldBasicsTest extends FieldsTest {
   #[Test]
   public function declaring_class() {
     $fixture= $this->type('{ public $declared; }');
-    $this->assertEquals($fixture, $fixture->getField('declared')->getDeclaringClass());
+    Assert::equals($fixture, $fixture->getField('declared')->getDeclaringClass());
   }
 
   #[Test]
   public function has_field_for_existant() {
-    $this->assertTrue($this->type('{ public $declared; }')->hasField('declared'));
+    Assert::true($this->type('{ public $declared; }')->hasField('declared'));
   }
 
   #[Test]
   public function has_field_for_non_existant() {
-    $this->assertFalse($this->type()->hasField('@@nonexistant@@'));
+    Assert::false($this->type()->hasField('@@nonexistant@@'));
   }
 
   #[Test]
   public function has_field_for_special() {
-    $this->assertFalse($this->type()->hasField('__id'));
+    Assert::false($this->type()->hasField('__id'));
   }
 
   #[Test]
   public function get_existant_Field() {
-    $this->assertInstanceOf(Field::class, $this->type('{ public $declared; }')->getField('declared'));
+    Assert::instance(Field::class, $this->type('{ public $declared; }')->getField('declared'));
   }
 
   #[Test, Expect(ElementNotFoundException::class)]
@@ -44,29 +45,29 @@ class FieldBasicsTest extends FieldsTest {
 
   #[Test]
   public function name() {
-    $this->assertEquals('fixture', $this->field('public $fixture;')->getName());
+    Assert::equals('fixture', $this->field('public $fixture;')->getName());
   }
 
   #[Test]
   public function equality() {
     $fixture= $this->type('{ public $fixture; }');
-    $this->assertEquals($fixture->getField('fixture'), $fixture->getField('fixture'));
+    Assert::equals($fixture->getField('fixture'), $fixture->getField('fixture'));
   }
 
   #[Test]
   public function a_field_is_not_equal_to_null() {
-    $this->assertNotEquals($this->field('public $fixture;'), null);
+    Assert::notEquals($this->field('public $fixture;'), null);
   }
 
   #[Test, Values([['public $fixture;', 'public var %s::$fixture'], ['private $fixture;', 'private var %s::$fixture'], ['protected $fixture;', 'protected var %s::$fixture'], ['static $fixture;', 'public static var %s::$fixture'], ['private static $fixture;', 'private static var %s::$fixture'], ['protected static $fixture;', 'protected static var %s::$fixture'], ['/** @var int */ public $fixture;', 'public int %s::$fixture']])]
   public function string_representation($declaration, $expected) {
     $fixture= $this->type('{ '.$declaration.' }');
-    $this->assertEquals(sprintf($expected, $fixture->getName()), $fixture->getField('fixture')->toString());
+    Assert::equals(sprintf($expected, $fixture->getName()), $fixture->getField('fixture')->toString());
   }
 
   #[Test]
   public function trait_field_type() {
-    $this->assertEquals('int', $this->type()->getField('NOT_INSTANCE')->getTypeName());
+    Assert::equals('int', $this->type()->getField('NOT_INSTANCE')->getTypeName());
   }
 
   #[Test]
@@ -74,7 +75,7 @@ class FieldBasicsTest extends FieldsTest {
     $fixture= $this->type('{ public $a= "Test", $b; }', [
       'use' => []
     ]);
-    $this->assertEquals(
+    Assert::equals(
       ['a', 'b'],
       array_map(function($f) { return $f->getName(); }, $fixture->getFields())
     );
@@ -86,7 +87,7 @@ class FieldBasicsTest extends FieldsTest {
       'use'     => [],
       'extends' => [AbstractTestClass::class]
     ]);
-    $this->assertEquals(
+    Assert::equals(
       ['declared', 'inherited'],
       array_map(function($f) { return $f->getName(); }, $fixture->getFields())
     );
@@ -97,7 +98,7 @@ class FieldBasicsTest extends FieldsTest {
     $fixture= $this->type('{ public $a= "Test", $b; }', [
       'use' => []
     ]);
-    $this->assertEquals(
+    Assert::equals(
       ['a', 'b'],
       array_map(function($f) { return $f->getName(); }, $fixture->getDeclaredFields())
     );

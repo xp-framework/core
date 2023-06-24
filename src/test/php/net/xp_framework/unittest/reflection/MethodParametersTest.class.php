@@ -16,7 +16,7 @@ use lang\{
 };
 use net\xp_framework\unittest\Name;
 use unittest\actions\RuntimeVersion;
-use unittest\{Action, Expect, Test, Values};
+use unittest\{Assert, Action, Expect, Test, Values};
 
 class MethodParametersTest extends MethodsTest {
 
@@ -53,8 +53,8 @@ class MethodParametersTest extends MethodsTest {
    * @param  lang.reflect.Parameter $param
    */
   private function assertParamType($expected, $param) {
-    $this->assertEquals($expected, $param->getType(), 'type');
-    $this->assertEquals($expected->getName(), $param->getTypeName(), 'name');
+    Assert::equals($expected, $param->getType(), 'type');
+    Assert::equals($expected->getName(), $param->getTypeName(), 'name');
   }
 
   #[Test]
@@ -122,31 +122,31 @@ class MethodParametersTest extends MethodsTest {
   #[Test]
   public function self_parameter_type() {
     $fixture= $this->type('{ public function fixture(self $param) { } }');
-    $this->assertEquals($fixture, $fixture->getMethod('fixture')->getParameter(0)->getType());
+    Assert::equals($fixture, $fixture->getMethod('fixture')->getParameter(0)->getType());
   }
 
   #[Test]
   public function self_parameter_typeName() {
     $fixture= $this->type('{ public function fixture(self $param) { } }');
-    $this->assertEquals('self', $fixture->getMethod('fixture')->getParameter(0)->getTypeName());
+    Assert::equals('self', $fixture->getMethod('fixture')->getParameter(0)->getTypeName());
   }
 
   #[Test]
   public function self_parameter_type_via_apidoc() {
     $fixture= $this->type('{ /** @param self $param */ public function fixture($param) { } }');
-    $this->assertEquals($fixture, $fixture->getMethod('fixture')->getParameter(0)->getType());
+    Assert::equals($fixture, $fixture->getMethod('fixture')->getParameter(0)->getType());
   }
 
   #[Test]
   public function self_parameter_typeName_via_apidoc() {
     $fixture= $this->type('{ /** @param self $param */ public function fixture($param) { } }');
-    $this->assertEquals('self', $fixture->getMethod('fixture')->getParameter(0)->getTypeName());
+    Assert::equals('self', $fixture->getMethod('fixture')->getParameter(0)->getTypeName());
   }
 
   #[Test]
   public function array_of_self_parameter_type_via_apidoc() {
     $fixture= $this->type('{ /** @param array<self> */ public function fixture($list) { } }');
-    $this->assertEquals(new ArrayType($fixture), $fixture->getMethod('fixture')->getParameter(0)->getType());
+    Assert::equals(new ArrayType($fixture), $fixture->getMethod('fixture')->getParameter(0)->getType());
   }
 
   #[Test]
@@ -154,7 +154,7 @@ class MethodParametersTest extends MethodsTest {
     $fixture= $this->type('{ public function fixture(parent $param) { } }', [
       'extends' => [Name::class]
     ]);
-    $this->assertEquals($fixture->getParentclass(), $fixture->getMethod('fixture')->getParameter(0)->getType());
+    Assert::equals($fixture->getParentclass(), $fixture->getMethod('fixture')->getParameter(0)->getType());
   }
 
   #[Test]
@@ -162,7 +162,7 @@ class MethodParametersTest extends MethodsTest {
     $fixture= $this->type('{ public function fixture(parent $param) { } }', [
       'extends' => [Name::class]
     ]);
-    $this->assertEquals('parent', $fixture->getMethod('fixture')->getParameter(0)->getTypeName());
+    Assert::equals('parent', $fixture->getMethod('fixture')->getParameter(0)->getTypeName());
   }
 
   #[Test]
@@ -170,7 +170,7 @@ class MethodParametersTest extends MethodsTest {
     $fixture= $this->type('{ /** @param parent $param */ public function fixture($param) { } }', [
       'extends' => [Name::class]
     ]);
-    $this->assertEquals($fixture->getParentclass(), $fixture->getMethod('fixture')->getParameter(0)->getType());
+    Assert::equals($fixture->getParentclass(), $fixture->getMethod('fixture')->getParameter(0)->getType());
   }
 
   #[Test]
@@ -178,7 +178,7 @@ class MethodParametersTest extends MethodsTest {
     $fixture= $this->type('{ /** @param parent $param */ public function fixture($param) { } }', [
       'extends' => [Name::class]
     ]);
-    $this->assertEquals('parent', $fixture->getMethod('fixture')->getParameter(0)->getTypeName());
+    Assert::equals('parent', $fixture->getMethod('fixture')->getParameter(0)->getTypeName());
   }
 
   #[Test, Expect(ClassNotFoundException::class)]
@@ -188,7 +188,7 @@ class MethodParametersTest extends MethodsTest {
 
   #[Test]
   public function nonexistant_name_class_parameter() {
-    $this->assertEquals(
+    Assert::equals(
       'net.xp_framework.unittest.reflection.UnknownTypeRestriction',
       $this->method('public function fixture(UnknownTypeRestriction $param) { }')->getParameter(0)->getTypeName()
     );
@@ -196,13 +196,13 @@ class MethodParametersTest extends MethodsTest {
 
   #[Test]
   public function unrestricted_parameter() {
-    $this->assertNull($this->method('public function fixture($param) { }')->getParameter(0)->getTypeRestriction());
+    Assert::null($this->method('public function fixture($param) { }')->getParameter(0)->getTypeRestriction());
   }
 
   #[Test]
   public function self_restricted_parameter() {
     $fixture= $this->type('{ public function fixture(self $param) { } }');
-    $this->assertEquals(
+    Assert::equals(
       $fixture,
       $fixture->getMethod('fixture')->getParameter(0)->getTypeRestriction()
     );
@@ -210,14 +210,14 @@ class MethodParametersTest extends MethodsTest {
 
   #[Test]
   public function unrestricted_parameter_with_apidoc() {
-    $this->assertNull(
+    Assert::null(
       $this->method('/** @param lang.Value */ public function fixture($param) { }')->getParameter(0)->getTypeRestriction()
     );
   }
 
   #[Test, Values('restrictions')]
   public function type_restriction_determined_via_syntax($literal, $type) {
-    $this->assertEquals(
+    Assert::equals(
       $type,
       $this->method('public function fixture('.$literal.' $param) { }')->getParameter(0)->getTypeRestriction()
     );
@@ -230,22 +230,22 @@ class MethodParametersTest extends MethodsTest {
 
   #[Test]
   public function zero_parameters() {
-    $this->assertEquals(0, $this->method('public function fixture() { }')->numParameters());
+    Assert::equals(0, $this->method('public function fixture() { }')->numParameters());
   }
 
   #[Test]
   public function three_parameters() {
-    $this->assertEquals(3, $this->method('public function fixture($a, $b, $c) { }')->numParameters());
+    Assert::equals(3, $this->method('public function fixture($a, $b, $c) { }')->numParameters());
   }
 
   #[Test]
   public function no_parameters() {
-    $this->assertEquals([], $this->method('public function fixture() { }')->getParameters());
+    Assert::equals([], $this->method('public function fixture() { }')->getParameters());
   }
 
   #[Test]
   public function parameter_names() {
-    $this->assertEquals(['a', 'b', 'c'], array_map(
+    Assert::equals(['a', 'b', 'c'], array_map(
       function($p) { return $p->getName(); },
       $this->method('public function fixture($a, $b, $c) { }')->getParameters()
     ));
@@ -253,7 +253,7 @@ class MethodParametersTest extends MethodsTest {
 
   #[Test, Values([-1, 0, 1])]
   public function accessing_a_parameter_via_non_existant_offset($offset) {
-    $this->assertNull($this->method('public function fixture() { }')->getParameter($offset));
+    Assert::null($this->method('public function fixture() { }')->getParameter($offset));
   }
 
   /** @return lang.reflect.Parameter */
@@ -269,27 +269,27 @@ class MethodParametersTest extends MethodsTest {
 
   #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
   public function annotated_parameter() {
-    $this->assertTrue($this->annotatedParameter()->hasAnnotations());
+    Assert::true($this->annotatedParameter()->hasAnnotations());
   }
 
   #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
   public function parameter_annotated_with_test_has_test_annotation() {
-    $this->assertTrue($this->annotatedParameter()->hasAnnotation('test'));
+    Assert::true($this->annotatedParameter()->hasAnnotation('test'));
   }
 
   #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
   public function parameter_annotated_with_test_has_no_limit_annotation() {
-    $this->assertFalse($this->annotatedParameter()->hasAnnotation('limit'));
+    Assert::false($this->annotatedParameter()->hasAnnotation('limit'));
   }
 
   #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
   public function annotations_of_parameter_annotated_with_test() {
-    $this->assertEquals(['test' => 'value'], $this->annotatedParameter()->getAnnotations());
+    Assert::equals(['test' => 'value'], $this->annotatedParameter()->getAnnotations());
   }
 
   #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
   public function test_annotation_of_parameter_annotated_with_test() {
-    $this->assertEquals('value', $this->annotatedParameter()->getAnnotation('test'));
+    Assert::equals('value', $this->annotatedParameter()->getAnnotation('test'));
   }
 
   #[Test]
@@ -310,7 +310,7 @@ class MethodParametersTest extends MethodsTest {
     foreach ($method->getParameters() as $param) {
       $r[$param->getName()]= $param->getAnnotations();
     }
-    $this->assertEquals(
+    Assert::equals(
       [
         'user'  => [],
         'sort'  => ['param' => null],
@@ -323,12 +323,12 @@ class MethodParametersTest extends MethodsTest {
 
   #[Test]
   public function un_annotated_parameter_has_no_annotations() {
-    $this->assertFalse($this->method('public function fixture($param) { }')->getParameter(0)->hasAnnotations());
+    Assert::false($this->method('public function fixture($param) { }')->getParameter(0)->hasAnnotations());
   }
 
   #[Test]
   public function un_annotated_parameter_annotations_are_empty() {
-    $this->assertEquals([], $this->method('public function fixture($param) { }')->getParameter(0)->getAnnotations());
+    Assert::equals([], $this->method('public function fixture($param) { }')->getParameter(0)->getAnnotations());
   }
 
   #[Test, Expect(class: ElementNotFoundException::class, withMessage: 'Annotation "test" does not exist')]
@@ -338,12 +338,12 @@ class MethodParametersTest extends MethodsTest {
 
   #[Test]
   public function required_parameter() {
-    $this->assertFalse($this->method('public function fixture($param) { }')->getParameter(0)->isOptional());
+    Assert::false($this->method('public function fixture($param) { }')->getParameter(0)->isOptional());
   }
 
   #[Test]
   public function optional_parameter() {
-    $this->assertTrue($this->method('public function fixture($param= true) { }')->getParameter(0)->isOptional());
+    Assert::true($this->method('public function fixture($param= true) { }')->getParameter(0)->isOptional());
   }
 
   #[Test, Expect(class: IllegalStateException::class, withMessage: 'Parameter "param" has no default value')]
@@ -353,7 +353,7 @@ class MethodParametersTest extends MethodsTest {
 
   #[Test]
   public function optional_parameters_default_value() {
-    $this->assertEquals(true, $this->method('public function fixture($param= true) { }')->getParameter(0)->getDefaultValue());
+    Assert::equals(true, $this->method('public function fixture($param= true) { }')->getParameter(0)->getDefaultValue());
   }
 
   #[Test]
@@ -366,23 +366,23 @@ class MethodParametersTest extends MethodsTest {
       DETAIL_TARGET_ANNO => ['$param' => ['default' => $this]]
     ];
 
-    $this->assertEquals($this, $method->getParameter(0)->getDefaultValue());
+    Assert::equals($this, $method->getParameter(0)->getDefaultValue());
   }
 
   #[Test]
   public function vararg_parameters_default_value() {
-    $this->assertEquals(null, $this->method('public function fixture(... $param) { }')->getParameter(0)->getDefaultValue());
+    Assert::equals(null, $this->method('public function fixture(... $param) { }')->getParameter(0)->getDefaultValue());
   }
 
   #[Test, Values([['/** @param string */ function fixture($a)', 'lang.reflect.Parameter<lang.Primitive<string> a>'], ['/** @param lang.Value */ function fixture($a)', 'lang.reflect.Parameter<lang.XPClass<lang.Value> a>'], ['/** @param \lang\Value */ function fixture($a)', 'lang.reflect.Parameter<lang.XPClass<lang.Value> a>'], ['function fixture(\lang\Value $a)', 'lang.reflect.Parameter<lang.XPClass<lang.Value> a>'], ['/** @param var[] */ function fixture($a)', 'lang.reflect.Parameter<lang.ArrayType<var[]> a>'], ['/** @param function(string): int */ function fixture($a)', 'lang.reflect.Parameter<lang.FunctionType<(function(string): int)> a>'], ['/** @param bool */ function fixture($a= true)', 'lang.reflect.Parameter<lang.Primitive<bool> a= true>']])]
   public function parameter_representations($declaration, $expected) {
-    $this->assertEquals($expected, $this->method($declaration.' { }')->getParameter(0)->toString());
+    Assert::equals($expected, $this->method($declaration.' { }')->getParameter(0)->toString());
   }
 
   #[Test]
   public function variadic_via_syntax_with_type() {
     $param= $this->method('function fixture(string... $args) { }')->getParameter(0);
-    $this->assertEquals(
+    Assert::equals(
       ['variadic' => true, 'optional' => true, 'type' => Primitive::$STRING],
       ['variadic' => $param->isVariadic(), 'optional' => $param->isOptional(), 'type' => $param->getType()]
     );
@@ -391,7 +391,7 @@ class MethodParametersTest extends MethodsTest {
   #[Test]
   public function variadic_via_syntax() {
     $param= $this->method('function fixture(... $args) { }')->getParameter(0);
-    $this->assertEquals(
+    Assert::equals(
       ['variadic' => true, 'optional' => true, 'type' => Type::$VAR],
       ['variadic' => $param->isVariadic(), 'optional' => $param->isOptional(), 'type' => $param->getType()]
     );
@@ -400,7 +400,7 @@ class MethodParametersTest extends MethodsTest {
   #[Test]
   public function variadic_via_apidoc() {
     $param= $this->method('/** @param var... $args */ function fixture($args= null) { }')->getParameter(0);
-    $this->assertEquals(
+    Assert::equals(
       ['variadic' => true, 'optional' => true, 'type' => Type::$VAR],
       ['variadic' => $param->isVariadic(), 'optional' => $param->isOptional(), 'type' => $param->getType()]
     );

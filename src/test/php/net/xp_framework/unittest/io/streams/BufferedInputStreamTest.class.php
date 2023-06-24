@@ -1,66 +1,56 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\streams\{BufferedInputStream, MemoryInputStream};
-use unittest\{Test, TestCase, Values};
+use unittest\{Assert, Test, Values};
 
-/**
- * Unit tests for streams API
- *
- * @see   xp://io.streams.InputStream
- * @see   xp://lang.Closeable#close
- */
-class BufferedInputStreamTest extends TestCase {
+class BufferedInputStreamTest {
   const BUFFER= 'Hello World, how are you doing?';
 
-  protected 
-    $in = null,
-    $mem= null;
-  
-  /**
-   * Setup method. Creates the fixture, a BufferedInputStream with
-   * a buffer size of 10 characters.
-   */
-  public function setUp() {
-    $this->mem= new MemoryInputStream(self::BUFFER);
-    $this->in= new BufferedInputStream($this->mem, 10);
-  }
+  /** @return io.streams.BufferedInputStream */
+  private function newFixture() { return new BufferedInputStream(new MemoryInputStream(self::BUFFER), 10); }
 
   #[Test]
   public function readAll() {
-    $this->assertEquals(self::BUFFER, $this->in->read(strlen(self::BUFFER)));
-    $this->assertEquals(0, $this->in->available());
+    $in= $this->newFixture();
+    Assert::equals(self::BUFFER, $in->read(strlen(self::BUFFER)));
+    Assert::equals(0, $in->available());
   }
 
   #[Test]
   public function readChunk() {
-    $this->assertEquals('Hello', $this->in->read(5));
-    $this->assertEquals(5, $this->in->available());      // Five buffered bytes
+    $in= $this->newFixture();
+    Assert::equals('Hello', $in->read(5));
+    Assert::equals(5, $in->available());      // Five buffered bytes
   }
   
   #[Test]
   public function readChunks() {
-    $this->assertEquals('Hello', $this->in->read(5));
-    $this->assertEquals(5, $this->in->available());      // Five buffered bytes
-    $this->assertEquals(' Worl', $this->in->read(5));
-    $this->assertNotEquals(0, $this->in->available());   // Buffer completely empty, but underlying stream has bytes
+    $in= $this->newFixture();
+    Assert::equals('Hello', $in->read(5));
+    Assert::equals(5, $in->available());      // Five buffered bytes
+    Assert::equals(' Worl', $in->read(5));
+    Assert::notEquals(0, $in->available());   // Buffer completely empty, but underlying stream has bytes
   }
 
   #[Test]
   public function closingTwiceHasNoEffect() {
-    $this->in->close();
-    $this->in->close();
+    $in= $this->newFixture();
+    $in->close();
+    $in->close();
   }
 
   #[Test]
   public function readSize() {
-    $this->assertEquals('Hello Worl', $this->in->read(10));
-    $this->assertEquals(strlen(self::BUFFER) - 10, $this->in->available());
+    $in= $this->newFixture();
+    Assert::equals('Hello Worl', $in->read(10));
+    Assert::equals(strlen(self::BUFFER) - 10, $in->available());
   }
 
   #[Test, Values([1, 5, 10, 11])]
   public function pushBack($count) {
-    $chunk= $this->in->read($count);
-    $this->in->pushBack($chunk);
-    $this->assertEquals('Hello World', $this->in->read(11));
+    $in= $this->newFixture();
+    $chunk= $in->read($count);
+    $in->pushBack($chunk);
+    Assert::equals('Hello World', $in->read(11));
   }
 }

@@ -1,7 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\{ArrayType, MapType, FunctionType, Primitive, Type, TypeUnion, Value, Nullable, XPClass};
+use lang\{ArrayType, FunctionType, MapType, Nullable, Primitive, Type, TypeUnion, Value, XPClass};
 use net\xp_framework\unittest\Name;
+use unittest\Assert;
 use unittest\actions\RuntimeVersion;
 use unittest\{Action, Test, Values};
 
@@ -14,8 +15,8 @@ class MethodReturnTypesTest extends MethodsTest {
    * @param  lang.reflect.Method $method
    */
   private function assertReturnType($expected, $method) {
-    $this->assertEquals($expected, $method->getReturnType(), 'type');
-    $this->assertEquals($expected->getName(), $method->getReturnTypeName(), 'name');
+    Assert::equals($expected, $method->getReturnType(), 'type');
+    Assert::equals($expected->getName(), $method->getReturnTypeName(), 'name');
   }
 
   /** @return iterable */
@@ -52,12 +53,12 @@ class MethodReturnTypesTest extends MethodsTest {
 
   #[Test]
   public function return_type_restriction_defaults_to_null() {
-    $this->assertNull($this->method('public function fixture() { }')->getReturnTypeRestriction());
+    Assert::null($this->method('public function fixture() { }')->getReturnTypeRestriction());
   }
 
   #[Test]
   public function return_type_restriction() {
-    $this->assertEquals(
+    Assert::equals(
       new XPClass(Value::class),
       $this->method('public function fixture(): Value { }')->getReturnTypeRestriction()
     );
@@ -129,13 +130,13 @@ class MethodReturnTypesTest extends MethodsTest {
   #[Test]
   public function special_self_return_type_via_apidoc() {
     $fixture= $this->type('{ /** @return self */ public function fixture() { } }');
-    $this->assertEquals($fixture, $fixture->getMethod('fixture')->getReturnType());
+    Assert::equals($fixture, $fixture->getMethod('fixture')->getReturnType());
   }
 
   #[Test]
   public function special_self_return_type_via_syntax() {
     $fixture= $this->type('{ public function fixture(): self { } }');
-    $this->assertEquals($fixture, $fixture->getMethod('fixture')->getReturnType());
+    Assert::equals($fixture, $fixture->getMethod('fixture')->getReturnType());
   }
 
   #[Test]
@@ -143,7 +144,7 @@ class MethodReturnTypesTest extends MethodsTest {
     $fixture= $this->type('{ /** @return parent */ public function fixture() { } }', [
       'extends' => [Name::class]
     ]);
-    $this->assertEquals($fixture->getParentclass(), $fixture->getMethod('fixture')->getReturnType());
+    Assert::equals($fixture->getParentclass(), $fixture->getMethod('fixture')->getReturnType());
   }
 
   #[Test]
@@ -151,30 +152,30 @@ class MethodReturnTypesTest extends MethodsTest {
     $fixture= $this->type('{ public function fixture(): parent { } }', [
       'extends' => [Name::class]
     ]);
-    $this->assertEquals($fixture->getParentclass(), $fixture->getMethod('fixture')->getReturnType());
+    Assert::equals($fixture->getParentclass(), $fixture->getMethod('fixture')->getReturnType());
   }
 
   #[Test]
   public function special_static_return_type_in_base_class() {
     $fixture= new XPClass(Name::class);
-    $this->assertEquals($fixture, $fixture->getMethod('copy')->getReturnType());
+    Assert::equals($fixture, $fixture->getMethod('copy')->getReturnType());
   }
 
   #[Test]
   public function special_static_return_type_in_inherited_class() {
     $fixture= $this->type('{ }', ['extends' => [Name::class]]);
-    $this->assertEquals($fixture, $fixture->getMethod('copy')->getReturnType());
+    Assert::equals($fixture, $fixture->getMethod('copy')->getReturnType());
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0")')]
   public function special_static_return_type_via_syntax() {
     $fixture= $this->type('{ public function fixture(): static { } }');
-    $this->assertEquals($fixture, $fixture->getMethod('fixture')->getReturnType());
+    Assert::equals($fixture, $fixture->getMethod('fixture')->getReturnType());
   }
 
   #[Test, Values([['/** @return static */', 'static'], ['/** @return self */', 'self'], ['/** @return parent */', 'parent'],])]
   public function special_typeName_determined_via_apidoc($apidoc, $type) {
-    $this->assertEquals($type, $this->method($apidoc.' public function fixture() { }')->getReturnTypeName());
+    Assert::equals($type, $this->method($apidoc.' public function fixture() { }')->getReturnTypeName());
   }
 
   #[Test]
@@ -183,16 +184,16 @@ class MethodReturnTypesTest extends MethodsTest {
     $fixture= $this->type('{ /* inherited with apidoc */ }', ['extends' => [$base]]);
     $method= $fixture->getMethod('fixture');
 
-    $this->assertEquals($fixture, $method->getReturnType(), 'type');
-    $this->assertEquals('static', $method->getReturnTypeName(), 'name');
+    Assert::equals($fixture, $method->getReturnType(), 'type');
+    Assert::equals('static', $method->getReturnTypeName(), 'name');
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=7.1")')]
   public function apidoc_supersedes_void_type_restriction() {
     $method= $this->type('{ /** @return never */ public function fixture(): void { exit(); } }')->getMethod('fixture');
 
-    $this->assertEquals(Type::$NEVER, $method->getReturnType(), 'type');
-    $this->assertEquals('never', $method->getReturnTypeName(), 'name');
+    Assert::equals(Type::$NEVER, $method->getReturnType(), 'type');
+    Assert::equals('never', $method->getReturnTypeName(), 'name');
   }
 
   #[Test]
@@ -201,13 +202,13 @@ class MethodReturnTypesTest extends MethodsTest {
     $fixture= $this->type('{ /* inherited without apidoc */ }', ['extends' => [$base]]);
     $method= $fixture->getMethod('fixture');
 
-    $this->assertEquals($base, $method->getReturnType(), 'type');
-    $this->assertEquals('self', $method->getReturnTypeName(), 'name');
+    Assert::equals($base, $method->getReturnType(), 'type');
+    Assert::equals('self', $method->getReturnTypeName(), 'name');
   }
 
   #[Test]
   public function array_of_special_self_type() {
     $fixture= $this->type('{ /** @return array<self> */ public function fixture() { } }');
-    $this->assertEquals(new ArrayType($fixture), $fixture->getMethod('fixture')->getReturnType());
+    Assert::equals(new ArrayType($fixture), $fixture->getMethod('fixture')->getReturnType());
   }
 }

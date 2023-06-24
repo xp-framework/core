@@ -3,6 +3,7 @@
 use io\streams\{MemoryOutputStream, StringWriter};
 use lang\Value;
 use net\xp_framework\unittest\Name;
+use unittest\Assert;
 use unittest\actions\RuntimeVersion;
 use unittest\{Test, TestCase, Values};
 
@@ -11,7 +12,7 @@ use unittest\{Test, TestCase, Values};
  *
  * @see  xp://io.streams.StringWriter
  */
-class StringWriterTest extends TestCase {
+class StringWriterTest {
 
   /**
    * Assert a given string has been written to the fixture after 
@@ -25,7 +26,7 @@ class StringWriterTest extends TestCase {
     with (new MemoryOutputStream(), function($out) use($bytes, $closure) {
       $fixture= new StringWriter($out);
       $closure($fixture);
-      $this->assertEquals($bytes, $out->bytes());
+      Assert::equals($bytes, $out->bytes());
     });
   }
 

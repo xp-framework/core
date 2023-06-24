@@ -1,22 +1,12 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{ClassLoader, IllegalAccessException, XPClass};
-use unittest\{BeforeClass, Expect, Ignore, Test};
+use unittest\{Assert, Before, Expect, Ignore, Test};
 
-/**
- * TestCase
- *
- * @see      xp://lang.reflect.Constructor
- * @see      xp://lang.reflect.Method
- * @see      xp://lang.reflect.Field
- */
-class PrivateAccessibilityTest extends \unittest\TestCase {
+class PrivateAccessibilityTest {
   private static $fixture, $fixtureChild, $fixtureCtorChild;
   
-  /**
-   * Initialize fixture, fixtureChild and fixtureCtorChild members
-   */
-  #[BeforeClass]
+  #[Before]
   public static function initializeClasses() {
     self::$fixture= XPClass::forName('net.xp_framework.unittest.reflection.PrivateAccessibilityFixture');
     self::$fixtureChild= XPClass::forName('net.xp_framework.unittest.reflection.PrivateAccessibilityFixtureChild');
@@ -30,7 +20,7 @@ class PrivateAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function invokingPrivateConstructorFromSameClass() {
-    $this->assertInstanceOf(self::$fixture, PrivateAccessibilityFixture::construct(self::$fixture));
+    Assert::instance(self::$fixture, PrivateAccessibilityFixture::construct(self::$fixture));
   }
 
   #[Test, Expect(IllegalAccessException::class)]
@@ -45,7 +35,7 @@ class PrivateAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function invokingPrivateConstructorMadeAccessible() {
-    $this->assertInstanceOf(self::$fixture, self::$fixture
+    Assert::instance(self::$fixture, self::$fixture
       ->getConstructor()
       ->setAccessible(true)
       ->newInstance([])
@@ -59,7 +49,7 @@ class PrivateAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function invokingPrivateMethodFromSameClass() {
-    $this->assertEquals('Invoked', PrivateAccessibilityFixture::invoke(self::$fixture));
+    Assert::equals('Invoked', PrivateAccessibilityFixture::invoke(self::$fixture));
   }
 
   #[Test, Expect(IllegalAccessException::class)]
@@ -74,7 +64,7 @@ class PrivateAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function invokingPrivateMethodMadeAccessible() {
-    $this->assertEquals('Invoked', self::$fixture
+    Assert::equals('Invoked', self::$fixture
       ->getMethod('target')
       ->setAccessible(true)
       ->invoke(PrivateAccessibilityFixture::construct(self::$fixture))
@@ -88,7 +78,7 @@ class PrivateAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function invokingPrivateStaticMethodFromSameClass() {
-    $this->assertEquals('Invoked', PrivateAccessibilityFixture::invokeStatic(self::$fixture));
+    Assert::equals('Invoked', PrivateAccessibilityFixture::invokeStatic(self::$fixture));
   }
 
   #[Test, Expect(IllegalAccessException::class)]
@@ -103,7 +93,7 @@ class PrivateAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function invokingPrivateStaticMethodMadeAccessible() {
-    $this->assertEquals('Invoked', self::$fixture
+    Assert::equals('Invoked', self::$fixture
       ->getMethod('staticTarget')
       ->setAccessible(true)
       ->invoke(null)
@@ -117,7 +107,7 @@ class PrivateAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function readingPrivateMemberFromSameClass() {
-    $this->assertEquals('Target', PrivateAccessibilityFixture::read(self::$fixture));
+    Assert::equals('Target', PrivateAccessibilityFixture::read(self::$fixture));
   }
 
   #[Test, Expect(IllegalAccessException::class)]
@@ -132,7 +122,7 @@ class PrivateAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function readingPrivateMemberMadeAccessible() {
-    $this->assertEquals('Target', self::$fixture
+    Assert::equals('Target', self::$fixture
       ->getField('target')
       ->setAccessible(true)
       ->get(PrivateAccessibilityFixture::construct(self::$fixture))
@@ -146,7 +136,7 @@ class PrivateAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function readingPrivateStaticMemberFromSameClass() {
-    $this->assertEquals('Target', PrivateAccessibilityFixture::readStatic(self::$fixture));
+    Assert::equals('Target', PrivateAccessibilityFixture::readStatic(self::$fixture));
   }
 
   #[Test, Expect(IllegalAccessException::class)]
@@ -161,7 +151,7 @@ class PrivateAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function readingPrivateStaticMemberMadeAccessible() {
-    $this->assertEquals('Target', self::$fixture
+    Assert::equals('Target', self::$fixture
       ->getField('staticTarget')
       ->setAccessible(true)
       ->get(null)
@@ -175,7 +165,7 @@ class PrivateAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function writingPrivateMemberFromSameClass() {
-    $this->assertEquals('Modified', PrivateAccessibilityFixture::write(self::$fixture));
+    Assert::equals('Modified', PrivateAccessibilityFixture::write(self::$fixture));
   }
 
   #[Test, Expect(IllegalAccessException::class)]
@@ -193,7 +183,7 @@ class PrivateAccessibilityTest extends \unittest\TestCase {
     with ($f= self::$fixture->getField('target'), $i= PrivateAccessibilityFixture::construct(self::$fixture)); {
       $f->setAccessible(true);
       $f->set($i, 'Modified');
-      $this->assertEquals('Modified', $f->get($i));
+      Assert::equals('Modified', $f->get($i));
     }
   }
 
@@ -204,7 +194,7 @@ class PrivateAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function writingPrivateStaticMemberFromSameClass() {
-    $this->assertEquals('Modified', PrivateAccessibilityFixture::writeStatic(self::$fixture));
+    Assert::equals('Modified', PrivateAccessibilityFixture::writeStatic(self::$fixture));
   }
 
   #[Test, Expect(IllegalAccessException::class)]
@@ -222,7 +212,7 @@ class PrivateAccessibilityTest extends \unittest\TestCase {
     with ($f= self::$fixture->getField('staticTarget')); {
       $f->setAccessible(true);
       $f->set(null, 'Modified');
-      $this->assertEquals('Modified', $f->get(null));
+      Assert::equals('Modified', $f->get(null));
     }
   }
 }

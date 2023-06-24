@@ -1,14 +1,14 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{ClassLoader, ElementNotFoundException};
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
 /**
  * TestCase for classloading
  *
  * @see    xp://lang.ClassLoader#registerPath
  */
-class ClassPathTest extends \unittest\TestCase {
+class ClassPathTest {
   protected $registered= [];
 
   /**
@@ -35,37 +35,57 @@ class ClassPathTest extends \unittest\TestCase {
 
   #[Test]
   public function before() {
-    $loader= $this->track(ClassLoader::registerPath('.', true));
-    $loaders= ClassLoader::getLoaders();
-    $this->assertEquals($loader, $loaders[0]);
+    try {
+      $loader= $this->track(ClassLoader::registerPath('.', true));
+      $loaders= ClassLoader::getLoaders();
+      Assert::equals($loader, $loaders[0]);
+    } finally {
+      $this->tearDown();
+    }
   } 
 
   #[Test]
   public function after() {
-    $loader= $this->track(ClassLoader::registerPath('.', false));
-    $loaders= ClassLoader::getLoaders();
-    $this->assertEquals($loader, $loaders[sizeof($loaders)- 1]);
+    try {
+      $loader= $this->track(ClassLoader::registerPath('.', false));
+      $loaders= ClassLoader::getLoaders();
+      Assert::equals($loader, $loaders[sizeof($loaders)- 1]);
+    } finally {
+      $this->tearDown();
+    }
   }
 
   #[Test]
   public function after_is_default() {
-    $loader= $this->track(ClassLoader::registerPath('.'));
-    $loaders= ClassLoader::getLoaders();
-    $this->assertEquals($loader, $loaders[sizeof($loaders)- 1]);
+    try {
+      $loader= $this->track(ClassLoader::registerPath('.'));
+      $loaders= ClassLoader::getLoaders();
+      Assert::equals($loader, $loaders[sizeof($loaders)- 1]);
+    } finally {
+      $this->tearDown();
+    }
   }
 
   #[Test]
   public function before_via_inspect() {
-    $loader= $this->track(ClassLoader::registerPath('!.', null));
-    $loaders= ClassLoader::getLoaders();
-    $this->assertEquals($loader, $loaders[0]);
+    try {
+      $loader= $this->track(ClassLoader::registerPath('!.', null));
+      $loaders= ClassLoader::getLoaders();
+      Assert::equals($loader, $loaders[0]);
+    } finally {
+      $this->tearDown();
+    }
   }
 
   #[Test]
   public function after_via_inspect() {
-    $loader= $this->track(ClassLoader::registerPath('.', null));
-    $loaders= ClassLoader::getLoaders();
-    $this->assertEquals($loader, $loaders[sizeof($loaders)- 1]);
+    try {
+      $loader= $this->track(ClassLoader::registerPath('.', null));
+      $loaders= ClassLoader::getLoaders();
+      Assert::equals($loader, $loaders[sizeof($loaders)- 1]);
+    } finally {
+      $this->tearDown();
+    }
   }
 
   #[Test, Expect(ElementNotFoundException::class)]

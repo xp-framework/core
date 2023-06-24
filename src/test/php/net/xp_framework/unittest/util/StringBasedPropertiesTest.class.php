@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\util;
 
+use unittest\Assert;
 use util\Properties;
 
 /**

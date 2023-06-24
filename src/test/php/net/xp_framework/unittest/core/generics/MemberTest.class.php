@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
+use unittest\Assert;
 use unittest\{Ignore, Test, TestCase};
 
 /**
@@ -7,17 +8,18 @@ use unittest\{Ignore, Test, TestCase};
  *
  * @see   xp://net.xp_framework.unittest.core.generics.ListOf
  */
-class MemberTest extends TestCase {
+class MemberTest {
   protected $fixture= null;
 
   /** @return void */
+  #[Before]
   public function setUp() {
     $this->fixture= create('new net.xp_framework.unittest.core.generics.ListOf<string>', 'Hello', 'World');
   }
 
   #[Test]
   public function readAccess() {
-    $this->assertEquals(['Hello', 'World'], $this->fixture->elements);
+    Assert::equals(['Hello', 'World'], $this->fixture->elements);
   }
 
   #[Test, Ignore('Behaviour not defined')]
@@ -28,7 +30,7 @@ class MemberTest extends TestCase {
   #[Test]
   public function writeAccess() {
     $this->fixture->elements= ['Hello', 'Wörld'];
-    $this->assertEquals(['Hello', 'Wörld'], $this->fixture->elements);
+    Assert::equals(['Hello', 'Wörld'], $this->fixture->elements);
   }
 
   #[Test, Ignore('Behaviour not defined')]

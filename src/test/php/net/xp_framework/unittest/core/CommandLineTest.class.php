@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\CommandLine;
+use unittest\Assert;
 use unittest\Test;
 
 /**
@@ -8,51 +9,51 @@ use unittest\Test;
  *
  * @see      xp://lang.CommandLine
  */
-class CommandLineTest extends \unittest\TestCase {
+class CommandLineTest {
 
   #[Test]
   public function forWindows() {
-    $this->assertEquals(CommandLine::$WINDOWS, CommandLine::forName('Windows'));
+    Assert::equals(CommandLine::$WINDOWS, CommandLine::forName('Windows'));
   }
 
   #[Test]
   public function forWinNT() {
-    $this->assertEquals(CommandLine::$WINDOWS, CommandLine::forName('WINNT'));
+    Assert::equals(CommandLine::$WINDOWS, CommandLine::forName('WINNT'));
   }
 
   #[Test]
   public function forBSD() {
-    $this->assertEquals(CommandLine::$UNIX, CommandLine::forName('FreeBSD'));
+    Assert::equals(CommandLine::$UNIX, CommandLine::forName('FreeBSD'));
   }
 
   #[Test]
   public function forLinux() {
-    $this->assertEquals(CommandLine::$UNIX, CommandLine::forName('Linux'));
+    Assert::equals(CommandLine::$UNIX, CommandLine::forName('Linux'));
   }
 
   #[Test]
   public function noquotingWindows() {
-    $this->assertEquals('php -v', CommandLine::$WINDOWS->compose('php', ['-v']));
+    Assert::equals('php -v', CommandLine::$WINDOWS->compose('php', ['-v']));
   }
 
   #[Test]
   public function noquotingUnix() {
-    $this->assertEquals('php -v', CommandLine::$UNIX->compose('php', ['-v']));
+    Assert::equals('php -v', CommandLine::$UNIX->compose('php', ['-v']));
   }
 
   #[Test]
   public function emptyArgumentQuotingWindows() {
-    $this->assertEquals('echo "" World', CommandLine::$WINDOWS->compose('echo', ['', 'World']));
+    Assert::equals('echo "" World', CommandLine::$WINDOWS->compose('echo', ['', 'World']));
   }
 
   #[Test]
   public function emptyArgumentQuotingUnix() {
-    $this->assertEquals("echo '' World", CommandLine::$UNIX->compose('echo', ['', 'World']));
+    Assert::equals("echo '' World", CommandLine::$UNIX->compose('echo', ['', 'World']));
   }
 
   #[Test]
   public function commandIsQuotedWindows() {
-    $this->assertEquals(
+    Assert::equals(
       '"C:/Users/Timm Friebe/php" -v', 
       CommandLine::$WINDOWS->compose('C:/Users/Timm Friebe/php', ['-v'])
     );
@@ -60,7 +61,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function commandIsQuotedUnix() {
-    $this->assertEquals(
+    Assert::equals(
       "'/Users/Timm Friebe/php' -v", 
       CommandLine::$UNIX->compose('/Users/Timm Friebe/php', ['-v'])
     );
@@ -68,7 +69,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function argumentsContainingSpacesAreQuotedWindows() {
-    $this->assertEquals(
+    Assert::equals(
       'php -r "a b"',
       CommandLine::$WINDOWS->compose('php', ['-r', 'a b'])
     );
@@ -76,7 +77,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function argumentsContainingSpacesAreQuotedUnix() {
-    $this->assertEquals(
+    Assert::equals(
       "php -r 'a b'",
       CommandLine::$UNIX->compose('php', ['-r', 'a b'])
     );
@@ -84,7 +85,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function quotesInArgumentsAreEscapedWindows() {
-    $this->assertEquals(
+    Assert::equals(
       'php -r "a"""b"',
       CommandLine::$WINDOWS->compose('php', ['-r', 'a"b'])
     );
@@ -92,7 +93,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function quotesInArgumentsAreEscapedUnix() {
-    $this->assertEquals(
+    Assert::equals(
       "php -r 'a'\''b'",
       CommandLine::$UNIX->compose('php', ['-r', "a'b"])
     );
@@ -100,7 +101,7 @@ class CommandLineTest extends \unittest\TestCase {
   
   #[Test]
   public function emptyArgsWindows() {
-    $this->assertEquals(
+    Assert::equals(
       ['C:\\Windows\\Explorer.EXE'],
       CommandLine::$WINDOWS->parse('C:\\Windows\\Explorer.EXE')
     );
@@ -108,7 +109,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function emptyArgsUnix() {
-    $this->assertEquals(
+    Assert::equals(
       ['/etc/init.d/apache'],
       CommandLine::$UNIX->parse('/etc/init.d/apache')
     );
@@ -116,7 +117,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function guidArgWindows() {
-    $this->assertEquals(
+    Assert::equals(
       ['taskeng.exe', '{58B7C886-2D94-4DBF-BBB9-96608B332124}'],
       CommandLine::$WINDOWS->parse('taskeng.exe {58B7C886-2D94-4DBF-BBB9-96608B332124}')
     );
@@ -124,7 +125,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function guidArgUnix() {
-    $this->assertEquals(
+    Assert::equals(
       ['guid', '{58B7C886-2D94-4DBF-BBB9-96608B332124}'],
       CommandLine::$WINDOWS->parse('guid {58B7C886-2D94-4DBF-BBB9-96608B332124}')
     );
@@ -132,7 +133,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function quotedCommandWindows() {
-    $this->assertEquals(
+    Assert::equals(
       ['C:\\Program Files\\Windows Sidebar\\sidebar.exe', '/autoRun'],
       CommandLine::$WINDOWS->parse('"C:\\Program Files\\Windows Sidebar\\sidebar.exe" /autoRun')
     );
@@ -140,7 +141,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function quotedCommandUnix() {
-    $this->assertEquals(
+    Assert::equals(
       ['/opt/MySQL Daemon/bin/mysqld', '--pid-file=/var/mysql.pid'],
       CommandLine::$UNIX->parse("'/opt/MySQL Daemon/bin/mysqld' --pid-file=/var/mysql.pid")
     );
@@ -148,7 +149,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function doubleQuotedCommandUnix() {
-    $this->assertEquals(
+    Assert::equals(
       ['/opt/MySQL Daemon/bin/mysqld', '--pid-file=/var/mysql.pid'],
       CommandLine::$UNIX->parse('"/opt/MySQL Daemon/bin/mysqld" --pid-file=/var/mysql.pid')
     );
@@ -156,7 +157,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function quotedArgumentPartWindows() {
-    $this->assertEquals(
+    Assert::equals(
       ['C:/usr/bin/php', '-q', '-dinclude_path=.:/usr/share', '-dauto_globals_jit=0'],
       CommandLine::$WINDOWS->parse('C:/usr/bin/php -q -dinclude_path=".:/usr/share" -dauto_globals_jit=0')
     );        
@@ -164,7 +165,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function quotedArgumentPartUnix() {
-    $this->assertEquals(
+    Assert::equals(
       ['/usr/bin/php', '-q', '-dinclude_path=".:/usr/share"', '-dauto_globals_jit=0'],
       CommandLine::$UNIX->parse('/usr/bin/php -q -dinclude_path=".:/usr/share" -dauto_globals_jit=0')
     );        
@@ -172,7 +173,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function quotedCommandAndArgumentPartWindows() {
-    $this->assertEquals(
+    Assert::equals(
       ['C:/usr/bin/php', '-q', '-dinclude_path=.:/usr/share', '-dauto_globals_jit=0'],
       CommandLine::$WINDOWS->parse('"C:/usr/bin/php" -q -dinclude_path=".:/usr/share" -dauto_globals_jit=0')
     );
@@ -180,7 +181,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function quotedCommandAndArgumentPartUnix() {
-    $this->assertEquals(
+    Assert::equals(
       ['/usr/bin/php', '-q', '-dinclude_path=".:/usr/share"', '-dauto_globals_jit=0'],
       CommandLine::$UNIX->parse('"/usr/bin/php" -q -dinclude_path=".:/usr/share" -dauto_globals_jit=0')
     );
@@ -188,7 +189,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function quotedArgumentWindows() {
-    $this->assertEquals(
+    Assert::equals(
       ['sublimetext', '/mnt/c/Users/Mr. Example/notes.txt'],
       CommandLine::$WINDOWS->parse('sublimetext "/mnt/c/Users/Mr. Example/notes.txt"')
     );
@@ -196,7 +197,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function doubleQuotedArgumentUnix() {
-    $this->assertEquals(
+    Assert::equals(
       ['sublimetext', '/mnt/c/Users/Mr. Example/notes.txt'],
       CommandLine::$UNIX->parse("sublimetext '/mnt/c/Users/Mr. Example/notes.txt'")
     );
@@ -204,7 +205,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function quotedArgumentUnix() {
-    $this->assertEquals(
+    Assert::equals(
       ['sublimetext', '/mnt/c/Users/Mr. Example/notes.txt'],
       CommandLine::$UNIX->parse('sublimetext "/mnt/c/Users/Mr. Example/notes.txt"')
     );
@@ -212,7 +213,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function quotedArgumentsWindows() {
-    $this->assertEquals(
+    Assert::equals(
       ['sublimetext', '/mnt/c/Users/Mr. Example/notes.txt', '../All Notes.txt'],
       CommandLine::$WINDOWS->parse('sublimetext "/mnt/c/Users/Mr. Example/notes.txt" "../All Notes.txt"')
     );
@@ -220,7 +221,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function quotedArgumentsUnix() {
-    $this->assertEquals(
+    Assert::equals(
       ['sublimetext', '/mnt/c/Users/Mr. Example/notes.txt', '../All Notes.txt'],
       CommandLine::$UNIX->parse("sublimetext '/mnt/c/Users/Mr. Example/notes.txt' '../All Notes.txt'")
     );
@@ -228,7 +229,7 @@ class CommandLineTest extends \unittest\TestCase {
 
   #[Test]
   public function doubleQuotedArgumentsUnix() {
-    $this->assertEquals(
+    Assert::equals(
       ['sublimetext', '/mnt/c/Users/Mr. Example/notes.txt', '../All Notes.txt'],
       CommandLine::$UNIX->parse('sublimetext "/mnt/c/Users/Mr. Example/notes.txt" "../All Notes.txt"')
     );
@@ -237,7 +238,7 @@ class CommandLineTest extends \unittest\TestCase {
   #[Test]
   public function evalCommandLineWindows() {
     $cmd= 'xp xp.runtime.Evaluate "echo """Hello World""";"';
-    $this->assertEquals(
+    Assert::equals(
       ['xp', 'xp.runtime.Evaluate', 'echo "Hello World";'],
       CommandLine::$WINDOWS->parse($cmd)
     );
@@ -246,7 +247,7 @@ class CommandLineTest extends \unittest\TestCase {
   #[Test]
   public function evalCommandLineWindowsUnclosed() {
     $cmd= 'xp xp.runtime.Evaluate "1+ 2';
-    $this->assertEquals(
+    Assert::equals(
       ['xp', 'xp.runtime.Evaluate', '1+ 2'],
       CommandLine::$WINDOWS->parse($cmd)
     );
@@ -255,7 +256,7 @@ class CommandLineTest extends \unittest\TestCase {
   #[Test]
   public function evalCommandLineWindowsUnclosedTriple() {
     $cmd= 'xp xp.runtime.Evaluate "echo """Hello World';
-    $this->assertEquals(
+    Assert::equals(
       ['xp', 'xp.runtime.Evaluate', 'echo "Hello World'],
       CommandLine::$WINDOWS->parse($cmd)
     );
@@ -264,7 +265,7 @@ class CommandLineTest extends \unittest\TestCase {
   #[Test]
   public function evalCommandLineWindowsTripleClosedBySingle() {
     $cmd= 'xp xp.runtime.Evaluate "echo """Hello World" a';
-    $this->assertEquals(
+    Assert::equals(
       ['xp', 'xp.runtime.Evaluate', 'echo "Hello World', 'a'],
       CommandLine::$WINDOWS->parse($cmd)
     );

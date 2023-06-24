@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
+use unittest\Assert;
 /** @see xp://net.xp_framework.unittest.reflection.ClassLoaderTest */
 class LoaderTestClass {
   private static $initializerCalled= false;

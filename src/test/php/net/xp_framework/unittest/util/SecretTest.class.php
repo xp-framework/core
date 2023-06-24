@@ -1,13 +1,18 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\{IllegalArgumentException, IllegalStateException, Throwable, XPException};
-use unittest\{Expect, Test, Values, TestCase};
+use unittest\{Assert, Before, Expect, Test, Values};
 use util\Secret;
 
-/**
- * Baseclass for test cases for security.Secret
- */
-abstract class SecretTest extends TestCase {
+abstract class SecretTest {
+
+  /** @return int */
+  protected abstract function backing();
+
+  #[Before]
+  public function useBacking() {
+    Secret::useBacking($this->backing());
+  }
 
   #[Test]
   public function create() {
@@ -33,7 +38,7 @@ abstract class SecretTest extends TestCase {
   #[Test]
   public function var_export_not_revealing_payload() {
     $export= var_export(new Secret('payload'), true);
-    $this->assertFalse(strpos($export, 'payload'));
+    Assert::false(strpos($export, 'payload'));
   }
 
   #[Test]
@@ -44,38 +49,38 @@ abstract class SecretTest extends TestCase {
     $output= ob_get_contents();
     ob_end_clean();
 
-    $this->assertFalse(strpos($output, 'payload'));
+    Assert::false(strpos($output, 'payload'));
   }
 
   #[Test]
   public function toString_not_revealing_payload() {
     $output= (new Secret('payload'))->toString();
-    $this->assertFalse(strpos($output, 'payload'));
+    Assert::false(strpos($output, 'payload'));
   }
 
   #[Test]
   public function string_cast_not_revealing_payload() {
     $output= (string)new Secret('payload');
-    $this->assertFalse(strpos($output, 'payload'));
+    Assert::false(strpos($output, 'payload'));
   }
 
   #[Test]
   public function array_cast_not_revealing_payload() {
     $output= var_export((array)new Secret('payload'), 1);
-    $this->assertFalse(strpos($output, 'payload'));
+    Assert::false(strpos($output, 'payload'));
   }
 
   #[Test]
   public function getPayload_reveals_original_data() {
     $secure= new Secret('payload');
-    $this->assertEquals('payload', $secure->reveal());
+    Assert::equals('payload', $secure->reveal());
   }
 
   #[Test]
   public function big_data() {
     $data= str_repeat('*', 1024000);
     $secure= new Secret($data);
-    $this->assertEquals($data, $secure->reveal());
+    Assert::equals($data, $secure->reveal());
   }
 
   #[Test]
@@ -86,8 +91,12 @@ abstract class SecretTest extends TestCase {
       throw new XPException('Something went wrong - intentionally.');
     }, function($value) { return null; });
 
-    new Secret('foo');
-    $this->assertTrue($called);
+    try {
+      new Secret('foo');
+      Assert::true($called);
+    } finally {
+      Secret::useBacking($this->backing());
+    }
   }
 
   #[Test, Expect(['class' => IllegalStateException::class, 'withMessage' => '/An error occurred during storing the encrypted secret./'])]
@@ -99,13 +108,17 @@ abstract class SecretTest extends TestCase {
 
     // Creation may never throw exception
     try {
-      $s= new Secret('foo');
-    } catch (\Throwable $t) {
-      $this->fail('Exception thrown where no exception may be thrown', $t, null);
-    }
+      try {
+        $s= new Secret('foo');
+      } catch (\Throwable $t) {
+        $this->fail('Exception thrown where no exception may be thrown', $t, null);
+      }
 
-    // Buf if creation failed, an exception must be raised here:
-    $s->reveal();
+      // Buf if creation failed, an exception must be raised here:
+      $s->reveal();
+    } finally {
+      Secret::useBacking($this->backing());
+    }
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
@@ -115,17 +128,17 @@ abstract class SecretTest extends TestCase {
 
   #[Test]
   public function equals_original_data() {
-    $this->assertTrue((new Secret('payload'))->equals('payload'));
+    Assert::true((new Secret('payload'))->equals('payload'));
   }
 
   #[Test]
   public function equals_itself() {
     $fixture= new Secret('payload');
-    $this->assertTrue($fixture->equals($fixture));
+    Assert::true($fixture->equals($fixture));
   }
 
   #[Test, Values([null, 'payloa', 'PAYLOAD', "payload\0", "\0payload"])]
   public function does_not_match($value) {
-    $this->assertFalse((new Secret('payload'))->equals($value));
+    Assert::false((new Secret('payload'))->equals($value));
   }
 }

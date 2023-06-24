@@ -2,10 +2,11 @@
 
 use io\{File, Files, Folder};
 use lang\Environment;
+use unittest\Assert;
 use unittest\{AfterClass, Expect, Test, TestCase};
 use xp\runtime\{CouldNotLoadDependencies, Modules};
 
-class ModulesTest extends TestCase {
+class ModulesTest {
   private static $cleanup= [];
 
   /** Creates a file & folder structure based on given definitions, remembering it for cleanup */
@@ -44,7 +45,7 @@ class ModulesTest extends TestCase {
     $fixture= new Modules();
     $fixture->add('xp-forge/sequence', '^8.0');
 
-    $this->assertEquals(['xp-forge/sequence' => '^8.0'], $fixture->all());
+    Assert::equals(['xp-forge/sequence' => '^8.0'], $fixture->all());
   }
 
   #[Test]

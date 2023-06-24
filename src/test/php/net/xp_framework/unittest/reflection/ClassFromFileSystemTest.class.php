@@ -2,6 +2,7 @@
 
 use io\{File, Folder};
 use lang\{Environment, FileSystemClassLoader, IClassLoader};
+use unittest\Assert;
 
 /**
  * TestCase for classloading

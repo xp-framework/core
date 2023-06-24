@@ -1,28 +1,24 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{ClassCastException, Type, XPClass};
-use unittest\{Expect, Test, TestCase};
+use net\xp_framework\unittest\BaseTest;
+use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase
- *
- * @see      xp://lang.XPClass#cast
- */
-class ClassCastingTest extends TestCase {
+class ClassCastingTest extends BaseTest {
 
   #[Test]
   public function thisClassCastingThis() {
-    $this->assertEquals($this, typeof($this)->cast($this));
+    Assert::equals($this, typeof($this)->cast($this));
   }
 
   #[Test]
   public function parentClassCastingThis() {
-    $this->assertEquals($this, typeof($this)->getParentClass()->cast($this));
+    Assert::equals($this, typeof($this)->getParentClass()->cast($this));
   }
 
   #[Test]
   public function objectClassCastingThis() {
-    $this->assertEquals($this, XPClass::forName('unittest.TestCase')->cast($this));
+    Assert::equals($this, XPClass::forName(self::class)->cast($this));
   }
 
   #[Test, Expect(ClassCastException::class)]
@@ -37,7 +33,7 @@ class ClassCastingTest extends TestCase {
 
   #[Test]
   public function thisClassCastingNull() {
-    $this->assertNull(typeof($this)->cast(null));
+    Assert::null(typeof($this)->cast(null));
   }
 
   #[Test, Expect(ClassCastException::class)]

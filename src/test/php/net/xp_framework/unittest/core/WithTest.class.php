@@ -2,15 +2,12 @@
 
 use lang\{ClassLoader, Closeable, IllegalStateException};
 use net\xp_framework\unittest\Name;
-use unittest\{BeforeClass, Test, TestCase, Values};
+use unittest\{Assert, Before, Test, TestCase, Values};
 
-/**
- * Tests `with()` functionality
- */
-class WithTest extends TestCase {
+class WithTest {
   private static $closes, $raises, $dispose;
 
-  #[BeforeClass]
+  #[Before]
   public static function defineCloseableSubclasses() {
     self::$closes= ClassLoader::defineClass('_WithTest_C0', null, [Closeable::class], '{
       public $closed= false;
@@ -30,21 +27,21 @@ class WithTest extends TestCase {
   #[Test]
   public function backwards_compatible_usage_without_closure() {
     with ($f= new Name('test')); {
-      $this->assertInstanceOf(Name::class, $f);
+      Assert::instance(Name::class, $f);
     }
   }
 
   #[Test]
   public function new_usage_with_closure() {
     with (new Name('test'), function($f) {
-      $this->assertInstanceOf(Name::class, $f);
+      Assert::instance(Name::class, $f);
     });
   }
 
   #[Test]
   public function closeable_is_open_inside_block() {
     with (self::$closes->newInstance(), function($f) {
-      $this->assertFalse($f->closed);
+      Assert::false($f->closed);
     });
   }
 
@@ -54,7 +51,7 @@ class WithTest extends TestCase {
     with ($f, function() {
       // NOOP
     });
-    $this->assertTrue($f->closed);
+    Assert::true($f->closed);
   }
 
   #[Test]
@@ -63,7 +60,7 @@ class WithTest extends TestCase {
     with ($f, function() {
       // NOOP
     });
-    $this->assertTrue($f->disposed);
+    Assert::true($f->disposed);
   }
 
   #[Test]
@@ -73,7 +70,7 @@ class WithTest extends TestCase {
     with ($a, $b, function() {
       // NOOP
     });
-    $this->assertEquals([true, true], [$a->closed, $b->closed]);
+    Assert::equals([true, true], [$a->closed, $b->closed]);
   }
 
   #[Test]
@@ -86,7 +83,7 @@ class WithTest extends TestCase {
       });
       $this->fail('No exception thrown', null, 'lang.IllegalStateException');
     } catch (IllegalStateException $expected) {
-      $this->assertEquals([true, true], [$a->closed, $b->closed]);
+      Assert::equals([true, true], [$a->closed, $b->closed]);
     }
   }
 
@@ -103,11 +100,11 @@ class WithTest extends TestCase {
     with (self::$raises->newInstance($class), $b, function() {
       // NOOP
     });
-    $this->assertTrue($b->closed);
+    Assert::true($b->closed);
   }
 
   #[Test]
   public function usage_with_closure_returns_whatever_closure_returns() {
-    $this->assertEquals('Test', with (function() { return 'Test'; }));
+    Assert::equals('Test', with (function() { return 'Test'; }));
   }
 }

@@ -1,10 +1,11 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\{Type, Nullable, IllegalArgumentException, ClassCastException};
+use lang\{ClassCastException, IllegalArgumentException, Nullable, Type};
 use net\xp_framework\unittest\Name;
+use unittest\Assert;
 use unittest\{Expect, Test, TestCase, Values};
 
-class NullableTest extends TestCase {
+class NullableTest {
 
   /** @return iterable */
   private function instances() {
@@ -26,7 +27,7 @@ class NullableTest extends TestCase {
 
   #[Test]
   public function type_factory() {
-    $this->assertInstanceOf(Nullable::class, Type::forName('?string'));
+    Assert::instance(Nullable::class, Type::forName('?string'));
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
@@ -36,12 +37,12 @@ class NullableTest extends TestCase {
 
   #[Test, Values('instances')]
   public function is_instance($value, $expected) {
-    $this->assertEquals($expected, Type::forName('?string')->isInstance($value));
+    Assert::equals($expected, Type::forName('?string')->isInstance($value));
   }
 
   #[Test, Values('castables')]
   public function cast($value, $expected) {
-    $this->assertEquals($expected, Type::forName('?string')->cast($value));
+    Assert::equals($expected, Type::forName('?string')->cast($value));
   }
 
   #[Test, Expect(ClassCastException::class)]

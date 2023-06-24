@@ -1,13 +1,13 @@
 <?php namespace net\xp_framework\unittest\core;
 
-/**
- * Profiling enumeration
- */
-class Profiling extends \lang\Enum {
+use lang\Enum;
+
+/** Profiling enumeration */
+class Profiling extends Enum {
   public static $INSTANCE;
   public static $EXTENSION;
 
-  public static $fixture = null;
+  public static $fixture= null;
   
   static function __static() {
     self::$INSTANCE= new self(0, 'INSTANCE');

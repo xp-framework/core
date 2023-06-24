@@ -1,20 +1,21 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\XPClass;
+use unittest\Assert;
 use unittest\Test;
 
 /**
  * Tests nameof() functionality
  */
-class NameOfTest extends \unittest\TestCase {
+class NameOfTest {
 
   #[Test]
   public function of_instance() {
-    $this->assertEquals('net.xp_framework.unittest.core.NameOfTest', nameof($this));
+    Assert::equals('net.xp_framework.unittest.core.NameOfTest', nameof($this));
   }
 
   #[Test]
   public function of_php_instance() {
-    $this->assertEquals('Exception', nameof(new \Exception('Test')));
+    Assert::equals('Exception', nameof(new \Exception('Test')));
   }
 }

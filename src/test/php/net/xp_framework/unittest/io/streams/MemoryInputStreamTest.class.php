@@ -1,49 +1,32 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\streams\MemoryInputStream;
-use unittest\{Test, TestCase};
+use unittest\{Assert, Test};
 
-class MemoryInputStreamTest extends TestCase {
+class MemoryInputStreamTest {
   const BUFFER= 'Hello World, how are you doing?';
 
-  protected $in= null;
+  /** @return io.streams.MemoryInputStream */
+  private function newFixture() { return new MemoryInputStream(self::BUFFER); }
 
-  /**
-   * Setup method. Creates the fixture.
-   *
-   */
-  public function setUp() {
-    $this->in= new MemoryInputStream(self::BUFFER);
-  }
-
-  /**
-   * Test reading all
-   *
-   */
   #[Test]
   public function readAll() {
-    $this->assertEquals(self::BUFFER, $this->in->read(strlen(self::BUFFER)));
-    $this->assertEquals(0, $this->in->available());
+    $in= $this->newFixture();
+    Assert::equals(self::BUFFER, $in->read(strlen(self::BUFFER)));
+    Assert::equals(0, $in->available());
   }
 
-  /**
-   * Test reading a five byte chunk
-   *
-   */
   #[Test]
   public function readChunk() {
-    $this->assertEquals('Hello', $this->in->read(5));
-    $this->assertEquals(strlen(self::BUFFER)- 5, $this->in->available());
+    $in= $this->newFixture();
+    Assert::equals('Hello', $in->read(5));
+    Assert::equals(strlen(self::BUFFER) - 5, $in->available());
   }
   
-  /**
-   * Test closing a stream twice has no effect.
-   *
-   * @see   xp://lang.Closeable#close
-   */
   #[Test]
   public function closingTwice() {
-    $this->in->close();
-    $this->in->close();
+    $in= $this->newFixture();
+    $in->close();
+    $in->close();
   }
 }

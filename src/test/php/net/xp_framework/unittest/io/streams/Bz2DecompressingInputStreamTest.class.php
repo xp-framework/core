@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\streams\Bz2DecompressingInputStream;
+use unittest\Assert;
 
 /**
  * TestCase

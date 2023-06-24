@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
- 
+
 use lang\{Error, IllegalArgumentException};
+use unittest\Assert;
 use unittest\actions\RuntimeVersion;
 use unittest\{Expect, Test, TestCase};
 use util\Comparator;
@@ -11,7 +12,7 @@ use util\profiling\Timer;
  *
  * @see      xp://util.profiling.Timer
  */
-class TimerTest extends TestCase {
+class TimerTest {
 
   #[Test]
   public function can_create() {
@@ -20,20 +21,20 @@ class TimerTest extends TestCase {
 
   #[Test]
   public function elapsed_time_is_zero_before_timer_is_started() {
-    $this->assertEquals(0.0, (new Timer())->elapsedTime());
+    Assert::equals(0.0, (new Timer())->elapsedTime());
   }
 
   #[Test]
   public function start_returns_timer() {
     $t= new Timer();
-    $this->assertEquals($t, $t->start());
+    Assert::equals($t, $t->start());
   }
 
   #[Test]
   public function stop_returns_timer() {
     $t= new Timer();
     $t->start();
-    $this->assertEquals($t, $t->stop());
+    Assert::equals($t, $t->stop());
   }
 
   #[Test]
@@ -46,7 +47,7 @@ class TimerTest extends TestCase {
     $fixture= (new Timer())->start();
     usleep(50 * 1000);
     $elapsed= $fixture->stop()->elapsedTime();
-    $this->assertTrue($elapsed > 0.0, 'Elapsed time '.$elapsed.' should be greater than zero');
+    Assert::true($elapsed > 0.0, 'Elapsed time '.$elapsed.' should be greater than zero');
   }
 
   #[Test]
@@ -54,7 +55,7 @@ class TimerTest extends TestCase {
     $fixture= (new Timer())->start();
     usleep(50 * 1000);
     $elapsed= $fixture->elapsedTime();
-    $this->assertTrue($elapsed > 0.0, 'Elapsed time '.$elapsed.' should be greater than zero');
+    Assert::true($elapsed > 0.0, 'Elapsed time '.$elapsed.' should be greater than zero');
   }
 
   #[Test]
@@ -63,7 +64,7 @@ class TimerTest extends TestCase {
       usleep(100 * 1000);
     });
     $elapsed= $fixture->elapsedTime();
-    $this->assertTrue($elapsed > 0.0, 'Elapsed time '.$elapsed.' should be greater than zero');
+    Assert::true($elapsed > 0.0, 'Elapsed time '.$elapsed.' should be greater than zero');
   }
 
   #[Test, Expect(Error::class)]

@@ -1,12 +1,13 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\ClassLoader;
+use unittest\Assert;
 use unittest\{Test, TestCase};
 
 /**
  * Tests the XP Framework's optional namespace support
  */
-class NamespaceAliasTest extends TestCase {
+class NamespaceAliasTest {
 
   #[Test]
   public function defined_class_exists() {
@@ -16,7 +17,7 @@ class NamespaceAliasTest extends TestCase {
       [], 
       '{}'
     );
-    $this->assertTrue(class_exists('net\xp_framework\unittest\core\NamespaceAliasClassFixture', false));
+    Assert::true(class_exists('net\xp_framework\unittest\core\NamespaceAliasClassFixture', false));
   }
 
   #[Test]
@@ -26,24 +27,24 @@ class NamespaceAliasTest extends TestCase {
       [], 
       '{}'
     );
-    $this->assertTrue(interface_exists('net\xp_framework\unittest\core\NamespaceAliasInterfaceFixture', false));
+    Assert::true(interface_exists('net\xp_framework\unittest\core\NamespaceAliasInterfaceFixture', false));
   }
 
   #[Test]
   public function autoloaded_class_exists() {
     new NamespaceAliasAutoloadedFixture();              // Triggers autoloader
-    $this->assertTrue(class_exists('net\xp_framework\unittest\core\NamespaceAliasAutoloadedFixture', false));
+    Assert::true(class_exists('net\xp_framework\unittest\core\NamespaceAliasAutoloadedFixture', false));
   }
 
   #[Test]
   public function autoloaded_namespaced_class_exists() {
     new NamespaceAliasAutoloadedNamespacedFixture();    // Triggers autoloader
-    $this->assertTrue(class_exists('net\xp_framework\unittest\core\NamespaceAliasAutoloadedNamespacedFixture', false));
+    Assert::true(class_exists('net\xp_framework\unittest\core\NamespaceAliasAutoloadedNamespacedFixture', false));
   }
 
   #[Test]
   public function autoloaded_fq_class_exists() {
     new NamespaceAliasAutoloadedFQFixture();            // Triggers autoloader
-    $this->assertTrue(class_exists('net\xp_framework\unittest\core\NamespaceAliasAutoloadedFQFixture', false));
+    Assert::true(class_exists('net\xp_framework\unittest\core\NamespaceAliasAutoloadedFQFixture', false));
   }
 }

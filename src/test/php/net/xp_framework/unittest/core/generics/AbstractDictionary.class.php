@@ -1,5 +1,4 @@
 <?php namespace net\xp_framework\unittest\core\generics;
-
 /**
  * Lookup map
  */

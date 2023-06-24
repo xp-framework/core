@@ -2,9 +2,10 @@
 
 use io\{Files, IOException, TempFile};
 use lang\{Environment, IllegalStateException};
+use unittest\Assert;
 use unittest\{Test, TestCase};
 
-class TempFileTest extends TestCase {
+class TempFileTest {
 
   #[Test]
   public function can_create() {
@@ -14,26 +15,26 @@ class TempFileTest extends TestCase {
   #[Test]
   public function uses_tempdir() {
     $t= new TempFile();
-    $this->assertEquals(realpath(Environment::tempDir()), realpath($t->getPath()));
+    Assert::equals(realpath(Environment::tempDir()), realpath($t->getPath()));
   }
 
   #[Test]
   public function filename_begins_with_prefix() {
     $t= new TempFile('pre');
-    $this->assertEquals('pre', substr($t->getFileName(), 0, 3));
+    Assert::equals('pre', substr($t->getFileName(), 0, 3));
   }
 
   #[Test]
   public function default_prefix() {
     $t= new TempFile();
-    $this->assertEquals('tmp', substr($t->getFileName(), 0, 3));
+    Assert::equals('tmp', substr($t->getFileName(), 0, 3));
   }
 
   #[Test]
   public function containing() {
     $t= (new TempFile())->containing('Test');
     try {
-      $this->assertEquals('Test', Files::read($t));
+      Assert::equals('Test', Files::read($t));
     } finally {
       $t->unlink();
     }
@@ -78,7 +79,7 @@ class TempFileTest extends TestCase {
     $uri= $t->getURI();
 
     $t= null; // Force garbage collection
-    $this->assertFalse(file_exists($uri));
+    Assert::false(file_exists($uri));
   }
 
   #[Test]
@@ -87,6 +88,6 @@ class TempFileTest extends TestCase {
     $uri= $t->getURI();
 
     $t= null; // Force garbage collection
-    $this->assertTrue(file_exists($uri));
+    Assert::true(file_exists($uri));
   }
 }

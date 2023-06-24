@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\{Process, Runtime};
+use unittest\Assert;
 use unittest\{BeforeClass, Ignore, PrerequisitesNotMetError, Test, Values};
 
 /**
@@ -8,7 +9,7 @@ use unittest\{BeforeClass, Ignore, PrerequisitesNotMetError, Test, Values};
  *
  * @see  xp://lang.Runtime
  */
-class RuntimeInstantiationTest extends \unittest\TestCase {
+class RuntimeInstantiationTest {
 
   /**
    * Skips tests if process execution has been disabled.
@@ -67,7 +68,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
 
   #[Test]
   public function shutdownHookRunOnScriptEnd() {
-    $this->assertEquals(
+    Assert::equals(
       '+OK exiting, +OK Shutdown hook run',
       $this->runInNewRuntime(Runtime::getInstance()->startupOptions(), '
         Runtime::getInstance()->addShutdownHook(newinstance("lang.Runnable", [], "{
@@ -83,7 +84,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
 
   #[Test]
   public function shutdownHookRunOnNormalExit() {
-    $this->assertEquals(
+    Assert::equals(
       '+OK exiting, +OK Shutdown hook run',
       $this->runInNewRuntime(Runtime::getInstance()->startupOptions(), '
         Runtime::getInstance()->addShutdownHook(newinstance("lang.Runnable", [], "{
@@ -111,8 +112,8 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
       $fatal= NULL;
       $fatal->error();
     ', 255);
-    $this->assertEquals('+OK exiting', substr($out, 0, 11), $out);
-    $this->assertEquals('+OK Shutdown hook run', substr($out, -21), $out);
+    Assert::equals('+OK exiting', substr($out, 0, 11), $out);
+    Assert::equals('+OK Shutdown hook run', substr($out, -21), $out);
   }
 
   #[Test]
@@ -127,8 +128,8 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
       echo "+OK exiting";
       throw new \lang\Error("Uncaught");
     ', 255);
-    $this->assertEquals('+OK exiting', substr($out, 0, 11), $out);
-    $this->assertEquals('+OK Shutdown hook run', substr($out, -21), $out);
+    Assert::equals('+OK exiting', substr($out, 0, 11), $out);
+    Assert::equals('+OK Shutdown hook run', substr($out, -21), $out);
   }
 
   #[Test, Values([[[], '1: xp.runtime.Evaluate'], [['test'], '2: xp.runtime.Evaluate test']])]
@@ -139,7 +140,7 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
       0,
       $args
     );
-    $this->assertEquals($expected, $out);
+    Assert::equals($expected, $out);
   }
 
   #[Test, Values([[['mysql+x://test@127.0.0.1/test'], '2: xp.runtime.Evaluate mysql+x://test@127.0.0.1/test'], [['über', '€uro'], '3: xp.runtime.Evaluate über €uro']])]
@@ -150,6 +151,6 @@ class RuntimeInstantiationTest extends \unittest\TestCase {
       0,
       $args
     );
-    $this->assertEquals($expected, $out);
+    Assert::equals($expected, $out);
   }
 }

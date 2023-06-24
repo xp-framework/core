@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
+use unittest\Assert;
 use unittest\{Test, TestCase};
 
 /**
@@ -7,22 +8,22 @@ use unittest\{Test, TestCase};
  *
  * @see   xp://net.xp_framework.unittest.core.generics.ListOf
  */
-class GenericsOfGenericsTest extends TestCase {
+class GenericsOfGenericsTest {
   
   #[Test]
   public function listOfListOfStringsReflection() {
     $l= create('new net.xp_framework.unittest.core.generics.ListOf<net.xp_framework.unittest.core.generics.ListOf<string>>');
     
     with ($class= typeof($l)); {
-      $this->assertTrue($class->isGeneric());
+      Assert::true($class->isGeneric());
       $arguments= $class->genericArguments();
-      $this->assertEquals(1, sizeof($arguments));
+      Assert::equals(1, sizeof($arguments));
       
       with ($cclass= $arguments[0]); {
-        $this->assertTrue($cclass->isGeneric());
+        Assert::true($cclass->isGeneric());
         $arguments= $cclass->genericArguments();
-        $this->assertEquals(1, sizeof($arguments));
-        $this->assertEquals(\lang\Primitive::$STRING, $arguments[0]);
+        Assert::equals(1, sizeof($arguments));
+        Assert::equals(\lang\Primitive::$STRING, $arguments[0]);
       }
     }
   }
@@ -32,16 +33,16 @@ class GenericsOfGenericsTest extends TestCase {
     $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, net.xp_framework.unittest.core.generics.ListOf<string>>');
     
     with ($class= typeof($l)); {
-      $this->assertTrue($class->isGeneric());
+      Assert::true($class->isGeneric());
       $arguments= $class->genericArguments();
-      $this->assertEquals(2, sizeof($arguments));
+      Assert::equals(2, sizeof($arguments));
       
-      $this->assertEquals(\lang\Primitive::$STRING, $arguments[0]);
+      Assert::equals(\lang\Primitive::$STRING, $arguments[0]);
       with ($vclass= $arguments[1]); {
-        $this->assertTrue($vclass->isGeneric());
+        Assert::true($vclass->isGeneric());
         $arguments= $vclass->genericArguments();
-        $this->assertEquals(1, sizeof($arguments));
-        $this->assertEquals(\lang\Primitive::$STRING, $arguments[0]);
+        Assert::equals(1, sizeof($arguments));
+        Assert::equals(\lang\Primitive::$STRING, $arguments[0]);
       }
     }
   }
@@ -51,17 +52,17 @@ class GenericsOfGenericsTest extends TestCase {
     $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, net.xp_framework.unittest.core.generics.Lookup<string, lang.Value>>');
     
     with ($class= typeof($l)); {
-      $this->assertTrue($class->isGeneric());
+      Assert::true($class->isGeneric());
       $arguments= $class->genericArguments();
-      $this->assertEquals(2, sizeof($arguments));
+      Assert::equals(2, sizeof($arguments));
       
-      $this->assertEquals(\lang\Primitive::$STRING, $arguments[0]);
+      Assert::equals(\lang\Primitive::$STRING, $arguments[0]);
       with ($vclass= $arguments[1]); {
-        $this->assertTrue($vclass->isGeneric());
+        Assert::true($vclass->isGeneric());
         $arguments= $vclass->genericArguments();
-        $this->assertEquals(2, sizeof($arguments));
-        $this->assertEquals(\lang\Primitive::$STRING, $arguments[0]);
-        $this->assertEquals(\lang\XPClass::forName('lang.Value'), $arguments[1]);
+        Assert::equals(2, sizeof($arguments));
+        Assert::equals(\lang\Primitive::$STRING, $arguments[0]);
+        Assert::equals(\lang\XPClass::forName('lang.Value'), $arguments[1]);
       }
     }
   }

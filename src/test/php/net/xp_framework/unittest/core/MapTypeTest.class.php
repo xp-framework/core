@@ -10,9 +10,9 @@ use lang\{
   XPClass
 };
 use net\xp_framework\unittest\Name;
-use unittest\{Expect, Test, TestCase, Values};
+use unittest\{Assert, Expect, Test, Values};
 
-class MapTypeTest extends TestCase {
+class MapTypeTest {
 
   /** @return iterable */
   private function nonMapValues() {
@@ -30,7 +30,7 @@ class MapTypeTest extends TestCase {
 
   #[Test]
   public function typeForName() {
-    $this->assertInstanceOf(MapType::class, Type::forName('[:string]'));
+    Assert::instance(MapType::class, Type::forName('[:string]'));
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
@@ -45,32 +45,32 @@ class MapTypeTest extends TestCase {
 
   #[Test]
   public function newMapTypeWithString() {
-    $this->assertEquals(MapType::forName('[:int]'), new MapType('int'));
+    Assert::equals(MapType::forName('[:int]'), new MapType('int'));
   }
 
   #[Test]
   public function newMapTypeWithTypeInstance() {
-    $this->assertEquals(MapType::forName('[:int]'), new MapType(Primitive::$INT));
+    Assert::equals(MapType::forName('[:int]'), new MapType(Primitive::$INT));
   }
 
   #[Test]
   public function stringComponentType() {
-    $this->assertEquals(Primitive::$STRING, MapType::forName('[:string]')->componentType());
+    Assert::equals(Primitive::$STRING, MapType::forName('[:string]')->componentType());
   }
 
   #[Test]
   public function arrayComponentType() {
-    $this->assertEquals(ArrayType::forName('int[]'), MapType::forName('[:int[]]')->componentType());
+    Assert::equals(ArrayType::forName('int[]'), MapType::forName('[:int[]]')->componentType());
   }
 
   #[Test]
   public function mapComponentType() {
-    $this->assertEquals(MapType::forName('[:int]'), MapType::forName('[:[:int]]')->componentType());
+    Assert::equals(MapType::forName('[:int]'), MapType::forName('[:[:int]]')->componentType());
   }
 
   #[Test]
   public function objectComponentType() {
-    $this->assertEquals(
+    Assert::equals(
       XPClass::forName('net.xp_framework.unittest.Name'),
       MapType::forName('[:net.xp_framework.unittest.Name]')->componentType()
     );
@@ -78,82 +78,82 @@ class MapTypeTest extends TestCase {
 
   #[Test]
   public function varComponentType() {
-    $this->assertEquals(Type::$VAR, MapType::forName('[:var]')->componentType());
+    Assert::equals(Type::$VAR, MapType::forName('[:var]')->componentType());
   }
 
   #[Test]
   public function isInstance() {
-    $this->assertInstanceOf(MapType::forName('[:string]'), ['greet' => 'Hello', 'whom' => 'World']);
+    Assert::instance(MapType::forName('[:string]'), ['greet' => 'Hello', 'whom' => 'World']);
   }
 
   #[Test]
   public function isInstanceOfName() {
-    $this->assertInstanceOf('[:string]', ['greet' => 'Hello', 'whom' => 'World']);
+    Assert::instance('[:string]', ['greet' => 'Hello', 'whom' => 'World']);
   }
 
   #[Test]
   public function intMapIsNotAnInstanceOfStringMap() {
-    $this->assertFalse(MapType::forName('[:string]')->isInstance(['one' => 1, 'two' => 2]));
+    Assert::false(MapType::forName('[:string]')->isInstance(['one' => 1, 'two' => 2]));
   }
 
   #[Test]
   public function varMap() {
-    $this->assertTrue(MapType::forName('[:var]')->isInstance(['one' => 1, 'two' => 'Zwei', 'three' => new Name('Test')]));
+    Assert::true(MapType::forName('[:var]')->isInstance(['one' => 1, 'two' => 'Zwei', 'three' => new Name('Test')]));
   }
 
   #[Test]
   public function arrayIsNotAnInstanceOfVarMap() {
-    $this->assertFalse(MapType::forName('[:var]')->isInstance([1, 2, 3]));
+    Assert::false(MapType::forName('[:var]')->isInstance([1, 2, 3]));
   }
 
   #[Test]
   public function stringMapAssignableFromStringMap() {
-    $this->assertTrue(MapType::forName('[:string]')->isAssignableFrom('[:string]'));
+    Assert::true(MapType::forName('[:string]')->isAssignableFrom('[:string]'));
   }
 
   #[Test]
   public function stringMapAssignableFromStringMapType() {
-    $this->assertTrue(MapType::forName('[:string]')->isAssignableFrom(MapType::forName('[:string]')));
+    Assert::true(MapType::forName('[:string]')->isAssignableFrom(MapType::forName('[:string]')));
   }
 
   #[Test]
   public function stringMapNotAssignableFromIntType() {
-    $this->assertFalse(MapType::forName('[:string]')->isAssignableFrom(Primitive::$INT));
+    Assert::false(MapType::forName('[:string]')->isAssignableFrom(Primitive::$INT));
   }
 
   #[Test]
   public function stringMapNotAssignableFromClassType() {
-    $this->assertFalse(MapType::forName('[:string]')->isAssignableFrom(typeof($this)));
+    Assert::false(MapType::forName('[:string]')->isAssignableFrom(typeof($this)));
   }
 
   #[Test]
   public function stringMapNotAssignableFromString() {
-    $this->assertFalse(MapType::forName('[:string]')->isAssignableFrom('string'));
+    Assert::false(MapType::forName('[:string]')->isAssignableFrom('string'));
   }
 
   #[Test]
   public function stringMapNotAssignableFromStringArray() {
-    $this->assertFalse(MapType::forName('[:string]')->isAssignableFrom('string[]'));
+    Assert::false(MapType::forName('[:string]')->isAssignableFrom('string[]'));
   }
 
   #[Test]
   public function stringMapNotAssignableFromVar() {
-    $this->assertFalse(MapType::forName('[:string]')->isAssignableFrom('var'));
+    Assert::false(MapType::forName('[:string]')->isAssignableFrom('var'));
   }
 
   #[Test]
   public function stringMapNotAssignableFromVoid() {
-    $this->assertFalse(MapType::forName('[:string]')->isAssignableFrom('void'));
+    Assert::false(MapType::forName('[:string]')->isAssignableFrom('void'));
   }
 
   #[Test]
   public function varMapAssignableFromIntMap() {
-    $this->assertFalse(MapType::forName('[:var]')->isAssignableFrom('[:int]'));
+    Assert::false(MapType::forName('[:var]')->isAssignableFrom('[:int]'));
   }
 
   #[Test, Values([[[], null], [[], []], [['key' => 'Test'], ['key' => 'Test']], [['one' => '1', 'two' => '2'], ['one' => 1, 'two' => 2]]])]
   public function newInstance($expected, $value) {
-    $this->assertEquals($expected, MapType::forName('[:string]')->newInstance($value));
+    Assert::equals($expected, MapType::forName('[:string]')->newInstance($value));
   }
 
   #[Test, Expect(IllegalArgumentException::class), Values('nonMapValues')]
@@ -163,7 +163,7 @@ class MapTypeTest extends TestCase {
 
   #[Test, Values([[null, null], [[], []], [['key' => 'Test'], ['key' => 'Test']], [['one' => '1', 'two' => '2'], ['one' => 1, 'two' => 2]]])]
   public function cast($expected, $value) {
-    $this->assertEquals($expected, MapType::forName('[:string]')->cast($value));
+    Assert::equals($expected, MapType::forName('[:string]')->cast($value));
   }
 
   #[Test, Expect(ClassCastException::class), Values('nonMapValues')]
@@ -173,6 +173,6 @@ class MapTypeTest extends TestCase {
 
   #[Test]
   public function instances_created_with_strings_and_instances_are_equal() {
-    $this->assertEquals(new MapType('string'), new MapType(Primitive::$STRING));
+    Assert::equals(new MapType('string'), new MapType(Primitive::$STRING));
   }
 }

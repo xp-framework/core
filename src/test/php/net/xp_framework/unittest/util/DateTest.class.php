@@ -1,41 +1,26 @@
 <?php namespace net\xp_framework\unittest\util;
- 
+
 use lang\{IllegalArgumentException, IllegalStateException};
-use unittest\{Expect, Ignore, Test, TestCase, Values};
+use unittest\{Assert, Before, After, Expect, Ignore, Test, Values};
 use util\{Date, TimeZone};
 
-/**
- * Tests Date class
- *
- * @see http://www.php.net/manual/en/datetime.formats.time.php
- */
-class DateTest extends TestCase {
-  public
-    $nowTime  = 0,
-    $nowDate  = null,
-    $refDate  = null;
+class DateTest {
+  private $nowTime, $nowDate, $refDate, $tz;
 
-  protected $tz= null;
-  
-  /**
-   * Set up this test
-   *
-   * @return void
-   */
+  #[Before]
   public function setUp() {
+
+    // Force timezone to GMT
+    Date::__static();
     $this->tz= date_default_timezone_get();
     date_default_timezone_set('GMT');
-    
+
     $this->nowTime= time();
     $this->nowDate= new Date($this->nowTime);
     $this->refDate= new Date('1977-12-14 11:55');
   }
 
-  /**
-   * Tear down test.
-   *
-   * @return void
-   */
+  #[After]
   public function tearDown() {
     date_default_timezone_set($this->tz);
   }
@@ -49,7 +34,7 @@ class DateTest extends TestCase {
    * @return  bool
    */
   public function assertDateEquals($expected, $date, $error= 'datenotequal') {
-    $this->assertEquals( 
+    Assert::equals( 
       $expected,
       date_format($date->getHandle(), 'Y-m-d\TH:i:sP'),
       $error
@@ -58,7 +43,7 @@ class DateTest extends TestCase {
   
   #[Test]
   public function constructorParseWithoutTz() {
-    $this->assertEquals(true, new Date('2007-01-01 01:00:00 Europe/Berlin') instanceof Date);
+    Assert::equals(true, new Date('2007-01-01 01:00:00 Europe/Berlin') instanceof Date);
   }
   
   #[Test]
@@ -74,40 +59,40 @@ class DateTest extends TestCase {
   #[Test]
   public function constructorParseTz() {
     $date= new Date('2007-01-01 01:00:00 Europe/Berlin');
-    $this->assertEquals('Europe/Berlin', $date->getTimeZone()->name());
+    Assert::equals('Europe/Berlin', $date->getTimeZone()->name());
     $this->assertDateEquals('2007-01-01T01:00:00+01:00', $date);
     
     $date= new Date('2007-01-01 01:00:00 Europe/Berlin', new TimeZone('Europe/Athens'));
-    $this->assertEquals('Europe/Berlin', $date->getTimeZone()->name());
+    Assert::equals('Europe/Berlin', $date->getTimeZone()->name());
     $this->assertDateEquals('2007-01-01T01:00:00+01:00', $date);
 
     $date= new Date('2007-01-01 01:00:00', new TimeZone('Europe/Athens'));
-    $this->assertEquals('Europe/Athens', $date->getTimeZone()->name());
+    Assert::equals('Europe/Athens', $date->getTimeZone()->name());
     $this->assertDateEquals('2007-01-01T01:00:00+02:00', $date);
   }
   
   #[Test]
   public function noDiscreteTimeZone() {
     $date= new Date('2007-11-04 14:32:00+1000');
-    $this->assertEquals('+1000', $date->getOffset());
-    $this->assertEquals(36000, $date->getOffsetInSeconds());
+    Assert::equals('+1000', $date->getOffset());
+    Assert::equals(36000, $date->getOffsetInSeconds());
   }
   
   #[Test]
   public function constructorParseNoTz() {
     $date= new Date('2007-01-01 01:00:00', new TimeZone('Europe/Athens'));
-    $this->assertEquals('Europe/Athens', $date->getTimeZone()->name());
+    Assert::equals('Europe/Athens', $date->getTimeZone()->name());
     
     $date= new Date('2007-01-01 01:00:00');
-    $this->assertEquals('GMT', $date->getTimeZone()->name());
+    Assert::equals('GMT', $date->getTimeZone()->name());
   }
   
   #[Test]
   public function testDate() {
-    $this->assertEquals($this->nowDate->getTime(), $this->nowTime);
-    $this->assertEquals($this->nowDate->toString('r'), date('r', $this->nowTime));
-    $this->assertTrue($this->nowDate->isAfter(new Date('yesterday')));
-    $this->assertTrue($this->nowDate->isBefore(new Date('tomorrow')));
+    Assert::equals($this->nowDate->getTime(), $this->nowTime);
+    Assert::equals($this->nowDate->toString('r'), date('r', $this->nowTime));
+    Assert::true($this->nowDate->isAfter(new Date('yesterday')));
+    Assert::true($this->nowDate->isBefore(new Date('tomorrow')));
   }
   
   #[Test]
@@ -152,25 +137,25 @@ class DateTest extends TestCase {
 
   #[Test]
   public function anteAndPostMeridiem() {
-    $this->assertEquals(1, (new Date('May 28 1980 1:00AM'))->getHours(), '1:00AM != 1h');
-    $this->assertEquals(0, (new Date('May 28 1980 12:00AM'))->getHours(), '12:00AM != 0h');
-    $this->assertEquals(13, (new Date('May 28 1980 1:00PM'))->getHours(), '1:00PM != 13h');
-    $this->assertEquals(12, (new Date('May 28 1980 12:00PM'))->getHours(), '12:00PM != 12h');
+    Assert::equals(1, (new Date('May 28 1980 1:00AM'))->getHours(), '1:00AM != 1h');
+    Assert::equals(0, (new Date('May 28 1980 12:00AM'))->getHours(), '12:00AM != 0h');
+    Assert::equals(13, (new Date('May 28 1980 1:00PM'))->getHours(), '1:00PM != 13h');
+    Assert::equals(12, (new Date('May 28 1980 12:00PM'))->getHours(), '12:00PM != 12h');
   }
   
   #[Test]
   public function anteAndPostMeridiemInMidage() {
-    $this->assertEquals(1, (new Date('May 28 1580 1:00AM'))->getHours(), '1:00AM != 1h');
-    $this->assertEquals(0, (new Date('May 28 1580 12:00AM'))->getHours(), '12:00AM != 0h');
-    $this->assertEquals(13, (new Date('May 28 1580 1:00PM'))->getHours(), '1:00PM != 13h');
-    $this->assertEquals(12, (new Date('May 28 1580 12:00PM'))->getHours(), '12:00PM != 12h');
+    Assert::equals(1, (new Date('May 28 1580 1:00AM'))->getHours(), '1:00AM != 1h');
+    Assert::equals(0, (new Date('May 28 1580 12:00AM'))->getHours(), '12:00AM != 0h');
+    Assert::equals(13, (new Date('May 28 1580 1:00PM'))->getHours(), '1:00PM != 13h');
+    Assert::equals(12, (new Date('May 28 1580 12:00PM'))->getHours(), '12:00PM != 12h');
   }
   
   #[Test]
   public function dateCreate() {
     
     // Test with a date before 1971
-    $this->assertEquals(-44668800, Date::create(1968, 8, 2, 0, 0, 0)->getTime());
+    Assert::equals(-44668800, Date::create(1968, 8, 2, 0, 0, 0)->getTime());
   }
   
   #[Test]
@@ -184,26 +169,26 @@ class DateTest extends TestCase {
   public function serialization() {
     $original= new Date('2007-07-18T09:42:08 Europe/Athens');
     $copy= unserialize(serialize($original));
-    $this->assertEquals($original, $copy);
+    Assert::equals($original, $copy);
   }
   
   #[Test]
   public function timeZoneSerialization() {
     date_default_timezone_set('Europe/Athens');
     $date= new Date('2007-11-20 21:45:33 Europe/Berlin');
-    $this->assertEquals('Europe/Berlin', $date->getTimeZone()->name());
-    $this->assertEquals('+0100', $date->getOffset());
+    Assert::equals('Europe/Berlin', $date->getTimeZone()->name());
+    Assert::equals('+0100', $date->getOffset());
     
     $copy= unserialize(serialize($date));
-    $this->assertEquals('+0100', $copy->getOffset());
+    Assert::equals('+0100', $copy->getOffset());
   }
   
   #[Test]
   public function handlingOfTimezone() {
     $date= new Date('2007-07-18T09:42:08 Europe/Athens');
 
-    $this->assertEquals('Europe/Athens', $date->getTimeZone()->name());
-    $this->assertEquals(3 * 3600, $date->getTimeZone()->offset($date));
+    Assert::equals('Europe/Athens', $date->getTimeZone()->name());
+    Assert::equals(3 * 3600, $date->getTimeZone()->offset($date));
   }
 
   /**
@@ -242,29 +227,32 @@ class DateTest extends TestCase {
 
   #[Test, Values('formatTokens')]
   public function supportedFormatTokens($input, $expect) {
-    $this->assertEquals($expect, $this->refDate->format($input));
+    Assert::equals($expect, $this->refDate->format($input));
   }
   
   #[Test]
   public function unsupportedFormatToken() {
-    $this->assertEquals('%b', $this->refDate->format('%b'));
+    Assert::equals('%b', $this->refDate->format('%b'));
   }
   
   #[Test]
   public function testTimestamp() {
     date_default_timezone_set('Europe/Berlin');
-    
-    $d1= new Date('1980-05-28 06:30:00 Europe/Berlin');
-    $d2= new Date(328336200);
-    
-    $this->assertEquals($d1, $d2);
-    $this->assertEquals($d2, new Date($d2->toString()));
+    try {
+      $d1= new Date('1980-05-28 06:30:00 Europe/Berlin');
+      $d2= new Date(328336200);
+      
+      Assert::equals($d1, $d2);
+      Assert::equals($d2, new Date($d2->toString()));
+    } finally {
+      date_default_timezone_set('GMT');
+    }
   }
   
   #[Test]
   public function testTimestampWithTZ() {
     $d= new Date(328336200, new TimeZone('Australia/Sydney'));
-    $this->assertEquals('Australia/Sydney', $d->getTimeZone()->name());
+    Assert::equals('Australia/Sydney', $d->getTimeZone()->name());
   }
   
   /**
@@ -276,21 +264,21 @@ class DateTest extends TestCase {
   
     // Specific timezone id unknown, can be Europe/Paris, Europe/Berlin, ...
     $date= new Date('1980-05-28 06:30:00+0200');
-    $this->assertNotEquals('GMT', $date->getTimeZone()->name());
+    Assert::notEquals('GMT', $date->getTimeZone()->name());
   }
   
   #[Test]
   public function toStringOutput() {
     $date= new Date('2007-11-10 20:15+0100');
-    $this->assertEquals('2007-11-10 20:15:00+0100', $date->toString());
-    $this->assertEquals('2007-11-10 19:15:00+0000', $date->toString(Date::DEFAULT_FORMAT, new TimeZone(null)));
+    Assert::equals('2007-11-10 20:15:00+0100', $date->toString());
+    Assert::equals('2007-11-10 19:15:00+0000', $date->toString(Date::DEFAULT_FORMAT, new TimeZone('GMT')));
   }
   
   #[Test]
   public function toStringOutputPreserved() {
     $date= unserialize(serialize(new Date('2007-11-10 20:15+0100')));
-    $this->assertEquals('2007-11-10 20:15:00+0100', $date->toString());
-    $this->assertEquals('2007-11-10 19:15:00+0000', $date->toString(Date::DEFAULT_FORMAT, new TimeZone(null)));
+    Assert::equals('2007-11-10 20:15:00+0100', $date->toString());
+    Assert::equals('2007-11-10 19:15:00+0000', $date->toString(Date::DEFAULT_FORMAT, new TimeZone('GMT')));
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
@@ -340,19 +328,19 @@ class DateTest extends TestCase {
   
   #[Test]
   public function createDateFromStaticNowFunctionWithoutParam() {
-    $this->assertEquals(true, Date::now() instanceof Date);
+    Assert::equals(true, Date::now() instanceof Date);
   }
   
   #[Test]
   public function createDateFromStaticNowFunctionWithZimeZone() {
     $d= Date::now(new TimeZone('Australia/Sydney'));
-    $this->assertEquals('Australia/Sydney', $d->getTimeZone()->name());
+    Assert::equals('Australia/Sydney', $d->getTimeZone()->name());
   }
 
   #[Test]
   public function createDateFromTime() {
     $date= new Date('19.19');
-    $this->assertEquals(strtotime('19.19'), $date->getTime());
+    Assert::equals(strtotime('19.19'), $date->getTime());
   }
 
   #[Test]
@@ -380,6 +368,6 @@ class DateTest extends TestCase {
 
   #[Test]
   public function microseconds() {
-    $this->assertEquals(393313, (new Date('2019-07-03 15:18:10.393313'))->getMicroSeconds());
+    Assert::equals(393313, (new Date('2019-07-03 15:18:10.393313'))->getMicroSeconds());
   }
 }

@@ -1,14 +1,16 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use io\{File, Files};
-use lang\{Environment, IllegalArgumentException, FileSystemClassLoader};
+use lang\{Environment, FileSystemClassLoader, IllegalArgumentException};
+use unittest\Assert;
 use unittest\{Expect, Test, TestCase};
 use util\{ClassPathPropertySource, Properties};
 
-class ClassPathPropertySourceTest extends TestCase {
+class ClassPathPropertySourceTest {
   protected $tempFile, $fixture;
 
   /** @return void */
+  #[Before]
   public function setUp() {
     $tempDir= realpath(Environment::tempDir());
     $this->fixture= new ClassPathPropertySource(null, new FileSystemClassLoader($tempDir));
@@ -19,23 +21,24 @@ class ClassPathPropertySourceTest extends TestCase {
   }
 
   /** @return void */
+  #[After]
   public function tearDown() {
     $this->tempFile->unlink();
   }
 
   #[Test]
   public function provides_existing_ini_file() {
-    $this->assertTrue($this->fixture->provides('temp'));
+    Assert::true($this->fixture->provides('temp'));
   }
 
   #[Test]
   public function does_not_provide_non_existant_ini_file() {
-    $this->assertFalse($this->fixture->provides('@@non-existant@@'));
+    Assert::false($this->fixture->provides('@@non-existant@@'));
   }
 
   #[Test]
   public function fetch_existing_ini_file() {
-    $this->assertEquals(
+    Assert::equals(
       ['key' => 'value'],
       $this->fixture->fetch('temp')->readSection('section')
     );

@@ -1,13 +1,14 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\{IllegalStateException, Runnable};
+use unittest\Assert;
 use unittest\{Expect, Test};
 use util\{AbstractDeferredInvokationHandler, DeferredInitializationException};
 
 /**
  * TestCase for AbstractDeferredInvokationHandler
  */
-class DeferredInvokationHandlerTest extends \unittest\TestCase {
+class DeferredInvokationHandlerTest {
 
   #[Test]
   public function echo_runnable_invokation() {
@@ -19,7 +20,7 @@ class DeferredInvokationHandlerTest extends \unittest\TestCase {
       }
     };
     $args= [1, 2, 'Test'];
-    $this->assertEquals($args, $handler->invoke($this, 'run', $args));
+    Assert::equals($args, $handler->invoke($this, 'run', $args));
   }
 
   #[Test, Expect(['class' => IllegalStateException::class, 'withMessage' => 'Test'])]
@@ -69,8 +70,8 @@ class DeferredInvokationHandlerTest extends \unittest\TestCase {
         return $f();
       }
     };
-    $this->assertEquals(true, $handler->invoke($this, 'run', []));
-    $this->assertEquals(true, $handler->invoke($this, 'run', []));
+    Assert::equals(true, $handler->invoke($this, 'run', []));
+    Assert::equals(true, $handler->invoke($this, 'run', []));
   }  
 
   #[Test]
@@ -93,6 +94,6 @@ class DeferredInvokationHandlerTest extends \unittest\TestCase {
     } catch (DeferredInitializationException $expected) {
       // OK
     }
-    $this->assertEquals(true, $handler->invoke($this, 'run', []));
+    Assert::equals(true, $handler->invoke($this, 'run', []));
   }
 }

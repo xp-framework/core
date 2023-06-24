@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{ClassLoader, ClassNotFoundException, Closeable, Runnable, XPClass};
+use unittest\Assert;
 use unittest\{Expect, Test};
 
 /**
@@ -31,7 +32,7 @@ class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
 
   #[Test]
   public function given_parent_is_inherited() {
-    $this->assertEquals(
+    Assert::equals(
       [XPClass::forName(Runnable::class)],
       $this->define(['parents' => [Runnable::class]])->getInterfaces()
     );
@@ -39,7 +40,7 @@ class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
 
   #[Test]
   public function given_parent_class_is_inherited() {
-    $this->assertEquals(
+    Assert::equals(
       [XPClass::forName(Runnable::class)],
       $this->define(['parents' => [XPClass::forName(Runnable::class)]])->getInterfaces()
     );
@@ -47,7 +48,7 @@ class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
 
   #[Test]
   public function given_parents_are_inherited() {
-    $this->assertEquals(
+    Assert::equals(
       [XPClass::forName(Runnable::class), XPClass::forName(Closeable::class)],
       $this->define(['parents' => [Runnable::class, Closeable::class]])->getInterfaces()
     );
@@ -55,7 +56,7 @@ class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
 
   #[Test]
   public function given_parent_classes_are_inherited() {
-    $this->assertEquals(
+    Assert::equals(
       [XPClass::forName(Runnable::class), XPClass::forName(Closeable::class)],
       $this->define(['parents' => [XPClass::forName(Runnable::class), XPClass::forName(Closeable::class)]])->getInterfaces()
     );
@@ -63,13 +64,13 @@ class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
 
   #[Test]
   public function parents_method_exists() {
-    $this->assertTrue($this->define(['parents' => [Runnable::class]])->hasMethod('run'));
+    Assert::true($this->define(['parents' => [Runnable::class]])->hasMethod('run'));
   }
 
   #[Test]
   public function method_exists() {
     $class= $this->define(['parents' => [Runnable::class]], '{ public function runAs($user); }');
-    $this->assertTrue($class->hasMethod('runAs'));
+    Assert::true($class->hasMethod('runAs'));
   }
 
   #[Test, Expect(ClassNotFoundException::class)]
@@ -85,6 +86,6 @@ class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
   #[Test]
   public function closure_map_style_declaring_method() {
     $class= $this->define(['parents' => [Runnable::class]], ['fixture' => function() { }]);
-    $this->assertTrue($class->hasMethod('fixture'));
+    Assert::true($class->hasMethod('fixture'));
   }
 }

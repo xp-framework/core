@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\archive;
 
 use lang\archive\Archive;
+use unittest\Assert;
 use unittest\Test;
 
 /**
@@ -17,7 +18,7 @@ class ArchiveV2Test extends ArchiveTest {
   public function read_empty_archive_with_version_1() {
     $a= new Archive($this->file(1));
     $a->open(Archive::READ);
-    $this->assertEquals(1, $a->version);
+    Assert::equals(1, $a->version);
     $this->assertEntries($a, []);
   }
 
@@ -25,14 +26,14 @@ class ArchiveV2Test extends ArchiveTest {
   public function archive_with_version_1() {
     $a= new Archive($this->resource('v1.xar'));
     $a->open(Archive::READ);
-    $this->assertEquals(1, $a->version);
+    Assert::equals(1, $a->version);
   }
 
   #[Test]
   public function archive_version_1_contains_contained_text_file() {
     $a= new Archive($this->resource('v1.xar'));
     $a->open(Archive::READ);
-    $this->assertTrue($a->contains('contained.txt'));
+    Assert::true($a->contains('contained.txt'));
   }
 
   #[Test]

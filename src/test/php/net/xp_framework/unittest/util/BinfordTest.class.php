@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
- 
+
 use lang\IllegalArgumentException;
+use unittest\Assert;
 use unittest\{Expect, Test, TestCase};
 use util\Binford;
 
@@ -9,7 +10,7 @@ use util\Binford;
  *
  * @see  xp://util.Binford
  */
-class BinfordTest extends TestCase {
+class BinfordTest {
   protected static $observable;
 
   #[Test]
@@ -19,19 +20,19 @@ class BinfordTest extends TestCase {
 
   #[Test]
   public function default_power_is_6100() {
-    $this->assertEquals(new Binford(6100), new Binford());
+    Assert::equals(new Binford(6100), new Binford());
   }
 
   #[Test]
   public function get_powered_by_returns_powerr() {
-    $this->assertEquals(6100, (new Binford(6100))->getPoweredBy());
+    Assert::equals(6100, (new Binford(6100))->getPoweredBy());
   }
 
   #[Test]
   public function set_powered_by_modifies_power() {
     $binford= new Binford(6100);
     $binford->setPoweredBy(61000);  // Hrhr, even more power!
-    $this->assertEquals(61000, $binford->getPoweredBy());
+    Assert::equals(61000, $binford->getPoweredBy());
   }
 
   #[Test]
@@ -61,6 +62,6 @@ class BinfordTest extends TestCase {
 
   #[Test]
   public function string_representation() {
-    $this->assertEquals('util.Binford(6100)', (new Binford(6100))->toString());
+    Assert::equals('util.Binford(6100)', (new Binford(6100))->toString());
   }
 }

@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{ArrayType, MapType, Primitive, Type, Value, XPClass};
+use unittest\Assert;
 use unittest\actions\RuntimeVersion;
 use unittest\{Action, Test, Values};
 
@@ -19,12 +20,12 @@ class FieldTypeTest extends FieldsTest {
 
   #[Test]
   public function untyped() {
-    $this->assertEquals(Type::$VAR, $this->field('public $fixture;')->getType());
+    Assert::equals(Type::$VAR, $this->field('public $fixture;')->getType());
   }
 
   #[Test, Values('types')]
   public function field_type_determined_via_var_tag($declaration, $type) {
-    $this->assertEquals(
+    Assert::equals(
       $type,
       $this->field('/** @var '.$declaration.' */ public $fixture;')->getType()
     );
@@ -32,7 +33,7 @@ class FieldTypeTest extends FieldsTest {
 
   #[Test, Values('types')]
   public function field_typeName_determined_via_var_tag($declaration, $type) {
-    $this->assertEquals(
+    Assert::equals(
       $type->getName(),
       $this->field('/** @var '.$declaration.' */ public $fixture;')->getTypeName()
     );
@@ -40,7 +41,7 @@ class FieldTypeTest extends FieldsTest {
 
   #[Test, Values('types')]
   public function field_type_determined_via_type_tag($declaration, $type) {
-    $this->assertEquals(
+    Assert::equals(
       $type,
       $this->field('/** @type '.$declaration.' */ public $fixture;')->getType()
     );
@@ -48,7 +49,7 @@ class FieldTypeTest extends FieldsTest {
 
   #[Test, Values('types')]
   public function field_type_determined_via_annotation($declaration, $type) {
-    $this->assertEquals(
+    Assert::equals(
       $type,
       $this->field('#[Type("'.$declaration.'")]'."\n".'public $fixture;')->getType()
     );
@@ -57,37 +58,37 @@ class FieldTypeTest extends FieldsTest {
   #[Test]
   public function self_type_via_apidoc() {
     $fixture= $this->type('{ /** @type self */ public $fixture; }');
-    $this->assertEquals('self', $fixture->getField('fixture')->getTypeName());
-    $this->assertEquals($fixture, $fixture->getField('fixture')->getType());
+    Assert::equals('self', $fixture->getField('fixture')->getTypeName());
+    Assert::equals($fixture, $fixture->getField('fixture')->getType());
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=7.4")')]
   public function self_type_via_syntax() {
     $fixture= $this->type('{ public self $fixture; }');
-    $this->assertEquals('self', $fixture->getField('fixture')->getTypeName());
-    $this->assertEquals($fixture, $fixture->getField('fixture')->getType());
+    Assert::equals('self', $fixture->getField('fixture')->getTypeName());
+    Assert::equals($fixture, $fixture->getField('fixture')->getType());
   }
 
   #[Test]
   public function array_of_self_type() {
     $fixture= $this->type('{ /** @type array<self> */ public $fixture; }');
-    $this->assertEquals(new ArrayType($fixture), $fixture->getField('fixture')->getType());
+    Assert::equals(new ArrayType($fixture), $fixture->getField('fixture')->getType());
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=7.4")')]
   public function specific_array_type_determined_via_apidoc() {
     $fixture= $this->type('{ /** @type string[] */ public array $fixture; }');
-    $this->assertEquals('string[]', $fixture->getField('fixture')->getTypeName());
-    $this->assertEquals(new ArrayType(Primitive::$STRING), $fixture->getField('fixture')->getType());
+    Assert::equals('string[]', $fixture->getField('fixture')->getTypeName());
+    Assert::equals(new ArrayType(Primitive::$STRING), $fixture->getField('fixture')->getType());
   }
 
   #[Test]
   public function untyped_restriction() {
-    $this->assertNull($this->field('public $fixture;')->getTypeRestriction());
+    Assert::null($this->field('public $fixture;')->getTypeRestriction());
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=7.4")')]
   public function typed_restriction() {
-    $this->assertEquals(Primitive::$STRING, $this->field('public string $fixture;')->getTypeRestriction());
+    Assert::equals(Primitive::$STRING, $this->field('public string $fixture;')->getTypeRestriction());
   }
 }

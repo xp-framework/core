@@ -1,12 +1,13 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use lang\{GenericTypes, Primitive, XPClass};
+use unittest\Assert;
 use unittest\{BeforeClass, Test, TestCase};
 
 /**
  * TestCase for lang.GenericTypes
  */
-class GenericTypesTest extends TestCase {
+class GenericTypesTest {
   private static $filter;
 
   #[BeforeClass]
@@ -16,7 +17,7 @@ class GenericTypesTest extends TestCase {
   
   #[Test]
   public function newType0_returns_literal() {
-    $this->assertEquals(
+    Assert::equals(
       "net\\xp_framework\\unittest\\core\\generics\\ArrayFilter\xb7\xb7\xfeint",
       (new GenericTypes())->newType0(self::$filter, [Primitive::$INT])
     );
@@ -24,7 +25,7 @@ class GenericTypesTest extends TestCase {
 
   #[Test]
   public function newType_returns_XPClass_instance() {
-    $this->assertInstanceOf(
+    Assert::instance(
       XPClass::class,
       (new GenericTypes())->newType(self::$filter, [Primitive::$INT])
     );
@@ -32,14 +33,14 @@ class GenericTypesTest extends TestCase {
 
   #[Test]
   public function newType_creates_generic_class() {
-    $this->assertTrue(
+    Assert::true(
       (new GenericTypes())->newType(self::$filter, [Primitive::$INT])->isGeneric()
     );
   }
 
   #[Test]
   public function newType_sets_generic_arguments() {
-    $this->assertEquals(
+    Assert::equals(
       [Primitive::$INT],
       (new GenericTypes())->newType(self::$filter, [Primitive::$INT])->genericArguments()
     );

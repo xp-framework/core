@@ -3,6 +3,7 @@
 use lang\ClassFormatException;
 use lang\reflect\ClassParser;
 use net\xp_framework\unittest\Name;
+use unittest\Assert;
 use unittest\{Call, Expect, Fixture, Test, Value, Values};
 
 /**
@@ -12,7 +13,7 @@ use unittest\{Call, Expect, Fixture, Test, Value, Values};
  * @see  https://github.com/xp-framework/xp-framework/issues/230
  * @see  https://github.com/xp-framework/xp-framework/issues/270
  */
-class ClassDetailsTest extends \unittest\TestCase {
+class ClassDetailsTest {
 
   /**
    * Helper method that parses an apidoc comment and returns the matches
@@ -29,7 +30,7 @@ class ClassDetailsTest extends \unittest\TestCase {
           public function test() { }
         }
       ?>',
-      $this->name
+      self::class
     );
     return $details[1]['test'];
   }
@@ -37,7 +38,7 @@ class ClassDetailsTest extends \unittest\TestCase {
   #[Test, Values(['class', 'interface', 'trait'])]
   public function parses($kind) {
     $details= (new ClassParser())->parseDetails('<?php '.$kind.' Test { }');
-    $this->assertEquals(
+    Assert::equals(
       [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => []],
       $details['class']
     );
@@ -54,7 +55,7 @@ class ClassDetailsTest extends \unittest\TestCase {
        * @param   string param1
        */
     ');
-    $this->assertEquals(
+    Assert::equals(
       "A protected method\n\nNote: Not compatible with PHP 4.1.2!",
       $details[DETAIL_COMMENT]
     );
@@ -67,109 +68,109 @@ class ClassDetailsTest extends \unittest\TestCase {
        * @see   php://comment
        */
     ');
-    $this->assertEquals('', $details[DETAIL_COMMENT]);
+    Assert::equals('', $details[DETAIL_COMMENT]);
   }
   
   #[Test]
   public function scalar_parameter() {
     $details= $this->parseComment('/** @param  string param1 */');
-    $this->assertEquals('string', $details[DETAIL_ARGUMENTS][0]);
+    Assert::equals('string', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[Test]
   public function array_parameter() {
     $details= $this->parseComment('/** @param  string[] param1 */');
-    $this->assertEquals('string[]', $details[DETAIL_ARGUMENTS][0]);
+    Assert::equals('string[]', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[Test]
   public function object_parameter() {
     $details= $this->parseComment('/** @param  util.Date param1 */');
-    $this->assertEquals('util.Date', $details[DETAIL_ARGUMENTS][0]);
+    Assert::equals('util.Date', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[Test]
   public function defaultParameter() {
     $details= $this->parseComment('/** @param  int param1 default 1 */');
-    $this->assertEquals('int', $details[DETAIL_ARGUMENTS][0]);
+    Assert::equals('int', $details[DETAIL_ARGUMENTS][0]);
   }
   
   #[Test]
   public function map_parameter() {
     $details= $this->parseComment('/** @param  [:string] map */');
-    $this->assertEquals('[:string]', $details[DETAIL_ARGUMENTS][0]);
+    Assert::equals('[:string]', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[Test]
   public function generic_parameter_with_two_components() {
     $details= $this->parseComment('/** @param  util.collection.HashTable<string, util.Traceable> map */');
-    $this->assertEquals('util.collection.HashTable<string, util.Traceable>', $details[DETAIL_ARGUMENTS][0]);
+    Assert::equals('util.collection.HashTable<string, util.Traceable>', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[Test]
   public function generic_parameter_with_one_component() {
     $details= $this->parseComment('/** @param  util.collections.Vector<unittest.TestCase> param1 */');
-    $this->assertEquals('util.collections.Vector<unittest.TestCase>', $details[DETAIL_ARGUMENTS][0]);
+    Assert::equals('util.collections.Vector<unittest.TestCase>', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[Test]
   public function nested_generic_parameter() {
     $details= $this->parseComment('/** @param  util.collections.Vector<util.collections.Vector<?>> map */');
-    $this->assertEquals('util.collections.Vector<util.collections.Vector<?>>', $details[DETAIL_ARGUMENTS][0]);
+    Assert::equals('util.collections.Vector<util.collections.Vector<?>>', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[Test]
   public function function_parameter() {
     $details= $this->parseComment('/** @param  function(string): string param1 */');
-    $this->assertEquals('function(string): string', $details[DETAIL_ARGUMENTS][0]);
+    Assert::equals('function(string): string', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[Test]
   public function function_accepting_function_parameter() {
     $details= $this->parseComment('/** @param  function(function(): void): string param1 */');
-    $this->assertEquals('function(function(): void): string', $details[DETAIL_ARGUMENTS][0]);
+    Assert::equals('function(function(): void): string', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[Test]
   public function function_returning_function_parameter() {
     $details= $this->parseComment('/** @param  function(): function(): void param1 */');
-    $this->assertEquals('function(): function(): void', $details[DETAIL_ARGUMENTS][0]);
+    Assert::equals('function(): function(): void', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[Test]
   public function function_returning_generic() {
     $details= $this->parseComment('/** @param  function(): util.Filter<string> param1 */');
-    $this->assertEquals('function(): util.Filter<string>', $details[DETAIL_ARGUMENTS][0]);
+    Assert::equals('function(): util.Filter<string>', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[Test]
   public function function_returning_array() {
     $details= $this->parseComment('/** @param  function(): int[] param1 */');
-    $this->assertEquals('function(): int[]', $details[DETAIL_ARGUMENTS][0]);
+    Assert::equals('function(): int[]', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[Test]
   public function braced_function_type() {
     $details= $this->parseComment('/** @param  (function(): int) param1 */');
-    $this->assertEquals('(function(): int)', $details[DETAIL_ARGUMENTS][0]);
+    Assert::equals('(function(): int)', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[Test]
   public function array_of_functions() {
     $details= $this->parseComment('/** @param  (function(): int)[] param1 */');
-    $this->assertEquals('(function(): int)[]', $details[DETAIL_ARGUMENTS][0]);
+    Assert::equals('(function(): int)[]', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[Test]
   public function map_of_functions() {
     $details= $this->parseComment('/** @param  [:function(): int] param1 */');
-    $this->assertEquals('[:function(): int]', $details[DETAIL_ARGUMENTS][0]);
+    Assert::equals('[:function(): int]', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[Test]
   public function map_of_functions_with_braces() {
     $details= $this->parseComment('/** @param  [:(function(): int)] param1 */');
-    $this->assertEquals('[:(function(): int)]', $details[DETAIL_ARGUMENTS][0]);
+    Assert::equals('[:(function(): int)]', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[Test]
@@ -182,14 +183,14 @@ class ClassDetailsTest extends \unittest\TestCase {
        * @throws  lang.IllegalAccessException
        */
     ');
-    $this->assertEquals('lang.IllegalArgumentException', $details[DETAIL_THROWS][0]);
-    $this->assertEquals('lang.IllegalAccessException', $details[DETAIL_THROWS][1]);
+    Assert::equals('lang.IllegalArgumentException', $details[DETAIL_THROWS][0]);
+    Assert::equals('lang.IllegalAccessException', $details[DETAIL_THROWS][1]);
   }
  
   #[Test]
   public function int_return_type() {
     $details= $this->parseComment('/** @return int */');
-    $this->assertEquals('int', $details[DETAIL_RETURNS]);
+    Assert::equals('int', $details[DETAIL_RETURNS]);
   }
 
   #[Test]
@@ -207,7 +208,7 @@ class ClassDetailsTest extends \unittest\TestCase {
         }
       }
     ?>');
-    $this->assertEquals('Creates a new answer', $details[1]['newAnswer'][DETAIL_COMMENT]);
+    Assert::equals('Creates a new answer', $details[1]['newAnswer'][DETAIL_COMMENT]);
   }
 
   #[Test]
@@ -234,7 +235,7 @@ class ClassDetailsTest extends \unittest\TestCase {
         }
       }
     ?>');
-    $this->assertEquals('Creates a new question', $details[1]['newQuestion'][DETAIL_COMMENT]);
+    Assert::equals('Creates a new question', $details[1]['newQuestion'][DETAIL_COMMENT]);
   }
 
   #[Test]
@@ -246,7 +247,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test {
       }
     ');
-    $this->assertInstanceOf(Name::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
+    Assert::instance(Name::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
   }
 
   #[Test]
@@ -258,7 +259,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test {
       }
     ');
-    $this->assertInstanceOf(Name::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
+    Assert::instance(Name::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
   }
 
   #[Test]
@@ -270,7 +271,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test extends DemoTest {
       }
     ');
-    $this->assertInstanceOf(Name::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
+    Assert::instance(Name::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
   }
 
   #[Test]
@@ -282,7 +283,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test {
       }
     ');
-    $this->assertInstanceOf(Name::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
+    Assert::instance(Name::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
   }
 
   #[Test]
@@ -294,7 +295,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test {
       }
     ');
-    $this->assertInstanceOf(\ArrayObject::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
+    Assert::instance(\ArrayObject::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
   }
 
   #[Test]
@@ -306,7 +307,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test {
       }
     ');
-    $this->assertInstanceOf(\ArrayObject::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
+    Assert::instance(\ArrayObject::class, $actual['class'][DETAIL_ANNOTATIONS]['value']);
   }
 
   #[Test]
@@ -316,7 +317,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test {
       }
     ');
-    $this->assertEquals(['value' => 'test'], $actual['class'][DETAIL_ANNOTATIONS]);
+    Assert::equals(['value' => 'test'], $actual['class'][DETAIL_ANNOTATIONS]);
   }
 
   #[Test]
@@ -326,7 +327,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test {
       }
     ');
-    $this->assertEquals(['test' => null, 'value' => 'test'], $actual['class'][DETAIL_ANNOTATIONS]);
+    Assert::equals(['test' => null, 'value' => 'test'], $actual['class'][DETAIL_ANNOTATIONS]);
   }
 
   #[Test, Values(['\net\xp_framework\unittest\Name', 'unittest\Name', 'Name'])]
@@ -338,7 +339,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test {
       }
     ');
-    $this->assertEquals(['expect' => ['class' => Name::class]], $actual['class'][DETAIL_ANNOTATIONS]);
+    Assert::equals(['expect' => ['class' => Name::class]], $actual['class'][DETAIL_ANNOTATIONS]);
   }
 
   #[Test]
@@ -348,7 +349,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test {
       }
     ');
-    $this->assertEquals('test', $actual['class'][DETAIL_ANNOTATIONS]['value']());
+    Assert::equals('test', $actual['class'][DETAIL_ANNOTATIONS]['value']());
   }
 
   #[Test]
@@ -358,7 +359,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test {
       }
     ');
-    $this->assertEquals('test', $actual['class'][DETAIL_ANNOTATIONS]['value']());
+    Assert::equals('test', $actual['class'][DETAIL_ANNOTATIONS]['value']());
   }
 
   #[Test]
@@ -368,7 +369,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test {
       }
     ');
-    $this->assertEquals('test', $actual['class'][DETAIL_ANNOTATIONS]['value']['func']());
+    Assert::equals('test', $actual['class'][DETAIL_ANNOTATIONS]['value']['func']());
   }
 
   #[Test]
@@ -378,7 +379,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test {
       }
     ');
-    $this->assertEquals(['one' => 1, 'two' => 2], $actual['class'][DETAIL_ANNOTATIONS]['value']);
+    Assert::equals(['one' => 1, 'two' => 2], $actual['class'][DETAIL_ANNOTATIONS]['value']);
   }
 
   #[Test]
@@ -388,7 +389,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test {
       }
     ');
-    $this->assertEquals(['test' => null], $actual['class'][DETAIL_ANNOTATIONS]);
+    Assert::equals(['test' => null], $actual['class'][DETAIL_ANNOTATIONS]);
   }
 
   #[Test]
@@ -398,7 +399,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test {
       }
     ');
-    $this->assertEquals(['test' => null], $actual['class'][DETAIL_ANNOTATIONS]);
+    Assert::equals(['test' => null], $actual['class'][DETAIL_ANNOTATIONS]);
   }
 
   #[Test, Expect(class: ClassFormatException::class, withMessage: 'Unexpected ","')]
@@ -437,7 +438,7 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test {
       }
     ');
-    $this->assertEquals([[1, 2], [3, 4]], $actual['class'][DETAIL_ANNOTATIONS]['values']);
+    Assert::equals([[1, 2], [3, 4]], $actual['class'][DETAIL_ANNOTATIONS]['values']);
   }
 
   #[Test]
@@ -448,7 +449,7 @@ class ClassDetailsTest extends \unittest\TestCase {
         public $fixture;
       }
     ');
-    $this->assertEquals(['test' => null], $details[0]['fixture'][DETAIL_ANNOTATIONS]);
+    Assert::equals(['test' => null], $details[0]['fixture'][DETAIL_ANNOTATIONS]);
   }
 
   #[Test]
@@ -459,7 +460,7 @@ class ClassDetailsTest extends \unittest\TestCase {
         public function fixture() { }
       }
     ');
-    $this->assertEquals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
+    Assert::equals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
   }
 
   #[Test]
@@ -470,7 +471,7 @@ class ClassDetailsTest extends \unittest\TestCase {
         public abstract function fixture();
       }
     ');
-    $this->assertEquals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
+    Assert::equals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
   }
 
   #[Test]
@@ -481,7 +482,7 @@ class ClassDetailsTest extends \unittest\TestCase {
         public function fixture();
       }
     ');
-    $this->assertEquals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
+    Assert::equals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
   }
 
   #[Test]
@@ -494,7 +495,7 @@ class ClassDetailsTest extends \unittest\TestCase {
         }
       }
     ');
-    $this->assertEquals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
+    Assert::equals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
   }
 
   #[Test]
@@ -508,7 +509,7 @@ class ClassDetailsTest extends \unittest\TestCase {
         public $fixture;
       }
     ');
-    $this->assertEquals(['test' => null], $details[0]['fixture'][DETAIL_ANNOTATIONS]);
+    Assert::equals(['test' => null], $details[0]['fixture'][DETAIL_ANNOTATIONS]);
   }
 
   #[Test, Values(['\net\xp_framework\unittest\Name', 'unittest\Name', 'Name'])]
@@ -521,7 +522,7 @@ class ClassDetailsTest extends \unittest\TestCase {
         public function fixture() { }
       }'
     );
-    $this->assertEquals(['fixture' => new Name('Test')], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
+    Assert::equals(['fixture' => new Name('Test')], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
   }
 
   #[Test, Expect(['class' => ClassFormatException::class, 'withMessage' => '/Class does not have a parent/'])]
@@ -543,7 +544,7 @@ class ClassDetailsTest extends \unittest\TestCase {
         private $classes= [self::class, parent::class];
       }
     ');
-    $this->assertEquals(
+    Assert::equals(
       [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => []],
       $details['class']
     );
@@ -557,7 +558,7 @@ class ClassDetailsTest extends \unittest\TestCase {
         public abstract function fixture();
       }
     ');
-    $this->assertEquals(['test' => $value], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
+    Assert::equals(['test' => $value], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
   }
 
   #[Test, Values(['function() { return "Test"; }', 'fn() => "Test"',])]
@@ -568,7 +569,7 @@ class ClassDetailsTest extends \unittest\TestCase {
         public abstract function fixture();
       }
     ');
-    $this->assertEquals('Test', $details[1]['fixture'][DETAIL_ANNOTATIONS]['call']());
+    Assert::equals('Test', $details[1]['fixture'][DETAIL_ANNOTATIONS]['call']());
   }
 
   #[Test]
@@ -579,7 +580,7 @@ class ClassDetailsTest extends \unittest\TestCase {
         public abstract function fixture();
       }
     ');
-    $this->assertEquals(42, $details[1]['fixture'][DETAIL_ANNOTATIONS]['call']());
+    Assert::equals(42, $details[1]['fixture'][DETAIL_ANNOTATIONS]['call']());
   }
 
   #[Test, Values(['[fn() => [1, 2, 3]]', '[fn() => [1, 2, 3], ]', '[fn() => [1, 2, 3], 1]', '[fn() => [[1, [2][0], 3]][0]]',])]
@@ -590,7 +591,7 @@ class ClassDetailsTest extends \unittest\TestCase {
         public abstract function fixture();
       }
     ');
-    $this->assertEquals([1, 2, 3], $details[1]['fixture'][DETAIL_ANNOTATIONS]['call'][0]());
+    Assert::equals([1, 2, 3], $details[1]['fixture'][DETAIL_ANNOTATIONS]['call'][0]());
   }
 
   #[Test]
@@ -598,7 +599,7 @@ class ClassDetailsTest extends \unittest\TestCase {
     $details= (new ClassParser())->parseDetails('<?php
       new class() { }
     ');
-    $this->assertEquals(
+    Assert::equals(
       [DETAIL_COMMENT => null, DETAIL_ANNOTATIONS => [], DETAIL_ARGUMENTS => null],
       $details['class']
     );
@@ -609,7 +610,7 @@ class ClassDetailsTest extends \unittest\TestCase {
     $details= (new ClassParser())->parseDetails('<?php
       new class(1, 2, 3) { }
     ');
-    $this->assertEquals(
+    Assert::equals(
       [DETAIL_COMMENT => null, DETAIL_ANNOTATIONS => [], DETAIL_ARGUMENTS => null],
       $details['class']
     );
@@ -623,7 +624,7 @@ class ClassDetailsTest extends \unittest\TestCase {
         public $fixture;
       }
     ');
-    $this->assertEquals(['test' => null], $details[0]['fixture'][DETAIL_ANNOTATIONS]);
+    Assert::equals(['test' => null], $details[0]['fixture'][DETAIL_ANNOTATIONS]);
   }
 
   #[Test]
@@ -634,7 +635,7 @@ class ClassDetailsTest extends \unittest\TestCase {
         public function fixture() { }
       }
     ');
-    $this->assertEquals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
+    Assert::equals(['test' => null], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
   }
 
   #[Test]
@@ -650,7 +651,7 @@ class ClassDetailsTest extends \unittest\TestCase {
         }
       }
     ');
-    $this->assertEquals(
+    Assert::equals(
       [DETAIL_COMMENT => 'Comment', DETAIL_ANNOTATIONS => []],
       $details['class']
     );
@@ -663,6 +664,6 @@ class ClassDetailsTest extends \unittest\TestCase {
       class Test {
       }
     ');
-    $this->assertEquals('test.txt', $details['class'][DETAIL_ANNOTATIONS]['run']('test'));
+    Assert::equals('test.txt', $details['class'][DETAIL_ANNOTATIONS]['run']('test'));
   }
 }

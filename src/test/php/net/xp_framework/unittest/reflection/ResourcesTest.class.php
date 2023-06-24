@@ -3,12 +3,14 @@
 use io\File;
 use lang\archive\{Archive, ArchiveClassLoader};
 use lang\{ClassLoader, ElementNotFoundException};
+use unittest\Assert;
 use unittest\{Expect, Test};
 
-class ResourcesTest extends \unittest\TestCase {
+class ResourcesTest {
   private $cl;
 
   /** @return void */
+  #[Before]
   public function setUp() {
     $this->cl= ClassLoader::registerLoader(new ArchiveClassLoader(new Archive(typeof($this)
       ->getPackage()
@@ -18,6 +20,7 @@ class ResourcesTest extends \unittest\TestCase {
   }
 
   /** @return void */
+  #[After]
   public function tearDown() {
     ClassLoader::removeLoader($this->cl);
   }
@@ -29,7 +32,7 @@ class ResourcesTest extends \unittest\TestCase {
    * @throws unittest.AssertionFailedError
    */
   private function assertManifestFile($contents) {
-    $this->assertEquals(
+    Assert::equals(
       "[runnable]\nmain-class=\"remote.server.impl.ApplicationServer\"",
       trim($contents)
     );
@@ -37,7 +40,7 @@ class ResourcesTest extends \unittest\TestCase {
   
   #[Test]
   public function findResource() {
-    $this->assertInstanceOf(
+    Assert::instance(
       ArchiveClassLoader::class,
       ClassLoader::getDefault()->findResource('META-INF/manifest.ini')
     );
@@ -51,7 +54,7 @@ class ResourcesTest extends \unittest\TestCase {
   #[Test]
   public function getResourceAsStream() {
     $stream= ClassLoader::getDefault()->getResourceAsStream('META-INF/manifest.ini');
-    $this->assertInstanceOf(File::class, $stream);
+    Assert::instance(File::class, $stream);
     $stream->open(File::READ);
     $this->assertManifestFile($stream->read($stream->size()));
     $stream->close();

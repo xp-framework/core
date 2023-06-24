@@ -1,13 +1,14 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\{Process, Runtime, RuntimeOptions};
+use unittest\Assert;
 use unittest\{BeforeClass, PrerequisitesNotMetError, Test};
 use util\Objects;
 
 /**
  * TestCase
  */
-class BootstrapTest extends \unittest\TestCase {
+class BootstrapTest {
 
   /**
    * Skips tests if process execution has been disabled.
@@ -46,34 +47,34 @@ class BootstrapTest extends \unittest\TestCase {
   #[Test, Values(['Europe/Berlin', 'UTC'])]
   public function valid_timezone($tz) {
     $r= $this->runWith(Runtime::getInstance()->startupOptions()->withSetting('date.timezone', $tz));
-    $this->assertEquals([1, '', ''], $r);
+    Assert::equals([1, '', ''], $r);
   }
 
   #[Test]
   public function leading_colon_stripped_from_timezone() {
     $r= $this->runWith(Runtime::getInstance()->startupOptions()->withSetting('date.timezone', ':UTC'), 'echo "TZ=", date_default_timezone_get();');
-    $this->assertTrue(
+    Assert::true(
       (bool)strstr($r[1].$r[2], 'TZ=UTC'),
       Objects::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
-    $this->assertEquals(0, $r[0], 'exitcode');
+    Assert::equals(0, $r[0], 'exitcode');
   }
 
   #[Test, Values(['', 'Foo/Bar'])]
   public function invalid_timezone($tz) {
     $r= $this->runWith(Runtime::getInstance()->startupOptions()->withSetting('date.timezone', $tz), 'new \util\Date();');
-    $this->assertTrue(
+    Assert::true(
       (bool)strstr($r[1].$r[2], '[xp::core] date.timezone not configured properly.'),
       Objects::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
-    $this->assertEquals(255, $r[0], 'exitcode');
+    Assert::equals(255, $r[0], 'exitcode');
   }
 
   #[Test]
   public function fatals_for_non_existant_class_path() {
     $r= $this->runWith(Runtime::getInstance()->startupOptions()->withClassPath('/does-not-exist'));
-    $this->assertEquals(255, $r[0], 'exitcode');
-    $this->assertTrue(
+    Assert::equals(255, $r[0], 'exitcode');
+    Assert::true(
       (bool)strstr($r[1].$r[2], '[bootstrap] Classpath element [/does-not-exist] not found'),
       Objects::stringOf(['out' => $r[1], 'err' => $r[2]])
     );
@@ -82,8 +83,8 @@ class BootstrapTest extends \unittest\TestCase {
   #[Test]
   public function fatals_for_non_existant_xar() {
     $r= $this->runWith(Runtime::getInstance()->startupOptions()->withClassPath('/does-not-exist.xar'));
-    $this->assertEquals(255, $r[0], 'exitcode');
-    $this->assertTrue(
+    Assert::equals(255, $r[0], 'exitcode');
+    Assert::true(
       (bool)strstr($r[1].$r[2], '[bootstrap] Classpath element [/does-not-exist.xar] not found'),
       Objects::stringOf(['out' => $r[1], 'err' => $r[2]])
     );

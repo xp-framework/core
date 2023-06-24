@@ -1,5 +1,6 @@
 <?php namespace net\xp_framework\unittest\archive;
 
+use unittest\Assert;
 /**
  * Unittest v1 XARs
  *

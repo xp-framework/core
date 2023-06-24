@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{Type, Value};
+use unittest\Assert;
 
 /**
  * Abstract base class

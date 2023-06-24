@@ -1,11 +1,12 @@
 <?php namespace net\xp_framework\unittest\annotations;
 
 use lang\reflect\ClassParser;
+use unittest\Assert;
 
 /**
  * Base class for parent access tests
  */
-abstract class AbstractAnnotationParsingTest extends \unittest\TestCase {
+abstract class AbstractAnnotationParsingTest {
   const PARENTS_CONSTANT = 'constant';
   public static $parentsExposed = 'exposed';
   protected static $parentsHidden = 'hidden';

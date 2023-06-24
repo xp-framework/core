@@ -1,15 +1,18 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\{ClassLoader, Value};
+use unittest\Assert;
 use unittest\{Test, TestCase, Values};
 use util\Comparison;
 
-class ComparisonTest extends TestCase {
+class ComparisonTest {
 
   /** Creates a new fixture */
-  private function newFixture(array $members): Value {
+  private function newFixture(array $members, string $name= null): Value {
+    static $uniq= 0;
+
     $t= ClassLoader::defineType(
-      $this->name.'Fixture',
+      'Fixture'.($name ?? $uniq++),
       ['kind' => 'class', 'extends' => null, 'implements' => [Value::class], 'use' => [Comparison::class]],
       array_merge(['toString' => function() { }], $members)
     );
@@ -18,33 +21,36 @@ class ComparisonTest extends TestCase {
 
   #[Test]
   public function hashCode_without_members() {
-    $this->assertEquals('hashCode_without_membersFixture', $this->newFixture([])->hashCode());
+    Assert::equals('FixturehashCode_without_members', $this->newFixture([], __FUNCTION__)->hashCode());
   }
 
   #[Test]
   public function hashCode_with_members() {
     $members= ['id' => 1, 'name' => 'Test'];
-    $this->assertEquals('hashCode_with_membersFixture|i:1;|s:4:"Test";', $this->newFixture($members)->hashCode());
+    Assert::equals(
+      'FixturehashCode_with_members|i:1;|s:4:"Test";',
+      $this->newFixture($members, __FUNCTION__)->hashCode()
+    );
   }
 
   #[Test]
   public function compareTo_self() {
     $fixture= $this->newFixture([]);
-    $this->assertEquals(0, $fixture->compareTo($fixture));
+    Assert::equals(0, $fixture->compareTo($fixture));
   }
 
   #[Test]
   public function compareTo_instance_without_members() {
-    $a= $this->newFixture([]);
-    $b= $this->newFixture([]);
-    $this->assertEquals(0, $a->compareTo($b));
+    $a= $this->newFixture([], __FUNCTION__);
+    $b= $this->newFixture([], __FUNCTION__);
+    Assert::equals(0, $a->compareTo($b));
   }
 
   #[Test]
   public function compareTo_instance_with_members() {
-    $a= $this->newFixture(['id' => 1]);
-    $b= $this->newFixture(['id' => 1]);
-    $this->assertEquals(0, $a->compareTo($b));
+    $a= $this->newFixture(['id' => 1], __FUNCTION__);
+    $b= $this->newFixture(['id' => 1], __FUNCTION__);
+    Assert::equals(0, $a->compareTo($b));
   }
 
   #[Test]
@@ -52,12 +58,12 @@ class ComparisonTest extends TestCase {
     $a= $this->newFixture(['id' => 1]);
     $b= clone $a;
     $b->id++;
-    $this->assertEquals(-1, $a->compareTo($b));
+    Assert::equals(-1, $a->compareTo($b));
   }
 
   #[Test, Values([[1], [1.0], [true], ['string'], [null], [[]]])]
   public function compareTo_any_other($value) {
-    $this->assertEquals(1, $this->newFixture([])->compareTo($this));
+    Assert::equals(1, $this->newFixture([])->compareTo($this));
   }
 
   #[Test]
@@ -67,6 +73,6 @@ class ComparisonTest extends TestCase {
       private $member= 1;
       public function toString() { return nameof($this).'<'.$this->member.'>'; }
     };
-    $this->assertEquals(0, $object->compareTo($object));
+    Assert::equals(0, $object->compareTo($object));
   }
 }

@@ -1,6 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-abstract class MethodsTest extends \unittest\TestCase {
+use unittest\Assert;
+
+abstract class MethodsTest {
   use TypeDefinition;
 
   /**

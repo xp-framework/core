@@ -2,13 +2,14 @@
 
 use io\streams\{MemoryOutputStream, OutputStream};
 use lang\IllegalArgumentException;
+use unittest\Assert;
 use unittest\{Expect, PrerequisitesNotMetError, Test};
 use util\Bytes;
 
 /**
  * Abstract base class for all compressing output stream tests
  */
-abstract class AbstractCompressingOutputStreamTest extends \unittest\TestCase {
+abstract class AbstractCompressingOutputStreamTest {
 
   /**
    * Get filter we depend on
@@ -45,7 +46,7 @@ abstract class AbstractCompressingOutputStreamTest extends \unittest\TestCase {
    * @throws unittest.AssertionFailedError
    */
   protected function assertCompressedDataEquals($expected, $actual) {
-    $this->assertEquals(new Bytes($expected), new Bytes($actual));
+    Assert::equals(new Bytes($expected), new Bytes($actual));
   }
 
   /**
@@ -53,6 +54,7 @@ abstract class AbstractCompressingOutputStreamTest extends \unittest\TestCase {
    *
    * @return void
    */
+  #[Before]
   public function setUp() {
     $depend= $this->filter();
     if (!in_array($depend, stream_get_filters())) {

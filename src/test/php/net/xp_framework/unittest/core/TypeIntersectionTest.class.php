@@ -1,14 +1,16 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\{Type, TypeIntersection, XPClass, IllegalArgumentException, ClassCastException};
+use lang\{ClassCastException, IllegalArgumentException, Type, TypeIntersection, XPClass};
 use net\xp_framework\unittest\Name;
+use unittest\Assert;
 use unittest\actions\RuntimeVersion;
 use unittest\{Action, Expect, Test, TestCase, Values};
 
-class TypeIntersectionTest extends TestCase {
+class TypeIntersectionTest {
   private $types;
 
   /** @return void */
+  #[Before]
   public function setUp() {
     $this->types= [new XPClass('Countable'), new XPClass('Traversable')];
   }
@@ -62,44 +64,44 @@ class TypeIntersectionTest extends TestCase {
 
   #[Test, Values(['Countable&Traversable', 'Countable & Traversable', 'Traversable&Countable'])]
   public function forName($literal) {
-    $this->assertEquals(new TypeIntersection($this->types), TypeIntersection::forName($literal));
+    Assert::equals(new TypeIntersection($this->types), TypeIntersection::forName($literal));
   }
 
   #[Test, Values(['Countable&Traversable', 'Countable & Traversable', '(Countable&Traversable)', '(Countable & Traversable)'])]
   public function forName_from_Type_class($literal) {
-    $this->assertEquals(new TypeIntersection($this->types), Type::forName($literal));
+    Assert::equals(new TypeIntersection($this->types), Type::forName($literal));
   }
 
   #[Test]
   public function types() {
-    $this->assertEquals($this->types, (new TypeIntersection($this->types))->types());
+    Assert::equals($this->types, (new TypeIntersection($this->types))->types());
   }
 
   #[Test]
   public function is_instance() {
-    $this->assertTrue((new TypeIntersection($this->types))->isInstance($this->intersection()));
+    Assert::true((new TypeIntersection($this->types))->isInstance($this->intersection()));
   }
 
   #[Test, Values('values')]
   public function is_not_instance($value) {
-    $this->assertFalse((new TypeIntersection($this->types))->isInstance($value));
+    Assert::false((new TypeIntersection($this->types))->isInstance($value));
   }
 
   #[Test]
   public function new_instance() {
     $i= $this->intersection();
-    $this->assertEquals($i, (new TypeIntersection($this->types))->newInstance($i));
+    Assert::equals($i, (new TypeIntersection($this->types))->newInstance($i));
   }
 
   #[Test]
   public function cast() {
     $i= $this->intersection();
-    $this->assertEquals($i, (new TypeIntersection($this->types))->cast($i));
+    Assert::equals($i, (new TypeIntersection($this->types))->cast($i));
   }
 
   #[Test]
   public function cast_null() {
-    $this->assertNull((new TypeIntersection($this->types))->cast(null));
+    Assert::null((new TypeIntersection($this->types))->cast(null));
   }
 
   #[Test, Expect(ClassCastException::class), Values('values')]
@@ -109,32 +111,32 @@ class TypeIntersectionTest extends TestCase {
 
   #[Test, Values(['Traversable&Countable', 'Countable&Traversable', 'Countable&IteratorAggregate', 'Countable&Traversable&ArrayAccess'])]
   public function is_assignable_from_intersection($type) {
-    $this->assertTrue(TypeIntersection::forName($type)->isAssignableFrom(new TypeIntersection($this->types)));
+    Assert::true(TypeIntersection::forName($type)->isAssignableFrom(new TypeIntersection($this->types)));
   }
 
   #[Test, Values(['ArrayObject', 'SplFixedArray'])]
   public function is_assignable_from_class($type) {
-    $this->assertTrue((new TypeIntersection($this->types))->isAssignableFrom($type));
+    Assert::true((new TypeIntersection($this->types))->isAssignableFrom($type));
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.1.0-dev")')]
   public function php81_native_intersection_field_type() {
     $f= typeof(eval('return new class() { public Countable&Traversable $fixture; };'))->getField('fixture');
-    $this->assertEquals(new TypeIntersection($this->types), $f->getType());
-    $this->assertEquals('Countable&Traversable', $f->getTypeName());
+    Assert::equals(new TypeIntersection($this->types), $f->getType());
+    Assert::equals('Countable&Traversable', $f->getTypeName());
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.1.0-dev")')]
   public function php81_native_intersection_param_type() {
     $m= typeof(eval('return new class() { public function fixture(Countable&Traversable $arg) { } };'))->getMethod('fixture');
-    $this->assertEquals(new TypeIntersection($this->types), $m->getParameter(0)->getType());
-    $this->assertEquals('Countable&Traversable', $m->getParameter(0)->getTypeName());
+    Assert::equals(new TypeIntersection($this->types), $m->getParameter(0)->getType());
+    Assert::equals('Countable&Traversable', $m->getParameter(0)->getTypeName());
   }
 
   #[Test, Action(eval: 'new RuntimeVersion(">=8.1.0-dev")')]
   public function php81_native_intersection_return_type() {
     $m= typeof(eval('return new class() { public function fixture(): Countable&Traversable { } };'))->getMethod('fixture');
-    $this->assertEquals(new TypeIntersection($this->types), $m->getReturnType());
-    $this->assertEquals('Countable&Traversable', $m->getReturnTypeName());
+    Assert::equals(new TypeIntersection($this->types), $m->getReturnType());
+    Assert::equals('Countable&Traversable', $m->getReturnTypeName());
   }
 }

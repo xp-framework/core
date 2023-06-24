@@ -13,10 +13,10 @@ use lang\{
   XPClass
 };
 use net\xp_framework\unittest\Name;
-use unittest\{Expect, Test, TestCase, Values};
+use unittest\{Assert, Expect, Test, Values};
 use util\collections\{HashTable, Vector};
 
-class TypeTest extends TestCase {
+class TypeTest {
 
   /** @return iterable */
   private function callables() {
@@ -54,72 +54,72 @@ class TypeTest extends TestCase {
 
   #[Test, Values(['string'])]
   public function stringType($named) {
-    $this->assertEquals(Primitive::$STRING, Type::forName($named));
+    Assert::equals(Primitive::$STRING, Type::forName($named));
   }
 
   #[Test, Values(['int', 'integer'])]
   public function intType($named) {
-    $this->assertEquals(Primitive::$INT, Type::forName($named));
+    Assert::equals(Primitive::$INT, Type::forName($named));
   }
 
   #[Test, Values(['double', 'float'])]
   public function doubleType($named) {
-    $this->assertEquals(Primitive::$FLOAT, Type::forName($named));
+    Assert::equals(Primitive::$FLOAT, Type::forName($named));
   }
 
   #[Test, Values(['bool', 'boolean', 'false', 'true'])]
   public function boolType($named) {
-    $this->assertEquals(Primitive::$BOOL, Type::forName($named));
+    Assert::equals(Primitive::$BOOL, Type::forName($named));
   }
 
   #[Test, Values(['void', 'null'])]
   public function voidType($named) {
-    $this->assertEquals(Type::$VOID, Type::forName($named));
+    Assert::equals(Type::$VOID, Type::forName($named));
   }
 
   #[Test]
   public function varType() {
-    $this->assertEquals(Type::$VAR, Type::forName('var'));
+    Assert::equals(Type::$VAR, Type::forName('var'));
   }
 
   #[Test, Values(['array'])]
   public function arrayTypeUnion($named) {
-    $this->assertEquals(Type::$ARRAY, Type::forName($named));
+    Assert::equals(Type::$ARRAY, Type::forName($named));
   }
 
   #[Test, Values(['callable'])]
   public function callableTypeUnion($named) {
-    $this->assertEquals(Type::$CALLABLE, Type::forName($named));
+    Assert::equals(Type::$CALLABLE, Type::forName($named));
   }
 
   #[Test, Values(['iterable'])]
   public function iterableTypeUnion($named) {
-    $this->assertEquals(Type::$ITERABLE, Type::forName($named));
+    Assert::equals(Type::$ITERABLE, Type::forName($named));
   }
 
   #[Test, Values(['object'])]
   public function objectTypeUnion($named) {
-    $this->assertEquals(Type::$OBJECT, Type::forName($named));
+    Assert::equals(Type::$OBJECT, Type::forName($named));
   }
 
   #[Test]
   public function arrayOfString() {
-    $this->assertEquals(ArrayType::forName('string[]'), Type::forName('string[]'));
+    Assert::equals(ArrayType::forName('string[]'), Type::forName('string[]'));
   }
 
   #[Test]
   public function mapOfString() {
-    $this->assertEquals(MapType::forName('[:string]'), Type::forName('[:string]'));
+    Assert::equals(MapType::forName('[:string]'), Type::forName('[:string]'));
   }
 
   #[Test]
   public function nullableOfString() {
-    $this->assertEquals(Nullable::forName('?string'), Type::forName('?string'));
+    Assert::equals(Nullable::forName('?string'), Type::forName('?string'));
   }
 
   #[Test, Values(['net.xp_framework.unittest.Name', '\net\xp_framework\unittest\Name', Name::class])]
   public function objectType($name) {
-    $this->assertEquals(XPClass::forName('net.xp_framework.unittest.Name'), Type::forName($name));
+    Assert::equals(XPClass::forName('net.xp_framework.unittest.Name'), Type::forName($name));
   }
 
   #[Test]
@@ -127,7 +127,7 @@ class TypeTest extends TestCase {
     $literal= 'net\\xp_framework\\unittest\\reflection\\TypeRefByLiteralLoadedOnDemand';
 
     Type::forName($literal);
-    $this->assertTrue(class_exists($literal, false));
+    Assert::true(class_exists($literal, false));
   }
 
   #[Test]
@@ -136,17 +136,17 @@ class TypeTest extends TestCase {
     $name= 'net.xp_framework.unittest.reflection.TypeRefByNameLoadedOnDemand';
 
     Type::forName($name);
-    $this->assertTrue(class_exists($literal, false));
+    Assert::true(class_exists($literal, false));
   }
 
   #[Test]
   public function closureType() {
-    $this->assertEquals(new XPClass('Closure'), Type::forName('Closure'));
+    Assert::equals(new XPClass('Closure'), Type::forName('Closure'));
   }
 
   #[Test]
   public function generic() {
-    $this->assertEquals(
+    Assert::equals(
       XPClass::forName('net.xp_framework.unittest.core.generics.Nullable')->newGenericType([Primitive::$STRING]),
       Type::forName('net.xp_framework.unittest.core.generics.Nullable<string>')
     );
@@ -155,7 +155,7 @@ class TypeTest extends TestCase {
   #[Test]
   public function genericOfGeneneric() {
     $t= XPClass::forName('net.xp_framework.unittest.core.generics.Nullable');
-    $this->assertEquals(
+    Assert::equals(
       $t->newGenericType([$t->newGenericType([Primitive::$INT])]), 
       Type::forName('net.xp_framework.unittest.core.generics.Nullable<net.xp_framework.unittest.core.generics.Nullable<int>>')
     );
@@ -164,10 +164,10 @@ class TypeTest extends TestCase {
   #[Test]
   public function genericObjectType() {
     with ($t= Type::forName('net.xp_framework.unittest.core.generics.IDictionary<string, lang.Value>')); {
-      $this->assertInstanceOf(XPClass::class, $t);
-      $this->assertTrue($t->isGeneric());
-      $this->assertEquals(XPClass::forName('net.xp_framework.unittest.core.generics.IDictionary'), $t->genericDefinition());
-      $this->assertEquals(
+      Assert::instance(XPClass::class, $t);
+      Assert::true($t->isGeneric());
+      Assert::equals(XPClass::forName('net.xp_framework.unittest.core.generics.IDictionary'), $t->genericDefinition());
+      Assert::equals(
         [Primitive::$STRING, XPClass::forName('lang.Value')],
         $t->genericArguments()
       );
@@ -176,27 +176,27 @@ class TypeTest extends TestCase {
 
   #[Test]
   public function resource_type() {
-    $this->assertEquals(Type::$VAR, Type::forName('resource'));
+    Assert::equals(Type::$VAR, Type::forName('resource'));
   }
 
   #[Test, Values(['function(): var', '(function(): var)'])]
   public function function_type($decl) {
-    $this->assertEquals(new FunctionType([], Type::$VAR), Type::forName($decl));
+    Assert::equals(new FunctionType([], Type::$VAR), Type::forName($decl));
   }
 
   #[Test, Values(['function(): int[]', '(function(): int[])'])]
   public function a_function_returning_array_of_int($decl) {
-    $this->assertEquals(new FunctionType([], new ArrayType(Primitive::$INT)), Type::forName($decl));
+    Assert::equals(new FunctionType([], new ArrayType(Primitive::$INT)), Type::forName($decl));
   }
 
   #[Test, Values(['[:function(): int]', '[:(function(): int)]'])]
   public function a_map_of_functions_returning_int($decl) {
-    $this->assertEquals(new MapType(new FunctionType([], Primitive::$INT)), Type::forName($decl));
+    Assert::equals(new MapType(new FunctionType([], Primitive::$INT)), Type::forName($decl));
   }
 
   #[Test]
   public function an_array_of_functions_returning_int() {
-    $this->assertEquals(
+    Assert::equals(
       new ArrayType(new FunctionType([], Primitive::$INT)),
       Type::forName('(function(): int)[]')
     );
@@ -204,7 +204,7 @@ class TypeTest extends TestCase {
 
   #[Test]
   public function an_array_of_arrays_of_functions_returning_int() {
-    $this->assertEquals(
+    Assert::equals(
       new ArrayType(new ArrayType(new FunctionType([], Primitive::$INT))),
       Type::forName('(function(): int)[][]')
     );
@@ -222,12 +222,12 @@ class TypeTest extends TestCase {
 
   #[Test, Values('instances')]
   public function anythingIsAnInstanceOfVar($value) {
-    $this->assertTrue(Type::$VAR->isInstance($value));
+    Assert::true(Type::$VAR->isInstance($value));
   }
 
   #[Test, Values('instances')]
   public function nothingIsAnInstanceOfVoid($value) {
-    $this->assertFalse(Type::$VOID->isInstance($value));
+    Assert::false(Type::$VOID->isInstance($value));
   }
 
   /** @return var[] */
@@ -243,27 +243,27 @@ class TypeTest extends TestCase {
 
   #[Test, Values('types')]
   public function varIsAssignableFromAnything($type) {
-    $this->assertTrue(Type::$VAR->isAssignableFrom($type));
+    Assert::true(Type::$VAR->isAssignableFrom($type));
   }
 
   #[Test]
   public function varIsNotAssignableFromVoid() {
-    $this->assertFalse(Type::$VAR->isAssignableFrom(Type::$VOID));
+    Assert::false(Type::$VAR->isAssignableFrom(Type::$VOID));
   }
 
   #[Test, Values('types')]
   public function voidIsAssignableFromNothing($type) {
-    $this->assertFalse(Type::$VOID->isAssignableFrom($type));
+    Assert::false(Type::$VOID->isAssignableFrom($type));
   }
 
   #[Test]
   public function voidIsAlsoNotAssignableFromVoid() {
-    $this->assertFalse(Type::$VOID->isAssignableFrom(Type::$VOID));
+    Assert::false(Type::$VOID->isAssignableFrom(Type::$VOID));
   }
 
   #[Test, Values('instances')]
   public function newInstance_of_var($value) {
-    $this->assertEquals($value, Type::$VAR->newInstance($value));
+    Assert::equals($value, Type::$VAR->newInstance($value));
   }
 
   #[Test, Expect(IllegalAccessException::class), Values('instances')]
@@ -273,7 +273,7 @@ class TypeTest extends TestCase {
 
   #[Test, Values('instances')]
   public function cast_to_var($value) {
-    $this->assertEquals($value, Type::$VAR->cast($value));
+    Assert::equals($value, Type::$VAR->cast($value));
   }
 
   #[Test, Expect(ClassCastException::class), Values('instances')]
@@ -283,226 +283,226 @@ class TypeTest extends TestCase {
 
   #[Test]
   public function string_type_default() {
-    $this->assertEquals('', Primitive::$STRING->default);
+    Assert::equals('', Primitive::$STRING->default);
   }
 
   #[Test]
   public function int_type_default() {
-    $this->assertEquals(0, Primitive::$INT->default);
+    Assert::equals(0, Primitive::$INT->default);
   }
 
   #[Test]
   public function double_type_default() {
-    $this->assertEquals(0.0, Primitive::$FLOAT->default);
+    Assert::equals(0.0, Primitive::$FLOAT->default);
   }
 
   #[Test]
   public function bool_type_default() {
-    $this->assertEquals(false, Primitive::$BOOL->default);
+    Assert::equals(false, Primitive::$BOOL->default);
   }
 
   #[Test]
   public function array_type_default() {
-    $this->assertEquals([], (new ArrayType('var'))->default);
+    Assert::equals([], (new ArrayType('var'))->default);
   }
 
   #[Test]
   public function map_type_default() {
-    $this->assertEquals([], (new MapType('var'))->default);
+    Assert::equals([], (new MapType('var'))->default);
   }
 
   #[Test]
   public function class_type_default() {
-    $this->assertEquals(null, XPClass::forName('lang.Value')->default);
+    Assert::equals(null, XPClass::forName('lang.Value')->default);
   }
 
   #[Test]
   public function var_type_default() {
-    $this->assertEquals(null, Type::$VAR->default);
+    Assert::equals(null, Type::$VAR->default);
   }
 
   #[Test]
   public function void_type_default() {
-    $this->assertEquals(null, Type::$VOID->default);
+    Assert::equals(null, Type::$VOID->default);
   }
 
   #[Test]
   public function native_array_default() {
-    $this->assertEquals([], Type::$ARRAY->default);
+    Assert::equals([], Type::$ARRAY->default);
   }
 
   #[Test]
   public function native_callable_default() {
-    $this->assertEquals(null, Type::$CALLABLE->default);
+    Assert::equals(null, Type::$CALLABLE->default);
   }
 
   #[Test]
   public function native_iterable_default() {
-    $this->assertEquals(null, Type::$ITERABLE->default);
+    Assert::equals(null, Type::$ITERABLE->default);
   }
 
   #[Test, Values([[[]], [[1, 2, 3]], [['key' => 'value']]])]
   public function array_type_union_isInstance($value) {
-    $this->assertTrue(Type::$ARRAY->isInstance($value));
+    Assert::true(Type::$ARRAY->isInstance($value));
   }
 
   #[Test, Values([[[]], [1], [1.5], [true], ['Test'], [[1, 2, 3]], [['key' => 'value']]])]
   public function array_type_union_newInstance_from_array($value) {
-    $this->assertEquals((array)$value, Type::$ARRAY->newInstance($value));
+    Assert::equals((array)$value, Type::$ARRAY->newInstance($value));
   }
 
   #[Test]
   public function array_type_union_newInstance_without_args() {
-    $this->assertEquals([], Type::$ARRAY->newInstance());
+    Assert::equals([], Type::$ARRAY->newInstance());
   }
 
   #[Test, Values(eval: '[Type::$ARRAY, new ArrayType("var"), new MapType("var")]')]
   public function array_type_union_isAssignableFrom_arrays($type) {
-    $this->assertTrue(Type::$ARRAY->isAssignableFrom($type));
+    Assert::true(Type::$ARRAY->isAssignableFrom($type));
   }
 
   #[Test, Values(eval: '[Primitive::$INT, Type::$VOID, new FunctionType([], Type::$VAR)]')]
   public function array_type_union_is_not_assignable_from($type) {
-    $this->assertFalse(Type::$ARRAY->isAssignableFrom($type));
+    Assert::false(Type::$ARRAY->isAssignableFrom($type));
   }
 
   #[Test]
   public function array_type_union_is_not_assignable_from_this() {
-    $this->assertFalse(Type::$ARRAY->isAssignableFrom(typeof($this)));
+    Assert::false(Type::$ARRAY->isAssignableFrom(typeof($this)));
   }
 
   #[Test, Values([[null], [1], [1.5], [true], ['Test'], [[]], [[1, 2, 3]], [['key' => 'value']]])]
   public function array_type_union_cast($value) {
-    $this->assertEquals((array)$value, Type::$ARRAY->newInstance($value));
+    Assert::equals((array)$value, Type::$ARRAY->newInstance($value));
   }
 
   #[Test]
   public function array_type_union_cast_null() {
-    $this->assertEquals(null, Type::$ARRAY->cast(null));
+    Assert::equals(null, Type::$ARRAY->cast(null));
   }
 
   #[Test, Values('callables')]
   public function callable_type_union_isInstance($value) {
-    $this->assertTrue(Type::$CALLABLE->isInstance($value));
+    Assert::true(Type::$CALLABLE->isInstance($value));
   }
 
   #[Test, Values('callables')]
   public function callable_type_union_newInstance($value) {
-    $this->assertEquals($value, Type::$CALLABLE->newInstance($value));
+    Assert::equals($value, Type::$CALLABLE->newInstance($value));
   }
 
   #[Test, Values('callables')]
   public function callable_type_union_cast($value) {
-    $this->assertEquals($value, Type::$CALLABLE->cast($value));
+    Assert::equals($value, Type::$CALLABLE->cast($value));
   }
 
   #[Test]
   public function callable_type_union_cast_null() {
-    $this->assertEquals(null, Type::$CALLABLE->cast(null));
+    Assert::equals(null, Type::$CALLABLE->cast(null));
   }
 
   #[Test]
   public function callable_type_union_isAssignableFrom_callable() {
-    $this->assertTrue(Type::$CALLABLE->isAssignableFrom(Type::$CALLABLE));
+    Assert::true(Type::$CALLABLE->isAssignableFrom(Type::$CALLABLE));
   }
 
   #[Test]
   public function callable_type_union_isAssignableFrom_functions() {
-    $this->assertTrue(Type::$CALLABLE->isAssignableFrom(new FunctionType([], Type::$VAR)));
+    Assert::true(Type::$CALLABLE->isAssignableFrom(new FunctionType([], Type::$VAR)));
   }
 
   #[Test, Values(eval: '[Primitive::$INT, Type::$VOID, new ArrayType("var"), new MapType("var")]')]
   public function callable_type_union_is_not_assignable_from($type) {
-    $this->assertFalse(Type::$CALLABLE->isAssignableFrom($type));
+    Assert::false(Type::$CALLABLE->isAssignableFrom($type));
   }
 
   #[Test]
   public function callable_type_union_is_not_assignable_from_this() {
-    $this->assertFalse(Type::$CALLABLE->isAssignableFrom(typeof($this)));
+    Assert::false(Type::$CALLABLE->isAssignableFrom(typeof($this)));
   }
 
   #[Test, Values('iterables')]
   public function iterable_type_union_isInstance($value) {
-    $this->assertTrue(Type::$ITERABLE->isInstance($value));
+    Assert::true(Type::$ITERABLE->isInstance($value));
   }
 
   #[Test]
   public function iterable_type_union_generator_isInstance() {
     $gen= function() { yield 'Test'; };
-    $this->assertTrue(Type::$ITERABLE->isInstance($gen()));
+    Assert::true(Type::$ITERABLE->isInstance($gen()));
   }
 
   #[Test, Values('iterables')]
   public function iterable_type_union_newInstance($value) {
-    $this->assertEquals($value, Type::$ITERABLE->newInstance($value));
+    Assert::equals($value, Type::$ITERABLE->newInstance($value));
   }
 
   #[Test, Values('iterables')]
   public function iterable_type_union_cast($value) {
-    $this->assertEquals($value, Type::$ITERABLE->cast($value));
+    Assert::equals($value, Type::$ITERABLE->cast($value));
   }
 
   #[Test]
   public function iterable_type_union_cast_null() {
-    $this->assertNull(Type::$ITERABLE->cast(null));
+    Assert::null(Type::$ITERABLE->cast(null));
   }
   #[Test, Values(eval: '[[new Name("test")], [new \ArrayObject([])]]')]
   public function object_type_union_isInstance($value) {
-    $this->assertTrue(Type::$OBJECT->isInstance($value));
+    Assert::true(Type::$OBJECT->isInstance($value));
   }
 
   #[Test, Values(eval: '[[function() { }], [function() { yield "Test"; }]]')]
   public function closures_are_instances_of_the_object_type_union($value) {
-    $this->assertTrue(Type::$OBJECT->isInstance($value));
+    Assert::true(Type::$OBJECT->isInstance($value));
   }
 
   #[Test, Values(eval: '[[null], [new Name("test")], [new \ArrayObject([])]]')]
   public function object_type_union_cast($value) {
-    $this->assertEquals($value, Type::$OBJECT->cast($value));
+    Assert::equals($value, Type::$OBJECT->cast($value));
   }
 
   #[Test, Values(eval: '[[new Name("test")], [new \ArrayObject([])]]')]
   public function object_type_union_newInstance($value) {
-    $this->assertInstanceOf(typeof($value), Type::$OBJECT->newInstance($value));
+    Assert::instance(typeof($value), Type::$OBJECT->newInstance($value));
   }
 
   #[Test]
   public function object_type_union_isAssignableFrom_self() {
-    $this->assertTrue(Type::$OBJECT->isAssignableFrom(Type::$OBJECT));
+    Assert::true(Type::$OBJECT->isAssignableFrom(Type::$OBJECT));
   }
 
   #[Test]
   public function object_type_union_isAssignableFrom_this_class() {
-    $this->assertTrue(Type::$OBJECT->isAssignableFrom(typeof($this)));
+    Assert::true(Type::$OBJECT->isAssignableFrom(typeof($this)));
   }
 
   #[Test, Values(eval: '[Primitive::$INT, Type::$VOID, new ArrayType("var"), new MapType("var")]')]
   public function object_type_union_is_not_assignable_from($type) {
-    $this->assertFalse(Type::$OBJECT->isAssignableFrom($type));
+    Assert::false(Type::$OBJECT->isAssignableFrom($type));
   }
 
   #[Test, Values(eval: '[[function() { }, true], [function(int $arg) { }, false]]')]
   public function function_parameter_count($fixture, $expected) {
-    $this->assertEquals($expected, Type::forName('function(): var')->isInstance($fixture));
+    Assert::equals($expected, Type::forName('function(): var')->isInstance($fixture));
   }
 
   #[Test, Values(eval: '[[function() { }, true], [function(int $arg) { }, true]]')]
   public function function_parameter_placeholder($fixture, $expected) {
-    $this->assertEquals($expected, Type::forName('function(?): var')->isInstance($fixture));
+    Assert::equals($expected, Type::forName('function(?): var')->isInstance($fixture));
   }
 
   #[Test, Values(eval: '[[function(string $arg) { }, true], [function(int $arg) { }, false]]')]
   public function function_parameter_type($fixture, $expected) {
-    $this->assertEquals($expected, Type::forName('function(string): var')->isInstance($fixture));
+    Assert::equals($expected, Type::forName('function(string): var')->isInstance($fixture));
   }
 
   #[Test, Values(eval: '[[function(): string { }, true], [function(): int { }, false]]')]
   public function function_return_type($fixture, $expected) {
-    $this->assertEquals($expected, Type::forName('function(): string')->isInstance($fixture));
+    Assert::equals($expected, Type::forName('function(): string')->isInstance($fixture));
   }
 
   #[Test, Values('names')]
   public function split($names, $expected) {
-    $this->assertEquals($expected, iterator_to_array(Type::split($names, ',')));
+    Assert::equals($expected, iterator_to_array(Type::split($names, ',')));
   }
 }

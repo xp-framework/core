@@ -3,9 +3,10 @@
 use io\streams\{MemoryOutputStream, Streams};
 use io\{IOException, TempFile};
 use lang\{Environment, IllegalStateException, Process, Runtime};
-use unittest\{AssertionFailedError, BeforeClass, Expect, PrerequisitesNotMetError, Test, Values, TestCase};
+use unittest\Assert;
+use unittest\{AssertionFailedError, BeforeClass, Expect, PrerequisitesNotMetError, Test, TestCase, Values};
 
-class ProcessTest extends TestCase {
+class ProcessTest {
 
   /**
    * Skips tests if process execution has been disabled.
@@ -43,10 +44,10 @@ class ProcessTest extends TestCase {
   public function information() {
     $p= new Process($this->executable(), ['-v']);
     try {
-      $this->assertEquals(-1, $p->exitValue(), 'Process should not have exited yet');
-      $this->assertNotEquals(0, $p->getProcessId());
-      $this->assertNotEquals('', $p->getFilename());
-      $this->assertNotEquals(false, strpos($p->getCommandLine(), '-v'));
+      Assert::equals(-1, $p->exitValue(), 'Process should not have exited yet');
+      Assert::notEquals(0, $p->getProcessId());
+      Assert::notEquals('', $p->getFilename());
+      Assert::notEquals(false, strpos($p->getCommandLine(), '-v'));
       $p->close();
     } catch (AssertionFailedError $e) {
       $p->close();    // Ensure process is closed
@@ -58,34 +59,34 @@ class ProcessTest extends TestCase {
   public function newInstance() {
     $p= Runtime::getInstance()->getExecutable()->newInstance(['-v']);
     $version= 'PHP '.PHP_VERSION;
-    $this->assertEquals($version, $p->out->read(strlen($version)));
+    Assert::equals($version, $p->out->read(strlen($version)));
     $p->close();
   }
 
   #[Test]
   public function exitValueReturnedFromClose() {
     $p= new Process($this->executable(), ['-r', 'exit(0);']);
-    $this->assertEquals(0, $p->close());
+    Assert::equals(0, $p->close());
   }
 
   #[Test]
   public function nonZeroExitValueReturnedFromClose() {
     $p= new Process($this->executable(), ['-r', 'exit(2);']);
-    $this->assertEquals(2, $p->close());
+    Assert::equals(2, $p->close());
   }
 
   #[Test]
   public function exitValue() {
     $p= new Process($this->executable(), ['-r', 'exit(0);']);
     $p->close();
-    $this->assertEquals(0, $p->exitValue());
+    Assert::equals(0, $p->exitValue());
   }
 
   #[Test]
   public function nonZeroExitValue() {
     $p= new Process($this->executable(), ['-r', 'exit(2);']);
     $p->close();
-    $this->assertEquals(2, $p->exitValue());
+    Assert::equals(2, $p->exitValue());
   }
 
   #[Test]
@@ -95,7 +96,7 @@ class ProcessTest extends TestCase {
     $p->in->close();
     $out= $p->out->read();
     $p->close();
-    $this->assertEquals('IN', $out);
+    Assert::equals('IN', $out);
   }
 
   #[Test, Values([[[]], [[1 => ['pipe', 'w']]]])]
@@ -103,7 +104,7 @@ class ProcessTest extends TestCase {
     $p= new Process($this->executable(), ['-r', 'fprintf(STDOUT, "OUT");'], null, null, $descriptors);
     $out= $p->out->read();
     $p->close();
-    $this->assertEquals('OUT', $out);
+    Assert::equals('OUT', $out);
   }
 
   #[Test, Values([[[]], [[2 => ['pipe', 'w']]]])]
@@ -111,7 +112,7 @@ class ProcessTest extends TestCase {
     $p= new Process($this->executable(), ['-r', 'fprintf(STDERR, "ERR");'], null, null, $descriptors);
     $err= $p->err->read();
     $p->close();
-    $this->assertEquals('ERR', $err);
+    Assert::equals('ERR', $err);
   }
 
   #[Test]
@@ -119,7 +120,7 @@ class ProcessTest extends TestCase {
     $p= new Process($this->executable(), ['-r', 'fprintf(STDERR, "ERR");'], null, null, [2 => ['redirect', 1]]);
     $out= $p->out->read();
     $p->close();
-    $this->assertEquals('ERR', $out);
+    Assert::equals('ERR', $out);
   }
 
   #[Test]
@@ -127,7 +128,7 @@ class ProcessTest extends TestCase {
     $p= new Process($this->executable(), ['-r', 'fprintf(STDERR, "ERR"); fprintf(STDOUT, "OK");'], null, null, [2 => ['null']]);
     $out= $p->out->read();
     $p->close();
-    $this->assertEquals('OK', $out);
+    Assert::equals('OK', $out);
   }
 
   #[Test]
@@ -139,7 +140,7 @@ class ProcessTest extends TestCase {
 
     try {
       $err->open(TempFile::READ);
-      $this->assertEquals('ERR', $err->read(3));
+      Assert::equals('ERR', $err->read(3));
     } finally {
       $err->close();
       $err->unlink();
@@ -156,7 +157,7 @@ class ProcessTest extends TestCase {
 
     try {
       $err->seek(0, SEEK_SET);
-      $this->assertEquals('ERR', $err->read(3));
+      Assert::equals('ERR', $err->read(3));
     } finally {
       $err->close();
       $err->unlink();
@@ -187,15 +188,15 @@ class ProcessTest extends TestCase {
   public function getByProcessId() {
     $pid= getmypid();
     $p= Process::getProcessById($pid);
-    $this->assertInstanceOf(Process::class, $p);
-    $this->assertEquals($pid, $p->getProcessId());
+    Assert::instance(Process::class, $p);
+    Assert::equals($pid, $p->getProcessId());
   }
 
   #[Test]
   public function doubleClose() {
     $p= new Process($this->executable(), ['-r', 'exit(222);']);
-    $this->assertEquals(222, $p->close());
-    $this->assertEquals(222, $p->close());
+    Assert::equals(222, $p->close());
+    Assert::equals(222, $p->close());
   }
 
   #[Test, Expect(['class' => IllegalStateException::class, 'withMessage' => '/Cannot close not-owned/'])]
@@ -211,7 +212,7 @@ class ProcessTest extends TestCase {
       $out.= $p->out->read();
     }
     $p->close();
-    $this->assertEquals(65536, strlen($out));
+    Assert::equals(65536, strlen($out));
   }
 
   #[Test]
@@ -222,7 +223,7 @@ class ProcessTest extends TestCase {
       $err.= $p->err->read();
     }
     $p->close();
-    $this->assertEquals(65536, strlen($err));
+    Assert::equals(65536, strlen($err));
   }
 
   #[Test]
@@ -232,13 +233,13 @@ class ProcessTest extends TestCase {
     $cpid= $p->getProcessId();
     $p->close();
 
-    $this->assertEquals($cpid, $ppid);
+    Assert::equals($cpid, $ppid);
   }
 
   #[Test]
   public function new_process_is_running() {
     $p= new Process($this->executable(), ['-r', 'fgets(STDIN, 8192);']);
-    $this->assertTrue($p->running());
+    Assert::true($p->running());
     $p->in->writeLine();
     $p->close();
   }
@@ -247,13 +248,13 @@ class ProcessTest extends TestCase {
   public function process_is_not_running_after_it_exited() {
     $p= new Process($this->executable(), ['-r', 'exit(0);']);
     $p->close();
-    $this->assertFalse($p->running());
+    Assert::false($p->running());
   }
 
   #[Test]
   public function runtime_is_running() {
     $p= Runtime::getInstance()->getExecutable();
-    $this->assertTrue($p->running());
+    Assert::true($p->running());
   }
 
   #[Test]
@@ -262,20 +263,20 @@ class ProcessTest extends TestCase {
     $mirror= Process::getProcessById($p->getProcessId());
     $p->in->write("\n");
     $p->close();
-    $this->assertFalse($mirror->running());
+    Assert::false($mirror->running());
   }
 
   #[Test]
   public function terminate() {
     $p= new Process($this->executable(), ['-r', 'sleep(10);']);
     $p->terminate();
-    $this->assertNotEquals(0, $p->close());
+    Assert::notEquals(0, $p->close());
   }
 
   #[Test]
   public function terminate_not_owned() {
     $p= new Process($this->executable(), ['-r', 'sleep(10);']);
     Process::getProcessById($p->getProcessId())->terminate();
-    $this->assertNotEquals(0, $p->close());
+    Assert::notEquals(0, $p->close());
   }
 }

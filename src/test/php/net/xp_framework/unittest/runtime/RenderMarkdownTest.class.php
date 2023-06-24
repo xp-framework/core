@@ -1,12 +1,14 @@
 <?php namespace net\xp_framework\unittest\runtime;
 
+use unittest\Assert;
 use unittest\{Test, Values};
 use xp\runtime\RenderMarkdown;
 
-class RenderMarkdownTest extends \unittest\TestCase {
+class RenderMarkdownTest {
   private $markdown;
 
   /** @return void */
+  #[Before]
   public function setUp() {
     $this->markdown= new RenderMarkdown([
       'h1'     => '<h1>$1</h1>',
@@ -21,7 +23,7 @@ class RenderMarkdownTest extends \unittest\TestCase {
   }
 
   private function assertMarkdown($expected, $input) {
-    $this->assertEquals($expected, $this->markdown->render($input));
+    Assert::equals($expected, $this->markdown->render($input));
   }
 
   #[Test]

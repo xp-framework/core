@@ -1,13 +1,14 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\{Error, IllegalArgumentException, Value};
+use unittest\Assert;
 use unittest\actions\RuntimeVersion;
 use unittest\{Expect, Test};
 
 /**
  * Test type hints.
  */
-class TypeHintsTest extends \unittest\TestCase {
+class TypeHintsTest {
 
   /**
    * Pass an object
@@ -33,7 +34,7 @@ class TypeHintsTest extends \unittest\TestCase {
       public function hashCode() { return 'Test'; }
       public function compareTo($value) { return $this <=> $value; }
     };
-    $this->assertEquals($o, $this->pass($o));
+    Assert::equals($o, $this->pass($o));
   }
 
   #[Test, Expect(Error::class)]
@@ -53,7 +54,7 @@ class TypeHintsTest extends \unittest\TestCase {
       public function hashCode() { return 'Test'; }
       public function compareTo($value) { return $this <=> $value; }
     };
-    $this->assertEquals($o, $this->nullable($o));
+    Assert::equals($o, $this->nullable($o));
   }
 
   #[Test, Expect(Error::class)]
@@ -64,6 +65,6 @@ class TypeHintsTest extends \unittest\TestCase {
 
   #[Test]
   public function pass_null_to_nullable() {
-    $this->assertEquals(null, $this->nullable(null));
+    Assert::equals(null, $this->nullable(null));
   }
 }

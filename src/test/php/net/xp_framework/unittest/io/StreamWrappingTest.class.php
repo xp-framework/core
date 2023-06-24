@@ -2,6 +2,7 @@
 
 use io\IOException;
 use io\streams\{InputStream, MemoryInputStream, MemoryOutputStream, Streams};
+use unittest\Assert;
 use unittest\{Expect, Test, TestCase, Values};
 
 /**
@@ -9,7 +10,7 @@ use unittest\{Expect, Test, TestCase, Values};
  *
  * @see   xp://io.streams.Streams
  */
-class StreamWrappingTest extends TestCase {
+class StreamWrappingTest {
 
   #[Test]
   public function read_using_fread() {
@@ -20,7 +21,7 @@ class StreamWrappingTest extends TestCase {
     $read= fread($fd, strlen($buffer));
     fclose($fd);
 
-    $this->assertEquals($buffer, $read);
+    Assert::equals($buffer, $read);
   }
 
   #[Test]
@@ -32,7 +33,7 @@ class StreamWrappingTest extends TestCase {
     $read= fgets($fd, strlen($buffer) + 1);
     fclose($fd);
 
-    $this->assertEquals($buffer, $read);
+    Assert::equals($buffer, $read);
   }
 
   #[Test]
@@ -44,19 +45,19 @@ class StreamWrappingTest extends TestCase {
     $read= fgets($fd, strlen($buffer) + 1);
     fclose($fd);
     
-    $this->assertEquals($buffer, $read);
+    Assert::equals($buffer, $read);
   }
 
   #[Test]
   public function endOfFile() {
     $fd= Streams::readableFd(new MemoryInputStream(str_repeat('x', 10)));
-    $this->assertFalse(feof($fd), 'May not be at EOF directly after opening');
+    Assert::false(feof($fd), 'May not be at EOF directly after opening');
 
     fread($fd, 5);
-    $this->assertFalse(feof($fd), 'May not be at EOF after reading only half of the bytes');
+    Assert::false(feof($fd), 'May not be at EOF after reading only half of the bytes');
 
     fread($fd, 5);
-    $this->assertTrue(feof($fd), 'Must be at EOF after having read all of the bytes');
+    Assert::true(feof($fd), 'Must be at EOF after having read all of the bytes');
 
     fclose($fd);
   }
@@ -65,11 +66,11 @@ class StreamWrappingTest extends TestCase {
   public function fstat() {
     $fd= Streams::readableFd(new MemoryInputStream(str_repeat('x', 10)));
     $stat= fstat($fd);
-    $this->assertEquals(10, $stat['size']);
+    Assert::equals(10, $stat['size']);
 
     fread($fd, 5);
     $stat= fstat($fd);
-    $this->assertEquals(10, $stat['size']);
+    Assert::equals(10, $stat['size']);
     
     fclose($fd);
   }
@@ -78,21 +79,21 @@ class StreamWrappingTest extends TestCase {
   public function statExistingReadableUri() {
     $uri= Streams::readableUri(new MemoryInputStream(str_repeat('x', 10)));
     $stat= stat($uri);
-    $this->assertEquals(0, $stat['size']);
+    Assert::equals(0, $stat['size']);
   }
 
   #[Test]
   public function statExistingWriteableUri() {
     $uri= Streams::writeableUri(new MemoryOutputStream());
     $stat= stat($uri);
-    $this->assertEquals(0, $stat['size']);
+    Assert::equals(0, $stat['size']);
   }
 
   #[Test]
   public function statNonExistingReadableUri() {
     $uri= Streams::readableUri(new MemoryInputStream(str_repeat('x', 10)));
     fclose(fopen($uri, 'r'));
-    $this->assertFalse(stat($uri));
+    Assert::false(stat($uri));
     \xp::gc(__FILE__);
   }
 
@@ -100,20 +101,20 @@ class StreamWrappingTest extends TestCase {
   public function statNonExistingWriteableUri() {
     $uri= Streams::writeableUri(new MemoryOutputStream());
     fclose(fopen($uri, 'w'));
-    $this->assertFalse(stat($uri));
+    Assert::false(stat($uri));
     \xp::gc(__FILE__);
   }
 
   #[Test]
   public function tellFromReadable() {
     $fd= Streams::readableFd(new MemoryInputStream(str_repeat('x', 10)));
-    $this->assertEquals(0, ftell($fd));
+    Assert::equals(0, ftell($fd));
 
     fread($fd, 5);
-    $this->assertEquals(5, ftell($fd));
+    Assert::equals(5, ftell($fd));
 
     fread($fd, 5);
-    $this->assertEquals(10, ftell($fd));
+    Assert::equals(10, ftell($fd));
     
     fclose($fd);
   }
@@ -121,13 +122,13 @@ class StreamWrappingTest extends TestCase {
   #[Test]
   public function tellFromWriteable() {
     $fd= Streams::writeableFd(new MemoryOutputStream());
-    $this->assertEquals(0, ftell($fd));
+    Assert::equals(0, ftell($fd));
 
     fwrite($fd, str_repeat('x', 5));
-    $this->assertEquals(5, ftell($fd));
+    Assert::equals(5, ftell($fd));
 
     fwrite($fd, str_repeat('x', 5));
-    $this->assertEquals(10, ftell($fd));
+    Assert::equals(10, ftell($fd));
     
     fclose($fd);
   }
@@ -141,8 +142,8 @@ class StreamWrappingTest extends TestCase {
     $written= fwrite($fd, $buffer);
     fclose($fd);
     
-    $this->assertEquals(strlen($buffer), $written);
-    $this->assertEquals($buffer, $m->bytes());
+    Assert::equals(strlen($buffer), $written);
+    Assert::equals($buffer, $m->bytes());
   }
 
   #[Test, Expect(IOException::class)]
@@ -159,7 +160,7 @@ class StreamWrappingTest extends TestCase {
 
   #[Test, Values(['', 'Hello', "Hello\nWorld\n"])]
   public function readAll($value) {
-    $this->assertEquals($value, Streams::readAll(new MemoryInputStream($value)));
+    Assert::equals($value, Streams::readAll(new MemoryInputStream($value)));
   }
 
   #[Test, Expect(IOException::class)]
@@ -180,13 +181,13 @@ class StreamWrappingTest extends TestCase {
       $l[]= strlen($c);
     }
     fclose($fd);
-    $this->assertEquals([128, 128, 128, 128, 128, 128, 128, 128], $l);
+    Assert::equals([128, 128, 128, 128, 128, 128, 128, 128], $l);
   }
 
   #[Test, Values([0, 10, 10485760])]
   public function file_get_contents($length) {
     $data= str_repeat('x', $length);
-    $this->assertEquals(
+    Assert::equals(
       $data,
       file_get_contents(Streams::readableUri(new MemoryInputStream($data)))
     );
@@ -194,6 +195,6 @@ class StreamWrappingTest extends TestCase {
 
   #[Test]
   public function is_file() {
-    $this->assertTrue(is_file(Streams::readableUri(new MemoryInputStream('Hello'))));
+    Assert::true(is_file(Streams::readableUri(new MemoryInputStream('Hello'))));
   }
 }

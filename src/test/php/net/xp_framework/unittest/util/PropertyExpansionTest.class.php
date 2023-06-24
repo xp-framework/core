@@ -3,10 +3,10 @@
 use ArrayAccess, ReturnTypeWillChange;
 use lang\ElementNotFoundException;
 use unittest\actions\VerifyThat;
-use unittest\{Expect, Test, TestCase, Values};
+use unittest\{Assert, Expect, Test, Values};
 use util\Properties;
 
-class PropertyExpansionTest extends TestCase {
+class PropertyExpansionTest {
 
   /**
    * Returns a fixture which expands `lookup.*` with a given expansion
@@ -25,19 +25,19 @@ class PropertyExpansionTest extends TestCase {
   #[Test]
   public function closure_lookup() {
     $prop= $this->newFixture(['test=${lookup.TEST}'], function($name) { return strtolower($name); });
-    $this->assertEquals('test', $prop->readString(null, 'test'));
+    Assert::equals('test', $prop->readString(null, 'test'));
   }
 
   #[Test, Action(eval: 'new VerifyThat(fn() => !extension_loaded("xdebug"))')]
   public function callable_lookup() {
     $prop= $this->newFixture(['test=${lookup.TEST}'], 'strtolower');
-    $this->assertEquals('test', $prop->readString(null, 'test'));
+    Assert::equals('test', $prop->readString(null, 'test'));
   }
 
   #[Test]
   public function map_lookup() {
     $prop= $this->newFixture(['test=${lookup.TEST}'], ['TEST' => 'test']);
-    $this->assertEquals('test', $prop->readString(null, 'test'));
+    Assert::equals('test', $prop->readString(null, 'test'));
   }
 
   #[Test]
@@ -56,13 +56,13 @@ class PropertyExpansionTest extends TestCase {
       #[ReturnTypeWillChange]
       function offsetUnset($key) { /* Not implemented */ }
     });
-    $this->assertEquals('test', $prop->readString(null, 'test'));
+    Assert::equals('test', $prop->readString(null, 'test'));
   }
 
   #[Test]
   public function null_lookup_ignores_missing_expansion() {
     $prop= $this->newFixture(['test=${lookup.TEST}'], null);
-    $this->assertEquals('', $prop->readString(null, 'test'));
+    Assert::equals('', $prop->readString(null, 'test'));
   }
 
   #[Test, Expect(ElementNotFoundException::class), Values([null, false])]
@@ -74,19 +74,19 @@ class PropertyExpansionTest extends TestCase {
   #[Test]
   public function lookup_inside_read_array() {
     $prop= $this->newFixture(['test[]=${lookup.TEST}']);
-    $this->assertEquals(['test'], $prop->readArray(null, 'test'));
+    Assert::equals(['test'], $prop->readArray(null, 'test'));
   }
 
   #[Test]
   public function lookup_inside_read_map() {
     $prop= $this->newFixture(['test[key]=${lookup.TEST}']);
-    $this->assertEquals(['key' => 'test'], $prop->readMap(null, 'test'));
+    Assert::equals(['key' => 'test'], $prop->readMap(null, 'test'));
   }
 
   #[Test]
   public function lookup_inside_read_section() {
     $prop= $this->newFixture(['array[]=${lookup.TEST}', 'map[key]=${lookup.TEST}', 'scalar=${lookup.TEST}']);
-    $this->assertEquals(
+    Assert::equals(
       ['array' => ['test'], 'map' => ['key' => 'test'], 'scalar' => 'test'],
       $prop->readSection(null)
     );

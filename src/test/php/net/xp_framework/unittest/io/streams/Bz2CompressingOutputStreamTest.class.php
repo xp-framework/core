@@ -1,6 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\streams\Bz2CompressingOutputStream;
+use unittest\Assert;
 
 /**
  * TestCase for BZIP2 compression

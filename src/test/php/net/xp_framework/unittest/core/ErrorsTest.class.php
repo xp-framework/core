@@ -10,34 +10,29 @@ use lang\{
   XPException
 };
 use unittest\actions\RuntimeVersion;
-use unittest\{Action, Expect, Test, TestCase};
+use unittest\{Assert, Action, Expect, Test};
 
 /**
  * Test the XP error handling semantics
  */
-class ErrorsTest extends TestCase {
+class ErrorsTest {
 
   /**
    * Setup method. Ensures xp error registry is initially empty and
    * that the error reporting level is set to E_ALL (which is done
    * in lang.base.php).
    */
+  #[Before]
   public function setUp() {
-    $this->assertEquals(E_ALL, error_reporting(), 'Error reporting level not E_ALL');
+    Assert::equals(E_ALL, error_reporting(), 'Error reporting level not E_ALL');
     \xp::$errors= [];
-  }
-
-  /**
-   * Teardown method. Clears the xp error registry.
-   */
-  public function tearDown() {
-    \xp::gc();
   }
 
   #[Test]
   public function errors_get_appended_to_registry() {
     trigger_error('Test error');
-    $this->assertEquals(1, sizeof(\xp::$errors));
+    Assert::equals(1, sizeof(\xp::$errors));
+    \xp::gc();
   }
 
   #[Test]
@@ -48,33 +43,36 @@ class ErrorsTest extends TestCase {
       throw new XPException('');
     } catch (XPException $e) {
       $element= $e->getStackTrace()[0];
-      $this->assertEquals(
+      Assert::equals(
         ['file' => __FILE__, 'message' => 'Test error'],
         ['file' => $element->file, 'message' => $element->message]
       );
+      \xp::gc();
     }
   }
 
   #[Test]
   public function errorAt_given_a_file_without_error() {
-    $this->assertFalse(isset(\xp::$errors[__FILE__]));
+    Assert::false(isset(\xp::$errors[__FILE__]));
   }
 
   #[Test]
   public function errorAt_given_a_file_with_error() {
     trigger_error('Test error');
-    $this->assertTrue(isset(\xp::$errors[__FILE__]));
+    Assert::true(isset(\xp::$errors[__FILE__]));
+    \xp::gc();
   }
 
   #[Test]
   public function errorAt_given_a_file_and_line_without_error() {
-    $this->assertFalse(isset(\xp::$errors[__FILE__][__LINE__ - 1]));
+    Assert::false(isset(\xp::$errors[__FILE__][__LINE__ - 1]));
   }
 
   #[Test]
   public function errorAt_given_a_file_and_line_with_error() {
     trigger_error('Test error');
-    $this->assertTrue(isset(\xp::$errors[__FILE__][__LINE__ - 1]));
+    Assert::true(isset(\xp::$errors[__FILE__][__LINE__ - 1]));
+    \xp::gc();
   }
 
   #[Test, Expect(NullPointerException::class)]

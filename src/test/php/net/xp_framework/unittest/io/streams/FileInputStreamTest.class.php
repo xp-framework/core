@@ -2,72 +2,65 @@
 
 use io\streams\FileInputStream;
 use io\{FileNotFoundException, IOException, TempFile};
-use unittest\{Expect, PrerequisitesNotMetError, Test, TestCase};
+use unittest\{Assert, After, Expect, PrerequisitesNotMetError, Test};
 
-class FileInputStreamTest extends TestCase {
-  private $file;
+class FileInputStreamTest {
+  private $files= [];
 
-  /**
-   * Sets up test case - creates temporary file
-   *
-   * @return void
-   */
-  public function setUp() {
-    try {
-      $this->file= (new TempFile())->containing('Created by FileInputStreamTest');
-    } catch (IOException $e) {
-      throw new PrerequisitesNotMetError('Cannot write temporary file', $e, [$this->file]);
-    }
+  /** @return io.TempFile */
+  private function tempFile() {
+    $file= (new TempFile())->containing('Created by FileInputStreamTest');
+    $this->files[]= $file;
+    return $file;
   }
-  
-  /**
-   * Tear down this test case - removes temporary file
-   *
-   * @return void
-   */
-  public function tearDown() {
-    try {
-      $this->file->isOpen() && $this->file->close();
-      $this->file->unlink();
-    } catch (IOException $ignored) {
-      // Can't really do anything about it...
+
+  #[After]
+  public function cleanUp() {
+    foreach ($this->files as $file) {
+      try {
+        $file->isOpen() && $file->close();
+        $file->unlink();
+      } catch (IOException $ignored) {
+        // Can't really do anything about it...
+      }
     }
   }
   
   #[Test]
   public function reading() {
-    with (new FileInputStream($this->file), function($stream) {
-      $this->assertEquals('Created by ', $stream->read(11));
-      $this->assertEquals('FileInputStreamTest', $stream->read());
-      $this->assertEquals('', $stream->read());
+    with (new FileInputStream($this->tempFile()), function($stream) {
+      Assert::equals('Created by ', $stream->read(11));
+      Assert::equals('FileInputStreamTest', $stream->read());
+      Assert::equals('', $stream->read());
     });
   }
 
   #[Test]
   public function seeking() {
-    with (new FileInputStream($this->file), function($stream) {
-      $this->assertEquals(0, $stream->tell());
+    with (new FileInputStream($this->tempFile()), function($stream) {
+      Assert::equals(0, $stream->tell());
       $stream->seek(20);
-      $this->assertEquals(20, $stream->tell());
-      $this->assertEquals('StreamTest', $stream->read());
+      Assert::equals(20, $stream->tell());
+      Assert::equals('StreamTest', $stream->read());
     });
   }
 
   #[Test]
   public function availability() {
-    with (new FileInputStream($this->file), function($stream) {
-      $this->assertNotEquals(0, $stream->available());
+    with (new FileInputStream($this->tempFile()), function($stream) {
+      Assert::notEquals(0, $stream->available());
       $stream->read(30);
-      $this->assertEquals(0, $stream->available());
+      Assert::equals(0, $stream->available());
     });
   }
 
   #[Test]
   public function delete() {
-    with (new FileInputStream($this->file), function($stream) {
-      $this->assertTrue($this->file->isOpen());
+    $file= $this->tempFile();
+    with (new FileInputStream($file), function($stream) use($file) {
+      Assert::true($file->isOpen());
       unset($stream);
-      $this->assertTrue($this->file->isOpen());
+      Assert::true($file->isOpen());
     });
   }
 
@@ -78,7 +71,7 @@ class FileInputStreamTest extends TestCase {
 
   #[Test, Expect(IOException::class)]
   public function readingAfterClose() {
-    with (new FileInputStream($this->file), function($stream) {
+    with (new FileInputStream($this->tempFile()), function($stream) {
       $stream->close();
       $stream->read();
     });
@@ -86,7 +79,7 @@ class FileInputStreamTest extends TestCase {
 
   #[Test, Expect(IOException::class)]
   public function availableAfterClose() {
-    with (new FileInputStream($this->file), function($stream) {
+    with (new FileInputStream($this->tempFile()), function($stream) {
       $stream->close();
       $stream->available();
     });
@@ -94,7 +87,7 @@ class FileInputStreamTest extends TestCase {
 
   #[Test]
   public function doubleClose() {
-    with (new FileInputStream($this->file), function($stream) {
+    with (new FileInputStream($this->tempFile()), function($stream) {
       $stream->close();
       $stream->close();
     });

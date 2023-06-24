@@ -1,18 +1,13 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\ClassLoader;
-use unittest\{BeforeClass, TestCase, Test};
+use unittest\{Assert, Before, Test, TestCase};
 use util\{Observable, Observer};
 
-/**
- * Test Observable class
- *
- * @see  xp://util.Observable
- */
-class ObservableTest extends TestCase {
+class ObservableTest {
   protected static $observable;
 
-  #[BeforeClass]
+  #[Before]
   public static function defineObservable() {
     self::$observable= ClassLoader::defineClass('net.xp_framework.unittest.util.ObservableFixture', Observable::class, [], '{
       private $value= 0;
@@ -32,14 +27,14 @@ class ObservableTest extends TestCase {
   #[Test]
   public function originally_unchanged() {
     $o= self::$observable->newInstance();
-    $this->assertFalse($o->hasChanged());
+    Assert::false($o->hasChanged());
   }
 
   #[Test]
   public function changed() {
     $o= self::$observable->newInstance();
     $o->setChanged();
-    $this->assertTrue($o->hasChanged());
+    Assert::true($o->hasChanged());
   }
 
   #[Test]
@@ -47,7 +42,7 @@ class ObservableTest extends TestCase {
     $o= self::$observable->newInstance();
     $o->setChanged();
     $o->clearChanged();
-    $this->assertFalse($o->hasChanged());
+    Assert::false($o->hasChanged());
   }
 
   #[Test]
@@ -58,7 +53,7 @@ class ObservableTest extends TestCase {
       }
     };
     $o= self::$observable->newInstance();
-    $this->assertEquals($observer, $o->addObserver($observer));
+    Assert::equals($observer, $o->addObserver($observer));
   }
 
   #[Test]
@@ -72,6 +67,6 @@ class ObservableTest extends TestCase {
     $o= self::$observable->newInstance();
     $o->addObserver($observer);
     $o->setValue(5);
-    $this->assertEquals([[$o, null]], $observer->calls);
+    Assert::equals([[$o, null]], $observer->calls);
   }
 }

@@ -2,13 +2,15 @@
 
 use io\{File, Files};
 use lang\{Environment, IllegalArgumentException};
+use unittest\Assert;
 use unittest\{Expect, Test, TestCase};
 use util\{FilesystemPropertySource, Properties};
 
-class FilesystemPropertySourceTest extends TestCase {
+class FilesystemPropertySourceTest {
   protected $tempFile, $fixture;
 
   /** @return void */
+  #[Before]
   public function setUp() {
     $tempDir= realpath(Environment::tempDir());
     $this->fixture= new FilesystemPropertySource($tempDir);
@@ -19,23 +21,24 @@ class FilesystemPropertySourceTest extends TestCase {
   }
 
   /** @return void */
+  #[After]
   public function tearDown() {
     $this->tempFile->unlink();
   }
 
   #[Test]
   public function provides_existing_ini_file() {
-    $this->assertTrue($this->fixture->provides('temp'));
+    Assert::true($this->fixture->provides('temp'));
   }
 
   #[Test]
   public function does_not_provide_non_existant_ini_file() {
-    $this->assertFalse($this->fixture->provides('@@non-existant@@'));
+    Assert::false($this->fixture->provides('@@non-existant@@'));
   }
 
   #[Test]
   public function fetch_existing_ini_file() {
-    $this->assertEquals(
+    Assert::equals(
       new Properties($this->tempFile->getURI()),
       $this->fixture->fetch('temp')
     );

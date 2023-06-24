@@ -2,6 +2,7 @@
 
 use lang\reflect\TargetInvocationException;
 use lang\{IllegalAccessException, IllegalArgumentException};
+use unittest\Assert;
 use unittest\actions\RuntimeVersion;
 use unittest\{Action, Expect, Test, Values};
 
@@ -10,25 +11,25 @@ class MethodInvocationTest extends MethodsTest {
   #[Test]
   public function invoke_instance() {
     $fixture= $this->type('{ public function fixture() { return "Test"; } }');
-    $this->assertEquals('Test', $fixture->getMethod('fixture')->invoke($fixture->newInstance(), []));
+    Assert::equals('Test', $fixture->getMethod('fixture')->invoke($fixture->newInstance(), []));
   }
 
   #[Test]
   public function invoke_static() {
     $fixture= $this->type('{ public static function fixture() { return "Test"; } }');
-    $this->assertEquals('Test', $fixture->getMethod('fixture')->invoke(null, []));
+    Assert::equals('Test', $fixture->getMethod('fixture')->invoke(null, []));
   }
 
   #[Test]
   public function invoke_passes_arguments() {
     $fixture= $this->type('{ public function fixture($a, $b) { return $a + $b; } }');
-    $this->assertEquals(3, $fixture->getMethod('fixture')->invoke($fixture->newInstance(), [1, 2]));
+    Assert::equals(3, $fixture->getMethod('fixture')->invoke($fixture->newInstance(), [1, 2]));
   }
 
   #[Test]
   public function invoke_method_without_return() {
     $fixture= $this->type('{ public function fixture() { } }');
-    $this->assertNull($fixture->getMethod('fixture')->invoke($fixture->newInstance(), []));
+    Assert::null($fixture->getMethod('fixture')->invoke($fixture->newInstance(), []));
   }
 
   #[Test, Expect(TargetInvocationException::class)]
@@ -70,6 +71,6 @@ class MethodInvocationTest extends MethodsTest {
   #[Test, Values([['{ private function fixture() { return "Test"; } }'], ['{ protected function fixture() { return "Test"; } }'],])]
   public function can_invoke_private_or_protected_via_setAccessible($declaration) {
     $fixture= $this->type($declaration);
-    $this->assertEquals('Test', $fixture->getMethod('fixture')->setAccessible(true)->invoke($fixture->newInstance(), []));
+    Assert::equals('Test', $fixture->getMethod('fixture')->setAccessible(true)->invoke($fixture->newInstance(), []));
   }
 }
