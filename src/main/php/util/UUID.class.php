@@ -147,7 +147,7 @@ class UUID implements \lang\Value {
     // Get timestamp and convert it to UTC (based Oct 15, 1582).
     sscanf(microtime(), '%f %d', $usec, $sec);
     $t= ($sec * 10000000) + ($usec * 10) + 122192928000000000;
-    $clock_seq= mt_rand();
+    $clock_seq= random_int(0, 2147483647);
     $h= md5(php_uname());
 
     return new self([
@@ -215,12 +215,12 @@ class UUID implements \lang\Value {
   public static function randomUUID() {
     return new self([
       4,
-      mt_rand(0, 0xffff) * 0x10000 + mt_rand(0, 0xffff),
-      mt_rand(0, 0xffff),
-      mt_rand(0, 0x0fff),
-      mt_rand(0, 0x3fff) | 0x8000,
+      random_int(0, 0xffff) * 0x10000 + random_int(0, 0xffff),
+      random_int(0, 0xffff),
+      random_int(0, 0x0fff),
+      random_int(0, 0x3fff) | 0x8000,
       sscanf(
-        sprintf('%04x%04x%04x', mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)),
+        sprintf('%04x%04x%04x', random_int(0, 0xffff), random_int(0, 0xffff), random_int(0, 0xffff)),
         '%02x%02x%02x%02x%02x%02x'
       )
     ]);
