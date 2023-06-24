@@ -3,11 +3,6 @@
 use lang\IllegalArgumentException;
 use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase for generic behaviour at runtime.
- *
- * @see   xp://collections.Lookup
- */
 class RuntimeTest {
   private $fixture;
   

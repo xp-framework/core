@@ -3,15 +3,8 @@
 use io\IOException;
 use io\streams\{ChannelInputStream, ChannelOutputStream};
 use lang\Runnable;
-use unittest\Assert;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase
- *
- * @see      xp://io.streams.ChannelOutputStream
- * @see      xp://io.streams.ChannelInputStream
- */
 class ChannelStreamTest {
 
   #[Test, Expect(IOException::class)]

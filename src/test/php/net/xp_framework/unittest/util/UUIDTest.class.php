@@ -1,8 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\FormatException;
-use unittest\Assert;
-use unittest\{Expect, Test, TestCase};
+use unittest\{Assert, Before, Expect, Test};
 use util\{Bytes, UUID};
 
 class UUIDTest {

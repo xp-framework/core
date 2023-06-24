@@ -1,14 +1,8 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use lang\Primitive;
-use unittest\Assert;
-use unittest\Test;
+use unittest\{Assert, Test};
 
-/**
- * TestCase for generic behaviour at runtime.
- *
- * @see   xp://net.xp_framework.unittest.core.generics.ArrayFilter
- */
 class AnonymousInstanceTest {
 
   #[Test]

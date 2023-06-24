@@ -3,15 +3,9 @@
 use io\Channel;
 use io\streams\{MemoryInputStream, MemoryOutputStream, TextWriter};
 use lang\IllegalArgumentException;
-use unittest\Assert;
 use unittest\actions\RuntimeVersion;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase
- *
- * @see      xp://io.streams.TextWriter
- */
 class TextWriterTest {
   protected $out= null;
 

@@ -4,7 +4,7 @@ use io\streams\{MemoryInputStream, Streams};
 use lang\{ClassCastException, IllegalArgumentException, Primitive};
 use net\xp_framework\unittest\Name;
 use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Expect, Test, TestCase, Values};
+use unittest\{Assert, Expect, Test, Values};
 
 class PrimitiveTest {
 

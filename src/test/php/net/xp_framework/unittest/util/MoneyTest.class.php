@@ -1,9 +1,8 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\IllegalArgumentException;
-use unittest\Assert;
 use unittest\actions\ExtensionAvailable;
-use unittest\{Action, Expect, Test, TestCase};
+use unittest\{Assert, Action, Expect, Test};
 use util\{Currency, Money};
 
 #[Action(eval: 'new ExtensionAvailable("bcmath")')]

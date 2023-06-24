@@ -1,15 +1,8 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use lang\{ElementNotFoundException, IllegalArgumentException, Primitive, Type, XPClass};
-use unittest\Assert;
-use unittest\{Expect, Ignore, Test, TestCase, Values};
+use unittest\{Assert, Expect, Ignore, Test, Values};
 
-/**
- * TestCase for instance reflection
- *
- * @see   xp://net.xp_framework.unittest.core.generics.TypeDictionary
- * @see   xp://net.xp_framework.unittest.core.generics.TypeLookup
- */
 class ImplementationTest {
 
   /**

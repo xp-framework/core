@@ -101,8 +101,8 @@ class ClassDetailsTest {
 
   #[Test]
   public function generic_parameter_with_one_component() {
-    $details= $this->parseComment('/** @param  util.collections.Vector<unittest.TestCase> param1 */');
-    Assert::equals('util.collections.Vector<unittest.TestCase>', $details[DETAIL_ARGUMENTS][0]);
+    $details= $this->parseComment('/** @param  util.collections.Vector<lang.Value> param1 */');
+    Assert::equals('util.collections.Vector<lang.Value>', $details[DETAIL_ARGUMENTS][0]);
   }
 
   #[Test]

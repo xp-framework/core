@@ -1,17 +1,10 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
-use unittest\Assert;
-use unittest\{Ignore, Test, TestCase};
+use unittest\{Assert, Before, Ignore, Test};
 
-/**
- * TestCase for member access
- *
- * @see   xp://net.xp_framework.unittest.core.generics.ListOf
- */
 class MemberTest {
   protected $fixture= null;
 
-  /** @return void */
   #[Before]
   public function setUp() {
     $this->fixture= create('new net.xp_framework.unittest.core.generics.ListOf<string>', 'Hello', 'World');

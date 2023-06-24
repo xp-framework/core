@@ -1,17 +1,11 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\{Error, IllegalArgumentException};
-use unittest\Assert;
 use unittest\actions\RuntimeVersion;
-use unittest\{Expect, Test, TestCase};
+use unittest\{Assert, Expect, Test};
 use util\Comparator;
 use util\profiling\Timer;
 
-/**
- * Tests Timer class
- *
- * @see      xp://util.profiling.Timer
- */
 class TimerTest {
 
   #[Test]

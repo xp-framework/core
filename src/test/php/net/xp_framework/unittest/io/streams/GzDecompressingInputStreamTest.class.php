@@ -1,15 +1,8 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\streams\{GzDecompressingInputStream, InputStream, MemoryInputStream};
-use unittest\Assert;
-use unittest\{Test, Values};
+use unittest\{Assert, Test, Values};
 
-/**
- * TestCase
- *
- * @ext   zlib
- * @see   xp://io.streams.GzDecompressingInputStream
- */
 class GzDecompressingInputStreamTest extends AbstractDecompressingInputStreamTest {
 
   /** @return string */

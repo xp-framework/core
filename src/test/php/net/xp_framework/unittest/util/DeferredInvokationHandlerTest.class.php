@@ -1,13 +1,9 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\{IllegalStateException, Runnable};
-use unittest\Assert;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect};
 use util\{AbstractDeferredInvokationHandler, DeferredInitializationException};
 
-/**
- * TestCase for AbstractDeferredInvokationHandler
- */
 class DeferredInvokationHandlerTest {
 
   #[Test]

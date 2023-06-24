@@ -1,14 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\streams\GzCompressingOutputStream;
-use unittest\Assert;
 
-/**
- * TestCase
- *
- * @ext      zlib
- * @see      xp://io.streams.GzCompressingOutputStream
- */
 class GzCompressingOutputStreamTest extends AbstractCompressingOutputStreamTest {
 
   /** @return string */

@@ -1,15 +1,9 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\{FormatException, IllegalArgumentException, IndexOutOfBoundsException};
-use unittest\Assert;
-use unittest\{Expect, Test, TestCase, Values};
+use unittest\{Assert, Expect, Test, Values};
 use util\Bytes;
 
-/**
- * TestCase for Bytes class
- *
- * @see   xp://util.Bytes
- */
 class BytesTest {
 
   /** @return iterable */

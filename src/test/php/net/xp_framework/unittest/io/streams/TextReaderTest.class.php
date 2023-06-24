@@ -3,15 +3,8 @@
 use io\streams\{InputStream, LinesIn, MemoryInputStream, MemoryOutputStream, TextReader};
 use io\{Channel, IOException};
 use lang\{FormatException, IllegalArgumentException};
-use unittest\Assert;
-use unittest\{Expect, Test, Values};
+use unittest\{Assert, Expect, Test, Values};
 
-/**
- * TestCase
- *
- * @see  http://de.wikipedia.org/wiki/China
- * @see  xp://io.streams.TextReader
- */
 class TextReaderTest {
 
   #[Test]

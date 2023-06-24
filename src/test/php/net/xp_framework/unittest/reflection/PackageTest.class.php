@@ -6,11 +6,6 @@ use lang\{ClassLoader, ElementNotFoundException, IllegalArgumentException, XPCla
 use unittest\{Assert, Expect, Test};
 use util\Objects;
 
-/**
- * TestCase
- *
- * @see   xp://lang.reflect.Package
- */
 class PackageTest {
   protected static
     $testClasses= [

@@ -3,11 +3,6 @@
 use net\xp_framework\unittest\Name;
 use unittest\{Assert, Test};
 
-/**
- * TestCase for generic behaviour at runtime.
- *
- * @see   xp://net.xp_framework.unittest.core.generics.Nullable
- */
 class OptionalArgTest {
   private $value;
 

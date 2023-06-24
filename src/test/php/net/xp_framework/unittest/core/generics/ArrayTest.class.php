@@ -1,29 +1,26 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use lang\IllegalArgumentException;
-use unittest\Assert;
-use unittest\{Expect, Test};
+use net\xp_framework\unittest\Name;
+use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase for generic behaviour at runtime.
- *
- * @see   xp://net.xp_framework.unittest.core.generics.Lookup
- */
 class ArrayTest {
 
   #[Test]
   public function primitiveStringArrayValue() {
+    $name= new Name('test');
     $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, string[]>', [
-      'this' => [$this->name]
+      'name' => [$name]
     ]);
-    Assert::equals([$this->name], $l->get('this'));
+    Assert::equals([$name], $l->get('name'));
   }
 
   #[Test]
   public function primitiveStringArrayKey() {
-    $l= create('new net.xp_framework.unittest.core.generics.Lookup<string[], unittest.TestCase>');
-    $l->put(['this'], $this);
-    Assert::equals($this, $l->get(['this']));
+    $l= create('new net.xp_framework.unittest.core.generics.Lookup<string[], lang.Value>');
+    $name= new Name('test');
+    $l->put(['name'], $name);
+    Assert::equals($name, $l->get(['name']));
   }
 
   #[Test, Expect(IllegalArgumentException::class)]

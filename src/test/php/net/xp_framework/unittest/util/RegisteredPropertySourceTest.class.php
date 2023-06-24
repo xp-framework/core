@@ -1,8 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use io\streams\MemoryInputStream;
-use unittest\Assert;
-use unittest\{Test, TestCase};
+use unittest\{Assert, Test};
 use util\{Properties, RegisteredPropertySource};
 
 class RegisteredPropertySourceTest {

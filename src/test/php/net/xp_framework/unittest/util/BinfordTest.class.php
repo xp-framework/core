@@ -1,17 +1,10 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\IllegalArgumentException;
-use unittest\Assert;
-use unittest\{Expect, Test, TestCase};
+use unittest\{Assert, Expect, Test};
 use util\Binford;
 
-/**
- * Test Binford class
- *
- * @see  xp://util.Binford
- */
 class BinfordTest {
-  protected static $observable;
 
   #[Test]
   public function can_create() {

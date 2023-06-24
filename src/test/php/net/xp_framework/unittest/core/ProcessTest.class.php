@@ -3,7 +3,7 @@
 use io\streams\{MemoryOutputStream, Streams};
 use io\{IOException, TempFile};
 use lang\{Environment, IllegalStateException, Process, Runtime};
-use unittest\{Assert, AssertionFailedError, Before, Expect, PrerequisitesNotMetError, Test, TestCase, Values};
+use unittest\{Assert, AssertionFailedError, Before, Expect, PrerequisitesNotMetError, Test, Values};
 
 class ProcessTest {
 

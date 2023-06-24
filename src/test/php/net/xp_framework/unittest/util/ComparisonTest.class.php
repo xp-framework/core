@@ -1,8 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\{ClassLoader, Value};
-use unittest\Assert;
-use unittest\{Test, TestCase, Values};
+use unittest\{Assert, Test, Values};
 use util\Comparison;
 
 class ComparisonTest {

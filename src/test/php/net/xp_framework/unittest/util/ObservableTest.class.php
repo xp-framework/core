@@ -1,7 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\ClassLoader;
-use unittest\{Assert, Before, Test, TestCase};
+use unittest\{Assert, Before, Test};
 use util\{Observable, Observer};
 
 class ObservableTest {

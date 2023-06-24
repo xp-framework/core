@@ -2,7 +2,7 @@
 
 use io\{File, Files, Folder};
 use lang\Environment;
-use unittest\{Assert, After, Expect, Test, TestCase};
+use unittest\{Assert, After, Expect, Test};
 use xp\runtime\{CouldNotLoadDependencies, Modules};
 
 class ModulesTest {

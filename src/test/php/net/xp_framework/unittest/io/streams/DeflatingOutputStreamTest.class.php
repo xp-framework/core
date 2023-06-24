@@ -1,14 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\streams\DeflatingOutputStream;
-use unittest\Assert;
 
-/**
- * TestCase
- *
- * @ext      zlib
- * @see      xp://io.streams.DeflatingOutputStream
- */
 class DeflatingOutputStreamTest extends AbstractCompressingOutputStreamTest {
 
   /** @return string */

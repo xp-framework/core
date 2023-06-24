@@ -1,15 +1,9 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\{IllegalArgumentException, IllegalStateException};
-use unittest\Assert;
-use unittest\{Expect, Test, TestCase};
+use unittest\{Assert, Expect, Test};
 use util\TimeSpan;
 
-/**
- * TestCase
- *
- * @see      xp://util.TimeSpan
- */
 class TimeSpanTest {
   
   #[Test]

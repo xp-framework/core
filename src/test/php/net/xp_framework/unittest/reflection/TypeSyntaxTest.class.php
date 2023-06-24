@@ -2,7 +2,7 @@
 
 use lang\{ClassLoader, Nullable, Primitive, TypeUnion};
 use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Action, Test, TestCase};
+use unittest\{Assert, Action, Test};
 
 class TypeSyntaxTest {
   private static $spec= ['kind' => 'class', 'extends' => null, 'implements' => [], 'use' => []];

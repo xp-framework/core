@@ -1,9 +1,8 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\IllegalArgumentException;
-use unittest\Assert;
 use unittest\actions\{ExtensionAvailable, RuntimeVersion, VerifyThat};
-use unittest\{Action, Expect, Test, TestCase, Values};
+use unittest\{Assert, Action, Expect, Test, Values};
 use util\Random;
 
 class RandomTest {

@@ -1,8 +1,7 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\{IllegalArgumentException, IllegalStateException};
-use unittest\Assert;
-use unittest\{Expect, Test, TestCase, Values};
+use unittest\{Assert, Expect, Test, Values};
 use util\{Filter, Filters};
 
 class FiltersTest {

@@ -1,12 +1,8 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use lang\IllegalStateException;
-use unittest\Assert;
-use unittest\{Expect, Test, TestCase};
+use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase for reflection on a non-generic
- */
 class NotGenericTest {
   
   #[Test]

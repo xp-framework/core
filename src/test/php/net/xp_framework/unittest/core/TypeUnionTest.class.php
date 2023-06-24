@@ -14,7 +14,7 @@ use lang\{
 };
 use net\xp_framework\unittest\Name;
 use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Action, Expect, Test, TestCase, Values};
+use unittest\{Assert, Action, Expect, Test, Values};
 
 class TypeUnionTest {
 

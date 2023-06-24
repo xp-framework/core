@@ -3,8 +3,7 @@
 use io\streams\{InputStream, LinesIn, MemoryInputStream, TextReader};
 use io\{File, IOException};
 use lang\IllegalArgumentException;
-use unittest\Assert;
-use unittest\{Expect, Test, TestCase, Values};
+use unittest\{Assert, Expect, Test, Values};
 
 class LinesInTest {
 

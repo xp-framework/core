@@ -1,28 +1,24 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
-use unittest\Assert;
-/**
- * TestCase for definition reflection
- *
- * @see   xp://net.xp_framework.unittest.core.generics.Lookup
- */
+use lang\XPClass;
+
 class DefinitionReflectionTest extends AbstractDefinitionReflectionTest {
   
   /**
    * Creates fixture, a Lookup class
    *
-   * @return  lang.XPClass
+   * @return lang.XPClass
    */  
   protected function fixtureClass() {
-    return \lang\XPClass::forName('net.xp_framework.unittest.core.generics.Lookup');
+    return XPClass::forName('net.xp_framework.unittest.core.generics.Lookup');
   }
 
   /**
    * Creates fixture instance
    *
-   * @return  var
+   * @return var
    */
   protected function fixtureInstance() {
-    return create('new net.xp_framework.unittest.core.generics.Lookup<string, unittest.TestCase>()');
+    return create('new net.xp_framework.unittest.core.generics.Lookup<string, lang.Value>()');
   }
 }

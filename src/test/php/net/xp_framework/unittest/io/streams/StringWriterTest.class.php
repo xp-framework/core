@@ -3,15 +3,9 @@
 use io\streams\{MemoryOutputStream, StringWriter};
 use lang\Value;
 use net\xp_framework\unittest\Name;
-use unittest\Assert;
 use unittest\actions\RuntimeVersion;
-use unittest\{Test, TestCase, Values};
+use unittest\{Assert, Test, Values};
 
-/**
- * Test StringWriter
- *
- * @see  xp://io.streams.StringWriter
- */
 class StringWriterTest {
 
   /**

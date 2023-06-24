@@ -5,7 +5,7 @@ use lang\reflect\Package;
 use lang\{ClassFormatException, ClassLoader, IllegalAccessException, Process, Runnable, Runtime, Value};
 use net\xp_framework\unittest\Name;
 use unittest\actions\{RuntimeVersion, VerifyThat};
-use unittest\{Assert, Action, Expect, Test, TestCase, Values};
+use unittest\{Assert, Action, Expect, Test, Values};
 use util\Objects;
 
 class NewInstanceTest {

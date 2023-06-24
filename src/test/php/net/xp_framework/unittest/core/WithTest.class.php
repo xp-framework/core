@@ -2,7 +2,7 @@
 
 use lang\{ClassLoader, Closeable, IllegalStateException};
 use net\xp_framework\unittest\Name;
-use unittest\{Assert, Before, Test, TestCase, Values};
+use unittest\{Assert, Before, Test, Values};
 
 class WithTest {
   private static $closes, $raises, $dispose;

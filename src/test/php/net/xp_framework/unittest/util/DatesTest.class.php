@@ -1,7 +1,6 @@
 <?php namespace net\xp_framework\unittest\util;
 
-use unittest\Assert;
-use unittest\{Test, TestCase};
+use unittest\{Assert, Test};
 use util\{Date, Dates, TimeInterval, TimeSpan};
 
 class DatesTest {

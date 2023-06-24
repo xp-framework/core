@@ -2,8 +2,7 @@
 
 use io\{File, Files};
 use lang\{Environment, FileSystemClassLoader, IllegalArgumentException};
-use unittest\Assert;
-use unittest\{Expect, Test, TestCase};
+use unittest\{Assert, Expect, Test};
 use util\{ClassPathPropertySource, Properties};
 
 class ClassPathPropertySourceTest {

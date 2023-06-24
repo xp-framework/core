@@ -1,13 +1,7 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
-use unittest\Assert;
-use unittest\{Test, TestCase};
+use unittest\{Assert, Test};
 
-/**
- * TestCase for generic behaviour at runtime.
- *
- * @see   xp://net.xp_framework.unittest.core.generics.ListOf
- */
 class GenericsOfGenericsTest {
   
   #[Test]

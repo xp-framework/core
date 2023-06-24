@@ -1,16 +1,12 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use lang\{GenericTypes, Primitive, XPClass};
-use unittest\Assert;
-use unittest\{BeforeClass, Test, TestCase};
+use unittest\{Assert, Before, Test};
 
-/**
- * TestCase for lang.GenericTypes
- */
 class GenericTypesTest {
   private static $filter;
 
-  #[BeforeClass]
+  #[Before]
   public static function defineBase() {
     self::$filter= XPClass::forName('net.xp_framework.unittest.core.generics.ArrayFilter');
   }

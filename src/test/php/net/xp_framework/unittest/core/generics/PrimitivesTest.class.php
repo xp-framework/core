@@ -3,11 +3,6 @@
 use lang\{IllegalArgumentException, Primitive, XPClass, Value};
 use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase for generic behaviour at runtime.
- *
- * @see   xp://net.xp_framework.unittest.core.generics.Lookup
- */
 class PrimitivesTest {
 
   #[Test]

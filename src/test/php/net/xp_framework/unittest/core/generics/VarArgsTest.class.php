@@ -1,14 +1,8 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use lang\IllegalArgumentException;
-use unittest\Assert;
-use unittest\{Expect, Test, TestCase};
+use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase for generic construction behaviour at runtime.
- *
- * @see   xp://net.xp_framework.unittest.core.generics.ListOf
- */
 class VarArgsTest {
 
   #[Test]

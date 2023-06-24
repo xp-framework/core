@@ -1,17 +1,10 @@
 <?php namespace net\xp_framework\unittest\util;
 
 use lang\{Error, IllegalArgumentException};
-use unittest\Assert;
 use unittest\actions\RuntimeVersion;
-use unittest\{Expect, Test, TestCase};
-use util\{CompositeProperties, Hashmap, Properties};
+use unittest\{Assert, Expect, Test};
+use util\{CompositeProperties, Properties};
 
-/**
- * Test CompositeProperties
- *
- * @see   https://github.com/xp-framework/xp-framework/issues/302
- * @see    xp://util.CompositeProperies
- */
 class CompositePropertiesTest {
 
   #[Test]

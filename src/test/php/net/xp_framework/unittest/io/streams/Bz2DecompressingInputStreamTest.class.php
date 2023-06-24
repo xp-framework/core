@@ -1,14 +1,7 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\streams\Bz2DecompressingInputStream;
-use unittest\Assert;
 
-/**
- * TestCase
- *
- * @ext      bz2
- * @see      xp://io.streams.Bz2DecompressingInputStream
- */
 class Bz2DecompressingInputStreamTest extends AbstractDecompressingInputStreamTest {
 
   /** @return string */
