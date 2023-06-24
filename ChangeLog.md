@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Merged PR #328: Migrate tests to baseless / Assert DSL - @thekid
+
 ## 11.7.0 / 2023-06-24
 
 ### Features
