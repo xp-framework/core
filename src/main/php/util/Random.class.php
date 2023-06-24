@@ -14,7 +14,8 @@ use lang\IllegalArgumentException;
  *
  * @see   http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
  * @see   http://sockpuppet.org/blog/2014/02/25/safely-generate-random-numbers/
- * @test  xp://net.xp_framework.unittest.util.RandomTest
+ * @see   https://wiki.php.net/rfc/deprecations_php_8_3#global_mersenne_twister
+ * @test  net.xp_framework.unittest.util.RandomTest
  */
 class Random {
   const SYSTEM  = 'system';
@@ -30,30 +31,21 @@ class Random {
   private $bytes, $ints, $source;
 
   static function __static() {
-    if (function_exists('random_bytes')) {
-      self::$sources[self::SYSTEM]= ['bytes' => 'random_bytes', 'ints' => 'random_int'];
-    }
+    self::$sources[self::SYSTEM]= ['bytes' => 'random_bytes', 'ints' => 'random_int'];
+    self::$sources[self::SECURE]= &self::$sources[self::SYSTEM];
+    self::$sources[self::FAST]= &self::$sources[self::SYSTEM];
+    self::$sources[self::BEST]= &self::$sources[self::SYSTEM];
+
     if (strncasecmp(PHP_OS, 'Win', 3) !== 0 && is_readable('/dev/urandom')) {
       self::$sources[self::URANDOM]= ['bytes' => [self::class, self::URANDOM], 'ints' => null];
     }
 
-    // All of these above are secure pseudo-random sources
-    if (!empty(self::$sources)) {
-      self::$sources[self::SECURE]= &self::$sources[key(self::$sources)];
-    }
-
     if (function_exists('openssl_random_pseudo_bytes')) {
       self::$sources[self::OPENSSL]= ['bytes' => [self::class, self::OPENSSL], 'ints' => null];
-      if (!isset(self::$sources[self::SECURE])) {
-        self::$sources[self::SECURE]= &self::$sources[self::OPENSSL];
-      }
     }
 
-    // The Mersenne Twister algorithm is always available
+    // The Mersenne Twister algorithm is always available but deprecated
     self::$sources[self::MTRAND]= ['bytes' => [self::class, self::MTRAND], 'ints' => 'mt_rand'];
-
-    self::$sources[self::BEST]= &self::$sources[key(self::$sources)];
-    self::$sources[self::FAST]= &self::$sources[self::MTRAND];
   }
 
   /**
@@ -118,6 +110,7 @@ class Random {
   /**
    * Implementation using `mt_rand()`
    *
+   * @deprecated
    * @param  int $limit
    * @return string $bytes
    */
