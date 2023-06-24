@@ -1,9 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\{ClassLoader, FunctionType, Type};
-use unittest\Assert;
 use unittest\actions\RuntimeVersion;
-use unittest\{Test, Values};
+use unittest\{Assert, Test, Values};
 
 class FunctionTypeVarArgsTest {
   private static $compiled= [];

@@ -1,7 +1,6 @@
 <?php namespace net\xp_framework\unittest\runtime;
 
-use unittest\Assert;
-use unittest\{Test, Values};
+use unittest\{Assert, Test, Values};
 use xp\runtime\RenderMarkdown;
 
 class RenderMarkdownTest {

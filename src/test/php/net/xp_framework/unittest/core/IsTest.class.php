@@ -3,10 +3,8 @@
 use lang\{ClassLoader, Runnable};
 use net\xp_framework\unittest\Name;
 use net\xp_framework\unittest\core\generics\ListOf;
-use unittest\Assert;
-use unittest\{Test, TestCase, Values};
+use unittest\{Assert, Test, Values};
 
-/** Tests the is() core functionality */
 class IsTest {
 
   /** @return iterable */
@@ -33,12 +31,12 @@ class IsTest {
     yield [new Name('test')];
     yield [new \ArrayObject([])];
   }
+
   /** @return iterable */
   private function functions() {
     yield [function() { }];
     yield [function() { yield 'Test'; }];
   }
-
 
   #[Test]
   public function string_array() {

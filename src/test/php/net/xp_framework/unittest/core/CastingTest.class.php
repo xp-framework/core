@@ -1,13 +1,10 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\{ClassCastException, CommandLine, Runnable, Value};
-use unittest\Assert;
-use unittest\{Expect, Test, TestCase, Values};
+use net\xp_framework\unittest\BaseTest;
+use unittest\{Assert, Expect, Test, Values};
 
-/**
- * Tests cast() functionality
- */
-class CastingTest extends TestCase implements Runnable {
+class CastingTest extends BaseTest implements Runnable {
 
   /** @return void */
   public function run() { 
@@ -54,7 +51,7 @@ class CastingTest extends TestCase implements Runnable {
 
   #[Test]
   public function parentClass() {
-    Assert::true($this === cast($this, TestCase::class));
+    Assert::true($this === cast($this, parent::class));
   }
 
   #[Test]

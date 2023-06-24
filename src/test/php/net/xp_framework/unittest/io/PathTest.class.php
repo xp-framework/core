@@ -2,9 +2,8 @@
 
 use io\{File, Folder, Path};
 use lang\{Environment, IllegalArgumentException, IllegalStateException, Runtime};
-use unittest\Assert;
 use unittest\actions\IsPlatform;
-use unittest\{Action, Expect, Test, Values};
+use unittest\{Assert, Action, Expect, Test, Values};
 
 class PathTest {
 

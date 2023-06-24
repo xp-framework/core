@@ -2,8 +2,7 @@
 
 use io\{File, Folder, FolderEntries, Path};
 use lang\{Environment, IllegalArgumentException};
-use unittest\Assert;
-use unittest\{Expect, Test, Values};
+use unittest\{Assert, Expect, Test, Values};
 
 class FolderEntriesTest {
   private $folder;

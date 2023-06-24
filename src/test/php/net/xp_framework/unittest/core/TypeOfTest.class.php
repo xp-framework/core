@@ -1,9 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\{ArrayType, FunctionType, MapType, Primitive, Type, XPClass};
-use unittest\Assert;
 use unittest\actions\RuntimeVersion;
-use unittest\{Action, Test, TestCase};
+use unittest\{Assert, Action, Test};
 
 class TypeOfTest {
 

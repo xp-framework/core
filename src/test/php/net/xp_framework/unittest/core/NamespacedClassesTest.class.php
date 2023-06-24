@@ -5,14 +5,6 @@ use net\xp_framework\unittest\Name;
 use unittest\{Assert, Before, Test};
 use util\collections\Vector;
 
-/**
- * TestCase for XP Framework's namespaces support
- *
- * @see   https://github.com/xp-framework/xp-framework/issues/132
- * @see   https://github.com/xp-framework/rfc/issues/222
- * @see   xp://net.xp_framework.unittest.core.NamespacedClass
- * @see   php://namespaces
- */
 class NamespacedClassesTest {
   protected $package;
 

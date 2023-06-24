@@ -1,13 +1,9 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\{Error, IllegalArgumentException, Value};
-use unittest\Assert;
 use unittest\actions\RuntimeVersion;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
-/**
- * Test type hints.
- */
 class TypeHintsTest {
 
   /**
@@ -25,7 +21,6 @@ class TypeHintsTest {
    * @return lang.Value
    */
   protected function nullable(Value $o= null) { return $o; }
-
 
   #[Test]
   public function pass_an_object() {

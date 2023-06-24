@@ -2,9 +2,8 @@
 
 use lang\{ClassCastException, IllegalArgumentException, Type, TypeIntersection, XPClass};
 use net\xp_framework\unittest\Name;
-use unittest\Assert;
 use unittest\actions\RuntimeVersion;
-use unittest\{Action, Expect, Test, TestCase, Values};
+use unittest\{Assert, Action, Expect, Test, Values};
 
 class TypeIntersectionTest {
   private $types;

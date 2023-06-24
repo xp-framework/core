@@ -2,14 +2,10 @@
 
 use lang\StackTraceElement;
 use net\xp_framework\unittest\Name;
-use unittest\Assert;
-use unittest\Test;
+use unittest\{Assert, Test};
 
-/**
- * Tests for the StackTraceElement class
- */
 class StackTraceElementTest {
-  const NEW_FIXTURE_METHOD = '  at net.xp_framework.unittest.core.StackTraceElementTest::newFixtureWith';
+  const NEW_FIXTURE_METHOD= '  at net.xp_framework.unittest.core.StackTraceElementTest::newFixtureWith';
 
   /**
    * Creates a new fixture with args set to the given arguments

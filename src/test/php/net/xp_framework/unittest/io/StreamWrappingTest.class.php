@@ -2,14 +2,8 @@
 
 use io\IOException;
 use io\streams\{InputStream, MemoryInputStream, MemoryOutputStream, Streams};
-use unittest\Assert;
-use unittest\{Expect, Test, TestCase, Values};
+use unittest\{Assert, Expect, Test, Values};
 
-/**
- * TestCase
- *
- * @see   xp://io.streams.Streams
- */
 class StreamWrappingTest {
 
   #[Test]

@@ -1,12 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use lang\XPClass;
-use unittest\Assert;
-use unittest\Test;
+use Exception;
+use unittest\{Assert, Test};
 
-/**
- * Tests nameof() functionality
- */
 class NameOfTest {
 
   #[Test]
@@ -16,6 +12,6 @@ class NameOfTest {
 
   #[Test]
   public function of_php_instance() {
-    Assert::equals('Exception', nameof(new \Exception('Test')));
+    Assert::equals('Exception', nameof(new Exception('Test')));
   }
 }

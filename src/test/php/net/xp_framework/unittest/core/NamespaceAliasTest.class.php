@@ -1,12 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\ClassLoader;
-use unittest\Assert;
-use unittest\{Test, TestCase};
+use unittest\{Assert, Test};
 
-/**
- * Tests the XP Framework's optional namespace support
- */
 class NamespaceAliasTest {
 
   #[Test]

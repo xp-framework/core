@@ -1,15 +1,23 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\ClassLoader;
-use unittest\Assert;
-use unittest\Test;
+use unittest\{Assert, Before, Test};
 
-/**
- * References test.
- */
 class ReferencesTest {
 
-  static function __static() {
+  /**
+   * Helper method that asserts to objects are references to each other
+   *
+   * @param  var $a
+   * @param  var $b
+   * @throws unittest.AssertionFailedError
+   */
+  private function assertReference($a, $b) {
+    Assert::true($a === $b);
+  }
+
+  #[Before]
+  public function fixtures() {
     
     // For singletonInstance test
     ClassLoader::defineClass('net.xp_framework.unittest.core.AnonymousSingleton', null, [], '{
@@ -37,17 +45,6 @@ class ReferencesTest {
         return \lang\XPClass::forName("net.xp_framework.unittest.core.AnonymousList")->newInstance();
       }
     }');
-  }
-
-  /**
-   * Helper method that asserts to objects are references to each other
-   *
-   * @param   var $a
-   * @param   var $b
-   * @throws  unittest.AssertionFailedError
-   */
-  protected function assertReference($a, $b) {
-    Assert::true($a === $b);
   }
 
   #[Test]

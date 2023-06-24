@@ -2,7 +2,7 @@
 
 use lang\{Environment, IllegalArgumentException, IllegalStateException};
 use unittest\Assert;
-use unittest\{After, Before, Expect, Test, TestCase, Values};
+use unittest\{After, Before, Expect, Test, Values};
 
 class EnvironmentTest {
   private static $set;

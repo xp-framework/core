@@ -2,25 +2,17 @@
 
 use io\IOException;
 use lang\Process;
-use unittest\Assert;
 use unittest\actions\IsPlatform;
-use unittest\{Action, Expect, Test, TestCase};
+use unittest\{Assert, Action, After, Before, Expect, Test};
 
-/**
- * TestCase for lang.Process' resolve() method
- *
- * @see      xp://lang.Process
- */
 class ProcessResolveTest {
   private $origDir;
 
-  /** @return void */
   #[Before]
   public function setUp() {
     $this->origDir= getcwd();
   }
   
-  /** @return void */
   #[After]
   public function tearDown() {
     chdir($this->origDir);

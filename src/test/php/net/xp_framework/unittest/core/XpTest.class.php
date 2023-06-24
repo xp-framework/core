@@ -1,7 +1,6 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\Assert;
-use unittest\{Test, TestCase};
+use unittest\{Assert, Test};
 
 class XpTest {
 

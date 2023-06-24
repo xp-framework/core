@@ -1,11 +1,14 @@
 <?php namespace net\xp_framework\unittest\core;
+
+use lang\Closeable;
+
 /**
  * Creates a block within which certain environment variables are set
  * to a specified value; and reset when the block is exited.
  *
  * @see  php://putenv
  */
-class EnvironmentSet implements \lang\Closeable {
+class EnvironmentSet implements Closeable {
   private $name;
   private $original= [];
 

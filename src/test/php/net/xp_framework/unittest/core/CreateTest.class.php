@@ -1,15 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\{IllegalArgumentException, XPClass};
-use unittest\Assert;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase for create() core functionality, which is used to create
- * generic instances.
- * 
- * @see   http://news.xp-framework.net/article/184/2007/05/06/
- */
 class CreateTest {
 
   #[Test]

@@ -2,9 +2,8 @@
 
 use io\streams\{MemoryOutputStream, Streams};
 use lang\{Error, IllegalArgumentException, Throwable, XPClass, XPException};
-use unittest\Assert;
 use unittest\actions\RuntimeVersion;
-use unittest\{Action, Expect, Test, TestCase};
+use unittest\{Assert, Action, Expect, Test};
 
 class ExceptionsTest {
 

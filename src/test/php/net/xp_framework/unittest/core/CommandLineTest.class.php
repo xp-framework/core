@@ -1,14 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\CommandLine;
-use unittest\Assert;
-use unittest\Test;
+use unittest\{Assert, Test};
 
-/**
- * TestCase
- *
- * @see      xp://lang.CommandLine
- */
 class CommandLineTest {
 
   #[Test]

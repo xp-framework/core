@@ -2,8 +2,7 @@
 
 use io\{File, Files, Folder};
 use lang\Environment;
-use unittest\Assert;
-use unittest\{AfterClass, Expect, Test, TestCase};
+use unittest\{Assert, After, Expect, Test, TestCase};
 use xp\runtime\{CouldNotLoadDependencies, Modules};
 
 class ModulesTest {
@@ -28,7 +27,7 @@ class ModulesTest {
     return $f;
   }
 
-  #[AfterClass]
+  #[After]
   public static function cleanup() {
     foreach (self::$cleanup as $folder) {
       $folder->unlink();

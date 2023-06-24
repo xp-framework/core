@@ -2,21 +2,9 @@
 
 use lang\reflect\Modifiers;
 use lang\{ClassLoader, CloneNotSupportedException, Enum, Error, IllegalArgumentException, XPClass};
-use unittest\Assert;
 use unittest\actions\{RuntimeVersion, VerifyThat};
-use unittest\{Action, Expect, Test, TestCase};
+use unittest\{Assert, Action, Expect, Test};
 
-/**
- * TestCase for enumerations
- *
- * @see  net.xp_framework.unittest.core.Coin
- * @see  net.xp_framework.unittest.core.Operation
- * @see  net.xp_framework.unittest.core.Weekday
- * @see  net.xp_framework.unittest.core.SortOrder
- * @see  lang.Enum
- * @see  lang.XPClass#isEnum
- * @see  https://github.com/xp-framework/rfc/issues/132
- */
 class EnumTest {
 
   /**

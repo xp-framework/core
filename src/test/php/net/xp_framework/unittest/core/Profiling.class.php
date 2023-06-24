@@ -2,7 +2,6 @@
 
 use lang\Enum;
 
-/** Profiling enumeration */
 class Profiling extends Enum {
   public static $INSTANCE;
   public static $EXTENSION;

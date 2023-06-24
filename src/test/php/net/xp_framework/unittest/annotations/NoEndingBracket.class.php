@@ -1,4 +1,5 @@
 <?php namespace net\xp_framework\unittest\annotations;
+
 /**
  * Tests the XP Framework's annotations
  *

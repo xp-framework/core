@@ -1,20 +1,14 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\{Process, Runtime};
-use unittest\Assert;
-use unittest\{BeforeClass, Ignore, PrerequisitesNotMetError, Test, Values};
+use unittest\{Assert, Before, Ignore, PrerequisitesNotMetError, Test, Values};
 
-/**
- * TestCase
- *
- * @see  xp://lang.Runtime
- */
 class RuntimeInstantiationTest {
 
   /**
    * Skips tests if process execution has been disabled.
    */
-  #[BeforeClass]
+  #[Before]
   public static function verifyProcessExecutionEnabled() {
     if (Process::$DISABLED) {
       throw new PrerequisitesNotMetError('Process execution disabled', null, ['enabled']);

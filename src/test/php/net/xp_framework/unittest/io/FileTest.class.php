@@ -3,20 +3,14 @@
 use io\streams\{MemoryInputStream, MemoryOutputStream, Streams};
 use io\{File, Folder, Path};
 use lang\{IllegalArgumentException, Runtime};
-use unittest\Assert;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase
- *
- * @see      xp://io.File
- */
 class FileTest {
 
   /**
    * Return a file that is known to exist
    *
-   * @return  string
+   * @return string
    */
   protected function fileKnownToExist() {
     return realpath(Runtime::getInstance()->getExecutable()->getFilename());

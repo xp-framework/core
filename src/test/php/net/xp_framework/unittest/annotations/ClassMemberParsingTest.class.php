@@ -2,14 +2,8 @@
 
 use lang\XPClass;
 use net\xp_framework\unittest\annotations\fixture\Namespaced;
-use unittest\Assert;
-use unittest\{Test, TestCase, Values};
+use unittest\{Assert, Test, Values};
 
-/**
- * Tests the XP Framework's annotation parsing implementation
- *
- * @see   https://github.com/xp-framework/xp-framework/pull/328
- */
 class ClassMemberParsingTest {
   const CONSTANT = 'local';
   protected static $value = 'static';

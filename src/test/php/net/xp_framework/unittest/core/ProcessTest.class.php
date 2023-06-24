@@ -3,25 +3,9 @@
 use io\streams\{MemoryOutputStream, Streams};
 use io\{IOException, TempFile};
 use lang\{Environment, IllegalStateException, Process, Runtime};
-use unittest\Assert;
-use unittest\{AssertionFailedError, BeforeClass, Expect, PrerequisitesNotMetError, Test, TestCase, Values};
+use unittest\{Assert, AssertionFailedError, Before, Expect, PrerequisitesNotMetError, Test, TestCase, Values};
 
 class ProcessTest {
-
-  /**
-   * Skips tests if process execution has been disabled.
-   *
-   * @return void
-   */
-  #[BeforeClass]
-  public static function verifyProcessExecutionEnabled() {
-    if (Process::$DISABLED) {
-      throw new PrerequisitesNotMetError('Process execution disabled', null, ['enabled']);
-    }
-    if (strstr(php_uname('v'), 'Windows Server 2016')) {
-      throw new PrerequisitesNotMetError('Process execution bug on Windows Server 2016', null, ['enabled']);
-    }
-  }
 
   /**
    * Return executable name
@@ -30,6 +14,16 @@ class ProcessTest {
    */
   private function executable() {
     return Runtime::getInstance()->getExecutable()->getFilename();
+  }
+
+  #[Before]
+  public static function verifyProcessExecutionEnabled() {
+    if (Process::$DISABLED) {
+      throw new PrerequisitesNotMetError('Process execution disabled', null, ['enabled']);
+    }
+    if (strstr(php_uname('v'), 'Windows Server 2016')) {
+      throw new PrerequisitesNotMetError('Process execution bug on Windows Server 2016', null, ['enabled']);
+    }
   }
 
   /**

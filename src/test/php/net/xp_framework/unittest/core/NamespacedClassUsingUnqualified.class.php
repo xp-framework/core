@@ -2,11 +2,6 @@
 
 use net\xp_framework\unittest\Name;
   
-/**
- * Fixture for namespaces tests
- *
- * @see   xp://net.xp_framework.unittest.core.NamespacedClassesTest
- */
 class NamespacedClassUsingUnqualified {
   
   /** Returns a new name */

@@ -3,31 +3,11 @@
 use io\Files;
 use lang\archive\{Archive, ArchiveClassLoader};
 use lang\{ClassNotFoundException, ElementNotFoundException, XPClass};
-use unittest\Assert;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase for archive class loading
- *
- * Relies on an archive.xar file existing in the resources directory
- * with the following contents:
- *
- * ```sh
- * $ xar tvf archive.xar
- *    92 test/ClassLoadedFromArchive.class.php
- *   104 test/package-info.xp
- * ```
- * 
- * @see   xp://lang.archive.ArchiveClassLoader
- */
 class ArchiveClassLoaderTest {
   private $fixture;
   
-  /**
-   * Sets fixture to point to archive.xar from src/test/resources/
-   *
-   * @return void
-   */
   #[Before]
   public function setUp() {
     $this->fixture= new ArchiveClassLoader(new Archive(

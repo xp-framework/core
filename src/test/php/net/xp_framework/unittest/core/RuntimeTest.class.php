@@ -1,8 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\{FormatException, Process, Runtime, RuntimeOptions, XPClass};
-use unittest\Assert;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
 class RuntimeTest {
 

@@ -2,22 +2,10 @@
 
 use io\streams\{MemoryInputStream, MemoryOutputStream, Streams};
 use lang\Runtime;
-use unittest\Assert;
-use unittest\{PrerequisitesNotMetError, Test};
+use unittest\{Assert, Before, PrerequisitesNotMetError, Test};
 
-/**
- * TestCase
- *
- * @see   php://DOMDocument
- * @see   xp://io.streams.Streams
- */
 class DomApiStreamsTest {
 
-  /**
-   * Sets up this unittest 
-   *
-   * @throws  unittest.PrerequisitesNotMetError
-   */
   #[Before]
   public function setUp() {
     if (!Runtime::getInstance()->extensionAvailable('dom')) {
@@ -25,10 +13,6 @@ class DomApiStreamsTest {
     }
   }
  
-  /**
-   * Test DOMDocument::loadHTMLFile()
-   *
-   */
   #[Test]
   public function usableInLoadHTMLFile() {
     $dom= new \DOMDocument();
@@ -46,10 +30,6 @@ class DomApiStreamsTest {
     Assert::equals('übercoder', $dom->getElementsByTagName('title')->item(0)->nodeValue);
   }
 
-  /**
-   * Test DOMDocument::saveHTMLFile()
-   *
-   */
   #[Test]
   public function usableInSaveHTMLFile() {
     $out= new MemoryOutputStream();
@@ -69,10 +49,6 @@ class DomApiStreamsTest {
     );
   }
 
-  /**
-   * Test DOMDocument::load()
-   *
-   */
   #[Test]
   public function usableInLoad() {
     $dom= new \DOMDocument();
@@ -84,10 +60,7 @@ class DomApiStreamsTest {
     ')))));
     Assert::equals('übercoder', $dom->getElementsByTagName('child')->item(0)->nodeValue);
   } 
-  /**
-   * Test DOMDocument::save()
-   *
-   */
+
   #[Test]
   public function usableInSave() {
     $out= new MemoryOutputStream();

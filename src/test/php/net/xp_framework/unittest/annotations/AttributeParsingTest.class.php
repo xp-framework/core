@@ -3,27 +3,20 @@
 use lang\ClassFormatException;
 use lang\reflect\ClassParser;
 use net\xp_framework\unittest\annotations\fixture\Namespaced;
-use unittest\Assert;
-use unittest\{Expect, Interceptors, Test, Value, Values};
+use unittest\{Assert, Expect, Interceptors, Test, Value, Values};
 
-/**
- * Tests the XP Framework's annotation parsing implementation
- *
- * @see     https://github.com/xp-framework/rfc/issues/336
- * @see     https://gist.github.com/1240769
- */
 class AttributeParsingTest extends AbstractAnnotationParsingTest {
-  const CONSTANT = 'constant';
-  public static $exposed = 'exposed';
-  protected static $hidden = 'hidden';
-  private static $internal = 'internal';
+  const CONSTANT= 'constant';
+  public static $exposed= 'exposed';
+  protected static $hidden= 'hidden';
+  private static $internal= 'internal';
 
   /**
    * Helper
    *
-   * @param   string $input
-   * @param   [:var] $imports
-   * @return  [:var]
+   * @param  string $input
+   * @param  [:var] $imports
+   * @return [:var]
    */
   protected function parse($input, $imports= []) {
     return (new ClassParser())->parseAnnotations($input, nameof($this), array_merge($imports, [

@@ -1,17 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\{ElementNotFoundException, XPClass};
-use unittest\Assert;
-use unittest\{Expect, Test, TestCase, Values};
+use unittest\{Assert, Expect, Test, Values};
 
-/**
- * Tests the XP Framework's annotations
- *
- * @see   xp://net.xp_framework.unittest.core.AnnotatedClass
- * @see   xp://lang.reflect.Routine
- * @see   xp://lang.reflect.XPClass
- * @see   rfc://0016
- */
 class AnnotationTest {
 
   /** @return lang.XPClass */

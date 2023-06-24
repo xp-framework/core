@@ -3,19 +3,8 @@
 use lang\ClassFormatException;
 use lang\reflect\ClassParser;
 use net\xp_framework\unittest\annotations\fixture\Namespaced;
-use unittest\Assert;
-use unittest\{Expect, Interceptors, Test, Value, Values};
+use unittest\{Assert, Expect, Interceptors, Test, Value, Values};
 
-/**
- * Tests the XP Framework's annotation parsing implementation
- *
- * @see     rfc://0016
- * @see     xp://lang.XPClass#parseAnnotations
- * @see     http://bugs.xp-framework.net/show_bug.cgi?id=38
- * @see     https://github.com/xp-framework/xp-framework/issues/14
- * @see     https://github.com/xp-framework/xp-framework/pull/56
- * @see     https://gist.github.com/1240769
- */
 class AnnotationParsingTest extends AbstractAnnotationParsingTest {
   const CONSTANT = 'constant';
   public static $exposed = 'exposed';

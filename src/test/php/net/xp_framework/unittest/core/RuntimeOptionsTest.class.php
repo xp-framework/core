@@ -1,14 +1,8 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\RuntimeOptions;
-use unittest\Assert;
-use unittest\Test;
+use unittest\{Assert, Test};
 
-/**
- * TestCase
- *
- * @see    xp://lang.RuntimeOptions
- */
 class RuntimeOptionsTest {
 
   /**

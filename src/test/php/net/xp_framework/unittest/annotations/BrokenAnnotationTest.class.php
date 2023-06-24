@@ -2,24 +2,16 @@
 
 use lang\reflect\ClassParser;
 use lang\{ClassFormatException, XPClass};
-use unittest\Assert;
 use unittest\actions\RuntimeVersion;
-use unittest\{Action, Expect, Test, TestCase};
+use unittest\{Assert, Action, Expect, Test};
 
-/**
- * Tests the XP Framework's annotations
- *
- * @see   rfc://0185
- * @see   https://github.com/xp-framework/xp-framework/pull/328
- * @see   https://github.com/xp-framework/xp-framework/issues/313
- */
 class BrokenAnnotationTest {
 
   /**
    * Helper
    *
-   * @param   string input
-   * @return  [:var]
+   * @param  string $input
+   * @return [:var]
    */
   protected function parse($input) {
     try {

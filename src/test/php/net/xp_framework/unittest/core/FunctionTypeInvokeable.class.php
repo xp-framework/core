@@ -1,8 +1,10 @@
 <?php namespace net\xp_framework\unittest\core;
-/** Class for FunctionTypeTest */
+
 class FunctionTypeInvokeable {
 
   /**
+   * Invocation handler
+   *
    * @param  var $arg
    * @return var
    */
