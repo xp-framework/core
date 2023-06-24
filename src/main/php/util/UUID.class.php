@@ -56,11 +56,7 @@ use lang\FormatException;
 class UUID implements \lang\Value {
   const FORMAT = '%04x%04x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x';
 
-  public static
-    $NS_DNS                       = null,
-    $NS_URL                       = null,
-    $NS_OID                       = null,
-    $NS_X500                      = null;
+  public static $NS_DNS, $NS_URL, $NS_OID, $NS_X500;
 
   public
     $time_low                     = 0,
@@ -83,8 +79,8 @@ class UUID implements \lang\Value {
   /**
    * Create a UUID
    *
-   * @param   var $arg
-   * @throws  lang.FormatException in case str is not a valid UUID string
+   * @param  string|int[]|util.Bytes $arg
+   * @throws lang.FormatException in case str is not a valid UUID string
    */
   public function __construct($arg) {
     if ($arg instanceof Bytes) {
@@ -107,7 +103,8 @@ class UUID implements \lang\Value {
   /**
    * Populate instance members from a given string
    *
-   * @param   string
+   * @param  string
+   * @return void
    */
   private function populate($str) {
 
@@ -139,8 +136,8 @@ class UUID implements \lang\Value {
   /**
    * Create a version 1 UUID based upon time stamp and node identifier
    *
-   * @return  util.UUID
-   * @see     http://www.ietf.org/internet-drafts/draft-mealling-uuid-urn-00.txt section 4.1.4
+   * @see    https://datatracker.ietf.org/doc/rfc4122/ section 4.1.4
+   * @return self
    */
   public static function timeUUID() {
 
@@ -170,9 +167,9 @@ class UUID implements \lang\Value {
   /**
    * Create a version 3 UUID based upon a name and a given namespace
    *
-   * @param   util.UUID namespace
-   * @param   string name
-   * @return  util.UUID
+   * @param  self $namespace
+   * @param  string $name
+   * @return self
    */
   public static function md5UUID(self $namespace, $name) {
     $bytes= md5($namespace->getBytes().iconv(\xp::ENCODING, 'utf-8', $name));
@@ -190,9 +187,9 @@ class UUID implements \lang\Value {
   /**
    * Create a version 5 UUID based upon a name and a given namespace
    *
-   * @param   util.UUID namespace
-   * @param   string name
-   * @return  util.UUID
+   * @param  self $namespace
+   * @param  string $name
+   * @return self
    */
   public static function sha1UUID(self $namespace, $name) {
     $bytes= sha1($namespace->getBytes().iconv(\xp::ENCODING, 'utf-8', $name));
@@ -210,7 +207,7 @@ class UUID implements \lang\Value {
   /**
    * Create a version 4 UUID based upon random bits
    *
-   * @return  util.UUID
+   * @return self
    */
   public static function randomUUID() {
     return new self([
@@ -229,7 +226,7 @@ class UUID implements \lang\Value {
   /**
    * Returns version
    *
-   * @return  int
+   * @return int
    */
   public function version() {
     return $this->version;
@@ -238,7 +235,7 @@ class UUID implements \lang\Value {
   /**
    * Get bytes
    *
-   * @return  util.Bytes
+   * @return util.Bytes
    */
   public function getBytes() {
     return new Bytes(pack('H32', str_replace('-', '', $this->hashCode())));
@@ -247,18 +244,18 @@ class UUID implements \lang\Value {
   /**
    * Creates a urn representation
    *
-   * @return  string
+   * @return string
    */
   public function getUrn() {
     return 'urn:uuid:'.$this->hashCode();
   }
-  
+
   /**
    * Creates a string representation. 
    *
    * Example: `{f81d4fae-7dec-11d0-a765-00a0c91e6bf6}`
    *
-   * @return  string
+   * @return string
    */
   public function toString() {
     return '{'.$this->hashCode().'}';
@@ -269,7 +266,7 @@ class UUID implements \lang\Value {
    *
    * Example: `f81d4fae-7dec-11d0-a765-00a0c91e6bf6`
    *
-   * @return  string
+   * @return string
    */
   public function hashCode() {
     $r= (int)($this->time_low / 0x10000);
