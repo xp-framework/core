@@ -49,9 +49,8 @@ use lang\FormatException;
  * $uuid->getBytes(); // new Bytes("k\xa7\xb8\x11\x9d\xad\x11\xd1\x80\xb4\x00\xc0O\xd40\xc8")
  * ```
  *
- * @test  xp://net.xp_framework.unittest.util.UUIDTest
- * @see   rfc://4122
- * @see   http://www.ietf.org/internet-drafts/draft-mealling-uuid-urn-00.txt
+ * @see   https://datatracker.ietf.org/doc/rfc4122/
+ * @test  net.xp_framework.unittest.util.UUIDTest
  */
 class UUID implements \lang\Value {
   const FORMAT = '%04x%04x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x';
@@ -136,7 +135,6 @@ class UUID implements \lang\Value {
   /**
    * Create a version 1 UUID based upon time stamp and node identifier
    *
-   * @see    https://datatracker.ietf.org/doc/rfc4122/ section 4.1.4
    * @return self
    */
   public static function timeUUID() {
