@@ -2,12 +2,12 @@
 
 use lang\{Environment, IllegalArgumentException, IllegalStateException};
 use unittest\Assert;
-use unittest\{AfterClass, BeforeClass, Expect, Test, TestCase, Values};
+use unittest\{After, Before, Expect, Test, TestCase, Values};
 
 class EnvironmentTest {
   private static $set;
 
-  #[BeforeClass]
+  #[Before]
   public static function clearXDG() {
     $remove= [];
     foreach ($_SERVER as $variable => $value) {
@@ -16,7 +16,7 @@ class EnvironmentTest {
     self::$set= new EnvironmentSet($remove);
   }
 
-  #[AfterClass]
+  #[After]
   public static function restoreXDG() {
     self::$set->close();
   }
