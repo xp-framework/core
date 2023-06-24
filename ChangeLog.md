@@ -3,6 +3,9 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #325: Use random_int() instead of mt_rand() in `util.UUID`
+  (@thekid)
+
 ## 11.6.0 / 2023-06-03
 
 ### Features
