@@ -15,6 +15,7 @@ use lang\IllegalArgumentException;
  * @see   http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
  * @see   http://sockpuppet.org/blog/2014/02/25/safely-generate-random-numbers/
  * @see   https://wiki.php.net/rfc/deprecations_php_8_3#global_mersenne_twister
+ * @see   https://wiki.php.net/rfc/rng_extension#prng_shootout
  * @test  net.xp_framework.unittest.util.RandomTest
  */
 class Random {
@@ -33,7 +34,6 @@ class Random {
   static function __static() {
     self::$sources[self::SYSTEM]= ['bytes' => 'random_bytes', 'ints' => 'random_int'];
     self::$sources[self::SECURE]= &self::$sources[self::SYSTEM];
-    self::$sources[self::FAST]= &self::$sources[self::SYSTEM];
     self::$sources[self::BEST]= &self::$sources[self::SYSTEM];
 
     if (strncasecmp(PHP_OS, 'Win', 3) !== 0 && is_readable('/dev/urandom')) {
@@ -42,6 +42,14 @@ class Random {
 
     if (function_exists('openssl_random_pseudo_bytes')) {
       self::$sources[self::OPENSSL]= ['bytes' => [self::class, self::OPENSSL], 'ints' => null];
+    }
+
+    // Use Xoshiro256** (w/o seed) as the fastest engine for PHP 8.2+
+    if (interface_exists(\Random\Engine::class, false)) {
+      $r= new \Random\Randomizer(new \Random\Engine\Xoshiro256StarStar());
+      self::$sources[self::FAST]= ['bytes' => [$r, 'getBytes'], 'ints' => [$r, 'getInt']];
+    } else {
+      self::$sources[self::FAST]= &self::$sources[self::SYSTEM];
     }
   }
 
