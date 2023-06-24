@@ -4,19 +4,10 @@ use lang\FormatException;
 use unittest\{Expect, Test, TestCase};
 use util\{Bytes, UUID};
 
-/**
- * TestCase
- *
- * @see   xp://util.UUID
- */
 class UUIDTest extends TestCase {
-  protected $fixture= null;
+  private $fixture;
 
-  /**
-   * Creates fixture
-   *
-   * @return void
-   */
+  /** @return void */
   public function setUp() {
     $this->fixture= new UUID('6ba7b811-9dad-11d1-80b4-00c04fd430c8');
   }
@@ -24,6 +15,11 @@ class UUIDTest extends TestCase {
   #[Test]
   public function stringRepresentation() {
     $this->assertEquals('{6ba7b811-9dad-11d1-80b4-00c04fd430c8}', $this->fixture->toString());
+  }
+
+  #[Test]
+  public function stringCast() {
+    $this->assertEquals('6ba7b811-9dad-11d1-80b4-00c04fd430c8', (string)$this->fixture);
   }
 
   #[Test]

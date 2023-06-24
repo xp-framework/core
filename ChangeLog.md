@@ -3,6 +3,7 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Implemented string casting for `util.UUID` instances - @thekid
 * Merged PR #327: Use Xoshiro256** (w/o seed) as the fastest engine for
   PHP 8.2+, see https://wiki.php.net/rfc/rng_extension#prng_shootout
   (@thekid)

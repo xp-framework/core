@@ -270,7 +270,8 @@ class UUID implements Value {
     $r= (int)($this->time_low / 0x10000);
     return sprintf(
       self::FORMAT,
-      $r, $this->time_low - $r * 0x10000,
+      $r,
+      $this->time_low - $r * 0x10000,
       $this->time_mid, 
       $this->time_hi_and_version,
       $this->clock_seq_hi_and_reserved, 
@@ -306,13 +307,12 @@ class UUID implements Value {
     unset($this->value);
   }
 
+  /** @return string */
+  public function toString() { return $this->hashCode(); }
+
   /** @return [:string] */
-  public function __serialize() {
-    return ['value' => $this->hashCode()];
-  }
+  public function __serialize() { return ['value' => $this->hashCode()]; }
   
   /** @param [:string] $data */
-  public function __unserialize($data) {
-    $this->populate($data['value']);
-  }
+  public function __unserialize($data) { $this->populate($data['value']); }
 }
