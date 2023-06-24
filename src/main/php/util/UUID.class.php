@@ -1,6 +1,6 @@
 <?php namespace util;
 
-use lang\FormatException;
+use lang\{FormatException, Value};
 
 /**
  * Encapsulates UUIDs (Universally Unique IDentifiers), also known as
@@ -52,7 +52,7 @@ use lang\FormatException;
  * @see   https://datatracker.ietf.org/doc/rfc4122/
  * @test  net.xp_framework.unittest.util.UUIDTest
  */
-class UUID implements \lang\Value {
+class UUID implements Value {
   const FORMAT = '%04x%04x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x';
 
   public static $NS_DNS, $NS_URL, $NS_OID, $NS_X500;
