@@ -9,7 +9,7 @@ use unittest\{Assert, Expect, Test, Values};
 class FunctionTypeTest extends BaseTest {
 
   /** Fixture */
-  private function getName(bool $compound= false): string { return 'test'; }
+  public function getName(bool $compound= false): string { return 'test'; }
 
   #[Test]
   public function can_create_with_type_instances() {
