@@ -3,6 +3,9 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #326: Deprecate `Random::MTRAND` as Mersenne Twister is no
+  longer recommended, see https://wiki.php.net/rfc/rng_extension
+  (@thekid)
 * Merged PR #325: Use random_int() instead of mt_rand() in `util.UUID`
   (@thekid)
 
