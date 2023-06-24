@@ -1,13 +1,8 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{DynamicClassLoader, IClassLoader};
-use unittest\{Ignore, Test};
+use unittest\{Assert, Ignore, Test};
 
-/**
- * TestCase for classloading
- *
- * @see  xp://lang.DynamicClassLoader#loadUri
- */
 class ClassFromDynamicDefinitionTest extends ClassFromUriTest {
 
   /** Creates fixture */
@@ -61,12 +56,12 @@ class ClassFromDynamicDefinitionTest extends ClassFromUriTest {
 
   #[Test]
   public function provides_a_relative_path_in_root() {
-    $this->assertTrue($this->fixture->providesUri('dyn://CLT1'));
+    Assert::true($this->fixture->providesUri('dyn://CLT1'));
   }
 
   #[Test]
   public function load_from_a_relative_path_in_root() {
-    $this->assertEquals(
+    Assert::equals(
       $this->fixture->loadClass('CLT1'),
       $this->fixture->loadUri('dyn://CLT1')
     );
@@ -74,7 +69,7 @@ class ClassFromDynamicDefinitionTest extends ClassFromUriTest {
 
   #[Test]
   public function from_a_relative_path() {
-    $this->assertEquals(
+    Assert::equals(
       $this->fixture->loadClass('net.xp_framework.unittest.reflection.CLT2'),
       $this->fixture->loadUri('dyn://net.xp_framework.unittest.reflection.CLT2')
     );

@@ -2,9 +2,9 @@
 
 use lang\{ClassLoader, FunctionType, Type};
 use unittest\actions\RuntimeVersion;
-use unittest\{Test, Values};
+use unittest\{Assert, Test, Values};
 
-class FunctionTypeVarArgsTest extends \unittest\TestCase {
+class FunctionTypeVarArgsTest {
   private static $compiled= [];
 
   /**
@@ -42,22 +42,22 @@ class FunctionTypeVarArgsTest extends \unittest\TestCase {
 
   #[Test, Values('singleParam')]
   public function singleParam_vararg_parameter_via_syntax($type) {
-    $this->assertTrue($type->isInstance($this->compile('... $args')));
+    Assert::true($type->isInstance($this->compile('... $args')));
   }
 
   #[Test, Values('singleParam')]
   public function single_vararg_parameter_via_apidoc($type) {
-    $this->assertTrue($type->isInstance($this->compile('', ['@param  var... $args]'])));
+    Assert::true($type->isInstance($this->compile('', ['@param  var... $args]'])));
   }
 
   #[Test, Values('arrayParameter')]
   public function array_parameter_followed_by_vararg_parameter_via_syntax($type) {
-    $this->assertTrue($type->isInstance($this->compile('array $tokens, ... $args')));
+    Assert::true($type->isInstance($this->compile('array $tokens, ... $args')));
   }
 
   #[Test, Values('arrayParameter')]
   public function array_parameter_followed_by_vararg_parameter_via_apidoc($type) {
-    $this->assertTrue($type->isInstance($this->compile('array $tokens', [
+    Assert::true($type->isInstance($this->compile('array $tokens', [
       '@param  var[] $tokens',
       '@param var... $args'
     ])));

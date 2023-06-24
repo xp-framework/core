@@ -4,14 +4,9 @@ use io\Channel;
 use io\streams\{MemoryInputStream, MemoryOutputStream, TextWriter};
 use lang\IllegalArgumentException;
 use unittest\actions\RuntimeVersion;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase
- *
- * @see      xp://io.streams.TextWriter
- */
-class TextWriterTest extends \unittest\TestCase {
+class TextWriterTest {
   protected $out= null;
 
   #[Test]
@@ -46,72 +41,72 @@ class TextWriterTest extends \unittest\TestCase {
   #[Test]
   public function write() {
     $this->newWriter()->write('Hello');
-    $this->assertEquals('Hello', $this->out->bytes());
+    Assert::equals('Hello', $this->out->bytes());
   }
 
   #[Test]
   public function writeOne() {
     $this->newWriter()->write('H');
-    $this->assertEquals('H', $this->out->bytes());
+    Assert::equals('H', $this->out->bytes());
   }
 
   #[Test]
   public function writeEmpty() {
     $this->newWriter()->write('');
-    $this->assertEquals('', $this->out->bytes());
+    Assert::equals('', $this->out->bytes());
   }
 
   #[Test]
   public function writeLine() {
     $this->newWriter()->writeLine('Hello');
-    $this->assertEquals("Hello\n", $this->out->bytes());
+    Assert::equals("Hello\n", $this->out->bytes());
   }
 
   #[Test]
   public function writeEmptyLine() {
     $this->newWriter()->writeLine();
-    $this->assertEquals("\n", $this->out->bytes());
+    Assert::equals("\n", $this->out->bytes());
   }
 
   #[Test]
   public function unixLineSeparatorIsDefault() {
-    $this->assertEquals("\n", $this->newWriter()->newLine());
+    Assert::equals("\n", $this->newWriter()->newLine());
   }
 
   #[Test]
   public function withNewLine() {
     $w= $this->newWriter()->withNewLine("\r");
-    $this->assertEquals("\r", $w->newLine());
+    Assert::equals("\r", $w->newLine());
   }
 
   #[Test]
   public function writeLineWindows() {
     $this->newWriter()->withNewLine("\r\n")->writeLine();
-    $this->assertEquals("\r\n", $this->out->bytes());
+    Assert::equals("\r\n", $this->out->bytes());
   }
 
   #[Test]
   public function writeLineUnix() {
     $this->newWriter()->withNewLine("\n")->writeLine();
-    $this->assertEquals("\n", $this->out->bytes());
+    Assert::equals("\n", $this->out->bytes());
   }
 
   #[Test]
   public function writeLineMac() {
     $this->newWriter()->withNewLine("\r")->writeLine();
-    $this->assertEquals("\r", $this->out->bytes());
+    Assert::equals("\r", $this->out->bytes());
   }
 
   #[Test]
   public function writeUtf8() {
     $this->newWriter('utf-8')->write('Übercoder');
-    $this->assertEquals("\303\234bercoder", $this->out->bytes());
+    Assert::equals("\303\234bercoder", $this->out->bytes());
   }
 
   #[Test]
   public function writeLineUtf8() {
     $this->newWriter('utf-8')->writeLine('Übercoder');
-    $this->assertEquals("\303\234bercoder\n", $this->out->bytes());
+    Assert::equals("\303\234bercoder\n", $this->out->bytes());
   }
 
   #[Test]
@@ -124,24 +119,24 @@ class TextWriterTest extends \unittest\TestCase {
   #[Test]
   public function isoHasNoBom() {
     $this->newWriter('iso-8859-1')->withBom()->write('Hello');
-    $this->assertEquals('Hello', $this->out->bytes());
+    Assert::equals('Hello', $this->out->bytes());
   }
  
   #[Test]
   public function utf8Bom() {
     $this->newWriter('utf-8')->withBom()->write('Hello');
-    $this->assertEquals("\357\273\277Hello", $this->out->bytes());
+    Assert::equals("\357\273\277Hello", $this->out->bytes());
   }
 
   #[Test]
   public function utf16beBom() {
     $this->newWriter('utf-16be')->withBom()->write('Hello');
-    $this->assertEquals("\376\377\0H\0e\0l\0l\0o", $this->out->bytes());
+    Assert::equals("\376\377\0H\0e\0l\0l\0o", $this->out->bytes());
   }
 
   #[Test]
   public function utf16leBom() {
     $this->newWriter('utf-16le')->withBom()->write('Hello');
-    $this->assertEquals("\377\376H\0e\0l\0l\0o\0", $this->out->bytes());
+    Assert::equals("\377\376H\0e\0l\0l\0o\0", $this->out->bytes());
   }
 }

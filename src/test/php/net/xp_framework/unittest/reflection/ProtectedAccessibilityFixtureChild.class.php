@@ -1,12 +1,5 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-
-
-/**
- * Fixture class for accessibility tests
- *
- * @see      xp://net.xp_framework.unittest.reflection.ProtectedAccessibilityTest
- */
 class ProtectedAccessibilityFixtureChild extends ProtectedAccessibilityFixture {
 
   /**

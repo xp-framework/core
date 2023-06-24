@@ -2,20 +2,20 @@
 
 use lang\{IllegalAccessException, IllegalArgumentException};
 use unittest\actions\RuntimeVersion;
-use unittest\{Action, Expect, Test, Values};
+use unittest\{Assert, Action, Expect, Test, Values};
 
 class FieldAccessTest extends FieldsTest {
 
   #[Test]
   public function read() {
     $fixture= $this->type('{ public $fixture= "Test"; }');
-    $this->assertEquals('Test', $fixture->getField('fixture')->get($fixture->newInstance()));
+    Assert::equals('Test', $fixture->getField('fixture')->get($fixture->newInstance()));
   }
 
   #[Test]
   public function read_static() {
     $fixture= $this->type('{ public static $fixture= "Test"; }');
-    $this->assertEquals('Test', $fixture->getField('fixture')->get(null));
+    Assert::equals('Test', $fixture->getField('fixture')->get(null));
   }
 
   #[Test]
@@ -23,14 +23,14 @@ class FieldAccessTest extends FieldsTest {
     $fixture= $this->type('{ public $fixture= "Test"; }');
     $instance= $fixture->newInstance();
     $fixture->getField('fixture')->set($instance, 'Changed');
-    $this->assertEquals('Changed', $fixture->getField('fixture')->get($instance));
+    Assert::equals('Changed', $fixture->getField('fixture')->get($instance));
   }
 
   #[Test]
   public function write_static() {
     $fixture= $this->type('{ public static $fixture= "Test"; }');
     $fixture->getField('fixture')->set(null, 'Changed');
-    $this->assertEquals('Changed', $fixture->getField('fixture')->get(null));
+    Assert::equals('Changed', $fixture->getField('fixture')->get(null));
   }
 
   #[Test, Expect(IllegalAccessException::class), Values([['{ private $fixture; }'], ['{ protected $fixture; }']])]
@@ -48,7 +48,7 @@ class FieldAccessTest extends FieldsTest {
   #[Test, Values([['{ private $fixture= "Test"; }'], ['{ protected $fixture= "Test"; }'],])]
   public function can_read_private_or_protected_via_setAccessible($declaration) {
     $fixture= $this->type($declaration);
-    $this->assertEquals('Test', $fixture->getField('fixture')->setAccessible(true)->get($fixture->newInstance()));
+    Assert::equals('Test', $fixture->getField('fixture')->setAccessible(true)->get($fixture->newInstance()));
   }
 
   #[Test, Values([['{ private $fixture= "Test"; }'], ['{ protected $fixture= "Test"; }'],])]
@@ -57,7 +57,7 @@ class FieldAccessTest extends FieldsTest {
     $instance= $fixture->newInstance();
     $field= $fixture->getField('fixture')->setAccessible(true);
     $field->set($instance, 'Changed');
-    $this->assertEquals('Changed', $field->get($instance));
+    Assert::equals('Changed', $field->get($instance));
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
@@ -79,7 +79,7 @@ class FieldAccessTest extends FieldsTest {
     $instance= $fixture->newInstance();
 
     $field->set($instance, 'Modified');
-    $this->assertEquals('Modified', $field->get($instance));
+    Assert::equals('Modified', $field->get($instance));
   }
 
   #[Test, Expect(IllegalAccessException::class), Action(eval: 'new RuntimeVersion(">=8.1")')]

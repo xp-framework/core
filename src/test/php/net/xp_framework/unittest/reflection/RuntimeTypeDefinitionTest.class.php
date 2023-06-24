@@ -1,15 +1,9 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{ClassLoader, DynamicClassLoader, XPClass};
-use unittest\{Test, TestCase, Values};
+use unittest\{Assert, Test, Values};
 
-/**
- * Base class for runtime type definitions
- *
- * @see   xp://lang.ClassLoader
- * @see   https://github.com/xp-framework/xp-framework/issues/94
- */
-abstract class RuntimeTypeDefinitionTest extends TestCase {
+abstract class RuntimeTypeDefinitionTest {
 
   /**
    * Wraps around a function which defines types, giving it unique names and
@@ -22,7 +16,9 @@ abstract class RuntimeTypeDefinitionTest extends TestCase {
    * @throws unittest.AssertionFailedError
    */
   protected function defineType($annotations, $name, $define) {
-    $t= $name ?: nameof($this).'__'.$this->name;
+    static $uniq= 0;
+
+    $t= $name ?: nameof($this).'__'.($uniq++);
     $spec= trim($annotations.' '.$t);
     if (interface_exists(literal($t), false) || class_exists(literal($t), false)) {
       $this->fail('Type may not exist!', $t, null);
@@ -41,48 +37,48 @@ abstract class RuntimeTypeDefinitionTest extends TestCase {
 
   #[Test]
   public function returns_XPClass_instances() {
-    $this->assertInstanceOf(XPClass::class, $this->define());
+    Assert::instance(XPClass::class, $this->define());
   }
 
   #[Test]
   public function classloader_of_defined_type_is_DynamicClassLoader() {
-    $this->assertInstanceOf(DynamicClassLoader::class, $this->define()->getClassLoader());
+    Assert::instance(DynamicClassLoader::class, $this->define()->getClassLoader());
   }
 
   #[Test]
   public function package_name() {
-    $this->assertEquals('net.xp_framework.unittest.reflection', $this->define()->getPackage()->getName());
+    Assert::equals('net.xp_framework.unittest.reflection', $this->define()->getPackage()->getName());
   }
 
   #[Test]
   public function default_classloader_provides_defined_type() {
-    $this->assertTrue(ClassLoader::getDefault()->providesClass($this->define()->getName()));
+    Assert::true(ClassLoader::getDefault()->providesClass($this->define()->getName()));
   }
 
   #[Test]
   public function default_classloader_provides_packaged_of_defined_type() {
-    $this->assertTrue(ClassLoader::getDefault()->providesPackage($this->define()->getPackage()->getName()));
+    Assert::true(ClassLoader::getDefault()->providesPackage($this->define()->getPackage()->getName()));
   }
 
   #[Test]
   public function declares_passed_annotation() {
-    $this->assertTrue($this->define(['annotations' => '#[Test]'])->hasAnnotation('test'));
+    Assert::true($this->define(['annotations' => '#[Test]'])->hasAnnotation('test'));
   }
 
   #[Test]
   public function declares_passed_annotation_with_value() {
-    $this->assertEquals('/rest', $this->define(['annotations' => '#[Webservice(["path" => "/rest"])]'])->getAnnotation('webservice', 'path'));
+    Assert::equals('/rest', $this->define(['annotations' => '#[Webservice(["path" => "/rest"])]'])->getAnnotation('webservice', 'path'));
   }
 
   #[Test, Values(['com.example.test.RTTDDotted', 'com\\example\\test\\RTTDNative'])]
   public function type_with_package_is_declared_inside_namespace($name) {
     $name.= typeof($this)->getSimpleName().$name;
-    $this->assertEquals('com\\example\\test\\', substr($this->define(['name' => $name])->literal(), 0, 17));
+    Assert::equals('com\\example\\test\\', substr($this->define(['name' => $name])->literal(), 0, 17));
   }
 
   #[Test]
   public function type_without_package_is_declared_globally() {
     $name= typeof($this)->getSimpleName().'RTTDGlobal';
-    $this->assertEquals($name, $this->define(['name' => $name])->literal());
+    Assert::equals($name, $this->define(['name' => $name])->literal());
   }
 }

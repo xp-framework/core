@@ -3,12 +3,8 @@
 use io\TempFile;
 use lang\IClassLoader;
 use lang\archive\{Archive, ArchiveClassLoader};
+use unittest\Assert;
 
-/**
- * TestCase for classloading
- *
- * @see  xp://lang.archive.ArchiveClassLoader#loadUri
- */
 class ClassFromArchiveTest extends ClassFromUriTest {
 
   /** Creates fixture */

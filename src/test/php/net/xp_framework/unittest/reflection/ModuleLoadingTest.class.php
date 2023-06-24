@@ -2,14 +2,9 @@
 
 use lang\reflect\Module;
 use lang\{ClassLoader, ElementNotFoundException};
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase for modules
- *
- * @see   xp://lang.ClassLoader
- */
-class ModuleLoadingTest extends \unittest\TestCase {
+class ModuleLoadingTest {
   protected $registered= [];
 
   /**
@@ -21,9 +16,7 @@ class ModuleLoadingTest extends \unittest\TestCase {
     $this->registered[]= ClassLoader::registerLoader($l);
   }
 
-  /**
-   * Tears down test, removing all loaders registered with the CL.
-   */
+  /** @return voud */
   public function tearDown() {
     foreach ($this->registered as $l) {
       ClassLoader::removeLoader($l);
@@ -32,108 +25,160 @@ class ModuleLoadingTest extends \unittest\TestCase {
 
   #[Test]
   public function simple_module() {
-    $this->register(new LoaderProviding(['module.xp' => 'module xp-framework/simple { }']));
+    try {
+      $this->register(new LoaderProviding(['module.xp' => 'module xp-framework/simple { }']));
+    } finally {
+      $this->tearDown();
+    }
   }
 
   #[Test]
   public function leading_php_tag_is_stripped() {
-    $this->register(new LoaderProviding(['module.xp' => '<?php module xp-framework/tagstart { }']));
+    try {
+      $this->register(new LoaderProviding(['module.xp' => '<?php module xp-framework/tagstart { }']));
+    } finally {
+      $this->tearDown();
+    }
   }
 
   #[Test]
   public function leading_and_trailing_php_tags_are_stripped() {
-    $this->register(new LoaderProviding(['module.xp' => '<?php module xp-framework/tagboth { } ?>']));
+    try {
+      $this->register(new LoaderProviding(['module.xp' => '<?php module xp-framework/tagboth { } ?>']));
+    } finally {
+      $this->tearDown();
+    }
   }
 
   #[Test]
   public function trailing_php_tag_is_stripped() {
-    $this->register(new LoaderProviding(['module.xp' => 'module xp-framework/tagend { } ?>']));
+    try {
+      $this->register(new LoaderProviding(['module.xp' => 'module xp-framework/tagend { } ?>']));
+    } finally {
+      $this->tearDown();
+    }
   }
 
   #[Test]
   public function module_in_namespace() {
-    $this->register(new LoaderProviding(['module.xp' => '<?php namespace net\xp_framework\unittest\reflection;
-    module xp-framework/namespaced { 
+    try {
+      $this->register(new LoaderProviding(['module.xp' => '<?php namespace net\xp_framework\unittest\reflection;
+      module xp-framework/namespaced { 
 
-    }']));
+      }']));
+    } finally {
+      $this->tearDown();
+    }
   }
 
   #[Test, Expect(['class' => ElementNotFoundException::class, 'withMessage' => '/Missing or malformed module-info/'])]
   public function empty_module_file() {
-    $this->register(new LoaderProviding(['module.xp' => '']));
+    try {
+      $this->register(new LoaderProviding(['module.xp' => '']));
+    } finally {
+      $this->tearDown();
+    }
   }
 
   #[Test, Expect(['class' => ElementNotFoundException::class, 'withMessage' => '/Missing or malformed module-info/'])]
   public function module_without_name() {
-    $this->register(new LoaderProviding(['module.xp' => 'module { }']));
+    try {
+      $this->register(new LoaderProviding(['module.xp' => 'module { }']));
+    } finally {
+      $this->tearDown();
+    }
   }
 
   #[Test]
   public function loaded_module() {
-    $cl= new LoaderProviding(['module.xp' => 'module xp-framework/loaded { }']);
-    $this->register($cl);
-    $this->assertEquals(new Module('xp-framework/loaded', $cl), Module::forName('xp-framework/loaded'));
+    try {
+      $cl= new LoaderProviding(['module.xp' => 'module xp-framework/loaded { }']);
+      $this->register($cl);
+      Assert::equals(new Module('xp-framework/loaded', $cl), Module::forName('xp-framework/loaded'));
+    } finally {
+      $this->tearDown();
+    }
   }
 
   #[Test]
   public function modules_initializer_is_invoked() {
-    $this->register(new LoaderProviding(['module.xp' => 'module xp-framework/initialized {
-      public $initialized= false;
+    try {
+      $this->register(new LoaderProviding(['module.xp' => 'module xp-framework/initialized {
+        public $initialized= false;
 
-      public function initialize() {
-        $this->initialized= true;
-      }
-    }']));
-    $this->assertEquals(true, Module::forName('xp-framework/initialized')->initialized);
+        public function initialize() {
+          $this->initialized= true;
+        }
+      }']));
+      Assert::equals(true, Module::forName('xp-framework/initialized')->initialized);
+    } finally {
+      $this->tearDown();
+    }
   }
 
   #[Test]
   public function modules_initializer_is_invoked_once_when_registered_multiple_times() {
-    $tracksInit= new LoaderProviding(['module.xp' => 'module xp-framework/tracks-init {
-      public static $initialized= 0;
+    try {
+      $tracksInit= new LoaderProviding(['module.xp' => 'module xp-framework/tracks-init {
+        public static $initialized= 0;
 
-      public function initialize() {
-        self::$initialized++;
-      }
+        public function initialize() {
+          self::$initialized++;
+        }
 
-      public function initialized() {
-        return self::$initialized;
-      }
-    }']);
-    $this->register($tracksInit);
-    $this->register($tracksInit);
-    $this->assertEquals(1, Module::forName('xp-framework/tracks-init')->initialized());
+        public function initialized() {
+          return self::$initialized;
+        }
+      }']);
+      $this->register($tracksInit);
+      $this->register($tracksInit);
+      Assert::equals(1, Module::forName('xp-framework/tracks-init')->initialized());
+    } finally {
+      $this->tearDown();
+    }
   }
 
   #[Test]
   public function module_inheritance() {
-    $cl= ClassLoader::defineClass('net.xp_framework.unittest.reflection.BaseModule', Module::class, []);
-    $this->register(new LoaderProviding([
-      'module.xp' => '<?php module xp-framework/child extends net\xp_framework\unittest\reflection\BaseModule { }'
-    ]));
-    $this->assertEquals($cl, typeof(Module::forName('xp-framework/child'))->getParentclass());
+    try {
+      $cl= ClassLoader::defineClass('net.xp_framework.unittest.reflection.BaseModule', Module::class, []);
+      $this->register(new LoaderProviding([
+        'module.xp' => '<?php module xp-framework/child extends net\xp_framework\unittest\reflection\BaseModule { }'
+      ]));
+      Assert::equals($cl, typeof(Module::forName('xp-framework/child'))->getParentclass());
+    } finally {
+      $this->tearDown();
+    }
   }
 
   #[Test]
   public function module_implementation() {
-    $cl= ClassLoader::defineInterface('net.xp_framework.unittest.reflection.IModule', []);
-    $this->register(new LoaderProviding([
-      'module.xp' => '<?php module xp-framework/impl implements net\xp_framework\unittest\reflection\IModule { }'
-    ]));
-    $interfaces= typeof(Module::forName('xp-framework/impl'))->getInterfaces();
-    foreach ($interfaces as $interface) {
-      if ($cl->equals($interface)) return;
+    try {
+      $cl= ClassLoader::defineInterface('net.xp_framework.unittest.reflection.IModule', []);
+      $this->register(new LoaderProviding([
+        'module.xp' => '<?php module xp-framework/impl implements net\xp_framework\unittest\reflection\IModule { }'
+      ]));
+      $interfaces= typeof(Module::forName('xp-framework/impl'))->getInterfaces();
+      foreach ($interfaces as $interface) {
+        if ($cl->equals($interface)) return;
+      }
+      $this->fail($cl->getName().' not included', $interfaces, [$cl]);
+    } finally {
+      $this->tearDown();
     }
-    $this->fail($cl->getName().' not included', $interfaces, [$cl]);
   }
 
   #[Test]
   public function modules_initializer_can_register_itself_upfront_without_causing_endless_recursion() {
-    $selfUpfront= new LoaderProviding(['module.xp' => 'module xp-framework/self-upfront {
-      public function initialize() {
-        \lang\ClassLoader::registerLoader($this->classLoader(), true);
-      }
-    }']);
-    $this->register($selfUpfront);
+    try {
+      $selfUpfront= new LoaderProviding(['module.xp' => 'module xp-framework/self-upfront {
+        public function initialize() {
+          \lang\ClassLoader::registerLoader($this->classLoader(), true);
+        }
+      }']);
+      $this->register($selfUpfront);
+    } finally {
+      $this->tearDown();
+    }
   }
 }

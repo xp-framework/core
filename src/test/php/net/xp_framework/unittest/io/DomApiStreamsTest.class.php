@@ -2,35 +2,21 @@
 
 use io\streams\{MemoryInputStream, MemoryOutputStream, Streams};
 use lang\Runtime;
-use unittest\{PrerequisitesNotMetError, Test};
+use unittest\{Assert, Before, PrerequisitesNotMetError, Test};
 
-/**
- * TestCase
- *
- * @see   php://DOMDocument
- * @see   xp://io.streams.Streams
- */
-class DomApiStreamsTest extends \unittest\TestCase {
+class DomApiStreamsTest {
 
-  /**
-   * Sets up this unittest 
-   *
-   * @throws  unittest.PrerequisitesNotMetError
-   */
+  #[Before]
   public function setUp() {
     if (!Runtime::getInstance()->extensionAvailable('dom')) {
       throw new PrerequisitesNotMetError('DOM extension not loaded', null, ['ext/dom']);
     }
   }
  
-  /**
-   * Test DOMDocument::loadHTMLFile()
-   *
-   */
   #[Test]
   public function usableInLoadHTMLFile() {
     $dom= new \DOMDocument();
-    $this->assertTrue($dom->loadHTMLFile(Streams::readableUri(new MemoryInputStream(trim('
+    Assert::true($dom->loadHTMLFile(Streams::readableUri(new MemoryInputStream(trim('
       <html>
         <head>
           <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -41,13 +27,9 @@ class DomApiStreamsTest extends \unittest\TestCase {
         </body>
       </html>
     ')))));
-    $this->assertEquals('übercoder', $dom->getElementsByTagName('title')->item(0)->nodeValue);
+    Assert::equals('übercoder', $dom->getElementsByTagName('title')->item(0)->nodeValue);
   }
 
-  /**
-   * Test DOMDocument::saveHTMLFile()
-   *
-   */
   #[Test]
   public function usableInSaveHTMLFile() {
     $out= new MemoryOutputStream();
@@ -61,31 +43,24 @@ class DomApiStreamsTest extends \unittest\TestCase {
     $dom->saveHTMLFile(Streams::writeableUri($out));
     
     // Check file contents
-    $this->assertEquals(
+    Assert::equals(
       '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Ubercoder</title></head></html>', 
       trim($out->bytes())
     );
   }
 
-  /**
-   * Test DOMDocument::load()
-   *
-   */
   #[Test]
   public function usableInLoad() {
     $dom= new \DOMDocument();
-    $this->assertTrue($dom->load(Streams::readableUri(new MemoryInputStream(trim('
+    Assert::true($dom->load(Streams::readableUri(new MemoryInputStream(trim('
       <?xml version="1.0" encoding="utf-8"?>
       <root>
         <child>übercoder</child>
       </root>
     ')))));
-    $this->assertEquals('übercoder', $dom->getElementsByTagName('child')->item(0)->nodeValue);
+    Assert::equals('übercoder', $dom->getElementsByTagName('child')->item(0)->nodeValue);
   } 
-  /**
-   * Test DOMDocument::save()
-   *
-   */
+
   #[Test]
   public function usableInSave() {
     $out= new MemoryOutputStream();
@@ -96,7 +71,7 @@ class DomApiStreamsTest extends \unittest\TestCase {
     $dom->save(Streams::writeableUri($out));
     
     // Check file contents
-    $this->assertEquals(
+    Assert::equals(
       '<?xml version="1.0"?>'."\n".
       '<root><child>&#xFC;bercoder</child></root>',
       trim($out->bytes())

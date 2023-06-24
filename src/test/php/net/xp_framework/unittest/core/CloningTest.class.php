@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\{CloneNotSupportedException, NullPointerException};
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
-class CloningTest extends \unittest\TestCase {
+class CloningTest {
 
   #[Test]
   public function cloneInterceptorCalled() {
@@ -11,10 +11,10 @@ class CloningTest extends \unittest\TestCase {
       public $cloned= false;
       public function __clone() { $this->cloned= true; }
     };
-    $this->assertFalse($original->cloned);
+    Assert::false($original->cloned);
     $clone= clone($original);
-    $this->assertFalse($original->cloned);
-    $this->assertTrue($clone->cloned);
+    Assert::false($original->cloned);
+    Assert::true($clone->cloned);
   }
 
   #[Test, Expect(CloneNotSupportedException::class)]

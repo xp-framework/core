@@ -4,16 +4,9 @@ use unittest\Action;
 use unittest\actions\ExtensionAvailable;
 use util\Secret;
 
-/**
- * Testcase for sodium backed security.Secret implementation
- */
 #[Action(eval: 'new ExtensionAvailable("sodium")')]
 class SodiumSecretTest extends SecretTest {
 
-  /**
-   * Use Sodium backing
-   */
-  public function setUp() {
-    Secret::useBacking(Secret::BACKING_SODIUM);
-  }
+  /** @return int */
+  protected function backing() { return Secret::BACKING_SODIUM; }
 }

@@ -2,12 +2,6 @@
 
 use io\streams\InflatingInputStream;
 
-/**
- * TestCase
- *
- * @ext      zlib
- * @see      xp://io.streams.InflatingInputStream
- */
 class InflatingInputStreamTest extends AbstractDecompressingInputStreamTest {
 
   /** @return string */

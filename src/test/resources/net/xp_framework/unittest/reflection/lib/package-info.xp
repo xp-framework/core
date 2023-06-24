@@ -1,8 +1,4 @@
 <?php
-/* This file is part of the XP framework
- *
- * $Id$
- */
 
 /**
  * Fixture libraries for package reflection tests

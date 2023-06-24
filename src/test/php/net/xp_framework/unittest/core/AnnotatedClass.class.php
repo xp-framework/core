@@ -1,12 +1,7 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\{Test, Ignore, Limit};
+use unittest\{Ignore, Limit, Test};
 
-/**
- * Helper class for AnnotationTest
- *
- * @see      xp://net.xp_framework.unittest.core.AnnotationTest
- */
 class AnnotatedClass {
 
   /**

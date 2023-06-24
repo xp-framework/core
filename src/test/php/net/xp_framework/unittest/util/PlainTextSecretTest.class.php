@@ -2,15 +2,8 @@
 
 use util\Secret;
 
-/**
- * Testcase for plaintext backed security.Secret implementation
- */
 class PlainTextSecretTest extends SecretTest {
 
-  /**
-   * Use PLAINTEXT backing
-   */
-  public function setUp() {
-    Secret::useBacking(Secret::BACKING_PLAINTEXT);
-  }
+  /** @return int */
+  protected function backing() { return Secret::BACKING_PLAINTEXT; }
 }

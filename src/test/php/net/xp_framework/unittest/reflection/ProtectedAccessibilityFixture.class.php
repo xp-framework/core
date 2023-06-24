@@ -2,11 +2,6 @@
 
 use lang\XPClass;
 
-/**
- * Fixture class for accessibility tests
- *
- * @see   xp://net.xp_framework.unittest.reflection.ProtectedAccessibilityTest
- */
 class ProtectedAccessibilityFixture {
   protected $target= 'Target';
   protected static $staticTarget= 'Target';

@@ -2,12 +2,6 @@
 
 use io\streams\DeflatingOutputStream;
 
-/**
- * TestCase
- *
- * @ext      zlib
- * @see      xp://io.streams.DeflatingOutputStream
- */
 class DeflatingOutputStreamTest extends AbstractCompressingOutputStreamTest {
 
   /** @return string */

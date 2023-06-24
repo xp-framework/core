@@ -1,14 +1,9 @@
 <?php namespace net\xp_framework\unittest\core;
 
-/**
- * Operation enumeration
- */
-abstract class Operation extends \lang\Enum {
-  public static
-    $plus,
-    $minus,
-    $times,
-    $divided_by;
+use lang\Enum;
+
+abstract class Operation extends Enum {
+  public static $plus, $minus, $times, $divided_by;
   
   static function __static() {
     self::$plus= new class(0, 'plus') extends Operation {

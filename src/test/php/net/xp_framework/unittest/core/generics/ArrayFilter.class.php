@@ -2,23 +2,6 @@
 
 use lang\Generic;
 
-/**
- * Generic array filter
- *
- * ```php
- * // Set up filter as anonymous class
- * $webmethods= create('new ArrayFilter<Method>', [], '{
- *   protected function accept($method) {
- *     return $method->hasAnnotation("webmethod");
- *   }
- * }');
- *
- * // Iterate over filtered array
- * foreach ($webmethods->filter($class->getMethods()) as $method) {
- *   Console::writeLine("Webmethod: ", $method);
- * }
- * ```
- */
 #[Generic(self: 'T')]
 abstract class ArrayFilter {
   

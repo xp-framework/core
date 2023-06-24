@@ -1,37 +1,28 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use lang\IllegalArgumentException;
-use unittest\{Expect, Test, TestCase};
+use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase for generic behaviour at runtime.
- *
- * @see   xp://collections.Lookup
- */
-class RuntimeTest extends TestCase {
+class RuntimeTest {
   private $fixture;
   
-  /**
-   * Creates fixture, a Lookup with string and TestCase as component types.
-   *
-   * @return void
-   */  
+  #[Before]
   public function setUp() {
-    $this->fixture= create('new net.xp_framework.unittest.core.generics.Lookup<string, unittest.TestCase>()');
+    $this->fixture= create('new net.xp_framework.unittest.core.generics.Lookup<string, net.xp_framework.unittest.core.generics.RuntimeTest>()');
   }
 
   #[Test]
   public function name() {
-    $this->assertEquals(
-      'net.xp_framework.unittest.core.generics.Lookup<string,unittest.TestCase>',
+    Assert::equals(
+      'net.xp_framework.unittest.core.generics.Lookup<string,net.xp_framework.unittest.core.generics.RuntimeTest>',
       typeof($this->fixture)->getName()
     );
   }
 
   #[Test]
   public function literal() {
-    $this->assertEquals(
-      "net\\xp_framework\\unittest\\core\\generics\\Lookup\xb7\xb7\xfestring\xb8unittest\xa6TestCase",
+    Assert::equals(
+      "net\\xp_framework\\unittest\\core\\generics\\Lookup\xb7\xb7\xfestring\xb8net\xa6xp_framework\xa6unittest\xa6core\xa6generics\xa6RuntimeTest",
       typeof($this->fixture)->literal()
     );
   }
@@ -44,7 +35,7 @@ class RuntimeTest extends TestCase {
   #[Test]
   public function putAndGetRoundTrip() {
     $this->fixture->put('Test', $this);
-    $this->assertEquals($this, $this->fixture->get('Test'));
+    Assert::equals($this, $this->fixture->get('Test'));
   }
 
   #[Test, Expect(IllegalArgumentException::class)]

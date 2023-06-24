@@ -3,9 +3,9 @@
 use io\streams\{InputStream, LinesIn, MemoryInputStream, TextReader};
 use io\{File, IOException};
 use lang\IllegalArgumentException;
-use unittest\{Expect, Test, TestCase, Values};
+use unittest\{Assert, Expect, Test, Values};
 
-class LinesInTest extends TestCase {
+class LinesInTest {
 
   /** @return iterable */
   private function iso88591Input() {
@@ -41,18 +41,18 @@ class LinesInTest extends TestCase {
 
   #[Test, Values([["Line 1", [1 => 'Line 1']], ["Line 1\n", [1 => 'Line 1']], ["Line 1\nLine 2", [1 => 'Line 1', 2 => 'Line 2']], ["Line 1\nLine 2\n", [1 => 'Line 1', 2 => 'Line 2']], ["Line 1\n\nLine 3\n", [1 => 'Line 1', 2 => '', 3 => 'Line 3']], ["Line 1\n\n\nLine 4\n", [1 => 'Line 1', 2 => '', 3 => '', 4 => 'Line 4']]])]
   public function iterating_lines($input, $lines) {
-    $this->assertEquals($lines, iterator_to_array(new LinesIn($input)));
+    Assert::equals($lines, iterator_to_array(new LinesIn($input)));
   }
 
   #[Test]
   public function iterating_empty_input_returns_empty_array() {
-    $this->assertEquals([], iterator_to_array(new LinesIn('')));
+    Assert::equals([], iterator_to_array(new LinesIn('')));
   }
 
   #[Test]
   public function can_iterate_twice_on_seekable() {
     $fixture= new LinesIn("A\nB");
-    $this->assertEquals(
+    Assert::equals(
       [[1 => 'A', 2 => 'B'], [1 => 'A', 2 => 'B']],
       [iterator_to_array($fixture), iterator_to_array($fixture)]
     );
@@ -60,7 +60,7 @@ class LinesInTest extends TestCase {
 
   #[Test, Values('iso88591Input')]
   public function input_is_encoded_to_utf8($arg) {
-    $this->assertEquals([1 => 'ü'], iterator_to_array($arg));
+    Assert::equals([1 => 'ü'], iterator_to_array($arg));
   }
 
   #[Test]
@@ -79,7 +79,7 @@ class LinesInTest extends TestCase {
       public function close() { }
     });
 
-    $this->assertEquals([1 => 'A', 2 => 'B'], iterator_to_array($fixture));
+    Assert::equals([1 => 'A', 2 => 'B'], iterator_to_array($fixture));
     try {
       iterator_to_array($fixture);
       $this->fail('No exception raised', null, 'io.IOException');

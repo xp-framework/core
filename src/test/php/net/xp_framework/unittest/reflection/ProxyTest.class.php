@@ -3,18 +3,14 @@
 use lang\reflect\{InvocationHandler, Proxy};
 use lang\{ClassLoader, Error, IllegalArgumentException, Type, XPClass};
 use unittest\actions\RuntimeVersion;
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 use util\{Observer, XPIterator};
 
-/**
- * Tests the Proxy class
- *
- * @see   xp://lang.reflect.Proxy
- */
-class ProxyTest extends \unittest\TestCase {
+class ProxyTest {
   protected $handler, $iteratorClass, $observerClass;
 
   /** @return void */
+  #[Before]
   public function setUp() {
     $this->handler= new class() implements InvocationHandler {
       public $invocations = [];
@@ -58,8 +54,10 @@ class ProxyTest extends \unittest\TestCase {
    * @return  lang.XPClass
    */
   protected function newProxyWith($body) {
+    static $uniq= 0;
+
     return $this->proxyClassFor([ClassLoader::defineInterface(
-      'net.xp_framework.unittest.reflection.__NP_'.$this->name,
+      'net.xp_framework.unittest.reflection.__NP_'.($uniq++),
       [],
       $body
     )]);
@@ -83,12 +81,12 @@ class ProxyTest extends \unittest\TestCase {
   #[Test]
   public function proxyClassNamesGetPrefixed() {
     $class= $this->proxyClassFor([$this->iteratorClass]);
-    $this->assertEquals(Proxy::PREFIX, substr($class->getName(), 0, strlen(Proxy::PREFIX)));
+    Assert::equals(Proxy::PREFIX, substr($class->getName(), 0, strlen(Proxy::PREFIX)));
   }
 
   #[Test]
   public function classesEqualForSameInterfaceList() {
-    $this->assertEquals(
+    Assert::equals(
       $this->proxyClassFor([$this->iteratorClass]),
       $this->proxyClassFor([$this->iteratorClass])
     );
@@ -96,7 +94,7 @@ class ProxyTest extends \unittest\TestCase {
 
   #[Test]
   public function classesNotEqualForDifferingInterfaceList() {
-    $this->assertNotEquals(
+    Assert::notEquals(
       $this->proxyClassFor([$this->iteratorClass]),
       $this->proxyClassFor([$this->iteratorClass, $this->observerClass])
     );
@@ -105,19 +103,19 @@ class ProxyTest extends \unittest\TestCase {
   #[Test]
   public function iteratorInterfaceIsImplemented() {
     $class= $this->proxyClassFor([$this->iteratorClass]);
-    $this->assertEquals([$this->iteratorClass], $class->getInterfaces());
+    Assert::equals([$this->iteratorClass], $class->getInterfaces());
   }
 
   #[Test]
   public function allInterfacesAreImplemented() {
     $class= $this->proxyClassFor([$this->iteratorClass, $this->observerClass]);
-    $this->assertEquals([$this->iteratorClass, $this->observerClass], $class->getInterfaces());
+    Assert::equals([$this->iteratorClass, $this->observerClass], $class->getInterfaces());
   }
 
   #[Test]
   public function iteratorMethods() {
     $class= $this->proxyClassFor([$this->iteratorClass]);
-    $this->assertEquals(
+    Assert::equals(
       [true, true],
       [$class->hasMethod('hasNext'), $class->hasMethod('next')]
     );
@@ -127,7 +125,7 @@ class ProxyTest extends \unittest\TestCase {
   public function iteratorNextInvoked() {
     $proxy= $this->proxyInstanceFor([$this->iteratorClass]);
     $proxy->next();
-    $this->assertEquals([], $this->handler->invocations['next_0']);
+    Assert::equals([], $this->handler->invocations['next_0']);
   }
   
   #[Test, Expect(IllegalArgumentException::class)]
@@ -156,14 +154,14 @@ class ProxyTest extends \unittest\TestCase {
     $proxy= $this->proxyInstanceFor([XPClass::forName(OverloadedInterface::class)]);
     $proxy->overloaded('foo');
     $proxy->overloaded('foo', 'bar');
-    $this->assertEquals(['foo'], $this->handler->invocations['overloaded_1']);
-    $this->assertEquals(['foo', 'bar'], $this->handler->invocations['overloaded_2']);
+    Assert::equals(['foo'], $this->handler->invocations['overloaded_1']);
+    Assert::equals(['foo', 'bar'], $this->handler->invocations['overloaded_2']);
   }
 
   #[Test]
   public function namespaced_typehinted_parameters_handled_correctly() {
     $proxy= $this->newProxyWith('{ public function fixture(\util\Date $param); }');
-    $this->assertEquals(
+    Assert::equals(
       XPClass::forName('util.Date'),
       $proxy->getMethod('fixture')->getParameters()[0]->getTypeRestriction()
     );
@@ -172,7 +170,7 @@ class ProxyTest extends \unittest\TestCase {
   #[Test]
   public function builtin_typehinted_parameters_handled_correctly() {
     $proxy= $this->newProxyWith('{ public function fixture(\ReflectionClass $param); }');
-    $this->assertEquals(
+    Assert::equals(
       new XPClass('ReflectionClass'),
       $proxy->getMethod('fixture')->getParameters()[0]->getTypeRestriction()
     );
@@ -181,7 +179,7 @@ class ProxyTest extends \unittest\TestCase {
   #[Test]
   public function builtin_array_parameters_handled_correctly() {
     $proxy= $this->newProxyWith('{ public function fixture(array $param); }');
-    $this->assertEquals(
+    Assert::equals(
       Type::$ARRAY,
       $proxy->getMethod('fixture')->getParameters()[0]->getTypeRestriction()
     );

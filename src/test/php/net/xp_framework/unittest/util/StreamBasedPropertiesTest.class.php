@@ -3,11 +3,6 @@
 use io\streams\MemoryInputStream;
 use util\Properties;
 
-/**
- * Testcase for util.Properties class.
- *
- * @see   xp://net.xp_framework.unittest.util.AbstractPropertiesTest
- */
 class StreamBasedPropertiesTest extends AbstractPropertiesTest {
 
   /**

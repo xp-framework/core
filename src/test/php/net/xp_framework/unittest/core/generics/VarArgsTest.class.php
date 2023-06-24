@@ -1,18 +1,13 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use lang\IllegalArgumentException;
-use unittest\{Expect, Test, TestCase};
+use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase for generic construction behaviour at runtime.
- *
- * @see   xp://net.xp_framework.unittest.core.generics.ListOf
- */
-class VarArgsTest extends TestCase {
+class VarArgsTest {
 
   #[Test]
   public function withArguments() {
-    $this->assertEquals(
+    Assert::equals(
       ['Hello', 'World'],
       create('new net.xp_framework.unittest.core.generics.ListOf<string>', 'Hello', 'World')->elements()
     );
@@ -20,7 +15,7 @@ class VarArgsTest extends TestCase {
 
   #[Test]
   public function withoutArguments() {
-    $this->assertEquals(
+    Assert::equals(
       [],
       create('new net.xp_framework.unittest.core.generics.ListOf<string>')->elements()
     );
@@ -33,7 +28,7 @@ class VarArgsTest extends TestCase {
 
   #[Test]
   public function withAllOf() {
-    $this->assertEquals(
+    Assert::equals(
       ['Hello', 'World'],
       create('new net.xp_framework.unittest.core.generics.ListOf<string>')->withAll('Hello', 'World')->elements()
     );

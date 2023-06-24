@@ -1,31 +1,43 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
-use unittest\{Test, TestCase};
+use net\xp_framework\unittest\Name;
+use unittest\{Assert, Test};
 
-/**
- * TestCase for generic behaviour at runtime.
- *
- * @see   xp://net.xp_framework.unittest.core.generics.Nullable
- */
-class OptionalArgTest extends TestCase {
+class OptionalArgTest {
+  private $value;
+
+  #[Before]
+  public function value() {
+    $this->value= new Name(self::class);
+  }
+
 
   #[Test]
   public function create_with_value() {
-    $this->assertEquals($this, create('new net.xp_framework.unittest.core.generics.Nullable<unittest.TestCase>', $this)->get());
+    Assert::equals(
+      $this->value,
+      create('new net.xp_framework.unittest.core.generics.Nullable<lang.Value>', $this->value)->get()
+    );
   }
 
   #[Test]
   public function create_with_null() {
-    $this->assertFalse(create('new net.xp_framework.unittest.core.generics.Nullable<unittest.TestCase>', null)->hasValue());
+    Assert::false(create('new net.xp_framework.unittest.core.generics.Nullable<lang.Value>', null)->hasValue());
   }
 
   #[Test]
   public function set_value() {
-    $this->assertEquals($this, create('new net.xp_framework.unittest.core.generics.Nullable<unittest.TestCase>', $this)->set($this)->get());
+    Assert::equals($this->value, create('new net.xp_framework.unittest.core.generics.Nullable<lang.Value>', $this->value)
+      ->set($this->value)
+      ->get()
+    );
   }
 
   #[Test]
   public function set_null() {
-    $this->assertFalse(create('new net.xp_framework.unittest.core.generics.Nullable<unittest.TestCase>', $this)->set(null)->hasValue());
+    Assert::false(create('new net.xp_framework.unittest.core.generics.Nullable<lang.Value>', $this->value)
+      ->set(null)
+      ->hasValue()
+    );
   }
 }

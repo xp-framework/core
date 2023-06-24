@@ -1,8 +1,6 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use unittest\TestCase;
-
-abstract class FieldsTest extends TestCase {
+abstract class FieldsTest {
   use TypeDefinition;
 
   /**

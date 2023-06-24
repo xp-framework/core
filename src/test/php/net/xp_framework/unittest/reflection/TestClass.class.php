@@ -1,15 +1,10 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-use lang\{Type, Runnable};
-use unittest\Test;
+use lang\{Runnable, Type};
+use unittest\{Assert, Test};
 use util\Date;
 use util\collections\{HashTable, Vector};
 
-/**
- * Test class
- *
- * @see    xp://net.xp_framework.unittest.reflection.ReflectionTest
- */
 #[Test('Annotation')]
 class TestClass extends AbstractTestClass implements Runnable {
 

@@ -1,14 +1,9 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{ClassNotFoundException, MethodNotImplementedException};
-use unittest\{AfterClass, BeforeClass, Expect, Test, TestCase};
+use unittest\{After, Assert, Before, Expect, Test};
 
-/**
- * TestCase for resolving classes from URIs using the `loadUri()` method.
- *
- * @see  xp://net.xp_framework.unittest.reflection.ClassFromFileSystemTest
- */
-abstract class ClassFromUriTest extends TestCase {
+abstract class ClassFromUriTest {
   protected static $base;
   protected $fixture;
 
@@ -21,10 +16,7 @@ abstract class ClassFromUriTest extends TestCase {
     throw new MethodNotImplementedException('Implement in subclass!', __FUNCTION__);
   }
 
-  /**
-   * Creates base and defines fixture classes
-   */
-  #[BeforeClass]
+  #[Before]
   public static function createBase() {
     self::$base= static::baseImpl();
     self::$base->initialize(function($self) {
@@ -34,10 +26,7 @@ abstract class ClassFromUriTest extends TestCase {
     });
   }
 
-  /**
-   * Removes base
-   */
-  #[AfterClass]
+  #[After]
   public static function cleanUp() {
     self::$base->delete();
   }
@@ -52,6 +41,7 @@ abstract class ClassFromUriTest extends TestCase {
   /**
    * Initializes fixture member with the results from `newFixture()`.
    */
+  #[Before]
   public function setUp() {
     $this->fixture= $this->newFixture();
   }
@@ -74,12 +64,12 @@ abstract class ClassFromUriTest extends TestCase {
 
   #[Test]
   public function provides_a_relative_path_in_root() {
-    $this->assertTrue($this->fixture->providesUri('CLT1.class.php'));
+    Assert::true($this->fixture->providesUri('CLT1.class.php'));
   }
 
   #[Test]
   public function load_from_a_relative_path_in_root() {
-    $this->assertEquals(
+    Assert::equals(
       $this->fixture->loadClass('CLT1'),
       $this->fixture->loadUri('CLT1.class.php')
     );
@@ -87,7 +77,7 @@ abstract class ClassFromUriTest extends TestCase {
 
   #[Test]
   public function from_a_relative_path() {
-    $this->assertEquals(
+    Assert::equals(
       $this->fixture->loadClass('net.xp_framework.unittest.reflection.CLT2'),
       $this->fixture->loadUri($this->compose('net', 'xp_framework', 'unittest', 'reflection', 'CLT2.class.php'))
     );
@@ -95,7 +85,7 @@ abstract class ClassFromUriTest extends TestCase {
 
   #[Test]
   public function from_a_relative_path_with_dot() {
-    $this->assertEquals(
+    Assert::equals(
       $this->fixture->loadClass('CLT1'),
       $this->fixture->loadUri($this->compose('.', 'CLT1.class.php'))
     );
@@ -103,7 +93,7 @@ abstract class ClassFromUriTest extends TestCase {
 
   #[Test]
   public function from_a_relative_path_with_dot_dot() {
-    $this->assertEquals(
+    Assert::equals(
       $this->fixture->loadClass('CLT1'),
       $this->fixture->loadUri($this->compose('net', 'xp_framework', '..', '..', 'CLT1.class.php'))
     );
@@ -111,7 +101,7 @@ abstract class ClassFromUriTest extends TestCase {
 
   #[Test]
   public function from_a_relative_path_with_multiple_directory_separators() {
-    $this->assertEquals(
+    Assert::equals(
       $this->fixture->loadClass('CLT1'),
       $this->fixture->loadUri($this->compose('.', null, 'CLT1.class.php'))
     );
@@ -119,7 +109,7 @@ abstract class ClassFromUriTest extends TestCase {
 
   #[Test]
   public function from_an_absolute_path_in_root() {
-    $this->assertEquals(
+    Assert::equals(
       $this->fixture->loadClass('CLT1'),
       $this->fixture->loadUri($this->compose(self::$base, 'CLT1.class.php'))
     );
@@ -127,7 +117,7 @@ abstract class ClassFromUriTest extends TestCase {
 
   #[Test]
   public function from_an_absolute_path() {
-    $this->assertEquals(
+    Assert::equals(
       $this->fixture->loadClass('net.xp_framework.unittest.reflection.CLT2'),
       $this->fixture->loadUri($this->compose(self::$base, 'net', 'xp_framework', 'unittest', 'reflection', 'CLT2.class.php'))
     );

@@ -1,10 +1,5 @@
 <?php namespace net\xp_framework\unittest\core;
 
-/**
- * Destroyable
- *
- * @see      xp://net.xp_framework.unittest.core.DestructorTest
- */
 class Destroyable {
   private $id, $callback;
 

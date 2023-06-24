@@ -2,7 +2,6 @@
 
 use lang\Generic;
 
-/** Nullable value */
 #[Generic(self: 'T')]
 class Nullable {
   protected $value;

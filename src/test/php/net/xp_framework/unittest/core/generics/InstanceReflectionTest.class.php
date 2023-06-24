@@ -1,70 +1,61 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use lang\{Primitive, XPClass};
-use unittest\{Test, TestCase};
+use unittest\{Assert, Test};
 
-/**
- * TestCase for instance reflection
- *
- * @see   xp://net.xp_framework.unittest.core.generics.Lookup
- */
-class InstanceReflectionTest extends TestCase {
+class InstanceReflectionTest {
   private $fixture;
   
-  /**
-   * Creates fixture, a Lookup with String and TestCase as component types.
-   *
-   * @return void
-   */  
+  #[Before]
   public function setUp() {
-    $this->fixture= create('new net.xp_framework.unittest.core.generics.Lookup<string, unittest.TestCase>()');
+    $this->fixture= create('new net.xp_framework.unittest.core.generics.Lookup<string, lang.Value>()');
   }
 
   #[Test]
   public function nameof() {
-    $this->assertEquals(
-      'net.xp_framework.unittest.core.generics.Lookup<string,unittest.TestCase>',
+    Assert::equals(
+      'net.xp_framework.unittest.core.generics.Lookup<string,lang.Value>',
       nameof($this->fixture)
     );
   }
 
   #[Test]
   public function nameOfClass() {
-    $this->assertEquals(
-      'net.xp_framework.unittest.core.generics.Lookup<string,unittest.TestCase>', 
+    Assert::equals(
+      'net.xp_framework.unittest.core.generics.Lookup<string,lang.Value>', 
       typeof($this->fixture)->getName()
     );
   }
 
   #[Test]
   public function simpleNameOfClass() {
-    $this->assertEquals(
-      'Lookup<string,unittest.TestCase>', 
+    Assert::equals(
+      'Lookup<string,lang.Value>', 
       typeof($this->fixture)->getSimpleName()
     );
   }
 
   #[Test]
   public function reflectedNameOfClass() {
-    $this->assertEquals(
-      "net\\xp_framework\\unittest\\core\\generics\\Lookup\xb7\xb7\xfestring\xb8unittest\xa6TestCase",
+    Assert::equals(
+      "net\\xp_framework\\unittest\\core\\generics\\Lookup\xb7\xb7\xfestring\xb8lang\xa6Value",
       typeof($this->fixture)->literal()
     );
   }
 
   #[Test]
   public function instanceIsGeneric() {
-    $this->assertTrue(typeof($this->fixture)->isGeneric());
+    Assert::true(typeof($this->fixture)->isGeneric());
   }
 
   #[Test]
   public function instanceIsNoGenericDefinition() {
-    $this->assertFalse(typeof($this->fixture)->isGenericDefinition());
+    Assert::false(typeof($this->fixture)->isGenericDefinition());
   }
 
   #[Test]
   public function genericDefinition() {
-    $this->assertEquals(
+    Assert::equals(
       XPClass::forName('net.xp_framework.unittest.core.generics.Lookup'),
       typeof($this->fixture)->genericDefinition()
     );
@@ -72,16 +63,16 @@ class InstanceReflectionTest extends TestCase {
 
   #[Test]
   public function genericArguments() {
-    $this->assertEquals(
-      [Primitive::$STRING, XPClass::forName('unittest.TestCase')],
+    Assert::equals(
+      [Primitive::$STRING, XPClass::forName('lang.Value')],
       typeof($this->fixture)->genericArguments()
     );
   }
 
   #[Test]
   public function elementFieldType() {
-    $this->assertEquals(
-      '[:unittest.TestCase]',
+    Assert::equals(
+      '[:lang.Value]',
       typeof($this->fixture)->getField('elements')->getTypeName()
     );
   }
@@ -89,23 +80,23 @@ class InstanceReflectionTest extends TestCase {
   #[Test]
   public function putParameters() {
     $params= typeof($this->fixture)->getMethod('put')->getParameters();
-    $this->assertEquals(2, sizeof($params));
-    $this->assertEquals(Primitive::$STRING, $params[0]->getType());
-    $this->assertEquals(XPClass::forName('unittest.TestCase'), $params[1]->getType());
+    Assert::equals(2, sizeof($params));
+    Assert::equals(Primitive::$STRING, $params[0]->getType());
+    Assert::equals(XPClass::forName('lang.Value'), $params[1]->getType());
   }
 
   #[Test]
   public function getReturnType() {
-    $this->assertEquals(
-      'unittest.TestCase',
+    Assert::equals(
+      'lang.Value',
       typeof($this->fixture)->getMethod('get')->getReturnTypeName()
     );
   }
 
   #[Test]
   public function valuesReturnType() {
-    $this->assertEquals(
-      'unittest.TestCase[]',
+    Assert::equals(
+      'lang.Value[]',
       typeof($this->fixture)->getMethod('values')->getReturnTypeName()
     );
   }

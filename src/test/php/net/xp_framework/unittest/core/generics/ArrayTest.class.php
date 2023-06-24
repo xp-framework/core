@@ -1,28 +1,26 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use lang\IllegalArgumentException;
-use unittest\{Expect, Test};
+use net\xp_framework\unittest\Name;
+use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase for generic behaviour at runtime.
- *
- * @see   xp://net.xp_framework.unittest.core.generics.Lookup
- */
-class ArrayTest extends \unittest\TestCase {
+class ArrayTest {
 
   #[Test]
   public function primitiveStringArrayValue() {
+    $name= new Name('test');
     $l= create('new net.xp_framework.unittest.core.generics.Lookup<string, string[]>', [
-      'this' => [$this->name]
+      'name' => [$name]
     ]);
-    $this->assertEquals([$this->name], $l->get('this'));
+    Assert::equals([$name], $l->get('name'));
   }
 
   #[Test]
   public function primitiveStringArrayKey() {
-    $l= create('new net.xp_framework.unittest.core.generics.Lookup<string[], unittest.TestCase>');
-    $l->put(['this'], $this);
-    $this->assertEquals($this, $l->get(['this']));
+    $l= create('new net.xp_framework.unittest.core.generics.Lookup<string[], lang.Value>');
+    $name= new Name('test');
+    $l->put(['name'], $name);
+    Assert::equals($name, $l->get(['name']));
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
@@ -38,8 +36,8 @@ class ArrayTest extends \unittest\TestCase {
       'colors' => ['red', 'green', 'blue'],
       'names'  => ['PHP', 'Java', 'C#']
     ]);
-    $this->assertEquals(['red', 'green', 'blue'], $l->get('colors'));
-    $this->assertEquals(['PHP', 'Java', 'C#'], $l->get('names'));
+    Assert::equals(['red', 'green', 'blue'], $l->get('colors'));
+    Assert::equals(['PHP', 'Java', 'C#'], $l->get('names'));
   }
  
   #[Test]
@@ -47,7 +45,7 @@ class ArrayTest extends \unittest\TestCase {
     $l= create('new net.xp_framework.unittest.core.generics.Lookup<string[], string>');
     $l->put(['red', 'green', 'blue'], 'colors');
     $l->put(['PHP', 'Java', 'C#'], 'names');
-    $this->assertEquals('colors', $l->get(['red', 'green', 'blue']));
-    $this->assertEquals('names', $l->get(['PHP', 'Java', 'C#']));
+    Assert::equals('colors', $l->get(['red', 'green', 'blue']));
+    Assert::equals('names', $l->get(['PHP', 'Java', 'C#']));
   }
 }

@@ -1,11 +1,8 @@
 <?php namespace net\xp_framework\unittest\core\generics;
 
 use unittest\Generic;
-use util\{Objects, NoSuchElementException};
+use util\{NoSuchElementException, Objects};
 
-/**
- * Lookup map
- */
 #[Generic(self: 'K, V', parent: 'K, V')]
 class Lookup extends AbstractDictionary {
   protected $size;

@@ -1,14 +1,10 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\streams\{InputStream, MemoryInputStream};
-use unittest\{PrerequisitesNotMetError, Test};
+use unittest\{Assert, PrerequisitesNotMetError, Test};
 use util\Bytes;
 
-/**
- * Abstract base class for all compressing output stream tests
- *
- */
-abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
+abstract class AbstractDecompressingInputStreamTest {
 
   /**
    * Get filter we depend on
@@ -37,6 +33,7 @@ abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
   /**
    * Setup method. Ensure filter we depend on is available
    */
+  #[Before]
   public function setUp() {
     $depend= $this->filter();
     if (!in_array($depend, stream_get_filters())) {
@@ -50,7 +47,7 @@ abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
     $decompressor= $this->newStream($in);
     $chunk= $decompressor->read();
     $decompressor->close();
-    $this->assertEquals('Hello', $chunk);
+    Assert::equals('Hello', $chunk);
   }
 
   #[Test]
@@ -61,9 +58,9 @@ abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
     $chunk2= $decompressor->read(1);
     $chunk3= $decompressor->read(5);
     $decompressor->close();
-    $this->assertEquals('Hello', $chunk1);
-    $this->assertEquals(' ', $chunk2);
-    $this->assertEquals('World', $chunk3);
+    Assert::equals('Hello', $chunk1);
+    Assert::equals(' ', $chunk2);
+    Assert::equals('World', $chunk3);
   }
 
   #[Test]
@@ -72,7 +69,7 @@ abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
     $decompressor= $this->newStream($in);
     $chunk= $decompressor->read();
     $decompressor->close();
-    $this->assertEquals('Hello', $chunk);
+    Assert::equals('Hello', $chunk);
   }
 
   #[Test]
@@ -81,7 +78,7 @@ abstract class AbstractDecompressingInputStreamTest extends \unittest\TestCase {
     $decompressor= $this->newStream($in);
     $chunk= $decompressor->read();
     $decompressor->close();
-    $this->assertEquals('Hello', $chunk);
+    Assert::equals('Hello', $chunk);
   }
 
   #[Test]

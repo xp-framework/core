@@ -1,14 +1,8 @@
 <?php namespace net\xp_framework\unittest\io\streams;
 
 use io\streams\{GzDecompressingInputStream, InputStream, MemoryInputStream};
-use unittest\{Test, Values};
+use unittest\{Assert, Test, Values};
 
-/**
- * TestCase
- *
- * @ext   zlib
- * @see   xp://io.streams.GzDecompressingInputStream
- */
 class GzDecompressingInputStreamTest extends AbstractDecompressingInputStreamTest {
 
   /** @return string */
@@ -46,13 +40,13 @@ class GzDecompressingInputStreamTest extends AbstractDecompressingInputStreamTes
     $decompressor= $this->newStream(new MemoryInputStream($data));
     $chunk= $decompressor->read();
     $decompressor->close();
-    $this->assertEquals('Hello', $chunk);
+    Assert::equals('Hello', $chunk);
   }
 
   #[Test, Values('dataWithFileName')]
   public function header_with_original_filename($data) {
     $decompressor= $this->newStream(new MemoryInputStream($data));
     $decompressor->close();
-    $this->assertEquals('test.txt', $decompressor->header()['filename']);
+    Assert::equals('test.txt', $decompressor->header()['filename']);
   }
 }

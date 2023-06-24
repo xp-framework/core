@@ -2,75 +2,67 @@
 
 use lang\reflect\Package;
 use net\xp_framework\unittest\Name;
-use unittest\{BeforeClass, Test};
+use unittest\{Assert, Before, Test};
 use util\collections\Vector;
 
-/**
- * TestCase for XP Framework's namespaces support
- *
- * @see   https://github.com/xp-framework/xp-framework/issues/132
- * @see   https://github.com/xp-framework/rfc/issues/222
- * @see   xp://net.xp_framework.unittest.core.NamespacedClass
- * @see   php://namespaces
- */
-class NamespacedClassesTest extends \unittest\TestCase {
-  protected static $package;
+class NamespacedClassesTest {
+  protected $package;
 
-  #[BeforeClass]
-  public static function initializePackage() {
-    self::$package= Package::forName('net.xp_framework.unittest.core');
+  #[Before]
+  public function initializePackage() {
+    $this->package= Package::forName('net.xp_framework.unittest.core');
   }
 
   #[Test]
   public function namespacedClassLiteral() {
-    $this->assertEquals(
+    Assert::equals(
       NamespacedClass::class, 
-      self::$package->loadClass('NamespacedClass')->literal()
+      $this->package->loadClass('NamespacedClass')->literal()
     );
   }
 
   #[Test]
   public function packageOfNamespacedClass() {
-    $this->assertEquals(
+    Assert::equals(
       Package::forName('net.xp_framework.unittest.core'),
-      self::$package->loadClass('NamespacedClass')->getPackage()
+      $this->package->loadClass('NamespacedClass')->getPackage()
     );
   }
 
   #[Test]
   public function namespacedClassUsingUnqualified() {
-    $this->assertInstanceOf(
+    Assert::instance(
       Name::class,
-      self::$package->loadClass('NamespacedClassUsingUnqualified')->newInstance()->newName()
+      $this->package->loadClass('NamespacedClassUsingUnqualified')->newInstance()->newName()
     );
   }
 
   #[Test]
   public function namespacedClassUsingQualified() {
-    $this->assertInstanceOf(
+    Assert::instance(
       NamespacedClass::class,
-      self::$package->loadClass('NamespacedClassUsingQualified')->newInstance()->getNamespacedClass()
+      $this->package->loadClass('NamespacedClassUsingQualified')->newInstance()->getNamespacedClass()
     );
   }
 
   #[Test]
   public function namespacedClassUsingQualifiedUnloaded() {
-    $this->assertInstanceOf(
+    Assert::instance(
       UnloadedNamespacedClass::class,
-      self::$package->loadClass('NamespacedClassUsingQualifiedUnloaded')->newInstance()->getNamespacedClass()
+      $this->package->loadClass('NamespacedClassUsingQualifiedUnloaded')->newInstance()->getNamespacedClass()
     );
   }
 
   #[Test]
   public function newInstanceOnNamespacedClass() {
     $i= new class() extends NamespacedClass {};
-    $this->assertInstanceOf(NamespacedClass::class, $i);
+    Assert::instance(NamespacedClass::class, $i);
   }
 
   #[Test]
   public function packageOfNewInstancedNamespacedClass() {
     $i= newinstance(NamespacedClass::class, []);
-    $this->assertEquals(
+    Assert::equals(
       Package::forName('net.xp_framework.unittest.core'),
       typeof($i)->getPackage()
     );
@@ -79,6 +71,6 @@ class NamespacedClassesTest extends \unittest\TestCase {
   #[Test]
   public function generics() {
     $v= create('new net.xp_framework.unittest.core.generics.Nullable<net.xp_framework.unittest.core.NamespacedClass>');
-    $this->assertTrue(typeof($v)->isGeneric());
+    Assert::true(typeof($v)->isGeneric());
   }
 }

@@ -1,34 +1,17 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
 use lang\{ClassLoader, IllegalAccessException, XPClass};
-use unittest\{BeforeClass, Expect, Test};
+use unittest\{Assert, Before, Expect, Test};
 
-/**
- * TestCase
- *
- * @see      xp://lang.reflect.Constructor
- * @see      xp://lang.reflect.Method
- * @see      xp://lang.reflect.Field
- */
-class ProtectedAccessibilityTest extends \unittest\TestCase {
+class ProtectedAccessibilityTest {
   protected static $fixture, $fixtureChild;
   
-  /**
-   * Initialize fixture and fixtureChild members
-   *
-   * @return void
-   */
-  #[BeforeClass]
+  #[Before]
   public static function initializeClasses() {
     self::$fixture= XPClass::forName('net.xp_framework.unittest.reflection.ProtectedAccessibilityFixture');
     self::$fixtureChild= XPClass::forName('net.xp_framework.unittest.reflection.ProtectedAccessibilityFixtureChild');
   }
 
-  /**
-   * Invoke protected constructor from here should not work
-   *
-   * @return void
-   */
   #[Test, Expect(IllegalAccessException::class)]
   public function invokingProtectedConstructor() {
     self::$fixture->getConstructor()->newInstance([]);
@@ -36,22 +19,22 @@ class ProtectedAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function invokingProtectedConstructorFromSameClass() {
-    $this->assertInstanceOf(self::$fixture, ProtectedAccessibilityFixture::construct(self::$fixture));
+    Assert::instance(self::$fixture, ProtectedAccessibilityFixture::construct(self::$fixture));
   }
 
   #[Test]
   public function invokingProtectedConstructorFromParentClass() {
-    $this->assertInstanceOf(self::$fixture, ProtectedAccessibilityFixtureChild::construct(self::$fixture));
+    Assert::instance(self::$fixture, ProtectedAccessibilityFixtureChild::construct(self::$fixture));
   }
 
   #[Test]
   public function invokingProtectedConstructorFromChildClass() {
-    $this->assertInstanceOf(self::$fixtureChild, ProtectedAccessibilityFixtureChild::construct(self::$fixtureChild));
+    Assert::instance(self::$fixtureChild, ProtectedAccessibilityFixtureChild::construct(self::$fixtureChild));
   }
 
   #[Test]
   public function invokingProtectedConstructorMadeAccessible() {
-    $this->assertInstanceOf(self::$fixture, self::$fixture
+    Assert::instance(self::$fixture, self::$fixture
       ->getConstructor()
       ->setAccessible(true)
       ->newInstance([])
@@ -65,22 +48,22 @@ class ProtectedAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function invokingProtectedMethodFromSameClass() {
-    $this->assertEquals('Invoked', ProtectedAccessibilityFixture::invoke(self::$fixture));
+    Assert::equals('Invoked', ProtectedAccessibilityFixture::invoke(self::$fixture));
   }
 
   #[Test]
   public function invokingProtectedMethodFromParentClass() {
-    $this->assertEquals('Invoked', ProtectedAccessibilityFixtureChild::invoke(self::$fixture));
+    Assert::equals('Invoked', ProtectedAccessibilityFixtureChild::invoke(self::$fixture));
   }
 
   #[Test]
   public function invokingProtectedMethodFromChildClass() {
-    $this->assertEquals('Invoked', ProtectedAccessibilityFixtureChild::invoke(self::$fixtureChild));
+    Assert::equals('Invoked', ProtectedAccessibilityFixtureChild::invoke(self::$fixtureChild));
   }
 
   #[Test]
   public function invokingProtectedMethodMadeAccessible() {
-    $this->assertEquals('Invoked', self::$fixture
+    Assert::equals('Invoked', self::$fixture
       ->getMethod('target')
       ->setAccessible(true)
       ->invoke(ProtectedAccessibilityFixture::construct(self::$fixture))
@@ -94,22 +77,22 @@ class ProtectedAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function invokingProtectedStaticMethodFromSameClass() {
-    $this->assertEquals('Invoked', ProtectedAccessibilityFixture::invokeStatic(self::$fixture));
+    Assert::equals('Invoked', ProtectedAccessibilityFixture::invokeStatic(self::$fixture));
   }
 
   #[Test]
   public function invokingProtectedStaticMethodFromParentClass() {
-    $this->assertEquals('Invoked', ProtectedAccessibilityFixtureChild::invokeStatic(self::$fixture));
+    Assert::equals('Invoked', ProtectedAccessibilityFixtureChild::invokeStatic(self::$fixture));
   }
 
   #[Test]
   public function invokingProtectedStaticMethodFromChildClass() {
-    $this->assertEquals('Invoked', ProtectedAccessibilityFixtureChild::invokeStatic(self::$fixtureChild));
+    Assert::equals('Invoked', ProtectedAccessibilityFixtureChild::invokeStatic(self::$fixtureChild));
   }
 
   #[Test]
   public function invokingProtectedStaticMethodMadeAccessible() {
-    $this->assertEquals('Invoked', self::$fixture
+    Assert::equals('Invoked', self::$fixture
       ->getMethod('staticTarget')
       ->setAccessible(true)
       ->invoke(null)
@@ -123,22 +106,22 @@ class ProtectedAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function readingProtectedMemberFromSameClass() {
-    $this->assertEquals('Target', ProtectedAccessibilityFixture::read(self::$fixture));
+    Assert::equals('Target', ProtectedAccessibilityFixture::read(self::$fixture));
   }
 
   #[Test]
   public function readingProtectedMemberFromParentClass() {
-    $this->assertEquals('Target', ProtectedAccessibilityFixtureChild::read(self::$fixture));
+    Assert::equals('Target', ProtectedAccessibilityFixtureChild::read(self::$fixture));
   }
 
   #[Test]
   public function readingProtectedMemberFromChildClass() {
-    $this->assertEquals('Target', ProtectedAccessibilityFixtureChild::read(self::$fixtureChild));
+    Assert::equals('Target', ProtectedAccessibilityFixtureChild::read(self::$fixtureChild));
   }
 
   #[Test]
   public function readingProtectedMemberMadeAccessible() {
-    $this->assertEquals('Target', self::$fixture
+    Assert::equals('Target', self::$fixture
       ->getField('target')
       ->setAccessible(true)
       ->get(ProtectedAccessibilityFixture::construct(self::$fixture))
@@ -152,22 +135,22 @@ class ProtectedAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function readingProtectedStaticMemberFromSameClass() {
-    $this->assertEquals('Target', ProtectedAccessibilityFixture::readStatic(self::$fixture));
+    Assert::equals('Target', ProtectedAccessibilityFixture::readStatic(self::$fixture));
   }
 
   #[Test]
   public function readingProtectedStaticMemberFromParentClass() {
-    $this->assertEquals('Target', ProtectedAccessibilityFixtureChild::readStatic(self::$fixture));
+    Assert::equals('Target', ProtectedAccessibilityFixtureChild::readStatic(self::$fixture));
   }
 
   #[Test]
   public function readingProtectedStaticMemberFromChildClass() {
-    $this->assertEquals('Target', ProtectedAccessibilityFixtureChild::readStatic(self::$fixtureChild));
+    Assert::equals('Target', ProtectedAccessibilityFixtureChild::readStatic(self::$fixtureChild));
   }
 
   #[Test]
   public function readingProtectedStaticMemberMadeAccessible() {
-    $this->assertEquals('Target', self::$fixture
+    Assert::equals('Target', self::$fixture
       ->getField('staticTarget')
       ->setAccessible(true)
       ->get(null)
@@ -181,17 +164,17 @@ class ProtectedAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function writingProtectedMemberFromSameClass() {
-    $this->assertEquals('Modified', ProtectedAccessibilityFixture::write(self::$fixture));
+    Assert::equals('Modified', ProtectedAccessibilityFixture::write(self::$fixture));
   }
 
   #[Test]
   public function writingProtectedMemberFromParentClass() {
-    $this->assertEquals('Modified', ProtectedAccessibilityFixtureChild::write(self::$fixture));
+    Assert::equals('Modified', ProtectedAccessibilityFixtureChild::write(self::$fixture));
   }
 
   #[Test]
   public function writingProtectedMemberFromChildClass() {
-    $this->assertEquals('Modified', ProtectedAccessibilityFixtureChild::write(self::$fixtureChild));
+    Assert::equals('Modified', ProtectedAccessibilityFixtureChild::write(self::$fixtureChild));
   }
 
   #[Test]
@@ -199,7 +182,7 @@ class ProtectedAccessibilityTest extends \unittest\TestCase {
     with ($f= self::$fixture->getField('target'), $i= ProtectedAccessibilityFixture::construct(self::$fixture)); {
       $f->setAccessible(true);
       $f->set($i, 'Modified');
-      $this->assertEquals('Modified', $f->get($i));
+      Assert::equals('Modified', $f->get($i));
     }
   }
 
@@ -210,17 +193,17 @@ class ProtectedAccessibilityTest extends \unittest\TestCase {
 
   #[Test]
   public function writingProtectedStaticMemberFromSameClass() {
-    $this->assertEquals('Modified', ProtectedAccessibilityFixture::writeStatic(self::$fixture));
+    Assert::equals('Modified', ProtectedAccessibilityFixture::writeStatic(self::$fixture));
   }
 
   #[Test]
   public function writingProtectedStaticMemberFromParentClass() {
-    $this->assertEquals('Modified', ProtectedAccessibilityFixtureChild::writeStatic(self::$fixture));
+    Assert::equals('Modified', ProtectedAccessibilityFixtureChild::writeStatic(self::$fixture));
   }
 
   #[Test]
   public function writingProtectedStaticMemberFromChildClass() {
-    $this->assertEquals('Modified', ProtectedAccessibilityFixtureChild::writeStatic(self::$fixtureChild));
+    Assert::equals('Modified', ProtectedAccessibilityFixtureChild::writeStatic(self::$fixtureChild));
   }
 
   #[Test]
@@ -228,7 +211,7 @@ class ProtectedAccessibilityTest extends \unittest\TestCase {
     with ($f= self::$fixture->getField('staticTarget')); {
       $f->setAccessible(true);
       $f->set(null, 'Modified');
-      $this->assertEquals('Modified', $f->get(null));
+      Assert::equals('Modified', $f->get(null));
     }
   }
 }

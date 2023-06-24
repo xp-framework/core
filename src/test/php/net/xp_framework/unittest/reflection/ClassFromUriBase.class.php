@@ -1,10 +1,5 @@
 <?php namespace net\xp_framework\unittest\reflection;
 
-/**
- * Represents the base underlying the given class loader implementation
- *
- * @see   xp://net.xp_framework.unittest.reflection.ClassFromUriTest
- */
 abstract class ClassFromUriBase {
 
   /**

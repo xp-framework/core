@@ -2,12 +2,6 @@
 
 use io\streams\Bz2DecompressingInputStream;
 
-/**
- * TestCase
- *
- * @ext      bz2
- * @see      xp://io.streams.Bz2DecompressingInputStream
- */
 class Bz2DecompressingInputStreamTest extends AbstractDecompressingInputStreamTest {
 
   /** @return string */

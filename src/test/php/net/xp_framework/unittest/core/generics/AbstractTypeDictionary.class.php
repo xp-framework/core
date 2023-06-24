@@ -2,9 +2,6 @@
 
 use lang\Generic;
 
-/**
- * Lookup map
- */
 #[Generic(self: 'V', implements: ['lang.Type, V'])]
 abstract class AbstractTypeDictionary implements IDictionary {
 

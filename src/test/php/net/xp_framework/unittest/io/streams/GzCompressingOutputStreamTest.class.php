@@ -2,12 +2,6 @@
 
 use io\streams\GzCompressingOutputStream;
 
-/**
- * TestCase
- *
- * @ext      zlib
- * @see      xp://io.streams.GzCompressingOutputStream
- */
 class GzCompressingOutputStreamTest extends AbstractCompressingOutputStreamTest {
 
   /** @return string */

@@ -1,9 +1,9 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\{FormatException, Process, Runtime, RuntimeOptions, XPClass};
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
-class RuntimeTest extends \unittest\TestCase {
+class RuntimeTest {
 
   /**
    * Assertion helper for `asArguments()` calls.
@@ -14,81 +14,81 @@ class RuntimeTest extends \unittest\TestCase {
    * @throws unittest.AssertionFailedError
    */
   private function assertArguments($expected, $actual) {
-    $this->assertEquals($expected, $actual->asArguments());
+    Assert::equals($expected, $actual->asArguments());
   }
 
   #[Test]
   public function getExecutable() {
     $exe= Runtime::getInstance()->getExecutable();
-    $this->assertInstanceOf(Process::class, $exe);
-    $this->assertEquals(getmypid(), $exe->getProcessId());
+    Assert::instance(Process::class, $exe);
+    Assert::equals(getmypid(), $exe->getProcessId());
   }
 
   #[Test]
   public function standardExtensionAvailable() {
-    $this->assertTrue(Runtime::getInstance()->extensionAvailable('standard'));
+    Assert::true(Runtime::getInstance()->extensionAvailable('standard'));
   }
 
   #[Test]
   public function nonExistantExtension() {
-    $this->assertFalse(Runtime::getInstance()->extensionAvailable(':DOES-NOT-EXIST"'));
+    Assert::false(Runtime::getInstance()->extensionAvailable(':DOES-NOT-EXIST"'));
   }
  
   #[Test]
   public function startupOptions() {
     $startup= Runtime::getInstance()->startupOptions();
-    $this->assertInstanceOf(RuntimeOptions::class, $startup);
+    Assert::instance(RuntimeOptions::class, $startup);
   }
 
   #[Test]
   public function modifiedStartupOptions() {
     $startup= Runtime::getInstance()->startupOptions();
     $modified= Runtime::getInstance()->startupOptions()->withSwitch('n');
-    $this->assertNotEquals($startup, $modified);
+    Assert::notEquals($startup, $modified);
   }
 
   #[Test]
   public function bootstrapScript() {
     $bootstrap= Runtime::getInstance()->bootstrapScript();
-    $this->assertNotEquals(null, $bootstrap);
+    Assert::notEquals(null, $bootstrap);
   }
 
   #[Test]
   public function certainBootstrapScript() {
     $bootstrap= Runtime::getInstance()->bootstrapScript('class');
-    $this->assertEquals('class-main.php', strstr($bootstrap, 'class-main.php'), $bootstrap);
+    Assert::equals('class-main.php', strstr($bootstrap, 'class-main.php'), $bootstrap);
   }
 
   #[Test]
   public function mainClass() {
     $main= Runtime::getInstance()->mainClass();
-    $this->assertInstanceOf(XPClass::class, $main);
+    Assert::instance(XPClass::class, $main);
   }
 
   #[Test]
   public function parseSetting() {
     $startup= Runtime::parseArguments(['-denable_dl=0']);
-    $this->assertEquals(['0'], $startup['options']->getSetting('enable_dl'));
+    Assert::equals(['0'], $startup['options']->getSetting('enable_dl'));
   }
 
   #[Test]
   public function parseSettingToleratesWhitespace() {
     $startup= Runtime::parseArguments(['-d auto_globals_jit=0']);
-    $this->assertEquals(['0'], $startup['options']->getSetting('auto_globals_jit'));
+    Assert::equals(['0'], $startup['options']->getSetting('auto_globals_jit'));
   }
 
   #[Test]
   public function doubleDashEndsOptions() {
     $startup= Runtime::parseArguments(['-q', '--', 'tools/xar.php']);
     $this->assertArguments(['-q'], $startup['options']);
-    $this->assertEquals('tools/xar.php', $startup['bootstrap']);
+    Assert::equals('tools/xar.php', $startup['bootstrap']);
   }
 
   #[Test]
   public function scriptEndsOptions() {
     $startup= Runtime::parseArguments(['-q', 'tools/xar.php']);
     $this->assertArguments(['-q'], $startup['options']);
-    $this->assertEquals('tools/xar.php', $startup['bootstrap']);
+    Assert::equals('tools/xar.php', $startup['bootstrap']);
   }
 
   #[Test, Expect(FormatException::class)]
@@ -102,7 +102,7 @@ class RuntimeTest extends \unittest\TestCase {
       '-dextension=php_xsl.dll', 
       '-dextension=php_sybase_ct.dll'
     ]);
-    $this->assertEquals(
+    Assert::equals(
       ['php_xsl.dll', 'php_sybase_ct.dll'],
       $startup['options']->getSetting('extension')
     );
@@ -111,12 +111,12 @@ class RuntimeTest extends \unittest\TestCase {
   #[Test]
   public function parseSwitch() {
     $startup= Runtime::parseArguments(['-q']);
-    $this->assertTrue($startup['options']->getSwitch('q'));
+    Assert::true($startup['options']->getSwitch('q'));
   }
 
   #[Test]
   public function memoryUsage() {
-    $this->assertEquals(
+    Assert::equals(
       \lang\Primitive::$INT, 
       typeof(Runtime::getInstance()->memoryUsage())
     );
@@ -124,7 +124,7 @@ class RuntimeTest extends \unittest\TestCase {
 
   #[Test]
   public function peakMemoryUsage() {
-    $this->assertEquals(
+    Assert::equals(
       \lang\Primitive::$INT, 
       typeof(Runtime::getInstance()->peakMemoryUsage())
     );
@@ -132,7 +132,7 @@ class RuntimeTest extends \unittest\TestCase {
 
   #[Test]
   public function memoryLimit() {
-    $this->assertEquals(
+    Assert::equals(
       \lang\Primitive::$INT,
       typeof(Runtime::getInstance()->memoryLimit())
     );

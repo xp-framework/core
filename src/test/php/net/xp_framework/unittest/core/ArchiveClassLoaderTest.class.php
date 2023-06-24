@@ -3,30 +3,12 @@
 use io\Files;
 use lang\archive\{Archive, ArchiveClassLoader};
 use lang\{ClassNotFoundException, ElementNotFoundException, XPClass};
-use unittest\{Expect, Test};
+use unittest\{Assert, Expect, Test};
 
-/**
- * TestCase for archive class loading
- *
- * Relies on an archive.xar file existing in the resources directory
- * with the following contents:
- *
- * ```sh
- * $ xar tvf archive.xar
- *    92 test/ClassLoadedFromArchive.class.php
- *   104 test/package-info.xp
- * ```
- * 
- * @see   xp://lang.archive.ArchiveClassLoader
- */
-class ArchiveClassLoaderTest extends \unittest\TestCase {
+class ArchiveClassLoaderTest {
   private $fixture;
   
-  /**
-   * Sets fixture to point to archive.xar from src/test/resources/
-   *
-   * @return void
-   */
+  #[Before]
   public function setUp() {
     $this->fixture= new ArchiveClassLoader(new Archive(
       typeof($this)->getPackage()->getResourceAsStream('archive.xar')
@@ -35,37 +17,37 @@ class ArchiveClassLoaderTest extends \unittest\TestCase {
 
   #[Test]
   public function provides_class_in_archive() {
-    $this->assertTrue($this->fixture->providesClass('test.ClassLoadedFromArchive'));
+    Assert::true($this->fixture->providesClass('test.ClassLoadedFromArchive'));
   }
 
   #[Test]
   public function does_not_provide_non_existant_class() {
-    $this->assertFalse($this->fixture->providesClass('non.existant.Class'));
+    Assert::false($this->fixture->providesClass('non.existant.Class'));
   }
 
   #[Test]
   public function provides_package_in_archive() {
-    $this->assertTrue($this->fixture->providesPackage('test'));
+    Assert::true($this->fixture->providesPackage('test'));
   }
 
   #[Test]
   public function does_not_provide_non_existant_package() {
-    $this->assertFalse($this->fixture->providesPackage('non.existant'));
+    Assert::false($this->fixture->providesPackage('non.existant'));
   }
 
   #[Test]
   public function provides_resource_in_archive() {
-    $this->assertTrue($this->fixture->providesResource('test/package-info.xp'));
+    Assert::true($this->fixture->providesResource('test/package-info.xp'));
   }
 
   #[Test]
   public function does_not_provide_non_existant_resource() {
-    $this->assertFalse($this->fixture->providesResource('non/existant/resource.file'));
+    Assert::false($this->fixture->providesResource('non/existant/resource.file'));
   }
 
   #[Test]
   public function load_existing_class_from_archive() {
-    $this->assertInstanceOf(XPClass::class, $this->fixture->loadClass('test.ClassLoadedFromArchive'));
+    Assert::instance(XPClass::class, $this->fixture->loadClass('test.ClassLoadedFromArchive'));
   }
 
   #[Test, Expect(ClassNotFoundException::class)]
@@ -76,13 +58,13 @@ class ArchiveClassLoaderTest extends \unittest\TestCase {
   #[Test]
   public function load_existing_resource_from_archive() {
     $contents= $this->fixture->getResource('test/package-info.xp');
-    $this->assertEquals('<?php', substr($contents, 0, strpos($contents, "\n")));
+    Assert::equals('<?php', substr($contents, 0, strpos($contents, "\n")));
   }
 
   #[Test]
   public function load_existing_resource_stream_from_archive() {
     $contents= Files::read($this->fixture->getResourceAsStream('test/package-info.xp'));
-    $this->assertEquals('<?php', substr($contents, 0, strpos($contents, "\n")));
+    Assert::equals('<?php', substr($contents, 0, strpos($contents, "\n")));
   }
 
   #[Test, Expect(ElementNotFoundException::class)]
@@ -97,7 +79,7 @@ class ArchiveClassLoaderTest extends \unittest\TestCase {
 
   #[Test]
   public function test_package_contents() {
-    $this->assertEquals(
+    Assert::equals(
       ['ClassLoadedFromArchive.class.php', 'package-info.xp'],
       $this->fixture->packageContents('test')
     );
@@ -105,11 +87,11 @@ class ArchiveClassLoaderTest extends \unittest\TestCase {
 
   #[Test]
   public function non_existant_package_contents() {
-    $this->assertEquals([], $this->fixture->packageContents('non.existant'));
+    Assert::equals([], $this->fixture->packageContents('non.existant'));
   }
 
   #[Test]
   public function root_package_contents() {
-    $this->assertEquals(['test/'], $this->fixture->packageContents(null));
+    Assert::equals(['test/'], $this->fixture->packageContents(null));
   }
 }

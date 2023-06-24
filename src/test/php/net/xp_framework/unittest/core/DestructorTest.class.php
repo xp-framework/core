@@ -1,15 +1,12 @@
 <?php namespace net\xp_framework\unittest\core;
 
-use unittest\{Test, TestCase};
+use unittest\{Assert, Test};
 
-class DestructorTest extends TestCase {
+class DestructorTest {
   private $destroyed= [];
   private $destroyable;
     
-  /**
-   * Setup method. Creates the destroyable member and sets its 
-   * callback to this test.
-   */
+  #[Before]
   public function setUp() {
     $this->destroyable= new Destroyable(function($object) {
       $this->destroyed[$object->hashCode()]++;
@@ -21,6 +18,6 @@ class DestructorTest extends TestCase {
   public function deleteCallsDestructor() {
     $hash= $this->destroyable->hashCode();
     unset($this->destroyable);
-    $this->assertEquals(1, $this->destroyed[$hash]);
+    Assert::equals(1, $this->destroyed[$hash]);
   } 
 }

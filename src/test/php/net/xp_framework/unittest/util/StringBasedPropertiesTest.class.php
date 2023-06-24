@@ -2,12 +2,6 @@
 
 use util\Properties;
 
-/**
- * Testcase for util.Properties class.
- *
- * @see   xp://net.xp_framework.unittest.util.AbstractPropertiesTest
- * @see   xp://util.Properties#fromString
- */
 class StringBasedPropertiesTest extends AbstractPropertiesTest {
 
   /**

@@ -1,12 +1,10 @@
 <?php namespace net\xp_framework\unittest\core;
 
 use lang\{ClassCastException, CommandLine, Runnable, Value};
-use unittest\{Expect, Test, TestCase, Values};
+use net\xp_framework\unittest\BaseTest;
+use unittest\{Assert, Expect, Test, Values};
 
-/**
- * Tests cast() functionality
- */
-class CastingTest extends TestCase implements Runnable {
+class CastingTest extends BaseTest implements Runnable {
 
   /** @return void */
   public function run() { 
@@ -18,7 +16,7 @@ class CastingTest extends TestCase implements Runnable {
     $runnable= new class() implements Runnable {
       public function run() { return 'Test'; }
     };
-    $this->assertEquals('Test', cast($runnable, Runnable::class)->run());
+    Assert::equals('Test', cast($runnable, Runnable::class)->run());
   }
 
   #[Test, Expect(ClassCastException::class)]
@@ -33,32 +31,32 @@ class CastingTest extends TestCase implements Runnable {
 
   #[Test]
   public function thisClass() {
-    $this->assertTrue($this === cast($this, typeof($this)));
+    Assert::true($this === cast($this, typeof($this)));
   }
 
   #[Test]
   public function thisClassName() {
-    $this->assertTrue($this === cast($this, nameof($this)));
+    Assert::true($this === cast($this, nameof($this)));
   }
 
   #[Test]
   public function thisClassLiteral() {
-    $this->assertTrue($this === cast($this, self::class));
+    Assert::true($this === cast($this, self::class));
   }
 
   #[Test]
   public function runnableInterface() {
-    $this->assertTrue($this === cast($this, Runnable::class));
+    Assert::true($this === cast($this, Runnable::class));
   }
 
   #[Test]
   public function parentClass() {
-    $this->assertTrue($this === cast($this, TestCase::class));
+    Assert::true($this === cast($this, parent::class));
   }
 
   #[Test]
   public function selfClass() {
-    $this->assertTrue($this === cast($this, self::class));
+    Assert::true($this === cast($this, self::class));
   }
 
   #[Test, Expect(ClassCastException::class)]
@@ -83,7 +81,7 @@ class CastingTest extends TestCase implements Runnable {
 
   #[Test, Values([null, 'test'])]
   public function nullable_string($value) {
-    $this->assertEquals($value, cast($value, '?string'));
+    Assert::equals($value, cast($value, '?string'));
   }
 
   #[Test, Expect(ClassCastException::class)]
