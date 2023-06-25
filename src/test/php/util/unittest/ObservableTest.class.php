@@ -9,7 +9,7 @@ class ObservableTest {
 
   #[Before]
   public static function defineObservable() {
-    self::$observable= ClassLoader::defineClass('net.xp_framework.unittest.util.ObservableFixture', Observable::class, [], '{
+    self::$observable= ClassLoader::defineClass('util.unittest.ObservableFixture', Observable::class, [], '{
       private $value= 0;
 
       public function setValue($value) {
