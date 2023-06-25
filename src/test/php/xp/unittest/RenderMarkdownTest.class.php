@@ -1,4 +1,4 @@
-<?php namespace net\xp_framework\unittest\runtime;
+<?php namespace xp\unittest;
 
 use unittest\{Assert, Test, Values};
 use xp\runtime\RenderMarkdown;
