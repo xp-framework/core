@@ -2,7 +2,7 @@
 
 use lang\unittest\ListOf;
 use lang\{ClassLoader, Runnable};
-use unittest\{Assert, Test, Values};
+use test\{Assert, Test, Values};
 
 class IsTest {
 
@@ -239,12 +239,12 @@ class IsTest {
     ];
   }
 
-  #[Test, Values('genericDictionaries')]
+  #[Test, Values(from: 'genericDictionaries')]
   public function wildcard_check_for_type_parameters($value) {
     Assert::true(is('lang.unittest.Lookup<?, ?>', $value));
   }
 
-  #[Test, Values('genericDictionaries')]
+  #[Test, Values(from: 'genericDictionaries')]
   public function wildcard_check_for_type_parameter_with_super_type($value) {
     Assert::true(is('lang.unittest.IDictionary<?, ?>', $value));
   }
@@ -302,7 +302,7 @@ class IsTest {
     Assert::true(is('?int', $val));
   }
 
-  #[Test, Values('callables')]
+  #[Test, Values(from: 'callables')]
   public function is_callable($val) {
     Assert::true(is('callable', $val));
   }
@@ -312,17 +312,17 @@ class IsTest {
     Assert::true(is('array', $val));
   }
 
-  #[Test, Values('iterables')]
+  #[Test, Values(from: 'iterables')]
   public function is_iterable($val) {
     Assert::true(is('iterable', $val));
   }
 
-  #[Test, Values('objects')]
+  #[Test, Values(from: 'objects')]
   public function is_object($val) {
     Assert::true(is('object', $val));
   }
 
-  #[Test, Values('functions')]
+  #[Test, Values(from: 'functions')]
   public function closures_are_objects($val) {
     Assert::true(is('object', $val));
   }

@@ -1,7 +1,7 @@
 <?php namespace util\unittest;
 
 use lang\FormatException;
-use unittest\{Assert, Before, Expect, Test};
+use test\{Assert, Before, Expect, Test};
 use util\{Bytes, UUID};
 
 class UUIDTest {

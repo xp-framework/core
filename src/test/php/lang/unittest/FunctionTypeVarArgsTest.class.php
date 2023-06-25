@@ -1,8 +1,8 @@
 <?php namespace lang\unittest;
 
 use lang\{ClassLoader, FunctionType, Type};
-use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Test, Values};
+use test\verify\Runtime;
+use test\{Assert, Test, Values};
 
 class FunctionTypeVarArgsTest {
   private static $compiled= [];
@@ -40,22 +40,22 @@ class FunctionTypeVarArgsTest {
     yield [new FunctionType([Type::$ARRAY, Type::$VAR, Type::$VAR], Type::$VAR)];
   }
 
-  #[Test, Values('singleParam')]
+  #[Test, Values(from: 'singleParam')]
   public function singleParam_vararg_parameter_via_syntax($type) {
     Assert::true($type->isInstance($this->compile('... $args')));
   }
 
-  #[Test, Values('singleParam')]
+  #[Test, Values(from: 'singleParam')]
   public function single_vararg_parameter_via_apidoc($type) {
     Assert::true($type->isInstance($this->compile('', ['@param  var... $args]'])));
   }
 
-  #[Test, Values('arrayParameter')]
+  #[Test, Values(from: 'arrayParameter')]
   public function array_parameter_followed_by_vararg_parameter_via_syntax($type) {
     Assert::true($type->isInstance($this->compile('array $tokens, ... $args')));
   }
 
-  #[Test, Values('arrayParameter')]
+  #[Test, Values(from: 'arrayParameter')]
   public function array_parameter_followed_by_vararg_parameter_via_apidoc($type) {
     Assert::true($type->isInstance($this->compile('array $tokens', [
       '@param  var[] $tokens',

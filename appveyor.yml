@@ -37,7 +37,16 @@ test_script:
       foreach ($file in $files)
       {
         echo $file.Name
-        xp -m . xp.unittest.Runner $file.FullName
+
+        $classes = Select-String -Path $file.FullName -Pattern '^class="([^"]+)"'
+
+        $args = @()
+        foreach ($class in $classes)
+        {
+          $args += $class.Matches.Groups[1].Value
+        }
+
+        xp -m . xp.test.Runner -r Dots $args
         if ($lastexitcode -gt 0) { $result = 1 }
       }
       if ($result -gt 0) { throw "Build failed" }

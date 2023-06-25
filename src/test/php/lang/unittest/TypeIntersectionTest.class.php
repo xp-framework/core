@@ -1,37 +1,37 @@
 <?php namespace lang\unittest;
 
+use Countable, IteratorAggregate, Traversable;
 use lang\{ClassCastException, IllegalArgumentException, Type, TypeIntersection, XPClass};
-use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Action, Expect, Test, Values};
+use test\verify\Runtime;
+use test\{Action, Assert, Before, Expect, Test, Values};
 
 class TypeIntersectionTest {
   private $types;
 
-  /** @return void */
   #[Before]
   public function setUp() {
-    $this->types= [new XPClass('Countable'), new XPClass('Traversable')];
+    $this->types= [new XPClass(Countable::class), new XPClass(Traversable::class)];
   }
 
   /** @return Countable&Traversable */
   private function intersection() {
-    return new class() implements \Countable, \IteratorAggregate {
+    return new class() implements Countable, IteratorAggregate {
       public function count(): int { return 0; }
-      public function getIterator(): \Traversable { while (false) yield; }
+      public function getIterator(): Traversable { while (false) yield; }
     };
   }
 
   /** @return Countable */
   private function countable() {
-    return new class() implements \Countable {
+    return new class() implements Countable {
       public function count(): int { return 0; }
     };
   }
 
   /** @return Traversable */
   private function traversable() {
-    return new class() implements \IteratorAggregate {
-      public function getIterator(): \Traversable { while (false) yield; }
+    return new class() implements IteratorAggregate {
+      public function getIterator(): Traversable { while (false) yield; }
     };
   }
 
@@ -80,7 +80,7 @@ class TypeIntersectionTest {
     Assert::true((new TypeIntersection($this->types))->isInstance($this->intersection()));
   }
 
-  #[Test, Values('values')]
+  #[Test, Values(from: 'values')]
   public function is_not_instance($value) {
     Assert::false((new TypeIntersection($this->types))->isInstance($value));
   }
@@ -102,7 +102,7 @@ class TypeIntersectionTest {
     Assert::null((new TypeIntersection($this->types))->cast(null));
   }
 
-  #[Test, Expect(ClassCastException::class), Values('values')]
+  #[Test, Expect(ClassCastException::class), Values(from: 'values')]
   public function cannot_cast($value) {
     (new TypeIntersection($this->types))->cast($value);
   }
@@ -117,21 +117,21 @@ class TypeIntersectionTest {
     Assert::true((new TypeIntersection($this->types))->isAssignableFrom($type));
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.1.0-dev")')]
+  #[Test, Runtime(php: '>=8.1.0-dev')]
   public function php81_native_intersection_field_type() {
     $f= typeof(eval('return new class() { public Countable&Traversable $fixture; };'))->getField('fixture');
     Assert::equals(new TypeIntersection($this->types), $f->getType());
     Assert::equals('Countable&Traversable', $f->getTypeName());
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.1.0-dev")')]
+  #[Test, Runtime(php: '>=8.1.0-dev')]
   public function php81_native_intersection_param_type() {
     $m= typeof(eval('return new class() { public function fixture(Countable&Traversable $arg) { } };'))->getMethod('fixture');
     Assert::equals(new TypeIntersection($this->types), $m->getParameter(0)->getType());
     Assert::equals('Countable&Traversable', $m->getParameter(0)->getTypeName());
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.1.0-dev")')]
+  #[Test, Runtime(php: '>=8.1.0-dev')]
   public function php81_native_intersection_return_type() {
     $m= typeof(eval('return new class() { public function fixture(): Countable&Traversable { } };'))->getMethod('fixture');
     Assert::equals(new TypeIntersection($this->types), $m->getReturnType());

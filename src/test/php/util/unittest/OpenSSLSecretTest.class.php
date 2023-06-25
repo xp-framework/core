@@ -1,10 +1,9 @@
 <?php namespace util\unittest;
 
-use unittest\Action;
-use unittest\actions\ExtensionAvailable;
+use test\verify\Runtime;
 use util\Secret;
 
-#[Action(eval: 'new ExtensionAvailable("openssl")')]
+#[Runtime(extensions: ['sodium'])]
 class OpenSSLSecretTest extends SecretTest {
 
   /** @return int */

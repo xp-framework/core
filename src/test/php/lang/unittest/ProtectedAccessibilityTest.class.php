@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{ClassLoader, IllegalAccessException, XPClass};
-use unittest\{Assert, Before, Expect, Test};
+use test\{Assert, Before, Expect, Test};
 
 class ProtectedAccessibilityTest {
   protected static $fixture, $fixtureChild;

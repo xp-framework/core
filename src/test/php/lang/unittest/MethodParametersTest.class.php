@@ -14,8 +14,8 @@ use lang\{
   Nullable,
   XPClass
 };
-use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Action, Expect, Test, Values};
+use test\verify\Runtime;
+use test\{Action, Assert, Expect, Test, Values};
 
 class MethodParametersTest extends MethodsTest {
 
@@ -61,7 +61,7 @@ class MethodParametersTest extends MethodsTest {
     $this->assertParamType(Type::$VAR, $this->method('public function fixture($param) { }')->getParameter(0));
   }
 
-  #[Test, Values('types')]
+  #[Test, Values(from: 'types')]
   public function parameter_type_determined_via_apidoc($declaration, $type) {
     $this->assertParamType(
       $type,
@@ -69,7 +69,7 @@ class MethodParametersTest extends MethodsTest {
     );
   }
 
-  #[Test, Values('arrays')]
+  #[Test, Values(from: 'arrays')]
   public function specific_array_type_determined_via_apidoc_if_present($declaration, $type) {
     $this->assertParamType(
       $type,
@@ -93,7 +93,7 @@ class MethodParametersTest extends MethodsTest {
     );
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=7.0")'), Values([['string'], ['int'], ['bool'], ['float']])]
+  #[Test, Runtime(php: '>=7.0'), Values([['string'], ['int'], ['bool'], ['float']])]
   public function parameter_type_determined_via_scalar_syntax($literal) {
     $this->assertParamType(
       Primitive::forName($literal),
@@ -101,7 +101,7 @@ class MethodParametersTest extends MethodsTest {
     );
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=7.1")')]
+  #[Test, Runtime(php: '>=7.1')]
   public function nullable_parameter_type() {
     $fixture= $this->type('{ public function fixture(?string $arg) { } }');
     $this->assertParamType(
@@ -110,7 +110,7 @@ class MethodParametersTest extends MethodsTest {
     );
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.0")'), Values([['string|int'], ['string|false']])]
+  #[Test, Runtime(php: '>=8.0'), Values([['string|int'], ['string|false']])]
   public function parameter_type_determined_via_union_syntax($literal) {
     $this->assertParamType(
       TypeUnion::forName($literal),
@@ -214,7 +214,7 @@ class MethodParametersTest extends MethodsTest {
     );
   }
 
-  #[Test, Values('restrictions')]
+  #[Test, Values(from: 'restrictions')]
   public function type_restriction_determined_via_syntax($literal, $type) {
     Assert::equals(
       $type,
@@ -266,27 +266,27 @@ class MethodParametersTest extends MethodsTest {
     }
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
+  #[Test, Runtime(php: '<8.0')]
   public function annotated_parameter() {
     Assert::true($this->annotatedParameter()->hasAnnotations());
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
+  #[Test, Runtime(php: '<8.0')]
   public function parameter_annotated_with_test_has_test_annotation() {
     Assert::true($this->annotatedParameter()->hasAnnotation('test'));
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
+  #[Test, Runtime(php: '<8.0')]
   public function parameter_annotated_with_test_has_no_limit_annotation() {
     Assert::false($this->annotatedParameter()->hasAnnotation('limit'));
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
+  #[Test, Runtime(php: '<8.0')]
   public function annotations_of_parameter_annotated_with_test() {
     Assert::equals(['test' => 'value'], $this->annotatedParameter()->getAnnotations());
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion("<8.0")')]
+  #[Test, Runtime(php: '<8.0')]
   public function test_annotation_of_parameter_annotated_with_test() {
     Assert::equals('value', $this->annotatedParameter()->getAnnotation('test'));
   }
@@ -330,7 +330,7 @@ class MethodParametersTest extends MethodsTest {
     Assert::equals([], $this->method('public function fixture($param) { }')->getParameter(0)->getAnnotations());
   }
 
-  #[Test, Expect(class: ElementNotFoundException::class, withMessage: 'Annotation "test" does not exist')]
+  #[Test, Expect(class: ElementNotFoundException::class, message: 'Annotation "test" does not exist')]
   public function cannot_get_test_annotation_for_un_annotated_parameter() {
     $this->method('public function fixture($param) { }')->getParameter(0)->getAnnotation('test');
   }
@@ -345,7 +345,7 @@ class MethodParametersTest extends MethodsTest {
     Assert::true($this->method('public function fixture($param= true) { }')->getParameter(0)->isOptional());
   }
 
-  #[Test, Expect(class: IllegalStateException::class, withMessage: 'Parameter "param" has no default value')]
+  #[Test, Expect(class: IllegalStateException::class, message: 'Parameter "param" has no default value')]
   public function required_parameter_does_not_have_default_value() {
     $this->method('public function fixture($param) { }')->getParameter(0)->getDefaultValue();
   }

@@ -2,13 +2,12 @@
 
 use io\{File, Files};
 use lang\{Environment, FileSystemClassLoader, IllegalArgumentException};
-use unittest\{Assert, Expect, Test};
+use test\{Assert, Before, Expect, Test};
 use util\{ClassPathPropertySource, Properties};
 
 class ClassPathPropertySourceTest {
   protected $tempFile, $fixture;
 
-  /** @return void */
   #[Before]
   public function setUp() {
     $tempDir= realpath(Environment::tempDir());
@@ -43,7 +42,7 @@ class ClassPathPropertySourceTest {
     );
   }
 
-  #[Test, Expect(class: IllegalArgumentException::class, withMessage: '/No properties @@non-existant@@ found at .+/')]
+  #[Test, Expect(class: IllegalArgumentException::class, message: '/No properties @@non-existant@@ found at .+/')]
   public function fetch_non_existant_ini_file() {
     $this->fixture->fetch('@@non-existant@@');
   }

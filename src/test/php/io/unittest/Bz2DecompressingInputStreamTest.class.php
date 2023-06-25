@@ -1,11 +1,10 @@
 <?php namespace io\unittest;
 
 use io\streams\Bz2DecompressingInputStream;
+use test\verify\Condition;
 
+#[Condition(assert: 'in_array("bzip2.*", stream_get_filters())')]
 class Bz2DecompressingInputStreamTest extends AbstractDecompressingInputStreamTest {
-
-  /** @return string */
-  protected function filter() { return 'bzip2.*'; }
 
   /**
    * Get stream

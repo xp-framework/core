@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{ClassLoader, ClassNotFoundException, Closeable, Runnable, XPClass};
-use unittest\{Assert, Expect, Test};
+use test\{Assert, Expect, Test};
 
 class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
 

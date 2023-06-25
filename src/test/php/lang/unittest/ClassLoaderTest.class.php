@@ -11,7 +11,7 @@ use lang\{
   IllegalStateException,
   XPClass
 };
-use unittest\{Assert, Expect, Test, Values};
+use test\{After, Assert, Before, Expect, Test, Values};
 
 class ClassLoaderTest {
   protected
@@ -29,10 +29,6 @@ class ClassLoaderTest {
     return ClassLoader::registerLoader(new ArchiveClassLoader(new Archive($file)));
   }
     
-  /**
-   * Setup this test. Registeres class loaders deleates for the 
-   * afforementioned XARs
-   */
   #[Before]
   public function setUp() {
     $lib= typeof($this)->getPackage();
@@ -41,10 +37,6 @@ class ClassLoaderTest {
     $this->containedLoader= $this->registerXar($this->libraryLoader->getResourceAsStream('contained.xar'));
   }
   
-  /**
-   * Tear down this test. Removes classloader delegates registered 
-   * during setUp()
-   */
   #[After]
   public function tearDown() {
     ClassLoader::removeLoader($this->libraryLoader);
@@ -129,12 +121,12 @@ class ClassLoaderTest {
     ClassLoader::getDefault()->loadClass('@@NON-EXISTANT@@');
   }
 
-  #[Test, Expect(['class' => ClassFormatException::class, 'withMessage' => '/No types declared in .+/'])]
+  #[Test, Expect(class: ClassFormatException::class, message: '/No types declared in .+/')]
   public function loadClassFileWithoutDeclaration() {
     XPClass::forName('lang.unittest.fixture.broken.NoClass');
   }
 
-  #[Test, Expect(['class' => ClassFormatException::class, 'withMessage' => '/File does not declare type `.+FalseClass`, but `.+TrueClass`/'])]
+  #[Test, Expect(class: ClassFormatException::class, message: '/File does not declare type `.+FalseClass`, but `.+TrueClass`/')]
   public function loadClassFileWithIncorrectDeclaration() {
     XPClass::forName('lang.unittest.fixture.broken.FalseClass');
   }

@@ -2,8 +2,8 @@
 
 use io\IOException;
 use lang\Process;
-use unittest\actions\IsPlatform;
-use unittest\{Assert, Action, After, Before, Expect, Test};
+use test\verify\Runtime;
+use test\{After, Assert, Before, Expect, Test, Values};
 
 class ProcessResolveTest {
   private $origDir;
@@ -33,43 +33,43 @@ class ProcessResolveTest {
     return implode($newSeparator, $parts);
   }
 
-  #[Test, Action(eval: 'new IsPlatform("WIN")')]
+  #[Test, Runtime(os: 'WIN')]
   public function resolveFullyQualifiedWithDriverLetter() {
     Assert::true(is_executable(Process::resolve(getenv('WINDIR').'\\EXPLORER.EXE')));
   }
 
-  #[Test, Action(eval: 'new IsPlatform("WIN")')]
+  #[Test, Runtime(os: 'WIN')]
   public function resolveFullyQualifiedWithDriverLetterWithoutExtension() {
     Assert::true(is_executable(Process::resolve(getenv('WINDIR').'\\EXPLORER')));
   }
 
-  #[Test, Action(eval: 'new IsPlatform("WIN")')]
+  #[Test, Runtime(os: 'WIN')]
   public function resolveFullyQualifiedWithBackSlash() {
     $path= '\\'.$this->replaceBackslashSeparator(getenv('WINDIR').'\\EXPLORER.EXE', '\\', TRUE);
     chdir('C:');
     Assert::true(is_executable(Process::resolve($path)));
   }
 
-  #[Test, Action(eval: 'new IsPlatform("WIN")')]
+  #[Test, Runtime(os: 'WIN')]
   public function resolveFullyQualifiedWithSlash() {
     $path= '/'.$this->replaceBackslashSeparator(getenv('WINDIR').'\\EXPLORER.EXE', '/', TRUE);
     chdir('C:');
     Assert::true(is_executable(Process::resolve($path)));
   }
 
-  #[Test, Action(eval: 'new IsPlatform("WIN")')]
+  #[Test, Runtime(os: 'WIN')]
   public function resolveFullyQualifiedWithoutExtension() {
     $path='\\'.$this->replaceBackslashSeparator(getenv('WINDIR').'\\EXPLORER', '\\', TRUE);
     chdir('C:');
     Assert::true(is_executable(Process::resolve($path)));
   }
 
-  #[Test, Action(eval: 'new IsPlatform("WIN")')]
+  #[Test, Runtime(os: 'WIN')]
   public function resolveCommandInPath() {
     Assert::true(is_executable(Process::resolve('explorer.exe')));
   }
 
-  #[Test, Action(eval: 'new IsPlatform("WIN")')]
+  #[Test, Runtime(os: 'WIN')]
   public function resolveCommandInPathWithoutExtension() {
     Assert::true(is_executable(Process::resolve('explorer')));
   }
@@ -79,7 +79,7 @@ class ProcessResolveTest {
     Process::resolve('/');
   }
 
-  #[Test, Action(eval: 'new IsPlatform("WIN")'), Expect(IOException::class)]
+  #[Test, Runtime(os: 'WIN'), Expect(IOException::class)]
   public function resolveBackslashDirectory() {
     Process::resolve('\\');
   }
@@ -99,28 +99,28 @@ class ProcessResolveTest {
     Process::resolve('/@@non-existant@@');
   }
 
-  #[Test, Action(eval: 'new IsPlatform("ANDROID")')]
+  #[Test, Runtime(os: 'ANDROID')]
   public function resolveFullyQualifiedOnAndroid() {
     $fq= getenv('ANDROID_ROOT').'/framework/core.jar';
     Assert::equals($fq, Process::resolve($fq));
   }
 
-  #[Test, Action(eval: 'new IsPlatform("!(WIN|ANDROID)")')]
+  #[Test, Runtime(os: '^(?!WIN|ANDROID)')]
   public function resolveFullyQualifiedOnPosix() {
     Assert::true(in_array(Process::resolve('/bin/ls'), ['/usr/bin/ls', '/bin/ls']));
   }
 
-  #[Test, Values(['"ls"', "'ls'"]), Action(eval: 'new IsPlatform("!(WIN|ANDROID)")')]
+  #[Test, Values(['"ls"', "'ls'"]), Runtime(os: '^(?!WIN|ANDROID)')]
   public function resolveQuotedOnPosix($command) {
     Assert::true(in_array(Process::resolve($command), ['/usr/bin/ls', '/bin/ls']));
   }
 
-  #[Test, Action(eval: 'new IsPlatform("WIN")')]
+  #[Test, Runtime(os: 'WIN')]
   public function resolveQuotedOnWindows() {
     Assert::true(is_executable(Process::resolve('"explorer"')));
   }
 
-  #[Test, Action(eval: 'new IsPlatform("!(WIN|ANDROID)")')]
+  #[Test, Runtime(os: '^(?!WIN|ANDROID)')]
   public function resolve() {
     Assert::true(in_array(Process::resolve('ls'), ['/usr/bin/ls', '/bin/ls']));
   }

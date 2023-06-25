@@ -2,8 +2,8 @@
 
 use lang\reflect\Modifiers;
 use lang\{ClassLoader, CloneNotSupportedException, Enum, Error, IllegalArgumentException, XPClass};
-use unittest\actions\{RuntimeVersion, VerifyThat};
-use unittest\{Assert, Action, Expect, Test};
+use test\verify\{Condition, Runtime};
+use test\{Action, Assert, Expect, Test};
 
 class EnumTest {
 
@@ -45,7 +45,7 @@ class EnumTest {
     Assert::true(XPClass::forName(Operation::class)->isEnum());
   }
 
-  #[Test, Action(eval: 'new VerifyThat(fn() => class_exists("ReflectionEnum", false))')]
+  #[Test, Condition(assert: 'class_exists("ReflectionEnum", false)')]
   public function sortorder_is_an_enum() {
     Assert::true(XPClass::forName(SortOrder::class)->isEnum());
   }
@@ -148,7 +148,7 @@ class EnumTest {
     );
   }
 
-  #[Test, Action(eval: 'new VerifyThat(fn() => class_exists("ReflectionEnum", false))')]
+  #[Test, Condition(assert: 'class_exists("ReflectionEnum", false)')]
   public function valueOf_sortorder_enum() {
     Assert::equals(
       SortOrder::ASC,
@@ -156,7 +156,7 @@ class EnumTest {
     );
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Action(eval: 'new VerifyThat(fn() => class_exists("ReflectionEnum", false))')]
+  #[Test, Expect(IllegalArgumentException::class), Condition(assert: 'class_exists("ReflectionEnum", false)')]
   public function valueOf_nonexistant_sortorder_enum() {
     Enum::valueOf(SortOrder::class, 'ESC');
   }
@@ -203,7 +203,7 @@ class EnumTest {
     );
   }
 
-  #[Test, Action(eval: 'new VerifyThat(fn() => class_exists("ReflectionEnum", false))')]
+  #[Test, Condition(assert: 'class_exists("ReflectionEnum", false)')]
   public function valuesOf_sortorder_enum() {
     Assert::equals(
       [SortOrder::ASC, SortOrder::DESC],
@@ -330,7 +330,7 @@ class EnumTest {
     Assert::equals(1, Weekday::$MON->ordinal());
   }
 
-  #[Test, Action(eval: 'new VerifyThat(fn() => class_exists("ReflectionEnum", false))')]
+  #[Test, Condition(assert: 'class_exists("ReflectionEnum", false)')]
   public function annotations_on_sortorder_enum() {
     Assert::equals(['usedBy' => self::class], XPClass::forName(SortOrder::class)->getAnnotations());
   }

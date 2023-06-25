@@ -2,7 +2,7 @@
 
 use io\IOException;
 use io\streams\{InputStream, MemoryInputStream, MemoryOutputStream, Streams};
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 
 class StreamWrappingTest {
 

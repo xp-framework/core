@@ -2,14 +2,13 @@
 
 use lang\reflect\{InvocationHandler, Proxy};
 use lang\{ClassLoader, Error, IllegalArgumentException, Type, XPClass};
-use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Expect, Test};
+use test\verify\Runtime;
+use test\{Assert, Before, Expect, Test};
 use util\{Observer, XPIterator};
 
 class ProxyTest {
   protected $handler, $iteratorClass, $observerClass;
 
-  /** @return void */
   #[Before]
   public function setUp() {
     $this->handler= new class() implements InvocationHandler {

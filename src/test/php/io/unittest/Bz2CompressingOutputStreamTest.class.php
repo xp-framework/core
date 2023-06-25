@@ -1,11 +1,10 @@
 <?php namespace io\unittest;
 
 use io\streams\Bz2CompressingOutputStream;
+use test\verify\Condition;
 
+#[Condition(assert: 'in_array("bzip2.*", stream_get_filters())')]
 class Bz2CompressingOutputStreamTest extends AbstractCompressingOutputStreamTest {
-
-  /** @return string */
-  protected function filter() { return 'bzip2.*'; }
 
   /**
    * Get stream

@@ -1,8 +1,8 @@
 <?php namespace lang\unittest;
 
 use lang\{ArrayType, FunctionType, MapType, Primitive, Type, XPClass};
-use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Action, Test};
+use test\verify\Runtime;
+use test\{Action, Assert, Test};
 
 class TypeOfTest {
 
@@ -96,22 +96,22 @@ class TypeOfTest {
     Assert::equals(FunctionType::forName('function(): int'), typeof(eval('return function(): int { };')));
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=7.1")')]
+  #[Test, Runtime(php: '>=7.1')]
   public function function_with_nullable_return_type() {
     Assert::equals(FunctionType::forName('function(): ?string'), typeof(eval('return function(): ?string { };')));
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=7.1")')]
+  #[Test, Runtime(php: '>=7.1')]
   public function function_with_void_return_type() {
     Assert::equals(FunctionType::forName('function(): void'), typeof(eval('return function(): void { };')));
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
+  #[Test, Runtime(php: '>=8.0.0-dev')]
   public function php8_native_union_param_type() {
     Assert::equals(FunctionType::forName('function(string|int): var'), typeof(eval('return function(string|int $a) { };')));
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
+  #[Test, Runtime(php: '>=8.0.0-dev')]
   public function php8_native_union_return_type() {
     Assert::equals(FunctionType::forName('function(): string|int'), typeof(eval('return function(): string|int { };')));
   }

@@ -1,6 +1,6 @@
 <?php namespace util\unittest;
 
-use unittest\{Assert, Test, Values};
+use test\{Assert, Test, Values};
 use util\MimeType;
 
 class MimeTypeTest {

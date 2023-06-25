@@ -3,7 +3,7 @@
 use lang\archive\{Archive, ArchiveClassLoader};
 use lang\reflect\Package;
 use lang\{ClassLoader, ElementNotFoundException, IllegalArgumentException, XPClass};
-use unittest\{Assert, Expect, Test};
+use test\{After, Assert, Before, Expect, Test};
 use util\Objects;
 
 class PackageTest {
@@ -17,12 +17,6 @@ class PackageTest {
   
   protected $libraryLoader;
 
-  /**
-   * Setup this test. Registeres class loaders deleates for the 
-   * afforementioned XARs
-   *
-   * @return void
-   */
   #[Before]
   public function setUp() {
     $this->libraryLoader= ClassLoader::registerLoader(new ArchiveClassLoader(new Archive((new XPClass(self::class))
@@ -31,12 +25,6 @@ class PackageTest {
     )));
   }
   
-  /**
-   * Tear down this test. Removes classloader delegates registered 
-   * during setUp()
-   *
-   * @return void
-   */
   #[After]
   public function tearDown() {
     ClassLoader::removeLoader($this->libraryLoader);

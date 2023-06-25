@@ -2,7 +2,7 @@
 
 use io\{File, FileNotFoundException, Folder, IOException};
 use lang\{Environment, IllegalStateException};
-use unittest\{Assert, After, Before, Expect, Ignore, Test};
+use test\{After, Assert, Before, Expect, Ignore, Test};
 
 class FileIntegrationTest {
   const TESTDATA= 'Test';

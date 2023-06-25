@@ -1,14 +1,14 @@
 <?php namespace lang\unittest;
 
 use lang\IllegalArgumentException;
-use unittest\{Assert, Expect, Test};
+use test\{Assert, Expect, Test};
 
 class ArrayTest {
 
   #[Test]
   public function primitiveStringArrayValue() {
     $name= new Name('test');
-    $l= create('new lang.unittest.Lookup<string, string[]>', [
+    $l= create('new lang.unittest.Lookup<string, lang.unittest.Name[]>', [
       'name' => [$name]
     ]);
     Assert::equals([$name], $l->get('name'));

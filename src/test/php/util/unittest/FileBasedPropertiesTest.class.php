@@ -1,7 +1,7 @@
 <?php namespace util\unittest;
 
 use io\{IOException, TempFile};
-use unittest\{Assert, Expect, Test};
+use test\{Assert, Expect, Test};
 use util\Properties;
 
 class FileBasedPropertiesTest extends AbstractPropertiesTest {

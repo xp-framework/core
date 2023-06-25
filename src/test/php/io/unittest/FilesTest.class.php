@@ -2,7 +2,7 @@
 
 use io\streams\{MemoryInputStream, MemoryOutputStream, Streams};
 use io\{File, Files};
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 
 class FilesTest {
 

@@ -1,7 +1,7 @@
 <?php namespace util\unittest;
 
 use lang\IllegalArgumentException;
-use unittest\{Assert, Expect, Test};
+use test\{Assert, Expect, Test};
 use util\Currency;
 
 class CurrencyTest {

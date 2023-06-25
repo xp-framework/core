@@ -2,8 +2,8 @@
 
 use io\streams\{MemoryOutputStream, Streams};
 use lang\{Error, IllegalArgumentException, Throwable, XPClass, XPException};
-use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Action, Expect, Test};
+use test\verify\Runtime;
+use test\{Action, Assert, Expect, Test};
 
 class ExceptionsTest {
 
@@ -137,7 +137,7 @@ class ExceptionsTest {
     Assert::instance(XPException::class, Throwable::wrap($e));
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=7.0.0")')]
+  #[Test, Runtime(php: '>=7.0.0')]
   public function wrap_php7_exceptions() {
     $e= new \TypeError('Test');
     Assert::instance(Error::class, Throwable::wrap($e));

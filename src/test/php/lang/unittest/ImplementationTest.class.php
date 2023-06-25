@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{ElementNotFoundException, IllegalArgumentException, Primitive, Type, XPClass};
-use unittest\{Assert, Expect, Ignore, Test, Values};
+use test\{Assert, Expect, Ignore, Test, Values};
 
 class ImplementationTest {
 

@@ -3,10 +3,11 @@
 use lang\ClassFormatException;
 use lang\reflect\ClassParser;
 use lang\unittest\fixture\Namespaced;
-use unittest\{Assert, Expect, Interceptors, Test, Value, Values};
+use test\{Assert, Expect, Interceptors, Test, Value, Values};
 
 class AnnotationParsingTest extends AbstractAnnotationParsingTest {
-  const CONSTANT = 'constant';
+  const CONSTANT= 'constant';
+
   public static $exposed = 'exposed';
   protected static $hidden = 'hidden';
   private static $internal = 'internal';
@@ -482,7 +483,7 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
     );
   }
 
-  #[Test, Expect(['class' => ClassFormatException::class, 'withMessage' => '/Cannot access private static field .+AbstractAnnotationParsingTest::\$parentsInternal/'])]
+  #[Test, Expect(class: ClassFormatException::class, message: '/Cannot access private static field .+AbstractAnnotationParsingTest::\$parentsInternal/')]
   public function parent_private_static_member() {
     $this->parse('#[@value(parent::$parentsInternal)]');
   }

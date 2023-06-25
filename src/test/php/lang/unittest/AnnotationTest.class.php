@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{ElementNotFoundException, XPClass};
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 
 class AnnotationTest {
 

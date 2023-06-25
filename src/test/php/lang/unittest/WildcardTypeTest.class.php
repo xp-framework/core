@@ -12,7 +12,7 @@ use lang\{
   WildcardType,
   XPClass
 };
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 
 class WildcardTypeTest {
 
@@ -144,83 +144,83 @@ class WildcardTypeTest {
     ];
   }
 
-  #[Test, Values('nullableOfAny')]
+  #[Test, Values(from: 'nullableOfAny')]
   public function generic_vectors_are_instances_of_vector_of_any($value) {
     Assert::true(WildcardType::forName('lang.unittest.Nullable<?>')->isInstance($value->newInstance()));
   }
 
-  #[Test, Values('nullableOfAny')]
+  #[Test, Values(from: 'nullableOfAny')]
   public function generic_vectors_are_assignable_to_vector_of_any($value) {
     Assert::true(WildcardType::forName('lang.unittest.Nullable<?>')->isAssignableFrom($value));
   }
 
-  #[Test, Values('nullableOfAny')]
+  #[Test, Values(from: 'nullableOfAny')]
   public function generic_vectors_can_be_cast_to_vector_of_any($value) {
     $instance= $value->newInstance();
     Assert::equals($instance, WildcardType::forName('lang.unittest.Nullable<?>')->cast($instance));
   }
 
-  #[Test, Values('hashTableOfAny')]
+  #[Test, Values(from: 'hashTableOfAny')]
   public function generic_hashtables_are_not_instances_of_vector_of_any($value) {
     Assert::false(WildcardType::forName('lang.unittest.Nullable<?>')->isInstance($value->newInstance()));
   }
 
-  #[Test, Values('hashTableOfAny')]
+  #[Test, Values(from: 'hashTableOfAny')]
   public function generic_hashtables_are_not_assignable_to_vector_of_any($value) {
     Assert::false(WildcardType::forName('lang.unittest.Nullable<?>')->isAssignableFrom($value));
   }
 
-  #[Test, Expect(ClassCastException::class), Values('hashTableOfAny')]
+  #[Test, Expect(ClassCastException::class), Values(from: 'hashTableOfAny')]
   public function generic_hashtables_cannot_be_cast_to_vector_of_any($value) {
     WildcardType::forName('lang.unittest.Nullable<?>')->cast($value->newInstance());
   }
 
-  #[Test, Values('unGenericInstances')]
+  #[Test, Values(from: 'unGenericInstances')]
   public function ungeneric_instances_are_not_instances_of_vector_of_any($value) {
     Assert::false(WildcardType::forName('lang.unittest.Nullable<?>')->isInstance($value));
   }
 
-  #[Test, Values('unGenericTypes')]
+  #[Test, Values(from: 'unGenericTypes')]
   public function ungeneric_instances_are_not_assignable_to_vector_of_any($value) {
     Assert::false(WildcardType::forName('lang.unittest.Nullable<?>')->isAssignableFrom($value));
   }
 
-  #[Test, Expect(ClassCastException::class), Values('unGenericInstances')]
+  #[Test, Expect(ClassCastException::class), Values(from: 'unGenericInstances')]
   public function ungeneric_instancess_cannot_be_cast_to_vector_of_any($value) {
     WildcardType::forName('lang.unittest.Nullable<?>')->cast($value);
   }
 
-  #[Test, Values('hashTableOfAny')]
+  #[Test, Values(from: 'hashTableOfAny')]
   public function generic_hashtables_are_instances_of_hash_of_any_any($value) {
     Assert::true(WildcardType::forName('lang.unittest.Lookup<?, ?>')->isInstance($value->newInstance()));
   }
 
-  #[Test, Values('hashTableOfAny')]
+  #[Test, Values(from: 'hashTableOfAny')]
   public function generic_hashtables_are_assignable_to_of_hash_of_any_any($value) {
     Assert::true(WildcardType::forName('lang.unittest.Lookup<?, ?>')->isAssignableFrom($value));
   }
 
-  #[Test, Values('hashTableOfAny')]
+  #[Test, Values(from: 'hashTableOfAny')]
   public function generic_hashtables_are_instances_of_map_of_any_any($value) {
     Assert::true(WildcardType::forName('lang.unittest.IDictionary<?, ?>')->isInstance($value->newInstance()));
   }
 
-  #[Test, Values('hashTableOfAny')]
+  #[Test, Values(from: 'hashTableOfAny')]
   public function generic_hashtables_are_assignable_to_of_map_of_any_any($value) {
     Assert::true(WildcardType::forName('lang.unittest.IDictionary<?, ?>')->isAssignableFrom($value));
   }
 
-  #[Test, Values('nullableOfAny')]
+  #[Test, Values(from: 'nullableOfAny')]
   public function generic_vectors_are_not_instances_of_hash_of_any_any($value) {
     Assert::false(WildcardType::forName('lang.unittest.Lookup<?, ?>')->isInstance($value->newInstance()));
   }
 
-  #[Test, Values('nullableOfAny')]
+  #[Test, Values(from: 'nullableOfAny')]
   public function generic_vectors_are_not_assignable_to_hash_of_any_any($value) {
     Assert::false(WildcardType::forName('lang.unittest.Lookup<?, ?>')->isAssignableFrom($value));
   }
 
-  #[Test, Values('unGenericInstances')]
+  #[Test, Values(from: 'unGenericInstances')]
   public function ungeneric_instances_are_not_instances_of_hash_of_any_any($value) {
     Assert::false(WildcardType::forName('lang.unittest.Lookup<?, ?>')->isInstance($value));
   }

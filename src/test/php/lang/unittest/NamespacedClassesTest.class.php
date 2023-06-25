@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\reflect\Package;
-use unittest\{Assert, Before, Test};
+use test\{Assert, Before, Test};
 use util\collections\Vector;
 
 class NamespacedClassesTest {

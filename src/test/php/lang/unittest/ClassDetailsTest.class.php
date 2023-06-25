@@ -2,7 +2,7 @@
 
 use lang\ClassFormatException;
 use lang\reflect\ClassParser;
-use unittest\{Assert, Call, Expect, Fixture, Test, Value, Values};
+use test\{Assert, Call, Expect, Fixture, Test, Value, Values};
 
 class ClassDetailsTest {
 
@@ -393,7 +393,7 @@ class ClassDetailsTest {
     Assert::equals(['test' => null], $actual['class'][DETAIL_ANNOTATIONS]);
   }
 
-  #[Test, Expect(class: ClassFormatException::class, withMessage: 'Unexpected ","')]
+  #[Test, Expect(class: ClassFormatException::class, message: '/Unexpected ","/')]
   public function php8_attributes_cannot_have_multiple_arguments() {
     (new ClassParser())->parseDetails('<?php
       #[Value(1, 2)]
@@ -402,7 +402,7 @@ class ClassDetailsTest {
     ');
   }
 
-  #[Test, Expect(class: ClassFormatException::class, withMessage: 'Unexpected "," in eval')]
+  #[Test, Expect(class: ClassFormatException::class, message: '/Unexpected "," in eval/')]
   public function array_eval_cannot_have_multiple_arguments() {
     (new ClassParser())->parseDetails('<?php
       #[Value(eval: ["1", "2"])]
@@ -516,7 +516,7 @@ class ClassDetailsTest {
     Assert::equals(['fixture' => new Name('Test')], $details[1]['fixture'][DETAIL_ANNOTATIONS]);
   }
 
-  #[Test, Expect(['class' => ClassFormatException::class, 'withMessage' => '/Class does not have a parent/'])]
+  #[Test, Expect(class: ClassFormatException::class, message: '/Class does not have a parent/')]
   public function annotation_with_parent_reference_in_parentless_class() {
     (new ClassParser())->parseDetails('<?php
       class Test {

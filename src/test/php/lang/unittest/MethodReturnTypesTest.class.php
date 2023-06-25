@@ -1,8 +1,8 @@
 <?php namespace lang\unittest;
 
 use lang\{ArrayType, FunctionType, MapType, Nullable, Primitive, Type, TypeUnion, Value, XPClass};
-use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Action, Test, Values};
+use test\verify\Runtime;
+use test\{Action, Assert, Test, Values};
 
 class MethodReturnTypesTest extends MethodsTest {
 
@@ -70,7 +70,7 @@ class MethodReturnTypesTest extends MethodsTest {
     );
   }
 
-  #[Test, Values('types')]
+  #[Test, Values(from: 'types')]
   public function return_type_determined_via_apidoc($declaration, $type) {
     $this->assertReturnType(
       $type,
@@ -78,30 +78,30 @@ class MethodReturnTypesTest extends MethodsTest {
     );
   }
 
-  #[Test, Values('restrictions')]
+  #[Test, Values(from: 'restrictions')]
   public function return_type_determined_via_syntax($literal, $type) {
     $this->assertReturnType($type, $this->method('public function fixture(): '.$literal.' { }'));
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=7.1")')]
+  #[Test, Runtime(php: '>=7.1')]
   public function void_return_type() {
     $fixture= $this->type('{ public function fixture(): void { } }');
     $this->assertReturnType(Type::$VOID, $fixture->getMethod('fixture'));
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.1")')]
+  #[Test, Runtime(php: '>=8.1')]
   public function never_return_type() {
     $fixture= $this->type('{ public function fixture(): never { exit(); } }');
     $this->assertReturnType(Type::$NEVER, $fixture->getMethod('fixture'));
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=7.1")')]
+  #[Test, Runtime(php: '>=7.1')]
   public function nullable_return_type() {
     $fixture= $this->type('{ public function fixture(): ?string { } }');
     $this->assertReturnType(new Nullable(Primitive::$STRING), $fixture->getMethod('fixture'));
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.0")'), Values([['string|int'], ['string|false']])]
+  #[Test, Runtime(php: '>=8.0'), Values([['string|int'], ['string|false']])]
   public function return_type_determined_via_union_syntax($literal) {
     $this->assertReturnType(
       TypeUnion::forName($literal),
@@ -109,7 +109,7 @@ class MethodReturnTypesTest extends MethodsTest {
     );
   }
 
-  #[Test, Values('arrays')]
+  #[Test, Values(from: 'arrays')]
   public function specific_array_type_determined_via_apidoc_if_present($declaration, $type) {
     $this->assertReturnType(
       $type,
@@ -165,7 +165,7 @@ class MethodReturnTypesTest extends MethodsTest {
     Assert::equals($fixture, $fixture->getMethod('copy')->getReturnType());
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.0")')]
+  #[Test, Runtime(php: '>=8.0')]
   public function special_static_return_type_via_syntax() {
     $fixture= $this->type('{ public function fixture(): static { } }');
     Assert::equals($fixture, $fixture->getMethod('fixture')->getReturnType());
@@ -186,7 +186,7 @@ class MethodReturnTypesTest extends MethodsTest {
     Assert::equals('static', $method->getReturnTypeName(), 'name');
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=7.1")')]
+  #[Test, Runtime(php: '>=7.1')]
   public function apidoc_supersedes_void_type_restriction() {
     $method= $this->type('{ /** @return never */ public function fixture(): void { exit(); } }')->getMethod('fixture');
 

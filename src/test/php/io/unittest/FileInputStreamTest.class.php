@@ -2,7 +2,7 @@
 
 use io\streams\FileInputStream;
 use io\{FileNotFoundException, IOException, TempFile};
-use unittest\{Assert, After, Expect, PrerequisitesNotMetError, Test};
+use test\{After, Assert, Expect, PrerequisitesNotMetError, Test};
 
 class FileInputStreamTest {
   private $files= [];

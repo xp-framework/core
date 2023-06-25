@@ -2,7 +2,7 @@
 
 use lang\ElementNotFoundException;
 use lang\reflect\Method;
-use unittest\{Assert, Expect, Ignore, Test, Values};
+use test\{Assert, Expect, Ignore, Test, Values};
 
 class MethodBasicsTest extends MethodsTest {
 

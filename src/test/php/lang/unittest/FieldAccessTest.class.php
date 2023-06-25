@@ -1,8 +1,8 @@
 <?php namespace lang\unittest;
 
 use lang\{IllegalAccessException, IllegalArgumentException};
-use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Action, Expect, Test, Values};
+use test\verify\Runtime;
+use test\{Action, Assert, Expect, Test, Values};
 
 class FieldAccessTest extends FieldsTest {
 
@@ -72,7 +72,7 @@ class FieldAccessTest extends FieldsTest {
     $fixture->getField('fixture')->set($this, 'Test');
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.1")')]
+  #[Test, Runtime(php: '>=8.1')]
   public function can_modify_uninitialized_readonly_property() {
     $fixture= $this->type('{ public readonly string $fixture; }');
     $field= $fixture->getField('fixture');
@@ -82,13 +82,13 @@ class FieldAccessTest extends FieldsTest {
     Assert::equals('Modified', $field->get($instance));
   }
 
-  #[Test, Expect(IllegalAccessException::class), Action(eval: 'new RuntimeVersion(">=8.1")')]
+  #[Test, Expect(IllegalAccessException::class), Runtime(php: '>=8.1')]
   public function cannot_write_readonly_property_after_initialization() {
     $fixture= $this->type('{ public readonly int $fixture; public function __construct() { $this->fixture= 1; } }');
     $fixture->getField('fixture')->set($fixture->newInstance(), 2);
   }
 
-  #[Test, Expect(IllegalAccessException::class), Action(eval: 'new RuntimeVersion(">=8.1")')]
+  #[Test, Expect(IllegalAccessException::class), Runtime(php: '>=8.1')]
   public function cannot_write_readonly_property_after_initialization_via_argument_promotiom() {
     $fixture= $this->type('{ public function __construct(public readonly int $fixture) { } }');
     $fixture->getField('fixture')->set($fixture->newInstance(1), 2);

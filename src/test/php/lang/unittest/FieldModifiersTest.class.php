@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
-use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Action, Test};
+use test\verify\Runtime;
+use test\{Action, Assert, Test};
 
 class FieldModifiersTest extends FieldsTest {
 
@@ -25,7 +25,7 @@ class FieldModifiersTest extends FieldsTest {
     Assert::equals(MODIFIER_STATIC | MODIFIER_PUBLIC, $this->field('public static $fixture;')->getModifiers());
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.1")')]
+  #[Test, Runtime(php: '>=8.1')]
   public function readonly_modifier() {
     Assert::equals(MODIFIER_READONLY | MODIFIER_PUBLIC, $this->field('public readonly int $fixture;')->getModifiers());
   }

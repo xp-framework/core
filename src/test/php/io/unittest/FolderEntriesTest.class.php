@@ -2,16 +2,11 @@
 
 use io\{File, Folder, FolderEntries, Path};
 use lang\{Environment, IllegalArgumentException};
-use unittest\{Assert, Expect, Test, Values};
+use test\{After, Assert, Before, Expect, Test, Values};
 
 class FolderEntriesTest {
   private $folder;
 
-  /**
-   * Sets up test case - initializes temp directory in %TEMP%
-   *
-   * @return void
-   */
   #[Before]
   public function setUp() {
     $this->folder= new Folder(Environment::tempDir(), md5(uniqid()).'.xp');
@@ -19,11 +14,6 @@ class FolderEntriesTest {
     $this->folder->create();
   }
 
-  /**
-   * Deletes directory in %TEMP% (including any files inside) if existant
-   *
-   * @return void
-   */
   #[After]
   public function tearDown() {
     $this->folder->exists() && $this->folder->unlink();

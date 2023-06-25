@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{ClassNotFoundException, MethodNotImplementedException};
-use unittest\{After, Assert, Before, Expect, Test};
+use test\{After, Assert, Before, Expect, Test};
 
 abstract class ClassFromUriTest {
   protected static $base;

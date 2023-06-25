@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{IllegalArgumentException, Primitive, XPClass};
-use unittest\{Assert, Before, Expect, Test};
+use test\{Assert, Before, Expect, Test};
 
 abstract class AbstractDefinitionReflectionTest {
   protected $fixture= null;

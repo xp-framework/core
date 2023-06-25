@@ -2,12 +2,11 @@
 
 use Countable;
 use lang\{ArrayType, ClassNotFoundException, MapType, Nullable, Primitive, Type, TypeUnion, XPClass};
-use unittest\{Assert, Test, Values};
+use test\{Assert, Before, Expect, Test, Values};
 
 class TypeResolveTest extends BaseTest {
   private $context;
 
-  /** @return void */
   #[Before]
   public function setUp() {
     $this->context= [
@@ -73,7 +72,7 @@ class TypeResolveTest extends BaseTest {
     Assert::equals(new XPClass(Countable::class), Type::named('\\Countable', $this->context));
   }
 
-  #[Test, Expect(class: ClassNotFoundException::class, withMessage: '/NonExistant/')]
+  #[Test, Expect(class: ClassNotFoundException::class, message: '/NonExistant/')]
   public function resolve_non_existant() {
     Type::named('NonExistant', $this->context);
   }

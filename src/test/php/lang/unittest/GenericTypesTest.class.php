@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{GenericTypes, Primitive, XPClass};
-use unittest\{Assert, Before, Test};
+use test\{Assert, Before, Test};
 
 class GenericTypesTest {
   private static $filter;
@@ -14,7 +14,7 @@ class GenericTypesTest {
   #[Test]
   public function newType0_returns_literal() {
     Assert::equals(
-      "net\\xp_framework\\unittest\\core\\generics\\ArrayFilter\xb7\xb7\xfeint",
+      "lang\\unittest\\ArrayFilter\xb7\xb7\xfeint",
       (new GenericTypes())->newType0(self::$filter, [Primitive::$INT])
     );
   }

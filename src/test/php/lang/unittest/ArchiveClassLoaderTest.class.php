@@ -3,7 +3,7 @@
 use io\Files;
 use lang\archive\{Archive, ArchiveClassLoader};
 use lang\{ClassNotFoundException, ElementNotFoundException, XPClass};
-use unittest\{Assert, Expect, Test};
+use test\{Assert, Before, Expect, Test};
 
 class ArchiveClassLoaderTest {
   private $fixture;

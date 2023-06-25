@@ -1,8 +1,8 @@
 <?php namespace util\unittest;
 
 use lang\{Error, IllegalArgumentException};
-use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Expect, Test};
+use test\verify\Runtime;
+use test\{Assert, Expect, Test};
 use util\Comparator;
 use util\profiling\Timer;
 

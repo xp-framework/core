@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{ClassLoader, IllegalAccessException, XPClass};
-use unittest\{Assert, Before, Expect, Ignore, Test};
+use test\{Assert, Before, Expect, Ignore, Test};
 
 class PrivateAccessibilityTest {
   private static $fixture, $fixtureChild, $fixtureCtorChild;

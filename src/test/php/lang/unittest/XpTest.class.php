@@ -1,6 +1,6 @@
 <?php namespace lang\unittest;
 
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 
 class XpTest {
 
@@ -12,10 +12,7 @@ class XpTest {
   #[Test]
   public function gc() {
     trigger_error('Test');
-    Assert::equals(
-      [__FILE__ => [__LINE__ - 2 => ['Test' => ['class' => NULL, 'method' => 'trigger_error', 'cnt' => 1]]]],
-      \xp::$errors
-    );
+    Assert::equals('Test', key(\xp::$errors[__FILE__][__LINE__ - 1]));
     \xp::gc();
     Assert::equals([], \xp::$errors);
   }

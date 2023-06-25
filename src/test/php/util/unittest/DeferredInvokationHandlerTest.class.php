@@ -1,7 +1,7 @@
 <?php namespace util\unittest;
 
 use lang\{IllegalStateException, Runnable};
-use unittest\{Assert, Expect};
+use test\{Assert, Expect, Test};
 use util\{AbstractDeferredInvokationHandler, DeferredInitializationException};
 
 class DeferredInvokationHandlerTest {
@@ -19,7 +19,7 @@ class DeferredInvokationHandlerTest {
     Assert::equals($args, $handler->invoke($this, 'run', $args));
   }
 
-  #[Test, Expect(['class' => IllegalStateException::class, 'withMessage' => 'Test'])]
+  #[Test, Expect(class: IllegalStateException::class, message: 'Test')]
   public function throwing_runnable_invokation() {
     $handler= new class() extends AbstractDeferredInvokationHandler {
       public function initialize() {
@@ -31,7 +31,7 @@ class DeferredInvokationHandlerTest {
     $handler->invoke($this, 'run', ['Test']);
   }
 
-  #[Test, Expect(['class' => DeferredInitializationException::class, 'withMessage' => 'run'])]
+  #[Test, Expect(class: DeferredInitializationException::class, message: 'run')]
   public function initialize_returns_null() {
     $handler= new class() extends AbstractDeferredInvokationHandler {
       public function initialize() {
@@ -41,7 +41,7 @@ class DeferredInvokationHandlerTest {
     $handler->invoke($this, 'run', []);
   }
 
-  #[Test, Expect(['class' => DeferredInitializationException::class, 'withMessage' => 'run'])]
+  #[Test, Expect(class: DeferredInitializationException::class, message: 'run')]
   public function initialize_throws_exception() {
     $handler= new class() extends AbstractDeferredInvokationHandler {
       public function initialize() {

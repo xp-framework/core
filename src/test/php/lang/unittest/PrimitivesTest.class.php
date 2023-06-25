@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
-use lang\{IllegalArgumentException, Primitive, XPClass, Value};
-use unittest\{Assert, Expect, Test};
+use lang\{IllegalArgumentException, Primitive, Value, XPClass};
+use test\{Assert, Expect, Test};
 
 class PrimitivesTest {
 

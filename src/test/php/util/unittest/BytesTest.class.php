@@ -1,7 +1,7 @@
 <?php namespace util\unittest;
 
 use lang\{FormatException, IllegalArgumentException, IndexOutOfBoundsException};
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 use util\Bytes;
 
 class BytesTest {
@@ -318,7 +318,7 @@ class BytesTest {
     Assert::equals($i, sizeof($c)- 1);
   }
 
-  #[Test, Values('comparing')]
+  #[Test, Values(from: 'comparing')]
   public function compare($value, $expected) {
     Assert::equals($expected, (new Bytes('Test'))->compareTo($value));
   }

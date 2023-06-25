@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{Primitive, XPClass};
-use unittest\{Assert, Test};
+use test\{Assert, Before, Test};
 
 class InstanceReflectionTest {
   private $fixture;

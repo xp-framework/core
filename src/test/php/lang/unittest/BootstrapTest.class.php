@@ -1,19 +1,19 @@
 <?php namespace lang\unittest;
 
 use lang\{Process, Runtime, RuntimeOptions};
-use unittest\{Assert, Before, PrerequisitesNotMetError, Test};
+use test\verify\Condition;
+use test\{Assert, Test, Values};
 use util\Objects;
 
+#[Condition(assert: 'self::verifyProcessExecutionEnabled()')]
 class BootstrapTest {
 
-  #[Before]
+  /**
+   * Skips tests if process execution has been disabled or if running on Windows
+   * Server 2016, where there is a bug in process execution affecting our tests.
+   */
   public static function verifyProcessExecutionEnabled() {
-    if (Process::$DISABLED) {
-      throw new PrerequisitesNotMetError('Process execution disabled', null, ['enabled']);
-    }
-    if (strstr(php_uname('v'), 'Windows Server 2016')) {
-      throw new PrerequisitesNotMetError('Process execution bug on Windows Server 2016', null, ['enabled']);
-    }
+    return !Process::$DISABLED && !strstr(php_uname('v'), 'Windows Server 2016');
   }
 
   /**

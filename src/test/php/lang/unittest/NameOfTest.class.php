@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use Exception;
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 
 class NameOfTest {
 

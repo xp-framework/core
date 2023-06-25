@@ -1,11 +1,10 @@
 <?php namespace io\unittest;
 
 use io\streams\GzCompressingOutputStream;
+use test\verify\Condition;
 
+#[Condition(assert: 'in_array("zlib.*", stream_get_filters())')]
 class GzCompressingOutputStreamTest extends AbstractCompressingOutputStreamTest {
-
-  /** @return string */
-  protected function filter() { return 'zlib.*'; }
 
   /**
    * Get stream

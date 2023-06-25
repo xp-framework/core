@@ -1,8 +1,8 @@
 <?php namespace lang\unittest;
 
 use lang\{Environment, IllegalArgumentException, IllegalStateException};
-use unittest\Assert;
-use unittest\{After, Before, Expect, Test, Values};
+use test\Assert;
+use test\{After, Before, Expect, Test, Values};
 
 class EnvironmentTest {
   private static $set;

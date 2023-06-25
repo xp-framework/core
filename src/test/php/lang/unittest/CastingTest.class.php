@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{ClassCastException, CommandLine, Runnable, Value};
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 
 class CastingTest extends BaseTest implements Runnable {
 

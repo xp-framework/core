@@ -1,7 +1,7 @@
 <?php namespace io\unittest;
 
 use io\streams\{BufferedInputStream, MemoryInputStream};
-use unittest\{Assert, Test, Values};
+use test\{Assert, Test, Values};
 
 class BufferedInputStreamTest {
   const BUFFER= 'Hello World, how are you doing?';

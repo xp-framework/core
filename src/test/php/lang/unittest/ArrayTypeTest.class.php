@@ -8,7 +8,7 @@ use lang\{
   Type,
   XPClass
 };
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 
 class ArrayTypeTest {
 
@@ -133,7 +133,7 @@ class ArrayTypeTest {
     Assert::equals($expected, ArrayType::forName('string[]')->newInstance($value));
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Values('nonArrayValues')]
+  #[Test, Expect(IllegalArgumentException::class), Values(from: 'nonArrayValues')]
   public function newInstance_raises_exceptions_for_non_arrays($value) {
     ArrayType::forName('var[]')->newInstance($value);
   }
@@ -143,7 +143,7 @@ class ArrayTypeTest {
     Assert::equals($expected, ArrayType::forName('string[]')->cast($value));
   }
 
-  #[Test, Expect(ClassCastException::class), Values('nonArrayValues')]
+  #[Test, Expect(ClassCastException::class), Values(from: 'nonArrayValues')]
   public function cast_raises_exceptions_for_non_arrays($value) {
     ArrayType::forName('var[]')->cast($value);
   }
