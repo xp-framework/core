@@ -19,7 +19,7 @@ case $1 in
     result=0
     for file in `ls -1 src/test/config/unittest/*.ini`; do
       printf "\033[33;1mTesting %s\033[0m\n" $file
-      sh xp-run xp.unittest.Runner -cp src/test/php -cp src/test/resources $file || result=1
+      sh xp-run xp.test.Runner -cp src/test/php -cp src/test/resources $file || result=1
       echo
     done
     exit $result

@@ -37,7 +37,7 @@ test_script:
       foreach ($file in $files)
       {
         echo $file.Name
-        xp -m . xp.unittest.Runner $file.FullName
+        xp -m . xp.test.Runner $file.FullName
         if ($lastexitcode -gt 0) { $result = 1 }
       }
       if ($result -gt 0) { throw "Build failed" }
