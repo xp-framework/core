@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.8.0 / 2023-06-25
+
 ### Heads up!
 
 * Merged PR #331: Migrate to new testing library. This makes it easier
