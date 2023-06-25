@@ -2,9 +2,9 @@
 
 use io\streams\{MemoryOutputStream, StringWriter};
 use lang\Value;
-use net\xp_framework\unittest\Name;
 use unittest\actions\RuntimeVersion;
 use unittest\{Assert, Test, Values};
+use util\Comparison;
 
 class StringWriterTest {
 
@@ -38,11 +38,9 @@ class StringWriterTest {
       ['Test', 'Test'], ['', ''],
       ["[]", []], ["[1, 2, 3]", [1, 2, 3]],
       ["[\n  a => \"b\"\n  c => \"d\"\n]", ['a' => 'b', 'c' => 'd']],
-      ['Test', new Name('Test')],
       ['Test', new class() implements Value {
+        use Comparison;
         public function toString() { return 'Test'; }
-        public function hashCode() { return get_class($this); }
-        public function compareTo($value) { return 1; }
       }]
     ];
   }
@@ -57,7 +55,10 @@ class StringWriterTest {
   #[Test]
   public function write_supports_var_args() {
     $this->assertWritten('1two3four', function($fixture) {
-      $fixture->write(1, 'two', 3.0, new Name('four'));
+      $fixture->write(1, 'two', 3.0, new class() implements Value {
+        use Comparison;
+        public function toString() { return 'four'; }
+      });
     });
   }
 
@@ -78,7 +79,10 @@ class StringWriterTest {
   #[Test]
   public function writeLine_supports_var_args() {
     $this->assertWritten("1two3four\n", function($fixture) {
-      $fixture->writeLine(1, 'two', 3.0, new Name('four'));
+      $fixture->writeLine(1, 'two', 3.0, new class() implements Value {
+        use Comparison;
+        public function toString() { return 'four'; }
+      });
     });
   }
 
