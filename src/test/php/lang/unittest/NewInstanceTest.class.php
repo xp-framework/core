@@ -129,7 +129,7 @@ class NewInstanceTest {
     $o= newinstance('#[Test] lang.Runnable', [], [
       'run' => function() { }
     ]);
-    Assert::true(typeof($o)->hasAnnotation('test'));
+    Assert::true(Reflection::type($o)->annotations()->provides('lang.Test'));
   }
 
   #[Test]
@@ -153,7 +153,7 @@ class NewInstanceTest {
     $o= newinstance('#[Test] lang.unittest.Named', [], [
       'run' => function() { }
     ]);
-    Assert::true(typeof($o)->hasAnnotation('test'));
+    Assert::true(Reflection::type($o)->annotations()->provides('lang.unittest.Test'));
   }
 
   #[Test]

@@ -1,6 +1,6 @@
 <?php namespace lang\unittest;
 
-use lang\Primitive;
+use lang\{Primitive, Reflection};
 use test\{Assert, Test};
 
 class AnonymousInstanceTest {
@@ -20,7 +20,7 @@ class AnonymousInstanceTest {
   #[Test]
   public function anonymous_generic_with_annotations() {
     $filter= newinstance('#[Anon] lang.unittest.Nullable<string>', [], []);
-    Assert::true(typeof($filter)->hasAnnotation('anon'));
+    Assert::true(Reflection::type($filter)->annotations()->provides('anon')); // FIXME: Should be lang.unittest.Anon
   }
 
   #[Test]

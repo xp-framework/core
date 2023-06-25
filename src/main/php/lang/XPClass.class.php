@@ -380,61 +380,6 @@ class XPClass extends Type {
     return $r;
   }
 
-  /**
-   * Check whether an annotation exists
-   *
-   * @param   string name
-   * @param   string key default NULL
-   * @return  bool
-   */
-  public function hasAnnotation($name, $key= null): bool {
-    $details= self::detailsForClass($this->name);
-    
-    return $details && ($key 
-      ? array_key_exists($key, $details['class'][DETAIL_ANNOTATIONS][$name] ?? []) 
-      : array_key_exists($name, $details['class'][DETAIL_ANNOTATIONS] ?? [])
-    );
-  }
-
-  /**
-   * Retrieve annotation by name
-   *
-   * @param   string name
-   * @param   string key default NULL
-   * @return  var
-   * @throws  lang.ElementNotFoundException
-   */
-  public function getAnnotation($name, $key= null) {
-    $details= self::detailsForClass($this->name);
-    if (!$details || !($key 
-      ? array_key_exists($key, $details['class'][DETAIL_ANNOTATIONS][$name] ?? []) 
-      : array_key_exists($name, $details['class'][DETAIL_ANNOTATIONS] ?? [])
-    )) {
-      throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
-    }
-
-    return ($key 
-      ? $details['class'][DETAIL_ANNOTATIONS][$name][$key] 
-      : $details['class'][DETAIL_ANNOTATIONS][$name]
-    );
-  }
-
-  /** Retrieve whether a method has annotations */
-  public function hasAnnotations(): bool {
-    $details= self::detailsForClass($this->name);
-    return $details ? !empty($details['class'][DETAIL_ANNOTATIONS]) : false;
-  }
-
-  /**
-   * Retrieve all of a method's annotations
-   *
-   * @return  array annotations
-   */
-  public function getAnnotations() {
-    $details= self::detailsForClass($this->name);
-    return $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
-  }
-  
   /** Retrieve the class loader a class was loaded with */
   public function getClassLoader(): IClassLoader {
     return self::_classLoaderFor($this->name);
@@ -538,8 +483,11 @@ class XPClass extends Type {
     if (!$this->isGenericDefinition()) {
       throw new IllegalStateException('Class '.$this->name.' is not a generic definition');
     }
+
+    $details= XPClass::detailsForClass($this->name);
+    $annotations= $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
     $components= [];
-    foreach (explode(',', $this->getAnnotation('generic', 'self')) as $name) {
+    foreach (explode(',', $annotations['generic']['self']) as $name) {
       $components[]= ltrim($name);
     }
     return $components;
@@ -551,7 +499,9 @@ class XPClass extends Type {
    * @return  bool
    */
   public function isGenericDefinition(): bool {
-    return $this->hasAnnotation('generic', 'self');
+    $details= XPClass::detailsForClass($this->name);
+    $annotations= $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
+    return isset($annotations['generic']['self']);
   }
 
   /**

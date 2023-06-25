@@ -28,7 +28,8 @@ class GenericTypes {
   public function newType0($base, $arguments) {
 
     // Verify
-    $annotations= $base->getAnnotations();
+    $details= XPClass::detailsForClass($base->getName());
+    $annotations= $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
     if (!isset($annotations['generic']['self'])) {
       throw new IllegalStateException('Class '.$base->name.' is not a generic definition');
     }

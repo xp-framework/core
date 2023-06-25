@@ -24,7 +24,7 @@ class BrokenAnnotationTest {
   #[Test, Runtime(php: '<8.0'), Expect(class: ClassFormatException::class, message: '/Unterminated annotation/')]
   public function no_ending_bracket() {
     try {
-      XPClass::forName('lang.unittest.NoEndingBracket')->getAnnotations();
+      XPClass::detailsForClass('lang.unittest.NoEndingBracket');
     } finally {
       \xp::gc(); // Strip deprecation warning
     }
