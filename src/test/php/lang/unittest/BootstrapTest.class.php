@@ -2,7 +2,7 @@
 
 use lang\{Process, Runtime, RuntimeOptions};
 use test\verify\Condition;
-use test\{Assert, PrerequisitesNotMetError, Test, Values};
+use test\{Assert, Test, Values};
 use util\Objects;
 
 #[Condition(assert: 'self::verifyProcessExecutionEnabled()')]
