@@ -2,7 +2,6 @@
 
 use lang\reflect\ClassParser;
 use lang\{ClassFormatException, XPClass};
-use test\verify\Runtime;
 use test\{Action, Assert, Expect, Test};
 
 class BrokenAnnotationTest {
@@ -13,7 +12,7 @@ class BrokenAnnotationTest {
    * @param  string $input
    * @return [:var]
    */
-  protected function parse($input) {
+  private function parse($input) {
     try {
       return (new ClassParser())->parseAnnotations($input, nameof($this));
     } finally {
@@ -21,13 +20,9 @@ class BrokenAnnotationTest {
     }
   }
 
-  #[Test, Runtime(php: '<8.0'), Expect(class: ClassFormatException::class, message: '/Unterminated annotation/')]
+  #[Test, Expect(class: ClassFormatException::class, message: '/Unterminated annotation/')]
   public function no_ending_bracket() {
-    try {
-      XPClass::detailsForClass('lang.unittest.NoEndingBracket');
-    } finally {
-      \xp::gc(); // Strip deprecation warning
-    }
+    $this->parse("#[@attribute\n");
   }
 
   #[Test, Expect(class: ClassFormatException::class, message: '/Parse error/')]
