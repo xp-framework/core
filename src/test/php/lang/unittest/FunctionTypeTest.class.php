@@ -1,6 +1,5 @@
 <?php namespace lang\unittest;
 
-use lang\reflect\TargetInvocationException;
 use lang\{
   ArrayType,
   ClassCastException,
@@ -435,8 +434,8 @@ class FunctionTypeTest extends BaseTest {
     $t->invoke($value);
   }
 
-  #[Test, Expect(TargetInvocationException::class)]
-  public function invoke_wraps_exceptions_in_TargetInvocationExceptions() {
+  #[Test, Expect(IllegalArgumentException::class)]
+  public function invoke_raises() {
     $t= new FunctionType([], Primitive::$VOID);
     $t->invoke(function() { throw new \lang\IllegalArgumentException('Test'); }, []);
   }

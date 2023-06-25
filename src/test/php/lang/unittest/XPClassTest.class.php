@@ -1,6 +1,6 @@
 <?php namespace lang\unittest;
 
-use lang\reflect\{Constructor, Package, TargetInvocationException};
+use lang\reflect\Package;
 use lang\{
   ClassLoader,
   ClassNotFoundException,

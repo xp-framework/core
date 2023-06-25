@@ -1,5 +1,7 @@
 <?php namespace lang;
 
+use Throwable as Any;
+
 /**
  * Represents function types
  *
@@ -303,7 +305,7 @@ class FunctionType extends Type {
    * @param   var[] $args
    * @return  var
    * @throws  lang.IllegalArgumentException in case the passed function is not an instance of this type
-   * @throws  lang.reflect.TargetInvocationException for any exception raised from the invoked function
+   * @throws  lang.Throwable for any exception raised from the invoked function
    */
   public function invoke($func, $args= []) {
     $closure= $this->verified($func, function($m) use($func) { throw new IllegalArgumentException(sprintf(
@@ -314,8 +316,8 @@ class FunctionType extends Type {
     )); });
     try {
       return $closure(...$args);
-    } catch (Throwable $e) {
-      throw new \lang\reflect\TargetInvocationException($this->getName(), $e);
+    } catch (Any $e) {
+      throw Throwable::wrap($e);
     }
   }
 }
