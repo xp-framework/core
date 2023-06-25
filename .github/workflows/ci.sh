@@ -21,7 +21,7 @@ case $1 in
     result=0
     for file in `ls -1 src/test/config/unittest/*.ini`; do
       printf "\033[33;1mTesting %s\033[0m\n" $file
-      (grep ^class $file | cut -d '"' -f 2 | xargs sh xp-run xp.test.Runner) || result=1
+      (grep ^class $file | cut -d '"' -f 2 | xargs sh xp-run xp.test.Runner -r Dots) || result=1
       echo
     done
     exit $result
