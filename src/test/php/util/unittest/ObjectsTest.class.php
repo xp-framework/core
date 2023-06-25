@@ -1,11 +1,10 @@
 <?php namespace util\unittest;
 
 use lang\Value;
-use net\xp_framework\unittest\{BaseTest, Name};
 use unittest\{Assert, Test, Values};
-use util\Objects;
+use util\{Objects, Comparison};
 
-class ObjectsTest extends BaseTest {
+class ObjectsTest {
   private static $func;
 
   static function __static() {
@@ -46,7 +45,10 @@ class ObjectsTest extends BaseTest {
     return [
       [new ValueObject('')],
       [new ValueObject('Test')],
-      [new Name('')]
+      [new class() implements Value {
+        use Comparison;
+        public function toString() { return 'Test'; }
+      }]
     ];
   }
 
@@ -108,7 +110,7 @@ class ObjectsTest extends BaseTest {
 
   #[Test]
   public function natives_with_different_members_are_not_equal() {
-    Assert::false(Objects::equal(new \ReflectionClass(self::class), new \ReflectionClass(parent::class)));
+    Assert::false(Objects::equal(new \ReflectionClass(self::class), new \ReflectionClass(Objects::class)));
   }
 
   #[Test]
@@ -173,7 +175,7 @@ class ObjectsTest extends BaseTest {
 
   #[Test, Values(['source' => 'values'])]
   public function value_not_equal_to_other_values($val) {
-    Assert::false(Objects::equal(new Name('Binford 6100: More Power!'), $val));
+    Assert::false(Objects::equal(new ValueObject('Binford 6100: More Power!'), $val));
   }
 
   #[Test]
@@ -195,11 +197,6 @@ class ObjectsTest extends BaseTest {
   }
 
   #[Test, Values([['a', 'a', 0], ['a', 'b', -1], ['b', 'a', 1],])]
-  public function compare_values($a, $b, $expected) {
-    Assert::equals($expected, Objects::compare(new Name($a), new Name($b)));
-  }
-
-  #[Test, Values([['a', 'a', 0], ['a', 'b', -1], ['b', 'a', 1],])]
   public function compare_objects($a, $b, $expected) {
     Assert::equals($expected, Objects::compare(new ValueObject($a), new ValueObject($b)));
   }
@@ -209,7 +206,7 @@ class ObjectsTest extends BaseTest {
     Assert::equals(0, Objects::compare($val, clone $val));
   }
 
-  #[Test, Values([[self::class, self::class, 0], [self::class, parent::class, 1], [parent::class, self::class, -1]])]
+  #[Test, Values([[self::class, self::class, 0], [self::class, Objects::class, 1], [Objects::class, self::class, -1]])]
   public function compare_natives($a, $b, $expected) {
     Assert::equals($expected, Objects::compare(new \ReflectionClass($a), new \ReflectionClass($b)));
   }
