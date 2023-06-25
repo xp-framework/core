@@ -8,7 +8,7 @@ class ArrayTest {
   #[Test]
   public function primitiveStringArrayValue() {
     $name= new Name('test');
-    $l= create('new lang.unittest.Lookup<string, string[]>', [
+    $l= create('new lang.unittest.Lookup<string, lang.unittest.Name[]>', [
       'name' => [$name]
     ]);
     Assert::equals([$name], $l->get('name'));

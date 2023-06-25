@@ -1,20 +1,20 @@
 <?php namespace lang\unittest;
 
 use lang\IllegalArgumentException;
-use test\{Assert, Expect, Test};
+use test\{Assert, Before, Expect, Test};
 
-class RuntimeTest {
+class RuntimeGenericsTest {
   private $fixture;
   
   #[Before]
   public function setUp() {
-    $this->fixture= create('new lang.unittest.Lookup<string, lang.unittest.RuntimeTest>()');
+    $this->fixture= create('new lang.unittest.Lookup<string, lang.unittest.RuntimeGenericsTest>()');
   }
 
   #[Test]
   public function name() {
     Assert::equals(
-      'lang.unittest.Lookup<string,lang.unittest.RuntimeTest>',
+      'lang.unittest.Lookup<string,lang.unittest.RuntimeGenericsTest>',
       typeof($this->fixture)->getName()
     );
   }
@@ -22,7 +22,7 @@ class RuntimeTest {
   #[Test]
   public function literal() {
     Assert::equals(
-      "net\\xp_framework\\unittest\\core\\generics\\Lookup\xb7\xb7\xfestring\xb8net\xa6xp_framework\xa6unittest\xa6core\xa6generics\xa6RuntimeTest",
+      "lang\\unittest\\Lookup\xb7\xb7\xfestring\xb8lang\xa6unittest\xa6RuntimeGenericsTest",
       typeof($this->fixture)->literal()
     );
   }
