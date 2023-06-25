@@ -1,6 +1,6 @@
 <?php namespace lang\unittest;
 
-use lang\ClassLoader;
+use lang\{ClassLoader, Reflection};
 use test\{Assert, Before, Test};
 
 class ReferencesTest {
@@ -79,9 +79,7 @@ class ReferencesTest {
 
   #[Test]
   public function returnNewObjectViaMethodInvoke() {
-    $class= \lang\XPClass::forName('lang.unittest.AnonymousFactory');
-    $factory= $class->getMethod('factory');
-    $object= $factory->invoke($instance= NULL);
+    $object= Reflection::type(AnonymousNewInstanceFactory::class)->method('factory')->invoke(null);
     $value= ReferencesTest::registry('list', $r= NULL);
 
     $this->assertReference($object, $value);

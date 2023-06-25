@@ -1,7 +1,17 @@
 <?php namespace lang\unittest;
 
 use lang\reflect\TargetInvocationException;
-use lang\{ArrayType, ClassCastException, FunctionType, IllegalArgumentException, MapType, Primitive, Type, XPClass};
+use lang\{
+  ArrayType,
+  ClassCastException,
+  FunctionType,
+  IllegalArgumentException,
+  MapType,
+  Primitive,
+  Type,
+  XPClass,
+  Reflection
+};
 use test\verify\Condition;
 use test\{Assert, Expect, Test, Values};
 

@@ -1,6 +1,7 @@
 <?php namespace lang\unittest;
 
-use lang\{ClassLoader, ClassNotFoundException, Runnable, Throwable, XPClass};
+use lang\reflection\{Method, Property};
+use lang\{ClassLoader, ClassNotFoundException, Runnable, Throwable, XPClass, Reflection};
 use test\verify\Runtime;
 use test\{Action, Assert, Expect, Test, Values};
 
@@ -57,25 +58,27 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
   }
 
   #[Test]
-  public function field_exists() {
+  public function property_exists() {
     $class= $this->define([], '{ public $fixture= null; }');
-    Assert::true($class->hasField('fixture'));
+    Assert::instance(Property::class, Reflection::type($class)->property('fixture'));
   }
 
   #[Test]
   public function method_exists() {
     $class= $this->define([], '{ public function fixture() { } }');
-    Assert::true($class->hasMethod('fixture'));
+    Assert::instance(Method::class, Reflection::type($class)->method('fixture'));
+  }
+
+  #[Test]
+  public function parents_property_exists() {
+    $class= $this->define(['parent' => Throwable::class]);
+    Assert::instance(Property::class, Reflection::type($class)->property('message'));
   }
 
   #[Test]
   public function parents_method_exists() {
-    Assert::true($this->define(['parent' => Throwable::class])->hasMethod('toString'));
-  }
-
-  #[Test]
-  public function parents_field_exists() {
-    Assert::true($this->define(['parent' => Throwable::class])->hasField('message'));
+    $class= $this->define(['parent' => Throwable::class]);
+    Assert::instance(Method::class, Reflection::type($class)->method('toString'));
   }
 
   #[Test]
@@ -84,7 +87,7 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
       public static $initializerCalled= false;
       static function __static() { self::$initializerCalled= true; }
     }');
-    Assert::true($class->getField('initializerCalled')->get(null));
+    Assert::true(Reflection::of($class)->property('initializerCalled')->get(null));
   }
 
   #[Test, Expect(ClassNotFoundException::class)]
@@ -105,47 +108,43 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
   #[Test]
   public function closure_map_style_declaring_field() {
     $class= $this->define([], ['fixture' => null]);
-    Assert::true($class->hasField('fixture'));
+    Assert::instance(Property::class, Reflection::type($class)->property('fixture'));
   }
 
   #[Test]
   public function closure_map_style_declaring_method() {
     $class= $this->define([], ['fixture' => function() { }]);
-    Assert::true($class->hasMethod('fixture'));
+    Assert::instance(Method::class, Reflection::type($class)->method('fixture'));
   }
 
   #[Test]
   public function closure_map_field_access() {
     $class= $this->define([], ['fixture' => 'Test']);
-    $instance= $class->newInstance();
-    Assert::equals('Test', $class->getField('fixture')->get($instance));
+    Assert::equals('Test', $class->newInstance()->fixture);
   }
 
   #[Test]
   public function closure_map_method_invocation() {
     $class= $this->define([], ['fixture' => function($a, $b) { return [$this, $a, $b]; }]);
     $instance= $class->newInstance();
-    Assert::equals([$instance, 1, 2], $class->getMethod('fixture')->invoke($instance, [1, 2]));
+    Assert::equals([$instance, 1, 2], $instance->fixture(1, 2));
   }
 
   #[Test]
   public function closure_with_string_parameter_type() {
     $class= $this->define([], ['fixture' => function(string $a) { return $a; }]);
-    $instance= $class->newInstance();
-    Assert::equals('1', $class->getMethod('fixture')->invoke($instance, [1]));
+    Assert::equals('1', $class->newInstance()->fixture(1));
   }
 
   #[Test]
   public function closure_with_string_return_type() {
     $class= $this->define([], ['fixture' => function($a): string { return $a; }]);
-    $instance= $class->newInstance();
-    Assert::equals('1', $class->getMethod('fixture')->invoke($instance, [1]));
+    Assert::equals('1', $class->newInstance()->fixture(1));
   }
 
   #[Test, Runtime(php: '>=7.1')]
   public function closure_with_void_return_type() {
-    $class= $this->define([], ['fixture' => function($a): void { }]);
-    $instance= $class->newInstance();
-    Assert::null($class->getMethod('fixture')->invoke($instance, [1]));
+    $class= $this->define([], ['fixture' => function(): void { }]);
+    Assert::null($class->newInstance()->fixture());
   }
 }

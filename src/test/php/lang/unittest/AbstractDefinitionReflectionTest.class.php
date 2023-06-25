@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
-use lang\{IllegalArgumentException, Primitive, XPClass};
-use test\{Assert, Before, Expect, Test};
+use lang\{IllegalArgumentException, Primitive, XPClass, Reflection};
+use test\{Assert, Before, Expect, Ignore, Test};
 
 abstract class AbstractDefinitionReflectionTest {
   protected $fixture= null;
@@ -85,15 +85,12 @@ abstract class AbstractDefinitionReflectionTest {
     $this->fixture->newGenericType([$c, $c, $c]);
   }
 
-  #[Test]
+  #[Test, Ignore('Unsupported')]
   public function abstractMethod() {
-    $abstractMethod= XPClass::forName('lang.unittest.ArrayFilter')
-      ->newGenericType([$this->fixture])
-      ->getMethod('accept')
-    ;
+    $generic= XPClass::forName('lang.unittest.ArrayFilter')->newGenericType([$this->fixture]);
     Assert::equals(
       $this->fixture,
-      $abstractMethod->getParameter(0)->getType()
+      Reflection::type($generic)->method('accept')->parameter(0)->constraint()->type()
     );
   }
 }

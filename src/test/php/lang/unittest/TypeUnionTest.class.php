@@ -10,7 +10,8 @@ use lang\{
   Type,
   TypeUnion,
   XPClass,
-  Nullable
+  Nullable,
+  Reflection
 };
 use test\verify\Runtime;
 use test\{Action, Assert, Expect, Test, Values};
@@ -193,7 +194,7 @@ class TypeUnionTest {
     $f= eval('return new class() { public int|string $fixture; };');
     Assert::equals(
       new TypeUnion([Primitive::$INT, Primitive::$STRING]),
-      typeof($f)->getField('fixture')->getType()
+      Reflection::type($f)->property('fixture')->constraint()->type()
     );
   }
 
@@ -202,7 +203,7 @@ class TypeUnionTest {
     $f= eval('return new class() { public function fixture(int|string $arg) { } };');
     Assert::equals(
       new TypeUnion([Primitive::$INT, Primitive::$STRING]),
-      typeof($f)->getMethod('fixture')->getParameter(0)->getType()
+      Reflection::type($f)->method('fixture')->parameter(0)->constraint()->type()
     );
   }
 
@@ -211,7 +212,7 @@ class TypeUnionTest {
     $f= eval('return new class() { public function fixture(): int|string { } };');
     Assert::equals(
       new TypeUnion([Primitive::$INT, Primitive::$STRING]),
-      typeof($f)->getMethod('fixture')->getReturnType()
+      Reflection::type($f)->method('fixture')->returns()->type()
     );
   }
 
@@ -220,26 +221,26 @@ class TypeUnionTest {
     $f= eval('return new class() { public function fixture(int|string|null $arg) { } };');
     Assert::equals(
       new Nullable(new TypeUnion([Primitive::$INT, Primitive::$STRING])),
-      typeof($f)->getMethod('fixture')->getParameter(0)->getType()
+      Reflection::type($f)->method('fixture')->parameter(0)->constraint()->type()
     );
   }
 
   #[Test, Runtime(php: '>=8.0.0-dev')]
   public function php8_native_nullable_union_field_type_name() {
     $f= eval('return new class() { public int|string|null $fixture; };');
-    Assert::equals('?', typeof($f)->getField('fixture')->getTypeName()[0]);
+    Assert::instance(Nullable::class, Reflection::type($f)->property('fixture')->constraint()->type());
   }
 
   #[Test, Runtime(php: '>=8.0.0-dev')]
   public function php8_native_nullable_union_param_type_name() {
     $f= eval('return new class() { public function fixture(int|string|null $arg) { } };');
-    Assert::equals('?', typeof($f)->getMethod('fixture')->getParameter(0)->getTypeName()[0]);
+    Assert::instance(Nullable::class, Reflection::type($f)->method('fixture')->parameter(0)->constraint()->type());
   }
 
   #[Test, Runtime(php: '>=8.0.0-dev')]
   public function php8_native_nullable_union_return_type_name() {
     $f= eval('return new class() { public function fixture(): int|string|null { } };');
-    Assert::equals('?', typeof($f)->getMethod('fixture')->getReturnTypeName()[0]);
+    Assert::instance(Nullable::class, Reflection::type($f)->method('fixture')->returns()->type());
   }
 
   #[Test, Runtime(php: '>=8.0.0-dev')]
@@ -255,7 +256,7 @@ class TypeUnionTest {
     ));
     Assert::equals(
       new TypeUnion([$t, new XPClass(Name::class), new XPClass(\Countable::class), new XPClass(\ArrayObject::class)]),
-      $t->getField('fixture')->getType()
+      Reflection::type($t)->property('fixture')->constraint()->type()
     );
   }
 }

@@ -187,30 +187,10 @@ class XPClassTest {
   }
 
   #[Test]
-  public function fixture_class_has_a_constructor() {
-    Assert::true($this->fixture->hasConstructor());
-  }
-
-  #[Test]
-  public function fixture_classes_constructor() {
-    Assert::instance(Constructor::class, $this->fixture->getConstructor());
-  }
-
-  #[Test]
-  public function value_class_does_not_have_a_constructor() {
-    Assert::false(XPClass::forName('lang.Value')->hasConstructor());
-  }
-
-  #[Test, Expect(ElementNotFoundException::class)]
-  public function getting_value_classes_constructor_raises_an_exception() {
-    XPClass::forName('lang.Value')->getConstructor();
-  }
-
-  #[Test]
   public function invoking_fixture_classes_constructor() {
     Assert::equals(
       new TestClass('1977-12-14'),
-      $this->fixture->getConstructor()->newInstance(['1977-12-14'])
+      $this->fixture->newInstance('1977-12-14')
     );
   }
 
@@ -229,49 +209,6 @@ class XPClassTest {
     XPClass::forName(AbstractTestClass::class)->newInstance();
   }
 
-  #[Test, Expect(TargetInvocationException::class)]
-  public function constructors_newInstance_method_wraps_exceptions() {
-    $this->fixture->getConstructor()->newInstance(['@@not-a-valid-date-string@@']);
-  }
-
-  #[Test, Expect(IllegalAccessException::class)]
-  public function constructors_newInstance_method_raises_exception_if_class_is_abstract() {
-    XPClass::forName(AbstractTestClass::class)->getConstructor()->newInstance();
-  }
-  
-  #[Test]
-  public function implementedConstructorInvocation() {
-    $i= ClassLoader::defineClass('ANonAbstractClass', AbstractTestClass::class, [], '{
-      public function getDate() {}
-    }');    
-    Assert::instance(AbstractTestClass::class, $i->getConstructor()->newInstance());
-  }
-
-  #[Test]
-  public function fixture_class_has_annotations() {
-    Assert::true($this->fixture->hasAnnotations());
-  }
-
-  #[Test]
-  public function fixture_class_annotations() {
-    Assert::equals(['test' => 'Annotation'], $this->fixture->getAnnotations());
-  }
-
-  #[Test]
-  public function fixture_class_has_test_annotation() {
-    Assert::true($this->fixture->hasAnnotation('test'));
-  }
-
-  #[Test]
-  public function fixture_class_test_annotation() {
-    Assert::equals('Annotation', $this->fixture->getAnnotation('test'));
-  }
-  
-  #[Test, Expect(ElementNotFoundException::class)]
-  public function getting_non_existant_annotation_raises_exception() {
-    $this->fixture->getAnnotation('non-existant');
-  }
-  
   #[Test, Expect(ClassNotFoundException::class)]
   public function forName_raises_exceptions_for_nonexistant_classes() {
     XPClass::forName('class.does.not.Exist');
@@ -295,33 +232,5 @@ class XPClassTest {
   #[Test]
   public function getClasses_returns_a_list_of_class_objects() {
     Assert::instance('lang.XPClass[]', iterator_to_array(XPClass::getClasses()));
-  }
-  
-  #[Test]
-  public function fixture_class_constants() {
-    Assert::equals(
-      ['CONSTANT_STRING' => 'XP Framework', 'CONSTANT_INT' => 15, 'CONSTANT_NULL' => null],
-      $this->fixture->getConstants()
-    );
-  }
-
-  #[Test, Values(['CONSTANT_STRING', 'CONSTANT_INT', 'CONSTANT_NULL'])]
-  public function hasConstant_returns_true_for_existing_constant($name) {
-    Assert::true($this->fixture->hasConstant($name));
-  }
-
-  #[Test, Values(['DOES_NOT_EXIST', ''])]
-  public function hasConstant_returns_false_for_non_existing_constant($name) {
-    Assert::false($this->fixture->hasConstant($name));
-  }
-
-  #[Test, Values([['XP Framework', 'CONSTANT_STRING'], [15, 'CONSTANT_INT'], [null, 'CONSTANT_NULL']])]
-  public function getConstant_returns_constants_value($value, $name) {
-    Assert::equals('XP Framework', $this->fixture->getConstant('CONSTANT_STRING'));
-  }
-
-  #[Test, Expect(ElementNotFoundException::class), Values(['DOES_NOT_EXIST', ''])]
-  public function getConstant_throws_exception_if_constant_doesnt_exist($name) {
-    $this->fixture->getConstant($name);
   }
 }

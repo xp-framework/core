@@ -1,9 +1,9 @@
 <?php namespace lang\unittest;
 
 use ReturnTypesWillChange;
-use lang\Runtime as XPRuntime;
 use lang\reflect\Package;
 use lang\{ClassFormatException, ClassLoader, IllegalAccessException, Process, Runnable, Value};
+use lang\{Runtime as XPRuntime, Reflection};
 use test\verify\{Condition, Runtime};
 use test\{Assert, Expect, Test, Values};
 use util\Objects;
@@ -74,7 +74,7 @@ class NewInstanceTest {
   #[Test]
   public function new_class_with_annotations() {
     $o= newinstance('#[Test] lang.unittest.Name', ['Test']);
-    Assert::true(typeof($o)->hasAnnotation('test'));
+    Assert::equals('test', Reflection::type($o)->annotation('lang.unittest.Test')->name());
   }
 
   #[Test]
@@ -82,7 +82,7 @@ class NewInstanceTest {
     $o= newinstance(Name::class, ['Test'], [
       '#[Test] fixture' => null
     ]);
-    Assert::true(typeof($o)->getField('fixture')->hasAnnotation('test'));
+    Assert::equals('test', Reflection::type($o)->property('fixture')->annotation('lang.unittest.Test')->name());
   }
 
   #[Test]
@@ -90,7 +90,7 @@ class NewInstanceTest {
     $o= newinstance(Name::class, ['Test'], [
       '#[Test] fixture' => function() { }
     ]);
-    Assert::true(typeof($o)->getMethod('fixture')->hasAnnotation('test'));
+    Assert::equals('test', Reflection::type($o)->method('fixture')->annotation('lang.unittest.Test')->name());
   }
 
   #[Test]

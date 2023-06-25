@@ -247,14 +247,21 @@ class ClassParser {
       $class= XPClass::forName($this->type($tokens, $i, $context, $imports));
       $i+= 2;
       if (T_VARIABLE === $tokens[$i][0]) {
-        $field= $class->getField(substr($tokens[$i][1], 1));
+        $name= substr($tokens[$i][1], 1);
+        $reflect= $class->reflect();
+        if (!$reflect->hasProperty($name)) {
+          throw new ElementNotFoundException('No such field "'.$name.'" in class '.$class->getName());
+        }
+        $field= $class->reflect()->getProperty($name);
         $m= $field->getModifiers();
         if ($m & MODIFIER_PUBLIC) {
-          return $field->get(null);
+          return $field->getValue(null);
         } else if (($m & MODIFIER_PROTECTED) && $class->isAssignableFrom($context['self'])) {
-          return $field->setAccessible(true)->get(null);
+          $field->setAccessible(true);
+          return $field->getValue(null);
         } else if (($m & MODIFIER_PRIVATE) && $class->getName() === $context['self']) {
-          return $field->setAccessible(true)->get(null);
+          $field->setAccessible(true);
+          return $field->getValue(null);
         } else {
           throw new IllegalAccessException(sprintf(
             'Cannot access %s field %s::$%s',
@@ -266,7 +273,12 @@ class ClassParser {
       } else if (T_CLASS === $tokens[$i][0]) {
         return $class->literal();
       } else {
-        return $class->getConstant($tokens[$i][1]);
+        $name= $tokens[$i][1];
+        $reflect= $class->reflect();
+        if (!$reflect->hasConstant($name)) {
+          throw new ElementNotFoundException('No such constant "'.$name.'" in class '.$class->getName());
+        }
+        return $reflect->getConstant($name);
       }
     }
   }
