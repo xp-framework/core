@@ -2,17 +2,10 @@
 
 use io\streams\{MemoryOutputStream, OutputStream};
 use lang\IllegalArgumentException;
-use test\{Assert, Expect, PrerequisitesNotMetError, Test};
+use test\{Assert, Expect, Test};
 use util\Bytes;
 
 abstract class AbstractCompressingOutputStreamTest {
-
-  /**
-   * Get filter we depend on
-   *
-   * @return string
-   */
-  protected abstract function filter();
 
   /**
    * Get stream
@@ -43,19 +36,6 @@ abstract class AbstractCompressingOutputStreamTest {
    */
   protected function assertCompressedDataEquals($expected, $actual) {
     Assert::equals(new Bytes($expected), new Bytes($actual));
-  }
-
-  /**
-   * Setup method. Ensure filter we depend on is available
-   *
-   * @return void
-   */
-  #[Before]
-  public function setUp() {
-    $depend= $this->filter();
-    if (!in_array($depend, stream_get_filters())) {
-      throw new PrerequisitesNotMetError(ucfirst($depend).' stream filter not available', null, [$depend]);
-    }
   }
 
   #[Test]

@@ -7,13 +7,6 @@ use util\Bytes;
 abstract class AbstractDecompressingInputStreamTest {
 
   /**
-   * Get filter we depend on
-   *
-   * @return  string
-   */
-  protected abstract function filter();
-
-  /**
    * Get stream
    *
    * @param   io.streams.InputStream wrapped
@@ -29,17 +22,6 @@ abstract class AbstractDecompressingInputStreamTest {
    * @return  string
    */
   protected abstract function compress($in, $level);
-
-  /**
-   * Setup method. Ensure filter we depend on is available
-   */
-  #[Before]
-  public function setUp() {
-    $depend= $this->filter();
-    if (!in_array($depend, stream_get_filters())) {
-      throw new PrerequisitesNotMetError(ucfirst($depend).' stream filter not available', null, [$depend]);
-    }
-  }
 
   #[Test]
   public function single_read() {

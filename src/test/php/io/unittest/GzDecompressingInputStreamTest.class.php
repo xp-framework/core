@@ -1,12 +1,11 @@
 <?php namespace io\unittest;
 
 use io\streams\{GzDecompressingInputStream, InputStream, MemoryInputStream};
+use test\verify\Condition;
 use test\{Assert, Test, Values};
 
+#[Condition(assert: 'in_array("zlib.*", stream_get_filters())')]
 class GzDecompressingInputStreamTest extends AbstractDecompressingInputStreamTest {
-
-  /** @return string */
-  protected function filter() { return 'zlib.*'; }
 
   /**
    * Get stream
