@@ -27,15 +27,20 @@ install:
   - type .\xp\php.ini
 
 test_script:
-  - php .\xp\composer.phar install --prefer-dist
-  - echo vendor/autoload.php > composer.pth
+  - cmd: |
+      for /f "skip=1 tokens=1-4" %%a in ('findstr /r /c:"^## " ChangeLog.md') do (
+        set COMPOSER_ROOT_VERSION=%%b
+        php .\xp\composer.phar install --prefer-dist
+        echo vendor/autoload.php > composer.pth
+        exit /b
+      )
   - ps: |
       $files = Get-ChildItem .\src\test\config\unittest\*.ini
       $result = 0
       foreach ($file in $files)
       {
         echo $file.Name
-        xp -m . -cp test.xar xp.unittest.Runner $file.FullName
+        xp -m . xp.unittest.Runner $file.FullName
         if ($lastexitcode -gt 0) { $result = 1 }
       }
       if ($result -gt 0) { throw "Build failed" }

@@ -10,11 +10,11 @@ case $1 in
     echo
 
     printf "\033[33;1mRunning Composer\033[0m\n"
-    composer install
+    COMPOSER_ROOT_VERSION=$(grep '^## ' ChangeLog.md | grep -v '?' | head -1 | cut -d ' ' -f 2) composer install
+    echo "vendor/autoload.php" > composer.pth
   ;;
 
   run-tests)
-    echo test.xar > test.pth
     result=0
     for file in `ls -1 src/test/config/unittest/*.ini`; do
       printf "\033[33;1mTesting %s\033[0m\n" $file
