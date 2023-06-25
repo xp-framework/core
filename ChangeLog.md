@@ -5,6 +5,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged PR #330: Use `COMPOSER_ROOT_VERSION` and add dependency instead
+  of bundling test library
+  (@thekid)
 * Merged PR #329: Refactor src/test/php - from tests inside the package
   `net.xp_framework.unittest` to the package (lang, util, io, xp) they're
   testing
