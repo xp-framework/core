@@ -41,7 +41,7 @@ class PropertyExpansionTest {
 
   #[Test]
   public function arrayaccess_lookup() {
-    $prop= $this->newFixture(['test=${lookup.TEST}'], new class implements ArrayAccess {
+    $prop= $this->newFixture(['test=${lookup.TEST}'], new class() implements ArrayAccess {
 
       #[ReturnTypeWillChange]
       function offsetExists($key) { return true; }
