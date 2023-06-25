@@ -81,7 +81,7 @@ class FunctionType extends Type {
    */
   protected function verify($r, $signature, $false, $class= null) {
     if ($class) {
-      $details= XPClass::detailsForMethod($class, $r->getName());
+      $details= XPClass::detailsForClass(XPClass::nameOf($class->name))[1][$r->name] ?? null;
       $resolve= [
         'static' => function() use($class) { return new XPClass($class); },
         'self'   => function() use($class) { return new XPClass($class); },

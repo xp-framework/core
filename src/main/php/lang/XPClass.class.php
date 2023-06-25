@@ -421,24 +421,6 @@ class XPClass extends Type {
   }
 
   /**
-   * Retrieve details for a specified class and method. Note: Results 
-   * from this method are cached!
-   *
-   * @param   php.ReflectionClass $class
-   * @param   string $method
-   * @return  array or NULL if not available
-   */
-  public static function detailsForMethod($class, $method) {
-    $details= self::detailsForClass(self::nameOf($class->name));
-    if (isset($details[1][$method])) return $details[1][$method];
-    foreach ($class->getTraitNames() as $trait) {
-      $details= self::detailsForClass(self::nameOf($trait));
-      if (isset($details[1][$method])) return $details[1][$method];
-    }
-    return null;
-  }
-
-  /**
    * Reflectively creates a new type
    *
    * @param   lang.Type[] arguments
