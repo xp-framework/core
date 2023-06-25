@@ -13,13 +13,15 @@ case $1 in
     COMPOSER_ROOT_VERSION=$(grep '^## ' ChangeLog.md | grep -v '?' | head -1 | cut -d ' ' -f 2) composer install
     echo "src/main/php/__xp.php" > composer.pth
     echo "vendor/autoload.php" >> composer.pth
+    echo "!src/test/php" >> composer.pth
+    echo "!src/test/resources" >> composer.pth
   ;;
 
   run-tests)
     result=0
     for file in `ls -1 src/test/config/unittest/*.ini`; do
       printf "\033[33;1mTesting %s\033[0m\n" $file
-      sh xp-run xp.test.Runner -cp src/test/php -cp src/test/resources $file || result=1
+      (grep ^class $file | cut -d '"' -f 2 | xargs sh xp-run xp.test.Runner) || result=1
       echo
     done
     exit $result
