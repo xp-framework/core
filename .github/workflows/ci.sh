@@ -1,6 +1,6 @@
 #!/bin/sh
 
-XP_RUNNERS_URL=https://baltocdn.com/xp-framework/xp-runners/distribution/downloads/e/entrypoint/xp-run-8.6.1.sh
+XP_RUNNERS_URL=https://baltocdn.com/xp-framework/xp-runners/distribution/downloads/e/entrypoint/xp-run-8.6.2.sh
 
 case $1 in
   install)
@@ -10,15 +10,16 @@ case $1 in
     echo
 
     printf "\033[33;1mRunning Composer\033[0m\n"
-    composer install
+    COMPOSER_ROOT_VERSION=$(grep '^## ' ChangeLog.md | grep -v '?' | head -1 | cut -d ' ' -f 2) composer install
+    echo "src/main/php/__xp.php" > composer.pth
+    echo "vendor/autoload.php" >> composer.pth
   ;;
 
   run-tests)
-    echo test.xar > test.pth
     result=0
     for file in `ls -1 src/test/config/unittest/*.ini`; do
       printf "\033[33;1mTesting %s\033[0m\n" $file
-      sh xp-run xp.unittest.Runner $file || result=1
+      sh xp-run xp.unittest.Runner -cp src/test/php -cp src/test/resources $file || result=1
       echo
     done
     exit $result

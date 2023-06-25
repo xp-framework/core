@@ -1,7 +1,7 @@
 <?php namespace util\unittest;
 
 use lang\{IllegalArgumentException, IllegalStateException, Throwable, XPException};
-use unittest\{Assert, Before, Expect, Test, Values};
+use unittest\{Assert, Before, Expect, Test, Values, PrerequisitesNotMetError};
 use util\Secret;
 
 abstract class SecretTest {
@@ -11,7 +11,11 @@ abstract class SecretTest {
 
   #[Before]
   public function useBacking() {
-    Secret::useBacking($this->backing());
+    try {
+      Secret::useBacking($this->backing());
+    } catch (IllegalStateException $e) {
+      throw new PrerequisitesNotMetError('Backing unavailable', $e);
+    }
   }
 
   #[Test]
