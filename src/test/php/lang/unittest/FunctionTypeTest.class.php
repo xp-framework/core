@@ -274,7 +274,7 @@ class FunctionTypeTest extends BaseTest {
     Assert::equals('Test', $value());
   }
 
-  #[Test, Condition(assert: 'fn() => !extension_loaded("xdebug")')]
+  #[Test, Condition(assert: '!extension_loaded("xdebug")')]
   public function create_instances_from_string_referencing_builtin() {
     $value= (new FunctionType([Primitive::$STRING], Type::$VAR))->newInstance('strlen');
     Assert::equals(4, $value('Test'));
