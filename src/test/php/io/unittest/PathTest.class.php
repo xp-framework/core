@@ -253,7 +253,7 @@ class PathTest {
     Assert::equals($parent, (new Path($child))->parent()->toString('/'));
   }
 
-  #[Test, VerifyRuntime(os: '^(?!WIN)')]
+  #[Test, VerifyRuntime(os: 'WIN')]
   public function parent_of_directory_in_root() {
     Assert::equals('C:/', (new Path('C:/Windows'))->parent()->toString('/'));
   }
@@ -263,7 +263,7 @@ class PathTest {
     Assert::null((new Path('/'))->parent());
   }
 
-  #[Test, Values(['C:', 'C:/', 'c:', 'C:/']), VerifyRuntime(os: '^(?!WIN)')]
+  #[Test, Values(['C:', 'C:/', 'c:', 'C:/']), VerifyRuntime(os: 'WIN')]
   public function parent_of_root_windows($root) {
     Assert::null((new Path($root))->parent());
   }
