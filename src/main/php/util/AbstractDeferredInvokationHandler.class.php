@@ -1,15 +1,14 @@
 <?php namespace util;
 
-use lang\reflect\InvocationHandler;
-use lang\Throwable;
 use lang\ClassCastException;
+use lang\Throwable;
 
 /**
  * Lazy initializable InvokationHandler 
  *
- * @test  xp://net.xp_framework.unittest.util.DeferredInvokationHandlerTest
+ * @test  net.xp_framework.unittest.util.DeferredInvokationHandlerTest
  */
-abstract class AbstractDeferredInvokationHandler implements InvocationHandler {
+abstract class AbstractDeferredInvokationHandler {
   private $_instance= null;
 
   /**
