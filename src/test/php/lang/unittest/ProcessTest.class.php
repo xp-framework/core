@@ -3,9 +3,19 @@
 use io\streams\{MemoryOutputStream, Streams};
 use io\{IOException, TempFile};
 use lang\{Environment, IllegalStateException, Process, Runtime};
-use test\{Assert, AssertionFailedError, Before, Expect, PrerequisitesNotMetError, Test, Values};
+use test\verify\Condition;
+use test\{Assert, AssertionFailedError, Expect, Test, Values};
 
+#[Condition(assert: 'self::verifyProcessExecutionEnabled()')]
 class ProcessTest {
+
+  /**
+   * Skips tests if process execution has been disabled or if running on Windows
+   * Server 2016, where there is a bug in process execution affecting our tests.
+   */
+  public static function verifyProcessExecutionEnabled() {
+    return !Process::$DISABLED && !strstr(php_uname('v'), 'Windows Server 2016');
+  }
 
   /**
    * Return executable name
@@ -14,16 +24,6 @@ class ProcessTest {
    */
   private function executable() {
     return Runtime::getInstance()->getExecutable()->getFilename();
-  }
-
-  #[Before]
-  public static function verifyProcessExecutionEnabled() {
-    if (Process::$DISABLED) {
-      throw new PrerequisitesNotMetError('Process execution disabled', null, ['enabled']);
-    }
-    if (strstr(php_uname('v'), 'Windows Server 2016')) {
-      throw new PrerequisitesNotMetError('Process execution bug on Windows Server 2016', null, ['enabled']);
-    }
   }
 
   /**
