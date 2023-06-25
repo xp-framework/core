@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{ClassLoader, Closeable, IllegalStateException};
-use unittest\{Assert, Before, Test, Values};
+use test\{Assert, Before, Test, Values};
 
 class WithTest {
   private static $closes, $raises, $dispose;

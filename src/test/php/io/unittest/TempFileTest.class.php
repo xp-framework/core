@@ -2,7 +2,7 @@
 
 use io\{Files, IOException, TempFile};
 use lang\{Environment, IllegalStateException};
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 
 class TempFileTest {
 

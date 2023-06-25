@@ -2,8 +2,7 @@
 
 use ArrayAccess, ReturnTypeWillChange;
 use lang\ElementNotFoundException;
-use unittest\actions\VerifyThat;
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 use util\Properties;
 
 class PropertyExpansionTest {
@@ -28,7 +27,7 @@ class PropertyExpansionTest {
     Assert::equals('test', $prop->readString(null, 'test'));
   }
 
-  #[Test, Action(eval: 'new VerifyThat(fn() => !extension_loaded("xdebug"))')]
+  #[Test]
   public function callable_lookup() {
     $prop= $this->newFixture(['test=${lookup.TEST}'], 'strtolower');
     Assert::equals('test', $prop->readString(null, 'test'));

@@ -2,7 +2,7 @@
 
 use lang\XPClass;
 use lang\unittest\fixture\Namespaced;
-use unittest\{Assert, Test, Values};
+use test\{Assert, Test, Values};
 
 class ClassMemberParsingTest {
   const CONSTANT = 'local';

@@ -3,7 +3,7 @@
 use io\TempFile;
 use lang\IClassLoader;
 use lang\archive\{Archive, ArchiveClassLoader};
-use unittest\Assert;
+use test\Assert;
 
 class ClassFromArchiveTest extends ClassFromUriTest {
 

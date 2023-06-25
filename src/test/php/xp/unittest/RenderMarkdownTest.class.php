@@ -1,12 +1,11 @@
 <?php namespace xp\unittest;
 
-use unittest\{Assert, Test, Values};
+use test\{Assert, Before, Test, Values};
 use xp\runtime\RenderMarkdown;
 
 class RenderMarkdownTest {
   private $markdown;
 
-  /** @return void */
   #[Before]
   public function setUp() {
     $this->markdown= new RenderMarkdown([

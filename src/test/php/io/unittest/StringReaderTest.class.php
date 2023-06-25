@@ -2,7 +2,7 @@
 
 use io\streams\{InputStream, MemoryInputStream, StringReader};
 use lang\IllegalStateException;
-use unittest\{Assert, Test, Values};
+use test\{Assert, Test, Values};
 
 class StringReaderTest {
 

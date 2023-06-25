@@ -1,6 +1,6 @@
 <?php namespace lang\unittest;
 
-use unittest\{Assert, Before, Ignore, Test};
+use test\{Assert, Before, Ignore, Test};
 
 class MemberTest {
   protected $fixture= null;

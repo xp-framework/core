@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{ClassLoader, DynamicClassLoader, XPClass};
-use unittest\{Assert, Test, Values};
+use test\{Assert, Test, Values};
 
 abstract class RuntimeTypeDefinitionTest {
 

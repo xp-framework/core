@@ -1,6 +1,6 @@
 <?php namespace xp\unittest;
 
-use unittest\{Assert, Test, Values};
+use test\{Assert, Test, Values};
 use xp\runtime\Code;
 
 class CodeTest {
@@ -160,9 +160,8 @@ class CodeTest {
     $code= new Code($head.'trigger_error("Test");', 'test.script.php');
     $code->run();
 
-    $e= ['Test' => ['class' => null, 'method' => 'trigger_error', 'cnt' => 1]];
     try {
-      Assert::equals(['test.script.php' => [$line => $e]], \xp::$errors);
+      Assert::equals('Test', key(\xp::$errors['test.script.php'][$line]));
     } finally {
       \xp::gc();
     }

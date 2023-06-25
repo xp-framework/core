@@ -3,7 +3,7 @@
 use io\IOException;
 use io\streams\{ChannelInputStream, ChannelOutputStream};
 use lang\Runnable;
-use unittest\{Assert, Expect, Test};
+use test\{Assert, Expect, Test};
 
 class ChannelStreamTest {
 

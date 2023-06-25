@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{CloneNotSupportedException, NullPointerException};
-use unittest\{Assert, Expect, Test};
+use test\{Assert, Expect, Test};
 
 class CloningTest {
 

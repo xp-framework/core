@@ -1,7 +1,7 @@
 <?php namespace util\unittest;
 
 use io\streams\MemoryOutputStream;
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 use util\Properties;
 
 class PropertyWritingTest {

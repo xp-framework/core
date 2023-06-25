@@ -2,7 +2,7 @@
 
 use io\streams\{ConsoleInputStream, ConsoleOutputStream, MemoryInputStream, MemoryOutputStream};
 use lang\{IllegalStateException, Value};
-use unittest\{Assert, Test, Values};
+use test\{Assert, Test, Values};
 use util\cmd\{Console, NoInput, NoOutput};
 
 class ConsoleTest {

@@ -1,8 +1,8 @@
 <?php namespace lang\unittest;
 
 use lang\{ArrayType, MapType, Primitive, Type, Value, XPClass};
-use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Action, Test, Values};
+use test\verify\Runtime;
+use test\{Action, Assert, Test, Values};
 
 class FieldTypeTest extends FieldsTest {
 
@@ -22,7 +22,7 @@ class FieldTypeTest extends FieldsTest {
     Assert::equals(Type::$VAR, $this->field('public $fixture;')->getType());
   }
 
-  #[Test, Values('types')]
+  #[Test, Values(from: 'types')]
   public function field_type_determined_via_var_tag($declaration, $type) {
     Assert::equals(
       $type,
@@ -30,7 +30,7 @@ class FieldTypeTest extends FieldsTest {
     );
   }
 
-  #[Test, Values('types')]
+  #[Test, Values(from: 'types')]
   public function field_typeName_determined_via_var_tag($declaration, $type) {
     Assert::equals(
       $type->getName(),
@@ -38,7 +38,7 @@ class FieldTypeTest extends FieldsTest {
     );
   }
 
-  #[Test, Values('types')]
+  #[Test, Values(from: 'types')]
   public function field_type_determined_via_type_tag($declaration, $type) {
     Assert::equals(
       $type,
@@ -46,7 +46,7 @@ class FieldTypeTest extends FieldsTest {
     );
   }
 
-  #[Test, Values('types')]
+  #[Test, Values(from: 'types')]
   public function field_type_determined_via_annotation($declaration, $type) {
     Assert::equals(
       $type,
@@ -61,7 +61,7 @@ class FieldTypeTest extends FieldsTest {
     Assert::equals($fixture, $fixture->getField('fixture')->getType());
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=7.4")')]
+  #[Test, Runtime(php: '>=7.4')]
   public function self_type_via_syntax() {
     $fixture= $this->type('{ public self $fixture; }');
     Assert::equals('self', $fixture->getField('fixture')->getTypeName());
@@ -74,7 +74,7 @@ class FieldTypeTest extends FieldsTest {
     Assert::equals(new ArrayType($fixture), $fixture->getField('fixture')->getType());
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=7.4")')]
+  #[Test, Runtime(php: '>=7.4')]
   public function specific_array_type_determined_via_apidoc() {
     $fixture= $this->type('{ /** @type string[] */ public array $fixture; }');
     Assert::equals('string[]', $fixture->getField('fixture')->getTypeName());
@@ -86,7 +86,7 @@ class FieldTypeTest extends FieldsTest {
     Assert::null($this->field('public $fixture;')->getTypeRestriction());
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=7.4")')]
+  #[Test, Runtime(php: '>=7.4')]
   public function typed_restriction() {
     Assert::equals(Primitive::$STRING, $this->field('public string $fixture;')->getTypeRestriction());
   }

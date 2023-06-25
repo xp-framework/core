@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{FormatException, Process, Runtime, RuntimeOptions, XPClass};
-use unittest\{Assert, Expect, Test};
+use test\{Assert, Expect, Test};
 
 class RuntimeTest {
 

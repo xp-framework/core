@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{IllegalAccessException, Primitive, XPClass};
-use unittest\{Assert, Before, Expect, Test};
+use test\{Assert, Before, Expect, Test};
 
 class VirtualMembersTest {
   private $property;

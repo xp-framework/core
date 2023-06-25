@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{GenericTypes, Primitive, XPClass};
-use unittest\{Assert, Before, Test};
+use test\{Assert, Before, Test};
 
 class GenericTypesTest {
   private static $filter;

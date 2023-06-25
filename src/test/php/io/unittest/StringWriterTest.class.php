@@ -2,8 +2,8 @@
 
 use io\streams\{MemoryOutputStream, StringWriter};
 use lang\Value;
-use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Test, Values};
+use test\verify\Runtime;
+use test\{Assert, Test, Values};
 use util\Comparison;
 
 class StringWriterTest {
@@ -45,7 +45,7 @@ class StringWriterTest {
     ];
   }
 
-  #[Test, Values('values')]
+  #[Test, Values(from: 'values')]
   public function write($expected, $value) {
     $this->assertWritten($expected, function($fixture) use($value) {
       $fixture->write($value);
@@ -69,7 +69,7 @@ class StringWriterTest {
     });
   }
 
-  #[Test, Values('values')]
+  #[Test, Values(from: 'values')]
   public function writeLine($expected, $value) {
     $this->assertWritten($expected."\n", function($fixture) use($value) {
       $fixture->writeLine($value);

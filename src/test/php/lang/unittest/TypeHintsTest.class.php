@@ -1,8 +1,8 @@
 <?php namespace lang\unittest;
 
 use lang\{Error, IllegalArgumentException, Value};
-use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Expect, Test};
+use test\verify\Runtime;
+use test\{Assert, Expect, Test};
 
 class TypeHintsTest {
 

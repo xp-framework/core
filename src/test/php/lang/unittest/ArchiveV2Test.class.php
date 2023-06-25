@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\archive\Archive;
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 
 class ArchiveV2Test extends ArchiveTest {
 

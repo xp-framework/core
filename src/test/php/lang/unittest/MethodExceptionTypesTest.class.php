@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{IllegalAccessException, IllegalArgumentException, XPClass};
-use unittest\{Assert, Test, Values};
+use test\{Assert, Test, Values};
 
 class MethodExceptionTypesTest extends MethodsTest {
 

@@ -1,11 +1,25 @@
 <?php namespace lang\unittest;
 
+use ReflectionClass;
 use io\streams\{MemoryInputStream, Streams};
 use lang\{ClassCastException, IllegalArgumentException, Primitive};
-use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Expect, Test, Values};
+use test\verify\Runtime;
+use test\{Assert, Expect, Test, Values};
 
 class PrimitiveTest {
+
+  /** @return iterable */
+  public function instances() {
+    return [
+      [$this], [null], [new Name('Test')], [new ReflectionClass(self::class)],
+      [false], [true],
+      [''], ['Hello'],
+      [0], [-1],
+      [0.0], [-1.5],
+      [[]],
+      [['one' => 'two']]
+    ];
+  }
 
   #[Test]
   public function string_primitive() {
@@ -42,36 +56,14 @@ class PrimitiveTest {
     Primitive::forName('lang.Value');
   }
 
-  /**
-   * Returns instances of all types
-   *
-   * @param   var[] except
-   * @return  var[]
-   */
-  public function instances($except) {
-    $values= [
-      [$this], [null], [new Name('Test')], [new \ReflectionClass(self::class)],
-      [false], [true],
-      [''], ['Hello'],
-      [0], [-1],
-      [0.0], [-1.5],
-      [[]],
-      [['one' => 'two']]
-    ];
-
-    return array_filter($values, function($value) use ($except) {
-      return !in_array($value[0], $except, true);
-    });
-  }
-
   #[Test, Values(['', 'Hello'])]
   public function isAnInstanceOfString_primitive($value) {
     Assert::true(Primitive::$STRING->isInstance($value));
   }
   
-  #[Test, Values(['source' => 'instances', 'args' => [['', 'Hello']]])]
+  #[Test, Values(from: 'instances')]
   public function notInstanceOfString_primitive($value) {
-    Assert::false(Primitive::$STRING->isInstance($value));
+    if (!is_string($value)) Assert::false(Primitive::$STRING->isInstance($value));
   }
 
   #[Test, Values([0, -1])]
@@ -79,9 +71,9 @@ class PrimitiveTest {
     Assert::true(Primitive::$INT->isInstance($value));
   }
 
-  #[Test, Values(['source' => 'instances', 'args' => [[0, -1]]])]
+  #[Test, Values(from: 'instances')]
   public function notInstanceOfInteger_primitive($value) {
-    Assert::false(Primitive::$INT->isInstance($value));
+    if (!is_int($value)) Assert::false(Primitive::$INT->isInstance($value));
   }
 
   #[Test, Values([0.0, -1.5])]
@@ -89,9 +81,9 @@ class PrimitiveTest {
     Assert::true(Primitive::$FLOAT->isInstance($value));
   }
 
-  #[Test, Values(['source' => 'instances', 'args' => [[0.0, -1.5]]])]
+  #[Test, Values(from: 'instances')]
   public function notInstanceOfDouble_primitive($value) {
-    Assert::false(Primitive::$FLOAT->isInstance($value));
+    if (!is_float($value)) Assert::false(Primitive::$FLOAT->isInstance($value));
   }
 
   #[Test, Values([false, true])]
@@ -99,9 +91,9 @@ class PrimitiveTest {
     Assert::true(Primitive::$BOOL->isInstance($value));
   }
 
-  #[Test, Values(['source' => 'instances', 'args' => [[false, true]]])]
+  #[Test, Values(from: 'instances')]
   public function notInstanceOfBoolean_primitive($value) {
-    Assert::false(Primitive::$BOOL->isInstance($value));
+    if (!is_bool($value)) Assert::false(Primitive::$BOOL->isInstance($value));
   }
 
   #[Test]

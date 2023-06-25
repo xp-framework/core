@@ -1,6 +1,6 @@
 <?php namespace lang\unittest;
 
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 
 class OptionalArgTest {
   private $value;

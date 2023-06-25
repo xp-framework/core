@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{Process, Runtime};
-use unittest\{Assert, Before, Ignore, PrerequisitesNotMetError, Test, Values};
+use test\{Assert, Before, Ignore, PrerequisitesNotMetError, Test, Values};
 
 class RuntimeInstantiationTest {
 

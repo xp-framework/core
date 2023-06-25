@@ -1,8 +1,8 @@
 <?php namespace lang\unittest;
 
 use lang\{ClassLoader, Nullable, Primitive, TypeUnion};
-use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Action, Test};
+use test\verify\Runtime;
+use test\{Action, Assert, Test};
 
 class TypeSyntaxTest {
   private static $spec= ['kind' => 'class', 'extends' => null, 'implements' => [], 'use' => []];
@@ -29,7 +29,7 @@ class TypeSyntaxTest {
     return ClassLoader::defineType(self::class.'Method'.(++$id), self::$spec, '{'.$source.'}')->getMethod('fixture');
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=7.4")')]
+  #[Test, Runtime(php: '>=7.4')]
   public function primitive_type() {
     $d= $this->field('private string $fixture;');
     Assert::equals(Primitive::$STRING, $d->getType());
@@ -50,28 +50,28 @@ class TypeSyntaxTest {
     Assert::equals('string', $d->getParameter(0)->getTypeName());
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.0")')]
+  #[Test, Runtime(php: '>=8.0')]
   public function union_type() {
     $d= $this->field('private string|int $fixture;');
     Assert::equals(new TypeUnion([Primitive::$STRING, Primitive::$INT]), $d->getType());
     Assert::equals('string|int', $d->getTypeName());
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.0")')]
+  #[Test, Runtime(php: '>=8.0')]
   public function nullable_union_type() {
     $d= $this->field('private string|int|null $fixture;');
     Assert::equals(new Nullable(new TypeUnion([Primitive::$STRING, Primitive::$INT])), $d->getType());
     Assert::equals('?string|int', $d->getTypeName());
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.0")')]
+  #[Test, Runtime(php: '>=8.0')]
   public function return_union_type() {
     $d= $this->method('function fixture(): string|int { return "Test"; }');
     Assert::equals(new TypeUnion([Primitive::$STRING, Primitive::$INT]), $d->getReturnType());
     Assert::equals('string|int', $d->getReturnTypeName());
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.0")')]
+  #[Test, Runtime(php: '>=8.0')]
   public function parameter_union_type() {
     $d= $this->method('function fixture(string|int $name) { }');
     Assert::equals(new TypeUnion([Primitive::$STRING, Primitive::$INT]), $d->getParameter(0)->getType());

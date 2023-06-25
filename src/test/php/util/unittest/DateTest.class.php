@@ -1,7 +1,7 @@
 <?php namespace util\unittest;
 
 use lang\{IllegalArgumentException, IllegalStateException};
-use unittest\{Assert, Before, After, Expect, Ignore, Test, Values};
+use test\{After, Assert, Before, Expect, Ignore, Test, Values};
 use util\{Date, TimeZone};
 
 class DateTest {
@@ -225,7 +225,7 @@ class DateTest {
     ];
   }
 
-  #[Test, Values('formatTokens')]
+  #[Test, Values(from: 'formatTokens')]
   public function supportedFormatTokens($input, $expect) {
     Assert::equals($expect, $this->refDate->format($input));
   }

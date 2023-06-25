@@ -1,7 +1,7 @@
 <?php namespace io\unittest;
 
 use io\streams\{InputStream, MemoryInputStream};
-use unittest\{Assert, PrerequisitesNotMetError, Test};
+use test\{Assert, PrerequisitesNotMetError, Test};
 use util\Bytes;
 
 abstract class AbstractDecompressingInputStreamTest {

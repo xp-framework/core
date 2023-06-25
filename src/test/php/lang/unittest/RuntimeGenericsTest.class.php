@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\IllegalArgumentException;
-use unittest\{Assert, Expect, Test};
+use test\{Assert, Expect, Test};
 
 class RuntimeTest {
   private $fixture;

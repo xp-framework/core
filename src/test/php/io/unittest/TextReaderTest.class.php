@@ -3,7 +3,7 @@
 use io\streams\{InputStream, LinesIn, MemoryInputStream, MemoryOutputStream, TextReader};
 use io\{Channel, IOException};
 use lang\{FormatException, IllegalArgumentException};
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 
 class TextReaderTest {
 
@@ -344,7 +344,7 @@ class TextReaderTest {
     Assert::equals('ABC', $r->read(3));
   }
 
-  #[Test, Expect(['class' => IOException::class, 'withMessage' => 'Underlying stream does not support seeking'])]
+  #[Test, Expect(class: IOException::class, message: 'Underlying stream does not support seeking')]
   public function resetUnseekable() {
     $r= new TextReader($this->unseekableStream());
     $r->reset();

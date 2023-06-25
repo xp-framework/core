@@ -10,12 +10,11 @@ use lang\{
   Primitive,
   XPClass
 };
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Before, Expect, Test, Values};
 
 class XPClassTest {
   private $fixture;
 
-  /** @return void */
   #[Before]
   public function setUp() {
     $this->fixture= XPClass::forName('lang.unittest.TestClass');

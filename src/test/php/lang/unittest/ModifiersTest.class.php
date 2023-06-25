@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\reflect\Modifiers;
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 
 class ModifiersTest {
 

@@ -3,7 +3,7 @@
 use io\streams\{MemoryInputStream, Streams};
 use io\{EncapsedStream, File};
 use lang\{IllegalAccessException, IllegalStateException};
-use unittest\{Assert, Expect, Test};
+use test\{Assert, Expect, Test};
 
 class EncapsedStreamTest {
     

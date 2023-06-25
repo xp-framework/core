@@ -1,7 +1,7 @@
 <?php namespace io\unittest;
 
 use io\streams\{InputStream, MemoryInputStream, MemoryOutputStream, OutputStream, StreamTransfer};
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 
 class StreamTransferTest {
 

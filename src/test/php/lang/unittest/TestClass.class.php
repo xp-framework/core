@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{Runnable, Type};
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 use util\Date;
 use util\collections\{HashTable, Vector};
 

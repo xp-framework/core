@@ -9,7 +9,7 @@ use lang\{
   Type,
   XPClass
 };
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 
 class MapTypeTest {
 
@@ -155,7 +155,7 @@ class MapTypeTest {
     Assert::equals($expected, MapType::forName('[:string]')->newInstance($value));
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Values('nonMapValues')]
+  #[Test, Expect(IllegalArgumentException::class), Values(from: 'nonMapValues')]
   public function newInstance_raises_exceptions_for_non_maps($value) {
     MapType::forName('var[]')->newInstance($value);
   }
@@ -165,7 +165,7 @@ class MapTypeTest {
     Assert::equals($expected, MapType::forName('[:string]')->cast($value));
   }
 
-  #[Test, Expect(ClassCastException::class), Values('nonMapValues')]
+  #[Test, Expect(ClassCastException::class), Values(from: 'nonMapValues')]
   public function cast_raises_exceptions_for_non_maps($value) {
     MapType::forName('[:var]')->cast($value);
   }

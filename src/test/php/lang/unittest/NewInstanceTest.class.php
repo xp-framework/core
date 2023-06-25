@@ -3,14 +3,14 @@
 use ReturnTypesWillChange;
 use lang\reflect\Package;
 use lang\{ClassFormatException, ClassLoader, IllegalAccessException, Process, Runnable, Runtime, Value};
-use unittest\actions\{RuntimeVersion, VerifyThat};
-use unittest\{Assert, Action, Expect, Test, Values};
+use test\verify\{Condition as VerifyThat, Runtime as VerifyRuntime};
+use test\{Assert, Expect, Test, Values};
 use util\Objects;
 
 class NewInstanceTest {
 
   /** @return bool */
-  protected function processExecutionEnabled() {
+  protected static function processExecutionEnabled() {
     return !Process::$DISABLED && !strstr(php_uname('v'), 'Windows Server 2016');
   }
 
@@ -194,7 +194,7 @@ class NewInstanceTest {
     Assert::equals($this, newinstance($base->getName(), [$this], [])->test);
   }
 
-  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()')]
   public function variadic_argument_passing() {
     $r= $this->runInNewRuntime('
       class Test {
@@ -216,7 +216,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()')]
   public function typed_variadic_argument_passing() {
     $r= $this->runInNewRuntime('
       class Test {
@@ -238,7 +238,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()')]
   public function missingMethodImplementationFatals() {
     $r= $this->runInNewRuntime('
       newinstance("lang.Runnable", [], "{}");
@@ -250,7 +250,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()')]
   public function syntaxErrorFatals() {
     $r= $this->runInNewRuntime('
       newinstance("lang.Runnable", [], "{ @__SYNTAX ERROR__@ }");
@@ -262,7 +262,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()')]
   public function missingClassFatals() {
     $r= $this->runInNewRuntime('
       newinstance("lang.NonExistantClass", [], "{}");
@@ -274,7 +274,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()')]
   public function notPreviouslyDefinedClassIsLoaded() {
     $r= $this->runInNewRuntime('
       if (isset(xp::$cl["lang.Runnable"])) {
@@ -382,7 +382,7 @@ class NewInstanceTest {
     Assert::equals('Test', $instance->getTest());
   }
 
-  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()')]
   public function declaration_with_array_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -397,7 +397,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()')]
   public function declaration_with_callable_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -412,7 +412,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()')]
   public function declaration_with_class_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -429,7 +429,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()')]
   public function declaration_with_self_return_type() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -445,7 +445,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()')]
   public function declaration_with_self_param_type() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -460,7 +460,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()')]
   public function declaration_with_primitive_param_type() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -475,7 +475,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()')]
   public function declaration_with_primitive_return_type() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -490,7 +490,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Action(eval: '[new VerifyThat("processExecutionEnabled"), new RuntimeVersion(">=7.2")]')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()'), VerifyRuntime(php: '>=7.2')]
   public function declaration_with_nullable_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -505,7 +505,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Action(eval: '[new VerifyThat("processExecutionEnabled"), new RuntimeVersion(">=7.1")]')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()'), VerifyRuntime(php: '>=7.1')]
   public function declaration_with_iterable_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -520,7 +520,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Action(eval: '[new VerifyThat("processExecutionEnabled"), new RuntimeVersion(">=7.2")]')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()'), VerifyRuntime(php: '>=7.2')]
   public function declaration_with_object_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -535,7 +535,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Action(eval: '[new VerifyThat("processExecutionEnabled"), new RuntimeVersion(">=7.1")]')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()'), VerifyRuntime(php: '>=7.1')]
   public function declaration_with_void_return() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -551,7 +551,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()')]
   public function declaration_with_variadic() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -566,7 +566,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()')]
   public function declaration_with_typed_variadic() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -581,7 +581,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Action(eval: 'new VerifyThat("processExecutionEnabled")')]
+  #[Test, VerifyThat(assert: 'self::processExecutionEnabled()')]
   public function value_types_fully_qualified() {
     $r= $this->runInNewRuntime('namespace test;
       abstract class Base {

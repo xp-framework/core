@@ -3,7 +3,7 @@
 use io\streams\{MemoryInputStream, MemoryOutputStream, Streams};
 use io\{File, Folder, Path};
 use lang\{IllegalArgumentException, Runtime};
-use unittest\{Assert, Expect, Test};
+use test\{Assert, Expect, Test};
 
 class FileTest {
 

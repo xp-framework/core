@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{DynamicClassLoader, IClassLoader};
-use unittest\{Assert, Ignore, Test};
+use test\{Assert, Ignore, Test};
 
 class ClassFromDynamicDefinitionTest extends ClassFromUriTest {
 

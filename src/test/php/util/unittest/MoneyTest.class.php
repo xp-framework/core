@@ -1,11 +1,11 @@
 <?php namespace util\unittest;
 
 use lang\IllegalArgumentException;
-use unittest\actions\ExtensionAvailable;
-use unittest\{Assert, Action, Expect, Test};
+use test\verify\Runtime;
+use test\{Action, Assert, Expect, Test};
 use util\{Currency, Money};
 
-#[Action(eval: 'new ExtensionAvailable("bcmath")')]
+#[Runtime(extensions: ['bcmath'])]
 class MoneyTest {
 
   #[Test]

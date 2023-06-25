@@ -1,8 +1,9 @@
 <?php namespace util\unittest;
 
+use ReflectionClass, StdClass;
 use lang\Value;
-use unittest\{Assert, Test, Values};
-use util\{Objects, Comparison};
+use test\{Assert, Test, Values};
+use util\{Comparison, Objects};
 
 class ObjectsTest {
   private static $func;
@@ -55,8 +56,8 @@ class ObjectsTest {
   /** @return  var[][] */
   public function natives() {
     return [
-      [new \ReflectionClass(self::class)],
-      [new \StdClass()]
+      [new ReflectionClass(self::class)],
+      [new StdClass()]
     ];
   }
 
@@ -73,19 +74,7 @@ class ObjectsTest {
     );
   }
 
-  /**
-   * Filters values() method
-   *
-   * @param   var exclude
-   * @return  php.Iterator
-   */
-  public function valuesExcept($exclude) {
-    foreach ($this->values as $value) {
-      if ($value[0] !== $exclude) yield $value;
-    }
-  }
-
-  #[Test, Values('values')]
+  #[Test, Values(from: 'values')]
   public function value_is_equal_to_self($val) {
     Assert::true(Objects::equal($val, $val));
   }
@@ -97,20 +86,20 @@ class ObjectsTest {
 
   #[Test]
   public function natives_with_equal_members_are_equal() {
-    Assert::true(Objects::equal(new \ReflectionClass(self::class), new \ReflectionClass(self::class)));
+    Assert::true(Objects::equal(new ReflectionClass(self::class), new ReflectionClass(self::class)));
   }
 
   #[Test]
   public function natives_with_equal_members_but_different_types_are_not_equal() {
-    $parent= new \ReflectionClass(self::class);
-    $inherited= newinstance(\ReflectionClass::class, [self::class]);
+    $parent= new ReflectionClass(self::class);
+    $inherited= newinstance(ReflectionClass::class, [self::class]);
     Assert::false(Objects::equal($parent, $inherited), 'parent, inherited');
     Assert::false(Objects::equal($inherited, $parent), 'inherited, parent');
   }
 
   #[Test]
   public function natives_with_different_members_are_not_equal() {
-    Assert::false(Objects::equal(new \ReflectionClass(self::class), new \ReflectionClass(Objects::class)));
+    Assert::false(Objects::equal(new ReflectionClass(self::class), new ReflectionClass(Objects::class)));
   }
 
   #[Test]
@@ -120,60 +109,60 @@ class ObjectsTest {
 
   #[Test]
   public function natives_are_not_equal_to_instances_with_same_members() {
-    Assert::false(Objects::equal((object)['name' => self::class], new \ReflectionClass(self::class)));
+    Assert::false(Objects::equal((object)['name' => self::class], new ReflectionClass(self::class)));
   }
 
-  #[Test, Values(['source' => 'valuesExcept', 'args' => [null]])]
+  #[Test, Values(from: 'values')]
   public function null_not_equal_to_other_values($val) {
-    Assert::false(Objects::equal(null, $val));
+    if (null !== $val) Assert::false(Objects::equal(null, $val));
   }
 
-  #[Test, Values(['source' => 'valuesExcept', 'args' => [false]])]
+  #[Test, Values(from: 'values')]
   public function false_not_equal_to_other_values($val) {
-    Assert::false(Objects::equal(false, $val));
+    if (false !== $val) Assert::false(Objects::equal(false, $val));
   }
 
-  #[Test, Values(['source' => 'valuesExcept', 'args' => [true]])]
+  #[Test, Values(from: 'values')]
   public function true_not_equal_to_other_values($val) {
-    Assert::false(Objects::equal(true, $val));
+    if (true !== $val) Assert::false(Objects::equal(true, $val));
   }
 
-  #[Test, Values(['source' => 'values'])]
+  #[Test, Values(from: 'values')]
   public function int_not_equal_to_other_values($val) {
     Assert::false(Objects::equal(6100, $val));
   }
 
-  #[Test, Values(['source' => 'values'])]
+  #[Test, Values(from: 'values')]
   public function double_not_equal_to_other_values($val) {
     Assert::false(Objects::equal(6100.0, $val));
   }
 
-  #[Test, Values(['source' => 'values'])]
+  #[Test, Values(from: 'values')]
   public function string_not_equal_to_other_values($val) {
     Assert::false(Objects::equal('More power', $val));
   }
 
-  #[Test, Values(['source' => 'values'])]
+  #[Test, Values(from: 'values')]
   public function array_not_equal_to_other_values($val) {
     Assert::false(Objects::equal([4, 5, 6], $val));
   }
 
-  #[Test, Values(['source' => 'values'])]
+  #[Test, Values(from: 'values')]
   public function hash_not_equal_to_other_values($val) {
     Assert::false(Objects::equal(['color' => 'blue'], $val));
   }
 
-  #[Test, Values(['source' => 'values'])]
+  #[Test, Values(from: 'values')]
   public function object_not_equal_to_other_values($val) {
     Assert::false(Objects::equal(new class() { }, $val));
   }
 
-  #[Test, Values(['source' => 'values'])]
+  #[Test, Values(from: 'values')]
   public function string_instance_not_equal_to_other_values($val) {
     Assert::false(Objects::equal(new ValueObject('Binford 6100: More Power!'), $val));
   }
 
-  #[Test, Values(['source' => 'values'])]
+  #[Test, Values(from: 'values')]
   public function value_not_equal_to_other_values($val) {
     Assert::false(Objects::equal(new ValueObject('Binford 6100: More Power!'), $val));
   }
@@ -208,13 +197,13 @@ class ObjectsTest {
 
   #[Test, Values([[self::class, self::class, 0], [self::class, Objects::class, 1], [Objects::class, self::class, -1]])]
   public function compare_natives($a, $b, $expected) {
-    Assert::equals($expected, Objects::compare(new \ReflectionClass($a), new \ReflectionClass($b)));
+    Assert::equals($expected, Objects::compare(new ReflectionClass($a), new ReflectionClass($b)));
   }
 
   #[Test]
   public function compare_natives_with_equal_members_but_different_types() {
-    $parent= new \ReflectionClass(self::class);
-    $inherited= newinstance(\ReflectionClass::class, [self::class]);
+    $parent= new ReflectionClass(self::class);
+    $inherited= newinstance(ReflectionClass::class, [self::class]);
     Assert::equals(1, Objects::compare($parent, $inherited), 'parent, inherited');
     Assert::equals(1, Objects::compare($inherited, $parent), 'inherited, parent');
   }
@@ -226,7 +215,7 @@ class ObjectsTest {
 
   #[Test]
   public function compare_natives_to_instances_with_same_members() {
-    Assert::equals(1, Objects::compare((object)['name' => self::class], new \ReflectionClass(self::class)));
+    Assert::equals(1, Objects::compare((object)['name' => self::class], new ReflectionClass(self::class)));
   }
 
   #[Test, Values([[[], [1], -1], [['color' => 'green'], ['color' => 'red'], -1], [[1], [1], 0], [[], [], 0], [[1, 2, 3], [1, 2, 3], 0], [['color' => 'green'], ['color' => 'green'], 0], [['color' => 'green'], [1], 1], [[1], ['color' => 'green'], 1], [['color' => 'green'], ['key' => 'value'], 1], [['key' => 'value'], ['color' => 'green'], 1], [[1], [], 1], [[1, 2, 3], [1, 2], 1]])]
@@ -259,7 +248,7 @@ class ObjectsTest {
     Assert::equals('<function()>',  Objects::stringOf(function() { }));
   }
 
-  #[Test, Values('objects')]
+  #[Test, Values(from: 'objects')]
   public function stringOf_calls_toString_on_objects($val) {
     Assert::equals($val->toString(), Objects::stringOf($val));
   }
@@ -373,27 +362,27 @@ class ObjectsTest {
     Assert::equals('N;', Objects::hashOf(null));
   }
 
-  #[Test, Values('primitives')]
+  #[Test, Values(from: 'primitives')]
   public function hashOf_calls_serialize_on_primitives($val) {
     Assert::equals(serialize($val), Objects::hashOf($val));
   }
 
-  #[Test, Values('arrays')]
+  #[Test, Values(from: 'arrays')]
   public function hashOf_on_arrays($val, $expected) {
     Assert::equals($expected, Objects::hashOf($val));
   }
 
-  #[Test, Values('maps')]
+  #[Test, Values(from: 'maps')]
   public function hashOf_on_maps($val, $expected) {
     Assert::equals($expected, Objects::hashOf($val));
   }
 
-  #[Test, Values('objects')]
+  #[Test, Values(from: 'objects')]
   public function hashOf_calls_hashCode_on_objects($val) {
     Assert::equals((string)$val->hashCode(), Objects::hashOf($val));
   }
 
-  #[Test, Values('natives')]
+  #[Test, Values(from: 'natives')]
   public function hashOf_calls_spl_object_hash_on_natives($val) {
     Assert::equals(spl_object_hash($val), Objects::hashOf($val));
   }

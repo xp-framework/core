@@ -3,8 +3,8 @@
 use io\Channel;
 use io\streams\{MemoryInputStream, MemoryOutputStream, TextWriter};
 use lang\IllegalArgumentException;
-use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Expect, Test};
+use test\verify\Runtime;
+use test\{Assert, Expect, Test};
 
 class TextWriterTest {
   protected $out= null;

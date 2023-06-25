@@ -1,7 +1,7 @@
 <?php namespace io\unittest;
 
 use io\streams\MemoryOutputStream;
-use unittest\{Assert, Test, Values};
+use test\{Assert, Test, Values};
 
 class MemoryOutputStreamTest {
 

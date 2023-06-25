@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\ClassLoader;
-use unittest\{Assert, Before, Test};
+use test\{Assert, Before, Test};
 
 class ReferencesTest {
 

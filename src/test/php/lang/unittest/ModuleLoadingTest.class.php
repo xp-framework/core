@@ -2,7 +2,7 @@
 
 use lang\reflect\Module;
 use lang\{ClassLoader, ElementNotFoundException};
-use unittest\{Assert, Expect, Test};
+use test\{After, Assert, Expect, Test};
 
 class ModuleLoadingTest {
   protected $registered= [];
@@ -11,12 +11,13 @@ class ModuleLoadingTest {
    * Register a loader with the CL
    *
    * @param  lang.IClassLoader $l
+   * @return void
    */
   protected function register($l) {
     $this->registered[]= ClassLoader::registerLoader($l);
   }
 
-  /** @return voud */
+  #[After]
   public function tearDown() {
     foreach ($this->registered as $l) {
       ClassLoader::removeLoader($l);
@@ -71,7 +72,7 @@ class ModuleLoadingTest {
     }
   }
 
-  #[Test, Expect(['class' => ElementNotFoundException::class, 'withMessage' => '/Missing or malformed module-info/'])]
+  #[Test, Expect(class: ElementNotFoundException::class, message: '/Missing or malformed module-info/')]
   public function empty_module_file() {
     try {
       $this->register(new LoaderProviding(['module.xp' => '']));
@@ -80,7 +81,7 @@ class ModuleLoadingTest {
     }
   }
 
-  #[Test, Expect(['class' => ElementNotFoundException::class, 'withMessage' => '/Missing or malformed module-info/'])]
+  #[Test, Expect(class: ElementNotFoundException::class, message: '/Missing or malformed module-info/')]
   public function module_without_name() {
     try {
       $this->register(new LoaderProviding(['module.xp' => 'module { }']));

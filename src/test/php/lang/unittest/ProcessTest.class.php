@@ -3,7 +3,7 @@
 use io\streams\{MemoryOutputStream, Streams};
 use io\{IOException, TempFile};
 use lang\{Environment, IllegalStateException, Process, Runtime};
-use unittest\{Assert, AssertionFailedError, Before, Expect, PrerequisitesNotMetError, Test, Values};
+use test\{Assert, AssertionFailedError, Before, Expect, PrerequisitesNotMetError, Test, Values};
 
 class ProcessTest {
 
@@ -193,7 +193,7 @@ class ProcessTest {
     Assert::equals(222, $p->close());
   }
 
-  #[Test, Expect(['class' => IllegalStateException::class, 'withMessage' => '/Cannot close not-owned/'])]
+  #[Test, Expect(class: IllegalStateException::class, message: '/Cannot close not-owned/')]
   public function closingProcessByProcessId() {
     Process::getProcessById(getmypid())->close();
   }

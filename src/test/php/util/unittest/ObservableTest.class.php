@@ -1,7 +1,7 @@
 <?php namespace util\unittest;
 
 use lang\ClassLoader;
-use unittest\{Assert, Before, Test};
+use test\{Assert, Before, Test};
 use util\{Observable, Observer};
 
 class ObservableTest {

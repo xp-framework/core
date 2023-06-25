@@ -12,8 +12,8 @@ use lang\{
   XPClass,
   Nullable
 };
-use unittest\actions\RuntimeVersion;
-use unittest\{Assert, Action, Expect, Test, Values};
+use test\verify\Runtime;
+use test\{Action, Assert, Expect, Test, Values};
 
 class TypeUnionTest {
 
@@ -102,17 +102,17 @@ class TypeUnionTest {
     Assert::equals($types, (new TypeUnion($types))->types());
   }
 
-  #[Test, Values('instances')]
+  #[Test, Values(from: 'instances')]
   public function is_instance_of_a_string_int_union($value) {
     Assert::true((new TypeUnion([Primitive::$STRING, Primitive::$INT]))->isInstance($value));
   }
 
-  #[Test, Values('notInstancesAndNull')]
+  #[Test, Values(from: 'notInstancesAndNull')]
   public function is_not_instance_of_a_string_int_union($value) {
     Assert::false((new TypeUnion([Primitive::$STRING, Primitive::$INT]))->isInstance($value));
   }
 
-  #[Test, Values('instances')]
+  #[Test, Values(from: 'instances')]
   public function new_instance_of_a_string_int_union($value) {
     Assert::equals(
       $value,
@@ -120,7 +120,7 @@ class TypeUnionTest {
     );
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Values('notInstancesAndNull')]
+  #[Test, Expect(IllegalArgumentException::class), Values(from: 'notInstancesAndNull')]
   public function cannot_create_instances_of_a_string_int_union($value) {
     Assert::equals(
       $value,
@@ -128,7 +128,7 @@ class TypeUnionTest {
     );
   }
 
-  #[Test, Values('instancesAndNull')]
+  #[Test, Values(from: 'instancesAndNull')]
   public function cast_to_a_string_int_union($value) {
     Assert::equals(
       $value,
@@ -136,7 +136,7 @@ class TypeUnionTest {
     );
   }
 
-  #[Test, Expect(ClassCastException::class), Values('notInstances')]
+  #[Test, Expect(ClassCastException::class), Values(from: 'notInstances')]
   public function cannot_cast_to_a_string_int_union($value) {
     Assert::equals(
       $value,
@@ -144,13 +144,13 @@ class TypeUnionTest {
     );
   }
 
-  #[Test, Values('isAssignable')]
+  #[Test, Values(from: 'isAssignable')]
   public function is_assignable_from($type) {
     $union= new TypeUnion([Primitive::$STRING, Primitive::$INT, typeof($this)]);
     Assert::true($union->isAssignableFrom($type));
   }
 
-  #[Test, Values('notAssignable')]
+  #[Test, Values(from: 'notAssignable')]
   public function is_not_assignable_from($type) {
     $union= new TypeUnion([Primitive::$STRING, Primitive::$INT, typeof($this)]);
     Assert::false($union->isAssignableFrom($type));
@@ -188,7 +188,7 @@ class TypeUnionTest {
     );
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
+  #[Test, Runtime(php: '>=8.0.0-dev')]
   public function php8_native_union_field_type() {
     $f= eval('return new class() { public int|string $fixture; };');
     Assert::equals(
@@ -197,7 +197,7 @@ class TypeUnionTest {
     );
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
+  #[Test, Runtime(php: '>=8.0.0-dev')]
   public function php8_native_union_param_type() {
     $f= eval('return new class() { public function fixture(int|string $arg) { } };');
     Assert::equals(
@@ -206,7 +206,7 @@ class TypeUnionTest {
     );
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
+  #[Test, Runtime(php: '>=8.0.0-dev')]
   public function php8_native_union_return_type() {
     $f= eval('return new class() { public function fixture(): int|string { } };');
     Assert::equals(
@@ -215,7 +215,7 @@ class TypeUnionTest {
     );
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
+  #[Test, Runtime(php: '>=8.0.0-dev')]
   public function php8_native_nullable_union_type() {
     $f= eval('return new class() { public function fixture(int|string|null $arg) { } };');
     Assert::equals(
@@ -224,25 +224,25 @@ class TypeUnionTest {
     );
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
+  #[Test, Runtime(php: '>=8.0.0-dev')]
   public function php8_native_nullable_union_field_type_name() {
     $f= eval('return new class() { public int|string|null $fixture; };');
     Assert::equals('?', typeof($f)->getField('fixture')->getTypeName()[0]);
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
+  #[Test, Runtime(php: '>=8.0.0-dev')]
   public function php8_native_nullable_union_param_type_name() {
     $f= eval('return new class() { public function fixture(int|string|null $arg) { } };');
     Assert::equals('?', typeof($f)->getMethod('fixture')->getParameter(0)->getTypeName()[0]);
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
+  #[Test, Runtime(php: '>=8.0.0-dev')]
   public function php8_native_nullable_union_return_type_name() {
     $f= eval('return new class() { public function fixture(): int|string|null { } };');
     Assert::equals('?', typeof($f)->getMethod('fixture')->getReturnTypeName()[0]);
   }
 
-  #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
+  #[Test, Runtime(php: '>=8.0.0-dev')]
   public function php8_native_union_with_self() {
     $t= typeof(eval('
       namespace lang\unittest;

@@ -2,8 +2,8 @@
 
 use lang\reflect\TargetInvocationException;
 use lang\{ArrayType, ClassCastException, FunctionType, IllegalArgumentException, MapType, Primitive, Type, XPClass};
-use unittest\actions\VerifyThat;
-use unittest\{Assert, Expect, Test, Values};
+use test\verify\Condition;
+use test\{Assert, Expect, Test, Values};
 
 class FunctionTypeTest extends BaseTest {
 
@@ -248,7 +248,7 @@ class FunctionTypeTest extends BaseTest {
     yield [[new Name('test'), 'non-existant']];
   }
 
-  #[Test, Expect(ClassCastException::class), Values('nonFunctions')]
+  #[Test, Expect(ClassCastException::class), Values(from: 'nonFunctions')]
   public function cannot_cast_this($value) {
     (new FunctionType([Type::$VAR], Type::$VAR))->cast($value);
   }
@@ -274,7 +274,7 @@ class FunctionTypeTest extends BaseTest {
     Assert::equals('Test', $value());
   }
 
-  #[Test, Action(eval: 'new VerifyThat(fn() => !extension_loaded("xdebug"))')]
+  #[Test, Condition(assert: 'fn() => !extension_loaded("xdebug")')]
   public function create_instances_from_string_referencing_builtin() {
     $value= (new FunctionType([Primitive::$STRING], Type::$VAR))->newInstance('strlen');
     Assert::equals(4, $value('Test'));
@@ -359,7 +359,7 @@ class FunctionTypeTest extends BaseTest {
     (new FunctionType([], Primitive::$VOID))->newInstance([$this, 'getName']);
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Values('nonFunctions')]
+  #[Test, Expect(IllegalArgumentException::class), Values(from: 'nonFunctions')]
   public function cannot_create_instances_from($value) {
     (new FunctionType([], Type::$VAR))->newInstance($value);
   }
@@ -419,7 +419,7 @@ class FunctionTypeTest extends BaseTest {
     Assert::equals('string', $t->invoke($f, [Primitive::$STRING]));
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Values('nonFunctions')]
+  #[Test, Expect(IllegalArgumentException::class), Values(from: 'nonFunctions')]
   public function invoke_not_instance($value) {
     $t= new FunctionType([XPClass::forName('lang.Type')], Primitive::$STRING);
     $t->invoke($value);

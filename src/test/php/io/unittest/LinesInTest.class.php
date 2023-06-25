@@ -3,7 +3,7 @@
 use io\streams\{InputStream, LinesIn, MemoryInputStream, TextReader};
 use io\{File, IOException};
 use lang\IllegalArgumentException;
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 
 class LinesInTest {
 
@@ -58,7 +58,7 @@ class LinesInTest {
     );
   }
 
-  #[Test, Values('iso88591Input')]
+  #[Test, Values(from: 'iso88591Input')]
   public function input_is_encoded_to_utf8($arg) {
     Assert::equals([1 => 'ü'], iterator_to_array($arg));
   }

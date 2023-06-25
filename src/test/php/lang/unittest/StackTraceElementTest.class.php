@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\StackTraceElement;
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 
 class StackTraceElementTest {
   const NEW_FIXTURE_METHOD= '  at lang.unittest.StackTraceElementTest::newFixtureWith';

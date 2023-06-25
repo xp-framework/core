@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{Runnable, XPClass};
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 
 class IsInstanceTest extends BaseTest {
 

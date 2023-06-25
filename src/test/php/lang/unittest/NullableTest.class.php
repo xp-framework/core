@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{ClassCastException, IllegalArgumentException, Nullable, Type};
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 
 class NullableTest {
 
@@ -33,12 +33,12 @@ class NullableTest {
     Nullable::forName('string');
   }
 
-  #[Test, Values('instances')]
+  #[Test, Values(from: 'instances')]
   public function is_instance($value, $expected) {
     Assert::equals($expected, Type::forName('?string')->isInstance($value));
   }
 
-  #[Test, Values('castables')]
+  #[Test, Values(from: 'castables')]
   public function cast($value, $expected) {
     Assert::equals($expected, Type::forName('?string')->cast($value));
   }

@@ -12,7 +12,7 @@ use lang\{
   Type,
   XPClass
 };
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 use util\collections\{HashTable, Vector};
 
 class TypeTest {
@@ -219,12 +219,12 @@ class TypeTest {
     return [$this, null, false, true, '', 0, -1, 0.0, [[]], [['one' => 'two']], $this];
   }
 
-  #[Test, Values('instances')]
+  #[Test, Values(from: 'instances')]
   public function anythingIsAnInstanceOfVar($value) {
     Assert::true(Type::$VAR->isInstance($value));
   }
 
-  #[Test, Values('instances')]
+  #[Test, Values(from: 'instances')]
   public function nothingIsAnInstanceOfVoid($value) {
     Assert::false(Type::$VOID->isInstance($value));
   }
@@ -240,7 +240,7 @@ class TypeTest {
     ];
   }
 
-  #[Test, Values('types')]
+  #[Test, Values(from: 'types')]
   public function varIsAssignableFromAnything($type) {
     Assert::true(Type::$VAR->isAssignableFrom($type));
   }
@@ -250,7 +250,7 @@ class TypeTest {
     Assert::false(Type::$VAR->isAssignableFrom(Type::$VOID));
   }
 
-  #[Test, Values('types')]
+  #[Test, Values(from: 'types')]
   public function voidIsAssignableFromNothing($type) {
     Assert::false(Type::$VOID->isAssignableFrom($type));
   }
@@ -260,22 +260,22 @@ class TypeTest {
     Assert::false(Type::$VOID->isAssignableFrom(Type::$VOID));
   }
 
-  #[Test, Values('instances')]
+  #[Test, Values(from: 'instances')]
   public function newInstance_of_var($value) {
     Assert::equals($value, Type::$VAR->newInstance($value));
   }
 
-  #[Test, Expect(IllegalAccessException::class), Values('instances')]
+  #[Test, Expect(IllegalAccessException::class), Values(from: 'instances')]
   public function newInstance_of_void($value) {
     Type::$VOID->newInstance($value);
   }
 
-  #[Test, Values('instances')]
+  #[Test, Values(from: 'instances')]
   public function cast_to_var($value) {
     Assert::equals($value, Type::$VAR->cast($value));
   }
 
-  #[Test, Expect(ClassCastException::class), Values('instances')]
+  #[Test, Expect(ClassCastException::class), Values(from: 'instances')]
   public function cast_to_void($value) {
     Type::$VOID->cast($value);
   }
@@ -380,17 +380,17 @@ class TypeTest {
     Assert::equals(null, Type::$ARRAY->cast(null));
   }
 
-  #[Test, Values('callables')]
+  #[Test, Values(from: 'callables')]
   public function callable_type_union_isInstance($value) {
     Assert::true(Type::$CALLABLE->isInstance($value));
   }
 
-  #[Test, Values('callables')]
+  #[Test, Values(from: 'callables')]
   public function callable_type_union_newInstance($value) {
     Assert::equals($value, Type::$CALLABLE->newInstance($value));
   }
 
-  #[Test, Values('callables')]
+  #[Test, Values(from: 'callables')]
   public function callable_type_union_cast($value) {
     Assert::equals($value, Type::$CALLABLE->cast($value));
   }
@@ -420,7 +420,7 @@ class TypeTest {
     Assert::false(Type::$CALLABLE->isAssignableFrom(typeof($this)));
   }
 
-  #[Test, Values('iterables')]
+  #[Test, Values(from: 'iterables')]
   public function iterable_type_union_isInstance($value) {
     Assert::true(Type::$ITERABLE->isInstance($value));
   }
@@ -431,12 +431,12 @@ class TypeTest {
     Assert::true(Type::$ITERABLE->isInstance($gen()));
   }
 
-  #[Test, Values('iterables')]
+  #[Test, Values(from: 'iterables')]
   public function iterable_type_union_newInstance($value) {
     Assert::equals($value, Type::$ITERABLE->newInstance($value));
   }
 
-  #[Test, Values('iterables')]
+  #[Test, Values(from: 'iterables')]
   public function iterable_type_union_cast($value) {
     Assert::equals($value, Type::$ITERABLE->cast($value));
   }
@@ -500,7 +500,7 @@ class TypeTest {
     Assert::equals($expected, Type::forName('function(): string')->isInstance($fixture));
   }
 
-  #[Test, Values('names')]
+  #[Test, Values(from: 'names')]
   public function split($names, $expected) {
     Assert::equals($expected, iterator_to_array(Type::split($names, ',')));
   }

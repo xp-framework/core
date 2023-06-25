@@ -3,25 +3,10 @@
 use io\File;
 use lang\archive\{Archive, ArchiveClassLoader};
 use lang\{ClassLoader, ElementNotFoundException};
-use unittest\{Assert, Expect, Test};
+use test\{After, Assert, Before, Expect, Test};
 
 class ResourcesTest {
   private $cl;
-
-  /** @return void */
-  #[Before]
-  public function setUp() {
-    $this->cl= ClassLoader::registerLoader(new ArchiveClassLoader(new Archive(typeof($this)
-      ->getPackage()
-      ->getResourceAsStream('three-and-four.xar'))
-    ));
-  }
-
-  /** @return void */
-  #[After]
-  public function tearDown() {
-    ClassLoader::removeLoader($this->cl);
-  }
 
   /**
    * Helper method for getResource() and getResourceAsStream()
@@ -34,6 +19,19 @@ class ResourcesTest {
       "[runnable]\nmain-class=\"remote.server.impl.ApplicationServer\"",
       trim($contents)
     );
+  }
+
+  #[Before]
+  public function setUp() {
+    $this->cl= ClassLoader::registerLoader(new ArchiveClassLoader(new Archive(typeof($this)
+      ->getPackage()
+      ->getResourceAsStream('three-and-four.xar'))
+    ));
+  }
+
+  #[After]
+  public function tearDown() {
+    ClassLoader::removeLoader($this->cl);
   }
   
   #[Test]

@@ -1,7 +1,7 @@
 <?php namespace util\unittest;
 
 use lang\{IllegalArgumentException, IllegalStateException, Throwable, XPException};
-use unittest\{Assert, Before, Expect, Test, Values, PrerequisitesNotMetError};
+use test\{Assert, Before, Expect, PrerequisitesNotMetError, Test, Values};
 use util\Secret;
 
 abstract class SecretTest {
@@ -103,7 +103,7 @@ abstract class SecretTest {
     }
   }
 
-  #[Test, Expect(['class' => IllegalStateException::class, 'withMessage' => '/An error occurred during storing the encrypted secret./'])]
+  #[Test, Expect(class: IllegalStateException::class, message: '/An error occurred during storing the encrypted secret./')]
   public function decryption_throws_exception_if_creation_has_failed() {
     $called= false;
     Secret::setBacking(function($value) {

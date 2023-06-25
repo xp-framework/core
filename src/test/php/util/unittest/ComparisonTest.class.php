@@ -1,7 +1,7 @@
 <?php namespace util\unittest;
 
 use lang\{ClassLoader, Value};
-use unittest\{Assert, Test, Values};
+use test\{Assert, Test, Values};
 use util\Comparison;
 
 class ComparisonTest {

@@ -2,7 +2,7 @@
 
 use io\streams\{MemoryInputStream, MemoryOutputStream, Streams};
 use lang\Runtime;
-use unittest\{Assert, Before, PrerequisitesNotMetError, Test};
+use test\{Assert, Before, PrerequisitesNotMetError, Test};
 
 class DomApiStreamsTest {
 

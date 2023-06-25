@@ -1,6 +1,6 @@
 <?php namespace lang\unittest;
 
-use unittest\{Ignore, Limit, Test};
+use test\{Ignore, Limit, Test};
 
 class AnnotatedClass {
 

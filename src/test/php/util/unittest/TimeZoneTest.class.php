@@ -1,7 +1,7 @@
 <?php namespace util\unittest;
 
 use lang\IllegalArgumentException;
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 use util\{Date, TimeZone};
 
 class TimeZoneTest {

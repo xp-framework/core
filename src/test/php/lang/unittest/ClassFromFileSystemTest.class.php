@@ -2,7 +2,7 @@
 
 use io\{File, Folder};
 use lang\{Environment, FileSystemClassLoader, IClassLoader};
-use unittest\Assert;
+use test\Assert;
 
 class ClassFromFileSystemTest extends ClassFromUriTest {
 

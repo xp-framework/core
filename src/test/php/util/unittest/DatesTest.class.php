@@ -1,6 +1,6 @@
 <?php namespace util\unittest;
 
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 use util\{Date, Dates, TimeInterval, TimeSpan};
 
 class DatesTest {

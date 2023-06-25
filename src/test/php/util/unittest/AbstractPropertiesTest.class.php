@@ -1,7 +1,7 @@
 <?php namespace util\unittest;
 
 use lang\{ElementNotFoundException, FormatException, IllegalStateException};
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 use util\Properties;
 
 abstract class AbstractPropertiesTest {

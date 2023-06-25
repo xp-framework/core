@@ -2,8 +2,8 @@
 
 use io\{File, Folder, Path};
 use lang\{Environment, IllegalArgumentException, IllegalStateException, Runtime};
-use unittest\actions\IsPlatform;
-use unittest\{Assert, Action, Expect, Test, Values};
+use test\verify\Runtime as VerifyRuntime;
+use test\{Assert, Expect, Test, Values};
 
 class PathTest {
 
@@ -187,7 +187,7 @@ class PathTest {
     Assert::equals($current, Path::compose($components)->asRealpath($current)->toString());
   }
 
-  #[Test, Action(eval: 'new IsPlatform("!^Win")')]
+  #[Test, VerifyRuntime(os: "!^Win")]
   public function links_resolved_in_realpath() {
     $temp= Environment::tempDir();
     $link= new Path($temp, 'link-to-temp');
@@ -207,7 +207,7 @@ class PathTest {
     Assert::equals($file, (new Path($file))->asFile());
   }
 
-  #[Test, Expect(['class' => IllegalStateException::class, 'withMessage' => '/.+ is not a file/'])]
+  #[Test, Expect(class: IllegalStateException::class, message: '/.+ is not a file/')]
   public function as_file_throws_exception_when_invoked_on_a_folder() {
     (new Path($this->existingFolder()))->asFile();
   }
@@ -217,7 +217,7 @@ class PathTest {
     Assert::equals(new File('test.txt'), (new Path('test.txt'))->asFile());
   }
 
-  #[Test, Expect(['class' => IllegalStateException::class, 'withMessage' => '/.+ does not exist/'])]
+  #[Test, Expect(class: IllegalStateException::class, message: '/.+ does not exist/')]
   public function as_file_throws_exception_when_existing_flag_defined_an_nonexistant_path_given() {
     (new Path('test.txt'))->asFile(Path::EXISTING);
   }
@@ -228,7 +228,7 @@ class PathTest {
     Assert::equals($folder, (new Path($folder))->asFolder());
   }
 
-  #[Test, Expect(['class' => IllegalStateException::class, 'withMessage' => '/.+ is not a folder/'])]
+  #[Test, Expect(class: IllegalStateException::class, message: '/.+ is not a folder/')]
   public function as_folder_throws_exception_when_invoked_on_a_folder() {
     (new Path($this->existingFile()))->asFolder();
   }
@@ -238,7 +238,7 @@ class PathTest {
     Assert::equals(new Folder('test'), (new Path('test'))->asFolder());
   }
 
-  #[Test, Expect(['class' => IllegalStateException::class, 'withMessage' => '/.+ does not exist/'])]
+  #[Test, Expect(class: IllegalStateException::class, message: '/.+ does not exist/')]
   public function as_folder_throws_exception_when_existing_flag_defined_an_nonexistant_path_given() {
     (new Path('test'))->asFolder(Path::EXISTING);
   }
@@ -253,7 +253,7 @@ class PathTest {
     Assert::equals($parent, (new Path($child))->parent()->toString('/'));
   }
 
-  #[Test, Action(eval: 'new IsPlatform("^Win")')]
+  #[Test, VerifyRuntime(os: '^(?!WIN)')]
   public function parent_of_directory_in_root() {
     Assert::equals('C:/', (new Path('C:/Windows'))->parent()->toString('/'));
   }
@@ -263,7 +263,7 @@ class PathTest {
     Assert::null((new Path('/'))->parent());
   }
 
-  #[Test, Values(['C:', 'C:/', 'c:', 'C:/']), Action(eval: 'new IsPlatform("^Win")')]
+  #[Test, Values(['C:', 'C:/', 'c:', 'C:/']), VerifyRuntime(os: '^(?!WIN)')]
   public function parent_of_root_windows($root) {
     Assert::null((new Path($root))->parent());
   }
@@ -344,17 +344,17 @@ class PathTest {
     Assert::equals(new Path('.'), new Path('dir/..'));
   }
 
-  #[Test, Action(eval: 'new IsPlatform("^Win")'), Values([['\\\\remote\\file.txt', true], ['\\\\remote', true]])]
+  #[Test, VerifyRuntime(os: '^(?!WIN)'), Values([['\\\\remote\\file.txt', true], ['\\\\remote', true]])]
   public function unc_path_is_absolute() {
     Assert::true((new Path('\\\\remote\file.txt'))->isAbsolute());
   }
 
-  #[Test, Action(eval: 'new IsPlatform("^Win")')]
+  #[Test, VerifyRuntime(os: '^(?!WIN)')]
   public function unc_path() {
     Assert::equals('//remote/file.txt', (new Path('\\\\remote\file.txt'))->toString('/'));
   }
 
-  #[Test, Action(eval: 'new IsPlatform("^Win")')]
+  #[Test, VerifyRuntime(os: '^(?!WIN)')]
   public function unc_path_as_base() {
     Assert::equals('//remote/file.txt', (new Path('\\\\remote', 'file.txt'))->toString('/'));
   }

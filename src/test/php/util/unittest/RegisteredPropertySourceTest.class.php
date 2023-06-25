@@ -1,13 +1,12 @@
 <?php namespace util\unittest;
 
 use io\streams\MemoryInputStream;
-use unittest\{Assert, Test};
+use test\{Assert, Before, Test};
 use util\{Properties, RegisteredPropertySource};
 
 class RegisteredPropertySourceTest {
   protected $fixture;
 
-  /** @return void */
   #[Before]
   public function setUp() {
     $this->fixture= new RegisteredPropertySource('props', new Properties(null));

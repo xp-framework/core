@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\Primitive;
-use unittest\{Assert, Test};
+use test\{Assert, Test};
 
 class AnonymousInstanceTest {
 

@@ -1,7 +1,7 @@
 <?php namespace util\unittest;
 
 use lang\{IllegalArgumentException, IllegalStateException};
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 use util\{Filter, Filters};
 
 class FiltersTest {
@@ -24,7 +24,7 @@ class FiltersTest {
     return [[Filters::$ALL], [Filters::$ANY], [Filters::$NONE]];
   }
 
-  #[Test, Values('accepting')]
+  #[Test, Values(from: 'accepting')]
   public function can_create($accepting) {
     create('new util.Filters<int>',
       [newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }])],
@@ -32,7 +32,7 @@ class FiltersTest {
     );
   }
 
-  #[Test, Values('accepting')]
+  #[Test, Values(from: 'accepting')]
   public function can_create_with_empty_filters($accepting) {
     create('new util.Filters<int>', [], $accepting);
   }

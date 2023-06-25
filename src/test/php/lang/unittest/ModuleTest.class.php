@@ -2,7 +2,7 @@
 
 use lang\reflect\Module;
 use lang\{ClassLoader, ElementNotFoundException};
-use unittest\{Assert, Expect, Test};
+use test\{After, Assert, Before, Expect, Test};
 
 class ModuleTest {
   private $cl;
@@ -12,23 +12,22 @@ class ModuleTest {
    * Register a loader with the CL
    *
    * @param  lang.reflect.Module $module
+   * @return void
    */
   private function register($module) {
     $this->registered[]= Module::register($module);
   }
 
-  /** @return void */
+  #[Before]
+  public function setUp() {
+    $this->cl= ClassLoader::getDefault();
+  }
+
   #[After]
   public function tearDown() {
     foreach ($this->registered as $module) {
       Module::remove($module);
     }
-  }
-
-  /** @return void */
-  #[Before]
-  public function setUp() {
-    $this->cl= ClassLoader::getDefault();
   }
 
   #[Test]
@@ -83,7 +82,7 @@ class ModuleTest {
     Assert::equals($module, Module::forName($module->name()));
   }
 
-  #[Test, Expect(['class' => ElementNotFoundException::class, 'withMessage' => 'No module "@@non-existant@@" declared'])]
+  #[Test, Expect(class: ElementNotFoundException::class, message: 'No module "@@non-existant@@" declared')]
   public function forName_throws_exception_when_no_module_registered() {
     Module::forName('@@non-existant@@');
   }

@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{Process, Runtime, RuntimeOptions};
-use unittest\{Assert, Before, PrerequisitesNotMetError, Test};
+use test\{Assert, Before, PrerequisitesNotMetError, Test, Values};
 use util\Objects;
 
 class BootstrapTest {
