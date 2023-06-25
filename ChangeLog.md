@@ -5,6 +5,10 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged PR #329: Refactor src/test/php - from tests inside the package
+  `net.xp_framework.unittest` to the package (lang, util, io, xp) they're
+  testing
+  (@thekid)
 * Merged PR #328: Migrate tests to baseless / Assert DSL - @thekid
 
 ## 11.7.0 / 2023-06-24
