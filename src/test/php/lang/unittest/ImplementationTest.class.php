@@ -29,7 +29,7 @@ class ImplementationTest {
     );
   }
 
-  #[Test, Ignore('Unsupported')]
+  #[Test]
   public function typeDictionaryPutMethodKeyParameter() {
     $fixture= create('new lang.unittest.TypeDictionary<string>');
     Assert::equals(

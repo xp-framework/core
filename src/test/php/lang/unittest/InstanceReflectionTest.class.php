@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{Primitive, XPClass, Reflection};
-use test\{Assert, Before, Ignore, Test};
+use test\{Assert, Before, Test};
 
 class InstanceReflectionTest {
   private $fixture;
@@ -69,7 +69,7 @@ class InstanceReflectionTest {
     );
   }
 
-  #[Test, Ignore('Unsupported')]
+  #[Test]
   public function elementFieldType() {
     Assert::equals(
       '[:lang.Value]',
@@ -77,7 +77,7 @@ class InstanceReflectionTest {
     );
   }
 
-  #[Test, Ignore('Unsupported')]
+  #[Test]
   public function putParameters() {
     $params= Reflection::type($this->fixture)->method('put')->parameters();
     Assert::equals(2, $params->size());
@@ -85,7 +85,7 @@ class InstanceReflectionTest {
     Assert::equals(XPClass::forName('lang.Value'), $params->at(1)->constraint()->type());
   }
 
-  #[Test, Ignore('Unsupported')]
+  #[Test]
   public function getReturnType() {
     Assert::equals(
       'lang.Value',
@@ -93,7 +93,7 @@ class InstanceReflectionTest {
     );
   }
 
-  #[Test, Ignore('Unsupported')]
+  #[Test]
   public function valuesReturnType() {
     Assert::equals(
       'lang.Value[]',
