@@ -2,7 +2,6 @@
 
 use lang\reflect\TargetInvocationException;
 use lang\{ArrayType, ClassCastException, FunctionType, IllegalArgumentException, MapType, Primitive, Type, XPClass};
-use net\xp_framework\unittest\{BaseTest, Name};
 use unittest\actions\VerifyThat;
 use unittest\{Assert, Expect, Test, Values};
 
@@ -172,7 +171,7 @@ class FunctionTypeTest extends BaseTest {
     Assert::false($type->isInstance($value));
   }
 
-  #[Test, Values([[['net.xp_framework.unittest.Name', 'new']],  ['net.xp_framework.unittest.Name::new'], [[Name::class, 'new']]])]
+  #[Test, Values([[['lang.unittest.Name', 'new']],  ['lang.unittest.Name::new'], [[Name::class, 'new']]])]
   public function array_referencing_constructor_is_instance($value) {
     $type= new FunctionType([Primitive::$STRING], XPClass::forName('lang.Value'));
     Assert::true($type->isInstance($value));
@@ -299,18 +298,18 @@ class FunctionTypeTest extends BaseTest {
   #[Test, Values([[['lang.XPClass', 'forName']], ['lang.XPClass::forName'], [[XPClass::class, 'forName']]])]
   public function create_instances_from_array_referencing_static_class_method($value) {
     $value= (new FunctionType([Primitive::$STRING], XPClass::forName('lang.XPClass')))->newInstance($value);
-    Assert::equals(XPClass::forName('net.xp_framework.unittest.Name'), $value('net.xp_framework.unittest.Name'));
+    Assert::equals(XPClass::forName('lang.unittest.Name'), $value('lang.unittest.Name'));
   }
 
-  #[Test, Values([[['net.xp_framework.unittest.Name', 'new']],  ['net.xp_framework.unittest.Name::new'], [[Name::class, 'new']]])]
+  #[Test, Values([[['lang.unittest.Name', 'new']],  ['lang.unittest.Name::new'], [[Name::class, 'new']]])]
   public function create_instances_from_array_referencing_constructor($value) {
-    $new= (new FunctionType([Primitive::$STRING], XPClass::forName('net.xp_framework.unittest.Name')))->newInstance($value);
+    $new= (new FunctionType([Primitive::$STRING], XPClass::forName('lang.unittest.Name')))->newInstance($value);
     Assert::instance(Name::class, $new('Test'));
   }
 
-  #[Test, Values([[['net.xp_framework.unittest.Name', 'new']], ['net.xp_framework.unittest.Name::new'], [[Name::class, 'new']]])]
+  #[Test, Values([[['lang.unittest.Name', 'new']], ['lang.unittest.Name::new'], [[Name::class, 'new']]])]
   public function create_instances_from_array_referencing_declared_constructor($value) {
-    $new= (new FunctionType([Type::$VAR], XPClass::forName('net.xp_framework.unittest.Name')))->newInstance($value);
+    $new= (new FunctionType([Type::$VAR], XPClass::forName('lang.unittest.Name')))->newInstance($value);
     Assert::equals(new Name('test'), $new($this->getName()));
   }
 
@@ -476,7 +475,7 @@ class FunctionTypeTest extends BaseTest {
 
   #[Test, Values([[['lang.unittest.FunctionTypeTest', 'getName']], ['lang.unittest.FunctionTypeTest::getName']])]
   public function reference_to_instance_method_is_instance_with_parent_class($value) {
-    $type= new FunctionType([XPClass::forName('net.xp_framework.unittest.BaseTest')], Primitive::$STRING);
+    $type= new FunctionType([XPClass::forName('lang.unittest.BaseTest')], Primitive::$STRING);
     Assert::true($type->isInstance($value));
   }
 

@@ -2,7 +2,6 @@
 
 use lang\unittest\ListOf;
 use lang\{ClassLoader, Runnable};
-use net\xp_framework\unittest\Name;
 use unittest\{Assert, Test, Values};
 
 class IsTest {
@@ -75,12 +74,12 @@ class IsTest {
 
   #[Test]
   public function object_array() {
-    Assert::true(is('net.xp_framework.unittest.Name[]', [new Name('test'), new Name('test'), new Name('test')]));
+    Assert::true(is('lang.unittest.Name[]', [new Name('test'), new Name('test'), new Name('test')]));
   }
 
   #[Test]
   public function objectArrayWithnull() {
-    Assert::false(is('net.xp_framework.unittest.Name[]', [new Name('test'), new Name('test'), null]));
+    Assert::false(is('lang.unittest.Name[]', [new Name('test'), new Name('test'), null]));
   }
 
   #[Test]

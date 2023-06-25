@@ -8,7 +8,6 @@ use lang\{
   Type,
   XPClass
 };
-use net\xp_framework\unittest\Name;
 use unittest\{Assert, Expect, Test, Values};
 
 class ArrayTypeTest {
@@ -53,7 +52,10 @@ class ArrayTypeTest {
 
   #[Test]
   public function objectComponentType() {
-    Assert::equals(XPClass::forName('net.xp_framework.unittest.Name'), ArrayType::forName('net.xp_framework.unittest.Name[]')->componentType());
+    Assert::equals(
+      XPClass::forName('lang.unittest.Name'),
+      ArrayType::forName('lang.unittest.Name[]')->componentType()
+    );
   }
 
   #[Test]

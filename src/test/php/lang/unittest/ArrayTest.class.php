@@ -1,7 +1,6 @@
 <?php namespace lang\unittest;
 
 use lang\IllegalArgumentException;
-use net\xp_framework\unittest\Name;
 use unittest\{Assert, Expect, Test};
 
 class ArrayTest {

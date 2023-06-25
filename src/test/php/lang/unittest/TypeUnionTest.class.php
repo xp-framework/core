@@ -12,7 +12,6 @@ use lang\{
   XPClass,
   Nullable
 };
-use net\xp_framework\unittest\Name;
 use unittest\actions\RuntimeVersion;
 use unittest\{Assert, Action, Expect, Test, Values};
 
@@ -246,7 +245,7 @@ class TypeUnionTest {
   #[Test, Action(eval: 'new RuntimeVersion(">=8.0.0-dev")')]
   public function php8_native_union_with_self() {
     $t= typeof(eval('
-      namespace net\xp_framework\unittest;
+      namespace lang\unittest;
 
       use Countable;
 

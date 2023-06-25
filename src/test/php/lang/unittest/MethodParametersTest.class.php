@@ -14,7 +14,6 @@ use lang\{
   Nullable,
   XPClass
 };
-use net\xp_framework\unittest\Name;
 use unittest\actions\RuntimeVersion;
 use unittest\{Assert, Action, Expect, Test, Values};
 
@@ -41,7 +40,7 @@ class MethodParametersTest extends MethodsTest {
   /** @return iterable */
   private function restrictions() {
     yield ['\lang\Value', new XPClass(Value::class)];
-    yield ['\net\xp_framework\unittest\Name', new XPClass(Name::class)];
+    yield ['\lang\unittest\Name', new XPClass(Name::class)];
     yield ['array', Type::$ARRAY];
     yield ['callable', Type::$CALLABLE];
   }
@@ -86,7 +85,7 @@ class MethodParametersTest extends MethodsTest {
     );
   }
 
-  #[Test, Values([['\lang\Value', Value::class], ['\net\xp_framework\unittest\Name', Name::class], ['Value', Value::class]])]
+  #[Test, Values([['\lang\Value', Value::class], ['\lang\unittest\Name', Name::class], ['Value', Value::class]])]
   public function parameter_type_determined_via_syntax($literal, $type) {
     $this->assertParamType(
       new XPClass($type),

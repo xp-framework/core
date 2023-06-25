@@ -2,7 +2,6 @@
 
 use lang\ClassFormatException;
 use lang\reflect\ClassParser;
-use net\xp_framework\unittest\Name;
 use unittest\{Assert, Call, Expect, Fixture, Test, Value, Values};
 
 class ClassDetailsTest {
@@ -233,7 +232,7 @@ class ClassDetailsTest {
   #[Test]
   public function use_statements_evaluated() {
     $actual= (new ClassParser())->parseDetails('<?php namespace test;
-      use net\xp_framework\unittest\Name;
+      use lang\unittest\Name;
 
       #[Value(new Name("test"))]
       class Test {
@@ -245,7 +244,7 @@ class ClassDetailsTest {
   #[Test]
   public function use_statements_with_alias_evaluated() {
     $actual= (new ClassParser())->parseDetails('<?php namespace test;
-      use net\xp_framework\unittest\Name as Named;
+      use lang\unittest\Name as Named;
 
       #[Value(new Named("test"))]
       class Test {
@@ -257,7 +256,7 @@ class ClassDetailsTest {
   #[Test]
   public function grouped_use_statements_evaluated() {
     $actual= (new ClassParser())->parseDetails('<?php namespace test;
-      use net\xp_framework\unittest\{Name, DemoTest};
+      use lang\unittest\{Name, DemoTest};
 
       #[Value(new Name("test"))]
       class Test extends DemoTest {
@@ -269,7 +268,7 @@ class ClassDetailsTest {
   #[Test]
   public function grouped_use_statements_with_alias_evaluated() {
     $actual= (new ClassParser())->parseDetails('<?php namespace test;
-      use net\xp_framework\unittest\{Name as Base};
+      use lang\unittest\{Name as Base};
 
       #[Value(new Base("test"))]
       class Test {
@@ -322,10 +321,10 @@ class ClassDetailsTest {
     Assert::equals(['test' => null, 'value' => 'test'], $actual['class'][DETAIL_ANNOTATIONS]);
   }
 
-  #[Test, Values(['\net\xp_framework\unittest\Name', 'unittest\Name', 'Name'])]
+  #[Test, Values(['\lang\unittest\Name', 'unittest\Name', 'Name'])]
   public function php8_attributes_with_named_arguments($name) {
-    $actual= (new ClassParser())->parseDetails('<?php namespace net\xp_framework;
-      use net\xp_framework\unittest\Name;
+    $actual= (new ClassParser())->parseDetails('<?php namespace lang;
+      use lang\unittest\Name;
 
       #[Expect(class: '.$name.'::class)]
       class Test {
@@ -504,10 +503,10 @@ class ClassDetailsTest {
     Assert::equals(['test' => null], $details[0]['fixture'][DETAIL_ANNOTATIONS]);
   }
 
-  #[Test, Values(['\net\xp_framework\unittest\Name', 'unittest\Name', 'Name'])]
+  #[Test, Values(['\lang\unittest\Name', 'unittest\Name', 'Name'])]
   public function annotation_with_reference_to($parent) {
-    $details= (new ClassParser())->parseDetails('<?php namespace net\xp_framework;
-      use net\xp_framework\unittest\Name;
+    $details= (new ClassParser())->parseDetails('<?php namespace lang;
+      use lang\unittest\Name;
 
       class Test extends '.$parent.' {
         #[Fixture(new parent("Test"))]

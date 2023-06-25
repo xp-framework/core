@@ -1,7 +1,6 @@
 <?php namespace lang\unittest;
 
 use lang\{ClassCastException, IllegalArgumentException, Nullable, Type};
-use net\xp_framework\unittest\Name;
 use unittest\{Assert, Expect, Test, Values};
 
 class NullableTest {

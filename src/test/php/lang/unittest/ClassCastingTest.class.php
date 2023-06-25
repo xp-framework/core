@@ -1,7 +1,6 @@
 <?php namespace lang\unittest;
 
 use lang\{ClassCastException, Type, XPClass};
-use net\xp_framework\unittest\BaseTest;
 use unittest\{Assert, Expect, Test};
 
 class ClassCastingTest extends BaseTest {

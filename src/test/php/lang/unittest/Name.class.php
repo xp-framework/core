@@ -17,6 +17,9 @@ class Name implements Value {
   /** @return string */
   public function toString() { return $this->value; }
 
+  /** @return static */
+  public function copy() { return new static($this->value); }
+
   /**
    * Compares this name to another
    *

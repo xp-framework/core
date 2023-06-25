@@ -212,6 +212,6 @@ class PackageTest {
 
   #[Test, Expect(ElementNotFoundException::class)]
   public function of_class_from_non_existant_package() {
-    Package::of('net.xp_framework.unittest.nonexistant.TestClass');
+    Package::of('lang.unittest.nonexistant.TestClass');
   }
 }

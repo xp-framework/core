@@ -40,7 +40,7 @@ abstract class ArchiveTest {
   /**
    * Returns an empty XAR archive as a file
    *
-   * @return net.xp_framework.unittest.io.Buffer
+   * @return io.File
    */
   protected function file($version) {
     static $header= [

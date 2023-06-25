@@ -1,7 +1,6 @@
 <?php namespace lang\unittest;
 
 use lang\{ClassCastException, CommandLine, Runnable, Value};
-use net\xp_framework\unittest\BaseTest;
 use unittest\{Assert, Expect, Test, Values};
 
 class CastingTest extends BaseTest implements Runnable {

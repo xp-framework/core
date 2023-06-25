@@ -1,7 +1,6 @@
 <?php namespace lang\unittest;
 
 use lang\reflect\Package;
-use net\xp_framework\unittest\Name;
 use unittest\{Assert, Before, Test};
 use util\collections\Vector;
 

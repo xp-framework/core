@@ -1,7 +1,6 @@
 <?php namespace lang\unittest;
 
 use lang\{ClassLoader, Closeable, IllegalStateException};
-use net\xp_framework\unittest\Name;
 use unittest\{Assert, Before, Test, Values};
 
 class WithTest {

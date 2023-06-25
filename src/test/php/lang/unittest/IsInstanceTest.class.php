@@ -1,7 +1,6 @@
 <?php namespace lang\unittest;
 
 use lang\{Runnable, XPClass};
-use net\xp_framework\unittest\{BaseTest, Name};
 use unittest\{Assert, Test};
 
 class IsInstanceTest extends BaseTest {

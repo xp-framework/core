@@ -12,7 +12,6 @@ use lang\{
   Type,
   XPClass
 };
-use net\xp_framework\unittest\Name;
 use unittest\{Assert, Expect, Test, Values};
 use util\collections\{HashTable, Vector};
 
@@ -117,9 +116,9 @@ class TypeTest {
     Assert::equals(Nullable::forName('?string'), Type::forName('?string'));
   }
 
-  #[Test, Values(['net.xp_framework.unittest.Name', '\net\xp_framework\unittest\Name', Name::class])]
+  #[Test, Values(['lang.unittest.Name', '\lang\unittest\Name', Name::class])]
   public function objectType($name) {
-    Assert::equals(XPClass::forName('net.xp_framework.unittest.Name'), Type::forName($name));
+    Assert::equals(XPClass::forName('lang.unittest.Name'), Type::forName($name));
   }
 
   #[Test]

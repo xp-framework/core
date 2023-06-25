@@ -7,16 +7,16 @@ class CreateTest {
 
   #[Test]
   public function create_with_all_qualified_names() {
-    $h= create('new lang.unittest.Lookup<net.xp_framework.unittest.Name, net.xp_framework.unittest.Name>');
+    $h= create('new lang.unittest.Lookup<lang.unittest.Name, lang.unittest.Name>');
     Assert::equals(
-      [XPClass::forName('net.xp_framework.unittest.Name'), XPClass::forName('net.xp_framework.unittest.Name')], 
+      [XPClass::forName('lang.unittest.Name'), XPClass::forName('lang.unittest.Name')], 
       typeof($h)->genericArguments()
     );
   }
 
   #[Test]
   public function create_can_be_used_with_type_variables() {
-    $T= XPClass::forName('net.xp_framework.unittest.Name');
+    $T= XPClass::forName('lang.unittest.Name');
     Assert::equals([$T], typeof(create("new lang.unittest.ListOf<$T>"))->genericArguments());
   }
 
@@ -30,6 +30,6 @@ class CreateTest {
 
   #[Test, Expect(IllegalArgumentException::class)]
   public function create_raises_exception_when_non_generic_given() {
-    create('new net.xp_framework.unittest.Name<string>');
+    create('new lang.unittest.Name<string>');
   }
 }

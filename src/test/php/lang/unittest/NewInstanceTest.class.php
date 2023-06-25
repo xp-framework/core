@@ -3,7 +3,6 @@
 use ReturnTypesWillChange;
 use lang\reflect\Package;
 use lang\{ClassFormatException, ClassLoader, IllegalAccessException, Process, Runnable, Runtime, Value};
-use net\xp_framework\unittest\Name;
 use unittest\actions\{RuntimeVersion, VerifyThat};
 use unittest\{Assert, Action, Expect, Test, Values};
 use util\Objects;
@@ -73,7 +72,7 @@ class NewInstanceTest {
 
   #[Test]
   public function new_class_with_annotations() {
-    $o= newinstance('#[Test] net.xp_framework.unittest.Name', ['Test']);
+    $o= newinstance('#[Test] lang.unittest.Name', ['Test']);
     Assert::true(typeof($o)->hasAnnotation('test'));
   }
 
@@ -295,7 +294,7 @@ class NewInstanceTest {
   public function packageOfNewInstancedClass() {
     $i= newinstance(Name::class, ['Test'], '{}');
     Assert::equals(
-      Package::forName('net.xp_framework.unittest'),
+      Package::forName('lang.unittest'),
       typeof($i)->getPackage()
     );
   }
@@ -335,7 +334,7 @@ class NewInstanceTest {
     $instance= newinstance(Name::class, ['Test'], '{ }');
     $n= nameof($instance);
     Assert::equals(
-      'net.xp_framework.unittest.Name',
+      'lang.unittest.Name',
       substr($n, 0, strrpos($n, "\xb7")),
       $n
     );

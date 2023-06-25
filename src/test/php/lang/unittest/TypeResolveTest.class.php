@@ -1,9 +1,7 @@
 <?php namespace lang\unittest;
 
 use Countable;
-use lang\unittest\Lookup;
 use lang\{ArrayType, ClassNotFoundException, MapType, Nullable, Primitive, Type, TypeUnion, XPClass};
-use net\xp_framework\unittest\BaseTest;
 use unittest\{Assert, Test, Values};
 
 class TypeResolveTest extends BaseTest {

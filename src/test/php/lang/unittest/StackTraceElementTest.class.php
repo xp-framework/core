@@ -1,7 +1,6 @@
 <?php namespace lang\unittest;
 
 use lang\StackTraceElement;
-use net\xp_framework\unittest\Name;
 use unittest\{Assert, Test};
 
 class StackTraceElementTest {
@@ -137,7 +136,7 @@ class StackTraceElementTest {
   #[Test]
   public function to_string_with_object_arg() {
     Assert::equals(
-      self::NEW_FIXTURE_METHOD."(net.xp_framework.unittest.Name{}) [line 1 of Test.class.php] Test\n",
+      self::NEW_FIXTURE_METHOD."(lang.unittest.Name{}) [line 1 of Test.class.php] Test\n",
       $this->newFixtureWith([new Name('test')])->toString()
     );
   }

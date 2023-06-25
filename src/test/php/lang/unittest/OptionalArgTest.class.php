@@ -1,6 +1,5 @@
 <?php namespace lang\unittest;
 
-use net\xp_framework\unittest\Name;
 use unittest\{Assert, Test};
 
 class OptionalArgTest {

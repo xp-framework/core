@@ -9,7 +9,6 @@ use lang\{
   Type,
   XPClass
 };
-use net\xp_framework\unittest\Name;
 use unittest\{Assert, Expect, Test, Values};
 
 class MapTypeTest {
@@ -71,8 +70,8 @@ class MapTypeTest {
   #[Test]
   public function objectComponentType() {
     Assert::equals(
-      XPClass::forName('net.xp_framework.unittest.Name'),
-      MapType::forName('[:net.xp_framework.unittest.Name]')->componentType()
+      XPClass::forName('lang.unittest.Name'),
+      MapType::forName('[:lang.unittest.Name]')->componentType()
     );
   }
 
