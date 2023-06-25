@@ -95,7 +95,7 @@ abstract class ClassFromUriTest {
   public function from_a_relative_path_with_dot_dot() {
     Assert::equals(
       $this->fixture->loadClass('CLT1'),
-      $this->fixture->loadUri($this->compose('net', 'xp_framework', '..', '..', 'CLT1.class.php'))
+      $this->fixture->loadUri($this->compose('lang', 'unittest', '..', '..', 'CLT1.class.php'))
     );
   }
 
