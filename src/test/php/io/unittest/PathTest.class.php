@@ -344,17 +344,17 @@ class PathTest {
     Assert::equals(new Path('.'), new Path('dir/..'));
   }
 
-  #[Test, VerifyRuntime(os: '^(?!WIN)'), Values([['\\\\remote\\file.txt', true], ['\\\\remote', true]])]
+  #[Test, VerifyRuntime(os: 'WIN'), Values([['\\\\remote\\file.txt', true], ['\\\\remote', true]])]
   public function unc_path_is_absolute() {
     Assert::true((new Path('\\\\remote\file.txt'))->isAbsolute());
   }
 
-  #[Test, VerifyRuntime(os: '^(?!WIN)')]
+  #[Test, VerifyRuntime(os: 'WIN')]
   public function unc_path() {
     Assert::equals('//remote/file.txt', (new Path('\\\\remote\file.txt'))->toString('/'));
   }
 
-  #[Test, VerifyRuntime(os: '^(?!WIN)')]
+  #[Test, VerifyRuntime(os: 'WIN')]
   public function unc_path_as_base() {
     Assert::equals('//remote/file.txt', (new Path('\\\\remote', 'file.txt'))->toString('/'));
   }
