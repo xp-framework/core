@@ -3,16 +3,17 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
-### Features
+### Heads up!
 
-* Merged PR #330: Use `COMPOSER_ROOT_VERSION` and add dependency instead
-  of bundling test library
+* Merged PR #331: Migrate to new testing library, including preliminary
+  work to make the transition easier:
+  - PR #330: Use `COMPOSER_ROOT_VERSION` and add dependency instead of
+    bundling test library
+  - PR #329: Restructure src/test/php - from tests inside the package
+    `net.xp_framework.unittest` to the package (lang, util, io, xp)
+    they're testing
+  - Merged PR #328: Migrate tests to baseless / Assert DSL
   (@thekid)
-* Merged PR #329: Refactor src/test/php - from tests inside the package
-  `net.xp_framework.unittest` to the package (lang, util, io, xp) they're
-  testing
-  (@thekid)
-* Merged PR #328: Migrate tests to baseless / Assert DSL - @thekid
 
 ## 11.7.0 / 2023-06-24
 
