@@ -5,8 +5,10 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
-* Merged PR #331: Migrate to new testing library, including preliminary
-  work to make the transition easier:
+* Merged PR #331: Migrate to new testing library. This makes it easier
+  to run the test suite (*now just `xp test src/test/php` like with any
+  other library*) and reduces the installed size by roughly 300 kB.
+  Preliminary work was put into this to make the transition easier:
   - PR #330: Use `COMPOSER_ROOT_VERSION` and add dependency instead of
     bundling test library
   - PR #329: Restructure src/test/php - from tests inside the package
