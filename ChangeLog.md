@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.8.1 / 2023-06-26
+
+### Bugfixes
+
+* Fixed issue #333: Class "lang\ClassLoader" not found - @thekid
+
 ## 11.8.0 / 2023-06-25
 
 ### Heads up!
