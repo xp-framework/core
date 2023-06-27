@@ -11,9 +11,6 @@
   "suggest" : {
     "php" : ">=8.0.0"
   },
-  "require-dev" : {
-    "xp-framework/test": "^1.0"
-  },
   "autoload" : {
     "files" : ["src/main/php/__xp.php", "src/main/resources/autoload.php"]
   }

@@ -10,7 +10,7 @@ case $1 in
     echo
 
     printf "\033[33;1mRunning Composer\033[0m\n"
-    COMPOSER_ROOT_VERSION=$(grep '^## ' ChangeLog.md | grep -v '?' | head -1 | cut -d ' ' -f 2) composer install
+    COMPOSER_ROOT_VERSION=$(grep '^## ' ChangeLog.md | grep -v '?' | head -1 | cut -d ' ' -f 2) composer require xp-framework/test
     echo "src/main/php/__xp.php" > composer.pth
     echo "vendor/autoload.php" >> composer.pth
     echo "!src/test/php" >> composer.pth
