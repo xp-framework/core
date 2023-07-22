@@ -30,7 +30,7 @@ class ClassDetailsTest {
   public function parses($kind) {
     $details= (new ClassParser())->parseDetails('<?php '.$kind.' Test { }');
     Assert::equals(
-      [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => []],
+      [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => [], DETAIL_TARGET_ANNO  => []],
       $details['class']
     );
   }
@@ -402,6 +402,54 @@ class ClassDetailsTest {
     ');
   }
 
+  #[Test]
+  public function php8_type_attributes_original_names() {
+    $actual= (new ClassParser())->parseDetails('<?php
+      #[Value("test")]
+      class Test {
+      }
+    ');
+    Assert::equals(['value' => 'Value'], $actual['class'][DETAIL_TARGET_ANNO]);
+  }
+
+  #[Test]
+  public function php8_method_attributes_original_names() {
+    $actual= (new ClassParser())->parseDetails('<?php
+      class Test {
+
+        #[Value("test")]
+        public function fixture() { }
+      }
+    ');
+    Assert::equals(['value' => 'Value'], $actual[1]['fixture'][DETAIL_TARGET_ANNO]);
+  }
+
+  #[Test]
+  public function php8_field_attributes_original_names() {
+    $actual= (new ClassParser())->parseDetails('<?php
+      class Test {
+
+        #[Value("test")]
+        public $fixture;
+      }
+    ');
+    Assert::equals(['value' => 'Value'], $actual[0]['fixture'][DETAIL_TARGET_ANNO]);
+  }
+
+  #[Test]
+  public function php8_param_attributes_original_names() {
+    $actual= (new ClassParser())->parseDetails('<?php
+      class Test {
+
+        public function fixture(
+          #[Value("test")]
+          $p
+        ) { }
+      }
+    ');
+    Assert::equals(['$p' => ['value' => 'test'], 'value' => 'Value'], $actual[1]['fixture'][DETAIL_TARGET_ANNO]);
+  }
+
   #[Test, Expect(class: ClassFormatException::class, message: '/Unexpected "," in eval/')]
   public function array_eval_cannot_have_multiple_arguments() {
     (new ClassParser())->parseDetails('<?php
@@ -536,7 +584,7 @@ class ClassDetailsTest {
       }
     ');
     Assert::equals(
-      [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => []],
+      [DETAIL_COMMENT => '', DETAIL_ANNOTATIONS => [], DETAIL_TARGET_ANNO  => []],
       $details['class']
     );
   }
@@ -643,7 +691,7 @@ class ClassDetailsTest {
       }
     ');
     Assert::equals(
-      [DETAIL_COMMENT => 'Comment', DETAIL_ANNOTATIONS => []],
+      [DETAIL_COMMENT => 'Comment', DETAIL_ANNOTATIONS => [], DETAIL_TARGET_ANNO  => []],
       $details['class']
     );
   }

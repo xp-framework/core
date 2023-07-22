@@ -213,7 +213,7 @@ class AnnotationParsingTest extends AbstractAnnotationParsingTest {
         'lang.unittest.SecondInterceptor',
       ]]], 1 => []],
       $this->parse("
-        #[Interceptors(['classes' => [
+        #[@interceptors(['classes' => [
           'lang.unittest.FirstInterceptor',
           'lang.unittest.SecondInterceptor',
         ]])]

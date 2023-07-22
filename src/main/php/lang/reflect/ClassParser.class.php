@@ -318,6 +318,7 @@ class ClassParser {
           } else {
             $type= $this->type($tokens, $i, $context, $imports);
             $annotation= lcfirst(false === ($p= strrpos($type, '.')) ? $type : substr($type, $p + 1));
+            $annotations[1][$annotation]= $type;
             $param= null;
             $value= null;
             $state= 1;
@@ -582,7 +583,8 @@ class ClassParser {
               4,                              // "/**\n"
               strpos($comment, '* @')- 2      // position of first details token
             ))),
-            DETAIL_ANNOTATIONS  => $annotations[0]
+            DETAIL_ANNOTATIONS  => $annotations[0],
+            DETAIL_TARGET_ANNO  => $annotations[1]
           ];
           $annotations= [0 => [], 1 => []];
           $comment= '';
@@ -599,7 +601,7 @@ class ClassParser {
             $parsed= '';
           }
           $f= substr($tokens[$i][1], 1);
-          $details[0][$f]= [DETAIL_ANNOTATIONS => $annotations[0]];
+          $details[0][$f]= [DETAIL_ANNOTATIONS => $annotations[0], DETAIL_TARGET_ANNO  => $annotations[1]];
           $annotations= [0 => [], 1 => []];
           $matches= null;
           if ('' === $comment) break;
@@ -673,12 +675,14 @@ class ClassParser {
                 }
               }
             } else if (T_VARIABLE === $tokens[$i][0] && null !== $parsed) {
-              $details[1][$m][DETAIL_TARGET_ANNO][$tokens[$i][1]]= $this->parseAnnotations(
+              $annotations= $this->parseAnnotations(
                 $parsed,
                 $context,
                 $imports,
                 $tokens[$i][2] ?? -1
-              )[0];
+              );
+              $details[1][$m][DETAIL_TARGET_ANNO][$tokens[$i][1]]= $annotations[0];
+              $details[1][$m][DETAIL_TARGET_ANNO]+= $annotations[1];
               $parsed= null;
             }
           }
