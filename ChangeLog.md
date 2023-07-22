@@ -3,6 +3,15 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.8.2 / 2023-07-22
+
+### Bugfixes
+
+* Merged PR #334: Store original attribute names in DETAIL_TARGET_ANNO.
+  This fixes a problem when using old and new reflection libraries in
+  conjunction
+  (@thekid)
+
 ## 11.8.1 / 2023-06-26
 
 ### Bugfixes
