@@ -436,6 +436,20 @@ class ClassDetailsTest {
     Assert::equals(['value' => 'Value'], $actual[0]['fixture'][DETAIL_TARGET_ANNO]);
   }
 
+  #[Test]
+  public function php8_param_attributes_original_names() {
+    $actual= (new ClassParser())->parseDetails('<?php
+      class Test {
+
+        public function fixture(
+          #[Value("test")]
+          $p
+        ) { }
+      }
+    ');
+    Assert::equals(['$p' => ['value' => 'test'], 'value' => 'Value'], $actual[1]['fixture'][DETAIL_TARGET_ANNO]);
+  }
+
   #[Test, Expect(class: ClassFormatException::class, message: '/Unexpected "," in eval/')]
   public function array_eval_cannot_have_multiple_arguments() {
     (new ClassParser())->parseDetails('<?php

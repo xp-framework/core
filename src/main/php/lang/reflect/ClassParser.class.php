@@ -675,12 +675,14 @@ class ClassParser {
                 }
               }
             } else if (T_VARIABLE === $tokens[$i][0] && null !== $parsed) {
-              $details[1][$m][DETAIL_TARGET_ANNO][$tokens[$i][1]]= $this->parseAnnotations(
+              $annotations= $this->parseAnnotations(
                 $parsed,
                 $context,
                 $imports,
                 $tokens[$i][2] ?? -1
-              )[0];
+              );
+              $details[1][$m][DETAIL_TARGET_ANNO][$tokens[$i][1]]= $annotations[0];
+              $details[1][$m][DETAIL_TARGET_ANNO]+= $annotations[1];
               $parsed= null;
             }
           }
