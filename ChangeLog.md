@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.8.3 / 2023-10-08
+
+### Bugfixes
+
+* Merged PR #335: Fix removing directories with symlinks inside - @thekid
+
 ## 11.8.2 / 2023-07-22
 
 ### Bugfixes
