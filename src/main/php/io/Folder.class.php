@@ -144,27 +144,26 @@ class Folder implements Value {
    * @throws  io.IOException in case one of the entries could'nt be deleted
    */
   public function unlink($uri= null) {
-    if (null === $uri) $uri= $this->uri; // We also use this recursively
-    
-    if (false === ($d= dir($uri))) {
+    $uri= null === $uri ? $this->uri : rtrim($uri, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+    if (false === ($d= opendir($uri))) {
       throw new IOException('Directory '.$uri.' does not exist');
     }
-    
-    while (false !== ($e= $d->read())) {
-      if ('.' == $e || '..' == $e) continue;
-      
-      $fn= $d->path.$e;
-      if (!is_dir($fn)) {
-        $ret= unlink($fn);
-      } else {
-        $ret= $this->unlink($fn.DIRECTORY_SEPARATOR);
-      }
-      if (false === $ret) throw new IOException(sprintf('unlink of "%s" failed', $fn));
-    }
-    $d->close();
 
-    if (false === rmdir($uri)) throw new IOException(sprintf('unlink of "%s" failed', $uri));
-    
+    while (false !== ($e= readdir($d))) {
+      if ('.' === $e || '..' === $e) continue;
+
+      // Recurse into subdirectories (but not if they are symlinks!)
+      $fn= $uri.$e;
+      if (0x4000 === (lstat($fn)['mode'] & 0xf000)) {
+        $this->unlink($fn);
+      } else if (false === unlink($fn)) {
+        closedir($d);
+        throw new IOException("Deleting '{$fn}' failed");
+      }
+    }
+    closedir($d);
+
+    if (false === rmdir($uri)) throw new IOException("Deleting '{$uri}' failed");
     return true;
   }
 
