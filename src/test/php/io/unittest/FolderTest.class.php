@@ -1,7 +1,8 @@
 <?php namespace io\unittest;
 
-use io\{Folder, FolderEntries, IOException, Path};
+use io\{Folder, FolderEntries, File, Files, IOException, Path};
 use lang\Environment;
+use test\verify\Runtime;
 use test\{After, Assert, Expect, Test};
 
 class FolderTest {
@@ -65,6 +66,61 @@ class FolderTest {
   public function unlink() {
     $f= new Folder($this->tempFolder());
     $f->create();
+    $f->unlink();
+    Assert::false($f->exists());
+  }
+
+  #[Test, Expect(IOException::class)]
+  public function unlink_nonexistant() {
+    $f= new Folder($this->tempFolder());
+    $f->unlink();
+  }
+
+  #[Test]
+  public function unlink_with_subdir() {
+    $f= new Folder($this->tempFolder());
+    $f->create();
+
+    $s= new Folder($f, 'sub');
+    $s->create();
+
+    $f->unlink();
+    Assert::false($f->exists());
+  }
+
+  #[Test]
+  public function unlink_with_file() {
+    $f= new Folder($this->tempFolder());
+    $f->create();
+
+    Files::write(new File($f, 'file'), 'Test');
+
+    $f->unlink();
+    Assert::false($f->exists());
+  }
+
+  #[Test, Runtime(os: 'Linux')]
+  public function unlink_with_file_symlink() {
+    $f= new Folder($this->tempFolder());
+    $f->create();
+
+    $target= new File($f, '.default.ini');
+    Files::write($target, 'key=value');
+    symlink('.default.ini', $f->getURI().'config.ini');
+
+    $f->unlink();
+    Assert::false($f->exists());
+  }
+
+  #[Test, Runtime(os: 'Linux')]
+  public function unlink_with_folder_symlink() {
+    $f= new Folder($this->tempFolder());
+    $f->create();
+
+    $target= new Folder($f, '.default');
+    $target->create();
+    symlink('.default', $f->getURI().'config');
+
     $f->unlink();
     Assert::false($f->exists());
   }
