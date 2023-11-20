@@ -21,7 +21,7 @@ the following one-liner:
 
 ```sh
 $ cd ~/bin
-$ curl -sSL https://baltocdn.com/xp-framework/xp-runners/distribution/downloads/i/installer/setup-8.6.2.sh | sh
+$ curl -sSL https://baltocdn.com/xp-framework/xp-runners/distribution/downloads/i/installer/setup-8.8.0.sh | sh
 ```
 
 ### Using it
