@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Suppress *implicitly nullable parameter types* deprecation warning as
+  there is no way of fixing these syntactically as long as we support
+  PHP 7.0. See issue #336 and xp-framework/rfc#343
+  (@thekid)
+
 ## 11.8.3 / 2023-10-08
 
 ### Bugfixes
