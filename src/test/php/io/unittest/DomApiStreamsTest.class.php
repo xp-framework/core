@@ -1,18 +1,12 @@
 <?php namespace io\unittest;
 
 use io\streams\{MemoryInputStream, MemoryOutputStream, Streams};
-use lang\Runtime;
-use test\{Assert, Before, PrerequisitesNotMetError, Test};
+use test\verify\Runtime;
+use test\{Assert, Test};
 
+#[Runtime(extensions: ['dom'])]
 class DomApiStreamsTest {
 
-  #[Before]
-  public function setUp() {
-    if (!Runtime::getInstance()->extensionAvailable('dom')) {
-      throw new PrerequisitesNotMetError('DOM extension not loaded', null, ['ext/dom']);
-    }
-  }
- 
   #[Test]
   public function usableInLoadHTMLFile() {
     $dom= new \DOMDocument();

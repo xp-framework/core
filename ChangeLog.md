@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 11.9.0 / 2024-03-16
+
 ### Features
 
 * Removed PHP 5 specific exception handling from `lang.Throwable::wrap()`
