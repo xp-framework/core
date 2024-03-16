@@ -1,7 +1,9 @@
 <?php namespace io\unittest;
 
 use io\streams\InflatingInputStream;
+use test\verify\Runtime;
 
+#[Runtime(extensions: ['zlib'])]
 class InflatingInputStreamTest extends AbstractDecompressingInputStreamTest {
 
   /** @return string */
