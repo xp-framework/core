@@ -5,7 +5,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
-* Suppress *implicitly nullable parameter types* deprecation warning as
+* Removed PHP 5 specific exception handling from `lang.Throwable::wrap()`
+  (@thekid)
+* Suppressed *implicitly nullable parameter types* deprecation warning as
   there is no way of fixing these syntactically as long as we support
   PHP 7.0. See issue #336 and xp-framework/rfc#343
   (@thekid)

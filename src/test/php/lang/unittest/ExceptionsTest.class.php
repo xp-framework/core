@@ -2,7 +2,6 @@
 
 use io\streams\{MemoryOutputStream, Streams};
 use lang\{Error, IllegalArgumentException, Throwable, XPClass, XPException};
-use test\verify\Runtime;
 use test\{Action, Assert, Expect, Test};
 
 class ExceptionsTest {
@@ -132,13 +131,7 @@ class ExceptionsTest {
   }
 
   #[Test]
-  public function wrap_php5_exceptions() {
-    $e= new \Exception('Test');
-    Assert::instance(XPException::class, Throwable::wrap($e));
-  }
-
-  #[Test, Runtime(php: '>=7.0.0')]
-  public function wrap_php7_exceptions() {
+  public function wrap_php_exceptions() {
     $e= new \TypeError('Test');
     Assert::instance(Error::class, Throwable::wrap($e));
   }

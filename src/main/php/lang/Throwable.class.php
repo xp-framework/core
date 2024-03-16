@@ -37,17 +37,13 @@ class Throwable extends \Exception implements Value {
   /**
    * Wraps an exception inside a throwable
    *
-   * @param  lang.Throwable|php.Throwable|php.Exception $e
+   * @param  lang.Throwable|php.Throwable $e
    * @return self
    * @throws lang.IllegalArgumentException
    */
   public static function wrap($e): self {
     if ($e instanceof self) {
       return $e;
-    } else if ($e instanceof \BadMethodCallException) {
-      $wrapped= new Error($e->getMessage(), $e->getPrevious(), false);
-    } else if ($e instanceof \Exception) {
-      $wrapped= new XPException($e->getMessage(), $e->getPrevious(), false);
     } else if ($e instanceof \Throwable) {
       $wrapped= new Error($e->getMessage(), $e->getPrevious(), false);
     } else {
