@@ -1,6 +1,6 @@
 <?php namespace lang\unittest;
 
-use lang\Primitive;
+use lang\{Primitive, Reflection};
 use test\{Assert, Test};
 
 class AnonymousInstanceTest {
@@ -20,7 +20,7 @@ class AnonymousInstanceTest {
   #[Test]
   public function anonymous_generic_with_annotations() {
     $filter= newinstance('#[Anon] lang.unittest.Nullable<string>', [], []);
-    Assert::true(typeof($filter)->hasAnnotation('anon'));
+    Assert::true(Reflection::type($filter)->annotations()->provides('anon')); // FIXME: Should be lang.unittest.Anon
   }
 
   #[Test]
@@ -44,12 +44,9 @@ class AnonymousInstanceTest {
 
   #[Test]
   public function invocation() {
-    $methods= newinstance('lang.unittest.ArrayFilter<lang.reflect.Method>', [], [
-      'accept' => function($method) { return 'invocation' === $method->getName(); }
+    $methods= newinstance('lang.unittest.ArrayFilter<int>', [], [
+      'accept' => function($i) { return 0 === $i % 2; }
     ]);
-    Assert::equals(
-      [typeof($this)->getMethod('invocation')],
-      $methods->filter(typeof($this)->getMethods())
-    );
+    Assert::equals([2], $methods->filter([1, 2, 3]));
   }
 }

@@ -9,15 +9,13 @@ use lang\{
   ClassLoader,
   ClassNotFoundException,
   IllegalStateException,
+  Reflection,
   XPClass
 };
 use test\{After, Assert, Before, Expect, Test, Values};
 
 class ClassLoaderTest {
-  protected
-    $libraryLoader   = null,
-    $brokenLoader    = null,
-    $containedLoader = null;
+  protected $libraryLoader, $brokenLoader, $containedLoader;
 
   /**
    * Register XAR
@@ -106,12 +104,11 @@ class ClassLoaderTest {
   public function initializerCalled() {
     $name= 'lang.unittest.LoaderTestClass';
     if (class_exists(literal($name), false)) {
-      return $this->fail('Class "'.$name.'" may not exist!');
+      throw new IllegalStateException('Class "'.$name.'" may not exist!');
     }
 
-    Assert::true(ClassLoader::getDefault()
-      ->loadClass($name)
-      ->getMethod('initializerCalled')
+    Assert::true(Reflection::type(ClassLoader::getDefault()->loadClass($name))
+      ->method('initializerCalled')
       ->invoke(null)
     );
   }
@@ -136,7 +133,7 @@ class ClassLoaderTest {
     with ($p= Package::forName('lang.unittest.fixture')); {
       $two= $p->loadClass('StaticRecursionTwo');
       $one= $p->loadClass('StaticRecursionOne');
-      Assert::equals($two, $one->getField('two')->get(null));
+      Assert::equals($two, Reflection::type($one)->property('two')->get(null));
     }
   }
 

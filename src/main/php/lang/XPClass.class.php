@@ -26,15 +26,6 @@ use lang\reflect\{Method, Field, Constructor, Package, ClassParser};
  * $instance= XPClass::forName('util.Binford')->newInstance();
  * ```
  *
- * Invoke a method by its name:
- * ```php
- * try {
- *   typeof($instance)->getMethod('connect')->invoke($instance);
- * } catch (TargetInvocationException $e) {
- *   $e->getCause()->printStackTrace();
- * }
- * ``` 
- *
  * @see   xp://lang.XPClass#forName
  * @test  xp://net.xp_framework.unittest.reflection.XPClassTest
  * @test  xp://net.xp_framework.unittest.reflection.ClassDetailsTest
@@ -188,195 +179,6 @@ class XPClass extends Type {
       throw new IllegalAccessException($e->getMessage(), $e);
     }
   }
-  
-  /**
-   * Gets class methods for this class
-   *
-   * @return  lang.reflect.Method[]
-   */
-  public function getMethods() {
-    $list= [];
-    foreach ($this->reflect()->getMethods() as $m) {
-      if (0 == strncmp('__', $m->getName(), 2)) continue;
-      $list[]= new Method($this->_class, $m);
-    }
-    return $list;
-  }
-
-  /**
-   * Gets class methods declared by this class
-   *
-   * @return  lang.reflect.Method[]
-   */
-  public function getDeclaredMethods() {
-    $list= [];
-    $reflect= $this->reflect();
-    foreach ($reflect->getMethods() as $m) {
-      if (0 == strncmp('__', $m->getName(), 2) || $m->class !== $reflect->name) continue;
-      $list[]= new Method($this->_class, $m);
-    }
-    return $list;
-  }
-
-  /**
-   * Gets a method by a specified name.
-   *
-   * @param   string name
-   * @return  lang.reflect.Method
-   * @see     xp://lang.reflect.Method
-   * @throws  lang.ElementNotFoundException
-   */
-  public function getMethod($name): Method {
-    if ($this->hasMethod($name)) {
-      return new Method($this->_class, $this->reflect()->getMethod($name));
-    }
-    throw new ElementNotFoundException('No such method "'.$name.'" in class '.$this->name);
-  }
-  
-  /**
-   * Checks whether this class has a method named "$method" or not.
-   *
-   * Note
-   * ====
-   * Since in PHP, methods are case-insensitive, calling hasMethod('toString') 
-   * will provide the same result as hasMethod('tostring')
-   *
-   * @param   string method the method's name
-   * @return  bool TRUE if method exists
-   */
-  public function hasMethod($method): bool {
-    return ((0 === strncmp('__', $method, 2))
-      ? false
-      : $this->reflect()->hasMethod($method)
-    );
-  }
-  
-  /**
-   * Retrieve if a constructor exists
-   *
-   * @return  bool
-   */
-  public function hasConstructor(): bool {
-    return $this->reflect()->hasMethod('__construct');
-  }
-  
-  /**
-   * Retrieves this class' constructor.
-   *
-   * @return  lang.reflect.Constructor
-   * @see     xp://lang.reflect.Constructor
-   * @throws  lang.ElementNotFoundException
-   */
-  public function getConstructor(): Constructor {
-    if ($this->hasConstructor()) {
-      return new Constructor($this->_class, $this->reflect()->getMethod('__construct')); 
-    }
-    throw new ElementNotFoundException('No constructor in class '.$this->name);
-  }
-
-  /**
-   * Returns virtual properties
-   *
-   * @param  ReflectionClass $reflect
-   * @param  bool $parents
-   * @return [:var][]
-   */
-  private function virtual($reflect, $parents= true) {
-    $r= [];
-    do {
-
-      // If meta information is already loaded, use property arguments
-      if ($meta= \xp::$meta[self::nameOf($reflect->name)][0] ?? null) {
-        foreach ($meta as $name => $property) {
-          if ($arg= $property[DETAIL_ARGUMENTS] ?? null) {
-            $r[$name]= [(int)$arg[0], $property[DETAIL_RETURNS] ?? 'mixed'];
-          }
-        }
-        continue;
-      }
-
-      // Parse doc comment
-      $comment= $reflect->getDocComment();
-      if (null === $comment) continue;
-
-      preg_match_all('/@property(\-read|\-write)? (.+) \$([^ ]+)/', $comment, $matches, PREG_SET_ORDER);
-      $r= [];
-      foreach ($matches as $match) {
-        $r[$match[3]]= ['-read' === $match[1] ? MODIFIER_READONLY : 0, $match[2]];
-      }
-    } while ($parents && ($reflect= $reflect->getParentclass()));
-
-    return $r;
-  }
-
-  /**
-   * Retrieve a list of all member variables
-   *
-   * @return lang.reflect.Field[]
-   */
-  public function getFields() {
-    $reflect= $this->reflect();
-
-    $f= [];
-    foreach ($reflect->getProperties() as $p) {
-      if ('__id' === $p->name) continue;
-      $f[]= new Field($this->_class, $p);
-    }
-    foreach ($this->virtual($reflect) as $name => $meta) {
-      $f[]= new Field($this->_class, new VirtualProperty($reflect, $name, $meta));
-    }
-    return $f;
-  }
-
-  /**
-   * Retrieve a list of member variables declared in this class
-   *
-   * @return lang.reflect.Field[]
-   */
-  public function getDeclaredFields() {
-    $reflect= $this->reflect();
-
-    $f= [];
-    foreach ($reflect->getProperties() as $p) {
-      if ('__id' === $p->name || $p->class !== $reflect->name) continue;
-      $f[]= new Field($this->_class, $p);
-    }
-    foreach ($this->virtual($reflect, false) as $name => $meta) {
-      $f[]= new Field($this->_class, new VirtualProperty($reflect, $name, $meta));
-    }
-    return $f;
-  }
-
-  /**
-   * Retrieve a field by a specified name.
-   *
-   * @param  string $name
-   * @return lang.reflect.Field
-   * @throws lang.ElementNotFoundException
-   */
-  public function getField($name): Field {
-    $reflect= $this->reflect();
-    if ($reflect->hasProperty($name)) {
-      return new Field($this->_class, $reflect->getProperty($name));
-    } else if ($meta= $this->virtual($reflect)[$name] ?? null) {
-      return new Field($this->_class, new VirtualProperty($reflect, $name, $meta));
-    }
-
-    throw new ElementNotFoundException('No such field "'.$name.'" in class '.$this->name);
-  }
-  
-  /**
-   * Checks whether this class has a field with a given name
-   *
-   * @param  string $name
-   * @return bool TRUE if field exists
-   */
-  public function hasField($name): bool {
-    return '__id' === $name ? false : ($reflect= $this->reflect()) &&
-      $reflect->hasProperty($name) ||
-      isset($this->virtual($reflect)[$name])
-    ;
-  }
 
   /**
    * Retrieve the parent class's class object. Returns NULL if there
@@ -386,39 +188,6 @@ class XPClass extends Type {
    */
   public function getParentclass() {
     return ($parent= $this->reflect()->getParentClass()) ? new self($parent) : null;
-  }
-  
-  /**
-   * Checks whether this class has a constant named "$constant" or not
-   *
-   * @param   string constant
-   * @return  bool
-   */
-  public function hasConstant($constant): bool {
-    return $this->reflect()->hasConstant($constant);
-  }
-  
-  /**
-   * Retrieve a constant by a specified name.
-   *
-   * @param   string constant
-   * @return  var
-   * @throws  lang.ElementNotFoundException in case constant does not exist
-   */
-  public function getConstant($constant) {
-    if ($this->hasConstant($constant)) {
-      return $this->reflect()->getConstant($constant);
-    }
-    throw new ElementNotFoundException('No such constant "'.$constant.'" in class '.$this->name);
-  }
-
-  /**
-   * Retrieve class constants
-   *
-   * @return  [:var]
-   */
-  public function getConstants() {
-    return $this->reflect()->getConstants();
   }
 
   /**
@@ -611,61 +380,6 @@ class XPClass extends Type {
     return $r;
   }
 
-  /**
-   * Check whether an annotation exists
-   *
-   * @param   string name
-   * @param   string key default NULL
-   * @return  bool
-   */
-  public function hasAnnotation($name, $key= null): bool {
-    $details= self::detailsForClass($this->name);
-    
-    return $details && ($key 
-      ? array_key_exists($key, $details['class'][DETAIL_ANNOTATIONS][$name] ?? []) 
-      : array_key_exists($name, $details['class'][DETAIL_ANNOTATIONS] ?? [])
-    );
-  }
-
-  /**
-   * Retrieve annotation by name
-   *
-   * @param   string name
-   * @param   string key default NULL
-   * @return  var
-   * @throws  lang.ElementNotFoundException
-   */
-  public function getAnnotation($name, $key= null) {
-    $details= self::detailsForClass($this->name);
-    if (!$details || !($key 
-      ? array_key_exists($key, $details['class'][DETAIL_ANNOTATIONS][$name] ?? []) 
-      : array_key_exists($name, $details['class'][DETAIL_ANNOTATIONS] ?? [])
-    )) {
-      throw new ElementNotFoundException('Annotation "'.$name.($key ? '.'.$key : '').'" does not exist');
-    }
-
-    return ($key 
-      ? $details['class'][DETAIL_ANNOTATIONS][$name][$key] 
-      : $details['class'][DETAIL_ANNOTATIONS][$name]
-    );
-  }
-
-  /** Retrieve whether a method has annotations */
-  public function hasAnnotations(): bool {
-    $details= self::detailsForClass($this->name);
-    return $details ? !empty($details['class'][DETAIL_ANNOTATIONS]) : false;
-  }
-
-  /**
-   * Retrieve all of a method's annotations
-   *
-   * @return  array annotations
-   */
-  public function getAnnotations() {
-    $details= self::detailsForClass($this->name);
-    return $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
-  }
-  
   /** Retrieve the class loader a class was loaded with */
   public function getClassLoader(): IClassLoader {
     return self::_classLoaderFor($this->name);
@@ -707,42 +421,6 @@ class XPClass extends Type {
   }
 
   /**
-   * Retrieve details for a specified class and method. Note: Results 
-   * from this method are cached!
-   *
-   * @param   php.ReflectionClass $class
-   * @param   string $method
-   * @return  array or NULL if not available
-   */
-  public static function detailsForMethod($class, $method) {
-    $details= self::detailsForClass(self::nameOf($class->name));
-    if (isset($details[1][$method])) return $details[1][$method];
-    foreach ($class->getTraitNames() as $trait) {
-      $details= self::detailsForClass(self::nameOf($trait));
-      if (isset($details[1][$method])) return $details[1][$method];
-    }
-    return null;
-  }
-
-  /**
-   * Retrieve details for a specified class and field. Note: Results 
-   * from this method are cached!
-   *
-   * @param   php.ReflectionClass $class
-   * @param   string method
-   * @return  array or NULL if not available
-   */
-  public static function detailsForField($class, $field) {
-    $details= self::detailsForClass(self::nameOf($class->name));
-    if (isset($details[0][$field])) return $details[0][$field];
-    foreach ($class->getTraitNames() as $trait) {
-      $details= self::detailsForClass(self::nameOf($trait));
-      if (isset($details[0][$field])) return $details[0][$field];
-    }
-    return null;
-  }
-
-  /**
    * Reflectively creates a new type
    *
    * @param   lang.Type[] arguments
@@ -769,8 +447,11 @@ class XPClass extends Type {
     if (!$this->isGenericDefinition()) {
       throw new IllegalStateException('Class '.$this->name.' is not a generic definition');
     }
+
+    $details= XPClass::detailsForClass($this->name);
+    $annotations= $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
     $components= [];
-    foreach (explode(',', $this->getAnnotation('generic', 'self')) as $name) {
+    foreach (explode(',', $annotations['generic']['self']) as $name) {
       $components[]= ltrim($name);
     }
     return $components;
@@ -782,7 +463,9 @@ class XPClass extends Type {
    * @return  bool
    */
   public function isGenericDefinition(): bool {
-    return $this->hasAnnotation('generic', 'self');
+    $details= XPClass::detailsForClass($this->name);
+    $annotations= $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
+    return isset($annotations['generic']['self']);
   }
 
   /**

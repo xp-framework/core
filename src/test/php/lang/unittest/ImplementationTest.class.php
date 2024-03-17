@@ -1,6 +1,6 @@
 <?php namespace lang\unittest;
 
-use lang\{ElementNotFoundException, IllegalArgumentException, Primitive, Type, XPClass};
+use lang\{ElementNotFoundException, IllegalArgumentException, Primitive, Type, XPClass, Reflection};
 use test\{Assert, Expect, Ignore, Test, Values};
 
 class ImplementationTest {
@@ -34,7 +34,7 @@ class ImplementationTest {
     $fixture= create('new lang.unittest.TypeDictionary<string>');
     Assert::equals(
       XPClass::forName('lang.Type'),
-      typeof($fixture)->getMethod('put')->getParameter(0)->getType()
+      Reflection::type($fixture)->method('put')->parameter(0)->constraint()->type()
     );
   }
 
@@ -43,7 +43,7 @@ class ImplementationTest {
     $fixture= Type::forName('lang.unittest.AbstractTypeDictionary<string>');
     Assert::equals(
       XPClass::forName('lang.Type'),
-      $fixture->getMethod('put')->getParameter(0)->getType()
+      Reflection::type($fixture)->method('put')->parameter(0)->constraint()->type()
     );
   }
 

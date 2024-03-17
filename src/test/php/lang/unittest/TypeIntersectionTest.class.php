@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use Countable, IteratorAggregate, Traversable;
-use lang\{ClassCastException, IllegalArgumentException, Type, TypeIntersection, XPClass};
+use lang\{ClassCastException, IllegalArgumentException, Type, TypeIntersection, XPClass, Reflection};
 use test\verify\Runtime;
 use test\{Action, Assert, Before, Expect, Test, Values};
 
@@ -119,22 +119,28 @@ class TypeIntersectionTest {
 
   #[Test, Runtime(php: '>=8.1.0-dev')]
   public function php81_native_intersection_field_type() {
-    $f= typeof(eval('return new class() { public Countable&Traversable $fixture; };'))->getField('fixture');
-    Assert::equals(new TypeIntersection($this->types), $f->getType());
-    Assert::equals('Countable&Traversable', $f->getTypeName());
+    $t= typeof(eval('return new class() { public Countable&Traversable $fixture; };'));
+    Assert::equals(
+      new TypeIntersection($this->types),
+      Reflection::type($t)->property('fixture')->constraint()->type()
+    );
   }
 
   #[Test, Runtime(php: '>=8.1.0-dev')]
   public function php81_native_intersection_param_type() {
-    $m= typeof(eval('return new class() { public function fixture(Countable&Traversable $arg) { } };'))->getMethod('fixture');
-    Assert::equals(new TypeIntersection($this->types), $m->getParameter(0)->getType());
-    Assert::equals('Countable&Traversable', $m->getParameter(0)->getTypeName());
+    $t= typeof(eval('return new class() { public function fixture(Countable&Traversable $arg) { } };'));
+    Assert::equals(
+      new TypeIntersection($this->types),
+      Reflection::type($t)->method('fixture')->parameter(0)->constraint()->type()
+    );
   }
 
   #[Test, Runtime(php: '>=8.1.0-dev')]
   public function php81_native_intersection_return_type() {
-    $m= typeof(eval('return new class() { public function fixture(): Countable&Traversable { } };'))->getMethod('fixture');
-    Assert::equals(new TypeIntersection($this->types), $m->getReturnType());
-    Assert::equals('Countable&Traversable', $m->getReturnTypeName());
+    $t= typeof(eval('return new class() { public function fixture(): Countable&Traversable { } };'));
+    Assert::equals(
+      new TypeIntersection($this->types),
+      Reflection::type($t)->method('fixture')->returns()->type()
+    );
   }
 }

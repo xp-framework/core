@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\reflect\Modifiers;
-use lang\{ClassLoader, CloneNotSupportedException, Enum, Error, IllegalArgumentException, XPClass};
+use lang\{ClassLoader, CloneNotSupportedException, Enum, Error, IllegalArgumentException, XPClass, Reflection};
 use test\verify\{Condition, Runtime};
 use test\{Action, Assert, Expect, Test};
 
@@ -332,6 +332,6 @@ class EnumTest {
 
   #[Test, Condition(assert: 'class_exists("ReflectionEnum", false)')]
   public function annotations_on_sortorder_enum() {
-    Assert::equals(['usedBy' => self::class], XPClass::forName(SortOrder::class)->getAnnotations());
+    Assert::equals([self::class], Reflection::type(SortOrder::class)->annotation('lang.unittest.UsedBy')->arguments());
   }
 }

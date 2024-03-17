@@ -1,6 +1,7 @@
 <?php namespace lang\unittest;
 
-use lang\{ClassLoader, ClassNotFoundException, Closeable, Runnable, XPClass};
+use lang\Reflection\Method;
+use lang\{ClassLoader, ClassNotFoundException, Closeable, Runnable, XPClass, Reflection};
 use test\{Assert, Expect, Test};
 
 class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
@@ -60,13 +61,14 @@ class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
 
   #[Test]
   public function parents_method_exists() {
-    Assert::true($this->define(['parents' => [Runnable::class]])->hasMethod('run'));
+    $class= $this->define(['parents' => [Runnable::class]]);
+    Assert::instance(Method::class, Reflection::type($class)->method('run'));
   }
 
   #[Test]
   public function method_exists() {
     $class= $this->define(['parents' => [Runnable::class]], '{ public function runAs($user); }');
-    Assert::true($class->hasMethod('runAs'));
+    Assert::instance(Method::class, Reflection::type($class)->method('runAs'));
   }
 
   #[Test, Expect(ClassNotFoundException::class)]
@@ -82,6 +84,6 @@ class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
   #[Test]
   public function closure_map_style_declaring_method() {
     $class= $this->define(['parents' => [Runnable::class]], ['fixture' => function() { }]);
-    Assert::true($class->hasMethod('fixture'));
+    Assert::instance(Method::class, Reflection::type($class)->method('fixture'));
   }
 }

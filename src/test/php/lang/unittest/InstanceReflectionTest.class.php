@@ -1,6 +1,6 @@
 <?php namespace lang\unittest;
 
-use lang\{Primitive, XPClass};
+use lang\{Primitive, XPClass, Reflection};
 use test\{Assert, Before, Test};
 
 class InstanceReflectionTest {
@@ -73,23 +73,23 @@ class InstanceReflectionTest {
   public function elementFieldType() {
     Assert::equals(
       '[:lang.Value]',
-      typeof($this->fixture)->getField('elements')->getTypeName()
+      Reflection::type($this->fixture)->property('elements')->constraint()->type()->getName()
     );
   }
 
   #[Test]
   public function putParameters() {
-    $params= typeof($this->fixture)->getMethod('put')->getParameters();
-    Assert::equals(2, sizeof($params));
-    Assert::equals(Primitive::$STRING, $params[0]->getType());
-    Assert::equals(XPClass::forName('lang.Value'), $params[1]->getType());
+    $params= Reflection::type($this->fixture)->method('put')->parameters();
+    Assert::equals(2, $params->size());
+    Assert::equals(Primitive::$STRING, $params->at(0)->constraint()->type());
+    Assert::equals(XPClass::forName('lang.Value'), $params->at(1)->constraint()->type());
   }
 
   #[Test]
   public function getReturnType() {
     Assert::equals(
       'lang.Value',
-      typeof($this->fixture)->getMethod('get')->getReturnTypeName()
+      Reflection::type($this->fixture)->method('get')->returns()->type()->getName()
     );
   }
 
@@ -97,7 +97,7 @@ class InstanceReflectionTest {
   public function valuesReturnType() {
     Assert::equals(
       'lang.Value[]',
-      typeof($this->fixture)->getMethod('values')->getReturnTypeName()
+      Reflection::type($this->fixture)->method('values')->returns()->type()->getName()
     );
   }
 }
