@@ -11,9 +11,16 @@ XP Framework Core ChangeLog
   latest PHP 7 release. The minimum required PHP version is now **7.4**!
   (@thekid)
 
+### Features
+
+* Merged PR #338: Set default character set for property files to `utf-8`
+  (@thekid)
+
 ### Bugfixes
 
-* Fixed issue #336: Deprecate implicitly nullable parameter types - @thekid
+* Fixed issue #336: Deprecate implicitly nullable parameter types, following
+  https://wiki.php.net/rfc/deprecate-implicitly-nullable-types
+  (@thekid)
 
 ## 11.9.0 / 2024-03-16
 
