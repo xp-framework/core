@@ -7,6 +7,9 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented xp-framework/rfc#342: Extract compression streams, removing
+  the implementing classes from `io.streams`. See PR #342.
+  (@thekid)
 * Implemented xp-framework/rfc#336, part 2: Remove XP annotations syntax,
   which was deprecated in XP 11, released October 2021. See PR #340.
   (@thekid)
