@@ -831,11 +831,11 @@ class XPClass extends Type {
    * string name. Uses the default classloader if none is specified.
    *
    * @param   string name - e.g. "Exception", "io.File" or "lang.XPClass"
-   * @param   lang.IClassLoader classloader default NULL
+   * @param   ?lang.IClassLoader classloader default NULL
    * @return  lang.XPClass class object
    * @throws  lang.ClassNotFoundException when there is no such class
    */
-  public static function forName($name, IClassLoader $classloader= null): self {
+  public static function forName($name, ?IClassLoader $classloader= null): self {
     $p= strpos($name, '\\');
     if (false === $p) {     // No backslashes, using dotted form
       $resolved= strtr($name, '.', '\\');

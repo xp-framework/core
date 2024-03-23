@@ -1,7 +1,17 @@
 <?php namespace lang\unittest;
 
 use lang\reflect\TargetInvocationException;
-use lang\{ArrayType, ClassCastException, FunctionType, IllegalArgumentException, MapType, Primitive, Type, XPClass};
+use lang\{
+  ArrayType,
+  ClassCastException,
+  FunctionType,
+  IllegalArgumentException,
+  MapType,
+  Nullable,
+  Primitive,
+  Type,
+  XPClass
+};
 use test\verify\Condition;
 use test\{Assert, Expect, Test, Values};
 
@@ -149,7 +159,7 @@ class FunctionTypeTest extends BaseTest {
 
   #[Test, Values([[['lang.XPClass', 'forName']], ['lang.XPClass::forName'], [[XPClass::class, 'forName']]])]
   public function array_referencing_static_class_method_is_instance($value) {
-    $type= new FunctionType([Primitive::$STRING, XPClass::forName('lang.IClassLoader')], XPClass::forName('lang.XPClass'));
+    $type= new FunctionType([Primitive::$STRING, new Nullable(XPClass::forName('lang.IClassLoader'))], XPClass::forName('lang.XPClass'));
     Assert::true($type->isInstance($value));
   }
 
