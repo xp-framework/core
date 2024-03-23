@@ -228,6 +228,16 @@ abstract class AbstractPropertiesTest {
   }
 
   #[Test]
+  public function utf8_by_default() {
+    $p= $this->newPropertiesFrom(
+      "[section]\n".
+      "key=Übercoder",
+      'utf-8'
+    );
+    Assert::equals('Übercoder', $p->readString('section', 'key'));
+  }
+
+  #[Test]
   public function honors_utf8_BOM() {
     $p= $this->newPropertiesFrom(
       "\357\273\277".
