@@ -3,7 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
-## 12.0.0 / ????-??-??
+## 12.0.0 / 2024-03-23
+
+This major release adopts more PHP 8 semantics, getting rid of the XP
+annotation syntax with `@` and deprecating implicitely nullable types.
+This is the last major release to support PHP 7, and only does so for
+its newest version.
 
 ### Heads up!
 
