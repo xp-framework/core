@@ -16,6 +16,7 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Synchronized mime types list with most recent `jshttp/mime-db` - @thekid
 * Merged PR #338: Set default character set for property files to `utf-8`
   (@thekid)
 
