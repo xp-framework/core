@@ -1,5 +1,6 @@
 <?php namespace util;
 
+use Traversable;
 use io\File;
 use io\streams\{FileInputStream, OutputStream, Reader, Writer, TextReader, TextWriter};
 use lang\{FormatException, IllegalStateException, Value};
@@ -152,10 +153,10 @@ class Properties implements PropertyAccess, Value {
   public function store($out, $charset= 'utf-8') {
     $writer= $out instanceof Writer ? $out : new TextWriter($out, $charset);
 
-    foreach (array_keys($this->_data) as $section) {
+    foreach ($this->_data as $section => $values) {
       $writer->write('['.$section."]\n");
-      foreach ($this->_data[$section] as $key => $val) {
-        if (';' == $key[0]) {
+      foreach ($values as $key => $val) {
+        if (';' === $key[0]) {
           $writer->write("\n; ".$val."\n");
         } else if (is_array($val)) {
           if (empty($val)) {
@@ -216,7 +217,7 @@ class Properties implements PropertyAccess, Value {
   }
 
   /** Returns sections */
-  public function sections(): \Traversable {
+  public function sections(): Traversable {
     $this->_load();
     foreach ($this->_data as $section => $_) {
       yield $section;
