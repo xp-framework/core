@@ -7,6 +7,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Removed deprecated Mersenne Twister algorithm from `util.Random`, see
+  https://wiki.php.net/rfc/deprecations_php_8_3#global_mersenne_twister
+  (@thekid)
 * Removed the deprecated *resolve()* method from `lang.Process`. Use
   `lang.CommandLine::resolve()` instead!
   (@thekid)

@@ -62,13 +62,6 @@ class RandomTest {
     Assert::equals(20, (new Random(Random::URANDOM))->bytes(20)->size());
   }
 
-  /** @deprecated */
-  #[Test]
-  public function mtrand_bytes() {
-    Assert::equals(20, (new Random(Random::MTRAND))->bytes(20)->size());
-    \xp::gc();
-  }
-
   #[Test, Expect(IllegalArgumentException::class), Values([-1, 0])]
   public function cannot_use_limit_smaller_than_one($limit) {
     (new Random())->bytes($limit);
@@ -102,14 +95,6 @@ class RandomTest {
   public function urandom_int() {
     $random= (new Random(Random::URANDOM))->int(0, 10);
     Assert::true($random >= 0 && $random <= 10);
-  }
-
-  /** @deprecated */
-  #[Test]
-  public function mtrand_int() {
-    $random= (new Random(Random::MTRAND))->int(0, 10);
-    Assert::true($random >= 0 && $random <= 10);
-    \xp::gc();
   }
 
   #[Test, Expect(IllegalArgumentException::class), Values([10, 11])]

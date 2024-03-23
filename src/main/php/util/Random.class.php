@@ -5,16 +5,11 @@ use lang\IllegalArgumentException;
 
 /**
  * This random generator uses PHP's `random_bytes()` and `random_int()`
- * functions if available (PHP >= 7.0) and provides alternatives if
- * necessary.
+ * functions and provides alternatives.
  *
- * _Note_: This RNG prefers secure pseudo-random sources. This may be
- * slow; for considerably faster results, use Random::MTRAND (which
- * uses the Mersenne Twister algorithm)
+ * _Note_: This RNG prefers secure pseudo-random sources.
  *
- * @see   http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
  * @see   http://sockpuppet.org/blog/2014/02/25/safely-generate-random-numbers/
- * @see   https://wiki.php.net/rfc/deprecations_php_8_3#global_mersenne_twister
  * @see   https://wiki.php.net/rfc/rng_extension#prng_shootout
  * @test  net.xp_framework.unittest.util.RandomTest
  */
@@ -22,7 +17,6 @@ class Random {
   const SYSTEM  = 'system';
   const OPENSSL = 'openssl';
   const URANDOM = 'urandom';
-  const MTRAND  = 'mtrand';
 
   const BEST    = '(best)';
   const FAST    = '(fast)';
@@ -56,7 +50,7 @@ class Random {
   /**
    * Creates a new random
    *
-   * @param  string|string[] $sources One or more of SYSTEM, OPENSSL, URANDOM, MTRAND, BEST, FAST and SECURE
+   * @param  string|string[] $sources One or more of SYSTEM, OPENSSL, URANDOM, BEST, FAST and SECURE
    * @throws lang.IllegalArgumentException
    */
   public function __construct($sources= self::BEST) {
@@ -65,12 +59,6 @@ class Random {
       if (isset(self::$sources[$source])) {
         $this->bytes= self::$sources[$source]['bytes'];
         $this->ints= self::$sources[$source]['ints'] ?: [$this, 'random'];
-        $this->source= $source;
-        return;
-      } else if (self::MTRAND === $source) {
-        trigger_error('MT19937 is deprecated', E_USER_DEPRECATED);
-        $this->bytes= [self::class, self::MTRAND];
-        $this->ints= 'mt_rand';
         $this->source= $source;
         return;
       }
@@ -115,21 +103,6 @@ class Random {
     stream_set_read_buffer($f, 0);
     $bytes= fread($f, $limit);
     fclose($f);
-    return $bytes;
-  }
-
-  /**
-   * Implementation using `mt_rand()`
-   *
-   * @deprecated
-   * @param  int $limit
-   * @return string $bytes
-   */
-  private static function mtrand($limit) {
-    $bytes= '';
-    for ($i= 0; $i < $limit; $i++) {
-      $bytes.= chr((mt_rand() ^ mt_rand()) % 0xFF);
-    }
     return $bytes;
   }
 
