@@ -1,21 +1,22 @@
 <?php namespace io\streams;
 
+use io\IOException;
 use lang\Closeable;
 
 /**
  * A stream transfer copies from an input stream to an output stream
  *
  * Example (downloading a file):
- * <code>
- *   $t= new StreamTransfer(
- *     (new HttpConnection('http://example.com'))->get('/')->getInputStream(), 
- *     new FileOutputStream(new File('index.html'))
- *   );
- *   $t->transferAll();
- *   $t->close();
- * </code>
+ * ```php
+ * $t= new StreamTransfer(
+ *   (new HttpConnection('http://example.com'))->get('/')->getInputStream(),
+ *   new FileOutputStream(new File('index.html'))
+ * );
+ * $t->transferAll();
+ * $t->close();
+ * ```
  *
- * @test    xp://net.xp_framework.unittest.io.streams.StreamTransferTest
+ * @test  net.xp_framework.unittest.io.streams.StreamTransferTest
  */
 class StreamTransfer implements Closeable {
   protected $in= null;
@@ -56,16 +57,16 @@ class StreamTransfer implements Closeable {
     $errors= '';
     try {
       $this->in->close();
-    } catch (\io\IOException $e) {
+    } catch (IOException $e) {
       $errors.= 'Could not close input stream: '.$e->getMessage().', ';
     }
     try {
       $this->out->close();
-    } catch (\io\IOException $e) {
+    } catch (IOException $e) {
       $errors.= 'Could not close output stream: '.$e->getMessage().', ';
     }
     if ($errors) {
-      throw new \io\IOException(rtrim($errors, ', '));
+      throw new IOException(rtrim($errors, ', '));
     }
   }
 
