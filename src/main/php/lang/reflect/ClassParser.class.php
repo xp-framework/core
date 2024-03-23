@@ -123,7 +123,7 @@ class ClassParser {
       return $value;
     } else if ('"' === $token || T_ENCAPSED_AND_WHITESPACE === $token) {
       throw new IllegalStateException('Parse error: Unterminated string');
-    } else if (T_FN === $token || T_STRING === $token && 'fn' === $tokens[$i][1]) {
+    } else if (T_FN === $token) {
       $s= sizeof($tokens);
       $b= 0;
       $code= '';
