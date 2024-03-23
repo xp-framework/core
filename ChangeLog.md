@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 12.0.0 / ????-??-??
+
+### RFCs
+
+* Implemented xp-framework/rfc#343, part 1: Drop support for all but the
+  latest PHP 7 release. The minimum required PHP version is now **7.4**!
+  (@thekid)
+
 ## 11.9.0 / 2024-03-16
 
 ### Features
