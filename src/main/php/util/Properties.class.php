@@ -302,7 +302,7 @@ class Properties implements PropertyAccess, Value {
       $return= [];
       foreach (explode('|', $value) as $val) {
         if (strstr($val, ':')) {
-          list($k, $v)= explode(':', $val, 2);
+          [$k, $v]= explode(':', $val, 2);
           $return[$k]= $expansion->in($v);
         } else {
           $return[]= $expansion->in($val);
