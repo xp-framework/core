@@ -5,6 +5,12 @@ XP Framework Core ChangeLog
 
 ## 12.0.0 / ????-??-??
 
+### Heads up!
+
+* Removed *Proxy* and *InvocationHandler* from the `lang.reflect` package,
+  and *AbstractDeferredInvokationHandler* from `util`. See PR #341
+  (@thekid)
+
 ### RFCs
 
 * Implemented xp-framework/rfc#342: Extract compression streams, removing
