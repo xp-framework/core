@@ -289,6 +289,7 @@ class CommandLineTest {
 
   #[Test, Runtime(os: 'Linux|Darwin')]
   public function resolve_ls_on_unix() {
+    var_dump([...CommandLine::$UNIX->resolve('ls')]);
     Assert::true(is_executable(CommandLine::$UNIX->resolve('ls')->current()));
   }
 
