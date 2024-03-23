@@ -300,15 +300,8 @@ class ClassParser {
       for ($state= 0, $i= 1, $s= sizeof($tokens); $i < $s; $i++) {
         if (T_WHITESPACE === $tokens[$i][0]) {
           continue;
-        } else if (0 === $state) {              // Initial state, expecting @attr or @$param: attr
-          if ('@' === $tokens[$i]) {
-            $annotation= $tokens[$i + 1][1];
-            $param= null;
-            $value= null;
-            $i++;
-            $state= 1;
-            trigger_error('XP annotation syntax is deprecated in '.$place, E_USER_DEPRECATED);
-          } else if (']' === $tokens[$i]) {     // Handle situations with trailing comma
+        } else if (0 === $state) {
+          if (']' === $tokens[$i]) {            // Handle situations with trailing comma
             $annotations[0][$annotation]= $value;
             return $annotations;
           } else {
@@ -344,7 +337,7 @@ class ClassParser {
           } else {
             throw new IllegalStateException('Parse error: Expecting either "(", "," or "]", have '.(is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i]));
           }
-        } else if (2 === $state) {              // Inside braces of @attr(...)
+        } else if (2 === $state) {
           if (')' === $tokens[$i]) {
             $state= 1;
           } else if ($i + 2 < $s && (':' === $tokens[$i + 1] || ':' === $tokens[$i + 2])) {
@@ -382,7 +375,7 @@ class ClassParser {
             $state= 1;
           } else if (',' === $tokens[$i]) {
             $key= null;
-          } else if ('=' === $tokens[$i] || ':' === $tokens[$i]) {
+          } else if (':' === $tokens[$i]) {
             $state= 4;
           } else if (is_array($tokens[$i])) {
             $key= $tokens[$i][1];

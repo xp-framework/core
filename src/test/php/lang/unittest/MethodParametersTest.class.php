@@ -258,7 +258,10 @@ class MethodParametersTest extends MethodsTest {
   /** @return lang.reflect.Parameter */
   private function annotatedParameter() {
     try {
-      $p= $this->method("#[@\$param: test('value')]\npublic function fixture(\$param) { }")->getParameter(0);
+      $p= $this->method("public function fixture(
+        #[Test('value')]
+        \$param
+      ) { }")->getParameter(0);
       $p->getAnnotations();
       return $p;
     } finally {
