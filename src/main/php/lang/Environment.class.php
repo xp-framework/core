@@ -146,7 +146,7 @@ abstract class Environment {
     if (strcspn($dir, '/\\') === strlen($dir)) return '.'.$separator.$dir;
 
     // Compare expanded paths against replace using case-insensitivity on Windows
-    $prefix= 0 === strncasecmp(PHP_OS, 'Win', 3) ? 'stripos' : 'strpos';
+    $prefix= 'Windows' === PHP_OS_FAMILY ? 'stripos' : 'strpos';
     $expand= function($path) {
       return realpath($path) ?: rtrim(strtr($path, '/\\', DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR);
     };
@@ -248,7 +248,7 @@ abstract class Environment {
     }
 
     // Search well-known locations
-    if (0 === strncasecmp(PHP_OS, 'Win', 3)) {
+    if ('Windows' === PHP_OS_FAMILY) {
       $base= dirname(getenv('HOME'));
       while (strlen($base) > 3 && !is_file($base.'\bin\cygwin1.dll')) {
         $base= dirname($base);

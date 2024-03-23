@@ -55,7 +55,7 @@ class Process {
       throw new IOException('Process execution has been disabled');
     }
 
-    $cmd= CommandLine::forName(PHP_OS);
+    $cmd= CommandLine::forName(PHP_OS_FAMILY);
     foreach ($cmd->resolve($command) as $binary) {
       $binary= realpath($binary);
       $exec= $cmd->compose($binary, $arguments);
@@ -125,7 +125,7 @@ class Process {
    * @throws io.IOException in case the command is empty or could not be found
    */
   public static function resolve(string $command): string {
-    foreach (CommandLine::forName(PHP_OS)->resolve($command) as $executable) {
+    foreach (CommandLine::forName(PHP_OS_FAMILY)->resolve($command) as $executable) {
       return realpath($executable);
     }
 
@@ -169,7 +169,7 @@ class Process {
     //   /bin/ps to retrieve the command line (please note unfortunately any
     //   quote signs have been lost and it can thus be only used for display
     //   purposes)
-    if (strncasecmp(PHP_OS, 'Win', 3) === 0) {
+    if ('Windows' === PHP_OS_FAMILY) {
       try {
         if (class_exists(\Com::class)) {
           $c= new \Com('winmgmts://./root/cimv2');
@@ -273,7 +273,7 @@ class Process {
    */
   public function getArguments() {
     if (null === $this->status['arguments']) {
-      $parts= CommandLine::forName(PHP_OS)->parse($this->status['command']);
+      $parts= CommandLine::forName(PHP_OS_FAMILY)->parse($this->status['command']);
       $this->status['arguments']= array_slice($parts, 1);
     }
     return $this->status['arguments'];

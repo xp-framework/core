@@ -36,7 +36,7 @@ class Random {
     self::$sources[self::SECURE]= &self::$sources[self::SYSTEM];
     self::$sources[self::BEST]= &self::$sources[self::SYSTEM];
 
-    if (strncasecmp(PHP_OS, 'Win', 3) !== 0 && is_readable('/dev/urandom')) {
+    if ('Windows' !== PHP_OS_FAMILY && is_readable('/dev/urandom')) {
       self::$sources[self::URANDOM]= ['bytes' => [self::class, self::URANDOM], 'ints' => null];
     }
 

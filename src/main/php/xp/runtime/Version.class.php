@@ -24,7 +24,7 @@ class Version {
 
   /** @return string */
   private function osVersion() {
-    if ('Linux' === PHP_OS) {
+    if ('Linux' === PHP_OS_FAMILY) {
       if (is_file('/etc/os-release')) {
         $rel= parse_ini_file('/etc/os-release');
         $code= $rel['VERSION_CODENAME'] ?? '';
@@ -32,7 +32,7 @@ class Version {
       } else if (is_executable('/usr/bin/lsb_release')) {
         return 'Linux/'.strtr(`/usr/bin/lsb_release -scd`, "\n", ' ');
       }
-    } else if ('Darwin' === PHP_OS) {
+    } else if ('Darwin' === PHP_OS_FAMILY) {
       if (is_executable('/usr/bin/sw_vers')) {
         return 'Mac OS X/'.trim(`/usr/bin/sw_vers -productVersion`);
       }
