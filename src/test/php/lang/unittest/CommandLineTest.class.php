@@ -6,6 +6,12 @@ use test\{Assert, Test, Values};
 
 class CommandLineTest {
 
+  /** @return iterable */
+  private function implementations() {
+    yield [CommandLine::$UNIX];
+    yield [CommandLine::$WINDOWS];
+  }
+
   #[Test]
   public function forWindows() {
     Assert::equals(CommandLine::$WINDOWS, CommandLine::forName('Windows'));
@@ -266,12 +272,12 @@ class CommandLineTest {
     );
   }
 
-  #[Test, Values(eval: 'CommandLine::values()')]
+  #[Test, Values(from: 'implementations')]
   public function resolve_non_existant($impl) {
     Assert::false($impl->resolve('@non-existant@')->valid());
   }
 
-  #[Test, Values(eval: 'CommandLine::values()')]
+  #[Test, Values(from: 'implementations')]
   public function resolve_empty($impl) {
     Assert::false($impl->resolve('')->valid());
   }
