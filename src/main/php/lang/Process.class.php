@@ -63,21 +63,9 @@ class Process {
 
       // Default descriptor spec to map STDIN to a pipe to read from and STDOUT and STDERR to
       // pipes the process will write to. This can be overwritten by the descriptors argument.
-      //
-      // Rewrite ['redirect', n] and ['null'] arguments for PHP versions <= 7.4.0, see
-      // https://github.com/php/php-src/commit/6285bb52faf407b07e71497723d13a1b08821352
       $spec= [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']];
       foreach ($descriptors as $n => $descriptor) {
-        if (!is_array($descriptor)) {
-          $spec[$n]= $descriptor;
-        } else if ('redirect' === $descriptor[0]) {
-          $exec.= ' '.$n.'>&'.$descriptor[1];
-          $options['bypass_shell']= false;
-        } else if ('null' === $descriptor[0]) {
-          $spec[$n]= ['file', CommandLine::$WINDOWS === $cmd ? 'NUL' : '/dev/null', 'w'];
-        } else {
-          $spec[$n]= $descriptor;
-        }
+        $spec[$n]= $descriptor;
       }
 
       // For non-Windows systems, use `exec` to replace the extra /bin/sh between this and the
