@@ -7,6 +7,9 @@ XP Framework Core ChangeLog
 
 ### Heads up!
 
+* Removed the deprecated *resolve()* method from `lang.Process`. Use
+  `lang.CommandLine::resolve()` instead!
+  (@thekid)
 * Removed *Proxy* and *InvocationHandler* from the `lang.reflect` package,
   and *AbstractDeferredInvokationHandler* from `util`. See PR #341
   (@thekid)

@@ -117,25 +117,6 @@ class Process {
   }
 
   /**
-   * Resolve path for a command
-   *
-   * @deprecated Use lang.CommandLine::resolve() instead!
-   * @param  string $command
-   * @return string $executable
-   * @throws io.IOException in case the command is empty or could not be found
-   */
-  public static function resolve(string $command): string {
-    foreach (CommandLine::forName(PHP_OS_FAMILY)->resolve($command) as $executable) {
-      return realpath($executable);
-    }
-
-    throw new IOException('' === $command
-      ? 'Empty command not resolveable'
-      : 'Could not find "'.$command.'" in path'
-    );
-  }
-
-  /**
    * Get a process by process ID
    *
    * @param  int $pid process id
