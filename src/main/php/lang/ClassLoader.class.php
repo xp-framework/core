@@ -228,9 +228,9 @@ final class ClassLoader implements IClassLoader {
       if (null === $t) {
         $constraint= '';
       } else if ($t->isBuiltin()) {
-        $constraint= (PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+        $constraint= $t->getName();
       } else {
-        $constraint= '\\'.(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+        $constraint= '\\'.$t->getName();
       }
 
       if ($param->isVariadic()) {
@@ -250,9 +250,9 @@ final class ClassLoader implements IClassLoader {
     if (null === $t) {
       // NOOP
     } else if ($t->isBuiltin()) {
-      $decl.= ':'.(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+      $decl.= ':'.$t->getName();
     } else {
-      $decl.= ': \\'.(PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString());
+      $decl.= ': \\'.$t->getName();
     }
 
     if (null === $invoke) {
@@ -300,7 +300,7 @@ final class ClassLoader implements IClassLoader {
             $forward= null;
           } else {
             $t= $f->getReturnType();
-            if (null !== $t && 'void' === (PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString())) {
+            if (null !== $t && 'void' === $t->getName()) {
               $forward= 'self::$__func["'.$name.'"]->call($this%s);';
             } else {
               $forward= 'return self::$__func["'.$name.'"]->call($this%s);';

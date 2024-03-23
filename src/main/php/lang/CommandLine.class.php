@@ -168,7 +168,7 @@ abstract class CommandLine extends Enum {
    * Returns the command line implementation for the given operating 
    * system.
    *
-   * @param  string $os operating system name, e.g. PHP_OS
+   * @param  string $os operating system name, e.g. PHP_OS_FAMILY
    * @return self
    */
   public static function forName(string $os): self {

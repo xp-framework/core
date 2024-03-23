@@ -24,7 +24,7 @@ class WildcardType extends Type {
     parent::__construct(sprintf(
       '%s<%s>',
       $base->getName(),
-      implode(',', array_map(function($e) { return $e->getName(); }, $components))
+      implode(',', array_map(fn($e) => $e->getName(), $components))
     ), null);
   }
 

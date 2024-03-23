@@ -76,7 +76,7 @@ class FieldBasicsTest extends FieldsTest {
     ]);
     Assert::equals(
       ['a', 'b'],
-      array_map(function($f) { return $f->getName(); }, $fixture->getFields())
+      array_map(fn($f) => $f->getName(), $fixture->getFields())
     );
   }
 
@@ -88,7 +88,7 @@ class FieldBasicsTest extends FieldsTest {
     ]);
     Assert::equals(
       ['declared', 'inherited'],
-      array_map(function($f) { return $f->getName(); }, $fixture->getFields())
+      array_map(fn($f) => $f->getName(), $fixture->getFields())
     );
   }
 
@@ -99,7 +99,7 @@ class FieldBasicsTest extends FieldsTest {
     ]);
     Assert::equals(
       ['a', 'b'],
-      array_map(function($f) { return $f->getName(); }, $fixture->getDeclaredFields())
+      array_map(fn($f) => $f->getName(), $fixture->getDeclaredFields())
     );
   }
 }

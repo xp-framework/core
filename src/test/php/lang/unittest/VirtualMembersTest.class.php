@@ -61,7 +61,7 @@ class VirtualMembersTest {
   public function included_in_all_fields() {
     Assert::equals(
       ['__readonly', 'prop'],
-      array_map(function($f) { return $f->getName(); }, $this->property->getFields())
+      array_map(fn($f) => $f->getName(), $this->property->getFields())
     );
   }
 
@@ -69,7 +69,7 @@ class VirtualMembersTest {
   public function included_in_all_declared_fields() {
     Assert::equals(
       ['__readonly', 'prop'],
-      array_map(function($f) { return $f->getName(); }, $this->property->getDeclaredFields())
+      array_map(fn($f) => $f->getName(), $this->property->getDeclaredFields())
     );
   }
 }

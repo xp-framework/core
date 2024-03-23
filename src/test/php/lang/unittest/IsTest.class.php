@@ -268,7 +268,7 @@ class IsTest {
   #[Test]
   public function wildcard_check_for_newinstance() {
     Assert::true(is('util.Filter<?>', newinstance('util.Filter<string>', [], [
-      'accept' => function($e) { return true; }
+      'accept' => fn($e) => true
     ])));
   }
 

@@ -83,7 +83,7 @@ class MethodReturnTypesTest extends MethodsTest {
     $this->assertReturnType($type, $this->method('public function fixture(): '.$literal.' { }'));
   }
 
-  #[Test, Runtime(php: '>=7.1')]
+  #[Test]
   public function void_return_type() {
     $fixture= $this->type('{ public function fixture(): void { } }');
     $this->assertReturnType(Type::$VOID, $fixture->getMethod('fixture'));
@@ -95,7 +95,7 @@ class MethodReturnTypesTest extends MethodsTest {
     $this->assertReturnType(Type::$NEVER, $fixture->getMethod('fixture'));
   }
 
-  #[Test, Runtime(php: '>=7.1')]
+  #[Test]
   public function nullable_return_type() {
     $fixture= $this->type('{ public function fixture(): ?string { } }');
     $this->assertReturnType(new Nullable(Primitive::$STRING), $fixture->getMethod('fixture'));
@@ -186,7 +186,7 @@ class MethodReturnTypesTest extends MethodsTest {
     Assert::equals('static', $method->getReturnTypeName(), 'name');
   }
 
-  #[Test, Runtime(php: '>=7.1')]
+  #[Test]
   public function apidoc_supersedes_void_type_restriction() {
     $method= $this->type('{ /** @return never */ public function fixture(): void { exit(); } }')->getMethod('fixture');
 

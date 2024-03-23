@@ -502,6 +502,6 @@ class TypeTest {
 
   #[Test, Values(from: 'names')]
   public function split($names, $expected) {
-    Assert::equals($expected, iterator_to_array(Type::split($names, ',')));
+    Assert::equals($expected, [...Type::split($names, ',')]);
   }
 }

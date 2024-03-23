@@ -123,14 +123,14 @@ class ClassParser {
       return $value;
     } else if ('"' === $token || T_ENCAPSED_AND_WHITESPACE === $token) {
       throw new IllegalStateException('Parse error: Unterminated string');
-    } else if (T_FN === $token || T_STRING === $token && 'fn' === $tokens[$i][1]) {
+    } else if (T_FN === $token) {
       $s= sizeof($tokens);
       $b= 0;
       $code= '';
       foreach ($imports as $name => $qualified) {
         $code.= 'use '.strtr($qualified, '.', '\\').' as '.$name.';';
       }
-      $code.= 'return function';
+      $code.= 'return fn';
       for ($i++; $i < $s; $i++) {
         if ('(' === $tokens[$i]) {
           $b++;
@@ -143,10 +143,6 @@ class ClassParser {
           $code.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
         }
       }
-
-      // Translates => to return statement
-      $code.= '{ return ';
-      while ($i < $s && T_DOUBLE_ARROW !== $tokens[$i][0]) $i++;
 
       // Parse expression
       $b= $c= 0;
@@ -170,7 +166,7 @@ class ClassParser {
         }
       }
       $i--;
-      $code.= '; };';
+      $code.= ';';
 
       try {
         $func= eval($code);

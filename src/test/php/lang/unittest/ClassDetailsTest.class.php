@@ -222,7 +222,7 @@ class ClassDetailsTest {
          * @return  php.Closure
          */
         public function newQuestion() {
-          return function() { return NULL; };   /* TODO: Remember question */
+          return function() { return null; };   /* TODO: Remember question */
         }
       }
     ?>');

@@ -14,7 +14,7 @@ abstract class Environment {
    * @return bool
    */
   private static function xdgCompliant() {
-    foreach (PHP_VERSION_ID >= 70100 ? getenv() : $_SERVER as $name => $value) {
+    foreach (getenv() as $name => $value) {
       if (0 === strncmp($name, 'XDG_', 4)) return true;
     }
     return false;
@@ -29,7 +29,7 @@ abstract class Environment {
    * @return  [:string]
    */
   public static function variables($filter= null) {
-    $variables= PHP_VERSION_ID >= 70100 ? getenv() : $_SERVER;
+    $variables= getenv();
     if (null === $filter) return $variables;
 
     $r= [];
@@ -102,14 +102,12 @@ abstract class Environment {
    * - Cygwin
    * - Unknown
    * 
-   * Same as the constant `PHP_OS_FAMILY` but handles Cygwin and also works
-   * for PHP 7.0 and 7.1, where this constant does not exist yet.
+   * Same as the constant `PHP_OS_FAMILY` but handles Cygwin.
    */
   public static function platform(): string {
-    $family= defined('PHP_OS_FAMILY') ? PHP_OS_FAMILY : PHP_OS;
-    return 'Windows' === $family || 'WINNT' === $family
+    return 'Windows' === PHP_OS_FAMILY
       ? getenv('HOME') ? 'Cygwin' : 'Windows'
-      : $family
+      : PHP_OS_FAMILY
     ;
   }
 
@@ -148,7 +146,7 @@ abstract class Environment {
     if (strcspn($dir, '/\\') === strlen($dir)) return '.'.$separator.$dir;
 
     // Compare expanded paths against replace using case-insensitivity on Windows
-    $prefix= 0 === strncasecmp(PHP_OS, 'Win', 3) ? 'stripos' : 'strpos';
+    $prefix= 'Windows' === PHP_OS_FAMILY ? 'stripos' : 'strpos';
     $expand= function($path) {
       return realpath($path) ?: rtrim(strtr($path, '/\\', DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR);
     };
@@ -188,7 +186,7 @@ abstract class Environment {
    * Pass NULL to retrieve configuration base directory
    */
   public static function configDir(string $named= null, string $home= null): string {
-    $home ?? $home= getenv('HOME');
+    $home??= getenv('HOME');
 
     if (!$home) {
       $base= getenv('APPDATA');
@@ -250,7 +248,7 @@ abstract class Environment {
     }
 
     // Search well-known locations
-    if (0 === strncasecmp(PHP_OS, 'Win', 3)) {
+    if ('Windows' === PHP_OS_FAMILY) {
       $base= dirname(getenv('HOME'));
       while (strlen($base) > 3 && !is_file($base.'\bin\cygwin1.dll')) {
         $base= dirname($base);

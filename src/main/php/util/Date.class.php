@@ -66,17 +66,6 @@ class Date implements Value {
     return clone $this->handle;
   }
   
-  /** @deprecated Replaced by __serialize() for PHP 7.4+ */
-  public function __sleep() {
-    $this->value= date_format($this->handle, self::DEFAULT_FORMAT);
-    return ['value'];
-  }
-  
-  /** @deprecated Replaced by __unserialize() for PHP 7.4+ */
-  public function __wakeup() {
-    $this->handle= date_create_from_format(self::DEFAULT_FORMAT, $this->value);
-  }
-
   /** @return [:string] */
   public function __serialize() {
     return ['value' => date_format($this->handle, self::DEFAULT_FORMAT)];

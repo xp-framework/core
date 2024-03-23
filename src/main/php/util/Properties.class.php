@@ -51,9 +51,9 @@ class Properties implements PropertyAccess, Value {
     $this->expansion= $this->expansion ?: clone self::$env;
 
     if (null === $expansion) {
-      $func= function($name) { return ''; };
+      $func= fn($name) => '';
     } else if ($expansion instanceof \ArrayAccess || (is_array($expansion) && 0 !== key($expansion))) {
-      $func= function($name) use($expansion) { return $expansion[$name] ?? null; };
+      $func= fn($name) => $expansion[$name] ?? null;
     } else {
       $func= cast($expansion, 'function(string): string');
     }
@@ -302,7 +302,7 @@ class Properties implements PropertyAccess, Value {
       $return= [];
       foreach (explode('|', $value) as $val) {
         if (strstr($val, ':')) {
-          list($k, $v)= explode(':', $val, 2);
+          [$k, $v]= explode(':', $val, 2);
           $return[$k]= $expansion->in($v);
         } else {
           $return[]= $expansion->in($val);

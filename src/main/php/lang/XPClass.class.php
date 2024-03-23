@@ -702,7 +702,7 @@ class XPClass extends Type {
     $cl= self::_classLoaderFor($class);
     if (!$cl || !($bytes= $cl->loadClassBytes($class))) return null;
 
-    $parser ?? $parser= new ClassParser();
+    $parser??= new ClassParser();
     return \xp::$meta[$class]= $parser->parseDetails($bytes);
   }
 

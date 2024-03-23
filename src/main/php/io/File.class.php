@@ -188,7 +188,7 @@ class File implements Channel, Value {
     }
 
     // OS vagaries: Windows does not retain file position!
-    if (0 === strncasecmp(PHP_OS, 'WIN', 3)) {
+    if ('Windows' === PHP_OS_FAMILY) {
       $pos= ftell($this->_fd);
       $return= ftruncate($this->_fd, $size);
       fseek($this->_fd, $pos, SEEK_SET);

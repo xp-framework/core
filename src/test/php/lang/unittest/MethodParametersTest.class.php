@@ -93,7 +93,7 @@ class MethodParametersTest extends MethodsTest {
     );
   }
 
-  #[Test, Runtime(php: '>=7.0'), Values([['string'], ['int'], ['bool'], ['float']])]
+  #[Test, Values([['string'], ['int'], ['bool'], ['float']])]
   public function parameter_type_determined_via_scalar_syntax($literal) {
     $this->assertParamType(
       Primitive::forName($literal),
@@ -101,7 +101,7 @@ class MethodParametersTest extends MethodsTest {
     );
   }
 
-  #[Test, Runtime(php: '>=7.1')]
+  #[Test]
   public function nullable_parameter_type() {
     $fixture= $this->type('{ public function fixture(?string $arg) { } }');
     $this->assertParamType(
@@ -245,7 +245,7 @@ class MethodParametersTest extends MethodsTest {
   #[Test]
   public function parameter_names() {
     Assert::equals(['a', 'b', 'c'], array_map(
-      function($p) { return $p->getName(); },
+      fn($p) => $p->getName(),
       $this->method('public function fixture($a, $b, $c) { }')->getParameters()
     ));
   }

@@ -294,7 +294,7 @@ class XPClassTest {
 
   #[Test]
   public function getClasses_returns_a_list_of_class_objects() {
-    Assert::instance('lang.XPClass[]', iterator_to_array(XPClass::getClasses()));
+    Assert::instance('lang.XPClass[]', [...XPClass::getClasses()]);
   }
   
   #[Test]

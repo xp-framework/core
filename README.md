@@ -3,7 +3,7 @@ XP Framework Core
 [![Build status on GitHub](https://github.com/xp-framework/core/workflows/Tests/badge.svg)](https://github.com/xp-framework/core/actions)
 [![Build status on AppVeyor](https://ci.appveyor.com/api/projects/status/bb9gkkq1o7f6m2ns?svg=true)](https://ci.appveyor.com/project/thekid/core)
 [![BSD License](https://raw.githubusercontent.com/xp-framework/web/master/static/licence-bsd.png)](https://github.com/xp-framework/core/blob/master/LICENSE.md)
-[![Requires PHP 7.0+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-7_0plus.svg)](http://php.net/)
+[![Requires PHP 7.4+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-7_4plus.svg)](http://php.net/)
 [![Supports PHP 8.0+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-8_0plus.svg)](http://php.net/)
 [![Latest Stable Version](https://poser.pugx.org/xp-framework/core/version.png)](https://packagist.org/packages/xp-framework/core)
 
@@ -35,7 +35,7 @@ Finally, start `xp -v` to see it working:
 
 ```sh
 $ xp -v
-XP 11.9.1-dev { PHP/8.3.4 & Zend/4.3.4 } @ Windows NT SURFACE 10.0 build 22621 (Windows 11) AMD64
+XP 12.0.0-dev { PHP/8.3.4 & Zend/4.3.4 } @ Windows NT SURFACE 10.0 build 22631 (Windows 11) AMD64
 Copyright (c) 2001-2024 the XP group
 FileSystemCL<./src/main/php>
 FileSystemCL<./src/test/php>

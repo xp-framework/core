@@ -295,18 +295,6 @@ class UUID implements Value {
     return $value instanceof self ? $this->hashCode() <=> $value->hashCode() : 1;
   }
 
-  /** @deprecated Replaced by __serialize() for PHP 7.4+ */
-  public function __sleep() {
-    $this->value= $this->hashCode();    // Invent "value" member
-    return ['value'];
-  }
-  
-  /** @deprecated Replaced by __unserialize() for PHP 7.4+ */
-  public function __wakeup() {
-    $this->populate($this->value);
-    unset($this->value);
-  }
-
   /** @return string */
   public function __toString() { return $this->hashCode(); }
 

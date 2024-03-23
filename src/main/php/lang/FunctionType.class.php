@@ -63,7 +63,7 @@ class FunctionType extends Type {
   public function literal(): string {
     return sprintf(
       "\xaa%s\xbb%s",
-      null === $this->signature ? "\xbf" : implode("\xb8", array_map(function($e) { return $e->literal(); }, $this->signature)),
+      null === $this->signature ? "\xbf" : implode("\xb8", array_map(fn($e) => $e->literal(), $this->signature)),
       $this->returns->literal()
     );
   }
@@ -81,9 +81,9 @@ class FunctionType extends Type {
     if ($class) {
       $details= XPClass::detailsForMethod($class, $r->getName());
       $resolve= [
-        'static' => function() use($class) { return new XPClass($class); },
-        'self'   => function() use($class) { return new XPClass($class); },
-        'parent' => function() use($class) { return new XPClass($class->getParentClass()); },
+        'static' => fn() => new XPClass($class),
+        'self'   => fn() => new XPClass($class),
+        'parent' => fn() => new XPClass($class->getParentClass()),
       ];
     } else {
       $details= null;
@@ -204,7 +204,7 @@ class FunctionType extends Type {
       }
       $c= new \ReflectionClass($class);
       if (!$c->isInstantiable()) return $false($arg.' cannot be instantiated');
-      return $return ? function(... $args) use($c) { return $c->newInstanceArgs($args); } : true;
+      return $return ? fn(... $args) => $c->newInstanceArgs($args) : true;
     } else if (is_string($arg) && is_string($method)) {
       $class= literal($arg);
       if (!method_exists($class, $method)) return $false('Method '.$arg.'::'.$method.' does not exist');
@@ -248,7 +248,7 @@ class FunctionType extends Type {
 
   /** Determines whether the specified object is an instance of this type */
   public function isInstance($obj): bool {
-    return $this->verified($obj, function($m) { return false; }, false);
+    return $this->verified($obj, fn($m) => false, false);
   }
 
   /**

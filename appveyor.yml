@@ -14,7 +14,7 @@ init:
 install:
   - if exist .\xp (set CACHED=1) else (mkdir .\xp)
   - if %CACHED%==0 cd .\xp
-  - if %CACHED%==0 curl -fsS -o php.zip https://windows.php.net/downloads/releases/archives/php-8.2.11-nts-Win32-vs16-x64.zip
+  - if %CACHED%==0 curl -fsS -o php.zip https://windows.php.net/downloads/releases/archives/php-8.3.3-nts-Win32-vs16-x64.zip
   - if %CACHED%==0 appveyor DownloadFile https://getcomposer.org/composer.phar
   - if %CACHED%==0 appveyor DownloadFile https://baltocdn.com/xp-framework/xp-runners/distribution/downloads/z/zip/xp-runners_8.8.0.zip -FileName xp.zip
   - if %CACHED%==0 7z x php.zip -y
@@ -28,7 +28,7 @@ install:
   - type .\xp\php.ini
 
 test_script:
-  - for /f "skip=1 tokens=1-2" %%a in ('findstr /r /c:"^## " ChangeLog.md') do ( set COMPOSER_ROOT_VERSION=%%b & php .\xp\composer.phar require xp-framework/test & exit /b )
+  - for /f "skip=1 tokens=1-4" %%a in ('findstr /r /c:"^## " ChangeLog.md') do ( if '????-??-??' neq '%%d' ( set COMPOSER_ROOT_VERSION=%%b & php .\xp\composer.phar require xp-framework/test & exit /b ) )
   - echo src/main/php/__xp.php > composer.pth
   - echo vendor/autoload.php >> composer.pth
   - xp -m . xp.test.Runner -r Dots src/test/php
