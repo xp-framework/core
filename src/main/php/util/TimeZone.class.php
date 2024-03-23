@@ -1,5 +1,6 @@
 <?php namespace util;
 
+use DateTimeZone, Throwable;
 use lang\{IllegalArgumentException, Value};
 
 /**
@@ -28,11 +29,11 @@ class TimeZone implements Value {
       $this->tz= timezone_open(date_default_timezone_get());
     } else if (is_string($tz)) {
       try {
-        $this->tz= new \DateTimeZone($tz);
-      } catch (\Throwable $e) {
+        $this->tz= new DateTimeZone($tz);
+      } catch (Throwable $e) {
         throw new IllegalArgumentException('Invalid timezone identifier given: '.$e->getMessage());
       }
-    } else if ($tz instanceof \DateTimeZone) {
+    } else if ($tz instanceof DateTimeZone) {
       $this->tz= $tz;
     } else {
       throw new IllegalArgumentException('Expecting NULL, a string or a DateTimeZone instance, have '.typeof($tz)->getName());
@@ -96,7 +97,7 @@ class TimeZone implements Value {
    * @return bool
    */
   public function hasDst($year= null) {
-    $year ?? $year= idate('Y');
+    $year??= idate('Y');
     $t= timezone_transitions_get($this->tz, gmmktime(0, 0, 0, 1, 1, $year), gmmktime(0, 0, 0, 1, 1, $year + 1));
 
     // Without DST: [2022-01-01 => UTC]
