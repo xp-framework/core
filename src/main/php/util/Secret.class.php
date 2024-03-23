@@ -1,6 +1,6 @@
 <?php namespace util;
 
-use Closure;
+use Closure, Throwable;
 use lang\{IllegalStateException, IllegalArgumentException, Value};
 
 /**
@@ -116,11 +116,10 @@ class Secret implements Value {
     $this->id= uniqid(microtime(true));
     try {
       self::$store[$this->id]= self::$encrypt->__invoke((string)$characters);
-    } catch (\Throwable $e) {
+    } catch (Throwable $e) {
       // This intentionally catches *ALL* exceptions, in order not to fail
       // and produce a stacktrace (containing arguments on the stack that were)
-      // supposed to be protected.
-      // Also, cleanup XP error stack
+      // supposed to be protected. Also, cleanup XP error stack
       unset(self::$store[$this->id]);
       \xp::gc();
     }
@@ -150,11 +149,7 @@ class Secret implements Value {
    * @return bool
    */
   public function equals($arg): bool {
-    if ($arg instanceof self) {
-      return hash_equals($this->reveal(), $arg->reveal());
-    } else {
-      return hash_equals($this->reveal(), (string)$arg);
-    }
+    return hash_equals($this->reveal(), $arg instanceof self ? $arg->reveal() : (string)$arg);
   }
 
   /** Override string casts */
