@@ -7,6 +7,9 @@ XP Framework Core ChangeLog
 
 ### RFCs
 
+* Implemented xp-framework/rfc#336, part 2: Remove XP annotations syntax,
+  which was deprecated in XP 11, released October 2021. See PR #340.
+  (@thekid)
 * Implemented xp-framework/rfc#343, part 1: Drop support for all but the
   latest PHP 7 release. The minimum required PHP version is now **7.4**!
   (@thekid)
