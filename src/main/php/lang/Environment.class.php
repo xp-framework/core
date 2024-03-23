@@ -186,7 +186,7 @@ abstract class Environment {
    * Pass NULL to retrieve configuration base directory
    */
   public static function configDir(string $named= null, string $home= null): string {
-    $home ?? $home= getenv('HOME');
+    $home??= getenv('HOME');
 
     if (!$home) {
       $base= getenv('APPDATA');
