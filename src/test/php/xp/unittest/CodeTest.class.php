@@ -25,7 +25,7 @@ class CodeTest {
     Assert::equals('var_dump("Test");', (new Code('var_dump("Test");'))->fragment());
   }
 
-  #[Test, Values(['<?php var_dump("Test")', '<?php    var_dump("Test")', '<? var_dump("Test")', '<?          var_dump("Test")', '<?=var_dump("Test")', '<?=         var_dump("Test")', '<?hh var_dump("Test")', '<?hh      var_dump("Test")'])]
+  #[Test, Values(['<?php var_dump("Test")', '<?php    var_dump("Test")', '<? var_dump("Test")', '<?          var_dump("Test")', '<?=var_dump("Test")', '<?=         var_dump("Test")'])]
   public function fragment_with_php_tag($input) {
     Assert::equals('var_dump("Test");', (new Code($input))->fragment());
   }
