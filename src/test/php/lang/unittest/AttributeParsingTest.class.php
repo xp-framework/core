@@ -426,7 +426,7 @@ class AttributeParsingTest extends AbstractAnnotationParsingTest {
   public function class_constant_via_classname() {
     Assert::equals(
       [0 => ['value' => 'constant'], 1 => ['value' => 'lang.unittest.Value']],
-      $this->parse('#[Value(AnnotationParsingTest::CONSTANT)]')
+      $this->parse('#[Value(AttributeParsingTest::CONSTANT)]')
     );
   }
 
@@ -434,7 +434,7 @@ class AttributeParsingTest extends AbstractAnnotationParsingTest {
   public function class_constant_via_ns_classname() {
     Assert::equals(
       [0 => ['value' => 'constant'], 1 => ['value' => 'lang.unittest.Value']],
-      $this->parse('#[Value(\lang\unittest\AnnotationParsingTest::CONSTANT)]')
+      $this->parse('#[Value(\lang\unittest\AttributeParsingTest::CONSTANT)]')
     );
   }
 
@@ -458,7 +458,7 @@ class AttributeParsingTest extends AbstractAnnotationParsingTest {
   public function class_constant_via_classname_in_map() {
     Assert::equals(
       [0 => ['map' => ['key' => 'constant', 'value' => 'val']], 1 => ['map' => 'lang.unittest.Map']],
-      $this->parse('#[Map(["key" => AnnotationParsingTest::CONSTANT, "value" => "val"])]')
+      $this->parse('#[Map(["key" => AttributeParsingTest::CONSTANT, "value" => "val"])]')
     );
   }
 
@@ -466,7 +466,7 @@ class AttributeParsingTest extends AbstractAnnotationParsingTest {
   public function class_constant_via_ns_classname_in_map() {
     Assert::equals(
       [0 => ['map' => ['key' => 'constant', 'value' => 'val']], 1 => ['map' => 'lang.unittest.Map']],
-      $this->parse('#[Map(["key" => \lang\unittest\AnnotationParsingTest::CONSTANT, "value" => "val"])]')
+      $this->parse('#[Map(["key" => \lang\unittest\AttributeParsingTest::CONSTANT, "value" => "val"])]')
     );
   }
 
