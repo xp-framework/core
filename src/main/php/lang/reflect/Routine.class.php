@@ -165,7 +165,7 @@ class Routine implements Value {
       return ($t->allowsNull() ? '?' : '').substr($intersection, 1);
     } else {
       $nullable= $t->allowsNull() ? '?' : '';
-      $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
+      $name= $t->getName();
 
       // Check array, self, void and callable for more specific types, e.g. `string[]`,
       // `static`, `never` or `function(): string` in api documentation

@@ -68,7 +68,7 @@ class Process {
       // https://github.com/php/php-src/commit/6285bb52faf407b07e71497723d13a1b08821352
       $spec= [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']];
       foreach ($descriptors as $n => $descriptor) {
-        if (PHP_VERSION_ID >= 70400 || !is_array($descriptor)) {
+        if (!is_array($descriptor)) {
           $spec[$n]= $descriptor;
         } else if ('redirect' === $descriptor[0]) {
           $exec.= ' '.$n.'>&'.$descriptor[1];

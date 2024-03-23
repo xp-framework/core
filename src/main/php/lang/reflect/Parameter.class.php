@@ -104,7 +104,7 @@ class Parameter {
       return ($t->allowsNull() ? '?' : '').substr($intersection, 1);
     } else {
       $nullable= $t->allowsNull() ? '?' : '';
-      $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
+      $name= $t->getName();
 
       // Check array and callable for more specific types, e.g. `string[]` or
       // `function(): string` in api documentation

@@ -253,7 +253,7 @@ class Type implements Value {
       }
       $t= new TypeIntersection($intersection);
     } else if ($type instanceof \ReflectionType) {
-      $name= PHP_VERSION_ID >= 70100 ? $type->getName() : $type->__toString();
+      $name= $type->getName();
 
       // Check array, self, void and callable for more specific types, e.g. `string[]`,
       // `static`, `never` or `function(): string` in api documentation

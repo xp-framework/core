@@ -58,8 +58,7 @@ class Field implements Value {
       return $r ? ltrim($r, '&') : null;
     };
 
-    $t= PHP_VERSION_ID >= 70400 || '' === $this->_reflect->name ? $this->_reflect->getType() : null;
-    return Type::resolve($t, $this->resolve(), $api) ?? Type::$VAR;
+    return Type::resolve($this->_reflect->getType(), $this->resolve(), $api) ?? Type::$VAR;
   }
 
   /** Gets field type's name */
@@ -72,8 +71,7 @@ class Field implements Value {
       'integer' => 'int',
     ];
 
-    $t= PHP_VERSION_ID >= 70400 || '' === $this->_reflect->name ? $this->_reflect->getType() : null;
-    if (null === $t) {
+    if (null === ($t= $this->_reflect->getType())) {
 
       // Check for type in api documentation
       $name= 'var';
@@ -96,7 +94,7 @@ class Field implements Value {
       }
       return substr($intersection, 1);
     } else {
-      $name= PHP_VERSION_ID >= 70100 ? $t->getName() : $t->__toString();
+      $name= $t->getName();
 
       // Check array for more specific types, e.g. `string[]` in api documentation
       if ('array' !== $name) {
@@ -117,7 +115,7 @@ class Field implements Value {
    */
   public function getTypeRestriction() {
     try {
-      return Type::resolve(PHP_VERSION_ID >= 70400 || '' === $this->_reflect->name ? $this->_reflect->getType() : null, $this->resolve());
+      return Type::resolve($this->_reflect->getType(), $this->resolve());
     } catch (ClassLoadingException $e) {
       throw new ClassNotFoundException(sprintf(
         'Typehint for %s::%s()\'s parameter "%s" cannot be resolved: %s',
