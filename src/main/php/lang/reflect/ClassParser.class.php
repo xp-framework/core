@@ -280,8 +280,7 @@ class ClassParser {
   public function parseAnnotations($bytes, $context, $imports= [], $line= -1) {
     static $states= [
       'annotation', 'annotation name', 'annotation value',
-      'annotation map key', 'annotation map value',
-      'multi-value'
+      'annotation named argument', 'annotation named argument value'
     ];
 
     // BC when class name is passed for context
