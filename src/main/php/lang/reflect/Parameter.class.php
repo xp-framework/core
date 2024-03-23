@@ -44,8 +44,8 @@ class Parameter {
    */
   private function resolve() {
     return [
-      'self'   => function() { return new XPClass($this->_reflect->getDeclaringClass()); },
-      'parent' => function() { return new XPClass($this->_reflect->getDeclaringClass()->getParentClass()); },
+      'self'   => fn() => new XPClass($this->_reflect->getDeclaringClass()),
+      'parent' => fn() => new XPClass($this->_reflect->getDeclaringClass()->getParentClass()),
     ];
   }
 

@@ -9,7 +9,7 @@ class ObjectsTest {
   private static $func;
 
   static function __static() {
-    self::$func= function() { return 'Test'; };
+    self::$func= fn() => 'Test';
   }
 
   /** @return  var[][] */
@@ -70,7 +70,7 @@ class ObjectsTest {
       $this->maps(),
       $this->objects(),
       $this->natives(),
-      [[function() { return 'Test'; }]]
+      [[self::$func]]
     );
   }
 

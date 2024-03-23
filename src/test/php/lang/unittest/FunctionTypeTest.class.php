@@ -414,7 +414,7 @@ class FunctionTypeTest extends BaseTest {
 
   #[Test]
   public function invoke() {
-    $f= function(Type $in) { return $in->getName(); };
+    $f= fn(Type $in) => $in->getName();
     $t= new FunctionType([XPClass::forName('lang.Type')], Primitive::$STRING);
     Assert::equals('string', $t->invoke($f, [Primitive::$STRING]));
   }

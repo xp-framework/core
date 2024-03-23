@@ -245,7 +245,7 @@ class MethodParametersTest extends MethodsTest {
   #[Test]
   public function parameter_names() {
     Assert::equals(['a', 'b', 'c'], array_map(
-      function($p) { return $p->getName(); },
+      fn($p) => $p->getName(),
       $this->method('public function fixture($a, $b, $c) { }')->getParameters()
     ));
   }

@@ -266,7 +266,7 @@ class Runtime {
     }
 
     // Finally, fork executable
-    $pass= array_map(function($arg) { return iconv(\xp::ENCODING, 'utf-7', $arg); }, $arguments);
+    $pass= array_map(fn($arg) => iconv(\xp::ENCODING, 'utf-7', $arg), $arguments);
     return $this->getExecutable()->newInstance(array_merge($cmdline, $pass), $cwd, $env);
   }
 }

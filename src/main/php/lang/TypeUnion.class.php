@@ -22,7 +22,7 @@ class TypeUnion extends Type {
       throw new IllegalArgumentException('A type union consists of at least 2 types');
     }
     $this->types= $types;
-    parent::__construct(implode('|', array_map(function($type) { return $type->getName(); }, $types)), null);
+    parent::__construct(implode('|', array_map(fn($type) => $type->getName(), $types)), null);
   }
 
   /** @return lang.Type[] */
@@ -30,7 +30,7 @@ class TypeUnion extends Type {
 
   /** Returns type literal */
   public function literal(): string {
-    return "\xb5".implode("\xb8", array_map(function($type) { return $type->literal(); }, $this->types));
+    return "\xb5".implode("\xb8", array_map(fn($type) => $type->literal(), $this->types));
   }
 
   /** Determines whether the specified object is an instance of this type */

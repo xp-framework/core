@@ -10,8 +10,8 @@ class TypeResolveTest extends BaseTest {
   #[Before]
   public function setUp() {
     $this->context= [
-      'self'   => function() { return new XPClass(self::class); },
-      'parent' => function() { return new XPClass(parent::class); },
+      'self'   => fn() => new XPClass(self::class),
+      'parent' => fn() => new XPClass(parent::class),
       '*'      => function($type) {
         switch ($type) {
           case 'TypeResolveTest': return new XPClass(self::class);

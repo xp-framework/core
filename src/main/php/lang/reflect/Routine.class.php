@@ -108,9 +108,9 @@ class Routine implements Value {
    */
   private function resolve() {
     return [
-      'static' => function() { return new XPClass($this->_class); },
-      'self'   => function() { return new XPClass($this->_reflect->getDeclaringClass()); },
-      'parent' => function() { return new XPClass($this->_reflect->getDeclaringClass()->getParentClass()); },
+      'static' => fn() => new XPClass($this->_class),
+      'self'   => fn() => new XPClass($this->_reflect->getDeclaringClass()),
+      'parent' => fn() => new XPClass($this->_reflect->getDeclaringClass()->getParentClass()),
     ];
   }
 

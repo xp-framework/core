@@ -27,7 +27,7 @@ class FiltersTest {
   #[Test, Values(from: 'accepting')]
   public function can_create($accepting) {
     create('new util.Filters<int>',
-      [newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }])],
+      [newinstance('util.Filter<int>', [], ['accept' => fn($e) => $e > 1])],
       $accepting
     );
   }
@@ -40,7 +40,7 @@ class FiltersTest {
   #[Test]
   public function can_create_with_empty_acceptor() {
     create('new util.Filters<int>',
-      [newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }])],
+      [newinstance('util.Filter<int>', [], ['accept' => fn($e) => $e > 1])],
       null
     );
   }
@@ -53,13 +53,13 @@ class FiltersTest {
   #[Test]
   public function add_filter() {
     $filters= create('new util.Filters<int>', [], Filters::$ALL);
-    $filters->add(newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }]));
+    $filters->add(newinstance('util.Filter<int>', [], ['accept' => fn($e) => $e > 1]));
     Assert::true($filters->accept(2));
   }
 
   #[Test]
   public function set_accepting() {
-    $filters= create('new util.Filters<int>', [newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }])]);
+    $filters= create('new util.Filters<int>', [newinstance('util.Filter<int>', [], ['accept' => fn($e) => $e > 1])]);
     $filters->accepting(Filters::$ALL);
     Assert::true($filters->accept(2));
   }
@@ -67,7 +67,7 @@ class FiltersTest {
   #[Test]
   public function fluent_interface() {
     Assert::true(create('new util.Filters<int>')
-      ->add(newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }]))
+      ->add(newinstance('util.Filter<int>', [], ['accept' => fn($e) => $e > 1]))
       ->accepting(Filters::$ALL)
       ->accept(2)
     );
@@ -76,7 +76,7 @@ class FiltersTest {
   #[Test, Expect(IllegalStateException::class)]
   public function accept_called_without_accepting_function_set() {
     create('new util.Filters<int>')
-      ->add(newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }]))
+      ->add(newinstance('util.Filter<int>', [], ['accept' => fn($e) => $e > 1]))
       ->accept(2)
     ;
   }
@@ -84,24 +84,24 @@ class FiltersTest {
   #[Test]
   public function allOf() {
     Assert::equals([2, 3], iterator_to_array($this->filter([1, 2, 3, 4], Filters::allOf([
-      newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e > 1; }]),
-      newinstance('util.Filter<int>', [], ['accept' => function($e) { return $e < 4; }])
+      newinstance('util.Filter<int>', [], ['accept' => fn($e) => $e > 1]),
+      newinstance('util.Filter<int>', [], ['accept' => fn($e) => $e < 4])
     ]))));
   }
 
   #[Test]
   public function anyOf() {
     Assert::equals(['Hello', 'World', '!'], iterator_to_array($this->filter(['Hello', 'test', '', 'World', '!'], Filters::anyOf([
-      newinstance('util.Filter<string>', [], ['accept' => function($e) { return 1 === strlen($e); }]),
-      newinstance('util.Filter<string>', [], ['accept' => function($e) { return strlen($e) > 0 && ord($e[0]) < 97; }])
+      newinstance('util.Filter<string>', [], ['accept' => fn($e) => 1 === strlen($e)]),
+      newinstance('util.Filter<string>', [], ['accept' => fn($e) => strlen($e) > 0 && ord($e[0]) < 97])
     ]))));
   }
 
   #[Test]
   public function noneOf() {
     Assert::equals(['index.html'], iterator_to_array($this->filter(['file.txt', 'index.html', 'test.php'], Filters::noneOf([
-      newinstance('util.Filter<string>', [], ['accept' => function($e) { return strstr($e, 'test'); }]),
-      newinstance('util.Filter<string>', [], ['accept' => function($e) { return strstr($e, '.txt'); }])
+      newinstance('util.Filter<string>', [], ['accept' => fn($e) => strstr($e, 'test')]),
+      newinstance('util.Filter<string>', [], ['accept' => fn($e) => strstr($e, '.txt')])
     ]))));
   }
 }

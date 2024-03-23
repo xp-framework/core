@@ -23,7 +23,7 @@ class PropertyExpansionTest {
 
   #[Test]
   public function closure_lookup() {
-    $prop= $this->newFixture(['test=${lookup.TEST}'], function($name) { return strtolower($name); });
+    $prop= $this->newFixture(['test=${lookup.TEST}'], fn($name) => strtolower($name));
     Assert::equals('test', $prop->readString(null, 'test'));
   }
 
@@ -66,7 +66,7 @@ class PropertyExpansionTest {
 
   #[Test, Expect(ElementNotFoundException::class), Values([null, false])]
   public function non_existant_lookup($return) {
-    $prop= $this->newFixture(['test=${lookup.TEST}'], function($name) use($return) { return $return; });
+    $prop= $this->newFixture(['test=${lookup.TEST}'], fn($name) => $return);
     $prop->readString(null, 'test');
   }
 

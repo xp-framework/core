@@ -104,6 +104,6 @@ class WithTest {
 
   #[Test]
   public function usage_with_closure_returns_whatever_closure_returns() {
-    Assert::equals('Test', with (function() { return 'Test'; }));
+    Assert::equals('Test', with (fn() => 'Test'));
   }
 }
