@@ -1,7 +1,8 @@
 <?php namespace util;
 
+use Traversable;
 use io\File;
-use io\streams\{FileInputStream, OutputStream, TextReader};
+use io\streams\{FileInputStream, OutputStream, Reader, Writer, TextReader, TextWriter};
 use lang\{FormatException, IllegalStateException, Value};
 
 /**
@@ -65,14 +66,14 @@ class Properties implements PropertyAccess, Value {
   /**
    * Load from an input stream, e.g. a file
    *
-   * @param   io.streams.InputStream|io.Channel|string $in
-   * @param   string $charset the charset the stream is encoded in or NULL to trigger autodetection by BOM
+   * @param   io.streams.Reader|io.streams.InputStream|io.Channel|string $in
+   * @param   ?string $charset the charset the stream is encoded in or NULL to trigger autodetection by BOM
    * @return  self
    * @throws  io.IOException
    * @throws  lang.FormatException
    */
-  public function load($in, $charset= null): self {
-    $reader= new TextReader($in, $charset);
+  public function load($in, $charset= 'utf-8'): self {
+    $reader= $in instanceof Reader ? $in : new TextReader($in, $charset);
     $this->_data= [];
     $section= null;
 
@@ -145,28 +146,31 @@ class Properties implements PropertyAccess, Value {
   /**
    * Store to an output stream, e.g. a file
    *
-   * @param   io.streams.OutputStream out
+   * @param   io.streams.Writer|io.streams.OutputStream|io.Channel|string $out
+   * @param   string $charset
    * @throws  io.IOException
    */
-  public function store(OutputStream $out) {
-    foreach (array_keys($this->_data) as $section) {
-      $out->write('['.$section."]\n");
-      foreach ($this->_data[$section] as $key => $val) {
-        if (';' == $key[0]) {
-          $out->write("\n; ".$val."\n");
+  public function store($out, $charset= 'utf-8') {
+    $writer= $out instanceof Writer ? $out : new TextWriter($out, $charset);
+
+    foreach ($this->_data as $section => $values) {
+      $writer->write('['.$section."]\n");
+      foreach ($values as $key => $val) {
+        if (';' === $key[0]) {
+          $writer->write("\n; ".$val."\n");
         } else if (is_array($val)) {
           if (empty($val)) {
-            $out->write($key."=\n");
+            $writer->write($key."=\n");
           } else if (0 === key($val)) {
-            foreach ($val as $v) { $out->write($key.'[]='.$this->quote($v)."\n"); }
+            foreach ($val as $v) { $writer->write($key.'[]='.$this->quote($v)."\n"); }
           } else {
-            foreach ($val as $k => $v) { $out->write($key.'['.$k.']='.$this->quote($v)."\n"); }
+            foreach ($val as $k => $v) { $writer->write($key.'['.$k.']='.$this->quote($v)."\n"); }
           }
         } else {
-          $out->write($key.'='.$this->quote($val)."\n");
+          $writer->write($key.'='.$this->quote($val)."\n");
         }
       }
-      $out->write("\n");
+      $writer->write("\n");
     }
   }
 
@@ -213,7 +217,7 @@ class Properties implements PropertyAccess, Value {
   }
 
   /** Returns sections */
-  public function sections(): \Traversable {
+  public function sections(): Traversable {
     $this->_load();
     foreach ($this->_data as $section => $_) {
       yield $section;
