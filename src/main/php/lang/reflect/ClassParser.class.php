@@ -130,7 +130,7 @@ class ClassParser {
       foreach ($imports as $name => $qualified) {
         $code.= 'use '.strtr($qualified, '.', '\\').' as '.$name.';';
       }
-      $code.= 'return function';
+      $code.= 'return fn';
       for ($i++; $i < $s; $i++) {
         if ('(' === $tokens[$i]) {
           $b++;
@@ -143,10 +143,6 @@ class ClassParser {
           $code.= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
         }
       }
-
-      // Translates => to return statement
-      $code.= '{ return ';
-      while ($i < $s && T_DOUBLE_ARROW !== $tokens[$i][0]) $i++;
 
       // Parse expression
       $b= $c= 0;
@@ -170,7 +166,7 @@ class ClassParser {
         }
       }
       $i--;
-      $code.= '; };';
+      $code.= ';';
 
       try {
         $func= eval($code);
