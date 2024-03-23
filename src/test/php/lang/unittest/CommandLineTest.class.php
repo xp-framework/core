@@ -1,7 +1,8 @@
 <?php namespace lang\unittest;
 
 use lang\CommandLine;
-use test\{Assert, Test};
+use test\verify\Runtime;
+use test\{Assert, Test, Values};
 
 class CommandLineTest {
 
@@ -263,5 +264,55 @@ class CommandLineTest {
       ['xp', 'xp.runtime.Evaluate', 'echo "Hello World', 'a'],
       CommandLine::$WINDOWS->parse($cmd)
     );
+  }
+
+  #[Test, Values(eval: 'CommandLine::values()')]
+  public function resolve_non_existant($impl) {
+    Assert::false($impl->resolve('@non-existant@')->valid());
+  }
+
+  #[Test, Values(eval: 'CommandLine::values()')]
+  public function resolve_empty($impl) {
+    Assert::false($impl->resolve('')->valid());
+  }
+
+  #[Test]
+  public function resolve_path_on_unix() {
+    Assert::false(CommandLine::$UNIX->resolve('/')->valid());
+  }
+
+  #[Test, Runtime(os: 'Linux|Darwin')]
+  public function resolve_ls_on_unix() {
+    Assert::true(is_executable(CommandLine::$UNIX->resolve('ls')->current()));
+  }
+
+  #[Test, Runtime(os: 'Linux|Darwin')]
+  public function resolve_absolute_on_unix() {
+    Assert::true(is_executable(CommandLine::$UNIX->resolve('/bin/ls')->current()));
+  }
+
+  #[Test]
+  public function resolve_path_on_win() {
+    Assert::false(CommandLine::$WINDOWS->resolve('\\')->valid());
+  }
+
+  #[Test, Runtime(os: '^Win')]
+  public function resolve_explorer_on_win() {
+    Assert::true(is_executable(CommandLine::$WINDOWS->resolve('explorer')->current()));
+  }
+
+  #[Test, Runtime(os: '^Win')]
+  public function resolve_with_extension_on_win() {
+    Assert::true(is_executable(CommandLine::$WINDOWS->resolve('explorer.exe')->current()));
+  }
+
+  #[Test, Runtime(os: '^Win')]
+  public function resolve_absolute_on_win() {
+    Assert::true(is_executable(CommandLine::$UNIX->resolve(getenv('WINDIR').'\\explorer.exe')->current()));
+  }
+
+  #[Test, Runtime(os: '^Win')]
+  public function resolve_quoted_on_win() {
+    Assert::true(is_executable(CommandLine::$WINDOWS->resolve('"explorer"')->current()));
   }
 }
