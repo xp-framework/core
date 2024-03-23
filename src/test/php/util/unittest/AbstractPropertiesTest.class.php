@@ -219,7 +219,7 @@ abstract class AbstractPropertiesTest {
       foo=bar
     ');
 
-    Assert::equals(['section', 'next', 'empty', 'final'], iterator_to_array($p->sections()));
+    Assert::equals(['section', 'next', 'empty', 'final'], [...$p->sections()]);
   }
 
   #[Test, Expect(FormatException::class), Values([["[section]\nfoo", 'missing equals sign for key'], ["[section]\nfoo]=value", 'key contains unbalanced bracket'], ["[section\nfoo=bar", 'section missing closing bracket']])]
