@@ -1,10 +1,10 @@
 <?php namespace lang\unittest;
 
 use ReturnTypesWillChange;
-use lang\Runtime as XPRuntime;
+use lang\Runtime;
 use lang\reflect\Package;
 use lang\{ClassFormatException, ClassLoader, IllegalAccessException, Process, Runnable, Value};
-use test\verify\{Condition, Runtime};
+use test\verify\Condition;
 use test\{Assert, Expect, Test, Values};
 use util\Objects;
 
@@ -22,7 +22,7 @@ class NewInstanceTest {
    * @return  var[] an array with three elements: exitcode, stdout and stderr contents
    */
   protected function runInNewRuntime($src) {
-    return with (XPRuntime::getInstance()->newInstance(null, 'class', 'xp.runtime.Evaluate', []), function($p) use($src) {
+    return with (Runtime::getInstance()->newInstance(null, 'class', 'xp.runtime.Evaluate', []), function($p) use($src) {
       $p->in->write($src);
       $p->in->close();
 
@@ -491,7 +491,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Condition(assert: 'self::processExecutionEnabled()'), Runtime(php: '>=7.2')]
+  #[Test, Condition(assert: 'self::processExecutionEnabled()')]
   public function declaration_with_nullable_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -506,7 +506,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Condition(assert: 'self::processExecutionEnabled()'), Runtime(php: '>=7.1')]
+  #[Test, Condition(assert: 'self::processExecutionEnabled()')]
   public function declaration_with_iterable_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -521,7 +521,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Condition(assert: 'self::processExecutionEnabled()'), Runtime(php: '>=7.2')]
+  #[Test, Condition(assert: 'self::processExecutionEnabled()')]
   public function declaration_with_object_typehint() {
     $r= $this->runInNewRuntime('
       abstract class Base {
@@ -536,7 +536,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Condition(assert: 'self::processExecutionEnabled()'), Runtime(php: '>=7.1')]
+  #[Test, Condition(assert: 'self::processExecutionEnabled()')]
   public function declaration_with_void_return() {
     $r= $this->runInNewRuntime('
       abstract class Base {

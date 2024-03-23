@@ -29,7 +29,7 @@ class TypeSyntaxTest {
     return ClassLoader::defineType(self::class.'Method'.(++$id), self::$spec, '{'.$source.'}')->getMethod('fixture');
   }
 
-  #[Test, Runtime(php: '>=7.4')]
+  #[Test]
   public function primitive_type() {
     $d= $this->field('private string $fixture;');
     Assert::equals(Primitive::$STRING, $d->getType());

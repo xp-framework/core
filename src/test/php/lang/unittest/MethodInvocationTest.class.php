@@ -2,7 +2,6 @@
 
 use lang\reflect\TargetInvocationException;
 use lang\{IllegalAccessException, IllegalArgumentException};
-use test\verify\Runtime;
 use test\{Action, Assert, Expect, Test, Values};
 
 class MethodInvocationTest extends MethodsTest {
@@ -43,13 +42,13 @@ class MethodInvocationTest extends MethodsTest {
     $fixture->getMethod('fixture')->invoke($fixture->newInstance(), []);
   }
 
-  #[Test, Expect(TargetInvocationException::class), Runtime(php: '>=7.0')]
+  #[Test, Expect(TargetInvocationException::class)]
   public function exceptions_raised_for_return_type_violations() {
     $fixture= $this->type('{ public function fixture(): array { return null; } }');
     $fixture->getMethod('fixture')->invoke($fixture->newInstance(), []);
   }
 
-  #[Test, Expect(TargetInvocationException::class), Runtime(php: '>=7.0')]
+  #[Test, Expect(TargetInvocationException::class)]
   public function exceptions_raised_for_parameter_type_violations() {
     $fixture= $this->type('{ public function fixture(int $i) { } }');
     $fixture->getMethod('fixture')->invoke($fixture->newInstance(), ['abc']);

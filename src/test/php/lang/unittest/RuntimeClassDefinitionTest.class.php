@@ -1,7 +1,6 @@
 <?php namespace lang\unittest;
 
 use lang\{ClassLoader, ClassNotFoundException, Runnable, Throwable, XPClass};
-use test\verify\Runtime;
 use test\{Action, Assert, Expect, Test, Values};
 
 class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
@@ -142,7 +141,7 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
     Assert::equals('1', $class->getMethod('fixture')->invoke($instance, [1]));
   }
 
-  #[Test, Runtime(php: '>=7.1')]
+  #[Test]
   public function closure_with_void_return_type() {
     $class= $this->define([], ['fixture' => function($a): void { }]);
     $instance= $class->newInstance();

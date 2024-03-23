@@ -96,12 +96,12 @@ class TypeOfTest {
     Assert::equals(FunctionType::forName('function(): int'), typeof(eval('return function(): int { };')));
   }
 
-  #[Test, Runtime(php: '>=7.1')]
+  #[Test]
   public function function_with_nullable_return_type() {
     Assert::equals(FunctionType::forName('function(): ?string'), typeof(eval('return function(): ?string { };')));
   }
 
-  #[Test, Runtime(php: '>=7.1')]
+  #[Test]
   public function function_with_void_return_type() {
     Assert::equals(FunctionType::forName('function(): void'), typeof(eval('return function(): void { };')));
   }

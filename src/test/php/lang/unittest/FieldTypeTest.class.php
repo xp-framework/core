@@ -1,7 +1,6 @@
 <?php namespace lang\unittest;
 
 use lang\{ArrayType, MapType, Primitive, Type, Value, XPClass};
-use test\verify\Runtime;
 use test\{Action, Assert, Test, Values};
 
 class FieldTypeTest extends FieldsTest {
@@ -61,7 +60,7 @@ class FieldTypeTest extends FieldsTest {
     Assert::equals($fixture, $fixture->getField('fixture')->getType());
   }
 
-  #[Test, Runtime(php: '>=7.4')]
+  #[Test]
   public function self_type_via_syntax() {
     $fixture= $this->type('{ public self $fixture; }');
     Assert::equals('self', $fixture->getField('fixture')->getTypeName());
@@ -74,7 +73,7 @@ class FieldTypeTest extends FieldsTest {
     Assert::equals(new ArrayType($fixture), $fixture->getField('fixture')->getType());
   }
 
-  #[Test, Runtime(php: '>=7.4')]
+  #[Test]
   public function specific_array_type_determined_via_apidoc() {
     $fixture= $this->type('{ /** @type string[] */ public array $fixture; }');
     Assert::equals('string[]', $fixture->getField('fixture')->getTypeName());
@@ -86,7 +85,7 @@ class FieldTypeTest extends FieldsTest {
     Assert::null($this->field('public $fixture;')->getTypeRestriction());
   }
 
-  #[Test, Runtime(php: '>=7.4')]
+  #[Test]
   public function typed_restriction() {
     Assert::equals(Primitive::$STRING, $this->field('public string $fixture;')->getTypeRestriction());
   }
