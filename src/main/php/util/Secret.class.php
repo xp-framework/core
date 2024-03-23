@@ -129,12 +129,8 @@ class Secret implements Value {
     $characters= null;
   }
 
-  /**
-   * Prevent serialization of object
-   *
-   * @return string[]
-   */
-  public function __sleep() {
+  /** @return [:string] */
+  public function __serialize() {
     throw new IllegalStateException('Cannot serialize Secret instances.');
   }
 
