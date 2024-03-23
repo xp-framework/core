@@ -35,7 +35,7 @@ class Properties implements PropertyAccess, Value {
   }
 
   /** Creates a new properties instance from a given file */
-  public function __construct(string $filename= null) {
+  public function __construct(?string $filename= null) {
     $this->_file= $filename;
   }
 

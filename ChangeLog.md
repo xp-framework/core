@@ -11,6 +11,10 @@ XP Framework Core ChangeLog
   latest PHP 7 release. The minimum required PHP version is now **7.4**!
   (@thekid)
 
+### Bugfixes
+
+* Fixed issue #336: Deprecate implicitly nullable parameter types - @thekid
+
 ## 11.9.0 / 2024-03-16
 
 ### Features

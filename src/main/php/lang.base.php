@@ -110,8 +110,6 @@ function __error($code, $msg, $file, $line) {
     } else {
       throw new \lang\Error($msg);
     }
-  } else if (E_DEPRECATED === $code && 0 === strncmp($msg, 'Implicitly marking parameter', 28)) {
-    // Ignore until we drop PHP 7.0 support
   } else if (0 === strncmp($msg, 'Undefined variable', 18)) {
     throw new \lang\NullPointerException($msg);
   } else if (0 === strncmp($msg, 'Missing argument', 16)) {

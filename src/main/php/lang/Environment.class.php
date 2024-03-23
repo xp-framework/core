@@ -119,7 +119,7 @@ abstract class Environment {
    * Platform accepts one of the values returned from `platform()` or NULL
    * to use the platform we're currently operating on.
    */
-  public static function path(string $dir= '.', string $platform= null): string {
+  public static function path(string $dir= '.', ?string $platform= null): string {
     if ('.' === $dir || '..' === $dir) return $dir; // Short-circuit well-known names
 
     // Based on platform, define shorthands for replacements
@@ -185,7 +185,7 @@ abstract class Environment {
    *
    * Pass NULL to retrieve configuration base directory
    */
-  public static function configDir(string $named= null, string $home= null): string {
+  public static function configDir(?string $named= null, ?string $home= null): string {
     $home??= getenv('HOME');
 
     if (!$home) {

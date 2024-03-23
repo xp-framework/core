@@ -56,9 +56,9 @@ class Throwable extends \Exception implements Value {
   }
 
   /** Set cause */
-  public function setCause(self $cause= null) { $this->cause= $cause; }
+  public function setCause(?self $cause) { $this->cause= $cause; }
 
-  /** @return self */
+  /** @return ?self */
   public function getCause() { return $this->cause; }
   
   /**

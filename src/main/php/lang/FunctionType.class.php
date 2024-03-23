@@ -18,7 +18,7 @@ class FunctionType extends Type {
    * @param  string[]|lang.Type[] $signature
    * @param  string|lang.Type $returns
    */
-  public function __construct(array $signature= null, $returns) {
+  public function __construct(?array $signature, $returns) {
     if (null === $signature) {
       $this->signature= null;
       $name= ',?';

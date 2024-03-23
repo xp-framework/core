@@ -86,7 +86,7 @@ class VirtualProperty extends ReflectionProperty {
    * @param  int $flags
    * @return \ReflectionAttribute[]
    */
-  public function getAttributes(string $name= null, int $flags= 0): array {
+  public function getAttributes(?string $name= null, int $flags= 0): array {
     return [];
   }
 

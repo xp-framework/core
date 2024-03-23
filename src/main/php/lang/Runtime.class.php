@@ -212,16 +212,16 @@ class Runtime {
   /**
    * Create a new runtime instance.
    *
-   * @param   lang.RuntimeOptions options default NULL
+   * @param   ?lang.RuntimeOptions options default NULL
    * @param   string bootstrap default 'class'
-   * @param   string class default NULL entry point class
+   * @param   ?string class default NULL entry point class
    * @param   string[] arguments default []
-   * @param   string cwd default NULL the working directory
-   * @param   [:string] default NULL the environment
+   * @param   ?string cwd default NULL the working directory
+   * @param   ?[:string] default NULL the environment
    * @return  lang.Process
    */
   public function newInstance(
-    RuntimeOptions $options= null, 
+    ?RuntimeOptions $options= null, 
     $bootstrap= 'class', 
     $class= null, 
     $arguments= [], 
