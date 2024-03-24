@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 12.0.1 / 2024-03-24
+
 ### Bugfixes
 
 * Fixed `lang.ClassLoader::defineType()` to generate correctly typed
