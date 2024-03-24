@@ -195,6 +195,46 @@ class NewInstanceTest {
     Assert::equals($this, newinstance($base->getName(), [$this], [])->test);
   }
 
+  #[Test]
+  public function scalar_typed_parameter() {
+    $instance= newinstance(Marker::class, ['Test'], [
+      'test'        => null,
+      '__construct' => function(string $test) { $this->test= $test; },
+      'get'         => function(): string { return $this->test; }
+    ]);
+    Assert::equals('Test', $instance->get());
+  }
+
+  #[Test]
+  public function value_typed_parameter() {
+    $instance= newinstance(Marker::class, [$this], [
+      'test'        => null,
+      '__construct' => function(NewInstanceTest $test) { $this->test= $test; },
+      'get'         => function(): NewInstanceTest { return $this->test; }
+    ]);
+    Assert::equals($this, $instance->get());
+  }
+
+  #[Test, Values(['Test', null])]
+  public function nullable_scalar($arg) {
+    $instance= newinstance(Marker::class, [$arg], [
+      'test'        => null,
+      '__construct' => function(?string $test= null) { $this->test= $test; },
+      'get'         => function(): ?string { return $this->test; }
+    ]);
+    Assert::equals($arg, $instance->get());
+  }
+
+  #[Test, Values(eval: '[new Name("Test"), null]')]
+  public function nullable_value_type($arg) {
+    $instance= newinstance(Marker::class, [$arg], [
+      'test'        => null,
+      '__construct' => function(?Name $test= null) { $this->test= $test; },
+      'get'         => function(): ?Name { return $this->test; }
+    ]);
+    Assert::equals($arg, $instance->test);
+  }
+
   #[Test, Condition(assert: 'self::processExecutionEnabled()')]
   public function variadic_argument_passing() {
     $r= $this->runInNewRuntime('

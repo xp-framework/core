@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed `lang.ClassLoader::defineType()` to generate correctly typed
+  method forwards for methods with explicitely nullable types.
+  (@thekid)
+
 ## 12.0.0 / 2024-03-23
 
 This major release adopts more PHP 8 semantics, getting rid of the XP

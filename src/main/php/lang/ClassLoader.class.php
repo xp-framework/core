@@ -224,13 +224,10 @@ final class ClassLoader implements IClassLoader {
     foreach ($func->getParameters() as $param) {
       $p= $param->getName();
 
-      $t= $param->getType();
-      if (null === $t) {
-        $constraint= '';
-      } else if ($t->isBuiltin()) {
-        $constraint= $t->getName();
+      if ($t= $param->getType()) {
+        $constraint= ($t->allowsNull() ? '?' : '').($t->isBuiltin() ? '' : '\\').$t->getName();
       } else {
-        $constraint= '\\'.$t->getName();
+        $constraint= '';
       }
 
       if ($param->isVariadic()) {
@@ -246,13 +243,8 @@ final class ClassLoader implements IClassLoader {
     }
 
     $decl= 'function '.$name.'('.substr($sig, 2).')';
-    $t= $func->getReturnType();
-    if (null === $t) {
-      // NOOP
-    } else if ($t->isBuiltin()) {
-      $decl.= ':'.$t->getName();
-    } else {
-      $decl.= ': \\'.$t->getName();
+    if ($t= $func->getReturnType()) {
+      $decl.= ':'.($t->allowsNull() ? '?' : '').($t->isBuiltin() ? '' : '\\').$t->getName();
     }
 
     if (null === $invoke) {
