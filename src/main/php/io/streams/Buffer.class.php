@@ -1,7 +1,7 @@
 <?php namespace io\streams;
 
 use io\{File, Folder};
-use lang\IllegalArgumentException;
+use lang\{IllegalArgumentException, IllegalStateException};
 
 /**
  * Buffers in memory up until a given threshold, using the file system once
@@ -15,6 +15,7 @@ class Buffer implements InputStream, OutputStream {
   private $memory= '';
   private $file= null;
   private $size= 0;
+  private $draining= false;
 
   /**
    * Creates a new buffer
@@ -43,8 +44,11 @@ class Buffer implements InputStream, OutputStream {
    *
    * @param  var $arg
    * @return void
+   * @throws lang.IllegalStateException
    */
   public function write($bytes) {
+    if ($this->draining) throw new IllegalStateException('Started draining buffer');
+
     $this->size+= strlen($bytes);
     if ($this->size <= $this->threshold) {
       $this->memory.= $bytes;
@@ -65,18 +69,13 @@ class Buffer implements InputStream, OutputStream {
     $this->file && $this->file->flush();
   }
 
-  /**
-   * Finish buffering
-   *
-   * @return void
-   */
-  public function finish() {
-    $this->file && $this->file->seek(0, SEEK_SET);
-  }
-
   /** @return int */
   public function available() {
-    return $this->file ? $this->size - $this->file->tell() : strlen($this->memory ?? '');
+    if ($this->file) {
+      return $this->draining ? $this->size - $this->file->tell() : $this->size;
+    } else {
+      return strlen($this->memory ?? '');
+    }
   }
 
   /**
@@ -87,11 +86,13 @@ class Buffer implements InputStream, OutputStream {
    */
   public function read($limit= 8192) {
     if ($this->file) {
+      $this->draining || $this->file->seek(0, SEEK_SET) && $this->draining= true;
       $chunk= $this->file->read($limit);
       return false === $chunk ? null : $chunk;
     }
 
     // Drain memory
+    $this->draining= true;
     if (null === $this->memory) {
       $chunk= null;
     } else if ($limit >= strlen($this->memory)) {
