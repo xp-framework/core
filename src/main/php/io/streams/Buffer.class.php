@@ -37,8 +37,11 @@ class Buffer implements InputStream, OutputStream {
   /** Returns buffer size */
   public function size(): int { return $this->size; }
 
-  /** @return ?io.File */
-  public function file() { return $this->file; }
+  /** Returns the underlying file, if any */
+  public function file(): ?File { return $this->file; }
+
+  /** Returns whether this buffer is draining */
+  public function draining(): bool { return $this->draining; }
 
   /**
    * Write a string

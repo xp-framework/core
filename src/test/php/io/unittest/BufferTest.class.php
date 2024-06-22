@@ -81,8 +81,10 @@ class BufferTest {
   public function cannot_write_after_draining_started() {
     $fixture= new Buffer($this->temp, self::THRESHOLD);
     $fixture->write('Test');
+    Assert::false($fixture->draining());
 
     $fixture->read();
+    Assert::true($fixture->draining());
     Assert::throws(IllegalStateException::class, fn() => $fixture->write('Test'));
   }
 
