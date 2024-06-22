@@ -62,4 +62,24 @@ class BufferTest {
     Assert::equals(0, $fixture->available());
     Assert::equals(null, $fixture->read());
   }
+
+  #[Test]
+  public function file_deleted_on_close() {
+    $fixture= new Buffer($this->temp, 0);
+    $fixture->write('Test');
+    $fixture->finish();
+
+    $fixture->close();
+    Assert::false($fixture->file()->exists());
+  }
+
+  #[Test]
+  public function double_close() {
+    $fixture= new Buffer($this->temp, 0);
+    $fixture->write('Test');
+    $fixture->finish();
+
+    $fixture->close();
+    $fixture->close();
+  }
 }

@@ -106,7 +106,10 @@ class Buffer implements InputStream, OutputStream {
 
   /** @return void */
   public function close() {
-    $this->file && $this->file->close();
+    if (null === $this->file || !$this->file->isOpen()) return;
+
+    $this->file->close();
+    $this->file->unlink();
   }
 
   /** Ensure file is closed */
