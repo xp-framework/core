@@ -24,7 +24,7 @@ class BufferTest {
     Assert::throws(IllegalArgumentException::class, fn() => new Buffer($this->temp, -1));
   }
 
-  #[Test, Values([0, 1, 127, 128])]
+  #[Test, Values([1, 127, 128])]
   public function uses_memory_under_threshold($length) {
     $bytes= str_repeat('*', $length);
 
@@ -59,6 +59,22 @@ class BufferTest {
     Assert::equals($bytes, $fixture->read());
     Assert::equals(0, $fixture->available());
     Assert::equals(null, $fixture->read());
+  }
+
+  #[Test, Values([127, 128, 129])]
+  public function reset($length) {
+    $bytes= str_repeat('*', $length);
+
+    $fixture= new Buffer($this->temp, self::THRESHOLD);
+    $fixture->write($bytes);
+
+    Assert::equals($length, $fixture->available());
+    Assert::equals($bytes, $fixture->read());
+
+    $fixture->reset();
+
+    Assert::equals($length, $fixture->available());
+    Assert::equals($bytes, $fixture->read());
   }
 
   #[Test]

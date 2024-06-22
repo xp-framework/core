@@ -15,6 +15,7 @@ class Buffer implements InputStream, OutputStream {
   private $memory= '';
   private $file= null;
   private $size= 0;
+  private $pointer= 0;
   private $draining= false;
 
   /**
@@ -69,13 +70,22 @@ class Buffer implements InputStream, OutputStream {
     $this->file && $this->file->flush();
   }
 
+  /**
+   * Resets buffer to be able to read from the beginning
+   *
+   * @return  void
+   */
+  public function reset() {
+    $this->file ? $this->file->seek(0, SEEK_SET) : $this->pointer= 0;
+    $this->draining= true;
+  }
+
   /** @return int */
   public function available() {
-    if ($this->file) {
-      return $this->draining ? $this->size - $this->file->tell() : $this->size;
-    } else {
-      return strlen($this->memory ?? '');
-    }
+    return $this->draining
+      ? $this->size - ($this->file ? $this->file->tell() : $this->pointer)
+      : $this->size
+    ;
   }
 
   /**
@@ -89,20 +99,15 @@ class Buffer implements InputStream, OutputStream {
       $this->draining || $this->file->seek(0, SEEK_SET) && $this->draining= true;
       $chunk= $this->file->read($limit);
       return false === $chunk ? null : $chunk;
-    }
-
-    // Drain memory
-    $this->draining= true;
-    if (null === $this->memory) {
-      $chunk= null;
-    } else if ($limit >= strlen($this->memory)) {
-      $chunk= $this->memory;
-      $this->memory= null;
+    } else if ($this->pointer < $this->size) {
+      $this->draining= true;
+      $chunk= substr($this->memory, $this->pointer, $limit);
+      $this->pointer+= strlen($chunk);
+      return $chunk;
     } else {
-      $chunk= substr($this->memory, 0, $limit);
-      $this->memory= substr($this->memory, $limit);
+      $this->draining= true;
+      return null;
     }
-    return $chunk;
   }
 
   /** @return void */
@@ -113,7 +118,7 @@ class Buffer implements InputStream, OutputStream {
     $this->file->unlink();
   }
 
-  /** Ensure file is closed */
+  /** Ensure the file (if any) is closed */
   public function __destruct() {
     $this->close();
   }
