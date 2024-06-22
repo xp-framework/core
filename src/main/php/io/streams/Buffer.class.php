@@ -95,21 +95,17 @@ class Buffer implements InputStream, OutputStream {
    * Read a string
    *
    * @param  int $limit
-   * @return ?string
+   * @return string
    */
   public function read($limit= 8192) {
     if ($this->file) {
       $this->draining || $this->file->seek(0, SEEK_SET) && $this->draining= true;
-      $chunk= $this->file->read($limit);
-      return false === $chunk ? null : $chunk;
-    } else if ($this->pointer < $this->size) {
+      return (string)$this->file->read($limit);
+    } else {
       $this->draining= true;
       $chunk= substr($this->memory, $this->pointer, $limit);
       $this->pointer+= strlen($chunk);
       return $chunk;
-    } else {
-      $this->draining= true;
-      return null;
     }
   }
 

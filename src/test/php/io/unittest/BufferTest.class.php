@@ -58,7 +58,7 @@ class BufferTest {
     Assert::equals($length, $fixture->available());
     Assert::equals($bytes, $fixture->read());
     Assert::equals(0, $fixture->available());
-    Assert::equals(null, $fixture->read());
+    Assert::equals('', $fixture->read());
   }
 
   #[Test, Values([127, 128, 129])]
