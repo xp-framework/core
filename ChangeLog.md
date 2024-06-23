@@ -3,6 +3,17 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 12.1.0 / ????-??-??
+
+### Features
+
+* Merged PR #344: Add `io.streams.StreamTransfer::transmit()` which yields
+  control after each chunk
+  (@thekid)
+* Merged PR #343: Implement a limited in-memory buffer with filesystem
+  overflow: `io.streams.Buffer`. See also xp-forge/web#118
+  (@thekid)
+
 ## 12.0.1 / 2024-03-24
 
 ### Bugfixes
