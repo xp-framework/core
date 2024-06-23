@@ -19,14 +19,13 @@ use lang\Closeable;
  * @test  net.xp_framework.unittest.io.streams.StreamTransferTest
  */
 class StreamTransfer implements Closeable {
-  protected $in= null;
-  protected $out= null;
+  protected $in, $out;
   
   /**
    * Creates a new stream transfer
    *
-   * @param   io.streams.InputStream in
-   * @param   io.streams.OutputStream out
+   * @param  io.streams.InputStream $in
+   * @param  io.streams.OutputStream $out
    */
   public function __construct(InputStream $in, OutputStream $out) {
     $this->in= $in;
@@ -36,22 +35,36 @@ class StreamTransfer implements Closeable {
   /**
    * Copy all available input from in
    *
-   * @return  int number of bytes copied
-   * @throws  io.IOException
+   * @return int number of bytes copied
+   * @throws io.IOException
    */
   public function transferAll() {
     $r= 0;
-    while ($this->in->available() > 0) {
+    while ($this->in->available()) {
       $r+= $this->out->write($this->in->read());
     }
     return $r;
   }
 
   /**
+   * Transmit all available input from in, yielding control after each chunk.
+   *
+   * @return iterable
+   * @throws io.IOException
+   */
+  public function transmit() {
+    while ($this->in->available()) {
+      $this->out->write($this->in->read());
+      yield;
+    }
+  }
+
+  /**
    * Close input and output streams. Guarantees to try to close both 
    * streams even if one of the close() calls yields an exception.
    *
-   * @throws  io.IOException
+   * @return void
+   * @throws io.IOException
    */
   public function close() {
     $errors= '';
