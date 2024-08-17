@@ -1,5 +1,6 @@
 <?php namespace util;
 
+use DateTime;
 use lang\{IllegalArgumentException, IllegalStateException, Value};
 
 /**
@@ -36,19 +37,21 @@ class Date implements Value {
    * - If no timezone has been given as second parameter, the system's default
    *   timezone is used.
    *
-   * @param  ?int|string|php.DateTime $in
+   * @param  ?int|float|string|DateTime $in
    * @param  ?util.TimeZone $timezone default NULL string of timezone
    * @throws lang.IllegalArgumentException in case the date is unparseable
    */
   public function __construct($in= null, ?TimeZone $timezone= null) {
-    if ($in instanceof \DateTime) {
+    if (null === $in) {
+      $this->handle= date_create('now', $timezone ? $timezone->getHandle() : null);
+    } else if ($in instanceof DateTime) {
       $this->handle= $in;
-    } else if ((string)(int)$in === (string)$in) {
+    } else if (is_int($in) || is_float($in) || (string)(int)$in === $in) {
       
       // Specially mark timestamps for parsing (we assume here that strings
       // containing only digits are timestamps)
       $this->handle= date_create('@'.$in);
-      date_timezone_set($this->handle, $timezone ? $timezone->getHandle() : timezone_open(date_default_timezone_get()));
+      $timezone && date_timezone_set($this->handle, $timezone->getHandle());
     } else {
       if (false === ($this->handle= date_create($in ?? 'now', $timezone ? $timezone->getHandle() : null))) {
         throw new IllegalArgumentException('Given argument is neither a timestamp nor a well-formed timestring: '.Objects::stringOf($in));
@@ -62,7 +65,7 @@ class Date implements Value {
   }
 
   /** Retrieve handle of underlying DateTime object. */
-  public function getHandle(): \DateTime {
+  public function getHandle(): DateTime {
     return clone $this->handle;
   }
   

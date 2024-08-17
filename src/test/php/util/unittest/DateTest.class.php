@@ -358,4 +358,9 @@ class DateTest {
   public function microseconds() {
     Assert::equals(393313, (new Date('2019-07-03 15:18:10.393313'))->getMicroSeconds());
   }
+
+  #[Test]
+  public function float_timestamp() {
+    Assert::equals(393000, (new Date(1723896922.393))->getMicroSeconds());
+  }
 }
