@@ -46,11 +46,17 @@ class Date implements Value {
       $this->handle= date_create('now', $timezone ? $timezone->getHandle() : null);
     } else if ($in instanceof DateTime) {
       $this->handle= $in;
-    } else if (is_int($in) || is_float($in) || (string)(int)$in === $in) {
-      
+    } else if (is_int($in) || (string)(int)$in === $in) {
+
       // Specially mark timestamps for parsing (we assume here that strings
       // containing only digits are timestamps)
       $this->handle= date_create('@'.$in);
+      $timezone && date_timezone_set($this->handle, $timezone->getHandle());
+    } else if (is_float($in)) {
+
+      // Timestamps with microseconds are defined as `"@" "-"? [0-9]+ "." [0-9]{0,6}`,
+      // see https://www.php.net/manual/en/datetime.formats.php#datetime.formats.relative
+      $this->handle= date_create('@'.sprintf('%.6f', $in);
       $timezone && date_timezone_set($this->handle, $timezone->getHandle());
     } else {
       if (false === ($this->handle= date_create($in ?? 'now', $timezone ? $timezone->getHandle() : null))) {
