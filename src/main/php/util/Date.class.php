@@ -56,7 +56,7 @@ class Date implements Value {
 
       // Timestamps with microseconds are defined as `"@" "-"? [0-9]+ "." [0-9]{0,6}`,
       // see https://www.php.net/manual/en/datetime.formats.php#datetime.formats.relative
-      $this->handle= date_create('@'.sprintf('%.6f', $in);
+      $this->handle= date_create('@'.sprintf('%.6f', $in));
       $timezone && date_timezone_set($this->handle, $timezone->getHandle());
     } else {
       if (false === ($this->handle= date_create($in ?? 'now', $timezone ? $timezone->getHandle() : null))) {
