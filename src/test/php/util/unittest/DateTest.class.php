@@ -343,22 +343,10 @@ class DateTest {
     Assert::equals(strtotime('19.19'), $date->getTime());
   }
 
-  #[Test]
-  public function testValidUnixTimestamp() {
-    $this->assertDateEquals('1970-01-01T00:00:00+00:00', new Date(0));
-    $this->assertDateEquals('1970-01-01T00:00:00+00:00', new Date('0'));
-
-    $this->assertDateEquals('1970-01-01T00:00:01+00:00', new Date(1));
-    $this->assertDateEquals('1970-01-01T00:00:01+00:00', new Date('1'));
-
-    $this->assertDateEquals('1969-12-31T23:59:59+00:00', new Date(-1));
-    $this->assertDateEquals('1969-12-31T23:59:59+00:00', new Date('-1'));
-
-    $this->assertDateEquals('1969-12-20T10:13:20+00:00', new Date(-1000000));
-    $this->assertDateEquals('1969-12-20T10:13:20+00:00', new Date('-1000000'));
-
-    $this->assertDateEquals('1970-01-12T13:46:40+00:00', new Date(1000000));
-    $this->assertDateEquals('1970-01-12T13:46:40+00:00', new Date('1000000'));
+  #[Test, Values([[0, '1970-01-01T00:00:00+00:00'], [1, '1970-01-01T00:00:01+00:00'], [-1, '1969-12-31T23:59:59+00:00'], [-1000000, '1969-12-20T10:13:20+00:00'], [1000000, '1970-01-12T13:46:40+00:00']])]
+  public function testValidUnixTimestamp($timestamp, $expected) {
+    $this->assertDateEquals($expected, new Date($timestamp));
+    $this->assertDateEquals($expected, new Date((string)$timestamp));
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
