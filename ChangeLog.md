@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Merged PR #345: Support passing floating point numbers to constructor,
+  setting microseconds for `util.Date` instances.
+  (@thekid)
+
 ## 12.1.0 / 2024-06-23
 
 ### Features
