@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed *Implicitly marking parameter $prompt as nullable is deprecated*
+  warnings in `util.cmd.Console` class with PHP 8.4, fixing #346.
+  (@thekid)
+
 ### Features
 
 * Merged PR #345: Support passing floating point numbers to constructor,
