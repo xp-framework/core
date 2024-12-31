@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 12.2.0 / 2024-12-31
+
 ### Bugfixes
 
 * Fixed *Implicitly marking parameter $prompt as nullable is deprecated*
