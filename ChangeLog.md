@@ -11,6 +11,9 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged PR #347: Accept strings or util.TimeZone instances - implementing
+  the *be liberal in what you accept*-paradigm in the `util.Date` class
+  (@thekid)
 * Merged PR #345: Support passing floating point numbers to constructor,
   setting microseconds for `util.Date` instances.
   (@thekid)
