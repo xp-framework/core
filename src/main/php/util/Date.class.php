@@ -1,6 +1,6 @@
 <?php namespace util;
 
-use DateTime;
+use DateTime, DateTimeZone;
 use lang\{IllegalArgumentException, IllegalStateException, Value};
 
 /**
@@ -38,12 +38,20 @@ class Date implements Value {
    *   timezone is used.
    *
    * @param  ?int|float|string|DateTime $in
-   * @param  ?util.TimeZone $timezone default NULL string of timezone
+   * @param  ?string|util.TimeZone $timezone
    * @throws lang.IllegalArgumentException in case the date is unparseable
    */
-  public function __construct($in= null, ?TimeZone $timezone= null) {
+  public function __construct($in= null, $timezone= null) {
+    if (null === $timezone) {
+      $tz= null;
+    } else if ($timezone instanceof TimeZone) {
+      $tz= $timezone->getHandle();
+    } else {
+      $tz= new DateTimeZone($timezone);
+    }
+
     if (null === $in) {
-      $this->handle= date_create('now', $timezone ? $timezone->getHandle() : null);
+      $this->handle= date_create('now', $tz);
     } else if ($in instanceof DateTime) {
       $this->handle= $in;
     } else if (is_int($in) || (string)(int)$in === $in) {
@@ -51,15 +59,15 @@ class Date implements Value {
       // Specially mark timestamps for parsing (we assume here that strings
       // containing only digits are timestamps)
       $this->handle= date_create('@'.$in);
-      $timezone && date_timezone_set($this->handle, $timezone->getHandle());
+      $tz && date_timezone_set($this->handle, $tz);
     } else if (is_float($in)) {
 
       // Timestamps with microseconds are defined as `"@" "-"? [0-9]+ "." [0-9]{0,6}`,
       // see https://www.php.net/manual/en/datetime.formats.php#datetime.formats.relative
       $this->handle= date_create('@'.sprintf('%.6f', $in));
-      $timezone && date_timezone_set($this->handle, $timezone->getHandle());
+      $tz && date_timezone_set($this->handle, $tz);
     } else {
-      if (false === ($this->handle= date_create($in ?? 'now', $timezone ? $timezone->getHandle() : null))) {
+      if (false === ($this->handle= date_create($in ?? 'now', $tz))) {
         throw new IllegalArgumentException('Given argument is neither a timestamp nor a well-formed timestring: '.Objects::stringOf($in));
       }
     }
@@ -96,13 +104,16 @@ class Date implements Value {
    * @param  int $hour
    * @param  int $minute
    * @param  int $second
-   * @param  ?util.TimeZone $tz default NULL
+   * @param  ?string|util.TimeZone $timezone
    * @return self
    */
-  public static function create($year, $month, $day, $hour, $minute, $second, ?TimeZone $tz= null): self {
-    $date= date_create();
-    if ($tz) {
-      date_timezone_set($date, $tz->getHandle());
+  public static function create($year, $month, $day, $hour, $minute, $second, $timezone= null): self {
+    if (null === $timezone) {
+      $date= date_create();
+    } else if ($timezone instanceof TimeZone) {
+      $date= date_create('now', $timezone->getHandle());
+    } else {
+      $date= date_create('now', new DateTimeZone($timezone));
     }
 
     try {
@@ -133,9 +144,9 @@ class Date implements Value {
     return $cmp instanceof self && $this->getTime() === $cmp->getTime();
   }
   
-  /** Static method to get current date/time */
-  public static function now(?TimeZone $tz= null): self {
-    return new self(null, $tz);
+  /** @param ?string|util.TimeZone $timezone */
+  public static function now($timezone= null): self {
+    return new self(null, $timezone);
   }
   
   /** Compare this date to another date */
@@ -199,11 +210,20 @@ class Date implements Value {
    *
    * @see    php://date
    * @param  string $format default Date::DEFAULT_FORMAT format-string
-   * @param  ?util.TimeZone $outtz default NULL
+   * @param  ?string|util.TimeZone $timezone
    * @return string the formatted date
    */
-  public function toString(string $format= self::DEFAULT_FORMAT, ?TimeZone $outtz= null): string {
-    return date_format(($outtz === null ? $this : $outtz->translate($this))->handle, $format);
+  public function toString(string $format= self::DEFAULT_FORMAT, $timezone= null): string {
+    if (null === $timezone) {
+      $handle= $this->handle;
+    } else if ($timezone instanceof TimeZone) {
+      $handle= clone $this->handle;
+      date_timezone_set($handle, $timezone->getHandle());
+    } else {
+      $handle= clone $this->handle;
+      date_timezone_set($handle, new DateTimeZone($timezone));
+    }
+    return date_format($handle, $format);
   }
   
   /**
@@ -214,11 +234,10 @@ class Date implements Value {
    *
    * @see    php://strftime
    * @param  string $format
-   * @param  ?util.TimeZone $outtz default NULL
+   * @param  ?string|util.TimeZone $timezone
    * @return string
-   * @throws lang.IllegalArgumentException if unsupported token has been given
    */
-  public function format(string $format, ?TimeZone $outtz= null): string {
+  public function format(string $format, $timezone= null): string {
     static $replace= [
       '%d' => 'd',
       '%m' => 'm',
@@ -253,6 +272,15 @@ class Date implements Value {
       '%%' => '%'
     ];
 
-    return date_format(($outtz === null ? $this : $outtz->translate($this))->handle, strtr($format, $replace));
+    if (null === $timezone) {
+      $handle= $this->handle;
+    } else if ($timezone instanceof TimeZone) {
+      $handle= clone $this->handle;
+      date_timezone_set($handle, $timezone->getHandle());
+    } else {
+      $handle= clone $this->handle;
+      date_timezone_set($handle, new DateTimeZone($timezone));
+    }
+    return date_format($handle, strtr($format, $replace));
   }
 }

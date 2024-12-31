@@ -7,6 +7,12 @@ use util\{Date, TimeZone};
 class DateTest {
   private $nowTime, $nowDate, $refDate, $tz;
 
+  /** @return iterable  */
+  private function timezones() {
+    yield 'Europe/Berlin';
+    yield new TimeZone('Europe/Berlin');
+  }
+
   #[Before]
   public function setUp() {
 
@@ -51,11 +57,11 @@ class DateTest {
     $this->assertDateEquals('2007-08-23T12:35:47+00:00', new Date(1187872547));
   }
   
-  #[Test]
-  public function constructorUnixtimestampWithTz() {
-    $this->assertDateEquals('2007-08-23T14:35:47+02:00', new Date(1187872547, new TimeZone('Europe/Berlin')));
+  #[Test, Values(from: 'timezones')]
+  public function constructorUnixtimestampWithTz($tz) {
+    $this->assertDateEquals('2007-08-23T14:35:47+02:00', new Date(1187872547, $tz));
   }
-  
+
   #[Test]
   public function constructorParseTz() {
     $date= new Date('2007-01-01 01:00:00 Europe/Berlin');
@@ -157,7 +163,12 @@ class DateTest {
     // Test with a date before 1971
     Assert::equals(-44668800, Date::create(1968, 8, 2, 0, 0, 0)->getTime());
   }
-  
+
+  #[Test, Values(from: 'timezones')]
+  public function create_date_with_timezone($tz) {
+    Assert::equals(-44672400, Date::create(1968, 8, 2, 0, 0, 0, $tz)->getTime());
+  }
+
   #[Test]
   public function pre1970() {
     $this->assertDateEquals('1969-02-01T00:00:00+00:00', new Date('01.02.1969'));
@@ -268,21 +279,29 @@ class DateTest {
   }
   
   #[Test]
-  public function toStringOutput() {
-    $date= new Date('2007-11-10 20:15+0100');
-    Assert::equals('2007-11-10 20:15:00+0100', $date->toString());
-    Assert::equals('2007-11-10 19:15:00+0000', $date->toString(Date::DEFAULT_FORMAT, new TimeZone('GMT')));
+  public function string_representation() {
+    Assert::equals(
+      '2007-11-10 20:15:00+0100',
+      (new Date('2007-11-10 20:15+0100'))->toString(Date::DEFAULT_FORMAT)
+    );
   }
   
+  #[Test, Values(from: 'timezones')]
+  public function string_representation_with_timezone($timezone) {
+    Assert::equals(
+      '2007-11-10 20:15:00+0100',
+      (new Date('2007-11-10 19:15+0000'))->toString(Date::DEFAULT_FORMAT, $timezone)
+    );
+  }
+
   #[Test]
-  public function toStringOutputPreserved() {
+  public function timezone_preserved_during_serialization() {
     $date= unserialize(serialize(new Date('2007-11-10 20:15+0100')));
     Assert::equals('2007-11-10 20:15:00+0100', $date->toString());
-    Assert::equals('2007-11-10 19:15:00+0000', $date->toString(Date::DEFAULT_FORMAT, new TimeZone('GMT')));
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
-  public function malformedInputString() {
+  public function malformed_input_string() {
     new Date('@@not-a-date@@');
   }
 
@@ -309,10 +328,7 @@ class DateTest {
   #[Test]
   public function constructorBrokenAfterException() {
     Date::now();
-    try {
-      new Date('bogus');
-      $this->fail('No exception raised', null, IllegalArgumentException::class);
-    } catch (\lang\IllegalArgumentException $expected) { }
+    Assert::throws(IllegalArgumentException::class, fn() => new Date('bogus'));
     Date::now();
   }
   
