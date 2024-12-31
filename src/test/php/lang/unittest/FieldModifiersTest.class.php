@@ -27,6 +27,9 @@ class FieldModifiersTest extends FieldsTest {
 
   #[Test, Runtime(php: '>=8.1')]
   public function readonly_modifier() {
-    Assert::equals(MODIFIER_READONLY | MODIFIER_PUBLIC, $this->field('public readonly int $fixture;')->getModifiers());
+
+    // Remove implicit protected(set) returned by PHP 8.4
+    $modifiers= $this->field('public readonly int $fixture;')->getModifiers() & ~0x800;
+    Assert::equals(MODIFIER_READONLY | MODIFIER_PUBLIC, $modifiers);
   }
 }
