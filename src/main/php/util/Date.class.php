@@ -236,7 +236,6 @@ class Date implements Value {
    * @param  string $format
    * @param  ?string|util.TimeZone $timezone
    * @return string
-   * @throws lang.IllegalArgumentException if unsupported token has been given
    */
   public function format(string $format, $timezone= null): string {
     static $replace= [
