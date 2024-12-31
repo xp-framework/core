@@ -279,21 +279,29 @@ class DateTest {
   }
   
   #[Test]
-  public function toStringOutput() {
-    $date= new Date('2007-11-10 20:15+0100');
-    Assert::equals('2007-11-10 20:15:00+0100', $date->toString());
-    Assert::equals('2007-11-10 19:15:00+0000', $date->toString(Date::DEFAULT_FORMAT, new TimeZone('GMT')));
+  public function string_representation() {
+    Assert::equals(
+      '2007-11-10 20:15:00+0100',
+      (new Date('2007-11-10 20:15+0100'))->toString(Date::DEFAULT_FORMAT)
+    );
   }
   
+  #[Test, Values(from: 'timezones')]
+  public function string_representation_with_timezone($timezone) {
+    Assert::equals(
+      '2007-11-10 20:15:00+0100',
+      (new Date('2007-11-10 19:15+0000'))->toString(Date::DEFAULT_FORMAT, $timezone)
+    );
+  }
+
   #[Test]
-  public function toStringOutputPreserved() {
+  public function timezone_preserved_during_serialization() {
     $date= unserialize(serialize(new Date('2007-11-10 20:15+0100')));
     Assert::equals('2007-11-10 20:15:00+0100', $date->toString());
-    Assert::equals('2007-11-10 19:15:00+0000', $date->toString(Date::DEFAULT_FORMAT, new TimeZone('GMT')));
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
-  public function malformedInputString() {
+  public function malformed_input_string() {
     new Date('@@not-a-date@@');
   }
 
@@ -320,10 +328,7 @@ class DateTest {
   #[Test]
   public function constructorBrokenAfterException() {
     Date::now();
-    try {
-      new Date('bogus');
-      $this->fail('No exception raised', null, IllegalArgumentException::class);
-    } catch (\lang\IllegalArgumentException $expected) { }
+    Assert::throws(IllegalArgumentException::class, fn() => new Date('bogus'));
     Date::now();
   }
   

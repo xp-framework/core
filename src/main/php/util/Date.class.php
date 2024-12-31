@@ -210,11 +210,20 @@ class Date implements Value {
    *
    * @see    php://date
    * @param  string $format default Date::DEFAULT_FORMAT format-string
-   * @param  ?util.TimeZone $outtz default NULL
+   * @param  ?string|util.TimeZone $timezone
    * @return string the formatted date
    */
-  public function toString(string $format= self::DEFAULT_FORMAT, ?TimeZone $outtz= null): string {
-    return date_format(($outtz === null ? $this : $outtz->translate($this))->handle, $format);
+  public function toString(string $format= self::DEFAULT_FORMAT, $timezone= null): string {
+    if (null === $timezone) {
+      $handle= $this->handle;
+    } else if ($timezone instanceof TimeZone) {
+      $handle= clone $this->handle;
+      date_timezone_set($handle, $timezone->getHandle());
+    } else {
+      $handle= clone $this->handle;
+      date_timezone_set($handle, new DateTimeZone($timezone));
+    }
+    return date_format($handle, $format);
   }
   
   /**
@@ -225,11 +234,11 @@ class Date implements Value {
    *
    * @see    php://strftime
    * @param  string $format
-   * @param  ?util.TimeZone $outtz default NULL
+   * @param  ?string|util.TimeZone $timezone
    * @return string
    * @throws lang.IllegalArgumentException if unsupported token has been given
    */
-  public function format(string $format, ?TimeZone $outtz= null): string {
+  public function format(string $format, $timezone= null): string {
     static $replace= [
       '%d' => 'd',
       '%m' => 'm',
@@ -264,6 +273,15 @@ class Date implements Value {
       '%%' => '%'
     ];
 
-    return date_format(($outtz === null ? $this : $outtz->translate($this))->handle, strtr($format, $replace));
+    if (null === $timezone) {
+      $handle= $this->handle;
+    } else if ($timezone instanceof TimeZone) {
+      $handle= clone $this->handle;
+      date_timezone_set($handle, $timezone->getHandle());
+    } else {
+      $handle= clone $this->handle;
+      date_timezone_set($handle, new DateTimeZone($timezone));
+    }
+    return date_format($handle, strtr($format, $replace));
   }
 }
