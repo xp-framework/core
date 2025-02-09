@@ -14,19 +14,21 @@ class Bytes implements Value, ArrayAccess, IteratorAggregate {
   /**
    * Constructor
    *
-   * @param  string|string[]|int[] $initial
+   * @param  string|string[]|int[]... $initial
    * @throws lang.IllegalArgumentException in case argument is of incorrect type.
    */
-  public function __construct($initial= '') {
-    if (is_string($initial)) {
-      $this->buffer= $initial;
-    } else if (is_array($initial)) {
-      $this->buffer= '';
-      foreach ($initial as $value) {
-        $this->buffer.= is_int($value) ? chr($value) : $value;
+  public function __construct(... $initial) {
+    $this->buffer= '';
+    foreach ($initial as $chunk) {
+      if (is_string($chunk)) {
+        $this->buffer.= $chunk;
+      } else if (is_array($chunk)) {
+        foreach ($chunk as $value) {
+          $this->buffer.= is_int($value) ? chr($value) : $value;
+        }
+      } else {
+        throw new IllegalArgumentException('Expected either string[], int[] or string but was '.typeof($initial)->getName());
       }
-    } else {
-      throw new IllegalArgumentException('Expected either string[], int[] or string but was '.typeof($initial)->getName());
     }
     $this->size= strlen($this->buffer);
   }

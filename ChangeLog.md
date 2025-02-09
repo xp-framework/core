@@ -9,7 +9,10 @@ XP Framework Core ChangeLog
 
 ### Features
 
-* Improved `util.Bytes` constructor performance - @thekid
+* Changed `util.Bytes` constructor to accept zero or more chunks from
+  which the byte buffer will be concatenated. Improved performance while
+  refactoring.
+  (@thekid)
 
 ## 12.2.0 / 2024-12-31
 

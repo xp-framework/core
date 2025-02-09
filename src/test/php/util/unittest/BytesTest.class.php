@@ -30,7 +30,7 @@ class BytesTest {
   }
 
   #[Test]
-  public function fromString() {
+  public function from_string() {
     $b= new Bytes('abcd');
     Assert::equals(4, $b->size());
     Assert::equals(97, $b[0]);
@@ -40,7 +40,7 @@ class BytesTest {
   }
 
   #[Test]
-  public function fromIntegerArray() {
+  public function from_integer_array() {
     $b= new Bytes([97, 98, 99, 100]);
     Assert::equals(4, $b->size());
     Assert::equals(97, $b[0]);
@@ -48,9 +48,9 @@ class BytesTest {
     Assert::equals(99, $b[2]);
     Assert::equals(100, $b[3]);
   }
- 
+
   #[Test]
-  public function fromCharArray() {
+  public function from_char_array() {
     $b= new Bytes(['a', 'b', 'c', 'd']);
     Assert::equals(4, $b->size());
     Assert::equals(97, $b[0]);
@@ -60,7 +60,7 @@ class BytesTest {
   }
 
   #[Test]
-  public function fromByteArray() {
+  public function from_byte_array() {
     $b= new Bytes([97, 98, 99, 100]);
     Assert::equals(4, $b->size());
     Assert::equals(97, $b[0]);
@@ -68,7 +68,17 @@ class BytesTest {
     Assert::equals(99, $b[2]);
     Assert::equals(100, $b[3]);
   }
- 
+
+  #[Test]
+  public function from_var_args() {
+    $b= new Bytes('ab', [99, 100]);
+    Assert::equals(4, $b->size());
+    Assert::equals(97, $b[0]);
+    Assert::equals(98, $b[1]);
+    Assert::equals(99, $b[2]);
+    Assert::equals(100, $b[3]);
+  }
+
   #[Test, Expect(IllegalArgumentException::class)]
   public function illegalConstructorArgument() {
     new Bytes(1);
