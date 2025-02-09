@@ -12,11 +12,17 @@ class BytesTest {
     yield ['5:7', 'is'];           // start:stop - with non-zero start
     yield ['5:-5', 'is a'];        // start:stop - with negative offset
     yield ['-4:-2', 'test'];       // start:stop - with negative offsets
+
     yield [':4', 'This'];          // :stop
     yield [':-5', 'This is a'];    // :stop - with negative offset
     yield ['5:', 'is a test'];     // start:
     yield ['-4:', 'test'];         // start: - at negative offset
     yield [':', 'This is a test']; // : - copy
+
+    yield [[0, 4], 'This'];        // start:stop
+    yield [[5, 7], 'is'];          // start:stop - with non-zero start
+    yield [[5, -5], 'is a'];       // start:stop - with negative offset
+    yield [[-4, -2], 'test'];      // start:stop - with negative offsets
   }
 
   /** @return iterable */
