@@ -50,10 +50,10 @@ use lang\{FormatException, Value};
  * ```
  *
  * @see   https://datatracker.ietf.org/doc/rfc4122/
- * @test  net.xp_framework.unittest.util.UUIDTest
+ * @test  util.unittest.UUIDTest
  */
 class UUID implements Value {
-  const FORMAT = '%04x%04x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x';
+  const FORMAT= '%04x%04x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x';
 
   public static $NS_DNS, $NS_URL, $NS_OID, $NS_X500;
 
@@ -83,7 +83,14 @@ class UUID implements Value {
    */
   public function __construct($arg) {
     if ($arg instanceof Bytes) {
-      $this->populate(implode('-', unpack('H8a/H4b/H4c/H4d/H12e', $arg)));
+      $r= unpack('Ntime_low/ntime_mid/ntime_hi_and_version/Cclock_seq_hi_and_reserved/Cclock_seq_low/C6node', $arg);
+      $this->version= ($r['time_hi_and_version'] >> 12) & 0xF;
+      $this->time_low= $r['time_low'];
+      $this->time_mid= $r['time_mid'];
+      $this->time_hi_and_version= $r['time_hi_and_version'];
+      $this->clock_seq_low= $r['clock_seq_low'];
+      $this->clock_seq_hi_and_reserved= $r['clock_seq_hi_and_reserved'];
+      $this->node= [$r['node1'], $r['node2'], $r['node3'], $r['node4'], $r['node5'], $r['node6']];
     } else if (is_array($arg)) {
       $this->version= $arg[0];
       $this->time_low= $arg[1];

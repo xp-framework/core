@@ -3,12 +3,16 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 12.3.0 / 2025-02-09
+
 ### Bugfixes
 
 * Fixed issue #348: Class "rt.script.php" could not be found - @thekid
 
 ### Features
 
+* Improved `util.UUID` constructor performance when passed `util.Bytes`
+  (@thekid)
 * Changed `util.Bytes` constructor to accept zero or more chunks, each of
   which may be `string[]`, `int[]`, `string` or `util.Bytes`, from which
   the underlying byte buffer will be concatenated. Improved performance
