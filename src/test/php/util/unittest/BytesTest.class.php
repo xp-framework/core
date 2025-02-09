@@ -7,6 +7,19 @@ use util\Bytes;
 class BytesTest {
 
   /** @return iterable */
+  private function slices() {
+    yield ['0:4', 'This'];         // start:stop
+    yield ['5:7', 'is'];           // start:stop - with non-zero start
+    yield ['5:-5', 'is a'];        // start:stop - with negative offset
+    yield ['-4:-2', 'test'];       // start:stop - with negative offsets
+    yield [':4', 'This'];          // :stop
+    yield [':-5', 'This is a'];    // :stop - with negative offset
+    yield ['5:', 'is a test'];     // start:
+    yield ['-4:', 'test'];         // start: - at negative offset
+    yield [':', 'This is a test']; // : - copy
+  }
+
+  /** @return iterable */
   private function comparing() {
     yield [new Bytes('Test'), 0];
     yield [new Bytes('T'), 1];
@@ -336,6 +349,12 @@ class BytesTest {
       Assert::equals($c[$i], chr($byte));
     }
     Assert::equals($i, sizeof($c)- 1);
+  }
+
+  #[Test, Values(from: 'slices')]
+  public function slice($slice, $expected) {
+    $b= new Bytes('This is a test');
+    Assert::equals(new Bytes($expected), $b($slice));
   }
 
   #[Test, Values(from: 'comparing')]

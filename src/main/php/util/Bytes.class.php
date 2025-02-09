@@ -44,6 +44,19 @@ class Bytes implements Value, ArrayAccess, IteratorAggregate {
   }
 
   /**
+   * Slicing
+   *
+   * @param  string $slice
+   * @return self
+   */
+  public function __invoke($slice) {
+    list($start, $stop)= explode(':', $slice, 2);
+    $offset= (int)$start;
+    $end= (int)$stop ?: $this->size;
+    return new self(substr($this->buffer, $offset, ($end < 0 ? $this->size + $end : $end) - $offset));
+  }
+
+  /**
    * = list[] overloading
    *
    * @param  int $offset
