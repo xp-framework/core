@@ -6,7 +6,7 @@ use lang\{IndexOutOfBoundsException, IllegalArgumentException, Value};
 /**
  * Represents a list of bytes
  *
- * @test  xp://net.xp_framework.unittest.util.BytesTest
+ * @test  util.unittest.BytesTest
  */
 class Bytes implements Value, ArrayAccess, IteratorAggregate {
   private $buffer, $size;
@@ -68,9 +68,9 @@ class Bytes implements Value, ArrayAccess, IteratorAggregate {
    * list[]= overloading
    *
    * @param  int $offset
-   * @param  var $value
+   * @param  int|string $value
    * @throws lang.IllegalArgumentException if key is neither numeric (set) nor NULL (add)
-   * @throws  lang.IndexOutOfBoundsException if key does not exist
+   * @throws lang.IndexOutOfBoundsException if key does not exist
    */
   #[ReturnTypeWillChange]
   public function offsetSet($offset, $value) {
