@@ -12,16 +12,6 @@ class Bytes implements Value, ArrayAccess, IteratorAggregate {
   private $buffer, $size;
   
   /**
-   * Returns input as byte
-   *
-   * @param  var $in
-   * @return string
-   */
-  private function asByte($in) {
-    return is_int($in) ? chr($in) : $in[0];
-  }
-
-  /**
    * Constructor
    *
    * @param  string|string[]|int[] $initial
@@ -32,8 +22,8 @@ class Bytes implements Value, ArrayAccess, IteratorAggregate {
       $this->buffer= $initial;
     } else if (is_array($initial)) {
       $this->buffer= '';
-      foreach ($initial as $arg) {
-        $this->buffer.= $this->asByte($arg);
+      foreach ($initial as $value) {
+        $this->buffer.= is_int($value) ? chr($value) : $value;
       }
     } else {
       throw new IllegalArgumentException('Expected either string[], int[] or string but was '.typeof($initial)->getName());
@@ -76,12 +66,12 @@ class Bytes implements Value, ArrayAccess, IteratorAggregate {
   #[ReturnTypeWillChange]
   public function offsetSet($offset, $value) {
     if (null === $offset) {
-      $this->buffer.= $this->asByte($value);
+      $this->buffer.= is_int($value) ? chr($value) : $value;
       $this->size++;
     } else if ($offset >= $this->size || $offset < 0) {
       throw new IndexOutOfBoundsException('Offset '.$offset.' out of bounds');
     } else {
-      $this->buffer[$offset]= $this->asByte($value);
+      $this->buffer[$offset]= is_int($value) ? chr($value) : $value;
     }
   }
 
