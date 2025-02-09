@@ -1,20 +1,17 @@
 <?php namespace lang\unittest;
 
 use lang\{FormatException, Process, Runtime, RuntimeOptions, XPClass};
-use test\{Assert, Expect, Test};
+use test\{Assert, Expect, Test, Values};
 
 class RuntimeTest {
 
-  /**
-   * Assertion helper for `asArguments()` calls.
-   *
-   * @param  string[] $expected
-   * @param  lang.RuntimeOptions $actual
-   * @return void
-   * @throws unittest.AssertionFailedError
-   */
-  private function assertArguments($expected, $actual) {
-    Assert::equals($expected, $actual->asArguments());
+  /** @return iterable */
+  private function main() {
+    yield [[], null];
+    yield [['class-main.php'], null];
+    yield [['class-main.php', __FILE__], null];
+    yield [['class-main.php', 'xp.runtime.Evaluate'], XPClass::forName('xp.runtime.Evaluate')];
+    yield [['class-main.php', '', 'xp.runtime.Evaluate'], XPClass::forName('xp.runtime.Evaluate')];
   }
 
   #[Test]
@@ -80,14 +77,14 @@ class RuntimeTest {
   #[Test]
   public function doubleDashEndsOptions() {
     $startup= Runtime::parseArguments(['-q', '--', 'tools/xar.php']);
-    $this->assertArguments(['-q'], $startup['options']);
+    Assert::equals(['-q'], $startup['options']->asArguments());
     Assert::equals('tools/xar.php', $startup['bootstrap']);
   }
 
   #[Test]
   public function scriptEndsOptions() {
     $startup= Runtime::parseArguments(['-q', 'tools/xar.php']);
-    $this->assertArguments(['-q'], $startup['options']);
+    Assert::equals(['-q'], $startup['options']->asArguments());
     Assert::equals('tools/xar.php', $startup['bootstrap']);
   }
 
@@ -114,27 +111,23 @@ class RuntimeTest {
     Assert::true($startup['options']->getSwitch('q'));
   }
 
+  #[Test, Values(from: 'main')]
+  public function parseMain($arguments, $expected) {
+    Assert::equals($expected, Runtime::parseArguments($arguments)['main']);
+  }
+
   #[Test]
   public function memoryUsage() {
-    Assert::equals(
-      \lang\Primitive::$INT, 
-      typeof(Runtime::getInstance()->memoryUsage())
-    );
+    Assert::instance('int', Runtime::getInstance()->memoryUsage());
   }
 
   #[Test]
   public function peakMemoryUsage() {
-    Assert::equals(
-      \lang\Primitive::$INT, 
-      typeof(Runtime::getInstance()->peakMemoryUsage())
-    );
+    Assert::instance('int', Runtime::getInstance()->peakMemoryUsage());
   }
 
   #[Test]
   public function memoryLimit() {
-    Assert::equals(
-      \lang\Primitive::$INT,
-      typeof(Runtime::getInstance()->memoryLimit())
-    );
+    Assert::instance('int', Runtime::getInstance()->memoryLimit());
   }
 }

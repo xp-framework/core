@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed issue #348: Class "rt.script.php" could not be found - @thekid
+
 ### Features
 
 * Improved `util.Bytes` constructor performance - @thekid

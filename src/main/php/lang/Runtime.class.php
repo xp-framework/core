@@ -6,15 +6,11 @@ use lang\archive\ArchiveClassLoader;
  * Represents the runtime - that is, the PHP binary executing the
  * current process.
  *
- * @test  xp://net.xp_framework.unittest.core.RuntimeTest
+ * @test  lang.unittest.RuntimeTest
  */
 class Runtime {
-  protected static 
-    $instance   = null;
-    
-  protected
-    $executable = null,
-    $startup    = null;
+  protected static $instance;
+  protected $executable, $startup;
   
   static function __static() {
     self::$instance= new self();
@@ -42,7 +38,7 @@ class Runtime {
   /**
    * Returns the amount of memory currently allocated by the runtime
    *
-   * @see     php://memory_get_peak_usage
+   * @see     http://php.net/memory_get_peak_usage
    * @return  int bytes
    */
   public function memoryUsage() {
@@ -53,7 +49,7 @@ class Runtime {
    * Returns the peak of of memory that has been allocated by the
    * runtime up until now.
    *
-   * @see     php://memory_get_usage
+   * @see     http://php.net/memory_get_usage
    * @return  int bytes
    */
   public function peakMemoryUsage() {
@@ -63,7 +59,7 @@ class Runtime {
   /**
    * Check whether a given extension is available
    *
-   * @see     php://extension_loaded
+   * @see     http://php.net/extension_loaded
    * @param   string name
    * @return  bool
    */
@@ -75,7 +71,7 @@ class Runtime {
    * Register a shutdown hook - a piece of code that will be run before
    * the runtime shuts down (e.g. with exit).
    *
-   * @see     php://register_shutdown_function
+   * @see     http://php.net/register_shutdown_function
    * @param   lang.Runnable r
    * @return  lang.Runnable the given runnable
    */
@@ -93,7 +89,7 @@ class Runtime {
    * @throws  lang.FormatException in case an unrecognized argument is encountered
    */
   public static function parseArguments($arguments) {
-    $return= ['options' => new RuntimeOptions(), 'bootstrap' => null, 'main' => null];
+    $return= ['options' => new RuntimeOptions(), 'bootstrap' => null];
     while (null !== ($argument= array_shift($arguments))) {
       if ('' === $argument) {
         continue;
@@ -132,7 +128,9 @@ class Runtime {
     $main= array_shift($arguments);
     if ('' === $main) {
       $return['main']= XPClass::forName(array_shift($arguments));
-    } else if ($main) {
+    } else if (null === $main || is_file($main)) {
+      $return['main']= null;
+    } else {
       $return['main']= XPClass::forName($main);
     }
     return $return;
@@ -188,7 +186,7 @@ class Runtime {
   /**
    * Get entry point class
    *
-   * @return  lang.XPClass
+   * @return  ?lang.XPClass
    */
   public function mainClass() {
     return $this->startup('main');
