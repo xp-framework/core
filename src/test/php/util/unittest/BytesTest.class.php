@@ -70,6 +70,16 @@ class BytesTest {
   }
 
   #[Test]
+  public function from_self() {
+    $b= new Bytes(new Bytes('abcd'));
+    Assert::equals(4, $b->size());
+    Assert::equals(97, $b[0]);
+    Assert::equals(98, $b[1]);
+    Assert::equals(99, $b[2]);
+    Assert::equals(100, $b[3]);
+  }
+
+  #[Test]
   public function from_var_args() {
     $b= new Bytes('ab', [99, 100]);
     Assert::equals(4, $b->size());

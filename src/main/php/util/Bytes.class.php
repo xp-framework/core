@@ -14,7 +14,7 @@ class Bytes implements Value, ArrayAccess, IteratorAggregate {
   /**
    * Constructor
    *
-   * @param  string|string[]|int[]... $initial
+   * @param  string|self|string[]|int[]... $initial
    * @throws lang.IllegalArgumentException in case argument is of incorrect type.
    */
   public function __construct(... $initial) {
@@ -26,8 +26,10 @@ class Bytes implements Value, ArrayAccess, IteratorAggregate {
         foreach ($chunk as $value) {
           $this->buffer.= is_int($value) ? chr($value) : $value;
         }
+      } else if ($chunk instanceof self) {
+        $this->buffer.= $chunk->buffer;
       } else {
-        throw new IllegalArgumentException('Expected either string[], int[] or string but was '.typeof($initial)->getName());
+        throw new IllegalArgumentException('Expected either string[], int[], string or util.Bytes but was '.typeof($initial)->getName());
       }
     }
     $this->size= strlen($this->buffer);
