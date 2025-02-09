@@ -3,6 +3,10 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Improved `util.Bytes` constructor performance - @thekid
+
 ## 12.2.0 / 2024-12-31
 
 ### Bugfixes
