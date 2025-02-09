@@ -24,16 +24,17 @@ class Bytes implements Value, ArrayAccess, IteratorAggregate {
   /**
    * Constructor
    *
-   * @param  string|string[]|int[] $initial default NULL
+   * @param  string|string[]|int[] $initial
    * @throws lang.IllegalArgumentException in case argument is of incorrect type.
    */
-  public function __construct($initial= null) {
-    if (null === $initial) {
-      $this->buffer= '';
-    } else if (is_array($initial)) {
-      $this->buffer= implode('', array_map([$this, 'asByte'], $initial));
-    } else if (is_string($initial)) {
+  public function __construct($initial= '') {
+    if (is_string($initial)) {
       $this->buffer= $initial;
+    } else if (is_array($initial)) {
+      $this->buffer= '';
+      foreach ($initial as $arg) {
+        $this->buffer.= $this->asByte($arg);
+      }
     } else {
       throw new IllegalArgumentException('Expected either string[], int[] or string but was '.typeof($initial)->getName());
     }
@@ -67,7 +68,7 @@ class Bytes implements Value, ArrayAccess, IteratorAggregate {
   /**
    * list[]= overloading
    *
-   * @param  int $offset
+   * @param  ?int $offset
    * @param  int|string $value
    * @throws lang.IllegalArgumentException if key is neither numeric (set) nor NULL (add)
    * @throws lang.IndexOutOfBoundsException if key does not exist
