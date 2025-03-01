@@ -14,9 +14,9 @@ init:
 install:
   - if exist .\xp (set CACHED=1) else (mkdir .\xp)
   - if %CACHED%==0 cd .\xp
-  - if %CACHED%==0 curl -fsS -o php.zip https://windows.php.net/downloads/releases/archives/php-8.4.3-nts-Win32-vs17-x64.zip
+  - if %CACHED%==0 curl -fsS -o php.zip https://windows.php.net/downloads/releases/archives/php-8.3.16-nts-Win32-vs16-x64.zip
   - if %CACHED%==0 appveyor DownloadFile https://getcomposer.org/composer.phar
-  - if %CACHED%==0 appveyor DownloadFile https://baltocdn.com/xp-framework/xp-runners/distribution/downloads/z/zip/xp-runners_9.1.0.zip -FileName xp.zip
+  - if %CACHED%==0 appveyor DownloadFile https://baltocdn.com/xp-framework/xp-runners/distribution/downloads/z/zip/xp-runners_8.8.0.zip -FileName xp.zip
   - if %CACHED%==0 7z x php.zip -y
   - if %CACHED%==0 7z x xp.zip -y
   - if %CACHED%==0 echo extension_dir=%cd%\ext >> php.ini
