@@ -33,6 +33,7 @@ class Runtime {
    * @see    https://stackoverflow.com/q/6481005 (Linux)
    * @see    https://stackoverflow.com/q/1715580 (Mac OS)
    * @see    https://stackoverflow.com/q/22919076 (Windows)
+   * @see    https://stackoverflow.com/a/49152519 (Docker w/ `--cpus=<n>`)
    * @see    https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-computersystem
    * @return ?int|float
    */
@@ -45,10 +46,13 @@ class Runtime {
         return $sys->NumberOfProcessors;
       }
     } else if (is_readable($f= '/sys/fs/cgroup/cpu/cpu.cfs_quota_us') && ($fd= fopen($f, 'r'))) {
-      $n= fgets($fd, 1024);
+      fscanf($fd, '%d', $n);
       fclose($fd);
-      return (float)($n / 100000);
-    } else if (is_readable($f= '/proc/cpuinfo') && ($fd= fopen($f, 'r'))) {
+      if ($n > 0) return (float)($n / 100000);
+      // Fall through
+    }
+
+    if (is_readable($f= '/proc/cpuinfo') && ($fd= fopen($f, 'r'))) {
       $n= 0;
       do {
         $line= fgets($fd, 1024);
