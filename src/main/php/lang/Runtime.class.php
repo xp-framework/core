@@ -34,7 +34,7 @@ class Runtime {
    * @see    https://stackoverflow.com/q/1715580 (Mac OS)
    * @see    https://stackoverflow.com/q/22919076 (Windows)
    * @see    https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-computersystem
-   * @return ?int
+   * @return ?int|float
    */
   public function availableProcessors() {
     if ($n= getenv('NUMBER_OF_PROCESSORS')) {
@@ -44,7 +44,11 @@ class Runtime {
       foreach ($c->instancesOf('Win32_ComputerSystem') as $sys) {
         return $sys->NumberOfProcessors;
       }
-    } else if (is_readable('/proc/cpuinfo') && ($fd= fopen('/proc/cpuinfo', 'r'))) {
+    } else if (is_readable($f= '/sys/fs/cgroup/cpu/cpu.cfs_quota_us') && ($fd= fopen($f, 'r'))) {
+      $n= fgets($fd, 1024);
+      fclose($fd);
+      return (float)($n / 100000);
+    } else if (is_readable($f= '/proc/cpuinfo') && ($fd= fopen($f, 'r'))) {
       $n= 0;
       do {
         $line= fgets($fd, 1024);
