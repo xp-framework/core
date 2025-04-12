@@ -8,8 +8,8 @@
  * - float
  * - bool
  *
- * @test  xp://net.xp_framework.unittest.reflection.PrimitiveTest 
- * @see   xp://lang.Type
+ * @test  lang.unittest.PrimitiveTest 
+ * @see   lang.Type
  */
 class Primitive extends Type {
   public static $STRING, $INT, $FLOAT, $BOOL;

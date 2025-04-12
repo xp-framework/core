@@ -3,8 +3,8 @@
 /**
  * Interval enumeration
  *
- * @test     xp://net.xp_framework.unittest.util.DateMathTest
- * @see      xp://util.DateMath
+ * @see   util.DateMath
+ * @test  util.unittest.DateMathTest
  */
 class TimeInterval extends \lang\Enum {
   public static

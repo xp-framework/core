@@ -21,9 +21,9 @@ use lang\{FormatException, IllegalStateException, Value};
  * key=value
  * ```
  *
- * @test    xp://net.xp_framework.unittest.util.PropertyWritingTest
- * @test    xp://net.xp_framework.unittest.util.StringBasedPropertiesTest
- * @test    xp://net.xp_framework.unittest.util.FileBasedPropertiesTest
+ * @test    util.unittest.PropertyWritingTest
+ * @test    util.unittest.StringBasedPropertiesTest
+ * @test    util.unittest.FileBasedPropertiesTest
  * @see     php://parse_ini_file
  */
 class Properties implements PropertyAccess, Value {

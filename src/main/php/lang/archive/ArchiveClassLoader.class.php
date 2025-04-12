@@ -16,12 +16,12 @@ use lang\ElementNotFoundException;
  * }
  * 
  * $obj= $class->newInstance();
- * </code>
+ * ```
  *
- * @test  xp://net.xp_framework.unittest.core.ArchiveClassLoaderTest
- * @test  xp://net.xp_framework.unittest.reflection.ClassFromArchiveTest
- * @see   xp://lang.ClassLoader
- * @see   xp://lang.archive.Archive
+ * @test  lang.unittest.ArchiveClassLoaderTest
+ * @test  lang.unittest.ClassFromArchiveTest
+ * @see   lang.ClassLoader
+ * @see   lang.archive.Archive
  */
 class ArchiveClassLoader extends AbstractClassLoader {
   protected $archive= null;
@@ -29,7 +29,7 @@ class ArchiveClassLoader extends AbstractClassLoader {
   /**
    * Constructor
    * 
-   * @param   var archive either a string or a lang.archive.Archive instance
+   * @param  string|lang.archive.Archive $arcgive
    */
   public function __construct($archive) {
     $this->path= $archive instanceof Archive ? $archive->getURI() : $archive;

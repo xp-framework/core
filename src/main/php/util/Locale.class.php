@@ -17,7 +17,7 @@
  * @see   http://ftp.ics.uci.edu/pub/ietf/http/related/iso639.txt
  * @see   http://userpage.chemie.fu-berlin.de/diverse/doc/ISO_3166.html
  * @see   http://groups.google.com/groups?threadm=DREPPER.96Aug8030605%40i44d2.ipd.info.uni-karlsruhe.de#link1
- * @test  xp://net.xp_framework.unittest.util.LocaleTest
+ * @test  util.unittest.LocaleTest
  */
 class Locale implements \lang\Value {
   public

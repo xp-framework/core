@@ -3,7 +3,7 @@
 /**
  * Generate generic runtime types.
  *
- * @test  xp://net.xp_framework.unittest.core.generics.GenericTypesTest
+ * @test  lang.unittest.generics.GenericTypesTest
  */
 class GenericTypes {
 

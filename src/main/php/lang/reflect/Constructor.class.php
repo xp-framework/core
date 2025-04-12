@@ -6,9 +6,9 @@ use lang\{Type, XPClass};
 /**
  * Represents a class' constructor
  *
- * @see   xp://lang.XPClass
- * @see   xp://lang.reflect.Routine
- * @test  xp://net.xp_framework.unittest.reflection.ReflectionTest
+ * @see   lang.XPClass
+ * @see   lang.reflect.Routine
+ * @test  lang.unittest.ReflectionTest
  */
 class Constructor extends Routine {
 

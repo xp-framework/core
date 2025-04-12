@@ -7,8 +7,8 @@ use lang\IllegalArgumentException;
  * Represents the lines inside an input stream of bytes, delimited
  * by either Unix, Mac or Windows line endings.
  *
- * @see   xp://io.streams.Reader#lines
- * @test  xp://net.xp_framework.unittest.io.streams.LinesInTest
+ * @see   io.streams.Reader#lines
+ * @test  io.unittest.LinesInTest
  */
 class LinesIn implements IteratorAggregate {
   private $reader, $reset;

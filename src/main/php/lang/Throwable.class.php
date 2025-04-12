@@ -5,12 +5,12 @@ use util\Objects;
 /**
  * Throwable
  *
- * @see   xp://lang.Error
- * @see   xp://lang.XPException
+ * @see   lang.Error
+ * @see   lang.XPException
  * @see   http://mindprod.com/jgloss/chainedexceptions.html
  * @see   http://www.jguru.com/faq/view.jsp?EID=1026405  
- * @test  xp://net.xp_framework.unittest.core.ExceptionsTest
- * @test  xp://net.xp_framework.unittest.core.ChainedExceptionTest
+ * @test  lang.unittest.ExceptionsTest
+ * @test  lang.unittest.ChainedExceptionTest
  */
 class Throwable extends \Exception implements Value {
   public $__id;

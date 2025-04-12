@@ -3,8 +3,8 @@
 /** 
  * Loads a class from the filesystem
  * 
- * @test  xp://net.xp_framework.unittest.reflection.ClassLoaderTest
- * @see   xp://lang.XPClass#forName
+ * @see   lang.XPClass#forName
+ * @test  lang.unittest.ClassLoaderTest
  */
 abstract class AbstractClassLoader implements IClassLoader {
   public $path= '';

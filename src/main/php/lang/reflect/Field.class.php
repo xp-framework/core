@@ -15,8 +15,8 @@ use lang\{
 /**
  * Represents a class field
  *
- * @test  xp://net.xp_framework.unittest.reflection.FieldsTest
- * @see   xp://lang.XPClass
+ * @see   lang.XPClass
+ * @test  lang.unittest.FieldsTest
  */
 class Field implements Value {
   protected $accessible= false;

@@ -3,8 +3,8 @@
 /**
  * Represents wildcard types
  *
- * @see   xp://lang.Type
- * @test  xp://net.xp_framework.unittest.core.WildcardTypeTest
+ * @see   lang.Type
+ * @test  lang.unittest.WildcardTypeTest
  */
 class WildcardType extends Type {
   protected $base;

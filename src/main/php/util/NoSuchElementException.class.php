@@ -1,10 +1,13 @@
 <?php namespace util;
- 
+
+use lang\XPException;
+
 /**
  * Thrown by the next method of an Iterator to indicate that 
  * there are no more elements.
  *
- * @see      xp://util.Iterator
+ * @see   util.Iterator
  */
-class NoSuchElementException extends \lang\XPException {
+class NoSuchElementException extends XPException {
+
 }

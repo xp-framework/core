@@ -5,8 +5,8 @@ use util\Objects;
 /**
  * Implements object comparison via `hashCode()` and `compareTo()`
  *
- * @see   xp://lang.Value
- * @test  xp://net.xp_framework.unittest.util.ComparisonTest
+ * @see   lang.Value
+ * @test  util.unittest.ComparisonTest
  */
 trait Comparison {
 

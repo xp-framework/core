@@ -6,7 +6,7 @@ use lang\IllegalArgumentException;
  * Composite class for util.Properties; can be used to group together
  * arbitrary many Properties objects
  *
- * @test   xp://net.xp_framework.unittest.util.CompositePropertiesTest
+ * @test   util.unittest.CompositePropertiesTest
  */
 class CompositeProperties implements PropertyAccess {
   private static $NONEXISTANT;

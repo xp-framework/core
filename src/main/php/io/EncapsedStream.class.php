@@ -5,7 +5,7 @@ use lang\MethodNotImplementedException;
 /**
  * Encapsulated / embedded stream
  *
- * @test  xp://net.xp_framework.unittest.io.EncapsedStreamTest
+ * @test  io.unittest.EncapsedStreamTest
  */
 class EncapsedStream extends File {
   private $_super, $_offset, $_size;

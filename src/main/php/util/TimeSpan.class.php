@@ -319,7 +319,7 @@ class TimeSpan implements Value {
   /**
    * Creates a string representation
    *
-   * @see     xp://util.TimeSpan#format
+   * @see     util.TimeSpan#format
    * @param   string format, defaults to '%ed, %yh, %jm, %ws'
    * @return  string
    */

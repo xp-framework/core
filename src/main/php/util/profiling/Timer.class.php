@@ -13,7 +13,7 @@
  * printf("Took %.3f seconds\n", $p->elapsedTime());
  * ```
  *
- * @test  xp://net.xp_framework.unittest.util.TimerTest
+ * @test  util.unittest.TimerTest
  */
 class Timer {
   private $start, $stop;

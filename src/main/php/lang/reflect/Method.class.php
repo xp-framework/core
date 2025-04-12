@@ -5,10 +5,10 @@ use lang\{XPClass, IllegalArgumentException, IllegalAccessException};
 /**
  * Represents a class method
  *
- * @see   xp://lang.XPClass
- * @see   xp://lang.reflect.Routine
- * @test  xp://net.xp_framework.unittest.reflection.MethodsTest
- * @test  xp://net.xp_framework.unittest.reflection.ReflectionTest
+ * @see   lang.XPClass
+ * @see   lang.reflect.Routine
+ * @test  lang.unittest.MethodsTest
+ * @test  lang.unittest.ReflectionTest
  */
 class Method extends Routine {
 

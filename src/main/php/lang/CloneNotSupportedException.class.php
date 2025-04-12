@@ -8,7 +8,7 @@
  * Applications that override the clone method can also throw this exception
  * to indicate that an object could not or should not be cloned. 
  *
- * @test  xp://net.xp_framework.unittest.core.CloningTest
+ * @test  lang.unittest.CloningTest
  */
 class CloneNotSupportedException extends XPException {
 

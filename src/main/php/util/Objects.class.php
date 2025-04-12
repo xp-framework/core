@@ -5,7 +5,7 @@ use lang\Value;
 /**
  * Objects utility methods
  *
- * @test  xp://net.xp_framework.unittest.util.ObjectsTest
+ * @test  util.unittest.ObjectsTest
  */
 abstract class Objects {
 

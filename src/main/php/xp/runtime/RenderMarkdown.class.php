@@ -4,7 +4,7 @@
  * Converts markdown to plain text w/ ASCII "art". Does not assume
  * to be a full-fledged, spec-compliant markdown parser!
  *
- * @test  xp://net.xp_framework.unittest.runtime.RenderMarkdownTest
+ * @test  xp.unittest.RenderMarkdownTest
  */
 class RenderMarkdown {
   private $style;

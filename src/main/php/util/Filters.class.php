@@ -10,8 +10,8 @@ use lang\{IllegalArgumentException, IllegalStateException, Generic};
  * Furthermore, this class contains the static factory methods `allOf()`,
  * `anyOf()` and `noneOf()` to cover common cases.
  *
- * @see  xp://util.Filter
- * @test xp://net.xp_framework.unittest.util.FiltersTest
+ * @see   util.Filter
+ * @test  util.unittest.FiltersTest
  */
 #[Generic(self: 'T', implements: ['T'])]
 class Filters implements Filter {

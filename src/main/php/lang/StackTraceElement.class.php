@@ -4,9 +4,9 @@
  * An element in a stack trace, as returned by Throwable::getStackTrace(). 
  * Each element represents a single stack frame.
  *
- * @see   xp://lang.Throwable#getStackTrace
- * @test  xp://net.xp_framework.unittest.core.ExceptionsTest
- * @test  xp://net.xp_framework.unittest.core.StackTraceElementTest
+ * @see   lang.Throwable#getStackTrace
+ * @test  lang.unittest.ExceptionsTest
+ * @test  lang.unittest.StackTraceElementTest
  */
 class StackTraceElement implements Value {
   public

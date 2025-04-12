@@ -3,8 +3,8 @@
 /**
  * Represents runtime options
  *
- * @test  xp://net.xp_framework.unittest.core.RuntimeOptionsTest
- * @see   xp://lang.Runtime#startupOptions
+ * @see   lang.Runtime#startupOptions
+ * @test  lang.unittest.RuntimeOptionsTest
  */
 class RuntimeOptions implements Value {
   protected $backing= [];

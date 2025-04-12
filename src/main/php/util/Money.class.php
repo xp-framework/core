@@ -5,30 +5,30 @@ use lang\{IllegalArgumentException, Value};
 /**
  * Represents money.
  *
- * <code>
- *   $ten= new Money(10, Currency::$USD);
- *   
- *   // Adding money
- *   $eleven= $ten->add(new Money(1, Currency::$USD));
- *   
- *   // Multiplying it
- *   $twentytwo= $eleven->multiplyBy(2);
- *   
- *   // Dividing it
- *   $two= $eleven->divideBy(11);
- *   
- *   // Subtracting it
- *   $one= $eleven->subtract(new Money(1, Currency::$USD));
- * </code>
+ * ```php
+ * $ten= new Money(10, Currency::$USD);
+ * 
+ * // Adding money
+ * $eleven= $ten->add(new Money(1, Currency::$USD));
+ * 
+ * // Multiplying it
+ * $twentytwo= $eleven->multiplyBy(2);
+ * 
+ * // Dividing it
+ * $two= $eleven->divideBy(11);
+ * 
+ * // Subtracting it
+ * $one= $eleven->subtract(new Money(1, Currency::$USD));
+ * ```
  *
  * @ext     bc
- * @test    xp://net.xp_framework.unittest.util.MoneyTest
+ * @test    util.unittest.MoneyTest
  * @see     xp://util.Currency
  * @see     http://martinfowler.com/eaaCatalog/money.html
  */
 class Money implements Value {
-  protected $amount   = '';
-  protected $currency = null;
+  protected $amount  = '';
+  protected $currency= null;
 
   static function __static() {
     bcscale(ini_get('precision'));

@@ -35,11 +35,11 @@ use lang\reflect\{Method, Field, Constructor, Package, ClassParser};
  * }
  * ``` 
  *
- * @see   xp://lang.XPClass#forName
- * @test  xp://net.xp_framework.unittest.reflection.XPClassTest
- * @test  xp://net.xp_framework.unittest.reflection.ClassDetailsTest
- * @test  xp://net.xp_framework.unittest.reflection.IsInstanceTest
- * @test  xp://net.xp_framework.unittest.reflection.ClassCastingTest
+ * @see   lang.XPClass#forName
+ * @test  lang.unittest.XPClassTest
+ * @test  lang.unittest.ClassDetailsTest
+ * @test  lang.unittest.IsInstanceTest
+ * @test  lang.unittest.ClassCastingTest
  */
 class XPClass extends Type {
   private $_class;

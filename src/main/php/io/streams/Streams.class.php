@@ -6,7 +6,7 @@ use io\IOException;
 /**
  * Wraps I/O streams into PHP streams
  *
- * @test  xp://net.xp_framework.unittest.io.StreamWrappingTest
+ * @test  io.unittest.StreamWrappingTest
  * @see   php://streams
  */
 abstract class Streams {

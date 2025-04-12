@@ -3,7 +3,7 @@
 use lang\reflect\Module;
 use lang\{Environment, ElementNotFoundException, FormatException};
 
-/** @test xp://net.xp_framework.unittest.runtime.ModulesTest */
+/** @test xp.unittest.ModulesTest */
 class Modules {
   private $list= [];
   private $loaded= ['php' => true, 'xp-framework/core' => true];

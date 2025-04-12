@@ -21,7 +21,7 @@ use io\streams\{StringWriter, StringReader, ConsoleOutputStream, ConsoleInputStr
  * Console::$err->writeLine('*** An error occured: ', $e->toString());
  * ```
  *
- * @test  xp://net.xp_framework.unittest.util.cmd.ConsoleTest
+ * @test  util.unittest.cmd.ConsoleTest
  * @see   http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlrfSystemConsoleClassTopic.asp
  */
 abstract class Console {

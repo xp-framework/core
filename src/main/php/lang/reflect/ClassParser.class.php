@@ -6,11 +6,11 @@ use lang\{XPClass, IllegalStateException, IllegalAccessException, ElementNotFoun
  * Parses classes for class meta information (apidoc, return and 
  * parameter types, annotations).
  *
- * @test  xp://net.xp_framework.unittest.reflection.ClassDetailsTest
- * @test  xp://net.xp_framework.unittest.annotations.AbstractAnnotationParsingTest
- * @test  xp://net.xp_framework.unittest.annotations.AnnotationParsingTest
- * @test  xp://net.xp_framework.unittest.annotations.BrokenAnnotationTest
- * @test  xp://net.xp_framework.unittest.annotations.MultiValueBCTest
+ * @test  lang.unittest.ClassDetailsTest
+ * @test  lang.unittest.AbstractAnnotationParsingTest
+ * @test  lang.unittest.AnnotationParsingTest
+ * @test  lang.unittest.BrokenAnnotationTest
+ * @test  lang.unittest.MultiValueBCTest
  */
 class ClassParser {
 

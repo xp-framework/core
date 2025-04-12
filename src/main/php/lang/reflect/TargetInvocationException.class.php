@@ -1,12 +1,14 @@
 <?php namespace lang\reflect;
 
+use lang\XPException;
+
 /**
  * Indicates an exception was thrown while reflectively invoking
  * a method or constructor.
  *
- * @see   xp://lang.reflect.Method
- * @see   xp://lang.reflect.Constructor
+ * @see   lang.reflect.Method
+ * @see   lang.reflect.Constructor
  */
-class TargetInvocationException extends \lang\XPException {
+class TargetInvocationException extends XPException {
   
 }

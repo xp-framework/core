@@ -3,8 +3,8 @@
 /**
  * Represents a union of types
  *
- * @see   xp://lang.Type
- * @test  xp://net.xp_framework.unittest.core.TypeUnionTest
+ * @see   lang.Type
+ * @test  lang.unittest.TypeUnionTest
  */
 class TypeUnion extends Type {
   private $types;

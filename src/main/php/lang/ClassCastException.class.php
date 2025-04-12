@@ -3,7 +3,7 @@
 /**
  * Indicates a class cast failed
  *
- * @test    xp://net.xp_framework.unittest.core.CastingTest
+ * @test  lang.unittest.CastingTest
  */
 class ClassCastException extends XPException {
   

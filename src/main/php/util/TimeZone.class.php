@@ -11,7 +11,7 @@ use lang\{IllegalArgumentException, Value};
  * printf("Difference to UTC is %s\n", $tz->difference());  // +0200
  * ```
  *
- * @test  xp://net.xp_framework.unittest.util.TimeZoneTest
+ * @test  util.unittest.TimeZoneTest
  * @see   php://datetime
  * @see   php://timezones
  */

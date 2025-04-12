@@ -7,8 +7,8 @@ use lang\{IllegalArgumentException, IllegalStateException, Value};
  * Instances of the file class serve as an opaque handle to the underlying machine-
  * specific structure representing an open file.
  * 
- * @test xp://net.xp_framework.unittest.io.FileTest
- * @test xp://net.xp_framework.unittest.io.FileIntegrationTest
+ * @test io.unittest.FileTest
+ * @test io.unittest.FileIntegrationTest
  */
 class File implements Channel, Value {
   const READ =      'rb';          // Read

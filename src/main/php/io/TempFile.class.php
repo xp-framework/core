@@ -27,9 +27,9 @@ use lang\{Environment, IllegalStateException};
  * same name. This would have to happen within the same 
  * microsecond, though, and is therefore quite unlikely.
  *
- * @see   xp://io.File
- * @see   xp://lang.Environment#tempDir
- * @test  xp://net.xp_framework.unittest.io.TempFileTest
+ * @see   io.File
+ * @see   lang.Environment#tempDir
+ * @test  io.unittest.TempFileTest
  */
 class TempFile extends File {
   private $persistent= false;

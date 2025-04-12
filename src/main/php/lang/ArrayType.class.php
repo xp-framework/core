@@ -3,8 +3,8 @@
 /**
  * Represents array types
  *
- * @see   xp://lang.Type
- * @test  xp://net.xp_framework.unittest.core.ArrayTypeTest
+ * @see   lang.Type
+ * @test  lang.unittest.ArrayTypeTest
  */
 class ArrayType extends Type {
   private $component;

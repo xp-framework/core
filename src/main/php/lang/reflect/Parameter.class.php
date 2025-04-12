@@ -6,10 +6,10 @@ use util\Objects;
 /**
  * Represents a method's parameter
  *
- * @see   xp://lang.reflect.Method#getParameter
- * @see   xp://lang.reflect.Method#getParameters
- * @see   xp://lang.reflect.Method#numParameters
- * @test  xp://net.xp_framework.unittest.reflection.MethodParametersTest
+ * @see   lang.reflect.Method#getParameter
+ * @see   lang.reflect.Method#getParameters
+ * @see   lang.reflect.Method#numParameters
+ * @test  lang.unittest.MethodParametersTest
  */
 class Parameter {
   protected

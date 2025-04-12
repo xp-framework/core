@@ -3,8 +3,8 @@
 /**
  * Represents nullable types
  *
- * @see   xp://lang.Type
- * @test  xp://net.xp_framework.unittest.core.NullableTest
+ * @see   lang.Type
+ * @test  lang.unittest.NullableTest
  */
 class Nullable extends Type {
   private $underlying;

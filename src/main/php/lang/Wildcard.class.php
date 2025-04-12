@@ -4,8 +4,8 @@
  * Represents wildcards in a wildcard type. Package class, not to be 
  * publicly used.
  *
- * @see   xp://lang.WildcardType
- * @test  xp://net.xp_framework.unittest.core.WildcardTypeTest
+ * @see   lang.WildcardType
+ * @test  lang.unittest.WildcardTypeTest
  */
 class Wildcard extends Type {
   public static $ANY;

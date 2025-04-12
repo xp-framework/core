@@ -4,11 +4,11 @@
  * Indicates a class specified by a name cannot be found - that is,
  * no classloader provides such a class.
  *
- * @see   xp://lang.IClassLoader#loadClass
- * @see   xp://lang.XPClass#forName
- * @test  xp://net.xp_framework.unittest.reflection.ClassLoaderTest
- * @test  xp://net.xp_framework.unittest.reflection.ReflectionTest
- * @test  xp://net.xp_framework.unittest.reflection.RuntimeClassDefinitionTest
+ * @see   lang.IClassLoader#loadClass
+ * @see   lang.XPClass#forName
+ * @test  lang.unittest.ClassLoaderTest
+ * @test  lang.unittest.ReflectionTest
+ * @test  lang.unittest.RuntimeClassDefinitionTest
  */
 class ClassNotFoundException extends XPException implements ClassLoadingException {
   protected $failedClass= null;

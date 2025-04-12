@@ -7,7 +7,7 @@ use util\Comparison;
 /**
  * OuputStream that writes to files
  *
- * @test  xp://net.xp_framework.unittest.io.streams.FileOutputStreamTest
+ * @test  io.unittest.FileOutputStreamTest
  */
 class FileOutputStream implements OutputStream, Seekable, Truncation, Value {
   use Comparison;

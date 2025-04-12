@@ -6,7 +6,7 @@ use lang\FormatException;
 /**
  * Expands variables inside property files.
  *
- * @see  xp://util.Properties
+ * @see   util.Properties
  */
 class PropertyExpansion {
   private $impl= [];

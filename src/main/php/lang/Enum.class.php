@@ -3,9 +3,7 @@
 /**
  * Enumeration base class
  *
- * @see   http://news.xp-framework.net/article/222/2007/11/12/
- * @see   http://news.xp-framework.net/article/207/2007/07/29/
- * @test  xp://net.xp_framework.unittest.core.EnumTest
+ * @test  lang.unittest.EnumTest
  */
 abstract class Enum implements Value {
   public $name= '';

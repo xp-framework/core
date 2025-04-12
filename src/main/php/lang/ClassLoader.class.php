@@ -28,15 +28,15 @@ use util\Objects;
  * will be asked to load it. In case none of the delegates are able
  * to provide the class, a ClassNotFoundException will be thrown.
  * 
- * @test  xp://net.xp_framework.unittest.reflection.ClassLoaderTest
- * @test  xp://net.xp_framework.unittest.reflection.ClassPathTest
- * @test  xp://net.xp_framework.unittest.reflection.ResourcesTest
- * @test  xp://net.xp_framework.unittest.reflection.PackageTest
- * @test  xp://net.xp_framework.unittest.reflection.RuntimeClassDefinitionTest
- * @test  xp://net.xp_framework.unittest.reflection.FullyQualifiedTest
- * @test  xp://net.xp_framework.unittest.reflection.ModuleLoadingTest
- * @see   xp://lang.XPClass#forName
- * @see   xp://lang.reflect.Package#loadClass
+ * @see   lang.XPClass#forName
+ * @see   lang.reflect.Package#loadClass
+ * @test  lang.unittest.ClassLoaderTest
+ * @test  lang.unittest.ClassPathTest
+ * @test  lang.unittest.ResourcesTest
+ * @test  lang.unittest.PackageTest
+ * @test  lang.unittest.RuntimeClassDefinitionTest
+ * @test  lang.unittest.FullyQualifiedTest
+ * @test  lang.unittest.ModuleLoadingTest
  */
 final class ClassLoader implements IClassLoader {
   protected static

@@ -1,8 +1,6 @@
 <?php namespace lang;
  
 /**
- * Wrapper for MethodNotImplementedException
- *
  * This exception indicates a certain class method is not
  * implemented.
  */
@@ -14,7 +12,6 @@ class MethodNotImplementedException extends XPException {
    *
    * @param   string message
    * @param   string method
-   * @see     xp://lang.XPException#construct
    */
   public function __construct($message, $method) {
     parent::__construct($message);

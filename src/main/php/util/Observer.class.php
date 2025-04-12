@@ -3,7 +3,7 @@
 /**
  * Observer interface
  *
- * @see      xp://util.Observable
+ * @see   util.Observable
  */
 interface Observer {
 

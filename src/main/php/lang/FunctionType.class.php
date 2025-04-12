@@ -3,8 +3,8 @@
 /**
  * Represents function types
  *
- * @see   xp://lang.Type
- * @test  xp://net.xp_framework.unittest.core.FunctionTypeTest
+ * @see   lang.Type
+ * @test  lang.unittest.FunctionTypeTest
  */
 class FunctionType extends Type {
   protected $signature;

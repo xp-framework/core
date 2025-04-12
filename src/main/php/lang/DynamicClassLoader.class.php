@@ -3,22 +3,16 @@
 /**
  * Dynamic class loader to define classes at runtime
  *
- * @see   xp://lang.ClassLoader::defineClass
- * @test  xp://net.xp_framework.unittest.reflection.RuntimeClassDefinitionTest
- * @test  xp://net.xp_framework.unittest.reflection.ClassFromDynamicDefinitionTest
+ * @see   lang.ClassLoader::defineClass
+ * @test  lang.unittest.RuntimeClassDefinitionTest
+ * @test  lang.unittest.ClassFromDynamicDefinitionTest
  */
 class DynamicClassLoader extends AbstractClassLoader {
-  const DEVICE = 1852557578;   // crc32('lang.DynamicClassLoader')
+  const DEVICE= 1852557578;   // crc32('lang.DynamicClassLoader')
 
-  protected
-    $position = 0,
-    $current  = '';
-
-  public
-    $context  = null;   // Used by PHP internally for stream support
-
-  protected static
-    $bytes    = [];
+  protected static $bytes= [];
+  protected $position= 0, $current = '';
+  public $context= null;   // Used by PHP internally for stream support
   
   static function __static() {
     stream_wrapper_register('dyn', self::class);

@@ -6,9 +6,9 @@ use lang\{ElementNotFoundException, Value};
 /**
  * Archives contain a collection of classes.
  *
- * @test  xp://net.xp_framework.unittest.archive.ArchiveV1Test
- * @test  xp://net.xp_framework.unittest.archive.ArchiveV2Test
- * @test  xp://net.xp_framework.unittest.core.ArchiveClassLoaderTest
+ * @test  lang.unittest.ArchiveV1Test
+ * @test  lang.unittest.ArchiveV2Test
+ * @test  lang.unittest.ArchiveClassLoaderTest
  * @see   http://java.sun.com/javase/6/docs/api/java/util/jar/package-summary.html
  */
 class Archive implements Value {

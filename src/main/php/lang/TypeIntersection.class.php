@@ -3,8 +3,8 @@
 /**
  * Represents a Intersection of types
  *
- * @see   xp://lang.Type
- * @test  xp://net.xp_framework.unittest.core.TypeIntersectionTest
+ * @see   lang.Type
+ * @test  lang.unittest.TypeIntersectionTest
  */
 class TypeIntersection extends Type {
   private $types;

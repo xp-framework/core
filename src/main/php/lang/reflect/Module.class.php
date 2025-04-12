@@ -5,7 +5,7 @@ use lang\{IClassLoader, ElementNotFoundException, Value};
 /**
  * Represents a module
  *
- * @test  xp://net.xp_framework.unittest.reflection.ModuleTest
+ * @test  lang.unittest.ModuleTest
  */
 class Module implements Value {
   public static $INCOMPLETE= false;

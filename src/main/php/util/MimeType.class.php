@@ -4,7 +4,7 @@
  * MIME Types
  *
  * @see   https://cdn.jsdelivr.net/gh/jshttp/mime-db@latest/db.json
- * @test  xp://net.xp_framework.unittest.util.MimeTypeTest
+ * @test  util.unittest.MimeTypeTest
  */
 abstract class MimeType {
   private static $map= [

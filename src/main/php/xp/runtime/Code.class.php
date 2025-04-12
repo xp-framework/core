@@ -6,7 +6,7 @@ use lang\Throwable;
  * Wrap code passed in from the command line.
  *
  * @see   https://wiki.php.net/rfc/group_use_declarations
- * @test  xp://net.xp_framework.unittest.runtime.CodeTest
+ * @test  xp.unittest.CodeTest
  */
 class Code {
   private $name, $fragment, $modules, $line, $imports, $namespace;

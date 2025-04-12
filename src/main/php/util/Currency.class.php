@@ -6,7 +6,7 @@ use lang\XPClass;
  * Currency enumeration. Currencies are identified by their ISO 4217 
  * currency codes.
  *
- * @test  xp://net.xp_framework.unittest.util.CurrencyTest
+ * @test  util.unittest.CurrencyTest
  * @see   http://www.xe.com/iso4217.php ISO 4217 Currency Code List
  */
 class Currency extends \lang\Enum {

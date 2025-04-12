@@ -9,7 +9,7 @@ use lang\Value;
  * Represents a file system path
  *
  * @see  https://blogs.msdn.microsoft.com/jeremykuhne/2016/04/21/path-normalization/
- * @test xp://net.xp_framework.unittest.io.PathTest
+ * @test io.unittest.PathTest
  */
 class Path implements Value {
   const EXISTING = true;

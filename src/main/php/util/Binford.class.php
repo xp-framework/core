@@ -3,7 +3,7 @@
 /**
  * This class adds power to an application
  *
- * @test  xp://net.xp_framework.unittest.util.BinfordTest
+ * @test  util.unittest.BinfordTest
  * @see   http://www.binford.de/
  */
 class Binford implements \lang\Value { 

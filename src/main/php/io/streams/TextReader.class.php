@@ -6,8 +6,8 @@ use lang\FormatException;
  * Reads text from an underlying input stream, converting it from the
  * given character set to our internal encoding.
  *
- * @test  xp://net.xp_framework.unittest.io.streams.TextReaderTest
  * @ext   iconv
+ * @test  io.unittest.TextReaderTest
  */
 class TextReader extends Reader {
   private $charset;

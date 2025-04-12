@@ -4,7 +4,7 @@
  * Dates is a helper class to handle Date objects and 
  * calculate date- and timestamps.
  *
- * @test  xp://net.xp_framework.unittest.util.DatesTest
+ * @test  util.unittest.DatesTest
  * @see   https://www.php.net/manual/en/datetime.formats.relative.php Relative formats
  * @see   https://www.php.net/manual/en/dateinterval.construct.php Periods
  * @see   https://en.wikipedia.org/wiki/ISO_8601#Durations

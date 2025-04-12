@@ -6,8 +6,8 @@ use lang\IllegalArgumentException;
 /**
  * Folder entries provides an iterable view of the files inside a given folder
  *
- * @test  xp://net.xp_framework.unittest.io.FolderEntriesTest
- * @see   xp://io.Folder#entries
+ * @see   io.Folder#entries
+ * @test  io.unittest.FolderEntriesTest
  */
 class FolderEntries implements IteratorAggregate {
   private $base;

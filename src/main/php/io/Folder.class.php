@@ -14,7 +14,7 @@ use lang\{IllegalStateException, Value};
  * $d->close();
  * ```
  *
- * @test  xp://net.xp_framework.unittest.io.FolderTest
+ * @test  io.unittest.FolderTest
  */
 class Folder implements Value {
   public 

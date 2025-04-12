@@ -48,7 +48,7 @@
  * its second.
  *
  * @see   http://www.javaworld.com/javaworld/jw-10-1996/jw-10-howto.html
- * @test  xp://net.xp_framework.unittest.util.ObservableTest
+ * @test  util.unittest.ObservableTest
  */
 class Observable {
   public

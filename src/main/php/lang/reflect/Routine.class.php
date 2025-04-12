@@ -12,10 +12,10 @@ use util\Objects;
  * PHP itself and will also rely on the API docs being consistent and 
  * correct.
  *
- * @test  xp://net.xp_framework.unittest.reflection.ReflectionTest
- * @see   xp://lang.reflect.Method
- * @see   xp://lang.reflect.Constructor
- * @see   http://de3.php.net/manual/en/reflectionmethod.setaccessible.php
+ * @see   lang.reflect.Method
+ * @see   lang.reflect.Constructor
+ * @see   https://php.net/manual/en/reflectionmethod.setaccessible.php
+ * @test  lang.unittest.ReflectionTest
  */
 class Routine implements Value {
   protected $accessible= false;

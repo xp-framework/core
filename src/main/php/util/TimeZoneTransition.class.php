@@ -5,8 +5,8 @@ use lang\{Value, IllegalArgumentException};
 /**
  * Represent a timezone transition.
  *
- * @see   xp://util.TimeZone
- * @test  xp://net.xp_framework.unittest.util.TimeZoneTest
+ * @see   util.TimeZone
+ * @test  util.unittest.TimeZoneTest
  */
 class TimeZoneTransition implements Value {
   private $tz, $date, $isDst, $offset, $abbr;

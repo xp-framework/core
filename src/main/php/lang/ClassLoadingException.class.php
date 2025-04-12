@@ -3,7 +3,8 @@
 /**
  * Marker interface for exceptions related to class loading
  *
- * @see      xp://lang.ClassLoader
+ * @see   lang.ClassLoader
  */
 interface ClassLoadingException {
+
 }

@@ -14,10 +14,10 @@ use io\{File, IOException};
  * var_dump($uptime);
  * ```
  *
- * @test  xp://net.xp_framework.unittest.core.ProcessResolveTest
- * @test  xp://net.xp_framework.unittest.core.ProcessTest
- * @see   xp://lang.Runtime#getExecutable
+ * @see   lang.Runtime#getExecutable
  * @see   php://proc_open
+ * @test  lang.unittest.ProcessResolveTest
+ * @test  lang.unittest.ProcessTest
  */
 class Process {
   public

@@ -3,10 +3,10 @@
 /**
  * Type is the base class for the XPClass and Primitive classes.
  *
- * @see    xp://lang.XPClass
- * @see    xp://lang.Primitive
- * @test   xp://net.xp_framework.unittest.core.TypeResolveTest
- * @test   xp://net.xp_framework.unittest.reflection.TypeTest 
+ * @see    lang.XPClass
+ * @see    lang.Primitive
+ * @test   lang.unittest.TypeResolveTest
+ * @test   lang.unittest.TypeTest 
  */
 class Type implements Value {
   public static $VAR, $VOID, $NEVER, $ARRAY, $OBJECT, $CALLABLE, $ITERABLE;

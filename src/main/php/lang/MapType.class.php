@@ -3,8 +3,8 @@
 /**
  * Represents map types
  *
- * @see   xp://lang.Type
- * @test  xp://net.xp_framework.unittest.core.MapTypeTest
+ * @see   lang.Type
+ * @test  lang.unittest.MapTypeTest
  */
 class MapType extends Type {
   private $component;

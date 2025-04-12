@@ -4,8 +4,8 @@
  * Writes text from to underlying output stream, encoding to the
  * given character set.
  *
- * @test  xp://net.xp_framework.unittest.io.streams.TextWriterTest
  * @ext   iconv
+ * @test  io.unittest.TextWriterTest
  */
 class TextWriter extends Writer {
   private $charset;

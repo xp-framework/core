@@ -6,8 +6,8 @@
  * - Class file does not declare any classes
  * - Class file does not declare class by file name
  *
- * @see   xp://lang.ClassLoader#loadClass
- * @test  xp://net.xp_framework.unittest.reflection.ClassLoaderTest
+ * @see   lang.ClassLoader#loadClass
+ * @test  net.xp_framework.unittest.reflection.ClassLoaderTest
  */
 class ClassFormatException extends XPException implements ClassLoadingException {
   

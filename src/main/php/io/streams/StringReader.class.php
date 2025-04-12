@@ -4,7 +4,7 @@
  * Reads strings from an underlying input stream. In contrast to the
  * TextReader, no character set conversio is performed.
  *
- * @test  xp://net.xp_framework.unittest.io.streams.StringReaderTest
+ * @test  io.unittest.StringReaderTest
  */
 class StringReader extends Reader {
 

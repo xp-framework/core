@@ -7,7 +7,7 @@ use util\Comparison;
 /**
  * InputStream that reads from a file
  *
- * @test     xp://net.xp_framework.unittest.io.streams.FileInputStreamTest
+ * @test  io.unittest.FileInputStreamTest
  */
 class FileInputStream implements InputStream, Seekable, Value {
   use Comparison;
