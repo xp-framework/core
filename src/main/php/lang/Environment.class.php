@@ -1,9 +1,11 @@
 <?php namespace lang;
 
+use Com;
+
 /**
  * User environment
  *
- * @test  xp://net.xp_framework.unittest.core.EnvironmentTest
+ * @test  net.xp_framework.unittest.core.EnvironmentTest
  */
 abstract class Environment {
 
@@ -112,9 +114,9 @@ abstract class Environment {
   }
 
   /**
-   * Returns the number of processors available to the the runtime. First checks
+   * Returns the number of processors available in this environment. First checks
    * for the `NUMBER_OF_PROCESSORS` environment variables, then uses platform-
-   * specific files and tools. Returns NULL if discovery fails.
+   * specific files and tools. Returns NULL if no discovery method is available.
    *
    * @see    https://stackoverflow.com/q/6481005 (Linux)
    * @see    https://stackoverflow.com/q/1715580 (Mac OS)
@@ -126,8 +128,8 @@ abstract class Environment {
   public static function availableProcessors() {
     if ($n= getenv('NUMBER_OF_PROCESSORS')) {
       return (int)$n;
-    } else if (class_exists(\Com::class)) {
-      $c= new \Com('winmgmts://./root/cimv2');
+    } else if (class_exists(Com::class)) {
+      $c= new Com('winmgmts://./root/cimv2');
       foreach ($c->instancesOf('Win32_ComputerSystem') as $sys) {
         return $sys->NumberOfProcessors;
       }
@@ -155,6 +157,7 @@ abstract class Environment {
         }
       }
     }
+
     return null;
   }
   
