@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 12.4.0 / ????-??-??
+
+### Features
+
+* Merged PR #350: Add `Environment::availableProcessors()` - @thekid
+
 ## 12.3.0 / 2025-02-09
 
 ### Bugfixes
