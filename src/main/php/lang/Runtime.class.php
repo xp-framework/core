@@ -26,53 +26,6 @@ class Runtime {
   }
 
   /**
-   * Returns the number of processors available to the the runtime. First checks
-   * for the `NUMBER_OF_PROCESSORS` environment variables, then uses platform-
-   * specific files and tools. Returns NULL if discovery fails.
-   *
-   * @see    https://stackoverflow.com/q/6481005 (Linux)
-   * @see    https://stackoverflow.com/q/1715580 (Mac OS)
-   * @see    https://stackoverflow.com/q/22919076 (Windows)
-   * @see    https://stackoverflow.com/a/49152519 (Docker w/ `--cpus=<n>`)
-   * @see    https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-computersystem
-   * @return ?int|float
-   */
-  public function availableProcessors() {
-    if ($n= getenv('NUMBER_OF_PROCESSORS')) {
-      return (int)$n;
-    } else if (class_exists(\Com::class)) {
-      $c= new \Com('winmgmts://./root/cimv2');
-      foreach ($c->instancesOf('Win32_ComputerSystem') as $sys) {
-        return $sys->NumberOfProcessors;
-      }
-    } else if (is_readable($f= '/sys/fs/cgroup/cpu/cpu.cfs_quota_us') && ($fd= fopen($f, 'r'))) {
-      fscanf($fd, '%d', $n);
-      fclose($fd);
-      if ($n > 0) return (float)($n / 100000);
-      // Fall through
-    }
-
-    if (is_readable($f= '/proc/cpuinfo') && ($fd= fopen($f, 'r'))) {
-      $n= 0;
-      do {
-        $line= fgets($fd, 1024);
-        if (0 === strncmp($line, 'processor', 9)) $n++;
-      } while (!feof($fd));
-      fclose($fd);
-      return $n;
-    } else {
-      $paths= explode(PATH_SEPARATOR, getenv('PATH'));
-      foreach (['nproc' => '', 'sysctl' => ' -n hw.ncpu'] as $command => $args) {
-        foreach ($paths as $path) {
-          $binary= $path.DIRECTORY_SEPARATOR.$command;
-          if (is_executable($binary)) return (int)exec($binary.$args);
-        }
-      }
-    }
-    return null;
-  }
-  
-  /**
    * Returns the total amount of memory available to the runtime. If there
    * is no limit zero will be returned.
    *
