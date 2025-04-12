@@ -1,6 +1,6 @@
 <?php namespace lang;
 
-use Com;
+use Com, Closure;
 
 /**
  * User environment
@@ -68,7 +68,7 @@ abstract class Environment {
         ? 'None of the variables [$'.implode(', $', $arg).'] exists'
         : 'No such environment variable $'.$name
       );
-    } else if ($default[0] instanceof \Closure) {
+    } else if ($default[0] instanceof Closure) {
       return $default[0]($arg);
     } else {
       return $default[0];
@@ -217,7 +217,7 @@ abstract class Environment {
    * cannot be found, uses PHP's builtin functionality.
    */
   public static function tempDir(): string {
-    $dir= self::variable(['TEMP', 'TMP', 'TMPDIR', 'TEMPDIR'], function() { return sys_get_temp_dir(); });
+    $dir= self::variable(['TEMP', 'TMP', 'TMPDIR', 'TEMPDIR'], fn() => sys_get_temp_dir());
     return rtrim($dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
   }
 
