@@ -59,8 +59,7 @@ abstract class Environment {
    */
   public static function variable($arg, ... $default) {
     foreach ((array)$arg as $name) {
-      if (false === ($env= getenv($name))) continue;
-      return $env;
+      if (false !== ($env= getenv($name))) return $env;
     }
 
     if (empty($default)) {
