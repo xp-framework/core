@@ -24,7 +24,7 @@ class Runtime {
   public static function getInstance() {
     return self::$instance;
   }
-  
+
   /**
    * Returns the total amount of memory available to the runtime. If there
    * is no limit zero will be returned.

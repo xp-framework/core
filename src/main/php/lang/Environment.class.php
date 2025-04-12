@@ -1,9 +1,11 @@
 <?php namespace lang;
 
+use Com, Closure;
+
 /**
  * User environment
  *
- * @test  xp://net.xp_framework.unittest.core.EnvironmentTest
+ * @test  net.xp_framework.unittest.core.EnvironmentTest
  */
 abstract class Environment {
 
@@ -57,8 +59,7 @@ abstract class Environment {
    */
   public static function variable($arg, ... $default) {
     foreach ((array)$arg as $name) {
-      if (false === ($env= getenv($name))) continue;
-      return $env;
+      if (false !== ($env= getenv($name))) return $env;
     }
 
     if (empty($default)) {
@@ -66,7 +67,7 @@ abstract class Environment {
         ? 'None of the variables [$'.implode(', $', $arg).'] exists'
         : 'No such environment variable $'.$name
       );
-    } else if ($default[0] instanceof \Closure) {
+    } else if ($default[0] instanceof Closure) {
       return $default[0]($arg);
     } else {
       return $default[0];
@@ -111,6 +112,54 @@ abstract class Environment {
     ;
   }
 
+  /**
+   * Returns the number of processors available in this environment. First checks
+   * for the `NUMBER_OF_PROCESSORS` environment variables, then uses platform-
+   * specific files and tools. Returns NULL if no discovery method is available.
+   *
+   * @see    https://stackoverflow.com/q/6481005 (Linux)
+   * @see    https://stackoverflow.com/q/1715580 (Mac OS)
+   * @see    https://stackoverflow.com/q/22919076 (Windows)
+   * @see    https://stackoverflow.com/a/49152519 (Docker w/ `--cpus=<n>`)
+   * @see    https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-computersystem
+   * @return ?int|float
+   */
+  public static function availableProcessors() {
+    if ($n= getenv('NUMBER_OF_PROCESSORS')) {
+      return (int)$n;
+    } else if (class_exists(Com::class)) {
+      $c= new Com('winmgmts://./root/cimv2');
+      foreach ($c->instancesOf('Win32_ComputerSystem') as $sys) {
+        return $sys->NumberOfProcessors;
+      }
+    } else if (is_readable($f= '/sys/fs/cgroup/cpu/cpu.cfs_quota_us') && ($fd= fopen($f, 'r'))) {
+      fscanf($fd, '%d', $n);
+      fclose($fd);
+      if ($n > 0) return (float)($n / 100000);
+      // Fall through
+    }
+
+    if (is_readable($f= '/proc/cpuinfo') && ($fd= fopen($f, 'r'))) {
+      $n= 0;
+      do {
+        $line= fgets($fd, 1024);
+        if (0 === strncmp($line, 'processor', 9)) $n++;
+      } while (!feof($fd));
+      fclose($fd);
+      return $n;
+    } else {
+      $paths= explode(PATH_SEPARATOR, getenv('PATH'));
+      foreach (['nproc' => '', 'sysctl' => ' -n hw.ncpu'] as $command => $args) {
+        foreach ($paths as $path) {
+          $binary= $path.DIRECTORY_SEPARATOR.$command;
+          if (is_executable($binary)) return (int)exec($binary.$args);
+        }
+      }
+    }
+
+    return null;
+  }
+  
   /**
    * Returns a path for display for a given directory. Will replace current
    * and parent directories with `.` and `..`, the user's home directory with
@@ -167,7 +216,7 @@ abstract class Environment {
    * cannot be found, uses PHP's builtin functionality.
    */
   public static function tempDir(): string {
-    $dir= self::variable(['TEMP', 'TMP', 'TMPDIR', 'TEMPDIR'], function() { return sys_get_temp_dir(); });
+    $dir= self::variable(['TEMP', 'TMP', 'TMPDIR', 'TEMPDIR'], fn() => sys_get_temp_dir());
     return rtrim($dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
   }
 

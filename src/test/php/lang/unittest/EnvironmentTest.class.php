@@ -116,6 +116,11 @@ class EnvironmentTest {
   }
 
   #[Test]
+  public function available_processors() {
+    Assert::notEquals(0, Environment::availableProcessors());
+  }
+
+  #[Test]
   public function current_path() {
     Assert::equals('.', Environment::path());
   }
