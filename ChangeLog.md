@@ -3,6 +3,15 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Added forward-compatible handling of `self` and `parent` for PHP 8.5,
+  which resolves these types at compile-time, see php/php-src#17755
+  (@thekid)
+* Added PHP 8.5 to the test matrix to ensure compatibility with the
+  next PHP version, see issue #351
+  (@thekid)
+
 ## 12.4.0 / 2025-04-12
 
 ### Features
