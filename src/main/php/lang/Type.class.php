@@ -338,7 +338,7 @@ class Type implements Value {
       try {
         return new XPClass(new \ReflectionClass($name));
       } catch (\ReflectionException $e) {
-        throw new ClassNotFoundException($name, $e);
+        throw new ClassNotFoundException($name, [], $e);
       }
     } else {
       $t= self::named(trim(substr($name, 0, $p)), $context);
