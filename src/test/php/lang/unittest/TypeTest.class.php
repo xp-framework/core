@@ -504,4 +504,10 @@ class TypeTest {
   public function split($names, $expected) {
     Assert::equals($expected, [...Type::split($names, ',')]);
   }
+
+  #[Test]
+  public function anonymous_classes_in_named() {
+    $t= new class() { };
+    Assert::equals(new XPClass($t), Type::named(get_class($t), []));
+  }
 }
