@@ -126,7 +126,15 @@ class Routine implements Value {
       $r= $details[DETAIL_RETURNS] ?? null;
       return $r ? ltrim($r, '&') : null;
     };
-    return Type::resolve($this->_reflect->getReturnType(), $this->resolve(), $api) ?? Type::$VAR;
+
+    // Check "self" (and declaring class, see https://github.com/php/php-src/issues/18373)
+    $decl= $this->_reflect->getDeclaringClass();
+    $type= $this->_reflect->getReturnType();
+    if ($type instanceof \ReflectionNamedType && (PHP_VERSION_ID >= 80500 ? $decl->getName() : 'self') === $type->getName()) {
+      return ($specific= $api()) ? Type::named($specific, $this->resolve()) : new XPClass($decl);
+    }
+
+    return Type::resolve($type, $this->resolve(), $api) ?? Type::$VAR;
   }
 
   /** Retrieve return type name */
