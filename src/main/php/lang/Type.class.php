@@ -335,7 +335,11 @@ class Type implements Value {
         $t= self::named($base, $context)->newGenericType($components);
       }
     } else if ('@' === $name[$p]) {
-      return new XPClass($name);
+      try {
+        return new XPClass(new \ReflectionClass($name));
+      } catch (\ReflectionException $e) {
+        throw new ClassNotFoundException($name, $e);
+      }
     } else {
       $t= self::named(trim(substr($name, 0, $p)), $context);
       $name= substr($name, $p);
