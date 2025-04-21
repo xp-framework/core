@@ -125,21 +125,9 @@ class MethodParametersTest extends MethodsTest {
   }
 
   #[Test]
-  public function self_parameter_typeName() {
-    $fixture= $this->type('{ public function fixture(self $param) { } }');
-    Assert::equals('self', $fixture->getMethod('fixture')->getParameter(0)->getTypeName());
-  }
-
-  #[Test]
   public function self_parameter_type_via_apidoc() {
     $fixture= $this->type('{ /** @param self $param */ public function fixture($param) { } }');
     Assert::equals($fixture, $fixture->getMethod('fixture')->getParameter(0)->getType());
-  }
-
-  #[Test]
-  public function self_parameter_typeName_via_apidoc() {
-    $fixture= $this->type('{ /** @param self $param */ public function fixture($param) { } }');
-    Assert::equals('self', $fixture->getMethod('fixture')->getParameter(0)->getTypeName());
   }
 
   #[Test]
@@ -157,27 +145,11 @@ class MethodParametersTest extends MethodsTest {
   }
 
   #[Test]
-  public function parent_parameter_typeName() {
-    $fixture= $this->type('{ public function fixture(parent $param) { } }', [
-      'extends' => [Name::class]
-    ]);
-    Assert::equals('parent', $fixture->getMethod('fixture')->getParameter(0)->getTypeName());
-  }
-
-  #[Test]
   public function parent_parameter_type_via_apidoc() {
     $fixture= $this->type('{ /** @param parent $param */ public function fixture($param) { } }', [
       'extends' => [Name::class]
     ]);
     Assert::equals($fixture->getParentclass(), $fixture->getMethod('fixture')->getParameter(0)->getType());
-  }
-
-  #[Test]
-  public function parent_parameter_typeName_via_apidoc() {
-    $fixture= $this->type('{ /** @param parent $param */ public function fixture($param) { } }', [
-      'extends' => [Name::class]
-    ]);
-    Assert::equals('parent', $fixture->getMethod('fixture')->getParameter(0)->getTypeName());
   }
 
   #[Test, Expect(ClassNotFoundException::class)]

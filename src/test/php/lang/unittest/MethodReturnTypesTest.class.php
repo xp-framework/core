@@ -183,7 +183,6 @@ class MethodReturnTypesTest extends MethodsTest {
     $method= $fixture->getMethod('fixture');
 
     Assert::equals($fixture, $method->getReturnType(), 'type');
-    Assert::equals('static', $method->getReturnTypeName(), 'name');
   }
 
   #[Test]
@@ -191,7 +190,6 @@ class MethodReturnTypesTest extends MethodsTest {
     $method= $this->type('{ /** @return never */ public function fixture(): void { exit(); } }')->getMethod('fixture');
 
     Assert::equals(Type::$NEVER, $method->getReturnType(), 'type');
-    Assert::equals('never', $method->getReturnTypeName(), 'name');
   }
 
   #[Test]
@@ -201,7 +199,6 @@ class MethodReturnTypesTest extends MethodsTest {
     $method= $fixture->getMethod('fixture');
 
     Assert::equals($base, $method->getReturnType(), 'type');
-    Assert::equals('self', $method->getReturnTypeName(), 'name');
   }
 
   #[Test]

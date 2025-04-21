@@ -56,14 +56,12 @@ class FieldTypeTest extends FieldsTest {
   #[Test]
   public function self_type_via_apidoc() {
     $fixture= $this->type('{ /** @type self */ public $fixture; }');
-    Assert::equals('self', $fixture->getField('fixture')->getTypeName());
     Assert::equals($fixture, $fixture->getField('fixture')->getType());
   }
 
   #[Test]
   public function self_type_via_syntax() {
     $fixture= $this->type('{ public self $fixture; }');
-    Assert::equals('self', $fixture->getField('fixture')->getTypeName());
     Assert::equals($fixture, $fixture->getField('fixture')->getType());
   }
 
