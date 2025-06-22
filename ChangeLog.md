@@ -114,6 +114,12 @@ its newest version.
   https://wiki.php.net/rfc/deprecate-implicitly-nullable-types
   (@thekid)
 
+## 11.10.0 / 2025-06-22
+
+### Features
+
+* Merged PR #352: Add `io.streams.SequenceInputStream` - @thekid
+
 ## 11.9.0 / 2024-03-16
 
 ### Features
