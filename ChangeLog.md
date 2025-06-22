@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 12.5.0 / 2025-06-22
+
+### Features
+
+* Merged PR #352: Add `io.streams.SequenceInputStream` - @thekid
+
 ### Bugfixes
 
 * Added forward-compatible handling of `self` and `parent` for PHP 8.5,
@@ -118,7 +124,7 @@ its newest version.
 
 ### Features
 
-* Merged PR #352: Add `io.streams.SequenceInputStream` - @thekid
+* Merged PR #352: Add `io.streams.SequenceInputStream` (backport) - @thekid
 
 ## 11.9.0 / 2024-03-16
 
