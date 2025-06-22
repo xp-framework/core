@@ -13,11 +13,11 @@ class SequenceInputStream implements InputStream {
   /**
    * Creates a new instance
    *
-   * @param  iterable|io.streams.InputStream... $args
+   * @param  iterable|io.streams.InputStream... $sources
    * @throws lang.IllegalArgumentException if streams are empty
    */
-  public function __construct(... $args) {
-    $this->streams= $this->iterator($args);
+  public function __construct(... $sources) {
+    $this->streams= $this->iterator($sources);
     if (!$this->streams->valid()) {
       throw new IllegalArgumentException('Streams may not be empty');
     }
@@ -26,12 +26,12 @@ class SequenceInputStream implements InputStream {
   }
 
   /** Creates an iterator from the given arguments */
-  private function iterator($args) {
-    foreach ($args as $arg) {
-      if ($arg instanceof InputStream) {
-        yield $arg;
+  private function iterator($sources) {
+    foreach ($sources as $source) {
+      if ($source instanceof InputStream) {
+        yield $source;
       } else {
-        yield from $arg;
+        yield from $source;
       }
     }
   }
