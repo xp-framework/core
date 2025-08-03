@@ -16,14 +16,15 @@ class MemoryOutputStream implements OutputStream, Seekable, Truncation, Value {
 
   /** @param string $bytes */
   public function __construct($bytes= '') {
-    $this->bytes= $bytes;
-    $this->pos= strlen($bytes);
+    $this->bytes= (string)$bytes;
+    $this->pos= strlen($this->bytes);
   }
 
   /**
    * Write a string
    *
    * @param  var $arg
+   * @return void
    */
   public function write($arg) {
     $l= strlen($arg);
@@ -66,6 +67,7 @@ class MemoryOutputStream implements OutputStream, Seekable, Truncation, Value {
    * @param  int $offset
    * @param  int $whence default SEEK_SET (one of SEEK_[SET|CUR|END])
    * @throws io.IOException
+   * @return void
    */
   public function seek($offset, $whence= SEEK_SET) {
     switch ($whence) {
