@@ -48,6 +48,9 @@ class FileOutputStream implements OutputStream, Seekable, Truncation, Value {
   /** @return int */
   public function tell() { return $this->file->tell(); }
 
+  /** @return int */
+  public function size() { return $this->file->size(); }
+
   /**
    * Truncate this buffer to a given new size.
    *
