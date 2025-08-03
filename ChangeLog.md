@@ -3,6 +3,16 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 12.6.0 / ????-??-??
+
+### Features
+
+* Merged PR #353: Add size() to both FileInputStream and FileOutputStream
+  (@thekid)
+* Merged PR #354: Consistency in memory I/O: Seeking, size() and bytes(),
+  input casting, API docs
+  (@thekid)
+
 ## 12.5.0 / 2025-06-22
 
 ### Features
