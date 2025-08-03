@@ -7,6 +7,10 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Added optional *$absolute* parameter `io.Path::resolve()` which will
+  return an absolute path given to it instead of calculating a relative
+  address containing `../`-segments.
+  (@thekid)
 * Merged PR #353: Add size() to both FileInputStream and FileOutputStream
   (@thekid)
 * Merged PR #354: Consistency in memory I/O: Seeking, size() and bytes(),

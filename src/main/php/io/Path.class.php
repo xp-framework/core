@@ -287,18 +287,20 @@ class Path implements Value {
    * Resolves given path against this path
    *
    * ```php
-   * $r= (new Path('/usr/local'))->resolve('bin');    // "/usr/local/bin"
-   * $r= (new Path('/usr/local'))->resolve('/usr');   // "../.."
+   * $r= (new Path('/usr/local'))->resolve('bin');        // "/usr/local/bin"
+   * $r= (new Path('/usr/local'))->resolve('/usr');       // ".."
+   * $r= (new Path('/usr/local'))->resolve('/usr', true); // "/usr"
    * ```
    *
    * @param  string|self|io.File|io.Folder|io.collections.IOElement $arg
+   * @param  bool absolute
    * @return self
    */
-  public function resolve($arg): self {
+  public function resolve($arg, $absolute= false): self {
     $other= $arg instanceof self ? $arg : new self($arg);
 
     if ($other->isAbsolute()) {
-      return $other->relativeTo($this);
+      return $absolute ? $other : $other->relativeTo($this);
     } else {
       return self::compose([$this->path, $other->path]);
     }

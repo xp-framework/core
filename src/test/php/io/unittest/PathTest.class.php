@@ -313,6 +313,11 @@ class PathTest {
     Assert::equals($result, (new Path($a))->resolve($b)->toString('/'));
   }
 
+  #[Test, Values([['a', 'b', 'a/b'], ['.', 'b', './b'], ['..', 'b', '../b'], ['/var', 'log', '/var/log'], ['C:/Windows', 'system32', 'C:/Windows/system32'], ['/usr/local', '/usr/bin', '/usr/bin'], ['/usr/local/bin', '/usr', '/usr'], ['/usr/local', '/usr/local', '/usr/local']])]
+  public function resolve_absolute($a, $b, $result) {
+    Assert::equals($result, (new Path($a))->resolve($b, true)->toString('/'));
+  }
+
   #[Test, Expect(IllegalArgumentException::class), Values([['relative', '/dev'], ['relative', 'C:/Windows'], ['relative', 'c:/Windows']])]
   public function cannot_resolve_path_if_path_is_relative_and_arg_is_absolute($a, $b) {
     (new Path($a))->relativeTo($b);
