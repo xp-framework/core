@@ -1,7 +1,8 @@
 <?php namespace io\unittest;
 
+use io\IOException;
 use io\streams\MemoryOutputStream;
-use test\{Assert, Test, Values};
+use test\{Assert, Expect, Test, Values};
 
 class MemoryOutputStreamTest {
 
@@ -12,19 +13,21 @@ class MemoryOutputStreamTest {
 
   #[Test]
   public function initially_empty() {
-    Assert::equals('', (new MemoryOutputStream())->bytes());
+    $out= new MemoryOutputStream();
+    Assert::equals('', $out->bytes());
   }
 
   #[Test]
   public function initial_value() {
-    Assert::equals('Test', (new MemoryOutputStream('Test'))->bytes());
+    $out= new MemoryOutputStream('Test');
+    Assert::equals('Test', $out->bytes());
   }
 
   #[Test]
   public function writing_a_string() {
     $out= new MemoryOutputStream();
-    $out->write('Hello');
-    Assert::equals('Hello', $out->bytes());
+    $out->write('Test');
+    Assert::equals('Test', $out->bytes());
   }
 
   #[Test]
@@ -45,6 +48,25 @@ class MemoryOutputStreamTest {
     $out= new MemoryOutputStream();
     $out->write('Hello');
     Assert::equals(5, $out->tell());
+  }
+
+  #[Test]
+  public function size() {
+    $out= new MemoryOutputStream();
+    Assert::equals(0, $out->size());
+  }
+
+  #[Test]
+  public function size_with_initial_value() {
+    $out= new MemoryOutputStream('Hello');
+    Assert::equals(5, $out->size());
+  }
+
+  #[Test]
+  public function size_after_writing() {
+    $out= new MemoryOutputStream();
+    $out->write('Hello');
+    Assert::equals(5, $out->size());
   }
 
   #[Test, Values([0, 1, 5])]
@@ -85,6 +107,16 @@ class MemoryOutputStreamTest {
     Assert::equals('Hell_', $out->bytes());
   }
 
+  #[Test, Expect(IOException::class)]
+  public function seek_unknown_whence() {
+    (new MemoryOutputStream(''))->seek(0, 9999);
+  }
+
+  #[Test, Expect(IOException::class)]
+  public function seek_before_start() {
+    (new MemoryOutputStream(''))->seek(-1);
+  }
+
   #[Test]
   public function overwriting() {
     $out= new MemoryOutputStream();
@@ -106,6 +138,7 @@ class MemoryOutputStreamTest {
   public function truncate_to_same_length() {
     $out= new MemoryOutputStream('Hello');
     $out->truncate(5);
+    Assert::equals(5, $out->size());
     Assert::equals('Hello', $out->bytes());
   }
 
@@ -113,6 +146,7 @@ class MemoryOutputStreamTest {
   public function truncate_to_zero() {
     $out= new MemoryOutputStream('Hello');
     $out->truncate(0);
+    Assert::equals(0, $out->size());
     Assert::equals('', $out->bytes());
   }
 
@@ -120,6 +154,7 @@ class MemoryOutputStreamTest {
   public function shorten_using_truncate() {
     $out= new MemoryOutputStream('Hello');
     $out->truncate(4);
+    Assert::equals(4, $out->size());
     Assert::equals('Hell', $out->bytes());
   }
 
@@ -127,6 +162,7 @@ class MemoryOutputStreamTest {
   public function lengthen_using_truncate() {
     $out= new MemoryOutputStream('Hello');
     $out->truncate(6);
+    Assert::equals(6, $out->size());
     Assert::equals("Hello\x00", $out->bytes());
   }
 
