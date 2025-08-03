@@ -55,6 +55,13 @@ class FileInputStreamTest {
   }
 
   #[Test]
+  public function size() {
+    with (new FileInputStream($this->tempFile()), function($stream) {
+      Assert::equals(30, $stream->size());
+    });
+  }
+
+  #[Test]
   public function delete() {
     $file= $this->tempFile();
     with (new FileInputStream($file), function($stream) use($file) {

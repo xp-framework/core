@@ -6,11 +6,12 @@ use lang\IllegalArgumentException;
 use test\{Assert, Expect, Test};
 
 class FileOutputStreamTest {
+  const INITIAL= 'Created by FileOutputStreamTest';
   private $files= [];
 
   /** @return io.TempFile */
   private function tempFile() {
-    $file= (new TempFile())->containing('Created by FileOutputStreamTest');
+    $file= (new TempFile())->containing(self::INITIAL);
     $this->files[]= $file;
     return $file;
   }
@@ -111,5 +112,40 @@ class FileOutputStreamTest {
       $file->close();
       Assert::equals('Exist', Files::read($file));
     });
+  }
+
+  #[Test]
+  public function size_initially() {
+    $stream= new FileOutputStream($this->tempFile());
+    Assert::equals(0, $stream->size());
+  }
+
+  #[Test]
+  public function size_after_writing() {
+    $stream= new FileOutputStream($this->tempFile());
+    $stream->write('Test');
+    Assert::equals(4, $stream->size());
+  }
+
+  #[Test]
+  public function size_after_truncation() {
+    $stream= new FileOutputStream($this->tempFile());
+    $stream->write('Test');
+    $stream->truncate(2);
+    Assert::equals(2, $stream->size());
+  }
+
+  #[Test]
+  public function size_when_opened_with_append() {
+    $file= $this->tempFile();
+    $file->open(File::APPEND);
+
+    $stream= new FileOutputStream($file);
+    $stream->write('Test');
+    $size= $stream->size();
+    $stream->close();
+
+    Assert::equals(strlen(self::INITIAL) + 4, $size);
+    Assert::equals(self::INITIAL.'Test', Files::read($file));
   }
 }

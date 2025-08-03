@@ -72,12 +72,9 @@ class FileInputStream implements InputStream, Seekable, Value {
     $this->file->seek($offset, $whence);
   }
 
-  /**
-   * Return current offset
-   *
-   * @return  int offset
-   */
-  public function tell() {
-    return $this->file->tell();
-  }
+  /** @return int */
+  public function tell() { return $this->file->tell(); }
+
+  /** @return int */
+  public function size() { return $this->file->size(); }
 }
