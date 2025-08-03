@@ -67,9 +67,8 @@ class MemoryInputStream implements InputStream, Seekable, Value {
 
     // Ensure we cannot seek *before* start
     if ($this->pos < 0) {
-      $e= new IOException('Seek error, position '.$this->pos.', whence: '.$whence);
       $this->pos= 0;
-      throw $e;
+      throw new IOException('Seek error, position '.$offset.', whence: '.$whence);
     }
   }
 
