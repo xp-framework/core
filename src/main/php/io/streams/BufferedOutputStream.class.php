@@ -8,7 +8,7 @@ use util\Comparison;
  * results internally. This means not every single byte passed to
  * write() will be written.
  * 
- * @test  net.xp_framework.unittest.io.streams.BufferedOutputStreamTest
+ * @test  io.unittest.BufferedOutputStreamTest
  */
 class BufferedOutputStream implements OutputStream, Value {
   use Comparison;

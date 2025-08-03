@@ -8,9 +8,9 @@ use util\Comparison;
  * Output stream that writes to one of the "stdout", "stderr", "output"
  * channels provided as PHP input/output streams.
  *
- * @test  net.xp_framework.unittest.io.streams.ChannelStreamTest
  * @see   php://wrappers
  * @see   io.streams.ChannelInputStream
+ * @test  io.unittest.ChannelStreamTest
  */
 class ChannelOutputStream implements OutputStream, Value {
   use Comparison;

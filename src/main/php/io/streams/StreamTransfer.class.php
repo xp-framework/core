@@ -16,7 +16,7 @@ use lang\Closeable;
  * $t->close();
  * ```
  *
- * @test  net.xp_framework.unittest.io.streams.StreamTransferTest
+ * @test  io.unittest.StreamTransferTest
  */
 class StreamTransfer implements Closeable {
   protected $in, $out;

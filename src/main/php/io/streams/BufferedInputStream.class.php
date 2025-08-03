@@ -6,7 +6,7 @@ use util\Comparison;
 /**
  * Buffered InputStream
  *
- * @test  net.xp_framework.unittest.io.streams.BufferedInputStreamTest
+ * @test  io.unittest.BufferedInputStreamTest
  */
 class BufferedInputStream implements InputStream, Value {
   use Comparison;

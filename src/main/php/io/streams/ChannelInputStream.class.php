@@ -8,9 +8,9 @@ use util\Comparison;
  * Input stream that reads from one of the "stdin", "input" channels
  * provided as PHP input/output streams.
  *
- * @test  net.xp_framework.unittest.io.streams.ChannelStreamTest
  * @see   php://wrappers
  * @see   io.streams.ChannelOutputStream
+ * @test  io.unittest.ChannelStreamTest
  */
 class ChannelInputStream implements InputStream, Value {
   use Comparison;
