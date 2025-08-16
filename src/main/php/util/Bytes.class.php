@@ -24,7 +24,7 @@ class Bytes implements Value, ArrayAccess, IteratorAggregate {
         $this->buffer.= $chunk;
       } else if (is_array($chunk)) {
         foreach ($chunk as $value) {
-          $this->buffer.= is_int($value) ? chr($value) : $value;
+          $this->buffer.= is_int($value) ? chr($value & 0xff) : $value;
         }
       } else if ($chunk instanceof self) {
         $this->buffer.= $chunk->buffer;
@@ -70,12 +70,12 @@ class Bytes implements Value, ArrayAccess, IteratorAggregate {
   #[ReturnTypeWillChange]
   public function offsetSet($offset, $value) {
     if (null === $offset) {
-      $this->buffer.= is_int($value) ? chr($value) : $value;
+      $this->buffer.= is_int($value) ? chr($value & 0xff) : $value;
       $this->size++;
     } else if ($offset >= $this->size || $offset < 0) {
       throw new IndexOutOfBoundsException('Offset '.$offset.' out of bounds');
     } else {
-      $this->buffer[$offset]= is_int($value) ? chr($value) : $value;
+      $this->buffer[$offset]= is_int($value) ? chr($value & 0xff) : $value;
     }
   }
 

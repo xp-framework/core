@@ -5,7 +5,9 @@ XP Framework Core ChangeLog
 
 ### Bugfixes
 
-* Fixed PHP 8.5 deprecation warnings about `setAccesible()` in reflection
+* Fixed PHP 8.5 deprecation warnings about:
+  - `setAccesible()` being a no-op in reflection methods & properties
+  - The `chr()` function not accepting integers outside `[0, 255]`.
   (@thekid)
 
 ## 12.6.0 / 2025-08-03
