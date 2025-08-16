@@ -65,7 +65,7 @@ class Constructor extends Routine {
       }
 
       $instance= unserialize('O:'.strlen($this->_class).':"'.$this->_class.'":0:{}');
-      $this->_reflect->setAccessible(true);
+      PHP_VERSION_ID < 80100 && $this->_reflect->setAccessible(true);
       $this->_reflect->invokeArgs($instance, $args);
       return $instance;
     } catch (\Throwable $e) {

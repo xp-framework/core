@@ -3,6 +3,11 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed PHP 8.5 deprecation warnings about `setAccesible()` in reflection
+  (@thekid)
+
 ## 12.6.0 / 2025-08-03
 
 ### Features

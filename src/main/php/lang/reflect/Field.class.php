@@ -233,7 +233,9 @@ class Field implements Value {
     }
 
     try {
-      $public || $this->_reflect->setAccessible(true);
+      if (!$public && PHP_VERSION_ID < 80100) {
+        $this->_reflect->setAccessible(true);
+      }
       return $this->_reflect->getValue($instance);
     } catch (Throwable $e) {
       throw $e;

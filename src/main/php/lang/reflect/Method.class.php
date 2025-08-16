@@ -82,7 +82,7 @@ class Method extends Routine {
     }
 
     try {
-      if (!$public) {
+      if (!$public && PHP_VERSION_ID < 80100) {
         $this->_reflect->setAccessible(true);
       }
       return $this->_reflect->invokeArgs($obj, (array)$args);
