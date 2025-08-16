@@ -333,7 +333,7 @@ class BytesTest {
     $c= ['H', "\303", "\244", 'l', 'l', 'o'];
     $b= new Bytes($c);
     foreach ($b as $i => $byte) {
-      Assert::equals($c[$i], chr($byte));
+      Assert::equals($c[$i], chr($byte & 0xff));
     }
     Assert::equals($i, sizeof($c)- 1);
   }
