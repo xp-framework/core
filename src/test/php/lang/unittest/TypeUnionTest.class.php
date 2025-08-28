@@ -242,7 +242,7 @@ class TypeUnionTest {
     Assert::equals('?', typeof($f)->getMethod('fixture')->getReturnTypeName()[0]);
   }
 
-  #[Test, Runtime(php: '>=8.0.0-dev'), Ignore('https://github.com/php/php-src/issues/18373')]
+  #[Test, Runtime(php: '>=8.0.0-dev')]
   public function php8_native_union_with_self() {
     $t= typeof(eval('
       namespace lang\unittest;
