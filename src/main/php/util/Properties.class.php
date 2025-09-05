@@ -75,7 +75,7 @@ class Properties implements PropertyAccess, Value {
   public function load($in, $charset= 'utf-8'): self {
     $reader= $in instanceof Reader ? $in : new TextReader($in, $charset);
     $this->_data= [];
-    $section= null;
+    $section= '';
 
     while (null !== ($t= $reader->readLine())) {
       $trimmedToken= trim($t);
@@ -233,6 +233,7 @@ class Properties implements PropertyAccess, Value {
    */
   public function readSection($name, $default= []) {
     $this->_load();
+    $name??= '';
     if (null === ($section= $this->_data[$name] ?? null)) return $default;
 
     $expansion= $this->expansion ?? self::$env;
@@ -253,7 +254,7 @@ class Properties implements PropertyAccess, Value {
    */ 
   public function readString($section, $key, $default= '') {
     $this->_load();
-    if (null === ($value= $this->_data[$section][$key] ?? null)) return $default;
+    if (null === ($value= $this->_data[$section ?? ''][$key] ?? null)) return $default;
 
     $expansion= $this->expansion ?? self::$env;
     return $expansion->in($value);
@@ -269,7 +270,7 @@ class Properties implements PropertyAccess, Value {
    */
   public function readArray($section, $key, $default= []) {
     $this->_load();
-    if (null === ($value= $this->_data[$section][$key] ?? null)) return $default;
+    if (null === ($value= $this->_data[$section ?? ''][$key] ?? null)) return $default;
 
     // New: key[]="a" or key[0]="a"
     // Old: key="" (an empty array) or key="a|b|c"
@@ -293,7 +294,7 @@ class Properties implements PropertyAccess, Value {
    */
   public function readMap($section, $key, $default= null) {
     $this->_load();
-    if (null === ($value= $this->_data[$section][$key] ?? null)) return $default;
+    if (null === ($value= $this->_data[$section ?? ''][$key] ?? null)) return $default;
 
     // New: key[color]="green" and key[make]="model"
     // Old: key="color:green|make:model"
@@ -326,7 +327,7 @@ class Properties implements PropertyAccess, Value {
    */
   public function readRange($section, $key, $default= []) {
     $this->_load();
-    if (null === ($value= $this->_data[$section][$key] ?? null)) return $default;
+    if (null === ($value= $this->_data[$section ?? ''][$key] ?? null)) return $default;
 
     $expansion= $this->expansion ?? self::$env;
     if (2 === sscanf($expansion->in($value), '%d..%d', $min, $max)) {
@@ -346,7 +347,7 @@ class Properties implements PropertyAccess, Value {
    */ 
   public function readInteger($section, $key, $default= 0) {
     $this->_load();
-    if (null === ($value= $this->_data[$section][$key] ?? null)) return $default;
+    if (null === ($value= $this->_data[$section ?? ''][$key] ?? null)) return $default;
 
     $expansion= $this->expansion ?? self::$env;
     return (int)$expansion->in($value);
@@ -362,7 +363,7 @@ class Properties implements PropertyAccess, Value {
    */ 
   public function readFloat($section, $key, $default= 0.0) {
     $this->_load();
-    if (null === ($value= $this->_data[$section][$key] ?? null)) return $default;
+    if (null === ($value= $this->_data[$section ?? ''][$key] ?? null)) return $default;
 
     $expansion= $this->expansion ?? self::$env;
     return (float)$expansion->in($value);
@@ -380,7 +381,7 @@ class Properties implements PropertyAccess, Value {
     static $true= ['1' => 1, 'yes' => 1, 'true' => 1, 'on' => 1];
 
     $this->_load();
-    if (null === ($value= $this->_data[$section][$key] ?? null)) return $default;
+    if (null === ($value= $this->_data[$section ?? ''][$key] ?? null)) return $default;
 
     $expansion= $this->expansion ?? self::$env;
     return isset($true[strtolower($expansion->in($value))]);
@@ -419,6 +420,7 @@ class Properties implements PropertyAccess, Value {
    */
   public function writeString($section, $key, $value) {
     $this->_load();
+    $section??= '';
     if (!$this->hasSection($section)) $this->_data[$section]= [];
     $this->_data[$section][$key]= (string)$value;
   }
@@ -432,6 +434,7 @@ class Properties implements PropertyAccess, Value {
    */
   public function writeInteger($section, $key, $value) {
     $this->_load();
+    $section??= '';
     if (!$this->hasSection($section)) $this->_data[$section]= [];
     $this->_data[$section][$key]= (int)$value;
   }
@@ -445,6 +448,7 @@ class Properties implements PropertyAccess, Value {
    */
   public function writeFloat($section, $key, $value) {
     $this->_load();
+    $section??= '';
     if (!$this->hasSection($section)) $this->_data[$section]= [];
     $this->_data[$section][$key]= (float)$value;
   }
@@ -458,6 +462,7 @@ class Properties implements PropertyAccess, Value {
    */
   public function writeBool($section, $key, $value) {
     $this->_load();
+    $section??= '';
     if (!$this->hasSection($section)) $this->_data[$section]= [];
     $this->_data[$section][$key]= $value ? 'yes' : 'no';
   }
@@ -471,6 +476,7 @@ class Properties implements PropertyAccess, Value {
    */
   public function writeArray($section, $key, $value) {
     $this->_load();
+    $section??= '';
     if (!$this->hasSection($section)) $this->_data[$section]= [];
     $this->_data[$section][$key]= $value;
   }
@@ -484,6 +490,7 @@ class Properties implements PropertyAccess, Value {
    */
   public function writeMap($section, $key, $value) {
     $this->_load();
+    $section??= '';
     if (!$this->hasSection($section)) $this->_data[$section]= [];
     $this->_data[$section][$key]= $value;
   }
@@ -497,6 +504,7 @@ class Properties implements PropertyAccess, Value {
    */
   public function writeComment($section, $comment) {
     $this->_load();
+    $section??= '';
     if (!$this->hasSection($section)) $this->_data[$section]= [];
     $this->_data[$section][';'.sizeof($this->_data[$section])]= $comment;
   }
@@ -509,6 +517,7 @@ class Properties implements PropertyAccess, Value {
    */
   public function removeSection($section) {
     $this->_load();
+    $section??= '';
     if (!isset($this->_data[$section])) throw new IllegalStateException('Cannot remove nonexistant section "'.$section.'"');
     unset($this->_data[$section]);
   }
@@ -522,6 +531,7 @@ class Properties implements PropertyAccess, Value {
    */
   public function removeKey($section, $key) {
     $this->_load();
+    $section??= '';
     if (!isset($this->_data[$section][$key])) throw new IllegalStateException('Cannot remove nonexistant key "'.$key.'" in "'.$section.'"');
     unset($this->_data[$section][$key]);
   }

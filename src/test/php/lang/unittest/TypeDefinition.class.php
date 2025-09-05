@@ -12,7 +12,7 @@ trait TypeDefinition {
    * @param  [:var] $definition
    * @return lang.XPClass
    */
-  protected function type($decl= null, array $definition= []) {
+  protected function type($decl= '', array $definition= []) {
     if (!isset(self::$fixtures[$decl])) {
       $defaults= [
         'modifiers'  => '',

@@ -45,7 +45,7 @@ class DynamicClassLoader extends AbstractClassLoader {
    * @return  bool
    */
   public function providesClass($class) {
-    return isset(self::$bytes[$class]);
+    return null === $class ? false : isset(self::$bytes[$class]);
   }
 
   /**
@@ -99,8 +99,11 @@ class DynamicClassLoader extends AbstractClassLoader {
    * @return  string fully qualified class name, or NULL
    */
   protected function classAtUri($uri) {
-    sscanf($uri, 'dyn://%s', $name);
-    return isset(self::$bytes[$name]) ? $name : null;
+    if (sscanf($uri, 'dyn://%s', $name)) {
+      return isset(self::$bytes[$name]) ? $name : null;
+    } else {
+      return null;
+    }
   }
 
   /**
