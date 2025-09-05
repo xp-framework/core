@@ -13,7 +13,7 @@ use lang\{
   Nullable
 };
 use test\verify\Runtime;
-use test\{Assert, Expect, Ignore, Test, Values};
+use test\{Assert, Expect, Test, Values};
 
 class TypeUnionTest {
 
