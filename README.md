@@ -14,6 +14,7 @@ Installation
 If you just want to use the XP Framework, grab a release using `composer require xp-framework/core`. If you wish to use this development checkout, clone this repository instead.
 
 ### Runners
+
 The entry point for software written in the XP Framework is not the PHP
 interpreter's CLI / web server API but either a command line runner or
 a specialized *web* entry point. These runners can be installed by using
@@ -21,10 +22,11 @@ the following one-liner:
 
 ```sh
 $ cd ~/bin
-$ curl -sSL https://baltocdn.com/xp-framework/xp-runners/distribution/downloads/i/installer/setup-9.1.0.sh | sh
+$ curl -sSL https://github.com/xp-runners/reference/releases/download/v9.2.0/setup-9.2.0.sh | sh
 ```
 
 ### Using it
+
 To use the the XP Framework development checkout, put the following in your `~/bin/xp.ini` file:
 
 ```ini
@@ -49,6 +51,7 @@ Basic usage
 The XP Framework runs scripts or classes.
 
 ### Hello World
+
 Save the following sourcecode to a file called `ageindays.script.php`:
 
 ```php
