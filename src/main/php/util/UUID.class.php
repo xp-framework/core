@@ -152,28 +152,21 @@ class UUID implements Value {
     $clock_seq= random_int(0, 2147483647);
     $h= md5(php_uname());
 
-    // Prevent "Implicit conversion from float (...) to int loses precision" in 8.5+
-    // TODO: This should really be fixed by using the bcmath functions if available!
-    set_error_handler(null);
-    try {
-      return new self([
-        1,
-        $t & 0xFFFFFFFF,
-        ($t >> 32) & 0xFFFF,
-        ($t >> 48) & 0x0FFF,
-        $clock_seq,
-        [
-          hexdec(substr($h, 0x0, 2)),
-          hexdec(substr($h, 0x2, 2)),
-          hexdec(substr($h, 0x4, 2)),
-          hexdec(substr($h, 0x6, 2)),
-          hexdec(substr($h, 0x8, 2)),
-          hexdec(substr($h, 0xB, 2))
-        ]
-      ]);
-    } finally {
-      restore_error_handler();
-    }
+    return new self([
+      1,
+      $t & 0xFFFFFFFF,
+      ($t >> 32) & 0xFFFF,
+      ($t >> 48) & 0x0FFF,
+      $clock_seq,
+      [
+        hexdec(substr($h, 0x0, 2)),
+        hexdec(substr($h, 0x2, 2)),
+        hexdec(substr($h, 0x4, 2)),
+        hexdec(substr($h, 0x6, 2)),
+        hexdec(substr($h, 0x8, 2)),
+        hexdec(substr($h, 0xB, 2))
+      ]
+    ]);
   }
 
   /**
