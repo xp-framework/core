@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 12.6.2 / 2025-09-06
+
+### Bugfixes
+
+* Fixed PHP 8.5 deprecation warnings about using null as an array offset
+  being deprecated
+  (@thekid)
+
 ## 12.6.1 / 2025-08-16
 
 ### Bugfixes
