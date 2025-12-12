@@ -124,7 +124,7 @@ class Random {
 
     do {
       for ($random= $this->bytes($bytes), $result= 0, $i= 0; $i < $bytes; $i++) {
-        $result |= ord($random[$i]) << ($i * 8);
+        $result |= $random[$i] << ($i * 8);
       }
 
       // Wrap around if negative
