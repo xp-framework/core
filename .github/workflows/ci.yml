@@ -11,11 +11,11 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     name: PHP ${{ matrix.php-versions }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    continue-on-error: ${{ matrix.php-versions >= '8.5' }}
+    continue-on-error: ${{ matrix.php-versions >= '8.6' }}
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
+        php-versions: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5', '8.6']
         os: [ubuntu-latest, windows-latest]
 
     steps:
