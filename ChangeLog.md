@@ -9,6 +9,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Merged PR #355: Work with `DateInterval` instances in `util.TimeSpan`
+  (@thekid)
 * Added PHP 8.6, changed PHP 8.5 to no longer allow failures in CI
   (@thekid)
 
