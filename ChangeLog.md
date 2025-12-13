@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 12.7.0 / 2025-12-13
+
 ### Bugfixes
 
 * Fixed `util.Random` warnings with PHP 8.5 - @thekid
