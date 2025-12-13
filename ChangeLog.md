@@ -3,6 +3,15 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed `util.Random` warnings with PHP 8.5 - @thekid
+
+### Features
+
+* Added PHP 8.6, changed PHP 8.5 to no longer allow failures in CI
+  (@thekid)
+
 ## 12.6.2 / 2025-09-06
 
 ### Bugfixes
