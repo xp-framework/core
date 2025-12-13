@@ -19,39 +19,30 @@ class TimeSpan implements Value {
    * @throws lang.IllegalArgumentException
    */
   public function __construct($arg) {
-    $this->_seconds= self::secondsOf($arg);
-  }
-
-  /**
-   * Converts given argument to seconds
-   *
-   * @param  int|string|DateInterval $arg
-   * @return int
-   * @throws lang.IllegalArgumentException
-   */
-  public static function secondsOf($arg) {
-    if (is_numeric($arg)) return (int)abs($arg);
-
-    try {
-      if ($arg instanceof DateInterval) {
-        $i= $arg;
-      } else if ('P' === $arg[0] ?? null) {
-        $i= new DateInterval($arg);
-      } else {
-        $i= DateInterval::createFromDateString($arg);
+    if (is_numeric($arg)) {
+      $this->_seconds= (int)abs($arg);
+    } else {
+      try {
+        if ($arg instanceof DateInterval) {
+          $i= $arg;
+        } else if ('P' === $arg[0] ?? null) {
+          $i= new DateInterval($arg);
+        } else {
+          $i= DateInterval::createFromDateString($arg);
+        }
+      } catch (Exception $e) {
+        throw new IllegalArgumentException('Invalid time span '.$arg, $e);
       }
-    } catch (Exception $e) {
-      throw new IllegalArgumentException('Invalid time span '.$arg, $e);
+
+      // PHP < 8.3 returns false for invalid time spans
+      if (false === $i) throw new IllegalArgumentException('Invalid time span '.$arg);
+
+      // Years and months do not have a constant amount of seconds. Technically, days
+      // don't either (think: leap seconds), but we'll handle them as 86400 seconds
+      if ($i->y || $i->m) throw new IllegalArgumentException('Cannot create from interval with years / months');
+
+      $this->_seconds= $i->d * 86400 + $i->h * 3600 + $i->i * 60 + $i->s;
     }
-
-    // PHP < 8.3 returns false for invalid time spans
-    if (false === $i) throw new IllegalArgumentException('Invalid time span '.$arg);
-
-    // Years and months do not have a constant amount of seconds. Technically, days
-    // don't either (think: leap seconds), but we'll handle them as 86400 seconds
-    if ($i->y || $i->m) throw new IllegalArgumentException('Cannot create from interval with years / months');
-
-    return $i->d * 86400 + $i->h * 3600 + $i->i * 60 + $i->s;
   }
 
   /**
