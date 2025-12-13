@@ -1,24 +1,35 @@
 <?php namespace util\unittest;
 
+use DateInterval;
 use lang\{IllegalArgumentException, IllegalStateException};
-use test\{Assert, Expect, Test};
+use test\{Assert, Expect, Test, Values};
 use util\TimeSpan;
 
 class TimeSpanTest {
   
-  #[Test]
-  public function newTimeSpan() {
-    Assert::equals('0d, 2h, 1m, 5s', (new TimeSpan(7265))->toString());
+  #[Test, Values([7265, 7265.0, 'PT2H1M5S', '2 hours 1 minute 5 seconds'])]
+  public function span_from($arg) {
+    Assert::equals('0d, 2h, 1m, 5s', (new TimeSpan($arg))->toString());
   }
 
   #[Test]
-  public function newNegativeTimeSpan() {
+  public function negative_span() {
     Assert::equals('0d, 0h, 0m, 1s', (new TimeSpan(-1))->toString());
   }
 
-  #[Test, Expect(IllegalArgumentException::class)]
-  public function wrongArguments() {
-    new TimeSpan('2 days');
+  #[Test, Expect(IllegalArgumentException::class), Values([null, '', 'not a time span'])]
+  public function invalid_string_argument($arg) {
+    new TimeSpan($arg);
+  }
+
+  #[Test, Expect(IllegalArgumentException::class), Values(['P1Y', 'P1M'])]
+  public function unsupported_dateinterval($arg) {
+    new TimeSpan(new DateInterval($arg));
+  }
+
+  #[Test]
+  public function span_from_dateinterval() {
+    Assert::equals('1d, 2h, 0m, 0s', (new TimeSpan(new DateInterval('P1DT2H')))->toString());
   }
 
   #[Test]

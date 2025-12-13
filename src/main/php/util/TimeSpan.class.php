@@ -1,27 +1,54 @@
 <?php namespace util;
 
+use DateInterval, Exception;
 use lang\{Value, IllegalArgumentException, IllegalStateException};
 
 /**
  * Represents a span of time
  *
- * @see   util.Dates::diff()
- * @test  net.xp_framework.unittest.util.TimeSpanTest
+ * @see  util.Dates::diff()
+ * @test net.xp_framework.unittest.util.TimeSpanTest
  */
 class TimeSpan implements Value {
-  protected $_seconds = 0;
+  protected $_seconds;
   
   /**
-   * Contructor
+   * Constructor
    *
-   * @param   int secs - an amount of seconds, absolute value is used
-   * @throws  lang.IllegalArgumentException in case the value given is not numeric
+   * @param  int|string|DateInterval $arg
+   * @throws lang.IllegalArgumentException
    */
-  public function __construct($secs= 0) {
-    if (!is_numeric($secs)) {
-      throw new IllegalArgumentException('Given argument is not an integer: '.typeof($secs)->getName());
+  public function __construct($arg) {
+    $this->_seconds= self::secondsOf($arg);
+  }
+
+  /**
+   * Converts given argument to seconds
+   *
+   * @param  int|string|DateInterval $arg
+   * @return int
+   * @throws lang.IllegalArgumentException
+   */
+  public static function secondsOf($arg) {
+    if (is_numeric($arg)) return (int)abs($arg);
+
+    try {
+      if ($arg instanceof DateInterval) {
+        $i= $arg;
+      } else if ('P' === $arg[0] ?? null) {
+        $i= new DateInterval($arg);
+      } else {
+        $i= DateInterval::createFromDateString($arg);
+      }
+    } catch (Exception $e) {
+      throw new IllegalArgumentException('Cannot convert '.$arg, $e);
     }
-    $this->_seconds= (int)abs($secs);
+
+    // Years and months do not have a constant amount of seconds. Technically, days
+    // don't either (think: leap seconds), but we'll handle them as 86400 seconds
+    if ($i->y || $i->m) throw new IllegalArgumentException('Cannot create from interval with years / months');
+
+    return $i->d * 86400 + $i->h * 3600 + $i->i * 60 + $i->s;
   }
 
   /**
