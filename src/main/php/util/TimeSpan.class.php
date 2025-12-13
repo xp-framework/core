@@ -41,8 +41,11 @@ class TimeSpan implements Value {
         $i= DateInterval::createFromDateString($arg);
       }
     } catch (Exception $e) {
-      throw new IllegalArgumentException('Cannot convert '.$arg, $e);
+      throw new IllegalArgumentException('Invalid time span '.$arg, $e);
     }
+
+    // PHP < 8.3 returns false for invalid time spans
+    if (false === $i) throw new IllegalArgumentException('Invalid time span '.$arg);
 
     // Years and months do not have a constant amount of seconds. Technically, days
     // don't either (think: leap seconds), but we'll handle them as 86400 seconds
