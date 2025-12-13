@@ -17,7 +17,7 @@ class TimeSpanTest {
     Assert::equals('0d, 0h, 0m, 1s', (new TimeSpan(-1))->toString());
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Values([null, '', 'not a time span'])]
+  #[Test, Expect(IllegalArgumentException::class), Values([null, '', 'not a time span', false, true])]
   public function invalid_string_argument($arg) {
     new TimeSpan($arg);
   }
