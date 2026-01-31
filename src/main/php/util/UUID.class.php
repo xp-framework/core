@@ -229,6 +229,33 @@ class UUID implements Value {
   }
 
   /**
+   * Create a version 7 UUID based upon the UNIX epoch in milliseconds and
+   * pseudorandom bits
+   *
+   * @param  ?int $ms
+   * @return self
+   */
+  public static function timeOrderedUUID($ms= null) {
+    $t= (int)($ms ?? microtime(true) * 1000);
+
+    return new self([
+      7,
+      ($t >> 16) & 0xffffffff,
+      $t & 0xffff,
+      random_int(0, 0x0fff),
+      random_int(0, 0x3fff) | 0x8000,
+      [
+        random_int(0, 0xff),
+        random_int(0, 0xff),
+        random_int(0, 0xff),
+        random_int(0, 0xff),
+        random_int(0, 0xff),
+        random_int(0, 0xff),
+      ]
+    ]);
+  }
+
+  /**
    * Returns version
    *
    * @return int

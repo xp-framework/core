@@ -148,6 +148,16 @@ class UUIDTest {
   }
 
   #[Test]
+  public function timeOrderedUUID() {
+    Assert::equals(7, UUID::timeOrderedUUID()->version());
+  }
+
+  #[Test]
+  public function timeOrderedUUIDPrefix() {
+    Assert::matches('/^019bf452-f817/', UUID::timeOrderedUUID(1769330636823)->hashCode());
+  }
+
+  #[Test]
   public function md5UUID() {
     Assert::equals(3, UUID::md5UUID(UUID::$NS_DNS, 'example.com')->version());
   }
