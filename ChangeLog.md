@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 12.8.0 / ????-??-??
+
+### Features
+
+* Merged PR #356: Implement UUID v7 - time-ordered UUIDs - @theid
+
 ## 12.7.0 / 2025-12-13
 
 ### Bugfixes
