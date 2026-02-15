@@ -2,7 +2,7 @@
 
 use io\IOException;
 use io\streams\{InputStream, MemoryInputStream, MemoryOutputStream, OutputStream, StreamTransfer};
-use test\{Assert, Test};
+use test\{Assert, Test, Values};
 
 class StreamTransferTest {
 
@@ -49,9 +49,10 @@ class StreamTransferTest {
     $out= new MemoryOutputStream();
 
     $s= new StreamTransfer(new MemoryInputStream('Hello'), $out);
-    $s->transferAll();
+    $size= $s->transferAll();
 
     Assert::equals('Hello', $out->bytes());
+    Assert::equals(5, $size);
   }
 
   #[Test]
@@ -62,6 +63,21 @@ class StreamTransferTest {
     foreach ($s->transmit() as $yield) { }
 
     Assert::equals('Hello', $out->bytes());
+  }
+
+  #[Test, Values([[0, []], [1, [1]], [1024, [1024]], [1025, [1024, 1]], [2077, [1024, 1024, 29]]])]
+  public function transmit_chunks($length, $chunks) {
+    $out= new MemoryOutputStream();
+    $data= str_repeat('*', $length);
+
+    $s= new StreamTransfer(new MemoryInputStream($data), $out);
+    $transmitted= [];
+    foreach ($s->transmit(1024) as $yield) {
+      $transmitted[]= $yield;
+    }
+
+    Assert::equals($data, $out->bytes());
+    Assert::equals($chunks, $transmitted);
   }
 
   #[Test]

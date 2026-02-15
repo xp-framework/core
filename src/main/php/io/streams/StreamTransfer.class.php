@@ -41,21 +41,26 @@ class StreamTransfer implements Closeable {
   public function transferAll() {
     $r= 0;
     while ($this->in->available()) {
-      $r+= $this->out->write($this->in->read());
+      $chunk= $this->in->read();
+      $this->out->write($chunk);
+      $r+= strlen($chunk);
     }
     return $r;
   }
 
   /**
    * Transmit all available input from in, yielding control after each chunk.
+   * Uses default chunk size of 8192 bytes.
    *
+   * @param  int $size
    * @return iterable
    * @throws io.IOException
    */
-  public function transmit() {
+  public function transmit($size= 8192) {
     while ($this->in->available()) {
-      $this->out->write($this->in->read());
-      yield;
+      $chunk= $this->in->read($size);
+      $this->out->write($chunk);
+      yield strlen($chunk);
     }
   }
 
@@ -71,15 +76,15 @@ class StreamTransfer implements Closeable {
     try {
       $this->in->close();
     } catch (IOException $e) {
-      $errors.= 'Could not close input stream: '.$e->getMessage().', ';
+      $errors.= ', Could not close input stream: '.$e->getMessage();
     }
     try {
       $this->out->close();
     } catch (IOException $e) {
-      $errors.= 'Could not close output stream: '.$e->getMessage().', ';
+      $errors.= ', Could not close output stream: '.$e->getMessage();
     }
     if ($errors) {
-      throw new IOException(rtrim($errors, ', '));
+      throw new IOException(substr($errors, 2));
     }
   }
 
