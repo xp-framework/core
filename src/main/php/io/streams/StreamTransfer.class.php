@@ -76,15 +76,15 @@ class StreamTransfer implements Closeable {
     try {
       $this->in->close();
     } catch (IOException $e) {
-      $errors.= 'Could not close input stream: '.$e->getMessage().', ';
+      $errors.= ', Could not close input stream: '.$e->getMessage();
     }
     try {
       $this->out->close();
     } catch (IOException $e) {
-      $errors.= 'Could not close output stream: '.$e->getMessage().', ';
+      $errors.= ', Could not close output stream: '.$e->getMessage();
     }
     if ($errors) {
-      throw new IOException(rtrim($errors, ', '));
+      throw new IOException(substr($errors, 2));
     }
   }
 
