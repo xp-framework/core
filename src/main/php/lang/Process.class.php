@@ -1,6 +1,6 @@
 <?php namespace lang;
 
-use io\{File, IOException};
+use io\{File, OperationFailed};
 
 /**
  * Process
@@ -43,16 +43,16 @@ class Process {
    * @param  ?string $cwd default NULL the working directory
    * @param  ?[:string] $env default NULL the environment
    * @param  var[] descriptors
-   * @throws io.IOException in case the command could not be executed
+   * @throws io.OperationFailed in case the command could not be executed
    */
   public function __construct($command= null, $arguments= [], $cwd= null, $env= null, $descriptors= []) {
     if (null === $command) return;
 
     // Short-circuit
     if ('' === $command) {
-      throw new IOException('Empty command not resolveable');
+      throw new OperationFailed('Empty command not resolveable');
     } else if (self::$DISABLED) {
-      throw new IOException('Process execution has been disabled');
+      throw new OperationFailed('Process execution has been disabled');
     }
 
     $cmd= CommandLine::forName(PHP_OS_FAMILY);
@@ -76,7 +76,7 @@ class Process {
 
       // Try creating a process from the given arguments and descriptors
       if (!is_resource($this->handle= proc_open($exec, $spec, $pipes, $cwd, $env, $options))) {
-        throw new IOException('Could not execute "'.$exec.'"');
+        throw new OperationFailed('Could not execute "'.$exec.'"');
       }
 
       $this->status= proc_get_status($this->handle);
@@ -99,7 +99,7 @@ class Process {
       return;
     }
 
-    throw new IOException('Could not find "'.$command.'" in path');
+    throw new OperationFailed('Could not find "'.$command.'" in path');
   }
 
   /**
@@ -110,7 +110,7 @@ class Process {
    * @param  ?[:string] $env default NULL the environment
    * @param  var[] $descriptors
    * @return self
-   * @throws io.IOException in case the command could not be executed
+   * @throws io.OperationFailed in case the command could not be executed
    */
   public function newInstance($arguments= [], $cwd= null, $env= null, $descriptors= []): self {
     return new self($this->status['exe'], $arguments, $cwd, $env, $descriptors);
@@ -222,7 +222,7 @@ class Process {
         if (0 !== $exit) {
           throw new IllegalStateException('Cannot find executable: '.implode('', $out));
         }
-      } catch (IOException $e) {
+      } catch (OperationFailed $e) {
         throw new IllegalStateException($e->getMessage());
       }
       $self->status['running?']= function() use($pid) {

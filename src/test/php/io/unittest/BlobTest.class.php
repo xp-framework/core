@@ -2,7 +2,7 @@
 
 use ArrayObject;
 use io\streams\{MemoryInputStream, InputStream};
-use io\{Blob, OperationNotSupportedException};
+use io\{Blob, NotSupported};
 use lang\IllegalArgumentException;
 use test\verify\Runtime;
 use test\{Assert, Expect, Test, Values};
@@ -97,7 +97,7 @@ class BlobTest {
     });
     iterator_to_array($fixture->slices());
 
-    Assert::throws(OperationNotSupportedException::class, fn() => iterator_to_array($fixture->slices()));
+    Assert::throws(NotSupported::class, fn() => iterator_to_array($fixture->slices()));
   }
 
   /** @see https://bugs.php.net/bug.php?id=77069 */

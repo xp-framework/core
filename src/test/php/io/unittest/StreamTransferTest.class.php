@@ -1,6 +1,6 @@
 <?php namespace io\unittest;
 
-use io\IOException;
+use io\OperationFailed;
 use io\streams\{InputStream, MemoryInputStream, MemoryOutputStream, OutputStream, StreamTransfer};
 use test\{Assert, Test};
 
@@ -11,7 +11,7 @@ class StreamTransferTest {
     return new class() implements InputStream {
       public function read($length= 8192) { }
       public function available() { }
-      public function close() { throw new \io\IOException("Close error"); }
+      public function close() { throw new \io\OperationFailed("Close error"); }
     };
   }
 
@@ -30,7 +30,7 @@ class StreamTransferTest {
     return new class() implements OutputStream {
       public function write($data) { }
       public function flush() { }
-      public function close() { throw new IOException('Close error'); }
+      public function close() { throw new OperationFailed('Close error'); }
     };
   }
 
@@ -100,8 +100,8 @@ class StreamTransferTest {
 
     try {
       (new StreamTransfer($in, $out))->close();
-      $this->fail('Expected exception not caught', null, 'io.IOException');
-    } catch (IOException $expected) {
+      $this->fail('Expected exception not caught', null, 'io.OperationFailed');
+    } catch (OperationFailed $expected) {
       Assert::equals('Could not close output stream: Close error', $expected->getMessage());
     }
     
@@ -115,8 +115,8 @@ class StreamTransferTest {
 
     try {
       (new StreamTransfer($in, $out))->close();
-      $this->fail('Expected exception not caught', null, 'io.IOException');
-    } catch (IOException $expected) {
+      $this->fail('Expected exception not caught', null, 'io.OperationFailed');
+    } catch (OperationFailed $expected) {
       Assert::equals('Could not close input stream: Close error', $expected->getMessage());
     }
 
@@ -130,8 +130,8 @@ class StreamTransferTest {
 
     try {
       (new StreamTransfer($in, $out))->close();
-      $this->fail('Expected exception not caught', null, 'io.IOException');
-    } catch (IOException $expected) {
+      $this->fail('Expected exception not caught', null, 'io.OperationFailed');
+    } catch (OperationFailed $expected) {
       Assert::equals('Could not close input stream: Close error, Could not close output stream: Close error', $expected->getMessage());
     }
   }

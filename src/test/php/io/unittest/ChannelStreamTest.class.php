@@ -1,48 +1,48 @@
 <?php namespace io\unittest;
 
-use io\IOException;
+use io\OperationFailed;
 use io\streams\{ChannelInputStream, ChannelOutputStream};
 use lang\Runnable;
 use test\{Assert, Expect, Test};
 
 class ChannelStreamTest {
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function invalidOutputChannelName() {
     new ChannelOutputStream('@@invalid@@');
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function invalidInputChannelName() {
     new ChannelInputStream('@@invalid@@');
   }
   
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function stdinIsNotAnOutputStream() {
     new ChannelOutputStream('stdin');
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function inputIsNotAnOutputStream() {
     new ChannelOutputStream('input');
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function stdoutIsNotAnInputStream() {
     new ChannelInputStream('stdout');
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function stderrIsNotAnInputStream() {
     new ChannelInputStream('stderr');
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function outputIsNotAnInputStream() {
     new ChannelInputStream('outpit');
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function writeToClosedChannel() {
     ChannelWrapper::capture(new class() implements Runnable {
       public function run() {
@@ -53,7 +53,7 @@ class ChannelStreamTest {
     });
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function readingFromClosedChannel() {
     ChannelWrapper::capture(new class() implements Runnable {
       public function run() {

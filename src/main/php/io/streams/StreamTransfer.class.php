@@ -1,6 +1,6 @@
 <?php namespace io\streams;
 
-use io\IOException;
+use io\OperationFailed;
 use lang\Closeable;
 
 /**
@@ -36,7 +36,7 @@ class StreamTransfer implements Closeable {
    * Copy all available input from in
    *
    * @return int number of bytes copied
-   * @throws io.IOException
+   * @throws io.OperationFailed
    */
   public function transferAll() {
     $r= 0;
@@ -52,7 +52,7 @@ class StreamTransfer implements Closeable {
    * Transmit all available input from in, yielding control after each chunk.
    *
    * @return iterable
-   * @throws io.IOException
+   * @throws io.OperationFailed
    */
   public function transmit() {
     while ($this->in->available()) {
@@ -66,22 +66,22 @@ class StreamTransfer implements Closeable {
    * streams even if one of the close() calls yields an exception.
    *
    * @return void
-   * @throws io.IOException
+   * @throws io.OperationFailed
    */
   public function close() {
     $errors= '';
     try {
       $this->in->close();
-    } catch (IOException $e) {
+    } catch (OperationFailed $e) {
       $errors.= 'Could not close input stream: '.$e->getMessage().', ';
     }
     try {
       $this->out->close();
-    } catch (IOException $e) {
+    } catch (OperationFailed $e) {
       $errors.= 'Could not close output stream: '.$e->getMessage().', ';
     }
     if ($errors) {
-      throw new IOException(rtrim($errors, ', '));
+      throw new OperationFailed(rtrim($errors, ', '));
     }
   }
 
