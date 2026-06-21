@@ -1,6 +1,6 @@
 #!/bin/sh
 
-XP_RUNNERS_URL=https://baltocdn.com/xp-framework/xp-runners/distribution/downloads/e/entrypoint/xp-run-8.8.0.sh
+XP_RUNNERS_URL=https://github.com/xp-runners/reference/releases/download/v9.3.0/xp-run-9.3.0.sh
 
 case $1 in
   install)
