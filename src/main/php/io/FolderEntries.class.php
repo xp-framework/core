@@ -35,7 +35,7 @@ class FolderEntries implements IteratorAggregate {
   public function getIterator(): Traversable {
     if (null === $this->handle) {
       if (!is_resource($handle= opendir($this->base->asFolder()->getURI()))) {
-        $e= new IOException('Cannot open folder '.$this->base);
+        $e= new OperationFailed('Cannot open folder '.$this->base);
         \xp::gc(__FILE__);
         throw $e;
       }

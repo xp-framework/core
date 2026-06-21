@@ -1,7 +1,7 @@
 <?php namespace io\unittest;
 
 use io\streams\{SpooledInputStream, MemoryInputStream, Streams};
-use io\{TempFile, Folder, Path, IOException};
+use io\{TempFile, Folder, Path, OperationFailed};
 use lang\Environment;
 use test\{Assert, Expect, Test, Values};
 
@@ -146,12 +146,12 @@ class SpooledInputStreamTest {
     $stream->close();
   }
 
-  #[Test, Expect(IOException::class), Values([SEEK_SET, SEEK_CUR])]
+  #[Test, Expect(OperationFailed::class), Values([SEEK_SET, SEEK_CUR])]
   public function cannot_seek_before_beginning_of_file($whence) {
     $this->newFixture()->seek(-1, $whence);
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function cannot_seek_with_invalid_whence() {
     $this->newFixture()->seek(0, 6100);
   }
@@ -161,7 +161,7 @@ class SpooledInputStreamTest {
     $stream= $this->newFixture();
     $stream->read(4);
 
-    Assert::throws(IOException::class, fn() => $stream->seek(-1));
+    Assert::throws(OperationFailed::class, fn() => $stream->seek(-1));
     Assert::equals(4, $stream->tell());
   }
 

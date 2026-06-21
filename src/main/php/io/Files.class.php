@@ -18,8 +18,8 @@ class Files {
    *
    * @param  string|io.File $file
    * @return string file contents
-   * @throws io.IOException
-   * @throws io.FileNotFoundException
+   * @throws io.OperationFailed
+   * @throws io.NotFound
    */
   public static function read($file) {
     $f= $file instanceof File ? $file : new File($file);
@@ -57,7 +57,7 @@ class Files {
    * @param  string|io.File $file
    * @param  string $bytes
    * @return int
-   * @throws io.IOException
+   * @throws io.OperationFailed
    */
   public static function write($file, $bytes) {
     $f= $file instanceof File ? $file : new File($file);
@@ -80,7 +80,7 @@ class Files {
    * @param  string|io.File $file
    * @param  string $bytes
    * @return int
-   * @throws io.IOException
+   * @throws io.OperationFailed
    */
   public static function append($file, $bytes) {
     $f= $file instanceof File ? $file : new File($file);
