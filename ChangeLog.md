@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Backported RFC #364 - I/O exceptions refactoring from XP 12 - @thekid
+
 ## 11.10.0 / 2025-06-22
 
 ### Features
