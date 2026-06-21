@@ -1,10 +1,11 @@
 <?php namespace lang\archive;
 
-use lang\AbstractClassLoader;
-use lang\ElementNotFoundException;
+use io\File;
+use lang\{AbstractClassLoader, ElementNotFoundException, FormatException};
 
 /** 
- * Loads XP classes from a XAR (XP Archive)
+ * Loads XP classes from a XAR (XP Archive). Implemented using raw file access
+ * to reduce bootstrapping dependencies.
  * 
  * ```php
  * $l= new ArchiveClassLoader(new Archive(new File('classes.xar')));
@@ -15,7 +16,7 @@ use lang\ElementNotFoundException;
  *   exit(-1);
  * }
  * 
- * $obj= $class->newInstance();
+ * $instance= $class->newInstance();
  * ```
  *
  * @test  lang.unittest.ArchiveClassLoaderTest
@@ -24,12 +25,13 @@ use lang\ElementNotFoundException;
  * @see   lang.archive.Archive
  */
 class ArchiveClassLoader extends AbstractClassLoader {
-  protected $archive= null;
+  protected $archive;
+  protected $acquired= null;
   
   /**
    * Constructor
    * 
-   * @param  string|lang.archive.Archive $arcgive
+   * @param  string|lang.archive.Archive $archive
    */
   public function __construct($archive) {
     $this->path= $archive instanceof Archive ? $archive->getURI() : $archive;
@@ -41,6 +43,52 @@ class ArchiveClassLoader extends AbstractClassLoader {
     $this->archive= 'xar://'.$this->path.'?';
   }
 
+  /** Acquires the archive, opening it if necessary */
+  private function acquire() {
+    static $unpack= [
+      1 => 'a80id/a80*filename/a80*path/V1size/V1offset/a*reserved',
+      2 => 'a240id/V1size/V1offset/a*reserved'
+    ];
+
+    if (null === $this->acquired) {
+      $file= urldecode(substr($this->archive, 6, -1));
+      if ('/' === $file[0] && ':' === $file[2]) {
+        $file= substr($file, 1);    // Handle xar:///f:/archive.xar => f:/archive.xar
+      }
+
+      $fd= fopen($file, 'rb');
+      $header= unpack('a3id/c1version/V1indexsize/a*reserved', fread($fd, 0x0100));
+      if ('CCA' !== $header['id']) {
+        fclose($fd);
+        throw new FormatException('Malformed archive '.$archive);
+      }
+
+      for ($index= [], $i= 0; $i < $header['indexsize']; $i++) {
+        $entry= unpack($unpack[$header['version']], fread($fd, 0x0100));
+        $index[rtrim($entry['id'], "\0")]= [$entry['size'], $entry['offset'], $i];
+      }
+
+      $this->acquired= ['handle' => $fd, 'index' => $index, 'offset' => 0x0100 + $i * 0x0100];
+    }
+    return $this->acquired;
+  }
+
+  /** Returns file contents, or NULL if it does not exist */
+  private function contents($filename) {
+    $acquired= $this->acquire();
+    if ($file= $acquired['index'][$filename] ?? null) {
+      fseek($acquired['handle'], $acquired['offset'] + $file[1], SEEK_SET);
+
+      $bytes= '';
+      while ($read= ($file[0] - strlen($bytes)) > 0) {
+        if (false === ($chunk= fread($acquired['handle'], $read))) break;
+        $bytes.= $chunk;
+      }
+      return $bytes;
+    }
+    return null;
+  }
+
   /**
    * Load class bytes
    *
@@ -48,7 +96,7 @@ class ArchiveClassLoader extends AbstractClassLoader {
    * @return  string
    */
   public function loadClassBytes($name) {
-    return file_get_contents($this->archive.strtr($name, '.', '/').\xp::CLASS_FILE_EXT);
+    return $this->contents(strtr($name, '.', '/').\xp::CLASS_FILE_EXT) ?? '';
   }
   
   /**
@@ -94,7 +142,7 @@ class ArchiveClassLoader extends AbstractClassLoader {
       }
     }
 
-    return is_file($archive.substr($path, 1))
+    return isset($this->acquire()['index'][substr($path, 1)])
       ? strtr(substr($path, 1, -strlen(\xp::CLASS_FILE_EXT)), '/', '.')
       : null
     ;
@@ -108,8 +156,10 @@ class ArchiveClassLoader extends AbstractClassLoader {
    * @throws  lang.ElementNotFoundException in case the resource cannot be found
    */
   public function getResource($string) {
-    if (false !== ($r= file_get_contents($this->archive.$string))) return $r;
-    \xp::gc(__FILE__);
+    if (null !== ($contents= $this->contents($string))) {
+      return $contents;
+    }
+
     throw new ElementNotFoundException('Could not load resource '.$string);
   }
   
@@ -117,14 +167,15 @@ class ArchiveClassLoader extends AbstractClassLoader {
    * Retrieve a stream to the resource
    *
    * @param   string string name of resource
-   * @return  io.Stream
+   * @return  io.File
    * @throws  lang.ElementNotFoundException in case the resource cannot be found
    */
   public function getResourceAsStream($string) {
-    if (!file_exists($fn= $this->archive.$string)) {
-      throw new ElementNotFoundException('Could not load resource '.$string);
+    if (isset($this->acquire()['index'][$string])) {
+      return new File($this->archive.$string);
     }
-    return new \io\File($fn);
+
+    throw new ElementNotFoundException('Could not load resource '.$string);
   }
   
   /**
@@ -134,7 +185,7 @@ class ArchiveClassLoader extends AbstractClassLoader {
    * @return  bool
    */
   public function providesClass($class) {
-    return file_exists($this->archive.strtr((string)$class, '.', '/').\xp::CLASS_FILE_EXT);
+    return isset($this->acquire()['index'][strtr((string)$class, '.', '/').\xp::CLASS_FILE_EXT]);
   }
 
   /**
@@ -144,7 +195,7 @@ class ArchiveClassLoader extends AbstractClassLoader {
    * @return  bool
    */
   public function providesResource($filename) {
-    return file_exists($this->archive.$filename);
+    return isset($this->acquire()['index'][$filename]);
   }
 
   /**
@@ -154,7 +205,7 @@ class ArchiveClassLoader extends AbstractClassLoader {
    * @return  bool
    */
   public function providesPackage($package) {
-    $acquired= \xp\xar::acquire(urldecode(substr($this->archive, 6, -1)));
+    $acquired= $this->acquire();
     $cmps= strtr($package, '.', '/').'/';
     $cmpl= strlen($cmps);
     
@@ -190,7 +241,7 @@ class ArchiveClassLoader extends AbstractClassLoader {
    */
   public function packageContents($package) {
     $contents= [];
-    $acquired= \xp\xar::acquire(urldecode(substr($this->archive, 6, -1)));
+    $acquired= $this->acquire();
     $cmps= strtr((string)$package, '.', '/');
     $cmpl= strlen($cmps);
     
@@ -217,5 +268,13 @@ class ArchiveClassLoader extends AbstractClassLoader {
       $contents[$entry]= null;
     }
     return array_keys($contents);
+  }
+
+  /** Ensures acquired file handle is closed */
+  public function __destruct() {
+    if ($this->acquired) {
+      fclose($this->acquired['handle']);
+      $this->acquired= null;
+    }
   }
 }

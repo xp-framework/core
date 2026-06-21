@@ -1,7 +1,7 @@
 <?php namespace lang\archive;
  
 use io\{EncapsedStream, Files, File};
-use lang\{ElementNotFoundException, Value};
+use lang\{ElementNotFoundException, IllegalArgumentException, FormatException, Throwable, Value};
 
 /**
  * Archives contain a collection of classes.
@@ -159,8 +159,8 @@ class Archive implements Value {
       $this->file->isOpen() || $this->file->open(File::READ);
       $this->file->seek($pos, SEEK_SET);
       $data= $this->file->read($this->_index[$id][0]);
-    } catch (\lang\XPException $e) {
-      throw new ElementNotFoundException('Element "'.$id.'" cannot be read: '.$e->getMessage());
+    } catch (Throwable $t) {
+      throw new ElementNotFoundException('Element "'.$id.'" cannot be read: '.$t->getMessage(), $t);
     }
     
     return $data;
@@ -216,7 +216,7 @@ class Archive implements Value {
 
         // Check header integrity
         if ('CCA' !== $data['id']) {
-          $e= new \lang\FormatException(sprintf('Header malformed: "CCA" expected, have "%s"', substr($header, 0, 3)));
+          $e= new FormatException(sprintf('Header malformed: "CCA" expected, have "%s"', substr($header, 0, 3)));
           \xp::gc(__FILE__);
           throw $e;
         }
@@ -239,7 +239,7 @@ class Archive implements Value {
         }
     }
     
-    throw new \lang\IllegalArgumentException('Mode '.$mode.' not recognized');
+    throw new IllegalArgumentException('Mode '.$mode.' not recognized');
   }
   
   /**
@@ -288,10 +288,7 @@ class Archive implements Value {
     return $this->file->compareTo($value->file);
   }
 
-  /**
-   * Destructor
-   *
-   */
+  /** Ensure underlying file is closed */
   public function __destruct() {
     $this->file->isOpen() && $this->file->close();
   }
