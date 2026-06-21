@@ -40,7 +40,7 @@ class Date implements Value {
    * @param  util.TimeZone $timezone default NULL string of timezone
    * @throws lang.IllegalArgumentException in case the date is unparseable
    */
-  public function __construct($in= null, TimeZone $timezone= null) {
+  public function __construct($in= null, $timezone= null) {
     if ($in instanceof \DateTime) {
       $this->handle= $in;
     } else if ((string)(int)$in === (string)$in) {
@@ -101,7 +101,7 @@ class Date implements Value {
    * @param  util.TimeZone $tz default NULL
    * @return self
    */
-  public static function create($year, $month, $day, $hour, $minute, $second, TimeZone $tz= null): self {
+  public static function create($year, $month, $day, $hour, $minute, $second, $tz= null): self {
     $date= date_create();
     if ($tz) {
       date_timezone_set($date, $tz->getHandle());
@@ -136,7 +136,7 @@ class Date implements Value {
   }
   
   /** Static method to get current date/time */
-  public static function now(TimeZone $tz= null): self {
+  public static function now($tz= null): self {
     return new self(null, $tz);
   }
   
@@ -204,7 +204,7 @@ class Date implements Value {
    * @param  util.TimeZone $outtz default NULL
    * @return string the formatted date
    */
-  public function toString(string $format= self::DEFAULT_FORMAT, TimeZone $outtz= null): string {
+  public function toString(string $format= self::DEFAULT_FORMAT, $outtz= null): string {
     return date_format(($outtz === null ? $this : $outtz->translate($this))->handle, $format);
   }
   
@@ -220,7 +220,7 @@ class Date implements Value {
    * @return string
    * @throws lang.IllegalArgumentException if unsupported token has been given
    */
-  public function format(string $format, TimeZone $outtz= null): string {
+  public function format(string $format, $outtz= null): string {
     static $replace= [
       '%d' => 'd',
       '%m' => 'm',

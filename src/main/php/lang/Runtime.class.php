@@ -221,7 +221,7 @@ class Runtime {
    * @return  lang.Process
    */
   public function newInstance(
-    RuntimeOptions $options= null, 
+    $options= null,
     $bootstrap= 'class', 
     $class= null, 
     $arguments= [], 
