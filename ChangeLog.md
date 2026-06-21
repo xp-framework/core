@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 12.11.0 / 2026-06-21
+
 ### Features
 
 * Merged PR #364: I/O exceptions refactoring, fixing a naming conflict with
