@@ -1,7 +1,6 @@
 <?php namespace lang\archive;
 
-use lang\AbstractClassLoader;
-use lang\ElementNotFoundException;
+use lang\{AbstractClassLoader, ElementNotFoundException};
 
 /** 
  * Loads XP classes from a XAR (XP Archive)
@@ -195,8 +194,8 @@ class ArchiveClassLoader extends AbstractClassLoader {
     $cmpl= strlen($cmps);
     
     foreach (array_keys($acquired['index']) as $e) {
-      if (strncmp($cmps, $e, $cmpl) != 0) continue;
-      $entry= 0 != $cmpl ? substr($e, $cmpl+ 1) : $e;
+      if (strncmp($cmps, $e, $cmpl) !== 0) continue;
+      $entry= $cmpl ? substr($e, $cmpl + 1) : $e;
       
       // Check to see if we're getting something in a subpackage. Imagine the 
       // following structure:
@@ -217,5 +216,14 @@ class ArchiveClassLoader extends AbstractClassLoader {
       $contents[$entry]= null;
     }
     return array_keys($contents);
+  }
+
+  /** Ensures underlying archive is closed */
+  public function __destruct() {
+
+    // See https://github.com/xp-runners/reference/releases/tag/v9.3.0
+    if (method_exists(\xp\xar::class, 'close')) {
+      \xp\xar::close(urldecode(substr($this->archive, 6, -1)));
+    }
   }
 }
