@@ -84,7 +84,7 @@ class NewInstanceTest {
     ]);
     Assert::equals(
       'lang\\unittest\\Test',
-      typeof($o)->reflect()->getProperty('fixture')->getAttributes()[0]->name
+      typeof($o)->reflect()->getProperty('fixture')->getAttributes()[0]->getName()
     );
   }
 
@@ -95,7 +95,7 @@ class NewInstanceTest {
     ]);
     Assert::equals(
       'lang\\unittest\\Test',
-      typeof($o)->reflect()->getMethod('fixture')->getAttributes()[0]->name
+      typeof($o)->reflect()->getMethod('fixture')->getAttributes()[0]->getName()
     );
   }
 
