@@ -37,7 +37,7 @@ Finally, start `xp -v` to see it working:
 
 ```sh
 $ xp -v
-XP 12.11.0-dev { PHP/8.5.7 & Zend/4.5.7 } @ Windows NT SURFACE 10.0 build 26200 (Windows 11) AMD64
+XP 12.11.1-dev { PHP/8.5.7 & Zend/4.5.7 } @ Windows NT SURFACE 10.0 build 26200 (Windows 11) AMD64
 Copyright (c) 2001-2026 the XP group
 FileSystemCL<./src/main/php>
 FileSystemCL<./src/test/php>
