@@ -2,6 +2,7 @@
 
 use lang\Primitive;
 use test\{Assert, Test};
+use util\Bytes;
 
 class AnonymousInstanceTest {
 
@@ -44,12 +45,12 @@ class AnonymousInstanceTest {
 
   #[Test]
   public function invocation() {
-    $methods= newinstance('lang.unittest.ArrayFilter<lang.reflect.Method>', [], [
-      'accept' => function($method) { return 'invocation' === $method->getName(); }
+    $nonEmpty= newinstance('lang.unittest.ArrayFilter<util.Bytes>', [], [
+      'accept' => function($bytes) { return $bytes->size() > 0; }
     ]);
     Assert::equals(
-      [typeof($this)->getMethod('invocation')],
-      $methods->filter(typeof($this)->getMethods())
+      [new Bytes('Test')],
+      $nonEmpty->filter([new Bytes(''), new Bytes('Test')])
     );
   }
 }

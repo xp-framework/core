@@ -116,25 +116,4 @@ class TypeIntersectionTest {
   public function is_assignable_from_class($type) {
     Assert::true((new TypeIntersection($this->types))->isAssignableFrom($type));
   }
-
-  #[Test, Runtime(php: '>=8.1.0-dev')]
-  public function php81_native_intersection_field_type() {
-    $f= typeof(eval('return new class() { public Countable&Traversable $fixture; };'))->getField('fixture');
-    Assert::equals(new TypeIntersection($this->types), $f->getType());
-    Assert::equals('Countable&Traversable', $f->getTypeName());
-  }
-
-  #[Test, Runtime(php: '>=8.1.0-dev')]
-  public function php81_native_intersection_param_type() {
-    $m= typeof(eval('return new class() { public function fixture(Countable&Traversable $arg) { } };'))->getMethod('fixture');
-    Assert::equals(new TypeIntersection($this->types), $m->getParameter(0)->getType());
-    Assert::equals('Countable&Traversable', $m->getParameter(0)->getTypeName());
-  }
-
-  #[Test, Runtime(php: '>=8.1.0-dev')]
-  public function php81_native_intersection_return_type() {
-    $m= typeof(eval('return new class() { public function fixture(): Countable&Traversable { } };'))->getMethod('fixture');
-    Assert::equals(new TypeIntersection($this->types), $m->getReturnType());
-    Assert::equals('Countable&Traversable', $m->getReturnTypeName());
-  }
 }

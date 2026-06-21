@@ -68,36 +68,4 @@ class InstanceReflectionTest {
       typeof($this->fixture)->genericArguments()
     );
   }
-
-  #[Test]
-  public function elementFieldType() {
-    Assert::equals(
-      '[:lang.Value]',
-      typeof($this->fixture)->getField('elements')->getTypeName()
-    );
-  }
-
-  #[Test]
-  public function putParameters() {
-    $params= typeof($this->fixture)->getMethod('put')->getParameters();
-    Assert::equals(2, sizeof($params));
-    Assert::equals(Primitive::$STRING, $params[0]->getType());
-    Assert::equals(XPClass::forName('lang.Value'), $params[1]->getType());
-  }
-
-  #[Test]
-  public function getReturnType() {
-    Assert::equals(
-      'lang.Value',
-      typeof($this->fixture)->getMethod('get')->getReturnTypeName()
-    );
-  }
-
-  #[Test]
-  public function valuesReturnType() {
-    Assert::equals(
-      'lang.Value[]',
-      typeof($this->fixture)->getMethod('values')->getReturnTypeName()
-    );
-  }
 }

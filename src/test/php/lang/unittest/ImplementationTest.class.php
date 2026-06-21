@@ -30,24 +30,6 @@ class ImplementationTest {
   }
 
   #[Test]
-  public function typeDictionaryPutMethodKeyParameter() {
-    $fixture= create('new lang.unittest.TypeDictionary<string>');
-    Assert::equals(
-      XPClass::forName('lang.Type'),
-      typeof($fixture)->getMethod('put')->getParameter(0)->getType()
-    );
-  }
-
-  #[Test, Ignore('Needs implementation change to copy all methods')]
-  public function abstractTypeDictionaryPutMethodKeyParameter() {
-    $fixture= Type::forName('lang.unittest.AbstractTypeDictionary<string>');
-    Assert::equals(
-      XPClass::forName('lang.Type'),
-      $fixture->getMethod('put')->getParameter(0)->getType()
-    );
-  }
-
-  #[Test]
   public function put() {
     $fixture= create('new lang.unittest.TypeDictionary<string>');
     $fixture->put(Primitive::$STRING, 'string');

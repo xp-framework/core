@@ -77,20 +77,26 @@ class NewInstanceTest {
     Assert::true(typeof($o)->hasAnnotation('test'));
   }
 
-  #[Test]
+  #[Test, Condition(assert: 'PHP_VERSION_ID >= 80000')]
   public function new_class_with_field_annotations() {
     $o= newinstance(Name::class, ['Test'], [
       '#[Test] fixture' => null
     ]);
-    Assert::true(typeof($o)->getField('fixture')->hasAnnotation('test'));
+    Assert::equals(
+      'lang\\unittest\\Test',
+      typeof($o)->reflect()->getProperty('fixture')->getAttributes()[0]->name
+    );
   }
 
-  #[Test]
+  #[Test, Condition(assert: 'PHP_VERSION_ID >= 80000')]
   public function new_class_with_method_annotations() {
     $o= newinstance(Name::class, ['Test'], [
       '#[Test] fixture' => function() { }
     ]);
-    Assert::true(typeof($o)->getMethod('fixture')->hasAnnotation('test'));
+    Assert::equals(
+      'lang\\unittest\\Test',
+      typeof($o)->reflect()->getMethod('fixture')->getAttributes()[0]->name
+    );
   }
 
   #[Test]

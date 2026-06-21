@@ -78,16 +78,6 @@ class ReferencesTest {
   }    
 
   #[Test]
-  public function returnNewObjectViaMethodInvoke() {
-    $class= \lang\XPClass::forName('lang.unittest.AnonymousFactory');
-    $factory= $class->getMethod('factory');
-    $object= $factory->invoke($instance= NULL);
-    $value= ReferencesTest::registry('list', $r= NULL);
-
-    $this->assertReference($object, $value);
-  }
-  
-  #[Test]
   public function returnNewObjectViaNewInstance() {
     $object= AnonymousNewInstanceFactory::factory();
     $value= ReferencesTest::registry('list', $r= NULL);

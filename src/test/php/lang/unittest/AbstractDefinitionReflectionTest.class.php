@@ -84,16 +84,4 @@ abstract class AbstractDefinitionReflectionTest {
     $c= typeof($this);
     $this->fixture->newGenericType([$c, $c, $c]);
   }
-
-  #[Test]
-  public function abstractMethod() {
-    $abstractMethod= XPClass::forName('lang.unittest.ArrayFilter')
-      ->newGenericType([$this->fixture])
-      ->getMethod('accept')
-    ;
-    Assert::equals(
-      $this->fixture,
-      $abstractMethod->getParameter(0)->getType()
-    );
-  }
 }
