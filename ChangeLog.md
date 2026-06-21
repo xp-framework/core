@@ -3,6 +3,13 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Features
+
+* Merged PR #364: I/O exceptions refactoring, fixing a naming conflict with
+  the *IoException* class introduced into PHP 8.6 as part of the I/O poll
+  infrastructure - see https://wiki.php.net/rfc/poll_api#exception_hierarchy
+  (@thekid)
+
 ## 12.10.1 / 2026-06-21
 
 ### Bugfixes
