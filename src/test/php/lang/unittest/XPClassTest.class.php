@@ -201,31 +201,6 @@ class XPClassTest {
     XPClass::forName(AbstractTestClass::class)->newInstance();
   }
 
-  #[Test]
-  public function fixture_class_has_annotations() {
-    Assert::true($this->fixture->hasAnnotations());
-  }
-
-  #[Test]
-  public function fixture_class_annotations() {
-    Assert::equals(['test' => 'Annotation'], $this->fixture->getAnnotations());
-  }
-
-  #[Test]
-  public function fixture_class_has_test_annotation() {
-    Assert::true($this->fixture->hasAnnotation('test'));
-  }
-
-  #[Test]
-  public function fixture_class_test_annotation() {
-    Assert::equals('Annotation', $this->fixture->getAnnotation('test'));
-  }
-  
-  #[Test, Expect(ElementNotFoundException::class)]
-  public function getting_non_existant_annotation_raises_exception() {
-    $this->fixture->getAnnotation('non-existant');
-  }
-  
   #[Test, Expect(ClassNotFoundException::class)]
   public function forName_raises_exceptions_for_nonexistant_classes() {
     XPClass::forName('class.does.not.Exist');

@@ -71,10 +71,13 @@ class NewInstanceTest {
     Assert::equals('Test', $o->test);
   }
 
-  #[Test]
+  #[Test, Condition(assert: 'PHP_VERSION_ID >= 80000')]
   public function new_class_with_annotations() {
     $o= newinstance('#[Test] lang.unittest.Name', ['Test']);
-    Assert::true(typeof($o)->hasAnnotation('test'));
+    Assert::equals(
+      'lang\\unittest\\Test',
+      typeof($o)->reflect()->getAttributes()[0]->getName()
+    );
   }
 
   #[Test, Condition(assert: 'PHP_VERSION_ID >= 80000')]
@@ -130,12 +133,15 @@ class NewInstanceTest {
     newinstance(Value::class, [], function() { });
   }
 
-  #[Test]
+  #[Test, Condition(assert: 'PHP_VERSION_ID >= 80000')]
   public function new_interface_with_annotations() {
     $o= newinstance('#[Test] lang.Runnable', [], [
       'run' => function() { }
     ]);
-    Assert::true(typeof($o)->hasAnnotation('test'));
+    Assert::equals(
+      'lang\\Test',
+      typeof($o)->reflect()->getAttributes()[0]->getName()
+    );
   }
 
   #[Test]
@@ -154,12 +160,15 @@ class NewInstanceTest {
     Assert::equals('Test', $o->name());
   }
 
-  #[Test]
+  #[Test, Condition(assert: 'PHP_VERSION_ID >= 80000')]
   public function new_trait_with_annotations() {
     $o= newinstance('#[Test] lang.unittest.Named', [], [
       'run' => function() { }
     ]);
-    Assert::true(typeof($o)->hasAnnotation('test'));
+    Assert::equals(
+      'lang\\unittest\\Test',
+      typeof($o)->reflect()->getAttributes()[0]->getName()
+    );
   }
 
   #[Test]

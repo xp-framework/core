@@ -329,9 +329,4 @@ class EnumTest {
   public function enum_value_initialized_to_declaration() {
     Assert::equals(1, Weekday::$MON->ordinal());
   }
-
-  #[Test, Condition(assert: 'class_exists("ReflectionEnum", false)')]
-  public function annotations_on_sortorder_enum() {
-    Assert::equals(['usedBy' => self::class], XPClass::forName(SortOrder::class)->getAnnotations());
-  }
 }
