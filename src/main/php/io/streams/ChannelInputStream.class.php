@@ -1,6 +1,6 @@
 <?php namespace io\streams;
 
-use io\IOException;
+use io\OperationFailed;
 use lang\Value;
 use util\Comparison;
 
@@ -25,14 +25,14 @@ class ChannelInputStream implements InputStream, Value {
   public function __construct($arg) {
     if ('stdin' === $arg || 'input' === $arg) {
       if (!($this->fd= fopen('php://'.$arg, 'rb'))) {
-        throw new IOException('Could not open '.$arg.' channel for reading');
+        throw new OperationFailed('Could not open '.$arg.' channel for reading');
       }
       $this->name= $arg;
     } else if (is_resource($arg)) {
       $this->fd= $arg;
       $this->name= '#'.(int)$arg;
     } else {
-      throw new IOException('Expecting either stdin, input or a file descriptor '.typeof($arg).' given');
+      throw new OperationFailed('Expecting either stdin, input or a file descriptor '.typeof($arg).' given');
     }
   }
 
@@ -44,7 +44,7 @@ class ChannelInputStream implements InputStream, Value {
    */
   public function read($limit= 8192) {
     if (null === $this->fd || false === ($bytes= fread($this->fd, $limit))) {
-      $e= new IOException('Could not read '.$limit.' bytes from '.$this->name.' channel');
+      $e= new OperationFailed('Could not read '.$limit.' bytes from '.$this->name.' channel');
       \xp::gc(__FILE__);
       throw $e;
     }

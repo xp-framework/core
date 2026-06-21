@@ -39,7 +39,7 @@ class FileOutputStream implements OutputStream, Seekable, Truncation, Value {
    *
    * @param   int $offset
    * @param   int $whence default SEEK_SET (one of SEEK_[SET|CUR|END])
-   * @throws  io.IOException in case of error
+   * @throws  io.OperationFailed in case of error
    */
   public function seek($offset, $whence= SEEK_SET) {
     $this->file->seek($offset, $whence);

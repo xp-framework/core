@@ -1,6 +1,6 @@
 <?php namespace util;
 
-use io\IOException;
+use io\OperationFailed;
 use lang\IllegalArgumentException;
 
 /**
@@ -96,11 +96,11 @@ class Random {
    *
    * @param  int $limit
    * @return string $bytes
-   * @throws io.IOException if there is a problem accessing the urandom character device
+   * @throws io.OperationFailed if there is a problem accessing the urandom character device
    */
   private static function urandom($limit) {
     if (!($f= fopen('/dev/urandom', 'r'))) {
-      $e= new IOException('Cannot access /dev/urandom');
+      $e= new OperationFailed('Cannot access /dev/urandom');
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -109,7 +109,7 @@ class Random {
     $stat= fstat($f);
     if (($stat['mode'] & 0170000) !== 020000) {
       fclose($f);
-      throw new IOException('Not a character device: /dev/urandom');
+      throw new OperationFailed('Not a character device: /dev/urandom');
     }
 
     stream_set_read_buffer($f, 0);

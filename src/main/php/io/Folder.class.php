@@ -8,8 +8,8 @@ use lang\{IllegalStateException, Value};
  * Usage:
  * ```
  * $d= new Folder('/etc/');
- * while (false !== ($entry= $d->getEntry())) {
- *   printf("%s/%s\n", $d->uri, $entry);
+ * foreach ($d->entries() as $entry) {
+ *   echo $entry, "\n";
  * }
  * $d->close();
  * ```
@@ -17,12 +17,7 @@ use lang\{IllegalStateException, Value};
  * @test  xp://net.xp_framework.unittest.io.FolderTest
  */
 class Folder implements Value {
-  public 
-    $uri      = '',
-    $dirname  = '',
-    $path     = '';
-  
-  private $_hdir = false;
+  public $uri, $dirname, $path;
     
   /**
    * Constructor
@@ -40,23 +35,6 @@ class Folder implements Value {
     }
 
     $this->setURI($composed.implode(DIRECTORY_SEPARATOR, $args));
-  }
-  
-  /**
-   * Destructor
-   */
-  public function __destruct() {
-    $this->close();
-  }
-  
-  /**
-   * Close directory
-   *
-   * @return void
-   */
-  public function close() {
-    if (false != $this->_hdir) $this->_hdir->close();
-    $this->_hdir= false;
   }
 
   /**
@@ -112,11 +90,11 @@ class Folder implements Value {
    *
    * @param   int permissions default 0700
    * @return  bool TRUE in case the creation succeeded or the directory already exists
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    */
   public function create($permissions= 0700) {
     if ('' == (string)$this->uri) {
-      throw new IOException('Cannot create folder with empty name');
+      throw new OperationFailed('Cannot create folder with empty name');
     }
     
     // Border-case: Folder already exists
@@ -128,7 +106,7 @@ class Folder implements Value {
       if (is_dir($d= substr($this->uri, 0, ++$i))) continue;
       if (false === mkdir($d, $permissions)) {
         umask($umask);
-        throw new IOException(sprintf('mkdir("%s", %d) failed', $d, $permissions));
+        throw new OperationFailed(sprintf('mkdir("%s", %d) failed', $d, $permissions));
       }
     }
     umask($umask);
@@ -141,12 +119,12 @@ class Folder implements Value {
    * Warning: Stops at the first element that can't be deleted!
    *
    * @return  bool success
-   * @throws  io.IOException in case one of the entries could'nt be deleted
+   * @throws  io.OperationFailed in case one of the entries could'nt be deleted
    */
   public function unlink($uri= null) {
     $uri= null === $uri ? $this->uri : rtrim($uri, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
     if (false === ($d= opendir($uri))) {
-      throw new IOException('Directory '.$uri.' does not exist');
+      throw new OperationFailed('Directory '.$uri.' does not exist');
     }
 
     while (false !== ($e= readdir($d))) {
@@ -158,31 +136,24 @@ class Folder implements Value {
         $this->unlink($fn);
       } else if (false === unlink($fn)) {
         closedir($d);
-        throw new IOException("Deleting '{$fn}' failed");
+        throw new OperationFailed("Deleting '{$fn}' failed");
       }
     }
     closedir($d);
 
-    if (false === rmdir($uri)) throw new IOException("Deleting '{$uri}' failed");
+    if (false === rmdir($uri)) throw new OperationFailed("Deleting '{$uri}' failed");
     return true;
   }
 
   /**
    * Move this directory
    *
-   * Warning: Open directories cannot be moved. Use the close() method to
-   * close the directory first
-   *
    * @return  bool success
-   * @throws  io.IOException in case of an error (e.g., lack of permissions)
-   * @throws  lang.IllegalStateException in case the directory is still open
+   * @throws  io.OperationFailed in case of an error (e.g., lack of permissions)
    */
   public function move($target) {
-    if (is_resource($this->_hdir)) {
-      throw new IllegalStateException('Directory still open');
-    }
     if (false === rename($this->uri, $target)) {
-      throw new IOException('Cannot move directory '.$this->uri.' to '.$target);
+      throw new OperationFailed('Cannot move directory '.$this->uri.' to '.$target);
     }
     return true;
   }
@@ -197,11 +168,11 @@ class Folder implements Value {
    * Retrieve when the folder was created
    *
    * @return  int The date the file was created as a unix-timestamp
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    */
   public function createdAt() {
     if (false === ($mtime= filectime($this->uri))) {
-      throw new IOException('Cannot get mtime for '.$this->uri);
+      throw new OperationFailed('Cannot get mtime for '.$this->uri);
     }
     return $mtime;
   }
@@ -218,11 +189,11 @@ class Folder implements Value {
    * On such filesystems this function will be useless. 
    *
    * @return  int The date the file was last accessed as a unix-timestamp
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    */
   public function lastAccessed() {
     if (false === ($atime= fileatime($this->uri))) {
-      throw new IOException('Cannot get atime for '.$this->uri);
+      throw new OperationFailed('Cannot get atime for '.$this->uri);
     }
     return $atime;
   }
@@ -231,11 +202,11 @@ class Folder implements Value {
    * Retrieve last modification time
    *
    * @return  int The date the file was last modified as a unix-timestamp
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    */
   public function lastModified() {
     if (false === ($mtime= filemtime($this->uri))) {
-      throw new IOException('Cannot get mtime for '.$this->uri);
+      throw new OperationFailed('Cannot get mtime for '.$this->uri);
     }
     return $mtime;
   }

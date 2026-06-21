@@ -41,7 +41,7 @@ class SingleProcess {
     try {
       $this->lockfile->open(File::WRITE);
       $this->lockfile->lockExclusive();
-    } catch (\io\IOException $e) {
+    } catch (\io\OperationFailed $e) {
       $this->lockfile->close();
       return false;
     }

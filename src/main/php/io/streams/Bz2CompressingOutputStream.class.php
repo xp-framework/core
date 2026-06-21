@@ -1,6 +1,6 @@
 <?php namespace io\streams;
 
-use io\IOException;
+use io\OperationFailed;
 use lang\{Value, IllegalArgumentException};
 use util\Comparison;
 
@@ -31,7 +31,7 @@ class Bz2CompressingOutputStream implements OutputStream, Value {
     if (!stream_filter_append($this->out, 'bzip2.compress', STREAM_FILTER_WRITE, ['blocks' => $level])) {
       fclose($this->out);
       $this->out= null;
-      throw new IOException('Could not append stream filter');
+      throw new OperationFailed('Could not append stream filter');
     }
   }
   

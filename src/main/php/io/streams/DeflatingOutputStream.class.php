@@ -1,6 +1,7 @@
 <?php namespace io\streams;
 
-use lang\Value;
+use io\OperationFailed;
+use lang\{Value, IllegalArgumentException};
 use util\Comparison;
 
 /**
@@ -23,13 +24,13 @@ class DeflatingOutputStream implements OutputStream, Value {
    */
   public function __construct(OutputStream $out, $level= 6) {
     if ($level < 0 || $level > 9) {
-      throw new \lang\IllegalArgumentException('Level '.$level.' out of range [0..9]');
+      throw new IllegalArgumentException('Level '.$level.' out of range [0..9]');
     }
     $this->out= Streams::writeableFd($out);
     if (!stream_filter_append($this->out, 'zlib.deflate', STREAM_FILTER_WRITE, $level)) {
       fclose($this->out);
       $this->out= null;
-      throw new \io\IOException('Could not append stream filter');
+      throw new OperationFailed('Could not append stream filter');
     }
   }
   

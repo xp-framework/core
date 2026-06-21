@@ -1,6 +1,6 @@
 <?php namespace lang\unittest;
 
-use io\IOException;
+use io\OperationFailed;
 use lang\Process;
 use test\verify\Runtime;
 use test\{After, Assert, Before, Expect, Test, Values};
@@ -74,27 +74,27 @@ class ProcessResolveTest {
     Assert::true(is_executable(Process::resolve('explorer')));
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function resolveSlashDirectory() {
     Process::resolve('/');
   }
 
-  #[Test, Runtime(os: 'WIN'), Expect(IOException::class)]
+  #[Test, Runtime(os: 'WIN'), Expect(OperationFailed::class)]
   public function resolveBackslashDirectory() {
     Process::resolve('\\');
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function resolveEmpty() {
     Process::resolve('');
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function resolveNonExistant() {
     Process::resolve('@@non-existant@@');
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function resolveNonExistantFullyQualified() {
     Process::resolve('/@@non-existant@@');
   }

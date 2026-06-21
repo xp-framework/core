@@ -1,7 +1,7 @@
 <?php namespace io\unittest;
 
 use io\streams\FileOutputStream;
-use io\{File, Files, IOException, TempFile};
+use io\{File, Files, OperationFailed, TempFile};
 use lang\IllegalArgumentException;
 use test\{Assert, Expect, Test};
 
@@ -21,7 +21,7 @@ class FileOutputStreamTest {
       try {
         $file->isOpen() && $file->close();
         $file->unlink();
-      } catch (IOException $ignored) {
+      } catch (OperationFailed $ignored) {
         // Can't really do anything about it...
       }
     }
@@ -63,7 +63,7 @@ class FileOutputStreamTest {
     new FileOutputStream('');
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function cannot_write_after_closing() {
     with (new FileOutputStream($this->tempFile()), function($stream) {
       $stream->close();

@@ -1,6 +1,6 @@
 <?php namespace io\unittest;
 
-use io\{Folder, FolderEntries, File, Files, IOException, Path};
+use io\{Folder, FolderEntries, File, Files, OperationFailed, Path};
 use lang\Environment;
 use test\verify\Runtime;
 use test\{After, Assert, Expect, Test};
@@ -70,7 +70,7 @@ class FolderTest {
     Assert::false($f->exists());
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function unlink_nonexistant() {
     $f= new Folder($this->tempFolder());
     $f->unlink();
@@ -235,7 +235,7 @@ class FolderTest {
     Assert::instance(FolderEntries::class, (new Folder($this->tempFolder()))->entries());
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function entries_iteration_raises_exception_if_path_does_not_exist() {
     iterator_to_array((new Folder($this->tempFolder()))->entries());
   }

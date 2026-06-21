@@ -1,5 +1,6 @@
 <?php namespace io\streams;
 
+use io\OperationFailed;
 use lang\Value;
 use util\Comparison;
 
@@ -22,7 +23,7 @@ class InflatingInputStream implements InputStream, Value {
   public function __construct(InputStream $in) {
     $this->in= Streams::readableFd($in);
     if (!stream_filter_append($this->in, 'zlib.inflate', STREAM_FILTER_READ)) {
-      throw new \io\IOException('Could not append stream filter');
+      throw new OperationFailed('Could not append stream filter');
     }
   }
 

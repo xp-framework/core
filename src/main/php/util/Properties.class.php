@@ -68,7 +68,7 @@ class Properties implements PropertyAccess, Value {
    * @param   io.streams.InputStream|io.Channel|string $in
    * @param   string $charset the charset the stream is encoded in or NULL to trigger autodetection by BOM
    * @return  self
-   * @throws  io.IOException
+   * @throws  io.OperationFailed
    * @throws  lang.FormatException
    */
   public function load($in, $charset= null): self {
@@ -146,7 +146,7 @@ class Properties implements PropertyAccess, Value {
    * Store to an output stream, e.g. a file
    *
    * @param   io.streams.OutputStream out
-   * @throws  io.IOException
+   * @throws  io.OperationFailed
    */
   public function store(OutputStream $out) {
     foreach (array_keys($this->_data) as $section) {
@@ -180,7 +180,7 @@ class Properties implements PropertyAccess, Value {
    * Create the property file
    *
    * @return  void
-   * @throws  io.IOException if the property file could not be created
+   * @throws  io.OperationFailed if the property file could not be created
    */
   public function create() {
     if (null !== $this->_file) {
@@ -195,7 +195,7 @@ class Properties implements PropertyAccess, Value {
    * Helper method that loads the data from the file if needed
    *
    * @param   bool force default FALSE
-   * @throws  io.IOException
+   * @throws  io.OperationFailed
    */
   private function _load($force= false) {
     if ($force || null === $this->_data) {

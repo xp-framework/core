@@ -1,6 +1,6 @@
 <?php namespace io\streams;
 
-use io\{IOException, Channel};
+use io\{OperationFailed, Channel};
 use lang\{Closeable, Value, IllegalArgumentException};
 use util\Objects;
 
@@ -65,7 +65,7 @@ abstract class Reader implements InputStreamReader, Closeable, Value {
    * Reset to start.
    *
    * @return void
-   * @throws io.IOException in case the underlying stream does not support seeking
+   * @throws io.OperationFailed in case the underlying stream does not support seeking
    */
   public function reset() {
     if ($this->stream instanceof Seekable) {
@@ -73,7 +73,7 @@ abstract class Reader implements InputStreamReader, Closeable, Value {
       $this->beginning= true;
       $this->buf= '';
     } else {
-      throw new IOException('Underlying stream does not support seeking');
+      throw new OperationFailed('Underlying stream does not support seeking');
     }
   }
 

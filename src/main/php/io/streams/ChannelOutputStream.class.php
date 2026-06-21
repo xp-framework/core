@@ -1,6 +1,6 @@
 <?php namespace io\streams;
 
-use io\IOException;
+use io\OperationFailed;
 use lang\Value;
 use util\Comparison;
 
@@ -25,14 +25,14 @@ class ChannelOutputStream implements OutputStream, Value {
   public function __construct($arg) {
     if ('stdout' === $arg || 'stderr' === $arg || 'output' === $arg) {
       if (!($this->fd= fopen('php://'.$arg, 'wb'))) {
-        throw new IOException('Could not open '.$arg.' channel for writing');
+        throw new OperationFailed('Could not open '.$arg.' channel for writing');
       }
       $this->name= $arg;
     } else if (is_resource($arg)) {
       $this->fd= $arg;
       $this->name= '#'.(int)$arg;
     } else {
-      throw new IOException('Expecting either stdout, stderr, output or a file descriptor '.typeof($arg).' given');
+      throw new OperationFailed('Expecting either stdout, stderr, output or a file descriptor '.typeof($arg).' given');
     }
   }
 
@@ -43,7 +43,7 @@ class ChannelOutputStream implements OutputStream, Value {
    */
   public function write($arg) { 
     if (null === $this->fd || false === fwrite($this->fd, $arg)) {
-      $e= new IOException('Could not write '.strlen($arg).' bytes to '.$this->name.' channel');
+      $e= new OperationFailed('Could not write '.strlen($arg).' bytes to '.$this->name.' channel');
       \xp::gc(__FILE__);
       throw $e;
     }

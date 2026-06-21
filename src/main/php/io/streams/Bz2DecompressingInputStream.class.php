@@ -1,6 +1,6 @@
 <?php namespace io\streams;
 
-use io\IOException;
+use io\OperationFailed;
 use lang\Value;
 use util\Comparison;
 
@@ -23,7 +23,7 @@ class Bz2DecompressingInputStream implements InputStream, Value {
   public function __construct(InputStream $in) {
     $this->in= Streams::readableFd($in);
     if (!stream_filter_append($this->in, 'bzip2.decompress', STREAM_FILTER_READ)) {
-      throw new IOException('Could not append stream filter');
+      throw new OperationFailed('Could not append stream filter');
     }
   }
 

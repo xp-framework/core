@@ -1,6 +1,6 @@
 <?php namespace io\unittest;
 
-use io\{Files, IOException, TempFile};
+use io\{Files, OperationFailed, TempFile};
 use lang\{Environment, IllegalStateException};
 use test\{Assert, Test};
 
@@ -47,8 +47,8 @@ class TempFileTest {
 
     try {
       $t->containing('Test');
-      $this->fail('No exception raised', null, IOException::class);
-    } catch (IOException $expected) {
+      $this->fail('No exception raised', null, OperationFailed::class);
+    } catch (OperationFailed $expected) {
       // OK
     } finally {
       $t->setPermissions(0600);

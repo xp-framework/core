@@ -1,6 +1,6 @@
 <?php namespace io\streams;
 
-use io\IOException;
+use io\OperationFailed;
 use lang\Value;
 use util\Comparison;
 
@@ -64,7 +64,7 @@ class GzDecompressingInputStream implements InputStream, Value {
    * Constructor
    *
    * @param   io.streams.InputStream $in
-   * @throws  io.IOException
+   * @throws  io.OperationFailed
    */
   public function __construct(InputStream $in) {
     
@@ -77,10 +77,10 @@ class GzDecompressingInputStream implements InputStream, Value {
     // * OS       (Operating system)
     $this->header= unpack('a2id/Cmethod/Cflags/Vtime/Cextra/Cos', $in->read(10));
     if ("\x1F\x8B" != $this->header['id']) {
-      throw new IOException('Invalid format, expected \037\213, have '.addcslashes($this->header['id'], "\0..\377"));
+      throw new OperationFailed('Invalid format, expected \037\213, have '.addcslashes($this->header['id'], "\0..\377"));
     }
     if (8 !== $this->header['method']) {
-      throw new IOException('Unknown compression method #'.$this->header['method']);
+      throw new OperationFailed('Unknown compression method #'.$this->header['method']);
     }
     if (8 === ($this->header['flags'] & 8)) {
       $this->header['filename']= '';
@@ -94,7 +94,7 @@ class GzDecompressingInputStream implements InputStream, Value {
     self::$wrapped[$wri]= $in;
     $this->in= fopen($wri, 'r');
     if (!stream_filter_append($this->in, 'zlib.inflate', STREAM_FILTER_READ)) {
-      throw new IOException('Could not append stream filter');
+      throw new OperationFailed('Could not append stream filter');
     }
   }
 

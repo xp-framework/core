@@ -1,6 +1,6 @@
 <?php namespace util\unittest;
 
-use io\{IOException, TempFile};
+use io\{OperationFailed, TempFile};
 use test\{Assert, Expect, Test};
 use util\Properties;
 
@@ -17,7 +17,7 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
     Assert::equals('value', $prop->readString('section', 'key'));
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function throws_error_when_reading() {
     $p= new Properties('@@does-not-exist.ini@@');
     $p->readString('section', 'key');
