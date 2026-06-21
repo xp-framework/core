@@ -37,7 +37,7 @@ Finally, start `xp -v` to see it working:
 
 ```sh
 $ xp -v
-XP 12.10.1-dev { PHP/8.5.7 & Zend/4.5.7 } @ Windows NT SURFACE 10.0 build 26200 (Windows 11) AMD64
+XP 12.10.2-dev { PHP/8.5.7 & Zend/4.5.7 } @ Windows NT SURFACE 10.0 build 26200 (Windows 11) AMD64
 Copyright (c) 2001-2026 the XP group
 FileSystemCL<./src/main/php>
 FileSystemCL<./src/test/php>
@@ -68,7 +68,7 @@ Now run it:
 
 ```sh
 $ xp ageindays.script.php 1977-12-14
-Hey, you are 17662 days old
+Hey, you are 17721 days old
 ```
 
 Alternatively, you can put this code inside a class and give it a static *main* method. This way, you can use features like inheritance, trait inclusion etcetera. This time, save the code to a file called `AgeInDays.class.php`.
@@ -93,7 +93,7 @@ class AgeInDays {
 
 ```sh
 $ xp AgeInDays 1977-12-14
-Hey, you are 17662 days old
+Hey, you are 17721 days old
 ```
 
 Contributing
