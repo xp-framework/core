@@ -1,6 +1,6 @@
 <?php namespace io\unittest;
 
-use io\{File, Folder, FolderEntries, Path};
+use io\{File, Folder, FolderEntries, Path, NotFound, OperationFailed};
 use lang\{Environment, IllegalArgumentException};
 use test\{After, Assert, Before, Expect, Test, Values};
 
@@ -86,6 +86,17 @@ class FolderEntriesTest {
       [$expected, $expected],
       [iterator_to_array($entries), iterator_to_array($entries)]
     );
+  }
+
+  #[Test, Expect(NotFound::class)]
+  public function entries_iteration_for_non_existant() {
+    iterator_to_array(new FolderEntries(new Folder($this->folder, '@non-existant@')));
+  }
+
+  #[Test, Expect(OperationFailed::class)]
+  public function entries_iteration_for_file() {
+    (new File($this->folder, 'file'))->touch();
+    iterator_to_array(new FolderEntries(new Folder($this->folder, 'file')));
   }
 
   #[Test]

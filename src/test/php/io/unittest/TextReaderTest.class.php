@@ -1,7 +1,7 @@
 <?php namespace io\unittest;
 
 use io\streams\{InputStream, LinesIn, MemoryInputStream, MemoryOutputStream, TextReader};
-use io\{Channel, IOException};
+use io\{Channel, OperationFailed};
 use lang\{FormatException, IllegalArgumentException};
 use test\{Assert, Expect, Test, Values};
 
@@ -344,7 +344,7 @@ class TextReaderTest {
     Assert::equals('ABC', $r->read(3));
   }
 
-  #[Test, Expect(class: IOException::class, message: 'Underlying stream does not support seeking')]
+  #[Test, Expect(class: OperationFailed::class, message: 'Underlying stream does not support seeking')]
   public function resetUnseekable() {
     $r= new TextReader($this->unseekableStream());
     $r->reset();
@@ -439,8 +439,8 @@ class TextReaderTest {
     Assert::equals([1 => 'A', 2 => 'B'], iterator_to_array($reader->lines()));
     try {
       iterator_to_array($reader->lines());
-      $this->fail('No exception raised', null, 'io.IOException');
-    } catch (\io\IOException $expected) {
+      $this->fail('No exception raised', null, 'io.OperationFailed');
+    } catch (\io\OperationFailed $expected) {
       // OK
     }
   }

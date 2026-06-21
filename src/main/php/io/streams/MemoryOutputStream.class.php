@@ -1,6 +1,6 @@
 <?php namespace io\streams;
 
-use io\IOException;
+use io\OperationFailed;
 use lang\Value;
 use util\Comparison;
 
@@ -66,7 +66,7 @@ class MemoryOutputStream implements OutputStream, Seekable, Truncation, Value {
    *
    * @param  int $offset
    * @param  int $whence default SEEK_SET (one of SEEK_[SET|CUR|END])
-   * @throws io.IOException
+   * @throws io.OperationFailed
    * @return void
    */
   public function seek($offset, $whence= SEEK_SET) {
@@ -74,13 +74,13 @@ class MemoryOutputStream implements OutputStream, Seekable, Truncation, Value {
       case SEEK_SET: $this->pos= $offset; break;
       case SEEK_CUR: $this->pos+= $offset; break;
       case SEEK_END: $this->pos= strlen($this->bytes) + $offset; break;
-      default: throw new IOException('Unexpected whence '.$whence);
+      default: throw new OperationFailed('Unexpected whence '.$whence);
     }
 
     // Ensure we cannot seek *before* start
     if ($this->pos < 0) {
       $this->pos= 0;
-      throw new IOException('Seek error, position '.$offset.', whence: '.$whence);
+      throw new OperationFailed('Seek error, position '.$offset.', whence: '.$whence);
     }
   }
 

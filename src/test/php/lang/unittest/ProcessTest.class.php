@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use io\streams\{MemoryOutputStream, Streams};
-use io\{IOException, TempFile};
+use io\{OperationFailed, TempFile};
 use lang\{Environment, IllegalStateException, Process, Runtime};
 use test\verify\Condition;
 use test\{Assert, AssertionFailedError, Expect, Test, Values};
@@ -158,17 +158,17 @@ class ProcessTest {
     }
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function runningNonExistantFile() {
     new Process(':FILE_DOES_NOT_EXIST:');
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function runningDirectory() {
     new Process(Environment::tempDir());
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function runningEmpty() {
     new Process('');
   }

@@ -1,6 +1,6 @@
 <?php namespace io\streams;
 
-use io\IOException;
+use io\OperationFailed;
 use lang\Environment;
 
 /**
@@ -71,7 +71,7 @@ class SpooledInputStream implements InputStream, Seekable {
    * @param  int $offset
    * @param  int $whence SEEK_SET, SEEK_CUR or SEEK_END
    * @return void
-   * @throws io.IOException
+   * @throws io.OperationFailed
    */
   public function seek($offset, $whence= SEEK_SET) {
     switch ($whence) {
@@ -82,7 +82,7 @@ class SpooledInputStream implements InputStream, Seekable {
     }
 
     if ($position < 0) {
-      throw new IOException("Seek error, position {$offset} in mode {$whence}");
+      throw new OperationFailed("Seek error, position {$offset} in mode {$whence}");
     }
 
     // Read from underlying stream when seeking forward, clamping on EOF.

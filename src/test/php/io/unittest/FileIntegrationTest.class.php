@@ -1,6 +1,6 @@
 <?php namespace io\unittest;
 
-use io\{File, FileNotFoundException, Folder, IOException};
+use io\{File, NotFound, Folder, OperationFailed};
 use lang\{Environment, IllegalStateException};
 use test\{After, Assert, Before, Expect, Ignore, Test};
 
@@ -58,7 +58,7 @@ class FileIntegrationTest {
    * @param   string data default NULL
    * @param   bool append default FALSE
    * @return  int number of written bytes or 0 if NULL data was given
-   * @throws  io.IOException
+   * @throws  io.OperationFailed
    */
   protected function writeData($file, $data= null, $append= false) {
     $file->open($append ? File::APPEND : File::WRITE);
@@ -113,7 +113,7 @@ class FileIntegrationTest {
     Assert::false($file->exists());
   }
   
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function cannotDeleteNonExistant() {
     $this->tempFile()->unlink();
   }
@@ -125,7 +125,7 @@ class FileIntegrationTest {
     $file->unlink();
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function cannotCloseUnopenedFile() {
     $this->tempFile()->close();
   }
@@ -291,7 +291,7 @@ class FileIntegrationTest {
     }
   }
 
-  #[Test, Expect(FileNotFoundException::class)]
+  #[Test, Expect(NotFound::class)]
   public function cannotOpenNonExistantForReading() {
     $this->tempFile()->open(File::READ);
   }

@@ -1,6 +1,6 @@
 <?php namespace io\streams;
 
-use io\{FileNotFoundException, OperationNotSupportedException, IOException};
+use io\{NotFound, NotSupported, OperationFailed};
 
 /**
  * Wraps I/O streams into PHP streams
@@ -25,7 +25,7 @@ abstract class Streams {
       }
 
       public function stream_write($data) {
-        throw new IOException('Cannot write to readable stream');
+        throw new NotSupported('Cannot write to readable stream');
       }
 
       public function stream_read($count) {
@@ -55,11 +55,11 @@ abstract class Streams {
           parent::$streams[$this->id]->truncate($size);
           return true;
         }
-        throw new IOException('Cannot truncate underlying stream');
+        throw new NotSupported('Cannot truncate underlying stream');
       }
 
       public function stream_read($count) {
-        throw new IOException('Cannot read from writeable stream');
+        throw new NotSupported('Cannot read from writeable stream');
       }
 
       public function stream_flush() {
@@ -125,7 +125,7 @@ abstract class Streams {
    *
    * @param   io.streams.InputStream $s
    * @return  string
-   * @throws  io.IOException
+   * @throws  io.OperationFailed
    */
   public static function readAll(InputStream $s) {
     $r= '';
@@ -140,14 +140,14 @@ abstract class Streams {
    * @param   int $offset
    * @param   int $whence default SEEK_SET (one of SEEK_[SET|CUR|END])
    * @return  void
-   * @throws  io.IOException
-   * @throws  io.OperationNotSupportedException
+   * @throws  io.OperationFailed
+   * @throws  io.NotSupported
    */
   public static function seek(InputStream $s, $offset, $whence= SEEK_SET) {
     if ($s instanceof Seekable) {
       $s->seek($offset, $whence);
     } else {
-      throw new OperationNotSupportedException('Cannot seek instances of '.nameof($s));
+      throw new NotSupported('Cannot seek instances of '.nameof($s));
     }
   }
 
@@ -158,12 +158,12 @@ abstract class Streams {
    * @param   string mode
    * @param   int options
    * @param   string opened_path
-   * @throws  io.FileNotFoundException in case the given file cannot be found
+   * @throws  io.NotFound in case the given file cannot be found
    */
   public function stream_open($path, $mode, $options, $opened_path) {
     sscanf(urldecode($path), "iostr%c://%[^$]", $m, $this->id);
     if (!isset(self::$streams[$this->id])) {
-      throw new FileNotFoundException('Cannot open stream "'.$this->id.'" mode '.$mode);
+      throw new NotFound('Cannot open stream "'.$this->id.'" mode '.$mode);
     }
     return true;
   }
@@ -190,7 +190,7 @@ abstract class Streams {
    */
   public function stream_seek($offset, $whence) {
     if (!self::$streams[$this->id] instanceof Seekable) {
-      throw new IOException('Underlying stream does not support seeking');
+      throw new OperationFailed('Underlying stream does not support seeking');
     }
 
     self::$streams[$this->id]->seek($offset, $whence);
@@ -204,7 +204,7 @@ abstract class Streams {
    */
   public function stream_tell() {
     if (!self::$streams[$this->id] instanceof Seekable) {
-      throw new IOException('Underlying stream does not support seeking');
+      throw new OperationFailed('Underlying stream does not support seeking');
     }
     return self::$streams[$this->id]->tell();
   }

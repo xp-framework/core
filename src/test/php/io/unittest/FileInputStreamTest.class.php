@@ -1,7 +1,7 @@
 <?php namespace io\unittest;
 
 use io\streams\FileInputStream;
-use io\{FileNotFoundException, IOException, TempFile};
+use io\{NotFound, OperationFailed, TempFile};
 use test\{After, Assert, Expect, PrerequisitesNotMetError, Test};
 
 class FileInputStreamTest {
@@ -20,7 +20,7 @@ class FileInputStreamTest {
       try {
         $file->isOpen() && $file->close();
         $file->unlink();
-      } catch (IOException $ignored) {
+      } catch (OperationFailed $ignored) {
         // Can't really do anything about it...
       }
     }
@@ -71,12 +71,12 @@ class FileInputStreamTest {
     });
   }
 
-  #[Test, Expect(FileNotFoundException::class)]
+  #[Test, Expect(NotFound::class)]
   public function nonExistantFile() {
     new FileInputStream('::NON-EXISTANT::');
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function readingAfterClose() {
     with (new FileInputStream($this->tempFile()), function($stream) {
       $stream->close();
@@ -84,7 +84,7 @@ class FileInputStreamTest {
     });
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function availableAfterClose() {
     with (new FileInputStream($this->tempFile()), function($stream) {
       $stream->close();

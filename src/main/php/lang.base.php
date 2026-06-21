@@ -465,4 +465,12 @@ spl_autoload_register(function($class) {
   $cl->loadClass0($name);
   return true;
 });
+
+// https://github.com/xp-framework/core/issues/363
+if (PHP_VERSION_ID < 80600) {
+  class_alias(\io\OperationFailed::class, \io\IOException::class);
+  class_alias(\io\NotFound::class, \io\FileNotFoundException::class);
+  class_alias(\io\NotSupported::class, \io\OperationNotSupportedException::class);
+  class_alias(\io\TimedOut::class, \io\OperationTimedOutException::class);
+}
 // }}}

@@ -1,7 +1,7 @@
 <?php namespace io\unittest;
 
 use io\streams\{InputStream, LinesIn, MemoryInputStream, TextReader};
-use io\{File, IOException};
+use io\{File, OperationFailed};
 use lang\IllegalArgumentException;
 use test\{Assert, Expect, Test, Values};
 
@@ -82,8 +82,8 @@ class LinesInTest {
     Assert::equals([1 => 'A', 2 => 'B'], iterator_to_array($fixture));
     try {
       iterator_to_array($fixture);
-      $this->fail('No exception raised', null, 'io.IOException');
-    } catch (IOException $expected) {
+      $this->fail('No exception raised', null, 'io.OperationFailed');
+    } catch (OperationFailed $expected) {
       // OK
     }
   }

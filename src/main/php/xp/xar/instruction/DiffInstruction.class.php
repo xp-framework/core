@@ -1,7 +1,7 @@
 <?php namespace xp\xar\instruction;
 
 use xp\xar\Options;
-use io\{TempFile, File, IOException};
+use io\{TempFile, File, OperationFailed};
 use lang\{Process, IllegalArgumentException};
 use lang\archive\Archive;
 
@@ -109,7 +109,7 @@ class DiffInstruction extends AbstractInstruction {
         }
         
         $p->close();
-      } catch (IOException $e) {
+      } catch (OperationFailed $e) {
         $this->err->writeLine('!=> Invocation of `diff` program failed.');
         $templ->unlink();
         $tempr->unlink();

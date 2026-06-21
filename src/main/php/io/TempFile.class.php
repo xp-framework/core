@@ -59,7 +59,7 @@ class TempFile extends File {
    *
    * @param  string $contents
    * @return self
-   * @throws io.IOException if an I/O error occurs
+   * @throws io.OperationFailed if an I/O error occurs
    * @throws lang.IllegalStateException if the file is open
    */
   public function containing($contents) {
@@ -68,7 +68,7 @@ class TempFile extends File {
     }
 
     if (false === file_put_contents($this->uri, $contents)) {
-      $e= new IOException('Cannot write to temporary file '.$this->uri);
+      $e= new OperationFailed('Cannot write to temporary file '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
     }

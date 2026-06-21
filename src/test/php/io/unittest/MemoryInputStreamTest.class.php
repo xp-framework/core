@@ -1,6 +1,6 @@
 <?php namespace io\unittest;
 
-use io\IOException;
+use io\OperationFailed;
 use io\streams\MemoryInputStream;
 use test\{Assert, Expect, Test, Values};
 
@@ -81,13 +81,13 @@ class MemoryInputStreamTest {
     Assert::equals('Hello', $in->read(5));
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function seek_unknown_whence() {
     $in= $this->newFixture();
     $in->seek(0, 9999);
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function seek_before_start() {
     $in= $this->newFixture();
     $in->seek(0, -1);
