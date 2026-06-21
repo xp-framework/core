@@ -25,7 +25,7 @@ abstract class Streams {
       }
 
       public function stream_write($data) {
-        throw new OperationFailed('Cannot write to readable stream');
+        throw new NotSupported('Cannot write to readable stream');
       }
 
       public function stream_read($count) {
@@ -55,11 +55,11 @@ abstract class Streams {
           parent::$streams[$this->id]->truncate($size);
           return true;
         }
-        throw new OperationFailed('Cannot truncate underlying stream');
+        throw new NotSupported('Cannot truncate underlying stream');
       }
 
       public function stream_read($count) {
-        throw new OperationFailed('Cannot read from writeable stream');
+        throw new NotSupported('Cannot read from writeable stream');
       }
 
       public function stream_flush() {

@@ -8,8 +8,8 @@ use lang\{IllegalStateException, Value};
  * Usage:
  * ```
  * $d= new Folder('/etc/');
- * while (false !== ($entry= $d->getEntry())) {
- *   printf("%s/%s\n", $d->uri, $entry);
+ * foreach ($d->entries() as $entry) {
+ *   echo $entry, "\n";
  * }
  * $d->close();
  * ```
@@ -17,12 +17,7 @@ use lang\{IllegalStateException, Value};
  * @test  io.unittest.FolderTest
  */
 class Folder implements Value {
-  public 
-    $uri      = '',
-    $dirname  = '',
-    $path     = '';
-  
-  private $_hdir = false;
+  public $uri, $dirname, $path;
     
   /**
    * Constructor
@@ -40,23 +35,6 @@ class Folder implements Value {
     }
 
     $this->setURI($composed.implode(DIRECTORY_SEPARATOR, $args));
-  }
-  
-  /**
-   * Destructor
-   */
-  public function __destruct() {
-    $this->close();
-  }
-  
-  /**
-   * Close directory
-   *
-   * @return void
-   */
-  public function close() {
-    if (false != $this->_hdir) $this->_hdir->close();
-    $this->_hdir= false;
   }
 
   /**
@@ -170,17 +148,10 @@ class Folder implements Value {
   /**
    * Move this directory
    *
-   * Warning: Open directories cannot be moved. Use the close() method to
-   * close the directory first
-   *
    * @return  bool success
    * @throws  io.OperationFailed in case of an error (e.g., lack of permissions)
-   * @throws  lang.IllegalStateException in case the directory is still open
    */
   public function move($target) {
-    if (is_resource($this->_hdir)) {
-      throw new IllegalStateException('Directory still open');
-    }
     if (false === rename($this->uri, $target)) {
       throw new OperationFailed('Cannot move directory '.$this->uri.' to '.$target);
     }

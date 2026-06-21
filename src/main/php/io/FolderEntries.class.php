@@ -31,11 +31,20 @@ class FolderEntries implements IteratorAggregate {
     return new Path($this->base, $name);
   }
 
-  /** Iterate over all entries */
+  /**
+   * Iterate over all entries
+   *
+   * @throws io.NotFound
+   * @throws io.OperationFailed
+   */
   public function getIterator(): Traversable {
     if (null === $this->handle) {
-      if (!is_resource($handle= opendir($this->base->asFolder()->getURI()))) {
-        $e= new OperationFailed('Cannot open folder '.$this->base);
+      $uri= $this->base->asURI();
+      if (!is_resource($handle= opendir($uri))) {
+        $e= file_exists($uri)
+          ? new OperationFailed('Cannot open folder '.$uri)
+          : new NotFound('Folder '.$uri.' does not exist')
+        ;
         \xp::gc(__FILE__);
         throw $e;
       }
