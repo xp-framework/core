@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 12.10.1 / 2026-06-21
+
+### Bugfixes
+
+* Ensured the files used by the archive class loading mechanism are closed
+  when the class loaders are garbage-collected
+  (@thekid)
+
 ## 12.10.0 / 2026-04-23
 
 ### Bugfixes
