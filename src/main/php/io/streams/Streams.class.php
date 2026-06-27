@@ -79,7 +79,7 @@ abstract class Streams {
    * @return  resource
    */
   public static function readableFd(InputStream $s) { 
-    $hash= spl_object_hash($s);
+    $hash= spl_object_id($s);
     self::$streams[$hash]= $s;
     return fopen('iostrr://'.$hash, 'rb');
   }
@@ -91,7 +91,7 @@ abstract class Streams {
    * @return  string
    */
   public static function readableUri(InputStream $s) { 
-    $hash= spl_object_hash($s);
+    $hash= spl_object_id($s);
     self::$streams[$hash]= $s;
     return 'iostrr://'.$hash;
   }
@@ -103,7 +103,7 @@ abstract class Streams {
    * @return  resource
    */
   public static function writeableFd(OutputStream $s) { 
-    $hash= spl_object_hash($s);
+    $hash= spl_object_id($s);
     self::$streams[$hash]= $s;
     return fopen('iostrw://'.$hash, 'wb');
   }
@@ -115,7 +115,7 @@ abstract class Streams {
    * @return  resource
    */
   public static function writeableUri(OutputStream $s) { 
-    $hash= spl_object_hash($s);
+    $hash= spl_object_id($s);
     self::$streams[$hash]= $s;
     return 'iostrw://'.$hash;
   }

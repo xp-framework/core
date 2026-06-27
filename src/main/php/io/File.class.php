@@ -124,7 +124,7 @@ class File implements Channel, Value {
     );
     $this->path= substr($uri, 0, $p);
     $this->filename= ltrim(substr($uri, $p), '/'.DIRECTORY_SEPARATOR);
-    $this->extension= (false === ($pe= strrpos($this->filename, '.', $s))) ? null : substr($this->filename, $pe+ 1);
+    $this->extension= (false === ($pe= strrpos($this->filename, '.'))) ? null : substr($this->filename, $pe + 1);
   }
 
   /**
