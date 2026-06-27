@@ -22,6 +22,9 @@ forward compatibility with PHP 8.6.
 
 ### Features
 
+* Merged PR #357: Make it possible to supply chunk size to `transfer()` &
+  `transmit()` in `io.streams.StreamTransfer`
+  (@thekid)
 * Merged PR #369: Replace spl_object_hash() with spl_object_id() - @thekid
 
 ## 12.11.0 / 2026-06-21
