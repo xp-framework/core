@@ -105,7 +105,7 @@ abstract class Objects {
       }
       return '<function('.substr($sig, 2).')>';
     } else if (is_object($val)) {
-      $hash= spl_object_hash($val);
+      $hash= spl_object_id($val);
       if (isset($protect[$hash])) return '->{:recursion:}';
       $protect[$hash]= true;
       $r= nameof($val)." {\n";
@@ -126,7 +126,7 @@ abstract class Objects {
     } else if ($val instanceof Value) {
       return $val->hashCode();
     } else if ($val instanceof \Closure) {
-      return spl_object_hash($val);
+      return spl_object_id($val);
     } else if (is_array($val)) {
       $s= '';
       foreach ($val as $key => $value) {
@@ -134,7 +134,7 @@ abstract class Objects {
       }
       return $s;
     } else {
-      return is_object($val) ? spl_object_hash($val) : serialize($val);
+      return is_object($val) ? spl_object_id($val) : serialize($val);
     }
   }
 }
