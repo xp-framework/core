@@ -1,7 +1,9 @@
 <?php namespace lang\unittest;
 
 use lang\Primitive;
+use test\verify\Runtime;
 use test\{Assert, Test};
+use util\Bytes;
 
 class AnonymousInstanceTest {
 
@@ -17,10 +19,10 @@ class AnonymousInstanceTest {
     Assert::equals([Primitive::$STRING], typeof($filter)->genericArguments());
   }
 
-  #[Test]
+  #[Test, Runtime(php: '>=8.0')]
   public function anonymous_generic_with_annotations() {
     $filter= newinstance('#[Anon] lang.unittest.Nullable<string>', [], []);
-    Assert::true(typeof($filter)->hasAnnotation('anon'));
+    Assert::equals('lang\\unittest\\Anon', typeof($filter)->reflect()->getAttributes()[0]->getName());
   }
 
   #[Test]
@@ -44,12 +46,12 @@ class AnonymousInstanceTest {
 
   #[Test]
   public function invocation() {
-    $methods= newinstance('lang.unittest.ArrayFilter<lang.reflect.Method>', [], [
-      'accept' => function($method) { return 'invocation' === $method->getName(); }
+    $nonEmpty= newinstance('lang.unittest.ArrayFilter<util.Bytes>', [], [
+      'accept' => function($bytes) { return $bytes->size() > 0; }
     ]);
     Assert::equals(
-      [typeof($this)->getMethod('invocation')],
-      $methods->filter(typeof($this)->getMethods())
+      [new Bytes('Test')],
+      $nonEmpty->filter([new Bytes(''), new Bytes('Test')])
     );
   }
 }

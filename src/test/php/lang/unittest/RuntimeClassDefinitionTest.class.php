@@ -58,23 +58,25 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
   #[Test]
   public function field_exists() {
     $class= $this->define([], '{ public $fixture= null; }');
-    Assert::true($class->hasField('fixture'));
+    Assert::true(property_exists($class->literal(), 'fixture'));
   }
 
   #[Test]
   public function method_exists() {
     $class= $this->define([], '{ public function fixture() { } }');
-    Assert::true($class->hasMethod('fixture'));
+    Assert::true(method_exists($class->literal(), 'fixture'));
   }
 
   #[Test]
   public function parents_method_exists() {
-    Assert::true($this->define(['parent' => Throwable::class])->hasMethod('toString'));
+    $class= $this->define(['parent' => Throwable::class]);
+    Assert::true(method_exists($class->literal(), 'toString'));
   }
 
   #[Test]
   public function parents_field_exists() {
-    Assert::true($this->define(['parent' => Throwable::class])->hasField('message'));
+    $class= $this->define(['parent' => Throwable::class]);
+    Assert::true(property_exists($class->literal(), 'message'));
   }
 
   #[Test]
@@ -83,7 +85,7 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
       public static $initializerCalled= false;
       static function __static() { self::$initializerCalled= true; }
     }');
-    Assert::true($class->getField('initializerCalled')->get(null));
+    Assert::true(eval("return {$class->literal()}::\$initializerCalled;"));
   }
 
   #[Test, Expect(ClassNotFoundException::class)]
@@ -104,47 +106,47 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
   #[Test]
   public function closure_map_style_declaring_field() {
     $class= $this->define([], ['fixture' => null]);
-    Assert::true($class->hasField('fixture'));
+    Assert::true(property_exists($class->literal(), 'fixture'));
   }
 
   #[Test]
   public function closure_map_style_declaring_method() {
     $class= $this->define([], ['fixture' => function() { }]);
-    Assert::true($class->hasMethod('fixture'));
+    Assert::true(method_exists($class->literal(), 'fixture'));
   }
 
   #[Test]
   public function closure_map_field_access() {
     $class= $this->define([], ['fixture' => 'Test']);
     $instance= $class->newInstance();
-    Assert::equals('Test', $class->getField('fixture')->get($instance));
+    Assert::equals('Test', $instance->fixture);
   }
 
   #[Test]
   public function closure_map_method_invocation() {
     $class= $this->define([], ['fixture' => function($a, $b) { return [$this, $a, $b]; }]);
     $instance= $class->newInstance();
-    Assert::equals([$instance, 1, 2], $class->getMethod('fixture')->invoke($instance, [1, 2]));
+    Assert::equals([$instance, 1, 2], $instance->fixture(1, 2));
   }
 
   #[Test]
   public function closure_with_string_parameter_type() {
     $class= $this->define([], ['fixture' => function(string $a) { return $a; }]);
     $instance= $class->newInstance();
-    Assert::equals('1', $class->getMethod('fixture')->invoke($instance, [1]));
+    Assert::equals('1', $instance->fixture(1));
   }
 
   #[Test]
   public function closure_with_string_return_type() {
     $class= $this->define([], ['fixture' => function($a): string { return $a; }]);
     $instance= $class->newInstance();
-    Assert::equals('1', $class->getMethod('fixture')->invoke($instance, [1]));
+    Assert::equals('1', $instance->fixture(1));
   }
 
   #[Test]
   public function closure_with_void_return_type() {
     $class= $this->define([], ['fixture' => function($a): void { }]);
     $instance= $class->newInstance();
-    Assert::null($class->getMethod('fixture')->invoke($instance, [1]));
+    Assert::null($instance->fixture(1));
   }
 }

@@ -243,14 +243,16 @@ class ClassParser {
       $class= XPClass::forName($this->type($tokens, $i, $context, $imports));
       $i+= 2;
       if (T_VARIABLE === $tokens[$i][0]) {
-        $field= $class->getField(substr($tokens[$i][1], 1));
+        $field= $class->reflect()->getProperty(substr($tokens[$i][1], 1));
         $m= $field->getModifiers();
         if ($m & MODIFIER_PUBLIC) {
-          return $field->get(null);
+          return $field->getValue(null);
         } else if (($m & MODIFIER_PROTECTED) && $class->isAssignableFrom($context['self'])) {
-          return $field->setAccessible(true)->get(null);
+          PHP_VERSION_ID < 80100 && $field->setAccessible(true);
+          return $field->getValue(null);
         } else if (($m & MODIFIER_PRIVATE) && $class->getName() === $context['self']) {
-          return $field->setAccessible(true)->get(null);
+          PHP_VERSION_ID < 80100 && $field->setAccessible(true);
+          return $field->getValue(null);
         } else {
           throw new IllegalAccessException(sprintf(
             'Cannot access %s field %s::$%s',
@@ -262,7 +264,7 @@ class ClassParser {
       } else if (T_CLASS === $tokens[$i][0]) {
         return $class->literal();
       } else {
-        return $class->getConstant($tokens[$i][1]);
+        return $class->reflect()->getConstant($tokens[$i][1]);
       }
     }
   }
