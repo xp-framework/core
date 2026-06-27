@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 13.0.0 / ????-??-??
+
+### RFCs
+
+* Implemented xp-framework/rfc#338: Remove reflection from XP Core. This
+  functionality is provided byin `xp-framework/reflection`. See PR #367.
+  (@thekid)
+
 ### Features
 
 * Merged PR #369: Replace spl_object_hash() with spl_object_id() - @thekid
