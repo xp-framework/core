@@ -5,6 +5,13 @@ XP Framework Core ChangeLog
 
 ## 13.0.0 / ????-??-??
 
+
+### Heads up!
+
+* Removed deprecated I/O exceptions as forward compatibility measure with
+  PHP 8.6, see #366
+  (@thekid)
+
 ### RFCs
 
 * Implemented xp-framework/rfc#338: Remove reflection from XP Core. This
