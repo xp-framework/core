@@ -71,7 +71,7 @@ class NewInstanceTest {
     Assert::equals('Test', $o->test);
   }
 
-  #[Test, Condition(assert: 'PHP_VERSION_ID >= 80000')]
+  #[Test]
   public function new_class_with_annotations() {
     $o= newinstance('#[Test] lang.unittest.Name', ['Test']);
     Assert::equals(
@@ -80,7 +80,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Condition(assert: 'PHP_VERSION_ID >= 80000')]
+  #[Test]
   public function new_class_with_field_annotations() {
     $o= newinstance(Name::class, ['Test'], [
       '#[Test] fixture' => null
@@ -91,7 +91,7 @@ class NewInstanceTest {
     );
   }
 
-  #[Test, Condition(assert: 'PHP_VERSION_ID >= 80000')]
+  #[Test]
   public function new_class_with_method_annotations() {
     $o= newinstance(Name::class, ['Test'], [
       '#[Test] fixture' => function() { }
@@ -133,7 +133,7 @@ class NewInstanceTest {
     newinstance(Value::class, [], function() { });
   }
 
-  #[Test, Condition(assert: 'PHP_VERSION_ID >= 80000')]
+  #[Test]
   public function new_interface_with_annotations() {
     $o= newinstance('#[Test] lang.Runnable', [], [
       'run' => function() { }
@@ -160,7 +160,7 @@ class NewInstanceTest {
     Assert::equals('Test', $o->name());
   }
 
-  #[Test, Condition(assert: 'PHP_VERSION_ID >= 80000')]
+  #[Test]
   public function new_trait_with_annotations() {
     $o= newinstance('#[Test] lang.unittest.Named', [], [
       'run' => function() { }

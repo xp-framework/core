@@ -11,6 +11,9 @@ forward compatibility with PHP 8.6.
 
 ### Heads up!
 
+* Dropped support for PHP 7.4 - phase 2 of xp-framework/rfc#343. Mininum
+  required PHP version is now 8.0.0!
+  (@thekid)
 * Removed deprecated I/O exceptions, see https://wiki.php.net/rfc/poll_api
   (@thekid)
 
