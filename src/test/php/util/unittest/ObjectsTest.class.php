@@ -29,7 +29,7 @@ class ObjectsTest {
       [[1, 2, 3], '|0:i:1;|1:i:2;|2:i:3;'],
       [[null, null], '|0:N;|1:N;'],
       [[['Nested'], ['Array']], '|0:|0:s:6:"Nested";|1:|0:s:5:"Array";'],
-      [[self::$func], '|0:'.spl_object_hash(self::$func)]
+      [[self::$func], '|0:'.spl_object_id(self::$func)]
     ];
   }
 
@@ -37,7 +37,7 @@ class ObjectsTest {
   public function maps() {
     return [
       [['one' => 'two'], '|one:s:3:"two";'],
-      [['func' => self::$func], '|func:'.spl_object_hash(self::$func)]
+      [['func' => self::$func], '|func:'.spl_object_id(self::$func)]
     ];
   }
 
@@ -383,12 +383,12 @@ class ObjectsTest {
   }
 
   #[Test, Values(from: 'natives')]
-  public function hashOf_calls_spl_object_hash_on_natives($val) {
-    Assert::equals(spl_object_hash($val), Objects::hashOf($val));
+  public function hashOf_calls_spl_object_id_on_natives($val) {
+    Assert::equals((string)spl_object_id($val), Objects::hashOf($val));
   }
 
   #[Test]
   public function function_hash() {
-    Assert::equals(spl_object_hash(self::$func), Objects::hashOf(self::$func));
+    Assert::equals((string)spl_object_id(self::$func), Objects::hashOf(self::$func));
   }
 }

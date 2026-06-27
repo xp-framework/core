@@ -20,7 +20,7 @@ interface Value {
   /**
    * Calculates a hashcode and makes this value useable in e.g. collections.
    *
-   * @see    php://spl_object_hash
+   * @see    php://spl_object_id
    * @return string
    */
   public function hashCode();
