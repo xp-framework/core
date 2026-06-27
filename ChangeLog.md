@@ -5,11 +5,13 @@ XP Framework Core ChangeLog
 
 ## 13.0.0 / ????-??-??
 
+This major release finally removes the reflection API, which has been in
+its dedicated library since the end of 2020. Multiple refactorings add
+forward compatibility with PHP 8.6.
 
 ### Heads up!
 
-* Removed deprecated I/O exceptions as forward compatibility measure with
-  PHP 8.6, see #366
+* Removed deprecated I/O exceptions, see https://wiki.php.net/rfc/poll_api
   (@thekid)
 
 ### RFCs
