@@ -1,6 +1,6 @@
 <?php namespace util\unittest;
 
-use ReflectionClass, StdClass;
+use ReflectionClass;
 use lang\Value;
 use test\{Assert, Test, Values};
 use util\{Comparison, Objects};
@@ -57,7 +57,7 @@ class ObjectsTest {
   public function natives() {
     return [
       [new ReflectionClass(self::class)],
-      [new StdClass()]
+      [(object)[]],
     ];
   }
 
@@ -281,8 +281,8 @@ class ObjectsTest {
 
   #[Test]
   public function object_with_recursion_representation() {
-    $o= new \StdClass();
-    $o->child= new \StdClass();
+    $o= (object)[];
+    $o->child= (object)[];
     $o->child->parent= $o;
     Assert::equals(
       "stdClass {\n  child => stdClass {\n    parent => ->{:recursion:}\n  }\n}",
