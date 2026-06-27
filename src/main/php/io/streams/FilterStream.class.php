@@ -11,9 +11,7 @@ abstract class FilterStream {
   private $remove= [];
 
   static function __static() {
-
-    // Suppress "Declaration should be compatible" in PHP 7.4
-    stream_filter_register('iostrl.*', get_class(@new class() extends php_user_filter {
+    stream_filter_register('iostrl.*', get_class(new class() extends php_user_filter {
       public function filter($in, $out, &$consumed, bool $closing): int {
         while ($bucket= stream_bucket_make_writeable($in)) {
           $consumed+= $bucket->datalen;
@@ -23,7 +21,7 @@ abstract class FilterStream {
         return PSFS_PASS_ON;
       }
     }));
-    stream_filter_register('iostrf.*', get_class(@new class() extends php_user_filter {
+    stream_filter_register('iostrf.*', get_class(new class() extends php_user_filter {
       public function filter($in, $out, &$consumed, bool $closing): int {
         return FilterStream::$filters[$this->filtername]($in, $out, $consumed, $closing);
       }
