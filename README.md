@@ -1,7 +1,6 @@
 XP Framework Core
 =================
 [![Build status on GitHub](https://github.com/xp-framework/core/workflows/Tests/badge.svg)](https://github.com/xp-framework/core/actions)
-[![Build status on AppVeyor](https://ci.appveyor.com/api/projects/status/bb9gkkq1o7f6m2ns?svg=true)](https://ci.appveyor.com/project/thekid/core)
 [![BSD License](https://raw.githubusercontent.com/xp-framework/web/master/static/licence-bsd.png)](https://github.com/xp-framework/core/blob/master/LICENSE.md)
 [![Requires PHP 7.4+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-7_4plus.svg)](http://php.net/)
 [![Supports PHP 8.0+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-8_0plus.svg)](http://php.net/)
@@ -22,7 +21,7 @@ the following one-liner:
 
 ```sh
 $ cd ~/bin
-$ curl -sSL https://github.com/xp-runners/reference/releases/download/v9.2.0/setup-9.2.0.sh | sh
+$ curl -sSL https://github.com/xp-runners/reference/releases/download/v9.3.0/setup-9.3.0.sh | sh
 ```
 
 ### Using it
@@ -37,7 +36,7 @@ Finally, start `xp -v` to see it working:
 
 ```sh
 $ xp -v
-XP 12.9.1-dev { PHP/8.5.5 & Zend/4.5.5 } @ Windows NT SURFACE 10.0 build 26200 (Windows 11) AMD64
+XP 12.11.1-dev { PHP/8.5.7 & Zend/4.5.7 } @ Windows NT SURFACE 10.0 build 26200 (Windows 11) AMD64
 Copyright (c) 2001-2026 the XP group
 FileSystemCL<./src/main/php>
 FileSystemCL<./src/test/php>
@@ -68,7 +67,7 @@ Now run it:
 
 ```sh
 $ xp ageindays.script.php 1977-12-14
-Hey, you are 17662 days old
+Hey, you are 17721 days old
 ```
 
 Alternatively, you can put this code inside a class and give it a static *main* method. This way, you can use features like inheritance, trait inclusion etcetera. This time, save the code to a file called `AgeInDays.class.php`.
@@ -93,7 +92,7 @@ class AgeInDays {
 
 ```sh
 $ xp AgeInDays 1977-12-14
-Hey, you are 17662 days old
+Hey, you are 17721 days old
 ```
 
 Contributing

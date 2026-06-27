@@ -1,6 +1,6 @@
 <?php namespace io\unittest;
 
-use io\IOException;
+use io\OperationFailed;
 use io\streams\MemoryOutputStream;
 use test\{Assert, Expect, Test, Values};
 
@@ -107,12 +107,12 @@ class MemoryOutputStreamTest {
     Assert::equals('Hell_', $out->bytes());
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function seek_unknown_whence() {
     (new MemoryOutputStream(''))->seek(0, 9999);
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function seek_before_start() {
     (new MemoryOutputStream(''))->seek(-1);
   }

@@ -1,6 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{ClassLoader, ClassNotFoundException, Closeable, Runnable, XPClass};
+use test\verify\Runtime;
 use test\{Assert, Expect, Test};
 
 class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
@@ -60,13 +61,14 @@ class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
 
   #[Test]
   public function parents_method_exists() {
-    Assert::true($this->define(['parents' => [Runnable::class]])->hasMethod('run'));
+    $class= $this->define(['parents' => [Runnable::class]]);
+    Assert::true(method_exists($class->literal(), 'run'));
   }
 
   #[Test]
   public function method_exists() {
     $class= $this->define(['parents' => [Runnable::class]], '{ public function runAs($user); }');
-    Assert::true($class->hasMethod('runAs'));
+    Assert::true(method_exists($class->literal(), 'runAs'));
   }
 
   #[Test, Expect(ClassNotFoundException::class)]
@@ -82,6 +84,6 @@ class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
   #[Test]
   public function closure_map_style_declaring_method() {
     $class= $this->define(['parents' => [Runnable::class]], ['fixture' => function() { }]);
-    Assert::true($class->hasMethod('fixture'));
+    Assert::true(method_exists($class->literal(), 'fixture'));
   }
 }

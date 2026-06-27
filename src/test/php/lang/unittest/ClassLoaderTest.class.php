@@ -109,11 +109,9 @@ class ClassLoaderTest {
       return $this->fail('Class "'.$name.'" may not exist!');
     }
 
-    Assert::true(ClassLoader::getDefault()
-      ->loadClass($name)
-      ->getMethod('initializerCalled')
-      ->invoke(null)
-    );
+    $prop= ClassLoader::getDefault()->loadClass($name)->reflect()->getProperty('initializerCalled');
+    PHP_VERSION_ID < 80100 && $prop->setAccessible(true);
+    Assert::true($prop->getValue(null));
   }
 
   #[Test, Expect(ClassNotFoundException::class)]
@@ -136,7 +134,7 @@ class ClassLoaderTest {
     with ($p= Package::forName('lang.unittest.fixture')); {
       $two= $p->loadClass('StaticRecursionTwo');
       $one= $p->loadClass('StaticRecursionOne');
-      Assert::equals($two, $one->getField('two')->get(null));
+      Assert::equals($two, $one->reflect()->getProperty('two')->getValue(null));
     }
   }
 

@@ -1,6 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\{ClassLoader, DynamicClassLoader, XPClass};
+use test\verify\Runtime;
 use test\{Assert, Test, Values};
 
 abstract class RuntimeTypeDefinitionTest {
@@ -60,14 +61,20 @@ abstract class RuntimeTypeDefinitionTest {
     Assert::true(ClassLoader::getDefault()->providesPackage($this->define()->getPackage()->getName()));
   }
 
-  #[Test]
+  #[Test, Runtime(php: '>=8.0')]
   public function declares_passed_annotation() {
-    Assert::true($this->define(['annotations' => '#[Test]'])->hasAnnotation('test'));
+    Assert::equals(
+      'lang\\unittest\\Test',
+      $this->define(['annotations' => '#[Test]'])->reflect()->getAttributes()[0]->getName()
+    );
   }
 
-  #[Test]
+  #[Test, Runtime(php: '>=8.0')]
   public function declares_passed_annotation_with_value() {
-    Assert::equals('/rest', $this->define(['annotations' => '#[Webservice(["path" => "/rest"])]'])->getAnnotation('webservice', 'path'));
+    Assert::equals(
+      [['path' => '/rest']],
+      $this->define(['annotations' => '#[Webservice(["path" => "/rest"])]'])->reflect()->getAttributes()[0]->getArguments()
+    );
   }
 
   #[Test, Values(['com.example.test.RTTDDotted', 'com\\example\\test\\RTTDNative'])]

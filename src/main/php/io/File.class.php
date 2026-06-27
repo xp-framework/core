@@ -124,7 +124,7 @@ class File implements Channel, Value {
     );
     $this->path= substr($uri, 0, $p);
     $this->filename= ltrim(substr($uri, $p), '/'.DIRECTORY_SEPARATOR);
-    $this->extension= (false === ($pe= strrpos($this->filename, '.', $s))) ? null : substr($this->filename, $pe+ 1);
+    $this->extension= (false === ($pe= strrpos($this->filename, '.'))) ? null : substr($this->filename, $pe + 1);
   }
 
   /**
@@ -132,8 +132,8 @@ class File implements Channel, Value {
    *
    * @param   string mode one of the File::* constants
    * @return  self
-   * @throws  io.FileNotFoundException in case the file is not found
-   * @throws  io.IOException in case the file cannot be opened (e.g., lacking permissions)
+   * @throws  io.NotFound in case the file is not found
+   * @throws  io.OperationFailed in case the file cannot be opened (e.g., lacking permissions)
    */
   public function open($mode= self::READ): self {
     $this->mode= $mode;
@@ -141,12 +141,12 @@ class File implements Channel, Value {
       self::READ === $mode && 
       0 !== strncmp('php://', $this->uri, 6) &&
       !$this->exists()
-    ) throw new FileNotFoundException('File "'.$this->uri.'" not found');
+    ) throw new NotFound('File "'.$this->uri.'" not found');
     
     $this->_fd= fopen($this->uri, $this->mode);
     if (!$this->_fd) {
       $this->_fd= null;
-      $e= new IOException('Cannot open '.$this->uri.' mode '.$this->mode);
+      $e= new OperationFailed('Cannot open '.$this->uri.' mode '.$this->mode);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -164,11 +164,11 @@ class File implements Channel, Value {
    * Retrieve the file's size in bytes
    *
    * @return  int size filesize in bytes
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    */
   public function size(): int {
     if (false === ($stat= $this->_fd ? fstat($this->_fd) : stat($this->uri))) {
-      $e= new IOException('Cannot get filesize for '.$this->uri);
+      $e= new OperationFailed('Cannot get filesize for '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -180,11 +180,11 @@ class File implements Channel, Value {
    *
    * @param   int $size Default 0
    * @return  bool
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    */
   public function truncate(int $size= 0): bool {
     if (null === $this->_fd) {
-      throw new IOException('Cannot truncate file '.$this->uri);
+      throw new OperationFailed('Cannot truncate file '.$this->uri);
     }
 
     // OS vagaries: Windows does not retain file position!
@@ -197,7 +197,7 @@ class File implements Channel, Value {
     }
 
     if (false === $return) {
-      $e= new IOException('Cannot truncate file '.$this->uri);
+      $e= new OperationFailed('Cannot truncate file '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -216,11 +216,11 @@ class File implements Channel, Value {
    * On such filesystems this function will be useless. 
    *
    * @return  int The date the file was last accessed as a unix-timestamp
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    */
   public function lastAccessed() {
     if (false === ($atime= fileatime($this->uri))) {
-      $e= new IOException('Cannot get atime for '.$this->uri);
+      $e= new OperationFailed('Cannot get atime for '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -231,11 +231,11 @@ class File implements Channel, Value {
    * Retrieve last modification time
    *
    * @return  int The date the file was last modified as a unix-timestamp
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    */
   public function lastModified() {
     if (false === ($mtime= filemtime($this->uri))) {
-      $e= new IOException('Cannot get mtime for '.$this->uri);
+      $e= new OperationFailed('Cannot get mtime for '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -247,12 +247,12 @@ class File implements Channel, Value {
    *
    * @param   int time default -1 Unix-timestamp
    * @return  bool success
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    */
   public function touch($time= -1) {
     if (-1 == $time) $time= time();
     if (false === touch($this->uri, $time)) {
-      $e= new IOException('Cannot set mtime for '.$this->uri);
+      $e= new OperationFailed('Cannot set mtime for '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -263,11 +263,11 @@ class File implements Channel, Value {
    * Retrieve when the file was created
    *
    * @return  int The date the file was created as a unix-timestamp
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    */
   public function createdAt() {
     if (false === ($mtime= filectime($this->uri))) {
-      $e= new IOException('Cannot get mtime for '.$this->uri);
+      $e= new OperationFailed('Cannot get mtime for '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -283,7 +283,7 @@ class File implements Channel, Value {
    *
    * @param   int bytes default 4096 Max. amount of bytes to be read
    * @return  string Data read
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    */
   public function readLine($bytes= 4096) {
     $bytes= $this->gets($bytes);
@@ -294,11 +294,11 @@ class File implements Channel, Value {
    * Read one char
    *
    * @return  string the character read
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    */
   public function readChar() {
     if (null === $this->_fd || false === ($result= fgetc($this->_fd)) && !feof($this->_fd)) {
-      $e= new IOException('Cannot read 1 byte from '.$this->uri);
+      $e= new OperationFailed('Cannot read 1 byte from '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -313,12 +313,12 @@ class File implements Channel, Value {
    *
    * @param   int bytes default 4096 Max. amount of bytes to read
    * @return  string Data read
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    */
   public function gets($bytes= 4096) {
     if (0 === $bytes) return '';
     if (null === $this->_fd || false === ($result= fgets($this->_fd, $bytes)) && !feof($this->_fd)) {
-      $e= new IOException('Cannot read '.$bytes.' bytes from '.$this->uri);
+      $e= new OperationFailed('Cannot read '.$bytes.' bytes from '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -330,12 +330,12 @@ class File implements Channel, Value {
    *
    * @param   int bytes default 4096 Max. amount of bytes to read
    * @return  string Data read
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    */
   public function read($bytes= 4096) {
     if (0 === $bytes) return '';
     if (null === $this->_fd || false === ($result= fread($this->_fd, $bytes)) && !feof($this->_fd)) {
-      $e= new IOException('Cannot read '.$bytes.' bytes from '.$this->uri);
+      $e= new OperationFailed('Cannot read '.$bytes.' bytes from '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -347,11 +347,11 @@ class File implements Channel, Value {
    *
    * @param   string string data to write
    * @return  int number of bytes written
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    */
   public function write($string) {
     if (null === $this->_fd || false === ($result= fwrite($this->_fd, $string))) {
-      $e= new IOException('Cannot write '.strlen($string).' bytes to '.$this->uri);
+      $e= new OperationFailed('Cannot write '.strlen($string).' bytes to '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -363,11 +363,11 @@ class File implements Channel, Value {
    *
    * @param   string string data default '' to write
    * @return  int number of bytes written
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    */
   public function writeLine($string= '') {
     if (null === $this->_fd || false === ($result= fwrite($this->_fd, $string."\n"))) {
-      $e= new IOException('Cannot write '.(strlen($string)+ 1).' bytes to '.$this->uri);
+      $e= new OperationFailed('Cannot write '.(strlen($string)+ 1).' bytes to '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -382,12 +382,12 @@ class File implements Channel, Value {
    *
    * @see     php://feof
    * @return  bool TRUE when the end of the file is reached
-   * @throws  io.IOException in case of an error (e.g., the file's not been opened)
+   * @throws  io.OperationFailed in case of an error (e.g., the file's not been opened)
    */
   public function eof() {
     $result= feof($this->_fd);
     if (isset(\xp::$errors[__FILE__][__LINE__ - 1])) {
-      $e= new IOException('Cannot determine eof of '.$this->uri);
+      $e= new OperationFailed('Cannot determine eof of '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -401,11 +401,11 @@ class File implements Channel, Value {
    * This function is identical to a call of $f->seek(0, SEEK_SET)
    *
    * @return  bool TRUE if rewind suceeded
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    */
   public function rewind() {
     if (null === $this->_fd || false === ($result= rewind($this->_fd))) {
-      $e= new IOException('Cannot rewind file pointer');
+      $e= new OperationFailed('Cannot rewind file pointer');
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -418,12 +418,12 @@ class File implements Channel, Value {
    * @param   int position default 0 The new position
    * @param   int mode default SEEK_SET 
    * @see     php://fseek
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    * @return  bool success
    */
   public function seek($position= 0, $mode= SEEK_SET) {
     if (null === $this->_fd || 0 != ($result= fseek($this->_fd, $position, $mode))) {
-      $e= new IOException('Seek error, position '.$position.' in mode '.$mode);
+      $e= new OperationFailed('Seek error, position '.$position.' in mode '.$mode);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -434,11 +434,11 @@ class File implements Channel, Value {
    * Retrieve file pointer position
    *
    * @return  int position
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    */
   public function tell() {
     if (null === $this->_fd || false === ($result= ftell($this->_fd))) {
-      $e= new IOException('Cannot retrieve file pointer\'s position');
+      $e= new OperationFailed('Cannot retrieve file pointer\'s position');
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -462,7 +462,7 @@ class File implements Channel, Value {
    * errno condition).
    *
    * @param   int op operation (one of the predefined LOCK_* constants)
-   * @throws  io.IOException in case of an error
+   * @throws  io.OperationFailed in case of an error
    * @return  bool success
    * @see     php://flock
    */
@@ -480,7 +480,7 @@ class File implements Channel, Value {
           $mode-= $o;
         }
       }
-      $e= new IOException('Cannot lock file '.$this->uri.' w/ '.substr($os, 3));
+      $e= new OperationFailed('Cannot lock file '.$this->uri.' w/ '.substr($os, 3));
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -524,14 +524,14 @@ class File implements Channel, Value {
    * Close this file
    *
    * @return  bool success
-   * @throws  io.IOException if close fails
+   * @throws  io.OperationFailed if close fails
    */
   public function close() {
     if (!is_resource($this->_fd)) {
-      throw new IOException('Cannot close non-opened file '.$this->uri);
+      throw new OperationFailed('Cannot close non-opened file '.$this->uri);
     }
     if (false === fclose($this->_fd)) {
-      $e= new IOException('Cannot close file '.$this->uri);
+      $e= new OperationFailed('Cannot close file '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -547,7 +547,7 @@ class File implements Channel, Value {
    * close the file first
    *
    * @return  bool success
-   * @throws  io.IOException in case of an error (e.g., lack of permissions)
+   * @throws  io.OperationFailed in case of an error (e.g., lack of permissions)
    * @throws  lang.IllegalStateException in case the file is still open
    */
   public function unlink() {
@@ -555,7 +555,7 @@ class File implements Channel, Value {
       throw new IllegalStateException('File still open');
     }
     if (false === unlink($this->uri)) {
-      $e= new IOException('Cannot delete file '.$this->uri);
+      $e= new OperationFailed('Cannot delete file '.$this->uri);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -570,7 +570,7 @@ class File implements Channel, Value {
    *
    * @param   var target where to move the file to, either a string, a File or a Folder
    * @return  bool success
-   * @throws  io.IOException in case of an error (e.g., lack of permissions)
+   * @throws  io.OperationFailed in case of an error (e.g., lack of permissions)
    * @throws  lang.IllegalStateException in case the file is still open
    */
   public function move($target) {
@@ -587,7 +587,7 @@ class File implements Channel, Value {
     }
     
     if (false === rename($this->uri, $uri)) {
-      $e= new IOException('Cannot move file '.$this->uri.' to '.$uri);
+      $e= new OperationFailed('Cannot move file '.$this->uri.' to '.$uri);
       \xp::gc(__FILE__);
       throw $e;
     }
@@ -604,7 +604,7 @@ class File implements Channel, Value {
    *
    * @param   var target where to copy the file to, either a string, a File or a Folder
    * @return  bool success
-   * @throws  io.IOException in case of an error (e.g., lack of permissions)
+   * @throws  io.OperationFailed in case of an error (e.g., lack of permissions)
    * @throws  lang.IllegalStateException in case the file is still open
    */
   public function copy($target) {
@@ -621,7 +621,7 @@ class File implements Channel, Value {
     }
     
     if (false === copy($this->uri, $uri)) {
-      $e= new IOException('Cannot copy file '.$this->uri.' to '.$uri);
+      $e= new OperationFailed('Cannot copy file '.$this->uri.' to '.$uri);
       \xp::gc(__FILE__);
       throw $e;
     }

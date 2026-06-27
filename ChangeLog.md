@@ -3,6 +3,46 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 13.0.0 / ????-??-??
+
+This major release finally removes the reflection API, which has been in
+its dedicated library since the end of 2020. Multiple refactorings add
+forward compatibility with PHP 8.6.
+
+### Heads up!
+
+* Removed deprecated I/O exceptions, see https://wiki.php.net/rfc/poll_api
+  (@thekid)
+
+### RFCs
+
+* Implemented xp-framework/rfc#338: Remove reflection from XP Core. This
+  functionality is provided byin `xp-framework/reflection`. See PR #367.
+  (@thekid)
+
+### Features
+
+* Merged PR #369: Replace spl_object_hash() with spl_object_id() - @thekid
+
+## 12.11.0 / 2026-06-21
+
+### Features
+
+* Merged PR #364: I/O exceptions refactoring, fixing a naming conflict with
+  the *IoException* class introduced into PHP 8.6 as part of the I/O poll
+  infrastructure - see https://wiki.php.net/rfc/poll_api#exception_hierarchy
+  (@thekid)
+
+## 12.10.1 / 2026-06-21
+
+### Bugfixes
+
+* Ensured the files used by the archive class loading mechanism are closed
+  when the class loaders are garbage-collected
+  (@thekid)
+
+## 12.10.0 / 2026-04-23
+
 ### Bugfixes
 
 * Fixed `io.streams.StreamTransfer::transferAll()` not correctly returning
@@ -11,6 +51,8 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Optimized reading from util.Bytes, iterables and strings in `io.Blob` class
+  (@thekid)
 * Merged PR #362: Add a seekable input stream which spools to a temporary
   file: `io.streams.SpooledInputStream`
   (@thekid)
@@ -195,6 +237,13 @@ its newest version.
 * Fixed issue #336: Deprecate implicitly nullable parameter types, following
   https://wiki.php.net/rfc/deprecate-implicitly-nullable-types
   (@thekid)
+
+## 11.11.0 / 2025-06-21
+
+### Features
+
+* Made nullable types compatible with all supported PHP versions - @thekid
+* Backported RFC #364 - I/O exceptions refactoring from XP 12 - @thekid
 
 ## 11.10.0 / 2025-06-22
 

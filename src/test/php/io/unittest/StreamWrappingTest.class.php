@@ -1,6 +1,6 @@
 <?php namespace io\unittest;
 
-use io\IOException;
+use io\OperationFailed;
 use io\streams\{InputStream, MemoryInputStream, MemoryOutputStream, Streams};
 use test\{Assert, Expect, Test, Values};
 
@@ -140,13 +140,13 @@ class StreamWrappingTest {
     Assert::equals($buffer, $m->bytes());
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function reading_from_writeable_fd_raises_exception() {
     $fd= Streams::writeableFd(new MemoryOutputStream());
     fread($fd, 1024);
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function writing_to_readable_fd_raises_exception() {
     $fd= Streams::readableFd(new MemoryInputStream(''));
     fwrite($fd, 1024);
@@ -157,10 +157,10 @@ class StreamWrappingTest {
     Assert::equals($value, Streams::readAll(new MemoryInputStream($value)));
   }
 
-  #[Test, Expect(IOException::class)]
+  #[Test, Expect(OperationFailed::class)]
   public function readAll_propagates_exception() {
     Streams::readAll(new class() implements InputStream {
-      public function read($limit= 8192) { throw new IOException('FAIL'); }
+      public function read($limit= 8192) { throw new OperationFailed('FAIL'); }
       public function available() { return 1; }
       public function close() { }
     });

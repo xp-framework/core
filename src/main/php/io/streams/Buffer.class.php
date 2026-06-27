@@ -1,6 +1,6 @@
 <?php namespace io\streams;
 
-use io\{File, Folder, Path, TempFile, IOException};
+use io\{File, Folder, Path, TempFile, OperationFailed};
 use lang\IllegalArgumentException;
 
 /**
@@ -125,7 +125,7 @@ class Buffer implements InputStream, OutputStream, Seekable {
    * @param  int $offset
    * @param  int $whence SEEK_SET, SEEK_CUR or SEEK_END
    * @return void
-   * @throws io.IOException
+   * @throws io.OperationFailed
    */
   public function seek($offset, $whence= SEEK_SET) {
     switch ($whence) {
@@ -136,7 +136,7 @@ class Buffer implements InputStream, OutputStream, Seekable {
     }
 
     if ($position < 0) {
-      throw new IOException("Seek error, position {$offset} in mode {$whence}");
+      throw new OperationFailed("Seek error, position {$offset} in mode {$whence}");
     }
 
     $this->file ? $this->file->seek($position, SEEK_SET) : $this->pointer= $position;

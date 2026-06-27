@@ -1,6 +1,6 @@
 #!/bin/sh
 
-XP_RUNNERS_URL=https://github.com/xp-runners/reference/releases/download/v9.2.0/xp-run-9.2.0.sh
+XP_RUNNERS_URL=https://github.com/xp-runners/reference/releases/download/v9.3.0/xp-run-9.3.0.sh
 
 case $1 in
   install)

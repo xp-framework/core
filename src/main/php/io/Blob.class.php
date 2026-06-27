@@ -31,13 +31,13 @@ class Blob implements IteratorAggregate, Value {
         })();
       };
     } else if ($parts instanceof Bytes || is_string($parts)) {
-      $this->iterator= fn() => (function() { yield (string)$this->parts; })();
+      $this->iterator= function() { yield (string)$this->parts; };
     } else if (is_iterable($parts)) {
-      $this->iterator= fn() => (function() {
+      $this->iterator= function() {
         foreach ($this->parts as $part) {
           yield (string)$part;
         }
-      })();
+      };
     } else {
       throw new IllegalArgumentException(sprintf(
         'Expected iterable|string|util.Bytes|io.streams.InputStream, have %s',

@@ -1,7 +1,7 @@
 <?php namespace io\unittest;
 
 use io\streams\Buffer;
-use io\{File, TempFile, Folder, Path, Blob, IOException};
+use io\{File, TempFile, Folder, Path, Blob, OperationFailed};
 use lang\{Environment, IllegalArgumentException};
 use test\{Assert, Test, Values};
 
@@ -201,12 +201,12 @@ class BufferTest {
 
   #[Test]
   public function cannot_seek_before_start() {
-    Assert::throws(IOException::class, fn() => $this->newFixture()->seek(-1));
+    Assert::throws(OperationFailed::class, fn() => $this->newFixture()->seek(-1));
   }
 
   #[Test]
   public function cannot_seek_invalid_whence() {
-    Assert::throws(IOException::class, fn() => $this->newFixture()->seek(0, 6100));
+    Assert::throws(OperationFailed::class, fn() => $this->newFixture()->seek(0, 6100));
   }
 
   #[Test]
