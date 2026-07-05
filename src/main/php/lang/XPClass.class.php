@@ -431,9 +431,7 @@ class XPClass extends Type {
   public function newGenericType($arguments) {
     static $creator= null;
 
-    if (!$creator) {
-      $creator= new GenericTypes();
-    }
+    $creator??= new GenericTypes();
     return $creator->newType($this, $arguments);
   }
 
@@ -487,11 +485,11 @@ class XPClass extends Type {
    * @throws  lang.IllegalStateException if this class is not a generic
    */
   public function genericDefinition() {
-    if (!($details= self::detailsForClass($this->name))) return null;
-    if (!isset($details['class'][DETAIL_GENERIC])) {
-      throw new IllegalStateException('Class '.$this->name.' is not generic');
+    if ($meta= \xp::$meta[$this->name] ?? null) {
+      return XPClass::forName($meta['class'][DETAIL_GENERIC][0]);
     }
-    return XPClass::forName($details['class'][DETAIL_GENERIC][0]);
+
+    throw new IllegalStateException('Class '.$this->name.' is not generic');
   }
 
   /**
@@ -517,8 +515,7 @@ class XPClass extends Type {
       
   /** Returns whether this class is generic */
   public function isGeneric(): bool {
-    if (!($details= self::detailsForClass($this->name))) return false;
-    return isset($details['class'][DETAIL_GENERIC]);
+    return isset(\xp::$meta[$this->name]['class'][DETAIL_GENERIC]);
   }
   
   /**
