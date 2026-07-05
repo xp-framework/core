@@ -290,16 +290,14 @@ final class ClassLoader implements IClassLoader {
           $f= new \ReflectionFunction($member);
           if ($iface) {
             $forward= null;
+          } else if ('__construct' === $name || 'void' === $f->getReturnType()?->getName()) {
+            $forward= 'self::$__func["'.$name.'"]->call($this%s);';
+            $functions[$name]= $member;
           } else {
-            $t= $f->getReturnType();
-            if (null !== $t && 'void' === $t->getName()) {
-              $forward= 'self::$__func["'.$name.'"]->call($this%s);';
-            } else {
-              $forward= 'return self::$__func["'.$name.'"]->call($this%s);';
-            }
+            $forward= 'return self::$__func["'.$name.'"]->call($this%s);';
+            $functions[$name]= $member;
           }
           $bytes.= $memberAnnotations.self::defineForward($name, $f, $forward);
-          $iface || $functions[$name]= $member;
         } else {
           $bytes.= $memberAnnotations.'public $'.$name.'= '.var_export($member, true).';';
         }

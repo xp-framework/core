@@ -30,6 +30,12 @@ forward compatibility with PHP 8.6.
   (@thekid)
 * Merged PR #369: Replace spl_object_hash() with spl_object_id() - @thekid
 
+### Bugfixes
+
+* Fixed *Returning a value from a constructor is deprecated* in PHP 8.6,
+  see https://wiki.php.net/rfc/deprecate-return-value-from-construct
+  (@thekid)
+
 ## 12.11.0 / 2026-06-21
 
 ### Features
