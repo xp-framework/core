@@ -444,14 +444,17 @@ class XPClass extends Type {
    * @throws  lang.IllegalStateException if this class is not a generic definition
    */
   public function genericComponents() {
-    if (!$this->isGenericDefinition()) {
+    $arguments= [];
+    foreach ($this->reflect()->getAttributes(Generic::class) as $attribute) {
+      $arguments+= $attribute->getArguments();
+    }
+
+    if (!isset($arguments['self'])) {
       throw new IllegalStateException('Class '.$this->name.' is not a generic definition');
     }
 
-    $details= XPClass::detailsForClass($this->name);
-    $annotations= $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
     $components= [];
-    foreach (explode(',', $annotations['generic']['self']) as $name) {
+    foreach (explode(',', $arguments['self']) as $name) {
       $components[]= ltrim($name);
     }
     return $components;
@@ -463,9 +466,10 @@ class XPClass extends Type {
    * @return  bool
    */
   public function isGenericDefinition(): bool {
-    $details= self::detailsForClass($this->name);
-    $annotations= $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
-    return isset($annotations['generic']['self']);
+    foreach ($this->reflect()->getAttributes(Generic::class) as $attribute) {
+      if (isset($attribute->getArguments()['self'])) return true;
+    }
+    return false;
   }
 
   /**

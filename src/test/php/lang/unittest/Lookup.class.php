@@ -1,6 +1,6 @@
 <?php namespace lang\unittest;
 
-use test\Generic;
+use lang\Generic;
 use util\{NoSuchElementException, Objects};
 
 #[Generic(self: 'K, V', parent: 'K, V')]
