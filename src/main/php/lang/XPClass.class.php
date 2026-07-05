@@ -485,8 +485,8 @@ class XPClass extends Type {
    * @throws  lang.IllegalStateException if this class is not a generic
    */
   public function genericDefinition() {
-    if ($meta= \xp::$meta[$this->name] ?? null) {
-      return XPClass::forName($meta['class'][DETAIL_GENERIC][0]);
+    if ($generic= \xp::$meta[$this->name]['class'][DETAIL_GENERIC] ?? null) {
+      return XPClass::forName($generic[0]);
     }
 
     throw new IllegalStateException('Class '.$this->name.' is not generic');
@@ -499,18 +499,11 @@ class XPClass extends Type {
    * @throws  lang.IllegalStateException if this class is not a generic
    */
   public function genericArguments() {
-    if (!($details= self::detailsForClass($this->name))) return null;
-    if (!isset($details['class'][DETAIL_GENERIC])) {
-      throw new IllegalStateException('Class '.$this->name.' is not generic');
+    if ($generic= \xp::$meta[$this->name]['class'][DETAIL_GENERIC] ?? null) {
+      return $generic[1] ?? array_map([Type::class, 'forName'], $generic[2]);
     }
-    if (!isset($details['class'][DETAIL_GENERIC][1])) {
-      $details['class'][DETAIL_GENERIC][1]= array_map(
-        [Type::class, 'forName'], 
-        $details['class'][DETAIL_GENERIC][2]
-      );
-      unset($details['class'][DETAIL_GENERIC][2]);
-    }
-    return $details['class'][DETAIL_GENERIC][1];
+
+    throw new IllegalStateException('Class '.$this->name.' is not generic');
   }
       
   /** Returns whether this class is generic */
