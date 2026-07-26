@@ -1,7 +1,6 @@
 <?php namespace lang\unittest;
 
 use lang\archive\{Archive, ArchiveClassLoader};
-use lang\reflect\Package;
 use lang\{
   ClassCastException,
   ClassDependencyException,
@@ -131,11 +130,10 @@ class ClassLoaderTest {
 
   #[Test]
   public function loadClassFileWithRecursionInStaticBlock() {
-    with ($p= Package::forName('lang.unittest.fixture')); {
-      $two= $p->loadClass('StaticRecursionTwo');
-      $one= $p->loadClass('StaticRecursionOne');
-      Assert::equals($two, $one->reflect()->getProperty('two')->getValue(null));
-    }
+    $cl= ClassLoader::getDefault();
+    $two= $cl->loadClass('lang.unittest.fixture.StaticRecursionTwo');
+    $one= $cl->loadClass('lang.unittest.fixture.StaticRecursionOne');
+    Assert::equals($two, $one->reflect()->getProperty('two')->getValue(null));
   }
 
   #[Test, Expect(IllegalStateException::class)]
