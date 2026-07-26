@@ -1,22 +1,20 @@
 <?php namespace lang\unittest;
 
-use lang\reflect\Package;
+use lang\ClassLoader;
 use test\{Assert, Before, Test};
-use util\collections\Vector;
 
 class NamespacedClassesTest {
-  protected $package;
 
-  #[Before]
-  public function initializePackage() {
-    $this->package= Package::forName('lang.unittest');
+  /** Helper to load class from the lang.unittest package */
+  private function loadClass($name) {
+    return ClassLoader::getDefault()->loadClass("lang.unittest.{$name}");
   }
 
   #[Test]
   public function namespacedClassLiteral() {
     Assert::equals(
       NamespacedClass::class, 
-      $this->package->loadClass('NamespacedClass')->literal()
+      $this->loadClass('NamespacedClass')->literal()
     );
   }
 
@@ -24,7 +22,7 @@ class NamespacedClassesTest {
   public function packageOfNamespacedClass() {
     Assert::equals(
       'lang.unittest',
-      $this->package->loadClass('NamespacedClass')->packageName()
+      $this->loadClass('NamespacedClass')->packageName()
     );
   }
 
@@ -32,7 +30,7 @@ class NamespacedClassesTest {
   public function namespacedClassUsingUnqualified() {
     Assert::instance(
       Name::class,
-      $this->package->loadClass('NamespacedClassUsingUnqualified')->newInstance()->newName()
+      $this->loadClass('NamespacedClassUsingUnqualified')->newInstance()->newName()
     );
   }
 
@@ -40,7 +38,7 @@ class NamespacedClassesTest {
   public function namespacedClassUsingQualified() {
     Assert::instance(
       NamespacedClass::class,
-      $this->package->loadClass('NamespacedClassUsingQualified')->newInstance()->getNamespacedClass()
+      $this->loadClass('NamespacedClassUsingQualified')->newInstance()->getNamespacedClass()
     );
   }
 
@@ -48,7 +46,7 @@ class NamespacedClassesTest {
   public function namespacedClassUsingQualifiedUnloaded() {
     Assert::instance(
       UnloadedNamespacedClass::class,
-      $this->package->loadClass('NamespacedClassUsingQualifiedUnloaded')->newInstance()->getNamespacedClass()
+      $this->loadClass('NamespacedClassUsingQualifiedUnloaded')->newInstance()->getNamespacedClass()
     );
   }
 
