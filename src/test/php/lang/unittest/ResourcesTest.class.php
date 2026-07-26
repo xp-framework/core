@@ -23,10 +23,9 @@ class ResourcesTest {
 
   #[Before]
   public function setUp() {
-    $this->cl= ClassLoader::registerLoader(new ArchiveClassLoader(new Archive(typeof($this)
-      ->getPackage()
-      ->getResourceAsStream('three-and-four.xar'))
-    ));
+    $this->cl= ClassLoader::registerLoader(new ArchiveClassLoader(new Archive(
+      ClassLoader::getDefault()->getResourceAsStream('lang/unittest/three-and-four.xar')
+    )));
   }
 
   #[After]

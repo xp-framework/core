@@ -1,6 +1,7 @@
 <?php namespace util\unittest;
 
 use io\{OperationFailed, TempFile};
+use lang\ClassLoader;
 use test\{Assert, Expect, Test};
 use util\Properties;
 
@@ -19,7 +20,7 @@ class FileBasedPropertiesTest extends AbstractPropertiesTest {
 
   #[Test]
   public function from_resource() {
-    $prop= new Properties(typeof($this)->getPackage()->getResourceAsStream('example.ini')->getURI());
+    $prop= new Properties(ClassLoader::getDefault()->getResourceAsStream('util/unittest/example.ini')->getURI());
     Assert::equals('value', $prop->readString('section', 'key'));
   }
 

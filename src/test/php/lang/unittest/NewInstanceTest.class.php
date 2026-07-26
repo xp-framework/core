@@ -349,10 +349,7 @@ class NewInstanceTest {
   #[Test]
   public function packageOfNewInstancedClass() {
     $i= newinstance(Name::class, ['Test'], '{}');
-    Assert::equals(
-      Package::forName('lang.unittest'),
-      typeof($i)->getPackage()
-    );
+    Assert::equals('lang.unittest', typeof($i)->packageName());
   }
 
   #[Test, Values(['php.IteratorAggregate', 'IteratorAggregate'])]
@@ -361,28 +358,19 @@ class NewInstanceTest {
       #[ReturnTypeWillChange]
       public function getIterator() { /* Empty */ }
     }');
-    Assert::equals(
-      Package::forName(''),
-      typeof($i)->getPackage()
-    );
+    Assert::null(typeof($i)->packageName());
   }
 
   #[Test, Values(['lang.unittest.NamespacedClass', NamespacedClass::class])]
   public function packageOfNewInstancedNamespacedClass($class) {
     $i= newinstance($class, [], '{}');
-    Assert::equals(
-      Package::forName('lang.unittest'),
-      typeof($i)->getPackage()
-    );
+    Assert::equals('lang.unittest', typeof($i)->packageName());
   }
 
   #[Test]
   public function packageOfNewInstancedNamespacedInterface() {
     $i= newinstance(NamespacedInterface::class, [], '{}');
-    Assert::equals(
-      Package::forName('lang.unittest'),
-      typeof($i)->getPackage()
-    );
+    Assert::equals('lang.unittest', typeof($i)->packageName());
   }
 
   #[Test]

@@ -48,7 +48,7 @@ abstract class RuntimeTypeDefinitionTest {
 
   #[Test]
   public function package_name() {
-    Assert::equals('lang.unittest', $this->define()->getPackage()->getName());
+    Assert::equals('lang.unittest', $this->define()->packageName());
   }
 
   #[Test]
@@ -58,7 +58,7 @@ abstract class RuntimeTypeDefinitionTest {
 
   #[Test]
   public function default_classloader_provides_packaged_of_defined_type() {
-    Assert::true(ClassLoader::getDefault()->providesPackage($this->define()->getPackage()->getName()));
+    Assert::true(ClassLoader::getDefault()->providesPackage($this->define()->packageName()));
   }
 
   #[Test, Runtime(php: '>=8.0')]
@@ -79,13 +79,13 @@ abstract class RuntimeTypeDefinitionTest {
 
   #[Test, Values(['com.example.test.RTTDDotted', 'com\\example\\test\\RTTDNative'])]
   public function type_with_package_is_declared_inside_namespace($name) {
-    $name.= typeof($this)->getSimpleName().$name;
+    $name.= typeof($this)->declaredName().$name;
     Assert::equals('com\\example\\test\\', substr($this->define(['name' => $name])->literal(), 0, 17));
   }
 
   #[Test]
   public function type_without_package_is_declared_globally() {
-    $name= typeof($this)->getSimpleName().'RTTDGlobal';
+    $name= typeof($this)->declaredName().'RTTDGlobal';
     Assert::equals($name, $this->define(['name' => $name])->literal());
   }
 }

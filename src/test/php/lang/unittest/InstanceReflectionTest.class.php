@@ -28,10 +28,10 @@ class InstanceReflectionTest {
   }
 
   #[Test]
-  public function simpleNameOfClass() {
+  public function declaredNameOfClass() {
     Assert::equals(
       'Lookup<string,lang.Value>', 
-      typeof($this->fixture)->getSimpleName()
+      typeof($this->fixture)->declaredName()
     );
   }
 

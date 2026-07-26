@@ -122,19 +122,22 @@ class XPClass extends Type {
     }
   }
 
-  /** Returns simple name */
-  public function getSimpleName(): string {
+  /** Returns declared name */
+  public function declaredName(): string {
     return false === ($p= strrpos(substr($this->name, 0, strcspn($this->name, '<')), '.')) 
-      ? $this->name                   // Already unqualified
-      : substr($this->name, $p+ 1)    // Full name
+      ? $this->name
+      : substr($this->name, $p + 1)
     ;
   }
-  
-  /** Retrieves the package associated with this class */
-  public function getPackage(): Package {
-    return Package::forName(substr($this->name, 0, strrpos($this->name, '.')));
+
+  /** Returns package name (or NULL for the global package) */
+  public function packageName(): ?string {
+    return false === ($p= strrpos(substr($this->name, 0, strcspn($this->name, '<')), '.'))
+      ? null
+      : substr($this->name, 0, $p)
+    ;
   }
-  
+
   /**
    * Creates a new instance of the class represented by this Class object.
    * The class is instantiated as if by a new expression with an empty argument list.

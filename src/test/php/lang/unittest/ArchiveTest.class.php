@@ -3,7 +3,7 @@
 use io\File;
 use io\streams\{MemoryInputStream, MemoryOutputStream, Streams};
 use lang\archive\Archive;
-use lang\{ElementNotFoundException, FormatException};
+use lang\{ElementNotFoundException, FormatException, ClassLoader};
 use test\{Assert, Expect, Test};
 
 abstract class ArchiveTest {
@@ -17,7 +17,7 @@ abstract class ArchiveTest {
 
   /** Helper to load a xar file from the class loading mechanism */
   protected function resource(string $name): File {
-    return typeof($this)->getPackage()->getResourceAsStream($name);
+    return ClassLoader::getDefault()->getResourceAsStream("lang/unittest/{$name}");
   }
 
   /**

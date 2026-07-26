@@ -1,6 +1,5 @@
 <?php namespace lang\unittest;
 
-use lang\reflect\{Constructor, Package, TargetInvocationException};
 use lang\{
   ClassLoader,
   ClassNotFoundException,
@@ -31,16 +30,13 @@ class XPClassTest {
   }
 
   #[Test]
-  public function getSimpleName_returns_class_name_only() {
-    Assert::equals('TestClass', $this->fixture->getSimpleName());
+  public function declared_name() {
+    Assert::equals('TestClass', $this->fixture->declaredName());
   }
 
   #[Test]
-  public function getPackage_returns_package_class_resides_in() {
-    Assert::equals(
-      Package::forName('lang.unittest'),
-      $this->fixture->getPackage()
-    );
+  public function package_name() {
+    Assert::equals('lang.unittest', $this->fixture->packageName());
   }
 
   #[Test]

@@ -23,8 +23,8 @@ class NamespacedClassesTest {
   #[Test]
   public function packageOfNamespacedClass() {
     Assert::equals(
-      Package::forName('lang.unittest'),
-      $this->package->loadClass('NamespacedClass')->getPackage()
+      'lang.unittest',
+      $this->package->loadClass('NamespacedClass')->packageName()
     );
   }
 
@@ -61,10 +61,7 @@ class NamespacedClassesTest {
   #[Test]
   public function packageOfNewInstancedNamespacedClass() {
     $i= newinstance(NamespacedClass::class, []);
-    Assert::equals(
-      Package::forName('lang.unittest'),
-      typeof($i)->getPackage()
-    );
+    Assert::equals('lang.unittest', typeof($i)->packageName());
   }
 
   #[Test]

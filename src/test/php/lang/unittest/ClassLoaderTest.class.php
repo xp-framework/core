@@ -31,9 +31,9 @@ class ClassLoaderTest {
     
   #[Before]
   public function setUp() {
-    $lib= typeof($this)->getPackage();
-    $this->libraryLoader= $this->registerXar($lib->getResourceAsStream('three-and-four.xar'));
-    $this->brokenLoader= $this->registerXar($lib->getResourceAsStream('broken.xar'));
+    $cl= ClassLoader::getDefault();
+    $this->libraryLoader= $this->registerXar($cl->getResourceAsStream('lang/unittest/three-and-four.xar'));
+    $this->brokenLoader= $this->registerXar($cl->getResourceAsStream('lang/unittest/broken.xar'));
     $this->containedLoader= $this->registerXar($this->libraryLoader->getResourceAsStream('contained.xar'));
   }
   

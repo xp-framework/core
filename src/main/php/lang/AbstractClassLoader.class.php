@@ -151,7 +151,7 @@ abstract class AbstractClassLoader implements IClassLoader {
    */
   public function toString() {
     return
-      str_replace('ClassLoader', 'CL', typeof($this)->getSimpleName()).
+      str_replace('ClassLoader', 'CL', typeof($this)->declaredName()).
       '<'.Environment::path($this->path).'>'
     ;
   }

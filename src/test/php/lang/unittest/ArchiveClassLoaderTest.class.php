@@ -2,7 +2,7 @@
 
 use io\Files;
 use lang\archive\{Archive, ArchiveClassLoader};
-use lang\{ClassNotFoundException, ElementNotFoundException, XPClass};
+use lang\{ClassNotFoundException, ElementNotFoundException, XPClass, ClassLoader};
 use test\{Assert, Before, Expect, Test};
 
 class ArchiveClassLoaderTest {
@@ -11,7 +11,7 @@ class ArchiveClassLoaderTest {
   #[Before]
   public function setUp() {
     $this->fixture= new ArchiveClassLoader(new Archive(
-      typeof($this)->getPackage()->getResourceAsStream('archive.xar')
+      ClassLoader::getDefault()->getResourceAsStream('lang/unittest/archive.xar')
     ));
   }
 
