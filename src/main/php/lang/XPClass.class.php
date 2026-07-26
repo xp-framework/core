@@ -108,6 +108,11 @@ class XPClass extends Type {
     }
   }
 
+  /** Returns type literal */
+  public function literal(): string {
+    return literal($this->name);
+  }
+
   /** Returns declared name */
   public function declaredName(): string {
     return false === ($p= strrpos(substr($this->name, 0, strcspn($this->name, '<')), '.')) 
@@ -493,11 +498,6 @@ class XPClass extends Type {
     } else {
       return ($classloader ?? ClassLoader::getDefault())->loadClass($name);
     }
-  }
-
-  /** Returns type literal */
-  public function literal(): string {
-    return literal($this->name);
   }
   
   /** Returns all loaded classes */
