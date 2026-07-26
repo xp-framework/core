@@ -352,36 +352,6 @@ class XPClass extends Type {
     }
     return $r;
   }
-  
-
-  /**
-   * Retrieves the api doc comment for this class. Returns NULL if
-   * no documentation is present.
-   *
-   * @return  string
-   */
-  public function getComment() {
-    if (!($details= self::detailsForClass($this->name))) return null;
-    return $details['class'][DETAIL_COMMENT];
-  }
-
-  /**
-   * Retrieves this class' modifiers
-   *
-   * @see     xp://lang.reflect.Modifiers
-   * @return  int
-   */
-  public function getModifiers(): int {
-    $r= MODIFIER_PUBLIC;
-
-    // Map PHP reflection modifiers to generic form
-    $m= $this->reflect()->getModifiers();
-    $m & \ReflectionClass::IS_EXPLICIT_ABSTRACT && $r |= MODIFIER_ABSTRACT;
-    $m & \ReflectionClass::IS_IMPLICIT_ABSTRACT && $r |= MODIFIER_ABSTRACT;
-    $m & \ReflectionClass::IS_FINAL && $r |= MODIFIER_FINAL;
-    
-    return $r;
-  }
 
   /** Retrieve the class loader a class was loaded with */
   public function getClassLoader(): IClassLoader {

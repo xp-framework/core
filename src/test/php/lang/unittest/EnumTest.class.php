@@ -7,34 +7,6 @@ use test\{Action, Assert, Expect, Test};
 
 class EnumTest {
 
-  /**
-   * Asserts given modifiers contain abstract
-   *
-   * @param  int $modifiers
-   * @return void
-   * @throws unittest.AssertionFailedError
-   */
-  protected function assertAbstract($modifiers) {
-    Assert::true(
-      Modifiers::isAbstract($modifiers), 
-      implode(' | ', Modifiers::namesOf($modifiers))
-    );
-  }
-
-  /**
-   * Asserts given modifiers do not contain abstract
-   *
-   * @param  int $modifiers
-   * @return void
-   * @throws unittest.AssertionFailedError
-   */
-  protected function assertNotAbstract($modifiers) {
-    Assert::false(
-      Modifiers::isAbstract($modifiers), 
-      implode(' | ', Modifiers::namesOf($modifiers))
-    );
-  }
-
   #[Test]
   public function coin_is_an_enum() {
     Assert::true(XPClass::forName(Coin::class)->isEnum());
@@ -57,17 +29,17 @@ class EnumTest {
 
   #[Test]
   public function enum_base_class_is_abstract() {
-    $this->assertAbstract(XPClass::forName(Enum::class)->getModifiers());
+    Assert::true(XPClass::forName(Enum::class)->reflect()->isAbstract());
   }
 
   #[Test]
   public function operation_enum_is_abstract() {
-    $this->assertAbstract(XPClass::forName(Operation::class)->getModifiers());
+    Assert::true(XPClass::forName(Operation::class)->reflect()->isAbstract());
   }
 
   #[Test]
   public function coin_enum_is_not_abstract() {
-    $this->assertNotAbstract(XPClass::forName(Coin::class)->getModifiers());
+    Assert::false(XPClass::forName(Coin::class)->reflect()->isAbstract());
   }
 
   #[Test]
@@ -82,8 +54,8 @@ class EnumTest {
 
   #[Test]
   public function enum_members_are_not_abstract() {
-    $this->assertNotAbstract(typeof(Coin::$penny)->getModifiers());
-    $this->assertNotAbstract(typeof(Operation::$plus)->getModifiers());
+    Assert::false(typeof(Coin::$penny)->reflect()->isAbstract());
+    Assert::false(typeof(Operation::$plus)->reflect()->isAbstract());
   }
 
   #[Test]
