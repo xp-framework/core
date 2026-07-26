@@ -1,7 +1,7 @@
 <?php namespace lang;
 
 use lang\ElementNotFoundException;
-use lang\reflect\{Package, ClassParser};
+use lang\reflect\ClassParser;
  
 /**
  * Represents classes. Every instance of an XP class has a method
