@@ -1,6 +1,5 @@
 <?php namespace lang\unittest;
 
-use lang\reflect\Modifiers;
 use lang\{ClassLoader, CloneNotSupportedException, Enum, Error, IllegalArgumentException, XPClass};
 use test\verify\{Condition, Runtime};
 use test\{Action, Assert, Expect, Test};
