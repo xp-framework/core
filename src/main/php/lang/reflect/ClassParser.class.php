@@ -1,5 +1,6 @@
 <?php namespace lang\reflect;
 
+use Reflection;
 use lang\{XPClass, IllegalStateException, IllegalAccessException, ElementNotFoundException, ClassFormatException};
 
 /**
@@ -256,7 +257,7 @@ class ClassParser {
         } else {
           throw new IllegalAccessException(sprintf(
             'Cannot access %s field %s::$%s',
-            implode(' ', Modifiers::namesOf($m)),
+            implode(' ', Reflection::getModifierNames($m)),
             $class->getName(),
             $field->getName()
           ));
