@@ -217,7 +217,7 @@ class XPClass extends Type {
    * @return  bool
    */
   public function isInstance($obj): bool {
-    return instance($this->name, $obj);
+    return $obj instanceof $this->_class;
   }
 
   /** Retrieve the class loader a class was loaded with */
