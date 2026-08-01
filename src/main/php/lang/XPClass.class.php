@@ -195,10 +195,10 @@ class XPClass extends Type {
   /**
    * Tests whether this class is assignable from a given type
    *
-   * <code>
-   *   // util.Date instanceof lang.Value
-   *   XPClass::forName('lang.Value')->isAssignableFrom('util.Date');   // TRUE
-   * </code>
+   * ```php
+   * // util.Date "instanceof" lang.Value
+   * XPClass::forName('lang.Value')->isAssignableFrom('util.Date');   // TRUE
+   * ```
    *
    * @param   string|lang.Type $type
    * @return  bool
@@ -213,10 +213,8 @@ class XPClass extends Type {
 
   /**
    * Determines whether the specified object is an instance of this
-   * class. This is the equivalent of the is() core functionality.
+   * class. This is the equivalent of the `is()` core functionality.
    *
-   * Examples
-   * ========
    * ```php
    * $class= XPClass::forName('io.File');
    * 
