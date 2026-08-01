@@ -42,6 +42,18 @@ forward compatibility with PHP 8.6.
   see https://wiki.php.net/rfc/deprecate-return-value-from-construct
   (@thekid)
 
+## 12.12.0 / 2026-08-01
+
+### Bugfixes
+
+* Fixed *Returning a value from a constructor is deprecated* in PHP 8.6
+  (@thekid)
+
+### Features
+
+* Backported #371: Rename is() -> instance() (PHP 8.6 deprecated) - @thekid
+* Merged PR #369: Replace spl_object_hash() with spl_object_id() - @thekid
+
 ## 12.11.0 / 2026-06-21
 
 ### Features
