@@ -231,19 +231,9 @@ class XPClass extends Type {
   }
 
   /** Retrieve the class loader a class was loaded with */
-  public function getClassLoader(): IClassLoader {
-    return self::_classLoaderFor($this->name);
-  }
-  
-  /**
-   * Fetch a class' classloader by its name
-   *
-   * @param   string name fqcn of class
-   * @return  lang.IClassLoader
-   */
-  protected static function _classLoaderFor($name) {
-    if (isset(\xp::$cl[$name])) {
-      sscanf(\xp::$cl[$name], '%[^:]://%[^$]', $cl, $argument);
+  public function getClassLoader(): ?IClassLoader {
+    if (isset(\xp::$cl[$this->name])) {
+      sscanf(\xp::$cl[$this->name], '%[^:]://%[^$]', $cl, $argument);
       $instanceFor= [literal($cl), 'instanceFor'];
       return $instanceFor($argument);
     }
@@ -258,26 +248,6 @@ class XPClass extends Type {
   public function meta() {
     static $meta;
     return \xp::$meta[$this->name]??= ($meta??= new ClassMeta())->meta($this->_class);
-  }
-  
-  /**
-   * Retrieve details for a specified class. Note: Results from this 
-   * method are cached!
-   *
-   * @param   string class fully qualified class name
-   * @return  array or NULL to indicate no details are available
-   */
-  public static function detailsForClass($class) {
-    static $parser= null;
-
-    if (isset(\xp::$meta[$class])) return \xp::$meta[$class];
-
-    // Retrieve class' sourcecode
-    $cl= self::_classLoaderFor($class);
-    if (!$cl || !($bytes= $cl->loadClassBytes($class))) return null;
-
-    $parser??= new ClassParser();
-    return \xp::$meta[$class]= $parser->parseDetails($bytes);
   }
 
   /**

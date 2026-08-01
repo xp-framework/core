@@ -26,7 +26,8 @@ class GenericTypes {
    * @return  string created type's literal
    */
   public function newType0($base, $arguments) {
-    $generic= $base->reflect()->getAttributes(Generic::class);
+    $reflect= $base->reflect();
+    $generic= $reflect->getAttributes(Generic::class);
     if (empty($generic) || (($annotated= $generic[0]->getArguments()) && !isset($annotated['self']))) {
      throw new IllegalStateException('Class '.$base->name.' is not a generic definition');
     }
@@ -57,9 +58,8 @@ class GenericTypes {
 
     // Create class if it doesn't exist yet
     if (!class_exists($name, false) && !interface_exists($name, false) && !trait_exists($name, false) && !enum_exists($name, false)) {
-      $details= XPClass::detailsForClass($base->getName());
-      $annotations= $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
-      $meta= \xp::$meta[$base->name];
+      $meta= $base->meta();
+      unset(\xp::$meta[$base->name]);
 
       // Parse placeholders into a lookup map
       $placeholders= [];
@@ -184,12 +184,13 @@ class GenericTypes {
             array_unshift($state, 2);
             $m= $tokens[$i+ 2][1];
             $p= 0;
-            $annotations= [$meta[1][$m][DETAIL_ANNOTATIONS] ?? [], $meta[1][$m][DETAIL_TARGET_ANNO] ?? []];
+            $generic= $reflect->getMethod($m)->getAttributes(Generic::class);
           } else if (T_VARIABLE === $tokens[$i][0]) {
             $f= substr($tokens[$i][1], 1);
-            $annotations= $meta[0][$f][DETAIL_ANNOTATIONS] ?? [];
-            if (isset($annotations['generic']['var'])) {
-              $meta[0][$f][DETAIL_RETURNS]= strtr($annotations['generic']['var'], $placeholders);
+            $generic= $reflect->getProperty($f)->getAttributes(Generic::class);
+            $annotations= $generic ? $generic[0]->getArguments() : [];
+            if (isset($annotations['var'])) {
+              $meta[0][$f][DETAIL_RETURNS]= strtr($annotations['var'], $placeholders);
             }
           } else if ('}' === $tokens[$i][0]) {
             $src.= '}';
@@ -219,32 +220,31 @@ class GenericTypes {
             $default[$p].= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
           }
         } else if (3 === $state[0]) {             // Method body
-          if (';' === $tokens[$i][0]) {
-            // Abstract method
-            if (isset($annotations[0]['generic']['return'])) {
-              $meta[1][$m][DETAIL_RETURNS]= strtr($annotations[0]['generic']['return'], $placeholders);
+          if (';' === $tokens[$i][0]) {           // Abstract method
+            $annotations= $generic ? $generic[0]->getArguments() : [];
+            if (isset($annotations['return'])) {
+              $meta[1][$m][DETAIL_RETURNS]= strtr($annotations['return'], $placeholders);
             }
-            if (isset($annotations[0]['generic']['params'])) {
-              foreach (Type::split($annotations[0]['generic']['params']) as $j => $placeholder) {
+            if (isset($annotations['params'])) {
+              foreach (Type::split($annotations['params']) as $j => $placeholder) {
                 if ('' !== ($replaced= strtr($placeholder, $placeholders))) {
                   $meta[1][$m][DETAIL_ARGUMENTS][$j]= $replaced;
                 }
               }
             }
-            $annotations= [];
-            unset($meta[1][$m][DETAIL_ANNOTATIONS]['generic']);
             array_shift($state);
           } else if ('{' === $tokens[$i][0]) {
             $braces= 1;
             array_shift($state);
             array_unshift($state, 4);
             $src.= '{';
-            if (isset($annotations[0]['generic']['return'])) {
-              $meta[1][$m][DETAIL_RETURNS]= strtr($annotations[0]['generic']['return'], $placeholders);
+            $annotations= $generic ? $generic[0]->getArguments() : [];
+            if (isset($annotations['return'])) {
+              $meta[1][$m][DETAIL_RETURNS]= strtr($annotations['return'], $placeholders);
             }
-            if (isset($annotations[0]['generic']['params'])) {
+            if (isset($annotations['params'])) {
               $generic= [];
-              foreach (Type::split($annotations[0]['generic']['params']) as $j => $placeholder) {
+              foreach (Type::split($annotations['params']) as $j => $placeholder) {
                 if ('' === ($replaced= strtr($placeholder, $placeholders))) {
                   $generic[$j]= null;
                 } else {
@@ -274,9 +274,6 @@ class GenericTypes {
                 }
               }
             }
-
-            $annotations= [];
-            unset($meta[1][$m][DETAIL_ANNOTATIONS]['generic']);
             continue;
           }
         } else if (4 === $state[0]) {             // Method body
@@ -337,7 +334,6 @@ class GenericTypes {
         }
         method_exists($name, '__static') && $name::__static();
       }
-      unset($meta['class'][DETAIL_ANNOTATIONS]['generic']);
       \xp::$meta[$qname]= $meta;
       \xp::$cn[$name]= $qname;
     }

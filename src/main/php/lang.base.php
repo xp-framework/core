@@ -313,7 +313,6 @@ function newinstance($spec, $args, $def= null) {
   }
 
   if ($generic) {
-    \lang\XPClass::detailsForClass($name);
     xp::$meta[$name]['class'][DETAIL_GENERIC]= $generic;
   }
 
