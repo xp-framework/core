@@ -292,7 +292,7 @@ final class ClassLoader implements IClassLoader {
             $forward= null;
           } else {
             $t= $f->getReturnType();
-            if (null !== $t && 'void' === $t->getName()) {
+            if ('__construct' === $name || (null !== $t && 'void' === $t->getName())) {
               $forward= 'self::$__func["'.$name.'"]->call($this%s);';
             } else {
               $forward= 'return self::$__func["'.$name.'"]->call($this%s);';

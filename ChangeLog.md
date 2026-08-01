@@ -3,6 +3,11 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+### Bugfixes
+
+* Fixed *Returning a value from a constructor is deprecated* in PHP 8.6
+  (@thekid)
+
 ### Features
 
 * Backported #371: Rename is() -> instance() (PHP 8.6 deprecated) - @thekid
