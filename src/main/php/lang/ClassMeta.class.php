@@ -111,7 +111,7 @@ class ClassMeta {
    * @return [:string]
    */
   public function imports($reflect) {
-    static $break= [T_CLASS => true, T_INTERFACE => true, T_TRAIT => true, 372 /* T_ENUM */ => true];
+    static $break= [T_CLASS => true, T_INTERFACE => true, T_TRAIT => true, T_ENUM => true];
     static $types= [T_WHITESPACE => true, 44 => true, 59 => true, 123 => true];
 
     // Exclude classes declared inside eval(), their declaration is not accessible
