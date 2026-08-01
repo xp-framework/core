@@ -26,23 +26,21 @@ class GenericTypes {
    * @return  string created type's literal
    */
   public function newType0($base, $arguments) {
-
-    // Verify
-    $details= XPClass::detailsForClass($base->getName());
-    $annotations= $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
-    if (!isset($annotations['generic']['self'])) {
-      throw new IllegalStateException('Class '.$base->name.' is not a generic definition');
+    $generic= $base->reflect()->getAttributes(Generic::class);
+    if (empty($generic) || (($annotated= $generic[0]->getArguments()) && !isset($annotated['self']))) {
+     throw new IllegalStateException('Class '.$base->name.' is not a generic definition');
     }
+
+    // Generic(self: 'K, V') => ["K", "V"]
     $components= [];
-    foreach (Type::split($annotations['generic']['self']) as $cs => $name) {
+    foreach (Type::split($annotated['self']) as $name) {
       $components[]= ltrim($name);
     }
-    $cs++;
-    if ($cs !== sizeof($arguments)) {
+    if (sizeof($components) !== sizeof($arguments)) {
       throw new IllegalArgumentException(sprintf(
         'Class %s expects %d component(s) <%s>, %d argument(s) given',
         $base->name,
-        $cs,
+        sizeof($components),
         implode(', ', $components),
         sizeof($arguments)
       ));
@@ -58,6 +56,8 @@ class GenericTypes {
     $qname= $base->name.'<'.substr($qc, 1).'>';
 
     // Create class if it doesn't exist yet
+    $details= XPClass::detailsForClass($base->getName());
+    $annotations= $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
     if (!class_exists($name, false) && !interface_exists($name, false) && !trait_exists($name, false) && !enum_exists($name, false)) {
       $meta= \xp::$meta[$base->name];
 
@@ -141,9 +141,9 @@ class GenericTypes {
               $parent.= $tokens[$i][1];
             }
             $i--;
-            if (isset($annotations['generic']['parent'])) {
+            if (isset($annotated['parent'])) {
               $xargs= [];
-              foreach (Type::split($annotations['generic']['parent']) as $j => $placeholder) {
+              foreach (Type::split($annotated['parent']) as $j => $placeholder) {
                 $xargs[]= Type::forName(strtr(ltrim($placeholder), $placeholders));
               }
               $src.= ' extends \\'.$this->newType0(new XPClass($base->reflect()->getParentClass()), $xargs);
@@ -153,7 +153,7 @@ class GenericTypes {
           } else if (T_IMPLEMENTS === $tokens[$i][0]) {
             $src.= ' implements';
             $counter= 0;
-            $annotation= $annotations['generic']['implements'] ?? null;
+            $annotation= $annotated['implements'] ?? null;
             array_unshift($state, T_CLASS);
             array_unshift($state, 5);
           } else if ('{' === $tokens[$i][0]) {
@@ -167,7 +167,7 @@ class GenericTypes {
           if (T_EXTENDS === $tokens[$i][0]) {
             $src.= ' extends';
             $counter= 0;
-            $annotation= $annotations['generic']['extends'] ?? null;
+            $annotation= $annotated['extends'] ?? null;
             array_unshift($state, T_INTERFACE);
             array_unshift($state, 5);
           } else if ('{' === $tokens[$i][0]) {

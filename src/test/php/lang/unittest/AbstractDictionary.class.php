@@ -1,5 +1,7 @@
 <?php namespace lang\unittest;
 
+use lang\Generic;
+
 #[Generic(self: 'K, V', implements: ['K, V'])]
 abstract class AbstractDictionary implements IDictionary, Marker {
   
