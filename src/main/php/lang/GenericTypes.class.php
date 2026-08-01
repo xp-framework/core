@@ -56,9 +56,9 @@ class GenericTypes {
     $qname= $base->name.'<'.substr($qc, 1).'>';
 
     // Create class if it doesn't exist yet
-    $details= XPClass::detailsForClass($base->getName());
-    $annotations= $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
     if (!class_exists($name, false) && !interface_exists($name, false) && !trait_exists($name, false) && !enum_exists($name, false)) {
+      $details= XPClass::detailsForClass($base->getName());
+      $annotations= $details ? $details['class'][DETAIL_ANNOTATIONS] : [];
       $meta= \xp::$meta[$base->name];
 
       // Parse placeholders into a lookup map
