@@ -5,6 +5,7 @@ XP Framework Core ChangeLog
 
 ### Features
 
+* Backported #371: Rename is() -> instance() (PHP 8.6 deprecated) - @thekid
 * Merged PR #369: Replace spl_object_hash() with spl_object_id() - @thekid
 
 ## 12.11.0 / 2026-06-21

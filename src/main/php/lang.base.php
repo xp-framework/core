@@ -159,48 +159,51 @@ function cast($arg, $type) {
 }
 // }}}
 
-// {{{ proto bool is(string type, var object)
+// {{{ proto bool instance(string type, var value)
 //     Checks whether a given object is an instance of the type given
-function is($type, $object) {
+function instance($type, $value) {
   if ('int' === $type) {
-    return is_int($object);
+    return is_int($value);
   } else if ('float' === $type || 'double' === $type) {
-    return is_float($object);
+    return is_float($value);
   } else if ('string' === $type) {
-    return is_string($object);
+    return is_string($value);
   } else if ('bool' === $type) {
-    return is_bool($object);
+    return is_bool($value);
   } else if ('var' === $type) {
     return true;
   } else if ('array' === $type) {
-    return is_array($object);
+    return is_array($value);
   } else if ('object' === $type) {
-    return is_object($object);
+    return is_object($value);
   } else if ('callable' === $type) {
-    return is_callable($object);
+    return is_callable($value);
   } else if ('iterable' === $type) {
-    return is_array($object) || $object instanceof \Traversable;
+    return is_array($value) || $value instanceof \Traversable;
   } else if ('?' === $type[0]) {
-    return null === $object || is(substr($type, 1), $object);
+    return null === $value || instance(substr($type, 1), $value);
   } else if (0 === strncmp($type, 'function(', 9)) {
-    return \lang\FunctionType::forName($type)->isInstance($object);
+    return \lang\FunctionType::forName($type)->isInstance($value);
   } else if (0 === substr_compare($type, '[]', -2)) {
-    return (new \lang\ArrayType(substr($type, 0, -2)))->isInstance($object);
+    return (new \lang\ArrayType(substr($type, 0, -2)))->isInstance($value);
   } else if (0 === substr_compare($type, '[:', 0, 2)) {
-    return (new \lang\MapType(substr($type, 2, -1)))->isInstance($object);
+    return (new \lang\MapType(substr($type, 2, -1)))->isInstance($value);
   } else if (0 === strncmp($type, '(function(', 10)) {
-    return \lang\FunctionType::forName(substr($type, 1, -1))->isInstance($object);
+    return \lang\FunctionType::forName(substr($type, 1, -1))->isInstance($value);
   } else if (strstr($type, '|')) {
-    return \lang\TypeUnion::forName($type)->isInstance($object);
+    return \lang\TypeUnion::forName($type)->isInstance($value);
   } else if (strstr($type, '&')) {
-    return \lang\TypeIntersection::forName($type)->isInstance($object);
+    return \lang\TypeIntersection::forName($type)->isInstance($value);
   } else if (strstr($type, '?')) {
-    return \lang\WildcardType::forName($type)->isInstance($object);
+    return \lang\WildcardType::forName($type)->isInstance($value);
   } else {
     $literal= literal($type);
-    return $object instanceof $literal;
+    return $value instanceof $literal;
   }
 }
+
+// Deprecated alias
+function is($type, $object) { return instance($type, $object); }
 // }}}
 
 // {{{ proto string literal(string type)

@@ -4,7 +4,7 @@ use lang\unittest\ListOf;
 use lang\{ClassLoader, Runnable};
 use test\{Assert, Test, Values};
 
-class IsTest {
+class InstanceTest {
 
   /** @return iterable */
   private function callables() {
@@ -39,128 +39,128 @@ class IsTest {
 
   #[Test]
   public function string_array() {
-    Assert::true(is('string[]', ['Hello']));
+    Assert::true(instance('string[]', ['Hello']));
   }
 
   #[Test]
   public function var_array() {
-    Assert::false(is('string[]', ['Hello', 1, true]));
+    Assert::false(instance('string[]', ['Hello', 1, true]));
   }
 
   #[Test]
   public function int_array() {
-    Assert::true(is('int[]', [1, 2, 3]));
+    Assert::true(instance('int[]', [1, 2, 3]));
   }
 
   #[Test]
   public function mapIsNotAnInt_array() {
-    Assert::false(is('int[]', ['one' => 1, 'two' => 2]));
+    Assert::false(instance('int[]', ['one' => 1, 'two' => 2]));
   }
 
   #[Test]
   public function intIsNotAnInt_array() {
-    Assert::false(is('int[]', 1));
+    Assert::false(instance('int[]', 1));
   }
 
   #[Test]
   public function thisIsNotAnInt_array() {
-    Assert::false(is('int[]', $this));
+    Assert::false(instance('int[]', $this));
   }
 
   #[Test]
   public function emptyArrayIsAnInt_array() {
-    Assert::true(is('int[]', []));
+    Assert::true(instance('int[]', []));
   }
 
   #[Test]
   public function object_array() {
-    Assert::true(is('lang.unittest.Name[]', [new Name('test'), new Name('test'), new Name('test')]));
+    Assert::true(instance('lang.unittest.Name[]', [new Name('test'), new Name('test'), new Name('test')]));
   }
 
   #[Test]
   public function objectArrayWithnull() {
-    Assert::false(is('lang.unittest.Name[]', [new Name('test'), new Name('test'), null]));
+    Assert::false(instance('lang.unittest.Name[]', [new Name('test'), new Name('test'), null]));
   }
 
   #[Test]
   public function stringMap() {
-    Assert::true(is('[:string]', ['greet' => 'Hello', 'whom' => 'World']));
+    Assert::true(instance('[:string]', ['greet' => 'Hello', 'whom' => 'World']));
   }
 
   #[Test]
   public function intMap() {
-    Assert::true(is('[:int]', ['greet' => 1, 'whom' => 2]));
+    Assert::true(instance('[:int]', ['greet' => 1, 'whom' => 2]));
   }
 
   #[Test]
   public function intArrayIsNotAnIntMap() {
-    Assert::false(is('[:int]', [1, 2, 3]));
+    Assert::false(instance('[:int]', [1, 2, 3]));
   }
 
   #[Test]
   public function intIsNotAnIntMap() {
-    Assert::false(is('[:int]', 1));
+    Assert::false(instance('[:int]', 1));
   }
 
   #[Test]
   public function thisIsNotAnIntMap() {
-    Assert::false(is('[:int]', $this));
+    Assert::false(instance('[:int]', $this));
   }
 
   #[Test]
   public function emptyArrayIsAnIntMap() {
-    Assert::true(is('[:int]', []));
+    Assert::true(instance('[:int]', []));
   }
 
   #[Test]
   public function stringPrimitive() {
-    Assert::true(is('string', 'Hello'));
+    Assert::true(instance('string', 'Hello'));
   }
 
   #[Test]
   public function nullNotAStringPrimitive() {
-    Assert::false(is('string', null));
+    Assert::false(instance('string', null));
   }
 
   #[Test]
   public function boolPrimitive() {
-    Assert::true(is('bool', true));
+    Assert::true(instance('bool', true));
   }
 
   #[Test]
   public function nullNotABoolPrimitive() {
-    Assert::false(is('bool', null));
+    Assert::false(instance('bool', null));
   }
 
   #[Test]
   public function doublePrimitive() {
-    Assert::true(is('double', 0.0));
+    Assert::true(instance('double', 0.0));
   }
 
   #[Test]
   public function nullNotADoublePrimitive() {
-    Assert::false(is('double', null));
+    Assert::false(instance('double', null));
   }
 
   #[Test]
   public function intPrimitive() {
-    Assert::true(is('int', 0));
+    Assert::true(instance('int', 0));
   }
 
   #[Test]
   public function nullNotAnIntPrimitive() {
-    Assert::false(is('int', null));
+    Assert::false(instance('int', null));
   }
 
   #[Test]
   public function undefinedClassName() {
     Assert::false(class_exists('Undefined_Class', false));
-    Assert::false(is('Undefined_Class', new class() { }));
+    Assert::false(instance('Undefined_Class', new class() { }));
   }
 
   #[Test]
   public function fullyQualifiedClassName() {
-    Assert::true(is('lang.Value', new Name('test')));
+    Assert::true(instance('lang.Value', new Name('test')));
   }
 
   #[Test]
@@ -178,24 +178,24 @@ class IsTest {
       []
     );
     
-    Assert::true(is('lang.Runnable', new RunnableImpl()));
-    Assert::true(is('lang.Runnable', new RunnableImplEx()));
-    Assert::false(is('lang.Runnable', new class() { }));
+    Assert::true(instance('lang.Runnable', new RunnableImpl()));
+    Assert::true(instance('lang.Runnable', new RunnableImplEx()));
+    Assert::false(instance('lang.Runnable', new class() { }));
   }
 
   #[Test]
   public function aStringVectorIsIsItself() {
-    Assert::true(is('lang.unittest.ListOf<string>', create('new lang.unittest.ListOf<string>')));
+    Assert::true(instance('lang.unittest.ListOf<string>', create('new lang.unittest.ListOf<string>')));
   }
 
   #[Test]
   public function aVectorIsNotAStringVector() {
-    Assert::false(is('lang.unittest.ListOf<string>', new ListOf()));
+    Assert::false(instance('lang.unittest.ListOf<string>', new ListOf()));
   }
 
   #[Test]
   public function aStringVectorIsNotAVector() {
-    Assert::false(is(
+    Assert::false(instance(
       'lang.unittest.ListOf',
       create('new lang.unittest.ListOf<string>')
     ));
@@ -203,7 +203,7 @@ class IsTest {
 
   #[Test]
   public function anIntVectorIsNotAStringVector() {
-    Assert::false(is(
+    Assert::false(instance(
       'lang.unittest.ListOf<string>',
       create('new lang.unittest.ListOf<int>')
     ));
@@ -211,7 +211,7 @@ class IsTest {
 
   #[Test]
   public function aVectorOfIntVectorsIsItself() {
-    Assert::true(is(
+    Assert::true(instance(
       'lang.unittest.ListOf<lang.unittest.ListOf<int>>',
       create('new lang.unittest.ListOf<lang.unittest.ListOf<int>>')
     ));
@@ -219,7 +219,7 @@ class IsTest {
 
   #[Test]
   public function aVectorOfIntVectorsIsNotAVectorOfStringVectors() {
-    Assert::false(is(
+    Assert::false(instance(
       'lang.unittest.ListOf<Vector<string>>',
       create('new lang.unittest.ListOf<lang.unittest.ListOf<int>>')
     ));
@@ -227,7 +227,7 @@ class IsTest {
  
   #[Test]
   public function anIntVectorIsNotAnUndefinedGeneric() {
-    Assert::false(is('Undefined_Class<string>', create('new lang.unittest.ListOf<int>')));
+    Assert::false(instance('Undefined_Class<string>', create('new lang.unittest.ListOf<int>')));
   }
 
   /** @return var[][] */
@@ -241,17 +241,17 @@ class IsTest {
 
   #[Test, Values(from: 'genericDictionaries')]
   public function wildcard_check_for_type_parameters($value) {
-    Assert::true(is('lang.unittest.Lookup<?, ?>', $value));
+    Assert::true(instance('lang.unittest.Lookup<?, ?>', $value));
   }
 
   #[Test, Values(from: 'genericDictionaries')]
   public function wildcard_check_for_type_parameter_with_super_type($value) {
-    Assert::true(is('lang.unittest.IDictionary<?, ?>', $value));
+    Assert::true(instance('lang.unittest.IDictionary<?, ?>', $value));
   }
 
   #[Test]
   public function wildcard_check_for_single_type_parameter_generic() {
-    Assert::true(is(
+    Assert::true(instance(
       'lang.unittest.ListOf<lang.unittest.ListOf<?>>',
       create('new lang.unittest.ListOf<lang.unittest.ListOf<int>>')
     ));
@@ -259,7 +259,7 @@ class IsTest {
 
   #[Test]
   public function wildcard_check_for_type_parameters_partial() {
-    Assert::true(is(
+    Assert::true(instance(
       'lang.unittest.Lookup<string, ?>',
       create('new lang.unittest.Lookup<string, lang.Value>')
     ));
@@ -267,68 +267,68 @@ class IsTest {
 
   #[Test]
   public function wildcard_check_for_newinstance() {
-    Assert::true(is('util.Filter<?>', newinstance('util.Filter<string>', [], [
+    Assert::true(instance('util.Filter<?>', newinstance('util.Filter<string>', [], [
       'accept' => fn($e) => true
     ])));
   }
 
   #[Test]
   public function function_type() {
-    Assert::true(is('function(): var', function() { }));
+    Assert::true(instance('function(): var', function() { }));
   }
 
   #[Test]
   public function function_type_returning_array() {
-    Assert::true(is('function(): var[]', function() { }));
+    Assert::true(instance('function(): var[]', function() { }));
   }
 
   #[Test]
   public function braced_function_type() {
-    Assert::true(is('(function(): var)', function() { }));
+    Assert::true(instance('(function(): var)', function() { }));
   }
 
   #[Test]
   public function array_of_function_type() {
-    Assert::true(is('(function(): var)[]', [function() { }]));
+    Assert::true(instance('(function(): var)[]', [function() { }]));
   }
 
   #[Test, Values([1, 'Test'])]
   public function type_union($val) {
-    Assert::true(is('int|string', $val));
+    Assert::true(instance('int|string', $val));
   }
 
   #[Test, Values([1, null])]
   public function nullable($val) {
-    Assert::true(is('?int', $val));
+    Assert::true(instance('?int', $val));
   }
 
   #[Test, Values(from: 'callables')]
   public function is_callable($val) {
-    Assert::true(is('callable', $val));
+    Assert::true(instance('callable', $val));
   }
 
   #[Test, Values([[[]], [[1, 2, 3]], [['key' => 'value']],])]
   public function is_array($val) {
-    Assert::true(is('array', $val));
+    Assert::true(instance('array', $val));
   }
 
   #[Test, Values(from: 'iterables')]
   public function is_iterable($val) {
-    Assert::true(is('iterable', $val));
+    Assert::true(instance('iterable', $val));
   }
 
   #[Test, Values(from: 'objects')]
   public function is_object($val) {
-    Assert::true(is('object', $val));
+    Assert::true(instance('object', $val));
   }
 
   #[Test, Values(from: 'functions')]
   public function closures_are_objects($val) {
-    Assert::true(is('object', $val));
+    Assert::true(instance('object', $val));
   }
 
   #[Test]
   public function type_intersection() {
-    Assert::true(is('Countable&Traversable', new \ArrayObject([])));
+    Assert::true(instance('Countable&Traversable', new \ArrayObject([])));
   }
 }
