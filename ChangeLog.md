@@ -3,6 +3,8 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 12.12.0 / 2026-08-01
+
 ### Bugfixes
 
 * Fixed *Returning a value from a constructor is deprecated* in PHP 8.6
