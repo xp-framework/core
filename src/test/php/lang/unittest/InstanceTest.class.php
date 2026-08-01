@@ -4,7 +4,7 @@ use lang\unittest\ListOf;
 use lang\{ClassLoader, Runnable};
 use test\{Assert, Test, Values};
 
-class IsTest {
+class InstanceTest {
 
   /** @return iterable */
   private function callables() {
