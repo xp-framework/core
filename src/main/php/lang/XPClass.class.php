@@ -1,17 +1,8 @@
 <?php namespace lang;
-
-use lang\ElementNotFoundException;
-use lang\reflect\ClassParser;
  
 /**
  * Represents classes. Every instance of an XP class has a method
  * called getClass() which returns an instance of this class.
- *
- * Warning
- * =======
- * Do not construct this class publicly, instead use either the
- * `typeof` syntax or the static method 
- * $class= XPClass::forName('fully.qualified.Name')
  *
  * Examples
  * ========
@@ -28,7 +19,6 @@ use lang\reflect\ClassParser;
  *
  * @see   lang.XPClass#forName
  * @test  lang.unittest.XPClassTest
- * @test  lang.unittest.ClassDetailsTest
  * @test  lang.unittest.IsInstanceTest
  * @test  lang.unittest.ClassCastingTest
  */
@@ -58,7 +48,7 @@ class XPClass extends Type {
   /**
    * Constructor
    *
-   * @param   var ref either a class name, a ReflectionClass instance or an object
+   * @param  string|ReflectionClass|object $ref
    */
   public function __construct($ref) {
     if ($ref instanceof \ReflectionClass) {
@@ -231,43 +221,23 @@ class XPClass extends Type {
   }
 
   /** Retrieve the class loader a class was loaded with */
-  public function getClassLoader(): IClassLoader {
-    return self::_classLoaderFor($this->name);
-  }
-  
-  /**
-   * Fetch a class' classloader by its name
-   *
-   * @param   string name fqcn of class
-   * @return  lang.IClassLoader
-   */
-  protected static function _classLoaderFor($name) {
-    if (isset(\xp::$cl[$name])) {
-      sscanf(\xp::$cl[$name], '%[^:]://%[^$]', $cl, $argument);
+  public function getClassLoader(): ?IClassLoader {
+    if (isset(\xp::$cl[$this->name])) {
+      sscanf(\xp::$cl[$this->name], '%[^:]://%[^$]', $cl, $argument);
       $instanceFor= [literal($cl), 'instanceFor'];
       return $instanceFor($argument);
     }
     return null;    // Internal class, e.g.
   }
-  
+
   /**
-   * Retrieve details for a specified class. Note: Results from this 
-   * method are cached!
+   * Returns `xp::$meta` for this class, extracting it if necessary
    *
-   * @param   string class fully qualified class name
-   * @return  array or NULL to indicate no details are available
+   * @return [:var]
    */
-  public static function detailsForClass($class) {
-    static $parser= null;
-
-    if (isset(\xp::$meta[$class])) return \xp::$meta[$class];
-
-    // Retrieve class' sourcecode
-    $cl= self::_classLoaderFor($class);
-    if (!$cl || !($bytes= $cl->loadClassBytes($class))) return null;
-
-    $parser??= new ClassParser();
-    return \xp::$meta[$class]= $parser->parseDetails($bytes);
+  public function meta() {
+    static $meta;
+    return \xp::$meta[$this->name]??= ($meta??= new ClassMeta())->meta($this->_class);
   }
 
   /**
