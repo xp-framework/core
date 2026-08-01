@@ -175,16 +175,6 @@ class XPClass extends Type {
   }
 
   /**
-   * Retrieve the parent class's class object. Returns NULL if there
-   * is no parent class.
-   *
-   * @return  lang.XPClass class object
-   */
-  public function getParentclass() {
-    return ($parent= $this->reflect()->getParentClass()) ? new self($parent) : null;
-  }
-
-  /**
    * Cast a given object to the class represented by this object
    *
    * @param   var value
@@ -200,17 +190,6 @@ class XPClass extends Type {
     } else {
       throw new ClassCastException('Cannot cast '.typeof($value)->getName().' to '.$this->name);
     }
-  }
-  
-  /**
-   * Tests whether this class is a subclass of a specified class.
-   *
-   * @param   string|self $class
-   * @return  bool
-   */
-  public function isSubclassOf($class): bool {
-    if (!($class instanceof self)) $class= XPClass::forName($class);
-    return $class->name === $this->name ? false : $this->reflect()->isSubclassOf($class->reflect());
   }
 
   /**
@@ -279,69 +258,6 @@ class XPClass extends Type {
   public function isEnum(): bool {
     $r= $this->reflect();
     return $r->isSubclassOf(Enum::class) || $r->isSubclassOf(\UnitEnum::class);
-  }
-
-  /**
-   * Retrieve traits this class uses
-   *
-   * @return  lang.XPClass[]
-   */
-  public function getTraits() {
-    $r= [];
-    foreach ($this->reflect()->getTraits() as $used) {
-      if (0 !== strncmp($used->getName(), '__', 2)) {
-        $r[]= new self($used);
-      }
-    }
-    return $r;
-  }
-
-  /**
-   * Retrieve interfaces this class implements
-   *
-   * @return  lang.XPClass[]
-   */
-  public function getInterfaces() {
-    $r= [];
-    foreach ($this->reflect()->getInterfaces() as $iface) {
-      $r[]= new self($iface);
-    }
-    return $r;
-  }
-
-  /**
-   * Retrieve interfaces this class implements in its declaration
-   *
-   * @return  lang.XPClass[]
-   */
-  public function getDeclaredInterfaces() {
-    $reflect= $this->reflect();
-    $is= $reflect->getInterfaces();
-    if ($parent= $reflect->getParentclass()) {
-      $ip= $parent->getInterfaces();
-    } else {
-      $ip= [];
-    }
-    $filter= [];
-    foreach ($is as $iname => $i) {
-
-      // Parent class implements this interface
-      if (isset($ip[$iname])) {
-        $filter[$iname]= true;
-        continue;
-      }
-
-      // Interface is implemented because it's the parent of another interface
-      foreach ($i->getInterfaces() as $pname => $p) {
-        if (isset($is[$pname])) $filter[$pname]= true;
-      }
-    }
-    
-    $r= [];
-    foreach ($is as $iname => $i) {
-      if (!isset($filter[$iname])) $r[]= new self($i);
-    }
-    return $r;
   }
 
   /** Retrieve the class loader a class was loaded with */

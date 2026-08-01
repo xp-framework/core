@@ -1,7 +1,7 @@
 <?php namespace lang\unittest;
 
 use lang\reflect\Module;
-use lang\{ClassLoader, ElementNotFoundException};
+use lang\{ClassLoader, ElementNotFoundException, XPClass};
 use test\{After, Assert, Expect, Test};
 
 class ModuleLoadingTest {
@@ -146,7 +146,7 @@ class ModuleLoadingTest {
       $this->register(new LoaderProviding([
         'module.xp' => '<?php module xp-framework/child extends lang\unittest\BaseModule { }'
       ]));
-      Assert::equals($cl, typeof(Module::forName('xp-framework/child'))->getParentclass());
+      Assert::equals($cl, new XPClass(typeof(Module::forName('xp-framework/child'))->reflect()->getParentclass()));
     } finally {
       $this->tearDown();
     }
@@ -159,11 +159,7 @@ class ModuleLoadingTest {
       $this->register(new LoaderProviding([
         'module.xp' => '<?php module xp-framework/impl implements lang\unittest\IModule { }'
       ]));
-      $interfaces= typeof(Module::forName('xp-framework/impl'))->getInterfaces();
-      foreach ($interfaces as $interface) {
-        if ($cl->equals($interface)) return;
-      }
-      $this->fail($cl->getName().' not included', $interfaces, [$cl]);
+      Assert::true(typeof(Module::forName('xp-framework/impl'))->reflect()->isSubclassOf($cl->reflect()));
     } finally {
       $this->tearDown();
     }

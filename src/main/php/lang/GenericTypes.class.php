@@ -146,7 +146,7 @@ class GenericTypes {
               foreach (Type::split($annotations['generic']['parent']) as $j => $placeholder) {
                 $xargs[]= Type::forName(strtr(ltrim($placeholder), $placeholders));
               }
-              $src.= ' extends \\'.$this->newType0($base->getParentClass(), $xargs);
+              $src.= ' extends \\'.$this->newType0(new XPClass($base->reflect()->getParentClass()), $xargs);
             } else {
               $src.= ' extends '.$parent;
             }

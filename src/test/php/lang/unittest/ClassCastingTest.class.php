@@ -12,7 +12,7 @@ class ClassCastingTest extends BaseTest {
 
   #[Test]
   public function parentClassCastingThis() {
-    Assert::equals($this, typeof($this)->getParentClass()->cast($this));
+    Assert::equals($this, XPClass::forName(parent::class)->cast($this));
   }
 
   #[Test]

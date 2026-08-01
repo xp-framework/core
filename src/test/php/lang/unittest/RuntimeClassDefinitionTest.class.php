@@ -29,12 +29,12 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
 
   #[Test]
   public function given_parent_is_inherited() {
-    Assert::true($this->define(['parent' => Throwable::class])->isSubclassOf(Throwable::class));
+    Assert::true($this->define(['parent' => Throwable::class])->reflect()->isSubclassOf(Throwable::class));
   }
 
   #[Test]
   public function given_parent_class_is_inherited() {
-    Assert::true($this->define(['parent' => XPClass::forName(Throwable::class)])->isSubclassOf(Throwable::class));
+    Assert::true($this->define(['parent' => XPClass::forName(Throwable::class)])->reflect()->isSubclassOf(Throwable::class));
   }
 
   #[Test]
@@ -43,7 +43,7 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
       public function run() { } 
     }');
 
-    Assert::true($class->isSubclassOf(Runnable::class));
+    Assert::true($class->reflect()->isSubclassOf(Runnable::class));
   }
 
   #[Test]
@@ -52,7 +52,7 @@ class RuntimeClassDefinitionTest extends RuntimeTypeDefinitionTest {
       public function run() { } 
     }');
 
-    Assert::true($class->isSubclassOf(Runnable::class));
+    Assert::true($class->reflect()->isSubclassOf(Runnable::class));
   }
 
   #[Test]

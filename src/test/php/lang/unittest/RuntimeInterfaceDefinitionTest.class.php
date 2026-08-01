@@ -1,7 +1,6 @@
 <?php namespace lang\unittest;
 
 use lang\{ClassLoader, ClassNotFoundException, Closeable, Runnable, XPClass};
-use test\verify\Runtime;
 use test\{Assert, Expect, Test};
 
 class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
@@ -15,23 +14,24 @@ class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
    */
   protected function define(array $decl= [], $def= null) {
     return $this->defineType(
-      array_key_exists('annotations', $decl) ? $decl['annotations'] : '',
-      array_key_exists('name', $decl) ? $decl['name'] : '',
-      function($spec) use($decl, $def) {
-        return ClassLoader::defineInterface(
-          $spec,
-          array_key_exists('parents', $decl) ? $decl['parents'] : [],
-          $def
-        );
-      }
+      $decl['annotations']  ?? '',
+      $decl['name'] ?? '',
+      fn($spec) => ClassLoader::defineInterface($spec, $decl['parents'] ?? [], $def)
     );
+  }
+
+  /** Yields interfaces a given class implements */
+  private function interfacesOf(XPClass $class): iterable {
+    foreach ($class->reflect()->getInterfaces() as $interface) {
+      yield new XPClass($interface);
+    }
   }
 
   #[Test]
   public function given_parent_is_inherited() {
     Assert::equals(
       [XPClass::forName(Runnable::class)],
-      $this->define(['parents' => [Runnable::class]])->getInterfaces()
+      [...$this->interfacesOf($this->define(['parents' => [Runnable::class]]))]
     );
   }
 
@@ -39,7 +39,7 @@ class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
   public function given_parent_class_is_inherited() {
     Assert::equals(
       [XPClass::forName(Runnable::class)],
-      $this->define(['parents' => [XPClass::forName(Runnable::class)]])->getInterfaces()
+      [...$this->interfacesOf($this->define(['parents' => [XPClass::forName(Runnable::class)]]))]
     );
   }
 
@@ -47,7 +47,7 @@ class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
   public function given_parents_are_inherited() {
     Assert::equals(
       [XPClass::forName(Runnable::class), XPClass::forName(Closeable::class)],
-      $this->define(['parents' => [Runnable::class, Closeable::class]])->getInterfaces()
+      [...$this->interfacesOf($this->define(['parents' => [Runnable::class, Closeable::class]]))]
     );
   }
 
@@ -55,7 +55,7 @@ class RuntimeInterfaceDefinitionTest extends RuntimeTypeDefinitionTest {
   public function given_parent_classes_are_inherited() {
     Assert::equals(
       [XPClass::forName(Runnable::class), XPClass::forName(Closeable::class)],
-      $this->define(['parents' => [XPClass::forName(Runnable::class), XPClass::forName(Closeable::class)]])->getInterfaces()
+      [...$this->interfacesOf($this->define(['parents' => [XPClass::forName(Runnable::class), XPClass::forName(Closeable::class)]]))]
     );
   }
 

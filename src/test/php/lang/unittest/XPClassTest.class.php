@@ -50,21 +50,6 @@ class XPClassTest {
   }
   
   #[Test]
-  public function is_subclass_of_its_parent() {
-    Assert::true($this->fixture->isSubclassOf('lang.unittest.AbstractTestClass'));
-  }
-
-  #[Test]
-  public function is_not_subclass_of_util_Date() {
-    Assert::false($this->fixture->isSubclassOf('util.Date'));
-  }
-
-  #[Test]
-  public function is_not_subclass_of_itself() {
-    Assert::false($this->fixture->isSubclassOf('lang.unittest.TestClass'));
-  }
-
-  #[Test]
   public function class_is_assignable_from_itself() {
     Assert::true($this->fixture->isAssignableFrom($this->fixture));
   }
@@ -95,19 +80,6 @@ class XPClassTest {
   }
 
   #[Test]
-  public function fixtures_parent_class() {
-    Assert::equals(
-      XPClass::forName('lang.unittest.AbstractTestClass'),
-      $this->fixture->getParentClass()
-    );
-  }
-
-  #[Test]
-  public function fixtures_parents_parent_class() {
-    Assert::null($this->fixture->getParentClass()->getParentClass());
-  }
-
-  #[Test]
   public function fixture_class_is_not_an_interface() {
     Assert::false($this->fixture->isInterface());
   }
@@ -130,56 +102,6 @@ class XPClassTest {
   #[Test]
   public function trait_class_is_trait() {
     Assert::true(XPClass::forName('lang.unittest.fixture.TraitOne')->isTrait());
-  }
-
-  #[Test]
-  public function traits_of_fixture() {
-    Assert::equals(
-      [],
-      $this->fixture->getTraits()
-    );
-  }
-
-  #[Test]
-  public function traits_of_UsingOne() {
-    Assert::equals(
-      [XPClass::forName('lang.unittest.fixture.TraitOne')],
-      XPClass::forName('lang.unittest.fixture.UsingOne')->getTraits()
-    );
-  }
-
-  #[Test]
-  public function traits_of_TraitOne() {
-    Assert::equals(
-      [],
-      XPClass::forName('lang.unittest.fixture.TraitOne')->getTraits()
-    );
-  }
-
-  #[Test]
-  public function getInterfaces_returns_array_of_class() {
-    Assert::instance('lang.XPClass[]', $this->fixture->getInterfaces());
-  }
-
-  #[Test]
-  public function getInterfaces_consist_of_declared_interface() {
-    Assert::equals(
-      [XPClass::forName('lang.Runnable')],
-      $this->fixture->getInterfaces()
-    );
-  }
-
-  #[Test]
-  public function getDeclaredInterfaces_consist_of_declared_interface() {
-    Assert::equals(
-      [XPClass::forName('lang.Runnable')],
-      $this->fixture->getDeclaredInterfaces()
-    );
-  }
-
-  #[Test]
-  public function this_class_does_not_declare_any_interfaces() {
-    Assert::equals([], typeof($this)->getDeclaredInterfaces());
   }
 
   #[Test, Expect(IllegalAccessException::class)]

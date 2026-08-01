@@ -14,8 +14,9 @@ class ImplementationTest {
    * @throws lang.ElementNotFoundException
    */
   private function interfaceNamed($class, $name) {
-    foreach ($class->getInterfaces() as $iface) {
-      if (strstr($iface->getName(), $name)) return $iface;
+    foreach ($class->reflect()->getInterfaces() as $reflect) {
+      $interface= new XPClass($reflect);
+      if (strstr($interface->getName(), $name)) return $interface;
     }
     throw new ElementNotFoundException('Class '.$class->getName().' does not implement '.$name);
   }
@@ -88,16 +89,14 @@ class ImplementationTest {
 
   #[Test]
   public function closed() {
-    Assert::null(
-      Type::forName('lang.unittest.ListOf<string>')->getParentclass()
-    );
+    Assert::false(Type::forName('lang.unittest.ListOf<string>')->reflect()->getParentclass());
   }
 
   #[Test]
   public function partiallyClosed() {
     Assert::equals(
       Type::forName('lang.unittest.Lookup<lang.Type, string>'),
-      Type::forName('lang.unittest.TypeLookup<string>')->getParentclass()
+      new XPClass(Type::forName('lang.unittest.TypeLookup<string>')->reflect()->getParentclass())
     );
   }
 
