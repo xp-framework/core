@@ -3,7 +3,7 @@
 use lang\ClassMeta;
 use lang\unittest\Name as Named;
 use lang\unittest\fixture\{ClassOne, InterfaceOne, TraitOne};
-use test\{Assert, Ignore, Test, Values};
+use test\{Assert, Test, Values};
 
 class ClassMetaTest {
 
@@ -112,7 +112,7 @@ class ClassMetaTest {
     Assert::equals('util.collection.HashTable<string, util.Filter<string>>', $meta[1]['test'][DETAIL_RETURNS]);
   }
 
-  #[Test, Ignore('Not yet supported')]
+  #[Test]
   public function imported_type() {
     $meta= (new ClassMeta())->meta(new class() {
 
@@ -120,6 +120,6 @@ class ClassMetaTest {
       public function test() { }
     });
 
-    Assert::equals('lang.unittest.Named', $meta[1]['test'][DETAIL_RETURNS]);
+    Assert::equals('lang.unittest.Name', $meta[1]['test'][DETAIL_RETURNS]);
   }
 }

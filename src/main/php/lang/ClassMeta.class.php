@@ -1,6 +1,6 @@
 <?php namespace lang;
 
-use ReflectionClass;
+use ReflectionClass, PhpToken;
 
 /** @test lang.unittest.ClassMetaTest */
 class ClassMeta {
@@ -48,14 +48,36 @@ class ClassMeta {
    * @param  ReflectionClass $reflect
    * @return string
    */
-  private function type($comment, $reflect= []) {
+  private function type($comment, $imports) {
+    static $literal= [
+      'string'    => 1,
+      'int'       => 1,
+      'integer'   => 1,
+      'double'    => 1,
+      'float'     => 1,
+      'bool'      => 1,
+      'boolean'   => 1,
+      'false'     => 1,
+      'true'      => 1,
+      'var'       => 1,
+      'resource'  => 1,
+      'mixed'     => 1,
+      'void'      => 1,
+      'null'      => 1,
+      'never'     => 1,
+      'array'     => 1,
+      'object'    => 1,
+      'callable'  => 1,
+      'iterable'  => 1,
+    ];
+
     if (0 === strncmp($comment, 'function(', 9)) {
       $p= $this->matching($comment, '(', ')');
       $p+= strspn($comment, ': ', $p);
-      return substr($comment, 0, $p).$this->type(substr($comment, $p), $reflect);
+      return substr($comment, 0, $p).$this->type(substr($comment, $p), $imports);
     } else if (0 === strncmp($comment, '(function(', 10)) {
       $p= $this->matching($comment, '(', ')');
-      return substr($comment, 0, $p).$this->type(substr($comment, $p), $reflect);
+      return substr($comment, 0, $p).$this->type(substr($comment, $p), $imports);
     } else if ('[' === $comment[0]) {
       $p= $this->matching($comment, '[', ']');
       return substr($comment, 0, $p);
@@ -66,11 +88,20 @@ class ClassMeta {
       $type= substr($comment, 0, strcspn($comment, ' '));
     }
 
-    if ('\\' === ($type[0] ?? null)) {
-      return strtr(substr($type, 1), '\\', '.');
-    } else {
+    // Figure out base type
+    $p= strcspn($type, '<&|[*(@');
+    $base= $p === strlen($type) ? $type : substr($type, 0, $p);
+
+    // Check known type literals and qualified type names
+    if (isset($literal[$base]) || strstr($base, '.')) {
       return $type;
+    } else if (strstr($base, '\\')) {
+      return strtr(ltrim($type, '\\'), '\\', '.');
     }
+
+    // Resolve against imports
+    $use= $imports();
+    return ($resolved= $use[$base] ?? null) ? $resolved.substr($type, $p) : $type;
   }
 
   /**
@@ -96,7 +127,7 @@ class ClassMeta {
       do {
         $type= '';
         for ($i+= 2; $i < $s, !isset($types[$tokens[$i]->id]); $i++) {
-          $type.= $tokens[$i]->text;
+          $type.= strtr($tokens[$i]->text, '\\', '.');
         }
 
         // Skip over whitespace
@@ -134,6 +165,7 @@ class ClassMeta {
         if (T_WHITESPACE === $tokens[$i]->id) $i++;
       } while (44 === $tokens[$i]->id);
     }
+
     return $imports;
   }
 
@@ -151,6 +183,12 @@ class ClassMeta {
     } else {
       $reflect= new ReflectionClass(strtr($class, '.', '\\'));
     }
+
+    // Cache imports for the duration of this method's invocation
+    $imports= function() use($reflect) {
+      static $resolved;
+      return $resolved??= $this->imports($reflect);
+    };
 
     $properties= [];
     foreach ($reflect->getProperties() as $property) {
@@ -182,11 +220,11 @@ class ClassMeta {
         preg_match_all('/@([a-z]+)\s*([^\r\n]+)?/', $comment, $matches, PREG_SET_ORDER, $p + 2);
         foreach ($matches as $match) {
           if ('param' === $match[1]) {
-            $params[]= $this->type($match[2], $reflect);
+            $params[]= $this->type($match[2], $imports);
           } else if ('return' === $match[1]) {
-            $returns= $this->type($match[2], $reflect);
+            $returns= $this->type($match[2], $imports);
           } else if ('throws' === $match[1]) {
-            $throws[]= $this->type($match[2], $reflect);
+            $throws[]= $this->type($match[2], $imports);
           }
         }
       }
