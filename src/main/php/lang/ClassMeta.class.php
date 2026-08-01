@@ -101,7 +101,7 @@ class ClassMeta {
 
     // Resolve against imports
     $use= $imports();
-    return ($resolved= $use[$base] ?? null) ? $resolved.substr($type, $p) : $type;
+    return ($resolved= $use[$base] ?? null) ? $resolved.substr($type, $p) : $use['namespace'].'.'.$type;
   }
 
   /**
@@ -122,6 +122,7 @@ class ClassMeta {
     $imports= [];
     for ($i= 0, $s= sizeof($tokens); $i < $s; $i++) {
       if (isset($break[$tokens[$i]->id])) break;
+      if (T_NAMESPACE === $tokens[$i]->id) $imports['namespace']= strtr($tokens[$i + 2]->text, '\\', '.');
       if (T_USE !== $tokens[$i]->id) continue;
 
       do {
@@ -155,10 +156,10 @@ class ClassMeta {
         } else if (T_AS === $tokens[$i]->id) {
           $i+= 2;
           $imports[$tokens[$i]->text]= $type;
-        } else if (false === ($p= strrpos($type, '\\'))) {
-          $imports[$type]= null;
+        } else if (false === ($p= strrpos($type, '.'))) {
+          $imports[$type]= $type;
         } else {
-          $imports[substr($type, strrpos($type, '\\') + 1)]= $type;
+          $imports[substr($type, strrpos($type, '.') + 1)]= $type;
         }
 
         // Skip over whitespace

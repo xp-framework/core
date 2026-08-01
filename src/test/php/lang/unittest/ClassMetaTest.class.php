@@ -113,6 +113,17 @@ class ClassMetaTest {
   }
 
   #[Test]
+  public function unqualified_type() {
+    $meta= (new ClassMeta())->meta(new class() {
+
+      /** @return Name */
+      public function test() { }
+    });
+
+    Assert::equals('lang.unittest.Name', $meta[1]['test'][DETAIL_RETURNS]);
+  }
+
+  #[Test]
   public function imported_type() {
     $meta= (new ClassMeta())->meta(new class() {
 
