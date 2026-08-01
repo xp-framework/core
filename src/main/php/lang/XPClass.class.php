@@ -1,17 +1,8 @@
 <?php namespace lang;
-
-use lang\ElementNotFoundException;
-use lang\reflect\ClassParser;
  
 /**
  * Represents classes. Every instance of an XP class has a method
  * called getClass() which returns an instance of this class.
- *
- * Warning
- * =======
- * Do not construct this class publicly, instead use either the
- * `typeof` syntax or the static method 
- * $class= XPClass::forName('fully.qualified.Name')
  *
  * Examples
  * ========
@@ -28,7 +19,6 @@ use lang\reflect\ClassParser;
  *
  * @see   lang.XPClass#forName
  * @test  lang.unittest.XPClassTest
- * @test  lang.unittest.ClassDetailsTest
  * @test  lang.unittest.IsInstanceTest
  * @test  lang.unittest.ClassCastingTest
  */
@@ -58,7 +48,7 @@ class XPClass extends Type {
   /**
    * Constructor
    *
-   * @param   var ref either a class name, a ReflectionClass instance or an object
+   * @param  string|ReflectionClass|object $ref
    */
   public function __construct($ref) {
     if ($ref instanceof \ReflectionClass) {
