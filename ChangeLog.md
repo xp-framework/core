@@ -11,6 +11,9 @@ forward compatibility with PHP 8.6.
 
 ### Heads up!
 
+* Merged PR #370: Add `lang.ClassMeta` as a replacement for class parser
+  implementatio dealing with PHP 7 annotation syntax
+  (@thekid)
 * Dropped support for PHP 7.4 - phase 2 of xp-framework/rfc#343. Mininum
   required PHP version is now 8.0.0!
   (@thekid)
