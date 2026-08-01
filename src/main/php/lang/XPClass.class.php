@@ -249,6 +249,16 @@ class XPClass extends Type {
     }
     return null;    // Internal class, e.g.
   }
+
+  /**
+   * Returns `xp::$meta` for this class, extracting it if necessary
+   *
+   * @return [:var]
+   */
+  public function meta() {
+    static $meta;
+    return \xp::$meta[$this->name]??= ($meta??= new ClassMeta())->meta($this->_class);
+  }
   
   /**
    * Retrieve details for a specified class. Note: Results from this 

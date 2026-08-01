@@ -76,16 +76,17 @@ class FunctionType extends Type {
    * @param  php.ReflectionFunctionAbstract $value
    * @param  [lang.Type] $signature
    * @param  function(string): var $value A function to invoke when verification fails
-   * @param  php.ReflectionClass $class Class to get details from, optionally
+   * @param  php.ReflectionClass $reflect Class to get details from, optionally
    * @return var
    */
-  protected function verify($r, $signature, $false, $class= null) {
-    if ($class) {
-      $details= XPClass::detailsForClass(XPClass::nameOf($class->name))[1][$r->name] ?? null;
+  protected function verify($r, $signature, $false, $reflect= null) {
+    if ($reflect) {
+      $class= new XPClass($reflect);
+      $details= $class->meta()[1][$r->name] ?? null;
       $resolve= [
-        'static' => fn() => new XPClass($class),
-        'self'   => fn() => new XPClass($class),
-        'parent' => fn() => new XPClass($class->getParentClass()),
+        'static' => fn() => $class,
+        'self'   => fn() => $class,
+        'parent' => fn() => new XPClass($reflect->getParentClass()),
       ];
     } else {
       $details= null;

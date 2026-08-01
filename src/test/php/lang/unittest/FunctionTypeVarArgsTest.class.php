@@ -18,7 +18,7 @@ class FunctionTypeVarArgsTest {
     if (!isset(self::$compiled[$class])) {
       self::$compiled[$class]= ClassLoader::defineClass($class, null, [], '{
         /**
-         '.implode("\n* ", $apidoc).'
+         * '.implode("\n* ", $apidoc).'
          */
         public static function fixture('.$signature.') { }
       }');
