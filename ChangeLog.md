@@ -11,6 +11,9 @@ forward compatibility with PHP 8.6.
 
 ### Heads up!
 
+* Merged PR #371: Rename *is()* -> *instance()* due to `is` being reserved
+  as an operator in PHP, see #368
+  (@thekid)
 * Merged PR #370: Add `lang.ClassMeta` as a replacement for class parser
   implementatio dealing with PHP 7 annotation syntax
   (@thekid)
