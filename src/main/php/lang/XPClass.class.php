@@ -203,7 +203,7 @@ class XPClass extends Type {
 
   /**
    * Determines whether the specified object is an instance of this
-   * class. This is the equivalent of the `is()` core functionality.
+   * class. This is the equivalent of the `instance()` core functionality.
    *
    * ```php
    * $class= XPClass::forName('io.File');
@@ -217,7 +217,7 @@ class XPClass extends Type {
    * @return  bool
    */
   public function isInstance($obj): bool {
-    return is($this->name, $obj);
+    return $obj instanceof $this->_class;
   }
 
   /** Retrieve the class loader a class was loaded with */
