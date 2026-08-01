@@ -256,22 +256,18 @@ class GenericTypes {
                 if (null === $type) {
                   continue;
                 } else if ('...' === substr($type, -3)) {
-                  $src.= $j ? '$·args= array_slice(func_get_args(), '.$j.');' : '$·args= func_get_args();';
-                  $src.= (
-                    ' if (!instance(\''.substr($generic[$j], 0, -3).'[]\', $·args)) throw new \lang\IllegalArgumentException('.
-                    '"Vararg '.($j + 1).' passed to ".__METHOD__."'.
-                    ' must be of '.$type.', ".typeof($·args)." given"'.
-                    ');'
-                  );
+                  $verify= substr($generic[$j], 0, -3).'[]';
                 } else {
-                  $src.= (
-                    ' if ('.(isset($default[$j]) ? '('.$default[$j].' !== '.$parameters[$j].') && ' : '').
-                    '!instance(\''.$generic[$j].'\', '.$parameters[$j].')) throw new \lang\IllegalArgumentException('.
-                    '"Argument '.($j + 1).' passed to ".__METHOD__."'.
-                    ' must be of '.$type.', ".typeof('.$parameters[$j].')." given"'.
-                    ');'
-                  );
+                  $verify= $generic[$j];
                 }
+
+                $src.= (
+                  ' if ('.(isset($default[$j]) ? '('.$default[$j].' !== '.$parameters[$j].') && ' : '').
+                  '!instance(\''.$verify.'\', '.$parameters[$j].')) throw new \lang\IllegalArgumentException('.
+                  '"Argument '.($j + 1).' passed to ".__METHOD__."'.
+                  ' must be of '.$type.', ".typeof('.$parameters[$j].')." given"'.
+                  ');'
+                );
               }
             }
             continue;
@@ -326,7 +322,7 @@ class GenericTypes {
       }
 
       // Create class
-      // DEBUG fputs(STDERR, "@* ".substr($src, 0, strpos($src, '{'))." -> $qname\n");
+      // fputs(STDERR, "@* ".substr($src, 0, strpos($src, '{'))." -> $qname\n");
       eval($src);
       if ($initialize) {
         foreach ($components as $i => $component) {
