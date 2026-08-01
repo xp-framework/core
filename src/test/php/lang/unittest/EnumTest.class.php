@@ -7,26 +7,6 @@ use test\{Action, Assert, Expect, Test};
 class EnumTest {
 
   #[Test]
-  public function coin_is_an_enum() {
-    Assert::true(XPClass::forName(Coin::class)->isEnum());
-  }
-  
-  #[Test]
-  public function operation_is_an_enum() {
-    Assert::true(XPClass::forName(Operation::class)->isEnum());
-  }
-
-  #[Test, Condition(assert: 'class_exists("ReflectionEnum", false)')]
-  public function sortorder_is_an_enum() {
-    Assert::true(XPClass::forName(SortOrder::class)->isEnum());
-  }
-
-  #[Test]
-  public function this_is_not_an_enum() {
-    Assert::false(typeof($this)->isEnum());
-  }
-
-  #[Test]
   public function enum_base_class_is_abstract() {
     Assert::true(XPClass::forName(Enum::class)->reflect()->isAbstract());
   }

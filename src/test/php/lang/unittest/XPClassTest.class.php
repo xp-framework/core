@@ -79,31 +79,6 @@ class XPClassTest {
     $this->fixture->isAssignableFrom('@not-a-type@');
   }
 
-  #[Test]
-  public function fixture_class_is_not_an_interface() {
-    Assert::false($this->fixture->isInterface());
-  }
-
-  #[Test]
-  public function lang_Value_class_is_an_interface() {
-    Assert::true(XPClass::forName('lang.Value')->isInterface());
-  }
-
-  #[Test]
-  public function fixture_class_is_not_a_trait() {
-    Assert::false($this->fixture->isTrait());
-  }
-
-  #[Test]
-  public function lang_Value_class_is_not_a_trait() {
-    Assert::false(XPClass::forName('lang.Value')->isTrait());
-  }
-
-  #[Test]
-  public function trait_class_is_trait() {
-    Assert::true(XPClass::forName('lang.unittest.fixture.TraitOne')->isTrait());
-  }
-
   #[Test, Expect(IllegalAccessException::class)]
   public function newInstance_raises_exception_if_class_is_an_interface() {
     XPClass::forName('lang.Runnable')->newInstance();

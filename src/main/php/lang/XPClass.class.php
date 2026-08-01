@@ -232,34 +232,6 @@ class XPClass extends Type {
     return is($this->name, $obj);
   }
 
-  /**
-   * Determines if this XPClass object represents an interface type.
-   *
-   * @return  bool
-   */
-  public function isInterface(): bool {
-    return $this->reflect()->isInterface();
-  }
-
-  /**
-   * Determines if this XPClass object represents a trait type.
-   *
-   * @return  bool
-   */
-  public function isTrait(): bool {
-    return $this->reflect()->isTrait();
-  }
-
-  /**
-   * Determines if this XPClass object represents an enum type.
-   *
-   * @return  bool
-   */
-  public function isEnum(): bool {
-    $r= $this->reflect();
-    return $r->isSubclassOf(Enum::class) || $r->isSubclassOf(\UnitEnum::class);
-  }
-
   /** Retrieve the class loader a class was loaded with */
   public function getClassLoader(): IClassLoader {
     return self::_classLoaderFor($this->name);
