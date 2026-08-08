@@ -5,10 +5,10 @@ use util\{NoSuchElementException, Objects};
 
 #[Generic(self: 'K, V', parent: 'K, V')]
 class Lookup extends AbstractDictionary {
-  protected $size= 0;
+  private $size= 0;
 
   #[Generic(['var' => '[:V]'])]
-  protected $elements= [];
+  public $elements= [];
   
   /**
    * Put a key/value pairt
@@ -36,6 +36,19 @@ class Lookup extends AbstractDictionary {
       throw new NoSuchElementException('No such key '.Objects::stringOf($key));
     }
     return $this->elements[$offset];
+  }
+
+  /**
+   * Applies a given map function to all elements in this lookup,
+   * returning a new list with the mapped elements.
+   */
+  #[Generic(self: 'M', params: 'function(V): M', return: 'self<K, M>')]
+  public function map($map) {
+    $m= create("new self<$K, $M>");
+    foreach ($this->elements as $hash => $element) {
+      $m->elements[$hash]= $map($element);
+    }
+    return $m;
   }
 
   /**

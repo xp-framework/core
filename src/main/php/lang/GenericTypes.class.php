@@ -233,7 +233,7 @@ class GenericTypes {
           } else if (',' === $tokens[$i][0]) {
             // Skip
           } else if ('=' === $tokens[$i][0]) {
-            $p= sizeof($parameters)- 1;
+            $p= sizeof($parameters) - 1;
             $default[$p]= '';
           } else if (T_WHITESPACE !== $tokens[$i][0] && isset($default[$p])) {
             $default[$p].= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
@@ -300,10 +300,23 @@ class GenericTypes {
           } else if ('}' === $tokens[$i][0]) {
             $braces--;
             if (0 === $braces) array_shift($state);
+          } else if ('"' === $tokens[$i][0]) {
+            array_unshift($state, T_STRING_VARNAME);
           } else if (T_VARIABLE === $tokens[$i][0]) {
             $v= substr($tokens[$i][1], 1);
             $src.= isset($placeholders[$v])
               ? 'self::$__generic["'.$v.'"]' :
+              (isset($typeargs[$v]) ? '$__T['.$typeargs[$v].']' : $tokens[$i][1])
+            ;
+            continue;
+          }
+        } else if (T_STRING_VARNAME === $state[0]) {
+          if ('"' === $tokens[$i][0]) {
+            array_shift($state);
+          } else if (T_VARIABLE === $tokens[$i][0]) {
+            $v= substr($tokens[$i][1], 1);
+            $src.= isset($placeholders[$v])
+              ? '".self::$__generic["'.$v.'"]."' :
               (isset($typeargs[$v]) ? '$__T['.$typeargs[$v].']' : $tokens[$i][1])
             ;
             continue;
