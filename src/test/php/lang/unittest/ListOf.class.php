@@ -29,19 +29,6 @@ class ListOf {
   }
 
   /**
-   * Applies a given map function to all elements in this list,
-   * returning a new list with the mapped elements.
-   */
-  #[Generic(self: 'M', params: 'function(T): M')]
-  public function map($map) {
-    $m= create("new self<$M>");
-    foreach ($this->elements as $element) {
-      $m->elements[]= $map($element);
-    }
-    return $m;
-  }
-
-  /**
    * Returns a list of all elements
    *
    * @return  T[] elements
