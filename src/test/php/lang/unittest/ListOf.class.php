@@ -19,12 +19,24 @@ class ListOf {
   /**
    * Extends this list with all given arguments
    *
+   * @param   T element
+   * @return  self
+   */
+  #[Generic(params: 'T')]
+  public function append($element) {
+    $this->elements[]= $element;
+    return $this;
+  }
+
+  /**
+   * Extends this list with all given arguments
+   *
    * @param   T[] elements
    * @return  self
    */
   #[Generic(params: 'T[]')]
-  public function extend($args) {
-    $this->elements= array_merge($this->elements, $args);
+  public function extend($elements) {
+    $this->elements= array_merge($this->elements, $elements);
     return $this;
   }
 

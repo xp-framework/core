@@ -84,6 +84,16 @@ class GenericsTest {
     Assert::equals(['Hello', 'World', '!'], $fixture->elements);
   }
 
+  #[Test]
+  public function pass_nullable() {
+    $fixture= create('new lang.unittest.ListOf<?string>')
+      ->append('Hello')
+      ->append(null)
+    ;
+
+    Assert::equals(['Hello', null], $fixture->elements);
+  }
+
   #[Test, Expect(IllegalArgumentException::class), Values([[[1]], [['Test', 1]], [[null, 'Test']]])]
   public function pass_invalid($arguments) {
     create('new lang.unittest.ListOf<string>', 'Hello')->extend($arguments);
