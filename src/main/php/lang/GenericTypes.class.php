@@ -5,29 +5,18 @@ use ReflectionClass;
 /**
  * Generate generic runtime types.
  *
+ * @test  lang.unittest.generics.GenericsTest
  * @test  lang.unittest.generics.GenericTypesTest
  */
 class GenericTypes {
 
-  /**
-   * Creates a generic type
-   *
-   * @param   lang.XPClass base
-   * @param   lang.Type[] arguments
-   * @return  lang.XPClass created type
-   */
-  public function newType(XPClass $base, array $arguments) {
+  /** Creates a generic type */
+  public function newType(XPClass $base, array $arguments): XPClass {
     return new XPClass(new ReflectionClass($this->newType0($base, $arguments)));
   }
 
-  /**
-   * Creates a generic type
-   *
-   * @param   lang.XPClass base
-   * @param   lang.Type[] arguments
-   * @return  string created type's literal
-   */
-  public function newType0($base, $arguments) {
+  /** Creates a generic type and returns the created type's literal */
+  public function newType0(XPClass $base, array $arguments): string {
     $reflect= $base->reflect();
     $generic= $reflect->getAttributes(Generic::class);
     if (empty($generic) || (($annotated= $generic[0]->getArguments()) && !isset($annotated['self']))) {
