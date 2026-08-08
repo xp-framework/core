@@ -155,7 +155,7 @@ class GenericTypes {
           }
           continue;
         } else if (T_INTERFACE === $state[0]) {
-          if (T_IMPLEMENTS === $tokens[$i][0]) {
+          if (T_EXTENDS === $tokens[$i][0]) {
             $src.= ' extends';
             $counter= 0;
             $annotation= $annotated['extends'] ?? null;
