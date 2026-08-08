@@ -93,4 +93,29 @@ class GenericsTest {
   public function pass_invalid_varargs($arguments) {
     create('new lang.unittest.ListOf<string>', ...$arguments);
   }
+
+  #[Test]
+  public function invoke_generic_method() {
+    $fixture= create('new lang.unittest.ListOf<string>', 'Hello', 'World!');
+    $mapped= $fixture->{'map<int>'}('strlen');
+
+    Assert::instance('lang.unittest.ListOf<int>', $mapped);
+    Assert::equals([5, 6], $mapped->elements);
+  }
+
+  #[Test]
+  public function generic_method_components() {
+    $fixture= create('new lang.unittest.Lookup<string, string>');
+    $fixture->put('greeting', 'Hello');
+    $fixture->put('person', 'Tester');
+    $mapped= $fixture->{'map<int>'}('strlen');
+
+    Assert::instance('lang.unittest.Lookup<string, int>', $mapped);
+    Assert::equals([5, 6], $mapped->values());
+  }
+
+  #[Test, Expect(IllegalArgumentException::class)]
+  public function generic_method_invalid_argument() {
+    create('new lang.unittest.ListOf<string>')->{'map<int>'}(null);
+  }
 }

@@ -1,31 +1,22 @@
 <?php namespace lang;
 
+use ReflectionClass;
+
 /**
  * Generate generic runtime types.
  *
+ * @test  lang.unittest.generics.GenericsTest
  * @test  lang.unittest.generics.GenericTypesTest
  */
 class GenericTypes {
 
-  /**
-   * Creates a generic type
-   *
-   * @param   lang.XPClass base
-   * @param   lang.Type[] arguments
-   * @return  lang.XPClass created type
-   */
-  public function newType(XPClass $base, array $arguments) {
-    return new XPClass(new \ReflectionClass($this->newType0($base, $arguments)));
+  /** Creates a generic type */
+  public function newType(XPClass $base, array $arguments): XPClass {
+    return new XPClass(new ReflectionClass($this->newType0($base, $arguments)));
   }
 
-  /**
-   * Creates a generic type
-   *
-   * @param   lang.XPClass base
-   * @param   lang.Type[] arguments
-   * @return  string created type's literal
-   */
-  public function newType0($base, $arguments) {
+  /** Creates a generic type and returns the created type's literal */
+  public function newType0(XPClass $base, array $arguments): string {
     $reflect= $base->reflect();
     $generic= $reflect->getAttributes(Generic::class);
     if (empty($generic) || (($annotated= $generic[0]->getArguments()) && !isset($annotated['self']))) {
@@ -155,36 +146,43 @@ class GenericTypes {
             $counter= 0;
             $annotation= $annotated['implements'] ?? null;
             array_unshift($state, T_CLASS);
-            array_unshift($state, 5);
+            array_unshift($state, T_IMPLEMENTS);
           } else if ('{' === $tokens[$i][0]) {
             array_shift($state);
-            array_unshift($state, 1);
+            array_unshift($state, T_CLASS_C);
             $src.= ' { public static $__generic= [];';
             $initialize= true;
           }
           continue;
         } else if (T_INTERFACE === $state[0]) {
-          if (T_EXTENDS === $tokens[$i][0]) {
+          if (T_IMPLEMENTS === $tokens[$i][0]) {
             $src.= ' extends';
             $counter= 0;
             $annotation= $annotated['extends'] ?? null;
             array_unshift($state, T_INTERFACE);
-            array_unshift($state, 5);
+            array_unshift($state, T_IMPLEMENTS);
           } else if ('{' === $tokens[$i][0]) {
             array_shift($state);
-            array_unshift($state, 1);
+            array_unshift($state, T_CLASS_C);
             $src.= ' {';
           }
           continue;
-        } else if (1 === $state[0]) {             // Class body
+        } else if (T_CLASS_C === $state[0]) {
           if (T_FUNCTION === $tokens[$i][0]) {
             $braces= 0;
             $parameters= $default= [];
-            array_unshift($state, 3);
-            array_unshift($state, 2);
+            array_unshift($state, T_CALLABLE);
+            array_unshift($state, T_METHOD_C);
             $m= $tokens[$i+ 2][1];
             $p= 0;
             $generic= $reflect->getMethod($m)->getAttributes(Generic::class);
+            $annotations= $generic ? $generic[0]->getArguments() : [];
+            $typeargs= [];
+            if (isset($annotations['self'])) {
+              foreach (Type::split($annotations['self']) as $p => $typearg) {
+                $typeargs[ltrim($typearg)]= $p;
+              }
+            }
           } else if (T_VARIABLE === $tokens[$i][0]) {
             $f= substr($tokens[$i][1], 1);
             $generic= $reflect->getProperty($f)->getAttributes(Generic::class);
@@ -193,14 +191,24 @@ class GenericTypes {
               $meta[0][$f][DETAIL_RETURNS]= strtr($annotations['var'], $placeholders);
             }
           } else if ('}' === $tokens[$i][0]) {
+            $reflect->isInterface() || $src.= (
+              'function __call($name, $arguments) {'.
+              '  $p= strpos($name, "<") ?: throw new \Error("Call to undefined method", $name);'.
+              '  return $this->{substr($name, 0, $p)}(\lang\Type::forNames(substr($name, $p + 1, -1)), ...$arguments);'.
+              '}'
+            );
             $src.= '}';
             break;
           } else if (T_CLOSE_TAG === $tokens[$i][0]) {
             break;
           }
-        } else if (2 === $state[0]) {             // Method declaration
+        } else if (T_METHOD_C === $state[0]) {
           if ('(' === $tokens[$i][0]) {
             $braces++;
+            if (1 === $braces && $typeargs) {
+              $src.= '($__T,';
+              continue;
+            }
           } else if (')' === $tokens[$i][0]) {
             $braces--;
             if (0 === $braces) {
@@ -214,12 +222,12 @@ class GenericTypes {
           } else if (',' === $tokens[$i][0]) {
             // Skip
           } else if ('=' === $tokens[$i][0]) {
-            $p= sizeof($parameters)- 1;
+            $p= sizeof($parameters) - 1;
             $default[$p]= '';
           } else if (T_WHITESPACE !== $tokens[$i][0] && isset($default[$p])) {
             $default[$p].= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
           }
-        } else if (3 === $state[0]) {             // Method body
+        } else if (T_CALLABLE === $state[0]) {
           if (';' === $tokens[$i][0]) {           // Abstract method
             $annotations= $generic ? $generic[0]->getArguments() : [];
             if (isset($annotations['return'])) {
@@ -236,16 +244,19 @@ class GenericTypes {
           } else if ('{' === $tokens[$i][0]) {
             $braces= 1;
             array_shift($state);
-            array_unshift($state, 4);
+            array_unshift($state, T_FUNCTION);
             $src.= '{';
-            $annotations= $generic ? $generic[0]->getArguments() : [];
             if (isset($annotations['return'])) {
               $meta[1][$m][DETAIL_RETURNS]= strtr($annotations['return'], $placeholders);
             }
             if (isset($annotations['params'])) {
               $generic= [];
+              $replace= $placeholders;
+              foreach ($typeargs as $placeholder => $p) {
+                $replace[$placeholder]= "\$__T[{$p}]";
+              }
               foreach (Type::split($annotations['params']) as $j => $placeholder) {
-                if ('' === ($replaced= strtr($placeholder, $placeholders))) {
+                if ('' === ($replaced= strtr($placeholder, $replace))) {
                   $generic[$j]= null;
                 } else {
                   $meta[1][$m][DETAIL_ARGUMENTS][$j]= $replaced;
@@ -263,7 +274,7 @@ class GenericTypes {
 
                 $src.= (
                   ' if ('.(isset($default[$j]) ? '('.$default[$j].' !== '.$parameters[$j].') && ' : '').
-                  '!instance(\''.$verify.'\', '.$parameters[$j].')) throw new \lang\IllegalArgumentException('.
+                  '!instance("'.$verify.'", '.$parameters[$j].')) throw new \lang\IllegalArgumentException('.
                   '"Argument '.($j + 1).' passed to ".__METHOD__."'.
                   ' must be of '.$type.', ".typeof('.$parameters[$j].')." given"'.
                   ');'
@@ -272,17 +283,34 @@ class GenericTypes {
             }
             continue;
           }
-        } else if (4 === $state[0]) {             // Method body
+        } else if (T_FUNCTION === $state[0]) {
           if ('{' === $tokens[$i][0] || T_CURLY_OPEN === $tokens[$i][0]) {
             $braces++;
           } else if ('}' === $tokens[$i][0]) {
             $braces--;
             if (0 === $braces) array_shift($state);
-          } else if (T_VARIABLE === $tokens[$i][0] && isset($placeholders[$v= substr($tokens[$i][1], 1)])) {
-            $src.= 'self::$__generic["'.$v.'"]';
+          } else if ('"' === $tokens[$i][0]) {
+            array_unshift($state, T_STRING_VARNAME);
+          } else if (T_VARIABLE === $tokens[$i][0]) {
+            $v= substr($tokens[$i][1], 1);
+            $src.= isset($placeholders[$v])
+              ? 'self::$__generic["'.$v.'"]' :
+              (isset($typeargs[$v]) ? '$__T['.$typeargs[$v].']' : $tokens[$i][1])
+            ;
             continue;
           }
-        } else if (5 === $state[0]) {             // Implements (class), Extends (interface)
+        } else if (T_STRING_VARNAME === $state[0]) {
+          if ('"' === $tokens[$i][0]) {
+            array_shift($state);
+          } else if (T_VARIABLE === $tokens[$i][0]) {
+            $v= substr($tokens[$i][1], 1);
+            $src.= isset($placeholders[$v])
+              ? '".self::$__generic["'.$v.'"]."' :
+              (isset($typeargs[$v]) ? '$__T['.$typeargs[$v].']' : $tokens[$i][1])
+            ;
+            continue;
+          }
+        } else if (T_IMPLEMENTS === $state[0]) { // Implements (class), Extends (interface)
           if ('{' === $tokens[$i]) {
             array_shift($state);
             array_shift($state);
@@ -310,7 +338,7 @@ class GenericTypes {
             foreach (Type::split($annotation[$counter]) as $j => $placeholder) {
               $iargs[]= Type::forName(strtr(ltrim($placeholder), $placeholders));
             }
-            $src.= '\\'.$this->newType0(new XPClass(new \ReflectionClass($rel)), $iargs);
+            $src.= '\\'.$this->newType0(new XPClass(new ReflectionClass($rel)), $iargs);
           } else {
             $src.= $rel;
           }
@@ -322,7 +350,7 @@ class GenericTypes {
       }
 
       // Create class
-      // fputs(STDERR, "@* ".substr($src, 0, strpos($src, '{'))." -> $qname\n");
+      // var_dump([$qname => $src]);
       eval($src);
       if ($initialize) {
         foreach ($components as $i => $component) {
