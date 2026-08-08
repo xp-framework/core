@@ -17,15 +17,28 @@ class ListOf {
   }
 
   /**
-   * Adds an element
+   * Extends this list with all given arguments
    *
-   * @param   T... elements
-   * @return  lang.unittest.List self
+   * @param   T[] elements
+   * @return  self
    */
-  #[Generic(params: 'T...')]
-  public function withAll(... $args) {
+  #[Generic(params: 'T[]')]
+  public function extend($args) {
     $this->elements= array_merge($this->elements, $args);
     return $this;
+  }
+
+  /**
+   * Applies a given map function to all elements in this list,
+   * returning a new list with the mapped elements.
+   */
+  #[Generic(self: 'M', params: 'function(T): M')]
+  public function map($map) {
+    $m= create("new self<$M>");
+    foreach ($this->elements as $element) {
+      $m->elements[]= $map($element);
+    }
+    return $m;
   }
 
   /**

@@ -5,7 +5,7 @@ use util\{NoSuchElementException, Objects};
 
 #[Generic(self: 'K, V', parent: 'K, V')]
 class Lookup extends AbstractDictionary {
-  protected $size;
+  protected $size= 0;
 
   #[Generic(['var' => '[:V]'])]
   protected $elements= [];
