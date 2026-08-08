@@ -32,7 +32,7 @@ class ListOf {
    * Applies a given map function to all elements in this list,
    * returning a new list with the mapped elements.
    */
-  #[Generic(self: 'M')]
+  #[Generic(self: 'M', params: 'function(T): M')]
   public function map($map) {
     $m= create("new lang.unittest.ListOf<$M>");
     foreach ($this->elements as $element) {

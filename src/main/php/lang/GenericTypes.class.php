@@ -260,8 +260,12 @@ class GenericTypes {
             }
             if (isset($annotations['params'])) {
               $generic= [];
+              $replace= $placeholders;
+              foreach ($typeargs as $placeholder => $p) {
+                $replace[$placeholder]= "\$__T[{$p}]";
+              }
               foreach (Type::split($annotations['params']) as $j => $placeholder) {
-                if ('' === ($replaced= strtr($placeholder, $placeholders))) {
+                if ('' === ($replaced= strtr($placeholder, $replace))) {
                   $generic[$j]= null;
                 } else {
                   $meta[1][$m][DETAIL_ARGUMENTS][$j]= $replaced;
@@ -279,7 +283,7 @@ class GenericTypes {
 
                 $src.= (
                   ' if ('.(isset($default[$j]) ? '('.$default[$j].' !== '.$parameters[$j].') && ' : '').
-                  '!instance(\''.$verify.'\', '.$parameters[$j].')) throw new \lang\IllegalArgumentException('.
+                  '!instance("'.$verify.'", '.$parameters[$j].')) throw new \lang\IllegalArgumentException('.
                   '"Argument '.($j + 1).' passed to ".__METHOD__."'.
                   ' must be of '.$type.', ".typeof('.$parameters[$j].')." given"'.
                   ');'

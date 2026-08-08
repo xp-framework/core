@@ -102,4 +102,9 @@ class GenericsTest {
     Assert::instance('lang.unittest.ListOf<int>', $mapped);
     Assert::equals([5, 6], $mapped->elements);
   }
+
+  #[Test, Expect(IllegalArgumentException::class)]
+  public function generic_method_invalid_argument() {
+    create('new lang.unittest.ListOf<string>')->{'map<int>'}(null);
+  }
 }
