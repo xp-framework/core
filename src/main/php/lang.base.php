@@ -334,12 +334,18 @@ function create($spec, ... $args) {
   // TYPE:= B "<" ARGS ">"
   // ARGS:= TYPE [ "," TYPE [ "," ... ]]
   $b= strpos($spec, '<');
-  $base= substr($spec, 4, $b- 4);
-  $typeargs= \lang\Type::forNames(substr($spec, $b+ 1, strrpos($spec, '>')- $b- 1));
+  $base= substr($spec, 4, $b - 4);
+
+  if ('self' === $base) {
+    $context= debug_backtrace(0, 2)[1]['class'];
+    $class= new \lang\XPClass(substr($context, 0, strcspn($context, "\xb7")));
+  } else {
+    $class= \lang\XPClass::forName($base);
+  }
   
   // Instantiate, passing the rest of any arguments passed to create()
   // BC: Wrap IllegalStateExceptions into IllegalArgumentExceptions
-  $class= \lang\XPClass::forName(strstr($base, '.') ? $base : \lang\XPClass::nameOf($base));
+  $typeargs= \lang\Type::forNames(substr($spec, $b+ 1, strrpos($spec, '>')- $b- 1));
   try {
     return $class->newGenericType($typeargs)->newInstance(...$args);
   } catch (\lang\IllegalStateException $e) {
