@@ -1,5 +1,7 @@
 <?php namespace lang;
 
+use ReflectionClass;
+
 /**
  * Generate generic runtime types.
  *
@@ -15,7 +17,7 @@ class GenericTypes {
    * @return  lang.XPClass created type
    */
   public function newType(XPClass $base, array $arguments) {
-    return new XPClass(new \ReflectionClass($this->newType0($base, $arguments)));
+    return new XPClass(new ReflectionClass($this->newType0($base, $arguments)));
   }
 
   /**
@@ -334,7 +336,7 @@ class GenericTypes {
             foreach (Type::split($annotation[$counter]) as $j => $placeholder) {
               $iargs[]= Type::forName(strtr(ltrim($placeholder), $placeholders));
             }
-            $src.= '\\'.$this->newType0(new XPClass(new \ReflectionClass($rel)), $iargs);
+            $src.= '\\'.$this->newType0(new XPClass(new ReflectionClass($rel)), $iargs);
           } else {
             $src.= $rel;
           }
