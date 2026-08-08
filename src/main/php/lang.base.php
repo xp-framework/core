@@ -344,12 +344,9 @@ function create($spec, ... $args) {
   }
   
   // Instantiate, passing the rest of any arguments passed to create()
-  // BC: Wrap IllegalStateExceptions into IllegalArgumentExceptions
   $typeargs= \lang\Type::forNames(substr($spec, $b+ 1, strrpos($spec, '>')- $b- 1));
   try {
     return $class->newGenericType($typeargs)->newInstance(...$args);
-  } catch (\lang\IllegalStateException $e) {
-    throw new \lang\IllegalArgumentException($e->getMessage());
   } catch (ReflectionException $e) {
     throw new \lang\IllegalAccessException($e->getMessage());
   }
