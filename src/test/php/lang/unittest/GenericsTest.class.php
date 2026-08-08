@@ -93,4 +93,13 @@ class GenericsTest {
   public function pass_invalid_varargs($arguments) {
     create('new lang.unittest.ListOf<string>', ...$arguments);
   }
+
+  #[Test]
+  public function invoke_generic_method() {
+    $fixture= create('new lang.unittest.ListOf<string>', 'Hello', 'World!');
+    $mapped= $fixture->{'map<int>'}('strlen');
+
+    Assert::instance('lang.unittest.ListOf<int>', $mapped);
+    Assert::equals([5, 6], $mapped->elements);
+  }
 }
