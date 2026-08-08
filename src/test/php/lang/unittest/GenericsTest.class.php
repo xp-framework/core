@@ -94,6 +94,16 @@ class GenericsTest {
     Assert::equals(['Hello', null], $fixture->elements);
   }
 
+  #[Test]
+  public function pass_union() {
+    $fixture= create('new lang.unittest.ListOf<int|float>')
+      ->append(1)
+      ->append(1.5)
+    ;
+
+    Assert::equals([1, 1.5], $fixture->elements);
+  }
+
   #[Test, Expect(IllegalArgumentException::class), Values([[[1]], [['Test', 1]], [[null, 'Test']]])]
   public function pass_invalid($arguments) {
     create('new lang.unittest.ListOf<string>', 'Hello')->extend($arguments);
