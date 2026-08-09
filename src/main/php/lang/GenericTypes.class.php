@@ -255,6 +255,7 @@ class GenericTypes {
               foreach ($typeargs as $placeholder => $p) {
                 $replace[$placeholder]= "\$__T[{$p}]";
               }
+              $replace['...']= '[]';
               foreach (Type::split($annotations['params']) as $j => $placeholder) {
                 if ('' === ($replaced= strtr($placeholder, $replace))) {
                   $generic[$j]= null;
@@ -264,17 +265,9 @@ class GenericTypes {
                 }
               }
               foreach ($generic as $j => $type) {
-                if (null === $type) {
-                  continue;
-                } else if ('...' === substr($type, -3)) {
-                  $verify= substr($generic[$j], 0, -3).'[]';
-                } else {
-                  $verify= $generic[$j];
-                }
-
-                $src.= (
+                isset($type) && $src.= (
                   ' if ('.(isset($default[$j]) ? '('.$default[$j].' !== '.$parameters[$j].') && ' : '').
-                  '!instance("'.$verify.'", '.$parameters[$j].')) throw new \lang\IllegalArgumentException('.
+                  '!instance("'.$type.'", '.$parameters[$j].')) throw new \lang\IllegalArgumentException('.
                   '"Argument '.($j + 1).' passed to ".__METHOD__."'.
                   ' must be of '.$type.', ".typeof('.$parameters[$j].')." given"'.
                   ');'
