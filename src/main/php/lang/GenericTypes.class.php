@@ -251,17 +251,16 @@ class GenericTypes {
             }
             if (isset($annotations['params'])) {
               $generic= [];
-              $replace= $placeholders;
+              $replace= $rewrite= ['...' => '[]'] + $placeholders;
               foreach ($typeargs as $placeholder => $p) {
                 $replace[$placeholder]= "\$__T[{$p}]";
               }
-              $replace['...']= '[]';
               foreach (Type::split($annotations['params']) as $j => $placeholder) {
-                if ('' === ($replaced= strtr($placeholder, $replace))) {
-                  $generic[$j]= null;
+                if ('' === $placeholder) {
+                  $generic[]= null;
                 } else {
-                  $meta[1][$m][DETAIL_ARGUMENTS][$j]= $replaced;
-                  $generic[$j]= $replaced;
+                  $generic[]= strtr($placeholder, $replace);
+                  $meta[1][$m][DETAIL_ARGUMENTS][$j]= strtr($placeholder, $rewrite);
                 }
               }
               foreach ($generic as $j => $type) {
