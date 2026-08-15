@@ -323,7 +323,7 @@ class Type implements Value {
           $wildcard= true;
         } else {
           $t= self::named($arg, $context);
-          $wildcard= $t instanceof WildcardType;
+          $wildcard= $t instanceof WildcardType || $t instanceof TypeParameter;
           $components[]= $t;
         }
       }
