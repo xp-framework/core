@@ -35,12 +35,13 @@ class DomApiStreamsTest {
       ->appendChild($dom->createElement('title', 'Ubercoder'))
     ;
     $dom->saveHTMLFile(Streams::writeableUri($out));
-    
-    // Check file contents
-    Assert::equals(
-      '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Ubercoder</title></head></html>', 
-      trim($out->bytes())
+
+    // PHP 8.6 excludes the Content-Type meta tag
+    $expected= sprintf(
+      '<html><head>%s<title>Ubercoder</title></head></html>',
+      PHP_VERSION_ID < 80600 ? '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">' : ''
     );
+    Assert::equals($expected, trim($out->bytes()));
   }
 
   #[Test]
