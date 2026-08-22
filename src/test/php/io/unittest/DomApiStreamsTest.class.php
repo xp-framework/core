@@ -30,15 +30,16 @@ class DomApiStreamsTest {
 
     // Create DOM and save it to stream
     $dom= new \DOMDocument();
-    $dom->appendChild($dom->createElement('html'))
-      ->appendChild($dom->createElement('head'))
-      ->appendChild($dom->createElement('title', 'Ubercoder'))
-    ;
+    $html= $dom->appendChild($dom->createElement('html'));
+    $head= $html->appendChild($dom->createElement('head'));
+    $meta= $head->appendChild($dom->createElement('meta'));
+    $meta->setAttribute('http-equiv', 'Content-Type');
+    $meta->setAttribute('content', 'text/html; charset=UTF-8');
+    $head->appendChild($dom->createElement('title', 'Ubercoder'));
     $dom->saveHTMLFile(Streams::writeableUri($out));
-    
-    // Check file contents
+
     Assert::equals(
-      '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Ubercoder</title></head></html>', 
+      '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Ubercoder</title></head></html>',
       trim($out->bytes())
     );
   }
