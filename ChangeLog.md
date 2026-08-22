@@ -44,6 +44,15 @@ forward compatibility with PHP 8.6.
   see https://wiki.php.net/rfc/deprecate-return-value-from-construct
   (@thekid)
 
+## 12.13.0 / 2026-08-22
+
+### Features
+
+* Backported #372: Add support for generic methods. This will make it
+  easier for libraries to adopt as they do not need to force anyone to
+  upgrade to PHP8-only XP 13
+  (@thekid)
+
 ## 12.12.0 / 2026-08-01
 
 ### Bugfixes
