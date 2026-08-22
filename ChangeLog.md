@@ -15,7 +15,7 @@ forward compatibility with PHP 8.6.
   as an operator in PHP, see #368
   (@thekid)
 * Merged PR #370: Add `lang.ClassMeta` as a replacement for class parser
-  implementatio dealing with PHP 7 annotation syntax
+  implementation dealing with PHP 7 annotation syntax
   (@thekid)
 * Dropped support for PHP 7.4 - phase 2 of xp-framework/rfc#343. Mininum
   required PHP version is now 8.0.0!
@@ -31,6 +31,8 @@ forward compatibility with PHP 8.6.
 
 ### Features
 
+* Merged PR #372: Add support for generic methods, runtime and reflection.
+  (@thekid)
 * Merged PR #357: Make it possible to supply chunk size to `transfer()` &
   `transmit()` in `io.streams.StreamTransfer`
   (@thekid)
