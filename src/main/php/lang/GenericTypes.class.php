@@ -184,8 +184,8 @@ class GenericTypes {
               }
 
               // Copy generic method information to created type
-              $meta[1][$m][5]= ['generic' => $annotations];
-              $meta[1][$m][6]= ['generic' => Generic::class];
+              $meta[1][$m][DETAIL_ANNOTATIONS]= ['generic' => $annotations];
+              $meta[1][$m][DETAIL_TARGET_ANNO]= ['generic' => Generic::class];
             }
           } else if (T_VARIABLE === $tokens[$i][0]) {
             $f= substr($tokens[$i][1], 1);
