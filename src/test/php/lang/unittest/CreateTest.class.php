@@ -29,6 +29,11 @@ class CreateTest {
   }
 
   #[Test, Expect(IllegalArgumentException::class)]
+  public function create_raises_exception_when_type_args_missing() {
+    create('new lang.unittest.Lookup');
+  }
+
+  #[Test, Expect(IllegalArgumentException::class)]
   public function create_raises_exception_when_non_generic_given() {
     create('new lang.unittest.Name<string>');
   }

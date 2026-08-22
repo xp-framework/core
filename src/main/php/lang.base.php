@@ -324,23 +324,27 @@ function newinstance($spec, $args, $def= null) {
 }
 // }}}
 
-// {{{ proto object create(string spec, var... $args)
+// {{{ proto object create(string type, var... $args)
 //     Creates a generic object
-function create($spec, ... $args) {
-  if (!is_string($spec)) {
-    throw new \lang\IllegalArgumentException('Create expects its first argument to be a string');
+function create(string $type, ... $args) {
+  if (false === ($b= strpos($type, '<'))) {
+    throw new \lang\IllegalArgumentException('Type '.$type.' does not have type arguments');
   }
 
-  // Parse type specification: "new " TYPE "()"?
+  // Parse type specification: "new " TYPE "()"
   // TYPE:= B "<" ARGS ">"
   // ARGS:= TYPE [ "," TYPE [ "," ... ]]
-  $b= strpos($spec, '<');
-  $base= substr($spec, 4, $b- 4);
-  $typeargs= \lang\Type::forNames(substr($spec, $b+ 1, strrpos($spec, '>')- $b- 1));
+  $base= substr($type, 4, $b - 4);
+  if ('self' === $base) {
+    $context= debug_backtrace(0, 2)[1]['class'];
+    $class= new \lang\XPClass(substr($context, 0, strcspn($context, "\xb7")));
+  } else {
+    $class= \lang\XPClass::forName($base);
+  }
   
   // Instantiate, passing the rest of any arguments passed to create()
   // BC: Wrap IllegalStateExceptions into IllegalArgumentExceptions
-  $class= \lang\XPClass::forName(strstr($base, '.') ? $base : \lang\XPClass::nameOf($base));
+  $typeargs= \lang\Type::forNames(substr($type, $b + 1, strrpos($type, '>') - $b - 1));
   try {
     return $class->newGenericType($typeargs)->newInstance(...$args);
   } catch (\lang\IllegalStateException $e) {
