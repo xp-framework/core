@@ -248,7 +248,6 @@ class GenericTypes {
               }
             }
             $annotations= [];
-            unset($meta[1][$m][DETAIL_ANNOTATIONS]['generic']);
             array_shift($state);
           } else if ('{' === $tokens[$i][0]) {
             $braces= 1;
@@ -277,9 +276,7 @@ class GenericTypes {
                 );
               }
             }
-
             $annotations= [];
-            unset($meta[1][$m][DETAIL_ANNOTATIONS]['generic']);
             continue;
           }
         } else if (T_FUNCTION === $state[0]) {
