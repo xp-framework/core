@@ -182,6 +182,10 @@ class GenericTypes {
               foreach (Type::split($annotations['self']) as $p => $typearg) {
                 $typeargs[ltrim($typearg)]= $p;
               }
+
+              // Copy generic method information to created type
+              $meta[1][$m][5]= ['generic' => $annotations];
+              $meta[1][$m][6]= ['generic' => Generic::class];
             }
           } else if (T_VARIABLE === $tokens[$i][0]) {
             $f= substr($tokens[$i][1], 1);
