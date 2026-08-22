@@ -3,6 +3,12 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 12.13.0 / ????-??-??
+
+### Features
+
+* Backported #372: Add support for generic methods - @thekid
+
 ## 12.12.0 / 2026-08-01
 
 ### Bugfixes
