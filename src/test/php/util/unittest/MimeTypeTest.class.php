@@ -4,15 +4,46 @@ use test\{Assert, Test, Values};
 use util\MimeType;
 
 class MimeTypeTest {
-  
-  #[Test]
-  public function text_file() {
-    Assert::equals('text/plain', MimeType::getByFilename('test.txt'));
+
+  /** @return iterable */
+  private function tests() {
+    yield ['test.txt', 'text/plain'];
+    yield ['test.md', 'text/markdown'];
+    yield ['test.xml', 'text/xml'];
+    yield ['test.yaml', 'text/yaml'];
+    yield ['test.csv', 'text/csv'];
+    yield ['test.json', 'application/json'];
+
+    yield ['test.htm', 'text/html'];
+    yield ['test.html', 'text/html'];
+    yield ['test.css', 'text/css'];
+    yield ['test.js', 'text/javascript'];
+
+    yield ['test.ttf', 'font/ttf'];
+    yield ['test.otf', 'font/otf'];
+    yield ['test.woff', 'font/woff'];
+    yield ['test.woff2', 'font/woff2'];
+
+    yield ['test.svg', 'image/svg+xml'];
+    yield ['test.gif', 'image/gif'];
+    yield ['test.png', 'image/png'];
+    yield ['test.jpg', 'image/jpeg'];
+    yield ['test.jpeg', 'image/jpeg'];
+    yield ['test.avif', 'image/avif'];
+    yield ['test.webp', 'image/webp'];
+
+    yield ['test.mp3', 'audio/mp3'];
+    yield ['test.wav', 'audio/wav'];
+    yield ['test.aac', 'audio/aac'];
+
+    yield ['test.mp4', 'video/mp4'];
+    yield ['test.webm', 'video/webm'];
+    yield ['test.mov', 'video/quicktime'];
   }
 
-  #[Test]
-  public function html_file() {
-    Assert::equals('text/html', MimeType::getByFilename('test.html'));
+  #[Test, Values(from: 'tests')]
+  public function wellknown($filename, $expected) {
+    Assert::equals($expected, MimeType::getByFilename($filename));
   }
 
   #[Test]
