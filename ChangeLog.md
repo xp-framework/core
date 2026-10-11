@@ -48,6 +48,14 @@ forward compatibility with PHP 8.6.
   see https://wiki.php.net/rfc/deprecate-return-value-from-construct
   (@thekid)
 
+## 12.13.1 / 2026-10-11
+
+### Bugfixes
+
+* Fixed issue #375: Failing streams tests with PHP 8.6.0RC3, by adding a
+  stream flush implementation which works consistently in all PHP versions.
+  (@thekid)
+
 ## 12.13.0 / 2026-08-22
 
 ### Features
