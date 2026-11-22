@@ -158,6 +158,11 @@ class PathTest {
   }
 
   #[Test]
+  public function real_with_relative_working_directory() {
+    Assert::equals((new Path('.', 'README.md'))->asRealpath(), Path::real('README.md', '.'));
+  }
+
+  #[Test]
   public function real_with_array() {
     $folder= $this->existingFolder();
     Assert::equals($folder->path, Path::real([$folder->path, '.', $folder->dirname, '..'])->toString());

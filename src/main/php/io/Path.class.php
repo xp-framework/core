@@ -69,10 +69,7 @@ class Path implements Value {
    * @return self
    */
   public static function real($arg, $wd= null): self {
-    return new self(self::real0(
-      self::pathFor(is_array($arg) ? $arg : [$arg]),
-      $wd ?? getcwd()
-    ));
+    return new self(self::real0(self::pathFor(is_array($arg) ? $arg : [$arg]), $wd));
   }
 
   /** Returns the name of this path */
@@ -181,7 +178,7 @@ class Path implements Value {
       $normalized= strtoupper($drive).':';
       $components= explode(DIRECTORY_SEPARATOR, substr($path, 3));
     } else if (null === $wd) {
-      throw new IllegalStateException('Cannot resolve '.$path);
+      return self::real0(getcwd().DIRECTORY_SEPARATOR.$path, null);
     } else {
       return self::real0(self::pathFor([$wd]).DIRECTORY_SEPARATOR.$path, null);
     }
@@ -218,7 +215,6 @@ class Path implements Value {
    */
   public function contains($arg, $wd= null) {
     $compare= $arg instanceof self ? $arg->path : self::pathFor([$arg]);
-    $wd??= getcwd();
     return strlen($compare) && str_starts_with(
       rtrim(self::real0($compare, $wd), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR,
       rtrim(self::real0($this->path, $wd), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR,
@@ -235,7 +231,7 @@ class Path implements Value {
    * @return string
    */
   public function asURI($wd= null): string {
-    return self::real0($this->path, $wd ?? getcwd());
+    return self::real0($this->path, $wd);
   }
 
   /**
@@ -248,7 +244,7 @@ class Path implements Value {
    * @return self
    */
   public function asRealpath($wd= null): self {
-    return new self(self::real0($this->path, $wd ?? getcwd()));
+    return new self(self::real0($this->path, $wd));
   }
 
   /**
