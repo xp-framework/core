@@ -18,6 +18,6 @@ case $1 in
   ;;
 
   run-tests)
-    sh xp-run xp.test.Runner src/test/php
+    sh xp-run xp.test.Runner -r Dots src/test/php
   ;;
 esac

@@ -370,7 +370,7 @@ class PathTest {
     ['/usr', true],
     ['/usr/', true],
     ['/usr/bin', true],
-    ['/usr/bin/ls', true],
+    ['/usr/bin/xp', true],
     ['/opt/../usr', true],
     ['', false],
     ['/', false],
