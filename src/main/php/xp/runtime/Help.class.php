@@ -41,8 +41,12 @@ class Help {
    * @return string
    */
   private static function commentOf($class) {
-    $doc= $class->reflect()->getDocComment();
-    return false === $doc ? '' : trim(preg_replace('/\n\s+\* ?/', "\n", substr($doc, 3, -2)));
+    if (false === ($doc= $class->reflect()->getDocComment())) {
+      return '# '.$class->declaredName();
+    }
+
+    $text= trim(preg_replace('/\n\s+\* ?/', "\n", substr($doc, 3, -2)));
+    return str_starts_with($text, '#') ? $text : '# '.$text;
   }
 
   /**
