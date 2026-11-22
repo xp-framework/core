@@ -1,6 +1,6 @@
 <?php namespace io\unittest;
 
-use io\{File, Folder, Path};
+use io\{File, Folder, Path, OperationFailed};
 use lang\{Environment, IllegalArgumentException, IllegalStateException, Runtime};
 use test\verify\Runtime as VerifyRuntime;
 use test\{Assert, Expect, Test, Values};
@@ -187,18 +187,36 @@ class PathTest {
     Assert::equals($current, Path::compose($components)->asRealpath($current)->toString());
   }
 
-  #[Test, VerifyRuntime(os: "!^Win")]
+  #[Test, VerifyRuntime(os: '^(?!WIN)')]
   public function links_resolved_in_realpath() {
     $temp= Environment::tempDir();
     $link= new Path($temp, 'link-to-temp');
     if (false === symlink($temp, $link)) {
-      $this->skip('Cannot create '.$link.' -> '.$temp);
+      throw new OperationFailed('Cannot create '.$link.' -> '.$temp);
     }
 
     $resolved= (new Path($link))->asRealpath()->toString();
     unlink($link);
 
-    Assert::equals($temp, $resolved);
+    Assert::equals(rtrim($temp, DIRECTORY_SEPARATOR), rtrim($resolved, DIRECTORY_SEPARATOR));
+  }
+
+  #[Test, VerifyRuntime(os: '^(?!WIN)')]
+  public function relative_links_resolved_in_realpath() {
+    $temp= Environment::tempDir();
+
+    $child= new Folder($temp, 'child-of-temp');
+    $child->exists() || $child->create();
+
+    $link= new Path($child, 'link-to-temp');
+    if (false === symlink($child->getURI().'..', $link)) {
+      throw new OperationFailed('Cannot create '.$link.' -> ..');
+    }
+
+    $resolved= (new Path($link))->asRealpath()->toString();
+    $child->unlink();
+
+    Assert::equals(rtrim($temp, DIRECTORY_SEPARATOR), rtrim($resolved, DIRECTORY_SEPARATOR));
   }
 
   #[Test]

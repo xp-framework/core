@@ -193,17 +193,17 @@ class Path implements Value {
       } else if ('..' === $component) {
         $normalized= substr($normalized, 0, strrpos($normalized, DIRECTORY_SEPARATOR));
         $check= true;
+      } else if ($check) {
+        $node= $normalized.DIRECTORY_SEPARATOR.$component;
+        if (false === ($stat= lstat($node))) {
+          \xp::gc(__FILE__);
+          $check= false;
+        } else if (0120000 === ($stat[2] & 0120000)) {
+          $node= self::real0(readlink($node), $normalized);
+        }
+        $normalized= $node;
       } else {
         $normalized.= DIRECTORY_SEPARATOR.$component;
-        if ($check) {
-          $stat= lstat($normalized);
-          if (false === $stat) {
-            \xp::gc(__FILE__);
-            $check= false;
-          } else if (0120000 === ($stat[2] & 0120000)) {
-            $normalized= readlink($normalized);
-          }
-        }
       }
     }
     return $normalized;
