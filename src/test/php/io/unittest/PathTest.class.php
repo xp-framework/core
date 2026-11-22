@@ -1,6 +1,6 @@
 <?php namespace io\unittest;
 
-use io\{File, Folder, Path};
+use io\{File, Folder, Path, OperationFailed};
 use lang\{Environment, IllegalArgumentException, IllegalStateException, Runtime};
 use test\verify\Runtime as VerifyRuntime;
 use test\{Assert, Expect, Test, Values};
@@ -158,6 +158,11 @@ class PathTest {
   }
 
   #[Test]
+  public function real_with_relative_working_directory() {
+    Assert::equals((new Path('.', 'README.md'))->asRealpath(), Path::real('README.md', '.'));
+  }
+
+  #[Test]
   public function real_with_array() {
     $folder= $this->existingFolder();
     Assert::equals($folder->path, Path::real([$folder->path, '.', $folder->dirname, '..'])->toString());
@@ -187,18 +192,36 @@ class PathTest {
     Assert::equals($current, Path::compose($components)->asRealpath($current)->toString());
   }
 
-  #[Test, VerifyRuntime(os: "!^Win")]
+  #[Test, VerifyRuntime(os: '^(?!WIN)')]
   public function links_resolved_in_realpath() {
     $temp= Environment::tempDir();
     $link= new Path($temp, 'link-to-temp');
     if (false === symlink($temp, $link)) {
-      $this->skip('Cannot create '.$link.' -> '.$temp);
+      throw new OperationFailed('Cannot create '.$link.' -> '.$temp);
     }
 
     $resolved= (new Path($link))->asRealpath()->toString();
     unlink($link);
 
-    Assert::equals($temp, $resolved);
+    Assert::equals(rtrim($temp, DIRECTORY_SEPARATOR), rtrim($resolved, DIRECTORY_SEPARATOR));
+  }
+
+  #[Test, VerifyRuntime(os: '^(?!WIN)')]
+  public function relative_links_resolved_in_realpath() {
+    $temp= Environment::tempDir();
+
+    $child= new Folder($temp, 'child-of-temp');
+    $child->exists() || $child->create();
+
+    $link= new Path($child, 'link-to-temp');
+    if (false === symlink($child->getURI().'..', $link)) {
+      throw new OperationFailed('Cannot create '.$link.' -> ..');
+    }
+
+    $resolved= (new Path($link))->asRealpath()->toString();
+    $child->unlink();
+
+    Assert::equals(rtrim($temp, DIRECTORY_SEPARATOR), rtrim($resolved, DIRECTORY_SEPARATOR));
   }
 
   #[Test]
@@ -306,6 +329,11 @@ class PathTest {
   #[Test]
   public function normalize_uppercases_drive_letter() {
     Assert::equals('C:/test', (new Path('c:/test'))->normalize()->toString('/'));
+  }
+
+  #[Test, Values([['/usr', true], ['/usr/', true], ['/usr/.', true], ['/usr/bin', true], ['/usr/bin/xp', true], ['/usr/bin/..', true], ['/opt/../usr', true], ['', false], ['/', false], ['/usr/..', false], ['/opt', false], ['/opt/bin', false], ['/usrs', false], ['/usr.txt', false],])]
+  public function usr_path_contains($path, $expected) {
+    Assert::equals($expected, (new Path('/usr'))->contains($path));
   }
 
   #[Test, Values([['a', 'b', 'a/b'], ['.', 'b', './b'], ['..', 'b', '../b'], ['/var', 'log', '/var/log'], ['C:/Windows', 'system32', 'C:/Windows/system32'], ['/usr/local', '/usr/bin', '../bin'], ['/usr/local/bin', '/usr', '../..'], ['/usr/local', '/usr/local', '']])]

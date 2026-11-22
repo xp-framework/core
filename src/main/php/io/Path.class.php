@@ -69,12 +69,7 @@ class Path implements Value {
    * @return self
    */
   public static function real($arg, $wd= null): self {
-    if (is_array($arg)) {
-      $path= self::pathFor($arg);
-    } else {
-      $path= self::pathFor([$arg]);
-    }
-    return new self(self::real0($path, $wd ?: getcwd()));
+    return new self(self::real0(self::pathFor(is_array($arg) ? $arg : [$arg]), $wd));
   }
 
   /** Returns the name of this path */
@@ -183,7 +178,7 @@ class Path implements Value {
       $normalized= strtoupper($drive).':';
       $components= explode(DIRECTORY_SEPARATOR, substr($path, 3));
     } else if (null === $wd) {
-      throw new IllegalStateException('Cannot resolve '.$path);
+      return self::real0(getcwd().DIRECTORY_SEPARATOR.$path, null);
     } else {
       return self::real0(self::pathFor([$wd]).DIRECTORY_SEPARATOR.$path, null);
     }
@@ -195,20 +190,35 @@ class Path implements Value {
       } else if ('..' === $component) {
         $normalized= substr($normalized, 0, strrpos($normalized, DIRECTORY_SEPARATOR));
         $check= true;
+      } else if ($check) {
+        $node= $normalized.DIRECTORY_SEPARATOR.$component;
+        if (false === ($stat= lstat($node))) {
+          \xp::gc(__FILE__);
+          $check= false;
+        } else if (0120000 === ($stat[2] & 0120000)) {
+          $node= self::real0(readlink($node), $normalized);
+        }
+        $normalized= $node;
       } else {
         $normalized.= DIRECTORY_SEPARATOR.$component;
-        if ($check) {
-          $stat= lstat($normalized);
-          if (false === $stat) {
-            \xp::gc(__FILE__);
-            $check= false;
-          } else if (0120000 === ($stat[2] & 0120000)) {
-            $normalized= readlink($normalized);
-          }
-        }
       }
     }
     return $normalized;
+  }
+
+  /**
+   * Checks whether this path contains another path, resolving filesystem links.
+   *
+   * @see    php://getcwd
+   * @param  string|self|io.File|io.Folder|io.collections.IOElement $arg
+   * @return bool
+   */
+  public function contains($arg, $wd= null) {
+    $compare= $arg instanceof self ? $arg->path : self::pathFor([$arg]);
+    return strlen($compare) && str_starts_with(
+      rtrim(self::real0($compare, $wd), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR,
+      rtrim(self::real0($this->path, $wd), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR,
+    );
   }
 
   /**
@@ -221,7 +231,7 @@ class Path implements Value {
    * @return string
    */
   public function asURI($wd= null): string {
-    return self::real0($this->path, $wd ?: getcwd());
+    return self::real0($this->path, $wd);
   }
 
   /**
@@ -234,7 +244,7 @@ class Path implements Value {
    * @return self
    */
   public function asRealpath($wd= null): self {
-    return new self(self::real0($this->path, $wd ?: getcwd()));
+    return new self(self::real0($this->path, $wd));
   }
 
   /**

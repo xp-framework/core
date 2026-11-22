@@ -3,6 +3,14 @@ XP Framework Core ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 12.14.0 / 2026-11-22
+
+### Features
+
+* Backported #376: Add `io.Path::contains()` to check whether a given path
+  exists in a base path, expanding links while resolving the path.
+  (@thekid)
+
 ## 12.13.1 / 2026-10-11
 
 ### Bugfixes
