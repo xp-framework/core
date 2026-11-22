@@ -3,9 +3,7 @@
 use lang\{XPClass, ClassLoader};
 use util\cmd\Console;
 
-/**
- * Shows help
- */
+/** Shows help */
 class Help {
   private static $colored;
 
@@ -37,6 +35,17 @@ class Help {
   }
 
   /**
+   * Gets the class' doc comment
+   *
+   * @param  lang.XPClass $class
+   * @return string
+   */
+  private static function commentOf($class) {
+    $doc= $class->reflect()->getDocComment();
+    return false === $doc ? '' : trim(preg_replace('/\n\s+\* ?/', "\n", substr($doc, 3, -2)));
+  }
+
+  /**
    * Main
    *
    * @param  string[] $args
@@ -46,7 +55,7 @@ class Help {
     if (empty($args)) {
       $class= new XPClass(self::class);
       $source= $class->getClassLoader();
-      $markdown= $class->getComment();
+      $markdown= self::commentOf($class);
     } else if ('@' === $args[0][0]) {
       $resource= substr($args[0], 1);
       if (null === ($source= ClassLoader::getDefault()->findResource($resource))) {
@@ -60,7 +69,7 @@ class Help {
         Console::$err->writeLine('No class named ', $class);
         return 2;
       }
-      $markdown= $source->loadClass($class)->getComment();
+      $markdown= self::commentOf($source->loadClass($class));
     }
 
     self::render(Console::$out, $markdown, $source);
