@@ -367,6 +367,23 @@ class PathTest {
   }
 
   #[Test, Values([
+    ['/usr', true],
+    ['/usr/', true],
+    ['/usr/bin', true],
+    ['/usr/bin/ls', true],
+    ['/opt/../usr', true],
+    ['', false],
+    ['/', false],
+    ['/opt', false],
+    ['/opt/bin', false],
+    ['/usrs', false],
+    ['/usr.txt', false],
+  ])]
+  public function usr_path_contains($path, $expected) {
+    Assert::equals($expected, (new Path('/usr'))->contains($path));
+  }
+
+  #[Test, Values([
     ['a', 'b', 'a/b'],
     ['.', 'b', './b'],
     ['..', 'b', '../b'],

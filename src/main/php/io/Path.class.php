@@ -210,6 +210,22 @@ class Path implements Value {
   }
 
   /**
+   * Checks whether this path contains another path, resolving filesystem links.
+   *
+   * @see    php://getcwd
+   * @param  string|self|io.File|io.Folder|io.collections.IOElement $arg
+   * @return bool
+   */
+  public function contains($arg, $wd= null) {
+    $compare= $arg instanceof self ? $arg->path : self::pathFor([$arg]);
+    $wd??= getcwd();
+    return strlen($compare) && str_starts_with(
+      rtrim(self::real0($compare, $wd), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR,
+      rtrim(self::real0($this->path, $wd), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR,
+    );
+  }
+
+  /**
    * Returns the real URI for this path, resolving links if necessary.
    * If no working directory is given, the current working directory is 
    * used to resolve relative paths.
