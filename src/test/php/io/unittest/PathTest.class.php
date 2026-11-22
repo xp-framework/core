@@ -248,7 +248,15 @@ class PathTest {
     Assert::equals(basename($arg), (new Path($arg))->name());
   }
 
-  #[Test, Values([['/dev', '/'], ['a/b', 'a'], ['a/b/c', 'a/b'], ['', '..'], ['..', '../..'], ['../a', '../../a'], ['../..', '../../..']])]
+  #[Test, Values([
+    ['/dev', '/'],
+    ['a/b', 'a'],
+    ['a/b/c', 'a/b'],
+    ['', '..'],
+    ['..', '../..'],
+    ['../a', '../../a'],
+    ['../..', '../../..'],
+  ])]
   public function parent($child, $parent) {
     Assert::equals($parent, (new Path($child))->parent()->toString('/'));
   }
@@ -268,7 +276,19 @@ class PathTest {
     Assert::null((new Path($root))->parent());
   }
 
-  #[Test, Values([['/dev', true], ['/', true], ['C:/Windows', true], ['C:/', true], ['C:', true], ['', false], ['.', false], ['..', false], ['a', false], ['a/b', false], ['a/b/c', false]])]
+  #[Test, Values([
+    ['/dev', true],
+    ['/', true],
+    ['C:/Windows', true],
+    ['C:/', true],
+    ['C:', true],
+    ['', false],
+    ['.', false],
+    ['..', false],
+    ['a', false],
+    ['a/b', false],
+    ['a/b/c', false]
+  ])]
   public function absolute($test, $expected) {
     Assert::equals($expected, (new Path($test))->isAbsolute());
   }
@@ -283,17 +303,55 @@ class PathTest {
     Assert::true((new Path($this->existingFolder()))->isAbsolute());
   }
 
-  #[Test, Values([['a', 'a'], ['a//b', 'a/b'], ['a///b', 'a/b'], ['./a', 'a'], ['././a', 'a'], ['a/./b', 'a/b'], ['a/././b', 'a/b'], ['a/../b', 'b'], ['a/../b/../c', 'c'], ['a/..', '.'], ['a/b/../..', '.'], ['../../a', '../../a'], ['a/../..', '..'],])]
+  #[Test, Values([
+    ['a', 'a'],
+    ['a//b', 'a/b'],
+    ['a///b', 'a/b'],
+    ['./a', 'a'],
+    ['././a', 'a'],
+    ['a/./b', 'a/b'],
+    ['a/././b', 'a/b'],
+    ['a/../b', 'b'],
+    ['a/../b/../c', 'c'],
+    ['a/..', '.'],
+    ['a/b/../..', '.'],
+    ['../../a', '../../a'],
+    ['a/../..', '..'],
+  ])]
   public function normalize($input, $result) {
     Assert::equals($result, (new Path($input))->normalize()->toString('/'));
   }
 
-  #[Test, Values([['.', '.'], ['./.', '.'], ['././.', '.'], ['./..', '..'], ['..', '..'], ['../.', '..'], ['../..', '../..'], ['./../..', '../..'],])]
+  #[Test, Values([
+    ['.', '.'],
+    ['./.', '.'],
+    ['././.', '.'],
+    ['./..', '..'],
+    ['..', '..'],
+    ['../.', '..'],
+    ['../..', '../..'],
+    ['./../..', '../..'],
+  ])]
   public function normalize_dots($input, $result) {
     Assert::equals($result, (new Path($input))->normalize()->toString('/'));
   }
 
-  #[Test, Values([['/', '/'], ['/var/lib/', '/var/lib'], ['//', '/'], ['/.', '/'], ['/var/lib/dpkg/..', '/var/lib'], ['/var/lib/.', '/var/lib'], ['C:', 'C:/'], ['C:/', 'C:/'], ['c:/', 'C:/'], ['C:/tools', 'C:/tools'], ['C://', 'C:/'], ['C:/.', 'C:/'], ['C:/tools/..', 'C:/'], ['C:/tools/.', 'C:/tools'],])]
+  #[Test, Values([
+    ['/', '/'],
+    ['/var/lib/', '/var/lib'],
+    ['//', '/'],
+    ['/.', '/'],
+    ['/var/lib/dpkg/..', '/var/lib'],
+    ['/var/lib/.', '/var/lib'],
+    ['C:', 'C:/'],
+    ['C:/', 'C:/'],
+    ['c:/', 'C:/'],
+    ['C:/tools', 'C:/tools'],
+    ['C://', 'C:/'],
+    ['C:/.', 'C:/'],
+    ['C:/tools/..', 'C:/'],
+    ['C:/tools/.', 'C:/tools'],
+  ])]
   public function normalize_absolute($input, $result) {
     Assert::equals($result, (new Path($input))->normalize()->toString('/'));
   }
@@ -308,32 +366,84 @@ class PathTest {
     Assert::equals('C:/test', (new Path('c:/test'))->normalize()->toString('/'));
   }
 
-  #[Test, Values([['a', 'b', 'a/b'], ['.', 'b', './b'], ['..', 'b', '../b'], ['/var', 'log', '/var/log'], ['C:/Windows', 'system32', 'C:/Windows/system32'], ['/usr/local', '/usr/bin', '../bin'], ['/usr/local/bin', '/usr', '../..'], ['/usr/local', '/usr/local', '']])]
+  #[Test, Values([
+    ['a', 'b', 'a/b'],
+    ['.', 'b', './b'],
+    ['..', 'b', '../b'],
+    ['/var', 'log', '/var/log'],
+    ['C:/Windows', 'system32', 'C:/Windows/system32'],
+    ['/usr/local', '/usr/bin', '../bin'],
+    ['/usr/local/bin', '/usr', '../..'],
+    ['/usr/local', '/usr/local', ''],
+  ])]
   public function resolve($a, $b, $result) {
     Assert::equals($result, (new Path($a))->resolve($b)->toString('/'));
   }
 
-  #[Test, Values([['a', 'b', 'a/b'], ['.', 'b', './b'], ['..', 'b', '../b'], ['/var', 'log', '/var/log'], ['C:/Windows', 'system32', 'C:/Windows/system32'], ['/usr/local', '/usr/bin', '/usr/bin'], ['/usr/local/bin', '/usr', '/usr'], ['/usr/local', '/usr/local', '/usr/local']])]
+  #[Test, Values([
+    ['a', 'b', 'a/b'],
+    ['.', 'b', './b'],
+    ['..', 'b', '../b'],
+    ['/var', 'log', '/var/log'],
+    ['C:/Windows', 'system32', 'C:/Windows/system32'],
+    ['/usr/local', '/usr/bin', '/usr/bin'],
+    ['/usr/local/bin', '/usr', '/usr'],
+    ['/usr/local', '/usr/local', '/usr/local'],
+  ])]
   public function resolve_absolute($a, $b, $result) {
     Assert::equals($result, (new Path($a))->resolve($b, true)->toString('/'));
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Values([['relative', '/dev'], ['relative', 'C:/Windows'], ['relative', 'c:/Windows']])]
+  #[Test, Expect(IllegalArgumentException::class), Values([
+    ['relative', '/dev'],
+    ['relative', 'C:/Windows'],
+    ['relative', 'c:/Windows'],
+  ])]
   public function cannot_resolve_path_if_path_is_relative_and_arg_is_absolute($a, $b) {
     (new Path($a))->relativeTo($b);
   }
 
-  #[Test, Values([['a', 'a', ''], ['', '',  ''], ['..', '..', ''], ['a', '.', 'a'], ['a/b', '.', 'a/b'], ['..', '', '..'], ['../a', '../a', ''], ['xp/core', 'xp', 'core'], ['core/src/main/php', 'core', 'src/main/php'], ['xp/core', 'xp/sequence', '../core'], ['xp/core', 'stubbles/core', '../../xp/core'], ['src', 'src/test/php', '../..'], ['src/main', 'src/main/php', '..'],])]
+  #[Test, Values([
+    ['a', 'a', ''],
+    ['', '',  ''],
+    ['..', '..', ''],
+    ['a', '.', 'a'],
+    ['a/b', '.', 'a/b'],
+    ['..', '', '..'],
+    ['../a', '../a', ''],
+    ['xp/core', 'xp', 'core'],
+    ['core/src/main/php', 'core', 'src/main/php'],
+    ['xp/core', 'xp/sequence', '../core'],
+    ['xp/core', 'stubbles/core', '../../xp/core'],
+    ['src', 'src/test/php', '../..'],
+    ['src/main', 'src/main/php', '..'],
+  ])]
   public function relative_to($a, $b, $result) {
     Assert::equals($result, (new Path($a))->relativeTo($b)->toString('/'));
   }
 
-  #[Test, Values([['/var', '/', 'var'], ['/var', '/var', ''], ['/usr/local', '/usr/bin', '../local'], ['C:/Windows', 'C:/', 'Windows'], ['C:\Windows', 'C:', 'Windows'], ['c:/Windows', 'C:/', 'Windows'], ['C:\Windows', 'c:', 'Windows'], ['/home/seq/src/main/php/Test.php', '/home/compiler', '../seq/src/main/php/Test.php']])]
+  #[Test, Values([
+    ['/var', '/', 'var'],
+    ['/var', '/var', ''],
+    ['/usr/local', '/usr/bin', '../local'],
+    ['C:/Windows', 'C:/', 'Windows'],
+    ['C:\Windows', 'C:', 'Windows'],
+    ['c:/Windows', 'C:/', 'Windows'],
+    ['C:\Windows', 'c:', 'Windows'],
+    ['/home/seq/src/main/php/Test.php', '/home/compiler', '../seq/src/main/php/Test.php']
+  ])]
   public function relative_to_absolute($a, $b, $result) {
     Assert::equals($result, (new Path($a))->relativeTo($b)->toString('/'));
   }
 
-  #[Test, Expect(IllegalArgumentException::class), Values([['/dev', 'relative'], ['relative', '/dev'], ['C:/Windows', 'relative'], ['relative', 'C:/Windows'], ['c:/Windows', 'relative'], ['relative', 'c:/Windows']])]
+  #[Test, Expect(IllegalArgumentException::class), Values([
+    ['/dev', 'relative'],
+    ['relative', '/dev'],
+    ['C:/Windows', 'relative'],
+    ['relative', 'C:/Windows'],
+    ['c:/Windows', 'relative'],
+    ['relative', 'c:/Windows'],
+  ])]
   public function cannot_calculate_relative_path_if_one_component_is_absolute_and_the_other_isnt($a, $b) {
     (new Path($a))->relativeTo($b);
   }

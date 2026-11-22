@@ -69,12 +69,10 @@ class Path implements Value {
    * @return self
    */
   public static function real($arg, $wd= null): self {
-    if (is_array($arg)) {
-      $path= self::pathFor($arg);
-    } else {
-      $path= self::pathFor([$arg]);
-    }
-    return new self(self::real0($path, $wd ?: getcwd()));
+    return new self(self::real0(
+      self::pathFor(is_array($arg) ? $arg : [$arg]),
+      $wd ?? getcwd()
+    ));
   }
 
   /** Returns the name of this path */
@@ -88,7 +86,7 @@ class Path implements Value {
   public function parent() {
     if ('' === $this->path) {
       return new self('..');
-    } else if (0 === strncmp($this->path, '..', 2)) {
+    } else if (str_starts_with($this->path, '..')) {
       return new self('..', $this->path);
     }
 
@@ -221,7 +219,7 @@ class Path implements Value {
    * @return string
    */
   public function asURI($wd= null): string {
-    return self::real0($this->path, $wd ?: getcwd());
+    return self::real0($this->path, $wd ?? getcwd());
   }
 
   /**
@@ -234,7 +232,7 @@ class Path implements Value {
    * @return self
    */
   public function asRealpath($wd= null): self {
-    return new self(self::real0($this->path, $wd ?: getcwd()));
+    return new self(self::real0($this->path, $wd ?? getcwd()));
   }
 
   /**
